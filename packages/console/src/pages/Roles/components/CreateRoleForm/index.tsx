@@ -10,7 +10,6 @@ import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
 import FeatureTag from '@/components/FeatureTag';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -154,8 +153,7 @@ function CreateRoleForm({ onClose }: Props) {
                           <FeatureTag
                             isVisible={!currentPlan?.quota.machineToMachineLimit}
                             for="upsell"
-                            // Todo @xiaoyijun [Pricing] Remove feature flag
-                            plan={isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby}
+                            plan={ReservedPlanId.Pro}
                             className={styles.proTag}
                           />
                         )

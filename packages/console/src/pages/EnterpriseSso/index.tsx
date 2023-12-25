@@ -12,7 +12,7 @@ import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -65,11 +65,7 @@ function EnterpriseSsoConnectors() {
     <ListPage
       title={{
         isBeta: true,
-        paywall: conditional(
-          (!isSsoEnabled || isDevTenant) &&
-            // Todo @xiaoyijun [Pricing] Remove feature flag
-            (isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby)
-        ),
+        paywall: conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
         title: 'enterprise_sso.title',
         subtitle: 'enterprise_sso.subtitle',
       }}

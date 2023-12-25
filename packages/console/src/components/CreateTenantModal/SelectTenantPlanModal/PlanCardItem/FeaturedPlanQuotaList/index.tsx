@@ -1,9 +1,7 @@
 import { ReservedPlanId } from '@logto/schemas';
-import { condArray } from '@silverhand/essentials';
 import { useMemo } from 'react';
 
 import PlanQuotaList from '@/components/PlanQuotaList';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { comingSoonQuotaKeys } from '@/consts/plan-quotas';
 import { quotaItemAddOnPhrasesMap } from '@/consts/quota-item-phrases';
 import {
@@ -18,8 +16,6 @@ import * as styles from './index.module.scss';
 const featuredQuotaKeys = new Set<keyof SubscriptionPlanQuota>([
   'mauLimit',
   'machineToMachineLimit',
-  // Todo @xiaoyijun [Pricing] Remove feature flag
-  ...condArray(!isDevFeaturesEnabled && 'standardConnectorsLimit'),
   'rolesLimit',
   'scopesPerRoleLimit',
   'mfaEnabled',
@@ -54,10 +50,7 @@ function FeaturedPlanQuotaList({ plan }: Props) {
           quotaKey={quotaKey}
           quotaValue={quotaValue}
           isAddOnQuota={
-            // Todo @xiaoyijun [Pricing] Remove feature flag
-            isDevFeaturesEnabled &&
-            planId !== ReservedPlanId.Free &&
-            Boolean(quotaItemAddOnPhrasesMap[quotaKey])
+            planId !== ReservedPlanId.Free && Boolean(quotaItemAddOnPhrasesMap[quotaKey])
           }
           isComingSoonTagVisible={comingSoonQuotaKeys.includes(quotaKey)}
         />

@@ -6,7 +6,6 @@ import Modal from 'react-modal';
 import { useCloudApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import { pricingLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
@@ -73,7 +72,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
             </Trans>
           </DangerousRaw>
         }
-        size={isDevFeaturesEnabled ? 'large' : 'xlarge'}
+        size="large"
         onClose={onClose}
       >
         <div className={styles.container}>

@@ -31,7 +31,6 @@ export type SubscriptionPlanTable = Partial<
   SubscriptionPlanQuota & {
     // Base quota
     basePrice: string;
-    mauUnitPrice: string[];
     // UI and branding
     customCssEnabled: boolean;
     appLogoAndFaviconEnabled: boolean;

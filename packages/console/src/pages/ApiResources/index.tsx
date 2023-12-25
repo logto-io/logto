@@ -14,7 +14,7 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Tag from '@/ds-components/Tag';
@@ -80,9 +80,7 @@ function ApiResources() {
           },
         }}
         subHeader={
-          isCloud &&
-          // Todo @xiaoyijun [Pricing] Remove feature flag
-          isDevFeaturesEnabled && (
+          isCloud && (
             <ChargeNotification
               hasSurpassedLimit={hasSurpassedLimit}
               quotaItemPhraseKey="api_resource"

@@ -1,5 +1,5 @@
 import { ReservedPlanId } from '@logto/schemas';
-import { type Nullable, condArray } from '@silverhand/essentials';
+import { type Nullable } from '@silverhand/essentials';
 
 import {
   type SubscriptionPlanTable,
@@ -9,8 +9,6 @@ import {
   ReservedPlanName,
   type SubscriptionPlanQuota,
 } from '@/types/subscriptions';
-
-import { isDevFeaturesEnabled as isDevelopmentFeaturesEnabled } from './env';
 
 type EnabledFeatureMap = Record<string, boolean | undefined>;
 
@@ -130,7 +128,6 @@ export const hipaaOrBaaReportEnabledMap: Record<string, boolean | undefined> = {
  */
 const enterprisePlanTable: SubscriptionPlanTable = {
   basePrice: undefined,
-  mauUnitPrice: undefined,
   mauLimit: undefined,
   applicationsLimit: undefined,
   machineToMachineLimit: undefined,
@@ -141,8 +138,7 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   appLogoAndFaviconEnabled: true,
   darkModeEnabled: true,
   i18nEnabled: true,
-  // Todo @xiaoyijun [Pricing] Remove feature flag
-  mfaEnabled: isDevelopmentFeaturesEnabled ? undefined : true,
+  mfaEnabled: undefined,
   omniSignInEnabled: true,
   passwordSignInEnabled: true,
   passwordlessSignInEnabled: true,
@@ -158,11 +154,8 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   hooksLimit: undefined,
   communitySupportEnabled: true,
   ticketSupportResponseTime: undefined,
-  // Todo @xiaoyijun [Pricing] Remove feature flag
-  organizationsEnabled: isDevelopmentFeaturesEnabled ? undefined : true,
-  // Todo @xiaoyijun [Pricing] Remove feature flag
-  ssoEnabled: isDevelopmentFeaturesEnabled ? undefined : true,
-  // Todo @xiaoyijun [Pricing] Remove feature flag
+  organizationsEnabled: undefined,
+  ssoEnabled: undefined,
   soc2ReportEnabled: true,
   hipaaOrBaaReportEnabled: true,
 };
@@ -177,12 +170,7 @@ export const enterprisePlanTableData: SubscriptionPlanTableData = {
 };
 
 export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.freeze({
-  [SubscriptionPlanTableGroupKey.base]: [
-    'basePrice',
-    // TODO @xiaoyijun [Pricing] remove feature flag
-    ...condArray(!isDevelopmentFeaturesEnabled && 'mauUnitPrice'),
-    'mauLimit',
-  ],
+  [SubscriptionPlanTableGroupKey.base]: ['basePrice', 'mauLimit'],
   [SubscriptionPlanTableGroupKey.applications]: ['applicationsLimit', 'machineToMachineLimit'],
   [SubscriptionPlanTableGroupKey.resources]: ['resourcesLimit', 'scopesPerResourceLimit'],
   [SubscriptionPlanTableGroupKey.branding]: [
@@ -199,38 +187,30 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
     'emailConnectorsEnabled',
     'smsConnectorsEnabled',
     'socialConnectorsLimit',
-    // Todo @xiaoyijun [Pricing] Remove feature flag
-    ...condArray(!isDevelopmentFeaturesEnabled && 'standardConnectorsLimit'),
     'mfaEnabled',
     'ssoEnabled',
   ],
   [SubscriptionPlanTableGroupKey.roles]: [
     'userManagementEnabled',
     'rolesLimit',
-    // Todo @xiaoyijun [Pricing] Remove feature flag
-    ...condArray(isDevelopmentFeaturesEnabled && 'machineToMachineRolesLimit'),
+    'machineToMachineRolesLimit',
     'scopesPerRoleLimit',
   ],
   [SubscriptionPlanTableGroupKey.organizations]: [
     'organizationsEnabled',
-    // Todo @xiaoyijun [Pricing] Remove feature flag
-    ...condArray(
-      isDevelopmentFeaturesEnabled && 'allowedUsersPerOrganization',
-      isDevelopmentFeaturesEnabled && 'invitationEnabled',
-      isDevelopmentFeaturesEnabled && 'orgRolesLimit',
-      isDevelopmentFeaturesEnabled && 'orgPermissionsLimit',
-      isDevelopmentFeaturesEnabled && 'justInTimeProvisioningEnabled'
-    ),
+    'allowedUsersPerOrganization',
+    'invitationEnabled',
+    'orgRolesLimit',
+    'orgPermissionsLimit',
+    'justInTimeProvisioningEnabled',
   ],
   [SubscriptionPlanTableGroupKey.auditLogs]: ['auditLogsRetentionDays'],
   [SubscriptionPlanTableGroupKey.hooks]: ['hooksLimit'],
   [SubscriptionPlanTableGroupKey.support]: [
     'communitySupportEnabled',
     'ticketSupportResponseTime',
-    ...condArray(
-      isDevelopmentFeaturesEnabled && 'soc2ReportEnabled',
-      isDevelopmentFeaturesEnabled && 'hipaaOrBaaReportEnabled'
-    ),
+    'soc2ReportEnabled',
+    'hipaaOrBaaReportEnabled',
   ],
 }) satisfies SubscriptionPlanTableGroupKeyMap;
 

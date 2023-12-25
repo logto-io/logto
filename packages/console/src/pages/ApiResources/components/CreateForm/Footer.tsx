@@ -5,7 +5,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
@@ -26,10 +25,9 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
     currentPlan &&
     hasReachedLimit &&
     /**
-     * Todo @xiaoyijun [Pricing] Remove feature flag
      * We don't guard API resources quota limit for paid plan, since it's an add-on feature
      */
-    (!isDevFeaturesEnabled || currentPlan.id === ReservedPlanId.Free)
+    currentPlan.id === ReservedPlanId.Free
   ) {
     return (
       <QuotaGuardFooter>

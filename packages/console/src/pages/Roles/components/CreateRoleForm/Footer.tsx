@@ -1,4 +1,4 @@
-import { type RoleResponse, RoleType, ReservedPlanId } from '@logto/schemas';
+import { type RoleResponse, RoleType } from '@logto/schemas';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
@@ -65,12 +65,9 @@ function Footer({ roleType, selectedScopesCount, isCreating, onClickCreate }: Pr
             t('upsell.paywall.roles', { count: currentPlan.quota.rolesLimit ?? 0 })}
           {hasRoleReachedLimit &&
             roleType === RoleType.MachineToMachine &&
-            /* Todo @xiaoyijun [Pricing] Remove feature flag */
-            (!isDevFeaturesEnabled && currentPlan.id === ReservedPlanId.Free
-              ? t('upsell.paywall.deprecated_machine_to_machine_feature')
-              : t('upsell.paywall.machine_to_machine_roles', {
-                  count: currentPlan.quota.machineToMachineRolesLimit ?? 0,
-                }))}
+            t('upsell.paywall.machine_to_machine_roles', {
+              count: currentPlan.quota.machineToMachineRolesLimit ?? 0,
+            })}
           {/* Role scopes limit paywall */}
           {!hasRoleReachedLimit &&
             hasScopesPerRoleSurpassedLimit &&
