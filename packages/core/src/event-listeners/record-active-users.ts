@@ -1,12 +1,9 @@
 import { generateStandardId } from '@logto/shared';
 
-import { getUtcStartOfToday } from '#src/oidc/utils.js';
+import { getUtcStartOfTheDay } from '#src/oidc/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 
-export const accessTokenIssuedListener = async (
-  accessToken: { accountId?: string },
-  queries: Queries
-) => {
+export const recordActiveUsers = async (accessToken: { accountId?: string }, queries: Queries) => {
   const { accountId } = accessToken;
   const { insertActiveUser } = queries.dailyActiveUsers;
 
@@ -19,6 +16,6 @@ export const accessTokenIssuedListener = async (
   await insertActiveUser({
     id: generateStandardId(),
     userId: accountId,
-    date: getUtcStartOfToday().getTime(),
+    date: getUtcStartOfTheDay(new Date()).getTime(),
   });
 };

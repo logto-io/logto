@@ -7,6 +7,7 @@ import { createApplicationsRolesQueries } from '#src/queries/applications-roles.
 import { createConnectorQueries } from '#src/queries/connector.js';
 import { createCustomPhraseQueries } from '#src/queries/custom-phrase.js';
 import { createDailyActiveUsersQueries } from '#src/queries/daily-active-user.js';
+import { createDailyTokenUsageQueries } from '#src/queries/daily-token-usage.js';
 import { createDomainsQueries } from '#src/queries/domains.js';
 import { createHooksQueries } from '#src/queries/hooks.js';
 import { createLogQueries } from '#src/queries/log.js';
@@ -46,6 +47,7 @@ export default class Queries {
   hooks = createHooksQueries(this.pool);
   domains = createDomainsQueries(this.pool);
   dailyActiveUsers = createDailyActiveUsersQueries(this.pool);
+  dailyTokenUsage = createDailyTokenUsageQueries(this.pool);
   organizations = new OrganizationQueries(this.pool);
   ssoConnectors = new SsoConnectorQueries(this.pool);
   userSsoIdentities = new UserSsoIdentityQueries(this.pool);
