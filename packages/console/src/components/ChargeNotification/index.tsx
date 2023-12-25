@@ -5,7 +5,6 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { pricingLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
@@ -28,11 +27,6 @@ function ChargeNotification({ hasSurpassedLimit, quotaItem, quotaLimit, classNam
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-
-  // Todo @xiaoyijun [Pricing] Remove feature flag
-  if (!isDevFeaturesEnabled) {
-    return null;
-  }
 
   if (
     !hasSurpassedLimit ||
