@@ -32,6 +32,8 @@ const quota_item = {
     limited_other: '{{count, number}} 个机器到机器应用',
     unlimited: '无限制机器到机器应用',
     not_eligible: '移除你的机器到机器应用',
+    /** UNTRANSLATED */
+    add_on: 'Additional machine-to-machine apps',
   },
   resources_limit: {
     name: 'API 资源',

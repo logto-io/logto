@@ -32,6 +32,8 @@ const quota_item = {
     limited_other: '{{count, number}} приложения для машин ко машине',
     unlimited: 'Неограниченное количество приложений для машин ко машине',
     not_eligible: 'Удалите свои приложения для машин ко машине',
+    /** UNTRANSLATED */
+    add_on: 'Additional machine-to-machine apps',
   },
   resources_limit: {
     name: 'API ресурсы',

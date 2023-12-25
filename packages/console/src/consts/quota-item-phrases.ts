@@ -105,3 +105,12 @@ export const quotaItemNotEligiblePhrasesMap: Record<
   organizationsEnabled: 'organizations_enabled.not_eligible',
   ssoEnabled: 'sso_enabled.not_eligible',
 };
+
+export const quotaItemAddOnPhrasesMap: Partial<
+  Record<
+    keyof SubscriptionPlanQuota,
+    TFuncKey<'translation', 'admin_console.subscription.quota_item'>
+  >
+> = {
+  machineToMachineLimit: 'machine_to_machine_limit.add_on',
+};

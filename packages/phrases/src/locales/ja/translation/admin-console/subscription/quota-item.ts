@@ -32,6 +32,8 @@ const quota_item = {
     limited_other: '{{count, number}} マシン間アプリケーション',
     unlimited: '無制限のマシン間アプリケーション',
     not_eligible: 'マシン間アプリケーションを削除してください',
+    /** UNTRANSLATED */
+    add_on: 'Additional machine-to-machine apps',
   },
   resources_limit: {
     name: 'APIリソース',

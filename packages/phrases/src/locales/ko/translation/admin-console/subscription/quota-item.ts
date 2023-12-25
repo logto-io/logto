@@ -32,6 +32,8 @@ const quota_item = {
     limited_other: '{{count, number}} 기계 간 앱',
     unlimited: '제한 없는 기계 간 앱',
     not_eligible: '기계 간 앱을 제거하십시오',
+    /** UNTRANSLATED */
+    add_on: 'Additional machine-to-machine apps',
   },
   resources_limit: {
     name: 'API 리소스',

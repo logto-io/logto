@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.featuredQuotaList {
+  flex: 1;
+  padding-bottom: _.unit(8);
+}
