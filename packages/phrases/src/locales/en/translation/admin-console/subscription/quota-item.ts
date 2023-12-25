@@ -134,6 +134,13 @@ const quota_item = {
     unlimited: 'Customer ticket support',
     not_eligible: 'No customer ticket support',
   },
+  email_ticket_support: {
+    name: 'Email ticket support',
+    limited: '{{count, number}} hour email ticket support',
+    limited_other: '{{count, number}} hours email ticket support',
+    unlimited: 'Email ticket support',
+    not_eligible: 'No email ticket support',
+  },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',

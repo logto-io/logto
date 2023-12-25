@@ -110,6 +110,18 @@ export const justInTimeProvisioningEnabledMap: Record<string, boolean | undefine
   [ReservedPlanId.Pro]: undefined,
 };
 
+export const soc2ReportEnabledMap: Record<string, boolean | undefined> = {
+  [ReservedPlanId.Free]: false,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
+};
+
+export const hipaaOrBaaReportEnabledMap: Record<string, boolean | undefined> = {
+  [ReservedPlanId.Free]: false,
+  [ReservedPlanId.Hobby]: false,
+  [ReservedPlanId.Pro]: false,
+};
+
 /**
  * Note: this is only for display purpose.
  *
@@ -150,6 +162,9 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   organizationsEnabled: isDevelopmentFeaturesEnabled ? undefined : true,
   // Todo @xiaoyijun [Pricing] Remove feature flag
   ssoEnabled: isDevelopmentFeaturesEnabled ? undefined : true,
+  // Todo @xiaoyijun [Pricing] Remove feature flag
+  soc2ReportEnabled: true,
+  hipaaOrBaaReportEnabled: true,
 };
 
 /**
@@ -209,7 +224,14 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
   ],
   [SubscriptionPlanTableGroupKey.auditLogs]: ['auditLogsRetentionDays'],
   [SubscriptionPlanTableGroupKey.hooks]: ['hooksLimit'],
-  [SubscriptionPlanTableGroupKey.support]: ['communitySupportEnabled', 'ticketSupportResponseTime'],
+  [SubscriptionPlanTableGroupKey.support]: [
+    'communitySupportEnabled',
+    'ticketSupportResponseTime',
+    ...condArray(
+      isDevelopmentFeaturesEnabled && 'soc2ReportEnabled',
+      isDevelopmentFeaturesEnabled && 'hipaaOrBaaReportEnabled'
+    ),
+  ],
 }) satisfies SubscriptionPlanTableGroupKeyMap;
 
 export const planQuotaItemOrder = Object.values(planTableGroupKeyMap).flat();

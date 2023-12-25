@@ -50,6 +50,9 @@ export type SubscriptionPlanTable = Partial<
     orgRolesLimit: Nullable<number>;
     orgPermissionsLimit: Nullable<number>;
     justInTimeProvisioningEnabled: boolean;
+    // Support
+    soc2ReportEnabled: boolean;
+    hipaaOrBaaReportEnabled: boolean;
   }
 >;
 

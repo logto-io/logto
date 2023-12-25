@@ -63,10 +63,17 @@ const quota_table = {
     just_in_time_provisioning: 'Пакетная настройка по запросу',
   },
   support: {
-    title: 'Поддержка',
+    /** UNTRANSLATED */
+    title: 'Compliance and support',
     community: 'Сообщество',
     customer_ticket: 'Техническая поддержка',
     premium: 'Премиум',
+    /** UNTRANSLATED */
+    email_ticket_support: 'Email ticket support',
+    /** UNTRANSLATED */
+    soc2_report: 'SOC2 report (Coming soon)',
+    /** UNTRANSLATED */
+    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
   mau_unit_price_footnote:
     '* Ваши активные пользователи в месяц (MAU) разделены на 3 уровня в зависимости от того, как часто они входят в систему в течение биллингового периода. Каждый уровень имеет свою стоимость за единицу MAU.',

@@ -63,10 +63,17 @@ const quota_table = {
     just_in_time_provisioning: '即時規定',
   },
   support: {
-    title: '支援',
+    /** UNTRANSLATED */
+    title: 'Compliance and support',
     community: '社群',
     customer_ticket: '客戶支援票據',
     premium: '高級版',
+    /** UNTRANSLATED */
+    email_ticket_support: 'Email ticket support',
+    /** UNTRANSLATED */
+    soc2_report: 'SOC2 report (Coming soon)',
+    /** UNTRANSLATED */
+    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
   mau_unit_price_footnote:
     '* 您的每月活躍用戶（MAU）將根據在結算週期內登錄的頻率分為3個層級。每個層級都有不同的MAU單價。',

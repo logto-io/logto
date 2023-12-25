@@ -42,7 +42,12 @@ const planQuotaKeyPhraseMap: {
   hooksLimit: 'hooks.hooks',
   auditLogsRetentionDays: 'audit_logs.retention',
   communitySupportEnabled: 'support.community',
-  ticketSupportResponseTime: 'support.customer_ticket',
+  /**
+   * Todo @xiaoyijun [Pricing] Remove feature flag
+   */
+  ticketSupportResponseTime: isDevFeaturesEnabled
+    ? 'support.email_ticket_support'
+    : 'support.customer_ticket',
   /**
    * Todo @xiaoyijun [Pricing] Remove feature flag
    */
@@ -54,6 +59,8 @@ const planQuotaKeyPhraseMap: {
   orgRolesLimit: 'organizations.org_roles',
   orgPermissionsLimit: 'organizations.org_permissions',
   justInTimeProvisioningEnabled: 'organizations.just_in_time_provisioning',
+  soc2ReportEnabled: 'support.soc2_report',
+  hipaaOrBaaReportEnabled: 'support.hipaa_or_baa_report',
 };
 
 type Props = {

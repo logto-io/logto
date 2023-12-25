@@ -63,10 +63,17 @@ const quota_table = {
     just_in_time_provisioning: '적시 프로비저닝',
   },
   support: {
-    title: '지원',
+    /** UNTRANSLATED */
+    title: 'Compliance and support',
     community: '커뮤니티',
     customer_ticket: '지원 티켓',
     premium: '프리미엄',
+    /** UNTRANSLATED */
+    email_ticket_support: 'Email ticket support',
+    /** UNTRANSLATED */
+    soc2_report: 'SOC2 report (Coming soon)',
+    /** UNTRANSLATED */
+    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
   mau_unit_price_footnote:
     '* 월간 활성 사용자(MAU)는 청구 주기 동안 로그인 빈도에 따라 3단계로 나뉩니다. 각 단계마다 달리 책정되는 MAU 단가가 있습니다.',

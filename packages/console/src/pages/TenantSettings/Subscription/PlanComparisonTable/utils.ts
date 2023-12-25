@@ -6,6 +6,7 @@ import {
   customCssEnabledMap,
   darkModeEnabledMap,
   emailConnectorsEnabledMap,
+  hipaaOrBaaReportEnabledMap,
   i18nEnabledMap,
   invitationEnabledMap,
   justInTimeProvisioningEnabledMap,
@@ -14,6 +15,7 @@ import {
   passwordSignInEnabledMap,
   passwordlessSignInEnabledMap,
   smsConnectorsEnabledMap,
+  soc2ReportEnabledMap,
   userManagementEnabledMap,
 } from '@/consts/plan-quotas';
 import { type SubscriptionPlanTableData, type SubscriptionPlan } from '@/types/subscriptions';
@@ -56,6 +58,8 @@ export const constructPlanTableDataArray = (
         orgRolesLimit: orgRolesLimitMap[id],
         orgPermissionsLimit: orgPermissionsLimitMap[id],
         justInTimeProvisioningEnabled: justInTimeProvisioningEnabledMap[id],
+        soc2ReportEnabled: soc2ReportEnabledMap[id],
+        hipaaOrBaaReportEnabled: hipaaOrBaaReportEnabledMap[id],
       },
     };
   });

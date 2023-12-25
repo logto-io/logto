@@ -2,6 +2,8 @@ import { type TFuncKey } from 'i18next';
 
 import { type SubscriptionPlanQuota } from '@/types/subscriptions';
 
+import { isDevFeaturesEnabled } from './env';
+
 export const quotaItemPhrasesMap: Record<
   keyof SubscriptionPlanQuota,
   TFuncKey<'translation', 'admin_console.subscription.quota_item'>
@@ -22,7 +24,12 @@ export const quotaItemPhrasesMap: Record<
   hooksLimit: 'hooks_limit.name',
   auditLogsRetentionDays: 'audit_logs_retention_days.name',
   communitySupportEnabled: 'community_support_enabled.name',
-  ticketSupportResponseTime: 'customer_ticket_support.name',
+  /**
+   * Todo @xiaoyijun [Pricing] Remove feature flag
+   */
+  ticketSupportResponseTime: isDevFeaturesEnabled
+    ? 'email_ticket_support.name'
+    : 'customer_ticket_support.name',
   mfaEnabled: 'mfa_enabled.name',
   organizationsEnabled: 'organizations_enabled.name',
   ssoEnabled: 'sso_enabled.name',
@@ -48,7 +55,12 @@ export const quotaItemUnlimitedPhrasesMap: Record<
   hooksLimit: 'hooks_limit.unlimited',
   auditLogsRetentionDays: 'audit_logs_retention_days.unlimited',
   communitySupportEnabled: 'community_support_enabled.unlimited',
-  ticketSupportResponseTime: 'customer_ticket_support.unlimited',
+  /**
+   * Todo @xiaoyijun [Pricing] Remove feature flag
+   */
+  ticketSupportResponseTime: isDevFeaturesEnabled
+    ? 'email_ticket_support.unlimited'
+    : 'customer_ticket_support.unlimited',
   mfaEnabled: 'mfa_enabled.unlimited',
   organizationsEnabled: 'organizations_enabled.unlimited',
   ssoEnabled: 'sso_enabled.unlimited',
@@ -74,7 +86,12 @@ export const quotaItemLimitedPhrasesMap: Record<
   hooksLimit: 'hooks_limit.limited',
   auditLogsRetentionDays: 'audit_logs_retention_days.limited',
   communitySupportEnabled: 'community_support_enabled.limited',
-  ticketSupportResponseTime: 'customer_ticket_support.limited',
+  /**
+   * Todo @xiaoyijun [Pricing] Remove feature flag
+   */
+  ticketSupportResponseTime: isDevFeaturesEnabled
+    ? 'email_ticket_support.limited'
+    : 'customer_ticket_support.limited',
   mfaEnabled: 'mfa_enabled.limited',
   organizationsEnabled: 'organizations_enabled.limited',
   ssoEnabled: 'sso_enabled.limited',
@@ -100,7 +117,12 @@ export const quotaItemNotEligiblePhrasesMap: Record<
   hooksLimit: 'hooks_limit.not_eligible',
   auditLogsRetentionDays: 'audit_logs_retention_days.not_eligible',
   communitySupportEnabled: 'community_support_enabled.not_eligible',
-  ticketSupportResponseTime: 'customer_ticket_support.not_eligible',
+  /**
+   * Todo @xiaoyijun [Pricing] Remove feature flag
+   */
+  ticketSupportResponseTime: isDevFeaturesEnabled
+    ? 'email_ticket_support.not_eligible'
+    : 'customer_ticket_support.not_eligible',
   mfaEnabled: 'mfa_enabled.not_eligible',
   organizationsEnabled: 'organizations_enabled.not_eligible',
   ssoEnabled: 'sso_enabled.not_eligible',

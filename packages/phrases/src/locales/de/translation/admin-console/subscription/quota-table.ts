@@ -63,10 +63,17 @@ const quota_table = {
     just_in_time_provisioning: 'Bedarfsgesteuerte Bereitstellung',
   },
   support: {
-    title: 'Support',
+    /** UNTRANSLATED */
+    title: 'Compliance and support',
     community: 'Gemeinschaft',
     customer_ticket: 'Support-Ticket',
     premium: 'Premium',
+    /** UNTRANSLATED */
+    email_ticket_support: 'Email ticket support',
+    /** UNTRANSLATED */
+    soc2_report: 'SOC2 report (Coming soon)',
+    /** UNTRANSLATED */
+    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
   mau_unit_price_footnote:
     '* Ihre monatlich aktiven Benutzer (MAU) werden in 3 Stufen unterteilt, basierend darauf, wie oft sie sich während des Abrechnungszeitraums anmelden. Jede Stufe hat einen anderen Preis pro MAU-Einheit.',

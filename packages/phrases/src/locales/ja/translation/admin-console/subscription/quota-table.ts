@@ -63,10 +63,17 @@ const quota_table = {
     just_in_time_provisioning: 'ジャストインタイムプロビジョニング',
   },
   support: {
-    title: 'サポート',
+    /** UNTRANSLATED */
+    title: 'Compliance and support',
     community: 'コミュニティ',
     customer_ticket: 'カスタマーチケット',
     premium: 'プレミアム',
+    /** UNTRANSLATED */
+    email_ticket_support: 'Email ticket support',
+    /** UNTRANSLATED */
+    soc2_report: 'SOC2 report (Coming soon)',
+    /** UNTRANSLATED */
+    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
   mau_unit_price_footnote:
     '* 月間アクティブユーザー（MAU）は、請求サイクル中のログイン頻度に基づいて3つの階層に分かれます。各階層ごとに異なるMAU単価が適用されます。',

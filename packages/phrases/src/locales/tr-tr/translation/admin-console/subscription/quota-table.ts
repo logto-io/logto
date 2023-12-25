@@ -63,10 +63,17 @@ const quota_table = {
     just_in_time_provisioning: 'İstisnai olana kadar temin',
   },
   support: {
-    title: 'Destek',
+    /** UNTRANSLATED */
+    title: 'Compliance and support',
     community: 'Topluluk',
     customer_ticket: 'Müşteri destek bileti',
     premium: 'Premium',
+    /** UNTRANSLATED */
+    email_ticket_support: 'Email ticket support',
+    /** UNTRANSLATED */
+    soc2_report: 'SOC2 report (Coming soon)',
+    /** UNTRANSLATED */
+    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
   mau_unit_price_footnote:
     '* Aylık etkin kullanıcılarınız (MAU), faturalandırma dönemi boyunca ne sıklıkla oturum açtıklarına göre 3 düzeye ayrılır. Her düzeyin farklı bir MAU birim fiyatı vardır.',
