@@ -42,13 +42,19 @@ function ChargeNotification({
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const { configs, updateConfigs } = useConfigs();
-  const checkedChargeNotification = configs?.checkedChargeNotification;
+
+  // Display null when loading
+  if (!currentPlan || !configs) {
+    return null;
+  }
+
+  const { checkedChargeNotification } = configs;
 
   if (
     Boolean(checkedChargeNotification?.[checkedFlagKey]) ||
     !hasSurpassedLimit ||
     // No charge notification for free plan
-    currentPlan?.id === ReservedPlanId.Free
+    currentPlan.id === ReservedPlanId.Free
   ) {
     return null;
   }
