@@ -82,6 +82,7 @@ const defaultTenantResponse: TenantResponse = {
   usage: {
     activeUsers: 0,
     cost: 0,
+    tokenUsage: 0,
   },
   openInvoices: [],
   isSuspended: false,

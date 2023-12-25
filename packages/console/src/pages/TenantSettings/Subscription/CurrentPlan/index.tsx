@@ -1,11 +1,16 @@
+import { cond } from '@silverhand/essentials';
+
 import { type SubscriptionUsage, type Subscription } from '@/cloud/types/router';
 import BillInfo from '@/components/BillInfo';
+import ChargeNotification from '@/components/ChargeNotification';
 import FormCard from '@/components/FormCard';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
 import PlanUsage from '@/components/PlanUsage';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import { type SubscriptionPlan } from '@/types/subscriptions';
+import { hasSurpassedQuotaLimit } from '@/utils/quota';
 
 import MauLimitExceedNotification from './MauLimitExceededNotification';
 import PaymentOverdueNotification from './PaymentOverdueNotification';
@@ -18,7 +23,17 @@ type Props = {
 };
 
 function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Props) {
-  const { id, name } = subscriptionPlan;
+  const {
+    id,
+    name,
+    quota: { tokenLimit },
+  } = subscriptionPlan;
+
+  const hasTokenSurpassedLimit = hasSurpassedQuotaLimit({
+    quotaKey: 'tokenLimit',
+    usage: subscriptionUsage.tokenUsage,
+    plan: subscriptionPlan,
+  });
 
   return (
     <FormCard title="subscription.current_plan" description="subscription.current_plan_description">
@@ -48,6 +63,16 @@ function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Prop
         currentPlan={subscriptionPlan}
         className={styles.notification}
       />
+      {/* Todo @xiaoyijun [Pricing] Remove feature flag */}
+      {isDevFeaturesEnabled && (
+        <ChargeNotification
+          hasSurpassedLimit={hasTokenSurpassedLimit}
+          quotaItemPhraseKey="tokens"
+          checkedFlagKey="token"
+          className={styles.notification}
+          quotaLimit={cond(typeof tokenLimit === 'number' && tokenLimit)}
+        />
+      )}
       <PaymentOverdueNotification className={styles.notification} />
     </FormCard>
   );

@@ -60,6 +60,7 @@ export const adminConsoleDataGuard = z.object({
     .optional(),
   checkedChargeNotification: z
     .object({
+      token: z.boolean().optional(),
       apiResource: z.boolean().optional(),
       machineToMachineApp: z.boolean().optional(),
     })
