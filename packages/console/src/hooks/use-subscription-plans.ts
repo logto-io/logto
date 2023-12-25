@@ -19,6 +19,7 @@ import { addSupportQuotaToPlan } from '@/utils/subscription';
  */
 const useSubscriptionPlans = () => {
   const cloudApi = useCloudApi();
+
   const useSwrResponse = useSWRImmutable<SubscriptionPlanResponse[], Error>(
     isCloud && '/api/subscription-plans',
     async () => cloudApi.get('/api/subscription-plans')

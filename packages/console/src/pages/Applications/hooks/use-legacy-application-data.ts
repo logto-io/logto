@@ -2,11 +2,12 @@ import { type Application } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 
+import { defaultPageSize } from '@/consts';
 import { type RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl } from '@/utils/url';
 
-const pageSize = 2;
+const pageSize = defaultPageSize;
 const applicationsEndpoint = 'api/applications';
 
 /**
