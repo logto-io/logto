@@ -63,10 +63,17 @@ const quota_table = {
     just_in_time_provisioning: '即时配置',
   },
   support: {
-    title: '支持',
+    /** UNTRANSLATED */
+    title: 'Compliance and support',
     community: '社区',
     customer_ticket: '客户支持票据',
     premium: '高级版',
+    /** UNTRANSLATED */
+    email_ticket_support: 'Email ticket support',
+    /** UNTRANSLATED */
+    soc2_report: 'SOC2 report (Coming soon)',
+    /** UNTRANSLATED */
+    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
   mau_unit_price_footnote:
     '* 您的每月活跃用户（MAU）根据在结算周期内登录的频率分为3个层级。每个层级的MAU单价不同。',

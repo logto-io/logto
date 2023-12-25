@@ -135,6 +135,18 @@ const quota_item = {
     unlimited: 'Apoio de bilhetes de cliente',
     not_eligible: 'Sem apoio de bilhetes de cliente',
   },
+  email_ticket_support: {
+    /** UNTRANSLATED */
+    name: 'Email ticket support',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} hour email ticket support',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} hours email ticket support',
+    /** UNTRANSLATED */
+    unlimited: 'Email ticket support',
+    /** UNTRANSLATED */
+    not_eligible: 'No email ticket support',
+  },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',

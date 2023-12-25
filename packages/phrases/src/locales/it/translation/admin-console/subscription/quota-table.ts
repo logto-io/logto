@@ -63,10 +63,17 @@ const quota_table = {
     just_in_time_provisioning: 'Provisioning just-in-time',
   },
   support: {
-    title: 'Assistenza',
+    /** UNTRANSLATED */
+    title: 'Compliance and support',
     community: 'Community',
     customer_ticket: 'Ticket di assistenza',
     premium: 'Premium',
+    /** UNTRANSLATED */
+    email_ticket_support: 'Email ticket support',
+    /** UNTRANSLATED */
+    soc2_report: 'SOC2 report (Coming soon)',
+    /** UNTRANSLATED */
+    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
   mau_unit_price_footnote:
     "* I vostri utenti attivi mensili (MAU) sono divisi in 3 livelli in base a quante volte effettuano l'accesso durante il ciclo di fatturazione. Ogni livello ha un prezzo diverso per unità MAU.",

@@ -63,10 +63,13 @@ const quota_table = {
     just_in_time_provisioning: 'Just-in-time provisioning',
   },
   support: {
-    title: 'Support',
+    title: 'Compliance and support',
     community: 'Community',
     customer_ticket: 'Ticket support',
     premium: 'Premium',
+    email_ticket_support: 'Email ticket support',
+    soc2_report: 'SOC2 report (Coming soon)',
+    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
   mau_unit_price_footnote:
     '* Your monthly active users (MAU) are divided into 3 tiers based on how often they log in during the billing cycle. Each tier has a different price per MAU unit.',

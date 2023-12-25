@@ -170,4 +170,10 @@ export const quotaValueRenderer: Record<
       formatter={(quota) => `(${quota}h)`}
     />
   ),
+  soc2ReportEnabled: ({ table: { soc2ReportEnabled } }) => (
+    <GenericFeatureFlag isEnabled={soc2ReportEnabled} />
+  ),
+  hipaaOrBaaReportEnabled: ({ table: { hipaaOrBaaReportEnabled } }) => (
+    <GenericFeatureFlag isEnabled={hipaaOrBaaReportEnabled} />
+  ),
 };
