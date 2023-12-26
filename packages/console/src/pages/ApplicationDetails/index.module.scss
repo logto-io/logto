@@ -19,3 +19,12 @@
   font: var(--font-body-2);
   color: var(--color-text-secondary);
 }
+
+.fieldButton {
+  margin-top: _.unit(2);
+}
+
+.trailingIcon {
+  width: 16px;
+  height: 16px;
+}

@@ -5,9 +5,15 @@ const application_details = {
   settings: '設定',
   settings_description:
     'アプリケーションは、Logto for OIDC、サインインエクスペリエンス、監査ログなどでアプリケーションを識別するために使用されます。',
-  advanced_settings: '高度な設定',
-  advanced_settings_description:
-    '高度な設定にはOIDC関連用語が含まれます。詳細については、トークンエンドポイントを確認してください。',
+  /** UNTRANSLATED */
+  endpoints_and_credentials: 'Endpoints & Credentials',
+  /** UNTRANSLATED */
+  endpoints_and_credentials_description:
+    'Use the following endpoints and credentials to set up the OIDC connection in your application.',
+  /** UNTRANSLATED */
+  refresh_token_settings: 'Refresh token',
+  /** UNTRANSLATED */
+  refresh_token_settings_description: 'Manage the refresh token rules for this application.',
   application_roles: '役割',
   machine_logs: 'マシンログ',
   application_name: 'アプリケーション名',
@@ -18,6 +24,10 @@ const application_details = {
   authorization_endpoint: '認可エンドポイント',
   authorization_endpoint_tip:
     '認証と認可を実行するエンドポイントです。OpenID Connectの<a>認証</a>に使用されます。',
+  /** UNTRANSLATED */
+  show_endpoint_details: 'Show endpoint details',
+  /** UNTRANSLATED */
+  hide_endpoint_details: 'Hide endpoint details',
   logto_endpoint: 'Logto エンドポイント',
   application_id: 'アプリID',
   application_id_tip:

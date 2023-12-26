@@ -1,14 +1,11 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
-import { AppDataContext } from '@/contexts/AppDataProvider';
-import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
 import {
@@ -17,7 +14,6 @@ import {
 } from '@/ds-components/MultiTextInput/utils';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
-import useCustomDomain from '@/hooks/use-custom-domain';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 type Props = {
@@ -25,9 +21,6 @@ type Props = {
 };
 
 function Settings({ data }: Props) {
-  const { tenantEndpoint } = useContext(AppDataContext);
-  const { applyDomain: applyCustomDomain } = useCustomDomain();
-
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const {
@@ -36,7 +29,7 @@ function Settings({ data }: Props) {
     formState: { errors },
   } = useFormContext<Application>();
 
-  const { secret, type: applicationType } = data;
+  const { type: applicationType } = data;
 
   const isNativeApp = applicationType === ApplicationType.Native;
   const uriPatternRules: MultiTextInputRule = {
@@ -62,28 +55,12 @@ function Settings({ data }: Props) {
           placeholder={t('application_details.application_name_placeholder')}
         />
       </FormField>
-      {tenantEndpoint && (
-        <FormField title="application_details.logto_endpoint">
-          <CopyToClipboard
-            isFullWidth
-            value={applyCustomDomain(tenantEndpoint.href)}
-            variant="border"
-          />
-        </FormField>
-      )}
       <FormField title="application_details.description">
         <TextInput
           {...register('description')}
           placeholder={t('application_details.description_placeholder')}
         />
       </FormField>
-      {[ApplicationType.Traditional, ApplicationType.MachineToMachine].includes(
-        applicationType
-      ) && (
-        <FormField title="application_details.application_secret">
-          <CopyToClipboard hasVisibilityToggle isFullWidth value={secret} variant="border" />
-        </FormField>
-      )}
       {applicationType !== ApplicationType.MachineToMachine && (
         <Controller
           name="oidcClientMetadata.redirectUris"

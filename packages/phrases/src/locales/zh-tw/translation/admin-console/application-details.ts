@@ -4,9 +4,15 @@ const application_details = {
   check_guide: '查看指南',
   settings: '設置',
   settings_description: '應用程式用於在 Logto OIDC、登錄體驗、審計日誌等方面識別你的應用程式。',
-  advanced_settings: '高級設置',
-  advanced_settings_description:
-    '高級設置包括 OIDC 相關術語。你可以查看 Token Endpoint 以獲取更多信息。',
+  /** UNTRANSLATED */
+  endpoints_and_credentials: 'Endpoints & Credentials',
+  /** UNTRANSLATED */
+  endpoints_and_credentials_description:
+    'Use the following endpoints and credentials to set up the OIDC connection in your application.',
+  /** UNTRANSLATED */
+  refresh_token_settings: 'Refresh token',
+  /** UNTRANSLATED */
+  refresh_token_settings_description: 'Manage the refresh token rules for this application.',
   application_roles: '角色',
   machine_logs: '機器日誌',
   application_name: '應用程式姓名',
@@ -16,6 +22,10 @@ const application_details = {
   config_endpoint: 'OpenID Provider 配置端點',
   authorization_endpoint: '授權端點',
   authorization_endpoint_tip: '進行驗證與授權的端點。用於 OpenID Connect 中的 <a>驗證</a> 流程。',
+  /** UNTRANSLATED */
+  show_endpoint_details: 'Show endpoint details',
+  /** UNTRANSLATED */
+  hide_endpoint_details: 'Hide endpoint details',
   logto_endpoint: 'Logto endpoint',
   application_id: '應用程式 ID',
   application_id_tip:

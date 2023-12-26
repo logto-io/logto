@@ -5,9 +5,15 @@ const application_details = {
   settings: '설정',
   settings_description:
     '애플리케이션은 Logto for OIDC, 로그인 환경, 감사 로그 등에서 애플리케이션을 식별하는 데 사용돼요.',
-  advanced_settings: '고급 설정',
-  advanced_settings_description:
-    '고급 설정에는 OIDC 관련 용어가 포함돼요. 자세한 내용은 토큰 엔드포인트에서 확인할 수 있어요.',
+  /** UNTRANSLATED */
+  endpoints_and_credentials: 'Endpoints & Credentials',
+  /** UNTRANSLATED */
+  endpoints_and_credentials_description:
+    'Use the following endpoints and credentials to set up the OIDC connection in your application.',
+  /** UNTRANSLATED */
+  refresh_token_settings: 'Refresh token',
+  /** UNTRANSLATED */
+  refresh_token_settings_description: 'Manage the refresh token rules for this application.',
   application_roles: '역할',
   machine_logs: '기계 로그',
   application_name: '어플리케이션 이름',
@@ -18,6 +24,10 @@ const application_details = {
   authorization_endpoint: '인증 Endpoint',
   authorization_endpoint_tip:
     '인증 및 권한 부여를 진행할 End-Point예요. OpenID Connect <a>인증</a>에서 사용되던 값이에요.',
+  /** UNTRANSLATED */
+  show_endpoint_details: 'Show endpoint details',
+  /** UNTRANSLATED */
+  hide_endpoint_details: 'Hide endpoint details',
   logto_endpoint: 'Logto endpoint',
   application_id: '앱 ID',
   application_id_tip:
