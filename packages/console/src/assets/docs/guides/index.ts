@@ -22,6 +22,7 @@ import webGo from './web-go/index';
 import webGptPlugin from './web-gpt-plugin/index';
 import webNext from './web-next/index';
 import webNextAppRouter from './web-next-app-router/index';
+import webNextServerActions from './web-next-server-actions/index';
 import webOutline from './web-outline/index';
 import webPhp from './web-php/index';
 import webPython from './web-python/index';
@@ -41,6 +42,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./spa-react/logo.svg')),
     Component: lazy(async () => import('./spa-react/README.mdx')),
     metadata: spaReact,
+  },
+  {
+    order: 1.1,
+    id: 'web-next-server-actions',
+    Logo: lazy(async () => import('./web-next-server-actions/logo.svg')),
+    Component: lazy(async () => import('./web-next-server-actions/README.mdx')),
+    metadata: webNextServerActions,
   },
   {
     order: 1.1,
