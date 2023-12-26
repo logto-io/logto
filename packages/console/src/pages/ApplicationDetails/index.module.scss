@@ -28,3 +28,13 @@
   width: 16px;
   height: 16px;
 }
+
+.tabContainer {
+  flex-direction: column;
+  flex-grow: 1;
+
+  &[data-active='true'] {
+    display: flex;
+  }
+}
+

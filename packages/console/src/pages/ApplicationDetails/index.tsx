@@ -228,7 +228,10 @@ function ApplicationDetails() {
               </>
             )}
           </TabNav>
-          <TabWrapper isActive={tab === ApplicationDetailsTabs.Settings}>
+          <TabWrapper
+            isActive={tab === ApplicationDetailsTabs.Settings}
+            className={styles.tabContainer}
+          >
             <FormProvider {...formMethods}>
               <DetailsForm
                 isDirty={isDirty}
@@ -247,10 +250,16 @@ function ApplicationDetails() {
 
           {data.type === ApplicationType.MachineToMachine && (
             <>
-              <TabWrapper isActive={tab === ApplicationDetailsTabs.Roles}>
+              <TabWrapper
+                isActive={tab === ApplicationDetailsTabs.Roles}
+                className={styles.tabContainer}
+              >
                 <MachineToMachineApplicationRoles application={data} />
               </TabWrapper>
-              <TabWrapper isActive={tab === ApplicationDetailsTabs.Logs}>
+              <TabWrapper
+                isActive={tab === ApplicationDetailsTabs.Logs}
+                className={styles.tabContainer}
+              >
                 <MachineLogs applicationId={data.id} />
               </TabWrapper>
             </>
