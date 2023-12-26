@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@silverhand/essentials": "^2.8.4",
-    "got": "^13.0.0",
+    "got": "^14.0.0",
     "snakecase-keys": "^5.4.4",
     "zod": "^3.22.4"
   },
