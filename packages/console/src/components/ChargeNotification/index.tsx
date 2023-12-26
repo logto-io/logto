@@ -4,7 +4,7 @@ import { type TFuncKey } from 'i18next';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { pricingLink } from '@/consts';
+import { newPlansBlogLink } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
@@ -72,7 +72,7 @@ function ChargeNotification({
         });
       }}
     >
-      <Trans components={{ a: <TextLink href={pricingLink} targetBlank="noopener" /> }}>
+      <Trans components={{ a: <TextLink href={newPlansBlogLink} targetBlank="noopener" /> }}>
         {t('charge_notification_for_quota_limit', {
           item: t(`add_on_quota_item.${quotaItemPhraseKey}`, {
             ...cond(
