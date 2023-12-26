@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg';
+import { newPlansBlogLink } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -43,7 +44,7 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
               a: (
                 <TextLink
                   className={styles.articleLink}
-                  href="https://blog.logto.io/logto-pricing-model"
+                  href={newPlansBlogLink}
                   targetBlank="noopener"
                 />
               ),
