@@ -59,7 +59,7 @@
     "inquirer": "^9.0.0",
     "nanoid": "^5.0.1",
     "ora": "^6.1.2",
-    "p-limit": "^4.0.0",
+    "p-limit": "^5.0.0",
     "p-queue": "^8.0.0",
     "p-retry": "^6.0.0",
     "pg-protocol": "^1.6.0",
