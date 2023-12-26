@@ -145,7 +145,7 @@ async function handleSubmitRegister(
     await queries.organizations.relations.users.insert([organizationId, id]);
     await queries.organizations.relations.rolesUsers.insert([
       organizationId,
-      getTenantRole(TenantRole.Owner).id,
+      getTenantRole(TenantRole.Admin).id,
       id,
     ]);
   }

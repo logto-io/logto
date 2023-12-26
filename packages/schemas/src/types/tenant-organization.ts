@@ -110,20 +110,16 @@ const tenantScopeDescriptions: Readonly<Record<TenantScope, string>> = Object.fr
  * Should sync JSDoc descriptions with {@link tenantRoleDescriptions}.
  */
 export enum TenantRole {
-  /** Owner of the tenant, who has all permissions. */
-  Owner = 'owner',
-  /** Admin of the tenant, who has all permissions except managing the tenant settings. */
+  /** Admin of the tenant, who has all permissions. */
   Admin = 'admin',
-  /** Member of the tenant, who has limited permissions on reading and writing the tenant data. */
+  /** Member of the tenant, who has permissions to operate the tenant data, but not the tenant settings. */
   Member = 'member',
 }
 
 const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.freeze({
-  [TenantRole.Owner]: 'Owner of the tenant, who has all permissions.',
-  [TenantRole.Admin]:
-    'Admin of the tenant, who has all permissions except managing the tenant settings.',
+  [TenantRole.Admin]: 'Admin of the tenant, who has all permissions.',
   [TenantRole.Member]:
-    'Member of the tenant, who has limited permissions on reading and writing the tenant data.',
+    'Member of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
 });
 
 /**
@@ -138,7 +134,7 @@ const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.free
  *   tenantId: 'admin',
  *   id: 'member',
  *   name: 'member',
- *   description: 'Member of the tenant, who has limited permissions on reading and writing the tenant data.',
+ *   description: 'Member of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
  * });
  * ```
  *
@@ -158,7 +154,11 @@ export const getTenantRole = (role: TenantRole): Readonly<OrganizationRole> =>
  */
 export const tenantRoleScopes: Readonly<Record<TenantRole, Readonly<TenantScope[]>>> =
   Object.freeze({
-    [TenantRole.Owner]: allTenantScopes,
-    [TenantRole.Admin]: allTenantScopes.filter((scope) => scope !== TenantScope.ManageTenant),
-    [TenantRole.Member]: [TenantScope.ReadData, TenantScope.WriteData, TenantScope.InviteMember],
+    [TenantRole.Admin]: allTenantScopes,
+    [TenantRole.Member]: [
+      TenantScope.ReadData,
+      TenantScope.WriteData,
+      TenantScope.DeleteData,
+      TenantScope.InviteMember,
+    ],
   });
