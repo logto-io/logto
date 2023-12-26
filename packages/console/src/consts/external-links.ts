@@ -12,6 +12,7 @@ export const reservationLink = buildUrl('https://calendly.com/logto/30min', {
 });
 export const trustAndSecurityLink = 'https://logto.io/trust-and-security';
 export const pricingLink = 'https://logto.io/pricing';
+export const newPlansBlogLink = 'https://blog.logto.io/logto-pricing-v2';
 
 /** Docs link */
 export const envTagsFeatureLink = '/docs/recipes/tenant-type';
