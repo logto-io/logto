@@ -81,7 +81,7 @@
     "@types/jest": "^29.4.0",
     "@types/node": "^20.9.5",
     "@types/semver": "^7.3.12",
-    "@types/sinon": "^10.0.13",
+    "@types/sinon": "^17.0.0",
     "@types/tar": "^6.1.2",
     "@types/yargs": "^17.0.13",
     "eslint": "^8.44.0",

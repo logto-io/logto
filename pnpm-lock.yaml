@@ -210,8 +210,8 @@ importers:
         specifier: ^7.3.12
         version: 7.3.12
       '@types/sinon':
-        specifier: ^10.0.13
-        version: 10.0.13
+        specifier: ^17.0.0
+        version: 17.0.2
       '@types/tar':
         specifier: ^6.1.2
         version: 6.1.2
@@ -3381,8 +3381,8 @@ importers:
         specifier: ^7.3.12
         version: 7.3.12
       '@types/sinon':
-        specifier: ^10.0.13
-        version: 10.0.13
+        specifier: ^17.0.0
+        version: 17.0.2
       '@types/supertest':
         specifier: ^2.0.11
         version: 2.0.11
@@ -10240,8 +10240,8 @@ packages:
     resolution: {integrity: sha512-dKkr1bTxbEsFlh2ARpKzcaAmsYixqt9UyCdoEZk8rHyE4iQYcDCyvSjDSf7JUWJHlJiTtbIoQjxKh6ViywqDAg==}
     dev: false
 
-  /@types/sinon@10.0.13:
-    resolution: {integrity: sha512-UVjDqJblVNQYvVNUsj0PuYYw0ELRmgt1Nt5Vk0pT5f16ROGfcKJY8o1HVuMOJOpD727RrGB9EGvoaTQE5tgxZQ==}
+  /@types/sinon@17.0.2:
+    resolution: {integrity: sha512-Zt6heIGsdqERkxctIpvN5Pv3edgBrhoeb3yHyxffd4InN0AX2SVNKSrhdDZKGQICVOxWP/q4DyhpfPNMSrpIiA==}
     dependencies:
       '@types/sinonjs__fake-timers': 8.1.2
     dev: true
