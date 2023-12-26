@@ -105,7 +105,7 @@ export default class GlobalValues {
   public readonly databasePoolSize = Number(getEnv('DATABASE_POOL_SIZE', '20'));
 
   /** Case insensitive username */
-  public readonly isCaseInsensitiveUsername = yes(getEnv('CASE_INSENSITIVE_USERNAME'));
+  public readonly isCaseSensitiveUsername = yes(getEnv('CASE_SENSITIVE_USERNAME', 'true'));
 
   /**
    * The Redis endpoint (optional). If it's set, the central cache mechanism will be automatically enabled.
