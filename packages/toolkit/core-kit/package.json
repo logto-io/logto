@@ -65,7 +65,7 @@
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.0",
-    "stylelint": "^15.0.0",
+    "stylelint": "^16.0.0",
     "tslib": "^2.4.1",
     "typescript": "^5.3.3"
   },
