@@ -31,16 +31,12 @@ const upsell = {
     update_payment: '更新支付',
   },
   add_on_quota_item: {
-    /** UNTRANSLATED */
-    api_resource: 'API resource',
-    /** UNTRANSLATED */
-    machine_to_machine: 'machine-to-machine application',
-    /** UNTRANSLATED */
-    tokens: '{{limit}}M tokens',
+    api_resource: 'API 资源',
+    machine_to_machine: '机器对机器应用',
+    tokens: '{{limit}}M 令牌',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
+    '您已超过{{item}}配额限制。Logto将为超出配额限制的使用添加费用。计费将从新的附加定价设计发布当天开始。 <a>了解更多</a>',
   paywall,
 };
 

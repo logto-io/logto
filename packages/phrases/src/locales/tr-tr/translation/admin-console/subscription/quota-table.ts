@@ -62,17 +62,13 @@ const quota_table = {
     just_in_time_provisioning: 'İstisnai olana kadar temin',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Compliance and support',
+    title: 'Uyumluluk ve destek',
     community: 'Topluluk',
     customer_ticket: 'Müşteri destek bileti',
     premium: 'Premium',
-    /** UNTRANSLATED */
-    email_ticket_support: 'Email ticket support',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report (Coming soon)',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
+    email_ticket_support: 'E-posta bileti desteği',
+    soc2_report: 'SOC2 raporu (Yakında)',
+    hipaa_or_baa_report: 'HIPAA/BAA raporu (Yakında)',
   },
   unlimited: 'Sınırsız',
   contact: 'İletişim',
@@ -91,7 +87,7 @@ const quota_table = {
   usage_based_beta_feature_tip:
     'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
   beta: 'Beta',
-  add_on_beta: 'Add-on (Beta)',
+  add_on_beta: 'Ek hizmet (Beta)',
 };
 
 export default Object.freeze(quota_table);

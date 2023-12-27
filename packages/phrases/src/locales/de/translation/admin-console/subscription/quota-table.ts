@@ -1,7 +1,7 @@
 const quota_table = {
   quota: {
     title: 'Kontingent',
-    tenant_limit: 'Tenant-Limit',
+    tenant_limit: 'Mieter-Limit',
     base_price: 'Grundpreis',
     mau_limit: 'MAU-Limit',
   },
@@ -62,17 +62,13 @@ const quota_table = {
     just_in_time_provisioning: 'Bedarfsgesteuerte Bereitstellung',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Compliance and support',
+    title: 'Compliance und Support',
     community: 'Gemeinschaft',
     customer_ticket: 'Support-Ticket',
     premium: 'Premium',
-    /** UNTRANSLATED */
-    email_ticket_support: 'Email ticket support',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report (Coming soon)',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
+    email_ticket_support: 'E-Mail-Ticket-Support',
+    soc2_report: 'SOC2-Bericht (in Kürze)',
+    hipaa_or_baa_report: 'HIPAA/BAA-Bericht (in Kürze)',
   },
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',

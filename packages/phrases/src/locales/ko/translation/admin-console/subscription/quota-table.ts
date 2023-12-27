@@ -62,17 +62,13 @@ const quota_table = {
     just_in_time_provisioning: '적시 프로비저닝',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Compliance and support',
+    title: '컴플라이언스 및 지원',
     community: '커뮤니티',
     customer_ticket: '지원 티켓',
     premium: '프리미엄',
-    /** UNTRANSLATED */
-    email_ticket_support: 'Email ticket support',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report (Coming soon)',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
+    email_ticket_support: '이메일 티켓 지원',
+    soc2_report: 'SOC2 보고서 (곧 제공 예정)',
+    hipaa_or_baa_report: 'HIPAA/BAA 보고서 (곧 제공 예정)',
   },
   unlimited: '무제한',
   contact: '문의',

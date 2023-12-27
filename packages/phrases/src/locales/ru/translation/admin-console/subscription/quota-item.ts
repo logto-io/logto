@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} приложения для машин ко машине',
     unlimited: 'Неограниченное количество приложений для машин ко машине',
     not_eligible: 'Удалите свои приложения для машин ко машине',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: 'Дополнительные приложения для машины ко машине',
   },
   resources_limit: {
     name: 'API ресурсы',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: 'Без поддержки сообщества',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: 'Поддержка по электронной почте',
+    limited: '{{count, number}} час поддержки по электронной почте',
+    limited_other: '{{count, number}} часов поддержки по электронной почте',
+    unlimited: 'Поддержка по электронной почте',
+    not_eligible: 'Без поддержки по электронной почте',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: 'Удалите свой MFA',
   },
   sso_enabled: {
-    name: 'Ограниченная',
-    limited: 'Ограниченная',
-    unlimited: 'Ограниченная',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    name: 'Единый вход для предприятий',
+    limited: 'Единый вход для предприятий',
+    unlimited: 'Единый вход для предприятий',
+    not_eligible: 'Удалите свой Единый вход для предприятий',
   },
 };
 

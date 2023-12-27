@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} Maschine-zu-Maschine-Apps',
     unlimited: 'Unbegrenzte Maschine-zu-Maschine-Apps',
     not_eligible: 'Entferne deine Maschine-zu-Maschine-Apps',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: 'Zusätzliche Maschine-zu-Maschine-Apps',
   },
   resources_limit: {
     name: 'API-Ressourcen',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: 'Kein Community-Support',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: 'E-Mail-Ticket-Support',
+    limited: '{{count, number}} Stunde E-Mail-Ticket-Support',
+    limited_other: '{{count, number}} Stunden E-Mail-Ticket-Support',
+    unlimited: 'E-Mail-Ticket-Support',
+    not_eligible: 'Kein E-Mail-Ticket-Support',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: 'Entferne dein MFA',
   },
   sso_enabled: {
     name: 'Enterprise SSO',
     limited: 'Enterprise SSO',
     unlimited: 'Enterprise SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: 'Entferne dein Enterprise SSO',
   },
 };
 

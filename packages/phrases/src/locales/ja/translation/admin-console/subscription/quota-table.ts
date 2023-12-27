@@ -62,17 +62,13 @@ const quota_table = {
     just_in_time_provisioning: 'ジャストインタイムプロビジョニング',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Compliance and support',
+    title: 'コンプライアンスとサポート',
     community: 'コミュニティ',
     customer_ticket: 'カスタマーチケット',
     premium: 'プレミアム',
-    /** UNTRANSLATED */
-    email_ticket_support: 'Email ticket support',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report (Coming soon)',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
+    email_ticket_support: 'Emailチケットサポート',
+    soc2_report: 'SOC2レポート（近日公開）',
+    hipaa_or_baa_report: 'HIPAA/BAAレポート（近日公開）',
   },
   unlimited: '無制限',
   contact: 'お問い合わせ',

@@ -62,17 +62,13 @@ const quota_table = {
     just_in_time_provisioning: 'Provisionamento just-in-time',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Compliance and support',
+    title: 'Conformidade e suporte',
     community: 'Comunidade',
     customer_ticket: 'Ticket de suporte',
     premium: 'Premium',
-    /** UNTRANSLATED */
-    email_ticket_support: 'Email ticket support',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report (Coming soon)',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
+    email_ticket_support: 'Suporte via e-mail',
+    soc2_report: 'Relatório SOC2 (Em breve)',
+    hipaa_or_baa_report: 'Relatório HIPAA/BAA (Em breve)',
   },
   unlimited: 'Ilimitado',
   contact: 'Contato',

@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} 個機器對機器應用程式',
     unlimited: '無限機器對機器應用程式',
     not_eligible: '刪除您的機器對機器應用程式',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: '附加的機器對機器應用程式',
   },
   resources_limit: {
     name: 'API 資源',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: '無社區支援',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: '電子郵件票務支援',
+    limited: '{{count, number}} 小時電子郵件票務支援',
+    limited_other: '{{count, number}} 小時電子郵件票務支援',
+    unlimited: '電子郵件票務支援',
+    not_eligible: '無電子郵件票務支援',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: '移除您的 MFA',
   },
   sso_enabled: {
     name: '企業SSO',
     limited: '企業SSO',
     unlimited: '企業SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: '移除您的企業單一登入',
   },
 };
 

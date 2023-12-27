@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} aplicações de máquina para máquina',
     unlimited: 'Aplicações de máquina para máquina ilimitadas',
     not_eligible: 'Remover as tuas aplicações de máquina para máquina',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: 'Aplicações adicionais de máquina para máquina',
   },
   resources_limit: {
     name: 'Recursos de API',
@@ -107,7 +106,7 @@ const quota_item = {
     limited: '{{count, number}} webhook',
     limited_other: '{{count, number}} webhooks',
     unlimited: 'Webhooks ilimitados',
-    not_eligible: 'Remova os seus webhooks',
+    not_eligible: 'Remova os teus webhooks',
   },
   organizations_enabled: {
     name: 'Organizações',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: 'Sem apoio da comunidade',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: 'Suporte por e-mail',
+    limited: '{{count, number}} horas de suporte por e-mail',
+    limited_other: '{{count, number}} horas de suporte por e-mail',
+    unlimited: 'Suporte por e-mail',
+    not_eligible: 'Sem suporte por e-mail',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: 'Remover o teu MFA',
   },
   sso_enabled: {
     name: 'SSO Empresarial',
     limited: 'SSO Empresarial',
     unlimited: 'SSO Empresarial',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: 'Remover o teu SSO Empresarial',
   },
 };
 

@@ -31,16 +31,12 @@ const upsell = {
     update_payment: '지불 업데이트',
   },
   add_on_quota_item: {
-    /** UNTRANSLATED */
-    api_resource: 'API resource',
-    /** UNTRANSLATED */
-    machine_to_machine: 'machine-to-machine application',
-    /** UNTRANSLATED */
-    tokens: '{{limit}}M tokens',
+    api_resource: 'API 리소스',
+    machine_to_machine: '머신 투 머신 애플리케이션',
+    tokens: '{{limit}}M 토큰',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
+    '{{item}} 할당량 한도를 초과했습니다. Logto는 할당량을 초과하는 사용에 대한 요금을 추가합니다. 새로운 애드온 가격 디자인이 출시된 날부터 청구가 시작됩니다. <a>더 알아보기</a>',
   paywall,
 };
 

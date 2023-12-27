@@ -16,8 +16,8 @@ const quota_item = {
     name: 'Tokens',
     limited: '{{count, number}} token',
     limited_other: '{{count, number}} tokens',
-    unlimited: 'Unlimited tokens',
-    not_eligible: 'Remove your all users to prevent new tokens',
+    unlimited: 'Nieograniczona liczba tokenów',
+    not_eligible: 'Usuń wszystkich użytkowników, aby zapobiec nowym tokenom',
   },
   applications_limit: {
     name: 'Liczba aplikacji',
@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} aplikacje machine to machine',
     unlimited: 'Nieograniczona liczba aplikacji machine to machine',
     not_eligible: 'Usuń swoje aplikacje machine to machine',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: 'Dodatkowe aplikacje machine-to-machine',
   },
   resources_limit: {
     name: 'Zasoby API',
@@ -92,14 +91,14 @@ const quota_item = {
     name: 'Machine to machine roles',
     limited: '{{count, number}} machine to machine role',
     limited_other: '{{count, number}} machine to machine roles',
-    unlimited: 'Unlimited machine to machine roles',
-    not_eligible: 'Remove your machine to machine roles',
+    unlimited: 'Nieograniczona liczba ról machine to machine',
+    not_eligible: 'Usuń swoje role machine to machine',
   },
   scopes_per_role_limit: {
     name: 'Uprawnienia roli',
     limited: '{{count, number}} uprawnienie na rolę',
     limited_other: '{{count, number}} uprawnienia na rolę',
-    unlimited: 'Nieograniczone uprawnienie na rolę',
+    unlimited: 'Nieograniczone uprawnienia na rolę',
     not_eligible: 'Usuń swoje uprawnienia roli',
   },
   hooks_limit: {
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: 'Brak wsparcia społecznościowego',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: 'Wsparcie poprzez e-maile',
+    limited: '{{count, number}} godzina wsparcia poprzez e-maile',
+    limited_other: '{{count, number}} godziny wsparcia poprzez e-maile',
+    unlimited: 'Wsparcie poprzez e-maile',
+    not_eligible: 'Brak wsparcia poprzez e-maile',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: 'Usuń swoje MFA',
   },
   sso_enabled: {
     name: 'SSO przedsiębiorstwa',
     limited: 'SSO przedsiębiorstwa',
     unlimited: 'SSO przedsiębiorstwa',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: 'Usuń swoje SSO przedsiębiorstwa',
   },
 };
 

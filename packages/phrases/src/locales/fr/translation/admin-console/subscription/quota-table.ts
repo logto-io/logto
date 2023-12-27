@@ -62,25 +62,21 @@ const quota_table = {
     just_in_time_provisioning: 'Fourniture juste-à-temps',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Compliance and support',
+    title: 'Conformité et support',
     community: 'Communauté',
     customer_ticket: 'Ticket de support',
     premium: 'Premium',
-    /** UNTRANSLATED */
-    email_ticket_support: 'Email ticket support',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report (Coming soon)',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
+    email_ticket_support: 'Support par ticket électronique',
+    soc2_report: 'Rapport SOC2 (prochainement)',
+    hipaa_or_baa_report: 'Rapport HIPAA/BAA (prochainement)',
   },
   unlimited: 'Illimité',
   contact: 'Contact',
-  monthly_price: '${{value, number}}/mo',
+  monthly_price: '${{value, number}}/mois',
   days_one: '{{count, number}} jour',
   days_other: '{{count, number}} jours',
   add_on: 'Module complémentaire',
-  tier: 'Niveau{{value, number}}: ',
+  tier: 'Niveau{{value, number}} : ',
   free_token_limit_tip: 'Gratuit pour {{value}}M jeton émis.',
   paid_token_limit_tip:
     'Gratuit pour {{value}}M jeton émis. Nous pouvons ajouter des frais si vous dépassez {{value}}M jetons une fois que nous aurons finalisé les prix.',

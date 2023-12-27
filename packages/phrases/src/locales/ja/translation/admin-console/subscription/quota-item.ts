@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} マシン間アプリケーション',
     unlimited: '無制限のマシン間アプリケーション',
     not_eligible: 'マシン間アプリケーションを削除してください',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: '追加のマシン間アプリケーション',
   },
   resources_limit: {
     name: 'APIリソース',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: 'コミュニティサポートなし',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: 'メールチケットサポート',
+    limited: '{{count, number}}時間のメールチケットサポート',
+    limited_other: '{{count, number}}時間のメールチケットサポート',
+    unlimited: 'メールチケットサポート',
+    not_eligible: 'メールチケットサポートなし',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: 'MFAを削除してください',
   },
   sso_enabled: {
     name: 'エンタープライズSSO',
     limited: 'エンタープライズSSO',
     unlimited: 'エンタープライズSSO',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: 'エンタープライズSSOを削除してください',
   },
 };
 

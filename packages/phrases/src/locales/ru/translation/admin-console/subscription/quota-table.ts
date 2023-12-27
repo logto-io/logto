@@ -62,17 +62,13 @@ const quota_table = {
     just_in_time_provisioning: 'Пакетная настройка по запросу',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Compliance and support',
+    title: 'Соблюдение и поддержка',
     community: 'Сообщество',
     customer_ticket: 'Техническая поддержка',
     premium: 'Премиум',
-    /** UNTRANSLATED */
-    email_ticket_support: 'Email ticket support',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report (Coming soon)',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
+    email_ticket_support: 'Поддержка по электронной почте',
+    soc2_report: 'Отчет SOC2 (Скоро)',
+    hipaa_or_baa_report: 'Отчет HIPAA/BAA (Скоро)',
   },
   unlimited: 'Неограниченно',
   contact: 'Связаться',

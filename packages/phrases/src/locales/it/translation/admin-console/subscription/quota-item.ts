@@ -16,8 +16,8 @@ const quota_item = {
     name: 'Tokens',
     limited: '{{count, number}} token',
     limited_other: '{{count, number}} tokens',
-    unlimited: 'Unlimited tokens',
-    not_eligible: 'Remove your all users to prevent new tokens',
+    unlimited: 'Tokens illimitati',
+    not_eligible: 'Rimuovi tutti i tuoi utenti per prevenire i nuovi tokens',
   },
   applications_limit: {
     name: 'Applicazioni',
@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} applicazioni Machine-to-Machine',
     unlimited: 'Applicazioni Machine-to-Machine illimitate',
     not_eligible: 'Rimuovi le tue applicazioni Machine-to-Machine',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: 'Applicazioni Machine-to-Machine aggiuntive',
   },
   resources_limit: {
     name: 'Risorse API',
@@ -89,11 +88,11 @@ const quota_item = {
     not_eligible: 'Rimuovi i tuoi ruoli',
   },
   machine_to_machine_roles_limit: {
-    name: 'Machine to machine roles',
-    limited: '{{count, number}} machine to machine role',
-    limited_other: '{{count, number}} machine to machine roles',
-    unlimited: 'Unlimited machine to machine roles',
-    not_eligible: 'Remove your machine to machine roles',
+    name: 'Ruoli di applicazione Machine-to-Machine',
+    limited: '{{count, number}} ruolo di applicazione Machine-to-Machine',
+    limited_other: '{{count, number}} ruoli di applicazione Machine-to-Machine',
+    unlimited: 'Ruoli di applicazione Machine-to-Machine illimitati',
+    not_eligible: 'Rimuovi i tuoi ruoli di applicazione Machine-to-Machine',
   },
   scopes_per_role_limit: {
     name: 'Permessi ruolo',
@@ -110,7 +109,7 @@ const quota_item = {
     not_eligible: 'Rimuovi i tuoi webhook',
   },
   organizations_enabled: {
-    name: 'Organizations',
+    name: 'Organizzazioni',
     limited: 'Organizzazioni',
     unlimited: 'Organizzazioni',
     not_eligible: 'Rimuovi le tue organizzazioni',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: 'Nessun supporto della comunità',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: 'Supporto tramite ticket email',
+    limited: '{{count, number}} ora di supporto tramite ticket email',
+    limited_other: '{{count, number}} ore di supporto tramite ticket email',
+    unlimited: 'Supporto tramite ticket email',
+    not_eligible: 'Nessun supporto tramite ticket email',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: 'Rimuovi il tuo MFA',
   },
   sso_enabled: {
     name: 'SSO aziendale',
     limited: 'SSO aziendale',
     unlimited: 'SSO aziendale',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: 'Rimuovi il tuo SSO aziendale',
   },
 };
 
