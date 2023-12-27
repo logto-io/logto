@@ -62,17 +62,13 @@ const quota_table = {
     just_in_time_provisioning: '即时配置',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Compliance and support',
+    title: '合规与支持',
     community: '社区',
     customer_ticket: '客户支持票据',
     premium: '高级版',
-    /** UNTRANSLATED */
-    email_ticket_support: 'Email ticket support',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report (Coming soon)',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
+    email_ticket_support: '邮件支持票据',
+    soc2_report: 'SOC2报告（即将推出）',
+    hipaa_or_baa_report: 'HIPAA/BAA报告（即将推出）',
   },
   unlimited: '无限制',
   contact: '联系',

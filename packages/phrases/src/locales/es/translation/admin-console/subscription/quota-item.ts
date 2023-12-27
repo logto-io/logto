@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} aplicaciones de dispositivo a dispositivo',
     unlimited: 'Aplicaciones de dispositivo a dispositivo ilimitadas',
     not_eligible: 'Elimine sus aplicaciones de dispositivo a dispositivo',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: 'Aplicaciones de máquina a máquina adicionales',
   },
   resources_limit: {
     name: 'Recursos de API',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: 'Sin soporte de la comunidad',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: 'Soporte de boletos de correo electrónico',
+    limited: '{{count, number}} hora de soporte de boletos de correo electrónico',
+    limited_other: '{{count, number}} horas de soporte de boletos de correo electrónico',
+    unlimited: 'Soporte de boletos de correo electrónico',
+    not_eligible: 'Sin soporte de boletos de correo electrónico',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: 'Elimine su MFA',
   },
   sso_enabled: {
     name: 'SSO empresarial',
     limited: 'SSO empresarial',
     unlimited: 'SSO empresarial',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: 'Elimine su SSO empresarial',
   },
 };
 

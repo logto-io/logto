@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} 个机器到机器应用',
     unlimited: '无限制机器到机器应用',
     not_eligible: '移除你的机器到机器应用',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: '更多机器到机器应用',
   },
   resources_limit: {
     name: 'API 资源',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: '无社区支持',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: '电子邮件支持',
+    limited: '{{count, number}} 小时电子邮件支持',
+    limited_other: '{{count, number}} 小时电子邮件支持',
+    unlimited: '电子邮件支持',
+    not_eligible: '无电子邮件支持',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: '移除你的 MFA',
   },
   sso_enabled: {
     name: '企业SSO',
     limited: '企业SSO',
     unlimited: '企业SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: '移除你的 企业SSO',
   },
 };
 

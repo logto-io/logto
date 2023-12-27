@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} aplicações de máquina a máquina',
     unlimited: 'Aplicações de máquina a máquina ilimitadas',
     not_eligible: 'Remova suas aplicações de máquina a máquina',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: 'Aplicativos adicionais de máquina a máquina',
   },
   resources_limit: {
     name: 'Recursos da API',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: 'Nenhum suporte da comunidade',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: 'Suporte de ingressos de e-mail',
+    limited: '{{count, number}} hora de suporte de ingressos de e-mail',
+    limited_other: '{{count, number}} horas de suporte de ingressos de e-mail',
+    unlimited: 'Suporte de ingressos de e-mail',
+    not_eligible: 'Nenhum suporte de ingressos de e-mail',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: 'Remova seu MFA',
   },
   sso_enabled: {
     name: 'SSO Empresarial',
     limited: 'SSO Empresarial',
     unlimited: 'SSO Empresarial',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: 'Remova seu Enterprise SSO',
   },
 };
 

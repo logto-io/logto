@@ -32,8 +32,7 @@ const quota_item = {
     limited_other: '{{count, number}} makineye makine uygulamalar',
     unlimited: 'Sınırsız makineye makine uygulamalar',
     not_eligible: 'Makineye makine uygulamalarınızı kaldırın',
-    /** UNTRANSLATED */
-    add_on: 'Additional machine-to-machine apps',
+    add_on: 'Ek makineye makine uygulamaları',
   },
   resources_limit: {
     name: 'API kaynakları',
@@ -129,30 +128,23 @@ const quota_item = {
     not_eligible: 'Topluluk desteği yok',
   },
   email_ticket_support: {
-    /** UNTRANSLATED */
-    name: 'Email ticket support',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} hour email ticket support',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} hours email ticket support',
-    /** UNTRANSLATED */
-    unlimited: 'Email ticket support',
-    /** UNTRANSLATED */
-    not_eligible: 'No email ticket support',
+    name: 'E-posta bilet desteği',
+    limited: '{{count, number}} saat e-posta bilet desteği',
+    limited_other: '{{count, number}} saat e-posta bilet desteği',
+    unlimited: 'E-posta bilet desteği',
+    not_eligible: 'E-posta bilet desteği yok',
   },
   mfa_enabled: {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your MFA',
+    not_eligible: "MFA'nızı kaldırın",
   },
   sso_enabled: {
     name: 'Kurumsal SSO',
     limited: 'Kurumsal SSO',
     unlimited: 'Kurumsal SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your Enterprise SSO',
+    not_eligible: "Kurumsal SSO'nuzu kaldırın",
   },
 };
 

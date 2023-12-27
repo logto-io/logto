@@ -62,17 +62,13 @@ const quota_table = {
     just_in_time_provisioning: '即時規定',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Compliance and support',
+    title: '合規和支援',
     community: '社群',
     customer_ticket: '客戶支援票據',
     premium: '高級版',
-    /** UNTRANSLATED */
     email_ticket_support: 'Email ticket support',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report (Coming soon)',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
+    soc2_report: 'SOC2報告（即將推出）',
+    hipaa_or_baa_report: 'HIPAA/BAA報告（即將推出）',
   },
   unlimited: '無限制',
   contact: '聯絡',

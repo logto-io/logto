@@ -31,16 +31,12 @@ const upsell = {
     update_payment: 'Atualizar pagamento',
   },
   add_on_quota_item: {
-    /** UNTRANSLATED */
-    api_resource: 'API resource',
-    /** UNTRANSLATED */
-    machine_to_machine: 'machine-to-machine application',
-    /** UNTRANSLATED */
+    api_resource: 'Recurso de API',
+    machine_to_machine: 'aplicação máquina a máquina',
     tokens: '{{limit}}M tokens',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
+    'Você ultrapassou o limite de sua cota de {{item}}. O Logto adicionará cobranças pelo uso além do limite da cota. A cobrança começará no dia em que o novo design de preços do complemento for lançado. <a>Saiba mais</a>',
   paywall,
 };
 
