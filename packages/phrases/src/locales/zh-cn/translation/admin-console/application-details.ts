@@ -64,6 +64,27 @@ const application_details = {
   enter_your_application_name: '输入你的应用名称',
   application_deleted: '应用 {{name}} 成功删除。',
   redirect_uri_required: '至少需要输入一个重定向 URI。',
+  branding: {
+    /** UNTRANSLATED */
+    branding: 'Branding',
+    /** UNTRANSLATED */
+    branding_description:
+      "Customize your application's display name and logo on the consent screen.",
+    /** UNTRANSLATED */
+    more_info: 'More info',
+    /** UNTRANSLATED */
+    more_info_description: 'Offer users more details about your application on the consent screen.',
+    /** UNTRANSLATED */
+    display_name: 'Display name',
+    /** UNTRANSLATED */
+    display_logo: 'Display logo',
+    /** UNTRANSLATED */
+    display_logo_dark: 'Display logo (dark)',
+    /** UNTRANSLATED */
+    terms_of_use_url: 'Application terms of use URL',
+    /** UNTRANSLATED */
+    privacy_policy_url: 'Application privacy policy URL',
+  },
   roles: {
     name_column: '角色',
     description_column: '描述',

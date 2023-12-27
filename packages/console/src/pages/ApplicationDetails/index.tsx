@@ -23,6 +23,7 @@ import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -33,6 +34,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
+import Branding from './components/Branding';
 import EndpointsAndCredentials from './components/EndpointsAndCredentials';
 import GuideDrawer from './components/GuideDrawer';
 import GuideModal from './components/GuideModal';
@@ -57,11 +59,13 @@ function ApplicationDetails() {
   const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
     id && `api/applications/${id}`
   );
+
   const {
     data: oidcConfig,
     error: fetchOidcConfigError,
     mutate: mutateOidcConfig,
   } = useSWR<SnakeCaseOidcConfig, RequestError>(openIdProviderConfigPath);
+
   const isLoading = (!data && !error) || (!oidcConfig && !fetchOidcConfigError);
   const requestError = error ?? fetchOidcConfigError;
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
@@ -227,6 +231,11 @@ function ApplicationDetails() {
                 </TabNavItem>
               </>
             )}
+            {isDevFeaturesEnabled && data.isThirdParty && (
+              <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
+                {t('application_details.branding.branding')}
+              </TabNavItem>
+            )}
           </TabNav>
           <TabWrapper
             isActive={tab === ApplicationDetailsTabs.Settings}
@@ -263,6 +272,15 @@ function ApplicationDetails() {
                 <MachineLogs applicationId={data.id} />
               </TabWrapper>
             </>
+          )}
+
+          {isDevFeaturesEnabled && data.isThirdParty && (
+            <TabWrapper
+              isActive={tab === ApplicationDetailsTabs.Branding}
+              className={styles.tabContainer}
+            >
+              <Branding application={data} />
+            </TabWrapper>
           )}
         </>
       )}

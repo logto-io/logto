@@ -2,6 +2,7 @@ export enum ApplicationDetailsTabs {
   Settings = 'settings',
   Roles = 'roles',
   Logs = 'logs',
+  Branding = 'branding',
 }
 
 export enum ApiResourceDetailsTabs {
