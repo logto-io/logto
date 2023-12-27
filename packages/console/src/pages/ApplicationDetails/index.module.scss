@@ -14,10 +14,6 @@
   }
 }
 
-.textField {
-  @include _.form-text-field;
-}
-
 .customEndpointNotes {
   margin-top: _.unit(6);
   font: var(--font-body-2);

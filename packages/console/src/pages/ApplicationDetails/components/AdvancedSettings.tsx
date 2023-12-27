@@ -57,7 +57,7 @@ function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
       {tenantEndpoint && (
         <FormField title="application_details.config_endpoint">
           <CopyToClipboard
-            className={styles.textField}
+            isFullWidth
             value={applyCustomDomain(appendPath(tenantEndpoint, openIdProviderConfigPath).href)}
             variant="border"
           />
@@ -82,21 +82,21 @@ function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
         )}
       >
         <CopyToClipboard
-          className={styles.textField}
+          isFullWidth
           value={applyCustomDomain(oidcConfig.authorization_endpoint)}
           variant="border"
         />
       </FormField>
       <FormField title="application_details.token_endpoint">
         <CopyToClipboard
-          className={styles.textField}
+          isFullWidth
           value={applyCustomDomain(oidcConfig.token_endpoint)}
           variant="border"
         />
       </FormField>
       <FormField title="application_details.user_info_endpoint">
         <CopyToClipboard
-          className={styles.textField}
+          isFullWidth
           value={applyCustomDomain(oidcConfig.userinfo_endpoint)}
           variant="border"
         />

@@ -31,6 +31,7 @@ type Props = {
   hasVisibilityToggle?: boolean;
   size?: 'default' | 'small';
   isWordWrapAllowed?: boolean;
+  isFullWidth?: boolean;
 };
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;
@@ -45,6 +46,7 @@ function CopyToClipboard(
     variant = 'contained',
     size = 'default',
     isWordWrapAllowed = false,
+    isFullWidth = false,
   }: Props,
   ref: ForwardedRef<HTMLDivElement>
 ) {
@@ -80,7 +82,13 @@ function CopyToClipboard(
   return (
     <div
       ref={ref}
-      className={classNames(styles.container, styles[variant], styles[size], className)}
+      className={classNames(
+        styles.container,
+        styles[variant],
+        styles[size],
+        isFullWidth && styles.fullWidth,
+        className
+      )}
       role="button"
       tabIndex={0}
       style={style}

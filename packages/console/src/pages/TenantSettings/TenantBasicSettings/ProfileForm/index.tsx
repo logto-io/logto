@@ -12,7 +12,6 @@ import { type TenantSettingsForm } from '../types.js';
 
 import TenantEnvironment from './TenantEnvironment/index.js';
 import TenantRegion from './TenantRegion/index.js';
-import * as styles from './index.module.scss';
 
 type Props = {
   currentTenantId: string;
@@ -48,7 +47,7 @@ function ProfileForm({ currentTenantId }: Props) {
   return (
     <FormCard title="tenants.settings.title" description="tenants.settings.description">
       <FormField title="tenants.settings.tenant_id">
-        <CopyToClipboard value={currentTenantId} variant="border" className={styles.textField} />
+        <CopyToClipboard isFullWidth value={currentTenantId} variant="border" />
       </FormField>
       <FormField isRequired title="tenants.settings.tenant_name">
         <TextInput
