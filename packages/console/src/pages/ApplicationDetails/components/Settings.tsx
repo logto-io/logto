@@ -57,7 +57,7 @@ function Settings({ data }: Props) {
         />
       </FormField>
       {/* Hide description field in third-party application's form. @simeng-li FIXME: remove isDevFeatureEnabled flag */}
-      {isDevFeaturesEnabled && !isThirdParty && (
+      {(!isDevFeaturesEnabled || !isThirdParty) && (
         <FormField title="application_details.description">
           <TextInput
             {...register('description')}

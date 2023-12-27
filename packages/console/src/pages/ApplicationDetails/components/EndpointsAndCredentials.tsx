@@ -52,7 +52,7 @@ function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidc
       }}
     >
       {/* Hide logto endpoint field in third-party application's form. @simeng-li FIXME: remove isDevFeatureEnabled flag */}
-      {tenantEndpoint && isDevFeaturesEnabled && !isThirdParty && (
+      {tenantEndpoint && (!isDevFeaturesEnabled || !isThirdParty) && (
         <FormField title="application_details.logto_endpoint">
           <CopyToClipboard
             isFullWidth
