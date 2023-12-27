@@ -1,5 +1,4 @@
 import { type Application, type ApplicationSignInExperience } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useCallback, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -18,28 +17,10 @@ import { uriValidator } from '@/utils/validator';
 import LogoUploader from './LogoUploader';
 import useApplicationSignInExperienceSWR from './use-application-sign-in-experience-swr';
 import useSignInExperienceSWR from './use-sign-in-experience-swr';
+import { formatFormToSubmitData, formatResponseDataToForm } from './utils';
 
 type Props = {
   application: Application;
-};
-
-/**
- * Format the form data to match the API request body
- * - Omit `applicationId` and `tenantId` from the request body
- * - Remove the empty `logoUrl` and `darkLogoUrl` fields in the `branding` object
- **/
-const formatFormSubmitData = (
-  data: ApplicationSignInExperience
-): Omit<ApplicationSignInExperience, 'applicationId' | 'tenantId'> => {
-  const { branding, applicationId, tenantId, ...rest } = data;
-
-  return {
-    ...rest,
-    branding: {
-      ...conditional(branding.logoUrl && { logoUrl: branding.logoUrl }),
-      ...conditional(branding.darkLogoUrl && { darkLogoUrl: branding.darkLogoUrl }),
-    },
-  };
 };
 
 function Branding({ application }: Props) {
@@ -79,12 +60,11 @@ function Branding({ application }: Props) {
 
       const response = await api
         .put(`api/applications/${application.id}/sign-in-experience`, {
-          json: formatFormSubmitData(data),
+          json: formatFormToSubmitData(data),
         })
         .json<ApplicationSignInExperience>();
 
-      reset(response);
-      void mutate();
+      void mutate(response);
       toast.success(t('general.saved'));
     })
   );
@@ -99,12 +79,8 @@ function Branding({ application }: Props) {
       return;
     }
 
-    if (isDirty) {
-      return;
-    }
-
-    reset(data);
-  }, [data, isDirty, reset]);
+    reset(formatResponseDataToForm(data));
+  }, [data, reset]);
 
   if (isLoading) {
     return <FormCardSkeleton />;
