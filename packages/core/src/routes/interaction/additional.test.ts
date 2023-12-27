@@ -21,15 +21,9 @@ import { verificationPath, interactionPrefix } from './const.js';
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-// FIXME @Darcy: no more `enabled` for `connectors` table
 const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
   const metadata = {
-    id:
-      connectorId === 'social_enabled'
-        ? 'social_enabled'
-        : connectorId === 'social_disabled'
-        ? 'social_disabled'
-        : 'others',
+    id: connectorId,
   };
 
   return {
@@ -173,7 +167,7 @@ describe('interaction routes', () => {
 
     it('should throw when redirectURI is invalid', async () => {
       const response = await sessionRequest.post(path).send({
-        connectorId: 'social_enabled',
+        connectorId: 'social_connector',
         state: 'state',
         redirectUri: 'logto.dev',
       });
@@ -182,7 +176,7 @@ describe('interaction routes', () => {
 
     it('should return the authorization-uri properly', async () => {
       const response = await sessionRequest.post(path).send({
-        connectorId: 'social_enabled',
+        connectorId: 'social_connector',
         state: 'state',
         redirectUri: 'https://logto.dev',
       });
@@ -193,7 +187,7 @@ describe('interaction routes', () => {
 
     it('throw error when sign-in with social but miss state', async () => {
       const response = await sessionRequest.post(path).send({
-        connectorId: 'social_enabled',
+        connectorId: 'social_connector',
         redirectUri: 'https://logto.dev',
       });
       expect(response.statusCode).toEqual(400);
@@ -201,7 +195,7 @@ describe('interaction routes', () => {
 
     it('throw error when sign-in with social but miss redirectUri', async () => {
       const response = await sessionRequest.post(path).send({
-        connectorId: 'social_enabled',
+        connectorId: 'social_connector',
         state: 'state',
       });
       expect(response.statusCode).toEqual(400);
@@ -209,7 +203,7 @@ describe('interaction routes', () => {
 
     it('throw error when no social connector is found', async () => {
       const response = await sessionRequest.post(path).send({
-        connectorId: 'others',
+        connectorId: 'sms_connector',
         state: 'state',
         redirectUri: 'https://logto.dev',
       });
