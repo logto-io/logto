@@ -4,7 +4,11 @@ import { type OpenAPIV3 } from 'openapi-types';
 import pluralize from 'pluralize';
 import { z } from 'zod';
 
-import { fallbackDefaultPageSize } from '#src/middleware/koa-pagination.js';
+import {
+  fallbackDefaultPageSize,
+  pageNumberKey,
+  pageSizeKey,
+} from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
 import { zodTypeToSwagger } from '#src/utils/zod.js';
 
@@ -12,10 +16,9 @@ import { getRootComponent } from './general.js';
 
 export type ParameterArray = Array<OpenAPIV3.ReferenceObject | OpenAPIV3.ParameterObject>;
 
-// TODO: Generate pagination parameters according to the config.
 export const paginationParameters: OpenAPIV3.ParameterObject[] = [
   {
-    name: 'page',
+    name: pageNumberKey,
     in: 'query',
     description: 'Page number (starts from 1).',
     required: false,
@@ -26,7 +29,7 @@ export const paginationParameters: OpenAPIV3.ParameterObject[] = [
     },
   },
   {
-    name: 'page_size',
+    name: pageSizeKey,
     in: 'query',
     description: 'Entries per page.',
     required: false,

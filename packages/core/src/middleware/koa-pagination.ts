@@ -27,6 +27,8 @@ export const isPaginationMiddleware = <Type extends IMiddleware>(
 ): function_ is WithPaginationContext<Type> => function_.name === 'paginationMiddleware';
 
 export const fallbackDefaultPageSize = 20;
+export const pageNumberKey = 'page';
+export const pageSizeKey = 'page_size';
 
 export default function koaPagination<StateT, ContextT, ResponseBodyT>({
   defaultPageSize = fallbackDefaultPageSize,
@@ -42,16 +44,16 @@ export default function koaPagination<StateT, ContextT, ResponseBodyT>({
     try {
       const {
         request: {
-          query: { page, page_size },
+          query: { [pageNumberKey]: rawPageNumber, [pageSizeKey]: rawPageSize },
         },
       } = ctx;
       // If isOptional is set to true, user can disable pagination by
       // set both `page` and `page_size` to empty
-      const disabled = !page && !page_size && isOptional;
+      const disabled = !rawPageNumber && !rawPageSize && isOptional;
       // Query values are all string, need to convert to number first.
-      const pageNumber = page ? number().positive().parse(Number(page)) : 1;
-      const pageSize = page_size
-        ? number().positive().max(maxPageSize).parse(Number(page_size))
+      const pageNumber = rawPageNumber ? number().positive().parse(Number(rawPageNumber)) : 1;
+      const pageSize = rawPageSize
+        ? number().positive().max(maxPageSize).parse(Number(rawPageSize))
         : defaultPageSize;
 
       ctx.pagination = { offset: (pageNumber - 1) * pageSize, limit: pageSize, disabled };
