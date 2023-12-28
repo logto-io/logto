@@ -7,6 +7,7 @@ import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
@@ -63,7 +64,11 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     pool.maybeOne<User>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where ${fields.username}=${username}
+      ${
+        EnvSet.values.isCaseSensitiveUsername
+          ? sql`where ${fields.username}=${username}`
+          : sql`where lower(${fields.username})=lower(${username})`
+      }
     `);
 
   const findUserByEmail = async (email: string) =>
@@ -100,7 +105,11 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     pool.exists(sql`
       select ${fields.id}
       from ${table}
-      where ${fields.username}=${username}
+      ${
+        EnvSet.values.isCaseSensitiveUsername
+          ? sql`where ${fields.username}=${username}`
+          : sql`where lower(${fields.username})=lower(${username})`
+      }
       ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
 

@@ -1,8 +1,10 @@
 import { Users } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
+import Sinon from 'sinon';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockUser } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
@@ -33,7 +35,17 @@ const {
   deleteUserIdentity,
 } = createUserQueries(pool);
 
+const stubIsCaseSensitiveUsername = (isCaseSensitiveUsername: boolean) =>
+  Sinon.stub(EnvSet, 'values').value({
+    ...EnvSet.values,
+    isCaseSensitiveUsername,
+  });
+
 describe('user query', () => {
+  beforeEach(() => {
+    stubIsCaseSensitiveUsername(true);
+  });
+
   const { table, fields } = convertToIdentifiers(Users);
   const databaseValue = {
     ...mockUser,
@@ -48,6 +60,24 @@ describe('user query', () => {
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
       where ${fields.username}=$1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockUser.username]);
+
+      return createMockQueryResult([databaseValue]);
+    });
+
+    await expect(findUserByUsername(mockUser.username!)).resolves.toEqual(databaseValue);
+  });
+
+  it('findUserByUsername (case insensitive)', async () => {
+    stubIsCaseSensitiveUsername(false);
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`,`)}
+      from ${table}
+      where lower(${fields.username})=lower($1)
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -119,6 +149,26 @@ describe('user query', () => {
         select ${fields.id}
         from ${table}
         where ${fields.username}=$1
+      )
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockUser.username]);
+
+      return createMockQueryResult([{ exists: true }]);
+    });
+
+    await expect(hasUser(mockUser.username!)).resolves.toEqual(true);
+  });
+
+  it('hasUser (case insensitive)', async () => {
+    stubIsCaseSensitiveUsername(false);
+    const expectSql = sql`
+      SELECT EXISTS(
+        select ${fields.id}
+        from ${table}
+        where lower(${fields.username})=lower($1)
       )
     `;
 
