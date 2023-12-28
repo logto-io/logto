@@ -87,7 +87,7 @@ export const allowedUsersPerOrganizationMap: Record<string, Nullable<number> | u
 export const invitationEnabledMap: Record<string, boolean | undefined> = {
   [ReservedPlanId.Free]: false,
   [ReservedPlanId.Hobby]: true,
-  [ReservedPlanId.Pro]: undefined,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const orgRolesLimitMap: Record<string, Nullable<number> | undefined> = {
@@ -105,7 +105,7 @@ export const orgPermissionsLimitMap: Record<string, Nullable<number> | undefined
 export const justInTimeProvisioningEnabledMap: Record<string, boolean | undefined> = {
   [ReservedPlanId.Free]: false,
   [ReservedPlanId.Hobby]: true,
-  [ReservedPlanId.Pro]: undefined,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const soc2ReportEnabledMap: Record<string, boolean | undefined> = {
@@ -155,6 +155,8 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   communitySupportEnabled: true,
   ticketSupportResponseTime: undefined,
   organizationsEnabled: undefined,
+  invitationEnabled: true,
+  justInTimeProvisioningEnabled: true,
   ssoEnabled: undefined,
   soc2ReportEnabled: true,
   hipaaOrBaaReportEnabled: true,
@@ -170,7 +172,7 @@ export const enterprisePlanTableData: SubscriptionPlanTableData = {
 };
 
 export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.freeze({
-  [SubscriptionPlanTableGroupKey.base]: ['basePrice', 'mauLimit'],
+  [SubscriptionPlanTableGroupKey.base]: ['basePrice', 'mauLimit', 'tokenLimit'],
   [SubscriptionPlanTableGroupKey.applications]: ['applicationsLimit', 'machineToMachineLimit'],
   [SubscriptionPlanTableGroupKey.resources]: ['resourcesLimit', 'scopesPerResourceLimit'],
   [SubscriptionPlanTableGroupKey.branding]: [

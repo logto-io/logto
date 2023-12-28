@@ -1,17 +1,18 @@
 import { cond, type Nullable } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
+import { type ReactNode } from 'react';
 
 import Success from '@/assets/icons/success.svg';
 import DynamicT from '@/ds-components/DynamicT';
 
-import QuotaValueWrapper from './QuotaValueWrapper';
+import TableDataWrapper from '../components/TableDataWrapper';
 
 type Props = {
   quota?: Nullable<number>;
   tipPhraseKey?: TFuncKey<'translation', 'admin_console.subscription.quota_table'>;
   tipInterpolation?: Record<string, unknown>;
   hasCheckmark?: boolean;
-  formatter?: (quota: number) => string;
+  formatter?: (quota: number) => string | ReactNode;
 };
 
 function GenericQuotaLimit({
@@ -36,15 +37,15 @@ function GenericQuotaLimit({
 
   if (quota === null) {
     return (
-      <QuotaValueWrapper tip={tipContent}>
+      <TableDataWrapper tip={tipContent}>
         {hasCheckmark && <Success />}
         <DynamicT forKey="subscription.quota_table.unlimited" />
-      </QuotaValueWrapper>
+      </TableDataWrapper>
     );
   }
 
   return (
-    <QuotaValueWrapper tip={tipContent}>
+    <TableDataWrapper tip={tipContent}>
       {quota === 0 ? (
         '-'
       ) : (
@@ -53,7 +54,7 @@ function GenericQuotaLimit({
           {formatter?.(quota) ?? quota.toLocaleString()}
         </>
       )}
-    </QuotaValueWrapper>
+    </TableDataWrapper>
   );
 }
 

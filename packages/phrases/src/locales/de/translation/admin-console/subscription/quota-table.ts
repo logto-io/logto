@@ -1,9 +1,9 @@
 const quota_table = {
   quota: {
-    title: 'Kontingent',
-    tenant_limit: 'Mieter-Limit',
+    title: 'Grundlagen',
     base_price: 'Grundpreis',
     mau_limit: 'MAU-Limit',
+    included_tokens: 'Inkludierte Tokens',
   },
   application: {
     title: 'Anwendungen',
@@ -56,7 +56,7 @@ const quota_table = {
     organizations: 'Organisationen',
     monthly_active_organization: 'Monatlich aktive Organisationen',
     allowed_users_per_org: 'Erlaubte Benutzer pro Organisation',
-    invitation: 'Einladung (in Kürze)',
+    invitation: 'Einladung',
     org_roles: 'Org Rollen',
     org_permissions: 'Org Berechtigungen',
     just_in_time_provisioning: 'Bedarfsgesteuerte Bereitstellung',
@@ -67,8 +67,8 @@ const quota_table = {
     customer_ticket: 'Support-Ticket',
     premium: 'Premium',
     email_ticket_support: 'E-Mail-Ticket-Support',
-    soc2_report: 'SOC2-Bericht (in Kürze)',
-    hipaa_or_baa_report: 'HIPAA/BAA-Bericht (in Kürze)',
+    soc2_report: 'SOC2-Bericht',
+    hipaa_or_baa_report: 'HIPAA/BAA-Bericht',
   },
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',
@@ -88,6 +88,11 @@ const quota_table = {
     'Während der Beta-Phase kostenfrei zu benutzen. Wir werden mit der finalen Festlegung der organisationsbasierten nutzungsabhängigen Preise beginnen.',
   beta: 'Beta',
   add_on_beta: 'Add-on (Beta)',
+  million: '{{value, number}} Millionen',
+  mau_tip:
+    'MAU (monatlich aktive Benutzer) bedeutet die Anzahl der eindeutigen Benutzer, die in einem Abrechnungsmonat mindestens einen Token mit Logto ausgetauscht haben.',
+  tokens_tip:
+    'Alle Arten von Tokens, die von Logto ausgegeben wurden, einschließlich Zugriffstoken, Aktualisierungstoken, usw.',
 };
 
 export default Object.freeze(quota_table);

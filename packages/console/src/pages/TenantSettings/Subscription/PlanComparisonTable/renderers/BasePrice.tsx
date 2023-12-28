@@ -1,6 +1,6 @@
 import DynamicT from '@/ds-components/DynamicT';
 
-import QuotaValueWrapper from './QuotaValueWrapper';
+import TableDataWrapper from '../components/TableDataWrapper';
 
 type Props = {
   value?: string;
@@ -15,12 +15,12 @@ function BasePrice({ value }: Props) {
    * `basePrice` is a string value representing the price in cents, we need to convert the value from cents to dollars.
    */
   return (
-    <QuotaValueWrapper>
+    <TableDataWrapper>
       <DynamicT
         forKey="subscription.quota_table.monthly_price"
         interpolation={{ value: Number(value) / 100 }}
       />
-    </QuotaValueWrapper>
+    </TableDataWrapper>
   );
 }
 

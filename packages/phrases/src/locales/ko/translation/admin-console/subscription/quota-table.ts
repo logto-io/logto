@@ -1,9 +1,9 @@
 const quota_table = {
   quota: {
-    title: '할당량',
-    tenant_limit: '테넌트 제한',
+    title: '기본',
     base_price: '기본 가격',
-    mau_limit: 'MAU 제한',
+    mau_limit: 'MAU 한도',
+    included_tokens: '포함된 토큰',
   },
   application: {
     title: '애플리케이션',
@@ -56,7 +56,7 @@ const quota_table = {
     organizations: '조직',
     monthly_active_organization: '월간 활성 조직',
     allowed_users_per_org: '조직 당 허용된 사용자',
-    invitation: '초대장 (곧 제공 예정)',
+    invitation: '초대장',
     org_roles: '조직 역할',
     org_permissions: '조직 권한',
     just_in_time_provisioning: '적시 프로비저닝',
@@ -67,8 +67,8 @@ const quota_table = {
     customer_ticket: '지원 티켓',
     premium: '프리미엄',
     email_ticket_support: '이메일 티켓 지원',
-    soc2_report: 'SOC2 보고서 (곧 제공 예정)',
-    hipaa_or_baa_report: 'HIPAA/BAA 보고서 (곧 제공 예정)',
+    soc2_report: 'SOC2 보고서',
+    hipaa_or_baa_report: 'HIPAA/BAA 보고서',
   },
   unlimited: '무제한',
   contact: '문의',
@@ -87,6 +87,10 @@ const quota_table = {
     '베타 단계에서 무료입니다. 조직 사용량 기반 요금 책정 후 요금이 부과됩니다.',
   beta: '베타',
   add_on_beta: '부가 기능 (베타)',
+  million: '{{value, number}} 백만',
+  mau_tip:
+    'MAU (월간 활성 사용자)는 빌링 월에 Logto와 적어도 하나의 토큰을 교환한 고유 사용자 수를 의미합니다.',
+  tokens_tip: 'Logto에서 발행한 모든 종류의 토큰, 액세스 토큰, 리프레시 토큰 등을 포함합니다.',
 };
 
 export default Object.freeze(quota_table);

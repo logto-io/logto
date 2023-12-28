@@ -1,9 +1,9 @@
 const quota_table = {
   quota: {
-    title: '配額',
-    tenant_limit: '租戶限制',
+    title: '基本',
     base_price: '基本價格',
     mau_limit: 'MAU 限制',
+    included_tokens: '包含的令牌',
   },
   application: {
     title: '應用程式',
@@ -56,7 +56,7 @@ const quota_table = {
     organizations: '組織',
     monthly_active_organization: '每月活躍組織',
     allowed_users_per_org: '組織允許用戶數',
-    invitation: '邀請（即將推出）',
+    invitation: '邀請',
     org_roles: '組織角色',
     org_permissions: '組織權限',
     just_in_time_provisioning: '即時供應管理',
@@ -67,8 +67,8 @@ const quota_table = {
     customer_ticket: '客戶支援票證',
     premium: '進階版',
     email_ticket_support: '郵件票證支援',
-    soc2_report: 'SOC2 報告（即將推出）',
-    hipaa_or_baa_report: 'HIPAA/BAA 報告（即將推出）',
+    soc2_report: 'SOC2 報告',
+    hipaa_or_baa_report: 'HIPAA/BAA 報告',
   },
   unlimited: '無限制',
   contact: '聯絡',
@@ -87,6 +87,9 @@ const quota_table = {
     '在測試版階段免費使用。一旦我們確定組織使用量的定價，我們將開始收費。',
   beta: '測試版',
   add_on_beta: '附加功能（測試版）',
+  million: '{{value, number}} 百萬',
+  mau_tip: 'MAU（月活躍使用者）表示在一個計費月內與 Logto 交換過至少一個令牌的獨立使用者數量。',
+  tokens_tip: 'Logto 發行的所有類型令牌，包括訪問令牌、刷新令牌等。',
 };
 
 export default Object.freeze(quota_table);
