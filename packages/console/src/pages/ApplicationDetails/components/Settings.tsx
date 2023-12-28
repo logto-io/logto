@@ -20,8 +20,6 @@ import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
-import * as styles from '../index.module.scss';
-
 type Props = {
   data: Application;
 };
@@ -67,9 +65,9 @@ function Settings({ data }: Props) {
       {tenantEndpoint && (
         <FormField title="application_details.logto_endpoint">
           <CopyToClipboard
+            isFullWidth
             value={applyCustomDomain(tenantEndpoint.href)}
             variant="border"
-            className={styles.textField}
           />
         </FormField>
       )}
@@ -83,12 +81,7 @@ function Settings({ data }: Props) {
         applicationType
       ) && (
         <FormField title="application_details.application_secret">
-          <CopyToClipboard
-            hasVisibilityToggle
-            value={secret}
-            variant="border"
-            className={styles.textField}
-          />
+          <CopyToClipboard hasVisibilityToggle isFullWidth value={secret} variant="border" />
         </FormField>
       )}
       {applicationType !== ApplicationType.MachineToMachine && (
