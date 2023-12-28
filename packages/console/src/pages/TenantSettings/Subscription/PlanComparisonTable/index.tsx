@@ -1,4 +1,3 @@
-import { cond } from '@silverhand/essentials';
 import { Fragment, useMemo } from 'react';
 
 import PlanName from '@/components/PlanName';
@@ -42,16 +41,13 @@ function PlanComparisonTable({ subscriptionPlans }: Props) {
           {Object.entries(planTableGroupKeyMap).map(([groupKey, quotaKeys]) => (
             <Fragment key={groupKey}>
               <tr>
-                <td className={styles.groupLabel}>
+                <td colSpan={planTableDataArray.length + 1} className={styles.groupLabel}>
                   {/* eslint-disable-next-line no-restricted-syntax */}
                   <PlanQuotaGroupKeyLabel groupKey={groupKey as SubscriptionPlanTableGroupKey} />
                 </td>
               </tr>
-              {quotaKeys.map((quotaKey, index) => (
-                <tr
-                  key={`${groupKey}-${quotaKey}`}
-                  className={cond(index % 2 === 0 && styles.colorRow)}
-                >
+              {quotaKeys.map((quotaKey) => (
+                <tr key={`${groupKey}-${quotaKey}`}>
                   <td className={styles.quotaKeyColumn}>
                     <PlanQuotaKeyLabel quotaKey={quotaKey} />
                   </td>

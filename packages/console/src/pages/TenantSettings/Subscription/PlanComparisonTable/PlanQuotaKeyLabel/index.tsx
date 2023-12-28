@@ -1,20 +1,20 @@
-import { cond, type Nullable } from '@silverhand/essentials';
+import { cond } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 
 import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlanTable } from '@/types/subscriptions';
 
+import TableDataWrapper from '../components/TableDataWrapper';
+
 const planQuotaKeyPhraseMap: {
-  [key in keyof Required<SubscriptionPlanTable>]: Nullable<
-    TFuncKey<'translation', 'admin_console.subscription.quota_table'>
+  [key in keyof Required<SubscriptionPlanTable>]: TFuncKey<
+    'translation',
+    'admin_console.subscription.quota_table'
   >;
 } = {
   basePrice: 'quota.base_price',
   mauLimit: 'quota.mau_limit',
-  /**
-   * Token limit is required in the plan quota table but we don't display it as a row data.
-   */
-  tokenLimit: null,
+  tokenLimit: 'quota.included_tokens',
   applicationsLimit: 'application.total',
   machineToMachineLimit: 'application.m2m',
   resourcesLimit: 'resource.resource_count',
@@ -51,13 +51,31 @@ const planQuotaKeyPhraseMap: {
   hipaaOrBaaReportEnabled: 'support.hipaa_or_baa_report',
 };
 
+const planQuotaTipPhraseMap: Partial<
+  Record<
+    keyof Required<SubscriptionPlanTable>,
+    TFuncKey<'translation', 'admin_console.subscription.quota_table'>
+  >
+> = {
+  mauLimit: 'mau_tip',
+  tokenLimit: 'tokens_tip',
+};
+
 type Props = {
   quotaKey: keyof SubscriptionPlanTable;
 };
 
 function PlanQuotaKeyLabel({ quotaKey }: Props) {
-  const phraseKey = planQuotaKeyPhraseMap[quotaKey];
-  return cond(phraseKey && <DynamicT forKey={`subscription.quota_table.${phraseKey}`} />) ?? <>-</>;
+  const quotaTip = planQuotaTipPhraseMap[quotaKey];
+
+  return (
+    <TableDataWrapper
+      isLeftAligned
+      tip={cond(quotaTip && <DynamicT forKey={`subscription.quota_table.${quotaTip}`} />)}
+    >
+      <DynamicT forKey={`subscription.quota_table.${planQuotaKeyPhraseMap[quotaKey]}`} />
+    </TableDataWrapper>
+  );
 }
 
 export default PlanQuotaKeyLabel;

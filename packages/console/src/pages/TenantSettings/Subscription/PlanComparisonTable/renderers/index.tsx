@@ -3,6 +3,7 @@ import { cond } from '@silverhand/essentials';
 import { t } from 'i18next';
 import { type ReactNode } from 'react';
 
+import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlanTable, type SubscriptionPlanTableData } from '@/types/subscriptions';
 
 import BasePrice from './BasePrice';
@@ -15,14 +16,21 @@ export const quotaValueRenderer: Record<
 > = {
   // Base
   basePrice: ({ table: { basePrice } }) => <BasePrice value={basePrice} />,
-  tokenLimit: () => <div />, // Dummy: We don't display token limit as an item in the plan comparison table.
-  mauLimit: ({ id, table: { tokenLimit, mauLimit } }) => (
+  mauLimit: ({ table: { mauLimit } }) => <GenericQuotaLimit quota={mauLimit} />,
+  tokenLimit: ({ id, table: { tokenLimit } }) => (
     <GenericQuotaLimit
-      quota={mauLimit}
-      tipPhraseKey={cond(
-        tokenLimit && (id === ReservedPlanId.Free ? 'free_token_limit_tip' : 'paid_token_limit_tip')
-      )}
-      tipInterpolation={cond(typeof tokenLimit === 'number' && { value: tokenLimit / 1_000_000 })}
+      quota={tokenLimit}
+      tipPhraseKey={cond(tokenLimit && id !== ReservedPlanId.Free && 'paid_quota_limit_tip')}
+      formatter={(quota) => {
+        return quota >= 1_000_000 ? (
+          <DynamicT
+            forKey="subscription.quota_table.million"
+            interpolation={{ value: quota / 1_000_000 }}
+          />
+        ) : (
+          quota.toLocaleString()
+        );
+      }}
     />
   ),
   // Applications
@@ -120,16 +128,22 @@ export const quotaValueRenderer: Record<
   allowedUsersPerOrganization: ({ table: { allowedUsersPerOrganization } }) => (
     <GenericQuotaLimit quota={allowedUsersPerOrganization} />
   ),
-  invitationEnabled: ({ table: { invitationEnabled } }) => (
-    <GenericFeatureFlag isEnabled={invitationEnabled} />
-  ),
+  invitationEnabled: ({ table: { invitationEnabled } }) =>
+    invitationEnabled ? (
+      <DynamicT forKey="general.coming_soon" />
+    ) : (
+      <GenericFeatureFlag isEnabled={invitationEnabled} />
+    ),
   orgRolesLimit: ({ table: { orgRolesLimit } }) => <GenericQuotaLimit quota={orgRolesLimit} />,
   orgPermissionsLimit: ({ table: { orgPermissionsLimit } }) => (
     <GenericQuotaLimit quota={orgPermissionsLimit} />
   ),
-  justInTimeProvisioningEnabled: ({ table: { justInTimeProvisioningEnabled } }) => (
-    <GenericFeatureFlag isEnabled={justInTimeProvisioningEnabled} />
-  ),
+  justInTimeProvisioningEnabled: ({ table: { justInTimeProvisioningEnabled } }) =>
+    justInTimeProvisioningEnabled ? (
+      <DynamicT forKey="general.coming_soon" />
+    ) : (
+      <GenericFeatureFlag isEnabled={justInTimeProvisioningEnabled} />
+    ),
   // Audit logs
   auditLogsRetentionDays: ({ table: { auditLogsRetentionDays } }) => (
     <GenericQuotaLimit
@@ -150,10 +164,16 @@ export const quotaValueRenderer: Record<
       formatter={(quota) => `(${quota}h)`}
     />
   ),
-  soc2ReportEnabled: ({ table: { soc2ReportEnabled } }) => (
-    <GenericFeatureFlag isEnabled={soc2ReportEnabled} />
-  ),
-  hipaaOrBaaReportEnabled: ({ table: { hipaaOrBaaReportEnabled } }) => (
-    <GenericFeatureFlag isEnabled={hipaaOrBaaReportEnabled} />
-  ),
+  soc2ReportEnabled: ({ table: { soc2ReportEnabled } }) =>
+    soc2ReportEnabled ? (
+      <DynamicT forKey="general.coming_soon" />
+    ) : (
+      <GenericFeatureFlag isEnabled={soc2ReportEnabled} />
+    ),
+  hipaaOrBaaReportEnabled: ({ table: { hipaaOrBaaReportEnabled } }) =>
+    hipaaOrBaaReportEnabled ? (
+      <DynamicT forKey="general.coming_soon" />
+    ) : (
+      <GenericFeatureFlag isEnabled={hipaaOrBaaReportEnabled} />
+    ),
 };

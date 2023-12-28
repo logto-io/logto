@@ -4,7 +4,7 @@ import { type TFuncKey } from 'i18next';
 import Success from '@/assets/icons/success.svg';
 import DynamicT from '@/ds-components/DynamicT';
 
-import QuotaValueWrapper from './QuotaValueWrapper';
+import TableDataWrapper from '../components/TableDataWrapper';
 
 type Props = {
   /**
@@ -55,7 +55,7 @@ function GenericFeatureFlag({ isEnabled, isBeta, tipPhraseKey, paymentType }: Pr
   }
 
   return (
-    <QuotaValueWrapper
+    <TableDataWrapper
       tip={cond(tipPhraseKey && <DynamicT forKey={`subscription.quota_table.${tipPhraseKey}`} />)}
     >
       {isEnabled
@@ -69,7 +69,7 @@ function GenericFeatureFlag({ isEnabled, isBeta, tipPhraseKey, paymentType }: Pr
             />
           )
         : '-'}
-    </QuotaValueWrapper>
+    </TableDataWrapper>
   );
 }
 

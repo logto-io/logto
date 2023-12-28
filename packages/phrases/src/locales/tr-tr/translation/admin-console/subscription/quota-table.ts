@@ -1,9 +1,9 @@
 const quota_table = {
   quota: {
-    title: 'Kota',
-    tenant_limit: 'Kiracı limiti',
+    title: 'Temel',
     base_price: 'Temel fiyat',
     mau_limit: 'MAU limiti',
+    included_tokens: 'Dahil olan jetonlar',
   },
   application: {
     title: 'Uygulamalar',
@@ -56,7 +56,7 @@ const quota_table = {
     organizations: 'Organizasyonlar',
     monthly_active_organization: 'Aylık aktif organizasyon',
     allowed_users_per_org: 'Organizasyon başına izin verilen kullanıcılar',
-    invitation: 'Davet (Yakında)',
+    invitation: 'Davet',
     org_roles: 'Org rolleri',
     org_permissions: 'Org izinleri',
     just_in_time_provisioning: 'İstisnai olana kadar temin',
@@ -67,8 +67,8 @@ const quota_table = {
     customer_ticket: 'Müşteri destek bileti',
     premium: 'Premium',
     email_ticket_support: 'E-posta bileti desteği',
-    soc2_report: 'SOC2 raporu (Yakında)',
-    hipaa_or_baa_report: 'HIPAA/BAA raporu (Yakında)',
+    soc2_report: 'SOC2 raporu',
+    hipaa_or_baa_report: 'HIPAA/BAA raporu',
   },
   unlimited: 'Sınırsız',
   contact: 'İletişim',
@@ -88,6 +88,11 @@ const quota_table = {
     'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
   beta: 'Beta',
   add_on_beta: 'Ek hizmet (Beta)',
+  million: '{{value, number}} milyon',
+  mau_tip:
+    'MAU (aylık aktif kullanıcı) Logto ile en az bir token değiştiren benzersiz kullanıcı sayısını ifade eder.',
+  tokens_tip:
+    'Logto tarafından ihraç edilen erişim tokeni, yenileme tokeni vb. dahil olmak üzere tüm token türleri.',
 };
 
 export default Object.freeze(quota_table);

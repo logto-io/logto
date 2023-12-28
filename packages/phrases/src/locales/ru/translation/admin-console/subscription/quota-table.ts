@@ -1,9 +1,9 @@
 const quota_table = {
   quota: {
-    title: 'Квота',
-    tenant_limit: 'Лимит арендатора',
+    title: 'Основы',
     base_price: 'Базовая цена',
-    mau_limit: 'Лимит активных пользователей (MAU)',
+    mau_limit: 'Лимит MAU',
+    included_tokens: 'Включенные токены',
   },
   application: {
     title: 'Приложения',
@@ -56,7 +56,7 @@ const quota_table = {
     organizations: 'Организации',
     monthly_active_organization: 'Активная организация в месяц',
     allowed_users_per_org: 'Разрешенные пользователи в организации',
-    invitation: 'Приглашение (Скоро)',
+    invitation: 'Приглашение',
     org_roles: 'Роли организации',
     org_permissions: 'Права организации',
     just_in_time_provisioning: 'Пакетная настройка по запросу',
@@ -67,8 +67,8 @@ const quota_table = {
     customer_ticket: 'Техническая поддержка',
     premium: 'Премиум',
     email_ticket_support: 'Поддержка по электронной почте',
-    soc2_report: 'Отчет SOC2 (Скоро)',
-    hipaa_or_baa_report: 'Отчет HIPAA/BAA (Скоро)',
+    soc2_report: 'Отчет SOC2',
+    hipaa_or_baa_report: 'Отчет HIPAA/BAA',
   },
   unlimited: 'Неограниченно',
   contact: 'Связаться',
@@ -88,6 +88,11 @@ const quota_table = {
     'Бесплатно во время бета-тестирования. Мы начнем взимать плату, как только установим цены на использование по организации.',
   beta: 'Бета-тестирование',
   add_on_beta: 'Дополнение (бета-тестирование)',
+  million: '{{value, number}} миллионов',
+  mau_tip:
+    'MAU (месячно активные пользователи) означает количество уникальных пользователей, которые обменялись хотя бы одним токеном с Logto за месяц расчета.',
+  tokens_tip:
+    'Все виды токенов, выпущенных Logto, включая токены доступа, токены обновления и т. д.',
 };
 
 export default Object.freeze(quota_table);

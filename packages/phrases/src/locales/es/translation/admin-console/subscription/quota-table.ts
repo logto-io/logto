@@ -1,9 +1,9 @@
 const quota_table = {
   quota: {
-    title: 'Cuota',
-    tenant_limit: 'Límite de inquilinos',
+    title: 'Conceptos básicos',
     base_price: 'Precio base',
     mau_limit: 'Límite de MAU',
+    included_tokens: 'Tokens incluidos',
   },
   application: {
     title: 'Aplicaciones',
@@ -56,7 +56,7 @@ const quota_table = {
     organizations: 'Organizaciones',
     monthly_active_organization: 'Organización activa mensualmente',
     allowed_users_per_org: 'Usuarios permitidos por organización',
-    invitation: 'Invitación (Próximamente)',
+    invitation: 'Invitación',
     org_roles: 'Roles de organización',
     org_permissions: 'Permisos de organización',
     just_in_time_provisioning: 'Provisión justo a tiempo',
@@ -88,6 +88,11 @@ const quota_table = {
     'Gratis durante la fase beta. Comenzaremos a cobrar una vez que finalicemos los precios basados en el uso de la organización.',
   beta: 'Beta',
   add_on_beta: 'Complemento (Beta)',
+  million: '{{value, number}} millones',
+  mau_tip:
+    'MAU (usuario activo mensual) significa el número de usuarios únicos que han intercambiado al menos un token con Logto en un mes de facturación.',
+  tokens_tip:
+    'Todo tipo de tokens emitidos por Logto, incluyendo tokens de acceso, tokens de actualización, etc.',
 };
 
 export default Object.freeze(quota_table);

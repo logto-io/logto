@@ -1,9 +1,9 @@
 const quota_table = {
   quota: {
-    title: 'クォータ',
-    tenant_limit: 'テナント制限',
+    title: '基本',
     base_price: '基本価格',
-    mau_limit: 'MAU制限',
+    mau_limit: 'MAU 制限',
+    included_tokens: '含まれるトークン',
   },
   application: {
     title: 'アプリケーション',
@@ -56,7 +56,7 @@ const quota_table = {
     organizations: '組織',
     monthly_active_organization: '月間アクティブ組織',
     allowed_users_per_org: '組織ごとの許可ユーザー数',
-    invitation: '招待状（近日公開）',
+    invitation: '招待状',
     org_roles: '組織ロール',
     org_permissions: '組織権限',
     just_in_time_provisioning: 'ジャストインタイムプロビジョニング',
@@ -67,8 +67,8 @@ const quota_table = {
     customer_ticket: 'カスタマーチケット',
     premium: 'プレミアム',
     email_ticket_support: 'Emailチケットサポート',
-    soc2_report: 'SOC2レポート（近日公開）',
-    hipaa_or_baa_report: 'HIPAA/BAAレポート（近日公開）',
+    soc2_report: 'SOC2レポート',
+    hipaa_or_baa_report: 'HIPAA/BAAレポート',
   },
   unlimited: '無制限',
   contact: 'お問い合わせ',
@@ -88,6 +88,11 @@ const quota_table = {
     'ベータフェーズ中は無料です。組織の使用に基づく価格設定が最終決定した後、請求を開始します。',
   beta: 'ベータ',
   add_on_beta: 'アドオン（ベータ版）',
+  million: '{{value, number}} 万',
+  mau_tip:
+    'MAU（月間アクティブユーザー）とは、請求月において少なくとも1つのトークンをLogtoと交換したユニークなユーザーの数を指します。',
+  tokens_tip:
+    'Logtoによって発行されたすべての種類のトークン、アクセストークン、リフレッシュトークンなどを含みます。',
 };
 
 export default Object.freeze(quota_table);

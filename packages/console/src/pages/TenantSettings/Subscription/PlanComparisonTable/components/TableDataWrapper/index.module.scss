@@ -4,5 +4,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: _.unit(2);
+  gap: _.unit(1);
+
+  &.leftAligned {
+    justify-content: flex-start;
+  }
 }

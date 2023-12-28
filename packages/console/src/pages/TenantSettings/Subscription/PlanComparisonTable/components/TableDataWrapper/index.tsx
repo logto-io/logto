@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { type ReactNode } from 'react';
 
 import Tip from '@/assets/icons/tip.svg';
@@ -9,11 +10,12 @@ import * as styles from './index.module.scss';
 type Props = {
   children: ReactNode;
   tip?: ReactNode;
+  isLeftAligned?: boolean;
 };
 
-function QuotaValueWrapper({ children, tip }: Props) {
+function TableDataWrapper({ children, tip, isLeftAligned }: Props) {
   return (
-    <div className={styles.quotaValue}>
+    <div className={classNames(styles.quotaValue, isLeftAligned && styles.leftAligned)}>
       {children}
       {tip && (
         <ToggleTip content={tip}>
@@ -26,4 +28,4 @@ function QuotaValueWrapper({ children, tip }: Props) {
   );
 }
 
-export default QuotaValueWrapper;
+export default TableDataWrapper;

@@ -1,9 +1,9 @@
 const quota_table = {
   quota: {
-    title: 'Quota',
-    tenant_limit: 'Limite de locataire',
+    title: 'Basiques',
     base_price: 'Prix de base',
-    mau_limit: 'Limite MAU',
+    mau_limit: 'Limite de MAU',
+    included_tokens: 'Jetons inclus',
   },
   application: {
     title: 'Applications',
@@ -56,7 +56,7 @@ const quota_table = {
     organizations: 'Organisations',
     monthly_active_organization: 'Organisation active mensuelle',
     allowed_users_per_org: 'Utilisateurs autorisés par organisation',
-    invitation: 'Invitation (Bientôt disponible)',
+    invitation: 'Invitation',
     org_roles: "Rôles d'organisation",
     org_permissions: "Permissions d'organisation",
     just_in_time_provisioning: 'Fourniture juste-à-temps',
@@ -67,8 +67,8 @@ const quota_table = {
     customer_ticket: 'Ticket de support',
     premium: 'Premium',
     email_ticket_support: 'Support par ticket électronique',
-    soc2_report: 'Rapport SOC2 (prochainement)',
-    hipaa_or_baa_report: 'Rapport HIPAA/BAA (prochainement)',
+    soc2_report: 'Rapport SOC2',
+    hipaa_or_baa_report: 'Rapport HIPAA/BAA',
   },
   unlimited: 'Illimité',
   contact: 'Contact',
@@ -88,6 +88,11 @@ const quota_table = {
     "Gratuit à utiliser pendant la phase bêta. Nous commencerons à facturer une fois que nous aurons finalisé les tarifs basés sur l'usage de l'organisation.",
   beta: 'Bêta',
   add_on_beta: 'Module complémentaire (Bêta)',
+  million: '{{value, number}} million',
+  mau_tip:
+    "MAU (utilisateur actif mensuel) signifie le nombre d'utilisateurs uniques qui ont échangé au moins un jeton avec Logto au cours d'un mois de facturation.",
+  tokens_tip:
+    "Tous types de jetons émis par Logto, y compris les jetons d'accès, les jetons de rafraîchissement, etc.",
 };
 
 export default Object.freeze(quota_table);

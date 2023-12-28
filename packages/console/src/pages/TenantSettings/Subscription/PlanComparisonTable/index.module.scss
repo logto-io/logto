@@ -13,21 +13,12 @@
     width: 100%;
 
     thead {
-      background-color: var(--color-layer-light);
       border-radius: 6px;
       padding: 0 _.unit(3);
 
       tr th {
         font: var(--font-title-2);
         padding: _.unit(3);
-
-        &:first-child {
-          border-radius: 6px 0 0 6px;
-        }
-
-        &:last-child {
-          border-radius: 0 6px 6px 0;
-        }
       }
     }
 
@@ -36,28 +27,18 @@
         font: var(--font-body-2);
         text-align: center;
         padding: _.unit(3);
-
-        &:first-child {
-          border-radius: 6px 0 0 6px;
-        }
-
-        &:last-child {
-          border-radius: 0 6px 6px 0;
-        }
       }
 
       .groupLabel {
         font: var(--font-title-2);
         text-align: left;
+        background-color: var(--color-layer-light);
+        border-radius: 6px;
       }
 
       .quotaKeyColumn {
         padding: _.unit(4) _.unit(6);
         text-align: left;
-      }
-
-      .colorRow {
-        background-color: var(--color-layer-light);
       }
     }
   }
