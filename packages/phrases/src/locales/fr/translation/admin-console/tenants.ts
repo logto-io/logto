@@ -17,7 +17,6 @@ const tenants = {
     tenant_region_tip:
       'Vos ressources de locataire sont hébergées dans {{region}}. <a>En savoir plus</a>',
     environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
     tenant_type: 'Type de locataire',
     development_description:

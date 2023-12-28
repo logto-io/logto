@@ -23,6 +23,12 @@ import { type TenantSettingsForm } from './types.js';
 
 const tenantProfileToForm = (tenant?: TenantResponse): TenantSettingsForm => {
   return {
+    /**
+     * Note:
+     * The tag type in the TenantInfo returned by the Cloud does not match the newly updated tag type, but they are compatible.
+     * However, we need to update the tenant type in the schema before we can update the type of the Cloud response.
+     */
+    /** @ts-expect-error @xiaoyijun FIXME: remove this line after the @logto/cloud package is updated */
     profile: { name: tenant?.name ?? 'My project', tag: tenant?.tag ?? TenantTag.Development },
   };
 };
@@ -61,6 +67,12 @@ function TenantBasicSettings() {
       params: { tenantId: currentTenantId },
       body: data,
     });
+    /**
+     * Note:
+     * The tag type in the TenantInfo returned by the Cloud does not match the newly updated tag type, but they are compatible.
+     * However, we need to update the tenant type in the schema before we can update the type of the Cloud response.
+     */
+    /** @ts-expect-error @xiaoyijun FIXME: remove this line after the @logto/cloud package is updated */
     reset({ profile: { name, tag } });
     toast.success(t('tenants.settings.tenant_info_saved'));
     updateTenant(currentTenantId, data);

@@ -15,7 +15,6 @@ const tenants = {
     tenant_region: '데이터 호스팅 영역',
     tenant_region_tip: '당신의 테넌트 자원은 {{region}}에 호스팅됩니다. <a>자세히 알아보기</a>',
     environment_tag_development: '개발',
-    environment_tag_staging: '스테이징',
     environment_tag_production: '프로드',
     tenant_type: '테넌트 유형',
     development_description:

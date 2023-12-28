@@ -1,3 +1,4 @@
+import { type TenantTag } from '@logto/schemas';
 import { useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -50,7 +51,9 @@ export default function TenantSelector() {
         }}
       >
         <div className={styles.name}>{currentTenantInfo.name}</div>
-        <TenantEnvTag className={styles.tag} tag={currentTenantInfo.tag} />
+        {/* @xiaoyijun FIXME: remove this line after the @logto/cloud package is updated */}
+        {/* eslint-disable-next-line no-restricted-syntax */}
+        <TenantEnvTag className={styles.tag} tag={currentTenantInfo.tag as TenantTag} />
         <KeyboardArrowDown className={styles.arrowIcon} />
       </div>
       <Dropdown

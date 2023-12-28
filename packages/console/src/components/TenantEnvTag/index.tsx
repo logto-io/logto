@@ -19,15 +19,11 @@ type TenantTagMap = {
 
 export const tenantAbbreviatedTagNameMap = Object.freeze({
   [TenantTag.Development]: 'tenants.settings.environment_tag_development',
-  // Todo @xiaoyijun Remove staging tag before release
-  [TenantTag.Staging]: 'tenants.settings.environment_tag_staging',
   [TenantTag.Production]: 'tenants.settings.environment_tag_production',
 }) satisfies TenantTagMap;
 
 const tenantTagNameMap = Object.freeze({
   [TenantTag.Development]: 'tenants.full_env_tag.development',
-  // Todo @xiaoyijun Remove staging tag before release
-  [TenantTag.Staging]: 'tenants.settings.environment_tag_staging',
   [TenantTag.Production]: 'tenants.full_env_tag.production',
 }) satisfies TenantTagMap;
 

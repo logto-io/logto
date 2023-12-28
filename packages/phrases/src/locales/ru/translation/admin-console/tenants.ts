@@ -16,7 +16,6 @@ const tenants = {
     tenant_region: 'Регион размещения данных',
     tenant_region_tip: 'Ваши ресурсы арендатора размещаются в {{region}}. <a>Узнайте больше</a>',
     environment_tag_development: 'Разр',
-    environment_tag_staging: 'Предпр',
     environment_tag_production: 'Прод',
     tenant_type: 'Тип арендатора',
     development_description:

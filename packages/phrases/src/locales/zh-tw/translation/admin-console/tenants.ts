@@ -15,7 +15,6 @@ const tenants = {
     tenant_region: '資料托管地區',
     tenant_region_tip: '您的租戶資源托管於 {{region}}。 <a>了解更多</a>',
     environment_tag_development: '開發',
-    environment_tag_staging: '預置',
     environment_tag_production: '產品',
     tenant_type: '租戶類型',
     development_description:

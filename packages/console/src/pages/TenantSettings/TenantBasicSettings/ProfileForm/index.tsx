@@ -1,7 +1,4 @@
-import type { AdminConsoleKey } from '@logto/phrases';
-import { TenantTag } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -17,28 +14,8 @@ type Props = {
   currentTenantId: string;
 };
 
-const tagOptions: Array<{
-  title: AdminConsoleKey;
-  value: TenantTag;
-}> = [
-  {
-    title: 'tenants.settings.environment_tag_development',
-    value: TenantTag.Development,
-  },
-  {
-    title: 'tenants.settings.environment_tag_staging',
-    value: TenantTag.Staging,
-  },
-  {
-    title: 'tenants.settings.environment_tag_production',
-    value: TenantTag.Production,
-  },
-];
-
 function ProfileForm({ currentTenantId }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    control,
     register,
     formState: { errors },
     getValues,
