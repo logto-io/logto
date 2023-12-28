@@ -16,15 +16,9 @@ import { interactionPrefix } from './const.js';
 const { jest } = import.meta;
 const { mockEsmDefault, mockEsmWithActual } = createMockUtils(jest);
 
-// FIXME @Darcy: no more `enabled` for `connectors` table
 const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
   const metadata = {
-    id:
-      connectorId === 'social_enabled'
-        ? 'social_enabled'
-        : connectorId === 'social_disabled'
-        ? 'social_disabled'
-        : 'others',
+    id: connectorId,
   };
 
   return {
