@@ -5,6 +5,7 @@ import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FeatureTag from '@/components/FeatureTag';
+import { isCloud } from '@/consts/env';
 import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 
 import type DangerousRaw from '../DangerousRaw';
@@ -49,8 +50,8 @@ function CardTitle({
     <div className={classNames(styles.container, styles[size], className)}>
       <div className={classNames(styles.title, !isWordWrapEnabled && styles.titleEllipsis)}>
         {typeof title === 'string' ? <DynamicT forKey={title} /> : title}
-        {paywall && <FeatureTag isVisible for="upsell" plan={paywall} />}
-        {isBeta && <FeatureTag for="beta" />}
+        {paywall && isCloud && <FeatureTag isVisible for="upsell" plan={paywall} />}
+        {isBeta && isCloud && <FeatureTag for="beta" />}
       </div>
       {Boolean(subtitle ?? learnMoreLink) && (
         <div className={styles.subtitle}>

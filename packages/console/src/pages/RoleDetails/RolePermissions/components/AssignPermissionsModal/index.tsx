@@ -8,12 +8,11 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { hasSurpassedQuotaLimit } from '@/utils/quota';
 
@@ -25,9 +24,8 @@ type Props = {
 };
 
 function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose }: Props) {
-  const { currentTenantId } = useContext(TenantsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [scopes, setScopes] = useState<ScopeResponse[]>([]);
 
@@ -51,13 +49,11 @@ function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose
     }
   };
 
-  const shouldBlockScopeAssignment =
-    currentPlan &&
-    hasSurpassedQuotaLimit({
-      quotaKey: 'scopesPerRoleLimit',
-      plan: currentPlan,
-      usage: totalRoleScopeCount + scopes.length,
-    });
+  const shouldBlockScopeAssignment = hasSurpassedQuotaLimit({
+    quotaKey: 'scopesPerRoleLimit',
+    plan: currentPlan,
+    usage: totalRoleScopeCount + scopes.length,
+  });
 
   return (
     <ReactModal

@@ -10,7 +10,8 @@ import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
 import FeatureTag from '@/components/FeatureTag';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { isCloud } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -18,7 +19,6 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
 
 import Footer from './Footer';
@@ -44,10 +44,10 @@ type CreateRolePayload = Pick<Role, 'name' | 'description' | 'type'> & {
 };
 
 function CreateRoleForm({ onClose }: Props) {
-  const { currentTenantId } = useContext(TenantsContext);
   const [isTypeSelectorVisible, setIsTypeSelectorVisible] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
+
   const {
     control,
     handleSubmit,
@@ -149,9 +149,10 @@ function CreateRoleForm({ onClose }: Props) {
                       title={<DynamicT forKey={key} />}
                       value={value}
                       trailingIcon={
-                        hasPaywall && (
+                        hasPaywall &&
+                        isCloud && (
                           <FeatureTag
-                            isVisible={!currentPlan?.quota.machineToMachineLimit}
+                            isVisible={!currentPlan.quota.machineToMachineLimit}
                             for="upsell"
                             plan={ReservedPlanId.Pro}
                             className={styles.proTag}

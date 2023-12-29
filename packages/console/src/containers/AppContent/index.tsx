@@ -5,6 +5,8 @@ import { Navigate, Outlet, useParams } from 'react-router-dom';
 import AppLoading from '@/components/AppLoading';
 import Topbar from '@/components/Topbar';
 import { isCloud } from '@/consts/env';
+import SubscriptionDataProvider from '@/contexts/SubscriptionDataProvider';
+import useSubscriptionData from '@/contexts/SubscriptionDataProvider/use-subscription-data';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -18,19 +20,22 @@ import * as styles from './index.module.scss';
 import { type AppContentOutletContext } from './types';
 
 export default function AppContent() {
-  const { isLoading } = useUserPreferences();
+  const { isLoading: isLoadingPreference } = useUserPreferences();
   const { currentTenant } = useContext(TenantsContext);
   const isTenantSuspended = isCloud && currentTenant?.isSuspended;
+  const { isLoading: isLoadingSubscriptionData, ...subscriptionDta } = useSubscriptionData();
 
   const scrollableContent = useRef<HTMLDivElement>(null);
   const { scrollTop } = useScroll(scrollableContent.current);
+
+  const isLoading = isLoadingPreference || isLoadingSubscriptionData;
 
   if (isLoading || !currentTenant) {
     return <AppLoading />;
   }
 
   return (
-    <>
+    <SubscriptionDataProvider subscriptionData={subscriptionDta}>
       <div className={styles.app}>
         <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
         {isTenantSuspended && <TenantSuspendedPage />}
@@ -39,7 +44,7 @@ export default function AppContent() {
         )}
       </div>
       <TenantNotificationContainer />
-    </>
+    </SubscriptionDataProvider>
   );
 }
 

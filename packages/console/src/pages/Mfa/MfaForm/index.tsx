@@ -9,7 +9,7 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { isCloud } from '@/consts/env';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -17,7 +17,6 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
 
 import { type MfaConfigForm, type MfaConfig } from '../types';
@@ -33,9 +32,8 @@ type Props = {
 };
 
 function MfaForm({ data, onMfaUpdated }: Props) {
-  const { currentTenantId } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  const isMfaDisabled = isCloud && !currentPlan?.quota.mfaEnabled;
+  const { currentPlan } = useContext(SubscriptionDataContext);
+  const isMfaDisabled = isCloud && !currentPlan.quota.mfaEnabled;
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();

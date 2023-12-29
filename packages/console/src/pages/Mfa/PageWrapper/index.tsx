@@ -5,10 +5,11 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PageMeta from '@/components/PageMeta';
+import { isCloud } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import InlineNotification from '@/ds-components/InlineNotification';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
 import * as styles from './index.module.scss';
 
@@ -17,11 +18,10 @@ type Props = {
 };
 
 function PageWrapper({ children }: Props) {
-  const { currentTenantId, isDevTenant } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { isDevTenant } = useContext(TenantsContext);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  // Note: fallback to true for OSS version
-  const isMfaEnabled = currentPlan?.quota.mfaEnabled ?? true;
+  const isMfaEnabled = !isCloud || currentPlan.quota.mfaEnabled;
 
   return (
     <div className={styles.container}>

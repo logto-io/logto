@@ -10,9 +10,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { type ConnectorGroup } from '@/types/connector';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
@@ -31,9 +30,8 @@ function Footer({
   isCreateButtonDisabled,
   onClickCreateButton,
 }: Props) {
-  const { currentTenantId } = useContext(TenantsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
 
   const standardConnectorCount = useMemo(
     () =>
@@ -51,23 +49,19 @@ function Footer({
     [existingConnectors]
   );
 
-  const isStandardConnectorsReachLimit =
-    currentPlan &&
-    hasReachedQuotaLimit({
-      quotaKey: 'standardConnectorsLimit',
-      plan: currentPlan,
-      usage: standardConnectorCount,
-    });
+  const isStandardConnectorsReachLimit = hasReachedQuotaLimit({
+    quotaKey: 'standardConnectorsLimit',
+    plan: currentPlan,
+    usage: standardConnectorCount,
+  });
 
-  const isSocialConnectorsReachLimit =
-    currentPlan &&
-    hasReachedQuotaLimit({
-      quotaKey: 'socialConnectorsLimit',
-      plan: currentPlan,
-      usage: socialConnectorCount,
-    });
+  const isSocialConnectorsReachLimit = hasReachedQuotaLimit({
+    quotaKey: 'socialConnectorsLimit',
+    plan: currentPlan,
+    usage: socialConnectorCount,
+  });
 
-  if (isCreatingSocialConnector && currentPlan && selectedConnectorGroup) {
+  if (isCreatingSocialConnector && selectedConnectorGroup) {
     const { id: planId, name: planName, quota } = currentPlan;
 
     if (isStandardConnectorsReachLimit && selectedConnectorGroup.isStandard) {

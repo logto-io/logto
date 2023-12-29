@@ -3,12 +3,12 @@ import { useContext, useMemo, useState } from 'react';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { subscriptionPage } from '@/consts/pages';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useSubscribe from '@/hooks/use-subscribe';
-import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import NotEligibleSwitchPlanModalContent from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { parseExceededQuotaLimitError } from '@/utils/subscription';
@@ -23,13 +23,14 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
   const { currentTenantId } = useContext(TenantsContext);
   const { subscribe } = useSubscribe();
   const { show } = useConfirmModal();
-  const { data: subscriptionPlans } = useSubscriptionPlans();
+  const { subscriptionPlans } = useContext(SubscriptionDataContext);
+
   const [isLoading, setIsLoading] = useState(false);
   const proPlan = useMemo(
     /**
      * Note: now the hobby plan is treated as the new pro plan
      */
-    () => subscriptionPlans?.find(({ id }) => id === ReservedPlanId.Hobby),
+    () => subscriptionPlans.find(({ id }) => id === ReservedPlanId.Hobby),
     [subscriptionPlans]
   );
 

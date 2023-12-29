@@ -6,10 +6,17 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
 import { featuredPlanIdOrder } from '@/consts/subscriptions';
+// Used in the docs
+// eslint-disable-next-line unused-imports/no-unused-imports
+import TenantAccess from '@/containers/TenantAccess';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { sortBy } from '@/utils/sort';
 import { addSupportQuotaToPlan } from '@/utils/subscription';
 
+/**
+ * Fetch subscription plans from the cloud API.
+ * Note: If you want to retrieve subscription plans under the {@link TenantAccess} component, use `SubscriptionDataContext` instead.
+ */
 const useSubscriptionPlans = () => {
   const cloudApi = useCloudApi();
   const useSwrResponse = useSWRImmutable<SubscriptionPlanResponse[], Error>(

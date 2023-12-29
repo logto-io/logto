@@ -5,11 +5,10 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { newPlansBlogLink } from '@/consts';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
 import useConfigs from '@/hooks/use-configs';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
 type Props = {
   hasSurpassedLimit: boolean;
@@ -39,12 +38,11 @@ function ChargeNotification({
   checkedFlagKey,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
-  const { currentTenantId } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const { configs, updateConfigs } = useConfigs();
 
   // Display null when loading
-  if (!currentPlan || !configs) {
+  if (!configs) {
     return null;
   }
 

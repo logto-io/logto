@@ -1,14 +1,14 @@
 import { TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
 import Tick from '@/assets/icons/tick.svg';
 import { type TenantResponse } from '@/cloud/types/router';
 import PlanName from '@/components/PlanName';
 import TenantEnvTag from '@/components/TenantEnvTag';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
-import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 
 import TenantStatusTag from './TenantStatusTag';
 import * as styles from './index.module.scss';
@@ -26,8 +26,11 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
     subscription: { planId },
   } = tenantData;
 
-  const { data: plans } = useSubscriptionPlans();
-  const tenantPlan = useMemo(() => plans?.find((plan) => plan.id === planId), [plans, planId]);
+  const { subscriptionPlans } = useContext(SubscriptionDataContext);
+  const tenantPlan = useMemo(
+    () => subscriptionPlans.find((plan) => plan.id === planId),
+    [subscriptionPlans, planId]
+  );
 
   if (!tenantPlan) {
     return null;

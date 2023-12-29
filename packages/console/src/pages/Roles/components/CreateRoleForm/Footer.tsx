@@ -7,9 +7,8 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud } from '@/consts/env';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 import { buildUrl } from '@/utils/url';
 
@@ -22,8 +21,8 @@ type Props = {
 
 function Footer({ roleType, selectedScopesCount, isCreating, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentTenantId } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
+
   const { data: [, roleCount] = [] } = useSWR<[RoleResponse[], number]>(
     isCloud &&
       buildUrl('api/roles', {
@@ -33,24 +32,19 @@ function Footer({ roleType, selectedScopesCount, isCreating, onClickCreate }: Pr
       })
   );
 
-  const hasRoleReachedLimit =
-    currentPlan &&
-    hasReachedQuotaLimit({
-      quotaKey: roleType === RoleType.User ? 'rolesLimit' : 'machineToMachineRolesLimit',
-      plan: currentPlan,
-      usage: roleCount ?? 0,
-    });
+  const hasRoleReachedLimit = hasReachedQuotaLimit({
+    quotaKey: roleType === RoleType.User ? 'rolesLimit' : 'machineToMachineRolesLimit',
+    plan: currentPlan,
+    usage: roleCount ?? 0,
+  });
 
-  const hasScopesPerRoleSurpassedLimit =
-    currentPlan &&
-    hasSurpassedQuotaLimit({
-      quotaKey: 'scopesPerRoleLimit',
-      plan: currentPlan,
-      usage: selectedScopesCount,
-    });
+  const hasScopesPerRoleSurpassedLimit = hasSurpassedQuotaLimit({
+    quotaKey: 'scopesPerRoleLimit',
+    plan: currentPlan,
+    usage: selectedScopesCount,
+  });
 
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  if (currentPlan && (hasRoleReachedLimit || hasScopesPerRoleSurpassedLimit)) {
+  if (hasRoleReachedLimit || hasScopesPerRoleSurpassedLimit) {
     return (
       <QuotaGuardFooter>
         <Trans

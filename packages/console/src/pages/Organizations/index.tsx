@@ -7,13 +7,13 @@ import Plus from '@/assets/icons/plus.svg';
 import PageMeta from '@/components/PageMeta';
 import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useConfigs from '@/hooks/use-configs';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
 
@@ -34,14 +34,14 @@ type Props = {
 
 function Organizations({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentTenantId, isDevTenant } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { isDevTenant } = useContext(TenantsContext);
 
   const { navigate } = useTenantPathname();
   const [isCreating, setIsCreating] = useState(false);
   const { configs, isLoading: isLoadingConfigs } = useConfigs();
   const isInitialSetup = !isLoadingConfigs && !configs?.organizationCreated;
-  const isOrganizationsDisabled = isCloud && !currentPlan?.quota.organizationsEnabled;
+  const isOrganizationsDisabled = isCloud && !currentPlan.quota.organizationsEnabled;
 
   const upgradePlan = useCallback(() => {
     navigate(subscriptionPage);

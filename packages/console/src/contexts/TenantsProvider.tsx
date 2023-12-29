@@ -1,11 +1,11 @@
-import { defaultManagementApi, defaultTenantId, ReservedPlanId, TenantTag } from '@logto/schemas';
+import { defaultTenantId, TenantTag } from '@logto/schemas';
 import { conditionalArray, noop } from '@silverhand/essentials';
-import dayjs from 'dayjs';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
 
 import { type TenantResponse } from '@/cloud/types/router';
+import { defaultTenantResponse } from '@/consts';
 import { isCloud } from '@/consts/env';
 
 /**
@@ -60,33 +60,6 @@ type Tenants = {
   isDevTenant: boolean;
   /** Navigate to the given tenant ID. */
   navigateTenant: (tenantId: string) => void;
-};
-
-const { tenantId, indicator } = defaultManagementApi.resource;
-
-/**
- * - For cloud, the initial tenants data is empty, and it will be fetched from the cloud API.
- * - OSS has a fixed tenant with ID `default` and no cloud API to dynamically fetch tenants.
- */
-const defaultTenantResponse: TenantResponse = {
-  id: tenantId,
-  name: `tenant_${tenantId}`,
-  tag: TenantTag.Production,
-  indicator,
-  subscription: {
-    status: 'active',
-    planId: ReservedPlanId.Free,
-    currentPeriodStart: dayjs().toDate(),
-    currentPeriodEnd: dayjs().add(1, 'month').toDate(),
-  },
-  usage: {
-    activeUsers: 0,
-    cost: 0,
-    tokenUsage: 0,
-  },
-  openInvoices: [],
-  isSuspended: false,
-  planId: ReservedPlanId.Free, // Reserved for compatibility with cloud
 };
 
 const initialTenants = Object.freeze(conditionalArray(!isCloud && defaultTenantResponse));
