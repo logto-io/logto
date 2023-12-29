@@ -12,33 +12,36 @@ const cloud = {
       personal: '개인 프로젝트',
       company: '기업 프로젝트',
     },
-    title_field: '해당 제목을 선택하세요',
-    title_options: {
-      developer: '개발자',
-      team_lead: '팀 리더',
-      ceo: 'CEO',
-      cto: 'CTO',
-      product: '상품',
-      others: '기타',
-    },
     company_name_field: '회사 이름',
     company_name_placeholder: 'Acme.co',
-    company_size_field: '회사의 규모가 어느 정도인가요?',
-    company_options: {
-      size_1: '1',
-      size_2_49: '2-49',
-      size_50_199: '50-199',
-      size_200_999: '200-999',
-      size_1000_plus: '1000+',
+    /** UNTRANSLATED */
+    stage_field: 'What stage is your product currently in?',
+    stage_options: {
+      /** UNTRANSLATED */
+      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
+      /** UNTRANSLATED */
+      existing_product:
+        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
+      /** UNTRANSLATED */
+      target_enterprise_ready:
+        'I just landed bigger clients and now make my product ready to sell to enterprises',
     },
-    reason_field: '저는 이것 때문에 가입하려고 해요',
-    reason_options: {
-      passwordless: '비밀번호 없는 인증 및 UI를 위한 도구를 찾고 있어요',
-      efficiency: '즉시 사용 가능한 인증 인프라를 찾고 있어요',
-      access_control: '역할 및 책임에 따라 사용자의 접근을 제어하고 싶어요',
-      multi_tenancy: '멀티 테넌시 제품을 위한 대응 방법을 찾고 있어요',
-      enterprise: '기업 준비성을 위한 SSO 솔루션을 찾고 있어요',
-      others: '기타',
+    /** UNTRANSLATED */
+    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_options: {
+      /** UNTRANSLATED */
+      customize_ui_and_flow:
+        'Need the ability to bring my own UI, or customize my own flows via Logto API',
+      /** UNTRANSLATED */
+      compliance: 'SOC2 and GDPR are must-haves',
+      /** UNTRANSLATED */
+      export_user_data: 'Need the ability to export user data from Logto',
+      /** UNTRANSLATED */
+      budget_control: 'I have very tight budget control',
+      /** UNTRANSLATED */
+      bring_own_auth: 'Have my own auth services and just need some Logto features',
+      /** UNTRANSLATED */
+      others: 'None of these above',
     },
   },
   sie: {

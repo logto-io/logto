@@ -5,7 +5,7 @@ import type {
   MultiCardSelectorOption,
 } from '@/onboarding/components/CardSelector';
 
-import { Project, CompanySize, Reason, Title } from '../../types';
+import { Project, Stage, AdditionalFeatures } from '../../types';
 
 export const projectOptions: CardSelectorOption[] = [
   {
@@ -20,28 +20,35 @@ export const projectOptions: CardSelectorOption[] = [
   },
 ];
 
-export const titleOptions: MultiCardSelectorOption[] = [
-  { title: 'cloud.welcome.title_options.developer', value: Title.Developer },
-  { title: 'cloud.welcome.title_options.team_lead', value: Title.TeamLead },
-  { title: 'cloud.welcome.title_options.ceo', value: Title.Ceo },
-  { title: 'cloud.welcome.title_options.cto', value: Title.Cto },
-  { title: 'cloud.welcome.title_options.product', value: Title.Product },
-  { title: 'cloud.welcome.title_options.others', value: Title.Others },
+export const stageOptions: CardSelectorOption[] = [
+  { title: 'cloud.welcome.stage_options.new_product', value: Stage.NewProduct },
+  { title: 'cloud.welcome.stage_options.existing_product', value: Stage.ExistingProduct },
+  {
+    title: 'cloud.welcome.stage_options.target_enterprise_ready',
+    value: Stage.TargetEnterpriseReady,
+  },
 ];
 
-export const companySizeOptions: CardSelectorOption[] = [
-  { title: 'cloud.welcome.company_options.size_1', value: CompanySize.Scale1 },
-  { title: 'cloud.welcome.company_options.size_2_49', value: CompanySize.Scale2 },
-  { title: 'cloud.welcome.company_options.size_50_199', value: CompanySize.Scale3 },
-  { title: 'cloud.welcome.company_options.size_200_999', value: CompanySize.Scale4 },
-  { title: 'cloud.welcome.company_options.size_1000_plus', value: CompanySize.Scale5 },
-];
-
-export const reasonOptions: MultiCardSelectorOption[] = [
-  { title: 'cloud.welcome.reason_options.passwordless', value: Reason.Passwordless },
-  { title: 'cloud.welcome.reason_options.efficiency', value: Reason.Efficiency },
-  { title: 'cloud.welcome.reason_options.access_control', value: Reason.AccessControl },
-  { title: 'cloud.welcome.reason_options.multi_tenancy', value: Reason.MultiTenancy },
-  { title: 'cloud.welcome.reason_options.enterprise', value: Reason.Enterprise },
-  { title: 'cloud.welcome.reason_options.others', value: Reason.Others },
+export const additionalFeaturesOptions: MultiCardSelectorOption[] = [
+  {
+    title: 'cloud.welcome.additional_features_options.customize_ui_and_flow',
+    value: AdditionalFeatures.CustomizeUiAndFlow,
+  },
+  {
+    title: 'cloud.welcome.additional_features_options.compliance',
+    value: AdditionalFeatures.Compliance,
+  },
+  {
+    title: 'cloud.welcome.additional_features_options.export_user_data',
+    value: AdditionalFeatures.ExportUserDataFromLogto,
+  },
+  {
+    title: 'cloud.welcome.additional_features_options.budget_control',
+    value: AdditionalFeatures.BudgetControl,
+  },
+  {
+    title: 'cloud.welcome.additional_features_options.bring_own_auth',
+    value: AdditionalFeatures.BringOwnAuth,
+  },
+  { title: 'cloud.welcome.additional_features_options.others', value: AdditionalFeatures.Others },
 ];

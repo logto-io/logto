@@ -11,33 +11,36 @@ const cloud = {
       personal: '個人專案',
       company: '公司專案',
     },
-    title_field: '選擇適用的職稱',
-    title_options: {
-      developer: '開發人員',
-      team_lead: '團隊負責人',
-      ceo: 'CEO',
-      cto: 'CTO',
-      product: '產品',
-      others: '其他',
-    },
     company_name_field: '公司名稱',
     company_name_placeholder: 'Acme.co',
-    company_size_field: '你的公司規模如何？',
-    company_options: {
-      size_1: '1',
-      size_2_49: '2-49',
-      size_50_199: '50-199',
-      size_200_999: '200-999',
-      size_1000_plus: '1000+',
+    /** UNTRANSLATED */
+    stage_field: 'What stage is your product currently in?',
+    stage_options: {
+      /** UNTRANSLATED */
+      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
+      /** UNTRANSLATED */
+      existing_product:
+        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
+      /** UNTRANSLATED */
+      target_enterprise_ready:
+        'I just landed bigger clients and now make my product ready to sell to enterprises',
     },
-    reason_field: '我註冊的原因是',
-    reason_options: {
-      passwordless: '尋找無需密碼身份驗證和 UI 工具包',
-      efficiency: '尋找即插即用的身份基礎架構',
-      access_control: '基於角色和責任控制用戶訪問',
-      multi_tenancy: '尋求面向多租戶產品的策略',
-      enterprise: '為產品更方便企業使用尋找 SSO 解決方案',
-      others: '其他',
+    /** UNTRANSLATED */
+    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_options: {
+      /** UNTRANSLATED */
+      customize_ui_and_flow:
+        'Need the ability to bring my own UI, or customize my own flows via Logto API',
+      /** UNTRANSLATED */
+      compliance: 'SOC2 and GDPR are must-haves',
+      /** UNTRANSLATED */
+      export_user_data: 'Need the ability to export user data from Logto',
+      /** UNTRANSLATED */
+      budget_control: 'I have very tight budget control',
+      /** UNTRANSLATED */
+      bring_own_auth: 'Have my own auth services and just need some Logto features',
+      /** UNTRANSLATED */
+      others: 'None of these above',
     },
   },
   sie: {

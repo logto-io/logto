@@ -22,7 +22,7 @@ import { OnboardingPage, Project } from '../../types';
 import { getOnboardingPage } from '../../utils';
 
 import * as styles from './index.module.scss';
-import { titleOptions, companySizeOptions, reasonOptions, projectOptions } from './options';
+import { stageOptions, additionalFeaturesOptions, projectOptions } from './options';
 
 function Welcome() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -77,57 +77,42 @@ function Welcome() {
             </FormField>
             {/* Check whether it is a business use case */}
             {watch('project') === Project.Company && (
-              <>
-                <FormField isMultiple title="cloud.welcome.title_field" headlineSpacing="large">
-                  <Controller
-                    control={control}
-                    name="titles"
-                    render={({ field: { onChange, value } }) => (
-                      <MultiCardSelector
-                        className={styles.titleSelector}
-                        optionClassName={styles.option}
-                        value={value ?? []}
-                        options={titleOptions}
-                        onChange={(value) => {
-                          onChange(value.length === 0 ? undefined : value);
-                        }}
-                      />
-                    )}
-                  />
-                </FormField>
-                <FormField title="cloud.welcome.company_name_field">
-                  <TextInput
-                    placeholder={t('cloud.welcome.company_name_placeholder')}
-                    {...register('companyName')}
-                  />
-                </FormField>
-                <FormField title="cloud.welcome.company_size_field" headlineSpacing="large">
-                  <Controller
-                    control={control}
-                    name="companySize"
-                    render={({ field: { onChange, value, name } }) => (
-                      <CardSelector
-                        name={name}
-                        value={value ?? ''}
-                        options={companySizeOptions}
-                        optionClassName={styles.option}
-                        onChange={(value) => {
-                          onChange(conditional(value && value));
-                        }}
-                      />
-                    )}
-                  />
-                </FormField>
-              </>
+              <FormField title="cloud.welcome.company_name_field">
+                <TextInput
+                  placeholder={t('cloud.welcome.company_name_placeholder')}
+                  {...register('companyName')}
+                />
+              </FormField>
             )}
-            <FormField isMultiple title="cloud.welcome.reason_field" headlineSpacing="large">
+            <FormField title="cloud.welcome.stage_field" headlineSpacing="large">
               <Controller
                 control={control}
-                name="reasons"
+                name="stage"
+                render={({ field: { name, onChange, value } }) => (
+                  <CardSelector
+                    name={name}
+                    value={value ?? ''}
+                    options={stageOptions}
+                    onChange={(value) => {
+                      onChange(conditional(value && value));
+                    }}
+                  />
+                )}
+              />
+            </FormField>
+            <FormField
+              isMultiple
+              title="cloud.welcome.additional_features_field"
+              headlineSpacing="large"
+            >
+              <Controller
+                control={control}
+                name="additionalFeatures"
                 render={({ field: { onChange, value } }) => (
                   <MultiCardSelector
+                    optionClassName={styles.option}
                     value={value ?? []}
-                    options={reasonOptions}
+                    options={additionalFeaturesOptions}
                     onChange={(value) => {
                       onChange(value.length === 0 ? undefined : value);
                     }}

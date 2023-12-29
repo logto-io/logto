@@ -12,33 +12,36 @@ const cloud = {
       personal: 'Projeto pessoal',
       company: 'Projeto da empresa',
     },
-    title_field: 'Selecione o(s) título(s) aplicável(veis)',
-    title_options: {
-      developer: 'Desenvolvedor/a',
-      team_lead: 'Líder de equipe',
-      ceo: 'CEO',
-      cto: 'CTO',
-      product: 'Produto',
-      others: 'Outros',
-    },
     company_name_field: 'Nome da empresa',
     company_name_placeholder: 'Acme.co',
-    company_size_field: 'Qual é o tamanho da sua empresa?',
-    company_options: {
-      size_1: '1',
-      size_2_49: '2-49',
-      size_50_199: '50-199',
-      size_200_999: '200-999',
-      size_1000_plus: '1000+',
+    /** UNTRANSLATED */
+    stage_field: 'What stage is your product currently in?',
+    stage_options: {
+      /** UNTRANSLATED */
+      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
+      /** UNTRANSLATED */
+      existing_product:
+        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
+      /** UNTRANSLATED */
+      target_enterprise_ready:
+        'I just landed bigger clients and now make my product ready to sell to enterprises',
     },
-    reason_field: 'Estou me registrando porque',
-    reason_options: {
-      passwordless: 'Busco autenticação sem senha e kit de UI',
-      efficiency: 'Busco infraestrutura de identidade out-of-the-box',
-      access_control: 'Controlar o acesso do usuário com base em funções e responsabilidades',
-      multi_tenancy: 'Procurando estratégias para um produto com múltiplos locatários',
-      enterprise: 'Buscando soluções SSO para produtividade empresarial',
-      others: 'Outros',
+    /** UNTRANSLATED */
+    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_options: {
+      /** UNTRANSLATED */
+      customize_ui_and_flow:
+        'Need the ability to bring my own UI, or customize my own flows via Logto API',
+      /** UNTRANSLATED */
+      compliance: 'SOC2 and GDPR are must-haves',
+      /** UNTRANSLATED */
+      export_user_data: 'Need the ability to export user data from Logto',
+      /** UNTRANSLATED */
+      budget_control: 'I have very tight budget control',
+      /** UNTRANSLATED */
+      bring_own_auth: 'Have my own auth services and just need some Logto features',
+      /** UNTRANSLATED */
+      others: 'None of these above',
     },
   },
   sie: {

@@ -12,33 +12,36 @@ const cloud = {
       personal: '個人プロジェクト',
       company: '会社プロジェクト',
     },
-    title_field: '適用可能なタイトルを選択してください',
-    title_options: {
-      developer: '開発者',
-      team_lead: 'チームリード',
-      ceo: 'CEO',
-      cto: 'CTO',
-      product: 'プロダクト',
-      others: 'その他',
-    },
     company_name_field: '会社名',
     company_name_placeholder: 'Acme.co',
-    company_size_field: '会社の規模は？',
-    company_options: {
-      size_1: '1',
-      size_2_49: '2-49',
-      size_50_199: '50-199',
-      size_200_999: '200-999',
-      size_1000_plus: '1000+',
+    /** UNTRANSLATED */
+    stage_field: 'What stage is your product currently in?',
+    stage_options: {
+      /** UNTRANSLATED */
+      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
+      /** UNTRANSLATED */
+      existing_product:
+        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
+      /** UNTRANSLATED */
+      target_enterprise_ready:
+        'I just landed bigger clients and now make my product ready to sell to enterprises',
     },
-    reason_field: 'サインアップの理由は？',
-    reason_options: {
-      passwordless: 'パスワードレス認証と UI キットを探したい',
-      efficiency: '即時利用可能な ID インフラを探したい',
-      access_control: '役割と責任に基づくユーザーアクセスを制御したい',
-      multi_tenancy: 'マルチテナント製品の戦略を探しています',
-      enterprise: '企業規模に向けた SSO ソリューションを探しています',
-      others: 'その他',
+    /** UNTRANSLATED */
+    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_options: {
+      /** UNTRANSLATED */
+      customize_ui_and_flow:
+        'Need the ability to bring my own UI, or customize my own flows via Logto API',
+      /** UNTRANSLATED */
+      compliance: 'SOC2 and GDPR are must-haves',
+      /** UNTRANSLATED */
+      export_user_data: 'Need the ability to export user data from Logto',
+      /** UNTRANSLATED */
+      budget_control: 'I have very tight budget control',
+      /** UNTRANSLATED */
+      bring_own_auth: 'Have my own auth services and just need some Logto features',
+      /** UNTRANSLATED */
+      others: 'None of these above',
     },
   },
   sie: {
