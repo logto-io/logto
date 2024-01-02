@@ -28,7 +28,7 @@
   transition-duration: 0.2s;
   padding: 0 _.unit(3);
   height: 36px;
-  background: var(--color-layer-1);
+  background-color: inherit;
   font: var(--font-body-2);
 
   &.withIcon {
