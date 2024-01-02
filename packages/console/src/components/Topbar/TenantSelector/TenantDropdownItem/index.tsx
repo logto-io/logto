@@ -41,7 +41,6 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
       <div className={styles.info}>
         <div className={styles.meta}>
           <div className={styles.name}>{name}</div>
-          {/* @ts-expect-error @xiaoyijun FIXME: remove this line after the @logto/cloud package is updated */}
           <TenantEnvTag tag={tag} />
           <TenantStatusTag
             tenantData={tenantData}
