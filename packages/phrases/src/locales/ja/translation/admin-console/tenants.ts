@@ -15,7 +15,6 @@ const tenants = {
     tenant_region: 'データがホストされている地域',
     tenant_region_tip: 'テナントのリソースは{{region}}にホストされています。 <a>詳細</a>',
     environment_tag_development: '開発',
-    environment_tag_staging: 'ステージング',
     environment_tag_production: '本番',
     tenant_type: 'テナントタイプ',
     development_description:

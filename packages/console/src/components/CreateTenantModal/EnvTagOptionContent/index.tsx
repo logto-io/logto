@@ -16,18 +16,11 @@ type Props = {
 const descriptionMap: Record<TenantTag, AdminConsoleKey> = {
   [TenantTag.Development]: 'tenants.create_modal.development_description',
   [TenantTag.Production]: 'tenants.create_modal.production_description',
-  // Todo @xiaoyijun Remove deprecated tag
-  [TenantTag.Staging]: 'tenants.create_modal.production_description',
 };
 
 const availableProductionPlanNames = [ReservedPlanName.Free, ReservedPlanName.Pro];
 
 function EnvTagOptionContent({ tag }: Props) {
-  // Todo @xiaoyijun Deprecated tag
-  if (tag === TenantTag.Staging) {
-    return null;
-  }
-
   return (
     <div className={styles.container}>
       <TenantEnvTag isAbbreviated={false} tag={tag} size="large" className={styles.tag} />

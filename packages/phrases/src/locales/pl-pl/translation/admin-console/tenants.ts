@@ -17,7 +17,6 @@ const tenants = {
     tenant_region_tip:
       'Twoje zasoby najemcy są hostowane w {{region}}. <a>Uzyskaj więcej informacji</a>',
     environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
     tenant_type: 'Typ najemcy',
     development_description:

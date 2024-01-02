@@ -16,7 +16,6 @@ const tenants = {
     tenant_region_tip:
       'Kiracı kaynaklarınız {{region}} bölgesinde barındırılır. <a>Daha fazla bilgi</a>',
     environment_tag_development: 'Geliş',
-    environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
     tenant_type: 'Kiracı türü',
     development_description:

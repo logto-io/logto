@@ -17,7 +17,6 @@ const tenants = {
     tenant_region_tip:
       'Sus recursos de inquilino se alojan en {{region}}. <a>Obtener más información</a>',
     environment_tag_development: 'Desarrollo',
-    environment_tag_staging: 'Pruebas',
     environment_tag_production: 'Producción',
     tenant_type: 'Tipo de inquilino',
     development_description:

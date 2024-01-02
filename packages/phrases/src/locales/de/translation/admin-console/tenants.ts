@@ -17,7 +17,6 @@ const tenants = {
     tenant_region_tip:
       'Ihre Mandantenressourcen werden in {{region}} gehostet. <a>Mehr erfahren</a>',
     environment_tag_development: 'Entw',
-    environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
     tenant_type: 'Mandantentyp',
     development_description:

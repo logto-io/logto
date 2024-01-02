@@ -1,3 +1,4 @@
+import { type TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation, Trans } from 'react-i18next';
 
@@ -37,7 +38,9 @@ function DeleteModal({ isOpen, isLoading, onClose, onDelete, tenant }: Props) {
           <Trans components={{ span: <span className={styles.bold} /> }}>
             {t('tenants.delete_modal.description_line1', {
               name,
-              tag: t(tenantAbbreviatedTagNameMap[tag], {}), // Referred to the use in DynamicT component.
+              // @xiaoyijun FIXME: remove this line after the @logto/cloud package is updated */
+              // eslint-disable-next-line no-restricted-syntax
+              tag: t(tenantAbbreviatedTagNameMap[tag as TenantTag], {}), // Referred to the use in DynamicT component.
             })}
           </Trans>
         </p>
