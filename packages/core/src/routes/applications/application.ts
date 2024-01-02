@@ -217,7 +217,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: applicationPatchGuard.deepPartial().merge(
+      body: applicationPatchGuard.merge(
         object({
           isAdmin: boolean().optional(),
         })
@@ -231,7 +231,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      const { isAdmin, ...rest } = body;
+      const { isAdmin, protectedAppMetadata, ...rest } = body;
 
       // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.
       // Since those apps sit in the user tenant, we provide an internal role to apply the necessary scopes.
@@ -258,6 +258,34 @@ export default function applicationRoutes<T extends AuthedRouter>(
           ]);
         } else if (!isAdmin && usedToBeAdmin) {
           await deleteApplicationRole(id, internalAdminRole.id);
+        }
+      }
+
+      if (protectedAppMetadata) {
+        const { type, protectedAppMetadata: originProtectedAppMetadata } =
+          await findApplicationById(id);
+        assertThat(type === ApplicationType.Protected, 'application.protected_application_only');
+        assertThat(
+          originProtectedAppMetadata,
+          new RequestError({
+            code: 'application.protected_application_misconfigured',
+            status: 422,
+          })
+        );
+        await updateApplicationById(id, {
+          protectedAppMetadata: {
+            ...originProtectedAppMetadata,
+            ...protectedAppMetadata,
+          },
+        });
+        try {
+          await protectedApps.syncAppConfigsToRemote(id);
+        } catch (error: unknown) {
+          // Revert changes on sync failure
+          await updateApplicationById(id, {
+            protectedAppMetadata: originProtectedAppMetadata,
+          });
+          throw error;
         }
       }
 

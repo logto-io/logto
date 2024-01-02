@@ -43,6 +43,7 @@ import MachineToMachineApplicationRoles from './components/MachineToMachineAppli
 import RefreshTokenSettings from './components/RefreshTokenSettings';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';
+import { type ApplicationForm, applicationFormDataParser } from './utils';
 
 const mapToUriFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(uri));
@@ -73,7 +74,7 @@ function ApplicationDetails() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const api = useApi();
-  const formMethods = useForm<Application & { isAdmin: boolean }>({
+  const formMethods = useForm<ApplicationForm>({
     defaultValues: { customClientMetadata: customClientMetadataDefault, isAdmin: false },
   });
 
@@ -92,7 +93,7 @@ function ApplicationDetails() {
       return;
     }
 
-    reset(data);
+    reset(applicationFormDataParser.fromResponse(data));
   }, [data, isDirty, reset]);
 
   const onSubmit = handleSubmit(

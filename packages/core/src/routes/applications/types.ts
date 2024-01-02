@@ -37,6 +37,28 @@ const applicationCreateGuardWithProtectedAppMetadata = originalApplicationCreate
       .optional(),
   });
 
+const applicationPatchGuardWithProtectedAppMetadata = originalApplicationPatchGuard
+  .deepPartial()
+  .omit({
+    protectedAppMetadata: true,
+  })
+  .extend({
+    protectedAppMetadata: z
+      .object({
+        origin: z.string().optional(),
+        sessionDuration: z.number().optional(),
+        pageRules: z
+          .array(
+            z.object({
+              /* The path pattern (regex) to match */
+              path: z.string(),
+            })
+          )
+          .optional(),
+      })
+      .optional(),
+  });
+
 // FIXME:  @wangsijie Remove this guard once protected app is ready
 // @ts-expect-error -- hide the dev feature field from the guard type, but always return the full type to make the api logic simpler
 export const applicationCreateGuard: typeof applicationCreateGuardWithProtectedAppMetadata = EnvSet
@@ -48,7 +70,7 @@ export const applicationCreateGuard: typeof applicationCreateGuardWithProtectedA
 
 // FIXME:  @wangsijie Remove this guard once protected app is ready
 // @ts-expect-error -- hide the dev feature field from the guard type, but always return the full type to make the api logic simpler
-export const applicationPatchGuard: typeof originalApplicationPatchGuard = EnvSet.values
-  .isDevFeaturesEnabled
-  ? originalApplicationPatchGuard
-  : originalApplicationPatchGuard.omit({ protectedAppMetadata: true });
+export const applicationPatchGuard: typeof applicationPatchGuardWithProtectedAppMetadata = EnvSet
+  .values.isDevFeaturesEnabled
+  ? applicationPatchGuardWithProtectedAppMetadata
+  : applicationPatchGuardWithProtectedAppMetadata.omit({ protectedAppMetadata: true });

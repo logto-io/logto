@@ -10,6 +10,10 @@ const application = {
   protected_app_not_configured: 'Protected app provider is not configured.',
   /** UNTRANSLATED */
   cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
+  /** UNTRANSLATED */
+  protected_application_only: 'The feature is only available for protected applications.',
+  /** UNTRANSLATED */
+  protected_application_misconfigured: 'Protected application is misconfigured.',
 };
 
 export default Object.freeze(application);

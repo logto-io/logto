@@ -9,6 +9,8 @@ const application = {
   protected_app_metadata_is_required: 'Protected app metadata is required.',
   protected_app_not_configured: 'Protected app provider is not configured.',
   cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
+  protected_application_only: 'The feature is only available for protected applications.',
+  protected_application_misconfigured: 'Protected application is misconfigured.',
 };
 
 export default Object.freeze(application);

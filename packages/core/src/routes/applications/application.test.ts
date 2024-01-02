@@ -12,6 +12,12 @@ const { jest } = import.meta;
 const findApplicationById = jest.fn(async () => mockApplication);
 const deleteApplicationById = jest.fn();
 const syncAppConfigsToRemote = jest.fn();
+const updateApplicationById = jest.fn(
+  async (_, data: Partial<CreateApplication>): Promise<Application> => ({
+    ...mockApplication,
+    ...data,
+  })
+);
 
 await mockIdGenerators();
 
@@ -33,12 +39,7 @@ const tenantContext = new MockTenant(
           },
         })
       ),
-      updateApplicationById: jest.fn(
-        async (_, data: Partial<CreateApplication>): Promise<Application> => ({
-          ...mockApplication,
-          ...data,
-        })
-      ),
+      updateApplicationById,
     },
   },
   undefined,
@@ -60,6 +61,11 @@ const customClientMetadata = {
 };
 
 describe('application route', () => {
+  afterEach(() => {
+    updateApplicationById.mockClear();
+    syncAppConfigsToRemote.mockClear();
+  });
+
   const applicationRequest = createRequester({ authedRoutes: applicationRoutes, tenantContext });
 
   it('GET /applications', async () => {
@@ -195,6 +201,23 @@ describe('application route', () => {
       .send({ name, description, customClientMetadata });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({ ...mockApplication, name, description, customClientMetadata });
+  });
+
+  it('PATCH /applications/:applicationId for protected app', async () => {
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
+    const name = 'FooApplication';
+    const description = 'FooDescription';
+    const origin = 'https://example.com';
+
+    const response = await applicationRequest
+      .patch('/applications/foo')
+      .send({ name, description, protectedAppMetadata: { origin } });
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({ ...mockApplication, name, description });
+    expect(syncAppConfigsToRemote).toHaveBeenCalledWith('foo');
+    expect(updateApplicationById).toHaveBeenNthCalledWith(1, 'foo', {
+      protectedAppMetadata: { ...mockProtectedApplication.protectedAppMetadata, origin },
+    });
   });
 
   it('PATCH /applications/:applicationId expect to throw with invalid properties', async () => {
