@@ -54,3 +54,28 @@ export const updateProtectedAppSiteConfigs = async (
 
   handleResponse(response);
 };
+
+export const deleteProtectedAppSiteConfigs = async (
+  auth: ProtectedAppConfigProviderData,
+  host: string
+) => {
+  const response = await got.delete(
+    new URL(
+      path.join(
+        baseUrl.pathname,
+        `/accounts/${auth.accountIdentifier}/storage/kv/namespaces/${
+          auth.namespaceIdentifier
+        }/values/${encodeURIComponent(`${auth.keyName}:${host}`)}`
+      ),
+      baseUrl
+    ),
+    {
+      headers: {
+        Authorization: `Bearer ${auth.apiToken}`,
+      },
+      throwHttpErrors: false,
+    }
+  );
+
+  handleResponse(response);
+};

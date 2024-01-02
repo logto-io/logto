@@ -306,6 +306,10 @@ export default function applicationRoutes<T extends AuthedRouter>(
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
+      const { type, protectedAppMetadata } = await findApplicationById(id);
+      if (type === ApplicationType.Protected && protectedAppMetadata) {
+        await protectedApps.deleteRemoteAppConfigs(protectedAppMetadata.host);
+      }
       // Note: will need delete cascade when application is joint with other tables
       await deleteApplicationById(id);
       ctx.status = 204;

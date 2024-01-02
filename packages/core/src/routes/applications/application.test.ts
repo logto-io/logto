@@ -12,6 +12,7 @@ const { jest } = import.meta;
 const findApplicationById = jest.fn(async () => mockApplication);
 const deleteApplicationById = jest.fn();
 const syncAppConfigsToRemote = jest.fn();
+const deleteRemoteAppConfigs = jest.fn();
 const updateApplicationById = jest.fn(
   async (_, data: Partial<CreateApplication>): Promise<Application> => ({
     ...mockApplication,
@@ -43,7 +44,10 @@ const tenantContext = new MockTenant(
     },
   },
   undefined,
-  { quota: createMockQuotaLibrary(), protectedApps: { syncAppConfigsToRemote } }
+  {
+    quota: createMockQuotaLibrary(),
+    protectedApps: { syncAppConfigsToRemote, deleteRemoteAppConfigs },
+  }
 );
 
 const { createRequester } = await import('#src/utils/test-utils.js');
@@ -64,6 +68,7 @@ describe('application route', () => {
   afterEach(() => {
     updateApplicationById.mockClear();
     syncAppConfigsToRemote.mockClear();
+    deleteRemoteAppConfigs.mockClear();
   });
 
   const applicationRequest = createRequester({ authedRoutes: applicationRoutes, tenantContext });
@@ -303,10 +308,14 @@ describe('application route', () => {
     );
   });
 
-  it('DELETE /applications/:applicationId', async () => {
+  it('DELETE /applications/:applicationId for protected app', async () => {
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
     await expect(applicationRequest.delete('/applications/foo')).resolves.toHaveProperty(
       'status',
       204
+    );
+    expect(deleteRemoteAppConfigs).toHaveBeenCalledWith(
+      mockProtectedApplication.protectedAppMetadata?.host
     );
   });
 
