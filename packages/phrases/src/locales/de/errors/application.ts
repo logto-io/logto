@@ -7,8 +7,7 @@ const application = {
     'Nur traditionelle Webanwendungen können als Drittanbieter-App markiert werden.',
   third_party_application_only: 'Das Feature ist nur für Drittanbieter-Anwendungen verfügbar.',
   user_consent_scopes_not_found: 'Ungültige Benutzerzustimmungsbereiche.',
-  /** UNTRANSLATED */
-  protected_app_metadata_is_required: 'Protected app metadata is required.',
+  protected_app_metadata_is_required: 'Geschützte App-Metadaten sind erforderlich.',
 };
 
 export default Object.freeze(application);

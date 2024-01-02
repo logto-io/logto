@@ -14,34 +14,24 @@ const cloud = {
     },
     company_name_field: 'Nombre de la empresa',
     company_name_placeholder: 'Acme.co',
-    /** UNTRANSLATED */
-    stage_field: 'What stage is your product currently in?',
+    stage_field: '¿En qué etapa se encuentra su producto actualmente?',
     stage_options: {
-      /** UNTRANSLATED */
-      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
-      /** UNTRANSLATED */
+      new_product: 'Comenzar un nuevo proyecto y buscar una solución rápida y lista para usar',
       existing_product:
-        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
-      /** UNTRANSLATED */
+        'Migrar desde una autenticación actual (por ejemplo, creada por uno mismo, Auth0, Cognito, Microsoft)',
       target_enterprise_ready:
-        'I just landed bigger clients and now make my product ready to sell to enterprises',
+        'Acabo de obtener clientes más grandes y ahora debo hacer que mi producto esté listo para vender a empresas',
     },
-    /** UNTRANSLATED */
-    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_field: '¿Hay algo más que desee que sepamos?',
     additional_features_options: {
-      /** UNTRANSLATED */
       customize_ui_and_flow:
-        'Need the ability to bring my own UI, or customize my own flows via Logto API',
-      /** UNTRANSLATED */
-      compliance: 'SOC2 and GDPR are must-haves',
-      /** UNTRANSLATED */
-      export_user_data: 'Need the ability to export user data from Logto',
-      /** UNTRANSLATED */
-      budget_control: 'I have very tight budget control',
-      /** UNTRANSLATED */
-      bring_own_auth: 'Have my own auth services and just need some Logto features',
-      /** UNTRANSLATED */
-      others: 'None of these above',
+        'Necesito la capacidad de utilizar mi propia interfaz de usuario o personalizar mis propios flujos a través de la API de Logto',
+      compliance: 'SOC2 y GDPR son imprescindibles',
+      export_user_data: 'Necesito la capacidad de exportar datos de usuario de Logto',
+      budget_control: 'Tengo un control presupuestario muy ajustado',
+      bring_own_auth:
+        'Tengo mis propios servicios de autenticación y solo necesito algunas características de Logto',
+      others: 'Ninguna de las anteriores',
     },
   },
   sie: {
@@ -54,7 +44,7 @@ const cloud = {
       inspire_me: 'Inspírame',
     },
     logo_field: 'Logotipo de la aplicación',
-    color_field: 'Color de marca',
+    color_field: 'Color de la marca',
     identifier_field: 'Identificador',
     identifier_options: {
       email: 'Correo electrónico',
@@ -75,9 +65,9 @@ const cloud = {
     connectors: {
       unlocked_later: 'Desbloqueado más adelante',
       unlocked_later_tip:
-        'Una vez que haya completado el proceso de incorporación y haya ingresado al producto, tendrá acceso a una mayor cantidad de métodos de inicio de sesión social.',
+        'Una vez que haya completado el proceso de incorporación y haya ingresado al producto, tendrá acceso a una mayor variedad de métodos de inicio de sesión social.',
       notice:
-        'Evite utilizar el conector de demostración con fines de producción. Una vez que haya completado las pruebas, elimine amablemente el conector de demostración y configure su propio conector con sus credenciales.',
+        'Evite usar el conector de demostración para fines de producción. Una vez completadas las pruebas, elimine amablemente el conector de demostración y configure su propio conector con sus credenciales.',
     },
   },
   socialCallback: {

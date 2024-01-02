@@ -14,34 +14,24 @@ const cloud = {
     },
     company_name_field: 'Firmenname',
     company_name_placeholder: 'Acme.co',
-    /** UNTRANSLATED */
-    stage_field: 'What stage is your product currently in?',
+    stage_field: 'In welchem Stadium befindet sich Ihr Produkt derzeit?',
     stage_options: {
-      /** UNTRANSLATED */
-      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
-      /** UNTRANSLATED */
+      new_product: 'Starte ein neues Projekt und suche nach einer schnellen, Out-of-the-Box-Lösung',
       existing_product:
-        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
-      /** UNTRANSLATED */
+        'Migration von der derzeitigen Authentifizierung (z. B. selbst erstellt, Auth0, Cognito, Microsoft)',
       target_enterprise_ready:
-        'I just landed bigger clients and now make my product ready to sell to enterprises',
+        'Ich habe gerade größere Kunden gewonnen und möchte mein Produkt jetzt bereit machen, um es an Unternehmen zu verkaufen',
     },
-    /** UNTRANSLATED */
-    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_field: 'Haben Sie noch etwas, das Sie uns wissen lassen möchten?',
     additional_features_options: {
-      /** UNTRANSLATED */
       customize_ui_and_flow:
-        'Need the ability to bring my own UI, or customize my own flows via Logto API',
-      /** UNTRANSLATED */
-      compliance: 'SOC2 and GDPR are must-haves',
-      /** UNTRANSLATED */
-      export_user_data: 'Need the ability to export user data from Logto',
-      /** UNTRANSLATED */
-      budget_control: 'I have very tight budget control',
-      /** UNTRANSLATED */
-      bring_own_auth: 'Have my own auth services and just need some Logto features',
-      /** UNTRANSLATED */
-      others: 'None of these above',
+        'Benötigen Sie die Möglichkeit, Ihr eigenes UI zu integrieren oder Ihre eigenen Abläufe über die Logto-API anzupassen',
+      compliance: 'SOC2 und GDPR sind Pflicht',
+      export_user_data: 'Benötigen Sie die Möglichkeit, Benutzerdaten von Logto zu exportieren',
+      budget_control: 'Ich habe sehr strenge Budgetkontrolle',
+      bring_own_auth:
+        'Ich habe eigene Authentifizierungsdienste und benötige nur einige Logto-Funktionen',
+      others: 'Keines der oben genannten',
     },
   },
   sie: {

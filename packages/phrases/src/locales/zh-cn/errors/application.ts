@@ -5,8 +5,7 @@ const application = {
   invalid_third_party_application_type: '只有传统网络应用程序可以标记为第三方应用。',
   third_party_application_only: '该功能仅适用于第三方应用程序。',
   user_consent_scopes_not_found: '无效的用户同意范围。',
-  /** UNTRANSLATED */
-  protected_app_metadata_is_required: 'Protected app metadata is required.',
+  protected_app_metadata_is_required: '需要保护的应用程序元数据。',
 };
 
 export default Object.freeze(application);

@@ -6,47 +6,36 @@ const cloud = {
     page_title: 'Welcome',
     title: "Welcome to Logto Cloud! We'd love to learn a bit about you.",
     description:
-      'Let‘s make your Logto experience unique to you by getting to know you better. Your information is safe with us.',
-    project_field: 'I’m using Logto for',
+      "Let's make your Logto experience unique to you by getting to know you better. Your information is safe with us.",
+    project_field: "I'm using Logto for",
     project_options: {
       personal: 'Personal project',
       company: 'Company project',
     },
     company_name_field: 'Company name',
     company_name_placeholder: 'Acme.co',
-    /** UNTRANSLATED */
     stage_field: 'What stage is your product currently in?',
     stage_options: {
-      /** UNTRANSLATED */
       new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
-      /** UNTRANSLATED */
       existing_product:
         'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
-      /** UNTRANSLATED */
       target_enterprise_ready:
         'I just landed bigger clients and now make my product ready to sell to enterprises',
     },
-    /** UNTRANSLATED */
     additional_features_field: 'Do you have anything else you want us to know?',
     additional_features_options: {
-      /** UNTRANSLATED */
       customize_ui_and_flow:
         'Need the ability to bring my own UI, or customize my own flows via Logto API',
-      /** UNTRANSLATED */
       compliance: 'SOC2 and GDPR are must-haves',
-      /** UNTRANSLATED */
       export_user_data: 'Need the ability to export user data from Logto',
-      /** UNTRANSLATED */
       budget_control: 'I have very tight budget control',
-      /** UNTRANSLATED */
       bring_own_auth: 'Have my own auth services and just need some Logto features',
-      /** UNTRANSLATED */
       others: 'None of these above',
     },
   },
   sie: {
     page_title: 'Customize sign-in experience',
-    title: 'Let’s first customize your sign-in experience with ease',
+    title: "Let's first customize your sign-in experience with ease",
     inspire: {
       title: 'Create compelling examples',
       description:
@@ -77,7 +66,7 @@ const cloud = {
       unlocked_later_tip:
         'Once you have completed the onboarding process and entered the product, you will have access to even more social sign-in methods.',
       notice:
-        'Please avoid using the demo connector for production purposes. Once you’ve completed testing, kindly delete the demo connector and set up your own connector with your credentials.',
+        "Please avoid using the demo connector for production purposes. Once you've completed testing, kindly delete the demo connector and set up your own connector with your credentials.",
     },
   },
   socialCallback: {

@@ -26,6 +26,7 @@ enum DeploymentType {
 }
 
 /** @deprecated */
+// eslint-disable-next-line import/no-unused-modules
 export enum Title {
   Developer = 'developer',
   TeamLead = 'team-lead',
@@ -36,6 +37,7 @@ export enum Title {
 }
 
 /** @deprecated */
+// eslint-disable-next-line import/no-unused-modules
 export enum CompanySize {
   Scale1 = '1',
   Scale2 = '2-49',
@@ -45,6 +47,7 @@ export enum CompanySize {
 }
 
 /** @deprecated */
+// eslint-disable-next-line import/no-unused-modules
 export enum Reason {
   Passwordless = 'passwordless',
   Efficiency = 'efficiency',

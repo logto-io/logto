@@ -13,34 +13,20 @@ const cloud = {
     },
     company_name_field: '公司名称',
     company_name_placeholder: 'Acme.co',
-    /** UNTRANSLATED */
-    stage_field: 'What stage is your product currently in?',
+    stage_field: '你的产品目前处于哪个阶段？',
     stage_options: {
-      /** UNTRANSLATED */
-      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
-      /** UNTRANSLATED */
-      existing_product:
-        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
-      /** UNTRANSLATED */
-      target_enterprise_ready:
-        'I just landed bigger clients and now make my product ready to sell to enterprises',
+      new_product: '开始一个新项目，寻找一个快速的即插即用解决方案',
+      existing_product: '从当前的身份验证系统迁移（例如，自建、Auth0、Cognito、Microsoft）',
+      target_enterprise_ready: '我刚刚赢得了更大的客户，现在希望让我的产品适应企业销售',
     },
-    /** UNTRANSLATED */
-    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_field: '你还有其他想告诉我们的信息么？',
     additional_features_options: {
-      /** UNTRANSLATED */
-      customize_ui_and_flow:
-        'Need the ability to bring my own UI, or customize my own flows via Logto API',
-      /** UNTRANSLATED */
-      compliance: 'SOC2 and GDPR are must-haves',
-      /** UNTRANSLATED */
-      export_user_data: 'Need the ability to export user data from Logto',
-      /** UNTRANSLATED */
-      budget_control: 'I have very tight budget control',
-      /** UNTRANSLATED */
-      bring_own_auth: 'Have my own auth services and just need some Logto features',
-      /** UNTRANSLATED */
-      others: 'None of these above',
+      customize_ui_and_flow: '需要通过 Logto API 带入自己的 UI，或定制自己的流程',
+      compliance: 'SOC2 和 GDPR 是必须的',
+      export_user_data: '需要能够从 Logto 导出用户数据',
+      budget_control: '我有非常严格的预算控制',
+      bring_own_auth: '有自己的身份验证服务，只需要一些 Logto 功能',
+      others: '以上都不是',
     },
   },
   sie: {
@@ -74,7 +60,7 @@ const cloud = {
       unlocked_later: '稍后解锁',
       unlocked_later_tip: '完成入门流程并进入产品后，你将获得访问更多社交登录方式的权限。',
       notice:
-        '请勿将演示连接器用于生产目的。完成测试后，请删除演示连接器并使用你的凭据设置自己的连接器。',
+        '请勿将演示连接器用于生产目的。 完成测试后，请删除演示连接器并使用你的凭证设置自己的连接器。',
     },
   },
   socialCallback: {

@@ -13,34 +13,20 @@ const cloud = {
     },
     company_name_field: '公司名稱',
     company_name_placeholder: 'Acme.co',
-    /** UNTRANSLATED */
-    stage_field: 'What stage is your product currently in?',
+    stage_field: '你的產品目前處於什麼階段？',
     stage_options: {
-      /** UNTRANSLATED */
-      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
-      /** UNTRANSLATED */
-      existing_product:
-        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
-      /** UNTRANSLATED */
-      target_enterprise_ready:
-        'I just landed bigger clients and now make my product ready to sell to enterprises',
+      new_product: '啟動新項目並尋找快速、即插即用的解決方案',
+      existing_product: '從當前身份驗證進行遷移（例如自行建立、Auth0、Cognito、Microsoft）',
+      target_enterprise_ready: '我剛剛簽下了更大的客戶，現在要使我的產品能夠銷售給企業',
     },
-    /** UNTRANSLATED */
-    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_field: '你還有其他想讓我們知道的事情嗎？',
     additional_features_options: {
-      /** UNTRANSLATED */
-      customize_ui_and_flow:
-        'Need the ability to bring my own UI, or customize my own flows via Logto API',
-      /** UNTRANSLATED */
-      compliance: 'SOC2 and GDPR are must-haves',
-      /** UNTRANSLATED */
-      export_user_data: 'Need the ability to export user data from Logto',
-      /** UNTRANSLATED */
-      budget_control: 'I have very tight budget control',
-      /** UNTRANSLATED */
-      bring_own_auth: 'Have my own auth services and just need some Logto features',
-      /** UNTRANSLATED */
-      others: 'None of these above',
+      customize_ui_and_flow: '需要通過 Logto API 自定義我的 UI，或自定義自己的流程',
+      compliance: 'SOC2 和 GDPR 是必不可少的',
+      export_user_data: '需要從 Logto 導出用戶數據的能力',
+      budget_control: '我有非常嚴格的預算控制',
+      bring_own_auth: '擁有自己的身份驗證服務，只需要一些 Logto 功能',
+      others: '以上都不是',
     },
   },
   sie: {

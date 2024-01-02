@@ -14,34 +14,24 @@ const cloud = {
     },
     company_name_field: 'Nazwa firmy',
     company_name_placeholder: 'Acme.co',
-    /** UNTRANSLATED */
-    stage_field: 'What stage is your product currently in?',
+    stage_field: 'W jakim etapie jest Twój produkt aktualnie?',
     stage_options: {
-      /** UNTRANSLATED */
-      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
-      /** UNTRANSLATED */
+      new_product: 'Rozpocznij nowy projekt i szukasz szybkiego, gotowego rozwiązania',
       existing_product:
-        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
-      /** UNTRANSLATED */
+        'Migracja z bieżącej autoryzacji (np. własna autoryzacja, Auth0, Cognito, Microsoft)',
       target_enterprise_ready:
-        'I just landed bigger clients and now make my product ready to sell to enterprises',
+        'Właśnie pozyskałem większych klientów i teraz przygotowuję mój produkt do sprzedaży dla przedsiębiorstw',
     },
-    /** UNTRANSLATED */
-    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_field: 'Czy masz coś jeszcze, o czym chcesz, żebyśmy wiedzieli?',
     additional_features_options: {
-      /** UNTRANSLATED */
       customize_ui_and_flow:
-        'Need the ability to bring my own UI, or customize my own flows via Logto API',
-      /** UNTRANSLATED */
-      compliance: 'SOC2 and GDPR are must-haves',
-      /** UNTRANSLATED */
-      export_user_data: 'Need the ability to export user data from Logto',
-      /** UNTRANSLATED */
-      budget_control: 'I have very tight budget control',
-      /** UNTRANSLATED */
-      bring_own_auth: 'Have my own auth services and just need some Logto features',
-      /** UNTRANSLATED */
-      others: 'None of these above',
+        'Potrzebuję możliwości dostarczenia mojego własnego interfejsu użytkownika lub dostosowania moich własnych przepływów za pomocą interfejsu API Logto',
+      compliance: 'SOC2 i GDPR są konieczne',
+      export_user_data: 'Potrzebuję możliwości eksportu danych użytkownika z Logto',
+      budget_control: 'Mam bardzo ściśłą kontrolę budżetu',
+      bring_own_auth:
+        'Mam swoje własne usługi autoryzacji i potrzebuję tylko niektórych funkcji Logto',
+      others: 'Nic z powyższych',
     },
   },
   sie: {
@@ -75,7 +65,7 @@ const cloud = {
     connectors: {
       unlocked_later: 'Zostanie odblokowane później',
       unlocked_later_tip:
-        'Po ukończeniu procesu wprowadzenia do użytku i wejściu do produktu będziesz mieć dostęp do jeszcze większej liczby metod logowania społecznościowego.',
+        'Po ukończeniu procesu wprowadzenia do użytku i wejściu do produktu będziesz mieć dostęp do jeszcze większej liczby metod logowania społecznościowego',
       notice:
         'Prosimy, unikaj korzystania z demo konektora do celów produkcyjnych. Po zakończeniu testów, uprzejmie usuń demokonwerter i skonfiguruj swój własny konektor z własnymi poświadczeniami.',
     },

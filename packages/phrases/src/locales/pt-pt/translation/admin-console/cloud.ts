@@ -4,48 +4,38 @@ const cloud = {
   },
   welcome: {
     page_title: 'Bem-vindo',
-    title: 'Bem-vindo ao Logto Cloud! Gostaríamos de aprender um pouco sobre você.',
+    title: 'Bem-vindo ao Logto Cloud! Gostaríamos de aprender um pouco sobre si.',
     description:
-      'Vamos tornar a experiência da Logto única para você conhecendo você melhor. Suas informações estão seguras conosco.',
-    project_field: 'Estou usando a Logto para',
+      'Vamos tornar a experiência da Logto única para si conhecendo-o melhor. As suas informações estão seguras connosco.',
+    project_field: 'Estou a usar a Logto para',
     project_options: {
       personal: 'Projeto pessoal',
       company: 'Projeto da empresa',
     },
     company_name_field: 'Nome da empresa',
     company_name_placeholder: 'Acme.co',
-    /** UNTRANSLATED */
-    stage_field: 'What stage is your product currently in?',
+    stage_field: 'Em que fase está atualmente o seu produto?',
     stage_options: {
-      /** UNTRANSLATED */
-      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
-      /** UNTRANSLATED */
+      new_product: 'Iniciar um novo projeto e procurar uma solução rápida e pronta a usar',
       existing_product:
-        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
-      /** UNTRANSLATED */
+        'Migrar da autenticação atual (p. ex., autenticação feita por si, Auth0, Cognito, Microsoft)',
       target_enterprise_ready:
-        'I just landed bigger clients and now make my product ready to sell to enterprises',
+        'Acabei de conquistar clientes mais importantes e agora pretendo preparar o meu produto para vender a empresas',
     },
-    /** UNTRANSLATED */
-    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_field: 'Tem algo mais que queira que saibamos?',
     additional_features_options: {
-      /** UNTRANSLATED */
       customize_ui_and_flow:
-        'Need the ability to bring my own UI, or customize my own flows via Logto API',
-      /** UNTRANSLATED */
-      compliance: 'SOC2 and GDPR are must-haves',
-      /** UNTRANSLATED */
-      export_user_data: 'Need the ability to export user data from Logto',
-      /** UNTRANSLATED */
-      budget_control: 'I have very tight budget control',
-      /** UNTRANSLATED */
-      bring_own_auth: 'Have my own auth services and just need some Logto features',
-      /** UNTRANSLATED */
-      others: 'None of these above',
+        'Necessidade de poder usar a minha própria interface do utilizador ou personalizar os meus próprios fluxos através da API da Logto',
+      compliance: 'A conformidade SOC2 e GDPR são imprescindíveis',
+      export_user_data: 'Necessidade de exportar dados de utilizadores da Logto',
+      budget_control: 'Tenho um controlo orçamental muito apertado',
+      bring_own_auth:
+        'Tenho os meus próprios serviços de autenticação e só preciso de algumas funcionalidades da Logto',
+      others: 'Nenhuma das acima mencionadas',
     },
   },
   sie: {
-    page_title: 'Personalize a experiência de login',
+    page_title: 'Personalize the Login Experience',
     title: 'Vamos personalizar a sua experiência de login com facilidade',
     inspire: {
       title: 'Crie exemplos convincentes',
@@ -59,7 +49,7 @@ const cloud = {
     identifier_options: {
       email: 'E-mail',
       phone: 'Telefone',
-      user_name: 'Nome de usuário',
+      user_name: 'Nome de utilizador',
     },
     authn_field: 'Autenticação',
     authn_options: {
@@ -69,7 +59,7 @@ const cloud = {
     social_field: 'Login social',
     finish_and_done: 'Terminar e pronto',
     preview: {
-      mobile_tab: 'Celular',
+      mobile_tab: 'Telemóvel',
       web_tab: 'Web',
     },
     connectors: {
@@ -81,9 +71,9 @@ const cloud = {
     },
   },
   socialCallback: {
-    title: 'Você entrou com sucesso',
+    title: 'Entrou com Sucesso',
     description:
-      'Você entrou com sucesso usando sua conta social. Para garantir uma integração perfeita e acesso a todos os recursos do Logto, recomendamos que você prossiga para configurar seu próprio conector social.',
+      'Entrou com sucesso usando a sua conta social. Para garantir uma integração perfeita e acesso a todos os recursos da Logto, recomendamos que prossiga para configurar o seu próprio conector social.',
   },
   tenant: {
     create_tenant: 'Criar novo inquilino',

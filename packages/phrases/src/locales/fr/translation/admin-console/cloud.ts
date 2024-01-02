@@ -14,34 +14,25 @@ const cloud = {
     },
     company_name_field: "Nom de l'entreprise",
     company_name_placeholder: 'Acme.co',
-    /** UNTRANSLATED */
-    stage_field: 'What stage is your product currently in?',
+    stage_field: 'Dans quelle étape se trouve actuellement votre produit ?',
     stage_options: {
-      /** UNTRANSLATED */
-      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
-      /** UNTRANSLATED */
+      new_product: "Démarrer un nouveau projet et chercher une solution rapide et prête à l'emploi",
       existing_product:
-        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
-      /** UNTRANSLATED */
+        "Migrer à partir d'une authentification actuelle (par exemple, auto-construite, Auth0, Cognito, Microsoft)",
       target_enterprise_ready:
-        'I just landed bigger clients and now make my product ready to sell to enterprises',
+        'Je viens de conclure des contrats avec des clients plus importants et je veux maintenant rendre mon produit prêt à être vendu aux entreprises',
     },
-    /** UNTRANSLATED */
-    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_field: "Avez-vous d'autres informations à nous communiquer ?",
     additional_features_options: {
-      /** UNTRANSLATED */
       customize_ui_and_flow:
-        'Need the ability to bring my own UI, or customize my own flows via Logto API',
-      /** UNTRANSLATED */
-      compliance: 'SOC2 and GDPR are must-haves',
-      /** UNTRANSLATED */
-      export_user_data: 'Need the ability to export user data from Logto',
-      /** UNTRANSLATED */
-      budget_control: 'I have very tight budget control',
-      /** UNTRANSLATED */
-      bring_own_auth: 'Have my own auth services and just need some Logto features',
-      /** UNTRANSLATED */
-      others: 'None of these above',
+        "Besoin de la possibilité d'apporter ma propre interface utilisateur ou personnaliser mes propres flux via l'API de Logto",
+      compliance: 'SOC2 et le respect du RGPD sont indispensables',
+      export_user_data:
+        "Besoin de la possibilité d'exporter des données utilisateur à partir de Logto",
+      budget_control: 'Je dois avoir un contrôle de budget très strict',
+      bring_own_auth:
+        "J'ai mes propres services d'authentification et j'ai juste besoin de certaines fonctionnalités de Logto",
+      others: 'Aucun de ceux mentionnés ci-dessus',
     },
   },
   sie: {
@@ -50,14 +41,14 @@ const cloud = {
     inspire: {
       title: 'Créez des exemples convaincants',
       description:
-        'Vous vous sentez incertain de l\'expérience de connexion? Cliquez simplement sur "Inspirez-moi" et laissez la magie opérer!',
+        'Vous vous sentez incertain de l\'expérience de connexion ? Cliquez simplement sur "Inspirez-moi" et laissez la magie opérer!',
       inspire_me: 'Inspirez-moi',
     },
     logo_field: "Logo de l'application",
     color_field: 'Couleur de la marque',
     identifier_field: 'Identifiant',
     identifier_options: {
-      email: 'Email',
+      email: 'E-mail',
       phone: 'Téléphone',
       user_name: "Nom d'utilisateur",
     },

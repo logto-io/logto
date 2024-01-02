@@ -14,34 +14,22 @@ const cloud = {
     },
     company_name_field: '会社名',
     company_name_placeholder: 'Acme.co',
-    /** UNTRANSLATED */
-    stage_field: 'What stage is your product currently in?',
+    stage_field: '製品は現在どの段階にありますか？',
     stage_options: {
-      /** UNTRANSLATED */
-      new_product: 'Start a new project and looking for a quick, out-of-the-box solution',
-      /** UNTRANSLATED */
-      existing_product:
-        'Migrate from current authentication (e.g., self-built, Auth0, Cognito, Microsoft)',
-      /** UNTRANSLATED */
+      new_product: '新しいプロジェクトを開始し、素早く立ち上げたい場合',
+      existing_product: '現在の認証（例：自社構築、Auth0、Cognito、Microsoft）から移行する',
       target_enterprise_ready:
-        'I just landed bigger clients and now make my product ready to sell to enterprises',
+        '大きなクライアントを獲得したため、製品を企業向けに販売できるようにしたい',
     },
-    /** UNTRANSLATED */
-    additional_features_field: 'Do you have anything else you want us to know?',
+    additional_features_field: '私たちに伝えたいことはありますか？',
     additional_features_options: {
-      /** UNTRANSLATED */
       customize_ui_and_flow:
-        'Need the ability to bring my own UI, or customize my own flows via Logto API',
-      /** UNTRANSLATED */
-      compliance: 'SOC2 and GDPR are must-haves',
-      /** UNTRANSLATED */
-      export_user_data: 'Need the ability to export user data from Logto',
-      /** UNTRANSLATED */
-      budget_control: 'I have very tight budget control',
-      /** UNTRANSLATED */
-      bring_own_auth: 'Have my own auth services and just need some Logto features',
-      /** UNTRANSLATED */
-      others: 'None of these above',
+        '独自のUIを持ち込んだり、Logto APIを使用して独自のフローをカスタマイズしたい場合',
+      compliance: 'SOC2とGDPRは必須です',
+      export_user_data: 'Logtoからユーザーデータをエクスポートする機能が必要です',
+      budget_control: '予算管理が非常に厳しいです',
+      bring_own_auth: '独自の認証サービスを持っており、Logtoの機能が必要な場合',
+      others: '上記のどれにも該当しません',
     },
   },
   sie: {
