@@ -13,18 +13,17 @@ const usePreview = () => {
 
   // Fetch the preview config
   useEffect(() => {
-    // Init i18n
-    const i18nInit = initI18n();
-
     // Listen to the message from the ancestor window
     const previewMessageHandler = async (event: MessageEvent) => {
       // #event.data should be guarded at the provider's side
       if (event.data.sender === 'ac_preview') {
-        // Wait for i18n to be initialized
-        await i18nInit;
-
         // eslint-disable-next-line no-restricted-syntax
-        setPreviewConfig(event.data.config as PreviewConfig);
+        const previewConfig = event.data.config as PreviewConfig;
+
+        // Wait for i18n to be initialized
+        await initI18n(previewConfig.language);
+
+        setPreviewConfig(previewConfig);
       }
     };
 
