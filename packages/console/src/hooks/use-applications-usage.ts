@@ -3,14 +3,12 @@ import { useContext, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { isCloud } from '@/consts/env';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 
-import useSubscriptionPlan from './use-subscription-plan';
-
 const useApplicationsUsage = () => {
-  const { currentTenantId } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
+
   /**
    * Note: we only need to fetch all applications when the user is in cloud environment.
    * The oss version doesn't have the quota limit.
@@ -25,40 +23,31 @@ const useApplicationsUsage = () => {
 
   const hasMachineToMachineAppsReachedLimit = useMemo(
     () =>
-      Boolean(
-        currentPlan &&
-          hasReachedQuotaLimit({
-            quotaKey: 'machineToMachineLimit',
-            plan: currentPlan,
-            usage: m2mAppCount,
-          })
-      ),
+      hasReachedQuotaLimit({
+        quotaKey: 'machineToMachineLimit',
+        plan: currentPlan,
+        usage: m2mAppCount,
+      }),
     [currentPlan, m2mAppCount]
   );
 
   const hasMachineToMachineAppsSurpassedLimit = useMemo(
     () =>
-      Boolean(
-        currentPlan &&
-          hasSurpassedQuotaLimit({
-            quotaKey: 'machineToMachineLimit',
-            plan: currentPlan,
-            usage: m2mAppCount,
-          })
-      ),
+      hasSurpassedQuotaLimit({
+        quotaKey: 'machineToMachineLimit',
+        plan: currentPlan,
+        usage: m2mAppCount,
+      }),
     [currentPlan, m2mAppCount]
   );
 
   const hasAppsReachedLimit = useMemo(
     () =>
-      Boolean(
-        currentPlan &&
-          hasReachedQuotaLimit({
-            quotaKey: 'applicationsLimit',
-            plan: currentPlan,
-            usage: allApplications?.length ?? 0,
-          })
-      ),
+      hasReachedQuotaLimit({
+        quotaKey: 'applicationsLimit',
+        plan: currentPlan,
+        usage: allApplications?.length ?? 0,
+      }),
     [allApplications?.length, currentPlan]
   );
 

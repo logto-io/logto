@@ -5,8 +5,7 @@ import { useContext } from 'react';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import FeatureTag from '@/components/FeatureTag';
 import { isCloud } from '@/consts/env';
-import { TenantsContext } from '@/contexts/TenantsProvider';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 
 import * as styles from './index.module.scss';
 
@@ -19,8 +18,7 @@ type Props = {
 };
 
 function TypeDescription({ title, subtitle, description, type, size = 'large' }: Props) {
-  const { currentTenantId } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const hasPaywall = isCloud && type === ApplicationType.MachineToMachine;
 
   return (
@@ -32,7 +30,7 @@ function TypeDescription({ title, subtitle, description, type, size = 'large' }:
       {hasPaywall && (
         <div className={styles.proTag}>
           <FeatureTag
-            isVisible={!currentPlan?.quota.machineToMachineLimit}
+            isVisible={!currentPlan.quota.machineToMachineLimit}
             for="upsell"
             plan={ReservedPlanId.Pro}
           />

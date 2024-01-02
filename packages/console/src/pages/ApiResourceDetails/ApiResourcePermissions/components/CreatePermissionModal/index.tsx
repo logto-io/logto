@@ -8,13 +8,12 @@ import ReactModal from 'react-modal';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
@@ -28,9 +27,9 @@ type Props = {
 type CreatePermissionFormData = Pick<Scope, 'name' | 'description'>;
 
 function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Props) {
-  const { currentTenantId } = useContext(TenantsContext);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+
   const {
     handleSubmit,
     register,
@@ -53,13 +52,11 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
     })
   );
 
-  const isScopesPerResourceReachLimit =
-    currentPlan &&
-    hasReachedQuotaLimit({
-      quotaKey: 'scopesPerResourceLimit',
-      plan: currentPlan,
-      usage: totalResourceCount,
-    });
+  const isScopesPerResourceReachLimit = hasReachedQuotaLimit({
+    quotaKey: 'scopesPerResourceLimit',
+    plan: currentPlan,
+    usage: totalResourceCount,
+  });
 
   return (
     <ReactModal

@@ -15,7 +15,7 @@ import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud } from '@/consts/env';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -23,7 +23,6 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import { type RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -44,11 +43,10 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentTenantId } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const [selectedProviderName, setSelectedProviderName] = useState<string>();
 
-  const isSsoEnabled = !isCloud || currentPlan?.quota.ssoEnabled;
+  const isSsoEnabled = !isCloud || currentPlan.quota.ssoEnabled;
 
   const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
     'api/sso-connector-providers'

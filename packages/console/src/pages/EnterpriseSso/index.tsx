@@ -14,13 +14,13 @@ import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl } from '@/utils/url';
 
@@ -37,13 +37,14 @@ function EnterpriseSsoConnectors() {
   const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentTenantId, isDevTenant } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { isDevTenant } = useContext(TenantsContext);
+  const { currentPlan } = useContext(SubscriptionDataContext);
+
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
 
-  const isSsoEnabled = !isCloud || currentPlan?.quota.ssoEnabled;
+  const isSsoEnabled = !isCloud || currentPlan.quota.ssoEnabled;
 
   const handleButtonClick = useCallback(() => {
     navigate(isSsoEnabled ? createEnterpriseSsoPathname : subscriptionPage);

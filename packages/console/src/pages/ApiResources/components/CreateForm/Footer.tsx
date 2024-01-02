@@ -5,10 +5,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
 type Props = {
   isCreationLoading: boolean;
@@ -17,12 +16,10 @@ type Props = {
 
 function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentTenantId } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const { hasReachedLimit } = useApiResourcesUsage();
 
   if (
-    currentPlan &&
     hasReachedLimit &&
     /**
      * We don't guard API resources quota limit for paid plan, since it's an add-on feature

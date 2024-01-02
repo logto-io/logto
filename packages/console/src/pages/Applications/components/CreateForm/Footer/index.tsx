@@ -5,10 +5,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
 type Props = {
   selectedType?: ApplicationType;
@@ -17,12 +16,11 @@ type Props = {
 };
 
 function Footer({ selectedType, isLoading, onClickCreate }: Props) {
-  const { currentTenantId } = useContext(TenantsContext);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const { hasAppsReachedLimit, hasMachineToMachineAppsReachedLimit } = useApplicationsUsage();
 
-  if (currentPlan && selectedType) {
+  if (selectedType) {
     const { id: planId, name: planName, quota } = currentPlan;
 
     if (
