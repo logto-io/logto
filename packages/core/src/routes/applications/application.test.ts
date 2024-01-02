@@ -110,6 +110,10 @@ describe('application route', () => {
       name,
       type,
       protectedAppMetadata,
+      oidcClientMetadata: {
+        redirectUris: [`https://${protectedAppMetadata?.host ?? ''}/callback`],
+        postLogoutRedirectUris: [`https://${protectedAppMetadata?.host ?? ''}`],
+      },
     });
   });
 
