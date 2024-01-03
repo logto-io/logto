@@ -11,6 +11,7 @@ const allowedImageMimeTypes: AllowedUploadMimeType[] = [
   'image/png',
   'image/jpeg',
   'image/vnd.microsoft.icon',
+  'image/x-icon',
 ];
 
 const useImageMimeTypes = (
