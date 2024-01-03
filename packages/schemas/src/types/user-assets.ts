@@ -8,6 +8,7 @@ export const allowUploadMimeTypes = [
   'image/png',
   'image/gif',
   'image/vnd.microsoft.icon',
+  'image/x-icon',
   'image/svg+xml',
   'image/tiff',
   'image/webp',

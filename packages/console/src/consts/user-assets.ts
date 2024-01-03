@@ -9,6 +9,7 @@ export const mimeTypeToFileExtensionMappings: MimeTypeToFileExtensionMappings = 
   'image/png': ['png'],
   'image/gif': ['gif'],
   'image/vnd.microsoft.icon': ['ico'],
+  'image/x-icon': ['ico'],
   'image/svg+xml': ['svg'],
   'image/tiff': ['tif', 'tiff'],
   'image/webp': ['webp'],
