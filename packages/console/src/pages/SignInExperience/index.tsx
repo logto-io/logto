@@ -40,8 +40,8 @@ import {
   getBrandingErrorCount,
   getContentErrorCount,
   getSignUpAndSignInErrorCount,
-  signInExperienceParser,
 } from './utils/form';
+import { sieFormDataParser } from './utils/parser';
 
 export enum SignInExperienceTab {
   Branding = 'branding',
@@ -117,7 +117,7 @@ function SignInExperience() {
       return;
     }
 
-    return signInExperienceParser.toLocalForm(data);
+    return sieFormDataParser.fromSignInExperience(data);
   }, [data]);
 
   useEffect(() => {
@@ -133,16 +133,12 @@ function SignInExperience() {
     setIsSaving(true);
 
     try {
-      /**
-       * Note: extract `mfa` since it will not be updated on the SIE config page.
-       * This is a temporary solution, we will split `SignInExperience` type into multiple types
-       * when the SIE config page is split into multiple pages.
-       */
-      const { mfa, ...payload } = signInExperienceParser.toRemoteModel(getValues());
       const updatedData = await api
-        .patch('api/sign-in-exp', { json: payload })
+        .patch('api/sign-in-exp', {
+          json: sieFormDataParser.toUpdateSignInExperienceData(getValues()),
+        })
         .json<SignInExperienceType>();
-      reset(signInExperienceParser.toLocalForm(updatedData));
+      reset(sieFormDataParser.fromSignInExperience(updatedData));
       void mutate(updatedData);
       setDataToCompare(undefined);
       await updateConfigs({ signInExperienceCustomized: true });
@@ -158,7 +154,7 @@ function SignInExperience() {
         return;
       }
 
-      const formatted = signInExperienceParser.toRemoteModel(formData);
+      const formatted = sieFormDataParser.toSignInExperience(formData);
 
       // Sign-in methods changed, need to show confirm modal first.
       if (!hasSignUpAndSignInConfigChanged(data, formatted)) {

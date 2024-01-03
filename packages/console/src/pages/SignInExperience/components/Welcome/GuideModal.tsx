@@ -22,7 +22,7 @@ import BrandingForm from '../../tabs/Branding/BrandingForm';
 import LanguagesForm from '../../tabs/Content/LanguagesForm';
 import TermsForm from '../../tabs/Content/TermsForm';
 import type { SignInExperienceForm } from '../../types';
-import { signInExperienceParser } from '../../utils/form';
+import { sieFormDataParser } from '../../utils/parser';
 import Preview from '../Preview';
 
 import * as styles from './GuideModal.module.scss';
@@ -52,7 +52,7 @@ function GuideModal({ isOpen, onClose }: Props) {
 
   useEffect(() => {
     if (data && !isDirty) {
-      reset(signInExperienceParser.toLocalForm(data));
+      reset(sieFormDataParser.fromSignInExperience(data));
     }
   }, [data, reset, isDirty]);
 
@@ -68,7 +68,7 @@ function GuideModal({ isOpen, onClose }: Props) {
 
       await Promise.all([
         api.patch('api/sign-in-exp', {
-          json: signInExperienceParser.toRemoteModel(formData),
+          json: sieFormDataParser.toSignInExperience(formData),
         }),
         updateConfigs({ signInExperienceCustomized: true }),
       ]);
