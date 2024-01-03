@@ -6,14 +6,14 @@ import Bulb from '@/assets/icons/bulb.svg';
 import LightBulb from '@/assets/icons/light-bulb.svg';
 import Button from '@/ds-components/Button';
 import useConnectorGroups from '@/hooks/use-connector-groups';
-import type { OnboardingSieConfig } from '@/onboarding/types';
 
-import { randomSieConfigTemplate } from '../../sie-config-templates';
+import { randomSieFormDataTemplate } from '../sie-config-templates';
+import { type OnboardingSieFormData } from '../types';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  onInspired: (template: OnboardingSieConfig) => void;
+  onInspired: (template: OnboardingSieFormData) => void;
 };
 
 function InspireMe({ onInspired }: Props) {
@@ -29,7 +29,7 @@ function InspireMe({ onInspired }: Props) {
         .map(({ target }) => target) ?? [];
 
   const handleInspire = () => {
-    const { template, templateIndex } = randomSieConfigTemplate(
+    const { template, templateIndex } = randomSieFormDataTemplate(
       lastTemplateIndex,
       availableSocialTargets
     );

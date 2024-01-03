@@ -9,7 +9,6 @@ import type {
   MultiCardSelectorOption,
   CardSelectorOption,
 } from '@/onboarding/components/CardSelector';
-import { Authentication } from '@/onboarding/types';
 
 import Apple from '../../assets/icons/social-apple.svg';
 import Facebook from '../../assets/icons/social-facebook.svg';
@@ -17,6 +16,8 @@ import Kakao from '../../assets/icons/social-kakao.svg';
 import Microsoft from '../../assets/icons/social-microsoft.svg';
 import Oidc from '../../assets/icons/social-oidc.svg';
 import Smal from '../../assets/icons/social-smal.svg';
+
+import { Authentication } from './types';
 
 export const identifierOptions: CardSelectorOption[] = [
   {

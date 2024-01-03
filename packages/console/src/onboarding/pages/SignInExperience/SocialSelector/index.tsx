@@ -7,7 +7,7 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 import { MultiCardSelector } from '@/onboarding/components/CardSelector';
 import type { MultiCardSelectorOption } from '@/onboarding/components/CardSelector';
 
-import { fakeSocialTargetOptions } from '../../options';
+import { fakeSocialTargetOptions } from '../options';
 
 type Props = {
   value: string[];

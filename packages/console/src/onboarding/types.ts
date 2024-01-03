@@ -1,4 +1,3 @@
-import type { SignInIdentifier } from '@logto/schemas';
 import { z } from 'zod';
 
 export enum OnboardingRoute {
@@ -95,16 +94,3 @@ export const userOnboardingDataGuard = z.object({
 });
 
 export type UserOnboardingData = z.infer<typeof userOnboardingDataGuard>;
-
-export enum Authentication {
-  Password = 'password',
-  VerificationCode = 'verificationCode',
-}
-
-export type OnboardingSieConfig = {
-  logo?: string;
-  color: string;
-  identifier: SignInIdentifier;
-  authentications: Authentication[];
-  socialTargets?: string[];
-};

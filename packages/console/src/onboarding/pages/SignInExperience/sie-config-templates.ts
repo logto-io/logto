@@ -1,19 +1,19 @@
 import { SignInIdentifier } from '@logto/schemas';
 
-import type { OnboardingSieConfig } from '@/onboarding/types';
-import { Authentication } from '@/onboarding/types';
+import type { OnboardingSieFormData } from './types';
+import { Authentication } from './types';
 
 const assetsUrl =
   'https://logtodev.blob.core.windows.net/public-blobs/admin/BY4BCq8GvfBF/2023/03/10';
 
-export const defaultOnboardingSieConfig: OnboardingSieConfig = {
+export const defaultOnboardingSieFormData: OnboardingSieFormData = {
   color: '#5D34F2',
   identifier: SignInIdentifier.Email,
   authentications: [Authentication.Password],
 };
 
 // Email + password sign-up; password sign-in
-const configTemplate1: OnboardingSieConfig = {
+const formDataTemplate1: OnboardingSieFormData = {
   logo: `${assetsUrl}/tVCAHjAB/logo1.png`,
   color: '#19BEFD',
   identifier: SignInIdentifier.Email,
@@ -21,7 +21,7 @@ const configTemplate1: OnboardingSieConfig = {
 };
 
 // Email + password sign-up; password + code sign-in
-const configTemplate2: OnboardingSieConfig = {
+const formDataTemplate2: OnboardingSieFormData = {
   logo: `${assetsUrl}/IcI0snBP/logo3.png`,
   color: '#FF5449',
   identifier: SignInIdentifier.Email,
@@ -29,7 +29,7 @@ const configTemplate2: OnboardingSieConfig = {
 };
 
 // Email + code sign-up; code sign-in
-const configTemplate3: OnboardingSieConfig = {
+const formDataTemplate3: OnboardingSieFormData = {
   logo: `${assetsUrl}/7UQyvuFc/logo4.png`,
   color: '#CA4E96',
   identifier: SignInIdentifier.Email,
@@ -37,29 +37,29 @@ const configTemplate3: OnboardingSieConfig = {
 };
 
 // Username sign-up; password sign-in
-const configTemplate4: OnboardingSieConfig = {
+const formDataTemplate4: OnboardingSieFormData = {
   logo: `${assetsUrl}/uLoMzrlz/logo7.png`,
   color: '#FF5449',
   identifier: SignInIdentifier.Username,
   authentications: [Authentication.Password],
 };
 
-const sieConfigTemplates: OnboardingSieConfig[] = [
-  configTemplate1,
-  configTemplate2,
-  configTemplate3,
-  configTemplate4,
+const formDataTemplates: OnboardingSieFormData[] = [
+  formDataTemplate1,
+  formDataTemplate2,
+  formDataTemplate3,
+  formDataTemplate4,
 ];
 
-export const randomSieConfigTemplate = (
+export const randomSieFormDataTemplate = (
   lastTemplateIndex: number | undefined,
   availableSocialTargets: string[]
 ) => {
   // Get random template
-  const randomIndex = Math.floor(Math.random() * sieConfigTemplates.length);
+  const randomIndex = Math.floor(Math.random() * formDataTemplates.length);
   const index =
-    randomIndex === lastTemplateIndex ? (randomIndex + 1) % sieConfigTemplates.length : randomIndex;
-  const template = sieConfigTemplates[index] ?? configTemplate1;
+    randomIndex === lastTemplateIndex ? (randomIndex + 1) % formDataTemplates.length : randomIndex;
+  const template = formDataTemplates[index] ?? formDataTemplate1;
 
   // Get 2 or 3 random social targets
   const randomCount = Math.floor(Math.random() * 2) + 2;

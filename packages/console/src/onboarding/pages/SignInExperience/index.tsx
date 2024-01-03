@@ -24,21 +24,21 @@ import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
-import type { OnboardingSieConfig } from '@/onboarding/types';
-import { Authentication, OnboardingPage } from '@/onboarding/types';
+import { OnboardingPage } from '@/onboarding/types';
 import { getOnboardingPage } from '@/onboarding/utils';
 import { trySubmitSafe } from '@/utils/form';
 import { buildUrl } from '@/utils/url';
 import { uriValidator } from '@/utils/validator';
 
-import InspireMe from './components/InspireMe';
-import Preview from './components/Preview';
-import Skeleton from './components/Skeleton';
-import SocialSelector from './components/SocialSelector';
+import InspireMe from './InspireMe';
+import Preview from './Preview';
+import Skeleton from './Skeleton';
+import SocialSelector from './SocialSelector';
+import { formDataParser } from './form-data-parser';
 import * as styles from './index.module.scss';
 import { authenticationOptions, identifierOptions } from './options';
-import { defaultOnboardingSieConfig } from './sie-config-templates';
-import { parser } from './utils';
+import { defaultOnboardingSieFormData } from './sie-config-templates';
+import { Authentication, type OnboardingSieFormData } from './types';
 
 function SignInExperience() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -70,7 +70,7 @@ function SignInExperience() {
     getValues,
     setValue,
     formState: { isSubmitting, errors },
-  } = useForm<OnboardingSieConfig>({ defaultValues: defaultOnboardingSieConfig });
+  } = useForm<OnboardingSieFormData>({ defaultValues: defaultOnboardingSieFormData });
 
   const updateAuthenticationConfig = useCallback(() => {
     const identifier = getValues('identifier');
@@ -82,21 +82,21 @@ function SignInExperience() {
 
   useEffect(() => {
     if (signInExperience) {
-      reset(parser.signInExperienceToOnboardSieConfig(signInExperience));
+      reset(formDataParser.fromSignInExperience(signInExperience));
       updateAuthenticationConfig();
     }
   }, [reset, signInExperience, updateAuthenticationConfig]);
 
-  const onboardingSieConfig = watch();
+  const onboardingSieFormData = watch();
 
   const previewSieConfig = useMemo(() => {
     if (signInExperience) {
-      return parser.onboardSieConfigToSignInExperience(onboardingSieConfig, signInExperience);
+      return formDataParser.toSignInExperience(onboardingSieFormData, signInExperience);
     }
-  }, [onboardingSieConfig, signInExperience]);
+  }, [onboardingSieFormData, signInExperience]);
 
   const submit = (onSuccess: () => void) =>
-    trySubmitSafe(async (formData: OnboardingSieConfig) => {
+    trySubmitSafe(async (formData: OnboardingSieFormData) => {
       if (!signInExperience) {
         return;
       }
@@ -116,19 +116,9 @@ function SignInExperience() {
         }
       }
 
-      /**
-       * Note: extract `mfa` since it will not be updated on the SIE config page.
-       * This is a temporary solution, we will split `SignInExperience` type into multiple types
-       * when the SIE config page is split into multiple pages.
-       */
-      const { mfa, ...payload } = parser.onboardSieConfigToSignInExperience(
-        formData,
-        signInExperience
-      );
-
       const updatedData = await api
         .patch(buildUrl('api/sign-in-exp', { removeUnusedDemoSocialConnector: '1' }), {
-          json: payload,
+          json: formDataParser.toUpdateOnboardingSieData(formData, signInExperience),
         })
         .json<SignInExperienceType>();
 
@@ -153,7 +143,7 @@ function SignInExperience() {
               onInspired={(template) => {
                 for (const [key, value] of Object.entries(template)) {
                   // eslint-disable-next-line no-restricted-syntax
-                  setValue(key as keyof OnboardingSieConfig, value, { shouldDirty: true });
+                  setValue(key as keyof OnboardingSieFormData, value, { shouldDirty: true });
                 }
                 updateAuthenticationConfig();
               }}
@@ -207,7 +197,7 @@ function SignInExperience() {
               <Controller
                 name="authentications"
                 control={control}
-                defaultValue={defaultOnboardingSieConfig.authentications}
+                defaultValue={defaultOnboardingSieFormData.authentications}
                 render={({ field: { value, onChange } }) => (
                   <MultiCardSelector
                     isNotAllowEmpty
@@ -215,7 +205,7 @@ function SignInExperience() {
                     value={value}
                     options={authenticationOptions.filter(
                       ({ value }) =>
-                        onboardingSieConfig.identifier !== SignInIdentifier.Username ||
+                        onboardingSieFormData.identifier !== SignInIdentifier.Username ||
                         value === Authentication.Password
                     )}
                     onChange={onChange}
@@ -227,7 +217,7 @@ function SignInExperience() {
               <Controller
                 name="socialTargets"
                 control={control}
-                defaultValue={defaultOnboardingSieConfig.socialTargets}
+                defaultValue={defaultOnboardingSieFormData.socialTargets}
                 render={({ field: { value, onChange } }) => (
                   <SocialSelector value={value ?? []} onChange={onChange} />
                 )}
