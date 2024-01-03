@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import useMeCustomData from '@/hooks/use-me-custom-data';
+import useCurrentUser from '@/hooks/use-current-user';
 
 import type { UserOnboardingData } from '../types';
 import { Project, userOnboardingDataGuard } from '../types';
@@ -12,14 +12,16 @@ import { Project, userOnboardingDataGuard } from '../types';
 const userOnboardingDataKey = 'onboarding';
 
 const useUserOnboardingData = () => {
-  const { data, error, isLoading, isLoaded, update: updateMeCustomData } = useMeCustomData();
+  const { customData, error, isLoading, isLoaded, updateCustomData } = useCurrentUser();
   const { currentTenantId } = useContext(TenantsContext);
 
   const userOnboardingData = useMemo(() => {
-    const parsed = z.object({ [userOnboardingDataKey]: userOnboardingDataGuard }).safeParse(data);
+    const parsed = z
+      .object({ [userOnboardingDataKey]: userOnboardingDataGuard })
+      .safeParse(customData);
 
     return parsed.success ? parsed.data[userOnboardingDataKey] : {};
-  }, [data]);
+  }, [customData]);
 
   const isOnboarding = useMemo(() => {
     if (!isCloud) {
@@ -47,14 +49,14 @@ const useUserOnboardingData = () => {
 
   const update = useCallback(
     async (data: Partial<UserOnboardingData>) => {
-      await updateMeCustomData({
+      await updateCustomData({
         [userOnboardingDataKey]: {
           ...userOnboardingData,
           ...data,
         },
       });
     },
-    [updateMeCustomData, userOnboardingData]
+    [updateCustomData, userOnboardingData]
   );
 
   return {

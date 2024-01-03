@@ -1,5 +1,5 @@
 import AppLoading from '@/components/AppLoading';
-import useMeCustomData from '@/hooks/use-me-custom-data';
+import useCurrentUser from '@/hooks/use-current-user';
 import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
@@ -8,7 +8,7 @@ import Redirect from './Redirect';
 import TenantLandingPage from './TenantLandingPage';
 
 export default function Main() {
-  const { isLoaded } = useMeCustomData();
+  const { isLoaded } = useCurrentUser();
   const { isOnboarding } = useUserOnboardingData();
   const { defaultTenantId } = useUserDefaultTenantId();
 

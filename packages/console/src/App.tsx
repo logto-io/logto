@@ -22,7 +22,6 @@ import CloudAppRoutes from '@/cloud/AppRoutes';
 import AppLoading from '@/components/AppLoading';
 import { isCloud } from '@/consts/env';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
-import useMeCustomData from '@/hooks/use-me-custom-data';
 import useTrackUserId from '@/hooks/use-track-user-id';
 import { OnboardingRoutes } from '@/onboarding';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
@@ -35,6 +34,7 @@ import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppDataProvider, { AppDataContext } from './contexts/AppDataProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
+import useCurrentUser from './hooks/use-current-user';
 import initI18n from './i18n/init';
 
 void initI18n();
@@ -141,7 +141,7 @@ function Providers() {
 /** Renders different routes based on the user's onboarding status. */
 function AppRoutes() {
   const { tenantEndpoint } = useContext(AppDataContext);
-  const { isLoaded } = useMeCustomData();
+  const { isLoaded } = useCurrentUser();
   const { isOnboarding } = useUserOnboardingData();
   const { isAuthenticated } = useLogto();
 

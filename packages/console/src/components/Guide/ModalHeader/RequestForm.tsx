@@ -9,7 +9,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
-import useMeCustomData from '@/hooks/use-me-custom-data';
+import useCurrentUser from '@/hooks/use-current-user';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 type Props = {
@@ -32,13 +32,13 @@ export default function RequestForm({
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { data, update } = useMeCustomData();
-  const guideRequests = data?.guideRequests;
+  const { customData, updateCustomData } = useCurrentUser();
+  const guideRequests = customData?.guideRequests;
 
   const submit = async () => {
     setIsLoading(true);
     try {
-      await update({
+      await updateCustomData({
         guideRequests: Array.isArray(guideRequests)
           ? guideRequests.concat(inputValue)
           : [inputValue],
