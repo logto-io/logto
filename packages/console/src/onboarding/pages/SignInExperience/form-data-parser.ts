@@ -2,12 +2,9 @@ import type { SignInExperience } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import type { OnboardingSieConfig } from '@/onboarding/types';
-import { Authentication } from '@/onboarding/types';
+import { Authentication, type UpdateOnboardingSieData, type OnboardingSieFormData } from './types';
 
-const signInExperienceToOnboardSieConfig = (
-  signInExperience: SignInExperience
-): OnboardingSieConfig => {
+const fromSignInExperience = (signInExperience: SignInExperience): OnboardingSieFormData => {
   const {
     color: { primaryColor },
     branding: { logoUrl: logo },
@@ -39,12 +36,12 @@ const signInExperienceToOnboardSieConfig = (
   };
 };
 
-const onboardSieConfigToSignInExperience = (
-  config: OnboardingSieConfig,
-  basedConfig: SignInExperience
+const toSignInExperience = (
+  formData: OnboardingSieFormData,
+  initialSignInExperience: SignInExperience
 ): SignInExperience => {
-  const { logo, color: onboardConfigColor, identifier, authentications, socialTargets } = config;
-  const { color: baseColorConfig, branding: baseBranding } = basedConfig;
+  const { logo, color: onboardConfigColor, identifier, authentications, socialTargets } = formData;
+  const { color: initialColor, branding: initialBranding } = initialSignInExperience;
 
   // Map to sign-up config
   const shouldSetPasswordAtSignUp =
@@ -59,14 +56,14 @@ const onboardSieConfigToSignInExperience = (
     authentications.includes(Authentication.VerificationCode);
 
   const signInExperience: SignInExperience = {
-    ...basedConfig,
+    ...initialSignInExperience,
     branding: {
-      ...baseBranding,
+      ...initialBranding,
       logoUrl: conditional(logo?.length && logo),
       darkLogoUrl: conditional(logo?.length && logo),
     },
     color: {
-      ...baseColorConfig,
+      ...initialColor,
       primaryColor: onboardConfigColor,
     },
     signUp: {
@@ -90,7 +87,26 @@ const onboardSieConfigToSignInExperience = (
   return signInExperience;
 };
 
-export const parser = {
-  signInExperienceToOnboardSieConfig,
-  onboardSieConfigToSignInExperience,
+const toUpdateOnboardingSieData = (
+  formData: OnboardingSieFormData,
+  initialSignInExperience: SignInExperience
+): UpdateOnboardingSieData => {
+  const { color, branding, signUp, signIn, socialSignInConnectorTargets } = toSignInExperience(
+    formData,
+    initialSignInExperience
+  );
+
+  return {
+    color,
+    branding,
+    signUp,
+    signIn,
+    socialSignInConnectorTargets,
+  };
+};
+
+export const formDataParser = {
+  fromSignInExperience,
+  toSignInExperience,
+  toUpdateOnboardingSieData,
 };

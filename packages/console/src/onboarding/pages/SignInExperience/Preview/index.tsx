@@ -6,8 +6,7 @@ import { useState } from 'react';
 import SignInExperiencePreview from '@/components/SignInExperiencePreview';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 
-import PlatformTabs from '../PlatformTabs';
-
+import PlatformTabs from './PlatformTabs';
 import * as styles from './index.module.scss';
 
 type Props = {
