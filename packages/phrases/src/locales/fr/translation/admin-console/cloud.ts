@@ -12,35 +12,27 @@ const cloud = {
       personal: 'Projet personnel',
       company: "Projet d'entreprise",
     },
-    title_field: 'Sélectionnez le(s) titre(s) applicable(s)',
-    title_options: {
-      developer: 'Développeur',
-      team_lead: "Chef d'équipe",
-      ceo: 'PDG',
-      cto: 'CTO',
-      product: 'Produit',
-      others: 'Autres',
-    },
     company_name_field: "Nom de l'entreprise",
     company_name_placeholder: 'Acme.co',
-    company_size_field: 'Taille de votre entreprise',
-    company_options: {
-      size_1: '1',
-      size_2_49: '2-49',
-      size_50_199: '50-199',
-      size_200_999: '200-999',
-      size_1000_plus: '1000+',
+    stage_field: 'Dans quelle étape se trouve actuellement votre produit ?',
+    stage_options: {
+      new_product: "Démarrer un nouveau projet et chercher une solution rapide et prête à l'emploi",
+      existing_product:
+        "Migrer à partir d'une authentification actuelle (par exemple, auto-construite, Auth0, Cognito, Microsoft)",
+      target_enterprise_ready:
+        'Je viens de conclure des contrats avec des clients plus importants et je veux maintenant rendre mon produit prêt à être vendu aux entreprises',
     },
-    reason_field: "Je m'inscris parce que",
-    reason_options: {
-      passwordless:
-        "Je cherche une authentification sans mot de passe et une trousse d'interface utilisateur",
-      efficiency: "Je cherche une infrastructure d'identité clé en main",
-      access_control:
-        "Je cherche à contrôler l'accès utilisateur en fonction des rôles et des responsabilités",
-      multi_tenancy: 'Je cherche des stratégies pour un produit multi-tenant',
-      enterprise: "Je cherche des solutions SSO pour une gestion de l'entreprise",
-      others: 'Autres',
+    additional_features_field: "Avez-vous d'autres informations à nous communiquer ?",
+    additional_features_options: {
+      customize_ui_and_flow:
+        "Besoin de la possibilité d'apporter ma propre interface utilisateur ou personnaliser mes propres flux via l'API de Logto",
+      compliance: 'SOC2 et le respect du RGPD sont indispensables',
+      export_user_data:
+        "Besoin de la possibilité d'exporter des données utilisateur à partir de Logto",
+      budget_control: 'Je dois avoir un contrôle de budget très strict',
+      bring_own_auth:
+        "J'ai mes propres services d'authentification et j'ai juste besoin de certaines fonctionnalités de Logto",
+      others: 'Aucun de ceux mentionnés ci-dessus',
     },
   },
   sie: {
@@ -49,14 +41,14 @@ const cloud = {
     inspire: {
       title: 'Créez des exemples convaincants',
       description:
-        'Vous vous sentez incertain de l\'expérience de connexion? Cliquez simplement sur "Inspirez-moi" et laissez la magie opérer!',
+        'Vous vous sentez incertain de l\'expérience de connexion ? Cliquez simplement sur "Inspirez-moi" et laissez la magie opérer!',
       inspire_me: 'Inspirez-moi',
     },
     logo_field: "Logo de l'application",
     color_field: 'Couleur de la marque',
     identifier_field: 'Identifiant',
     identifier_options: {
-      email: 'Email',
+      email: 'E-mail',
       phone: 'Téléphone',
       user_name: "Nom d'utilisateur",
     },

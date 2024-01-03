@@ -8,7 +8,6 @@ const application = {
   third_party_application_only:
     'La funzionalità è disponibile solo per le applicazioni di terze parti.',
   user_consent_scopes_not_found: 'Scopi di consenso utente non validi.',
-  /** UNTRANSLATED */
   protected_app_metadata_is_required: 'Protected app metadata is required.',
 };
 

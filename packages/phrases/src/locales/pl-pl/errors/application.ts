@@ -6,8 +6,7 @@ const application = {
     'Tylko tradycyjne aplikacje internetowe mogą być oznaczone jako aplikacja zewnętrzna.',
   third_party_application_only: 'Ta funkcja jest dostępna tylko dla aplikacji zewnętrznych.',
   user_consent_scopes_not_found: 'Nieprawidłowe zakresy zgody użytkownika.',
-  /** UNTRANSLATED */
-  protected_app_metadata_is_required: 'Protected app metadata is required.',
+  protected_app_metadata_is_required: 'Wymagane jest zabezpieczone metadane aplikacji.',
 };
 
 export default Object.freeze(application);

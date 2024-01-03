@@ -12,33 +12,24 @@ const cloud = {
       personal: '個人プロジェクト',
       company: '会社プロジェクト',
     },
-    title_field: '適用可能なタイトルを選択してください',
-    title_options: {
-      developer: '開発者',
-      team_lead: 'チームリード',
-      ceo: 'CEO',
-      cto: 'CTO',
-      product: 'プロダクト',
-      others: 'その他',
-    },
     company_name_field: '会社名',
     company_name_placeholder: 'Acme.co',
-    company_size_field: '会社の規模は？',
-    company_options: {
-      size_1: '1',
-      size_2_49: '2-49',
-      size_50_199: '50-199',
-      size_200_999: '200-999',
-      size_1000_plus: '1000+',
+    stage_field: '製品は現在どの段階にありますか？',
+    stage_options: {
+      new_product: '新しいプロジェクトを開始し、素早く立ち上げたい場合',
+      existing_product: '現在の認証（例：自社構築、Auth0、Cognito、Microsoft）から移行する',
+      target_enterprise_ready:
+        '大きなクライアントを獲得したため、製品を企業向けに販売できるようにしたい',
     },
-    reason_field: 'サインアップの理由は？',
-    reason_options: {
-      passwordless: 'パスワードレス認証と UI キットを探したい',
-      efficiency: '即時利用可能な ID インフラを探したい',
-      access_control: '役割と責任に基づくユーザーアクセスを制御したい',
-      multi_tenancy: 'マルチテナント製品の戦略を探しています',
-      enterprise: '企業規模に向けた SSO ソリューションを探しています',
-      others: 'その他',
+    additional_features_field: '私たちに伝えたいことはありますか？',
+    additional_features_options: {
+      customize_ui_and_flow:
+        '独自のUIを持ち込んだり、Logto APIを使用して独自のフローをカスタマイズしたい場合',
+      compliance: 'SOC2とGDPRは必須です',
+      export_user_data: 'Logtoからユーザーデータをエクスポートする機能が必要です',
+      budget_control: '予算管理が非常に厳しいです',
+      bring_own_auth: '独自の認証サービスを持っており、Logtoの機能が必要な場合',
+      others: '上記のどれにも該当しません',
     },
   },
   sie: {

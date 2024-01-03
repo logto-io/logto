@@ -12,33 +12,26 @@ const cloud = {
       personal: 'Projeto pessoal',
       company: 'Projeto da empresa',
     },
-    title_field: 'Selecione o(s) título(s) aplicável(eis)',
-    title_options: {
-      developer: 'Desenvolvedor',
-      team_lead: 'Líder de equipe',
-      ceo: 'CEO',
-      cto: 'CTO',
-      product: 'Produto',
-      others: 'Outros',
-    },
     company_name_field: 'Nome da empresa',
     company_name_placeholder: 'Acme.co',
-    company_size_field: 'Qual o tamanho da sua empresa?',
-    company_options: {
-      size_1: '1',
-      size_2_49: '2-49',
-      size_50_199: '50-199',
-      size_200_999: '200-999',
-      size_1000_plus: '1000+',
+    stage_field: 'Em qual estágio seu produto está atualmente?',
+    stage_options: {
+      new_product: 'Iniciar um novo projeto e procurar por uma solução rápida e pronta para uso',
+      existing_product:
+        'Migrar da autenticação atual (por exemplo, construída internamente, Auth0, Cognito, Microsoft)',
+      target_enterprise_ready:
+        'Acabei de conseguir clientes maiores e agora estou preparando meu produto para vender para empresas',
     },
-    reason_field: 'Estou me inscrevendo porque',
-    reason_options: {
-      passwordless: 'Procurando autenticação sem senha e kit de IU',
-      efficiency: 'Encontrando infraestrutura de identidade pronta para uso',
-      access_control: 'Controlando o acesso do usuário com base em funções e responsabilidades',
-      multi_tenancy: 'Buscando estratégias para um produto multi-inquilino',
-      enterprise: 'Encontrando soluções SSO para prontidão corporativa',
-      others: 'Outros',
+    additional_features_field: 'Você tem mais alguma coisa que deseja que saibamos?',
+    additional_features_options: {
+      customize_ui_and_flow:
+        'Preciso da capacidade de trazer minha própria UI, ou personalizar meus próprios fluxos via API do Logto',
+      compliance: 'SOC2 e GDPR são imprescindíveis',
+      export_user_data: 'Preciso da capacidade de exportar dados do usuário do Logto',
+      budget_control: 'Tenho controle de orçamento muito rígido',
+      bring_own_auth:
+        'Tenho meus próprios serviços de autenticação e apenas preciso de alguns recursos do Logto',
+      others: 'Nenhuma das opções acima',
     },
   },
   sie: {

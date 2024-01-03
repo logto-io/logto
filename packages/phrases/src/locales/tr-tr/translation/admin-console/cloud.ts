@@ -12,33 +12,26 @@ const cloud = {
       personal: 'Kişisel proje',
       company: 'Şirket projesi',
     },
-    title_field: 'Uygun başlığı seçin',
-    title_options: {
-      developer: 'Geliştirici',
-      team_lead: 'Takım Lideri',
-      ceo: 'CEO',
-      cto: 'CTO',
-      product: 'Ürün',
-      others: 'Diğerleri',
-    },
     company_name_field: 'Şirket adı',
     company_name_placeholder: 'Acme.co',
-    company_size_field: 'Şirketinizin boyutu nasıl?',
-    company_options: {
-      size_1: '1',
-      size_2_49: '2-49',
-      size_50_199: '50-199',
-      size_200_999: '200-999',
-      size_1000_plus: '1000+',
+    stage_field: 'Ürününüz şu anda hangi aşamada?',
+    stage_options: {
+      new_product: 'Yeni bir proje başlatmak ve hızlı, hazır bir çözüm arıyorum',
+      existing_product:
+        'Mevcut kimlik doğrulamadan göç etmek (ör. özelleştirilmiş, Auth0, Cognito, Microsoft)',
+      target_enterprise_ready:
+        'Yeni büyük müşteriler kazandım ve ürünümü şimdi kurumsal müşterilere satılabilir hale getiriyorum',
     },
-    reason_field: 'Kaydolma nedenim',
-    reason_options: {
-      passwordless: 'Parolasız kimlik doğrulama ve UI kit arayışı',
-      efficiency: 'Kutudan çıkan kimlik altyapısı arayışı',
-      access_control: 'Kullanıcının rollerine ve sorumluluklarına göre erişim kontrolü',
-      multi_tenancy: 'Çok kiracılı bir ürün için stratejiler arayışı',
-      enterprise: 'Enterprize hazır SSO çözümleri arayışı',
-      others: 'Diğerleri',
+    additional_features_field: 'Bilmemizi istediğiniz başka bir şey var mı?',
+    additional_features_options: {
+      customize_ui_and_flow:
+        "Logto API aracılığıyla kendi UI'ımı getirme veya kendi akışlarımı özelleştirme yeteneğine ihtiyacım var",
+      compliance: 'SOC2 ve GDPR olmazsa olmaz',
+      export_user_data: "Kullanıcı verilerini Logto'dan dışa aktarma yeteneğine ihtiyacım var",
+      budget_control: 'Çok sıkı bir bütçe kontrolüm var',
+      bring_own_auth:
+        'Kendi kimlik doğrulama hizmetlerim var ve sadece bazı Logto özelliklerine ihtiyacım var',
+      others: 'Yukarıdakilerden hiçbiri',
     },
   },
   sie: {

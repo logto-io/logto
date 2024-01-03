@@ -25,6 +25,8 @@ enum DeploymentType {
   Cloud = 'cloud',
 }
 
+/** @deprecated */
+// eslint-disable-next-line import/no-unused-modules
 export enum Title {
   Developer = 'developer',
   TeamLead = 'team-lead',
@@ -34,6 +36,8 @@ export enum Title {
   Others = 'others',
 }
 
+/** @deprecated */
+// eslint-disable-next-line import/no-unused-modules
 export enum CompanySize {
   Scale1 = '1',
   Scale2 = '2-49',
@@ -42,6 +46,8 @@ export enum CompanySize {
   Scale5 = '1000+',
 }
 
+/** @deprecated */
+// eslint-disable-next-line import/no-unused-modules
 export enum Reason {
   Passwordless = 'passwordless',
   Efficiency = 'efficiency',
@@ -51,14 +57,34 @@ export enum Reason {
   Others = 'others',
 }
 
+export enum Stage {
+  NewProduct = 'new-product',
+  ExistingProduct = 'existing-product',
+  TargetEnterpriseReady = 'target-enterprise-ready',
+}
+
+export enum AdditionalFeatures {
+  CustomizeUiAndFlow = 'customize-ui-and-flow',
+  Compliance = 'compliance',
+  ExportUserDataFromLogto = 'export-user-data-from-logto',
+  BudgetControl = 'budget-control',
+  BringOwnAuth = 'bring-own-auth',
+  Others = 'others',
+}
+
 const questionnaireGuard = z.object({
   project: z.nativeEnum(Project).optional(),
   /** @deprecated Open-source options was for cloud preview use, no longer needed. Use default `Cloud` value for placeholder. */
   deploymentType: z.nativeEnum(DeploymentType).optional().default(DeploymentType.Cloud),
+  /** @deprecated */
   titles: z.array(z.nativeEnum(Title)).optional(),
   companyName: z.string().optional(),
+  /** @deprecated */
   companySize: z.nativeEnum(CompanySize).optional(),
+  /** @deprecated */
   reasons: z.array(z.nativeEnum(Reason)).optional(),
+  stage: z.nativeEnum(Stage).optional(),
+  additionalFeatures: z.array(z.nativeEnum(AdditionalFeatures)).optional(),
 });
 
 export type Questionnaire = z.infer<typeof questionnaireGuard>;
