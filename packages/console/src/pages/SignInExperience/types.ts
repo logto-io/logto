@@ -43,3 +43,11 @@ export type SignInMethodsObject = Record<
   SignInIdentifier,
   { password: boolean; verificationCode: boolean }
 >;
+
+export type UpdateSignInExperienceData = Omit<SignInExperience, 'mfa'> & {
+  /**
+   * `mfa` data will not be updated in the sign-in experience page.
+   * Hard code it to `undefined` to have a better type checking when constructing the update data.
+   */
+  mfa: undefined;
+};

@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from 'react';
 import useDebounce from '@/hooks/use-debounce';
 
 import type { SignInExperienceForm } from '../types';
-import { signInExperienceParser } from '../utils/form';
+import { sieFormDataParser } from '../utils/parser';
 
 const usePreviewConfigs = (
   formData: SignInExperienceForm,
@@ -27,7 +27,7 @@ const usePreviewConfigs = (
       return data;
     }
 
-    return signInExperienceParser.toRemoteModel({
+    return sieFormDataParser.toSignInExperience({
       ...restFormData,
       customCss: debouncedCustomCss,
     });

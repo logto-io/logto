@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import DynamicT from '@/ds-components/DynamicT';
 import { signUpIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignUpForm } from '@/pages/SignInExperience/types';
-import { signInExperienceParser } from '@/pages/SignInExperience/utils/form';
+import { signUpFormDataParser } from '@/pages/SignInExperience/utils/parser';
 
 import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
@@ -19,8 +19,8 @@ type Props = {
 
 function SignUpDiffSection({ before, after, isAfter = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const parsedBefore = signInExperienceParser.toLocalSignUp(before);
-  const parsedAfter = signInExperienceParser.toLocalSignUp(after);
+  const parsedBefore = signUpFormDataParser.fromSignUp(before);
+  const parsedAfter = signUpFormDataParser.fromSignUp(after);
   const signUpDiff = isAfter ? diff(parsedBefore, parsedAfter) : diff(parsedAfter, parsedBefore);
   const signUp = isAfter ? parsedAfter : parsedBefore;
   const hasChanged = (path: keyof SignUpForm) => getSafe(signUpDiff, path) !== undefined;
