@@ -7,7 +7,7 @@ import { AppThemeContext, buildDefaultAppearanceMode } from '@/contexts/AppTheme
 import type { DynamicAppearanceMode } from '@/types/appearance-mode';
 import { appearanceModeGuard } from '@/types/appearance-mode';
 
-import useMeCustomData from './use-me-custom-data';
+import useCurrentUser from './use-current-user';
 
 const adminConsolePreferencesKey = 'adminConsolePreferences';
 
@@ -33,11 +33,13 @@ const defaultUserPreferences: DefaultUserPreference = {
 };
 
 const useUserPreferences = () => {
-  const { data, error, isLoading, isLoaded, update: updateMeCustomData } = useMeCustomData();
+  const { customData, error, isLoading, isLoaded, updateCustomData } = useCurrentUser();
   const { setAppearanceMode } = useContext(AppThemeContext);
 
   const userPreferences = useMemo(() => {
-    const parsed = z.object({ [adminConsolePreferencesKey]: userPreferencesGuard }).safeParse(data);
+    const parsed = z
+      .object({ [adminConsolePreferencesKey]: userPreferencesGuard })
+      .safeParse(customData);
 
     return parsed.success
       ? {
@@ -45,10 +47,10 @@ const useUserPreferences = () => {
           ...parsed.data[adminConsolePreferencesKey],
         }
       : defaultUserPreferences;
-  }, [data]);
+  }, [customData]);
 
   const update = async (data: Partial<UserPreferences>) => {
-    await updateMeCustomData({
+    await updateCustomData({
       [adminConsolePreferencesKey]: {
         ...userPreferences,
         ...data,

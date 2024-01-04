@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
-import useMeCustomData from './use-me-custom-data';
+import useCurrentUser from './use-current-user';
 
 const key = 'defaultTenantId';
 
@@ -17,12 +17,12 @@ const key = 'defaultTenantId';
  * - If the default tenant ID is not available to the user anymore, it semantically equals to the first tenant ID.
  */
 const useUserDefaultTenantId = () => {
-  const { data, update: updateMeCustomData } = useMeCustomData();
-  const { tenants, currentTenantId } = useContext(TenantsContext);
+  const { customData, updateCustomData } = useCurrentUser();
+  const { tenants } = useContext(TenantsContext);
   /** The current stored default tenant ID in the user's `customData`. */
   const storedId = useMemo(
-    () => trySafe(() => z.object({ [key]: z.string() }).parse(data)[key]),
-    [data]
+    () => trySafe(() => z.object({ [key]: z.string() }).parse(customData)[key]),
+    [customData]
   );
 
   const defaultTenantId = useMemo(() => {
@@ -47,11 +47,11 @@ const useUserDefaultTenantId = () => {
         return;
       }
 
-      await updateMeCustomData({
+      await updateCustomData({
         [key]: tenantId,
       });
     },
-    [updateMeCustomData]
+    [updateCustomData]
   );
 
   return useMemo(
