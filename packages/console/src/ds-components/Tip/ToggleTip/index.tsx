@@ -41,6 +41,15 @@ function ToggleTip({
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const openTip = useCallback(() => {
+    setIsOpen(true);
+    /**
+     * Note: should focus on the anchor wrapper element after the tip bubble is opened,
+     * or the hover state will not be removed from its child element, and this will cause the child element to have a hover state after the tip bubble is closed.
+     */
+    anchorRef.current?.focus();
+  }, []);
+
   const onClose = useCallback(() => {
     setIsOpen(false);
   }, [setIsOpen]);
@@ -67,12 +76,8 @@ function ToggleTip({
         role="tab"
         tabIndex={0}
         className={anchorClassName}
-        onClick={() => {
-          setIsOpen(true);
-        }}
-        onKeyDown={onKeyDownHandler(() => {
-          setIsOpen(true);
-        })}
+        onClick={openTip}
+        onKeyDown={onKeyDownHandler(openTip)}
       >
         {children}
       </div>
