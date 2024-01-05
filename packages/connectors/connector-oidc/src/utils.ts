@@ -1,4 +1,4 @@
-import { assert, pick } from '@silverhand/essentials';
+import { pick } from '@silverhand/essentials';
 import type { Response } from 'got';
 import { got, HTTPError } from 'got';
 import snakecaseKeys from 'snakecase-keys';
@@ -7,7 +7,7 @@ import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector
 
 import { defaultTimeout } from './constant.js';
 import type { AccessTokenResponse, OidcConfig } from './types.js';
-import { accessTokenResponseGuard, delimiter, authResponseGuard } from './types.js';
+import { accessTokenResponseGuard, authResponseGuard } from './types.js';
 
 export const accessTokenRequester = async (
   tokenEndpoint: string,
@@ -39,18 +39,7 @@ const accessTokenResponseHandler = async (
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
   }
 
-  assert(
-    result.data.access_token,
-    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
-      message: 'Missing `access_token` in token response!',
-    })
-  );
-
   return result.data;
-};
-
-export const isIdTokenInResponseType = (responseType: string) => {
-  return responseType.split(delimiter).includes('id_token');
 };
 
 export const getIdToken = async (config: OidcConfig, data: unknown, redirectUri: string) => {
