@@ -21,7 +21,7 @@ function LogoUploader({ isDarkModeEnabled }: Props) {
   const { control } = useFormContext<ApplicationSignInExperience>();
 
   return (
-    <div className={styles.field}>
+    <div>
       <div className={styles.container}>
         <Controller
           name="branding.logoUrl"
