@@ -26,7 +26,8 @@ jobs:
       - name: Check for alteration changes
         id: changes-detection
         run: |
-          CHANGE_FILES=$(git diff --name-only HEAD..origin/${{github.base_ref}} | grep 'packages/schemas/alterations/' || true)
+          MERGE_BASE=$(git merge-base origin/${{github.base_ref}} HEAD)
+          CHANGE_FILES=$(git diff --name-only $MERGE_BASE | grep 'packages/schemas/alterations/' || true)
           if [ -n "$CHANGE_FILES" ]; then
             echo "$CHANGE_FILES"
             echo "::set-output name=has-alteration-changes::true"
