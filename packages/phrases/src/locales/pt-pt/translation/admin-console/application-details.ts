@@ -5,9 +5,15 @@ const application_details = {
   settings: 'Definições',
   settings_description:
     'As aplicações são utilizadas para identificar as suas aplicações no Logto para OIDC, experiência de início de sessão, registos de auditoria, etc.',
-  advanced_settings: 'Definições avançadas',
-  advanced_settings_description:
-    'As configurações avançadas incluem termos relacionados com OIDC. Pode consultar o Endpoint do Token para obter mais informações.',
+  /** UNTRANSLATED */
+  endpoints_and_credentials: 'Endpoints & Credentials',
+  /** UNTRANSLATED */
+  endpoints_and_credentials_description:
+    'Use the following endpoints and credentials to set up the OIDC connection in your application.',
+  /** UNTRANSLATED */
+  refresh_token_settings: 'Refresh token',
+  /** UNTRANSLATED */
+  refresh_token_settings_description: 'Manage the refresh token rules for this application.',
   application_roles: 'Funções da aplicação',
   machine_logs: 'Registos da máquina',
   application_name: 'Nome da aplicação',
@@ -18,6 +24,10 @@ const application_details = {
   authorization_endpoint: 'Endpoint de autorização',
   authorization_endpoint_tip:
     'O endpoint para realizar a autenticação e autorização. É usado para <a>autenticação</a> OpenID Connect.',
+  /** UNTRANSLATED */
+  show_endpoint_details: 'Show endpoint details',
+  /** UNTRANSLATED */
+  hide_endpoint_details: 'Hide endpoint details',
   logto_endpoint: 'Endpoint Logto',
   application_id: 'ID da aplicação',
   application_id_tip:

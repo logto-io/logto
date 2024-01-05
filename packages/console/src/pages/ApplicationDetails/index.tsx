@@ -33,11 +33,12 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
-import AdvancedSettings from './components/AdvancedSettings';
+import EndpointsAndCredentials from './components/EndpointsAndCredentials';
 import GuideDrawer from './components/GuideDrawer';
 import GuideModal from './components/GuideModal';
 import MachineLogs from './components/MachineLogs';
 import MachineToMachineApplicationRoles from './components/MachineToMachineApplicationRoles';
+import RefreshTokenSettings from './components/RefreshTokenSettings';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';
 
@@ -216,11 +217,6 @@ function ApplicationDetails() {
             <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Settings}`}>
               {t('application_details.settings')}
             </TabNavItem>
-            <TabNavItem
-              href={`/applications/${data.id}/${ApplicationDetailsTabs.AdvancedSettings}`}
-            >
-              {t('application_details.advanced_settings')}
-            </TabNavItem>
             {data.type === ApplicationType.MachineToMachine && (
               <>
                 <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Roles}`}>
@@ -232,31 +228,42 @@ function ApplicationDetails() {
               </>
             )}
           </TabNav>
-          <FormProvider {...formMethods}>
-            <DetailsForm
-              isDirty={isDirty}
-              isSubmitting={isSubmitting}
-              onDiscard={reset}
-              onSubmit={onSubmit}
-            >
-              <TabWrapper isActive={tab === ApplicationDetailsTabs.Settings}>
+          <TabWrapper
+            isActive={tab === ApplicationDetailsTabs.Settings}
+            className={styles.tabContainer}
+          >
+            <FormProvider {...formMethods}>
+              <DetailsForm
+                isDirty={isDirty}
+                isSubmitting={isSubmitting}
+                onDiscard={reset}
+                onSubmit={onSubmit}
+              >
                 <Settings data={data} />
+                <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
+                {data.type !== ApplicationType.MachineToMachine && (
+                  <RefreshTokenSettings data={data} />
+                )}
+              </DetailsForm>
+            </FormProvider>
+          </TabWrapper>
+
+          {data.type === ApplicationType.MachineToMachine && (
+            <>
+              <TabWrapper
+                isActive={tab === ApplicationDetailsTabs.Roles}
+                className={styles.tabContainer}
+              >
+                <MachineToMachineApplicationRoles application={data} />
               </TabWrapper>
-              <TabWrapper isActive={tab === ApplicationDetailsTabs.AdvancedSettings}>
-                <AdvancedSettings app={data} oidcConfig={oidcConfig} />
+              <TabWrapper
+                isActive={tab === ApplicationDetailsTabs.Logs}
+                className={styles.tabContainer}
+              >
+                <MachineLogs applicationId={data.id} />
               </TabWrapper>
-              {data.type === ApplicationType.MachineToMachine && (
-                <>
-                  <TabWrapper isActive={tab === ApplicationDetailsTabs.Roles}>
-                    <MachineToMachineApplicationRoles application={data} />
-                  </TabWrapper>
-                  <TabWrapper isActive={tab === ApplicationDetailsTabs.Logs}>
-                    <MachineLogs applicationId={data.id} />
-                  </TabWrapper>
-                </>
-              )}
-            </DetailsForm>
-          </FormProvider>
+            </>
+          )}
         </>
       )}
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} onConfirm={reset} />

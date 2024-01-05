@@ -1,6 +1,5 @@
 export enum ApplicationDetailsTabs {
   Settings = 'settings',
-  AdvancedSettings = 'advanced-settings',
   Roles = 'roles',
   Logs = 'logs',
 }

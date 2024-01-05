@@ -10,7 +10,11 @@ type Props = {
 };
 
 function TabWrapper({ isActive, className, children }: Props) {
-  return <div className={classNames(!isActive && styles.hide, className)}>{children}</div>;
+  return (
+    <div className={classNames(!isActive && styles.hide, className)} data-active={isActive}>
+      {children}
+    </div>
+  );
 }
 
 export default TabWrapper;
