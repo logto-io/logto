@@ -26,7 +26,7 @@ export const mockedConfig: SendGridMailConfig = {
   fromEmail: 'noreply@logto.test.io',
   templates: [
     {
-      usageType: 'Test',
+      usageType: 'Generic',
       type: ContextType.Text,
       subject: 'Logto Test Template',
       content: 'This is for testing purposes only. Your verification code is {{code}}.',
