@@ -11,7 +11,12 @@ function TableEmptyWrapper({ columns, children }: Props) {
   return (
     <tr>
       <td colSpan={columns} className={styles.tableEmptyWrapper}>
-        <div className={styles.content}>{children}</div>
+        <div className={styles.content}>
+          {/* Per design requirement, the empty placeholder should have a top and bottom spacing, and the space height aspect ratio is 2:3. */}
+          <div className={styles.topSpace} />
+          {children}
+          <div className={styles.bottomSpace} />
+        </div>
       </td>
     </tr>
   );
