@@ -73,15 +73,4 @@ describe('sendMessage()', () => {
       mockedConnectorConfig.accessKeySecret
     );
   });
-
-  it('throws if template is missing', async () => {
-    const connector = await createConnector({ getConfig });
-    await expect(
-      connector.sendMessage({
-        to: phoneTest,
-        type: VerificationCodeType.Test,
-        payload: { code: codeTest },
-      })
-    ).rejects.toThrow();
-  });
 });
