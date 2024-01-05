@@ -88,7 +88,7 @@ const useApplicationsData = (isThirdParty = false) => {
 
   const { data } = thirdPartyApplicationsData;
   const [_, totalCount] = data ?? [];
-  const hasThirdPartyApplications = totalCount && totalCount > 0;
+  const hasThirdPartyApplications = Boolean(totalCount && totalCount > 0);
 
   return {
     ...(isThirdParty ? thirdPartyApplicationsData : firstPartyApplicationsData),

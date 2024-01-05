@@ -6,6 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
 import {
@@ -29,7 +30,7 @@ function Settings({ data }: Props) {
     formState: { errors },
   } = useFormContext<Application>();
 
-  const { type: applicationType } = data;
+  const { type: applicationType, isThirdParty } = data;
 
   const isNativeApp = applicationType === ApplicationType.Native;
   const uriPatternRules: MultiTextInputRule = {
@@ -55,12 +56,16 @@ function Settings({ data }: Props) {
           placeholder={t('application_details.application_name_placeholder')}
         />
       </FormField>
-      <FormField title="application_details.description">
-        <TextInput
-          {...register('description')}
-          placeholder={t('application_details.description_placeholder')}
-        />
-      </FormField>
+      {/* Hide description field in third-party application's form. @simeng-li FIXME: remove isDevFeatureEnabled flag */}
+      {(!isDevFeaturesEnabled || !isThirdParty) && (
+        <FormField title="application_details.description">
+          <TextInput
+            {...register('description')}
+            placeholder={t('application_details.description_placeholder')}
+          />
+        </FormField>
+      )}
+
       {applicationType !== ApplicationType.MachineToMachine && (
         <Controller
           name="oidcClientMetadata.redirectUris"

@@ -67,6 +67,27 @@ const application_details = {
   enter_your_application_name: 'Digite o nome do seu aplicativo',
   application_deleted: 'O aplicativo {{name}} foi excluído com sucesso',
   redirect_uri_required: 'Você deve inserir pelo menos um URI de redirecionamento',
+  branding: {
+    /** UNTRANSLATED */
+    branding: 'Branding',
+    /** UNTRANSLATED */
+    branding_description:
+      "Customize your application's display name and logo on the consent screen.",
+    /** UNTRANSLATED */
+    more_info: 'More info',
+    /** UNTRANSLATED */
+    more_info_description: 'Offer users more details about your application on the consent screen.',
+    /** UNTRANSLATED */
+    display_name: 'Display name',
+    /** UNTRANSLATED */
+    display_logo: 'Display logo',
+    /** UNTRANSLATED */
+    display_logo_dark: 'Display logo (dark)',
+    /** UNTRANSLATED */
+    terms_of_use_url: 'Application terms of use URL',
+    /** UNTRANSLATED */
+    privacy_policy_url: 'Application privacy policy URL',
+  },
   roles: {
     name_column: 'Função',
     description_column: 'Descrição',

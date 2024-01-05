@@ -67,6 +67,27 @@ const application_details = {
   enter_your_application_name: '어플리케이션 이름을 입력해 주세요.',
   application_deleted: '{{name}} 어플리케이션이 성공적으로 삭제되었어요.',
   redirect_uri_required: '반드시 최소 하나의 Redirect URI 를 입력해야 해요.',
+  branding: {
+    /** UNTRANSLATED */
+    branding: 'Branding',
+    /** UNTRANSLATED */
+    branding_description:
+      "Customize your application's display name and logo on the consent screen.",
+    /** UNTRANSLATED */
+    more_info: 'More info',
+    /** UNTRANSLATED */
+    more_info_description: 'Offer users more details about your application on the consent screen.',
+    /** UNTRANSLATED */
+    display_name: 'Display name',
+    /** UNTRANSLATED */
+    display_logo: 'Display logo',
+    /** UNTRANSLATED */
+    display_logo_dark: 'Display logo (dark)',
+    /** UNTRANSLATED */
+    terms_of_use_url: 'Application terms of use URL',
+    /** UNTRANSLATED */
+    privacy_policy_url: 'Application privacy policy URL',
+  },
   roles: {
     name_column: '역할',
     description_column: '설명',
