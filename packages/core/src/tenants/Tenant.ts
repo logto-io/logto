@@ -13,6 +13,7 @@ import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import koaAutoConsent from '#src/middleware/koa-auto-consent.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
@@ -23,6 +24,7 @@ import koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
 import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import initOidc from '#src/oidc/init.js';
+import { routes } from '#src/routes/consts.js';
 import initApis from '#src/routes/init.js';
 import initMeApis from '#src/routes-me/init.js';
 import BasicSentinel from '#src/sentinel/basic-sentinel.js';
@@ -137,7 +139,13 @@ export default class Tenant implements TenantContext {
     }
 
     // Mount UI
-    app.use(compose([koaSpaSessionGuard(provider, queries), koaSpaProxy(mountedApps)]));
+    app.use(
+      compose([
+        koaSpaSessionGuard(provider, queries),
+        mount(`${routes.consent}`, koaAutoConsent(provider, queries)),
+        koaSpaProxy(mountedApps),
+      ])
+    );
 
     this.app = app;
     this.provider = provider;
