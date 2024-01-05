@@ -8,6 +8,8 @@ const guide = {
     Native: '原生應用',
     MachineToMachine: '機器對機器',
     Protected: '受保護的應用程式',
+    /** UNTRANSLATED */
+    ThirdParty: 'Third-party app',
   },
   filter: {
     title: '篩選框架',

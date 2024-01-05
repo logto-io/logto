@@ -39,12 +39,23 @@ export const testApp: ApplicationCase = {
   postSignOutRedirectUri: 'https://my.test.app/sign-out',
 };
 
+export const thirdPartyApp: Omit<
+  ApplicationCase,
+  'sample' | 'redirectUri' | 'postSignOutRedirectUri'
+> = {
+  framework: 'OIDC',
+  name: 'OIDC third party app',
+  description: 'This is a OIDC third party app',
+  guideFilename: 'third-party-oidc',
+};
+
 export const frameworkGroupLabels = [
   'Popular and for you',
   'Traditional web app',
   'Single page app',
   'Native',
   'Machine-to-machine',
+  'Third-party',
 ] as const;
 
 export type ApplicationMetadata = {

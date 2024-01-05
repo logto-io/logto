@@ -27,6 +27,9 @@ export type GuideMetadata = {
   };
   /** Whether the guide is displayed in featured group. */
   isFeatured?: boolean;
+
+  /** Indicate whether the application is for third-party use */
+  isThirdParty?: boolean;
 };
 
 /** The guide instance to build in the console. */

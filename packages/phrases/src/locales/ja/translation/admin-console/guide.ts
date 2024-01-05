@@ -8,6 +8,8 @@ const guide = {
     Native: 'ネイティブ',
     MachineToMachine: 'Machine-to-machine',
     Protected: '保護されたアプリ',
+    /** UNTRANSLATED */
+    ThirdParty: 'Third-party app',
   },
   filter: {
     title: 'フレームワークを絞り込む',

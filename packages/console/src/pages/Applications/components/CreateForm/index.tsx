@@ -25,21 +25,30 @@ type FormData = {
   type: ApplicationType;
   name: string;
   description?: string;
+  isThirdParty?: boolean;
 };
 
 type Props = {
+  isDefaultCreateThirdParty?: boolean;
   defaultCreateType?: ApplicationType;
   defaultCreateFrameworkName?: string;
   onClose?: (createdApp?: Application) => void;
 };
 
-function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: Props) {
+function CreateForm({
+  defaultCreateType,
+  defaultCreateFrameworkName,
+  isDefaultCreateThirdParty,
+  onClose,
+}: Props) {
   const {
     handleSubmit,
     control,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ defaultValues: { type: defaultCreateType } });
+  } = useForm<FormData>({
+    defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
+  });
 
   const {
     field: { onChange, value, name, ref },

@@ -14,6 +14,7 @@ import nativeIosSwift from './native-ios-swift/index';
 import spaReact from './spa-react/index';
 import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
+import thirdPartyOidc from './third-party-oidc/index';
 import { type Guide } from './types';
 import webAspNetCore from './web-asp-net-core/index';
 import webAspNetCoreMvc from './web-asp-net-core-mvc/index';
@@ -196,6 +197,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./api-spring-boot/logo.svg')),
     Component: lazy(async () => import('./api-spring-boot/README.mdx')),
     metadata: apiSpringBoot,
+  },
+  {
+    order: Number.POSITIVE_INFINITY,
+    id: 'third-party-oidc',
+    Logo: lazy(async () => import('./third-party-oidc/logo.svg')),
+    Component: lazy(async () => import('./third-party-oidc/README.mdx')),
+    metadata: thirdPartyOidc,
   },
 ]);
 

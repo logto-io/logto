@@ -2,7 +2,12 @@ import { useCallback, useMemo } from 'react';
 
 import guides from '@/assets/docs/guides';
 import { type Guide } from '@/assets/docs/guides/types';
-import { type AppGuideCategory, type StructuredAppGuideMetadata } from '@/types/applications';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import {
+  thirdPartyAppCategory,
+  type AppGuideCategory,
+  type StructuredAppGuideMetadata,
+} from '@/types/applications';
 
 const defaultStructuredMetadata: StructuredAppGuideMetadata = {
   featured: [],
@@ -11,6 +16,7 @@ const defaultStructuredMetadata: StructuredAppGuideMetadata = {
   Native: [],
   MachineToMachine: [],
   Protected: [],
+  ThirdParty: [],
 };
 
 type FilterOptions = {
@@ -28,7 +34,12 @@ export const useAppGuideMetadata = (): {
   ) => Record<AppGuideCategory, readonly Guide[]>;
 } => {
   const appGuides = useMemo(
-    () => guides.filter(({ metadata: { target } }) => target !== 'API'),
+    () =>
+      guides.filter(
+        ({ metadata: { target, isThirdParty } }) =>
+          // @simeng-li #FIXME: remove isDevFeaturesEnabled check once we have all guides ready
+          target !== 'API' && (isDevFeaturesEnabled || !isThirdParty)
+      ),
     []
   );
 
@@ -49,11 +60,15 @@ export const useAppGuideMetadata = (): {
 
       // Categories only, return selected categories
       if (!keyword && filterCategories?.length) {
-        return appGuides.filter(({ metadata: { target, isFeatured } }) =>
-          filterCategories.some(
-            (filterCategory) =>
-              filterCategory === target || (isFeatured && filterCategory === 'featured')
-          )
+        return appGuides.filter(({ metadata: { target, isFeatured, isThirdParty } }) =>
+          filterCategories.some((filterCategory) => {
+            return (
+              filterCategory === target ||
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              (isFeatured && filterCategory === 'featured') ||
+              (isThirdParty && filterCategory === 'ThirdParty')
+            );
+          })
         );
       }
 
@@ -76,13 +91,22 @@ export const useAppGuideMetadata = (): {
   const getStructuredAppGuideMetadata = useCallback(
     (filters?: FilterOptions) => {
       const filteredMetadata = getFilteredAppGuideMetadata(filters);
+
       return filteredMetadata.reduce((accumulated, guide) => {
-        const { target, isFeatured } = guide.metadata;
+        const { target, isFeatured, isThirdParty } = guide.metadata;
 
         // Rule out API target guides to make TypeScript happy
         if (target === 'API') {
           return accumulated;
         }
+
+        if (isThirdParty) {
+          return {
+            ...accumulated,
+            [thirdPartyAppCategory]: [...accumulated[thirdPartyAppCategory], guide],
+          };
+        }
+
         return {
           ...accumulated,
           [target]: [...accumulated[target], guide],

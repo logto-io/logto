@@ -11,6 +11,7 @@ export type SelectedGuide = {
   id: Guide['id'];
   target: GuideMetadata['target'];
   name: GuideMetadata['name'];
+  isThirdParty: GuideMetadata['isThirdParty'];
 };
 
 type Props = {
@@ -24,13 +25,13 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
   const {
     id,
     Logo,
-    metadata: { target, name, description },
+    metadata: { target, name, description, isThirdParty },
   } = data;
 
   const buttonText = target === 'API' ? 'guide.get_started' : 'guide.start_building';
 
   const handleClick = useCallback(() => {
-    onClick({ id, target, name });
+    onClick({ id, target, name, isThirdParty });
   }, [id, name, target, onClick]);
 
   return (

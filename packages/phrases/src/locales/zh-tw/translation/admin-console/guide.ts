@@ -6,8 +6,11 @@ const guide = {
     Traditional: '傳統網頁應用',
     SPA: '單頁應用',
     Native: '原生應用',
+    /** UNTRANSLATED */
     MachineToMachine: 'Machine-to-machine',
     Protected: '受保護的應用',
+    /** UNTRANSLATED */
+    ThirdParty: 'Third-party app',
   },
   filter: {
     title: '篩選框架',

@@ -39,9 +39,9 @@ function GuideDrawer({ app, onClose }: Props) {
       if (guide) {
         const {
           id,
-          metadata: { target, name },
+          metadata: { target, name, isThirdParty },
         } = guide;
-        setSelectedGuide({ id, target, name });
+        setSelectedGuide({ id, target, name, isThirdParty });
       }
     }
   }, [hasSingleGuide, app.type, structuredMetadata]);
