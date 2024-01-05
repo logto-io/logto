@@ -1,8 +1,6 @@
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
-import { TenantTag } from './tenant.js';
-
 /**
  * Logto OIDC signing key types, used mainly in REST API routes.
  */
@@ -54,7 +52,11 @@ export const adminConsoleDataGuard = z.object({
   developmentTenantMigrationNotification: z
     .object({
       isPaidTenant: z.boolean(),
-      tag: z.nativeEnum(TenantTag),
+      /**
+       * Tag is used to store the original tenant tag before dev tenant migration.
+       * This field is only used for DB rollback and because the `TenantTag` may change, so we don't guard it as the `TenantTag` type.
+       */
+      tag: z.string(),
       readAt: z.number().optional(),
     })
     .optional(),
