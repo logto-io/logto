@@ -12,6 +12,12 @@ const applications = {
   select_application_type: '어플리케이션 종류 선택',
   no_application_type_selected: '어플리케이션 종류를 선택하지 않았어요.',
   application_created: '어플리케이션이 성공적으로 생성되었어요.',
+  tab: {
+    /** UNTRANSLATED */
+    my_applications: 'My apps',
+    /** UNTRANSLATED */
+    third_party_applications: 'Third party apps',
+  },
   app_id: 'App ID',
   type: {
     native: {
@@ -33,6 +39,14 @@ const applications = {
       title: 'Machine-to-Machine',
       subtitle: '직접 리소스에 접근하는 엡(서비스)',
       description: '예) 백엔드 서비스',
+    },
+    third_party: {
+      /** UNTRANSLATED */
+      title: 'Third-party app',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is used as a third-party IdP connector',
+      /** UNTRANSLATED */
+      description: 'E.g., OIDC, SAML',
     },
   },
   placeholder_title: '애플리케이션 유형을 선택하여 계속하세요',

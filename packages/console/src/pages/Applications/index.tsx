@@ -1,24 +1,21 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import type { Application } from '@logto/schemas';
+import { joinPath } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import ChargeNotification from '@/components/ChargeNotification';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
-import { defaultPageSize } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
-import type { RequestError } from '@/hooks/use-api';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
-import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
@@ -26,29 +23,53 @@ import { buildUrl } from '@/utils/url';
 
 import GuideLibrary from './components/GuideLibrary';
 import GuideLibraryModal from './components/GuideLibraryModal';
+import useApplicationsData from './hooks/use-application-data';
+import useLegacyApplicationsData from './hooks/use-legacy-application-data';
 import * as styles from './index.module.scss';
 
-const pageSize = defaultPageSize;
+const tabs = Object.freeze({
+  thirdPartyApplications: 'third-party-applications',
+});
+
 const applicationsPathname = '/applications';
 const createApplicationPathname = `${applicationsPathname}/create`;
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
 
-function Applications() {
+// Build the path with pagination query param for the tabs
+const buildTabPathWithPagePagination = (page: number, tab?: keyof typeof tabs) => {
+  const pathname = tab
+    ? joinPath(applicationsPathname, tabs.thirdPartyApplications)
+    : applicationsPathname;
+
+  return page > 1 ? buildUrl(pathname, { page: String(page) }) : pathname;
+};
+
+// @simeng-li FIXME: Remove this when the third party applications is production ready
+const useApplicationDataHook = isDevFeaturesEnabled
+  ? useApplicationsData
+  : useLegacyApplicationsData;
+
+type Props = {
+  tab?: keyof typeof tabs;
+};
+
+function Applications({ tab }: Props) {
   const { search } = useLocation();
   const { match, navigate } = useTenantPathname();
-  const isCreating = match(createApplicationPathname);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  const isCreating = match(createApplicationPathname);
   const { hasMachineToMachineAppsSurpassedLimit } = useApplicationsUsage();
-  const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
-    page: 1,
-  });
 
-  const url = buildUrl('api/applications', {
-    page: String(page),
-    page_size: String(pageSize),
-  });
-
-  const { data, error, mutate } = useSWR<[Application[], number], RequestError>(url);
+  const {
+    data,
+    error,
+    mutate,
+    pagination,
+    updatePagination,
+    paginationRecords,
+    showThirdPartyApplicationTab,
+  } = useApplicationDataHook(tab === 'thirdPartyApplications');
 
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];
@@ -81,6 +102,27 @@ function Applications() {
           checkedFlagKey="machineToMachineApp"
         />
       )}
+
+      {showThirdPartyApplicationTab && (
+        <TabNav className={styles.tabs}>
+          <TabNavItem
+            href={buildTabPathWithPagePagination(paginationRecords.firstPartyApplicationPage)}
+            isActive={!tab}
+          >
+            {t('applications.tab.my_applications')}
+          </TabNavItem>
+          <TabNavItem
+            href={buildTabPathWithPagePagination(
+              paginationRecords.thirdPartyApplicationPage,
+              'thirdPartyApplications'
+            )}
+            isActive={tab === 'thirdPartyApplications'}
+          >
+            {t('applications.tab.third_party_applications')}
+          </TabNavItem>
+        </TabNav>
+      )}
+
       {!isLoading && !applications?.length && (
         <OverlayScrollbar className={styles.guideLibraryContainer}>
           <CardTitle
@@ -103,10 +145,14 @@ function Applications() {
               title: t('applications.application_name'),
               dataIndex: 'name',
               colSpan: 6,
-              render: ({ id, name, type }) => (
+              render: ({ id, name, type, isThirdParty }) => (
                 <ItemPreview
                   title={name}
-                  subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
+                  subtitle={
+                    isThirdParty
+                      ? t('applications.type.third_party.title')
+                      : t(`${applicationTypeI18nKey[type]}.title`)
+                  }
                   icon={<ApplicationIcon className={styles.icon} type={type} />}
                   to={buildDetailsPathname(id)}
                 />
@@ -123,12 +169,9 @@ function Applications() {
             navigate(buildDetailsPathname(id));
           }}
           pagination={{
-            page,
+            ...pagination,
             totalCount,
-            pageSize,
-            onChange: (page) => {
-              updateSearchParameters({ page });
-            },
+            onChange: updatePagination,
           }}
           onRetry={async () => mutate(undefined, true)}
         />
@@ -136,10 +179,7 @@ function Applications() {
       <GuideLibraryModal
         isOpen={isCreating}
         onClose={() => {
-          navigate({
-            pathname: applicationsPathname,
-            search,
-          });
+          navigate(-1);
         }}
       />
     </div>

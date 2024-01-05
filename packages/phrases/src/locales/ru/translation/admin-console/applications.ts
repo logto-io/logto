@@ -12,6 +12,12 @@ const applications = {
   select_application_type: 'Выбрать тип приложения',
   no_application_type_selected: 'Вы еще не выбрали тип приложения',
   application_created: 'Приложение успешно создано.',
+  tab: {
+    /** UNTRANSLATED */
+    my_applications: 'My apps',
+    /** UNTRANSLATED */
+    third_party_applications: 'Third party apps',
+  },
   app_id: 'App ID',
   type: {
     native: {
@@ -33,6 +39,14 @@ const applications = {
       title: 'Machine-to-Machine',
       subtitle: 'Приложение (обычно сервис), которое напрямую общается с ресурсами',
       description: 'Например, backend-сервис',
+    },
+    third_party: {
+      /** UNTRANSLATED */
+      title: 'Third-party app',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is used as a third-party IdP connector',
+      /** UNTRANSLATED */
+      description: 'E.g., OIDC, SAML',
     },
   },
   placeholder_title: 'Выберите тип приложения, чтобы продолжить',

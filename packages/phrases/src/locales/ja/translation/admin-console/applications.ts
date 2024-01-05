@@ -12,6 +12,12 @@ const applications = {
   select_application_type: 'アプリケーションタイプを選択してください',
   no_application_type_selected: 'まだアプリケーションタイプが選択されていません',
   application_created: 'アプリケーションが正常に作成されました。',
+  tab: {
+    /** UNTRANSLATED */
+    my_applications: 'My apps',
+    /** UNTRANSLATED */
+    third_party_applications: 'Third party apps',
+  },
   app_id: 'App ID',
   type: {
     native: {
@@ -33,6 +39,14 @@ const applications = {
       title: 'Machine-to-Machine',
       subtitle: 'リソースに直接アクセスするアプリケーション（通常はサービス）',
       description: '例：バックエンドサービス',
+    },
+    third_party: {
+      /** UNTRANSLATED */
+      title: 'Third-party app',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is used as a third-party IdP connector',
+      /** UNTRANSLATED */
+      description: 'E.g., OIDC, SAML',
     },
   },
   placeholder_title: '続行するにはアプリケーションタイプを選択してください',

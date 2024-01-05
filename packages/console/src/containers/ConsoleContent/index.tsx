@@ -11,7 +11,7 @@ import {
   ApplicationDetailsTabs,
   EnterpriseSsoDetailsTabs,
 } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -85,6 +85,12 @@ function ConsoleContent() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="applications">
               <Route index element={<Applications />} />
+              {isDevFeaturesEnabled && (
+                <Route
+                  path="third-party-applications"
+                  element={<Applications tab="thirdPartyApplications" />}
+                />
+              )}
               <Route path="create" element={<Applications />} />
               <Route path=":id/guide/:guideId" element={<ApplicationDetails />} />
               <Route path=":id">

@@ -11,6 +11,12 @@ const applications = {
   select_application_type: '选择应用类型',
   no_application_type_selected: '你还没有选择应用类型',
   application_created: '创建应用成功。',
+  tab: {
+    /** UNTRANSLATED */
+    my_applications: 'My apps',
+    /** UNTRANSLATED */
+    third_party_applications: 'Third party apps',
+  },
   app_id: 'App ID',
   type: {
     native: {
@@ -32,6 +38,14 @@ const applications = {
       title: 'Machine-to-Machine',
       subtitle: '直接与资源对话的应用程序（通常是服务）',
       description: '例如，后端服务',
+    },
+    third_party: {
+      /** UNTRANSLATED */
+      title: 'Third-party app',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is used as a third-party IdP connector',
+      /** UNTRANSLATED */
+      description: 'E.g., OIDC, SAML',
     },
   },
   placeholder_title: '选择应用程序类型以继续',

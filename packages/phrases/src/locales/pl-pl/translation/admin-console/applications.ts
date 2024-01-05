@@ -12,6 +12,12 @@ const applications = {
   select_application_type: 'Wybierz typ aplikacji',
   no_application_type_selected: 'Nie wybrałeś jeszcze żadnego typu aplikacji',
   application_created: 'Aplikacja ostała pomyślnie utworzona.',
+  tab: {
+    /** UNTRANSLATED */
+    my_applications: 'My apps',
+    /** UNTRANSLATED */
+    third_party_applications: 'Third party apps',
+  },
   app_id: 'App ID',
   type: {
     native: {
@@ -34,6 +40,14 @@ const applications = {
       title: 'Machine-to-Machine',
       subtitle: 'Aplikacja (zazwyczaj usługa), która bezpośrednio komunikuje się z zasobami',
       description: 'Na przykład usługa backendowa',
+    },
+    third_party: {
+      /** UNTRANSLATED */
+      title: 'Third-party app',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is used as a third-party IdP connector',
+      /** UNTRANSLATED */
+      description: 'E.g., OIDC, SAML',
     },
   },
   placeholder_title: 'Wybierz typ aplikacji, aby kontynuować',

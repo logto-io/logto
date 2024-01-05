@@ -8,6 +8,7 @@ import {
   useLocation,
   useNavigate,
   useHref,
+  type NavigateFunction,
 } from 'react-router-dom';
 
 import { isCloud } from '@/consts/env';
@@ -43,7 +44,7 @@ type TenantPathname = {
    */
   getTo: (to: To) => To;
   /** Navigate to the given pathname in the current tenant. */
-  navigate: (to: To, options?: NavigateOptions) => void;
+  navigate: NavigateFunction;
   /** Returns the full URL with the current tenant ID prepended. */
   getUrl: (pathname: string) => URL;
 };
@@ -112,7 +113,13 @@ function useTenantPathname(): TenantPathname {
   const data = useMemo(
     () => ({
       match,
-      navigate: (to: To, options?: NavigateOptions) => {
+      navigate: (to: To | number, options?: NavigateOptions) => {
+        // Navigate to the given index in the history stack
+        if (typeof to === 'number') {
+          navigate(to);
+          return;
+        }
+
         navigate(getTo(to), options);
       },
       getPathname,
