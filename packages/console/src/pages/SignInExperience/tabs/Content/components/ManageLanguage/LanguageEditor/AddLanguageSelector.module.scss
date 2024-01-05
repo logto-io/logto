@@ -46,6 +46,13 @@
         color: var(--color-text-secondary);
       }
     }
+
+    .noDataPlaceholder {
+      padding: _.unit(2);
+      color: var(--color-text-secondary);
+      font: var(--font-body-2);
+      user-select: none;
+    }
   }
 }
 

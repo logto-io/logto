@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Plus from '@/assets/icons/plus.svg';
 import SearchIcon from '@/assets/icons/search.svg';
 import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -89,25 +90,31 @@ function AddLanguageSelector({ options, onSelect }: Props) {
           />
         )}
       </div>
-      {isDropDownOpen && filteredOptions.length > 0 && (
+      {isDropDownOpen && (
         <OverlayScrollbar className={style.dropDown}>
-          {filteredOptions.map((languageTag) => (
-            <div
-              key={languageTag}
-              role="tab"
-              tabIndex={0}
-              className={style.dropDownItem}
-              onKeyDown={onKeyDownHandler(() => {
-                handleSelect(languageTag);
-              })}
-              onClick={() => {
-                handleSelect(languageTag);
-              }}
-            >
-              <div className={style.languageName}>{uiLanguageNameMapping[languageTag]}</div>
-              <div className={style.languageTag}>{languageTag}</div>
+          {filteredOptions.length === 0 ? (
+            <div className={style.noDataPlaceholder}>
+              <DynamicT forKey="errors.empty" />
             </div>
-          ))}
+          ) : (
+            filteredOptions.map((languageTag) => (
+              <div
+                key={languageTag}
+                role="tab"
+                tabIndex={0}
+                className={style.dropDownItem}
+                onKeyDown={onKeyDownHandler(() => {
+                  handleSelect(languageTag);
+                })}
+                onClick={() => {
+                  handleSelect(languageTag);
+                }}
+              >
+                <div className={style.languageName}>{uiLanguageNameMapping[languageTag]}</div>
+                <div className={style.languageTag}>{languageTag}</div>
+              </div>
+            ))
+          )}
         </OverlayScrollbar>
       )}
     </div>

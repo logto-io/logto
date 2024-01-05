@@ -13,6 +13,7 @@ import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
 import UserRoleIcon from '@/assets/icons/user-role.svg';
 import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
 import RolesEmpty from '@/assets/images/roles-empty.svg';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
@@ -168,7 +169,9 @@ function Roles() {
             updateSearchParameters({ page });
           },
         },
-        placeholder: (
+        placeholder: keyword ? (
+          <EmptyDataPlaceholder />
+        ) : (
           <TablePlaceholder
             image={<RolesEmpty />}
             imageDark={<RolesEmptyDark />}

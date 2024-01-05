@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import OrganizationIcon from '@/assets/icons/organization-preview.svg';
+import NotFoundDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ThemedIcon from '@/components/ThemedIcon';
 import { defaultPageSize } from '@/consts';
@@ -52,9 +53,13 @@ function OrganizationsTable({ isLoading, onCreate }: Props) {
       className={pageLayout.table}
       isLoading={isTableLoading}
       placeholder={
-        <EmptyDataPlaceholder
-          buttonProps={{ title: 'organizations.create_organization', onClick: onCreate }}
-        />
+        keyword ? (
+          <NotFoundDataPlaceholder />
+        ) : (
+          <EmptyDataPlaceholder
+            buttonProps={{ title: 'organizations.create_organization', onClick: onCreate }}
+          />
+        )
       }
       rowGroups={[{ key: 'data', data }]}
       rowClickHandler={({ id }) => {
