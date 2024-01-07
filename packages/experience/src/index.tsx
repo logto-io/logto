@@ -1,3 +1,5 @@
+/* eslint-disable-next-line import/no-unassigned-import */
+import 'core-js/actual';
 import { createRoot } from 'react-dom/client';
 import ReactModal from 'react-modal';
 

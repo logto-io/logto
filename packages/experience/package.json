@@ -56,6 +56,7 @@
     "camelcase-keys": "^9.0.0",
     "classnames": "^2.3.1",
     "color": "^4.2.3",
+    "core-js": "^3.34.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.44.0",
     "i18next": "^22.4.15",
@@ -99,7 +100,16 @@
   "targets": {
     "default": {
       "engines": {
-        "browsers": "defaults"
+        "browsers": [
+          "defaults",
+          ">0.3%",
+          "Chrome >= 52",
+          "Firefox >= 55",
+          "Safari >= 10",
+          "Edge >= 13",
+          "iOS >= 10",
+          "Electron >= 0.36"
+        ]
       }
     }
   },
