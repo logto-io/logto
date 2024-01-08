@@ -41,7 +41,13 @@ import { consoleLog, getPathInModule } from '../../../utils.js';
 import { appendAdminConsoleRedirectUris, seedTenantCloudServiceApplication } from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
 import { seedTenantOrganizations } from './tenant-organizations.js';
-import { assignScopesToRole, createTenant, seedAdminData } from './tenant.js';
+import {
+  assignScopesToRole,
+  createTenant,
+  seedAdminData,
+  seedLegacyManagementApiUserRole,
+  seedManagementApiProxyApplications,
+} from './tenant.js';
 
 const getExplicitOrder = (query: string) => {
   const matched = /\/\*\s*init_order\s*=\s*([\d.]+)\s*\*\//.exec(query)?.[1];
@@ -159,18 +165,9 @@ export const seedTables = async (
       .map(({ id }) => id)
   );
 
-  // Assign all cloud API scopes to role `admin:admin`
-  await assignScopesToRole(
-    connection,
-    adminTenantId,
-    adminAdminData.role.id,
-    ...cloudAdditionalScopes.map(({ id }) => id)
-  );
-
-  // FIXME: @wangsijie should not create tenant Cloud Service application in the OSS DB.
-  await seedTenantCloudServiceApplication(connection, defaultTenantId);
-
   await Promise.all([
+    seedLegacyManagementApiUserRole(connection),
+    seedTenantCloudServiceApplication(connection, defaultTenantId),
     connection.query(
       insertInto(createDefaultAdminConsoleConfig(defaultTenantId), LogtoConfigs.table)
     ),
@@ -183,9 +180,9 @@ export const seedTables = async (
     connection.query(insertInto(createAdminTenantSignInExperience(), SignInExperiences.table)),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
     updateDatabaseTimestamp(connection, latestTimestamp),
+    seedTenantOrganizations(connection),
+    seedManagementApiProxyApplications(connection),
   ]);
-
-  await seedTenantOrganizations(connection);
 
   consoleLog.succeed('Seed data');
 };
@@ -232,13 +229,18 @@ export const seedTest = async (connection: DatabaseTransactionConnection, forLeg
       insertInto({ id: userIds[1], username: 'test2', tenantId: adminTenantId }, Users.table)
     ),
   ]);
+
+  if (forLegacy) {
+    const adminTenantRole = await getManagementRole(adminTenantId);
+    await assignRoleToUser(userIds[0], adminTenantRole.id);
+  }
+
   consoleLog.succeed('Created test users');
 
-  const adminTenantRole = await getManagementRole(adminTenantId);
+  // The only legacy user role for Management API. Used in OSS only.
   const defaultTenantRole = await getManagementRole(defaultTenantId);
 
   await Promise.all([
-    assignRoleToUser(userIds[0], adminTenantRole.id),
     assignRoleToUser(userIds[0], defaultTenantRole.id),
     assignRoleToUser(userIds[1], defaultTenantRole.id),
   ]);

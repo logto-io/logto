@@ -94,7 +94,6 @@ function Providers() {
         isCloud && [
           ...Object.values(TenantScope),
           cloudApi.scopes.CreateTenant,
-          cloudApi.scopes.ManageTenant,
           cloudApi.scopes.ManageTenantSelf,
         ]
       ),

@@ -3,21 +3,16 @@
 
 import type { LogtoConfig } from '@logto/node';
 import {
-  cloudApiIndicator,
-  CloudScope,
   PredefinedScope,
   adminTenantId,
   defaultTenantId,
   getManagementApiResourceIndicator,
-  getManagementApiAdminName,
   adminConsoleApplicationId,
   InteractionEvent,
-  AdminTenantRole,
   type Role,
   type User,
   RoleType,
 } from '@logto/schemas';
-import { conditionalArray } from '@silverhand/essentials';
 
 import { authedAdminTenantApi as api, adminTenantApi } from '#src/api/api.js';
 import type { InteractionPayload } from '#src/api/interaction.js';
@@ -102,23 +97,6 @@ export const createUserWithAllRolesAndSignInToClient = async () => {
   const client = await initClientAndSignIn(username, password, {
     resources: [resourceDefault, resourceMe],
     scopes: [PredefinedScope.All],
-  });
-
-  return { id, client };
-};
-
-export const createUserAndSignInToCloudClient = async (
-  userRoleType: AdminTenantRole.User | AdminTenantRole.Admin
-) => {
-  const [{ id }, { username, password }] = await createUserWithRoles(
-    conditionalArray<string>(
-      AdminTenantRole.User,
-      userRoleType === AdminTenantRole.Admin && getManagementApiAdminName(adminTenantId)
-    )
-  );
-  const client = await initClientAndSignIn(username, password, {
-    resources: [cloudApiIndicator],
-    scopes: Object.values(CloudScope),
   });
 
   return { id, client };

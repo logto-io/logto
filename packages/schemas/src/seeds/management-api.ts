@@ -6,10 +6,19 @@ import {
   type CreateRole,
   type CreateScope,
 } from '../db-entries/index.js';
-import { PredefinedScope, InternalRole, AdminTenantRole } from '../types/index.js';
+import {
+  PredefinedScope,
+  InternalRole,
+  AdminTenantRole,
+  getMapiProxyRole,
+} from '../types/index.js';
 
 import { adminTenantId, defaultTenantId } from './tenant.js';
 
+/**
+ * The Management API data for a tenant. Usually used for creating a new tenant in the admin
+ * tenant.
+ */
 export type AdminData = {
   resource: CreateResource;
   scopes: CreateScope[];
@@ -51,6 +60,10 @@ export const defaultManagementApi = Object.freeze({
       resourceId: defaultResourceId,
     },
   ],
+  /**
+   * An internal user role for Management API of the `default` tenant.
+   * @deprecated This role will be removed soon.
+   */
   role: {
     tenantId: defaultTenantId,
     /** @deprecated You should not rely on this constant. Change to something else. */
@@ -73,11 +86,14 @@ export function getManagementApiResourceIndicator(tenantId: string, path = 'api'
   return `https://${tenantId}.logto.app/${path}`;
 }
 
-export const getManagementApiAdminName = <TenantId extends string>(tenantId: TenantId) =>
-  `${tenantId}:${AdminTenantRole.Admin}` as const;
+/**
+ * The fixed Management API user role for `default` tenant in the admin tenant. It is used for
+ * OSS only.
+ */
+export const defaultManagementApiAdminName = `${defaultTenantId}:admin` as const;
 
 /** Create a set of admin data for Management API of the given tenant ID. */
-export const createAdminData = (tenantId: string): AdminData => {
+export const createAdminData = (tenantId: string) => {
   const resourceId = generateStandardId();
 
   return Object.freeze({
@@ -96,6 +112,7 @@ export const createAdminData = (tenantId: string): AdminData => {
         resourceId,
       },
     ],
+    /** @deprecated This role will be removed soon. */
     role: {
       tenantId,
       id: generateStandardId(),
@@ -103,11 +120,11 @@ export const createAdminData = (tenantId: string): AdminData => {
       description: `Internal admin role for Logto tenant ${defaultTenantId}.`,
       type: RoleType.MachineToMachine,
     },
-  });
+  } satisfies AdminData);
 };
 
-/** Create a set of admin data for Management API of the given tenant ID for `admin` tenant. */
-export const createAdminDataInAdminTenant = (tenantId: string): AdminData => {
+/** Create a set of admin data for Management API of the given tenant ID for the admin tenant. */
+export const createAdminDataInAdminTenant = (tenantId: string) => {
   const resourceId = generateStandardId();
 
   return Object.freeze({
@@ -126,17 +143,12 @@ export const createAdminDataInAdminTenant = (tenantId: string): AdminData => {
         resourceId,
       },
     ],
-    role: {
-      tenantId: adminTenantId,
-      id: generateStandardId(),
-      name: getManagementApiAdminName(tenantId),
-      description: `Admin tenant admin role for Logto tenant ${tenantId}.`,
-      type: RoleType.User,
-    },
-  });
+    /** The machine-to-machine role for the Management API proxy of the given tenant ID. */
+    role: getMapiProxyRole(tenantId),
+  } satisfies AdminData);
 };
 
-export const createMeApiInAdminTenant = (): AdminData => {
+export const createMeApiInAdminTenant = () => {
   const resourceId = generateStandardId();
 
   return Object.freeze({
@@ -162,5 +174,5 @@ export const createMeApiInAdminTenant = (): AdminData => {
       description: 'Default role for admin tenant.',
       type: RoleType.User,
     },
-  });
+  } satisfies AdminData);
 };
