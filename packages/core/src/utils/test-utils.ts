@@ -121,7 +121,7 @@ export function createRequester({
   authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
   middlewares?: Middleware[];
   tenantContext?: TenantContext;
-}): request.SuperTest<request.Test> {
+}) {
   const app = new Koa();
   const tenant = tenantContext ?? new MockTenant();
 
