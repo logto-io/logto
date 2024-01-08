@@ -23,11 +23,18 @@ jobs:
           fetch-depth: 0
 
       # compare the current codebase with HEAD and check if there are any changes under the alterations folder
+      # if the event is a pull request, we need to compare the merge base with HEAD, otherwise we compare the current commit with the previous commit
       - name: Check for alteration changes
         id: changes-detection
         run: |
-          MERGE_BASE=$(git merge-base origin/${{github.base_ref}} HEAD)
-          CHANGE_FILES=$(git diff --name-only $MERGE_BASE | grep 'packages/schemas/alterations/' || true)
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE=$(git merge-base origin/${{github.base_ref}} HEAD)
+          else
+            BASE=${{ github.event.before }}
+          fi
+
+          CHANGE_FILES=$(git diff --name-only $BASE | grep 'packages/schemas/alterations/' || true)
+
           if [ -n "$CHANGE_FILES" ]; then
             echo "$CHANGE_FILES"
             echo "::set-output name=has-alteration-changes::true"
