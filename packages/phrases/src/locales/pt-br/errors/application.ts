@@ -8,6 +8,10 @@ const application = {
   third_party_application_only: 'O recurso está disponível apenas para aplicativos de terceiros.',
   user_consent_scopes_not_found: 'Escopos de consentimento do usuário inválidos.',
   protected_app_metadata_is_required: 'Protegido metadados do app é necessário.',
+  /** UNTRANSLATED */
+  protected_app_not_configured: 'Protected app provider is not configured.',
+  /** UNTRANSLATED */
+  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
 };
 
 export default Object.freeze(application);

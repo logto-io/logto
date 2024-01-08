@@ -6,6 +6,10 @@ const application = {
   third_party_application_only: '該功能僅適用於第三方應用程式。',
   user_consent_scopes_not_found: '無效的使用者同意範圍。',
   protected_app_metadata_is_required: '需要保護應用程式元數據。',
+  /** UNTRANSLATED */
+  protected_app_not_configured: 'Protected app provider is not configured.',
+  /** UNTRANSLATED */
+  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
 };
 
 export default Object.freeze(application);

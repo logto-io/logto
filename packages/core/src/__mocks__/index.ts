@@ -43,6 +43,32 @@ export const mockApplication: Application = {
   createdAt: 1_645_334_775_356,
 };
 
+export const mockProtectedApplication: Application = {
+  tenantId: 'fake_tenant',
+  id: 'mock-protected-app',
+  secret: mockId,
+  name: 'mock-protected-app',
+  type: ApplicationType.Protected,
+  description: null,
+  oidcClientMetadata: {
+    redirectUris: [],
+    postLogoutRedirectUris: [],
+  },
+  customClientMetadata: {
+    corsAllowedOrigins: ['http://localhost:3000', 'http://localhost:3001', 'https://logto.dev'],
+    idTokenTtl: 5000,
+    refreshTokenTtl: 6_000_000,
+  },
+  protectedAppMetadata: {
+    host: 'mock.protected.dev',
+    origin: 'https://my-blog.com',
+    sessionDuration: 1_209_600,
+    pageRules: [{ path: '^/' }],
+  },
+  isThirdParty: false,
+  createdAt: 1_645_334_775_356,
+};
+
 export const mockResource: Resource = {
   tenantId: 'fake_tenant',
   id: 'logto_api',

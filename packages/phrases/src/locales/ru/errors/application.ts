@@ -9,6 +9,10 @@ const application = {
     'Эта функция доступна только для приложений сторонних разработчиков.',
   user_consent_scopes_not_found: 'Недействительные области согласия пользователя.',
   protected_app_metadata_is_required: 'Требуется защищенная метаданные приложения.',
+  /** UNTRANSLATED */
+  protected_app_not_configured: 'Protected app provider is not configured.',
+  /** UNTRANSLATED */
+  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
 };
 
 export default Object.freeze(application);

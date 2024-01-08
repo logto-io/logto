@@ -164,7 +164,11 @@ describe('admin console application', () => {
     const allApps = await getApplications();
     const m2mApps = await getApplications([ApplicationType.MachineToMachine]);
     const spaApps = await getApplications([ApplicationType.SPA]);
-    const otherApps = await getApplications([ApplicationType.Native, ApplicationType.Traditional]);
+    const otherApps = await getApplications([
+      ApplicationType.Native,
+      ApplicationType.Traditional,
+      ApplicationType.Protected,
+    ]);
     expect(allApps.length).toBe(m2mApps.length + spaApps.length + otherApps.length);
     const allAppNames = allApps.map(({ name }) => name);
     const spaAppNames = spaApps.map(({ name }) => name);

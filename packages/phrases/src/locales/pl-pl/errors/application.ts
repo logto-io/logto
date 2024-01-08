@@ -7,6 +7,10 @@ const application = {
   third_party_application_only: 'Ta funkcja jest dostępna tylko dla aplikacji zewnętrznych.',
   user_consent_scopes_not_found: 'Nieprawidłowe zakresy zgody użytkownika.',
   protected_app_metadata_is_required: 'Wymagane jest zabezpieczone metadane aplikacji.',
+  /** UNTRANSLATED */
+  protected_app_not_configured: 'Protected app provider is not configured.',
+  /** UNTRANSLATED */
+  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
 };
 
 export default Object.freeze(application);

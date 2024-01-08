@@ -13,9 +13,9 @@ import SystemContext from '#src/tenants/SystemContext.js';
 import { mockFallbackOrigin } from '#src/utils/cloudflare/mock.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
+const { mockEsmWithActual } = createMockUtils(jest);
 
-const { getCustomHostname, createCustomHostname, deleteCustomHostname } = mockEsm(
+const { getCustomHostname, createCustomHostname, deleteCustomHostname } = await mockEsmWithActual(
   '#src/utils/cloudflare/index.js',
   () => ({
     createCustomHostname: jest.fn(async () => mockCloudflareData),
@@ -25,7 +25,7 @@ const { getCustomHostname, createCustomHostname, deleteCustomHostname } = mockEs
   })
 );
 
-const { clearCustomDomainCache } = mockEsm('#src/utils/tenant.js', () => ({
+const { clearCustomDomainCache } = await mockEsmWithActual('#src/utils/tenant.js', () => ({
   clearCustomDomainCache: jest.fn(),
 }));
 

@@ -1,52 +1,31 @@
 import path from 'node:path';
 
 import { type HostnameProviderData, cloudflareDataGuard } from '@logto/schemas';
-import { type Response, got } from 'got';
-import { type ZodType } from 'zod';
+import { got } from 'got';
 
 import RequestError from '#src/errors/RequestError/index.js';
-
-import assertThat from '../assert-that.js';
 
 import { baseUrl } from './consts.js';
 import { mockCustomHostnameResponse, mockFallbackOrigin } from './mock.js';
 import { cloudflareHostnameResponseGuard } from './types.js';
-import { parseCloudflareResponse } from './utils.js';
+import { buildHandleResponse } from './utils.js';
 
-type HandleResponse = {
-  <T>(response: Response<string>, guard: ZodType<T>): T;
-  (response: Response<string>): void;
-};
+export * from './kv.js';
 
-const handleResponse: HandleResponse = <T>(response: Response<string>, guard?: ZodType<T>) => {
-  if (!response.ok) {
-    if (response.statusCode === 409) {
-      throw new RequestError('domain.hostname_already_exists');
-    }
-
-    if (response.statusCode === 404) {
-      throw new RequestError('domain.cloudflare_not_found');
-    }
-
-    throw new RequestError(
-      {
-        code: 'domain.cloudflare_unknown_error',
-        status: 500,
-      },
-      response.body
-    );
+const handleResponse = buildHandleResponse((statusCode) => {
+  if (statusCode === 409) {
+    throw new RequestError('domain.hostname_already_exists');
   }
 
-  if (!guard) {
-    return;
+  if (statusCode === 404) {
+    throw new RequestError('domain.cloudflare_not_found');
   }
 
-  const result = guard.safeParse(parseCloudflareResponse(response.body));
-
-  assertThat(result.success, 'domain.cloudflare_response_error');
-
-  return result.data;
-};
+  throw new RequestError({
+    code: 'domain.cloudflare_unknown_error',
+    status: 500,
+  });
+});
 
 export const getFallbackOrigin = async (auth: HostnameProviderData): Promise<string> => {
   const {
