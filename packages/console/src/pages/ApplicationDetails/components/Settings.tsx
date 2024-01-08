@@ -35,7 +35,7 @@ function Settings({ data }: Props) {
   const isNativeApp = applicationType === ApplicationType.Native;
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
-      verify: (value) => !value || validateRedirectUrl(value, isNativeApp ? 'mobile' : 'web'),
+      verify: (value) => !value || validateRedirectUrl(value, isNativeApp ? 'native' : 'web'),
       message: t('errors.invalid_uri_format'),
     },
   };

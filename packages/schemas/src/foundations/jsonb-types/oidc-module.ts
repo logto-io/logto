@@ -19,7 +19,7 @@ export const oidcClientMetadataGuard = z.object({
   redirectUris: z
     .string()
     .refine((url) => validateRedirectUrl(url, 'web'))
-    .or(z.string().refine((url) => validateRedirectUrl(url, 'mobile')))
+    .or(z.string().refine((url) => validateRedirectUrl(url, 'native')))
     .array(),
   postLogoutRedirectUris: z.string().url().array(),
   logoUri: z.string().optional(),

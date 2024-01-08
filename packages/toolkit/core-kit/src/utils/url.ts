@@ -1,10 +1,10 @@
-import { mobileUriSchemeProtocolRegEx, webRedirectUriProtocolRegEx } from '../regex.js';
+import { looseNativeUriSchemeProtocolRegEx, webRedirectUriProtocolRegEx } from '../regex.js';
 
-export const validateRedirectUrl = (url: string, type: 'web' | 'mobile') => {
+export const validateRedirectUrl = (url: string, type: 'web' | 'native') => {
   try {
     const { protocol } = new URL(url);
     const protocolRegEx =
-      type === 'mobile' ? mobileUriSchemeProtocolRegEx : webRedirectUriProtocolRegEx;
+      type === 'native' ? looseNativeUriSchemeProtocolRegEx : webRedirectUriProtocolRegEx;
 
     return protocolRegEx.test(protocol);
   } catch {
