@@ -10,7 +10,7 @@ export const mockedConfig: TwilioSmsConfig = {
   fromMessagingServiceSID: mockedFromMessagingServiceSID,
   templates: [
     {
-      usageType: 'Test',
+      usageType: 'Generic',
       content: 'This is for testing purposes only. Your verification code is {{code}}.',
     },
   ],

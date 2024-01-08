@@ -53,15 +53,4 @@ describe('sendMessage()', () => {
       })
     );
   });
-
-  it('throws if template is missing', async () => {
-    const connector = await createConnector({ getConfig });
-    await expect(
-      connector.sendMessage({
-        to: 'to@email.com',
-        type: VerificationCodeType.Test,
-        payload: { code: '1234' },
-      })
-    ).rejects.toThrow();
-  });
 });
