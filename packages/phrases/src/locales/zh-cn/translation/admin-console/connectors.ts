@@ -68,6 +68,8 @@ const connectors = {
     callback_uri: 'Callback URI',
     callback_uri_description:
       '也称为重定向 URI，在社交授权后，用户将被发送回 Logto 的 URI，复制并粘贴到社交提供者的配置页面中。',
+    /** UNTRANSLATED */
+    acs_url: 'Assertion consumer service URL',
   },
   platform: {
     universal: '通用',

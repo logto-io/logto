@@ -50,6 +50,9 @@ const domain = {
     'Вы можете настроить имя домена этих конечных точек по своему усмотрению. Выберите "{{custom}}" или "{{default}}".',
   custom_social_callback_url_note:
     'Вы можете настроить имя домена этого URI, чтобы соответствовать конечной точке вашего приложения. Выберите "{{custom}}" или "{{default}}".',
+  /** UNTRANSLATED */
+  custom_acs_url_note:
+    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
 };
 
 export default Object.freeze(domain);

@@ -157,7 +157,12 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
               }
             )}
           >
-            <ConfigForm formItems={formItems} connectorId={id} connectorType={connectorType} />
+            <ConfigForm
+              formItems={formItems}
+              connectorFactoryId={connectorId}
+              connectorId={id}
+              connectorType={connectorType}
+            />
           </FormCard>
         )}
         {!isSocialConnector && (

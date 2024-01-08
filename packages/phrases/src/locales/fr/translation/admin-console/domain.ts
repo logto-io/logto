@@ -51,6 +51,9 @@ const domain = {
     'Vous pouvez personnaliser le nom de domaine de ces points de terminaison selon vos besoins. Choisissez soit "{{custom}}" ou "{{default}}".',
   custom_social_callback_url_note:
     'Vous pouvez personnaliser le nom de domaine de cette URI pour correspondre au point de terminaison de votre application. Choisissez soit "{{custom}}" ou "{{default}}".',
+  /** UNTRANSLATED */
+  custom_acs_url_note:
+    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
 };
 
 export default Object.freeze(domain);

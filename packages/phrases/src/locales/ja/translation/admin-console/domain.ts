@@ -50,6 +50,9 @@ const domain = {
     'これらのエンドポイントのドメイン名を必要に応じてカスタマイズできます。 "{{custom}}" または "{{default}}" のいずれかを選択してください。',
   custom_social_callback_url_note:
     'このURIのドメイン名をアプリケーションのエンドポイントに合わせてカスタマイズできます。 "{{custom}}" または "{{default}}" のいずれかを選択してください。',
+  /** UNTRANSLATED */
+  custom_acs_url_note:
+    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
 };
 
 export default Object.freeze(domain);

@@ -77,6 +77,8 @@ const connectors = {
     callback_uri: 'Geri dönüş URI',
     callback_uri_description:
       "Ayrıca yönlendirme URI'si olarak adlandırılır, kullanıcıların sosyal yetkilendirmeden sonra Logto'ya geri gönderilecekleri URI'dir, ve sosyal sağlayıcının yapılandırma sayfasına kopyalayın yapıştırın.",
+    /** UNTRANSLATED */
+    acs_url: 'Assertion consumer service URL',
   },
   platform: {
     universal: 'Evrensel',

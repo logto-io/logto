@@ -78,6 +78,8 @@ const connectors = {
     callback_uri: 'Callback-URI',
     callback_uri_description:
       'Auch als Redirect-URI bezeichnet, ist die URI in Logto, zu der Benutzer nach der Social-Autorisierung zurückgesendet werden. Kopieren und fügen Sie sie in die Konfigurationsseite des Social Providers ein.',
+    /** UNTRANSLATED */
+    acs_url: 'Assertion consumer service URL',
   },
   platform: {
     universal: 'Universal',
