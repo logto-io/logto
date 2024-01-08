@@ -69,10 +69,9 @@ const application_details = {
   redirect_uri_required: 'Вы должны ввести по крайней мере один URI перенаправления',
   branding: {
     /** UNTRANSLATED */
-    branding: 'Branding',
+    name: 'Branding',
     /** UNTRANSLATED */
-    branding_description:
-      "Customize your application's display name and logo on the consent screen.",
+    description: "Customize your application's display name and logo on the consent screen.",
     /** UNTRANSLATED */
     more_info: 'More info',
     /** UNTRANSLATED */
@@ -87,6 +86,13 @@ const application_details = {
     terms_of_use_url: 'Application terms of use URL',
     /** UNTRANSLATED */
     privacy_policy_url: 'Application privacy policy URL',
+  },
+  permissions: {
+    /** UNTRANSLATED */
+    name: 'Permissions',
+    /** UNTRANSLATED */
+    description:
+      'Select the permissions that the third-party application requires for user authorization to access specific data types.',
   },
   roles: {
     name_column: 'Роль',
