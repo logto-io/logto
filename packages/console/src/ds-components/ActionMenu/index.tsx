@@ -5,10 +5,10 @@ import { useRef, useState } from 'react';
 import type { HorizontalAlignment } from '@/types/positioning';
 
 import type { Props as ButtonProps } from '../Button';
+import Button from '../Button';
 import Dropdown from '../Dropdown';
 import IconButton from '../IconButton';
 
-import ActionMenuButton from './ActionMenuButton';
 import * as styles from './index.module.scss';
 
 export { default as ActionMenuItem } from '../Dropdown/DropdownItem';
@@ -53,10 +53,11 @@ function ActionMenu(props: Props) {
   return (
     <div>
       {hasButtonProps && (
-        <ActionMenuButton
+        <Button
           // eslint-disable-next-line unicorn/consistent-destructuring -- cannot deconstruct before checking
           {...props.buttonProps}
           ref={anchorReference}
+          className={styles.actionMenuButton}
           onClick={() => {
             setIsOpen(true);
           }}

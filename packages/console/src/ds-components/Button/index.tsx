@@ -1,7 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import type { HTMLProps, ReactElement, ReactNode } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, forwardRef } from 'react';
+import type { HTMLProps, ReactElement, ReactNode, ForwardedRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Ring as Spinner } from '@/ds-components/Spinner';
@@ -22,7 +22,7 @@ export type ButtonType =
   | 'branding'
   | 'violet';
 
-type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
+type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title' | 'ref'> & {
   htmlType?: 'button' | 'submit' | 'reset';
   type?: ButtonType;
   size?: 'small' | 'medium' | 'large';
@@ -44,19 +44,22 @@ type IconButtonProps = BaseProps & {
 
 export type Props = TitleButtonProps | IconButtonProps;
 
-function Button({
-  htmlType = 'button',
-  type = 'default',
-  size = 'medium',
-  title,
-  icon,
-  className,
-  isLoading = false,
-  loadingDelay = 500,
-  trailingIcon,
-  disabled,
-  ...rest
-}: Props) {
+function Button(
+  {
+    htmlType = 'button',
+    type = 'default',
+    size = 'medium',
+    title,
+    icon,
+    className,
+    isLoading = false,
+    loadingDelay = 500,
+    trailingIcon,
+    disabled,
+    ...rest
+  }: Props,
+  buttonRef: ForwardedRef<HTMLButtonElement>
+) {
   const [showSpinner, setShowSpinner] = useState(false);
   const timerRef = useRef<number>();
 
@@ -77,6 +80,7 @@ function Button({
 
   return (
     <button
+      ref={buttonRef}
       className={classNames(
         styles.button,
         styles[type],
@@ -104,7 +108,7 @@ function Button({
   );
 }
 
-export default Button;
+export default forwardRef(Button);
 
 type LinkProps = Omit<HTMLProps<HTMLAnchorElement>, 'type' | 'size' | 'title' | 'ref'> & {
   /**
