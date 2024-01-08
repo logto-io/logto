@@ -40,6 +40,7 @@ const alteration: AlterationScript = {
     `);
   },
   down: async (pool) => {
+    console.log('Add `manage:tenant` scope to the Cloud API resource');
     // Add `manage:tenant` scope to the Cloud API resource
     await pool.query(sql`
       insert into scopes (tenant_id, id, name, description, resource_id)
@@ -47,6 +48,7 @@ const alteration: AlterationScript = {
         select id from resources where tenant_id = 'admin' and indicator = 'https://cloud.logto.io/api'
       ));
     `);
+    console.log('Update default role description');
     // Update default role description
     await pool.query(sql`
       update roles
@@ -54,6 +56,7 @@ const alteration: AlterationScript = {
       where tenant_id = 'admin'
       and name = 'default:admin';
     `);
+    console.log('Add legacy roles in the admin tenant');
     // Add legacy roles in the admin tenant
     const existingTenantIds = await pool.any<{ id: string }>(sql`
       select id from tenants where id != 'default';
@@ -74,6 +77,7 @@ const alteration: AlterationScript = {
         sql`, `
       )};
     `);
+    console.log('Restore assigned Management API scopes to the legacy roles');
     // Restore assigned Management API scopes to the legacy roles
     await pool.query(sql`
       insert into roles_scopes (tenant_id, id, role_id, scope_id)
@@ -97,19 +101,20 @@ const alteration: AlterationScript = {
         sql`, `
       )};
     `);
+    console.log('Assign to legacy roles to users according to the tenant organization roles');
     // Assign to legacy roles to users according to the tenant organization roles
-    const ownerUsersOrganizations = await pool.any<{ userId: string; organizationId: string }>(sql`
+    const adminUsersOrganizations = await pool.any<{ userId: string; organizationId: string }>(sql`
       select user_id as "userId", organization_id as "organizationId"
       from organization_role_user_relations
       where tenant_id = 'admin'
-      and organization_role_id = 'owner'
+      and organization_role_id = 'admin'
       and organization_id != 't-default'
       and organization_id like 't-%';
     `);
     await pool.query(sql`
       insert into users_roles (tenant_id, id, user_id, role_id)
       values ${sql.join(
-        ownerUsersOrganizations.map((relation) => {
+        adminUsersOrganizations.map((relation) => {
           return sql`
             (
               'admin',
@@ -122,6 +127,9 @@ const alteration: AlterationScript = {
         sql`, `
       )};
     `);
+    console.log(
+      'Assign back cloud scopes to the admin Management API proxy and the legacy admin user'
+    );
     // Assign back cloud scopes to the admin Management API proxy and the legacy admin user
     await pool.query(sql`
       insert into roles_scopes (tenant_id, id, role_id, scope_id)
