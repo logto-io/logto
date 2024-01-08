@@ -17,11 +17,10 @@ describe('url utilities', () => {
 
   it('should detect invalid redirect URIs', () => {
     expect(validateRedirectUrl('io.logto://my-app/callback', 'web')).toBeFalsy();
-    expect(validateRedirectUrl('ws://com.company://demo:1234', 'web')).toBeFalsy();
     expect(validateRedirectUrl('abc.com', 'web')).toBeFalsy();
-    expect(validateRedirectUrl('abc.com', 'native')).toBeFalsy();
-    expect(validateRedirectUrl('http://localhost:3001', 'native')).toBeFalsy();
-    expect(validateRedirectUrl('https://logto.dev/callback', 'native')).toBeFalsy();
+    // Does not have colon.
     expect(validateRedirectUrl('demoApp/callback', 'native')).toBeFalsy();
+    // Does not have non-whitespace characters before colon.
+    expect(validateRedirectUrl('://callback', 'native')).toBeFalsy();
   });
 });
