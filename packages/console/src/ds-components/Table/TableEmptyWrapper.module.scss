@@ -9,6 +9,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-bottom: _.unit(25);
+
+    .topSpace {
+      flex: 2;
+    }
+
+    .bottomSpace {
+      flex: 3;
+    }
   }
 }
