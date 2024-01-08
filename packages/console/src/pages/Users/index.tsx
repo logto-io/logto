@@ -10,6 +10,7 @@ import UsersEmptyDark from '@/assets/images/users-empty-dark.svg';
 import UsersEmpty from '@/assets/images/users-empty.svg';
 import ApplicationName from '@/components/ApplicationName';
 import DateTime from '@/components/DateTime';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import UserAvatar from '@/components/UserAvatar';
@@ -120,7 +121,9 @@ function Users() {
             }}
           />
         ),
-        placeholder: (
+        placeholder: keyword ? (
+          <EmptyDataPlaceholder />
+        ) : (
           <TablePlaceholder
             image={<UsersEmpty />}
             imageDark={<UsersEmptyDark />}
