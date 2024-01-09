@@ -98,7 +98,9 @@ const application_details = {
     /** UNTRANSLATED */
     table_name: 'Grant permissions',
     /** UNTRANSLATED */
-    field_name: 'permission',
+    field_name: 'Permission',
+    /** UNTRANSLATED */
+    field_description: 'Displayed in the consent screen',
     /** UNTRANSLATED */
     delete_text: 'Remove permission',
     /** UNTRANSLATED */
