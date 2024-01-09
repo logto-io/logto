@@ -123,10 +123,10 @@ function Table<
                 <TableEmptyWrapper columns={columns.length}>{placeholder}</TableEmptyWrapper>
               )}
               {isLoaded &&
-                rowGroups.map(({ key, label, labelClassName, data }) => (
+                rowGroups.map(({ key, label, labelRowClassName, labelClassName, data }) => (
                   <Fragment key={key}>
                     {label && (
-                      <tr>
+                      <tr className={labelRowClassName}>
                         <td colSpan={totalColspan} className={labelClassName}>
                           {label}
                         </td>

@@ -76,6 +76,13 @@ const application_details = {
     name: 'Permissions',
     description:
       'Select the permissions that the third-party application requires for user authorization to access specific data types.',
+    user_permissions: 'Personal user information',
+    organization_permissions: 'Organization access',
+    table_name: 'Grant permissions',
+    field_name: 'permission',
+    delete_text: 'Remove permission',
+    permission_delete_confirm:
+      'This action will withdraw the permissions granted to the third-party app, preventing it from requesting user authorization for specific data types. Are you sure you want to continue?',
   },
   roles: {
     name_column: 'Role',

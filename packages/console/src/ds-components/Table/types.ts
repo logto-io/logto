@@ -12,6 +12,7 @@ export type Column<TFieldValues extends FieldValues = FieldValues> = {
 export type RowGroup<TFieldValues extends FieldValues = FieldValues> = {
   key: Key;
   label?: ReactNode;
+  labelRowClassName?: string;
   labelClassName?: string;
   data?: TFieldValues[];
 };
