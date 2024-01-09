@@ -79,7 +79,8 @@ const application_details = {
     user_permissions: 'Personal user information',
     organization_permissions: 'Organization access',
     table_name: 'Grant permissions',
-    field_name: 'permission',
+    field_name: 'Permission',
+    field_description: 'Displayed in the consent screen',
     delete_text: 'Remove permission',
     permission_delete_confirm:
       'This action will withdraw the permissions granted to the third-party app, preventing it from requesting user authorization for specific data types. Are you sure you want to continue?',

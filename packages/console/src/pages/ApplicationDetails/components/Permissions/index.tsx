@@ -41,7 +41,7 @@ function Permissions({ application }: Props) {
         rowGroups={rowGroups}
         columns={[
           {
-            title: t('general.name'),
+            title: t('application_details.permissions.field_name'),
             dataIndex: 'name',
             colSpan: 5,
             render: ({ name }) => (
@@ -51,7 +51,9 @@ function Permissions({ application }: Props) {
             ),
           },
           {
-            title: t('general.description'),
+            title: `${t('general.description')} (${t(
+              'application_details.permissions.field_description'
+            )})`,
             dataIndex: 'description',
             colSpan: 5,
             render: ({ description }) => <Breakable>{description ?? '-'}</Breakable>,
