@@ -1,5 +1,6 @@
 import { type AdminConsoleKey } from '@logto/phrases';
-import { type FieldValues, type FieldPath } from 'react-hook-form';
+import { useMemo } from 'react';
+import { type FieldPath, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg';
@@ -7,7 +8,7 @@ import Plus from '@/assets/icons/plus.svg';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
-import { type Column } from '@/ds-components/Table/types';
+import { type RowGroup, type Column } from '@/ds-components/Table/types';
 
 import * as styles from './index.module.scss';
 
@@ -17,12 +18,14 @@ type Props<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValue
    */
   name?: AdminConsoleKey;
   rowIndexKey: TName;
-  data: TFieldValues[];
+  rowGroups: Array<RowGroup<TFieldValues>>;
   columns: Array<Column<TFieldValues>>;
-  totalCount: number;
-  page: number;
+  pagination?: {
+    page: number;
+    totalCount: number;
+    onChange: (page: number) => void;
+  };
   isLoading?: boolean;
-  onPageChange: (page: number) => void;
   onAdd?: () => void;
 };
 
@@ -38,16 +41,18 @@ function TemplateTable<
 >({
   name,
   rowIndexKey,
-  data,
+  rowGroups,
   columns,
-  onAdd,
-  totalCount,
-  page,
+  pagination,
   isLoading,
-  onPageChange,
+  onAdd,
 }: Props<TFieldValues, TName>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const noData = !isLoading && data.length === 0;
+
+  // If there is no data for all row groups, we will render an empty state with an add button.
+  const noData = !isLoading && !rowGroups.some(({ data }) => data && data.length > 0);
+
+  const tablePagination = useMemo(() => pagination && { ...pagination, pageSize }, [pagination]);
 
   return (
     <section className={styles.section}>
@@ -71,20 +76,10 @@ function TemplateTable<
           hasBorder
           isRowHoverEffectDisabled
           isLoading={isLoading}
-          rowGroups={[
-            {
-              key: 'data',
-              data,
-            },
-          ]}
+          rowGroups={rowGroups}
           columns={columns}
           rowIndexKey={rowIndexKey}
-          pagination={{
-            page,
-            totalCount,
-            pageSize,
-            onChange: onPageChange,
-          }}
+          pagination={tablePagination}
           footer={
             <Button
               size="small"

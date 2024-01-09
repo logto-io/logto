@@ -7,13 +7,13 @@ import useSWR, { useSWRConfig } from 'swr';
 import ActionsButton from '@/components/ActionsButton';
 import Breakable from '@/components/Breakable';
 import FormCard from '@/components/FormCard';
+import TemplateTable, { pageSize } from '@/components/TemplateTable';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { buildUrl } from '@/utils/url';
 
 import PermissionModal from '../PermissionModal';
 import { swrKey } from '../RolesCard';
-import TemplateTable, { pageSize } from '../TemplateTable';
 
 /**
  * Renders the permissions card that allows users to add, edit, and delete organization
@@ -62,9 +62,12 @@ function PermissionsCard() {
         name="organizations.organization_permission"
         rowIndexKey="id"
         isLoading={isLoading}
-        page={page}
-        totalCount={totalCount}
-        data={data}
+        rowGroups={[
+          {
+            key: 'data',
+            data,
+          },
+        ]}
         columns={[
           {
             title: t('general.name'),
@@ -101,7 +104,11 @@ function PermissionsCard() {
             ),
           },
         ]}
-        onPageChange={setPage}
+        pagination={{
+          page,
+          totalCount,
+          onChange: setPage,
+        }}
         onAdd={() => {
           setEditData(null);
           setIsModalOpen(true);
