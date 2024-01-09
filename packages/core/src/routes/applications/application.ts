@@ -24,7 +24,7 @@ import {
   applicationCreateGuard,
   applicationPatchGuard,
 } from './types.js';
-import { buildProtectedAppMetadata } from './utils.js';
+import { buildProtectedAppData } from './utils.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
@@ -161,7 +161,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
         ...conditional(
           rest.type === ApplicationType.Protected &&
             protectedAppMetadata &&
-            buildProtectedAppMetadata(protectedAppMetadata)
+            buildProtectedAppData(protectedAppMetadata)
         ),
         ...rest,
       });
