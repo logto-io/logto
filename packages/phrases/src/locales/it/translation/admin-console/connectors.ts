@@ -78,6 +78,8 @@ const connectors = {
     callback_uri: 'URI di callback',
     callback_uri_description:
       "Anche chiamato URI di reindirizzamento, è l'URI in Logto dove gli utenti verranno rimandati dopo l'autorizzazione tramite social media, copia e incollalo nella pagina di configurazione del provider social media.",
+    /** UNTRANSLATED */
+    acs_url: 'Assertion consumer service URL',
   },
   platform: {
     universal: 'Universale',

@@ -77,6 +77,8 @@ const connectors = {
     callback_uri: 'URI обратного вызова',
     callback_uri_description:
       'Также называется URI перенаправления, это URI в Logto, на который пользователи будут отправлены после социальной авторизации. Скопируйте и вставьте его на странице настройки социального провайдера.',
+    /** UNTRANSLATED */
+    acs_url: 'Assertion consumer service URL',
   },
   platform: {
     universal: 'Универсальная',

@@ -51,6 +51,8 @@ const domain = {
     'You can customize the domain name of these endpoints as your required. Choose either "{{custom}}" or "{{default}}".',
   custom_social_callback_url_note:
     'You can customize the domain name of this URI to match your application’s endpoint. Choose either "{{custom}}" or "{{default}}".',
+  custom_acs_url_note:
+    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
 };
 
 export default Object.freeze(domain);

@@ -45,6 +45,9 @@ const domain = {
   custom_endpoint_note: '您可以根据需要自定义这些端点的域名。选择 "{{custom}}" 或 "{{default}}"。',
   custom_social_callback_url_note:
     '您可以根据需要自定义此 URI 的域名，以匹配您的应用程序端点。选择 "{{custom}}" 或 "{{default}}"。',
+  /** UNTRANSLATED */
+  custom_acs_url_note:
+    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
 };
 
 export default Object.freeze(domain);

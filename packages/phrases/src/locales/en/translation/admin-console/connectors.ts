@@ -77,6 +77,7 @@ const connectors = {
     callback_uri: 'Callback URI',
     callback_uri_description:
       "Also called redirect URI, is the URI in Logto where users will be sent back after social authorization, copy and paste to the social provider's config page.",
+    acs_url: 'Assertion consumer service URL',
   },
   platform: {
     universal: 'Universal',

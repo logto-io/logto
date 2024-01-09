@@ -1,6 +1,7 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
 import { DomainStatus } from '@logto/schemas';
+import { appendPath, conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -21,10 +22,17 @@ type Props = {
   formItems?: ConnectorConfigFormItem[];
   className?: string;
   connectorId: string;
+  connectorFactoryId?: string;
   connectorType?: ConnectorType;
 };
 
-function ConfigForm({ formItems, className, connectorId, connectorType }: Props) {
+function ConfigForm({
+  formItems,
+  className,
+  connectorId,
+  connectorFactoryId,
+  connectorType,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
@@ -33,23 +41,33 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
   const { tenantEndpoint } = useContext(AppDataContext);
   const { data: customDomain, applyDomain: applyCustomDomain } = useCustomDomain();
   const callbackUri = new URL(`/callback/${connectorId}`, tenantEndpoint).toString();
+  const acsUrl = conditional(
+    tenantEndpoint && appendPath(tenantEndpoint, `/api/authn/saml/${connectorId}`).href
+  );
+  const isSamlConnector = connectorFactoryId === 'saml';
+  // This is an auto-generated URL serve as the connector's internal property and should be configured on the identity provider side.
+  const displayUrl = isSamlConnector ? acsUrl : callbackUri;
 
   return (
     <div className={className}>
-      {connectorType === ConnectorType.Social && (
+      {connectorType === ConnectorType.Social && displayUrl && (
         <FormField
-          title="connectors.guide.callback_uri"
-          tip={t('connectors.guide.callback_uri_description')}
+          title={isSamlConnector ? 'connectors.guide.acs_url' : 'connectors.guide.callback_uri'}
+          tip={conditional(!isSamlConnector && t('connectors.guide.callback_uri_description'))}
         >
           <CopyToClipboard
             className={styles.copyToClipboard}
             variant="border"
-            value={applyCustomDomain(callbackUri)}
+            value={applyCustomDomain(displayUrl)}
           />
           {customDomain?.status === DomainStatus.Active && tenantEndpoint && (
             <div className={styles.description}>
               <DynamicT
-                forKey="domain.custom_social_callback_url_note"
+                forKey={
+                  isSamlConnector
+                    ? 'domain.custom_acs_url_note'
+                    : 'domain.custom_social_callback_url_note'
+                }
                 interpolation={{
                   custom: customDomain.domain,
                   default: new URL(tenantEndpoint).host,

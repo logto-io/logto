@@ -48,7 +48,7 @@ function Guide({ connector, onClose }: Props) {
   const callbackConnectorId = useRef(generateStandardId());
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { type: connectorType, formItems, isStandard } = connector ?? {};
+  const { type: connectorType, formItems, isStandard, id: connectorFactoryId } = connector ?? {};
   const { language } = i18next;
 
   const isSocialConnector =
@@ -207,6 +207,7 @@ function Guide({ connector, onClose }: Props) {
                   </div>
                   <ConfigForm
                     connectorId={callbackConnectorId.current}
+                    connectorFactoryId={connectorFactoryId}
                     connectorType={connectorType}
                     formItems={formItems}
                   />
