@@ -1,7 +1,7 @@
 import { emailRegEx, usernameRegEx } from '@logto/core-kit';
 import type { User } from '@logto/schemas';
 import { parsePhoneNumber } from '@logto/shared/universal';
-import { trySafe } from '@silverhand/essentials';
+import { conditionalString, trySafe } from '@silverhand/essentials';
 import { parsePhoneNumberWithError } from 'libphonenumber-js';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -79,7 +79,7 @@ function UserSettings() {
 
       const payload: Partial<User> = {
         ...formData,
-        primaryPhone: parsePhoneNumber(primaryPhone),
+        primaryPhone: conditionalString(primaryPhone && parsePhoneNumber(primaryPhone)),
         customData: parseResult.data,
       };
 
