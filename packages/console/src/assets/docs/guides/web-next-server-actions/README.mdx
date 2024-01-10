@@ -63,7 +63,7 @@ const config = {
   cookieSecure: process.env.NODE_ENV === 'production',
 };
 
-export const logtoClient = new LogtoClient(config);`}
+const logtoClient = new LogtoClient(config);`}
   </code>
 </pre>
 
@@ -181,8 +181,13 @@ type Props = {
 
 export default function Callback({ searchParams }: Props) {
   const router = useRouter();
+  const redirectinRef = React.useRef(false);
 
   useEffect(() => {
+    if (redirectinRef.current) {
+      return;
+    }
+    redirectinRef.current = true;
     handleSignIn(searchParams).then(() => {
       router.push('/');
     });
