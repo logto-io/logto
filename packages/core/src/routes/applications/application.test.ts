@@ -13,6 +13,11 @@ const findApplicationById = jest.fn(async () => mockApplication);
 const deleteApplicationById = jest.fn();
 const syncAppConfigsToRemote = jest.fn();
 const deleteRemoteAppConfigs = jest.fn();
+const checkAndBuildProtectedAppData = jest.fn(async () => {
+  const { oidcClientMetadata, protectedAppMetadata } = mockProtectedApplication;
+
+  return { oidcClientMetadata, protectedAppMetadata };
+});
 const updateApplicationById = jest.fn(
   async (_, data: Partial<CreateApplication>): Promise<Application> => ({
     ...mockApplication,
@@ -46,7 +51,11 @@ const tenantContext = new MockTenant(
   undefined,
   {
     quota: createMockQuotaLibrary(),
-    protectedApps: { syncAppConfigsToRemote, deleteRemoteAppConfigs },
+    protectedApps: {
+      syncAppConfigsToRemote,
+      deleteRemoteAppConfigs,
+      checkAndBuildProtectedAppData,
+    },
   }
 );
 
@@ -109,7 +118,7 @@ describe('application route', () => {
       name,
       type,
       protectedAppMetadata: {
-        host: protectedAppMetadata?.host,
+        subDomain: 'mock',
         origin: protectedAppMetadata?.origin,
       },
     });

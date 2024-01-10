@@ -31,7 +31,7 @@ const applicationCreateGuardWithProtectedAppMetadata = originalApplicationCreate
   .extend({
     protectedAppMetadata: z
       .object({
-        host: z.string(),
+        subDomain: z.string(),
         origin: z.string(),
       })
       .optional(),

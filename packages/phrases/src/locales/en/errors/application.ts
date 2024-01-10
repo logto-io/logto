@@ -11,6 +11,9 @@ const application = {
   cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
   protected_application_only: 'The feature is only available for protected applications.',
   protected_application_misconfigured: 'Protected application is misconfigured.',
+  protected_application_subdomain_exists:
+    'The subdomain of Protected application is already in use.',
+  invalid_subdomain: 'Invalid subdomain.',
 };
 
 export default Object.freeze(application);

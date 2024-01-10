@@ -51,8 +51,8 @@ export const mockProtectedApplication: Application = {
   type: ApplicationType.Protected,
   description: null,
   oidcClientMetadata: {
-    redirectUris: [],
-    postLogoutRedirectUris: [],
+    redirectUris: ['https://mock.protected.dev/callback'],
+    postLogoutRedirectUris: ['https://mock.protected.dev'],
   },
   customClientMetadata: {
     corsAllowedOrigins: ['http://localhost:3000', 'http://localhost:3001', 'https://logto.dev'],

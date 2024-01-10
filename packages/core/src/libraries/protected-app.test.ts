@@ -1,6 +1,11 @@
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockProtectedApplication } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import {
+  defaultProtectedAppPageRules,
+  defaultProtectedAppSessionDuration,
+} from '#src/routes/applications/constants.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 
 const { jest } = import.meta;
@@ -17,8 +22,9 @@ const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createProtectedAppLibrary } = await import('./protected-app.js');
 
 const findApplicationById = jest.fn(async () => mockProtectedApplication);
-const { syncAppConfigsToRemote } = createProtectedAppLibrary(
-  new MockQueries({ applications: { findApplicationById } })
+const findApplicationByProtectedAppHost = jest.fn();
+const { syncAppConfigsToRemote, checkAndBuildProtectedAppData } = createProtectedAppLibrary(
+  new MockQueries({ applications: { findApplicationById, findApplicationByProtectedAppHost } })
 );
 
 const protectedAppConfigProviderConfig = {
@@ -26,6 +32,7 @@ const protectedAppConfigProviderConfig = {
   namespaceIdentifier: 'fake_namespace_id',
   keyName: 'fake_key_name',
   apiToken: '',
+  domain: 'protected.app',
 };
 
 beforeAll(() => {
@@ -70,5 +77,45 @@ describe('syncAppConfigsToRemote()', () => {
         },
       }
     );
+  });
+});
+
+describe('checkAndBuildProtectedAppData()', () => {
+  const origin = 'https://example.com';
+
+  it('should throw if subdomain is invalid', async () => {
+    await expect(checkAndBuildProtectedAppData({ subDomain: 'a-', origin })).rejects.toThrowError(
+      new RequestError({
+        code: 'application.protected_application_subdomain_exists',
+        status: 422,
+      })
+    );
+  });
+
+  it('should throw if subdomain is not available', async () => {
+    findApplicationByProtectedAppHost.mockResolvedValueOnce(mockProtectedApplication);
+    await expect(checkAndBuildProtectedAppData({ subDomain: 'a', origin })).rejects.toThrowError(
+      new RequestError({
+        code: 'application.protected_application_subdomain_exists',
+        status: 422,
+      })
+    );
+  });
+
+  it('should return data if subdomain is available', async () => {
+    const subDomain = 'a';
+    const host = `${subDomain}.${protectedAppConfigProviderConfig.domain}`;
+    await expect(checkAndBuildProtectedAppData({ subDomain, origin })).resolves.toEqual({
+      protectedAppMetadata: {
+        host,
+        origin,
+        sessionDuration: defaultProtectedAppSessionDuration,
+        pageRules: defaultProtectedAppPageRules,
+      },
+      oidcClientMetadata: {
+        redirectUris: [`https://${host}/callback`],
+        postLogoutRedirectUris: [`https://${host}`],
+      },
+    });
   });
 });
