@@ -1,4 +1,12 @@
+import { type Application } from '@logto/schemas';
+import { isValidSubdomain } from '@logto/shared';
+
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import {
+  defaultProtectedAppPageRules,
+  defaultProtectedAppSessionDuration,
+} from '#src/routes/applications/constants.js';
 import type Queries from '#src/tenants/Queries.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -28,7 +36,7 @@ const deleteRemoteAppConfigs = async (host: string): Promise<void> => {
 
 export const createProtectedAppLibrary = (queries: Queries) => {
   const {
-    applications: { findApplicationById },
+    applications: { findApplicationById, findApplicationByProtectedAppHost },
   } = queries;
 
   const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
@@ -58,8 +66,59 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     );
   };
 
+  /**
+   * Build application data for protected app
+   * check if subdomain is valid
+   * generate host based on subdomain
+   * generate default protectedAppMetadata based on host and origin
+   * generate redirectUris and postLogoutRedirectUris based on host
+   */
+  const checkAndBuildProtectedAppData = async ({
+    subDomain,
+    origin,
+  }: {
+    subDomain: string;
+    origin: string;
+  }): Promise<Pick<Application, 'protectedAppMetadata' | 'oidcClientMetadata'>> => {
+    assertThat(
+      isValidSubdomain(subDomain),
+      new RequestError({
+        code: 'application.invalid_subdomain',
+        status: 422,
+      })
+    );
+
+    // Skip for integration test, use empty value instead
+    const { domain } = EnvSet.values.isIntegrationTest ? { domain: '' } : await getProviderConfig();
+    const host = `${subDomain}.${domain}`;
+
+    const application = await findApplicationByProtectedAppHost(host);
+
+    assertThat(
+      !application,
+      new RequestError({
+        code: 'application.protected_application_subdomain_exists',
+        status: 422,
+      })
+    );
+
+    return {
+      protectedAppMetadata: {
+        host,
+        origin,
+        sessionDuration: defaultProtectedAppSessionDuration,
+        pageRules: defaultProtectedAppPageRules,
+      },
+      oidcClientMetadata: {
+        redirectUris: [`https://${host}/callback`],
+        postLogoutRedirectUris: [`https://${host}`],
+      },
+    };
+  };
+
   return {
     syncAppConfigsToRemote,
     deleteRemoteAppConfigs,
+    checkAndBuildProtectedAppData,
   };
 };

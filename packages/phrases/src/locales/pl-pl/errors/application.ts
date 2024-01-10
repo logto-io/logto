@@ -15,6 +15,11 @@ const application = {
   protected_application_only: 'The feature is only available for protected applications.',
   /** UNTRANSLATED */
   protected_application_misconfigured: 'Protected application is misconfigured.',
+  /** UNTRANSLATED */
+  protected_application_subdomain_exists:
+    'The subdomain of Protected application is already in use.',
+  /** UNTRANSLATED */
+  invalid_subdomain: 'Invalid subdomain.',
 };
 
 export default Object.freeze(application);
