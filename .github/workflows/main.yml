@@ -127,7 +127,7 @@ jobs:
       # ** End **
 
       - name: Setup Postgres
-        uses: ikalnytskyi/action-setup-postgres@v4
+        uses: ikalnytskyi/action-setup-postgres@v5
 
       # ** Setup up-to-date databases and compare (test `up`) **
       - name: Setup fresh database
