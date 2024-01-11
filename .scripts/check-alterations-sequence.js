@@ -19,7 +19,10 @@ const diffFiles = execSync("git diff HEAD~1 HEAD --name-only --diff-filter=ACR",
 });
 const committedAlterations = diffFiles
   .split("\n")
-  .filter((filename) => filename.startsWith(alterationFilePrefix))
+  .filter((filename) => 
+    filename.startsWith(alterationFilePrefix) && 
+    !filename.slice(alterationFilePrefix.length).includes("/")
+  )
   .map((filename) =>
     filename.replace(alterationFilePrefix, "").replace(".ts", "")
   );
@@ -32,4 +35,6 @@ for (const alteration of committedAlterations) {
       `Wrong alteration sequence for committed file: ${alteration}\nAll timestamps of committed alteration files should be greater than the biggest one in the base branch.`
     );
   }
+
+  console.log(`✅ ${alteration}`);
 }

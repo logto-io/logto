@@ -11,6 +11,7 @@ export * from './sentinel.js';
 export * from './users.js';
 export * from './sso-connector.js';
 export * from './applications.js';
+export * from './organizations.js';
 
 export {
   configurableConnectorMetadataGuard,
