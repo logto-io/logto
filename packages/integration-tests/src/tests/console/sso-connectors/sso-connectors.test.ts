@@ -62,7 +62,8 @@ describe('create SSO connectors', () => {
   });
 
   it.each(ssoConnectorTestCases.slice(1))(
-    'create other SSO connectors %p',
+    // The full object of `ssoConnector` test case is too burdensome for the test title, so we only use the index here.
+    'create other SSO connectors %#',
     async (ssoConnector) => {
       await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
@@ -100,13 +101,15 @@ describe('create SSO connectors', () => {
      * To check only the `duplicated connector name` is blocked, even if the
      * existing SSO connector (with the occupied name) is created with a different connector factory.
      */
-    const { connectorFactoryName, protocol } = ssoConnectorTestCases[0]!;
+    const { connectorFactoryName, protocol, formData, previewResults } = ssoConnectorTestCases[0]!;
     const { connectorName } = ssoConnectorTestCases[1]!;
     // Since the creation process is expected to be blocked in this test case, we do not want to check the connection info on details page.
     await fillSsoConnectorCreationModal(page, {
       connectorFactoryName,
       connectorName,
       protocol,
+      formData,
+      previewResults,
     });
 
     // Error message should be shown.
