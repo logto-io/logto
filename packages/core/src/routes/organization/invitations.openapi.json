@@ -1,0 +1,22 @@
+{
+  "tags": [
+    {
+      "name": "Organization invitations",
+      "description": "Organization invitations are used to invite users to join an organization. They are sent via email and contain a link that the user can click to accept the invitation and join the organization."
+    }
+  ],
+  "paths": {
+    "/api/organization-invitations": {
+      "get": {
+        "summary": "Get organization invitations",
+        "description": "Get organization invitations with pagination.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A list of organization invitations, each item also contains the organization roles to be assigned to the user when they accept the invitation, and the corresponding magic link data."
+          }
+        }
+      }
+    }
+  }
+}
