@@ -23,6 +23,7 @@ import organization_details from './organization-details.js';
 import organizations from './organizations.js';
 import permissions from './permissions.js';
 import profile from './profile.js';
+import protected_app from './protected-app.js';
 import role_details from './role-details.js';
 import roles from './roles.js';
 import session_expired from './session-expired.js';
@@ -83,6 +84,7 @@ const admin_console = {
   mfa,
   organizations,
   organization_details,
+  protected_app,
 };
 
 export default Object.freeze(admin_console);

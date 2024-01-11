@@ -4,6 +4,8 @@ import MachineToMachineDark from '@/assets/icons/machine-to-machine-dark.svg';
 import MachineToMachine from '@/assets/icons/machine-to-machine.svg';
 import NativeAppDark from '@/assets/icons/native-app-dark.svg';
 import NativeApp from '@/assets/icons/native-app.svg';
+import ProtectedAppDark from '@/assets/icons/protected-app-dark.svg';
+import ProtectedApp from '@/assets/icons/protected-app.svg';
 import SinglePageAppDark from '@/assets/icons/single-page-app-dark.svg';
 import SinglePageApp from '@/assets/icons/single-page-app.svg';
 import TraditionalWebAppDark from '@/assets/icons/traditional-web-app-dark.svg';
@@ -18,8 +20,7 @@ export const lightModeApplicationIconMap: ApplicationIconMap = Object.freeze({
   [ApplicationType.SPA]: SinglePageApp,
   [ApplicationType.Traditional]: TraditionalWebApp,
   [ApplicationType.MachineToMachine]: MachineToMachine,
-  // TODO @sijie: update with new icon
-  [ApplicationType.Protected]: TraditionalWebApp,
+  [ApplicationType.Protected]: ProtectedApp,
 } as const);
 
 export const darkModeApplicationIconMap: ApplicationIconMap = Object.freeze({
@@ -27,6 +28,5 @@ export const darkModeApplicationIconMap: ApplicationIconMap = Object.freeze({
   [ApplicationType.SPA]: SinglePageAppDark,
   [ApplicationType.Traditional]: TraditionalWebAppDark,
   [ApplicationType.MachineToMachine]: MachineToMachineDark,
-  // TODO @sijie: update with new icon
-  [ApplicationType.Protected]: TraditionalWebAppDark,
+  [ApplicationType.Protected]: ProtectedAppDark,
 } as const);

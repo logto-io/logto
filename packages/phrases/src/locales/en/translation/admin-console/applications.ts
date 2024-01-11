@@ -38,6 +38,11 @@ const applications = {
       subtitle: 'An app (usually a service) that directly talks to resources',
       description: 'E.g., Backend service',
     },
+    protected: {
+      title: 'Protected App',
+      subtitle: 'An app that is protected by Logto', // Not in use
+      description: 'N/A', // Not in use
+    },
     third_party: {
       title: 'Third-party app',
       subtitle: 'An app that is used as a third-party IdP connector',

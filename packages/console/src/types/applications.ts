@@ -9,8 +9,7 @@ export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.SPA]: 'applications.type.spa',
   [ApplicationType.Traditional]: 'applications.type.traditional',
   [ApplicationType.MachineToMachine]: 'applications.type.machine_to_machine',
-  // TODO @sijie: update with new phrase
-  [ApplicationType.Protected]: 'applications.type.traditional',
+  [ApplicationType.Protected]: 'applications.type.protected',
 } as const);
 
 /**

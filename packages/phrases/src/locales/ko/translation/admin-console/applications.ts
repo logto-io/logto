@@ -40,6 +40,14 @@ const applications = {
       subtitle: '직접 리소스에 접근하는 엡(서비스)',
       description: '예) 백엔드 서비스',
     },
+    protected: {
+      /** UNTRANSLATED */
+      title: 'Protected App',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is protected by Logto',
+      /** UNTRANSLATED */
+      description: 'N/A',
+    },
     third_party: {
       /** UNTRANSLATED */
       title: 'Third-party app',

@@ -19,6 +19,7 @@ import { allAppGuideCategories, type AppGuideCategory } from '@/types/applicatio
 import { thirdPartyAppCategory } from '@/types/applications';
 
 import CreateForm from '../CreateForm';
+import ProtectedAppCard from '../ProtectedAppCard';
 
 import * as styles from './index.module.scss';
 
@@ -95,8 +96,8 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                     options={allAppGuideCategories
                       .filter(
                         (category) =>
-                          isDevFeaturesEnabled ||
-                          (category !== 'Protected' && category !== thirdPartyAppCategory)
+                          category !== 'Protected' &&
+                          (isDevFeaturesEnabled || category !== thirdPartyAppCategory)
                       )
                       .map((category) => ({
                         title: `guide.categories.${category}`,
@@ -135,21 +136,25 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
             ) : (
               <EmptyDataPlaceholder className={styles.emptyPlaceholder} size="large" />
             ))}
-          {!keyword &&
-            (filterCategories.length > 0 ? filterCategories : allAppGuideCategories).map(
-              (category) =>
-                structuredMetadata[category].length > 0 && (
-                  <GuideCardGroup
-                    key={category}
-                    className={styles.guideGroup}
-                    hasCardBorder={hasCardBorder}
-                    hasCardButton={hasCardButton}
-                    categoryName={t(`categories.${category}`)}
-                    guides={structuredMetadata[category]}
-                    onClickGuide={onClickGuide}
-                  />
-                )
-            )}
+          {!keyword && (
+            <>
+              {isDevFeaturesEnabled && <ProtectedAppCard />}
+              {(filterCategories.length > 0 ? filterCategories : allAppGuideCategories).map(
+                (category) =>
+                  structuredMetadata[category].length > 0 && (
+                    <GuideCardGroup
+                      key={category}
+                      className={styles.guideGroup}
+                      hasCardBorder={hasCardBorder}
+                      hasCardButton={hasCardButton}
+                      categoryName={t(`categories.${category}`)}
+                      guides={structuredMetadata[category]}
+                      onClickGuide={onClickGuide}
+                    />
+                  )
+              )}
+            </>
+          )}
         </div>
       </div>
       {selectedGuide?.target !== 'API' && showCreateForm && (
