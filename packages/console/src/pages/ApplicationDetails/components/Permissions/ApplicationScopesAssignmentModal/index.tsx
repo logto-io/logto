@@ -3,8 +3,7 @@ import { ApplicationUserConsentScopeType } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ScopesAssignmentModal from '@/components/ScopesAssignmentModal';
-import ScopesAssignmentForm from '@/components/ScopesAssignmentModal/ScopesAssignmentForm';
+import ScopesAssignmentModal, { ScopesAssignmentForm } from '@/components/ScopesAssignmentModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
 

@@ -7,6 +7,8 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+export { default as ScopesAssignmentForm } from './ScopesAssignmentForm';
+
 type ModalTextConfig = {
   title: AdminConsoleKey;
   subtitle: AdminConsoleKey;
