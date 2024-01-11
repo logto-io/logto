@@ -102,6 +102,32 @@ describe('admin console application', () => {
     });
   });
 
+  it('should update application details for protected app successfully', async () => {
+    const metadata = {
+      origin: 'https://example.com',
+      host: 'example.protected.app',
+    };
+
+    const application = await createApplication('test-update-app', ApplicationType.Protected, {
+      // @ts-expect-error the create guard has been modified
+      protectedAppMetadata: metadata,
+    });
+
+    const newApplicationDescription = `new_${application.description ?? ''}`;
+
+    const newOrigin = 'https://example2.com';
+
+    await updateApplication(application.id, {
+      description: newApplicationDescription,
+      protectedAppMetadata: { origin: newOrigin },
+    });
+
+    const updatedApplication = await getApplication(application.id);
+
+    expect(updatedApplication.description).toBe(newApplicationDescription);
+    expect(updatedApplication.protectedAppMetadata?.origin).toEqual(newOrigin);
+  });
+
   it('should update application "admin" successfully', async () => {
     const application = await createApplication(
       'test-update-is-admin',

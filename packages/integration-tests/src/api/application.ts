@@ -4,6 +4,7 @@ import {
   type ApplicationType,
   type OidcClientMetadata,
   type Role,
+  type ProtectedAppMetadata,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -48,9 +49,9 @@ export const getApplication = async (applicationId: string) =>
 export const updateApplication = async (
   applicationId: string,
   payload: Partial<
-    Omit<CreateApplication, 'id' | 'created_at' | 'oidcClientMetadata'> & {
+    Omit<CreateApplication, 'id' | 'created_at' | 'oidcClientMetadata' | 'protectedAppMetadata'> & {
       oidcClientMetadata: Partial<OidcClientMetadata>;
-    }
+    } & { protectedAppMetadata: Partial<ProtectedAppMetadata> }
   > & { isAdmin?: boolean }
 ) =>
   authedAdminApi
