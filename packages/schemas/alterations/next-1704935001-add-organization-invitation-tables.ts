@@ -7,6 +7,8 @@ import { applyTableRls, dropTableRls } from './utils/1704934999-tables.js';
 const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
+      create type organization_invitation_status as enum ('Pending', 'Accepted', 'Expired', 'Revoked');
+
       create table organization_invitations (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
@@ -22,7 +24,7 @@ const alteration: AlterationScript = {
         /** The ID of the organization to which the invitee is invited. */
         organization_id varchar(21) not null,
         /** The status of the invitation. */
-        status varchar(32) /* @use OrganizationInvitationStatus */ not null,
+        status organization_invitation_status not null,
         /** The ID of the magic link that can be used to accept the invitation. */
         magic_link_id varchar(21)
           references magic_links (id) on update cascade on delete cascade,
@@ -37,6 +39,11 @@ const alteration: AlterationScript = {
           references organization_user_relations (tenant_id, user_id, organization_id)
           on update cascade on delete cascade
       );
+
+      -- Ensure there is only one pending invitation for a given invitee and organization.
+      create unique index organization_invitations__invitee_organization_id
+        on organization_invitations (tenant_id, invitee, organization_id)
+        where status = 'Pending';
     `);
     await applyTableRls(pool, 'organization_invitations');
 
@@ -63,6 +70,7 @@ const alteration: AlterationScript = {
     await dropTableRls(pool, 'organization_invitations');
     await pool.query(sql`
       drop table organization_invitations;
+      drop type organization_invitation_status;
     `);
   },
 };
