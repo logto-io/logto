@@ -5,6 +5,10 @@ import {
   OrganizationRoles,
   type Organization,
   Organizations,
+  type OrganizationInvitation,
+  type MagicLink,
+  OrganizationInvitations,
+  MagicLinks,
 } from '../db-entries/index.js';
 
 import { type UserInfo, type FeaturedUser, userInfoGuard } from './user.js';
@@ -81,3 +85,20 @@ export type OrganizationWithFeatured = Organization & {
   usersCount?: number;
   featuredUsers?: FeaturedUser[];
 };
+
+/**
+ * The organization invitation with additional fields:
+ *
+ * - `magicLink`: The magic link that can be used to accept the invitation.
+ * - `organizationRoles`: The roles to be assigned to the user when accepting the invitation.
+ */
+export type OrganizationInvitationEntity = OrganizationInvitation & {
+  magicLink: MagicLink;
+  organizationRoles: OrganizationRoleEntity[];
+};
+
+export const organizationInvitationEntityGuard: z.ZodType<OrganizationInvitationEntity> =
+  OrganizationInvitations.guard.extend({
+    magicLink: MagicLinks.guard,
+    organizationRoles: organizationRoleEntityGuard.array(),
+  });

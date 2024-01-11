@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- refactor in the next pull */
 import {
   type Organization,
   type CreateOrganization,
@@ -17,11 +18,23 @@ import {
   type UserWithOrganizationRoles,
   type FeaturedUser,
   type OrganizationScopeEntity,
+  OrganizationInvitations,
+  type OrganizationInvitationKeys,
+  type CreateOrganizationInvitation,
+  type OrganizationInvitation,
+  type OrganizationInvitationEntity,
+  MagicLinks,
+  OrganizationInvitationRoleRelations,
 } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 
-import { type SearchOptions, buildSearchSql, expandFields } from '#src/database/utils.js';
+import {
+  type SearchOptions,
+  buildSearchSql,
+  expandFields,
+  buildJsonObjectSql,
+} from '#src/database/utils.js';
 import RelationQueries, {
   type GetEntitiesOptions,
   TwoRelationsQueries,
@@ -292,19 +305,98 @@ class RoleUserRelationQueries extends RelationQueries<
   }
 }
 
+class OrganizationInvitationsQueries extends SchemaQueries<
+  OrganizationInvitationKeys,
+  CreateOrganizationInvitation,
+  OrganizationInvitation
+> {
+  override async findById(id: string): Promise<Readonly<OrganizationInvitationEntity>> {
+    return this.pool.one(this.#findEntity(id));
+  }
+
+  override async findAll(
+    limit: number,
+    offset: number,
+    search?: SearchOptions<OrganizationInvitationKeys>
+  ): Promise<[totalNumber: number, rows: Readonly<OrganizationInvitationEntity[]>]> {
+    return Promise.all([
+      this.findTotalNumber(search),
+      this.pool.any(this.#findEntity(undefined, limit, offset, search)),
+    ]);
+  }
+
+  #findEntity(
+    invitationId?: string,
+    limit = 1,
+    offset = 0,
+    search?: SearchOptions<OrganizationInvitationKeys>
+  ) {
+    const { table, fields } = convertToIdentifiers(OrganizationInvitations, true);
+    const magicLinks = convertToIdentifiers(MagicLinks, true);
+    const roleRelations = convertToIdentifiers(OrganizationInvitationRoleRelations, true);
+    const roles = convertToIdentifiers(OrganizationRoles, true);
+
+    return sql<OrganizationInvitationEntity>`
+      select
+        ${table}.*,
+        coalesce(
+          json_agg(
+            json_build_object(
+              'id', ${roles.fields.id},
+              'name', ${roles.fields.name}
+            ) order by ${roles.fields.name}
+          ) filter (where ${roles.fields.id} is not null),
+          '[]'
+        ) as "organizationRoles", -- left join could produce nulls
+        ${buildJsonObjectSql(magicLinks.fields)} as "magicLink"
+      from ${table}
+      left join ${roleRelations.table}
+        on ${roleRelations.fields.invitationId} = ${fields.id}
+      left join ${roles.table}
+        on ${roles.fields.id} = ${roleRelations.fields.organizationRoleId}
+      left join ${magicLinks.table}
+        on ${magicLinks.fields.id} = ${fields.magicLinkId}
+      ${conditionalSql(invitationId, (id) => {
+        return sql`where ${fields.id} = ${id}`;
+      })}
+      ${buildSearchSql(OrganizationInvitations, search)}
+      group by ${fields.id}, ${magicLinks.fields.id}
+      ${conditionalSql(this.orderBy, ({ field, order }) => {
+        return sql`order by ${fields[field]} ${order === 'desc' ? sql`desc` : sql`asc`}`;
+      })}
+      limit ${limit}
+      offset ${offset}
+    `;
+  }
+}
 export default class OrganizationQueries extends SchemaQueries<
   OrganizationKeys,
   CreateOrganization,
   Organization
 > {
-  /** Queries for roles in the organization template. */
+  /**
+   * Queries for roles in the organization template.
+   * @see {@link OrganizationRoles}
+   */
   roles = new OrganizationRolesQueries(this.pool, OrganizationRoles, {
     field: 'name',
     order: 'asc',
   });
 
-  /** Queries for scopes in the organization template. */
+  /**
+   * Queries for scopes in the organization template.
+   * @see {@link OrganizationScopes}
+   */
   scopes = new SchemaQueries(this.pool, OrganizationScopes, { field: 'name', order: 'asc' });
+
+  /**
+   * Queries for organization invitations.
+   * @see {@link OrganizationInvitations}
+   */
+  invitations = new OrganizationInvitationsQueries(this.pool, OrganizationInvitations, {
+    field: 'createdAt',
+    order: 'desc',
+  });
 
   /** Queries for relations that connected with organization-related entities. */
   relations = {
@@ -325,3 +417,4 @@ export default class OrganizationQueries extends SchemaQueries<
     super(pool, Organizations);
   }
 }
+/* eslint-enable max-lines */

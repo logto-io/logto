@@ -8,6 +8,7 @@ import {
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -18,6 +19,7 @@ import { parseSearchOptions } from '#src/utils/search.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
+import organizationInvitationRoutes from './invitations.js';
 import organizationRoleRoutes from './roles.js';
 import organizationScopeRoutes from './scopes.js';
 import { errorHandler } from './utils.js';
@@ -236,6 +238,10 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
   // MARK: Mount sub-routes
   organizationRoleRoutes(...args);
   organizationScopeRoutes(...args);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    organizationInvitationRoutes(...args);
+  }
 
   router.use(koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }));
 
