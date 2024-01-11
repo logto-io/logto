@@ -23,7 +23,7 @@ import * as styles from './index.module.scss';
 type Props = {
   currentSubscriptionPlanId: string;
   subscriptionPlans: SubscriptionPlan[];
-  onSubscriptionUpdated: () => void;
+  onSubscriptionUpdated: () => Promise<void>;
 };
 
 function SwitchPlanActionBar({
@@ -67,7 +67,7 @@ function SwitchPlanActionBar({
       setCurrentLoadingPlanId(targetPlanId);
       if (targetPlanId === ReservedPlanId.Free) {
         await cancelSubscription(currentTenantId);
-        onSubscriptionUpdated();
+        await onSubscriptionUpdated();
         toast.success(
           <Trans components={{ name: <PlanName name={targetPlan.name} /> }}>
             {t('downgrade_success')}

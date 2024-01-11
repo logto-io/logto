@@ -19,7 +19,11 @@ function Subscription() {
   const { subscriptionPlans, currentPlan, currentSubscription, onCurrentSubscriptionUpdated } =
     useContext(SubscriptionDataContext);
 
-  const { data: subscriptionUsage, isLoading } = useSubscriptionUsage(currentTenantId);
+  const {
+    data: subscriptionUsage,
+    isLoading,
+    mutate: mutateSubscriptionUsage,
+  } = useSubscriptionUsage(currentTenantId);
 
   const reservedPlans = pickupFeaturedPlans(subscriptionPlans);
 
@@ -43,7 +47,15 @@ function Subscription() {
       <SwitchPlanActionBar
         currentSubscriptionPlanId={currentSubscription.planId}
         subscriptionPlans={reservedPlans}
-        onSubscriptionUpdated={onCurrentSubscriptionUpdated}
+        onSubscriptionUpdated={async () => {
+          /**
+           * The upcoming billing info is calculated based on the current subscription usage,
+           * and the usage is based on the current subscription plan,
+           * need to manually trigger the usage update while the subscription plan is changed.
+           */
+          onCurrentSubscriptionUpdated();
+          await mutateSubscriptionUsage();
+        }}
       />
     </div>
   );
