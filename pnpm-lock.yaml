@@ -3363,8 +3363,8 @@ importers:
         specifier: ^4.1.3
         version: 4.1.3
       '@types/koa__cors':
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
@@ -10017,8 +10017,8 @@ packages:
       '@types/node': 20.10.4
     dev: true
 
-  /@types/koa__cors@4.0.0:
-    resolution: {integrity: sha512-qpwswNgQ2GxiDGNnKbDSBY5XmQTVJ6fspNvInLsAJ+jSwINxihvVzblj5anujNBg2BtL0xpUrcIt3UYwGzu05A==}
+  /@types/koa__cors@5.0.0:
+    resolution: {integrity: sha512-LCk/n25Obq5qlernGOK/2LUwa/2YJb2lxHUkkvYFDOpLXlVI6tKcdfCHRBQnOY4LwH6el5WOLs6PD/a8Uzau6g==}
     dependencies:
       '@types/koa': 2.13.4
     dev: true
