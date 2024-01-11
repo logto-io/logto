@@ -108,6 +108,17 @@ const application_details = {
     /** UNTRANSLATED */
     permission_delete_confirm:
       'This action will withdraw the permissions granted to the third-party app, preventing it from requesting user authorization for specific data types. Are you sure you want to continue?',
+    /** UNTRANSLATED */
+    permissions_assignment_description:
+      'Select the permissions the third-party application requests for user authorization to access specific data types.',
+    /** UNTRANSLATED */
+    user_profile: 'User profile',
+    /** UNTRANSLATED */
+    api_resource: 'API resource',
+    /** UNTRANSLATED */
+    organization: 'Organization',
+    /** UNTRANSLATED */
+    permissions_assignment_form_title: 'Add profile permissions',
   },
   roles: {
     name_column: 'Role',
