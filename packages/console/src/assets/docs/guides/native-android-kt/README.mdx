@@ -12,11 +12,13 @@ import Step from '@/mdx-components/Step';
 
 <InlineNotification>The minimum supported Android API is level 24</InlineNotification>
 
-Add the `mavenCentral()` repository to your Gradle project build file:
+Before you add Logto Android SDK, ensure `mavenCentral()` is added to your repository configuration in the Gradle project build file:
 
 ```kotlin
-repositories {
-    mavenCentral()
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
 }
 ```
 
@@ -24,8 +26,21 @@ Add Logto Android SDK to your dependencies:
 
 ```kotlin
 dependencies {
-    implementation("io.logto.sdk:android:1.0.0")
+    implementation("io.logto.sdk:android:1.1.3")
 }
+```
+
+Since the SDK needs internet access, you need to add the following permission to your `AndroidManifest.xml` file:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <uses-permission android:name="android.permission.INTERNET" />
+
+  <!-- other configurations... -->
+</manifest>
 ```
 
 </Step>
@@ -40,17 +55,15 @@ dependencies {
     {`import io.logto.sdk.android.LogtoClient
 import io.logto.sdk.android.type.LogtoConfig
 
-class MainActivity : AppCompatActivity() {
-    val logtoConfig = LogtoConfig(
-        endpoint = "${props.endpoint}",
-        appId = "${props.app.id}",
-        scopes = null,
-        resources = null,
-        usingPersistStorage = true,
-    )
+val logtoConfig = LogtoConfig(
+    endpoint = "${props.endpoint}",
+    appId = "${props.app.id}",
+    scopes = null,
+    resources = null,
+    usingPersistStorage = true,
+)
 
-    val logtoClient = LogtoClient(logtoConfig, application)
-}`}
+val logtoClient = LogtoClient(logtoConfig, application)`}
   </code>
 </pre>
 
