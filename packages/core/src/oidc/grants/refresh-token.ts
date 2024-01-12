@@ -34,7 +34,7 @@ import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { type EnvSet } from '#src/env-set/index.js';
-import type OrganizationQueries from '#src/queries/organizations.js';
+import type OrganizationQueries from '#src/queries/organization/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../resource.js';
