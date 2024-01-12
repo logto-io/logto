@@ -17,6 +17,7 @@ export type ConfirmModalProps = {
   children: ReactNode;
   className?: string;
   title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   confirmButtonType?: ButtonType;
   confirmButtonText?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   cancelButtonText?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
@@ -33,6 +34,7 @@ function ConfirmModal({
   children,
   className,
   title = 'general.reminder',
+  subtitle,
   confirmButtonType = 'danger',
   confirmButtonText = 'general.confirm',
   cancelButtonText = 'general.cancel',
@@ -54,6 +56,9 @@ function ConfirmModal({
     >
       <ModalLayout
         title={title}
+        subtitle={subtitle}
+        className={classNames(styles.content, className)}
+        size={size}
         footer={
           <>
             {isCancelButtonVisible && onCancel && (
@@ -70,8 +75,6 @@ function ConfirmModal({
             )}
           </>
         }
-        className={classNames(styles.content, className)}
-        size={size}
         onClose={onCancel}
       >
         {children}

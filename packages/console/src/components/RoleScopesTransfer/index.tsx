@@ -7,6 +7,10 @@ import SourceScopesBox from './components/SourceScopesBox';
 import TargetScopesBox from './components/TargetScopesBox';
 import * as styles from './index.module.scss';
 
+/**
+ * @deprecated Use `@/ds-component/DataTransferBox` instead.
+ */
+
 type Props = {
   roleId?: string;
   roleType: RoleType;
