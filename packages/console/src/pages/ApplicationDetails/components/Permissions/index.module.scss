@@ -2,7 +2,7 @@
 
 
 // Override the Table  component styles
-[class*='tableContainer'] [class*='bodyTable'] tr.sectionTitleRow {
+.permissionsModal [class*='tableContainer'] [class*='bodyTable'] tr.sectionTitleRow {
   height: _.unit(9);
 
   td {

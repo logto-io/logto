@@ -10,6 +10,7 @@ import TemplateTable from '@/components/TemplateTable';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 
+import * as styles from './index.module.scss';
 import usePermissionsTable from './use-permissions-table';
 
 type Props = {
@@ -22,11 +23,10 @@ function Permissions({ application }: Props) {
   const [isAssignScopesModalOpen, setIsAssignScopesModalOpen] = useState(false);
   const { parseRowGroup, deletePermission } = usePermissionsTable();
 
-  const { data, error, mutate } = useSWR<ApplicationUserConsentScopesResponse, RequestError>(
+  const { data, mutate, isLoading } = useSWR<ApplicationUserConsentScopesResponse, RequestError>(
     `api/applications/${application.id}/user-consent-scopes`
   );
 
-  const isLoading = !data && !error;
   const rowGroups = useMemo(() => parseRowGroup(data), [data, parseRowGroup]);
 
   return (
@@ -35,6 +35,7 @@ function Permissions({ application }: Props) {
       description="application_details.permissions.description"
     >
       <TemplateTable
+        className={styles.permissionsModal}
         name="application_details.permissions.table_name"
         rowIndexKey="id"
         isLoading={isLoading}
