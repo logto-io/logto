@@ -1,0 +1,62 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  border-radius: 12px;
+  border: 1px solid var(--color-divider);
+  overflow: hidden;
+
+  .separator {
+    border-bottom: 1px solid var(--color-divider);
+  }
+
+  .form {
+    background: var(--color-layer-1);
+    padding: _.unit(6) _.unit(8);
+  }
+
+  .protectedApps {
+    display: flex;
+    flex-direction: column;
+    gap: _.unit(3);
+    background: var(--color-success-container);
+    padding: _.unit(5) _.unit(9);
+
+    .label {
+      display: flex;
+      align-items: center;
+      font: var(--font-label-2);
+      white-space: pre;
+    }
+
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .app {
+      display: flex;
+      align-items: center;
+      padding-left: _.unit(5);
+      gap: _.unit(3);
+      font: var(--font-body-2);
+
+      .status {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--color-on-success-container);
+        margin-right: _.unit(-1);
+      }
+
+      .hostName {
+        margin-right: _.unit(-3);
+        color: var(--color-text);
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

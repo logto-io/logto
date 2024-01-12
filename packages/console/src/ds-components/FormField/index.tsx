@@ -16,6 +16,8 @@ import * as styles from './index.module.scss';
 
 export type Props = {
   title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  description?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  descriptionPosition?: 'top' | 'bottom';
   children: ReactNode;
   isRequired?: boolean;
   isMultiple?: boolean;
@@ -27,6 +29,8 @@ export type Props = {
 
 function FormField({
   title,
+  description,
+  descriptionPosition = 'bottom',
   children,
   isRequired,
   isMultiple,
@@ -62,7 +66,15 @@ function FormField({
         <Spacer />
         {isRequired && <div className={styles.required}>{t('general.required')}</div>}
       </div>
+      {description && descriptionPosition === 'top' && (
+        <div className={styles.description}>{descriptionPosition}</div>
+      )}
       {children}
+      {description && descriptionPosition === 'bottom' && (
+        <div className={styles.description}>
+          {typeof description === 'string' ? <DynamicT forKey={description} /> : description}
+        </div>
+      )}
     </div>
   );
 }

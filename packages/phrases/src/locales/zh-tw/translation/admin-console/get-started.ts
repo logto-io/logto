@@ -4,6 +4,11 @@ const get_started = {
   subtitle: '一些快速獲取 Logto 價值的事情',
   develop: {
     title: '開發：花 5 分鐘集成您的應用程式',
+    /** UNTRANSLATED */
+    title_cloud: 'Develop: Securely integrate your app in minutes',
+    /** UNTRANSLATED */
+    subtitle_cloud:
+      'Or take 5 minutes to integrate your app with our pre-built SDKs and tutorials.',
   },
   customize: {
     title: '自訂：提供出色的登錄體驗',

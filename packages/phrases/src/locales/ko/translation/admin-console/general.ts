@@ -54,6 +54,8 @@ const general = {
   demo: '데모',
   unnamed: '이름없음',
   view: '보기',
+  /** UNTRANSLATED */
+  open: 'Open',
   hide: '숨기기',
   unknown_error: '알 수 없는 오류가 발생했습니다. 나중에 다시 시도해주세요.',
   select: '선택',

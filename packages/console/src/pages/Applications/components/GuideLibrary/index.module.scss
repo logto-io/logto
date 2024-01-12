@@ -70,6 +70,10 @@
   }
 }
 
+.protectedAppCard {
+  margin-bottom: _.unit(4);
+}
+
 .wrapper.hasFilters .groups {
   max-width: dim.$guide-main-content-max-width;
 }

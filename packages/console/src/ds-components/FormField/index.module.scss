@@ -35,3 +35,9 @@
     color: var(--color-text-secondary);
   }
 }
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin-top: _.unit(1);
+}

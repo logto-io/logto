@@ -55,6 +55,8 @@ const general = {
   demo: 'Démo',
   unnamed: 'Sans nom',
   view: 'Vue',
+  /** UNTRANSLATED */
+  open: 'Open',
   hide: 'Cacher',
   unknown_error: 'Erreur inconnue, veuillez réessayer ultérieurement.',
   select: 'Sélectionner',
