@@ -81,18 +81,20 @@ const quota_table = {
   paid_token_limit_tip:
     'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
   paid_quota_limit_tip:
-    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
-  beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
-  usage_based_beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
-  beta: 'Beta',
-  add_on_beta: 'Ek hizmet (Beta)',
+    "Logto, kota limitinizi aşan özellikler için ücretlendirme ekleyecektir. Şarjımıza başlamadan önce, yaklaşık olarak 2024 Q2'ye kadar ücretsiz olarak kullanabilirsiniz.",
+  paid_add_on_feature_tip:
+    "Bu bir ek özelliktir. Şarjımıza başlamadan önce, yaklaşık olarak 2024 Q2'ye kadar ücretsiz olarak kullanabilirsiniz.",
   million: '{{value, number}} milyon',
   mau_tip:
     'MAU (aylık aktif kullanıcı) Logto ile en az bir token değiştiren benzersiz kullanıcı sayısını ifade eder.',
   tokens_tip:
     'Logto tarafından ihraç edilen erişim tokeni, yenileme tokeni vb. dahil olmak üzere tüm token türleri.',
+  included: '{{value, number}} dahil',
+  included_mao: '{{value, number}} MAO dahil',
+  extra_quota_price: 'Sonra aylık ${{value, number}} / sonrasında her biri',
+  per_month_each: 'Aylık ${{value, number}} / her biri',
+  extra_mao_price: 'Sonra MAO başına ${{value, number}}',
+  per_month: 'Aylık ${{value, number}}',
 };
 
 export default Object.freeze(quota_table);

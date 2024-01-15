@@ -10,6 +10,13 @@ import BasePrice from './BasePrice';
 import GenericFeatureFlag from './GenericFeatureFlag';
 import GenericQuotaLimit from './GenericQuotaLimit';
 
+const m2mAppUnitPrice = 8;
+const resourceUnitPrice = 3;
+const ssoUnitPrice = 48;
+const mfaPrice = 48;
+const maoDisplayLimit = 100;
+const maoUnitPrice = 0.64;
+
 export const quotaValueRenderer: Record<
   keyof SubscriptionPlanTable,
   (planTableData: SubscriptionPlanTableData) => ReactNode
@@ -37,19 +44,60 @@ export const quotaValueRenderer: Record<
   applicationsLimit: ({ table: { applicationsLimit } }) => (
     <GenericQuotaLimit quota={applicationsLimit} />
   ),
-  machineToMachineLimit: ({ id, table: { machineToMachineLimit } }) => (
-    <GenericQuotaLimit
-      quota={machineToMachineLimit}
-      tipPhraseKey={cond(id !== ReservedPlanId.Free && 'paid_quota_limit_tip')}
-    />
-  ),
+  machineToMachineLimit: ({ id, table: { machineToMachineLimit } }) => {
+    const isPaidPlan = id === ReservedPlanId.Hobby;
+
+    return (
+      <GenericQuotaLimit
+        quota={machineToMachineLimit}
+        tipPhraseKey={cond(isPaidPlan && 'paid_quota_limit_tip')}
+        extraInfo={cond(
+          isPaidPlan && (
+            <DynamicT
+              forKey="subscription.quota_table.extra_quota_price"
+              interpolation={{ value: m2mAppUnitPrice }}
+            />
+          )
+        )}
+        formatter={cond(
+          isPaidPlan &&
+            ((quota) => (
+              <DynamicT
+                forKey="subscription.quota_table.included"
+                interpolation={{ value: quota }}
+              />
+            ))
+        )}
+      />
+    );
+  },
   // Resources
-  resourcesLimit: ({ id, table: { resourcesLimit } }) => (
-    <GenericQuotaLimit
-      quota={resourcesLimit}
-      tipPhraseKey={cond(id !== ReservedPlanId.Free && 'paid_quota_limit_tip')}
-    />
-  ),
+  resourcesLimit: ({ id, table: { resourcesLimit } }) => {
+    const isPaidPlan = id === ReservedPlanId.Hobby;
+    return (
+      <GenericQuotaLimit
+        quota={resourcesLimit}
+        tipPhraseKey={cond(isPaidPlan && 'paid_quota_limit_tip')}
+        extraInfo={cond(
+          isPaidPlan && (
+            <DynamicT
+              forKey="subscription.quota_table.extra_quota_price"
+              interpolation={{ value: resourceUnitPrice }}
+            />
+          )
+        )}
+        formatter={cond(
+          isPaidPlan &&
+            ((quota) => (
+              <DynamicT
+                forKey="subscription.quota_table.included"
+                interpolation={{ value: quota }}
+              />
+            ))
+        )}
+      />
+    );
+  },
   scopesPerResourceLimit: ({ table: { scopesPerResourceLimit } }) => (
     <GenericQuotaLimit quota={scopesPerResourceLimit} />
   ),
@@ -68,14 +116,24 @@ export const quotaValueRenderer: Record<
   ),
   i18nEnabled: ({ table: { i18nEnabled } }) => <GenericFeatureFlag isEnabled={i18nEnabled} />,
   // UserAuthentication
-  mfaEnabled: ({ table: { mfaEnabled } }) => (
-    <GenericFeatureFlag
-      isBeta
-      isEnabled={mfaEnabled}
-      paymentType="add-on"
-      tipPhraseKey={cond(mfaEnabled && 'beta_feature_tip')}
-    />
-  ),
+  mfaEnabled: ({ id, table: { mfaEnabled } }) => {
+    const isPaidPlan = id === ReservedPlanId.Hobby;
+    return (
+      <GenericFeatureFlag
+        isEnabled={mfaEnabled}
+        isAddOnForPlan={isPaidPlan}
+        tipPhraseKey={cond(isPaidPlan && 'paid_add_on_feature_tip')}
+        customContent={cond(
+          isPaidPlan && (
+            <DynamicT
+              forKey="subscription.quota_table.per_month"
+              interpolation={{ value: mfaPrice }}
+            />
+          )
+        )}
+      />
+    );
+  },
   omniSignInEnabled: ({ table: { omniSignInEnabled } }) => (
     <GenericFeatureFlag isEnabled={omniSignInEnabled} />
   ),
@@ -97,14 +155,24 @@ export const quotaValueRenderer: Record<
   standardConnectorsLimit: ({ table: { standardConnectorsLimit } }) => (
     <GenericQuotaLimit quota={standardConnectorsLimit} />
   ),
-  ssoEnabled: ({ table: { ssoEnabled } }) => (
-    <GenericFeatureFlag
-      isBeta
-      isEnabled={ssoEnabled}
-      paymentType="add-on"
-      tipPhraseKey={cond(ssoEnabled && 'beta_feature_tip')}
-    />
-  ),
+  ssoEnabled: ({ id, table: { ssoEnabled } }) => {
+    const isPaidPlan = id === ReservedPlanId.Hobby;
+    return (
+      <GenericFeatureFlag
+        isEnabled={ssoEnabled}
+        isAddOnForPlan={isPaidPlan}
+        tipPhraseKey={cond(isPaidPlan && 'paid_add_on_feature_tip')}
+        customContent={cond(
+          isPaidPlan && (
+            <DynamicT
+              forKey="subscription.quota_table.per_month_each"
+              interpolation={{ value: ssoUnitPrice }}
+            />
+          )
+        )}
+      />
+    );
+  },
   // Roles
   userManagementEnabled: ({ table: { userManagementEnabled } }) => (
     <GenericFeatureFlag isEnabled={userManagementEnabled} />
@@ -117,14 +185,38 @@ export const quotaValueRenderer: Record<
     <GenericQuotaLimit quota={scopesPerRoleLimit} />
   ),
   // Organizations
-  organizationsEnabled: ({ table: { organizationsEnabled } }) => (
-    <GenericFeatureFlag
-      isBeta
-      isEnabled={organizationsEnabled}
-      paymentType="usage"
-      tipPhraseKey={cond(organizationsEnabled && 'usage_based_beta_feature_tip')}
-    />
-  ),
+  organizationsEnabled: ({ id, table: { organizationsEnabled } }) => {
+    const isPaidPlan = id === ReservedPlanId.Hobby;
+    return (
+      <GenericQuotaLimit
+        quota={
+          organizationsEnabled === undefined
+            ? organizationsEnabled
+            : organizationsEnabled
+            ? maoDisplayLimit
+            : 0
+        }
+        tipPhraseKey={cond(isPaidPlan && 'paid_quota_limit_tip')}
+        extraInfo={cond(
+          isPaidPlan && (
+            <DynamicT
+              forKey="subscription.quota_table.extra_mao_price"
+              interpolation={{ value: maoUnitPrice }}
+            />
+          )
+        )}
+        formatter={cond(
+          isPaidPlan &&
+            ((quota) => (
+              <DynamicT
+                forKey="subscription.quota_table.included_mao"
+                interpolation={{ value: quota }}
+              />
+            ))
+        )}
+      />
+    );
+  },
   allowedUsersPerOrganization: ({ table: { allowedUsersPerOrganization } }) => (
     <GenericQuotaLimit quota={allowedUsersPerOrganization} />
   ),

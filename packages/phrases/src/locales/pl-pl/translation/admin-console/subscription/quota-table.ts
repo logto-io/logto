@@ -81,18 +81,20 @@ const quota_table = {
   paid_token_limit_tip:
     'Bezpłatne do wydania {{value}} M tokenów. Możemy doliczyć opłaty, jeśli przekroczysz limity {{value}} M tokenów, gdy ustalimy ostateczne ceny.',
   paid_quota_limit_tip:
-    'Możemy doliczyć opłaty za funkcje po przekroczeniu limitów kwoty jako dodatki, gdy ustalimy ostateczne ceny.',
-  beta_feature_tip:
-    'Darmowe w trakcie fazy beta. Będziemy pobierać opłaty po zakończeniu fazy beta przy ustaleniu cen dodatków.',
-  usage_based_beta_feature_tip:
-    'Darmowe w trakcie fazy beta. Będziemy pobierać opłaty po zakończeniu fazy beta przy ustaleniu opłat w oparciu o użycie organizacji.',
-  beta: 'Beta',
-  add_on_beta: 'Dodatkowy (Beta)',
+    'Logto będzie naliczać opłaty za funkcje przekraczające limit kontyngentu. Możesz go używać bezpłatnie do czasu rozpoczęcia naliczania opłat, około II kwartał 2024 roku.',
+  paid_add_on_feature_tip:
+    'To jest funkcja dodatkowa. Możesz z niej korzystać bezpłatnie do czasu rozpoczęcia naliczania opłat, około II kwartał 2024 roku.',
   million: '{{value, number}} milion',
   mau_tip:
     'MAU (miesięczny aktywny użytkownik) oznacza liczbę unikalnych użytkowników, którzy wymienili co najmniej jeden token z Logto w miesiącu rozliczeniowym.',
   tokens_tip:
     'Wszystkie rodzaje tokenów wydanych przez Logto, w tym tokeny dostępu, tokeny odświeżania, itp.',
+  included: '{{value, number}} zawarte',
+  included_mao: '{{value, number}} MAO wliczone',
+  extra_quota_price: 'Następnie ${{value, number}} za miesiąc / każdy po',
+  per_month_each: '${{value, number}} za miesiąc / każdy',
+  extra_mao_price: 'Następnie ${{value, number}} za MAO',
+  per_month: '${{value, number}} za miesiąc',
 };
 
 export default Object.freeze(quota_table);

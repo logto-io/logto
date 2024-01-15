@@ -81,18 +81,20 @@ const quota_table = {
   paid_token_limit_tip:
     'Grátis para {{value}}M tokens emitidos. Podemos cobrar se você ultrapassar {{value}}M tokens após finalizarmos os preços.',
   paid_quota_limit_tip:
-    'Podemos adicionar cobranças para recursos que ultrapassarem o limite da sua cota como complementos, uma vez que finalizarmos os preços.',
-  beta_feature_tip:
-    'Grátis durante a fase beta. Começaremos a cobrar uma vez que finalizarmos os preços dos complementos.',
-  usage_based_beta_feature_tip:
-    'Grátis durante a fase beta. Começaremos a cobrar uma vez que finalizarmos os preços baseados no uso da organização.',
-  beta: 'Beta',
-  add_on_beta: 'Complemento (Beta)',
+    'O Logto adicionará cobranças por recursos que ultrapassarem seu limite de cota. Você pode usá-lo gratuitamente até começarmos a cobrar, aproximadamente no segundo trimestre de 2024.',
+  paid_add_on_feature_tip:
+    'Esta é uma função adicional. Você pode usá-la gratuitamente até começarmos a cobrar, aproximadamente no segundo trimestre de 2024.',
   million: '{{value, number}} milhão',
   mau_tip:
     'MAU (usuário ativo mensal) significa o número de usuários únicos que trocaram pelo menos um token com o Logto em um mês de faturamento.',
   tokens_tip:
     'Todos os tipos de tokens emitidos pelo Logto, incluindo token de acesso, token de atualização, etc.',
+  included: 'incluído{{value, number}}',
+  included_mao: '{{value, number}} MAO incluído',
+  extra_quota_price: 'Então ${{value, number}} por mês / cada depois',
+  per_month_each: '${{value, number}} por mês / cada',
+  extra_mao_price: 'Então ${{value, number}} por MAO',
+  per_month: '${{value, number}} por mês',
 };
 
 export default Object.freeze(quota_table);

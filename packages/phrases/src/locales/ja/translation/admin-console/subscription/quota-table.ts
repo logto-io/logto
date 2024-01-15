@@ -81,18 +81,20 @@ const quota_table = {
   paid_token_limit_tip:
     '無料 {{value}}M トークン発行。価格設定が最終決定した場合、{{value}}M トークンを超えると追加料金が発生する可能性があります。',
   paid_quota_limit_tip:
-    '価格設定が最終決定した場合、クォータ制限を超える機能について追加料金が発生することがあります。',
-  beta_feature_tip:
-    'ベータフェーズ中は無料です。アドオンの価格設定が最終決定した後、請求を開始します。',
-  usage_based_beta_feature_tip:
-    'ベータフェーズ中は無料です。組織の使用に基づく価格設定が最終決定した後、請求を開始します。',
-  beta: 'ベータ',
-  add_on_beta: 'アドオン（ベータ版）',
+    'Logtoはクォータ制限を超える機能に対して料金を追加します。2024年第2四半期ごろまでは無料でご利用いただけます。',
+  paid_add_on_feature_tip:
+    'これはアドオン機能です。2024年第2四半期ごろまでは無料でご利用いただけます。',
   million: '{{value, number}} 万',
   mau_tip:
     'MAU（月間アクティブユーザー）とは、請求月において少なくとも1つのトークンをLogtoと交換したユニークなユーザーの数を指します。',
   tokens_tip:
     'Logtoによって発行されたすべての種類のトークン、アクセストークン、リフレッシュトークンなどを含みます。',
+  included: '{{value, number}} 込み',
+  included_mao: '{{value, number}} MAO込み',
+  extra_quota_price: 'その後、各${{value, number}} / 月ごと',
+  per_month_each: '各${{value, number}} / 月ごと',
+  extra_mao_price: 'その後、MAOごとに${{value, number}}',
+  per_month: '${{value, number}} / 月ごと',
 };
 
 export default Object.freeze(quota_table);

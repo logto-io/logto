@@ -81,18 +81,20 @@ const quota_table = {
   paid_token_limit_tip:
     'Gratuit pour {{value}}M jeton émis. Nous pouvons ajouter des frais si vous dépassez {{value}}M jetons une fois que nous aurons finalisé les prix.',
   paid_quota_limit_tip:
-    'Nous pouvons facturer des fonctionnalités qui dépassent votre limite de quotas en tant que modules complémentaires une fois que nous aurons finalisé les prix.',
-  beta_feature_tip:
-    'Gratuit à utiliser pendant la phase bêta. Nous commencerons à facturer une fois que nous aurons finalisé les tarifs des modules complémentaires.',
-  usage_based_beta_feature_tip:
-    "Gratuit à utiliser pendant la phase bêta. Nous commencerons à facturer une fois que nous aurons finalisé les tarifs basés sur l'usage de l'organisation.",
-  beta: 'Bêta',
-  add_on_beta: 'Module complémentaire (Bêta)',
+    "Logto ajoutera des frais pour les fonctionnalités qui dépassent votre limite de quota. Vous pouvez l'utiliser gratuitement jusqu'à ce que nous commencions à facturer vers le deuxième trimestre 2024.",
+  paid_add_on_feature_tip:
+    "Il s'agit d'une fonctionnalité supplémentaire. Vous pouvez l'utiliser gratuitement jusqu'à ce que nous commencions à facturer vers le deuxième trimestre 2024.",
   million: '{{value, number}} million',
   mau_tip:
     "MAU (utilisateur actif mensuel) signifie le nombre d'utilisateurs uniques qui ont échangé au moins un jeton avec Logto au cours d'un mois de facturation.",
   tokens_tip:
     "Tous types de jetons émis par Logto, y compris les jetons d'accès, les jetons de rafraîchissement, etc.",
+  included: '{{value, number}} inclus',
+  included_mao: '{{value, number}} MAO inclus',
+  extra_quota_price: 'Ensuite ${{value, number}} par mois / chacun après',
+  per_month_each: '${{value, number}} par mois / chacun',
+  extra_mao_price: 'Ensuite ${{value, number}} par MAO',
+  per_month: '${{value, number}} par mois',
 };
 
 export default Object.freeze(quota_table);

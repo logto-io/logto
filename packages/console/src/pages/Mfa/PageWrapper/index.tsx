@@ -27,7 +27,6 @@ function PageWrapper({ children }: Props) {
     <div className={styles.container}>
       <PageMeta titleKey="mfa.title" />
       <CardTitle
-        isBeta
         paywall={cond((!isMfaEnabled || isDevTenant) && ReservedPlanId.Pro)}
         title="mfa.title"
         subtitle="mfa.description"

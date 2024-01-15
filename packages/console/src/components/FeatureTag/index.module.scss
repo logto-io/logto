@@ -9,8 +9,4 @@
   padding: _.unit(0.5) _.unit(2);
   color: var(--color-white);
   text-transform: capitalize;
-
-  &.beta {
-    background-color: var(--color-specific-tag-test);
-  }
 }
