@@ -64,7 +64,7 @@ describe('application sign in experience', () => {
       ),
       {
         code: 'application.third_party_application_only',
-        statusCode: 400,
+        statusCode: 422,
       }
     );
   });

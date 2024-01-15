@@ -78,7 +78,7 @@ describe('assign user consent scopes to application', () => {
       }),
       {
         code: 'application.third_party_application_only',
-        statusCode: 400,
+        statusCode: 422,
       }
     );
   });
