@@ -110,8 +110,15 @@ function CreateForm({
                 onChange={onChange}
               >
                 {Object.values(ApplicationType)
-                  // Protected app should not show up in the creation modal
-                  .filter((value) => value !== ApplicationType.Protected)
+                  // Other application types (e.g. "Protected") should not show up in the creation modal
+                  .filter((value) =>
+                    [
+                      ApplicationType.Native,
+                      ApplicationType.SPA,
+                      ApplicationType.Traditional,
+                      ApplicationType.MachineToMachine,
+                    ].includes(value)
+                  )
                   .map((type) => (
                     <Radio
                       key={type}
