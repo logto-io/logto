@@ -13,6 +13,7 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 import type { Search } from '#src/utils/search.js';
 
+import ApplicationUserConsentOrganizationsQuery from './application-user-consent-organizations.js';
 import {
   ApplicationUserConsentOrganizationScopeQueries,
   ApplicationUserConsentResourceScopeQueries,
@@ -241,6 +242,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     deleteApplicationById,
     userConsentOrganizationScopes: new ApplicationUserConsentOrganizationScopeQueries(pool),
     userConsentResourceScopes: new ApplicationUserConsentResourceScopeQueries(pool),
-    useConsentUserScopes: createApplicationUserConsentUserScopeQueries(pool),
+    userConsentUserScopes: createApplicationUserConsentUserScopeQueries(pool),
+    userConsentOrganizations: new ApplicationUserConsentOrganizationsQuery(pool),
   };
 };
