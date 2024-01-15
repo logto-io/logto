@@ -1,9 +1,6 @@
-import { OrganizationInvitations, organizationInvitationEntityGuard } from '@logto/schemas';
-import Router, { type IRouterParamContext } from 'koa-router';
+import { OrganizationInvitations } from '@logto/schemas';
 
-import koaGuard from '#src/middleware/koa-guard.js';
-import koaPagination from '#src/middleware/koa-pagination.js';
-import { tableToPathname } from '#src/utils/SchemaRouter.js';
+import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
@@ -17,24 +14,12 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  const router = new Router<unknown, IRouterParamContext>({
-    prefix: '/' + tableToPathname(OrganizationInvitations.table),
+  const router = new SchemaRouter(OrganizationInvitations, invitations, {
+    disabled: {
+      post: true,
+      patchById: true,
+    },
   });
-
-  router.get(
-    '/',
-    koaPagination(),
-    koaGuard({ response: organizationInvitationEntityGuard.array(), status: [200] }),
-    async (ctx, next) => {
-      const { limit, offset } = ctx.pagination;
-      const [count, entities] = await invitations.findAll(limit, offset);
-
-      ctx.pagination.totalCount = count;
-      ctx.body = entities;
-      ctx.status = 200;
-      return next();
-    }
-  );
 
   originalRouter.use(router.routes());
 }
