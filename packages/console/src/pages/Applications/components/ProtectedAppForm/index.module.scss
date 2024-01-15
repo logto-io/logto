@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.fieldWrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .subdomain {
+    flex: 1;
+
+    > div {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  .domain {
+    display: flex;
+    align-items: center;
+    padding: 0 _.unit(4);
+    border: 1px solid var(--color-border);
+    height: 36px;
+    border-radius: 0 6px 6px 0;
+    border-left: none;
+    font: var(--font-body-2);
+    color: var(--color-text);
+    background-color: var(--color-specific-unselected-disabled);
+  }
+}

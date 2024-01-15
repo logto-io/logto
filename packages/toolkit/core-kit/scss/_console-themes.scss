@@ -160,6 +160,7 @@
   --color-env-tag-production: rgba(131, 218, 133, 35%);
   --color-specific-icon-bg: #f3effa;
   --color-specific-toggle-off-enable: var(--color-neutral-90);
+  --color-specific-unselected-disabled: var(--color-hover); // 8% Neutral-10
 
   // Shadows
   --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
@@ -362,6 +363,7 @@
   --color-env-tag-production: rgba(104, 190, 108, 36%);
   --color-specific-icon-bg: rgba(247, 248, 248, 12%);
   --color-specific-toggle-off-enable: var(--color-neutral-90);
+  --color-specific-unselected-disabled: var(--color-hover); // 8% Neutral-10
 
   // Shadows
   --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);

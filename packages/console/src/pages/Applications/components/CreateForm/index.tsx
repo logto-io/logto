@@ -5,7 +5,6 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -111,7 +110,15 @@ function CreateForm({
                 onChange={onChange}
               >
                 {Object.values(ApplicationType)
-                  .filter((value) => isDevFeaturesEnabled || value !== ApplicationType.Protected)
+                  // Other application types (e.g. "Protected") should not show up in the creation modal
+                  .filter((value) =>
+                    [
+                      ApplicationType.Native,
+                      ApplicationType.SPA,
+                      ApplicationType.Traditional,
+                      ApplicationType.MachineToMachine,
+                    ].includes(value)
+                  )
                   .map((type) => (
                     <Radio
                       key={type}

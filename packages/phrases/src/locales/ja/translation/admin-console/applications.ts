@@ -40,6 +40,14 @@ const applications = {
       subtitle: 'リソースに直接アクセスするアプリケーション（通常はサービス）',
       description: '例：バックエンドサービス',
     },
+    protected: {
+      /** UNTRANSLATED */
+      title: 'Protected App',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is protected by Logto',
+      /** UNTRANSLATED */
+      description: 'N/A',
+    },
     third_party: {
       /** UNTRANSLATED */
       title: 'Third-party app',

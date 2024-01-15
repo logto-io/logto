@@ -39,6 +39,14 @@ const applications = {
       subtitle: '直接与资源对话的应用程序（通常是服务）',
       description: '例如，后端服务',
     },
+    protected: {
+      /** UNTRANSLATED */
+      title: 'Protected App',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is protected by Logto',
+      /** UNTRANSLATED */
+      description: 'N/A',
+    },
     third_party: {
       /** UNTRANSLATED */
       title: 'Third-party app',
