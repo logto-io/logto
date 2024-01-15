@@ -7,6 +7,8 @@ const domain = {
   limit_to_one_domain: 'Sie können nur eine benutzerdefinierte Domain haben.',
   hostname_already_exists: 'Diese Domain existiert bereits auf unserem Server.',
   cloudflare_not_found: 'Hostname in Cloudflare nicht gefunden',
+  /** UNTRANSLATED */
+  domain_is_not_allowed: 'This domain is not allowed.',
 };
 
 export default Object.freeze(domain);

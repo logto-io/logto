@@ -6,6 +6,8 @@ const domain = {
   limit_to_one_domain: 'Sadece bir özel alan adınız olabilir.',
   hostname_already_exists: 'Bu alan adı sunucumuzda zaten mevcut.',
   cloudflare_not_found: "Cloudflare'da alan adı bulunamadı.",
+  /** UNTRANSLATED */
+  domain_is_not_allowed: 'This domain is not allowed.',
 };
 
 export default Object.freeze(domain);

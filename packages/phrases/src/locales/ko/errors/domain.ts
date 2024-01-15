@@ -6,6 +6,8 @@ const domain = {
   limit_to_one_domain: '하나의 맞춤 도메인만 사용할 수 있습니다.',
   hostname_already_exists: '이 도메인은 이미 서버에 존재합니다.',
   cloudflare_not_found: 'Cloudflare에서 호스트 이름을 찾을 수 없습니다.',
+  /** UNTRANSLATED */
+  domain_is_not_allowed: 'This domain is not allowed.',
 };
 
 export default Object.freeze(domain);

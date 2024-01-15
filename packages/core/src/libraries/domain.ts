@@ -11,6 +11,7 @@ import {
   deleteCustomHostname,
   getFallbackOrigin,
 } from '#src/utils/cloudflare/index.js';
+import { isSubdomainOf } from '#src/utils/domain.js';
 import { clearCustomDomainCache } from '#src/utils/tenant.js';
 
 export type DomainLibrary = ReturnType<typeof createDomainLibrary>;
@@ -70,6 +71,14 @@ export const createDomainLibrary = (queries: Queries) => {
   const addDomain = async (hostname: string): Promise<Domain> => {
     const { hostnameProviderConfig } = SystemContext.shared;
     assertThat(hostnameProviderConfig, 'domain.not_configured');
+
+    const { blockedDomains } = hostnameProviderConfig;
+    assertThat(
+      !(blockedDomains ?? []).some(
+        (domain) => hostname === domain || isSubdomainOf(hostname, domain)
+      ),
+      'domain.domain_is_not_allowed'
+    );
 
     const [fallbackOrigin, cloudflareData] = await Promise.all([
       getFallbackOrigin(hostnameProviderConfig),

@@ -45,6 +45,7 @@ beforeAll(() => {
   SystemContext.shared.hostnameProviderConfig = {
     zoneId: 'fake_zone_id',
     apiToken: '',
+    blockedDomains: ['blocked.com'],
   };
 });
 
@@ -69,6 +70,12 @@ describe('addDomain()', () => {
       name: mockDomainWithCloudflareData.domain,
       value: mockFallbackOrigin,
     });
+  });
+
+  it('should throw for blocked domain', async () => {
+    await expect(addDomain('hi.blocked.com')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed' })
+    );
   });
 });
 

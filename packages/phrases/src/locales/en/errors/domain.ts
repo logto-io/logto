@@ -6,6 +6,7 @@ const domain = {
   limit_to_one_domain: 'You can only have one custom domain.',
   hostname_already_exists: 'This domain already exists in our server.',
   cloudflare_not_found: 'Can not find hostname in Cloudflare',
+  domain_is_not_allowed: 'This domain is not allowed.',
 };
 
 export default Object.freeze(domain);
