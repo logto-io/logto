@@ -128,6 +128,7 @@ const identifiableEntityNames = [
   'organization',
   'organization-role',
   'organization-scope',
+  'organization-invitation',
 ];
 
 /**
