@@ -145,6 +145,7 @@ export const demoSocialGuard: Readonly<{
 export const hostnameProviderDataGuard = z.object({
   zoneId: z.string(),
   apiToken: z.string(), // Requires zone permission for "SSL and Certificates Edit"
+  blockedDomains: z.string().array().optional(), // Optional list of blocked domains
 });
 
 export type HostnameProviderData = z.infer<typeof hostnameProviderDataGuard>;

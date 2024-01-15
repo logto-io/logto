@@ -6,6 +6,8 @@ const domain = {
   limit_to_one_domain: 'カスタムドメインは1つしか持てません。',
   hostname_already_exists: 'サーバーには既にこのドメインが存在しています。',
   cloudflare_not_found: 'Cloudflare からホスト名が見つかりませんでした。',
+  /** UNTRANSLATED */
+  domain_is_not_allowed: 'This domain is not allowed.',
 };
 
 export default Object.freeze(domain);
