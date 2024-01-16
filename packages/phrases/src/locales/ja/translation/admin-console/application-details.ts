@@ -93,6 +93,21 @@ const application_details = {
     /** UNTRANSLATED */
     description:
       'Select the permissions that the third-party application requires for user authorization to access specific data types.',
+    /** UNTRANSLATED */
+    user_permissions: 'Personal user information',
+    /** UNTRANSLATED */
+    organization_permissions: 'Organization access',
+    /** UNTRANSLATED */
+    table_name: 'Grant permissions',
+    /** UNTRANSLATED */
+    field_name: 'Permission',
+    /** UNTRANSLATED */
+    field_description: 'Displayed in the consent screen',
+    /** UNTRANSLATED */
+    delete_text: 'Remove permission',
+    /** UNTRANSLATED */
+    permission_delete_confirm:
+      'This action will withdraw the permissions granted to the third-party app, preventing it from requesting user authorization for specific data types. Are you sure you want to continue?',
   },
   roles: {
     name_column: '役割',

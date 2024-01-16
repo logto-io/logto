@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+
+// Override the Table  component styles
+.permissionsModal [class*='tableContainer'] [class*='bodyTable'] tr.sectionTitleRow {
+  height: _.unit(9);
+
+  td {
+    color: var(--color-text-secondary);
+    background-color: var(--color-layer-light);
+  }
+}

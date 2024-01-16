@@ -17,6 +17,7 @@ type Props<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValue
    * The optional table name. The value must be a valid phrase singular key with plural support.
    */
   name?: AdminConsoleKey;
+  className?: string;
   rowIndexKey: TName;
   rowGroups: Array<RowGroup<TFieldValues>>;
   columns: Array<Column<TFieldValues>>;
@@ -40,6 +41,7 @@ function TemplateTable<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   name,
+  className,
   rowIndexKey,
   rowGroups,
   columns,
@@ -75,6 +77,7 @@ function TemplateTable<
         <Table
           hasBorder
           isRowHoverEffectDisabled
+          className={className}
           isLoading={isLoading}
           rowGroups={rowGroups}
           columns={columns}

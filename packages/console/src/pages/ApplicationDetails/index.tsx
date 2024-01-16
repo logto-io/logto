@@ -40,6 +40,7 @@ import GuideDrawer from './components/GuideDrawer';
 import GuideModal from './components/GuideModal';
 import MachineLogs from './components/MachineLogs';
 import MachineToMachineApplicationRoles from './components/MachineToMachineApplicationRoles';
+import Permissions from './components/Permissions';
 import RefreshTokenSettings from './components/RefreshTokenSettings';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';
@@ -286,7 +287,7 @@ function ApplicationDetails() {
                 isActive={tab === ApplicationDetailsTabs.Permissions}
                 className={styles.tabContainer}
               >
-                <div>Permissions</div>
+                <Permissions application={data} />
               </TabWrapper>
               <TabWrapper
                 isActive={tab === ApplicationDetailsTabs.Branding}
