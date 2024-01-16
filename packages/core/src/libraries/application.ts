@@ -31,11 +31,11 @@ export const createApplicationLibrary = (queries: Queries) => {
       findApplicationById,
       userConsentOrganizationScopes,
       userConsentResourceScopes,
-      useConsentUserScopes,
+      userConsentUserScopes,
     },
     applicationsRoles: { findApplicationsRolesByApplicationId },
     rolesScopes: { findRolesScopesByRoleIds },
-    organizations: { scopes: organizationScopesQuery },
+    organizations: { scopes: organizationScopesQuery, relations: organizationRelations },
     scopes: { findScopesByIdsAndResourceIndicator, findScopesByIds },
     resources: { findResourceById },
   } = queries;
@@ -60,7 +60,13 @@ export const createApplicationLibrary = (queries: Queries) => {
   const validateThirdPartyApplicationById = async (applicationId: string) => {
     const application = await findApplicationById(applicationId);
 
-    assertThat(application.isThirdParty, 'application.third_party_application_only');
+    assertThat(
+      application.isThirdParty,
+      new RequestError({
+        code: 'application.third_party_application_only',
+        status: 422,
+      })
+    );
   };
 
   // Guard that all scopes exist
@@ -125,7 +131,7 @@ export const createApplicationLibrary = (queries: Queries) => {
     if (userScopes) {
       await Promise.all(
         userScopes.map(async (userScope) =>
-          useConsentUserScopes.insert({ applicationId, userScope })
+          userConsentUserScopes.insert({ applicationId, userScope })
         )
       );
     }
@@ -156,7 +162,7 @@ export const createApplicationLibrary = (queries: Queries) => {
   };
 
   const getApplicationUserConsentScopes = async (applicationId: string) =>
-    useConsentUserScopes.findAllByApplicationId(applicationId);
+    userConsentUserScopes.findAllByApplicationId(applicationId);
 
   const deleteApplicationUserConsentScopesByTypeAndScopeId = async (
     applicationId: string,
@@ -173,7 +179,7 @@ export const createApplicationLibrary = (queries: Queries) => {
         break;
       }
       case ApplicationUserConsentScopeType.UserScopes: {
-        await useConsentUserScopes.deleteByApplicationIdAndScopeId(applicationId, scopeId);
+        await userConsentUserScopes.deleteByApplicationIdAndScopeId(applicationId, scopeId);
         break;
       }
       default: {
@@ -181,6 +187,31 @@ export const createApplicationLibrary = (queries: Queries) => {
         throw new Error(`Unexpected application user consent scope type: ${type}`);
       }
     }
+  };
+
+  const validateUserConsentOrganizationMembership = async (
+    userId: string,
+    organizationIds: string[]
+  ) => {
+    // If no organization ids, skip
+    if (organizationIds.length === 0) {
+      return;
+    }
+
+    // Assert that user is a member of all organizations
+    const userOrganizations = await organizationRelations.users.getOrganizationsByUserId(userId);
+
+    const invalidOrganizationIds = organizationIds.filter(
+      (organizationId) => !userOrganizations.some(({ id }) => id === organizationId)
+    );
+
+    assertThat(
+      invalidOrganizationIds.length === 0,
+      new RequestError({
+        code: 'organization.require_membership',
+        status: 422,
+      })
+    );
   };
 
   return {
@@ -192,5 +223,6 @@ export const createApplicationLibrary = (queries: Queries) => {
     getApplicationUserConsentResourceScopes,
     getApplicationUserConsentScopes,
     deleteApplicationUserConsentScopesByTypeAndScopeId,
+    validateUserConsentOrganizationMembership,
   };
 };

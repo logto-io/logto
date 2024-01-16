@@ -1,0 +1,96 @@
+{
+  "paths": {
+    "/api/applications/{id}/users/{userId}/consent-organizations": {
+      "get": {
+        "summary": "List all the user consented organizations of a application.",
+        "description": "List all the user consented organizations for a application by application id and user id.",
+        "responses": {
+          "200": {
+            "description": "List of organization entities granted by the user for the application.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "organizations": {
+                      "description": "A list of organization entities granted by the user for the application."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Grant a list of organization access of a user for a application.",
+        "description": "Grant a list of organization access of a user for a application by application id and user id. <br/> The user must be a member of all the organizations. <br/> Only third-party application needs to be granted access to organizations, all the other applications can request for all the organizations' access by default.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationIds": {
+                    "description": "A list of organization ids to be granted."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "All the request organizations's access are granted to the user for the application."
+          },
+          "404": {
+            "description": "The application or user is not found."
+          },
+          "422": {
+            "description": "The user is not a member of one of the organizations, or the application is not a third-party application."
+          }
+        }
+      },
+      "put": {
+        "summary": "Grant a list of organization access of a user for a application.",
+        "description": "Grant a list of organization access of a user for a application by application id and user id. <br/> The user must be a member of all the organizations. <br/> Only third-party application needs to be granted access to organizations, all the other applications can request for all the organizations' access by default.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationIds": {
+                    "description": "A list of organization ids to be granted. <br/> All the existing organizations' access will be revoked if not in the list. <br/> If the list is empty, all the organizations' access will be revoked."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "All the request organizations's access are granted to the user for the application. "
+          },
+          "404": {
+            "description": "The application or user is not found."
+          },
+          "422": {
+            "description": "The user is not a member of one of the organizations, or the application is not a third-party application."
+          }
+        }
+      }
+    },
+    "/api/applications/{id}/users/{userId}/consent-organizations/{organizationId}": {
+      "delete": {
+        "summary": "Revoke a user's access to an organization for a application.",
+        "description": "Revoke a user's access to an organization for a application by application id, user id and organization id.",
+        "responses": {
+          "204": {
+            "description": "The user's access to the organization is revoked for the application."
+          },
+          "404": {
+            "description": "The application, user or organization is not found."
+          }
+        }
+      }
+    }
+  }
+}
