@@ -30,6 +30,7 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
   ]: RouterInitArgs<T>
 ) {
   const router = new SchemaRouter(OrganizationRoles, roles, {
+    middlewares: [koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })],
     disabled: { get: true, post: true },
     errorHandler,
     searchFields: ['name'],
@@ -88,8 +89,6 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
   );
 
   router.addRelationRoutes(rolesScopes, 'scopes');
-
-  router.use(koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }));
 
   originalRouter.use(router.routes());
 }
