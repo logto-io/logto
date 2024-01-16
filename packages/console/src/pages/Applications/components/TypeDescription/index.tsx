@@ -31,7 +31,6 @@ function TypeDescription({ title, subtitle, description, type, size = 'large' }:
         <div className={styles.proTag}>
           <FeatureTag
             isVisible={!currentPlan.quota.machineToMachineLimit}
-            for="upsell"
             plan={ReservedPlanId.Pro}
           />
         </div>

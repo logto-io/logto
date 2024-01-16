@@ -70,7 +70,6 @@ function Organizations({ tab }: Props) {
       <PageMeta titleKey="organizations.page_title" />
       <div className={pageLayout.headline}>
         <CardTitle
-          isBeta
           paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
           title="organizations.title"
           subtitle="organizations.subtitle"

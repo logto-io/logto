@@ -80,15 +80,19 @@ const quota_table = {
   free_token_limit_tip: '免費發行 {{value}}M 個令牌。',
   paid_token_limit_tip:
     '免費發行 {{value}}M 個令牌。一旦我們確定價格，如果您超出{{value}}M個令牌，我們可能會加收費用。',
-  paid_quota_limit_tip: '一旦我們確定價格，我們可能會以附加功能的形式為超出配額限制的功能收費。',
-  beta_feature_tip: '在測試版階段免費使用。我們確定附加功能的價格後將開始收費。',
-  usage_based_beta_feature_tip:
-    '在測試版階段免費使用。我們確定組織基於使用情況的價格後將開始收費。',
-  beta: '測試版',
-  add_on_beta: '附加功能（測試版）',
+  paid_quota_limit_tip:
+    'Logto將為超出配額限制的功能添加費用。在我們從2024年第二季度開始收費之前，您可以免費使用它。',
+  paid_add_on_feature_tip:
+    '這是一個附加功能。在我們從2024年第二季度開始收費之前，您可以免費使用它。',
   million: '{{value, number}} 百萬',
   mau_tip: 'MAU（月活躍用戶）表示在一個結算月內與 Logto 交換過至少一個令牌的獨立用戶數量。',
   tokens_tip: 'Logto 發行的所有類型令牌，包括訪問令牌、刷新令牌等。',
+  included: '已包含 {{value, number}}',
+  included_mao: '已包含 {{value, number}} MAO',
+  extra_quota_price: '然後每月 ${{value, number}} / 每個之後',
+  per_month_each: '每月 ${{value, number}} / 每個',
+  extra_mao_price: '然後每 MAO ${{value, number}}',
+  per_month: '每月 ${{value, number}}',
 };
 
 export default Object.freeze(quota_table);

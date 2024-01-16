@@ -165,11 +165,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
             <div className={styles.standardLabel}>
               <DynamicT forKey="connectors.standard_connectors" />
               {isCloud && (
-                <FeatureTag
-                  isVisible={isStandardConnectorDisabled}
-                  for="upsell"
-                  plan={ReservedPlanId.Pro}
-                />
+                <FeatureTag isVisible={isStandardConnectorDisabled} plan={ReservedPlanId.Pro} />
               )}
             </div>
             <ConnectorRadioGroup

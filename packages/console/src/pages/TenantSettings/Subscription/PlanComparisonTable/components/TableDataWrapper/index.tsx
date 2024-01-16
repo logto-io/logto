@@ -11,19 +11,23 @@ type Props = {
   children: ReactNode;
   tip?: ReactNode;
   isLeftAligned?: boolean;
+  extraInfo?: ReactNode;
 };
 
-function TableDataWrapper({ children, tip, isLeftAligned }: Props) {
+function TableDataWrapper({ children, tip, isLeftAligned, extraInfo }: Props) {
   return (
-    <div className={classNames(styles.quotaValue, isLeftAligned && styles.leftAligned)}>
-      {children}
-      {tip && (
-        <ToggleTip content={tip}>
-          <IconButton size="small">
-            <Tip />
-          </IconButton>
-        </ToggleTip>
-      )}
+    <div>
+      <div className={classNames(styles.quotaValue, isLeftAligned && styles.leftAligned)}>
+        {children}
+        {tip && (
+          <ToggleTip content={tip}>
+            <IconButton size="small">
+              <Tip />
+            </IconButton>
+          </ToggleTip>
+        )}
+      </div>
+      {extraInfo && <div className={styles.extraInfo}>{extraInfo}</div>}
     </div>
   );
 }

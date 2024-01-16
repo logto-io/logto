@@ -81,18 +81,20 @@ const quota_table = {
   paid_token_limit_tip:
     'Kostenlos bis {{value}}M umlaufende Tokens. Wir können Gebühren hinzufügen, wenn Sie über {{value}}M Tokens hinausgehen, sobald wir die Preise finalisieren.',
   paid_quota_limit_tip:
-    'Wir können Gebühren für Funktionen hinzufügen, die Ihre Kontingentgrenze überschreiten, sobald wir die Preise finalisieren.',
-  beta_feature_tip:
-    'Während der Beta-Phase kostenfrei zu benutzen. Wir werden mit der finalen Festlegung der Zusatzkosten beginnen.',
-  usage_based_beta_feature_tip:
-    'Während der Beta-Phase kostenfrei zu benutzen. Wir werden mit der finalen Festlegung der organisationsbasierten nutzungsabhängigen Preise beginnen.',
-  beta: 'Beta',
-  add_on_beta: 'Add-on (Beta)',
+    'Logto wird Gebühren für Funktionen hinzufügen, die über Ihr Kontingent hinausgehen. Sie können es kostenlos verwenden, bis wir etwa im 2. Quartal 2024 mit der Berechnung beginnen.',
+  paid_add_on_feature_tip:
+    'Dies ist eine Zusatzfunktion. Sie können sie kostenlos verwenden, bis wir etwa im 2. Quartal 2024 mit der Berechnung beginnen.',
   million: '{{value, number}} Millionen',
   mau_tip:
     'MAU (monatlich aktive Benutzer) bedeutet die Anzahl der eindeutigen Benutzer, die in einem Abrechnungsmonat mindestens einen Token mit Logto ausgetauscht haben.',
   tokens_tip:
     'Alle Arten von Tokens, die von Logto ausgegeben wurden, einschließlich Zugriffstoken, Aktualisierungstoken, usw.',
+  included: '{{value, number}} inklusive',
+  included_mao: '{{value, number}} MAO enthalten',
+  extra_quota_price: 'Dann ${{value, number}} pro Monat / je danach',
+  per_month_each: '${{value, number}} pro Monat / je',
+  extra_mao_price: 'Dann ${{value, number}} pro MAO',
+  per_month: '${{value, number}} pro Monat',
 };
 
 export default Object.freeze(quota_table);

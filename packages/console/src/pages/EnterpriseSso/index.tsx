@@ -65,7 +65,6 @@ function EnterpriseSsoConnectors() {
   return (
     <ListPage
       title={{
-        isBeta: true,
         paywall: conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
         title: 'enterprise_sso.title',
         subtitle: 'enterprise_sso.subtitle',

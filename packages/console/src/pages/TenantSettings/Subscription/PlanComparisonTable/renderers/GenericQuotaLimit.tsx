@@ -12,6 +12,7 @@ type Props = {
   tipPhraseKey?: TFuncKey<'translation', 'admin_console.subscription.quota_table'>;
   tipInterpolation?: Record<string, unknown>;
   hasCheckmark?: boolean;
+  extraInfo?: ReactNode;
   formatter?: (quota: number) => string | ReactNode;
 };
 
@@ -20,6 +21,7 @@ function GenericQuotaLimit({
   tipPhraseKey,
   tipInterpolation,
   hasCheckmark,
+  extraInfo,
   formatter,
 }: Props) {
   if (quota === undefined) {
@@ -37,7 +39,7 @@ function GenericQuotaLimit({
 
   if (quota === null) {
     return (
-      <TableDataWrapper tip={tipContent}>
+      <TableDataWrapper tip={tipContent} extraInfo={extraInfo}>
         {hasCheckmark && <Success />}
         <DynamicT forKey="subscription.quota_table.unlimited" />
       </TableDataWrapper>
@@ -45,7 +47,7 @@ function GenericQuotaLimit({
   }
 
   return (
-    <TableDataWrapper tip={tipContent}>
+    <TableDataWrapper tip={tipContent} extraInfo={extraInfo}>
       {quota === 0 ? (
         '-'
       ) : (

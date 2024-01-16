@@ -153,7 +153,6 @@ function CreateRoleForm({ onClose }: Props) {
                         isCloud && (
                           <FeatureTag
                             isVisible={!currentPlan.quota.machineToMachineLimit}
-                            for="upsell"
                             plan={ReservedPlanId.Pro}
                             className={styles.proTag}
                           />

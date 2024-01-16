@@ -21,8 +21,6 @@ export type Props = {
   learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'>;
   isWordWrapEnabled?: boolean;
   className?: string;
-  /** If a beta tag should be shown next to the title. */
-  isBeta?: boolean;
   /**
    * If a paywall tag should be shown next to the title. The value is the plan type.
    *
@@ -41,7 +39,6 @@ function CardTitle({
   isWordWrapEnabled = false,
   learnMoreLink,
   className,
-  isBeta,
   paywall,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -50,8 +47,7 @@ function CardTitle({
     <div className={classNames(styles.container, styles[size], className)}>
       <div className={classNames(styles.title, !isWordWrapEnabled && styles.titleEllipsis)}>
         {typeof title === 'string' ? <DynamicT forKey={title} /> : title}
-        {paywall && isCloud && <FeatureTag isVisible for="upsell" plan={paywall} />}
-        {isBeta && isCloud && <FeatureTag for="beta" />}
+        {paywall && isCloud && <FeatureTag isVisible plan={paywall} />}
       </div>
       {Boolean(subtitle ?? learnMoreLink) && (
         <div className={styles.subtitle}>
