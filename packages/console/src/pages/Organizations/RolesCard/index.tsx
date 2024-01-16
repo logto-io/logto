@@ -8,12 +8,12 @@ import ActionsButton from '@/components/ActionsButton';
 import Breakable from '@/components/Breakable';
 import FormCard from '@/components/FormCard';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
+import TemplateTable, { pageSize } from '@/components/TemplateTable';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { buildUrl } from '@/utils/url';
 
 import RoleModal from '../RoleModal';
-import TemplateTable, { pageSize } from '../TemplateTable';
 
 import * as styles from './index.module.scss';
 
@@ -61,9 +61,12 @@ function RolesCard() {
         name="organizations.organization_role"
         rowIndexKey="id"
         isLoading={isLoading}
-        page={page}
-        totalCount={totalCount}
-        data={data}
+        rowGroups={[
+          {
+            key: 'data',
+            data,
+          },
+        ]}
         columns={[
           {
             title: t('general.name'),
@@ -107,7 +110,11 @@ function RolesCard() {
             ),
           },
         ]}
-        onPageChange={setPage}
+        pagination={{
+          page,
+          totalCount,
+          onChange: setPage,
+        }}
         onAdd={() => {
           setEditData(null);
           setIsModalOpen(true);
