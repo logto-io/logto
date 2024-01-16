@@ -1,14 +1,10 @@
 import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Tip from '@/assets/icons/tip.svg';
 import { newPlansBlogLink } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
-import DynamicT from '@/ds-components/DynamicT';
-import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
-import { ToggleTip } from '@/ds-components/Tip';
 import useSubscribe from '@/hooks/use-subscribe';
 
 import * as styles from './index.module.scss';
@@ -28,16 +24,7 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
   return (
     <div className={styles.container}>
       <div className={styles.billInfo}>
-        <div className={styles.price}>
-          <span>{`$${(cost / 100).toLocaleString()}`}</span>
-          {cost > 0 && (
-            <ToggleTip content={<DynamicT forKey="subscription.next_bill_tip" />}>
-              <IconButton size="small">
-                <Tip />
-              </IconButton>
-            </ToggleTip>
-          )}
-        </div>
+        <div className={styles.price}>{`$${(cost / 100).toLocaleString()}`}</div>
         <div className={styles.description}>
           <Trans
             components={{
