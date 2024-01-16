@@ -34,6 +34,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
   ] = args;
 
   const router = new SchemaRouter(Organizations, organizations, {
+    middlewares: [koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })],
     errorHandler,
     searchFields: ['name'],
     disabled: { get: true },
@@ -242,8 +243,6 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
   if (EnvSet.values.isDevFeaturesEnabled) {
     organizationInvitationRoutes(...args);
   }
-
-  router.use(koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }));
 
   // Add routes to the router
   originalRouter.use(router.routes());

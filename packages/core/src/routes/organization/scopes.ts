@@ -19,11 +19,10 @@ export default function organizationScopeRoutes<T extends AuthedRouter>(
   ]: RouterInitArgs<T>
 ) {
   const router = new SchemaRouter(OrganizationScopes, scopes, {
+    middlewares: [koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })],
     errorHandler,
     searchFields: ['name'],
   });
-
-  router.use(koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }));
 
   originalRouter.use(router.routes());
 }

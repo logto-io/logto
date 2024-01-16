@@ -3,6 +3,7 @@ import { generateStandardId } from '@logto/shared';
 import { type DeepPartial } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
+import { type MiddlewareType } from 'koa';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
@@ -50,6 +51,7 @@ type SchemaRouterConfig<Key extends string> = {
     /** Disable `DELETE /:id` route. */
     deleteById: boolean;
   };
+  middlewares?: MiddlewareType[];
   /** A custom error handler for the router before throwing the error. */
   errorHandler?: (error: unknown) => void;
   /** The fields that can be searched for the `GET /` route. */
@@ -112,6 +114,10 @@ export default class SchemaRouter<
       },
       config
     );
+
+    if (this.config.middlewares?.length) {
+      this.use(...this.config.middlewares);
+    }
 
     if (this.config.errorHandler) {
       this.use(async (_, next) => {
