@@ -1,0 +1,21 @@
+{
+  "tags": [
+    {
+      "name": "Systems",
+      "description": "Endpoints for system constants and information."
+    }
+  ],
+  "paths": {
+    "/api/systems/application": {
+      "get": {
+        "summary": "Get the application constants.",
+        "description": "Get the application constants.",
+        "responses": {
+          "200": {
+            "description": "The application constants."
+          }
+        }
+      }
+    }
+  }
+}

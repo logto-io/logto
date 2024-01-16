@@ -2,7 +2,11 @@ import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { mockApplication, mockProtectedApplication } from '#src/__mocks__/index.js';
+import {
+  mockApplication,
+  mockProtectedAppConfigProviderConfig,
+  mockProtectedApplication,
+} from '#src/__mocks__/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -55,6 +59,7 @@ const tenantContext = new MockTenant(
       syncAppConfigsToRemote,
       deleteRemoteAppConfigs,
       checkAndBuildProtectedAppData,
+      getDefaultDomain: jest.fn(async () => mockProtectedAppConfigProviderConfig.domain),
     },
   }
 );

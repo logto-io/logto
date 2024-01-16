@@ -33,6 +33,7 @@ import signInExperiencesRoutes from './sign-in-experience/index.js';
 import ssoConnectors from './sso-connector/index.js';
 import statusRoutes from './status.js';
 import swaggerRoutes from './swagger/index.js';
+import systemRoutes from './system.js';
 import type { AnonymousRouter, AuthedRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
 import verificationCodeRoutes from './verification-code.js';
@@ -71,6 +72,7 @@ const createRouters = (tenant: TenantContext) => {
   domainRoutes(managementRouter, tenant);
   organizationRoutes(managementRouter, tenant);
   ssoConnectors(managementRouter, tenant);
+  systemRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
   wellKnownRoutes(anonymousRouter, tenant);
