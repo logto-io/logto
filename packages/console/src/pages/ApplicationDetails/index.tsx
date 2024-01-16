@@ -233,9 +233,14 @@ function ApplicationDetails() {
               </>
             )}
             {isDevFeaturesEnabled && data.isThirdParty && (
-              <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
-                {t('application_details.branding.branding')}
-              </TabNavItem>
+              <>
+                <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Permissions}`}>
+                  {t('application_details.permissions.name')}
+                </TabNavItem>
+                <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
+                  {t('application_details.branding.name')}
+                </TabNavItem>
+              </>
             )}
           </TabNav>
           <TabWrapper
@@ -276,12 +281,20 @@ function ApplicationDetails() {
           )}
 
           {isDevFeaturesEnabled && data.isThirdParty && (
-            <TabWrapper
-              isActive={tab === ApplicationDetailsTabs.Branding}
-              className={styles.tabContainer}
-            >
-              <Branding application={data} />
-            </TabWrapper>
+            <>
+              <TabWrapper
+                isActive={tab === ApplicationDetailsTabs.Permissions}
+                className={styles.tabContainer}
+              >
+                <div>Permissions</div>
+              </TabWrapper>
+              <TabWrapper
+                isActive={tab === ApplicationDetailsTabs.Branding}
+                className={styles.tabContainer}
+              >
+                <Branding application={data} />
+              </TabWrapper>
+            </>
           )}
         </>
       )}

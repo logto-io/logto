@@ -62,9 +62,8 @@ const application_details = {
   application_deleted: 'Application {{name}} has been successfully deleted',
   redirect_uri_required: 'You must enter at least one redirect URI',
   branding: {
-    branding: 'Branding',
-    branding_description:
-      "Customize your application's display name and logo on the consent screen.",
+    name: 'Branding',
+    description: "Customize your application's display name and logo on the consent screen.",
     more_info: 'More info',
     more_info_description: 'Offer users more details about your application on the consent screen.',
     display_name: 'Display name',
@@ -72,6 +71,11 @@ const application_details = {
     display_logo_dark: 'Display logo (dark)',
     terms_of_use_url: 'Application terms of use URL',
     privacy_policy_url: 'Application privacy policy URL',
+  },
+  permissions: {
+    name: 'Permissions',
+    description:
+      'Select the permissions that the third-party application requires for user authorization to access specific data types.',
   },
   roles: {
     name_column: 'Role',

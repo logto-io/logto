@@ -102,8 +102,8 @@ function Branding({ application }: Props) {
         onSubmit={onSubmit}
       >
         <FormCard
-          title="application_details.branding.branding"
-          description="application_details.branding.branding_description"
+          title="application_details.branding.name"
+          description="application_details.branding.description"
         >
           <FormField title="application_details.branding.display_name">
             <TextInput {...register('displayName')} />
