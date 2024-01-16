@@ -51,6 +51,7 @@ type SchemaRouterConfig<Key extends string> = {
     /** Disable `DELETE /:id` route. */
     deleteById: boolean;
   };
+  /** Middlewares that are used before creating API routes */
   middlewares?: MiddlewareType[];
   /** A custom error handler for the router before throwing the error. */
   errorHandler?: (error: unknown) => void;
