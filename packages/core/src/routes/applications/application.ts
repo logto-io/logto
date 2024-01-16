@@ -24,7 +24,6 @@ import {
   applicationCreateGuard,
   applicationPatchGuard,
 } from './types.js';
-import { buildProtectedAppData } from './utils.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
@@ -152,8 +151,6 @@ export default function applicationRoutes<T extends AuthedRouter>(
         );
       }
 
-      // TODO LOG-7794: check and add domain to Cloudflare
-
       const application = await insertApplication({
         id: generateStandardId(),
         secret: generateStandardSecret(),
@@ -161,7 +158,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
         ...conditional(
           rest.type === ApplicationType.Protected &&
             protectedAppMetadata &&
-            buildProtectedAppData(protectedAppMetadata)
+            (await protectedApps.checkAndBuildProtectedAppData(protectedAppMetadata))
         ),
         ...rest,
       });

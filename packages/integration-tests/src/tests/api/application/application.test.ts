@@ -52,7 +52,7 @@ describe('admin console application', () => {
     const applicationName = 'test-protected-app';
     const metadata = {
       origin: 'https://example.com',
-      host: 'example.protected.app',
+      subDomain: 'example',
     };
 
     const application = await createApplication(applicationName, ApplicationType.Protected, {
@@ -63,8 +63,32 @@ describe('admin console application', () => {
     expect(application.name).toBe(applicationName);
     expect(application.type).toBe(ApplicationType.Protected);
     expect(application.protectedAppMetadata).toHaveProperty('origin', metadata.origin);
-    expect(application.protectedAppMetadata).toHaveProperty('host', metadata.host);
+    expect(application.protectedAppMetadata?.host).toContain(metadata.subDomain);
     expect(application.protectedAppMetadata).toHaveProperty('sessionDuration');
+    await deleteApplication(application.id);
+  });
+
+  it('should throw error when creating protected application with existing subdomain', async () => {
+    const applicationName = 'test-protected-app';
+    const metadata = {
+      origin: 'https://example.com',
+      subDomain: 'example',
+    };
+
+    const application = await createApplication(applicationName, ApplicationType.Protected, {
+      // @ts-expect-error the create guard has been modified
+      protectedAppMetadata: metadata,
+    });
+    await expectRejects(
+      createApplication('test-create-app', ApplicationType.Protected, {
+        // @ts-expect-error the create guard has been modified
+        protectedAppMetadata: metadata,
+      }),
+      {
+        code: 'application.protected_application_subdomain_exists',
+        statusCode: 422,
+      }
+    );
     await deleteApplication(application.id);
   });
 
@@ -105,7 +129,7 @@ describe('admin console application', () => {
   it('should update application details for protected app successfully', async () => {
     const metadata = {
       origin: 'https://example.com',
-      host: 'example.protected.app',
+      subDomain: 'example',
     };
 
     const application = await createApplication('test-update-app', ApplicationType.Protected, {

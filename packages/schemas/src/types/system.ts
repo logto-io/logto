@@ -158,6 +158,8 @@ export const protectedAppConfigProviderDataGuard = z.object({
   namespaceIdentifier: z.string(),
   /* Key prefix for protected app config */
   keyName: z.string(),
+  /* The default domain (e.g protected.app) for the protected app */
+  domain: z.string(),
   apiToken: z.string(), // Requires account permission for "KV Storage Edit"
 });
 

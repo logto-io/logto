@@ -130,6 +130,14 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
 
   const findApplicationById = buildFindEntityByIdWithPool(pool)(Applications);
 
+  const findApplicationByProtectedAppHost = async (host: string) =>
+    pool.maybeOne<Application>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.protectedAppMetadata}->>'host' = ${host}
+      and ${fields.type} = ${ApplicationType.Protected}
+    `);
+
   const insertApplication = buildInsertIntoWithPool(pool)(Applications, {
     returning: true,
   });
@@ -231,6 +239,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     findApplications,
     findTotalNumberOfApplications,
     findApplicationById,
+    findApplicationByProtectedAppHost,
     insertApplication,
     updateApplication,
     updateApplicationById,

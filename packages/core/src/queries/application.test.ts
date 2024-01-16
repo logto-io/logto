@@ -1,4 +1,4 @@
-import { Applications } from '@logto/schemas';
+import { ApplicationType, Applications } from '@logto/schemas';
 import { convertToIdentifiers, convertToPrimitiveOrSql, excludeAutoSetFields } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { snakeCase } from 'snake-case';
@@ -22,6 +22,7 @@ const { createApplicationQueries } = await import('./application.js');
 const {
   findTotalNumberOfApplications,
   findApplicationById,
+  findApplicationByProtectedAppHost,
   insertApplication,
   updateApplicationById,
   deleteApplicationById,
@@ -64,6 +65,27 @@ describe('application query', () => {
     });
 
     await findApplicationById(id);
+  });
+
+  it('findApplicationByProtectedAppHost', async () => {
+    const host = 'host.protected.app';
+    const rowData = { host };
+
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.protectedAppMetadata}->>'host' = $1
+      and ${fields.type} = $2
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([host, ApplicationType.Protected]);
+
+      return createMockQueryResult([rowData]);
+    });
+
+    await findApplicationByProtectedAppHost(host);
   });
 
   it('insertApplication', async () => {

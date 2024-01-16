@@ -45,10 +45,7 @@ export const updateProtectedAppSiteConfigs = async (
         Authorization: `Bearer ${auth.apiToken}`,
       },
       throwHttpErrors: false,
-      json: {
-        metadata: {},
-        value: JSON.stringify(value),
-      },
+      json: value,
     }
   );
 
