@@ -1,4 +1,4 @@
-import type { VerificationCodeType } from '@logto/connector-kit';
+import type { TemplateType } from '@logto/connector-kit';
 import type { Passcode, RequestVerificationCodePayload } from '@logto/schemas';
 import { Passcodes } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
@@ -11,10 +11,10 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 const { table, fields } = convertToIdentifiers(Passcodes);
 
 type FindByIdentifierAndTypeProperties = {
-  type: VerificationCodeType;
+  type: TemplateType;
 } & RequestVerificationCodePayload;
 
-const buildSqlForFindByJtiAndType = (jti: string, type: VerificationCodeType) => sql`
+const buildSqlForFindByJtiAndType = (jti: string, type: TemplateType) => sql`
   select ${sql.join(Object.values(fields), sql`, `)}
   from ${table}
   where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${fields.consumed} = false
@@ -40,10 +40,10 @@ const buildSqlForFindByIdentifierAndType = ({
 `;
 
 export const createPasscodeQueries = (pool: CommonQueryMethods) => {
-  const findUnconsumedPasscodeByJtiAndType = async (jti: string, type: VerificationCodeType) =>
+  const findUnconsumedPasscodeByJtiAndType = async (jti: string, type: TemplateType) =>
     pool.maybeOne<Passcode>(buildSqlForFindByJtiAndType(jti, type));
 
-  const findUnconsumedPasscodesByJtiAndType = async (jti: string, type: VerificationCodeType) =>
+  const findUnconsumedPasscodesByJtiAndType = async (jti: string, type: TemplateType) =>
     pool.any<Passcode>(buildSqlForFindByJtiAndType(jti, type));
 
   const findUnconsumedPasscodeByIdentifierAndType = async (

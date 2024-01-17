@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import {
   requestVerificationCodePayloadGuard,
   verifyVerificationCodePayloadGuard,
@@ -8,7 +8,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-const codeType = VerificationCodeType.Generic;
+const codeType = TemplateType.Generic;
 
 export default function verificationCodeRoutes<T extends AuthedRouter>(
   ...[router, { libraries }]: RouterInitArgs<T>

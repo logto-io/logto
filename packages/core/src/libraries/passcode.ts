@@ -1,18 +1,12 @@
-import type { EmailConnector, VerificationCodeType, SmsConnector } from '@logto/connector-kit';
-import {
-  verificationCodeTypeGuard,
-  ConnectorError,
-  ConnectorErrorCodes,
-} from '@logto/connector-kit';
+import type { TemplateType } from '@logto/connector-kit';
+import { templateTypeGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import type { Passcode } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
-import assertThat from '#src/utils/assert-that.js';
 import { ConnectorType } from '#src/utils/connectors/types.js';
-import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 export const passcodeLength = 6;
 const randomCode = customAlphabet('1234567890', passcodeLength);
@@ -33,11 +27,11 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     increasePasscodeTryCount,
     insertPasscode,
   } = queries.passcodes;
-  const { getLogtoConnectors } = connectorLibrary;
+  const { getMessageConnector } = connectorLibrary;
 
   const createPasscode = async (
     jti: string | undefined,
-    type: VerificationCodeType,
+    type: TemplateType,
     payload: { phone: string } | { email: string }
   ) => {
     // Disable existing passcodes.
@@ -68,24 +62,10 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     }
 
     const expectType = passcode.phone ? ConnectorType.Sms : ConnectorType.Email;
-    const connectors = await getLogtoConnectors();
-
-    const connector = connectors.find(
-      (connector): connector is LogtoConnector<SmsConnector | EmailConnector> =>
-        connector.type === expectType
-    );
-
-    assertThat(
-      connector,
-      new RequestError({
-        code: 'connector.not_found',
-        type: expectType,
-      })
-    );
-
+    const connector = await getMessageConnector(expectType);
     const { dbEntry, metadata, sendMessage } = connector;
 
-    const messageTypeResult = verificationCodeTypeGuard.safeParse(passcode.type);
+    const messageTypeResult = templateTypeGuard.safeParse(passcode.type);
 
     if (!messageTypeResult.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
@@ -104,7 +84,7 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
 
   const verifyPasscode = async (
     jti: string | undefined,
-    type: VerificationCodeType,
+    type: TemplateType,
     code: string,
     payload: { phone: string } | { email: string }
   ): Promise<void> => {

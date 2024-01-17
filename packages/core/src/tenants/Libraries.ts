@@ -3,6 +3,7 @@ import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js'
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
+import { OrganizationInvitationLibrary } from '#src/libraries/organization-invitation.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createProtectedAppLibrary } from '#src/libraries/protected-app.js';
@@ -32,6 +33,12 @@ export default class Libraries {
     this.connectors,
     this.ssoConnectors,
     this.cloudConnection
+  );
+
+  organizationInvitations = new OrganizationInvitationLibrary(
+    this.tenantId,
+    this.queries,
+    this.connectors
   );
 
   constructor(

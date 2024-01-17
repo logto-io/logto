@@ -11,6 +11,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorType,
+  replaceSendMessageHandlebars,
   validateConfig,
 } from '@logto/connector-kit';
 
@@ -40,7 +41,7 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
     const parameters: PublicParameters = {
       number: to,
       sign: senderName,
-      text: template.content.replaceAll('{{code}}', payload.code),
+      text: replaceSendMessageHandlebars(template.content, payload),
     };
 
     const auth = Buffer.from(`${email}:${apiKey}`).toString('base64');

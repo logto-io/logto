@@ -13,6 +13,7 @@ import {
   ConnectorType,
   validateConfig,
   parseJson,
+  replaceSendMessageHandlebars,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
@@ -49,11 +50,8 @@ const sendMessage =
           AddressType: '1',
           ToAddress: to,
           FromAlias: fromAlias,
-          Subject: template.subject,
-          HtmlBody:
-            typeof payload.code === 'string'
-              ? template.content.replaceAll('{{code}}', payload.code)
-              : template.content,
+          Subject: replaceSendMessageHandlebars(template.subject, payload),
+          HtmlBody: replaceSendMessageHandlebars(template.content, payload),
         },
         accessKeySecret
       );

@@ -46,7 +46,7 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
     );
 
     try {
-      const httpResponse = await sendSmsRequest(template.templateCode, [payload.code], to, {
+      const httpResponse = await sendSmsRequest(template.templateCode, Object.values(payload), to, {
         secretId: accessKeyId,
         secretKey: accessKeySecret,
         sdkAppId,

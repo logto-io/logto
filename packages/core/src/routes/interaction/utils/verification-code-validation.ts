@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import type {
   InteractionEvent,
   RequestVerificationCodePayload,
@@ -10,16 +10,16 @@ import type { LogContext } from '#src/middleware/koa-audit-log.js';
 
 /**
  * Refactor Needed:
- * This is a work around to map the latest interaction event type to old VerificationCodeType
+ * This is a work around to map the latest interaction event type to old TemplateType
  *  */
-const eventToVerificationCodeTypeMap: Record<InteractionEvent, VerificationCodeType> = {
-  SignIn: VerificationCodeType.SignIn,
-  Register: VerificationCodeType.Register,
-  ForgotPassword: VerificationCodeType.ForgotPassword,
+const eventToTemplateTypeMap: Record<InteractionEvent, TemplateType> = {
+  SignIn: TemplateType.SignIn,
+  Register: TemplateType.Register,
+  ForgotPassword: TemplateType.ForgotPassword,
 };
 
-const getVerificationCodeTypeByEvent = (event: InteractionEvent): VerificationCodeType =>
-  eventToVerificationCodeTypeMap[event];
+const getTemplateTypeByEvent = (event: InteractionEvent): TemplateType =>
+  eventToTemplateTypeMap[event];
 
 export const sendVerificationCodeToIdentifier = async (
   payload: RequestVerificationCodePayload & { event: InteractionEvent },
@@ -28,7 +28,7 @@ export const sendVerificationCodeToIdentifier = async (
   { createPasscode, sendPasscode }: PasscodeLibrary
 ) => {
   const { event, ...identifier } = payload;
-  const messageType = getVerificationCodeTypeByEvent(event);
+  const messageType = getTemplateTypeByEvent(event);
 
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Create`);
   log.append(identifier);
@@ -46,7 +46,7 @@ export const verifyIdentifierByVerificationCode = async (
   passcodeLibrary: PasscodeLibrary
 ) => {
   const { event, verificationCode, ...identifier } = payload;
-  const messageType = getVerificationCodeTypeByEvent(event);
+  const messageType = getTemplateTypeByEvent(event);
 
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Submit`);
   log.append(identifier);

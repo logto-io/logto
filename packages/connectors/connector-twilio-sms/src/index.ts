@@ -12,6 +12,7 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  replaceSendMessageHandlebars,
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
@@ -38,10 +39,7 @@ const sendMessage =
     const parameters: PublicParameters = {
       To: to,
       MessagingServiceSid: fromMessagingServiceSID,
-      Body:
-        typeof payload.code === 'string'
-          ? template.content.replaceAll('{{code}}', payload.code)
-          : template.content,
+      Body: replaceSendMessageHandlebars(template.content, payload),
     };
 
     try {

@@ -1,5 +1,10 @@
 import { buildRawConnector, defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
-import type { AllConnector, ConnectorPlatform } from '@logto/connector-kit';
+import type {
+  AllConnector,
+  ConnectorPlatform,
+  EmailConnector,
+  SmsConnector,
+} from '@logto/connector-kit';
 import { validateConfig, ServiceConnector, ConnectorType } from '@logto/connector-kit';
 import { type Nullable, conditional, pick, trySafe } from '@silverhand/essentials';
 
@@ -134,11 +139,43 @@ export const createConnectorLibrary = (
     });
   };
 
+  type MappedConnectorType = {
+    [ConnectorType.Email]: LogtoConnector<EmailConnector>;
+    [ConnectorType.Sms]: LogtoConnector<SmsConnector>;
+  };
+
+  const getMessageConnector = async <Type extends keyof MappedConnectorType>(
+    type: Type
+  ): Promise<MappedConnectorType[Type]> => {
+    const connectors = await getLogtoConnectors();
+    const connector = connectors.find(
+      (connector): connector is MappedConnectorType[Type] => connector.type === type
+    );
+    assertThat(
+      connector,
+      // TODO: @gao refactor RequestError and ServerError to share the same base class
+      new RequestError({
+        code: 'connector.not_found',
+        type,
+        status: 501,
+      })
+    );
+    return connector;
+  };
+
   return {
     getConnectorConfig,
     getLogtoConnectors,
     getLogtoConnectorsWellKnown,
     getLogtoConnectorById,
     getLogtoConnectorByTargetAndPlatform,
+    /**
+     * Get the connector that can send message of the given type.
+     *
+     * @param type The type of the connector to get.
+     * @returns The connector that can send message of the given type.
+     * @throws {RequestError} If no connector can send message of the given type (status 500).
+     */
+    getMessageConnector,
   };
 };
