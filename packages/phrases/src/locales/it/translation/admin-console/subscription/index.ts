@@ -15,8 +15,6 @@ const subscription = {
   plan_cycle: "Ciclo del piano: {{period}}. L'utilizzo si rinnova il {{renewDate}}.",
   next_bill: 'La tua prossima fattura',
   next_bill_hint: 'Per saperne di più sul calcolo, consulta questo <a>articolo</a>.',
-  next_bill_tip:
-    'La tua prossima fattura include il prezzo base del tuo piano per il mese successivo, oltre al costo del tuo utilizzo moltiplicato per il prezzo unitario MAU in diverse fasce.',
   manage_payment: 'Gestisci pagamento',
   overfill_quota_warning:
     "Hai raggiunto il limite del tuo contingente. Per evitare eventuali problemi, esegui l'upgrade del piano.",
