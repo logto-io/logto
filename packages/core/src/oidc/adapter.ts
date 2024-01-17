@@ -157,6 +157,7 @@ export default function postgresAdapter(
           new errors.InvalidClient(`invalid client ${id}`)
         );
 
+        // FIXME: @simeng-li Remove this check after the third-party client scope feature is released
         if (EnvSet.values.isDevFeaturesEnabled && application.isThirdParty) {
           const clientScopes = await getThirdPartyClientScopes(applications, id);
           return transpileClient(application, clientScopes);

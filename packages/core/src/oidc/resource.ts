@@ -1,6 +1,6 @@
 import { ReservedResource } from '@logto/core-kit';
 import { type Resource } from '@logto/schemas';
-import { type Nullable } from '@silverhand/essentials';
+import { trySafe, type Nullable } from '@silverhand/essentials';
 import { type KoaContextWithOIDC } from 'oidc-provider';
 import type Provider from 'oidc-provider';
 
@@ -34,7 +34,7 @@ export const findResourceScopes = async (
   libraries: Libraries,
   ctx: KoaContextWithOIDC,
   indicator: string
-): Promise<ReadonlyArray<{ name: string }>> => {
+): Promise<ReadonlyArray<{ name: string; id: string }>> => {
   if (isReservedResource(indicator)) {
     switch (indicator) {
       case ReservedResource.Organization: {
@@ -92,4 +92,73 @@ export const findResource = async (
   }
 
   return queries.resources.findResourceByIndicator(indicator);
+};
+
+export const isThirdPartyApplication = async ({ applications }: Queries, applicationId: string) => {
+  // Demo-app not exist in the database
+  const application = await trySafe(async () => applications.findApplicationById(applicationId));
+
+  return application?.isThirdParty ?? false;
+};
+
+/**
+ * Filter out the unsupported scopes for the third-party application.
+ *
+ * third-party application can only request the scopes that are enabled in the client scope metadata  @see {@link https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#clients}
+ * However, the client scope metadata does not support prefix matching and resource scopes name are not unique, so we need to filter out the resource and organization scopes specifically based on the resource indicator.
+ *
+ * Available resource scopes can be found using {@link findResourceScopes}.
+ */
+export const filterResourceScopesForTheThirdPartyApplication = async (
+  libraries: Libraries,
+  applicationId: string,
+  indicator: string,
+  scopes: ReadonlyArray<{ name: string; id: string }>
+) => {
+  const {
+    applications: {
+      getApplicationUserConsentOrganizationScopes,
+      getApplicationUserConsentResourceScopes,
+    },
+  } = libraries;
+
+  if (isReservedResource(indicator)) {
+    switch (indicator) {
+      case ReservedResource.Organization: {
+        const userConsentOrganizationScopes = await getApplicationUserConsentOrganizationScopes(
+          applicationId
+        );
+
+        // Filter out the organization scopes that are not enabled in the application
+        return scopes.filter(({ id: organizationScopeId }) =>
+          userConsentOrganizationScopes.some(
+            ({ id: consentOrganizationId }) => consentOrganizationId === organizationScopeId
+          )
+        );
+      }
+      // Return all the scopes for the reserved resources
+      default: {
+        return scopes;
+      }
+    }
+  }
+
+  // Get the API resource scopes that are enabled in the application
+  const userConsentResources = await getApplicationUserConsentResourceScopes(applicationId);
+  const userConsentResource = userConsentResources.find(
+    ({ resource }) => resource.indicator === indicator
+  );
+
+  // If the resource is not in the application enabled user consent resources, return empty array
+  if (!userConsentResource) {
+    return [];
+  }
+
+  const { scopes: userConsentResourceScopes } = userConsentResource;
+
+  return scopes.filter(({ id: resourceScopeId }) =>
+    userConsentResourceScopes.some(
+      ({ id: consentResourceScopeId }) => consentResourceScopeId === resourceScopeId
+    )
+  );
 };
