@@ -15,6 +15,8 @@ const subscription = {
   plan_cycle: 'プランサイクル: {{period}}。更新日: {{renewDate}}。',
   next_bill: '次の請求書',
   next_bill_hint: '計算方法については、次の<a>記事</a>を参照してください。',
+  next_bill_tip:
+    '次の請求書には、次の月のプランのベース価格と、各ティアのMAU単価での使用料金が含まれます。',
   manage_payment: '支払い方法の管理',
   overfill_quota_warning:
     'クォータ制限に到達しました。問題を防ぐために、プランをアップグレードしてください。',

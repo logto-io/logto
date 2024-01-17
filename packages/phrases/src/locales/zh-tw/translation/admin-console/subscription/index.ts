@@ -14,6 +14,8 @@ const subscription = {
   plan_cycle: '計劃週期：{{period}}。使用情況訂閱日期為{{renewDate}}。',
   next_bill: '您的下一個帳單',
   next_bill_hint: '要了解更多計算方法，請參閱本<a>文章</a>。',
+  next_bill_tip:
+    '即將到期的帳單包括您的計劃下個月的基本價格，以及各級別 MAU 單價乘以使用量的費用。',
   manage_payment: '管理付款',
   overfill_quota_warning: '您已達到配額限制。為防止出現問題，請升級計畫。',
   upgrade_pro: '升級專業',

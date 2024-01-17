@@ -14,6 +14,8 @@ const subscription = {
   plan_cycle: 'Plan cycle: {{period}}. Usage renews on {{renewDate}}.',
   next_bill: 'Your next bill',
   next_bill_hint: 'To learn more about the calculation, please refer to this <a>article</a>.',
+  next_bill_tip:
+    'Your upcoming bill includes the base price of your plan for the next month, as well as the cost of your usage multiplied by the MAU unit price in various tiers.',
   manage_payment: 'Manage Payment',
   overfill_quota_warning:
     'You have reached your quota limit. To prevent any issues, upgrade the plan.',

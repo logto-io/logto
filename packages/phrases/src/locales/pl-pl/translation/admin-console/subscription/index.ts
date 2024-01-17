@@ -15,6 +15,8 @@ const subscription = {
   plan_cycle: 'Cykl planu: {{period}}. Użycie odnawiane w dniu {{renewDate}}.',
   next_bill: 'Twoje następne rozliczenie',
   next_bill_hint: 'Aby dowiedzieć się więcej o obliczeniach, zapoznaj się z tym <a>artykułem</a>.',
+  next_bill_tip:
+    'Twoje nadchodzące rozliczenie zawiera cenę podstawowego planu na kolejny miesiąc oraz koszt korzystania pomnożony przez cenę jednostkową MAU w różnych poziomach.',
   manage_payment: 'Zarządzanie płatnościami',
   overfill_quota_warning:
     'Osiągnąłeś limit swojej puli. Aby uniknąć problemów, zaktualizuj swój plan.',
