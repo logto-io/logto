@@ -10,7 +10,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import ApplicationDetailsContent from './ApplicationDetailsContent';
-import GuideModal from './components/GuideModal';
+import GuideModal from './GuideModal';
 
 function ApplicationDetails() {
   const { id, guideId } = useParams();

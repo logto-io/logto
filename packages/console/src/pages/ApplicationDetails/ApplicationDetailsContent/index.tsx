@@ -27,16 +27,16 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
-import Branding from '../components/Branding';
-import EndpointsAndCredentials from '../components/EndpointsAndCredentials';
-import GuideDrawer from '../components/GuideDrawer';
-import MachineLogs from '../components/MachineLogs';
-import MachineToMachineApplicationRoles from '../components/MachineToMachineApplicationRoles';
-import Permissions from '../components/Permissions';
-import RefreshTokenSettings from '../components/RefreshTokenSettings';
-import Settings from '../components/Settings';
-import * as styles from '../index.module.scss';
-import { type ApplicationForm, applicationFormDataParser } from '../utils';
+import Branding from './Branding';
+import EndpointsAndCredentials from './EndpointsAndCredentials';
+import GuideDrawer from './GuideDrawer';
+import MachineLogs from './MachineLogs';
+import MachineToMachineApplicationRoles from './MachineToMachineApplicationRoles';
+import Permissions from './Permissions';
+import RefreshTokenSettings from './RefreshTokenSettings';
+import Settings from './Settings';
+import * as styles from './index.module.scss';
+import { type ApplicationForm, applicationFormDataParser } from './utils';
 
 type Props = {
   data: ApplicationResponse;

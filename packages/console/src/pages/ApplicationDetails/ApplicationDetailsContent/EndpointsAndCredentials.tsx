@@ -21,7 +21,7 @@ import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
 
-import * as styles from '../index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   app: Application;
