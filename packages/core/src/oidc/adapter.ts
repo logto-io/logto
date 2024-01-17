@@ -1,6 +1,12 @@
 import type { CreateApplication } from '@logto/schemas';
-import { ApplicationType, adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas';
-import { appendPath, tryThat } from '@silverhand/essentials';
+import {
+  ApplicationType,
+  OrganizationScopes,
+  Scopes,
+  adminConsoleApplicationId,
+  demoAppApplicationId,
+} from '@logto/schemas';
+import { deduplicate, appendPath, tryThat, conditional } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import { errors } from 'oidc-provider';
@@ -22,6 +28,7 @@ const transpileMetadata = (clientId: string, data: AllClientMetadata): AllClient
   }
 
   const { adminUrlSet, cloudUrlSet } = EnvSet.values;
+
   const urls = [
     ...adminUrlSet.deduplicated().map((url) => appendPath(url, '/console')),
     ...cloudUrlSet.deduplicated(),
@@ -51,12 +58,56 @@ const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
   };
 };
 
+/**
+ * Restrict third-party client scopes to the app-level enabled user consent scopes
+ *
+ * - userScopes: app-level enabled user claim scopes
+ * - resourceScopes: app-level enabled resource scopes
+ * - organizationScopes app-level enabled organization scopes
+ *
+ * @remark
+ * We use the client scope metadata to restrict the third-party client scopes, @see {@link https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#clients}
+ * Auth request will be rejected if the requested scopes are not included in the client scope metadata.
+ */
+const getThirdPartyClientScopes = async (
+  {
+    userConsentUserScopes,
+    userConsentResourceScopes,
+    userConsentOrganizationScopes,
+  }: Queries['applications'],
+  applicationId: string
+) => {
+  const [availableUserScopes, [, resourceScopes], [, organizationScopes]] = await Promise.all([
+    userConsentUserScopes.findAllByApplicationId(applicationId),
+    userConsentResourceScopes.getEntities(Scopes, {
+      applicationId,
+    }),
+    userConsentOrganizationScopes.getEntities(OrganizationScopes, {
+      applicationId,
+    }),
+  ]);
+
+  const clientScopes = [
+    'openid',
+    'offline_access',
+    ...availableUserScopes,
+    ...resourceScopes.map(({ name }) => name),
+    ...organizationScopes.map(({ name }) => name),
+  ];
+
+  // ClientScopes does not support prefix matching, so we need to include all the scopes.
+  // Resource scopes name are not unique, we need to deduplicate them.
+  // Requested resource scopes and organization scopes will be validated in resource server fetching method exclusively.
+  return deduplicate(clientScopes);
+};
+
 export default function postgresAdapter(
   envSet: EnvSet,
   queries: Queries,
   modelName: string
 ): ReturnType<AdapterFactory> {
   const {
+    applications,
     applications: { findApplicationById },
     oidcModelInstances: {
       consumeInstanceById,
@@ -72,14 +123,17 @@ export default function postgresAdapter(
     const reject = async () => {
       throw new Error('Not implemented');
     };
-    const transpileClient = ({
-      id: client_id,
-      secret: client_secret,
-      name: client_name,
-      type,
-      oidcClientMetadata,
-      customClientMetadata,
-    }: CreateApplication): AllClientMetadata => ({
+    const transpileClient = (
+      {
+        id: client_id,
+        secret: client_secret,
+        name: client_name,
+        type,
+        oidcClientMetadata,
+        customClientMetadata,
+      }: CreateApplication,
+      clientScopes?: string[]
+    ): AllClientMetadata => ({
       client_id,
       client_secret,
       client_name,
@@ -87,6 +141,8 @@ export default function postgresAdapter(
       ...transpileMetadata(client_id, snakecaseKeys(oidcClientMetadata)),
       // `node-oidc-provider` won't camelCase custom parameter keys, so we need to keep the keys camelCased
       ...customClientMetadata,
+      /* Third-party client scopes are restricted to the app-level enabled user consent scopes. @see {@link https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#clients} */
+      ...conditional(clientScopes && { scope: clientScopes.join(' ') }),
     });
 
     return {
@@ -96,9 +152,17 @@ export default function postgresAdapter(
           return buildDemoAppClientMetadata(envSet);
         }
 
-        return transpileClient(
-          await tryThat(findApplicationById(id), new errors.InvalidClient(`invalid client ${id}`))
+        const application = await tryThat(
+          findApplicationById(id),
+          new errors.InvalidClient(`invalid client ${id}`)
         );
+
+        if (EnvSet.values.isDevFeaturesEnabled && application.isThirdParty) {
+          const clientScopes = await getThirdPartyClientScopes(applications, id);
+          return transpileClient(application, clientScopes);
+        }
+
+        return transpileClient(application);
       },
       findByUserCode: reject,
       findByUid: reject,
