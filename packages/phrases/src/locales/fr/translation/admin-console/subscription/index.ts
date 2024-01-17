@@ -16,7 +16,7 @@ const subscription = {
   next_bill: 'Votre prochaine facture',
   next_bill_hint: 'Pour en savoir plus sur le calcul, veuillez vous référer à cet <a>article</a>.',
   next_bill_tip:
-    'Votre prochaine facture comprend le prix de base de votre plan pour le mois prochain, ainsi que le coût de votre utilisation multiplié par le prix unitaire MAU dans les différentes catégories.',
+    "Les prix affichés ici n'incluent pas les taxes. Le montant des taxes sera calculé en fonction des informations que vous fournissez et des exigences réglementaires locales, et sera indiqué sur vos factures.",
   manage_payment: 'Gérer le Paiement',
   overfill_quota_warning:
     'Vous avez atteint votre limite de quota. Pour éviter tout problème, passez à un plan supérieur.',

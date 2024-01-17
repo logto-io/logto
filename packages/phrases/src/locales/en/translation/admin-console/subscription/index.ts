@@ -15,7 +15,7 @@ const subscription = {
   next_bill: 'Your next bill',
   next_bill_hint: 'To learn more about the calculation, please refer to this <a>article</a>.',
   next_bill_tip:
-    'Your upcoming bill includes the base price of your plan for the next month, as well as the cost of your usage multiplied by the MAU unit price in various tiers.',
+    'The prices displayed here are tax-exclusive. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
   manage_payment: 'Manage Payment',
   overfill_quota_warning:
     'You have reached your quota limit. To prevent any issues, upgrade the plan.',

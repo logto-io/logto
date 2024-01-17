@@ -16,7 +16,7 @@ const subscription = {
   next_bill: 'Su próxima factura',
   next_bill_hint: 'Para obtener más información sobre el cálculo, consulte este <a>artículo</a>.',
   next_bill_tip:
-    'Su próxima factura incluye el precio base de su plan para el próximo mes, así como el costo de su uso multiplicado por el precio de la unidad MAU en varios niveles.',
+    'Los precios mostrados aquí no incluyen impuestos. El monto de impuestos se calculará según la información que proporcione y los requisitos regulatorios locales, y se mostrará en sus facturas.',
   manage_payment: 'Gestionar el pago',
   overfill_quota_warning:
     'Ha alcanzado el límite de su cuota. Para evitar problemas, actualice el plan.',

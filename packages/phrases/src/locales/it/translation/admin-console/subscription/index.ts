@@ -16,7 +16,7 @@ const subscription = {
   next_bill: 'La tua prossima fattura',
   next_bill_hint: 'Per saperne di più sul calcolo, consulta questo <a>articolo</a>.',
   next_bill_tip:
-    'La tua prossima fattura include il prezzo base del tuo piano per il mese successivo, oltre al costo del tuo utilizzo moltiplicato per il prezzo unitario MAU in diverse fasce.',
+    "I prezzi visualizzati qui sono esclusi di tasse. L'importo delle tasse sarà calcolato in base alle informazioni che fornite e ai requisiti normativi locali, e verrà mostrato nelle vostre fatture.",
   manage_payment: 'Gestisci pagamento',
   overfill_quota_warning:
     "Hai raggiunto il limite del tuo contingente. Per evitare eventuali problemi, esegui l'upgrade del piano.",

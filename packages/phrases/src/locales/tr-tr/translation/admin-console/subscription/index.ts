@@ -16,7 +16,7 @@ const subscription = {
   next_bill: 'Bir sonraki faturanız',
   next_bill_hint: 'Hesaplama hakkında daha fazla bilgi için lütfen bu <a>makaleye</a> başvurun.',
   next_bill_tip:
-    'Yaklaşan faturanız, bir sonraki ay için planınızın taban fiyatını ve çeşitli seviyelerde MAU birim fiyatıyla çarpılan kullanımınızın maliyetini içerir.',
+    'Burada görünen fiyatlar vergileri içermez. Vergi tutarı, sağladığınız bilgilere ve yerel düzenleyici gereksinimlere dayalı olarak hesaplanacak ve faturalarınızda gösterilecektir.',
   manage_payment: 'Ödemeleri düzenle',
   overfill_quota_warning:
     'Kota sınırınıza ulaştınız. Herhangi bir sorunu önlemek için planı yükseltin.',

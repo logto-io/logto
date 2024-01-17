@@ -15,7 +15,7 @@ const subscription = {
   next_bill: '您的下個帳單',
   next_bill_hint: '要了解有關計算的更多信息，請參閱這篇<a>文章</a>。',
   next_bill_tip:
-    '您即將到來的帳單包括下個月計劃的基本價格，以及各個層級中MAU單價乘以您使用量的成本。',
+    '這裡顯示的價格不包括稅款。稅款將根據您提供的信息和當地法規要求進行計算，並顯示在您的發票中。',
   manage_payment: '管理付款',
   overfill_quota_warning: '您已達到配額限制。請升級計劃以防止任何問題。',
   upgrade_pro: '升級到專業版',
