@@ -1,51 +1,98 @@
-import {
-  customClientMetadataDefault,
-  type ApplicationResponse,
-  type Application,
-} from '@logto/schemas';
+import { customClientMetadataDefault, type ApplicationResponse } from '@logto/schemas';
+import { type DeepPartial, cond } from '@silverhand/essentials';
 
-export type ApplicationForm = Pick<
-  ApplicationResponse,
-  'name' | 'description' | 'oidcClientMetadata' | 'customClientMetadata' | 'isAdmin'
->;
+type ProtectedAppMetadataType = ApplicationResponse['protectedAppMetadata'];
+
+export type ApplicationForm = {
+  name: ApplicationResponse['name'];
+  description?: ApplicationResponse['description'];
+  oidcClientMetadata?: ApplicationResponse['oidcClientMetadata'];
+  customClientMetadata?: ApplicationResponse['customClientMetadata'];
+  isAdmin?: ApplicationResponse['isAdmin'];
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  protectedAppMetadata?: Omit<Exclude<ProtectedAppMetadataType, null>, 'customDomains'>;
+};
 
 const mapToUriFormatArrays = (value?: string[]) =>
-  value?.filter(Boolean).map((uri) => decodeURIComponent(uri)) ?? [];
+  value?.filter(Boolean).map((uri) => decodeURIComponent(uri));
 
 const mapToUriOriginFormatArrays = (value?: string[]) =>
-  value?.filter(Boolean).map((uri) => decodeURIComponent(uri.replace(/\/*$/, ''))) ?? [];
+  value?.filter(Boolean).map((uri) => decodeURIComponent(uri.replace(/\/*$/, '')));
 
 export const applicationFormDataParser = {
   fromResponse: (data: ApplicationResponse): ApplicationForm => {
-    const { name, description, oidcClientMetadata, customClientMetadata, isAdmin } = data;
-
-    return {
+    const {
       name,
       description,
       oidcClientMetadata,
-      customClientMetadata: {
-        ...customClientMetadataDefault,
-        ...customClientMetadata,
-      },
+      customClientMetadata,
       isAdmin,
+      /** Specific metadata for protected apps */
+      protectedAppMetadata,
+    } = data;
+
+    return {
+      name,
+      ...cond(
+        !protectedAppMetadata && {
+          description,
+          oidcClientMetadata,
+          customClientMetadata: {
+            ...customClientMetadataDefault,
+            ...customClientMetadata,
+          },
+          isAdmin,
+        }
+      ),
+      ...cond(
+        protectedAppMetadata && {
+          protectedAppMetadata: {
+            ...protectedAppMetadata,
+            sessionDuration: protectedAppMetadata.sessionDuration / 3600 / 24,
+          },
+        }
+      ),
     };
   },
-  toUpdateApplicationData: (formData: ApplicationForm): Partial<Application> => {
+  toRequestPayload: (data: ApplicationForm): DeepPartial<ApplicationResponse> => {
+    const {
+      name,
+      description,
+      oidcClientMetadata,
+      customClientMetadata,
+      isAdmin,
+      protectedAppMetadata,
+    } = data;
+
     return {
-      ...formData,
-      oidcClientMetadata: {
-        ...formData.oidcClientMetadata,
-        redirectUris: mapToUriFormatArrays(formData.oidcClientMetadata.redirectUris),
-        postLogoutRedirectUris: mapToUriFormatArrays(
-          formData.oidcClientMetadata.postLogoutRedirectUris
-        ),
-      },
-      customClientMetadata: {
-        ...formData.customClientMetadata,
-        corsAllowedOrigins: mapToUriOriginFormatArrays(
-          formData.customClientMetadata.corsAllowedOrigins
-        ),
-      },
+      name,
+      ...cond(
+        !protectedAppMetadata && {
+          description,
+          oidcClientMetadata: {
+            ...oidcClientMetadata,
+            redirectUris: mapToUriFormatArrays(oidcClientMetadata?.redirectUris),
+            postLogoutRedirectUris: mapToUriFormatArrays(
+              oidcClientMetadata?.postLogoutRedirectUris
+            ),
+          },
+          customClientMetadata: {
+            ...customClientMetadata,
+            corsAllowedOrigins: mapToUriOriginFormatArrays(
+              customClientMetadata?.corsAllowedOrigins
+            ),
+          },
+          isAdmin,
+        }
+      ),
+      ...cond(
+        protectedAppMetadata && {
+          protectedAppMetadata: {
+            ...protectedAppMetadata,
+            sessionDuration: protectedAppMetadata.sessionDuration * 3600 * 24,
+          },
+        }
+      ),
     };
   },
 };

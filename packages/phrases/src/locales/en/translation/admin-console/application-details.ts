@@ -5,6 +5,12 @@ const application_details = {
   settings: 'Settings',
   settings_description:
     'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.',
+  integration: 'Integration',
+  integration_description:
+    "Deploy with Logto secure workers, powered by Cloudflare's edge network for top-tier performance and 0ms cold starts worldwide.",
+  service_configuration: 'Service configuration',
+  service_configuration_description: 'Complete the necessary configurations in your service.',
+  session: 'Session',
   endpoints_and_credentials: 'Endpoints & Credentials',
   endpoints_and_credentials_description:
     'Use the following endpoints and credentials to set up the OIDC connection in your application.',
@@ -61,6 +67,25 @@ const application_details = {
   enter_your_application_name: 'Enter your application name',
   application_deleted: 'Application {{name}} has been successfully deleted',
   redirect_uri_required: 'You must enter at least one redirect URI',
+  app_domain_protected: 'App domain protected',
+  app_domain_protected_description:
+    'Feel free to utilize your domain <domain></domain> which is consistently valid.',
+  origin_url_tip:
+    "Enter primary website address of your application, excluding any '/routes'.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
+  custom_rules: 'Custom authentication rules',
+  custom_rules_placeholder: '^/(admin|privacy)/.+$',
+  custom_rules_description:
+    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if blank.',
+  authentication_routes: 'Authentication routes',
+  custom_rules_tip:
+    "Here are two case scenarios:<ol><li>To only protect routes '/admin' and '/privacy' with authentication: ^/(admin|privacy)/.*</li><li>To exclude JPG images from authentication: ^(?!.*\\.jpg$).*$</li></ol>",
+  authentication_routes_description:
+    'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
+  implement_jwt_verification: 'Implement JWT verification',
+  implement_jwt_verification_description:
+    'Configure JWT in your service for essential security communication. Follow the <a>JWT implementation guide</a>.',
+  session_duration: 'Session duration (days)',
+  try_it: 'Try it',
   branding: {
     name: 'Branding',
     description: "Customize your application's display name and logo on the consent screen.",

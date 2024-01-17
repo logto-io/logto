@@ -6,6 +6,17 @@ const application_details = {
   settings_description:
     'Приложения используются для идентификации ваших приложений в Logto для OIDC, опыта входа, аудита и т. Д.',
   /** UNTRANSLATED */
+  integration: 'Integration',
+  /** UNTRANSLATED */
+  integration_description:
+    "Deploy with Logto secure workers, powered by Cloudflare's edge network for top-tier performance and 0ms cold starts worldwide.",
+  /** UNTRANSLATED */
+  service_configuration: 'Service configuration',
+  /** UNTRANSLATED */
+  service_configuration_description: 'Complete the necessary configurations in your service.',
+  /** UNTRANSLATED */
+  session: 'Session',
+  /** UNTRANSLATED */
   endpoints_and_credentials: 'Endpoints & Credentials',
   /** UNTRANSLATED */
   endpoints_and_credentials_description:
@@ -67,6 +78,38 @@ const application_details = {
   enter_your_application_name: 'Введите название своего приложения',
   application_deleted: 'Приложение {{name}} успешно удалено',
   redirect_uri_required: 'Вы должны ввести по крайней мере один URI перенаправления',
+  /** UNTRANSLATED */
+  app_domain_protected: 'App domain protected',
+  /** UNTRANSLATED */
+  app_domain_protected_description:
+    'Feel free to utilize your domain <domain></domain> which is consistently valid.',
+  /** UNTRANSLATED */
+  origin_url_tip:
+    "Enter primary website address of your application, excluding any '/routes'.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
+  /** UNTRANSLATED */
+  custom_rules: 'Custom authentication rules',
+  /** UNTRANSLATED */
+  custom_rules_placeholder: '^/(admin|privacy)/.+$',
+  /** UNTRANSLATED */
+  custom_rules_description:
+    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if blank.',
+  /** UNTRANSLATED */
+  authentication_routes: 'Authentication routes',
+  /** UNTRANSLATED */
+  custom_rules_tip:
+    "Here are two case scenarios:<ol><li>To only protect routes '/admin' and '/privacy' with authentication: ^/(admin|privacy)/.*</li><li>To exclude JPG images from authentication: ^(?!.*\\.jpg$).*$</li></ol>",
+  /** UNTRANSLATED */
+  authentication_routes_description:
+    'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
+  /** UNTRANSLATED */
+  implement_jwt_verification: 'Implement JWT verification',
+  /** UNTRANSLATED */
+  implement_jwt_verification_description:
+    'Configure JWT in your service for essential security communication. Follow the <a>JWT implementation guide</a>.',
+  /** UNTRANSLATED */
+  session_duration: 'Session duration (days)',
+  /** UNTRANSLATED */
+  try_it: 'Try it',
   branding: {
     /** UNTRANSLATED */
     name: 'Branding',

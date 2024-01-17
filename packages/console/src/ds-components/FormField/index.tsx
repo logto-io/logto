@@ -67,7 +67,9 @@ function FormField({
         {isRequired && <div className={styles.required}>{t('general.required')}</div>}
       </div>
       {description && descriptionPosition === 'top' && (
-        <div className={styles.description}>{descriptionPosition}</div>
+        <div className={classNames(styles.description, styles.top)}>
+          {typeof description === 'string' ? <DynamicT forKey={description} /> : description}
+        </div>
       )}
       {children}
       {description && descriptionPosition === 'bottom' && (

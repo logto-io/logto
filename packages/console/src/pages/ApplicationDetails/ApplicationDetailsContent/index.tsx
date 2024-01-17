@@ -73,7 +73,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
 
       await api
         .patch(`api/applications/${data.id}`, {
-          json: applicationFormDataParser.toUpdateApplicationData(formData),
+          json: applicationFormDataParser.toRequestPayload(formData),
         })
         .json<Application>();
       reset(formData);
@@ -185,8 +185,12 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             onSubmit={onSubmit}
           >
             <Settings data={data} />
-            <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
-            {data.type !== ApplicationType.MachineToMachine && <RefreshTokenSettings data={data} />}
+            {data.type !== ApplicationType.Protected && (
+              <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
+            )}
+            {![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(data.type) && (
+              <RefreshTokenSettings data={data} />
+            )}
           </DetailsForm>
         </FormProvider>
       </TabWrapper>

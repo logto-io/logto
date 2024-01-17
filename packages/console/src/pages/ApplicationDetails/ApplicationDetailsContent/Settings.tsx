@@ -17,6 +17,8 @@ import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
+import ProtectedAppSettings from './ProtectedAppSettings';
+
 type Props = {
   data: Application;
 };
@@ -33,12 +35,17 @@ function Settings({ data }: Props) {
   const { type: applicationType, isThirdParty } = data;
 
   const isNativeApp = applicationType === ApplicationType.Native;
+  const isProtectedApp = applicationType === ApplicationType.Protected;
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
       verify: (value) => !value || validateRedirectUrl(value, isNativeApp ? 'mobile' : 'web'),
       message: t('errors.invalid_uri_format'),
     },
   };
+
+  if (isProtectedApp) {
+    return <ProtectedAppSettings data={data} />;
+  }
 
   return (
     <FormCard
