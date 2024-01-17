@@ -9,4 +9,6 @@ describe('SMSAero SMS connector', () => {
   it('init without throwing errors', async () => {
     await expect(createConnector({ getConfig })).resolves.not.toThrow();
   });
+
+  // TODO: add test cases
 });

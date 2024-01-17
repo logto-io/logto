@@ -37,12 +37,12 @@ const {
   consumePasscode,
 } = passcodeQueries;
 
-const getLogtoConnectors = jest.fn();
+const getMessageConnector = jest.fn();
 
 const { createPasscode, sendPasscode, verifyPasscode } = createPasscodeLibrary(
   new MockQueries({ passcodes: passcodeQueries }),
   // @ts-expect-error
-  { getLogtoConnectors }
+  { getMessageConnector }
 );
 
 beforeAll(() => {
@@ -164,75 +164,22 @@ describe('sendPasscode', () => {
     );
   });
 
-  it('should throw error when email or sms connector can not be found', async () => {
-    getLogtoConnectors.mockResolvedValueOnce([
-      {
-        ...defaultConnectorMethods,
-        dbEntry: {
-          ...mockConnector,
-          id: 'id1',
-        },
-        metadata: {
-          ...mockMetadata,
-          platform: null,
-        },
-        type: ConnectorType.Email,
-        sendMessage: jest.fn(),
-        configGuard: any(),
-      },
-    ]);
-    const passcode: Passcode = {
-      tenantId: 'fake_tenant',
-      id: 'id',
-      interactionJti: 'jti',
-      phone: 'phone',
-      email: null,
-      type: TemplateType.SignIn,
-      code: '1234',
-      consumed: false,
-      tryCount: 0,
-      createdAt: Date.now(),
-    };
-    await expect(sendPasscode(passcode)).rejects.toThrowError(
-      new RequestError({
-        code: 'connector.not_found',
-        type: ConnectorType.Sms,
-      })
-    );
-  });
-
   it('should call sendPasscode with params matching', async () => {
     const sendMessage = jest.fn();
-    getLogtoConnectors.mockResolvedValueOnce([
-      {
-        ...defaultConnectorMethods,
-        configGuard: any(),
-        dbEntry: {
-          ...mockConnector,
-          id: 'id0',
-        },
-        metadata: {
-          ...mockMetadata,
-          platform: null,
-        },
-        type: ConnectorType.Sms,
-        sendMessage,
+    getMessageConnector.mockResolvedValueOnce({
+      ...defaultConnectorMethods,
+      configGuard: any(),
+      dbEntry: {
+        ...mockConnector,
+        id: 'id0',
       },
-      {
-        ...defaultConnectorMethods,
-        configGuard: any(),
-        dbEntry: {
-          ...mockConnector,
-          id: 'id1',
-        },
-        metadata: {
-          ...mockMetadata,
-          platform: null,
-        },
-        type: ConnectorType.Email,
-        sendMessage,
+      metadata: {
+        ...mockMetadata,
+        platform: null,
       },
-    ]);
+      type: ConnectorType.Sms,
+      sendMessage,
+    });
     const passcode: Passcode = {
       tenantId: 'fake_tenant',
       id: 'passcode_id',

@@ -21,7 +21,7 @@ export const makeClient = (
 export const makeEmailContent = (template: Template, payload: SendMessagePayload): EmailContent => {
   return {
     Simple: {
-      Subject: { Data: template.subject, Charset: 'utf8' },
+      Subject: { Data: replaceSendMessageHandlebars(template.subject, payload), Charset: 'utf8' },
       Body: {
         Html: {
           Data: replaceSendMessageHandlebars(template.content, payload),

@@ -78,6 +78,33 @@ describe('Maligun connector', () => {
     });
   });
 
+  it('should send email with raw data (2)', async () => {
+    nockMessages({
+      from: baseConfig.from,
+      to: 'bar@example.com',
+      subject: 'Organization invitation',
+      html: '<p>Your link is https://example.com</p>',
+      'h:Reply-To': 'baz@example.com',
+    });
+
+    getConfig.mockResolvedValue({
+      ...baseConfig,
+      deliveries: {
+        [TemplateType.OrganizationInvitation]: {
+          subject: 'Organization invitation',
+          html: '<p>Your link is {{link}}</p>',
+          replyTo: 'baz@example.com',
+        },
+      },
+    });
+
+    await connector.sendMessage({
+      to: 'bar@example.com',
+      type: TemplateType.OrganizationInvitation,
+      payload: { link: 'https://example.com', code: '123456' },
+    });
+  });
+
   it('should send email with template', async () => {
     nockMessages({
       from: 'foo@example.com',
@@ -194,7 +221,7 @@ describe('Maligun connector', () => {
           code: '123456',
         },
       })
-    ).rejects.toThrowErrorMatchingInlineSnapshot('"ConnectorError: template_not_supported"');
+    ).rejects.toThrowErrorMatchingInlineSnapshot('"ConnectorError: template_not_found"');
   });
 
   it('should throw error if mailgun returns error', async () => {

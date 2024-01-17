@@ -70,7 +70,8 @@ export const replaceSendMessageHandlebars = (
   payload: SendMessagePayload
 ): string => {
   return sendMessagePayloadKeys.reduce(
-    (accumulator, key) => accumulator.replaceAll(`{{${key}}}`, payload[key] ?? ''),
+    (accumulator, key) =>
+      accumulator.replaceAll(new RegExp(`{{\\s*${key}\\s*}}`, 'g'), payload[key] ?? ''),
     template
   );
 };

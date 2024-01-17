@@ -50,7 +50,7 @@ describe('SMTP connector', () => {
     });
   });
 
-  it('should send mail with proper subject', async () => {
+  it('should send mail with proper data', async () => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
       to: 'bar',
@@ -63,6 +63,22 @@ describe('SMTP connector', () => {
       subject: 'Logto sign-in with SMTP 234567',
       text: 'This is for sign-in purposes only. Your verification code is 234567.',
       to: 'bar',
+    });
+  });
+
+  it('should send mail with proper data (2)', async () => {
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: 'baz',
+      type: TemplateType.OrganizationInvitation,
+      payload: { code: '345678', link: 'https://example.com' },
+    });
+
+    expect(sendMail).toHaveBeenCalledWith({
+      from: '<notice@test.smtp>',
+      subject: 'Organization invitation',
+      text: 'This is for organization invitation. Your link is https://example.com.',
+      to: 'baz',
     });
   });
 });
