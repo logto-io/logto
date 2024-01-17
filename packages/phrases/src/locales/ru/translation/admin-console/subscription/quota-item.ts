@@ -135,10 +135,10 @@ const quota_item = {
     not_eligible: 'Без поддержки по электронной почте',
   },
   mfa_enabled: {
-    name: 'MFA',
-    limited: 'MFA',
-    unlimited: 'MFA',
-    not_eligible: 'Удалите свой MFA',
+    name: 'Двухфакторная аутентификация',
+    limited: 'Двухфакторная аутентификация',
+    unlimited: 'Двухфакторная аутентификация',
+    not_eligible: 'Удалите свою двухфакторную аутентификацию',
   },
   sso_enabled: {
     name: 'Единый вход для предприятий',

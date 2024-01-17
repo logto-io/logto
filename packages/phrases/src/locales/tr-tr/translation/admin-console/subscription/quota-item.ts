@@ -135,10 +135,10 @@ const quota_item = {
     not_eligible: 'E-posta bilet desteği yok',
   },
   mfa_enabled: {
-    name: 'MFA',
-    limited: 'MFA',
-    unlimited: 'MFA',
-    not_eligible: "MFA'nızı kaldırın",
+    name: 'Çok faktörlü kimlik doğrulama',
+    limited: 'Çok faktörlü kimlik doğrulama',
+    unlimited: 'Çok faktörlü kimlik doğrulama',
+    not_eligible: 'Çok faktörlü kimlik doğrulamanızı kaldırın',
   },
   sso_enabled: {
     name: 'Kurumsal SSO',

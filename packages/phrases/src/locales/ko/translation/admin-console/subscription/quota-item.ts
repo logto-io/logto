@@ -135,10 +135,10 @@ const quota_item = {
     not_eligible: '이메일 지원 티켓 없음',
   },
   mfa_enabled: {
-    name: 'MFA',
-    limited: 'MFA',
-    unlimited: 'MFA',
-    not_eligible: 'MFA를 제거하십시오',
+    name: '다중 인증',
+    limited: '다중 인증',
+    unlimited: '다중 인증',
+    not_eligible: '다중 인증 제거',
   },
   sso_enabled: {
     name: '기업 SSO',

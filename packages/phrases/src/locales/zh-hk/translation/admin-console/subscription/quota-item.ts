@@ -135,10 +135,10 @@ const quota_item = {
     not_eligible: '無電子郵件票務支援',
   },
   mfa_enabled: {
-    name: 'MFA',
-    limited: 'MFA',
-    unlimited: 'MFA',
-    not_eligible: '移除您的 MFA',
+    name: '多因素認證',
+    limited: '多因素認證',
+    unlimited: '多因素認證',
+    not_eligible: '移除您的多因素認證',
   },
   sso_enabled: {
     name: '企業SSO',

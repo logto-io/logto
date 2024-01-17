@@ -135,10 +135,10 @@ const quota_item = {
     not_eligible: 'Kein E-Mail-Ticket-Support',
   },
   mfa_enabled: {
-    name: 'MFA',
-    limited: 'MFA',
-    unlimited: 'MFA',
-    not_eligible: 'Entferne dein MFA',
+    name: 'Zwei-Faktor-Authentifizierung',
+    limited: 'Zwei-Faktor-Authentifizierung',
+    unlimited: 'Zwei-Faktor-Authentifizierung',
+    not_eligible: 'Entfernen Sie Ihre Zwei-Faktor-Authentifizierung',
   },
   sso_enabled: {
     name: 'Enterprise SSO',
