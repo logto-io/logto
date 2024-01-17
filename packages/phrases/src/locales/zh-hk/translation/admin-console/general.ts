@@ -54,6 +54,8 @@ const general = {
   demo: '演示',
   unnamed: '未命名',
   view: '查看',
+  /** UNTRANSLATED */
+  open: 'Open',
   hide: '隱藏',
   unknown_error: '未知錯誤，請稍後重試。',
   select: '選擇',

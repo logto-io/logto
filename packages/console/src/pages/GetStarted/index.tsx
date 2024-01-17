@@ -15,7 +15,7 @@ import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useApiGuideMetadata, useAppGuideMetadata } from '@/components/Guide/hooks';
 import PageMeta from '@/components/PageMeta';
 import { ConnectorsTabs } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { LinkButton } from '@/ds-components/Button';
@@ -30,6 +30,7 @@ import CreateApiForm from '../ApiResources/components/CreateForm';
 import CreateAppForm from '../Applications/components/CreateForm';
 
 import DevelopmentTenantNotification from './DevelopmentTenantNotification';
+import ProtectedAppCreationForm from './ProtectedAppCreationForm';
 import * as styles from './index.module.scss';
 
 const icons = {
@@ -112,7 +113,17 @@ function GetStarted() {
       </div>
       {isCloud && isDevTenant && <DevelopmentTenantNotification />}
       <Card className={styles.card}>
-        <div className={styles.title}>{t('get_started.develop.title')}</div>
+        <div className={styles.title}>
+          {isCloud && isDevFeaturesEnabled
+            ? t('get_started.develop.title_cloud')
+            : t('get_started.develop.title')}
+        </div>
+        {isCloud && isDevFeaturesEnabled && (
+          <>
+            <ProtectedAppCreationForm />
+            <div className={styles.subtitle}>{t('get_started.develop.subtitle_cloud')}</div>
+          </>
+        )}
         <GuideCardGroup
           ref={containerRef}
           hasCardBorder

@@ -137,7 +137,9 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
             ))}
           {!keyword && (
             <>
-              {isDevFeaturesEnabled && <ProtectedAppCard />}
+              {isDevFeaturesEnabled && (
+                <ProtectedAppCard hasLabel hasCreateButton className={styles.protectedAppCard} />
+              )}
               {(filterCategories.length > 0 ? filterCategories : allAppGuideCategories).map(
                 (category) =>
                   structuredMetadata[category].length > 0 && (

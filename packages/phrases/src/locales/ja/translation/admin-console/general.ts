@@ -54,6 +54,8 @@ const general = {
   demo: 'デモ',
   unnamed: '名前がありません',
   view: '表示',
+  /** UNTRANSLATED */
+  open: 'Open',
   hide: '非表示',
   unknown_error: '不明なエラーが発生しました。後で再試行してください。',
   select: '選択する',

@@ -1,4 +1,5 @@
-import { Theme } from '@logto/schemas';
+import { type Application, Theme } from '@logto/schemas';
+import classNames from 'classnames';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -13,7 +14,14 @@ import ProtectedAppModal from '../ProtectedAppModal';
 
 import * as styles from './index.module.scss';
 
-function ProtectedAppCard() {
+type Props = {
+  className?: string;
+  hasLabel?: boolean;
+  hasCreateButton?: boolean;
+  onCreateSuccess?: (app: Application) => void;
+};
+
+function ProtectedAppCard({ className, hasLabel, hasCreateButton, onCreateSuccess }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.protected_app' });
   const { documentationSiteUrl } = useDocumentationUrl();
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
@@ -22,8 +30,8 @@ function ProtectedAppCard() {
 
   return (
     <>
-      <div className={styles.container}>
-        <label>{t('name')}</label>
+      <div className={classNames(styles.container, className)}>
+        {hasLabel && <label>{t('name')}</label>}
         <div className={styles.card}>
           <Icon className={styles.logo} />
           <div className={styles.wrapper}>
@@ -39,18 +47,23 @@ function ProtectedAppCard() {
               </Trans>
             </div>
           </div>
-          <Button
-            title="protected_app.fast_create"
-            onClick={() => {
-              setShowCreateModal(true);
-            }}
-          />
+          {hasCreateButton && (
+            <Button
+              title="protected_app.fast_create"
+              onClick={() => {
+                setShowCreateModal(true);
+              }}
+            />
+          )}
         </div>
       </div>
       {showCreateModal && (
         <ProtectedAppModal
-          onClose={() => {
+          onClose={(app) => {
             setShowCreateModal(false);
+            if (app) {
+              onCreateSuccess?.(app);
+            }
           }}
         />
       )}

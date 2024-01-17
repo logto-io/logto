@@ -54,6 +54,8 @@ const general = {
   demo: 'Демо',
   unnamed: 'Без названия',
   view: 'Просмотр',
+  /** UNTRANSLATED */
+  open: 'Open',
   hide: 'Скрыть',
   unknown_error: 'Неизвестная ошибка, пожалуйста, попробуйте позже.',
   select: 'Выбрать',

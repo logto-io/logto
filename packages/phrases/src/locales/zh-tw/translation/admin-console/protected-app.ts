@@ -19,6 +19,9 @@ const protected_app = {
     domain_field_placeholder: 'Custom subdomain',
     /** UNTRANSLATED */
     domain_field_description:
+      'Specify the app domain that will be protected by authentication and redirected to the Origin URL. Custom domain can be added after creation.',
+    /** UNTRANSLATED */
+    domain_field_description_short:
       'Specify the app domain that will be protected by authentication and redirected to the Origin URL.',
     /** UNTRANSLATED */
     domain_field_tooltip:
@@ -28,10 +31,14 @@ const protected_app = {
     /** UNTRANSLATED */
     url_field_placeholder: 'https://',
     /** UNTRANSLATED */
+    url_field_description: 'Enter the primary website address of your application.',
+    /** UNTRANSLATED */
     url_field_tooltip:
       "Enter primary website address of your application, excluding any '/routes'. After creation, you can customize route authentication rules.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
     /** UNTRANSLATED */
     create_application: 'Create application',
+    /** UNTRANSLATED */
+    create_protected_app: 'Create and experience auth protection',
     errors: {
       /** UNTRANSLATED */
       domain_required: 'Subdomain is required',
@@ -47,6 +54,9 @@ const protected_app = {
         "Invalid Origin URL format: Use http:// or https://. Note: '/routes' is not currently supported.",
     },
   },
+  /** UNTRANSLATED */
+  success_message:
+    '🎉  App authentication successfully enabled! Explore the new protection of your website.',
 };
 
 export default Object.freeze(protected_app);

@@ -10,14 +10,18 @@ const protected_app = {
     domain_field_label: 'App domain protected',
     domain_field_placeholder: 'Custom subdomain',
     domain_field_description:
+      'Specify the app domain that will be protected by authentication and redirected to the Origin URL. Custom domain can be added after creation.',
+    domain_field_description_short:
       'Specify the app domain that will be protected by authentication and redirected to the Origin URL.',
     domain_field_tooltip:
       "You can use a 'protected.app' subdomain powered by Logto for quick testing or online access, which remains consistently valid. After creation, your custom domain name can be added.",
     url_field_label: 'Origin URL',
     url_field_placeholder: 'https://',
+    url_field_description: 'Enter the primary website address of your application.',
     url_field_tooltip:
       "Enter primary website address of your application, excluding any '/routes'. After creation, you can customize route authentication rules.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
     create_application: 'Create application',
+    create_protected_app: 'Create and experience auth protection',
     errors: {
       domain_required: 'Subdomain is required',
       domain_in_use: 'This subdomain name is already in use.',
@@ -28,6 +32,8 @@ const protected_app = {
         "Invalid Origin URL format: Use http:// or https://. Note: '/routes' is not currently supported.",
     },
   },
+  success_message:
+    '🎉  App authentication successfully enabled! Explore the new protection of your website.',
 };
 
 export default Object.freeze(protected_app);

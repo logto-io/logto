@@ -55,6 +55,8 @@ const general = {
   demo: 'Demo',
   unnamed: 'İsimsiz',
   view: 'Görünüm',
+  /** UNTRANSLATED */
+  open: 'Open',
   hide: 'Gizle',
   unknown_error: 'Bilinmeyen hata, lütfen daha sonra tekrar deneyin.',
   select: 'Seç',

@@ -4,6 +4,11 @@ const get_started = {
   subtitle: 'Logto의 가치를 빠르게 얻을 수 있는 몇 가지 방법',
   develop: {
     title: '개발: 앱을 통합하는 데 5분이면 충분합니다',
+    /** UNTRANSLATED */
+    title_cloud: 'Develop: Securely integrate your app in minutes',
+    /** UNTRANSLATED */
+    subtitle_cloud:
+      'Or take 5 minutes to integrate your app with our pre-built SDKs and tutorials.',
   },
   customize: {
     title: '사용자 정의: 훌륭한 로그인 경험 전달하기',

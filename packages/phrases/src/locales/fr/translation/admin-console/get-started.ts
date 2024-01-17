@@ -4,6 +4,11 @@ const get_started = {
   subtitle: 'Quelques choses que vous pouvez faire pour obtenir rapidement de la valeur de Logto',
   develop: {
     title: 'Développer: Prenez 5 minutes pour intégrer votre application',
+    /** UNTRANSLATED */
+    title_cloud: 'Develop: Securely integrate your app in minutes',
+    /** UNTRANSLATED */
+    subtitle_cloud:
+      'Or take 5 minutes to integrate your app with our pre-built SDKs and tutorials.',
   },
   customize: {
     title: 'Personnaliser: Offrez une excellente expérience de connexion',
