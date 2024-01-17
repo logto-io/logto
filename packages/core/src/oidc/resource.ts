@@ -162,3 +162,18 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
     )
   );
 };
+
+/**
+ * Check if the user has consented to the application for the specific organization.
+ *
+ * User will be asked to grant the organization access to the application on the consent page.
+ * User application organization grant status can be managed using management API.
+ */
+export const isOrganizationConsentedToApplication = async (
+  { applications: { userConsentOrganizations } }: Queries,
+  applicationId: string,
+  accountId: string,
+  organizationId: string
+) => {
+  return userConsentOrganizations.exists(applicationId, accountId, organizationId);
+};

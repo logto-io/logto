@@ -21,7 +21,7 @@ export const registerGrants = (oidc: Provider, envSet: EnvSet, queries: Queries)
   // Override the default `refresh_token` grant
   oidc.registerGrantType(
     GrantType.RefreshToken,
-    refreshToken.buildHandler(envSet, queries.organizations),
+    refreshToken.buildHandler(envSet, queries),
     ...parameterConfig
   );
 };

@@ -33,11 +33,16 @@ import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
 import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
-import { type EnvSet } from '#src/env-set/index.js';
-import type OrganizationQueries from '#src/queries/organization/index.js';
+import { EnvSet } from '#src/env-set/index.js';
+import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../resource.js';
+import {
+  getSharedResourceServerData,
+  isThirdPartyApplication,
+  reversedResourceAccessTokenTtl,
+  isOrganizationConsentedToApplication,
+} from '../resource.js';
 
 const {
   InvalidClient,
@@ -71,7 +76,7 @@ const requiredParameters = Object.freeze(['refresh_token'] as const) satisfies R
 /* eslint-disable @silverhand/fp/no-let, @typescript-eslint/no-non-null-assertion, @silverhand/fp/no-mutation, unicorn/no-array-method-this-argument */
 export const buildHandler: (
   envSet: EnvSet,
-  queries: OrganizationQueries
+  queries: Queries
   // eslint-disable-next-line complexity
 ) => Parameters<Provider['registerGrantType']>['1'] = (envSet, queries) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
@@ -220,12 +225,27 @@ export const buildHandler: (
   }
 
   /* === RFC 0001 === */
-  // Check membership
-  if (
-    organizationId &&
-    !(await queries.relations.users.exists(organizationId, account.accountId))
-  ) {
-    throw new AccessDenied('user is not a member of the organization');
+
+  if (organizationId) {
+    // Check membership
+    if (!(await queries.organizations.relations.users.exists(organizationId, account.accountId))) {
+      throw new AccessDenied('user is not a member of the organization');
+    }
+
+    // Check if the organization is granted (third-party application only) by the user
+    // FIXME @simeng-li: remove the `isDevFeaturesEnabled` check when the feature is enabled
+    if (
+      EnvSet.values.isDevFeaturesEnabled &&
+      (await isThirdPartyApplication(queries, client.clientId)) &&
+      !(await isOrganizationConsentedToApplication(
+        queries,
+        client.clientId,
+        account.accountId,
+        organizationId
+      ))
+    ) {
+      throw new AccessDenied('organization access is not granted to the application');
+    }
   }
   /* === End RFC 0001 === */
 
@@ -299,9 +319,10 @@ export const buildHandler: (
   if (organizationId) {
     const audience = buildOrganizationUrn(organizationId);
     /** All available scopes for the user in the organization. */
-    const availableScopes = await queries.relations.rolesUsers
+    const availableScopes = await queries.organizations.relations.rolesUsers
       .getUserScopes(organizationId, account.accountId)
       .then((scopes) => scopes.map(({ name }) => name));
+
     /** The intersection of the available scopes and the requested scopes. */
     const issuedScopes = availableScopes.filter((name) => scope.has(name)).join(' ');
 
