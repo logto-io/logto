@@ -5,6 +5,8 @@ const application = {
   invalid_third_party_application_type: '只有传统网络应用程序可以标记为第三方应用。',
   third_party_application_only: '该功能仅适用于第三方应用程序。',
   user_consent_scopes_not_found: '无效的用户同意范围。',
+  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: '需要保护的应用程序元数据。',
   /** UNTRANSLATED */
   protected_app_not_configured: 'Protected app provider is not configured.',

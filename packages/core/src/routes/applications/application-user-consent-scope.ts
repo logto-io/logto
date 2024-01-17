@@ -13,6 +13,7 @@ export default function applicationUserConsentScopeRoutes<T extends AuthedRouter
   ...[
     router,
     {
+      id: tenantId,
       queries: {
         applications: { findApplicationById },
       },
@@ -51,7 +52,7 @@ export default function applicationUserConsentScopeRoutes<T extends AuthedRouter
 
       await validateThirdPartyApplicationById(applicationId);
 
-      await validateApplicationUserConsentScopes(body);
+      await validateApplicationUserConsentScopes(body, tenantId);
 
       await assignApplicationUserConsentScopes(applicationId, body);
 
