@@ -1,6 +1,6 @@
 import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
 import type router from '@logto/cloud/routes';
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
@@ -82,7 +82,7 @@ describe('connector services route', () => {
       expect(sendMessage).toHaveBeenCalledWith(
         {
           to: '12345678901',
-          type: VerificationCodeType.Generic,
+          type: TemplateType.Generic,
           payload: {
             code: '000000',
           },
@@ -109,7 +109,7 @@ describe('connector services route', () => {
       expect(sendMessage).toHaveBeenCalledWith(
         {
           to: 'test@email.com',
-          type: VerificationCodeType.Generic,
+          type: TemplateType.Generic,
           payload: {
             code: '000000',
           },

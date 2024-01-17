@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import { Passcodes } from '@logto/schemas';
 import { convertToIdentifiers, convertToPrimitiveOrSql, excludeAutoSetFields } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
@@ -35,7 +35,7 @@ describe('passcode query', () => {
 
   it('findUnconsumedPasscodeByJtiAndType', async () => {
     const jti = 'foo';
-    const type = VerificationCodeType.SignIn;
+    const type = TemplateType.SignIn;
 
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
@@ -55,7 +55,7 @@ describe('passcode query', () => {
 
   it('findUnconsumedPasscodesByJtiAndType', async () => {
     const jti = 'foo';
-    const type = VerificationCodeType.SignIn;
+    const type = TemplateType.SignIn;
 
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
@@ -74,7 +74,7 @@ describe('passcode query', () => {
   });
 
   it('findUnconsumedPasscodeByIdentifierAndType', async () => {
-    const type = VerificationCodeType.Generic;
+    const type = TemplateType.Generic;
     const phone = '1234567890';
     const mockGenericPasscode = { ...mockPasscode, interactionJti: null, type, phone };
 
@@ -99,7 +99,7 @@ describe('passcode query', () => {
   });
 
   it('findUnconsumedPasscodesByIdentifierAndType', async () => {
-    const type = VerificationCodeType.Generic;
+    const type = TemplateType.Generic;
     const email = 'johndoe@example.com';
     const mockGenericPasscode = { ...mockPasscode, interactionJti: null, type, email };
 

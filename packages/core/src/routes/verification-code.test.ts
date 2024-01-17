@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -30,7 +30,7 @@ describe('Generic verification code flow triggered by management API', () => {
     authedRoutes: verificationCodeRoutes,
     tenantContext,
   });
-  const type = VerificationCodeType.Generic;
+  const type = TemplateType.Generic;
 
   afterEach(() => {
     jest.clearAllMocks();

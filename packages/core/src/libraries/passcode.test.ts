@@ -1,5 +1,5 @@
 import { defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
-import { ConnectorType, VerificationCodeType } from '@logto/connector-kit';
+import { ConnectorType, TemplateType } from '@logto/connector-kit';
 import { type Passcode } from '@logto/schemas';
 import { any } from 'zod';
 
@@ -67,7 +67,7 @@ afterEach(() => {
 describe('createPasscode', () => {
   it('should generate `passcodeLength` digits code for phone with valid session and insert to database', async () => {
     const phone = '13000000000';
-    const passcode = await createPasscode('jti', VerificationCodeType.SignIn, {
+    const passcode = await createPasscode('jti', TemplateType.SignIn, {
       phone,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -76,7 +76,7 @@ describe('createPasscode', () => {
 
   it('should generate `passcodeLength` digits code for email with valid session and insert to database', async () => {
     const email = 'jony@example.com';
-    const passcode = await createPasscode('jti', VerificationCodeType.SignIn, {
+    const passcode = await createPasscode('jti', TemplateType.SignIn, {
       email,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -85,7 +85,7 @@ describe('createPasscode', () => {
 
   it('should generate `passcodeLength` digits code for phone and insert to database, without session', async () => {
     const phone = '13000000000';
-    const passcode = await createPasscode(undefined, VerificationCodeType.Generic, {
+    const passcode = await createPasscode(undefined, TemplateType.Generic, {
       phone,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -94,7 +94,7 @@ describe('createPasscode', () => {
 
   it('should generate `passcodeLength` digits code for email and insert to database, without session', async () => {
     const email = 'jony@example.com';
-    const passcode = await createPasscode(undefined, VerificationCodeType.Generic, {
+    const passcode = await createPasscode(undefined, TemplateType.Generic, {
       email,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -109,7 +109,7 @@ describe('createPasscode', () => {
         id: 'id',
         interactionJti: jti,
         code: '1234',
-        type: VerificationCodeType.SignIn,
+        type: TemplateType.SignIn,
         createdAt: Date.now(),
         phone: '',
         email,
@@ -117,7 +117,7 @@ describe('createPasscode', () => {
         tryCount: 0,
       },
     ]);
-    await createPasscode(jti, VerificationCodeType.SignIn, {
+    await createPasscode(jti, TemplateType.SignIn, {
       email,
     });
     expect(deletePasscodesByIds).toHaveBeenCalledWith(['id']);
@@ -130,7 +130,7 @@ describe('createPasscode', () => {
         id: 'id',
         interactionJti: null,
         code: '123456',
-        type: VerificationCodeType.Generic,
+        type: TemplateType.Generic,
         createdAt: Date.now(),
         phone,
         email: null,
@@ -138,7 +138,7 @@ describe('createPasscode', () => {
         tryCount: 0,
       },
     ]);
-    await createPasscode(undefined, VerificationCodeType.Generic, {
+    await createPasscode(undefined, TemplateType.Generic, {
       phone,
     });
     expect(deletePasscodesByIds).toHaveBeenCalledWith(['id']);
@@ -153,7 +153,7 @@ describe('sendPasscode', () => {
       interactionJti: 'jti',
       phone: null,
       email: null,
-      type: VerificationCodeType.SignIn,
+      type: TemplateType.SignIn,
       code: '1234',
       consumed: false,
       tryCount: 0,
@@ -187,7 +187,7 @@ describe('sendPasscode', () => {
       interactionJti: 'jti',
       phone: 'phone',
       email: null,
-      type: VerificationCodeType.SignIn,
+      type: TemplateType.SignIn,
       code: '1234',
       consumed: false,
       tryCount: 0,
@@ -239,7 +239,7 @@ describe('sendPasscode', () => {
       interactionJti: 'jti',
       phone: 'phone',
       email: null,
-      type: VerificationCodeType.SignIn,
+      type: TemplateType.SignIn,
       code: '1234',
       consumed: false,
       tryCount: 0,
@@ -263,7 +263,7 @@ describe('verifyPasscode', () => {
     interactionJti: 'jti',
     phone: 'phone',
     email: null,
-    type: VerificationCodeType.SignIn,
+    type: TemplateType.SignIn,
     code: '1234',
     consumed: false,
     tryCount: 0,
@@ -286,7 +286,7 @@ describe('verifyPasscode', () => {
   it('should mark as consumed on successful verification without jti', async () => {
     const passcodeWithoutJti = {
       ...passcode,
-      type: VerificationCodeType.Generic,
+      type: TemplateType.Generic,
       interactionJti: null,
     };
     findUnconsumedPasscodeByIdentifierAndType.mockResolvedValue(passcodeWithoutJti);

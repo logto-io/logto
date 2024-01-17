@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import { InteractionEvent } from '@logto/schemas';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -15,27 +15,27 @@ const { sendVerificationCodeToIdentifier } = await import('./verification-code-v
 const sendVerificationCodeTestCase = [
   {
     payload: { email: 'email', event: InteractionEvent.SignIn },
-    createVerificationCodeParams: [VerificationCodeType.SignIn, { email: 'email' }],
+    createVerificationCodeParams: [TemplateType.SignIn, { email: 'email' }],
   },
   {
     payload: { email: 'email', event: InteractionEvent.Register },
-    createVerificationCodeParams: [VerificationCodeType.Register, { email: 'email' }],
+    createVerificationCodeParams: [TemplateType.Register, { email: 'email' }],
   },
   {
     payload: { email: 'email', event: InteractionEvent.ForgotPassword },
-    createVerificationCodeParams: [VerificationCodeType.ForgotPassword, { email: 'email' }],
+    createVerificationCodeParams: [TemplateType.ForgotPassword, { email: 'email' }],
   },
   {
     payload: { phone: 'phone', event: InteractionEvent.SignIn },
-    createVerificationCodeParams: [VerificationCodeType.SignIn, { phone: 'phone' }],
+    createVerificationCodeParams: [TemplateType.SignIn, { phone: 'phone' }],
   },
   {
     payload: { phone: 'phone', event: InteractionEvent.Register },
-    createVerificationCodeParams: [VerificationCodeType.Register, { phone: 'phone' }],
+    createVerificationCodeParams: [TemplateType.Register, { phone: 'phone' }],
   },
   {
     payload: { phone: 'phone', event: InteractionEvent.ForgotPassword },
-    createVerificationCodeParams: [VerificationCodeType.ForgotPassword, { phone: 'phone' }],
+    createVerificationCodeParams: [TemplateType.ForgotPassword, { phone: 'phone' }],
   },
 ];
 

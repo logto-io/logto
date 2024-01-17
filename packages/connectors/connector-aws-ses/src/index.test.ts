@@ -1,5 +1,5 @@
 import { SESv2Client } from '@aws-sdk/client-sesv2';
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 
 import createConnector from './index.js';
 import { mockedConfig } from './mock.js';
@@ -26,7 +26,7 @@ describe('sendMessage()', () => {
     const { emailAddress } = mockedConfig;
     await connector.sendMessage({
       to: toMail,
-      type: VerificationCodeType.SignIn,
+      type: TemplateType.SignIn,
       payload: { code: '1234' },
     });
     const toExpected = [toMail];

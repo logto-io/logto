@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 
 import { mailgunConfigGuard } from './types.js';
 
@@ -9,21 +9,21 @@ describe('Mailgun config guard', () => {
       apiKey: 'key',
       from: 'from',
       deliveries: {
-        [VerificationCodeType.SignIn]: {
+        [TemplateType.SignIn]: {
           html: 'html',
           subject: 'subject',
         },
-        [VerificationCodeType.Register]: {
+        [TemplateType.Register]: {
           template: 'template',
           variables: {},
           subject: 'subject',
         },
-        [VerificationCodeType.ForgotPassword]: {
+        [TemplateType.ForgotPassword]: {
           html: 'html',
           text: 'text',
           subject: 'subject',
         },
-        [VerificationCodeType.Generic]: {
+        [TemplateType.Generic]: {
           template: 'template',
           variables: {},
           subject: 'subject',
@@ -39,7 +39,7 @@ describe('Mailgun config guard', () => {
       apiKey: 'key',
       from: 'from',
       deliveries: {
-        [VerificationCodeType.SignIn]: {
+        [TemplateType.SignIn]: {
           html: 'html',
           subject: 'subject',
         },
@@ -54,7 +54,7 @@ describe('Mailgun config guard', () => {
       apiKey: 'key',
       from: 'from',
       deliveries: {
-        [VerificationCodeType.ForgotPassword]: {
+        [TemplateType.ForgotPassword]: {
           text: 'text',
           subject: 'subject',
         },
@@ -70,7 +70,7 @@ describe('Mailgun config guard', () => {
       apiKey: 'key',
       from: 'from',
       deliveries: {
-        [VerificationCodeType.ForgotPassword]: {
+        [TemplateType.ForgotPassword]: {
           html: 'html',
           subject: 'subject',
         },

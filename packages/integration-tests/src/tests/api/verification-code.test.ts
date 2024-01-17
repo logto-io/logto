@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import { ConnectorType, type RequestVerificationCodePayload } from '@logto/schemas';
 
 import { requestVerificationCode, verifyVerificationCode } from '#src/api/verification-code.js';
@@ -36,7 +36,7 @@ describe('Generic verification code through management API', () => {
 
     const { code, type, address } = await readVerificationCode();
 
-    expect(type).toBe(VerificationCodeType.Generic);
+    expect(type).toBe(TemplateType.Generic);
     expect(address).toBe(mockEmail);
     expect(code).not.toBeNull();
   });
@@ -48,7 +48,7 @@ describe('Generic verification code through management API', () => {
 
     const { code, type, phone } = await readVerificationCode();
 
-    expect(type).toBe(VerificationCodeType.Generic);
+    expect(type).toBe(TemplateType.Generic);
     expect(phone).toBe(mockPhone);
     expect(code).not.toBeNull();
   });

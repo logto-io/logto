@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 
 import createMailgunConnector from './index.js';
 import { type MailgunConfig } from './types.js';
@@ -63,7 +63,7 @@ describe('Maligun connector', () => {
     getConfig.mockResolvedValue({
       ...baseConfig,
       deliveries: {
-        [VerificationCodeType.Generic]: {
+        [TemplateType.Generic]: {
           subject: 'Verification code is {{code}}',
           html: '<p>Your verification code is {{code}}</p>',
           replyTo: 'baz@example.com',
@@ -73,7 +73,7 @@ describe('Maligun connector', () => {
 
     await connector.sendMessage({
       to: 'bar@example.com',
-      type: VerificationCodeType.Generic,
+      type: TemplateType.Generic,
       payload: { code: '123456' },
     });
   });
@@ -90,7 +90,7 @@ describe('Maligun connector', () => {
     getConfig.mockResolvedValue({
       ...baseConfig,
       deliveries: {
-        [VerificationCodeType.Generic]: {
+        [TemplateType.Generic]: {
           template: 'template',
           variables: { foo: 'bar' },
           subject: 'Verification code is {{code}}',
@@ -100,7 +100,7 @@ describe('Maligun connector', () => {
 
     await connector.sendMessage({
       to: 'bar@example.com',
-      type: VerificationCodeType.Generic,
+      type: TemplateType.Generic,
       payload: {
         code: '123456',
       },
@@ -123,7 +123,7 @@ describe('Maligun connector', () => {
       ...baseConfig,
       endpoint: 'https://api.eu.mailgun.net',
       deliveries: {
-        [VerificationCodeType.Generic]: {
+        [TemplateType.Generic]: {
           template: 'template',
           variables: { foo: 'bar' },
           subject: 'Verification code is {{code}}',
@@ -133,7 +133,7 @@ describe('Maligun connector', () => {
 
     await connector.sendMessage({
       to: 'bar@example.com',
-      type: VerificationCodeType.Generic,
+      type: TemplateType.Generic,
       payload: {
         code: '123456',
       },
@@ -152,7 +152,7 @@ describe('Maligun connector', () => {
     getConfig.mockResolvedValue({
       ...baseConfig,
       deliveries: {
-        [VerificationCodeType.Generic]: {
+        [TemplateType.Generic]: {
           template: 'template',
           variables: { foo: 'bar' },
           subject: 'Verification code is {{code}}',
@@ -162,7 +162,7 @@ describe('Maligun connector', () => {
 
     await connector.sendMessage({
       to: 'bar@example.com',
-      type: VerificationCodeType.ForgotPassword,
+      type: TemplateType.ForgotPassword,
       payload: {
         code: '123456',
       },
@@ -178,7 +178,7 @@ describe('Maligun connector', () => {
     await expect(
       connector.sendMessage({
         to: '',
-        type: VerificationCodeType.Generic,
+        type: TemplateType.Generic,
         payload: {
           code: '123456',
         },
@@ -201,7 +201,7 @@ describe('Maligun connector', () => {
     getConfig.mockResolvedValue({
       ...baseConfig,
       deliveries: {
-        [VerificationCodeType.Generic]: {
+        [TemplateType.Generic]: {
           template: 'template',
           variables: { foo: 'bar' },
           subject: 'Verification code is {{code}}',
@@ -214,7 +214,7 @@ describe('Maligun connector', () => {
     await expect(
       connector.sendMessage({
         to: '',
-        type: VerificationCodeType.Generic,
+        type: TemplateType.Generic,
         payload: {
           code: '123456',
         },
