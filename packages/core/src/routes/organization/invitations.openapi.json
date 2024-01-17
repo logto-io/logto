@@ -16,6 +16,56 @@
             "description": "A list of organization invitations, each item also contains the organization roles to be assigned to the user when they accept the invitation, and the corresponding magic link data."
           }
         }
+      },
+      "post": {
+        "summary": "Create organization invitation",
+        "description": "Create an organization invitation and optionally send it via email. The tenant should have an email connector configured if you want to send the invitation via email at this point.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skipEmail",
+            "description": "If true, the invitation will not be sent via email; otherwise, the invitation will be sent via email when it is created. If the email is failed to send, the invitation will not be created.",
+            "required": false,
+            "schema": {
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The organization invitation to create.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "inviterId": {
+                    "description": "The ID of the user who is inviting the user to join the organization."
+                  },
+                  "invitee": {
+                    "description": "The email address of the user to invite to join the organization."
+                  },
+                  "organizationId": {
+                    "description": "The ID of the organization to invite the user to join."
+                  },
+                  "expiresAt": {
+                    "description": "The epoch time in milliseconds when the invitation expires."
+                  },
+                  "organizationRoleIds": {
+                    "description": "The IDs of the organization roles to assign to the user when they accept the invitation."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The organization invitation was created successfully, and the corresponding magic link data."
+          },
+          "501": {
+            "description": "No email connector is configured for the tenant."
+          }
+        }
       }
     },
     "/api/organization-invitations/{id}": {

@@ -46,7 +46,7 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
           organizationRoleIds: z.string().array().optional(),
         }),
       response: OrganizationInvitations.guard,
-      status: [200],
+      status: [201],
     }),
     async (ctx) => {
       const { query, body } = ctx.guard;
@@ -57,6 +57,7 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
       );
 
       ctx.body = await organizationInvitations.insert(body, query.skipEmail);
+      ctx.body = 201;
     }
   );
 
