@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import ModalHeader from '@/components/Guide/ModalHeader';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import AppGuide from '../AppGuide';
+import AppGuide from '../components/AppGuide';
 
 import * as styles from './index.module.scss';
 

@@ -10,7 +10,7 @@ import { useAppGuideMetadata } from '@/components/Guide/hooks';
 import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 
-import AppGuide from '../AppGuide';
+import AppGuide from '../../components/AppGuide';
 
 import * as styles from './index.module.scss';
 
