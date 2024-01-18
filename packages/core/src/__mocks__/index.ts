@@ -11,7 +11,7 @@ import type {
   Scope,
   UsersRole,
 } from '@logto/schemas';
-import { RoleType, ApplicationType, LogtoOidcConfigKey } from '@logto/schemas';
+import { RoleType, ApplicationType, LogtoOidcConfigKey, DomainStatus } from '@logto/schemas';
 
 import { mockId } from '#src/test-utils/nanoid.js';
 
@@ -70,6 +70,20 @@ export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'>
   },
   isThirdParty: false,
   createdAt: 1_645_334_775_356,
+};
+
+export const mockCustomDomain = {
+  domain: 'mock.blog.com',
+  status: DomainStatus.PendingVerification,
+  error: null,
+  dnsRecords: [],
+  cloudflareData: {
+    id: 'cloudflare-id',
+    status: 'active',
+    ssl: {
+      status: 'active',
+    },
+  },
 };
 
 export const mockResource: Resource = {

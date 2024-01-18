@@ -1,6 +1,18 @@
 {
   "paths": {
     "/api/applications/{id}/protected-app-metadata/custom-domains": {
+      "get": {
+        "summary": "Get the list of custom domains of the protected application.",
+        "description": "Get the list of custom domains of the protected application.",
+        "responses": {
+          "200": {
+            "description": "The domain list of the protected application."
+          },
+          "400": {
+            "description": "Faild to sync the domain info from remote provider."
+          }
+        }
+      },
       "post": {
         "summary": "Add a custom domain to the protected application.",
         "description": "Add a custom domain to the protected application. You'll need to setup DNS record later.",

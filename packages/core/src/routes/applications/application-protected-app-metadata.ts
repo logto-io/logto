@@ -1,3 +1,4 @@
+import { customDomainsGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -19,7 +20,7 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
       },
       libraries: {
         applications: { validateProtectedApplicationById },
-        protectedApps: { addDomainToRemote },
+        protectedApps: { addDomainToRemote, syncAppCustomDomainStatus },
       },
     },
   ]: RouterInitArgs<T>
@@ -36,6 +37,25 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
 
     return next();
   });
+
+  router.get(
+    customDomainsPathname,
+    koaGuard({
+      params: z.object(params),
+      status: [200, 400, 404],
+      response: customDomainsGuard,
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+
+      const {
+        protectedAppMetadata: { customDomains },
+      } = await syncAppCustomDomainStatus(id);
+
+      ctx.body = customDomains ?? [];
+      return next();
+    }
+  );
 
   router.post(
     customDomainsPathname,

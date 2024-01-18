@@ -30,6 +30,13 @@ const mockDomainResponse = {
   ],
 };
 const addDomainToRemote = jest.fn(async () => mockDomainResponse);
+const syncAppCustomDomainStatus = jest.fn(async () => ({
+  ...mockProtectedApplication,
+  protectedAppMetadata: {
+    ...mockProtectedApplication.protectedAppMetadata,
+    customDomains: [mockDomainResponse],
+  },
+}));
 
 await mockIdGenerators();
 
@@ -44,7 +51,7 @@ const tenantContext = new MockTenant(
   },
   undefined,
   {
-    protectedApps: { addDomainToRemote },
+    protectedApps: { addDomainToRemote, syncAppCustomDomainStatus },
     applications: { validateProtectedApplicationById: jest.fn() },
   }
 );
@@ -58,6 +65,16 @@ describe('application protected app metadata routes', () => {
   const requester = createRequester({
     authedRoutes: applicationProtectedAppMetadataRoutes,
     tenantContext,
+  });
+
+  describe('GET /applications/:applicationId/protected-app-metadata/custom-domains', () => {
+    it('should return domain list', async () => {
+      const response = await requester.get(
+        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`
+      );
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual([mockDomainResponse]);
+    });
   });
 
   describe('POST /applications/:applicationId/protected-app-metadata/custom-domains', () => {

@@ -1,4 +1,5 @@
 import { parseJson } from '@logto/connector-kit';
+import { type CloudflareData, DomainStatus } from '@logto/schemas';
 import { type Response } from 'got';
 import { type ZodType } from 'zod';
 
@@ -32,4 +33,20 @@ export const buildHandleResponse = (handleError: (statusCode: number) => never) 
   };
 
   return handleResponse;
+};
+
+/**
+ * Parse the string response from Cloudflare API and return the domain status
+ * there are lots of status in Cloudflare API, but we only care about whether it's active or not
+ * see https://developers.cloudflare.com/api/operations/custom-hostname-for-a-zone-custom-hostname-details
+ */
+export const getDomainStatusFromCloudflareData = (data: CloudflareData): DomainStatus => {
+  switch (data.status) {
+    case 'active': {
+      return data.ssl.status === 'active' ? DomainStatus.Active : DomainStatus.PendingSsl;
+    }
+    default: {
+      return DomainStatus.PendingVerification;
+    }
+  }
 };
