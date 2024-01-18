@@ -59,6 +59,7 @@ const planQuotaTipPhraseMap: Partial<
 > = {
   mauLimit: 'mau_tip',
   tokenLimit: 'tokens_tip',
+  organizationsEnabled: 'mao_tip',
 };
 
 type Props = {

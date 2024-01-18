@@ -86,8 +86,10 @@ const quota_table = {
     '이것은 부가 기능입니다. 2024년 제2분기까지는 무료로 사용할 수 있습니다.',
   million: '{{value, number}} 백만',
   mau_tip:
-    'MAU (월간 활성 사용자)는 빌링 월에 Logto와 적어도 하나의 토큰을 교환한 고유 사용자 수를 의미합니다.',
+    'MAU (월간 활성 사용자)는 청구 주기 동안 Logto와 적어도 하나의 토큰을 교환한 고유 사용자 수를 의미합니다.',
   tokens_tip: 'Logto에서 발행한 모든 종류의 토큰, 액세스 토큰, 리프레시 토큰 등을 포함합니다.',
+  mao_tip:
+    'MAO (월간 활성 조직)는 빌링 주기 내에서 적어도 하나의 MAU (월간 활성 사용자)를 가진 고유한 조직의 수를 의미합니다.',
   included: '{{value, number}} 포함',
   included_mao: '{{value, number}} MAO 포함',
   extra_quota_price: '이후 월당 ${{value, number}} / 각각',

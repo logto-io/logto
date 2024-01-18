@@ -86,9 +86,11 @@ const quota_table = {
     "Il s'agit d'une fonctionnalité supplémentaire. Vous pouvez l'utiliser gratuitement jusqu'à ce que nous commencions à facturer vers le deuxième trimestre 2024.",
   million: '{{value, number}} million',
   mau_tip:
-    "MAU (utilisateur actif mensuel) signifie le nombre d'utilisateurs uniques qui ont échangé au moins un jeton avec Logto au cours d'un mois de facturation.",
+    "MAU (utilisateurs actifs mensuels) signifie le nombre d'utilisateurs uniques qui ont échangé au moins un jeton avec Logto au cours d'un cycle de facturation.",
   tokens_tip:
     "Tous types de jetons émis par Logto, y compris les jetons d'accès, les jetons de rafraîchissement, etc.",
+  mao_tip:
+    "MAO (Organisation active mensuelle) désigne le nombre d'organisations uniques ayant au moins un MAU (utilisateur actif mensuel) au cours d'un cycle de facturation.",
   included: '{{value, number}} inclus',
   included_mao: '{{value, number}} MAO inclus',
   extra_quota_price: 'Ensuite ${{value, number}} par mois / chacun après',
