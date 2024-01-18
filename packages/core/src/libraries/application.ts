@@ -3,6 +3,7 @@ import {
   Scopes,
   type Scope,
   ApplicationUserConsentScopeType,
+  getManagementApiResourceIndicator,
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -42,7 +43,7 @@ export const createApplicationLibrary = (queries: Queries) => {
 
   const findApplicationScopesForResourceIndicator = async (
     applicationId: string,
-    resourceId: string
+    resourceIndicator: string
   ): Promise<readonly Scope[]> => {
     const applicationsRoles = await findApplicationsRolesByApplicationId(applicationId);
     const rolesScopes = await findRolesScopesByRoleIds(
@@ -50,7 +51,7 @@ export const createApplicationLibrary = (queries: Queries) => {
     );
     const scopes = await findScopesByIdsAndResourceIndicator(
       rolesScopes.map(({ scopeId }) => scopeId),
-      resourceId
+      resourceIndicator
     );
 
     return scopes;
@@ -70,19 +71,21 @@ export const createApplicationLibrary = (queries: Queries) => {
   };
 
   // Guard that all scopes exist
-  const validateApplicationUserConsentScopes = async ({
-    organizationScopes = [],
-    resourceScopes = [],
-  }: {
-    organizationScopes?: string[];
-    resourceScopes?: string[];
-  }) => {
+  const validateApplicationUserConsentScopes = async (
+    {
+      organizationScopes = [],
+      resourceScopes = [],
+    }: {
+      organizationScopes?: string[];
+      resourceScopes?: string[];
+    },
+    tenantId: string
+  ) => {
     const [organizationScopesData, resourceScopesData] = await Promise.all([
       organizationScopesQuery.findByIds(organizationScopes),
       findScopesByIds(resourceScopes),
     ]);
 
-    // Assert that all scopes exist, return the missing ones
     const invalidOrganizationScopes = organizationScopes.filter(
       (scope) => !organizationScopesData.some(({ id }) => id === scope)
     );
@@ -91,6 +94,7 @@ export const createApplicationLibrary = (queries: Queries) => {
       (scope) => !resourceScopesData.some(({ id }) => id === scope)
     );
 
+    // Assert that all scopes exist, return the missing ones
     assertThat(
       invalidOrganizationScopes.length === 0 && invalidResourceScopes.length === 0,
       new RequestError(
@@ -100,6 +104,21 @@ export const createApplicationLibrary = (queries: Queries) => {
         },
         { invalidOrganizationScopes, invalidResourceScopes }
       )
+    );
+
+    const managementApiResourceIndicator = getManagementApiResourceIndicator(tenantId);
+
+    const managementApiScopes = await findScopesByIdsAndResourceIndicator(
+      resourceScopes,
+      managementApiResourceIndicator
+    );
+
+    assertThat(
+      managementApiScopes.length === 0,
+      new RequestError({
+        code: 'application.consent_management_api_scopes_not_allowed',
+        status: 422,
+      })
     );
   };
 

@@ -7,6 +7,8 @@ const application = {
     'Nur traditionelle Webanwendungen können als Drittanbieter-App markiert werden.',
   third_party_application_only: 'Das Feature ist nur für Drittanbieter-Anwendungen verfügbar.',
   user_consent_scopes_not_found: 'Ungültige Benutzerzustimmungsbereiche.',
+  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: 'Geschützte App-Metadaten sind erforderlich.',
   /** UNTRANSLATED */
   protected_app_not_configured: 'Protected app provider is not configured.',

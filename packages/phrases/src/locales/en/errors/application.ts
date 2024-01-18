@@ -6,6 +6,7 @@ const application = {
     'Only traditional web applications can be marked as a third-party app.',
   third_party_application_only: 'The feature is only available for third-party applications.',
   user_consent_scopes_not_found: 'Invalid user consent scopes.',
+  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: 'Protected app metadata is required.',
   protected_app_not_configured: 'Protected app provider is not configured.',
   cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',

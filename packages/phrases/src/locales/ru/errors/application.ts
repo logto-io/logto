@@ -8,6 +8,8 @@ const application = {
   third_party_application_only:
     'Эта функция доступна только для приложений сторонних разработчиков.',
   user_consent_scopes_not_found: 'Недействительные области согласия пользователя.',
+  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: 'Требуется защищенная метаданные приложения.',
   /** UNTRANSLATED */
   protected_app_not_configured: 'Protected app provider is not configured.',

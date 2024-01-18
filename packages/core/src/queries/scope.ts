@@ -122,7 +122,7 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
       `)
       : [];
 
-  const findScopesByIds = async (scopeIds: string[]) =>
+  const findScopesByIds = async (scopeIds: string[]): Promise<readonly Scope[]> =>
     scopeIds.length > 0
       ? pool.any<Scope>(sql`
         select ${sql.join(Object.values(fields), sql`, `)}

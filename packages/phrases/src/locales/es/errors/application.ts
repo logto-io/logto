@@ -7,6 +7,8 @@ const application = {
     'Solo las aplicaciones web tradicionales pueden ser marcadas como una aplicación de terceros.',
   third_party_application_only: 'La función solo está disponible para aplicaciones de terceros.',
   user_consent_scopes_not_found: 'Ámbitos de consentimiento de usuario no válidos.',
+  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: 'Se requiere metadatos de aplicación protegida.',
   /** UNTRANSLATED */
   protected_app_not_configured: 'Protected app provider is not configured.',

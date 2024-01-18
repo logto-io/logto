@@ -6,6 +6,8 @@ const application = {
     '전통적인 웹 응용 프로그램만 제 3자 앱으로 표시할 수 있습니다.',
   third_party_application_only: '해당 기능은 제 3자 응용 프로그램에만 사용할 수 있습니다.',
   user_consent_scopes_not_found: '유효하지 않은 사용자 동의 범위입니다.',
+  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: '보호된 응용 프로그램 메타데이터가 필요합니다.',
   /** UNTRANSLATED */
   protected_app_not_configured: 'Protected app provider is not configured.',

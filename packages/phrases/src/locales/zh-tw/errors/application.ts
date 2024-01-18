@@ -5,6 +5,8 @@ const application = {
   invalid_third_party_application_type: '僅傳統網路應用程式可以標記為第三方應用程式。',
   third_party_application_only: '該功能僅適用於第三方應用程式。',
   user_consent_scopes_not_found: '無效的使用者同意範圍。',
+  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: '需要保護應用程式元數據。',
   /** UNTRANSLATED */
   protected_app_not_configured: 'Protected app provider is not configured.',

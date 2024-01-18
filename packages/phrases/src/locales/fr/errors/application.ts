@@ -8,6 +8,8 @@ const application = {
   third_party_application_only:
     'La fonctionnalité est uniquement disponible pour les applications tierces.',
   user_consent_scopes_not_found: 'Portées de consentement utilisateur invalides.',
+  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: "Les métadonnées d'application protégée sont requises.",
   /** UNTRANSLATED */
   protected_app_not_configured: 'Protected app provider is not configured.',
