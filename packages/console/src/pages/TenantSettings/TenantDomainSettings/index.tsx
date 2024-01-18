@@ -1,8 +1,12 @@
 import { withAppInsights } from '@logto/app-insights/react';
+import { type Domain, DomainStatus } from '@logto/schemas';
+import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import FormField from '@/ds-components/FormField';
+import TextLink from '@/ds-components/TextLink';
+import useApi from '@/hooks/use-api';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
@@ -14,8 +18,10 @@ import DefaultDomain from './DefaultDomain';
 import * as styles from './index.module.scss';
 
 function TenantDomainSettings() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: customDomain, isLoading: isLoadingCustomDomain, mutate } = useCustomDomain(true);
   const { getDocumentationUrl } = useDocumentationUrl();
+  const api = useApi();
 
   if (isLoadingCustomDomain) {
     return <Skeleton />;
@@ -34,9 +40,37 @@ function TenantDomainSettings() {
       >
         <FormField title="domain.custom.custom_domain_field">
           {customDomain ? (
-            <CustomDomain customDomain={customDomain} onDeleteCustomDomain={mutate} />
+            <CustomDomain
+              hasExtraTipsOnDelete
+              customDomain={customDomain}
+              onDeleteCustomDomain={async () => {
+                await api.delete(`api/domains/${customDomain.id}`);
+                mutate();
+              }}
+            />
           ) : (
-            <AddDomainForm onCustomDomainAdded={mutate} />
+            <AddDomainForm
+              onSubmitCustomDomain={async (json) => {
+                const createdDomain = await api.post('api/domains', { json }).json<Domain>();
+                mutate(createdDomain);
+              }}
+            />
+          )}
+          {customDomain?.status === DomainStatus.Active && (
+            <div className={styles.notes}>
+              <Trans
+                components={{
+                  a: (
+                    <TextLink
+                      targetBlank="noopener"
+                      to={getDocumentationUrl('docs/recipes/custom-domain/use-custom-domain')}
+                    />
+                  ),
+                }}
+              >
+                {t('domain.update_endpoint_notice', { link: t('general.learn_more') })}
+              </Trans>
+            </div>
           )}
         </FormField>
       </FormCard>

@@ -68,8 +68,10 @@ const application_details = {
   application_deleted: 'Application {{name}} has been successfully deleted',
   redirect_uri_required: 'You must enter at least one redirect URI',
   app_domain_protected: 'App domain protected',
-  app_domain_protected_description:
-    'Feel free to utilize your domain <domain></domain> which is consistently valid.',
+  app_domain_protected_description_1:
+    'Feel free to use your subdomain with protected.app powered by Logto, which is permanently valid.',
+  app_domain_protected_description_2:
+    'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
   origin_url_tip:
     "Enter primary website address of your application, excluding any '/routes'.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
   custom_rules: 'Custom authentication rules',

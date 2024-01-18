@@ -2,21 +2,18 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: _.unit(5) _.unit(6);
+  gap: _.unit(6);
 
-  .domainInfo {
-    display: flex;
-    flex-direction: column;
-    gap: _.unit(1);
 
-    .domain {
-      font: var(--font-title-2);
-    }
+  .domain {
+    font: var(--font-title-2);
   }
 
   .icon {
+    width: 16px;
+    height: 16px;
     color: var(--color-text-secondary);
   }
 }

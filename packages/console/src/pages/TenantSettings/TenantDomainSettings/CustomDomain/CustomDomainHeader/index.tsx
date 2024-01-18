@@ -1,40 +1,34 @@
-import { type AdminConsoleKey } from '@logto/phrases';
-import { DomainStatus, type Domain } from '@logto/schemas';
+import { DomainStatus, type CustomDomain } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 
 import Delete from '@/assets/icons/delete.svg';
 import More from '@/assets/icons/more.svg';
+import DomainStatusTag from '@/components/DomainStatusTag';
+import OpenExternalLink from '@/components/OpenExternalLink';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
-import Tag from '@/ds-components/Tag';
-import type { Props as TagProps } from '@/ds-components/Tag';
-import useApi from '@/hooks/use-api';
+import Spacer from '@/ds-components/Spacer';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  customDomain: Domain;
-  onDeleteCustomDomain: () => void;
+  customDomain: CustomDomain;
+  hasExtraTipsOnDelete?: boolean;
+  hasOpenExternalLink?: boolean;
+  onDeleteCustomDomain: () => Promise<void>;
 };
 
-const domainStatusToTag: Record<
-  DomainStatus,
-  { title: AdminConsoleKey; status: TagProps['status'] }
-> = {
-  [DomainStatus.PendingVerification]: { title: 'domain.status.connecting', status: 'alert' },
-  [DomainStatus.PendingSsl]: { title: 'domain.status.connecting', status: 'alert' },
-  [DomainStatus.Active]: { title: 'domain.status.in_used', status: 'success' },
-  [DomainStatus.Error]: { title: 'domain.status.failed_to_connect', status: 'error' },
-};
-
-function CustomDomainHeader({ customDomain: { id, domain, status }, onDeleteCustomDomain }: Props) {
+function CustomDomainHeader({
+  customDomain: { domain, status },
+  hasExtraTipsOnDelete,
+  hasOpenExternalLink,
+  onDeleteCustomDomain,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const tag = domainStatusToTag[status];
   const { show } = useConfirmModal();
-  const api = useApi();
 
   const handleDelete = async () => {
     const [result] = await show({
@@ -48,11 +42,13 @@ function CustomDomainHeader({ customDomain: { id, domain, status }, onDeleteCust
             <Trans components={{ span: <span className={styles.strong} /> }}>
               {t('domain.custom.deletion.in_used_description', { domain })}
             </Trans>
-            <div className={styles.inUsedDeletionTip}>
-              <Trans components={{ span: <span className={styles.strong} /> }}>
-                {t('domain.custom.deletion.in_used_tip', { domain })}
-              </Trans>
-            </div>
+            {hasExtraTipsOnDelete && (
+              <div className={styles.inUsedDeletionTip}>
+                <Trans components={{ span: <span className={styles.strong} /> }}>
+                  {t('domain.custom.deletion.in_used_tip', { domain })}
+                </Trans>
+              </div>
+            )}
           </>
         );
       },
@@ -65,21 +61,20 @@ function CustomDomainHeader({ customDomain: { id, domain, status }, onDeleteCust
       return;
     }
 
-    await api.delete(`api/domains/${id}`);
+    await onDeleteCustomDomain();
     toast.success(t('domain.custom.deletion.deleted'));
-    onDeleteCustomDomain();
   };
 
   return (
     <div className={styles.header}>
-      <div className={styles.domainInfo}>
-        <CopyToClipboard className={styles.domain} value={domain} variant="text" />
-        <Tag status={tag.status} type="state" variant="plain">
-          <DynamicT forKey={tag.title} />
-        </Tag>
-      </div>
+      <div className={styles.domain}>{domain}</div>
+      <DomainStatusTag status={status} />
+      <Spacer />
+      <CopyToClipboard value={domain} variant="icon" />
+      {hasOpenExternalLink && <OpenExternalLink link={`https://${domain}`} />}
       <ActionMenu
-        buttonProps={{ icon: <More className={styles.icon} />, size: 'large' }}
+        icon={<More className={styles.icon} />}
+        iconSize="small"
         title={<DynamicT forKey="general.more_options" />}
       >
         <ActionMenuItem icon={<Delete />} type="danger" onClick={handleDelete}>

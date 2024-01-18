@@ -1,26 +1,25 @@
-import { type Domain } from '@logto/schemas';
+import { domainRegEx } from '@logto/core-kit';
+import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/ds-components/Button';
 import TextInput from '@/ds-components/TextInput';
-import useApi from '@/hooks/use-api';
 import { onKeyDownHandler } from '@/utils/a11y';
 import { trySubmitSafe } from '@/utils/form';
 
 import * as styles from './index.module.scss';
-
-const subdomainRegex = /^[\dA-Za-z][\dA-Za-z-]*[\dA-Za-z](\.[\dA-Za-z][\dA-Za-z-]*[\dA-Za-z]){2,}$/;
 
 type FormData = {
   domain: string;
 };
 
 type Props = {
-  onCustomDomainAdded: (domain: Domain) => void;
+  className?: string;
+  onSubmitCustomDomain: (data: FormData) => Promise<void>;
 };
 
-function AddDomainForm({ onCustomDomainAdded }: Props) {
+function AddDomainForm({ className, onSubmitCustomDomain }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
@@ -35,17 +34,14 @@ function AddDomainForm({ onCustomDomainAdded }: Props) {
 
   const domainInput = watch('domain');
 
-  const api = useApi();
-
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
-      const createdDomain = await api.post('api/domains', { json: formData }).json<Domain>();
-      onCustomDomainAdded(createdDomain);
+      await onSubmitCustomDomain(formData);
     })
   );
 
   return (
-    <div className={styles.addDomain}>
+    <div className={classNames(styles.addDomain, className)}>
       <TextInput
         className={styles.textInput}
         placeholder={t('domain.custom.custom_domain_placeholder')}
@@ -54,7 +50,7 @@ function AddDomainForm({ onCustomDomainAdded }: Props) {
         {...register('domain', {
           required: true,
           pattern: {
-            value: subdomainRegex,
+            value: domainRegEx,
             message: t('domain.custom.invalid_domain_format'),
           },
         })}

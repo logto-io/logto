@@ -1,7 +1,7 @@
 const domain = {
   status: {
-    connecting: '正在連接',
-    in_used: '使用中',
+    connecting: '正在連接...',
+    in_use: '使用中',
     failed_to_connect: '連接失敗',
   },
   update_endpoint_notice:

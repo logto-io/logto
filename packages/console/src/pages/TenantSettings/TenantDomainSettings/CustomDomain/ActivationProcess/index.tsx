@@ -1,4 +1,4 @@
-import { type Domain } from '@logto/schemas';
+import { type CustomDomain } from '@logto/schemas';
 
 import { customDomainSyncInterval } from '@/consts/custom-domain';
 import DynamicT from '@/ds-components/DynamicT';
@@ -9,7 +9,7 @@ import Step from './Step';
 import * as styles from './index.module.scss';
 
 type Props = {
-  customDomain: Domain;
+  customDomain: CustomDomain;
 };
 
 function ActivationProcess({ customDomain }: Props) {

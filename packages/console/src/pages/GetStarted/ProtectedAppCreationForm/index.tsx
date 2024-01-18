@@ -4,10 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
-import ExternalLinkIcon from '@/assets/icons/external-link.svg';
+import OpenExternalLink from '@/components/OpenExternalLink';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
-import IconButton from '@/ds-components/IconButton';
-import { Tooltip } from '@/ds-components/Tip';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ProtectedAppCard from '@/pages/Applications/components/ProtectedAppCard';
 import ProtectedAppForm from '@/pages/Applications/components/ProtectedAppForm';
@@ -47,25 +45,17 @@ function ProtectedAppCreationForm() {
           <div className={styles.label}>{t('protected_app.success_message')}</div>
           <div className={styles.list}>
             {data.map((app) => {
-              const host = app.protectedAppMetadata?.host;
+              const { host, customDomains } = app.protectedAppMetadata ?? {};
+              const domain = customDomains?.[0]?.domain ?? host;
               return (
-                !!host && (
+                !!domain && (
                   <div key={app.id} className={styles.app}>
                     <div className={styles.status} />
                     <Link className={styles.hostName} to={getTo(`/applications/${app.id}`)}>
-                      {host}
+                      {domain}
                     </Link>
-                    <CopyToClipboard value={host} variant="icon" />
-                    <Tooltip content={t('general.open')}>
-                      <IconButton
-                        size="small"
-                        onClick={() => {
-                          window.open(`https://${host}`, '_blank');
-                        }}
-                      >
-                        <ExternalLinkIcon />
-                      </IconButton>
-                    </Tooltip>
+                    <CopyToClipboard value={domain} variant="icon" />
+                    <OpenExternalLink link={`https://${domain}`} />
                   </div>
                 )
               );
