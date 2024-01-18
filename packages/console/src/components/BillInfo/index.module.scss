@@ -17,6 +17,8 @@
 
 .price {
   font: var(--font-title-2);
+  display: flex;
+  align-items: center;
 }
 
 .description {

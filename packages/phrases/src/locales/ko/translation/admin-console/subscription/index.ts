@@ -14,6 +14,8 @@ const subscription = {
   plan_cycle: 'Plan cycle: {{period}}. 사용량은 {{renewDate}}에 갱신됩니다.',
   next_bill: '다음 청구서',
   next_bill_hint: '계산에 대해 자세히 알아보려면 이 <a>게시물</a>을 참조하세요.',
+  next_bill_tip:
+    '여기에 표시된 가격은 세금이 포함되어 있지 않습니다. 세금은 제공하는 정보와 지역 규정 요건을 기반으로 계산되어 청구서에 표시됩니다.',
   manage_payment: '결제 관리',
   overfill_quota_warning:
     '할당량 한도에 도달했습니다. 문제를 방지하기 위해 요금제를 업그레이드하세요.',

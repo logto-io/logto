@@ -14,6 +14,8 @@ const subscription = {
   plan_cycle: 'Plan-Zyklus: {{period}}. Die Nutzung wird am {{renewDate}} erneuert.',
   next_bill: 'Ihre nächste Rechnung',
   next_bill_hint: 'Weitere Informationen zur Berechnung finden Sie in diesem <a>Artikel</a>.',
+  next_bill_tip:
+    'Die hier angezeigten Preise verstehen sich exklusive Steuern. Die Steuer wird auf Grundlage der von Ihnen bereitgestellten Informationen und Ihrer lokalen gesetzlichen Anforderungen berechnet und in Ihren Rechnungen ausgewiesen.',
   manage_payment: 'Zahlung verwalten',
   overfill_quota_warning:
     'Sie haben Ihr Quotenlimit erreicht. Um Probleme zu vermeiden, upgraden Sie den Plan.',

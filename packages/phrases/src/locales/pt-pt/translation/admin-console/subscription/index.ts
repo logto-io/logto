@@ -15,6 +15,8 @@ const subscription = {
   plan_cycle: 'Ciclo do plano: {{period}}. O uso é renovado em {{renewDate}}.',
   next_bill: 'Sua próxima fatura',
   next_bill_hint: 'Para saber mais sobre o cálculo, consulte este <a>artigo</a>.',
+  next_bill_tip:
+    'Os preços exibidos aqui não incluem impostos. O valor do imposto será calculado com base nas informações que você fornecer e nos requisitos regulatórios locais, e será mostrado nas suas faturas.',
   manage_payment: 'Gerenciar pagamento',
   overfill_quota_warning:
     'Você atingiu o limite da sua cota. Para evitar problemas, faça upgrade do plano.',

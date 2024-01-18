@@ -15,6 +15,8 @@ const subscription = {
   plan_cycle: 'Cykl planu: {{period}}. Użycie odnawiane w dniu {{renewDate}}.',
   next_bill: 'Twoje następne rozliczenie',
   next_bill_hint: 'Aby dowiedzieć się więcej o obliczeniach, zapoznaj się z tym <a>artykułem</a>.',
+  next_bill_tip:
+    'Tutaj wyświetlane ceny nie obejmują podatków. Kwota podatku będzie obliczana na podstawie dostarczonych przez Ciebie informacji oraz lokalnych wymagań regulacyjnych i będzie widoczna na Twoich fakturach.',
   manage_payment: 'Zarządzanie płatnościami',
   overfill_quota_warning:
     'Osiągnąłeś limit swojej puli. Aby uniknąć problemów, zaktualizuj swój plan.',

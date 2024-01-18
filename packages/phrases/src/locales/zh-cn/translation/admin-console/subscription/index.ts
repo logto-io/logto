@@ -14,6 +14,8 @@ const subscription = {
   plan_cycle: '计划周期：{{period}}，使用情况将于{{renewDate}}续订。',
   next_bill: '您的下一个账单',
   next_bill_hint: '要了解有关计算的更多信息，请参阅此<a>文章</a>。',
+  next_bill_tip:
+    '此处显示的价格不包含税款。税款将根据您提供的信息和当地法规要求进行计算，并将显示在您的发票中。',
   manage_payment: '管理付款',
   overfill_quota_warning: '您已达到配额限制。为防止任何问题，请升级计划。',
   upgrade_pro: '升级专业计划',
