@@ -23,6 +23,7 @@ const {
   findTotalNumberOfApplications,
   findApplicationById,
   findApplicationByProtectedAppHost,
+  findApplicationByProtectedAppCustomDomain,
   insertApplication,
   updateApplicationById,
   deleteApplicationById,
@@ -86,6 +87,28 @@ describe('application query', () => {
     });
 
     await findApplicationByProtectedAppHost(host);
+  });
+
+  it('findApplicationByProtectedAppCustomDomain', async () => {
+    const domain = 'my.blog.com';
+    const rowData = { domain };
+
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.protectedAppMetadata} ? 'customDomains' 
+      and ${fields.protectedAppMetadata}->'customDomains' @> $1::jsonb
+      and ${fields.type} = $2
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([JSON.stringify([domain]), ApplicationType.Protected]);
+
+      return createMockQueryResult([rowData]);
+    });
+
+    await findApplicationByProtectedAppCustomDomain(domain);
   });
 
   it('insertApplication', async () => {
