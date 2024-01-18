@@ -20,6 +20,16 @@ type Props<TEntry extends DataEntry> = {
   onSelectData: (data: TEntry) => void;
 };
 
+/**
+ * SourceGroupItem is a component that renders a group of data in the source panel.
+ *
+ * e.g. API resource scopes grouped under the same API resource.
+ *
+ * @param dataGroup - The data group to be rendered. e.g. resource with scopes
+ * @param selectedGroupDataList - The list of selected data in the group.
+ * @param onSelectDataGroup - The callback function to select the whole group.
+ * @param onSelectData - The callback function to select a single data within the group.
+ */
 function SourceGroupItem<TEntry extends DataEntry>({
   dataGroup,
   selectedGroupDataList,
