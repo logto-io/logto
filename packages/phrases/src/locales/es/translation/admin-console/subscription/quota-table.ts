@@ -86,9 +86,11 @@ const quota_table = {
     'Esta es una característica adicional. Puede usarla sin costo hasta que comencemos a cobrar aproximadamente en el segundo trimestre de 2024.',
   million: '{{value, number}} millones',
   mau_tip:
-    'MAU (usuario activo mensual) significa el número de usuarios únicos que han intercambiado al menos un token con Logto en un mes de facturación.',
+    'MAU (usuarios activos mensuales) significa el número de usuarios únicos que han intercambiado al menos un token con Logto en un ciclo de facturación.',
   tokens_tip:
     'Todo tipo de tokens emitidos por Logto, incluyendo tokens de acceso, tokens de actualización, etc.',
+  mao_tip:
+    'MAO (Organización activa mensual) significa la cantidad de organizaciones únicas que tienen al menos un MAU (usuario activo mensual) en un ciclo de facturación.',
   included: 'incluido{{value, number}}',
   included_mao: '{{value, number}} MAO incluido',
   extra_quota_price: 'Luego ${{value, number}} por mes / cada uno después',

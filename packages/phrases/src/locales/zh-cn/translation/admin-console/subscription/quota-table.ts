@@ -85,8 +85,9 @@ const quota_table = {
   paid_add_on_feature_tip:
     '这是一个附加功能。在我们从2024年第二季度开始收费之前，您可以免费使用它。',
   million: '{{value, number}} 百万',
-  mau_tip: 'MAU（月活跃用户）表示在一个计费月内与 Logto 交换过至少一个令牌的独立用户数量。',
+  mau_tip: 'MAU（月活跃用户）是指在计费周期内与Logto交换过至少一个令牌的独立用户数量。',
   tokens_tip: 'Logto 发行的所有类型令牌，包括访问令牌、刷新令牌等。',
+  mao_tip: 'MAO（月度活跃组织）是指在计费周期内至少有一个MAU（月度活跃用户）的独特组织数量。',
   included: '已包含{{value, number}}',
   included_mao: '已包含 {{value, number}} MAO',
   extra_quota_price: '然后每月 ${{value, number}} / 每个之后',

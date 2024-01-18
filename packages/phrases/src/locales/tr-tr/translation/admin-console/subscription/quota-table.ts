@@ -86,9 +86,11 @@ const quota_table = {
     "Bu bir ek özelliktir. Şarjımıza başlamadan önce, yaklaşık olarak 2024 Q2'ye kadar ücretsiz olarak kullanabilirsiniz.",
   million: '{{value, number}} milyon',
   mau_tip:
-    'MAU (aylık aktif kullanıcı) Logto ile en az bir token değiştiren benzersiz kullanıcı sayısını ifade eder.',
+    'MAU (aylık aktif kullanıcı) Logto ile en az bir jeton değiştirmiş olan benzersiz kullanıcı sayısını ifade eder.',
   tokens_tip:
     'Logto tarafından ihraç edilen erişim tokeni, yenileme tokeni vb. dahil olmak üzere tüm token türleri.',
+  mao_tip:
+    "MAO (aylık aktif kuruluş) bir fatura döngüsünde en az bir MAU'ya (aylık aktif kullanıcı) sahip olan benzersiz kuruluşların sayısını ifade eder.",
   included: '{{value, number}} dahil',
   included_mao: '{{value, number}} MAO dahil',
   extra_quota_price: 'Sonra aylık ${{value, number}} / sonrasında her biri',
