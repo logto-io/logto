@@ -135,10 +135,10 @@ const quota_item = {
     not_eligible: 'Nessun supporto tramite ticket email',
   },
   mfa_enabled: {
-    name: 'MFA',
-    limited: 'MFA',
-    unlimited: 'MFA',
-    not_eligible: 'Rimuovi il tuo MFA',
+    name: 'Autenticazione a due fattori',
+    limited: 'Autenticazione a due fattori',
+    unlimited: 'Autenticazione a due fattori',
+    not_eligible: 'Rimuovi la tua autenticazione a due fattori',
   },
   sso_enabled: {
     name: 'SSO aziendale',

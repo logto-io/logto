@@ -135,10 +135,10 @@ const quota_item = {
     not_eligible: 'メールチケットサポートなし',
   },
   mfa_enabled: {
-    name: 'MFA',
-    limited: 'MFA',
-    unlimited: 'MFA',
-    not_eligible: 'MFAを削除してください',
+    name: '二要素認証',
+    limited: '二要素認証',
+    unlimited: '二要素認証',
+    not_eligible: '二要素認証を削除',
   },
   sso_enabled: {
     name: 'エンタープライズSSO',

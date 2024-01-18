@@ -135,10 +135,10 @@ const quota_item = {
     not_eligible: 'Brak wsparcia poprzez e-maile',
   },
   mfa_enabled: {
-    name: 'MFA',
-    limited: 'MFA',
-    unlimited: 'MFA',
-    not_eligible: 'Usuń swoje MFA',
+    name: 'Wielopoziomowe uwierzytelnianie',
+    limited: 'Wielopoziomowe uwierzytelnianie',
+    unlimited: 'Wielopoziomowe uwierzytelnianie',
+    not_eligible: 'Usuń swoje wielopoziomowe uwierzytelnianie',
   },
   sso_enabled: {
     name: 'SSO przedsiębiorstwa',

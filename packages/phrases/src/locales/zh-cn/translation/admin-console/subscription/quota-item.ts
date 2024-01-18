@@ -135,10 +135,10 @@ const quota_item = {
     not_eligible: '无电子邮件支持',
   },
   mfa_enabled: {
-    name: 'MFA',
-    limited: 'MFA',
-    unlimited: 'MFA',
-    not_eligible: '移除你的 MFA',
+    name: '多因素认证',
+    limited: '多因素认证',
+    unlimited: '多因素认证',
+    not_eligible: '移除您的多因素认证',
   },
   sso_enabled: {
     name: '企业SSO',
