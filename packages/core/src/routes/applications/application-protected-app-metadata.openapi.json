@@ -1,0 +1,34 @@
+{
+  "paths": {
+    "/api/applications/{id}/protected-app-metadata/custom-domains": {
+      "post": {
+        "summary": "Add a custom domain to the protected application.",
+        "description": "Add a custom domain to the protected application. You'll need to setup DNS record later.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "domain": {
+                    "description": "The domain to be added to the application."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The domain has been added to the application."
+          },
+          "409": {
+            "description": "The domain already exists."
+          },
+          "422": {
+            "description": "Exeeded the maximum number of domains allowed or the domain is invalid."
+          }
+        }
+      }
+    }
+  }
+}

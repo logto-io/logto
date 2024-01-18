@@ -124,7 +124,7 @@ describe('application route', () => {
       type,
       protectedAppMetadata: {
         subDomain: 'mock',
-        origin: protectedAppMetadata?.origin,
+        origin: protectedAppMetadata.origin,
       },
     });
     expect(response.status).toEqual(200);
@@ -136,8 +136,8 @@ describe('application route', () => {
       type,
       protectedAppMetadata,
       oidcClientMetadata: {
-        redirectUris: [`https://${protectedAppMetadata?.host ?? ''}/callback`],
-        postLogoutRedirectUris: [`https://${protectedAppMetadata?.host ?? ''}`],
+        redirectUris: [`https://${protectedAppMetadata.host}/callback`],
+        postLogoutRedirectUris: [`https://${protectedAppMetadata.host}`],
       },
     });
   });
@@ -329,7 +329,7 @@ describe('application route', () => {
       204
     );
     expect(deleteRemoteAppConfigs).toHaveBeenCalledWith(
-      mockProtectedApplication.protectedAppMetadata?.host
+      mockProtectedApplication.protectedAppMetadata.host
     );
   });
 
