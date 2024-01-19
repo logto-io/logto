@@ -1,25 +1,25 @@
 @use '@/scss/underscore' as _;
 
 
-.viewBox {
-  position: absolute;
-  inset: 0;
-  overflow: auto;
+.scopesCard,
+.organizationSelector {
+  margin-top: _.unit(6);
+}
 
-  .container {
-    min-height: 100%;
-    @include _.flex_column(center, center);
-  }
+.footer {
+  margin-top: _.unit(7);
+  @include _.flex_row;
+  gap: _.unit(2);
+}
 
-  .img {
-    height: _.unit(10);
-    @include _.image-align-center;
-    margin-bottom: _.unit(5);
-  }
-
-  .loadingWrapper {
-    height: _.unit(16);
-    @include _.flex_column(center, center);
+:global(body.mobile) {
+  .scopesCard {
+    margin-top: _.unit(4);
   }
 }
 
+:global(body.desktop) {
+  .scopesCard {
+    margin-top: _.unit(6);
+  }
+}

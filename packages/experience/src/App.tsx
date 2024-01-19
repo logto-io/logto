@@ -50,7 +50,6 @@ const App = () => {
             <AppBoundary>
               <AppInsightsBoundary cloudRole="ui">
                 <Routes>
-                  <Route path="consent" element={<Consent />} />
                   <Route element={<AppLayout />}>
                     <Route
                       path="unknown-session"
@@ -115,6 +114,9 @@ const App = () => {
                       <Route path="email" element={<SingleSignOnEmail />} />
                       <Route path="connectors" element={<SingleSignOnConnectors />} />
                     </Route>
+
+                    {/* Consent */}
+                    <Route path="consent" element={<Consent />} />
 
                     <Route path="*" element={<ErrorPage />} />
                   </Route>

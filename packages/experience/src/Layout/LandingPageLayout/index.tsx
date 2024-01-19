@@ -1,3 +1,4 @@
+import { type ConsentInfoResponse } from '@logto/schemas';
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
 import type { ReactNode } from 'react';
@@ -11,13 +12,23 @@ import { getBrandingLogoUrl } from '@/utils/logo';
 
 import * as styles from './index.module.scss';
 
+type ThirdPartyBranding = ConsentInfoResponse['application']['branding'];
+
 type Props = {
   children: ReactNode;
   className?: string;
   title: TFuncKey;
+  titleInterpolation?: Record<string, unknown>;
+  thirdPartyBranding?: ThirdPartyBranding;
 };
 
-const LandingPageLayout = ({ children, className, title }: Props) => {
+const LandingPageLayout = ({
+  children,
+  className,
+  title,
+  titleInterpolation,
+  thirdPartyBranding,
+}: Props) => {
   const { experienceSettings, theme, platform } = useContext(PageContext);
 
   if (!experienceSettings) {
@@ -31,13 +42,18 @@ const LandingPageLayout = ({ children, className, title }: Props) => {
 
   return (
     <>
-      <PageMeta titleKey={title} />
+      <PageMeta titleKey={title} titleKeyInterpolation={titleInterpolation} />
       {platform === 'web' && <div className={styles.placeholderTop} />}
       <div className={classNames(styles.wrapper, className)}>
         <BrandingHeader
           className={classNames(styles.header, layoutClassNames.brandingHeader)}
           headline={title}
+          headlineInterpolation={titleInterpolation}
           logo={getBrandingLogoUrl({ theme, branding, isDarkModeEnabled })}
+          thirdPartyLogo={
+            thirdPartyBranding &&
+            getBrandingLogoUrl({ theme, branding: thirdPartyBranding, isDarkModeEnabled })
+          }
         />
         {children}
       </div>

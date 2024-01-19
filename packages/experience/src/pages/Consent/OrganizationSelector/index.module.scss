@@ -1,0 +1,35 @@
+@use '@/scss/underscore' as _;
+
+.title {
+  font: var(--font-label-2);
+  margin-bottom: _.unit(2);
+}
+
+.cardWrapper {
+  border: _.border(var(--color-line-divider));
+  border-radius: 8px;
+  padding: _.unit(2) 0;
+  position: relative;
+}
+
+.expandButton {
+  position: relative;
+
+  // increase the clickable area
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: var(--color-type-secondary);
+  }
+}
+

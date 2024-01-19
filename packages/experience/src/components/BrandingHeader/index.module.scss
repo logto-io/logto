@@ -7,6 +7,15 @@ $logo-height: 40px;
   @include _.flex-column;
 }
 
+.logoWrapper {
+  @include _.flex-row;
+}
+
+.connectIcon {
+  color: var(--color-neutral-variant-80);
+  margin: 0 _.unit(3);
+}
+
 .logo {
   height: $logo-height;
   width: auto;
@@ -27,7 +36,7 @@ $logo-height: 40px;
     max-height: 148px;
   }
 
-  .logo:not(:last-child) {
+  .logoWrapper:not(:last-child) {
     margin-bottom: _.unit(2);
   }
 
@@ -37,7 +46,7 @@ $logo-height: 40px;
 }
 
 :global(body.desktop) {
-  .logo:not(:last-child) {
+  .logoWrapper:not(:last-child) {
     margin-bottom: _.unit(3);
   }
 
