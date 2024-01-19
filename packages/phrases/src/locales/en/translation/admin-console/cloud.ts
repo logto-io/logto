@@ -25,7 +25,7 @@ const cloud = {
     additional_features_field: 'Do you have anything else you want us to know?',
     additional_features_options: {
       customize_ui_and_flow:
-        'Need the ability to bring my own UI, or customize my own flows via Logto API',
+        'Build and manage my own UI, not just use Logto pre-built and customizable solution',
       compliance: 'SOC2 and GDPR are must-haves',
       export_user_data: 'Need the ability to export user data from Logto',
       budget_control: 'I have very tight budget control',

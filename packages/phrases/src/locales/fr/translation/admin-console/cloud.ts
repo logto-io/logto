@@ -14,7 +14,7 @@ const cloud = {
     },
     company_name_field: "Nom de l'entreprise",
     company_name_placeholder: 'Acme.co',
-    stage_field: 'Dans quelle étape se trouve actuellement votre produit ?',
+    stage_field: 'Dans quelle étape se trouve actuellement votre produit?',
     stage_options: {
       new_product: "Démarrer un nouveau projet et chercher une solution rapide et prête à l'emploi",
       existing_product:
@@ -22,10 +22,10 @@ const cloud = {
       target_enterprise_ready:
         'Je viens de conclure des contrats avec des clients plus importants et je veux maintenant rendre mon produit prêt à être vendu aux entreprises',
     },
-    additional_features_field: "Avez-vous d'autres informations à nous communiquer ?",
+    additional_features_field: "Avez-vous d'autres informations à nous communiquer?",
     additional_features_options: {
       customize_ui_and_flow:
-        "Besoin de la possibilité d'apporter ma propre interface utilisateur ou personnaliser mes propres flux via l'API de Logto",
+        'Construire et gérer ma propre interface utilisateur, pas seulement utiliser la solution pré-construite et personnalisable de Logto',
       compliance: 'SOC2 et le respect du RGPD sont indispensables',
       export_user_data:
         "Besoin de la possibilité d'exporter des données utilisateur à partir de Logto",

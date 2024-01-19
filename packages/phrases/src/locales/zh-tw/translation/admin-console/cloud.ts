@@ -21,7 +21,7 @@ const cloud = {
     },
     additional_features_field: '你還有其他想讓我們知道的事情嗎？',
     additional_features_options: {
-      customize_ui_and_flow: '需要通過 Logto API 自定義我的 UI，或自定義自己的流程',
+      customize_ui_and_flow: '構建和管理我的自己的 UI，而不僅僅是使用 Logto 預製和可定制的解決方案',
       compliance: 'SOC2 和 GDPR 是必不可少的',
       export_user_data: '需要從 Logto 導出用戶數據的能力',
       budget_control: '我有非常嚴格的預算控制',
