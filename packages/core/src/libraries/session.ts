@@ -58,6 +58,16 @@ const saveUserFirstConsentedAppId = async (
   }
 };
 
+// Get the missing scopes from prompt details
+const missingScopesGuard = z.object({
+  missingOIDCScope: z.string().array().optional(),
+  missingResourceScopes: z.object({}).catchall(z.string().array()).optional(),
+});
+
+export const getMissingScopes = (prompt: Provider.PromptDetail) => {
+  return missingScopesGuard.parse(prompt.details);
+};
+
 export const consent = async (
   ctx: Context,
   provider: Provider,
@@ -81,13 +91,9 @@ export const consent = async (
 
   await saveUserFirstConsentedAppId(queries, accountId, String(client_id));
 
-  // Fulfill missing claims / resources
-  const PromptDetailsBody = z.object({
-    missingOIDCScope: z.string().array().optional(),
-    missingResourceScopes: z.object({}).catchall(z.string().array()).optional(),
-  });
-  const { missingOIDCScope, missingResourceScopes } = PromptDetailsBody.parse(prompt.details);
+  const { missingOIDCScope, missingResourceScopes } = getMissingScopes(prompt);
 
+  // Fulfill missing scopes
   if (missingOIDCScope) {
     grant.addOIDCScope(missingOIDCScope.join(' '));
   }
