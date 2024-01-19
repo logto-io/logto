@@ -15,7 +15,7 @@ const UserProfile = ({
   return (
     <div className={classNames(styles.wrapper, className)}>
       {avatar && <img src={avatar} alt="avatar" className={styles.avatar} />}
-      <div className={styles.info}>
+      <div>
         <div className={styles.name}>{name ?? id}</div>
         <div className={styles.identifier}>{primaryEmail ?? primaryPhone ?? username}</div>
       </div>
