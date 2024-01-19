@@ -28,6 +28,7 @@ type Props<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValue
   };
   isLoading?: boolean;
   onAdd?: () => void;
+  errorMessage?: string;
 };
 
 export const pageSize = 10;
@@ -48,6 +49,7 @@ function TemplateTable<
   pagination,
   isLoading,
   onAdd,
+  errorMessage,
 }: Props<TFieldValues, TName>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -63,7 +65,7 @@ function TemplateTable<
           <DynamicT forKey={name} interpolation={{ count: 2 }} />
         </header>
       )}
-      {onAdd && noData && (
+      {onAdd && noData && !errorMessage && (
         <>
           {name && (
             <div className={styles.empty}>
@@ -73,6 +75,7 @@ function TemplateTable<
           <Button icon={<Plus />} title="general.add" onClick={onAdd} />
         </>
       )}
+      {noData && errorMessage && <div className={styles.empty}>{errorMessage}</div>}
       {!noData && (
         <Table
           hasBorder
