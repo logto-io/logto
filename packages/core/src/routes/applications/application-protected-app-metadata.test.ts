@@ -1,5 +1,6 @@
-import { DomainStatus } from '@logto/schemas';
+import { type Application, DomainStatus } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
+import { type Nullable } from '@silverhand/essentials';
 
 import { mockProtectedApplication } from '#src/__mocks__/index.js';
 import { mockIdGenerators } from '#src/test-utils/nanoid.js';
@@ -11,6 +12,9 @@ const mockDomain = 'app.example.com';
 
 const updateApplicationById = jest.fn();
 const findApplicationById = jest.fn(async () => mockProtectedApplication);
+const findApplicationByProtectedAppCustomDomain = jest.fn(
+  async (): Promise<Nullable<Application>> => null
+);
 
 const mockDomainResponse = {
   domain: mockDomain,
@@ -35,6 +39,7 @@ const tenantContext = new MockTenant(
     applications: {
       findApplicationById,
       updateApplicationById,
+      findApplicationByProtectedAppCustomDomain,
     },
   },
   undefined,
@@ -85,6 +90,16 @@ describe('application protected app metadata routes', () => {
           domain: mockDomain,
         });
       expect(response.status).toEqual(400);
+    });
+
+    it('throw when the domain is already in use', async () => {
+      findApplicationByProtectedAppCustomDomain.mockResolvedValueOnce(mockProtectedApplication);
+      const response = await requester
+        .post(`/applications/asdf/protected-app-metadata/custom-domains`)
+        .send({
+          domain: mockDomain,
+        });
+      expect(response.status).toEqual(422);
     });
   });
 });

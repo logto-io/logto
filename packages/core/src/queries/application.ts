@@ -138,6 +138,19 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
       and ${fields.type} = ${ApplicationType.Protected}
     `);
 
+  /**
+   * Find an protected application by its custom domain.
+   * the domain is stored in the `customDomains` field of the `protectedAppMetadata` field.
+   */
+  const findApplicationByProtectedAppCustomDomain = async (domain: string) =>
+    pool.maybeOne<Application>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.protectedAppMetadata} ? 'customDomains'
+      and ${fields.protectedAppMetadata}->'customDomains' @> ${sql.jsonb([domain])}
+      and ${fields.type} = ${ApplicationType.Protected}
+    `);
+
   const insertApplication = buildInsertIntoWithPool(pool)(Applications, {
     returning: true,
   });
@@ -240,6 +253,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     findTotalNumberOfApplications,
     findApplicationById,
     findApplicationByProtectedAppHost,
+    findApplicationByProtectedAppCustomDomain,
     insertApplication,
     updateApplication,
     updateApplicationById,

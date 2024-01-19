@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -10,7 +11,11 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
     router,
     {
       queries: {
-        applications: { findApplicationById, updateApplicationById },
+        applications: {
+          findApplicationById,
+          updateApplicationById,
+          findApplicationByProtectedAppCustomDomain,
+        },
       },
       libraries: {
         applications: { validateProtectedApplicationById },
@@ -51,7 +56,13 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
         'domain.limit_to_one_domain'
       );
 
-      // TODO: LOG-8066 check if domain is already in use
+      assertThat(
+        !(await findApplicationByProtectedAppCustomDomain(domain)),
+        new RequestError({
+          code: 'domain.hostname_already_exists',
+          status: 422,
+        })
+      );
 
       const customDomain = await addDomainToRemote(domain);
       await updateApplicationById(id, {
