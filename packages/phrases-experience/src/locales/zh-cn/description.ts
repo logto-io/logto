@@ -63,6 +63,20 @@ const description = {
   single_sign_on_connectors_list:
     '你的企业已为电子邮件账户{{email}}启用了单点登录。你可以继续使用以下SSO提供商进行登录。',
   single_sign_on_enabled: '该帐户已启用单点登录',
+  /** UNTRANSLATED */
+  authorize_title: 'Authorize {{name}}',
+  /** UNTRANSLATED */
+  request_permission: '{{name}} is requesting access to:',
+  /** UNTRANSLATED */
+  grant_organization_access: 'Grant the organization access:',
+  /** UNTRANSLATED */
+  user_scopes: 'Personal user data',
+  /** UNTRANSLATED */
+  organization_scopes: 'Organization access',
+  /** UNTRANSLATED */
+  authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
+  /** UNTRANSLATED */
+  not_you: 'Not you?',
 };
 
 export default Object.freeze(description);

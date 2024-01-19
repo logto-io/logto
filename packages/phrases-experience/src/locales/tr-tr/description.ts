@@ -71,6 +71,20 @@ const description = {
   single_sign_on_connectors_list:
     'Şirketiniz, {{email}} e-posta hesabı için Tekli Oturum Açmayı (Single Sign-On) etkinleştirdi. Aşağıdaki SSO sağlayıcıları ile oturum açmaya devam edebilirsiniz.',
   single_sign_on_enabled: 'Bu hesapta Tekli Oturum Açma etkinleştirildi.',
+  /** UNTRANSLATED */
+  authorize_title: 'Authorize {{name}}',
+  /** UNTRANSLATED */
+  request_permission: '{{name}} is requesting access to:',
+  /** UNTRANSLATED */
+  grant_organization_access: 'Grant the organization access:',
+  /** UNTRANSLATED */
+  user_scopes: 'Personal user data',
+  /** UNTRANSLATED */
+  organization_scopes: 'Organization access',
+  /** UNTRANSLATED */
+  authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
+  /** UNTRANSLATED */
+  not_you: 'Not you?',
 };
 
 export default Object.freeze(description);

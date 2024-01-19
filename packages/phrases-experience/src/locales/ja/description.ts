@@ -72,6 +72,20 @@ const description = {
   single_sign_on_connectors_list:
     'あなたの企業は、メールアカウント{{email}}に対してシングルサインオンを有効にしました。以下のSSOプロバイダーを使用してサインインを続けることができます。',
   single_sign_on_enabled: 'このアカウントではシングル サインオンが有効になっています',
+  /** UNTRANSLATED */
+  authorize_title: 'Authorize {{name}}',
+  /** UNTRANSLATED */
+  request_permission: '{{name}} is requesting access to:',
+  /** UNTRANSLATED */
+  grant_organization_access: 'Grant the organization access:',
+  /** UNTRANSLATED */
+  user_scopes: 'Personal user data',
+  /** UNTRANSLATED */
+  organization_scopes: 'Organization access',
+  /** UNTRANSLATED */
+  authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
+  /** UNTRANSLATED */
+  not_you: 'Not you?',
 };
 
 export default Object.freeze(description);

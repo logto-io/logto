@@ -29,6 +29,8 @@ const action = {
   verify_via_passkey: 'Verify via passkey',
   download: 'Download',
   single_sign_on: 'Single Sign-On',
+  authorize: 'Authorize',
+  use_another_account: 'Use another account',
 };
 
 export default Object.freeze(action);

@@ -29,6 +29,10 @@ const action = {
   verify_via_passkey: 'Parola ile doğrula',
   download: 'İndir',
   single_sign_on: 'Tek oturum açma',
+  /** UNTRANSLATED */
+  authorize: 'Authorize',
+  /** UNTRANSLATED */
+  use_another_account: 'Use another account',
 };
 
 export default Object.freeze(action);

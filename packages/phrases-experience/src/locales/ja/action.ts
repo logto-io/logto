@@ -29,6 +29,10 @@ const action = {
   verify_via_passkey: 'パスキー経由で確認',
   download: 'ダウンロード',
   single_sign_on: 'シングルサインオン',
+  /** UNTRANSLATED */
+  authorize: 'Authorize',
+  /** UNTRANSLATED */
+  use_another_account: 'Use another account',
 };
 
 export default Object.freeze(action);
