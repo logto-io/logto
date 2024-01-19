@@ -1,6 +1,9 @@
 import { createMockUtils } from '@logto/shared/esm';
 
-import { mockProtectedApplication } from '#src/__mocks__/index.js';
+import {
+  mockProtectedAppConfigProviderConfig,
+  mockProtectedApplication,
+} from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   defaultProtectedAppPageRules,
@@ -23,21 +26,14 @@ const { createProtectedAppLibrary } = await import('./protected-app.js');
 
 const findApplicationById = jest.fn(async () => mockProtectedApplication);
 const findApplicationByProtectedAppHost = jest.fn();
-const { syncAppConfigsToRemote, checkAndBuildProtectedAppData } = createProtectedAppLibrary(
-  new MockQueries({ applications: { findApplicationById, findApplicationByProtectedAppHost } })
-);
-
-const protectedAppConfigProviderConfig = {
-  accountIdentifier: 'fake_account_id',
-  namespaceIdentifier: 'fake_namespace_id',
-  keyName: 'fake_key_name',
-  apiToken: '',
-  domain: 'protected.app',
-};
+const { syncAppConfigsToRemote, checkAndBuildProtectedAppData, getDefaultDomain } =
+  createProtectedAppLibrary(
+    new MockQueries({ applications: { findApplicationById, findApplicationByProtectedAppHost } })
+  );
 
 beforeAll(() => {
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  SystemContext.shared.protectedAppConfigProviderConfig = protectedAppConfigProviderConfig;
+  SystemContext.shared.protectedAppConfigProviderConfig = mockProtectedAppConfigProviderConfig;
 });
 
 afterAll(() => {
@@ -64,7 +60,7 @@ describe('syncAppConfigsToRemote()', () => {
     await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
     const { protectedAppMetadata, id, secret } = mockProtectedApplication;
     expect(updateProtectedAppSiteConfigs).toHaveBeenCalledWith(
-      protectedAppConfigProviderConfig,
+      mockProtectedAppConfigProviderConfig,
       protectedAppMetadata?.host,
       {
         ...protectedAppMetadata,
@@ -104,7 +100,7 @@ describe('checkAndBuildProtectedAppData()', () => {
 
   it('should return data if subdomain is available', async () => {
     const subDomain = 'a';
-    const host = `${subDomain}.${protectedAppConfigProviderConfig.domain}`;
+    const host = `${subDomain}.${mockProtectedAppConfigProviderConfig.domain}`;
     await expect(checkAndBuildProtectedAppData({ subDomain, origin })).resolves.toEqual({
       protectedAppMetadata: {
         host,
@@ -117,5 +113,11 @@ describe('checkAndBuildProtectedAppData()', () => {
         postLogoutRedirectUris: [`https://${host}`],
       },
     });
+  });
+});
+
+describe('getDefaultDomain()', () => {
+  it('should get default domain', async () => {
+    await expect(getDefaultDomain()).resolves.toBe(mockProtectedAppConfigProviderConfig.domain);
   });
 });

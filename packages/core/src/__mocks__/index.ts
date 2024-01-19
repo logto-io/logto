@@ -21,6 +21,7 @@ export * from './cloud-connection.js';
 export * from './user.js';
 export * from './domain.js';
 export * from './sso.js';
+export * from './protected-app.js';
 
 export const mockApplication: Application = {
   tenantId: 'fake_tenant',

@@ -34,6 +34,14 @@ const deleteRemoteAppConfigs = async (host: string): Promise<void> => {
   await deleteProtectedAppSiteConfigs(protectedAppConfigProviderConfig, host);
 };
 
+/**
+ * Get default domain from provider config, this is used for front-end display
+ */
+const getDefaultDomain = async () => {
+  const { domain } = await getProviderConfig();
+  return domain;
+};
+
 export const createProtectedAppLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById, findApplicationByProtectedAppHost },
@@ -120,5 +128,6 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     syncAppConfigsToRemote,
     deleteRemoteAppConfigs,
     checkAndBuildProtectedAppData,
+    getDefaultDomain,
   };
 };
