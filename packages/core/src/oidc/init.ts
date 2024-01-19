@@ -19,7 +19,7 @@ import koaBody from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -32,7 +32,13 @@ import type Queries from '#src/tenants/Queries.js';
 
 import defaults from './defaults.js';
 import { registerGrants } from './grants/index.js';
-import { findResource, findResourceScopes, getSharedResourceServerData } from './resource.js';
+import {
+  findResource,
+  findResourceScopes,
+  getSharedResourceServerData,
+  isThirdPartyApplication,
+  filterResourceScopesForTheThirdPartyApplication,
+} from './resource.js';
 import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
 import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 
@@ -119,7 +125,31 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
           }
 
           const { accessTokenTtl: accessTokenTTL } = resourceServer;
+
           const scopes = await findResourceScopes(queries, libraries, ctx, indicator);
+          const { client } = ctx.oidc;
+
+          // FIXME: @simeng-li Remove this check after the third-party client scope feature is released
+          // Need to filter out the unsupported scopes for the third-party application.
+          if (
+            EnvSet.values.isDevFeaturesEnabled &&
+            client &&
+            (await isThirdPartyApplication(queries, client.clientId))
+          ) {
+            const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
+              libraries,
+              client.clientId,
+              indicator,
+              scopes
+            );
+
+            return {
+              ...getSharedResourceServerData(envSet),
+              accessTokenTTL,
+              scope: filteredScopes.map(({ name }) => name).join(' '),
+            };
+          }
+
           return {
             ...getSharedResourceServerData(envSet),
             accessTokenTTL,

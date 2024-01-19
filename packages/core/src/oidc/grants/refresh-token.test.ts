@@ -2,6 +2,7 @@ import { UserScope } from '@logto/core-kit';
 import { type KoaContextWithOIDC, errors, type Adapter } from 'oidc-provider';
 import Sinon from 'sinon';
 
+import { mockApplication } from '#src/__mocks__/index.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -13,7 +14,7 @@ const { jest } = import.meta;
 const noop = async () => {};
 
 const mockHandler = (tenant = new MockTenant()) => {
-  return buildHandler(tenant.envSet, tenant.queries.organizations);
+  return buildHandler(tenant.envSet, tenant.queries);
 };
 
 const clientId = 'some_client_id';
@@ -283,6 +284,18 @@ describe('organization token grant', () => {
     await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(errors.AccessDenied);
   });
 
+  it('should throw if the user has not granted the requested organization', async () => {
+    const ctx = createPreparedContext();
+    const tenant = new MockTenant();
+    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves({
+      ...mockApplication,
+      isThirdParty: true,
+    });
+    Sinon.stub(tenant.queries.applications.userConsentOrganizations, 'exists').resolves(false);
+    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(errors.AccessDenied);
+  });
+
   // The handler returns void so we cannot check the return value, and it's also not
   // straightforward to assert the token is issued correctly. Here we just do the sanity
   // check and basic token validation. Comprehensive token validation should be done in
@@ -292,6 +305,7 @@ describe('organization token grant', () => {
     const tenant = new MockTenant();
 
     Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves(mockApplication);
     Sinon.stub(tenant.queries.organizations.relations.rolesUsers, 'getUserScopes').resolves([
       { id: 'foo', name: 'foo' },
       { id: 'bar', name: 'bar' },

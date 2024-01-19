@@ -1,3 +1,4 @@
+import { trySafe } from '@silverhand/essentials';
 import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 import type Provider from 'oidc-provider';
@@ -13,14 +14,19 @@ export default function koaAutoConsent<StateT, ContextT extends IRouterParamCont
   query: Queries
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
-    const shouldAutoConsent = true;
+    const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
+    const { client_id: clientId } = interactionDetails.params;
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Update later. Third party app should not auto consent
+    const application = await trySafe(async () =>
+      query.applications.findApplicationById(String(clientId))
+    );
+
+    const shouldAutoConsent = !application?.isThirdParty;
+
     if (!shouldAutoConsent) {
       return next();
     }
 
-    const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
     const redirectTo = await consent(ctx, provider, query, interactionDetails);
 
     ctx.redirect(redirectTo);
