@@ -20,6 +20,7 @@ export default class SystemContext {
   public storageProviderConfig?: StorageProviderData;
   public hostnameProviderConfig?: HostnameProviderData;
   public protectedAppConfigProviderConfig?: ProtectedAppConfigProviderData;
+  public protectedAppHostnameProviderConfig?: HostnameProviderData;
 
   async loadProviderConfigs(pool: CommonQueryMethods) {
     await Promise.all([
@@ -42,6 +43,13 @@ export default class SystemContext {
           pool,
           CloudflareKey.ProtectedAppConfigProvider,
           protectedAppConfigProviderDataGuard
+        );
+      })(),
+      (async () => {
+        this.protectedAppHostnameProviderConfig = await this.loadConfig(
+          pool,
+          CloudflareKey.ProtectedAppHostnameProvider,
+          hostnameProviderDataGuard
         );
       })(),
     ]);

@@ -168,11 +168,13 @@ export type ProtectedAppConfigProviderData = z.infer<typeof protectedAppConfigPr
 export enum CloudflareKey {
   HostnameProvider = 'cloudflareHostnameProvider',
   ProtectedAppConfigProvider = 'cloudflareProtectedAppConfigProvider',
+  ProtectedAppHostnameProvider = 'cloudflareProtectedAppHostnameProvider',
 }
 
 export type CloudflareType = {
   [CloudflareKey.HostnameProvider]: HostnameProviderData;
   [CloudflareKey.ProtectedAppConfigProvider]: ProtectedAppConfigProviderData;
+  [CloudflareKey.ProtectedAppHostnameProvider]: HostnameProviderData;
 };
 
 export const cloudflareGuard: Readonly<{
@@ -180,6 +182,7 @@ export const cloudflareGuard: Readonly<{
 }> = Object.freeze({
   [CloudflareKey.HostnameProvider]: hostnameProviderDataGuard,
   [CloudflareKey.ProtectedAppConfigProvider]: protectedAppConfigProviderDataGuard,
+  [CloudflareKey.ProtectedAppHostnameProvider]: hostnameProviderDataGuard,
 });
 
 // Summary
