@@ -117,6 +117,8 @@ const application_details = {
     user_permissions_assignment_form_title: 'Add the user profile permissions',
     organization_permissions_assignment_form_title: 'Add the organization permissions',
     api_resource_permissions_assignment_form_title: 'Add the API resource permissions',
+    permission_description_tips:
+      'When Logto is used as an Identity Provider (IdP) for authentication in third-party apps, and users are asked for authorization, this description appears on the consent screen.',
   },
   roles: {
     name_column: 'Role',

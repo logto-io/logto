@@ -21,6 +21,10 @@ const api_resource_details = {
     create_title: 'Créer une autorisation',
     create_subtitle: 'Définir les autorisations (scopes) requises pour cette API.',
     confirm_create: 'Créer une autorisation',
+    /** UNTRANSLATED */
+    edit_title: 'Edit API permission',
+    /** UNTRANSLATED */
+    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
     name: "Nom de l'autorisation",
     name_placeholder: 'lecture:ressource',
     forbidden_space_in_name: "Le nom de l'autorisation ne doit pas contenir d'espaces.",

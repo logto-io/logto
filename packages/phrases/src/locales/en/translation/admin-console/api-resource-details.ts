@@ -21,6 +21,8 @@ const api_resource_details = {
     create_title: 'Create permission',
     create_subtitle: 'Define the permissions (scopes) needed by this API.',
     confirm_create: 'Create permission',
+    edit_title: 'Edit API permission',
+    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
     name: 'Permission name',
     name_placeholder: 'read:resource',
     forbidden_space_in_name: 'The permission name must not contain any spaces.',

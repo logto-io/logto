@@ -1,4 +1,8 @@
-import { type Application, type ApplicationUserConsentScopesResponse } from '@logto/schemas';
+import {
+  type Application,
+  type ApplicationUserConsentScopesResponse,
+  ApplicationUserConsentScopeType,
+} from '@logto/schemas';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -11,6 +15,9 @@ import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 
 import ApplicationScopesAssignmentModal from './ApplicationScopesAssignmentModal';
+import ApplicationScopesManagementModal, {
+  type EditableScopeData,
+} from './ApplicationScopesManagementModal';
 import * as styles from './index.module.scss';
 import useScopesTable from './use-scopes-table';
 
@@ -22,7 +29,9 @@ function Permissions({ application }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [isAssignScopesModalOpen, setIsAssignScopesModalOpen] = useState(false);
-  const { parseRowGroup, deleteScope } = useScopesTable();
+  const [editScopeModalData, setEditScopeModalData] = useState<EditableScopeData | undefined>();
+
+  const { parseRowGroup, deleteScope, editScope } = useScopesTable();
 
   const { data, error, mutate, isLoading } = useSWR<
     ApplicationUserConsentScopesResponse,
@@ -74,9 +83,14 @@ function Permissions({ application }: Props) {
                     delete: 'application_details.permissions.delete_text',
                     deleteConfirmation: 'general.remove',
                   }}
-                  onEdit={() => {
-                    // TODO: Implement edit permission
-                  }}
+                  onEdit={
+                    // UserScopes is not editable
+                    data.type === ApplicationUserConsentScopeType.UserScopes
+                      ? undefined
+                      : () => {
+                          setEditScopeModalData(data);
+                        }
+                  }
                   onDelete={async () => {
                     await deleteScope(data, application.id);
                     void mutate();
@@ -97,6 +111,19 @@ function Permissions({ application }: Props) {
           isOpen={isAssignScopesModalOpen}
           onClose={() => {
             setIsAssignScopesModalOpen(false);
+          }}
+        />
+      )}
+      {data && (
+        <ApplicationScopesManagementModal
+          scope={editScopeModalData}
+          onClose={() => {
+            setEditScopeModalData(undefined);
+          }}
+          onSubmit={async (scope) => {
+            await editScope(scope);
+            void mutate();
+            setEditScopeModalData(undefined);
           }}
         />
       )}

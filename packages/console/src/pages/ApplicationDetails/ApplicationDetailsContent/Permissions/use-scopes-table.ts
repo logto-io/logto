@@ -9,12 +9,28 @@ import useApi from '@/hooks/use-api';
 
 import * as styles from './index.module.scss';
 
-type ScopesTableRowDataType = {
-  type: ApplicationUserConsentScopeType;
+export type UserScopeTableRowDataType = {
+  type: ApplicationUserConsentScopeType.UserScopes;
   id: string;
   name: string;
   description?: string;
 };
+
+type OrganizationScopeTableRowDataType = {
+  type: ApplicationUserConsentScopeType.OrganizationScopes;
+} & ApplicationUserConsentScopesResponse['organizationScopes'][number];
+
+type ResourceScopeTableRowDataType = {
+  type: ApplicationUserConsentScopeType.ResourceScopes;
+  // Resource ID is required for resource scope patch request
+  resourceId: string;
+  resourceName: string;
+} & ApplicationUserConsentScopesResponse['resourceScopes'][number]['scopes'][number];
+
+export type ScopesTableRowDataType =
+  | UserScopeTableRowDataType
+  | OrganizationScopeTableRowDataType
+  | ResourceScopeTableRowDataType;
 
 type ScopesTableRowGroupType = {
   key: string;
@@ -54,11 +70,9 @@ const useScopesTable = () => {
         key: ApplicationUserConsentScopeType.OrganizationScopes,
         label: t('application_details.permissions.organization_permissions'),
         labelRowClassName: styles.sectionTitleRow,
-        data: organizationScopes.map(({ id, name, description }) => ({
+        data: organizationScopes.map((scope) => ({
           type: ApplicationUserConsentScopeType.OrganizationScopes,
-          id,
-          name,
-          description: description ?? undefined,
+          ...scope,
         })),
       };
 
@@ -67,11 +81,11 @@ const useScopesTable = () => {
           key: resource.indicator,
           label: resource.name,
           labelRowClassName: styles.sectionTitleRow,
-          data: scopes.map(({ id, name, description }) => ({
+          data: scopes.map((scope) => ({
             type: ApplicationUserConsentScopeType.ResourceScopes,
-            id,
-            name,
-            description,
+            ...scope,
+            resourceId: resource.id,
+            resourceName: resource.name,
           })),
         })
       );
@@ -87,9 +101,38 @@ const useScopesTable = () => {
     [api]
   );
 
+  // Only description is editable
+  const editScope = useCallback(
+    async (scope: ScopesTableRowDataType) => {
+      const { type, id, description } = scope;
+
+      if (type === ApplicationUserConsentScopeType.ResourceScopes) {
+        const { resourceId } = scope;
+
+        await api.patch(`api/resources/${resourceId}/scopes/${id}`, {
+          json: {
+            description,
+          },
+        });
+
+        return;
+      }
+
+      if (type === ApplicationUserConsentScopeType.OrganizationScopes) {
+        await api.patch(`api/organization-scopes/${id}`, {
+          json: {
+            description,
+          },
+        });
+      }
+    },
+    [api]
+  );
+
   return {
     parseRowGroup,
     deleteScope,
+    editScope,
   };
 };
 
