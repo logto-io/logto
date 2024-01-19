@@ -113,18 +113,35 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       return;
     }
 
+    const { customDomains, ...rest } = protectedAppMetadata;
+
+    const siteConfigs = {
+      ...rest,
+      sdkConfig: {
+        appId: id,
+        appSecret: secret,
+        endpoint: EnvSet.values.endpoint.href,
+      },
+    };
+
+    // Update default host (subdomain of the default domain)
     await updateProtectedAppSiteConfigs(
       protectedAppConfigProviderConfig,
       protectedAppMetadata.host,
-      {
-        ...protectedAppMetadata,
-        sdkConfig: {
-          appId: id,
-          appSecret: secret,
-          endpoint: EnvSet.values.endpoint.href,
-        },
-      }
+      siteConfigs
     );
+
+    // Update custom domains sites
+    if (customDomains && customDomains.length > 0) {
+      await Promise.all(
+        customDomains.map(async ({ domain }) => {
+          await updateProtectedAppSiteConfigs(protectedAppConfigProviderConfig, domain, {
+            ...siteConfigs,
+            host: domain,
+          });
+        })
+      );
+    }
   };
 
   /**

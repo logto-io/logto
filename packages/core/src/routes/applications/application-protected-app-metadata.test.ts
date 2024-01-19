@@ -37,6 +37,7 @@ const syncAppCustomDomainStatus = jest.fn(async () => ({
     customDomains: [mockDomainResponse],
   },
 }));
+const syncAppConfigsToRemote = jest.fn();
 
 await mockIdGenerators();
 
@@ -51,7 +52,7 @@ const tenantContext = new MockTenant(
   },
   undefined,
   {
-    protectedApps: { addDomainToRemote, syncAppCustomDomainStatus },
+    protectedApps: { addDomainToRemote, syncAppCustomDomainStatus, syncAppConfigsToRemote },
     applications: { validateProtectedApplicationById: jest.fn() },
   }
 );
@@ -78,7 +79,7 @@ describe('application protected app metadata routes', () => {
   });
 
   describe('POST /applications/:applicationId/protected-app-metadata/custom-domains', () => {
-    it('should return 201', async () => {
+    it('should return 201 and update OIDC metadata and sync site configs', async () => {
       const response = await requester
         .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
         .send({
@@ -90,7 +91,18 @@ describe('application protected app metadata routes', () => {
           ...mockProtectedApplication.protectedAppMetadata,
           customDomains: [mockDomainResponse],
         },
+        oidcClientMetadata: {
+          postLogoutRedirectUris: [
+            `https://${mockProtectedApplication.protectedAppMetadata.host}`,
+            `https://${mockDomain}`,
+          ],
+          redirectUris: [
+            `https://${mockProtectedApplication.protectedAppMetadata.host}/callback`,
+            `https://${mockDomain}/callback`,
+          ],
+        },
       });
+      expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
     });
 
     it('throw when domain exists', async () => {

@@ -20,7 +20,7 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
       },
       libraries: {
         applications: { validateProtectedApplicationById },
-        protectedApps: { addDomainToRemote, syncAppCustomDomainStatus },
+        protectedApps: { addDomainToRemote, syncAppCustomDomainStatus, syncAppConfigsToRemote },
       },
     },
   ]: RouterInitArgs<T>
@@ -68,7 +68,7 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
       const { id } = ctx.guard.params;
       const { domain } = ctx.guard.body;
 
-      const { protectedAppMetadata } = await findApplicationById(id);
+      const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
       assertThat(protectedAppMetadata, 'application.protected_app_not_configured');
 
       assertThat(
@@ -87,7 +87,22 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
       const customDomain = await addDomainToRemote(domain);
       await updateApplicationById(id, {
         protectedAppMetadata: { ...protectedAppMetadata, customDomains: [customDomain] },
+        oidcClientMetadata: {
+          redirectUris: [...oidcClientMetadata.redirectUris, `https://${domain}/callback`],
+          postLogoutRedirectUris: [
+            ...oidcClientMetadata.postLogoutRedirectUris,
+            `https://${domain}`,
+          ],
+        },
       });
+
+      try {
+        await syncAppConfigsToRemote(id);
+      } catch (error: unknown) {
+        // Revert changes
+        await updateApplicationById(id, { protectedAppMetadata, oidcClientMetadata });
+        throw error;
+      }
 
       ctx.status = 201;
       return next();
