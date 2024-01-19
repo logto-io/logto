@@ -1,4 +1,4 @@
-import { type Application } from '@logto/schemas';
+import { DomainStatus, type Application, type ProtectedAppMetadata } from '@logto/schemas';
 import { isValidSubdomain } from '@logto/shared';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -11,9 +11,12 @@ import type Queries from '#src/tenants/Queries.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
+  createCustomHostname,
   deleteProtectedAppSiteConfigs,
+  getFallbackOrigin,
   updateProtectedAppSiteConfigs,
 } from '#src/utils/cloudflare/index.js';
+import { isSubdomainOf } from '#src/utils/domain.js';
 
 export type ProtectedAppLibrary = ReturnType<typeof createProtectedAppLibrary>;
 
@@ -22,6 +25,13 @@ const getProviderConfig = async () => {
   assertThat(protectedAppConfigProviderConfig, 'application.protected_app_not_configured');
 
   return protectedAppConfigProviderConfig;
+};
+
+const getHostnameProviderConfig = async () => {
+  const { protectedAppHostnameProviderConfig } = SystemContext.shared;
+  assertThat(protectedAppHostnameProviderConfig, 'application.protected_app_not_configured');
+
+  return protectedAppHostnameProviderConfig;
 };
 
 const deleteRemoteAppConfigs = async (host: string): Promise<void> => {
@@ -42,9 +52,45 @@ const getDefaultDomain = async () => {
   return domain;
 };
 
+/**
+ * Call Cloudflare API to add the domain (custom hostname) to the remote
+ * and get the DNS records to be added to the DNS provider
+ */
+const addDomainToRemote = async (
+  hostname: string
+): Promise<NonNullable<ProtectedAppMetadata['customDomains']>[number]> => {
+  const hostnameProviderConfig = await getHostnameProviderConfig();
+  const { blockedDomains } = hostnameProviderConfig;
+  assertThat(
+    !(blockedDomains ?? []).some(
+      (domain) => hostname === domain || isSubdomainOf(hostname, domain)
+    ),
+    'domain.domain_is_not_allowed'
+  );
+
+  const [fallbackOrigin, cloudflareData] = await Promise.all([
+    getFallbackOrigin(hostnameProviderConfig),
+    createCustomHostname(hostnameProviderConfig, hostname),
+  ]);
+
+  return {
+    domain: hostname,
+    cloudflareData,
+    status: DomainStatus.PendingVerification,
+    error: null,
+    dnsRecords: [
+      {
+        type: 'CNAME',
+        name: hostname,
+        value: fallbackOrigin,
+      },
+    ],
+  };
+};
+
 export const createProtectedAppLibrary = (queries: Queries) => {
   const {
-    applications: { findApplicationById, findApplicationByProtectedAppHost },
+    applications: { findApplicationById, findApplicationByProtectedAppHost, updateApplicationById },
   } = queries;
 
   const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
@@ -129,5 +175,6 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     deleteRemoteAppConfigs,
     checkAndBuildProtectedAppData,
     getDefaultDomain,
+    addDomainToRemote,
   };
 };

@@ -11,6 +11,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import koaAuth from '../middleware/koa-auth/index.js';
 
 import adminUserRoutes from './admin-user/index.js';
+import applicationProtectedAppMetadataRoutes from './applications/application-protected-app-metadata.js';
 import applicationRoleRoutes from './applications/application-role.js';
 import applicationSignInExperienceRoutes from './applications/application-sign-in-experience.js';
 import applicationUserConsentOrganizationRoutes from './applications/application-user-consent-organization.js';
@@ -54,6 +55,7 @@ const createRouters = (tenant: TenantContext) => {
     applicationUserConsentScopeRoutes(managementRouter, tenant);
     applicationSignInExperienceRoutes(managementRouter, tenant);
     applicationUserConsentOrganizationRoutes(managementRouter, tenant);
+    applicationProtectedAppMetadataRoutes(managementRouter, tenant);
   }
 
   logtoConfigRoutes(managementRouter, tenant);

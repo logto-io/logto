@@ -44,7 +44,9 @@ export const mockApplication: Application = {
   createdAt: 1_645_334_775_356,
 };
 
-export const mockProtectedApplication: Application = {
+export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'> & {
+  protectedAppMetadata: NonNullable<Application['protectedAppMetadata']>;
+} = {
   tenantId: 'fake_tenant',
   id: 'mock-protected-app',
   secret: mockId,

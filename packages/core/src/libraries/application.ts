@@ -4,6 +4,7 @@ import {
   type Scope,
   ApplicationUserConsentScopeType,
   getManagementApiResourceIndicator,
+  ApplicationType,
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -233,6 +234,19 @@ export const createApplicationLibrary = (queries: Queries) => {
     );
   };
 
+  // Guard application exists and is a protected app
+  const validateProtectedApplicationById = async (applicationId: string) => {
+    const application = await findApplicationById(applicationId);
+
+    assertThat(
+      application.type === ApplicationType.Protected,
+      new RequestError({
+        code: 'application.protected_application_only',
+        status: 422,
+      })
+    );
+  };
+
   return {
     validateThirdPartyApplicationById,
     findApplicationScopesForResourceIndicator,
@@ -243,5 +257,6 @@ export const createApplicationLibrary = (queries: Queries) => {
     getApplicationUserConsentScopes,
     deleteApplicationUserConsentScopesByTypeAndScopeId,
     validateUserConsentOrganizationMembership,
+    validateProtectedApplicationById,
   };
 };

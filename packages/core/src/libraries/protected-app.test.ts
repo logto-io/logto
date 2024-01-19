@@ -1,3 +1,4 @@
+import { type Application } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import {
@@ -24,7 +25,7 @@ const { updateProtectedAppSiteConfigs } = await mockEsmWithActual(
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createProtectedAppLibrary } = await import('./protected-app.js');
 
-const findApplicationById = jest.fn(async () => mockProtectedApplication);
+const findApplicationById = jest.fn(async (): Promise<Application> => mockProtectedApplication);
 const findApplicationByProtectedAppHost = jest.fn();
 const { syncAppConfigsToRemote, checkAndBuildProtectedAppData, getDefaultDomain } =
   createProtectedAppLibrary(
@@ -61,7 +62,7 @@ describe('syncAppConfigsToRemote()', () => {
     const { protectedAppMetadata, id, secret } = mockProtectedApplication;
     expect(updateProtectedAppSiteConfigs).toHaveBeenCalledWith(
       mockProtectedAppConfigProviderConfig,
-      protectedAppMetadata?.host,
+      protectedAppMetadata.host,
       {
         ...protectedAppMetadata,
         sdkConfig: {
