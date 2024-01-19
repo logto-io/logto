@@ -16,6 +16,7 @@ const application = {
     'The subdomain of Protected application is already in use.',
   invalid_subdomain: 'Invalid subdomain.',
   custom_domain_not_found: 'Custom domain not found.',
+  should_delete_custom_domains_first: 'Should delete custom domains first.',
 };
 
 export default Object.freeze(application);

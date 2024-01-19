@@ -5,6 +5,7 @@ import { pickDefault } from '@logto/shared/esm';
 import {
   mockApplication,
   mockProtectedAppConfigProviderConfig,
+  mockCustomDomain,
   mockProtectedApplication,
 } from '#src/__mocks__/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
@@ -339,6 +340,20 @@ describe('application route', () => {
     await expect(applicationRequest.delete('/applications/foo')).resolves.toHaveProperty(
       'status',
       500
+    );
+  });
+
+  it('DELETE /applications/:applicationId should throw if custom domains are not empty', async () => {
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        customDomains: [mockCustomDomain],
+      },
+    });
+    await expect(applicationRequest.delete('/applications/foo')).resolves.toHaveProperty(
+      'status',
+      400
     );
   });
 });

@@ -85,7 +85,7 @@ const addDomainToRemote = async (
     domain: hostname,
     cloudflareData,
     status: DomainStatus.PendingVerification,
-    error: null,
+    errorMessage: null,
     dnsRecords: [
       {
         type: 'CNAME',
@@ -252,7 +252,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
         return {
           ...domain,
           cloudflareData,
-          errorMessage,
+          errorMessage: errorMessage || null,
           status,
         };
       })
