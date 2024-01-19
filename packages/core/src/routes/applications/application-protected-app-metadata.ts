@@ -20,7 +20,13 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
       },
       libraries: {
         applications: { validateProtectedApplicationById },
-        protectedApps: { addDomainToRemote, syncAppCustomDomainStatus, syncAppConfigsToRemote },
+        protectedApps: {
+          addDomainToRemote,
+          syncAppCustomDomainStatus,
+          syncAppConfigsToRemote,
+          deleteDomainFromRemote,
+          deleteRemoteAppConfigs,
+        },
       },
     },
   ]: RouterInitArgs<T>
@@ -105,6 +111,64 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
       }
 
       ctx.status = 201;
+      return next();
+    }
+  );
+
+  router.delete(
+    `${customDomainsPathname}/:domain`,
+    koaGuard({
+      params: z.object({
+        ...params,
+        domain: z.string(),
+      }),
+      status: [204, 404],
+    }),
+    async (ctx, next) => {
+      const { id, domain } = ctx.guard.params;
+
+      const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
+
+      const domainObject = protectedAppMetadata?.customDomains?.find(
+        ({ domain: domainName }) => domainName === domain
+      );
+
+      assertThat(
+        protectedAppMetadata && domainObject,
+        new RequestError({
+          code: 'application.custom_domain_not_found',
+          status: 404,
+        })
+      );
+
+      // Remove domain from Cloudflare
+      if (domainObject.cloudflareData?.id) {
+        await deleteDomainFromRemote(domainObject.cloudflareData.id);
+      }
+
+      // Remove site configs
+      await deleteRemoteAppConfigs(domain);
+
+      await updateApplicationById(id, {
+        oidcClientMetadata: {
+          ...oidcClientMetadata,
+          redirectUris: oidcClientMetadata.redirectUris.filter(
+            (uri) => uri !== `https://${domain}/callback`
+          ),
+          postLogoutRedirectUris: oidcClientMetadata.postLogoutRedirectUris.filter(
+            (uri) => uri !== `https://${domain}`
+          ),
+        },
+        protectedAppMetadata: {
+          ...protectedAppMetadata,
+          customDomains: protectedAppMetadata.customDomains?.filter(
+            ({ domain: domainName }) => domainName !== domain
+          ),
+        },
+      });
+
+      ctx.status = 204;
+
       return next();
     }
   );

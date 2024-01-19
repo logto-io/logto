@@ -2,7 +2,7 @@ import { type Application, DomainStatus } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { type Nullable } from '@silverhand/essentials';
 
-import { mockProtectedApplication } from '#src/__mocks__/index.js';
+import { mockCloudflareData, mockProtectedApplication } from '#src/__mocks__/index.js';
 import { mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -38,6 +38,8 @@ const syncAppCustomDomainStatus = jest.fn(async () => ({
   },
 }));
 const syncAppConfigsToRemote = jest.fn();
+const deleteDomainFromRemote = jest.fn();
+const deleteRemoteAppConfigs = jest.fn();
 
 await mockIdGenerators();
 
@@ -52,7 +54,13 @@ const tenantContext = new MockTenant(
   },
   undefined,
   {
-    protectedApps: { addDomainToRemote, syncAppCustomDomainStatus, syncAppConfigsToRemote },
+    protectedApps: {
+      addDomainToRemote,
+      syncAppCustomDomainStatus,
+      syncAppConfigsToRemote,
+      deleteDomainFromRemote,
+      deleteRemoteAppConfigs,
+    },
     applications: { validateProtectedApplicationById: jest.fn() },
   }
 );
@@ -63,6 +71,10 @@ const applicationProtectedAppMetadataRoutes = await pickDefault(
 );
 
 describe('application protected app metadata routes', () => {
+  afterEach(() => {
+    updateApplicationById.mockClear();
+  });
+
   const requester = createRequester({
     authedRoutes: applicationProtectedAppMetadataRoutes,
     tenantContext,
@@ -129,6 +141,53 @@ describe('application protected app metadata routes', () => {
           domain: mockDomain,
         });
       expect(response.status).toEqual(422);
+    });
+  });
+
+  describe('DELETE /applications/:applicationId/protected-app-metadata/custom-domains/:domain', () => {
+    it('should update application, delete remote domain, and delete site configs', async () => {
+      findApplicationById.mockResolvedValueOnce({
+        ...mockProtectedApplication,
+        protectedAppMetadata: {
+          ...mockProtectedApplication.protectedAppMetadata,
+          customDomains: [
+            {
+              ...mockDomainResponse,
+              cloudflareData: mockCloudflareData,
+            },
+          ],
+        },
+      });
+      const response = await requester.delete(
+        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains/${mockDomainResponse.domain}`
+      );
+      expect(response.status).toEqual(204);
+      expect(updateApplicationById).toHaveBeenCalledWith(mockProtectedApplication.id, {
+        protectedAppMetadata: {
+          ...mockProtectedApplication.protectedAppMetadata,
+          customDomains: [],
+        },
+        oidcClientMetadata: {
+          postLogoutRedirectUris: [`https://${mockProtectedApplication.protectedAppMetadata.host}`],
+          redirectUris: [`https://${mockProtectedApplication.protectedAppMetadata.host}/callback`],
+        },
+      });
+      expect(deleteDomainFromRemote).toHaveBeenCalledWith(mockCloudflareData.id);
+      expect(deleteRemoteAppConfigs).toHaveBeenCalledWith(mockDomainResponse.domain);
+    });
+
+    it('throw when domain exists', async () => {
+      findApplicationById.mockResolvedValueOnce({
+        ...mockProtectedApplication,
+        protectedAppMetadata: {
+          ...mockProtectedApplication.protectedAppMetadata,
+          customDomains: [mockDomainResponse],
+        },
+      });
+      const response = await requester.delete(
+        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains/unexists.com`
+      );
+      expect(response.status).toEqual(404);
     });
   });
 });

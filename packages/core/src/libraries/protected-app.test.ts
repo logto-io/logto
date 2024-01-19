@@ -18,12 +18,13 @@ import { mockFallbackOrigin } from '#src/utils/cloudflare/mock.js';
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const { updateProtectedAppSiteConfigs } = await mockEsmWithActual(
+const { updateProtectedAppSiteConfigs, deleteCustomHostname } = await mockEsmWithActual(
   '#src/utils/cloudflare/index.js',
   () => ({
     updateProtectedAppSiteConfigs: jest.fn(),
     getCustomHostname: jest.fn(async () => mockCloudflareData),
     getFallbackOrigin: jest.fn(async () => mockFallbackOrigin),
+    deleteCustomHostname: jest.fn(),
   })
 );
 
@@ -36,12 +37,12 @@ const updateApplicationById = jest.fn(async (id: string, data: Partial<Applicati
   ...mockProtectedApplication,
   ...data,
 }));
-
 const {
   syncAppConfigsToRemote,
   checkAndBuildProtectedAppData,
   syncAppCustomDomainStatus,
   getDefaultDomain,
+  deleteDomainFromRemote,
 } = createProtectedAppLibrary(
   new MockQueries({
     applications: {
@@ -220,5 +221,12 @@ describe('syncAppCustomDomainStatus()', () => {
     });
     await syncAppCustomDomainStatus(mockProtectedApplication.id);
     expect(updateApplicationById).not.toHaveBeenCalled();
+  });
+});
+
+describe('deleteDomainFromRemote()', () => {
+  it('should call deleteCustomHostname', async () => {
+    await deleteDomainFromRemote('id');
+    expect(deleteCustomHostname).toHaveBeenCalled();
   });
 });
