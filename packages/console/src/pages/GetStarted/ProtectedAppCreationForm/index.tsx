@@ -57,7 +57,12 @@ function ProtectedAppCreationForm() {
                     </Link>
                     <CopyToClipboard value={host} variant="icon" />
                     <Tooltip content={t('general.open')}>
-                      <IconButton size="small">
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          window.open(`https://${host}`, '_blank');
+                        }}
+                      >
                         <ExternalLinkIcon />
                       </IconButton>
                     </Tooltip>
