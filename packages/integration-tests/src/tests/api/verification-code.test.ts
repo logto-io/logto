@@ -67,7 +67,7 @@ describe('Generic verification code through management API', () => {
     await clearConnectorsByTypes([ConnectorType.Email]);
     await expectRejects(requestVerificationCode({ email: emailForTestSendCode }), {
       code: 'connector.not_found',
-      statusCode: 400,
+      statusCode: 501,
     });
 
     await expect(
@@ -91,7 +91,7 @@ describe('Generic verification code through management API', () => {
     await clearConnectorsByTypes([ConnectorType.Sms]);
     await expectRejects(requestVerificationCode({ phone: phoneForTestSendCode }), {
       code: 'connector.not_found',
-      statusCode: 400,
+      statusCode: 501,
     });
 
     await expect(
