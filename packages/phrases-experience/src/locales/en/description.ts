@@ -73,6 +73,13 @@ const description = {
   single_sign_on_connectors_list:
     'Your enterprise has enabled Single Sign-On for the email account {{email}}. You can continue to sign in with the following SSO providers.',
   single_sign_on_enabled: 'Single Sign-On is enabled for this account',
+  authorize_title: 'Authorize {{name}}',
+  request_permission: '{{name}} is requesting access to:',
+  grant_organization_access: 'Grant the organization access:',
+  user_scopes: 'Personal user data',
+  organization_scopes: 'Organization access',
+  authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
+  not_you: 'Not you?',
 };
 
 export default Object.freeze(description);

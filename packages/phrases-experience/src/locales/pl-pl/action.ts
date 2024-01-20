@@ -29,6 +29,10 @@ const action = {
   verify_via_passkey: 'Weryfikacja za pomocą klucza dostępu',
   download: 'Pobierz',
   single_sign_on: 'Pojedyncze logowanie',
+  /** UNTRANSLATED */
+  authorize: 'Authorize',
+  /** UNTRANSLATED */
+  use_another_account: 'Use another account',
 };
 
 export default Object.freeze(action);

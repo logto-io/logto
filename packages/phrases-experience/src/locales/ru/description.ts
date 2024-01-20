@@ -75,6 +75,20 @@ const description = {
   single_sign_on_connectors_list:
     'Ваше предприятие включило функцию единого входа для электронной почты {{email}}. Вы можете продолжить вход в систему с помощью следующих провайдеров SSO.',
   single_sign_on_enabled: 'Единый вход в систему включен для этой учетной записи',
+  /** UNTRANSLATED */
+  authorize_title: 'Authorize {{name}}',
+  /** UNTRANSLATED */
+  request_permission: '{{name}} is requesting access to:',
+  /** UNTRANSLATED */
+  grant_organization_access: 'Grant the organization access:',
+  /** UNTRANSLATED */
+  user_scopes: 'Personal user data',
+  /** UNTRANSLATED */
+  organization_scopes: 'Organization access',
+  /** UNTRANSLATED */
+  authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
+  /** UNTRANSLATED */
+  not_you: 'Not you?',
 };
 
 export default Object.freeze(description);

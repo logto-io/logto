@@ -71,6 +71,20 @@ const description = {
   single_sign_on_connectors_list:
     'A sua empresa ativou o Single Sign-On para a conta de email {{email}}. Pode continuar a iniciar sessão com os seguintes fornecedores de SSO.',
   single_sign_on_enabled: 'Esta conta tem o Single Sign-On ativado.',
+  /** UNTRANSLATED */
+  authorize_title: 'Authorize {{name}}',
+  /** UNTRANSLATED */
+  request_permission: '{{name}} is requesting access to:',
+  /** UNTRANSLATED */
+  grant_organization_access: 'Grant the organization access:',
+  /** UNTRANSLATED */
+  user_scopes: 'Personal user data',
+  /** UNTRANSLATED */
+  organization_scopes: 'Organization access',
+  /** UNTRANSLATED */
+  authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
+  /** UNTRANSLATED */
+  not_you: 'Not you?',
 };
 
 export default Object.freeze(description);
