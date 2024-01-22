@@ -22,7 +22,7 @@ import { type DataEntry, type DataGroup, type SelectedDataEntry } from './type';
  * @param availableDataGroups - The list of available data groups. (Single level tree form)
  */
 
-type Props<TEntry extends DataEntry> = {
+export type Props<TEntry extends DataEntry> = {
   title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   selectedData: Array<SelectedDataEntry<TEntry>>;
   setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
@@ -61,5 +61,4 @@ function DataTransferBox<TEntry extends DataEntry = DataEntry>({
   );
 }
 
-// eslint-disable-next-line import/no-unused-modules -- will be used in the following PR
 export default DataTransferBox;
