@@ -6,8 +6,7 @@ import apiExpress from './api-express/index';
 import apiPython from './api-python/index';
 import apiSpringBoot from './api-spring-boot/index';
 import m2mGeneral from './m2m-general/index';
-import nativeAndroidJava from './native-android-java/index';
-import nativeAndroidKt from './native-android-kt/index';
+import nativeAndroid from './native-android/index';
 import nativeCapacitor from './native-capacitor/index';
 import nativeFlutter from './native-flutter/index';
 import nativeIosSwift from './native-ios-swift/index';
@@ -102,10 +101,10 @@ const guides: Readonly<Guide[]> = Object.freeze([
   },
   {
     order: 2,
-    id: 'native-android-kt',
-    Logo: lazy(async () => import('./native-android-kt/logo.svg')),
-    Component: lazy(async () => import('./native-android-kt/README.mdx')),
-    metadata: nativeAndroidKt,
+    id: 'native-android',
+    Logo: lazy(async () => import('./native-android/logo.svg')),
+    Component: lazy(async () => import('./native-android/README.mdx')),
+    metadata: nativeAndroid,
   },
   {
     order: 2,
@@ -120,13 +119,6 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-php/logo.svg')),
     Component: lazy(async () => import('./web-php/README.mdx')),
     metadata: webPhp,
-  },
-  {
-    order: 3,
-    id: 'native-android-java',
-    Logo: lazy(async () => import('./native-android-java/logo.svg')),
-    Component: lazy(async () => import('./native-android-java/README.mdx')),
-    metadata: nativeAndroidJava,
   },
   {
     order: 3,
