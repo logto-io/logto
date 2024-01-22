@@ -10,22 +10,12 @@ import {
   createCustomHostname,
   deleteCustomHostname,
   getFallbackOrigin,
+  getDomainStatusFromCloudflareData,
 } from '#src/utils/cloudflare/index.js';
 import { isSubdomainOf } from '#src/utils/domain.js';
 import { clearCustomDomainCache } from '#src/utils/tenant.js';
 
 export type DomainLibrary = ReturnType<typeof createDomainLibrary>;
-
-const getDomainStatusFromCloudflareData = (data: CloudflareData): DomainStatus => {
-  switch (data.status) {
-    case 'active': {
-      return data.ssl.status === 'active' ? DomainStatus.Active : DomainStatus.PendingSsl;
-    }
-    default: {
-      return DomainStatus.PendingVerification;
-    }
-  }
-};
 
 export const createDomainLibrary = (queries: Queries) => {
   const {

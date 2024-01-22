@@ -3,6 +3,8 @@ import { createMockUtils } from '@logto/shared/esm';
 
 import {
   mockProtectedAppConfigProviderConfig,
+  mockCloudflareData,
+  mockCustomDomain,
   mockProtectedApplication,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -11,6 +13,7 @@ import {
   defaultProtectedAppSessionDuration,
 } from '#src/routes/applications/constants.js';
 import SystemContext from '#src/tenants/SystemContext.js';
+import { mockFallbackOrigin } from '#src/utils/cloudflare/mock.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -19,6 +22,8 @@ const { updateProtectedAppSiteConfigs } = await mockEsmWithActual(
   '#src/utils/cloudflare/index.js',
   () => ({
     updateProtectedAppSiteConfigs: jest.fn(),
+    getCustomHostname: jest.fn(async () => mockCloudflareData),
+    getFallbackOrigin: jest.fn(async () => mockFallbackOrigin),
   })
 );
 
@@ -27,14 +32,43 @@ const { createProtectedAppLibrary } = await import('./protected-app.js');
 
 const findApplicationById = jest.fn(async (): Promise<Application> => mockProtectedApplication);
 const findApplicationByProtectedAppHost = jest.fn();
-const { syncAppConfigsToRemote, checkAndBuildProtectedAppData, getDefaultDomain } =
-  createProtectedAppLibrary(
-    new MockQueries({ applications: { findApplicationById, findApplicationByProtectedAppHost } })
-  );
+const updateApplicationById = jest.fn(async (id: string, data: Partial<Application>) => ({
+  ...mockProtectedApplication,
+  ...data,
+}));
+
+const {
+  syncAppConfigsToRemote,
+  checkAndBuildProtectedAppData,
+  syncAppCustomDomainStatus,
+  getDefaultDomain,
+} = createProtectedAppLibrary(
+  new MockQueries({
+    applications: {
+      findApplicationById,
+      findApplicationByProtectedAppHost,
+      updateApplicationById,
+    },
+  })
+);
+
+const protectedAppConfigProviderConfig = {
+  accountIdentifier: 'fake_account_id',
+  namespaceIdentifier: 'fake_namespace_id',
+  keyName: 'fake_key_name',
+  apiToken: '',
+  domain: 'protected.app',
+};
 
 beforeAll(() => {
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  SystemContext.shared.protectedAppConfigProviderConfig = mockProtectedAppConfigProviderConfig;
+  SystemContext.shared.protectedAppConfigProviderConfig = protectedAppConfigProviderConfig;
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  SystemContext.shared.protectedAppHostnameProviderConfig = {
+    zoneId: 'fake_zone_id',
+    apiToken: '',
+    blockedDomains: ['blocked.com'],
+  };
 });
 
 afterAll(() => {
@@ -120,5 +154,44 @@ describe('checkAndBuildProtectedAppData()', () => {
 describe('getDefaultDomain()', () => {
   it('should get default domain', async () => {
     await expect(getDefaultDomain()).resolves.toBe(mockProtectedAppConfigProviderConfig.domain);
+  });
+});
+
+describe('syncAppCustomDomainStatus()', () => {
+  afterEach(() => {
+    updateApplicationById.mockClear();
+  });
+
+  it('should return application with synced domains', async () => {
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        customDomains: [mockCustomDomain],
+      },
+    });
+    await expect(syncAppCustomDomainStatus(mockProtectedApplication.id)).resolves.toMatchObject({
+      protectedAppMetadata: {
+        customDomains: [
+          {
+            ...mockCustomDomain,
+            cloudflareData: mockCloudflareData,
+          },
+        ],
+      },
+    });
+    expect(updateApplicationById).toHaveBeenCalled();
+  });
+
+  it('should skip when custom domains are empty', async () => {
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        customDomains: [],
+      },
+    });
+    await syncAppCustomDomainStatus(mockProtectedApplication.id);
+    expect(updateApplicationById).not.toHaveBeenCalled();
   });
 });

@@ -132,3 +132,5 @@ export const deleteCustomHostname = async (auth: HostnameProviderData, identifie
 
   handleResponse(response);
 };
+
+export { getDomainStatusFromCloudflareData } from './utils.js';

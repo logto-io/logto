@@ -1,4 +1,9 @@
-import { DomainStatus, type Application, type ProtectedAppMetadata } from '@logto/schemas';
+import {
+  DomainStatus,
+  type Application,
+  type ProtectedAppMetadata,
+  type CustomDomain,
+} from '@logto/schemas';
 import { isValidSubdomain } from '@logto/shared';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -13,6 +18,8 @@ import assertThat from '#src/utils/assert-that.js';
 import {
   createCustomHostname,
   deleteProtectedAppSiteConfigs,
+  getCustomHostname,
+  getDomainStatusFromCloudflareData,
   getFallbackOrigin,
   updateProtectedAppSiteConfigs,
 } from '#src/utils/cloudflare/index.js';
@@ -170,11 +177,85 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     };
   };
 
+  /**
+   * Query domain status from Cloudflare and update the data and status in the database
+   */
+  const syncAppCustomDomainStatus = async (
+    applicationId: string
+  ): Promise<
+    Omit<Application, 'protectedAppMetadata'> & {
+      protectedAppMetadata: NonNullable<Application['protectedAppMetadata']>;
+    }
+  > => {
+    const { protectedAppHostnameProviderConfig } = SystemContext.shared;
+    assertThat(protectedAppHostnameProviderConfig, 'domain.not_configured');
+
+    const application = await findApplicationById(applicationId);
+    const { protectedAppMetadata } = application;
+    assertThat(protectedAppMetadata, 'application.protected_app_not_configured');
+
+    if (!protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0) {
+      return {
+        ...application,
+        protectedAppMetadata,
+      };
+    }
+
+    const customDomains: CustomDomain[] = await Promise.all(
+      protectedAppMetadata.customDomains.map(async (domain) => {
+        assertThat(domain.cloudflareData, 'domain.cloudflare_data_missing');
+
+        const cloudflareData = await getCustomHostname(
+          protectedAppHostnameProviderConfig,
+          domain.cloudflareData.id
+        );
+
+        const status = getDomainStatusFromCloudflareData(cloudflareData);
+        const {
+          verification_errors: verificationErrors,
+          ssl: { validation_errors: sslVerificationErrors },
+        } = cloudflareData;
+
+        const errorMessage: string = [
+          ...(verificationErrors ?? []),
+          ...(sslVerificationErrors ?? []).map(({ message }) => message),
+        ]
+          .filter(Boolean)
+          .join('\n');
+
+        return {
+          ...domain,
+          cloudflareData,
+          errorMessage,
+          status,
+        };
+      })
+    );
+
+    const { protectedAppMetadata: updatedProtectedAppMetadata } = await updateApplicationById(
+      applicationId,
+      {
+        protectedAppMetadata: {
+          ...protectedAppMetadata,
+          customDomains,
+        },
+      }
+    );
+    // Not expected to happen, just to make TS happy
+    assertThat(updatedProtectedAppMetadata, 'application.protected_app_not_configured');
+
+    return {
+      ...application,
+      protectedAppMetadata: updatedProtectedAppMetadata,
+    };
+  };
+
   return {
     syncAppConfigsToRemote,
     deleteRemoteAppConfigs,
     checkAndBuildProtectedAppData,
     getDefaultDomain,
     addDomainToRemote,
+    syncAppCustomDomainStatus,
   };
 };
