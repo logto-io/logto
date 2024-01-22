@@ -56,6 +56,19 @@ export default function applicationRoutes<T extends AuthedRouter>(
   } = queries.applicationsRoles;
   const { findRoleByRoleName } = queries.roles;
 
+  const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false ' | undefined) => {
+    // FIXME:  @simeng-li Remove this guard once Logto as IdP is ready
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return false;
+    }
+
+    if (isThirdPartyQuery === undefined) {
+      return;
+    }
+
+    return isThirdPartyQuery === 'true';
+  };
+
   router.get(
     '/applications',
     koaPagination({ isOptional: true }),
@@ -72,7 +85,9 @@ export default function applicationRoutes<T extends AuthedRouter>(
         excludeRoleId: string().optional(),
         // FIXME:  @simeng-li Remove this guard once Logto as IdP is ready
         ...conditional(
-          EnvSet.values.isDevFeaturesEnabled && { isThirdParty: z.literal('true').optional() }
+          EnvSet.values.isDevFeaturesEnabled && {
+            isThirdParty: z.union([z.literal('true'), z.literal('false')]).optional(),
+          }
         ),
       }),
       response: z.array(applicationResponseGuard),
@@ -81,10 +96,10 @@ export default function applicationRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const { limit, offset, disabled: paginationDisabled } = ctx.pagination;
       const { searchParams } = ctx.URL;
-      const { types, excludeRoleId } = ctx.guard.query;
+      const { types, excludeRoleId, isThirdParty: isThirdPartyParam } = ctx.guard.query;
 
-      // FIXME:  @simeng-li Remove this guard once Logto as IdP is ready
-      const isThirdParty = Boolean(ctx.guard.query.isThirdParty);
+      // @ts-expect-error FIXME: unknown type will be fixed once we have the isDevFeaturesEnabled guard removed
+      const isThirdParty = parseIsThirdPartQueryParam(isThirdPartyParam);
 
       // This will only parse the `search` query param, other params will be ignored. Please use query guard to validate them.
       const search = parseSearchParamsForSearch(searchParams);
