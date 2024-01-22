@@ -38,13 +38,6 @@ export const mockCloudflareData: CloudflareData = {
   status: 'pending',
   ssl: {
     status: 'pending',
-    txt_name: mockSslTxtName,
-    txt_value: mockSslTxtValue,
-  },
-  ownership_verification: {
-    type: 'TXT',
-    name: mockTxtName,
-    value: mockTxtValue,
   },
 };
 
@@ -53,8 +46,6 @@ export const mockCloudflareDataPendingSSL: CloudflareData = {
   status: 'active',
   ssl: {
     status: 'pending',
-    txt_name: mockSslTxtName,
-    txt_value: mockSslTxtValue,
   },
 };
 
