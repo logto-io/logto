@@ -29,7 +29,7 @@ function Permissions({ application }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [isAssignScopesModalOpen, setIsAssignScopesModalOpen] = useState(false);
-  const [editScopeModalData, setEditScopeModalData] = useState<EditableScopeData | undefined>();
+  const [editScopeModalData, setEditScopeModalData] = useState<EditableScopeData>();
 
   const { parseRowGroup, deleteScope, editScope } = useScopesTable();
 
