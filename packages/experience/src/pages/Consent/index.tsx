@@ -1,9 +1,11 @@
 import { type ConsentInfoResponse } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import { consent, getConsentInfo } from '@/apis/consent';
 import Button from '@/components/Button';
+import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 
@@ -15,6 +17,7 @@ import * as styles from './index.module.scss';
 const Consent = () => {
   const handleError = useErrorHandler();
   const asyncConsent = useApi(consent);
+  const { t } = useTranslation();
 
   const [consentData, setConsentData] = useState<ConsentInfoResponse | undefined>();
   const [selectedOrganization, setSelectedOrganization] = useState<Organization | undefined>();
@@ -91,7 +94,7 @@ const Consent = () => {
           onSelect={setSelectedOrganization}
         />
       )}
-      <div className={styles.footer}>
+      <div className={styles.footerButton}>
         <Button
           title="action.cancel"
           type="secondary"
@@ -100,6 +103,10 @@ const Consent = () => {
           }}
         />
         <Button title="action.authorize" onClick={consentHandler} />
+      </div>
+      <div className={styles.footerLink}>
+        {t('description.not_you')}{' '}
+        <TextLink replace to="/sign-in" text="action.use_another_account" />
       </div>
     </LandingPageLayout>
   );
