@@ -25,7 +25,7 @@ const cloud = {
     additional_features_field: 'Haben Sie noch etwas, das Sie uns wissen lassen möchten?',
     additional_features_options: {
       customize_ui_and_flow:
-        'Benötigen Sie die Möglichkeit, Ihr eigenes UI zu integrieren oder Ihre eigenen Abläufe über die Logto-API anzupassen',
+        'Erstellen und verwalten Sie Ihre eigene Benutzeroberfläche und Ihren eigenen Ablauf, anstatt nur die vorgefertigte und anpassbare Lösung von Logto zu verwenden',
       compliance: 'SOC2 und GDPR sind Pflicht',
       export_user_data: 'Benötigen Sie die Möglichkeit, Benutzerdaten von Logto zu exportieren',
       budget_control: 'Ich habe sehr strenge Budgetkontrolle',

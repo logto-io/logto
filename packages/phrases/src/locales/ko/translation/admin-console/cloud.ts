@@ -23,11 +23,11 @@ const cloud = {
     additional_features_field: '알려주고 싶은 다른 사항이 있으세요?',
     additional_features_options: {
       customize_ui_and_flow:
-        '내가 원하는 UI를 가져오거나 Logto API를 통해 내 흐름을 사용자화하려고 해요',
+        '내 UI를 직접 구축하고 관리하려고 하지만 Logto의 미리 구축되고 사용자 정의 가능한 솔루션을 사용하지 않는다',
       compliance: 'SOC2와 GDPR가 필수 사항이에요',
       export_user_data: 'Logto 에서 사용자 데이터를 내보낼 수 있는 기능이 필요해요',
       budget_control: '매우 엄격한 예산 통제가 있어요',
-      bring_own_auth: '내 자체 인증 서비스가 있고 Logto 기능만 필요해요',
+      bring_own_auth: '내장 인증 서비스가 있고 Logto 기능만 필요해요',
       others: '위에 나열된 것 중에 없어요',
     },
   },

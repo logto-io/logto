@@ -25,7 +25,7 @@ const cloud = {
     additional_features_field: 'Bilmemizi istediğiniz başka bir şey var mı?',
     additional_features_options: {
       customize_ui_and_flow:
-        "Logto API aracılığıyla kendi UI'ımı getirme veya kendi akışlarımı özelleştirme yeteneğine ihtiyacım var",
+        "Kendi UI'ımı inşa etmek ve yönetmek, sadece Logto'nun önceden yapılandırılmış ve özelleştirilebilir çözümünü kullanmamak",
       compliance: 'SOC2 ve GDPR olmazsa olmaz',
       export_user_data: "Kullanıcı verilerini Logto'dan dışa aktarma yeteneğine ihtiyacım var",
       budget_control: 'Çok sıkı bir bütçe kontrolüm var',

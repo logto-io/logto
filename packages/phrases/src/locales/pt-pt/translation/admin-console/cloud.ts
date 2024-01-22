@@ -25,7 +25,7 @@ const cloud = {
     additional_features_field: 'Tem algo mais que queira que saibamos?',
     additional_features_options: {
       customize_ui_and_flow:
-        'Necessidade de poder usar a minha própria interface do utilizador ou personalizar os meus próprios fluxos através da API da Logto',
+        'Construir e gerir a minha própria IU, não apenas usar a solução pré-construída e personalizável da Logto',
       compliance: 'A conformidade SOC2 e GDPR são imprescindíveis',
       export_user_data: 'Necessidade de exportar dados de utilizadores da Logto',
       budget_control: 'Tenho um controlo orçamental muito apertado',
@@ -35,7 +35,7 @@ const cloud = {
     },
   },
   sie: {
-    page_title: 'Personalize the Login Experience',
+    page_title: 'Personalize a Experiência de Login',
     title: 'Vamos personalizar a sua experiência de login com facilidade',
     inspire: {
       title: 'Crie exemplos convincentes',
