@@ -1,4 +1,4 @@
-import { UserScope } from '@logto/core-kit';
+import { ReservedResource, UserScope } from '@logto/core-kit';
 import {
   consentInfoResponseGuard,
   publicApplicationGuard,
@@ -14,6 +14,7 @@ import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 import { errors } from 'oidc-provider';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { consent, getMissingScopes } from '#src/libraries/session.js';
@@ -40,6 +41,30 @@ const parseMissingResourceScopesInfo = async (
 
   const resourcesWithScopes = await Promise.all(
     Object.entries(missingResourceScopes).map(async ([resourceIndicator, scopeNames]) => {
+      // Organization resources are reserved resources, we don't need to find the resource details
+      if (resourceIndicator === ReservedResource.Organization) {
+        const [_, organizationScopes] = await queries.organizations.scopes.findAll();
+        const scopes = scopeNames.map((scopeName) => {
+          const scope = organizationScopes.find((scope) => scope.name === scopeName);
+
+          // Will be guarded by OIDC provider, should not happen
+          assertThat(
+            scope,
+            new InvalidTarget(`scope with name ${scopeName} not found for organization resource`)
+          );
+
+          return scope;
+        });
+
+        return {
+          resource: {
+            id: resourceIndicator,
+            name: resourceIndicator,
+          },
+          scopes,
+        };
+      }
+
       const resource = await queries.resources.findResourceByIndicator(resourceIndicator);
 
       // Will be guarded by OIDC provider, should not happen
@@ -74,19 +99,69 @@ const parseMissingResourceScopesInfo = async (
 
 export default function consentRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<T>>,
-  { provider, queries }: TenantContext
+  {
+    provider,
+    queries,
+    libraries: {
+      applications: { validateUserConsentOrganizationMembership },
+    },
+  }: TenantContext
 ) {
   const consentPath = `${interactionPrefix}/consent`;
 
-  router.post(consentPath, async (ctx, next) => {
-    const { interactionDetails } = ctx;
+  router.post(
+    consentPath,
+    koaGuard({
+      body: z.object({
+        organizationIds: z.string().array().optional(),
+      }),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const {
+        interactionDetails,
+        guard: {
+          body: { organizationIds },
+        },
+      } = ctx;
 
-    const redirectTo = await consent(ctx, provider, queries, interactionDetails);
+      // FIXME: @simeng-li remove this when the IdP is ready
 
-    ctx.body = { redirectTo };
+      // Grant the organizations to the application if the user has selected the organizations
+      if (organizationIds?.length && EnvSet.values.isDevFeaturesEnabled) {
+        const {
+          session,
+          params: { client_id: applicationId },
+        } = interactionDetails;
 
-    return next();
-  });
+        assertThat(session, 'session.not_found');
+
+        assertThat(
+          applicationId && typeof applicationId === 'string',
+          new InvalidClient('client must be available')
+        );
+
+        const { accountId: userId } = session;
+
+        // Assert that user is a member of all organizations
+        await validateUserConsentOrganizationMembership(userId, organizationIds);
+
+        await queries.applications.userConsentOrganizations.insert(
+          ...organizationIds.map<[string, string, string]>((organizationId) => [
+            applicationId,
+            userId,
+            organizationId,
+          ])
+        );
+      }
+
+      const redirectTo = await consent(ctx, provider, queries, interactionDetails);
+
+      ctx.body = { redirectTo };
+
+      return next();
+    }
+  );
 
   // FIXME: @simeng-li remove this when the IdP is ready
   if (!EnvSet.values.isDevFeaturesEnabled) {
