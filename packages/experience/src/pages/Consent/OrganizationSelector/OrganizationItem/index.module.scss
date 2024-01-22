@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.organizationItem {
+  @include _.flex-row;
+  padding: _.unit(2) _.unit(4);
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    color: var(--color-type-secondary);
+    margin-right: _.unit(2);
+  }
+
+  .organizationName {
+    font: var(--font-body-2);
+    flex: 1;
+  }
+
+  &[role='button'] {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-overlay-brand-hover);
+    }
+  }
+
+  &[data-selected='true'] {
+    color: var(--color-brand-default);
+
+    .icon {
+      color: var(--color-brand-default);
+    }
+  }
+}
