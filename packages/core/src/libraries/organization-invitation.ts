@@ -13,6 +13,7 @@ import { type ConnectorLibrary } from './connector.js';
 
 const invitationLinkPath = '/invitation';
 
+/** Class for managing organization invitations. */
 export class OrganizationInvitationLibrary {
   constructor(
     protected readonly tenantId: string,
@@ -20,6 +21,20 @@ export class OrganizationInvitationLibrary {
     protected readonly connector: ConnectorLibrary
   ) {}
 
+  /**
+   * Creates a new organization invitation.
+   *
+   * Note: If the invitation email is not skipped, and the email cannot be sent, the transaction
+   * will be rolled back.
+   *
+   * @param data Invitation data.
+   * @param data.inviterId The user ID of the inviter.
+   * @param data.invitee The email address of the invitee.
+   * @param data.organizationId The ID of the organization to invite to.
+   * @param data.expiresAt The epoch time in milliseconds when the invitation expires.
+   * @param data.organizationRoleIds The IDs of the organization roles to assign to the invitee.
+   * @param skipEmail Whether to skip sending the invitation email. Defaults to `false`.
+   */
   async insert(
     data: Pick<
       CreateOrganizationInvitation,

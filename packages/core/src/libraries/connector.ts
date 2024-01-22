@@ -139,6 +139,7 @@ export const createConnectorLibrary = (
     });
   };
 
+  /** Type of the connector that can send message of the given type. */
   type MappedConnectorType = {
     [ConnectorType.Email]: LogtoConnector<EmailConnector>;
     [ConnectorType.Sms]: LogtoConnector<SmsConnector>;

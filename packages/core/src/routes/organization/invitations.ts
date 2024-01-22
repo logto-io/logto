@@ -53,6 +53,7 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
 
       assertThat(
         body.expiresAt > Date.now(),
+        // TODO: Throw `RequestError` instead.
         new Error('The value of `expiresAt` must be in the future.')
       );
 
