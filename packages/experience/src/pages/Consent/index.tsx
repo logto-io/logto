@@ -19,8 +19,8 @@ const Consent = () => {
   const asyncConsent = useApi(consent);
   const { t } = useTranslation();
 
-  const [consentData, setConsentData] = useState<ConsentInfoResponse | undefined>();
-  const [selectedOrganization, setSelectedOrganization] = useState<Organization | undefined>();
+  const [consentData, setConsentData] = useState<ConsentInfoResponse>();
+  const [selectedOrganization, setSelectedOrganization] = useState<Organization>();
 
   const asyncGetConsentInfo = useApi(getConsentInfo);
 
@@ -49,19 +49,17 @@ const Consent = () => {
       }
 
       setConsentData(result);
+
+      // Init the default organization selection
+      if (!result?.organizations?.length) {
+        return;
+      }
+
+      setSelectedOrganization(result.organizations[0]);
     };
 
     void getConsentInfoHandler();
   }, [asyncGetConsentInfo, handleError]);
-
-  // Init the default organization selection
-  useEffect(() => {
-    if (!consentData?.organizations?.length) {
-      return;
-    }
-
-    setSelectedOrganization(consentData.organizations[0]);
-  }, [consentData]);
 
   if (!consentData) {
     return null;
