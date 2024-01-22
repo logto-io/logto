@@ -21,6 +21,10 @@ const api_resource_details = {
     create_title: 'İzin Oluştur',
     create_subtitle: 'Bu API tarafından gerektirilen izinleri (kapsamları) tanımlayın.',
     confirm_create: 'İzin Oluştur',
+    /** UNTRANSLATED */
+    edit_title: 'Edit API permission',
+    /** UNTRANSLATED */
+    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
     name: 'İzin adı',
     name_placeholder: 'read:kaynak',
     forbidden_space_in_name: 'İzin adı boşluk içermemelidir.',

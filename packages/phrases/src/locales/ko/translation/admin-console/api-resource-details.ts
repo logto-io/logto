@@ -21,6 +21,10 @@ const api_resource_details = {
     create_title: '권한 생성',
     create_subtitle: '이 API에 필요한 권한을 정의합니다.',
     confirm_create: '권한 생성',
+    /** UNTRANSLATED */
+    edit_title: 'Edit API permission',
+    /** UNTRANSLATED */
+    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
     name: '권한 이름',
     name_placeholder: 'read:resource',
     forbidden_space_in_name: '권한 이름에는 공백을 포함할 수 없습니다.',
