@@ -73,7 +73,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
           ? sql`${fields.id} not in (${sql.join(excludeApplicationIds, sql`, `)})`
           : sql``,
         types && types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``,
-        isThirdParty ? sql`${fields.isThirdParty} = true` : sql`${fields.isThirdParty} = false`,
+        typeof isThirdParty === 'boolean' ? sql`${fields.isThirdParty} = ${isThirdParty}` : sql``,
         buildApplicationConditions(search),
       ])}
     `);
@@ -118,7 +118,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
           ? sql`${fields.id} not in (${sql.join(excludeApplicationIds, sql`, `)})`
           : sql``,
         types && types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``,
-        isThirdParty ? sql`${fields.isThirdParty} = true` : sql`${fields.isThirdParty} = false`,
+        typeof isThirdParty === 'boolean' ? sql`${fields.isThirdParty} = ${isThirdParty}` : sql``,
         buildApplicationConditions(search),
       ])}
       order by ${fields.createdAt} desc

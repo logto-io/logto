@@ -64,6 +64,7 @@ const useApplicationsData = (isThirdParty = false) => {
       buildUrl(applicationsEndpoint, {
         page: String(firstPartyApplicationPage),
         page_size: String(pageSize),
+        isThirdParty: 'false',
       }),
     [firstPartyApplicationPage]
   );

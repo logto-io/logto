@@ -176,7 +176,7 @@ describe('admin console application', () => {
   });
 
   it('should fetch all non-third party applications created above', async () => {
-    const applications = await getApplications();
+    const applications = await getApplications(undefined, undefined, 'false');
 
     const applicationNames = applications.map(({ name }) => name);
     expect(applicationNames).toContain('test-create-app');
@@ -194,10 +194,29 @@ describe('admin console application', () => {
       }
     );
 
-    const applications = await getApplications(undefined, undefined, true);
+    const applications = await getApplications(undefined, undefined, 'true');
 
     expect(applications.find(({ id }) => id === application.id)).toEqual(application);
     expect(applications.some(({ isThirdParty }) => !isThirdParty)).toBe(false);
+    await deleteApplication(application.id);
+  });
+
+  it('should fetch all applications including third party applications', async () => {
+    const application = await createApplication(
+      'test-third-party-app',
+      ApplicationType.Traditional,
+      {
+        isThirdParty: true,
+      }
+    );
+
+    const applications = await getApplications();
+    const applicationNames = applications.map(({ name }) => name);
+
+    expect(applicationNames).toContain('test-create-app');
+    expect(applicationNames).toContain('test-update-app');
+    expect(applicationNames).toContain('test-third-party-app');
+
     await deleteApplication(application.id);
   });
 
