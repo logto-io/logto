@@ -109,6 +109,33 @@ describe('syncAppConfigsToRemote()', () => {
       }
     );
   });
+
+  it('should sync custom domains configs to remote', async () => {
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        customDomains: [mockCustomDomain],
+      },
+    });
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
+    const { protectedAppMetadata, id, secret } = mockProtectedApplication;
+    expect(updateProtectedAppSiteConfigs).toHaveBeenLastCalledWith(
+      protectedAppConfigProviderConfig,
+      mockCustomDomain.domain,
+      {
+        ...protectedAppMetadata,
+        host: mockCustomDomain.domain,
+        sdkConfig: {
+          appId: id,
+          appSecret: secret,
+          // Avoid mocking envset
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          endpoint: expect.anything(),
+        },
+      }
+    );
+  });
 });
 
 describe('checkAndBuildProtectedAppData()', () => {
