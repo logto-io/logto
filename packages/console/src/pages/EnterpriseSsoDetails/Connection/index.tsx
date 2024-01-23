@@ -2,8 +2,7 @@ import { SsoProviderName, type RequestErrorBody } from '@logto/schemas';
 import { conditional, type Optional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { HTTPError } from 'ky';
-import { useEffect } from 'react';
-import { useForm, FormProvider, type Path } from 'react-hook-form';
+import { useForm, FormProvider, type Path, type DeepPartial } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -42,7 +41,11 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
 
   const api = useApi({ hideErrorToast: true });
 
-  const methods = useForm<GuideFormType<T>>();
+  const methods = useForm<GuideFormType<T>>({
+    // Make typescript happy
+    // eslint-disable-next-line no-restricted-syntax
+    defaultValues: config as DeepPartial<GuideFormType<T>>,
+  });
 
   const {
     watch,
@@ -51,10 +54,6 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
     handleSubmit,
     reset,
   } = methods;
-
-  useEffect(() => {
-    reset(config);
-  }, [config, reset]);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {

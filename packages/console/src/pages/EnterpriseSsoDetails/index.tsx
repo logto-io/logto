@@ -11,7 +11,6 @@ import Delete from '@/assets/icons/delete.svg';
 import File from '@/assets/icons/file.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
-import Skeleton from '@/components/DetailsPage/Skeleton';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { EnterpriseSsoDetailsTabs } from '@/consts';
@@ -101,14 +100,14 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
     <DetailsPage
       backLink={enterpriseSsoPathname}
       backLinkTitle="enterprise_sso_details.back_to_sso_connectors"
+      isLoading={isLoading}
       error={requestError}
       onRetry={() => {
         void mutate();
       }}
     >
       <PageMeta titleKey="enterprise_sso_details.page_title" />
-      {isLoading && <Skeleton />}
-      {!isLoading && ssoConnector && (
+      {ssoConnector && (
         <>
           <DetailsPageHeader
             icon={
