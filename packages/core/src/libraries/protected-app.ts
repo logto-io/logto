@@ -17,6 +17,7 @@ import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   createCustomHostname,
+  deleteCustomHostname,
   deleteProtectedAppSiteConfigs,
   getCustomHostname,
   getDomainStatusFromCloudflareData,
@@ -93,6 +94,14 @@ const addDomainToRemote = async (
       },
     ],
   };
+};
+
+/**
+ * Call Cloudflare API to delete the domain (custom hostname)
+ */
+const deleteDomainFromRemote = async (id: string) => {
+  const hostnameProviderConfig = await getHostnameProviderConfig();
+  await deleteCustomHostname(hostnameProviderConfig, id);
 };
 
 export const createProtectedAppLibrary = (queries: Queries) => {
@@ -274,5 +283,6 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     getDefaultDomain,
     addDomainToRemote,
     syncAppCustomDomainStatus,
+    deleteDomainFromRemote,
   };
 };

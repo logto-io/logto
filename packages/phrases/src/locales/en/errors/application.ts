@@ -15,6 +15,7 @@ const application = {
   protected_application_subdomain_exists:
     'The subdomain of Protected application is already in use.',
   invalid_subdomain: 'Invalid subdomain.',
+  custom_domain_not_found: 'Custom domain not found.',
 };
 
 export default Object.freeze(application);

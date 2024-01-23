@@ -41,6 +41,20 @@
           }
         }
       }
+    },
+    "/api/applications/{id}/protected-app-metadata/custom-domains/{domain}": {
+      "delete": {
+        "summary": "Delete a custom domain.",
+        "description": "Add a custom domain.",
+        "responses": {
+          "204": {
+            "description": "The domain has been deleted."
+          },
+          "404": {
+            "description": "Can not find the domain."
+          }
+        }
+      }
     }
   }
 }
