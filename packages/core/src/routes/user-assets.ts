@@ -87,7 +87,10 @@ export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: Ro
 
         ctx.body = result;
       } catch {
-        throw new RequestError('storage.upload_error');
+        throw new RequestError({
+          code: 'storage.upload_error',
+          status: 500,
+        });
       }
 
       return next();
