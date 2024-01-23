@@ -4,7 +4,7 @@
   border: _.border(var(--color-line-divider));
   border-radius: 8px;
   padding: _.unit(4);
-  @include _.flex-column(normal, normal);
+  @include _.flex-row;
 }
 
 .avatar {
