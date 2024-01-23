@@ -106,7 +106,7 @@ function Branding({ application }: Props) {
           description="application_details.branding.description"
         >
           <FormField title="application_details.branding.display_name">
-            <TextInput {...register('displayName')} />
+            <TextInput {...register('displayName')} placeholder={application.name} />
           </FormField>
           {isUserAssetsServiceReady && (
             <FormField title="application_details.branding.display_logo">
