@@ -15,7 +15,7 @@ const applications = {
     /** UNTRANSLATED */
     my_applications: 'My apps',
     /** UNTRANSLATED */
-    third_party_applications: 'Third party apps',
+    third_party_applications: 'Third-party apps',
   },
   app_id: 'App ID',
   type: {

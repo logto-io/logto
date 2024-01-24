@@ -14,7 +14,7 @@ const applications = {
   application_created: 'Application created successfully.',
   tab: {
     my_applications: 'My apps',
-    third_party_applications: 'Third party apps',
+    third_party_applications: 'Third-party apps',
   },
   app_id: 'App ID',
   type: {

@@ -10,6 +10,7 @@ export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.Traditional]: 'applications.type.traditional',
   [ApplicationType.MachineToMachine]: 'applications.type.machine_to_machine',
   [ApplicationType.Protected]: 'applications.type.protected',
+  thirdParty: 'applications.type.third_party',
 } as const);
 
 /**
