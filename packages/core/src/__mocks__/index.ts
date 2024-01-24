@@ -75,7 +75,7 @@ export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'>
 export const mockCustomDomain = {
   domain: 'mock.blog.com',
   status: DomainStatus.PendingVerification,
-  error: null,
+  errorMessage: null,
   dnsRecords: [],
   cloudflareData: {
     id: 'cloudflare-id',

@@ -26,6 +26,8 @@ const application = {
   invalid_subdomain: 'Invalid subdomain.',
   /** UNTRANSLATED */
   custom_domain_not_found: 'Custom domain not found.',
+  /** UNTRANSLATED */
+  should_delete_custom_domains_first: 'Should delete custom domains first.',
 };
 
 export default Object.freeze(application);

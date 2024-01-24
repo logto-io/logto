@@ -320,6 +320,10 @@ export default function applicationRoutes<T extends AuthedRouter>(
       const { id } = ctx.guard.params;
       const { type, protectedAppMetadata } = await findApplicationById(id);
       if (type === ApplicationType.Protected && protectedAppMetadata) {
+        assertThat(
+          !protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0,
+          'application.should_delete_custom_domains_first'
+        );
         await protectedApps.deleteRemoteAppConfigs(protectedAppMetadata.host);
       }
       // Note: will need delete cascade when application is joint with other tables

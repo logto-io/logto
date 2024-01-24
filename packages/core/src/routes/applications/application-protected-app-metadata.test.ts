@@ -20,7 +20,7 @@ const mockDomainResponse = {
   domain: mockDomain,
   cloudflareData: null,
   status: DomainStatus.PendingVerification,
-  error: null,
+  errorMessage: null,
   dnsRecords: [
     {
       type: 'CNAME',

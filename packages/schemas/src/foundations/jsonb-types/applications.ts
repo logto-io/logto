@@ -8,7 +8,7 @@ export const customDomainGuard = z.object({
   /* The status of the domain in Cloudflare */
   status: domainStatusGuard,
   /* The error message if any */
-  error: z.string().nullable(),
+  errorMessage: z.string().nullable(),
   /* The DNS records of the domain */
   dnsRecords: domainDnsRecordsGuard,
   /* The remote Cloudflare data */
