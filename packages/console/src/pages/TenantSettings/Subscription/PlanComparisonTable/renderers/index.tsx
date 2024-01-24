@@ -27,7 +27,7 @@ export const quotaValueRenderer: Record<
   tokenLimit: ({ id, table: { tokenLimit } }) => (
     <GenericQuotaLimit
       quota={tokenLimit}
-      tipPhraseKey={cond(tokenLimit && id !== ReservedPlanId.Free && 'paid_quota_limit_tip')}
+      tipPhraseKey={cond(tokenLimit && id !== ReservedPlanId.Free && 'paid_token_limit_tip')}
       formatter={(quota) => {
         return quota >= 1_000_000 ? (
           <DynamicT

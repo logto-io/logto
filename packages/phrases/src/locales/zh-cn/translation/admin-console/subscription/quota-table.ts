@@ -77,9 +77,8 @@ const quota_table = {
   days_other: '{{count, number}} 天',
   add_on: '附加功能',
   tier: '层级{{value, number}}：',
-  free_token_limit_tip: '免费发行{{value}}M令牌。',
   paid_token_limit_tip:
-    '免费发行{{value}}M令牌。我们可能会在定价确定后，如果您的令牌超过{{value}}M，则会加收费用。',
+    'Logto将为超出您配额限制的功能收费。您可以在2024年第二季度左右开始收费之前免费使用它。如果您需要更多的令牌，请与我们联系。默认情况下，我们每月为每百万令牌收费80美元。',
   paid_quota_limit_tip:
     'Logto将为超出配额限制的功能添加费用。在我们从2024年第二季度开始收费之前，您可以免费使用它。',
   paid_add_on_feature_tip:

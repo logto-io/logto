@@ -77,9 +77,8 @@ const quota_table = {
   days_other: '{{count, number}} giorni',
   add_on: 'Aggiuntiva',
   tier: 'Livello{{value, number}}: ',
-  free_token_limit_tip: 'Gratuito per {{value}}M token rilasciati.',
   paid_token_limit_tip:
-    'Gratuito per {{value}}M token rilasciati. Potremmo aggiungere costi se superi {{value}}M token una volta che finalizziamo i prezzi.',
+    'Logto addebiterà tariffe per le funzionalità che superano il limite della tua quota. Puoi usarlo gratuitamente fino a quando inizieremo a addebitare circa nel secondo trimestre del 2024. Se hai bisogno di più token, ti preghiamo di contattarci. Per default, addebitiamo $80 al mese per ogni milione di token.',
   paid_quota_limit_tip:
     'Logto addebiterà costi per le funzionalità che superano il limite della tua quota. Puoi usarlo gratuitamente fino a quando inizieremo a addebitare circa nel secondo trimestre del 2024.',
   paid_add_on_feature_tip:

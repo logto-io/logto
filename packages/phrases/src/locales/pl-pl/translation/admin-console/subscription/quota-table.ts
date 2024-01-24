@@ -77,9 +77,8 @@ const quota_table = {
   days_other: '{{count, number}} dni',
   add_on: 'Dodatkowy',
   tier: 'Poziom{{value, number}}: ',
-  free_token_limit_tip: 'Bezpłatne do wydania {{value}} M tokenów.',
   paid_token_limit_tip:
-    'Bezpłatne do wydania {{value}} M tokenów. Możemy doliczyć opłaty, jeśli przekroczysz limity {{value}} M tokenów, gdy ustalimy ostateczne ceny.',
+    'Logto doliczy opłaty za funkcje, które przekraczają Twój limit kwoty. Możesz go używać bezpłatnie do momentu rozpoczęcia naliczania opłat około II kwartału 2024 roku. Jeśli potrzebujesz więcej tokenów, skontaktuj się z nami. Domyślnie naliczamy $80 miesięcznie za milion tokenów.',
   paid_quota_limit_tip:
     'Logto będzie naliczać opłaty za funkcje przekraczające limit kontyngentu. Możesz go używać bezpłatnie do czasu rozpoczęcia naliczania opłat, około II kwartał 2024 roku.',
   paid_add_on_feature_tip:

@@ -77,9 +77,8 @@ const quota_table = {
   days_other: '{{count, number}} gün',
   add_on: 'Ek Hizmet',
   tier: 'Seviye{{value, number}}: ',
-  free_token_limit_tip: 'Free for {{value}}M token issued.',
   paid_token_limit_tip:
-    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
+    'Logto, kota sınırlarını aşan özellikler için ücretlendirme ekleyecektir. 2024 ikinci çeyreğinde başlamak üzere ücretlendirmeye kadar ücretsiz kullanabilirsiniz. Daha fazla tokena ihtiyacınız varsa lütfen bizimle iletişime geçin. Varsayılan olarak her milyon token için aylık $80 fatura kesmekteyiz.',
   paid_quota_limit_tip:
     "Logto, kota limitinizi aşan özellikler için ücretlendirme ekleyecektir. Şarjımıza başlamadan önce, yaklaşık olarak 2024 Q2'ye kadar ücretsiz olarak kullanabilirsiniz.",
   paid_add_on_feature_tip:
