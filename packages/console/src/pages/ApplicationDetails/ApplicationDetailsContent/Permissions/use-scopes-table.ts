@@ -44,6 +44,8 @@ type ScopesTableRowGroupType = {
  */
 const useScopesTable = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t: experienceT } = useTranslation('experience', { keyPrefix: 'user_scopes' });
+
   const api = useApi();
 
   const parseRowGroup = useCallback(
@@ -62,7 +64,7 @@ const useScopesTable = () => {
           type: ApplicationUserConsentScopeType.UserScopes,
           id: scope,
           name: scope,
-          // TODO: @simeng-li add user profile scopes description
+          description: experienceT(`descriptions.${scope}`),
         })),
       };
 
@@ -92,7 +94,7 @@ const useScopesTable = () => {
 
       return [userScopesGroup, ...resourceScopesGroups, organizationScopesGroup];
     },
-    [t]
+    [experienceT, t]
   );
 
   const deleteScope = useCallback(
