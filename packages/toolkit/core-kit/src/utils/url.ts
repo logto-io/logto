@@ -19,3 +19,11 @@ export const validateUriOrigin = (url: string) => {
     return false;
   }
 };
+
+export const isValidUrl = (url?: string) => {
+  try {
+    return Boolean(url && new URL(url));
+  } catch {
+    return false;
+  }
+};
