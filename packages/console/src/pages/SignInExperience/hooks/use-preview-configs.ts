@@ -3,8 +3,8 @@ import { useEffect, useState, useMemo } from 'react';
 
 import useDebounce from '@/hooks/use-debounce';
 
+import { sieFormDataParser } from '../PageContent/utils/parser';
 import type { SignInExperienceForm } from '../types';
-import { sieFormDataParser } from '../utils/parser';
 
 const usePreviewConfigs = (
   formData: SignInExperienceForm,
