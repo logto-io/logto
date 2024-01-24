@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import ImageUploader from '@/ds-components/Uploader/ImageUploader';
 import useImageMimeTypes from '@/hooks/use-image-mime-types';
 
-import * as styles from './index.module.scss';
+import * as styles from './LogoUploader.module.scss';
 
 type Props = {
   isDarkModeEnabled?: boolean;

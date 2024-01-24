@@ -6,6 +6,7 @@
   > * {
     flex: 1;
 
+    // remove the left side of the border-radius on the second column when dark mode logo uploader is active
     &:nth-child(2) {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
