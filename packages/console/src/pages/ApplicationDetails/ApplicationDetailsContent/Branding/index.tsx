@@ -121,6 +121,7 @@ function Branding({ application }: Props) {
                   validate: (value) =>
                     !value || uriValidator(value) || t('errors.invalid_uri_format'),
                 })}
+                placeholder={t('sign_in_exp.branding.logo_image_url_placeholder')}
                 error={errors.branding?.logoUrl?.message}
               />
             </FormField>
@@ -133,6 +134,7 @@ function Branding({ application }: Props) {
                   validate: (value) =>
                     !value || uriValidator(value) || t('errors.invalid_uri_format'),
                 })}
+                placeholder={t('sign_in_exp.branding.dark_logo_image_url_placeholder')}
                 error={errors.branding?.darkLogoUrl?.message}
               />
             </FormField>
