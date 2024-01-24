@@ -11,7 +11,7 @@ const initI18n = async (language?: LanguageTag) => {
     .use(LanguageDetector)
     .init({
       /*
-       * I18n can not load extra namespaces with a given resources on init.
+       * I18n can not load extra namespaces with a non-empty resources value given on init.
        * In order to load experiences' namespace we need to pass empty resources on init and load them later.
        */
       resources: {},
@@ -26,12 +26,12 @@ const initI18n = async (language?: LanguageTag) => {
       },
     });
 
-  // Phrases
+  // Load phrases
   for (const [language, values] of Object.entries(resources)) {
     i18next.addResourceBundle(language, 'translation', values.translation, true);
   }
 
-  // Phrases-experience
+  // Load phrases-experience
   for (const [language, values] of Object.entries(experienceResource)) {
     i18next.addResourceBundle(language, 'experience', values.translation, true);
   }
