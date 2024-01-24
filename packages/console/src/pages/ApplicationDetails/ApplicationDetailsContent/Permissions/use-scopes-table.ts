@@ -64,7 +64,8 @@ const useScopesTable = () => {
           type: ApplicationUserConsentScopeType.UserScopes,
           id: scope,
           name: scope,
-          description: experienceT(`descriptions.${scope}`),
+          // We have ':' in the user scope, need to change the nsSeparator to '|' to avoid i18n ns matching
+          description: experienceT(`descriptions.${scope}`, { nsSeparator: '|' }),
         })),
       };
 

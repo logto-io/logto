@@ -85,7 +85,10 @@ const ScopesListCard = ({
       userScopes?.map((scope) => ({
         id: scope,
         name: scope,
-        description: isUserScope(scope) ? t(`user_scopes.descriptions.${scope}`) : undefined,
+        description: isUserScope(scope)
+          ? // We have ':' in the user scope, need to change the nsSeparator to '|' to avoid i18n ns matching
+            t(`user_scopes.descriptions.${scope}`, { nsSeparator: '|' })
+          : undefined,
       })),
     [t, userScopes]
   );
