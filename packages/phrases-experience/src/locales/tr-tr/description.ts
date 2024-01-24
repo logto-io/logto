@@ -87,6 +87,8 @@ const description = {
   not_you: 'Not you?',
   /** UNTRANSLATED */
   user_id: 'User ID: {{id}}',
+  /** UNTRANSLATED */
+  redirect_to: 'You will be redirected to {{name}}.',
 };
 
 export default Object.freeze(description);

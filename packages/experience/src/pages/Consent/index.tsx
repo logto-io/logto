@@ -97,10 +97,13 @@ const Consent = () => {
           title="action.cancel"
           type="secondary"
           onClick={() => {
-            window.history.back();
+            window.location.replace(consentData.redirectUri);
           }}
         />
         <Button title="action.authorize" onClick={consentHandler} />
+      </div>
+      <div className={styles.redirectUri}>
+        {t('description.redirect_to', { name: consentData.redirectUri })}
       </div>
       <div className={styles.footerLink}>
         {t('description.not_you')}{' '}

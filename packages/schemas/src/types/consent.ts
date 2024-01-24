@@ -62,6 +62,7 @@ export const consentInfoResponseGuard = z.object({
   organizations: publicOrganizationGuard.array().optional(),
   missingOIDCScope: z.string().array().optional(),
   missingResourceScopes: missingResourceScopesGuard.array().optional(),
+  redirectUri: z.string(),
 });
 
 export type ConsentInfoResponse = z.infer<typeof consentInfoResponseGuard>;
