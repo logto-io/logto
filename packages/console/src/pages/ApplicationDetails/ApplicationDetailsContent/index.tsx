@@ -112,7 +112,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
         primaryTag={t(`${applicationTypeI18nKey[data.type]}.title`)}
         identifier={{ name: 'App ID', value: data.id }}
         additionalActionButton={conditional(
-          data.isThirdParty && {
+          !data.isThirdParty && {
             title: 'application_details.check_guide',
             icon: <File />,
             onClick: () => {
