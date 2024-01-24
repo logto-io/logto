@@ -4,6 +4,7 @@ import {
   type ApplicationResponse,
   type SnakeCaseOidcConfig,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -110,13 +111,15 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
         title={data.name}
         primaryTag={t(`${applicationTypeI18nKey[data.type]}.title`)}
         identifier={{ name: 'App ID', value: data.id }}
-        additionalActionButton={{
-          title: 'application_details.check_guide',
-          icon: <File />,
-          onClick: () => {
-            setIsReadmeOpen(true);
-          },
-        }}
+        additionalActionButton={conditional(
+          data.isThirdParty && {
+            title: 'application_details.check_guide',
+            icon: <File />,
+            onClick: () => {
+              setIsReadmeOpen(true);
+            },
+          }
+        )}
         actionMenuItems={[
           {
             type: 'danger',
