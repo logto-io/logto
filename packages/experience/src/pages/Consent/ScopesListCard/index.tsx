@@ -1,7 +1,6 @@
 import { ReservedResource } from '@logto/core-kit';
 import { type ConsentInfoResponse } from '@logto/schemas';
 import classNames from 'classnames';
-import type React from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -64,7 +63,6 @@ type Props = {
   resourceScopes: ConsentInfoResponse['missingResourceScopes'];
   appName: string;
   className?: string;
-  children?: React.ReactNode;
   termsUrl?: string;
   privacyUrl?: string;
 };
@@ -76,7 +74,6 @@ const ScopesListCard = ({
   termsUrl,
   privacyUrl,
   className,
-  children,
 }: Props) => {
   const { t } = useTranslation();
 
@@ -91,6 +88,22 @@ const ScopesListCard = ({
   );
 
   const showTerms = Boolean(termsUrl ?? privacyUrl);
+
+  // If there is no user scopes and resource scopes, we don't need to show the scopes list.
+  // This is a fallback for the corner case that all the scopes are already granted.
+  if (!userScopesData?.length && !resourceScopes?.length) {
+    return showTerms ? (
+      <div className={className}>
+        <Trans
+          components={{
+            link: <TermsLinks inline termsOfUseUrl={termsUrl} privacyPolicyUrl={privacyUrl} />,
+          }}
+        >
+          {t('description.authorize_agreement', { name: appName })}
+        </Trans>
+      </div>
+    ) : null;
+  }
 
   return (
     <div className={className}>
