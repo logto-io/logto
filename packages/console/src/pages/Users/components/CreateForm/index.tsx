@@ -146,6 +146,8 @@ function CreateForm({ onClose, onCreate }: Props) {
         <form>
           <FormField title="user_details.field_email">
             <TextInput
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
               {...register('primaryEmail', {
                 pattern: {
                   value: emailRegEx,
