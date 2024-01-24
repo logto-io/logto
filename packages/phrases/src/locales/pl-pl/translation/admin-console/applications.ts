@@ -51,7 +51,7 @@ const applications = {
     },
     third_party: {
       /** UNTRANSLATED */
-      title: 'Third-party app',
+      title: 'Third-party App',
       /** UNTRANSLATED */
       subtitle: 'An app that is used as a third-party IdP connector',
       /** UNTRANSLATED */
