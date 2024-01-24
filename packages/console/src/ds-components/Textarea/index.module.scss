@@ -30,6 +30,10 @@
     resize: none;
     padding: 0;
 
+    // Leave space for scrollbar by setting `box-sizing` and `padding-right`
+    box-sizing: content-box;
+    padding-right: 10px;
+
     &::placeholder {
       color: var(--color-placeholder);
     }
