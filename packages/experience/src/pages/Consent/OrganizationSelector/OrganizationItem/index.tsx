@@ -1,4 +1,5 @@
 import { type ConsentInfoResponse } from '@logto/schemas';
+import classNames from 'classnames';
 import { type ReactNode } from 'react';
 
 import CheckMark from '@/assets/icons/check-mark.svg';
@@ -10,6 +11,7 @@ import * as styles from './index.module.scss';
 export type Organization = Exclude<ConsentInfoResponse['organizations'], undefined>[number];
 
 type OrganizationItemProps = {
+  className?: string;
   organization: Organization;
   onSelect?: (organization: Organization) => void;
   isSelected?: boolean;
@@ -21,10 +23,11 @@ const OrganizationItem = ({
   onSelect,
   isSelected,
   suffixElement,
+  className,
 }: OrganizationItemProps) => {
   return (
     <div
-      className={styles.organizationItem}
+      className={classNames(styles.organizationItem, className)}
       data-selected={isSelected}
       {...(onSelect && {
         role: 'button',
@@ -32,16 +35,15 @@ const OrganizationItem = ({
         onClick: () => {
           onSelect(organization);
         },
-        onKeyDown: () => {
-          onKeyDownHandler({
-            Enter: () => {
-              onSelect(organization);
-            },
-            ' ': () => {
-              onSelect(organization);
-            },
-          });
-        },
+        onKeyDown: onKeyDownHandler({
+          Enter: () => {
+            console.log('enter');
+            onSelect(organization);
+          },
+          ' ': () => {
+            onSelect(organization);
+          },
+        }),
       })}
     >
       {isSelected ? (

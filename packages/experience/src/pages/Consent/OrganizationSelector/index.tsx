@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ExpandableIcon from '@/assets/icons/expandable-icon.svg';
-import IconButton from '@/components/Button/IconButton';
 
 import OrganizationItem, { type Organization } from './OrganizationItem';
 import OrganizationSelectorModal from './OrganizationSelectorModal';
@@ -33,19 +32,14 @@ const OrganizationSelector = ({
   return (
     <div className={className}>
       <div className={styles.title}>{t('description.grant_organization_access')}</div>
-      <div ref={parentElementRef} className={styles.cardWrapper}>
+      <div ref={parentElementRef} className={styles.cardWrapper} data-active={showDropdown}>
         <OrganizationItem
+          className={styles.selectedOrganization}
           organization={selectedOrganization}
-          suffixElement={
-            <IconButton
-              className={styles.expandButton}
-              onClick={() => {
-                setShowDropdown(true);
-              }}
-            >
-              <ExpandableIcon />
-            </IconButton>
-          }
+          suffixElement={<ExpandableIcon className={styles.expandButton} />}
+          onSelect={() => {
+            setShowDropdown(true);
+          }}
         />
       </div>
       <OrganizationSelectorModal

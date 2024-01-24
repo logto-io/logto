@@ -8,28 +8,25 @@
 .cardWrapper {
   border: _.border(var(--color-line-divider));
   border-radius: 8px;
-  padding: _.unit(2) 0;
+  padding: _.unit(2);
   position: relative;
+
+  &[data-active='true'] {
+    border-color: var(--color-brand-default);
+    outline: 3px solid var(--color-overlay-brand-focused);
+  }
 }
 
 .expandButton {
   position: relative;
+  width: 20px;
+  height: 20px;
+  color: var(--color-type-disable);
+}
 
-  // increase the clickable area
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    width: 40px;
-    height: 40px;
-  }
-
-  svg {
-    width: 20px;
-    height: 20px;
-    color: var(--color-type-secondary);
+.selectedOrganization {
+  &:hover {
+    background: none;
   }
 }
 
