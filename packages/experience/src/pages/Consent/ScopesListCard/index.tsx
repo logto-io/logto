@@ -9,6 +9,7 @@ import DownArrowIcon from '@/assets/icons/arrow-down.svg';
 import CheckMark from '@/assets/icons/check-mark.svg';
 import IconButton from '@/components/Button/IconButton';
 import TermsLinks from '@/components/TermsLinks';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';
 
@@ -30,10 +31,18 @@ const ScopeGroup = ({ groupName, scopes }: ScopeGroupProps) => {
 
   return (
     <div className={classNames(styles.scopeGroup)}>
-      <div className={styles.scopeGroupHeader}>
+      <div
+        className={styles.scopeGroupHeader}
+        role="button"
+        tabIndex={0}
+        onClick={toggle}
+        onKeyDown={onKeyDownHandler({
+          Enter: toggle,
+        })}
+      >
         <CheckMark className={styles.check} />
         <div className={styles.scopeGroupName}>{groupName}</div>
-        <IconButton className={styles.toggleButton} data-expanded={expanded} onClick={toggle}>
+        <IconButton className={styles.toggleButton} data-expanded={expanded}>
           <DownArrowIcon />
         </IconButton>
       </div>

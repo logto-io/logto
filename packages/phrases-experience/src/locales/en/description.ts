@@ -80,6 +80,7 @@ const description = {
   organization_scopes: 'Organization access',
   authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
   not_you: 'Not you?',
+  user_id: 'User ID: {{id}}',
 };
 
 export default Object.freeze(description);

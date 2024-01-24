@@ -12,14 +12,20 @@
 }
 
 .scopeGroup {
-  padding: 0 _.unit(4);
+  padding: 0 _.unit(2);
 
   .scopeGroupHeader {
     @include _.flex-row;
+    border-radius: _.unit(2);
+    padding: _.unit(2);
+
+    &:hover {
+      background-color: var(--color-overlay-neutral-hover);
+    }
   }
 
   .check {
-    color: var(--color-success-default);
+    color: var(--color-success-pressed);
     width: 20px;
     height: 20px;
     margin-right: _.unit(2);
@@ -29,7 +35,6 @@
     font: var(--font-body-2);
     flex: 1;
     margin-right: _.unit(2);
-    padding: _.unit(2) 0;
   }
 
   .toggleButton {
@@ -44,21 +49,10 @@
     &[data-expanded='true'] {
       transform: rotate(180deg);
     }
-
-    // increase the clickable area
-    &::after {
-      content: '';
-      display: block;
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      width: 40px;
-      height: 40px;
-    }
   }
 
   .scopesList {
-    padding-inline-start: _.unit(6);
+    padding-inline-start: _.unit(8);
     font: var(--font-body-3);
     color: var(--color-type-secondary);
     margin: 0;
@@ -74,5 +68,6 @@
   padding: _.unit(4);
   border-top: _.border(var(--color-line-divider));
   margin-top: _.unit(2);
+  font: var(--font-body-3);
   color: var(--color-type-secondary);
 }

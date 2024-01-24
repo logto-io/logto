@@ -85,6 +85,8 @@ const description = {
   authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
   /** UNTRANSLATED */
   not_you: 'Not you?',
+  /** UNTRANSLATED */
+  user_id: 'User ID: {{id}}',
 };
 
 export default Object.freeze(description);
