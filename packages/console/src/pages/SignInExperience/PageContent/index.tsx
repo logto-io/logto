@@ -1,0 +1,171 @@
+import { type SignInExperience } from '@logto/schemas';
+import classNames from 'classnames';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+
+import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import ConfirmModal from '@/ds-components/ConfirmModal';
+import TabNav, { TabNavItem } from '@/ds-components/TabNav';
+import useApi from '@/hooks/use-api';
+import useConfigs from '@/hooks/use-configs';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { trySubmitSafe } from '@/utils/form';
+
+import Preview from '../components/Preview';
+import usePreviewConfigs from '../hooks/use-preview-configs';
+import { SignInExperienceTab } from '../types';
+import { type SignInExperienceForm } from '../types';
+
+import Branding from './Branding';
+import Content from './Content';
+import PasswordPolicy from './PasswordPolicy';
+import SignUpAndSignIn from './SignUpAndSignIn';
+import SignUpAndSignInChangePreview from './SignUpAndSignInChangePreview';
+import * as styles from './index.module.scss';
+import {
+  getBrandingErrorCount,
+  getSignUpAndSignInErrorCount,
+  getContentErrorCount,
+  hasSignUpAndSignInConfigChanged,
+} from './utils/form';
+import { sieFormDataParser } from './utils/parser';
+
+const PageTab = TabNavItem<`../${SignInExperienceTab}`>;
+
+type Props = {
+  data: SignInExperience;
+  onSignInExperienceUpdated: (data: SignInExperience) => void;
+};
+
+function PageContent({ data, onSignInExperienceUpdated }: Props) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { tab } = useParams();
+  const [isSaving, setIsSaving] = useState(false);
+
+  const { updateConfigs } = useConfigs();
+  const { getPathname } = useTenantPathname();
+
+  const [dataToCompare, setDataToCompare] = useState<SignInExperience>();
+
+  const methods = useForm<SignInExperienceForm>({
+    defaultValues: sieFormDataParser.fromSignInExperience(data),
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    getValues,
+    watch,
+    formState: { isDirty, errors },
+  } = methods;
+  const api = useApi();
+  const formData = watch();
+
+  const previewConfigs = usePreviewConfigs(formData, isDirty, data);
+
+  const saveData = async () => {
+    setIsSaving(true);
+
+    try {
+      const updatedData = await api
+        .patch('api/sign-in-exp', {
+          json: sieFormDataParser.toUpdateSignInExperienceData(getValues()),
+        })
+        .json<SignInExperience>();
+
+      reset(sieFormDataParser.fromSignInExperience(updatedData));
+      onSignInExperienceUpdated(updatedData);
+      setDataToCompare(undefined);
+      await updateConfigs({ signInExperienceCustomized: true });
+      toast.success(t('general.saved'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData: SignInExperienceForm) => {
+      if (isSaving) {
+        return;
+      }
+
+      const formatted = sieFormDataParser.toSignInExperience(formData);
+
+      // Sign-in methods changed, need to show confirm modal first.
+      if (!hasSignUpAndSignInConfigChanged(data, formatted)) {
+        setDataToCompare(formatted);
+
+        return;
+      }
+
+      await saveData();
+    })
+  );
+
+  return (
+    <>
+      <TabNav className={styles.tabs}>
+        <PageTab href="../branding" errorCount={getBrandingErrorCount(errors)}>
+          {t('sign_in_exp.tabs.branding')}
+        </PageTab>
+        <PageTab
+          href="../sign-up-and-sign-in"
+          errorCount={getSignUpAndSignInErrorCount(errors, formData)}
+        >
+          {t('sign_in_exp.tabs.sign_up_and_sign_in')}
+        </PageTab>
+        <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
+          {t('sign_in_exp.tabs.content')}
+        </PageTab>
+        <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
+      </TabNav>
+      <div className={styles.content}>
+        <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
+          <FormProvider {...methods}>
+            <form className={styles.form}>
+              <Branding isActive={tab === SignInExperienceTab.Branding} />
+              <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} />
+              <Content isActive={tab === SignInExperienceTab.Content} />
+              <PasswordPolicy isActive={tab === SignInExperienceTab.PasswordPolicy} />
+            </form>
+          </FormProvider>
+          {formData.id && (
+            <Preview
+              isLivePreviewDisabled={isDirty}
+              signInExperience={previewConfigs}
+              className={styles.preview}
+            />
+          )}
+        </div>
+        <SubmitFormChangesActionBar
+          isOpen={isDirty}
+          isSubmitting={isSaving}
+          onDiscard={reset}
+          onSubmit={onSubmit}
+        />
+      </div>
+      <ConfirmModal
+        isOpen={Boolean(dataToCompare)}
+        isLoading={isSaving}
+        onCancel={() => {
+          setDataToCompare(undefined);
+        }}
+        onConfirm={async () => {
+          await saveData();
+        }}
+      >
+        {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
+      </ConfirmModal>
+      <UnsavedChangesAlertModal
+        hasUnsavedChanges={isDirty}
+        parentPath={getPathname('/sign-in-experience')}
+      />
+    </>
+  );
+}
+
+export default PageContent;

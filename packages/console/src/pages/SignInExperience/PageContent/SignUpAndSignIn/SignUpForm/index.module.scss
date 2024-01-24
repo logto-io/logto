@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.title {
+  @include _.section-head-1;
+  color: var(--color-neutral-variant-60);
+}
+
+.socialOnlyDescription {
+  margin-left: _.unit(1);
+  color: var(--color-text-secondary);
+}
+
+.selections {
+  > :not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}

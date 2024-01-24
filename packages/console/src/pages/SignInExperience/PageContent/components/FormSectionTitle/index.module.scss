@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.title {
+  @include _.section-head-1;
+  color: var(--color-neutral-variant-60);
+}

@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.tabContent {
+  > :not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}

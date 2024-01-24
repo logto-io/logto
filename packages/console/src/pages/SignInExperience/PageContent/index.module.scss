@@ -1,0 +1,36 @@
+@use '@/scss/underscore' as _;
+
+.tabs {
+  margin: _.unit(4) 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .contentTop {
+    display: flex;
+    flex: 1;
+    margin-bottom: _.unit(6);
+
+    &.withSubmitActionBar {
+      margin-bottom: _.unit(3);
+    }
+
+    > * {
+      flex: 1;
+      min-width: 510px;
+    }
+
+    .form {
+      margin-right: _.unit(3);
+    }
+
+    .preview {
+      position: sticky;
+      top: _.unit(4);
+      align-self: flex-start;
+    }
+  }
+}
