@@ -44,7 +44,7 @@ function ApplicationDetails() {
 
   return (
     <DetailsPage
-      backLink="/applications"
+      backLink={data?.isThirdParty ? '/applications/third-party-applications' : '/applications'}
       backLinkTitle="application_details.back_to_applications"
       isLoading={isLoading}
       error={requestError}
