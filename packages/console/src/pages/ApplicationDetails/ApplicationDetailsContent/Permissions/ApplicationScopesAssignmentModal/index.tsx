@@ -1,6 +1,6 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { ApplicationUserConsentScopeType } from '@logto/schemas';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ConfirmModal from '@/ds-components/ConfirmModal';
@@ -45,6 +45,26 @@ function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId }: Pr
     ({ selectedData }) => selectedData.length > 0
   );
 
+  const tabs = useMemo(
+    () =>
+      Object.values(permissionTabs).map(({ title, key }) => {
+        const selectedDataCount = scopesAssignment[key].selectedData.length;
+
+        return (
+          <TabNavItem
+            key={key}
+            isActive={key === activeTab}
+            onClick={() => {
+              setActiveTab(key);
+            }}
+          >
+            {`${t(title)}${selectedDataCount ? ` (${selectedDataCount})` : ''}`}
+          </TabNavItem>
+        );
+      }),
+    [activeTab, scopesAssignment, setActiveTab, t]
+  );
+
   return (
     <ConfirmModal
       isOpen={isOpen}
@@ -59,19 +79,7 @@ function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId }: Pr
       onCancel={onCloseHandler}
       onConfirm={onSubmitHandler}
     >
-      <TabNav>
-        {Object.values(permissionTabs).map(({ title, key }) => (
-          <TabNavItem
-            key={key}
-            isActive={key === activeTab}
-            onClick={() => {
-              setActiveTab(key);
-            }}
-          >
-            {`${t(title)}(${scopesAssignment[key].selectedData.length})`}
-          </TabNavItem>
-        ))}
-      </TabNav>
+      <TabNav>{tabs}</TabNav>
       <TabWrapper
         key={ApplicationUserConsentScopeType.UserScopes}
         isActive={ApplicationUserConsentScopeType.UserScopes === activeTab}
