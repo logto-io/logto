@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import useSWRImmutable from 'swr/immutable';
 
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -32,6 +33,8 @@ function ProtectedAppForm({
   hasRequiredLabel,
   onCreateSuccess,
 }: Props) {
+  const { data } = useSWRImmutable<ProtectedAppsDomainConfig>('api/systems/application');
+  const defaultDomain = data?.protectedApps.defaultDomain ?? '';
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
@@ -89,8 +92,7 @@ function ProtectedAppForm({
               placeholder={t('protected_app.form.domain_field_placeholder')}
               error={Boolean(errors.subDomain)}
             />
-            {/** TODO: @charles Hard-coded for now, will update to read from API later. */}
-            <div className={styles.domain}>.protected.app</div>
+            {defaultDomain && <div className={styles.domain}>{defaultDomain}</div>}
           </div>
         </FormField>
       </div>

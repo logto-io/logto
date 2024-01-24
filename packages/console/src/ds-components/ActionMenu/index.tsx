@@ -27,6 +27,7 @@ type Props =
     })
   | (BaseProps & {
       icon: ReactNode;
+      iconSize?: 'small' | 'medium' | 'large';
     });
 
 /**
@@ -66,6 +67,8 @@ function ActionMenu(props: Props) {
       {!hasButtonProps && (
         <IconButton
           ref={anchorReference}
+          // eslint-disable-next-line unicorn/consistent-destructuring -- cannot deconstruct before checking
+          size={props.iconSize}
           onClick={() => {
             setIsOpen(true);
           }}

@@ -23,6 +23,62 @@
   }
 }
 
+.customDomain {
+  margin-bottom: _.unit(3);
+}
+
+.label {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin-bottom: _.unit(1);
+}
+
+.hostInUse {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  border-radius: 8px;
+  border: 1px solid var(--color-divider);
+  background: var(--color-layer-1);
+  padding: _.unit(5) _.unit(6);
+
+  .host {
+    font: var(--font-label-1);
+    white-space: nowrap;
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: _.unit(2);
+    font: var(--font-body-2);
+    white-space: nowrap;
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+
+      &.success {
+        background: var(--color-on-success-container);
+      }
+
+      &.connecting {
+        background: var(--color-on-alert-container);
+      }
+    }
+  }
+}
+
+.inlineCode {
+  font: var(--font-body-2);
+  font-family: 'Roboto Mono', monospace;
+  background-color: var(--color-bg-layer-2);
+  color: var(--color-text);
+  border-radius: 6px;
+  padding: _.unit(0.5) _.unit(1.5);
+}
+
 .routes {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

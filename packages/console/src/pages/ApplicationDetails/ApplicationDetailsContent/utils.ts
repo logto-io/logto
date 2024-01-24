@@ -10,7 +10,7 @@ export type ApplicationForm = {
   customClientMetadata?: ApplicationResponse['customClientMetadata'];
   isAdmin?: ApplicationResponse['isAdmin'];
   // eslint-disable-next-line @typescript-eslint/ban-types
-  protectedAppMetadata?: Omit<Exclude<ProtectedAppMetadataType, null>, 'customDomains'>;
+  protectedAppMetadata?: Omit<Exclude<ProtectedAppMetadataType, null>, 'customDomains'>; // Custom domains are handled separately
 };
 
 const mapToUriFormatArrays = (value?: string[]) =>

@@ -1,50 +1,37 @@
-import { type Domain, DomainStatus } from '@logto/schemas';
-import { Trans, useTranslation } from 'react-i18next';
-
-import TextLink from '@/ds-components/TextLink';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
+import { type CustomDomain as CustomDomainType, DomainStatus } from '@logto/schemas';
+import classNames from 'classnames';
 
 import ActivationProcess from './ActivationProcess';
 import CustomDomainHeader from './CustomDomainHeader';
 import * as styles from './index.module.scss';
 
 type Props = {
-  customDomain: Domain;
-  onDeleteCustomDomain: () => void;
+  className?: string;
+  customDomain: CustomDomainType;
+  hasExtraTipsOnDelete?: boolean;
+  hasOpenExternalLink?: boolean;
+  onDeleteCustomDomain: () => Promise<void>;
 };
 
-function CustomDomain({ customDomain, onDeleteCustomDomain }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { getDocumentationUrl } = useDocumentationUrl();
-
+function CustomDomain({
+  className,
+  customDomain,
+  hasExtraTipsOnDelete,
+  hasOpenExternalLink,
+  onDeleteCustomDomain,
+}: Props) {
   return (
-    <>
-      <div className={styles.container}>
-        <CustomDomainHeader
-          customDomain={customDomain}
-          onDeleteCustomDomain={onDeleteCustomDomain}
-        />
-        {customDomain.status !== DomainStatus.Active && (
-          <ActivationProcess customDomain={customDomain} />
-        )}
-      </div>
-      {customDomain.status === DomainStatus.Active && (
-        <div className={styles.notes}>
-          <Trans
-            components={{
-              a: (
-                <TextLink
-                  targetBlank="noopener"
-                  to={getDocumentationUrl('docs/recipes/custom-domain/use-custom-domain')}
-                />
-              ),
-            }}
-          >
-            {t('domain.update_endpoint_notice', { link: t('general.learn_more') })}
-          </Trans>
-        </div>
+    <div className={classNames(styles.container, className)}>
+      <CustomDomainHeader
+        customDomain={customDomain}
+        hasExtraTipsOnDelete={hasExtraTipsOnDelete}
+        hasOpenExternalLink={hasOpenExternalLink}
+        onDeleteCustomDomain={onDeleteCustomDomain}
+      />
+      {customDomain.status !== DomainStatus.Active && (
+        <ActivationProcess customDomain={customDomain} />
       )}
-    </>
+    </div>
   );
 }
 

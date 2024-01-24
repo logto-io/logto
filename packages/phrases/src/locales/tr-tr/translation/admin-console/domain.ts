@@ -1,7 +1,7 @@
 const domain = {
   status: {
-    connecting: 'Bağlanıyor',
-    in_used: 'Kullanımda',
+    connecting: 'Bağlanıyor...',
+    in_use: 'Kullanımda',
     failed_to_connect: 'Bağlantı başarısız oldu',
   },
   update_endpoint_notice:

@@ -1,16 +1,27 @@
-import { type Application } from '@logto/schemas';
+import {
+  DomainStatus,
+  type Application,
+  type CustomDomain as CustomDomainType,
+} from '@logto/schemas';
 import { type ChangeEvent } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 
 import ExternalLinkIcon from '@/assets/icons/external-link.svg';
+import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
+import OpenExternalLink from '@/components/OpenExternalLink';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
+import Spacer from '@/ds-components/Spacer';
 import TextInput from '@/ds-components/TextInput';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
+import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import AddDomainForm from '@/pages/TenantSettings/TenantDomainSettings/AddDomainForm';
+import CustomDomain from '@/pages/TenantSettings/TenantDomainSettings/CustomDomain';
 
 import { type ApplicationForm } from '../utils';
 
@@ -26,6 +37,10 @@ const maxSessionDuration = 365; // 1 year
 function ProtectedAppSettings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
+  const { data: customDomains = [], mutate } = useSWR<CustomDomainType[]>(
+    `api/applications/${data.id}/protected-app-metadata/custom-domains`
+  );
+  const api = useApi();
 
   const {
     control,
@@ -39,6 +54,9 @@ function ProtectedAppSettings({ data }: Props) {
   });
 
   const host = data.protectedAppMetadata?.host;
+
+  // We only support one custom domain for protected apps at the moment.
+  const customDomain = customDomains[0];
 
   return (
     <>
@@ -59,7 +77,12 @@ function ProtectedAppSettings({ data }: Props) {
               title="application_details.try_it"
               trailingIcon={<ExternalLinkIcon />}
               onClick={() => {
-                window.open(`https://${host}`, '_blank');
+                window.open(
+                  `https://${
+                    customDomain?.status === DomainStatus.Active ? customDomain.domain : host
+                  }`,
+                  '_blank'
+                );
               }}
             />
           </div>
@@ -71,6 +94,56 @@ function ProtectedAppSettings({ data }: Props) {
             placeholder={t('application_details.application_name_placeholder')}
           />
         </FormField>
+        {!!host && (
+          <FormField title="application_details.app_domain_protected">
+            {!customDomain && (
+              <AddDomainForm
+                className={styles.customDomain}
+                onSubmitCustomDomain={async (json) => {
+                  await api.post(
+                    `api/applications/${data.id}/protected-app-metadata/custom-domains`,
+                    { json }
+                  );
+                  void mutate();
+                }}
+              />
+            )}
+            {customDomain && (
+              <CustomDomain
+                hasOpenExternalLink
+                className={styles.customDomain}
+                customDomain={customDomain}
+                onDeleteCustomDomain={async () => {
+                  await api.delete(
+                    `api/applications/${data.id}/protected-app-metadata/custom-domains/${customDomain.domain}`
+                  );
+                  void mutate();
+                }}
+              />
+            )}
+            {customDomain?.status !== DomainStatus.Active && (
+              <>
+                <div className={styles.label}>
+                  {t('application_details.app_domain_protected_description_1')}
+                </div>
+                <div className={styles.hostInUse}>
+                  <span className={styles.host}>{data.protectedAppMetadata?.host}</span>
+                  <DomainStatusTag status={DomainStatus.Active} />
+                  <Spacer />
+                  <CopyToClipboard value={host} variant="icon" />
+                  <OpenExternalLink link={host} />
+                </div>
+              </>
+            )}
+            {customDomain?.status === DomainStatus.Active && (
+              <span className={styles.label}>
+                <Trans components={{ domain: <span className={styles.inlineCode} /> }}>
+                  {t('application_details.app_domain_protected_description_2', { domain: host })}
+                </Trans>
+              </span>
+            )}
+          </FormField>
+        )}
         <FormField
           isRequired
           title="protected_app.form.url_field_label"
