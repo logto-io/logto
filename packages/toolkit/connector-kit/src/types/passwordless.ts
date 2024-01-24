@@ -4,6 +4,19 @@ import { z } from 'zod';
 
 import { type BaseConnector, type ConnectorType } from './foundation.js';
 
+/** @deprecated Use {@link TemplateType} instead. */
+export enum VerificationCodeType {
+  SignIn = 'SignIn',
+  Register = 'Register',
+  ForgotPassword = 'ForgotPassword',
+  Generic = 'Generic',
+  /** @deprecated Use `Generic` type template for sending test sms/email use case */
+  Test = 'Test',
+}
+
+/** @deprecated Use {@link templateTypeGuard} instead. */
+export const verificationCodeTypeGuard = z.nativeEnum(VerificationCodeType);
+
 export enum TemplateType {
   /** The template for sending verification code when user is signing in. */
   SignIn = 'SignIn',
@@ -61,13 +74,13 @@ export type EmailServiceBranding = z.infer<typeof emailServiceBrandingGuard>;
 
 export type SendMessageData = {
   to: string;
-  type: TemplateType;
+  type: TemplateType | VerificationCodeType;
   payload: SendMessagePayload;
 };
 
 export const sendMessageDataGuard = z.object({
   to: z.string(),
-  type: templateTypeGuard,
+  type: templateTypeGuard.or(verificationCodeTypeGuard),
   payload: sendMessagePayloadGuard,
 }) satisfies z.ZodType<SendMessageData>;
 

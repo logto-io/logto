@@ -1,5 +1,5 @@
 ---
-"@logto/connector-kit": major
+"@logto/connector-kit": minor
 ---
 
 support magic link feature

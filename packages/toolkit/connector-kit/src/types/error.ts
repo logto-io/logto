@@ -10,6 +10,12 @@ export enum ConnectorErrorCodes {
   InvalidResponse = 'invalid_response',
   /** The template is not found for the given type. */
   TemplateNotFound = 'template_not_found',
+  /**
+   * The template type is not supported by the connector.
+   *
+   * @deprecated Connector should be able to handle dynamic template type.
+   */
+  TemplateNotSupported = 'template_not_supported',
   RateLimitExceeded = 'rate_limit_exceeded',
   NotImplemented = 'not_implemented',
   SocialAuthCodeInvalid = 'social_auth_code_invalid',
