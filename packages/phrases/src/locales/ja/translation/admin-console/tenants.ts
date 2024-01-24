@@ -58,10 +58,6 @@ const tenants = {
     hint_3: 'ご安心ください、他のすべての設定は変わりません。',
     about_tenant_type: 'テナントタイプについて',
   },
-  dev_tenant_notification: {
-    title: '開発テナントで<a>Logto Proのすべての機能</a>にアクセスできます！',
-    description: '完全無料であり、トライアル期間はありません！',
-  },
   delete_modal: {
     title: 'テナントを削除します',
     description_line1:

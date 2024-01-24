@@ -53,10 +53,6 @@ const tenants = {
     hint_3: '別擔心，您的其他設置將保持不變。',
     about_tenant_type: '關於租戶類型',
   },
-  dev_tenant_notification: {
-    title: '現在您可以在您的開發租戶中訪問<a>Logto Pro所有功能</a>！',
-    description: '它完全免費，沒有試用期-永遠免費！',
-  },
   delete_modal: {
     title: '刪除租戶',
     description_line1:

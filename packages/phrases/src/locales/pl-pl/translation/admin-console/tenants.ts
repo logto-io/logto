@@ -62,10 +62,6 @@ const tenants = {
     hint_3: 'Nie martw się, wszystkie inne ustawienia pozostaną takie same.',
     about_tenant_type: 'O typie najemcy',
   },
-  dev_tenant_notification: {
-    title: 'Teraz możesz uzyskać <a>wszystkie funkcje Logto Pro</a> w swoim najemcy deweloperskim!',
-    description: 'Jest to całkowicie darmowe, bez okresu próbnego – na zawsze!',
-  },
   delete_modal: {
     title: 'Usuń najemcę',
     description_line1:

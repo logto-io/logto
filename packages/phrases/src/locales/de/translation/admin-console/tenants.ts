@@ -62,11 +62,6 @@ const tenants = {
     hint_3: 'Keine Sorge, all Ihre anderen Einstellungen bleiben gleich.',
     about_tenant_type: 'Über den Mandantentyp',
   },
-  dev_tenant_notification: {
-    title:
-      'Sie können jetzt <a> alle Funktionen von Logto Pro </a> in Ihrem Entwicklungsmieter nutzen!',
-    description: 'Es ist komplett kostenlos, ohne Testphase – für immer!',
-  },
   delete_modal: {
     title: 'Mieter löschen',
     description_line1:

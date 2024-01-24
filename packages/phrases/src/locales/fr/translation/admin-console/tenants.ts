@@ -62,11 +62,6 @@ const tenants = {
     hint_3: 'Ne vous inquiétez pas, tous vos autres paramètres resteront les mêmes.',
     about_tenant_type: 'À propos du type de locataire',
   },
-  dev_tenant_notification: {
-    title:
-      'Vous pouvez désormais accéder à <a>toutes les fonctionnalités de Logto Pro</a> dans votre locataire de développement !',
-    description: "C'est complètement gratuit, sans période d'essai - pour toujours !",
-  },
   delete_modal: {
     title: 'Supprimer le locataire',
     description_line1:
