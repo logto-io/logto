@@ -109,7 +109,11 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
       <DetailsPageHeader
         icon={<ApplicationIcon type={data.type} />}
         title={data.name}
-        primaryTag={t(`${applicationTypeI18nKey[data.type]}.title`)}
+        primaryTag={
+          data.isThirdParty
+            ? t(`${applicationTypeI18nKey.thirdParty}.title`)
+            : t(`${applicationTypeI18nKey[data.type]}.title`)
+        }
         identifier={{ name: 'App ID', value: data.id }}
         additionalActionButton={conditional(
           !data.isThirdParty && {

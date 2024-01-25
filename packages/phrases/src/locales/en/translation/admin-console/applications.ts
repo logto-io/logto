@@ -14,7 +14,7 @@ const applications = {
   application_created: 'Application created successfully.',
   tab: {
     my_applications: 'My apps',
-    third_party_applications: 'Third party apps',
+    third_party_applications: 'Third-party apps',
   },
   app_id: 'App ID',
   type: {
@@ -44,7 +44,7 @@ const applications = {
       description: 'N/A', // Not in use
     },
     third_party: {
-      title: 'Third-party app',
+      title: 'Third-party App',
       subtitle: 'An app that is used as a third-party IdP connector',
       description: 'E.g., OIDC, SAML',
     },

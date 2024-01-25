@@ -150,7 +150,7 @@ function Applications({ tab }: Props) {
                   title={name}
                   subtitle={
                     isThirdParty
-                      ? t('applications.type.third_party.title')
+                      ? t(`${applicationTypeI18nKey.thirdParty}.title`)
                       : t(`${applicationTypeI18nKey[type]}.title`)
                   }
                   icon={<ApplicationIcon className={styles.icon} type={type} />}
