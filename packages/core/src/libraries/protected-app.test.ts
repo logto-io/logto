@@ -7,6 +7,7 @@ import {
   mockCustomDomain,
   mockProtectedApplication,
 } from '#src/__mocks__/index.js';
+import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   defaultProtectedAppPageRules,
@@ -172,7 +173,7 @@ describe('checkAndBuildProtectedAppData()', () => {
         pageRules: defaultProtectedAppPageRules,
       },
       oidcClientMetadata: {
-        redirectUris: [`https://${host}/callback`],
+        redirectUris: [`https://${host}/${protectedAppSignInCallbackUrl}`],
         postLogoutRedirectUris: [`https://${host}`],
       },
     });

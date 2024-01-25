@@ -13,6 +13,7 @@ import type {
 } from '@logto/schemas';
 import { RoleType, ApplicationType, LogtoOidcConfigKey, DomainStatus } from '@logto/schemas';
 
+import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import { mockId } from '#src/test-utils/nanoid.js';
 
 export * from './connector.js';
@@ -54,7 +55,7 @@ export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'>
   type: ApplicationType.Protected,
   description: null,
   oidcClientMetadata: {
-    redirectUris: ['https://mock.protected.dev/callback'],
+    redirectUris: [`https://mock.protected.dev/${protectedAppSignInCallbackUrl}`],
     postLogoutRedirectUris: ['https://mock.protected.dev'],
   },
   customClientMetadata: {

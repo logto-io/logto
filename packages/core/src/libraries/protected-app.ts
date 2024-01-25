@@ -6,6 +6,7 @@ import {
 } from '@logto/schemas';
 import { isValidSubdomain } from '@logto/shared';
 
+import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
@@ -197,7 +198,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
         pageRules: defaultProtectedAppPageRules,
       },
       oidcClientMetadata: {
-        redirectUris: [`https://${host}/callback`],
+        redirectUris: [`https://${host}/${protectedAppSignInCallbackUrl}`],
         postLogoutRedirectUris: [`https://${host}`],
       },
     };

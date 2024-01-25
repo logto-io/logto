@@ -9,6 +9,7 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 const { jest } = import.meta;
 
 const mockDomain = 'app.example.com';
+const protectedAppSignInCallbackUrl = 'sign-in-callback';
 
 const updateApplicationById = jest.fn();
 const findApplicationById = jest.fn(async () => mockProtectedApplication);
@@ -109,8 +110,8 @@ describe('application protected app metadata routes', () => {
             `https://${mockDomain}`,
           ],
           redirectUris: [
-            `https://${mockProtectedApplication.protectedAppMetadata.host}/callback`,
-            `https://${mockDomain}/callback`,
+            `https://${mockProtectedApplication.protectedAppMetadata.host}/${protectedAppSignInCallbackUrl}`,
+            `https://${mockDomain}/${protectedAppSignInCallbackUrl}`,
           ],
         },
       });
@@ -169,7 +170,9 @@ describe('application protected app metadata routes', () => {
         },
         oidcClientMetadata: {
           postLogoutRedirectUris: [`https://${mockProtectedApplication.protectedAppMetadata.host}`],
-          redirectUris: [`https://${mockProtectedApplication.protectedAppMetadata.host}/callback`],
+          redirectUris: [
+            `https://${mockProtectedApplication.protectedAppMetadata.host}/${protectedAppSignInCallbackUrl}`,
+          ],
         },
       });
       expect(deleteDomainFromRemote).toHaveBeenCalledWith(mockCloudflareData.id);
