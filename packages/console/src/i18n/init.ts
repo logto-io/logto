@@ -29,6 +29,7 @@ const initI18n = async (language?: LanguageTag) => {
   // Load phrases
   for (const [language, values] of Object.entries(resources)) {
     i18next.addResourceBundle(language, 'translation', values.translation, true);
+    i18next.addResourceBundle(language, 'errors', values.errors, true);
   }
 
   // Load phrases-experience
