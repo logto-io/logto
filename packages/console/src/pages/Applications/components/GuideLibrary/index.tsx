@@ -1,16 +1,14 @@
-import { ReservedPlanId, type Application } from '@logto/schemas';
+import { type Application } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import SearchIcon from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
-import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
@@ -38,7 +36,6 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
   const { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
-  const { currentPlan } = useContext(SubscriptionDataContext);
 
   const structuredMetadata = useMemo(
     () => getStructuredAppGuideMetadata({ categories: filterCategories }),
@@ -111,14 +108,6 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                       setFilterCategories(sortedValue);
                     }}
                   />
-                  {/* TODO: must be refactored since there's no way to see the tag's intention */}
-                  {isCloud && (
-                    <FeatureTag
-                      isVisible={!currentPlan.quota.machineToMachineLimit}
-                      plan={ReservedPlanId.Pro}
-                      className={styles.proTag}
-                    />
-                  )}
                 </div>
               </div>
             </div>
