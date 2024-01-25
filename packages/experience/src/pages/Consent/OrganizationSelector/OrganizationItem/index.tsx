@@ -35,14 +35,8 @@ const OrganizationItem = ({
         onClick: () => {
           onSelect(organization);
         },
-        onKeyDown: onKeyDownHandler({
-          Enter: () => {
-            console.log('enter');
-            onSelect(organization);
-          },
-          ' ': () => {
-            onSelect(organization);
-          },
+        onKeyDown: onKeyDownHandler(() => {
+          onSelect(organization);
         }),
       })}
     >

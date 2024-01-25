@@ -35,9 +35,7 @@ const ScopeGroup = ({ groupName, scopes }: ScopeGroupProps) => {
         role="button"
         tabIndex={0}
         onClick={toggle}
-        onKeyDown={onKeyDownHandler({
-          Enter: toggle,
-        })}
+        onKeyDown={onKeyDownHandler(toggle)}
       >
         <CheckMark className={styles.check} />
         <div className={styles.scopeGroupName}>{groupName}</div>
