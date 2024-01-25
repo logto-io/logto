@@ -14,6 +14,7 @@ import * as styles from './index.module.scss';
 
 type ScopeGroupProps = {
   groupName: string;
+  isAutoExpand?: boolean;
   scopes: Array<{
     id: string;
     name: string;
@@ -21,8 +22,8 @@ type ScopeGroupProps = {
   }>;
 };
 
-const ScopeGroup = ({ groupName, scopes }: ScopeGroupProps) => {
-  const [expanded, setExpanded] = useState(false);
+const ScopeGroup = ({ groupName, scopes, isAutoExpand = false }: ScopeGroupProps) => {
+  const [expanded, setExpanded] = useState(isAutoExpand);
 
   const toggle = useCallback(() => {
     setExpanded((previous) => !previous);
@@ -110,7 +111,12 @@ const ScopesListCard = ({
       <div className={styles.title}>{t('description.request_permission', { name: appName })}</div>
       <div className={styles.cardWrapper}>
         {userScopesData && userScopesData.length > 0 && (
-          <ScopeGroup groupName="User Scopes" scopes={userScopesData} />
+          <ScopeGroup
+            groupName="User Scopes"
+            scopes={userScopesData}
+            // If there is no resource scopes, we should auto expand the user scopes
+            isAutoExpand={!resourceScopes?.length}
+          />
         )}
         {resourceScopes?.map(({ resource, scopes }) => (
           <ScopeGroup
@@ -121,6 +127,8 @@ const ScopesListCard = ({
                 : resource.name
             }
             scopes={scopes}
+            // If there is no user scopes, we should auto expand the resource scopes
+            isAutoExpand={!userScopesData?.length && resourceScopes.length === 1}
           />
         ))}
         {showTerms && (
