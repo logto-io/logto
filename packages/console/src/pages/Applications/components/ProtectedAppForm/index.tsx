@@ -1,6 +1,9 @@
-import { ApplicationType, type Application } from '@logto/schemas';
+import { isValidUrl } from '@logto/core-kit';
+import { ApplicationType, type Application, type RequestErrorBody } from '@logto/schemas';
+import { isValidSubdomain } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
+import { HTTPError } from 'ky';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +13,6 @@ import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import { trySubmitSafe } from '@/utils/form';
 
 import * as styles from './index.module.scss';
 
@@ -39,17 +41,18 @@ function ProtectedAppForm({
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<ProtectedAppForm>();
 
-  const api = useApi();
+  const api = useApi({ hideErrorToast: true });
 
-  const onSubmit = handleSubmit(
-    trySubmitSafe(async (data) => {
-      if (isSubmitting) {
-        return;
-      }
+  const onSubmit = handleSubmit(async (data) => {
+    if (isSubmitting) {
+      return;
+    }
 
+    try {
       const createdApp = await api
         .post('api/applications', {
           json: {
@@ -62,8 +65,16 @@ function ProtectedAppForm({
         .json<Application>();
       toast.success(t('applications.application_created'));
       onCreateSuccess?.(createdApp);
-    })
-  );
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        const { code, message } = await error.response.json<RequestErrorBody>();
+
+        if (code === 'application.protected_application_subdomain_exists') {
+          setError('subDomain', { type: 'custom', message });
+        }
+      }
+    }
+  });
 
   return (
     <form className={className}>
@@ -88,9 +99,18 @@ function ProtectedAppForm({
           <div className={styles.domainFieldWrapper}>
             <TextInput
               className={styles.subdomain}
-              {...register('subDomain', { required: true })}
+              {...register('subDomain', {
+                required: true,
+                validate: (value) =>
+                  isValidSubdomain(value) || t('protected_app.form.errors.invalid_domain_format'),
+              })}
               placeholder={t('protected_app.form.domain_field_placeholder')}
-              error={Boolean(errors.subDomain)}
+              error={
+                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                errors.subDomain?.message ||
+                (errors.subDomain?.type === 'required' &&
+                  t('protected_app.form.errors.domain_required'))
+              }
             />
             {defaultDomain && <div className={styles.domain}>{defaultDomain}</div>}
           </div>
@@ -108,9 +128,16 @@ function ProtectedAppForm({
           tip={conditional(!hasDetailedInstructions && t('protected_app.form.url_field_tooltip'))}
         >
           <TextInput
-            {...register('origin', { required: true })}
+            {...register('origin', {
+              required: true,
+              validate: (value) => isValidUrl(value) || t('protected_app.form.errors.invalid_url'),
+            })}
             placeholder={t('protected_app.form.url_field_placeholder')}
-            error={Boolean(errors.origin)}
+            error={
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              errors.origin?.message ||
+              (errors.origin?.type === 'required' && t('protected_app.form.errors.url_required'))
+            }
           />
         </FormField>
       </div>

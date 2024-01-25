@@ -1,4 +1,4 @@
-import { validateRedirectUrl } from './url.js';
+import { isValidUrl, validateRedirectUrl } from './url.js';
 
 describe('url utilities', () => {
   it('should allow valid redirect URIs', () => {
@@ -21,5 +21,23 @@ describe('url utilities', () => {
     expect(validateRedirectUrl('http://localhost:3001', 'mobile')).toBeFalsy();
     expect(validateRedirectUrl('https://logto.dev/callback', 'mobile')).toBeFalsy();
     expect(validateRedirectUrl('demoApp/callback', 'mobile')).toBeFalsy();
+  });
+
+  it('should allow valid URIs', () => {
+    expect(isValidUrl('http://localhost:3001')).toBeTruthy();
+    expect(isValidUrl('https://google.com')).toBeTruthy();
+    expect(isValidUrl('https://logto.dev/callback')).toBeTruthy();
+    expect(isValidUrl('https://my-company.com/callback?test=123')).toBeTruthy();
+    expect(isValidUrl('https://abc.com/callback?test=123#param=hash')).toBeTruthy();
+    expect(isValidUrl('io.logto://my-app/callback')).toBeTruthy();
+    expect(isValidUrl('io.logto.SwiftUI-Demo://callback')).toBeTruthy();
+  });
+
+  it('should detect invalid URIs', () => {
+    expect(isValidUrl('invalid_url')).toBeFalsy();
+    expect(isValidUrl('abc.com')).toBeFalsy();
+    expect(isValidUrl('abc.com/callback')).toBeFalsy();
+    expect(isValidUrl('abc.com/callback?test=123')).toBeFalsy();
+    expect(isValidUrl('abc.com/callback#test=123')).toBeFalsy();
   });
 });
