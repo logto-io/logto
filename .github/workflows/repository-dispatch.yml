@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Dispatch Event
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.BOT_PAT }}
           repository: ${{ matrix.target }}
