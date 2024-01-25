@@ -8,6 +8,7 @@ import input from './input.js';
 import list from './list.js';
 import mfa from './mfa.js';
 import secondary from './secondary.js';
+import user_scopes from './user-scopes.js';
 
 const es = {
   translation: {
@@ -19,6 +20,7 @@ const es = {
     list,
     mfa,
     development_tenant,
+    user_scopes,
   },
 } satisfies LocalePhrase;
 

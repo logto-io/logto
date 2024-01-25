@@ -1,4 +1,4 @@
-import { ReservedResource } from '@logto/core-kit';
+import { ReservedResource, UserScope } from '@logto/core-kit';
 import { type ConsentInfoResponse } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useMemo, useState } from 'react';
@@ -10,6 +10,9 @@ import TermsLinks from '@/components/TermsLinks';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';
+
+const isUserScope = (scope: string): scope is UserScope =>
+  Object.values<string>(UserScope).includes(scope);
 
 type ScopeGroupProps = {
   groupName: string;
@@ -73,14 +76,17 @@ const ScopesListCard = ({
 }: Props) => {
   const { t } = useTranslation();
 
-  // TODO: implement the userScopes description
   const userScopesData = useMemo(
     () =>
       userScopes?.map((scope) => ({
         id: scope,
         name: scope,
+        description: isUserScope(scope)
+          ? // We have ':' in the user scope, need to change the nsSeparator to '|' to avoid i18n ns matching
+            t(`user_scopes.descriptions.${scope}`, { nsSeparator: '|' })
+          : undefined,
       })),
-    [userScopes]
+    [t, userScopes]
   );
 
   const showTerms = Boolean(termsUrl ?? privacyUrl);
