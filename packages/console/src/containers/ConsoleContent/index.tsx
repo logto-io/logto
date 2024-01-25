@@ -98,6 +98,10 @@ function ConsoleContent() {
                 <Route index element={<Navigate replace to={ApplicationDetailsTabs.Settings} />} />
                 <Route path=":tab" element={<ApplicationDetails />} />
               </Route>
+              <Route
+                path={`:appId/${ApplicationDetailsTabs.Logs}/:logId`}
+                element={<AuditLogDetails />}
+              />
             </Route>
             <Route path="api-resources">
               <Route index element={<ApiResources />} />

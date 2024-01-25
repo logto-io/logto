@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import type { User, Log, Hook } from '@logto/schemas';
+import type { Application, User, Log, Hook } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
@@ -33,10 +33,11 @@ const isWebhookEventLog = (key?: string) =>
   key && Object.values<string>(hookEventLogKey).includes(key);
 
 function AuditLogDetails() {
-  const { userId, hookId, logId } = useParams();
+  const { appId, userId, hookId, logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Log, RequestError>(logId && `api/logs/${logId}`);
+  const { data: appData } = useSWR<Application, RequestError>(appId && `api/applications/${appId}`);
   const { data: userData } = useSWR<User, RequestError>(userId && `api/users/${userId}`);
   const { data: hookData } = useSWR<Hook, RequestError>(hookId && `api/hooks/${hookId}`);
 
@@ -54,7 +55,14 @@ function AuditLogDetails() {
       hookId &&
         t('log_details.back_to', {
           // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-          name: hookData?.name || t('users.unnamed'),
+          name: hookData?.name || t('general.unnamed'),
+        })
+    ) ??
+    conditional(
+      appId &&
+        t('log_details.back_to', {
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          name: appData?.name || t('general.unnamed'),
         })
     ) ??
     t('log_details.back_to_logs');
