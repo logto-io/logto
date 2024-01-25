@@ -8,6 +8,7 @@ import {
   mockCustomDomain,
   mockProtectedApplication,
 } from '#src/__mocks__/index.js';
+import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -137,7 +138,7 @@ describe('application route', () => {
       type,
       protectedAppMetadata,
       oidcClientMetadata: {
-        redirectUris: [`https://${protectedAppMetadata.host}/callback`],
+        redirectUris: [`https://${protectedAppMetadata.host}/${protectedAppSignInCallbackUrl}`],
         postLogoutRedirectUris: [`https://${protectedAppMetadata.host}`],
       },
     });

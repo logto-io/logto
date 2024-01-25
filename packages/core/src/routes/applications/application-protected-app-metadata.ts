@@ -1,6 +1,7 @@
 import { customDomainsGuard } from '@logto/schemas';
 import { z } from 'zod';
 
+import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -94,7 +95,10 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
       await updateApplicationById(id, {
         protectedAppMetadata: { ...protectedAppMetadata, customDomains: [customDomain] },
         oidcClientMetadata: {
-          redirectUris: [...oidcClientMetadata.redirectUris, `https://${domain}/callback`],
+          redirectUris: [
+            ...oidcClientMetadata.redirectUris,
+            `https://${domain}/${protectedAppSignInCallbackUrl}`,
+          ],
           postLogoutRedirectUris: [
             ...oidcClientMetadata.postLogoutRedirectUris,
             `https://${domain}`,
@@ -153,7 +157,7 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
         oidcClientMetadata: {
           ...oidcClientMetadata,
           redirectUris: oidcClientMetadata.redirectUris.filter(
-            (uri) => uri !== `https://${domain}/callback`
+            (uri) => uri !== `https://${domain}/${protectedAppSignInCallbackUrl}`
           ),
           postLogoutRedirectUris: oidcClientMetadata.postLogoutRedirectUris.filter(
             (uri) => uri !== `https://${domain}`
