@@ -1,10 +1,15 @@
+/* eslint-disable consistent-default-export-name/default-export-match-filename */
+// We need to return a ReactNode property in the parseRowGroup function
 import {
   type ApplicationUserConsentScopesResponse,
   ApplicationUserConsentScopeType,
 } from '@logto/schemas';
-import { useCallback } from 'react';
+import { useCallback, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Tip from '@/assets/icons/tip.svg';
+import IconButton from '@/ds-components/IconButton';
+import { ToggleTip } from '@/ds-components/Tip';
 import useApi from '@/hooks/use-api';
 
 import * as styles from './index.module.scss';
@@ -34,7 +39,7 @@ export type ScopesTableRowDataType =
 
 type ScopesTableRowGroupType = {
   key: string;
-  label: string;
+  label: string | ReactNode;
   labelRowClassName?: string;
   data: ScopesTableRowDataType[];
 };
@@ -58,7 +63,18 @@ const useScopesTable = () => {
 
       const userScopesGroup: ScopesTableRowGroupType = {
         key: ApplicationUserConsentScopeType.UserScopes,
-        label: t('application_details.permissions.user_permissions'),
+        label: (
+          <div className={styles.label}>
+            {t('application_details.permissions.user_permissions')}
+            <ToggleTip
+              content={t('application_details.permissions.user_data_permission_description_tips')}
+            >
+              <IconButton size="small">
+                <Tip />
+              </IconButton>
+            </ToggleTip>
+          </div>
+        ),
         labelRowClassName: styles.sectionTitleRow,
         data: userScopes.map((scope) => ({
           type: ApplicationUserConsentScopeType.UserScopes,
@@ -145,3 +161,4 @@ const useScopesTable = () => {
 };
 
 export default useScopesTable;
+/* eslint-enable consistent-default-export-name/default-export-match-filename */
