@@ -6,7 +6,6 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import DownArrowIcon from '@/assets/icons/arrow-down.svg';
 import CheckMark from '@/assets/icons/check-mark.svg';
-import IconButton from '@/components/Button/IconButton';
 import TermsLinks from '@/components/TermsLinks';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -36,15 +35,11 @@ const ScopeGroup = ({ groupName, scopes, isAutoExpand = false }: ScopeGroupProps
         role="button"
         tabIndex={0}
         onClick={toggle}
-        onKeyDown={onKeyDownHandler({
-          Enter: toggle,
-        })}
+        onKeyDown={onKeyDownHandler(toggle)}
       >
         <CheckMark className={styles.check} />
         <div className={styles.scopeGroupName}>{groupName}</div>
-        <IconButton className={styles.toggleButton} data-expanded={expanded}>
-          <DownArrowIcon />
-        </IconButton>
+        <DownArrowIcon className={styles.toggleButton} data-expanded={expanded} />
       </div>
       {expanded && (
         <ul className={styles.scopesList}>

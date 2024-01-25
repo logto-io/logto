@@ -11,10 +11,13 @@
   border: _.border(var(--color-line-divider));
   box-shadow: var(--color-shadow-2);
   border-radius: _.unit(2);
-  background-color: var(--color-bg-float);
+  background: var(--color-bg-float);
   position: absolute;
   z-index: 50;
-  padding: _.unit(2) 0;
+
+  .container {
+    padding: _.unit(2);
+  }
 }
 
 :global(body.mobile) {
@@ -31,8 +34,16 @@
     border-bottom-right-radius: 0;
     bottom: 0;
     width: 100%;
-    height: 300px;
-    padding: _.unit(4) 0;
+    min-height: 200px;
+    padding-bottom: env(safe-area-inset-bottom);
+
+    .container {
+      padding: _.unit(3) _.unit(1);
+    }
+  }
+
+  .organizationItem {
+    padding: _.unit(3);
   }
 }
 

@@ -65,17 +65,20 @@ const OrganizationSelectorModal = ({
       closeTimeoutMS={isMobile ? 300 : 0}
       onRequestClose={onClose}
     >
-      {organizations.map((organization) => (
-        <OrganizationItem
-          key={organization.id}
-          organization={organization}
-          isSelected={organization.id === selectedOrganization.id}
-          onSelect={() => {
-            onClose();
-            onSelect(organization);
-          }}
-        />
-      ))}
+      <div className={styles.container}>
+        {organizations.map((organization) => (
+          <OrganizationItem
+            key={organization.id}
+            className={styles.organizationItem}
+            organization={organization}
+            isSelected={organization.id === selectedOrganization.id}
+            onSelect={() => {
+              onClose();
+              onSelect(organization);
+            }}
+          />
+        ))}
+      </div>
     </ReactModal>
   );
 };

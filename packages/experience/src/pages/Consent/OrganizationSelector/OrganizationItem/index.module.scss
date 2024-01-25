@@ -1,8 +1,9 @@
 @use '@/scss/underscore' as _;
 
 .organizationItem {
-  @include _.flex-row;
-  padding: _.unit(2) _.unit(4);
+  border-radius: _.unit(2);
+  padding: _.unit(2.5) _.unit(2);
+  cursor: pointer;
 
   .icon {
     width: 20px;
@@ -16,12 +17,8 @@
     flex: 1;
   }
 
-  &[role='button'] {
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-overlay-brand-hover);
-    }
+  &:hover {
+    background-color: var(--color-overlay-neutral-hover);
   }
 
   &[data-selected='true'] {
@@ -31,4 +28,5 @@
       color: var(--color-brand-default);
     }
   }
+  @include _.flex-row;
 }
