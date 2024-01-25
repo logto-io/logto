@@ -5,6 +5,9 @@ const applications = {
     'Configura la autenticación de Logto para tu aplicación nativa, de página única, de máquina a máquina o tradicional',
   subtitle_with_app_type: 'Configura la autenticación de Logto para tu aplicación {{name}}',
   create: 'Crear aplicación',
+  /** UNTRANSLATED */
+  create_subtitle_third_party:
+    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
   application_name: 'Nombre de la aplicación',
   application_name_placeholder: 'Mi App',
   application_description: 'Descripción de la aplicación',

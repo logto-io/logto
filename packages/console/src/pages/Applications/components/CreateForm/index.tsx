@@ -1,5 +1,7 @@
+import { type AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
+import { type ReactElement, useMemo } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -72,6 +74,23 @@ function CreateForm({
     })
   );
 
+  const subtitleElement = useMemo<AdminConsoleKey | ReactElement>(() => {
+    if (!defaultCreateFrameworkName) {
+      return 'applications.subtitle';
+    }
+
+    if (isDefaultCreateThirdParty) {
+      return 'applications.create_subtitle_third_party';
+    }
+
+    return (
+      <DynamicT
+        forKey="applications.subtitle_with_app_type"
+        interpolation={{ name: defaultCreateFrameworkName }}
+      />
+    );
+  }, [defaultCreateFrameworkName, isDefaultCreateThirdParty]);
+
   return (
     <Modal
       shouldCloseOnEsc
@@ -84,17 +103,8 @@ function CreateForm({
     >
       <ModalLayout
         title="applications.create"
-        subtitle={
-          defaultCreateFrameworkName ? (
-            <DynamicT
-              forKey="applications.subtitle_with_app_type"
-              interpolation={{ name: defaultCreateFrameworkName }}
-            />
-          ) : (
-            'applications.subtitle'
-          )
-        }
-        size="large"
+        subtitle={subtitleElement}
+        size="medium"
         footer={<Footer selectedType={value} isLoading={isSubmitting} onClickCreate={onSubmit} />}
         onClose={onClose}
       >
@@ -142,6 +152,8 @@ function CreateForm({
           <FormField isRequired title="applications.application_name">
             <TextInput
               {...register('name', { required: true })}
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus={!!defaultCreateType}
               placeholder={t('applications.application_name_placeholder')}
               error={Boolean(errors.name)}
             />
