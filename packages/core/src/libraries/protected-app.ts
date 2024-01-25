@@ -6,7 +6,7 @@ import {
 } from '@logto/schemas';
 import { isValidSubdomain } from '@logto/shared';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   defaultProtectedAppPageRules,
@@ -117,7 +117,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
 
     const protectedAppConfigProviderConfig = await getProviderConfig();
 
-    const { protectedAppMetadata, id, secret } = await findApplicationById(applicationId);
+    const { protectedAppMetadata, id, secret, tenantId } = await findApplicationById(applicationId);
     if (!protectedAppMetadata) {
       return;
     }
@@ -129,7 +129,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       sdkConfig: {
         appId: id,
         appSecret: secret,
-        endpoint: EnvSet.values.endpoint.href,
+        endpoint: getTenantEndpoint(tenantId, EnvSet.values).origin,
       },
     };
 
