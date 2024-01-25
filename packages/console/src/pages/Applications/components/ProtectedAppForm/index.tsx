@@ -9,6 +9,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWRImmutable from 'swr/immutable';
 
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
@@ -35,7 +36,9 @@ function ProtectedAppForm({
   hasRequiredLabel,
   onCreateSuccess,
 }: Props) {
-  const { data } = useSWRImmutable<ProtectedAppsDomainConfig>('api/systems/application');
+  const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(
+    isDevFeaturesEnabled && isCloud && 'api/systems/application'
+  );
   const defaultDomain = data?.protectedApps.defaultDomain ?? '';
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
