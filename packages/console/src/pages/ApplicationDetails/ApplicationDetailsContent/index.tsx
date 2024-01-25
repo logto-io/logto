@@ -200,6 +200,9 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             )}
           </DetailsForm>
         </FormProvider>
+        {tab === ApplicationDetailsTabs.Settings && (
+          <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} onConfirm={reset} />
+        )}
       </TabWrapper>
 
       {data.type === ApplicationType.MachineToMachine && (
@@ -230,11 +233,11 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             isActive={tab === ApplicationDetailsTabs.Branding}
             className={styles.tabContainer}
           >
-            <Branding application={data} />
+            {/* isActive is needed to support conditional render UnsavedChangesAlertModal */}
+            <Branding application={data} isActive={tab === ApplicationDetailsTabs.Branding} />
           </TabWrapper>
         </>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} onConfirm={reset} />
     </>
   );
 }
