@@ -26,7 +26,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { interactionPrefix } from './const.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 
-const { InvalidClient, InvalidTarget } = errors;
+const { InvalidClient, InvalidTarget, InvalidRedirectUri } = errors;
 
 /**
  * Parse the missing resource scopes info with details. We need to display the resource name and scope details on the consent page.
@@ -182,7 +182,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const {
         session,
-        params: { client_id: clientId },
+        params: { client_id: clientId, redirect_uri: redirectUri },
         prompt,
       } = interactionDetails;
 
@@ -191,6 +191,11 @@ export default function consentRoutes<T extends IRouterParamContext>(
       assertThat(
         clientId && typeof clientId === 'string',
         new InvalidClient('client must be available')
+      );
+
+      assertThat(
+        redirectUri && typeof redirectUri === 'string',
+        new InvalidRedirectUri('redirect_uri must be available')
       );
 
       const { accountId } = session;
@@ -230,6 +235,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         ),
         // Parse the missing resource scopes info with details.
         missingResourceScopes: await parseMissingResourceScopesInfo(queries, missingResourceScopes),
+        redirectUri,
       } satisfies ConsentInfoResponse;
 
       return next();

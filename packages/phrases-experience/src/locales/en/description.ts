@@ -81,6 +81,7 @@ const description = {
   authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
   not_you: 'Not you?',
   user_id: 'User ID: {{id}}',
+  redirect_to: 'You will be redirected to {{name}}.',
 };
 
 export default Object.freeze(description);
