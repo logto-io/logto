@@ -49,10 +49,6 @@
   .trailingIcon {
     display: flex;
     align-items: center;
-
-    &:not(:first-child) {
-      margin-left: _.unit(2);
-    }
   }
 
   &.small {

@@ -168,6 +168,9 @@ const application_details = {
     /** UNTRANSLATED */
     api_resource_permissions_assignment_form_title: 'Add the API resource permissions',
     /** UNTRANSLATED */
+    user_data_permission_description_tips:
+      'You can modify the description of the personal user data permissions via "Sign-in Experience > Content > Manage Language"',
+    /** UNTRANSLATED */
     permission_description_tips:
       'When Logto is used as an Identity Provider (IdP) for authentication in third-party apps, and users are asked for authorization, this description appears on the consent screen.',
   },

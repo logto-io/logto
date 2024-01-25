@@ -13,3 +13,9 @@
     padding-bottom: _.unit(2);
   }
 }
+
+.label {
+  display: flex;
+  gap: _.unit(1);
+  align-items: center;
+}
