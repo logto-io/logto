@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import { type BaseConnector, type ConnectorType } from './foundation.js';
 
+/** @deprecated Use {@link TemplateType} instead. */
 export enum VerificationCodeType {
   SignIn = 'SignIn',
   Register = 'Register',
@@ -13,18 +14,45 @@ export enum VerificationCodeType {
   Test = 'Test',
 }
 
+/** @deprecated Use {@link templateTypeGuard} instead. */
 export const verificationCodeTypeGuard = z.nativeEnum(VerificationCodeType);
+
+export enum TemplateType {
+  /** The template for sending verification code when user is signing in. */
+  SignIn = 'SignIn',
+  /** The template for sending verification code when user is registering. */
+  Register = 'Register',
+  /** The template for sending verification code when user is resetting password. */
+  ForgotPassword = 'ForgotPassword',
+  /** The template for sending organization invitation. */
+  OrganizationInvitation = 'OrganizationInvitation',
+  /** The template for generic usage. */
+  Generic = 'Generic',
+}
+
+export const templateTypeGuard = z.nativeEnum(TemplateType);
 
 export type SendMessagePayload = {
   /**
-   * The dynamic verification code to send.
+   * The dynamic verification code to send. It will replace the `{{code}}` handlebars in the
+   * template.
    * @example '123456'
    */
-  code: string;
+  code?: string;
+  /**
+   * The dynamic link to send. It will replace the `{{link}}` handlebars in the template.
+   * @example 'https://example.com'
+   */
+  link?: string;
 };
 
+export const sendMessagePayloadKeys = ['code', 'link'] as const satisfies Array<
+  keyof SendMessagePayload
+>;
+
 export const sendMessagePayloadGuard = z.object({
-  code: z.string(),
+  code: z.string().optional(),
+  link: z.string().optional(),
 }) satisfies z.ZodType<SendMessagePayload>;
 
 export const urlRegEx =
@@ -34,13 +62,10 @@ export const emailServiceBrandingGuard = z
   .object({
     senderName: z
       .string()
-      .refine((address) => !urlRegEx.test(address), 'DO NOT include URL in the sender name!'),
+      .refine((address) => !urlRegEx.test(address), 'URL is not allowed in sender name.'),
     companyInformation: z
       .string()
-      .refine(
-        (address) => !urlRegEx.test(address),
-        'DO NOT include URL in the company information!'
-      ),
+      .refine((address) => !urlRegEx.test(address), 'URL is not allowed in company information.'),
     appLogo: z.string().url(),
   })
   .partial();
@@ -49,13 +74,13 @@ export type EmailServiceBranding = z.infer<typeof emailServiceBrandingGuard>;
 
 export type SendMessageData = {
   to: string;
-  type: VerificationCodeType;
+  type: TemplateType | VerificationCodeType;
   payload: SendMessagePayload;
 };
 
 export const sendMessageDataGuard = z.object({
   to: z.string(),
-  type: verificationCodeTypeGuard,
+  type: templateTypeGuard.or(verificationCodeTypeGuard),
   payload: sendMessagePayloadGuard,
 }) satisfies z.ZodType<SendMessageData>;
 

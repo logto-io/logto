@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import type { Transporter } from 'nodemailer';
 import nodemailer from 'nodemailer';
 
@@ -38,7 +38,7 @@ describe('SMTP connector', () => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
       to: 'foo',
-      type: VerificationCodeType.Register,
+      type: TemplateType.Register,
       payload: { code: '123456' },
     });
 
@@ -50,11 +50,11 @@ describe('SMTP connector', () => {
     });
   });
 
-  it('should send mail with proper subject', async () => {
+  it('should send mail with proper data', async () => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
       to: 'bar',
-      type: VerificationCodeType.SignIn,
+      type: TemplateType.SignIn,
       payload: { code: '234567' },
     });
 
@@ -63,6 +63,22 @@ describe('SMTP connector', () => {
       subject: 'Logto sign-in with SMTP 234567',
       text: 'This is for sign-in purposes only. Your verification code is 234567.',
       to: 'bar',
+    });
+  });
+
+  it('should send mail with proper data (2)', async () => {
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: 'baz',
+      type: TemplateType.OrganizationInvitation,
+      payload: { code: '345678', link: 'https://example.com' },
+    });
+
+    expect(sendMail).toHaveBeenCalledWith({
+      from: '<notice@test.smtp>',
+      subject: 'Organization invitation',
+      text: 'This is for organization invitation. Your link is https://example.com.',
+      to: 'baz',
     });
   });
 });

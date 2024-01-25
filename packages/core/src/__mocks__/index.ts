@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import type {
   AdminConsoleData,
   Application,
@@ -178,7 +178,7 @@ export const mockPasscode: Passcode = {
   interactionJti: 'jti',
   phone: '888 888 8888',
   email: 'foo@logto.io',
-  type: VerificationCodeType.SignIn,
+  type: TemplateType.SignIn,
   code: 'asdfghjkl',
   consumed: false,
   tryCount: 2,

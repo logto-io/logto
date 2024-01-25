@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 
 import { mockedConfigWithAllRequiredTemplates } from './mock.js';
 
@@ -22,16 +22,33 @@ describe('sendMessage()', () => {
     jest.clearAllMocks();
   });
 
-  it('should call singleSendMail() and replace code in content', async () => {
+  it('should call singleSendMail() with correct template and content', async () => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
       to: 'to@email.com',
-      type: VerificationCodeType.SignIn,
+      type: TemplateType.SignIn,
       payload: { code: '1234' },
     });
     expect(singleSendMail).toHaveBeenCalledWith(
       expect.objectContaining({
-        HtmlBody: 'Your code is 1234, 1234 is your code',
+        HtmlBody: 'Your sign-in code is 1234, 1234 is your code',
+        Subject: 'Sign-in code 1234',
+      }),
+      expect.anything()
+    );
+  });
+
+  it('should call singleSendMail() with correct template and content (2)', async () => {
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.OrganizationInvitation,
+      payload: { code: '1234', link: 'https://example.com' },
+    });
+    expect(singleSendMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        HtmlBody: 'Your link is https://example.com',
+        Subject: 'Organization invitation',
       }),
       expect.anything()
     );

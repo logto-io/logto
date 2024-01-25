@@ -11,6 +11,7 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  replaceSendMessageHandlebars,
 } from '@logto/connector-kit';
 import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
@@ -39,9 +40,7 @@ const sendMessage =
     const transporter = nodemailer.createTransport(configOptions);
 
     const contentsObject = parseContents(
-      typeof payload.code === 'string'
-        ? template.content.replaceAll(/{{\s*code\s*}}/g, payload.code)
-        : template.content,
+      replaceSendMessageHandlebars(template.content, payload),
       template.contentType
     );
 
@@ -49,7 +48,7 @@ const sendMessage =
       to,
       from: config.fromEmail,
       replyTo: config.replyTo,
-      subject: template.subject.replaceAll(/{{\s*code\s*}}/g, payload.code),
+      subject: replaceSendMessageHandlebars(template.subject, payload),
       ...contentsObject,
     };
 

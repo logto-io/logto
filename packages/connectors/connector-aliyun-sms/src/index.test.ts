@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 
 import { mockedConnectorConfig, phoneTest, codeTest } from './mock.js';
 
@@ -26,7 +26,7 @@ describe('sendMessage()', () => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
       to: phoneTest,
-      type: VerificationCodeType.SignIn,
+      type: TemplateType.SignIn,
       payload: { code: codeTest },
     });
     expect(sendSms).toHaveBeenCalledWith(
@@ -48,7 +48,7 @@ describe('sendMessage()', () => {
       // eslint-disable-next-line no-await-in-loop
       await connector.sendMessage({
         to,
-        type: VerificationCodeType.Register,
+        type: TemplateType.Register,
         payload: { code: codeTest },
       });
       expect(sendSms).toHaveBeenCalledWith(
@@ -63,7 +63,7 @@ describe('sendMessage()', () => {
 
     await connector.sendMessage({
       to: '+1123123123',
-      type: VerificationCodeType.Register,
+      type: TemplateType.Register,
       payload: { code: codeTest },
     });
     expect(sendSms).toHaveBeenCalledWith(

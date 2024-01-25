@@ -195,6 +195,12 @@ export default class OrganizationQueries extends SchemaQueries<
     users: new UserRelationQueries(this.pool),
     /** Queries for organization - organization role - user relations. */
     rolesUsers: new RoleUserRelationQueries(this.pool),
+    invitationsRoles: new TwoRelationsQueries(
+      this.pool,
+      OrganizationInvitationRoleRelations.table,
+      OrganizationInvitations,
+      OrganizationRoles
+    ),
   };
 
   constructor(pool: CommonQueryMethods) {

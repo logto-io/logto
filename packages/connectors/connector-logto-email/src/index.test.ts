@@ -1,7 +1,7 @@
 import { got } from 'got';
 import nock from 'nock';
 
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 
 import { emailEndpoint, usageEndpoint } from './constant.js';
 import createConnector from './index.js';
@@ -38,7 +38,7 @@ describe('sendMessage()', () => {
     await expect(
       sendMessage({
         to: 'wangsijie94@gmail.com',
-        type: VerificationCodeType.SignIn,
+        type: TemplateType.SignIn,
         payload: { code: '1234' },
       })
     ).resolves.not.toThrow();

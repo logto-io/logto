@@ -1,50 +1,83 @@
 import { z } from 'zod';
 
-import { parseJson, parseJsonObject, validateConfig } from './index.js';
+import {
+  parseJson,
+  parseJsonObject,
+  replaceSendMessageHandlebars,
+  validateConfig,
+} from './index.js';
 
-describe('connector-kit', () => {
-  describe('validateConfig', () => {
-    it('valid config', () => {
-      const testingTypeGuard = z.unknown();
-      type TestingType = z.infer<typeof testingTypeGuard>;
-      const testingConfig = { foo: 'foo', bar: 1, baz: true };
-      expect(() => {
-        validateConfig(testingConfig, testingTypeGuard);
-      }).not.toThrow();
-    });
-
-    it('invalid config', () => {
-      const testingTypeGuard = z.record(z.string());
-      type TestingType = z.infer<typeof testingTypeGuard>;
-      const testingConfig = { foo: 'foo', bar: 1 };
-      expect(() => {
-        validateConfig(testingConfig, testingTypeGuard);
-      }).toThrow();
-    });
+describe('validateConfig', () => {
+  it('valid config', () => {
+    const testingTypeGuard = z.unknown();
+    const testingConfig = { foo: 'foo', bar: 1, baz: true };
+    expect(() => {
+      validateConfig(testingConfig, testingTypeGuard);
+    }).not.toThrow();
   });
 
-  describe('parseJson', () => {
-    it('should return parsed result', () => {
-      const literalContent = 'foo';
-      expect(parseJson(JSON.stringify(literalContent))).toEqual(literalContent);
+  it('invalid config', () => {
+    const testingTypeGuard = z.record(z.string());
+    const testingConfig = { foo: 'foo', bar: 1 };
+    expect(() => {
+      validateConfig(testingConfig, testingTypeGuard);
+    }).toThrow();
+  });
+});
 
-      const objectContent = { foo: 'foo', bar: 1, baz: true, qux: [1, '2', null] };
-      expect(parseJson(JSON.stringify(objectContent))).toEqual(objectContent);
-    });
+describe('parseJson', () => {
+  it('should return parsed result', () => {
+    const literalContent = 'foo';
+    expect(parseJson(JSON.stringify(literalContent))).toEqual(literalContent);
 
-    it('throw error when parsing invalid Json string', () => {
-      expect(() => parseJson('[1,2,3,"4",]')).toThrow();
-    });
+    const objectContent = { foo: 'foo', bar: 1, baz: true, qux: [1, '2', null] };
+    expect(parseJson(JSON.stringify(objectContent))).toEqual(objectContent);
   });
 
-  describe('parseJsonObject', () => {
-    it('should return parsed object', () => {
-      const objectContent = { foo: 'foo', bar: 1, baz: true, qux: [1, '2', null] };
-      expect(parseJsonObject(JSON.stringify(objectContent))).toEqual(objectContent);
-    });
+  it('throw error when parsing invalid Json string', () => {
+    expect(() => parseJson('[1,2,3,"4",]')).toThrow();
+  });
+});
 
-    it('throw error when parsing non-object result', () => {
-      expect(() => parseJsonObject(JSON.stringify('foo'))).toThrow();
-    });
+describe('parseJsonObject', () => {
+  it('should return parsed object', () => {
+    const objectContent = { foo: 'foo', bar: 1, baz: true, qux: [1, '2', null] };
+    expect(parseJsonObject(JSON.stringify(objectContent))).toEqual(objectContent);
+  });
+
+  it('throw error when parsing non-object result', () => {
+    expect(() => parseJsonObject(JSON.stringify('foo'))).toThrow();
+  });
+});
+
+describe('replaceSendMessageHandlebars', () => {
+  it('should replace handlebars with payload', () => {
+    const template = 'Your verification code is {{code}}';
+    const payload = { code: '123456' };
+    expect(replaceSendMessageHandlebars(template, payload)).toEqual(
+      'Your verification code is 123456'
+    );
+  });
+
+  it('should replace handlebars with empty string if payload does not contain the key', () => {
+    const template = 'Your verification code is {{code}}';
+    const payload = {};
+    expect(replaceSendMessageHandlebars(template, payload)).toEqual('Your verification code is ');
+  });
+
+  it('should ignore handlebars that are not in the predefined list for both template and payload', () => {
+    const template = 'Your verification code is {{code}} and {{foo}}';
+    const payload = { code: '123456', foo: 'bar' };
+    expect(replaceSendMessageHandlebars(template, payload)).toEqual(
+      'Your verification code is 123456 and {{foo}}'
+    );
+  });
+
+  it('should replace handlebars that have extra spaces with payload', () => {
+    const template = 'Your verification code is {{     code }}';
+    const payload = { code: '123456' };
+    expect(replaceSendMessageHandlebars(template, payload)).toEqual(
+      'Your verification code is 123456'
+    );
   });
 });

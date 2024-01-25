@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import { emailRegEx } from '@logto/core-kit';
 import { literal, object, string, union } from 'zod';
 
@@ -12,7 +12,7 @@ import type { AuthedMeRouter } from './types.js';
 export default function verificationCodeRoutes<T extends AuthedMeRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
-  const codeType = VerificationCodeType.Generic;
+  const codeType = TemplateType.Generic;
   const {
     queries: {
       users: { findUserById },

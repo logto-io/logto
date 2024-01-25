@@ -1,16 +1,5 @@
 import { z } from 'zod';
 
-import { VerificationCodeType } from '@logto/connector-kit';
-
-export const supportTemplateGuard = z.enum([
-  VerificationCodeType.SignIn,
-  VerificationCodeType.Register,
-  VerificationCodeType.ForgotPassword,
-  VerificationCodeType.Generic,
-]);
-
-type SupportTemplate = z.infer<typeof supportTemplateGuard>;
-
 type CommonEmailConfig = {
   /** Subject of the message. */
   subject?: string;
@@ -65,7 +54,7 @@ export type MailgunConfig = {
    * The template config object for each template type, while the key is the template type
    * and the value is the config object.
    */
-  deliveries: Partial<Record<SupportTemplate, DeliveryConfig>>;
+  deliveries: Record<string, DeliveryConfig>;
 };
 
 export const mailgunConfigGuard = z.object({
@@ -73,7 +62,5 @@ export const mailgunConfigGuard = z.object({
   domain: z.string(),
   apiKey: z.string(),
   from: z.string(),
-  // Although the type it's expected, this guard should infer required keys. Looks like a mis-implemented in zod.
-  // See https://github.com/colinhacks/zod/issues/2623
-  deliveries: z.record(supportTemplateGuard, templateConfigGuard),
+  deliveries: z.record(templateConfigGuard),
 }) satisfies z.ZodType<MailgunConfig>;

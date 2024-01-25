@@ -10,7 +10,7 @@ import { generateEmail, generatePhone } from '#src/utils.js';
  * cannot be covered within the auth flow.
  */
 describe('POST /interaction/verification/verification-code', () => {
-  it('Should fail to send email verification code if related connector is not found', async () => {
+  it('should fail to send email verification code if related connector is not found', async () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
@@ -23,12 +23,12 @@ describe('POST /interaction/verification/verification-code', () => {
       }),
       {
         code: 'connector.not_found',
-        statusCode: 400,
+        statusCode: 501,
       }
     );
   });
 
-  it('Should fail to send phone verification code if related connector is not found', async () => {
+  it('should fail to send phone verification code if related connector is not found', async () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
@@ -41,7 +41,7 @@ describe('POST /interaction/verification/verification-code', () => {
       }),
       {
         code: 'connector.not_found',
-        statusCode: 400,
+        statusCode: 501,
       }
     );
   });

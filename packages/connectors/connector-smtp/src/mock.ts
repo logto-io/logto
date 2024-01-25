@@ -28,6 +28,12 @@ export const mockedConfig = {
       subject: 'Logto Forgot Password with SMTP',
       usageType: 'ForgotPassword',
     },
+    {
+      contentType: 'text/plain',
+      content: 'This is for organization invitation. Your link is {{  link}}.',
+      subject: 'Organization invitation',
+      usageType: 'OrganizationInvitation',
+    },
   ],
 };
 

@@ -5,7 +5,7 @@ import {
   type SmsConnector,
   type EmailConnector,
   demoConnectorIds,
-  VerificationCodeType,
+  TemplateType,
 } from '@logto/connector-kit';
 import { ServiceConnector } from '@logto/connector-kit';
 import { phoneRegEx, emailRegEx } from '@logto/core-kit';
@@ -81,7 +81,7 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
       await sendMessage(
         {
           to: subject,
-          type: VerificationCodeType.Generic,
+          type: TemplateType.Generic,
           payload: {
             code: '000000',
           },

@@ -5,27 +5,29 @@ import type {
   SendMessageFunction,
   CreateConnector,
   EmailConnector,
+  SendMessagePayload,
 } from '@logto/connector-kit';
 import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorType,
   validateConfig,
-  VerificationCodeType,
+  TemplateType,
+  replaceSendMessageHandlebars,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
-import { type DeliveryConfig, mailgunConfigGuard, supportTemplateGuard } from './types.js';
+import { type DeliveryConfig, mailgunConfigGuard } from './types.js';
 
 const removeUndefinedKeys = (object: Record<string, unknown>) =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
 
 const getDataFromDeliveryConfig = (
   { subject, replyTo, ...rest }: DeliveryConfig,
-  code: string
+  payload: SendMessagePayload
 ): Record<string, string | undefined> => {
   const commonData = {
-    subject: subject?.replaceAll('{{code}}', code),
+    subject: subject && replaceSendMessageHandlebars(subject, payload),
     'h:Reply-To': replyTo,
   };
 
@@ -33,30 +35,24 @@ const getDataFromDeliveryConfig = (
     return {
       ...commonData,
       template: rest.template,
-      'h:X-Mailgun-Variables': JSON.stringify({ ...rest.variables, code }),
+      'h:X-Mailgun-Variables': JSON.stringify({ ...rest.variables, ...payload }),
     };
   }
 
   return {
     ...commonData,
-    html: rest.html.replaceAll('{{code}}', code),
-    text: rest.text?.replaceAll('{{code}}', code),
+    html: replaceSendMessageHandlebars(rest.html, payload),
+    text: rest.text && replaceSendMessageHandlebars(rest.text, payload),
   };
 };
 
 const sendMessage = (getConfig: GetConnectorConfig): SendMessageFunction => {
-  return async ({ to, type: typeInput, payload: { code } }, inputConfig) => {
+  return async ({ to, type, payload }, inputConfig) => {
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, mailgunConfigGuard);
 
     const { endpoint, domain, apiKey, from, deliveries } = config;
-    const type = supportTemplateGuard.safeParse(typeInput);
-
-    if (!type.success) {
-      throw new ConnectorError(ConnectorErrorCodes.TemplateNotSupported);
-    }
-
-    const template = deliveries[type.data] ?? deliveries[VerificationCodeType.Generic];
+    const template = deliveries[type] ?? deliveries[TemplateType.Generic];
 
     if (!template) {
       throw new ConnectorError(ConnectorErrorCodes.TemplateNotFound);
@@ -71,7 +67,7 @@ const sendMessage = (getConfig: GetConnectorConfig): SendMessageFunction => {
           form: {
             from,
             to,
-            ...removeUndefinedKeys(getDataFromDeliveryConfig(template, code)),
+            ...removeUndefinedKeys(getDataFromDeliveryConfig(template, payload)),
           },
         }
       );

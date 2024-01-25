@@ -38,6 +38,7 @@ const sendMessage =
     try {
       await client.post(`/api${emailEndpoint}`, {
         body: {
+          // @ts-expect-error TODO: @gao update cloud types and remove this
           data: { to, type, payload: { ...payload, senderName, companyInformation, appLogo } },
         },
       });

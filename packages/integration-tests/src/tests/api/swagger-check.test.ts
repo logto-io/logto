@@ -13,16 +13,11 @@ describe('Swagger check', () => {
     expect(response.headers['content-type']).toContain('application/json');
 
     // Use multiple validators to be more confident
-    expect(async () => {
-      const object: unknown = JSON.parse(response.body);
+    const object: unknown = JSON.parse(response.body);
 
-      const validator = new OpenApiSchemaValidator({ version: 3 });
-      const result = validator.validate(object as OpenAPI.Document);
-      expect(result.errors).toEqual([]);
-
-      await expect(
-        SwaggerParser.default.validate(object as OpenAPI.Document)
-      ).resolves.not.toThrow();
-    }).not.toThrow();
+    const validator = new OpenApiSchemaValidator({ version: 3 });
+    const result = validator.validate(object as OpenAPI.Document);
+    expect(result.errors).toEqual([]);
+    await expect(SwaggerParser.default.validate(object as OpenAPI.Document)).resolves.not.toThrow();
   });
 });

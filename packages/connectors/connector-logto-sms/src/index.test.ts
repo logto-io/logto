@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 
 import { smsEndpoint } from './constant.js';
 import { mockedAccessTokenResponse, mockedConfig } from './mock.js';
@@ -22,7 +22,7 @@ describe('sendMessage()', () => {
     await expect(
       connector.sendMessage({
         to: '13000000000',
-        type: VerificationCodeType.SignIn,
+        type: TemplateType.SignIn,
         payload: { code: '1234' },
       })
     ).resolves.not.toThrow();

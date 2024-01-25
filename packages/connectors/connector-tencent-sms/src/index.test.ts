@@ -1,4 +1,4 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 
 import { codeTest, mockedConnectorConfig, mockedTemplateCode, phoneTest } from './mock.js';
 
@@ -47,7 +47,7 @@ describe('sendMessage()', () => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
       to: phoneTest,
-      type: VerificationCodeType.SignIn,
+      type: TemplateType.SignIn,
       payload: { code: codeTest },
     });
     expect(sendSmsRequest).toHaveBeenCalledWith(

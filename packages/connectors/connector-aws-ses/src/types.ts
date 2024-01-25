@@ -38,7 +38,3 @@ export const awsSesConfigGuard = z.object({
 });
 
 export type AwsSesConfig = z.infer<typeof awsSesConfigGuard>;
-
-export type Payload = {
-  code: string | number;
-};

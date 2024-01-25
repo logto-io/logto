@@ -12,6 +12,7 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  replaceSendMessageHandlebars,
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
@@ -42,17 +43,13 @@ const sendMessage =
     const personalizations: Personalization = { to: toEmailData };
     const content: Content = {
       type: template.type,
-      value:
-        typeof payload.code === 'string'
-          ? template.content.replaceAll('{{code}}', payload.code)
-          : template.content,
+      value: replaceSendMessageHandlebars(template.content, payload),
     };
-    const { subject } = template;
 
     const parameters: PublicParameters = {
       personalizations: [personalizations],
       from: fromEmailData,
-      subject,
+      subject: replaceSendMessageHandlebars(template.subject, payload),
       content: [content],
     };
 

@@ -1,8 +1,9 @@
 import type { EmailContent } from '@aws-sdk/client-sesv2';
 import { SendEmailCommand, SESv2Client } from '@aws-sdk/client-sesv2';
 import type { AwsCredentialIdentity } from '@aws-sdk/types';
+import { replaceSendMessageHandlebars, type SendMessagePayload } from '@logto/connector-kit';
 
-import type { AwsSesConfig, Template, Payload } from './types.js';
+import type { AwsSesConfig, Template } from './types.js';
 
 export const makeClient = (
   accessKeyId: string,
@@ -17,16 +18,13 @@ export const makeClient = (
   return new SESv2Client({ credentials, region });
 };
 
-export const makeEmailContent = (template: Template, payload: Payload): EmailContent => {
+export const makeEmailContent = (template: Template, payload: SendMessagePayload): EmailContent => {
   return {
     Simple: {
-      Subject: { Data: template.subject, Charset: 'utf8' },
+      Subject: { Data: replaceSendMessageHandlebars(template.subject, payload), Charset: 'utf8' },
       Body: {
         Html: {
-          Data:
-            typeof payload.code === 'string'
-              ? template.content.replaceAll('{{code}}', payload.code)
-              : template.content,
+          Data: replaceSendMessageHandlebars(template.content, payload),
         },
       },
     },
