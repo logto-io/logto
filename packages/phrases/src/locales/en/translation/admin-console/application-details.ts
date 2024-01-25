@@ -103,7 +103,7 @@ const application_details = {
     name: 'Permissions',
     description:
       'Select the permissions that the third-party application requires for user authorization to access specific data types.',
-    user_permissions: 'Personal user information',
+    user_permissions: 'Personal user data',
     organization_permissions: 'Organization access',
     table_name: 'Grant permissions',
     field_name: 'Permission',
@@ -113,7 +113,7 @@ const application_details = {
       'This action will withdraw the permissions granted to the third-party app, preventing it from requesting user authorization for specific data types. Are you sure you want to continue?',
     permissions_assignment_description:
       'Select the permissions the third-party application requests for user authorization to access specific data types.',
-    user_profile: 'User profile',
+    user_profile: 'User data',
     api_resource: 'API resource',
     organization: 'Organization',
     user_permissions_assignment_form_title: 'Add the user profile permissions',

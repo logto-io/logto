@@ -137,7 +137,7 @@ const application_details = {
     description:
       'Select the permissions that the third-party application requires for user authorization to access specific data types.',
     /** UNTRANSLATED */
-    user_permissions: 'Personal user information',
+    user_permissions: 'Personal user data',
     /** UNTRANSLATED */
     organization_permissions: 'Organization access',
     /** UNTRANSLATED */
@@ -155,7 +155,7 @@ const application_details = {
     permissions_assignment_description:
       'Select the permissions the third-party application requests for user authorization to access specific data types.',
     /** UNTRANSLATED */
-    user_profile: 'User profile',
+    user_profile: 'User data',
     /** UNTRANSLATED */
     api_resource: 'API resource',
     /** UNTRANSLATED */

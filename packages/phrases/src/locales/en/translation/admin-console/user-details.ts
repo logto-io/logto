@@ -24,7 +24,7 @@ const user_details = {
   authentication: 'Authentication',
   authentication_description:
     'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.',
-  user_profile: 'User profile',
+  user_profile: 'User data',
   field_email: 'Email address',
   field_phone: 'Phone number',
   field_username: 'Username',
