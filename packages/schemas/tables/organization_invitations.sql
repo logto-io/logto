@@ -9,14 +9,16 @@ create table organization_invitations (
   /** The unique identifier of the invitation. */
   id varchar(21) not null,
   /** The user ID who sent the invitation. */
-  inviter_id varchar(21) not null,
+  inviter_id varchar(21)
+    references users (id) on update cascade on delete cascade,
   /** The email address or other identifier of the invitee. */
   invitee varchar(256) not null,
   /** The user ID of who accepted the invitation. */
   accepted_user_id varchar(21)
     references users (id) on update cascade on delete cascade,
   /** The ID of the organization to which the invitee is invited. */
-  organization_id varchar(21) not null,
+  organization_id varchar(21) not null
+    references organizations (id) on update cascade on delete cascade,
   /** The status of the invitation. */
   status organization_invitation_status not null,
   /** The ID of the magic link that can be used to accept the invitation. */
@@ -28,10 +30,7 @@ create table organization_invitations (
   updated_at timestamptz not null default (now()),
   /** The time when the invitation expires. */
   expires_at timestamptz not null,
-  primary key (id),
-  foreign key (tenant_id, inviter_id, organization_id)
-    references organization_user_relations (tenant_id, user_id, organization_id)
-    on update cascade on delete cascade
+  primary key (id)
 );
 
 -- Ensure there is only one pending invitation for a given invitee and organization.
