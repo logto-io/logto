@@ -4,7 +4,7 @@ const application_details = {
   check_guide: 'Check guide',
   settings: 'Settings',
   settings_description:
-    'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.',
+    'An “Application” is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
   integration: 'Integration',
   integration_description:
     "Deploy with Logto secure workers, powered by Cloudflare's edge network for top-tier performance and 0ms cold starts worldwide.",

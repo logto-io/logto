@@ -3,7 +3,9 @@ const application_details = {
   back_to_applications: '返回全部应用',
   check_guide: '查看指南',
   settings: '设置',
-  settings_description: '应用程序用于在 Logto OIDC、登录体验、审计日志等方面识别你的应用程序。',
+  /** UNTRANSLATED */
+  settings_description:
+    'An “Application” is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
   /** UNTRANSLATED */
   integration: 'Integration',
   /** UNTRANSLATED */

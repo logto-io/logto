@@ -1,8 +1,7 @@
 const applications = {
   page_title: 'Applications',
   title: 'Applications',
-  subtitle:
-    'Set up Logto authentication for your native, single page, machine to machine, or traditional application',
+  subtitle: 'Create and manage applications for OIDC authentication.',
   subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application',
   create: 'Create application',
   application_name: 'Application name',

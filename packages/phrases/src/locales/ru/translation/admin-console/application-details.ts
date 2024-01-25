@@ -3,8 +3,9 @@ const application_details = {
   back_to_applications: 'Вернуться к приложениям',
   check_guide: 'Проверить гид',
   settings: 'Настройки',
+  /** UNTRANSLATED */
   settings_description:
-    'Приложения используются для идентификации ваших приложений в Logto для OIDC, опыта входа, аудита и т. Д.',
+    'An “Application” is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
   /** UNTRANSLATED */
   integration: 'Integration',
   /** UNTRANSLATED */

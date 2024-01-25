@@ -3,8 +3,9 @@ const application_details = {
   back_to_applications: 'Uygulamalara geri dön',
   check_guide: 'Kılavuza Göz At',
   settings: 'Ayarlar',
+  /** UNTRANSLATED */
   settings_description:
-    'Uygulamalar, Logto için OIDC, oturum açma deneyimi, denetim kayıtları vb. alanlarda uygulamalarınızı tanımlamak için kullanılır.',
+    'An “Application” is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
   /** UNTRANSLATED */
   integration: 'Integration',
   /** UNTRANSLATED */
