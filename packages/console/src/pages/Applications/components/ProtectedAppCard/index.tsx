@@ -16,12 +16,19 @@ import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
+  hasBorder?: boolean;
   hasLabel?: boolean;
   hasCreateButton?: boolean;
   onCreateSuccess?: (app: Application) => void;
 };
 
-function ProtectedAppCard({ className, hasLabel, hasCreateButton, onCreateSuccess }: Props) {
+function ProtectedAppCard({
+  className,
+  hasBorder,
+  hasLabel,
+  hasCreateButton,
+  onCreateSuccess,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.protected_app' });
   const { documentationSiteUrl } = useDocumentationUrl();
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
@@ -32,7 +39,7 @@ function ProtectedAppCard({ className, hasLabel, hasCreateButton, onCreateSucces
     <>
       <div className={classNames(styles.container, className)}>
         {hasLabel && <label>{t('name')}</label>}
-        <div className={styles.card}>
+        <div className={classNames(styles.card, hasBorder && styles.hasBorder)}>
           <Icon className={styles.logo} />
           <div className={styles.wrapper}>
             <div className={styles.name}>{t('title')}</div>

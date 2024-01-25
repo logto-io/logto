@@ -12,7 +12,6 @@ import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
-import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
@@ -124,14 +123,14 @@ function Applications({ tab }: Props) {
       )}
 
       {!isLoading && !applications?.length && (
-        <OverlayScrollbar className={styles.guideLibraryContainer}>
+        <div className={styles.guideLibraryContainer}>
           <CardTitle
             className={styles.title}
             title="guide.app.select_framework_or_tutorial"
             subtitle="guide.app.modal_subtitle"
           />
           <GuideLibrary hasCardBorder hasCardButton className={styles.library} />
-        </OverlayScrollbar>
+        </div>
       )}
       {(isLoading || !!applications?.length) && (
         <Table

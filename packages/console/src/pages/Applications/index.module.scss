@@ -18,11 +18,10 @@
 
 .guideLibraryContainer {
   flex: 1;
-  overflow-y: auto;
   background: var(--color-layer-1);
   border-radius: 12px;
   padding: _.unit(6) 0;
-  margin: _.unit(4) 0;
+  margin-top: _.unit(4);
 
   .title {
     align-items: center;
