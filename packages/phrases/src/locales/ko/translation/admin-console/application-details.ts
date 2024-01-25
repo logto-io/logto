@@ -3,8 +3,9 @@ const application_details = {
   back_to_applications: '어플리케이션으로 돌아가기',
   check_guide: '가이드 확인',
   settings: '설정',
+  /** UNTRANSLATED */
   settings_description:
-    '애플리케이션은 Logto for OIDC, 로그인 환경, 감사 로그 등에서 애플리케이션을 식별하는 데 사용돼요.',
+    'An "Application" is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
   /** UNTRANSLATED */
   integration: 'Integration',
   /** UNTRANSLATED */
