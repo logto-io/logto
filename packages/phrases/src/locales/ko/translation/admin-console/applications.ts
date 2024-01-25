@@ -5,6 +5,9 @@ const applications = {
     '인증에 Logto를 사용할 모바일, 단일 페이지, Machine-to-Machine 또는 기존 어플리케이션을 설정할 수 있어요.',
   subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application',
   create: '어플리케이션 생성',
+  /** UNTRANSLATED */
+  create_subtitle_third_party:
+    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
   application_name: '어플리케이션 이름',
   application_name_placeholder: '나의 앱',
   application_description: '어플리케이션 설명',

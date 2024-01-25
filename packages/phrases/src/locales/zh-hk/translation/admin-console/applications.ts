@@ -4,6 +4,9 @@ const applications = {
   subtitle: '創建一個移動、單頁、machine-to-machine 或傳統 web 應用程序，並通過 Logto 進行身份驗證',
   subtitle_with_app_type: '為你的 {{name}} 應用程序設置 Logto 身份驗證',
   create: '創建應用',
+  /** UNTRANSLATED */
+  create_subtitle_third_party:
+    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
   application_name: '應用名稱',
   application_name_placeholder: '我的應用',
   application_description: '應用描述',

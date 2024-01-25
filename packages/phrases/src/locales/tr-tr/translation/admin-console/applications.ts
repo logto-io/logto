@@ -5,6 +5,9 @@ const applications = {
     'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa, machine to machine veya geleneksel bir uygulama ayarlayınız',
   subtitle_with_app_type: 'Logto Doğrulamasını {{name}} uygulamanız için yapılandırın',
   create: 'Uygulama oluştur',
+  /** UNTRANSLATED */
+  create_subtitle_third_party:
+    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
   application_name: 'Uygulama adı',
   application_name_placeholder: 'Uygulamam',
   application_description: 'Uygulama açıklaması',

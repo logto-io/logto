@@ -5,6 +5,9 @@ const applications = {
     'Skonfiguruj uwierzytelnianie Logto dla Twojej aplikacji natywnej, jednostronicowej, komunikującej się bezpośrednio z zasobami lub tradycyjnej',
   subtitle_with_app_type: 'Skonfiguruj uwierzytelnianie Logto dla twojej aplikacji {{name}}',
   create: 'Utwórz aplikację',
+  /** UNTRANSLATED */
+  create_subtitle_third_party:
+    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
   application_name: 'Nazwa aplikacji',
   application_name_placeholder: 'Moja aplikacja',
   application_description: 'Opis aplikacji',
