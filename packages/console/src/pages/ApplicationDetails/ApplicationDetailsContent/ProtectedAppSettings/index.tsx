@@ -53,10 +53,16 @@ function ProtectedAppSettings({ data }: Props) {
     name: 'protectedAppMetadata.pageRules',
   });
 
-  const host = data.protectedAppMetadata?.host;
+  if (!data.protectedAppMetadata) {
+    return null;
+  }
 
+  const { host } = data.protectedAppMetadata;
   // We only support one custom domain for protected apps at the moment.
   const customDomain = customDomains[0];
+  const externalLink = `https://${
+    customDomain?.status === DomainStatus.Active ? customDomain.domain : host
+  }`;
 
   return (
     <>
@@ -68,25 +74,18 @@ function ProtectedAppSettings({ data }: Props) {
           targetBlank: 'noopener',
         }}
       >
-        {!!host && (
-          <div className={styles.launcher}>
-            <span>{t('protected_app.success_message')}</span>
-            <Button
-              className={styles.button}
-              size="small"
-              title="application_details.try_it"
-              trailingIcon={<ExternalLinkIcon />}
-              onClick={() => {
-                window.open(
-                  `https://${
-                    customDomain?.status === DomainStatus.Active ? customDomain.domain : host
-                  }`,
-                  '_blank'
-                );
-              }}
-            />
-          </div>
-        )}
+        <div className={styles.launcher}>
+          <span>{t('protected_app.success_message')}</span>
+          <Button
+            className={styles.button}
+            size="small"
+            title="application_details.try_it"
+            trailingIcon={<ExternalLinkIcon />}
+            onClick={() => {
+              window.open(externalLink, '_blank');
+            }}
+          />
+        </div>
         <FormField isRequired title="application_details.application_name">
           <TextInput
             {...register('name', { required: true })}
@@ -127,11 +126,11 @@ function ProtectedAppSettings({ data }: Props) {
                   {t('application_details.app_domain_protected_description_1')}
                 </div>
                 <div className={styles.hostInUse}>
-                  <span className={styles.host}>{data.protectedAppMetadata?.host}</span>
+                  <span className={styles.host}>{host}</span>
                   <DomainStatusTag status={DomainStatus.Active} />
                   <Spacer />
                   <CopyToClipboard value={host} variant="icon" />
-                  <OpenExternalLink link={host} />
+                  <OpenExternalLink link={externalLink} />
                 </div>
               </>
             )}
