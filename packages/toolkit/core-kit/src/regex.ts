@@ -8,5 +8,4 @@ export const hexColorRegEx = /^#[\da-f]{3}([\da-f]{3})?$/i;
 export const dateRegex = /^\d{4}(-\d{2}){2}/;
 export const noSpaceRegEx = /^\S+$/;
 /** Full domain that consists of at least 3 parts, e.g. foo.bar.com */
-export const domainRegEx =
-  /^[\dA-Za-z][\dA-Za-z-]*[\dA-Za-z](\.[\dA-Za-z][\dA-Za-z-]*[\dA-Za-z]){2,}$/;
+export const domainRegEx = /^[\dA-Za-z]+(\.[\dA-Za-z]+){2,}$/;
