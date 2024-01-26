@@ -1,14 +1,14 @@
 import {
+  ApplicationType,
   type Application,
   type CreateApplication,
-  type ApplicationType,
   type OidcClientMetadata,
   type Role,
   type ProtectedAppMetadata,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { authedAdminApi } from './api.js';
+import { authedAdminApi, oidcApi } from './api.js';
 
 export const createApplication = async (
   name: string,
@@ -89,3 +89,20 @@ export const putRolesToApplication = async (applicationId: string, roleIds: stri
 
 export const deleteRoleFromApplication = async (applicationId: string, roleId: string) =>
   authedAdminApi.delete(`applications/${applicationId}/roles/${roleId}`);
+
+export const generateM2mLog = async (applicationId: string) => {
+  const { id, secret, type, isThirdParty } = await getApplication(applicationId);
+
+  if (type !== ApplicationType.MachineToMachine || isThirdParty) {
+    return;
+  }
+
+  // This is a token request with insufficient parameters and should fail. We make the request to generate a log for the current machine to machine app.
+  return oidcApi.post('token', {
+    form: {
+      client_id: id,
+      client_secret: secret,
+      grant_type: 'client_credentials',
+    },
+  });
+};

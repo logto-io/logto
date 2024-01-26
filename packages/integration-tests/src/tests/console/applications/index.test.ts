@@ -1,5 +1,6 @@
 import { ApplicationType } from '@logto/schemas';
 
+import { generateM2mLog } from '#src/api/application.js';
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import {
   expectConfirmModalAndAct,
@@ -12,7 +13,7 @@ import {
   goToAdminConsole,
   waitForToast,
 } from '#src/ui-helpers/index.js';
-import { expectNavigation, appendPathname } from '#src/utils.js';
+import { expectNavigation, appendPathname, dcls } from '#src/utils.js';
 
 import {
   type ApplicationMetadata,
@@ -254,6 +255,56 @@ describe('applications', () => {
       await expect(page).toMatchElement('div[class$=main] div[class$=header] div[class$=name]', {
         text: app.name,
       });
+
+      // Make sure the machine log details page can be accessed.
+      // Machine logs only available for m2m apps.
+      if (app.type === ApplicationType.MachineToMachine) {
+        // Get the app id from the page.
+        const appId = await page.$eval(
+          [dcls('main'), dcls('header'), dcls('row'), dcls('copyId'), dcls('content')].join(' '),
+          (element) => element.textContent
+        );
+        expect(appId).toBeTruthy();
+
+        await Promise.all([
+          expect(generateM2mLog(appId!)).rejects.toThrow(),
+          expect(page).toClick('nav div[class$=item] div[class$=link] a', {
+            text: 'Machine logs',
+          }),
+        ]);
+        expect(page.url().endsWith('logs')).toBeTruthy();
+
+        // Logs were preloaded, so we need to reload the page to get the latest list of logs.
+        await page.reload({ waitUntil: 'networkidle0' });
+
+        // Go to the details page of the log.
+        await expect(page).toClick(
+          'table tbody tr td div[class*=eventName]:has(div[class*=title])',
+          {
+            text: 'Exchange token by Client Credentials',
+          }
+        );
+
+        await expect(page).toMatchElement([dcls('main'), dcls('header'), dcls('label')].join(' '), {
+          text: 'Failed',
+        });
+        await expect(page).toMatchElement(
+          [dcls('main'), dcls('header'), dcls('content'), dcls('basicInfo'), 'a[class*=link]'].join(
+            ' '
+          ),
+          {
+            text: app.name,
+          }
+        );
+
+        // Go back to machine logs tab of the m2m app details page.
+        await expect(page).toClick(
+          [dcls('main'), dcls('container'), 'a[class*=backLink]', 'span'].join(' '),
+          {
+            text: `Back to ${app.name}`,
+          }
+        );
+      }
 
       await expectToProceedAppDeletion(page, app.name);
 
