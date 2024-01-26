@@ -104,7 +104,7 @@ function CreateForm({
       <ModalLayout
         title="applications.create"
         subtitle={subtitleElement}
-        size="medium"
+        size={defaultCreateType ? 'medium' : 'large'}
         footer={<Footer selectedType={value} isLoading={isSubmitting} onClickCreate={onSubmit} />}
         onClose={onClose}
       >
