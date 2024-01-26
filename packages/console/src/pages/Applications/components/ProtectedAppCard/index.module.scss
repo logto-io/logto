@@ -21,6 +21,10 @@
     background-color: var(--color-layer-1);
     border-radius: 12px;
 
+    &.hasBorder {
+      border: 1px solid var(--color-divider);
+    }
+
     .logo {
       width: 48px;
       height: 48px;

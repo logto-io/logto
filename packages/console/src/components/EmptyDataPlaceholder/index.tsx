@@ -22,8 +22,10 @@ function EmptyDataPlaceholder({ title, size = 'medium', className }: Props) {
 
   return (
     <div className={classNames(styles.empty, styles[size], className)}>
+      <div className={styles.topSpace} />
       <EmptyImage className={styles.image} />
       <div className={styles.title}>{title ?? t('errors.empty')}</div>
+      <div className={styles.bottomSpace} />
     </div>
   );
 }

@@ -1,17 +1,19 @@
-import { type Application } from '@logto/schemas';
+import { ApplicationType, type Application } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 
 import SearchIcon from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { allAppGuideCategories, type AppGuideCategory } from '@/types/applications';
 import { thirdPartyAppCategory } from '@/types/applications';
@@ -25,17 +27,18 @@ type Props = {
   className?: string;
   hasCardBorder?: boolean;
   hasCardButton?: boolean;
-  hasFilters?: boolean;
 };
 
-function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.guide' });
+function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
+  const { pathname } = useLocation();
   const [keyword, setKeyword] = useState<string>('');
   const [filterCategories, setFilterCategories] = useState<AppGuideCategory[]>([]);
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
   const { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
+  const isApplicationCreateModal = pathname.includes('/applications/create');
 
   const structuredMetadata = useMemo(
     () => getStructuredAppGuideMetadata({ categories: filterCategories }),
@@ -72,16 +75,16 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
 
   return (
     <OverlayScrollbar className={classNames(styles.container, className)}>
-      <div className={classNames(styles.wrapper, hasFilters && styles.hasFilters)}>
+      <div className={classNames(styles.wrapper, isApplicationCreateModal && styles.hasFilters)}>
         <div className={styles.groups}>
-          {hasFilters && (
+          {isApplicationCreateModal && (
             <div className={styles.filterAnchor}>
               <div className={styles.filters}>
-                <label>{t('filter.title')}</label>
+                <label>{t('guide.filter.title')}</label>
                 <TextInput
                   className={styles.searchInput}
                   icon={<SearchIcon />}
-                  placeholder={t('filter.placeholder')}
+                  placeholder={t('guide.filter.placeholder')}
                   value={keyword}
                   onChange={(event) => {
                     setKeyword(event.currentTarget.value);
@@ -92,9 +95,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                     className={styles.checkboxGroup}
                     options={allAppGuideCategories
                       .filter(
-                        (category) =>
-                          category !== 'Protected' &&
-                          (isDevFeaturesEnabled || category !== thirdPartyAppCategory)
+                        (category) => isDevFeaturesEnabled || category !== thirdPartyAppCategory
                       )
                       .map((category) => ({
                         title: `guide.categories.${category}`,
@@ -126,9 +127,17 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
             ))}
           {!keyword && (
             <>
-              {isDevFeaturesEnabled && (
-                <ProtectedAppCard hasLabel hasCreateButton className={styles.protectedAppCard} />
-              )}
+              {isDevFeaturesEnabled &&
+                isCloud &&
+                (filterCategories.length === 0 ||
+                  filterCategories.includes(ApplicationType.Protected)) && (
+                  <ProtectedAppCard
+                    hasLabel
+                    hasCreateButton
+                    hasBorder={hasCardBorder}
+                    className={styles.protectedAppCard}
+                  />
+                )}
               {(filterCategories.length > 0 ? filterCategories : allAppGuideCategories).map(
                 (category) =>
                   structuredMetadata[category].length > 0 && (
@@ -137,13 +146,18 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                       className={styles.guideGroup}
                       hasCardBorder={hasCardBorder}
                       hasCardButton={hasCardButton}
-                      categoryName={t(`categories.${category}`)}
+                      categoryName={t(`guide.categories.${category}`)}
                       guides={structuredMetadata[category]}
                       onClickGuide={onClickGuide}
                     />
                   )
               )}
             </>
+          )}
+          {!isApplicationCreateModal && (
+            <TextLink className={styles.viewAll} to="/applications/create">
+              {t('get_started.view_all')}
+            </TextLink>
           )}
         </div>
       </div>

@@ -36,7 +36,7 @@ function GuideLibraryModal({ isOpen, onClose }: Props) {
           requestSuccessMessage="guide.request_guide_successfully"
           onClose={onClose}
         />
-        <GuideLibrary hasFilters hasCardButton className={styles.content} />
+        <GuideLibrary hasCardButton className={styles.content} />
         <ModalFooter
           wrapperClassName={styles.footerInnerWrapper}
           content="guide.do_not_need_tutorial"
