@@ -57,10 +57,6 @@ const tenants = {
     hint_3: '걱정 마세요. 다른 설정은 그대로 유지됩니다.',
     about_tenant_type: '테넌트 유형 정보',
   },
-  dev_tenant_notification: {
-    title: '이제 개발 테넌트에서 <a>Logto Pro의 모든 기능</a>을 사용할 수 있습니다!',
-    description: '이것은 완전히 무료이며 평생 무료 체험을 받을 수 있습니다!',
-  },
   delete_modal: {
     title: '테넌트 삭제',
     description_line1:

@@ -61,11 +61,6 @@ const tenants = {
     hint_3: 'No te preocupes, todas tus otras configuraciones permanecerán iguales.',
     about_tenant_type: 'Sobre el tipo de inquilino',
   },
-  dev_tenant_notification: {
-    title:
-      '¡Ahora puedes acceder a <a>todas las características de Logto Pro</a> en tu inquilino de desarrollo!',
-    description: '¡Es completamente gratis, sin período de prueba, para siempre!',
-  },
   delete_modal: {
     title: 'Eliminar inquilino',
     description_line1:

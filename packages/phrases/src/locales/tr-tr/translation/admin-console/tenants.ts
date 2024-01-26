@@ -61,10 +61,6 @@ const tenants = {
     hint_3: 'Endişelenmeyin, diğer tüm ayarlarınız aynı kalacak.',
     about_tenant_type: 'Kiracı türü hakkında',
   },
-  dev_tenant_notification: {
-    title: 'Artık geliştirme kiracınızda <a>Logto Pro’nun tüm özelliklerine erişebilirsiniz</a>!',
-    description: 'Ücretsiz, deneme süresi olmadan - her zaman!',
-  },
   delete_modal: {
     title: 'Kiracıyı Sil',
     description_line1:

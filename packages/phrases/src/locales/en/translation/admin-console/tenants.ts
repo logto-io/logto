@@ -57,10 +57,6 @@ const tenants = {
     hint_3: "Don't worry, all your other settings will remain the same.",
     about_tenant_type: 'About tenant type',
   },
-  dev_tenant_notification: {
-    title: 'You can now access <a>all features of Logto Pro</a> in your development tenant!',
-    description: "It's completely free, with no trial period – forever!",
-  },
   delete_modal: {
     title: 'Delete tenant',
     description_line1:
