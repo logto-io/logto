@@ -110,7 +110,8 @@ const useScopesTable = () => {
       );
 
       return [
-        userScopesGroup,
+        // Hide the user scopes group if there is no user scopes
+        ...(userScopesGroup.data.length > 0 ? [userScopesGroup] : []),
         ...resourceScopesGroups,
         // Hide the organization scopes group if there is no organization scopes
         ...(organizationScopesGroup.data.length > 0 ? [organizationScopesGroup] : []),
