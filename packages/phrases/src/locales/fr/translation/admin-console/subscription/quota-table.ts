@@ -77,9 +77,8 @@ const quota_table = {
   days_other: '{{count, number}} jours',
   add_on: 'Module complémentaire',
   tier: 'Niveau{{value, number}} : ',
-  free_token_limit_tip: 'Gratuit pour {{value}}M jeton émis.',
   paid_token_limit_tip:
-    'Gratuit pour {{value}}M jeton émis. Nous pouvons ajouter des frais si vous dépassez {{value}}M jetons une fois que nous aurons finalisé les prix.',
+    "Logto facturera des frais pour les fonctionnalités qui dépassent votre limite de quota. Vous pouvez l'utiliser gratuitement jusqu'à ce que nous commencions à facturer vers le deuxième trimestre 2024. Si vous avez besoin de plus de jetons, veuillez nous contacter. Par défaut, nous facturons 80 $ par mois pour chaque million de jetons.",
   paid_quota_limit_tip:
     "Logto ajoutera des frais pour les fonctionnalités qui dépassent votre limite de quota. Vous pouvez l'utiliser gratuitement jusqu'à ce que nous commencions à facturer vers le deuxième trimestre 2024.",
   paid_add_on_feature_tip:

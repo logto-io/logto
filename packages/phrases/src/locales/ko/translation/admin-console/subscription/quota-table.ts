@@ -77,9 +77,8 @@ const quota_table = {
   days_other: '{{count, number}} 일',
   add_on: '부가 기능',
   tier: '레벨{{value, number}}: ',
-  free_token_limit_tip: '무료 {{value}}M 토큰 발급',
   paid_token_limit_tip:
-    '무료 {{value}}M 토큰 발급. 가격 확정 후 {{value}}M 토큰을 초과하면 추가 요금이 부과될 수 있습니다.',
+    'Logto는 할당량 한도를 초과하는 기능에 대해 요금을 부과할 것입니다. 2024년 제2분기부터 요금이 부과될 때까지 무료로 사용할 수 있습니다. 더 많은 토큰이 필요한 경우 저희에게 문의하십시오. 기본적으로 100만 토큰 당 월 $80을 청구합니다.',
   paid_quota_limit_tip:
     'Logto는 할당량 제한을 초과하는 기능에 대해 요금을 부과할 것입니다. 2024년 제2분기까지는 무료로 사용할 수 있습니다.',
   paid_add_on_feature_tip:

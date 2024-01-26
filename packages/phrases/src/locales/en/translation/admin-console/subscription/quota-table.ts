@@ -77,9 +77,8 @@ const quota_table = {
   days_other: '{{count, number}} days',
   add_on: 'Add-on',
   tier: 'Tier{{value, number}}: ',
-  free_token_limit_tip: 'Free for {{value}}M token issued.',
   paid_token_limit_tip:
-    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
+    "Logto will add charges for features that go beyond your quota limit. You can use it at no cost until we're beginning charging around Q2 2024. If you require more tokens, please get in touch with us. By default, we bill $80 per month for every million tokens.",
   paid_quota_limit_tip:
     "Logto will add charges for features that go beyond your quota limit. You can use it at no cost until we're beginning charging around Q2 2024.",
   paid_add_on_feature_tip:

@@ -77,9 +77,8 @@ const quota_table = {
   days_other: '{{count, number}}日',
   add_on: 'アドオン',
   tier: 'レベル{{value, number}}: ',
-  free_token_limit_tip: '無料 {{value}}M トークン発行。',
   paid_token_limit_tip:
-    '無料 {{value}}M トークン発行。価格設定が最終決定した場合、{{value}}M トークンを超えると追加料金が発生する可能性があります。',
+    'Logtoは、クォータ制限を超える機能に対して料金を追加します。2024年第2四半期ごろから課金を開始するまで無料でご利用いただけます。トークンがさらに必要な場合は、お問い合わせください。デフォルトでは、100万トークンごとに月額80ドルを請求します。',
   paid_quota_limit_tip:
     'Logtoはクォータ制限を超える機能に対して料金を追加します。2024年第2四半期ごろまでは無料でご利用いただけます。',
   paid_add_on_feature_tip:
