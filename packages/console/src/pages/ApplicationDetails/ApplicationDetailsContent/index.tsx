@@ -1,6 +1,5 @@
 import {
   ApplicationType,
-  type Application,
   type ApplicationResponse,
   type SnakeCaseOidcConfig,
 } from '@logto/schemas';
@@ -72,12 +71,12 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
         return;
       }
 
-      await api
+      const updatedData = await api
         .patch(`api/applications/${data.id}`, {
           json: applicationFormDataParser.toRequestPayload(formData),
         })
-        .json<Application>();
-      reset(formData);
+        .json<ApplicationResponse>();
+      reset(applicationFormDataParser.fromResponse(updatedData));
       onApplicationUpdated();
       toast.success(t('general.saved'));
     })
