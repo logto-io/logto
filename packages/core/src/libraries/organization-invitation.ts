@@ -72,7 +72,8 @@ export class OrganizationInvitationLibrary {
         await this.sendEmail(invitee, magicLink.token);
       }
 
-      return invitation;
+      // Additional query to get the full invitation data
+      return organizationQueries.invitations.findById(invitation.id);
     });
   }
 

@@ -134,7 +134,7 @@ class OrganizationInvitationsQueries extends SchemaQueries<
         ${buildJsonObjectSql(magicLinks.fields)} as "magicLink"
       from ${table}
       left join ${roleRelations.table}
-        on ${roleRelations.fields.invitationId} = ${fields.id}
+        on ${roleRelations.fields.organizationInvitationId} = ${fields.id}
       left join ${roles.table}
         on ${roles.fields.id} = ${roleRelations.fields.organizationRoleId}
       left join ${magicLinks.table}

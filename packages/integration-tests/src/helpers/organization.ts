@@ -3,9 +3,14 @@ import {
   type OrganizationRole,
   type Organization,
   type OrganizationRoleWithScopes,
+  type OrganizationInvitationEntity,
 } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
+import {
+  OrganizationInvitationApi,
+  type PostOrganizationInvitationData,
+} from '#src/api/organization-invitation.js';
 import {
   type CreateOrganizationRolePostData,
   OrganizationRoleApi,
@@ -14,6 +19,35 @@ import { OrganizationScopeApi } from '#src/api/organization-scope.js';
 import { OrganizationApi } from '#src/api/organization.js';
 
 /* eslint-disable @silverhand/fp/no-mutating-methods */
+export class OrganizationInvitationApiTest extends OrganizationInvitationApi {
+  #invitations: OrganizationInvitationEntity[] = [];
+
+  get invitations(): OrganizationInvitationEntity[] {
+    return this.#invitations;
+  }
+
+  override async create(
+    data: PostOrganizationInvitationData,
+    skipEmail = false
+  ): Promise<OrganizationInvitationEntity> {
+    const created = await super.create(data, skipEmail);
+    this.invitations.push(created);
+    return created;
+  }
+
+  /**
+   * Delete all created invitations. This method will ignore errors when deleting invitations to
+   * avoid error when they are deleted by other tests.
+   */
+  async cleanUp(): Promise<void> {
+    // Use `trySafe` to avoid error when invitation is deleted by other tests.
+    await Promise.all(
+      this.invitations.map(async (invitation) => trySafe(this.delete(invitation.id)))
+    );
+    this.#invitations = [];
+  }
+}
+
 /**
  * A help class that records the created organization roles, and provides a `cleanUp` method to
  * delete them.

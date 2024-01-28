@@ -1,6 +1,8 @@
-import { OrganizationInvitations } from '@logto/schemas';
+import { OrganizationInvitations, organizationInvitationEntityGuard } from '@logto/schemas';
+import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -26,13 +28,14 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
       post: true,
       patchById: true,
     },
+    entityGuard: organizationInvitationEntityGuard,
   });
 
   router.post(
     '/',
     koaGuard({
       query: z.object({
-        skipEmail: z.boolean().optional(),
+        skipEmail: z.string().optional(),
       }),
       body: OrganizationInvitations.createGuard
         .pick({
@@ -45,7 +48,7 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
           invitee: z.string().email(),
           organizationRoleIds: z.string().array().optional(),
         }),
-      response: OrganizationInvitations.guard,
+      response: organizationInvitationEntityGuard,
       status: [201],
     }),
     async (ctx) => {
@@ -53,12 +56,14 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
 
       assertThat(
         body.expiresAt > Date.now(),
-        // TODO: Throw `RequestError` instead.
-        new Error('The value of `expiresAt` must be in the future.')
+        new RequestError({
+          code: 'request.invalid_input',
+          details: 'The value of `expiresAt` must be in the future.',
+        })
       );
 
-      ctx.body = await organizationInvitations.insert(body, query.skipEmail);
-      ctx.body = 201;
+      ctx.body = await organizationInvitations.insert(body, yes(query.skipEmail));
+      ctx.status = 201;
     }
   );
 
