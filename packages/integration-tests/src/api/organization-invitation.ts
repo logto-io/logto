@@ -1,3 +1,4 @@
+import { type SendMessagePayload } from '@logto/connector-kit';
 import {
   type OrganizationInvitationStatus,
   type OrganizationInvitationEntity,
@@ -12,6 +13,7 @@ export type PostOrganizationInvitationData = {
   organizationId: string;
   expiresAt: number;
   organizationRoleIds?: string[];
+  emailPayload?: SendMessagePayload | false;
 };
 
 export class OrganizationInvitationApi extends ApiFactory<
@@ -22,15 +24,8 @@ export class OrganizationInvitationApi extends ApiFactory<
     super('organization-invitations');
   }
 
-  override async create(data: PostOrganizationInvitationData, skipEmail = false) {
-    return authedAdminApi
-      .post(this.path, {
-        searchParams: {
-          skipEmail: skipEmail.toString(),
-        },
-        json: data,
-      })
-      .json<OrganizationInvitationEntity>();
+  override async create(json: PostOrganizationInvitationData) {
+    return authedAdminApi.post(this.path, { json }).json<OrganizationInvitationEntity>();
   }
 
   async updateStatus(id: string, status: OrganizationInvitationStatus, acceptedUserId?: string) {

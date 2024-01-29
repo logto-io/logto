@@ -1,4 +1,4 @@
-import { ConnectorType, TemplateType } from '@logto/connector-kit';
+import { ConnectorType, type SendMessagePayload, TemplateType } from '@logto/connector-kit';
 import {
   OrganizationInvitationStatus,
   type CreateOrganizationInvitation,
@@ -46,14 +46,15 @@ export class OrganizationInvitationLibrary {
    * @param data.organizationId The ID of the organization to invite to.
    * @param data.expiresAt The epoch time in milliseconds when the invitation expires.
    * @param data.organizationRoleIds The IDs of the organization roles to assign to the invitee.
-   * @param skipEmail Whether to skip sending the invitation email. Defaults to `false`.
+   * @param messagePayload The payload to send in the email. If it is `false`, the email will be
+   * skipped.
    */
   async insert(
     data: Pick<
       CreateOrganizationInvitation,
       'inviterId' | 'invitee' | 'organizationId' | 'expiresAt'
     > & { organizationRoleIds?: string[] },
-    skipEmail = false
+    messagePayload: SendMessagePayload | false
   ) {
     const { inviterId, invitee, organizationId, expiresAt, organizationRoleIds } = data;
 
@@ -74,8 +75,8 @@ export class OrganizationInvitationLibrary {
         );
       }
 
-      if (!skipEmail) {
-        await this.sendEmail(invitee);
+      if (messagePayload) {
+        await this.sendEmail(invitee, messagePayload);
       }
 
       // Additional query to get the full invitation data
@@ -185,14 +186,12 @@ export class OrganizationInvitationLibrary {
     });
   }
 
-  protected async sendEmail(to: string) {
+  protected async sendEmail(to: string, payload: SendMessagePayload) {
     const emailConnector = await this.connector.getMessageConnector(ConnectorType.Email);
     return emailConnector.sendMessage({
       to,
       type: TemplateType.OrganizationInvitation,
-      payload: {
-        link: 'TODO',
-      },
+      payload,
     });
   }
 }

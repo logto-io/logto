@@ -13,24 +13,13 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "A list of organization invitations, each item also contains the organization roles to be assigned to the user when they accept the invitation, and the corresponding magic link data."
+            "description": "A list of organization invitations, each item also contains the organization roles to be assigned to the user when they accept the invitation."
           }
         }
       },
       "post": {
         "summary": "Create organization invitation",
         "description": "Create an organization invitation and optionally send it via email. The tenant should have an email connector configured if you want to send the invitation via email at this point.",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "skipEmail",
-            "description": "If true, the invitation will not be sent via email; otherwise, the invitation will be sent via email when it is created. If the email is failed to send, the invitation will not be created.",
-            "required": false,
-            "schema": {
-              "default": false
-            }
-          }
-        ],
         "requestBody": {
           "description": "The organization invitation to create.",
           "required": true,
@@ -52,6 +41,9 @@
                   },
                   "organizationRoleIds": {
                     "description": "The IDs of the organization roles to assign to the user when they accept the invitation."
+                  },
+                  "messagePayload": {
+                    "description": "The message payload for the \"OrganizationInvitation\" template to use when sending the invitation via email. If it is `false`, the invitation will not be sent via email."
                   }
                 }
               }
@@ -60,7 +52,7 @@
         },
         "responses": {
           "201": {
-            "description": "The organization invitation was created successfully, and the corresponding magic link data."
+            "description": "The organization invitation was created successfully."
           },
           "501": {
             "description": "No email connector is configured for the tenant."
@@ -74,7 +66,7 @@
         "description": "Get an organization invitation by ID.",
         "responses": {
           "200": {
-            "description": "The organization invitation, also contains the organization roles to be assigned to the user when they accept the invitation, and the corresponding magic link data."
+            "description": "The organization invitation, also contains the organization roles to be assigned to the user when they accept the invitation."
           }
         }
       },

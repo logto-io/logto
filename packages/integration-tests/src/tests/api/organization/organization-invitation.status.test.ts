@@ -33,14 +33,11 @@ describe('organization invitation status update', () => {
 
   it('should expire invitations and disable update after the expiration date', async () => {
     const organization = await organizationApi.create({ name: 'test' });
-    const invitation = await invitationApi.create(
-      {
-        organizationId: organization.id,
-        invitee: `${randomId()}@example.com`,
-        expiresAt: Date.now() + 100,
-      },
-      true
-    );
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 100,
+    });
     expect(invitation.status).toBe('Pending');
 
     await new Promise((resolve) => {
@@ -58,14 +55,11 @@ describe('organization invitation status update', () => {
 
   it('should be able to accept an invitation', async () => {
     const organization = await organizationApi.create({ name: 'test' });
-    const invitation = await invitationApi.create(
-      {
-        organizationId: organization.id,
-        invitee: `${randomId()}@example.com`,
-        expiresAt: Date.now() + 1_000_000,
-      },
-      true
-    );
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+    });
     expect(invitation.status).toBe('Pending');
 
     const user = await userApi.create({
@@ -91,15 +85,12 @@ describe('organization invitation status update', () => {
   it('should be able to accept an invitation with roles', async () => {
     const organization = await organizationApi.create({ name: 'test' });
     const role = await organizationApi.roleApi.create({ name: 'test' });
-    const invitation = await invitationApi.create(
-      {
-        organizationId: organization.id,
-        invitee: `${randomId()}@example.com`,
-        expiresAt: Date.now() + 1_000_000,
-        organizationRoleIds: [role.id],
-      },
-      true
-    );
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+      organizationRoleIds: [role.id],
+    });
     expect(invitation.status).toBe('Pending');
 
     const user = await userApi.create({
@@ -125,14 +116,11 @@ describe('organization invitation status update', () => {
 
   it('should not be able to accept an invitation with a different email', async () => {
     const organization = await organizationApi.create({ name: 'test' });
-    const invitation = await invitationApi.create(
-      {
-        organizationId: organization.id,
-        invitee: `${randomId()}@example.com`,
-        expiresAt: Date.now() + 1_000_000,
-      },
-      true
-    );
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+    });
     expect(invitation.status).toBe('Pending');
 
     const user = await userApi.create({
@@ -147,14 +135,11 @@ describe('organization invitation status update', () => {
 
   it('should not be able to accept an invitation with an invalid user id', async () => {
     const organization = await organizationApi.create({ name: 'test' });
-    const invitation = await invitationApi.create(
-      {
-        organizationId: organization.id,
-        invitee: `${randomId()}@example.com`,
-        expiresAt: Date.now() + 1_000_000,
-      },
-      true
-    );
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+    });
     expect(invitation.status).toBe('Pending');
 
     const error = await invitationApi
@@ -166,14 +151,11 @@ describe('organization invitation status update', () => {
 
   it('should not be able to update the status of an ended invitation', async () => {
     const organization = await organizationApi.create({ name: 'test' });
-    const invitation = await invitationApi.create(
-      {
-        organizationId: organization.id,
-        invitee: `${randomId()}@example.com`,
-        expiresAt: Date.now() + 1_000_000,
-      },
-      true
-    );
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+    });
     expect(invitation.status).toBe('Pending');
 
     await invitationApi.updateStatus(invitation.id, OrganizationInvitationStatus.Revoked);
