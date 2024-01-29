@@ -50,6 +50,17 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
     [getFilteredAppGuideMetadata, keyword, filterCategories]
   );
 
+  // Only show third party app and machine to machine app in create modal. Hide them by default in the empty app guide page.
+  const fullApplicationCategories = useMemo(() => {
+    if (isApplicationCreateModal) {
+      return allAppGuideCategories;
+    }
+
+    return allAppGuideCategories.filter(
+      (category) => category !== thirdPartyAppCategory && category !== 'MachineToMachine'
+    );
+  }, [isApplicationCreateModal]);
+
   const onClickGuide = useCallback((data: SelectedGuide) => {
     setShowCreateForm(true);
     setSelectedGuide(data);
@@ -138,7 +149,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
                     className={styles.protectedAppCard}
                   />
                 )}
-              {(filterCategories.length > 0 ? filterCategories : allAppGuideCategories).map(
+              {(filterCategories.length > 0 ? filterCategories : fullApplicationCategories).map(
                 (category) =>
                   structuredMetadata[category].length > 0 && (
                     <GuideCardGroup
