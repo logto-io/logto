@@ -73,7 +73,7 @@ const application_details = {
   app_domain_protected_description_2:
     'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
   origin_url_tip:
-    "Enter primary website address of your application, excluding any '/routes'.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
+    "Enter primary website address of your application, excluding any '/pathname'.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
   custom_rules: 'Custom authentication rules',
   custom_rules_placeholder: '^/(admin|privacy)/.+$',
   custom_rules_description:

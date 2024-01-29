@@ -19,7 +19,7 @@ const protected_app = {
     url_field_placeholder: 'https://',
     url_field_description: 'Enter the primary website address of your application.',
     url_field_tooltip:
-      "Enter primary website address of your application, excluding any '/routes'. After creation, you can customize route authentication rules.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
+      "Enter primary website address of your application, excluding any '/pathname'. After creation, you can customize route authentication rules.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
     create_application: 'Create application',
     create_protected_app: 'Create and experience auth protection',
     errors: {
@@ -29,7 +29,7 @@ const protected_app = {
         "Invalid subdomain format: use only lowercase letters, hyphens '-', and underscores '_'.",
       url_required: 'Origin URL is required.',
       invalid_url:
-        "Invalid Origin URL format: Use http:// or https://. Note: '/routes' is not currently supported.",
+        "Invalid Origin URL format: Use http:// or https://. Note: '/pathname' is not currently supported.",
     },
   },
   success_message:

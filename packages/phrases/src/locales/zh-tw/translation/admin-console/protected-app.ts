@@ -34,7 +34,7 @@ const protected_app = {
     url_field_description: 'Enter the primary website address of your application.',
     /** UNTRANSLATED */
     url_field_tooltip:
-      "Enter primary website address of your application, excluding any '/routes'. After creation, you can customize route authentication rules.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
+      "Enter primary website address of your application, excluding any '/pathname'. After creation, you can customize route authentication rules.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
     /** UNTRANSLATED */
     create_application: 'Create application',
     /** UNTRANSLATED */
@@ -51,7 +51,7 @@ const protected_app = {
       url_required: 'Origin URL is required.',
       /** UNTRANSLATED */
       invalid_url:
-        "Invalid Origin URL format: Use http:// or https://. Note: '/routes' is not currently supported.",
+        "Invalid Origin URL format: Use http:// or https://. Note: '/pathname' is not currently supported.",
     },
   },
   /** UNTRANSLATED */
