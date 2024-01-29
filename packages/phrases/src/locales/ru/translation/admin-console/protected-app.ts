@@ -46,7 +46,7 @@ const protected_app = {
       domain_in_use: 'This subdomain name is already in use.',
       /** UNTRANSLATED */
       invalid_domain_format:
-        "Invalid subdomain format: use only lowercase letters, hyphens '-', and underscores '_'.",
+        "Invalid subdomain format: use only lowercase letters, numbers, and hyphens '-'.",
       /** UNTRANSLATED */
       url_required: 'Origin URL is required.',
       /** UNTRANSLATED */

@@ -14,5 +14,7 @@ describe('isValidSubdomain()', () => {
     expect(isValidSubdomain('-a1')).toBe(false);
     expect(isValidSubdomain('a1-')).toBe(false);
     expect(isValidSubdomain('a1.b')).toBe(false);
+    expect(isValidSubdomain('a_b')).toBe(false);
+    expect(isValidSubdomain('aBc')).toBe(false);
   });
 });
