@@ -95,7 +95,7 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
 
   const runLifecycleQuery = async (
     lifecycle: Lifecycle,
-    parameters: { name?: string; database?: string } = {}
+    parameters: { name?: string; database?: string; password?: string } = {}
   ) => {
     const query = queries.find(([file]) => file.slice(1, -4) === lifecycle)?.[1];
 
@@ -106,6 +106,7 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
           query
             .replaceAll('${name}', parameters.name ?? '')
             .replaceAll('${database}', parameters.database ?? '')
+            .replaceAll('${password}', parameters.password ?? '')
           /* eslint-enable no-template-curly-in-string */
         )}`
       );
@@ -118,8 +119,9 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
   ];
   const sorted = allQueries.slice().sort(compareQuery);
   const database = await getDatabaseName(connection, true);
+  const password = generateStandardId(32);
 
-  await runLifecycleQuery('before_all', { database });
+  await runLifecycleQuery('before_all', { database, password });
 
   /* eslint-disable no-await-in-loop */
   for (const [file, query] of sorted) {
