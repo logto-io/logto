@@ -2,7 +2,6 @@ import { type SchemaLike, type GeneratedSchema } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type DeepPartial } from '@silverhand/essentials';
 import camelcase from 'camelcase';
-import deepmerge from 'deepmerge';
 import { type MiddlewareType } from 'koa';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
@@ -14,6 +13,17 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import { type TwoRelationsQueries } from './RelationQueries.js';
 import type SchemaQueries from './SchemaQueries.js';
 import { parseSearchOptions } from './search.js';
+
+const defaultConfig = Object.freeze({
+  disabled: {
+    get: false,
+    post: false,
+    getById: false,
+    patchById: false,
+    deleteById: false,
+  },
+  searchFields: [],
+});
 
 /**
  * Generate the pathname for from a table name.
@@ -63,6 +73,16 @@ type SchemaRouterConfig<Key extends string> = {
    * @see {@link generateStandardId} for the default length.
    */
   idLength?: number;
+  /**
+   * The guard for the entity returned by the following routes:
+   *
+   * - `GET /:id`
+   * - `POST /`
+   * - `PATCH /:id`
+   *
+   * If not provided, the `schema.guard` will be used.
+   */
+  entityGuard?: z.ZodTypeAny;
 };
 
 type RelationRoutesConfig = {
@@ -102,19 +122,16 @@ export default class SchemaRouter<
   ) {
     super({ prefix: '/' + tableToPathname(schema.table) });
 
-    this.config = deepmerge<typeof this.config, DeepPartial<typeof this.config>>(
-      {
-        disabled: {
-          get: false,
-          post: false,
-          getById: false,
-          patchById: false,
-          deleteById: false,
-        },
-        searchFields: [],
+    const { disabled, ...rest } = config;
+
+    this.config = {
+      ...defaultConfig,
+      disabled: {
+        ...defaultConfig.disabled,
+        ...disabled,
       },
-      config
-    );
+      ...rest,
+    };
 
     if (this.config.middlewares?.length) {
       this.use(...this.config.middlewares);
@@ -131,94 +148,7 @@ export default class SchemaRouter<
       });
     }
 
-    const { disabled, searchFields, idLength } = this.config;
-
-    if (!disabled.get) {
-      this.get(
-        '/',
-        koaPagination(),
-        koaGuard({
-          query: z.object({ q: z.string().optional() }),
-          response: schema.guard.array(),
-          status: [200],
-        }),
-        async (ctx, next) => {
-          const search = parseSearchOptions(searchFields, ctx.guard.query);
-          const { limit, offset } = ctx.pagination;
-          const [count, entities] = await queries.findAll(limit, offset, search);
-
-          ctx.pagination.totalCount = count;
-          ctx.body = entities;
-          return next();
-        }
-      );
-    }
-
-    if (!disabled.post) {
-      this.post(
-        '/',
-        koaGuard({
-          body: schema.createGuard.omit({ id: true }),
-          response: schema.guard,
-          status: [201], // TODO: 409/422 for conflict?
-        }),
-        async (ctx, next) => {
-          // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well with generics
-          ctx.body = await queries.insert({
-            id: generateStandardId(idLength),
-            ...ctx.guard.body,
-          } as CreateSchema);
-          ctx.status = 201;
-          return next();
-        }
-      );
-    }
-
-    if (!disabled.getById) {
-      this.get(
-        '/:id',
-        koaGuard({
-          params: z.object({ id: z.string().min(1) }),
-          response: schema.guard,
-          status: [200, 404],
-        }),
-        async (ctx, next) => {
-          ctx.body = await queries.findById(ctx.guard.params.id);
-          return next();
-        }
-      );
-    }
-
-    if (!disabled.patchById) {
-      this.patch(
-        '/:id',
-        koaGuard({
-          params: z.object({ id: z.string().min(1) }),
-          body: schema.updateGuard,
-          response: schema.guard,
-          status: [200, 404], // TODO: 409/422 for conflict?
-        }),
-        async (ctx, next) => {
-          ctx.body = await queries.updateById(ctx.guard.params.id, ctx.guard.body);
-          return next();
-        }
-      );
-    }
-
-    if (!disabled.deleteById) {
-      this.delete(
-        '/:id',
-        koaGuard({
-          params: z.object({ id: z.string().min(1) }),
-          status: [204, 404],
-        }),
-        async (ctx, next) => {
-          await queries.deleteById(ctx.guard.params.id);
-          ctx.status = 204;
-          return next();
-        }
-      );
-    }
+    this.#addRoutes();
   }
 
   /**
@@ -361,5 +291,97 @@ export default class SchemaRouter<
         return next();
       }
     );
+  }
+
+  #addRoutes() {
+    const { queries, schema, config } = this;
+    const { disabled, searchFields, idLength, entityGuard } = config;
+
+    if (!disabled.get) {
+      this.get(
+        '/',
+        koaPagination(),
+        koaGuard({
+          query: z.object({ q: z.string().optional() }),
+          response: (entityGuard ?? schema.guard).array(),
+          status: [200],
+        }),
+        async (ctx, next) => {
+          const search = parseSearchOptions(searchFields, ctx.guard.query);
+          const { limit, offset } = ctx.pagination;
+          const [count, entities] = await queries.findAll(limit, offset, search);
+
+          ctx.pagination.totalCount = count;
+          ctx.body = entities;
+          return next();
+        }
+      );
+    }
+
+    if (!disabled.post) {
+      this.post(
+        '/',
+        koaGuard({
+          body: schema.createGuard.omit({ id: true }),
+          response: entityGuard ?? schema.guard,
+          status: [201], // TODO: 409/422 for conflict?
+        }),
+        async (ctx, next) => {
+          // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well with generics
+          ctx.body = await queries.insert({
+            id: generateStandardId(idLength),
+            ...ctx.guard.body,
+          } as CreateSchema);
+          ctx.status = 201;
+          return next();
+        }
+      );
+    }
+
+    if (!disabled.getById) {
+      this.get(
+        '/:id',
+        koaGuard({
+          params: z.object({ id: z.string().min(1) }),
+          response: entityGuard ?? schema.guard,
+          status: [200, 404],
+        }),
+        async (ctx, next) => {
+          ctx.body = await queries.findById(ctx.guard.params.id);
+          return next();
+        }
+      );
+    }
+
+    if (!disabled.patchById) {
+      this.patch(
+        '/:id',
+        koaGuard({
+          params: z.object({ id: z.string().min(1) }),
+          body: schema.updateGuard,
+          response: entityGuard ?? schema.guard,
+          status: [200, 404], // TODO: 409/422 for conflict?
+        }),
+        async (ctx, next) => {
+          ctx.body = await queries.updateById(ctx.guard.params.id, ctx.guard.body);
+          return next();
+        }
+      );
+    }
+
+    if (!disabled.deleteById) {
+      this.delete(
+        '/:id',
+        koaGuard({
+          params: z.object({ id: z.string().min(1) }),
+          status: [204, 404],
+        }),
+        async (ctx, next) => {
+          await queries.deleteById(ctx.guard.params.id);
+          ctx.status = 204;
+          return next();
+        }
+      );
+    }
   }
 }
