@@ -1,4 +1,8 @@
-import { OrganizationInvitations, organizationInvitationEntityGuard } from '@logto/schemas';
+import {
+  OrganizationInvitationStatus,
+  OrganizationInvitations,
+  organizationInvitationEntityGuard,
+} from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -51,7 +55,7 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
       response: organizationInvitationEntityGuard,
       status: [201],
     }),
-    async (ctx) => {
+    async (ctx, next) => {
       const { query, body } = ctx.guard;
 
       assertThat(
@@ -64,6 +68,50 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
 
       ctx.body = await organizationInvitations.insert(body, yes(query.skipEmail));
       ctx.status = 201;
+      return next();
+    }
+  );
+
+  router.put(
+    '/:id/status',
+    koaGuard({
+      params: z.object({
+        id: z.string(),
+      }),
+      body: OrganizationInvitations.updateGuard
+        .pick({
+          acceptedUserId: true,
+        })
+        .extend({
+          status: z.enum([
+            OrganizationInvitationStatus.Accepted,
+            OrganizationInvitationStatus.Revoked,
+          ]),
+        }),
+      response: organizationInvitationEntityGuard,
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+      const { status, acceptedUserId } = ctx.guard.body;
+
+      if (status !== OrganizationInvitationStatus.Accepted) {
+        ctx.body = await organizationInvitations.updateStatus(id, status);
+        return next();
+      }
+
+      // TODO: Error i18n
+      assertThat(
+        acceptedUserId,
+        new RequestError({
+          status: 422,
+          code: 'request.invalid_input',
+          details: 'The `acceptedUserId` is required when accepting an invitation.',
+        })
+      );
+
+      ctx.body = await organizationInvitations.updateStatus(id, status, acceptedUserId);
+      return next();
     }
   );
 

@@ -93,12 +93,12 @@ export type OrganizationWithFeatured = Organization & {
  * - `organizationRoles`: The roles to be assigned to the user when accepting the invitation.
  */
 export type OrganizationInvitationEntity = OrganizationInvitation & {
-  magicLink: MagicLink;
+  magicLink?: MagicLink;
   organizationRoles: OrganizationRoleEntity[];
 };
 
 export const organizationInvitationEntityGuard: z.ZodType<OrganizationInvitationEntity> =
   OrganizationInvitations.guard.extend({
-    magicLink: MagicLinks.guard,
+    magicLink: MagicLinks.guard.optional(),
     organizationRoles: organizationRoleEntityGuard.array(),
   });

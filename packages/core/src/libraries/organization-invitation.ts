@@ -1,17 +1,33 @@
 import { ConnectorType, TemplateType } from '@logto/connector-kit';
-import { OrganizationInvitationStatus, type CreateOrganizationInvitation } from '@logto/schemas';
+import {
+  OrganizationInvitationStatus,
+  type CreateOrganizationInvitation,
+  type OrganizationInvitationEntity,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { appendPath } from '@silverhand/essentials';
+import { appendPath, removeUndefinedKeys } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { getTenantEndpoint } from '#src/env-set/utils.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import MagicLinkQueries from '#src/queries/magic-link.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
+import { createUserQueries } from '#src/queries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { type ConnectorLibrary } from './connector.js';
 
 const invitationLinkPath = '/invitation';
+
+/**
+ * The ending statuses of an organization invitation per RFC 0003. It means that the invitation
+ * status cannot be changed anymore.
+ */
+const endingStatuses = Object.freeze([
+  OrganizationInvitationStatus.Accepted,
+  OrganizationInvitationStatus.Expired,
+  OrganizationInvitationStatus.Revoked,
+]);
 
 /** Class for managing organization invitations. */
 export class OrganizationInvitationLibrary {
@@ -74,6 +90,108 @@ export class OrganizationInvitationLibrary {
 
       // Additional query to get the full invitation data
       return organizationQueries.invitations.findById(invitation.id);
+    });
+  }
+
+  /**
+   * Revokes an organization invitation. The transaction will be rolled back if the status is one
+   * of the ending statuses.
+   *
+   * @param id The ID of the invitation.
+   * @param status The new status of the invitation.
+   * @returns A promise that resolves to the updated invitation.
+   * @see {@link endingStatuses} for the ending statuses.
+   */
+  async updateStatus(
+    id: string,
+    status: OrganizationInvitationStatus.Revoked
+  ): Promise<OrganizationInvitationEntity>;
+  /**
+   * Updates the status of an organization invitation to `Accepted`, and assigns the user to the
+   * organization with the provided roles in the invitation.
+   *
+   * The transaction will be rolled back if:
+   * - The status is one of the ending statuses.
+   * - The `acceptedUserId` is not provided.
+   * - The `acceptedUserId` is not the same as the invitee.
+   *
+   * @param id The ID of the invitation.
+   * @param status The new status of the invitation (`Accepted`).
+   * @param acceptedUserId The user ID of the user who accepted the invitation.
+   * @returns A promise that resolves to the updated invitation.
+   * @see {@link endingStatuses} for the ending statuses.
+   */
+  async updateStatus(
+    id: string,
+    status: OrganizationInvitationStatus.Accepted,
+    acceptedUserId: string
+  ): Promise<OrganizationInvitationEntity>;
+  // TODO: Error i18n
+  async updateStatus(
+    id: string,
+    status: OrganizationInvitationStatus,
+    acceptedUserId?: string
+  ): Promise<OrganizationInvitationEntity> {
+    const entity = await this.queries.organizations.invitations.findById(id);
+
+    if (endingStatuses.includes(entity.status)) {
+      throw new RequestError({
+        status: 422,
+        code: 'request.invalid_input',
+        details: 'The status of the invitation cannot be changed anymore.',
+      });
+    }
+
+    return this.queries.pool.transaction(async (connection) => {
+      const organizationQueries = new OrganizationQueries(connection);
+      const userQueries = createUserQueries(connection);
+
+      switch (status) {
+        case OrganizationInvitationStatus.Accepted: {
+          // Normally this shouldn't happen, so we use `TypeError` instead of `RequestError`.
+          if (!acceptedUserId) {
+            throw new TypeError('The `acceptedUserId` is required when accepting an invitation.');
+          }
+
+          const user = await userQueries.findUserById(acceptedUserId);
+
+          if (user.primaryEmail !== entity.invitee) {
+            throw new RequestError({
+              status: 422,
+              code: 'request.invalid_input',
+              details: 'The accepted user must have the same email as the invitee.',
+            });
+          }
+
+          await organizationQueries.relations.users.insert([entity.organizationId, acceptedUserId]);
+
+          if (entity.organizationRoles.length > 0) {
+            await organizationQueries.relations.rolesUsers.insert(
+              ...entity.organizationRoles.map<[string, string, string]>((role) => [
+                entity.organizationId,
+                role.id,
+                acceptedUserId,
+              ])
+            );
+          }
+          break;
+        }
+        case OrganizationInvitationStatus.Revoked: {
+          break;
+        }
+        default: {
+          throw new TypeError(`The status "${status}" is not supported.`);
+        }
+      }
+
+      const updated = {
+        status,
+        acceptedUserId,
+        updatedAt: Date.now(),
+      };
+      await organizationQueries.invitations.updateById(id, updated);
+
+      return { ...entity, ...removeUndefinedKeys(updated) };
     });
   }
 

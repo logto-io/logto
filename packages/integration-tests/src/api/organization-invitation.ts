@@ -1,4 +1,7 @@
-import { type OrganizationInvitationEntity } from '@logto/schemas';
+import {
+  type OrganizationInvitationStatus,
+  type OrganizationInvitationEntity,
+} from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 import { ApiFactory } from './factory.js';
@@ -26,6 +29,17 @@ export class OrganizationInvitationApi extends ApiFactory<
           skipEmail: skipEmail.toString(),
         },
         json: data,
+      })
+      .json<OrganizationInvitationEntity>();
+  }
+
+  async updateStatus(id: string, status: OrganizationInvitationStatus, acceptedUserId?: string) {
+    return authedAdminApi
+      .put(`${this.path}/${id}/status`, {
+        json: {
+          status,
+          acceptedUserId,
+        },
       })
       .json<OrganizationInvitationEntity>();
   }

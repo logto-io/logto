@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^1.0.0",
-    "@silverhand/essentials": "^2.8.4"
+    "@silverhand/essentials": "^2.8.8"
   },
   "peerDependencies": {
     "zod": "^3.22.4"

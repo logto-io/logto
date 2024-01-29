@@ -23,7 +23,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@silverhand/essentials": "^2.8.4",
+    "@silverhand/essentials": "^2.8.8",
     "got": "^14.0.0",
     "snakecase-keys": "^5.4.4",
     "zod": "^3.22.4"

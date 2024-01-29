@@ -60,7 +60,7 @@
     "@microsoft/applicationinsights-clickanalytics-js": "^3.0.2",
     "@microsoft/applicationinsights-react-js": "^17.0.0",
     "@microsoft/applicationinsights-web": "^3.0.2",
-    "@silverhand/essentials": "^2.8.4",
+    "@silverhand/essentials": "^2.8.8",
     "applicationinsights": "^2.7.0"
   },
   "peerDependencies": {

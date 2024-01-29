@@ -53,7 +53,7 @@
   "devDependencies": {
     "@jest/types": "^29.0.3",
     "@silverhand/eslint-config": "5.0.0",
-    "@silverhand/essentials": "^2.8.4",
+    "@silverhand/essentials": "^2.8.8",
     "@silverhand/ts-config": "5.0.0",
     "@silverhand/ts-config-react": "5.0.0",
     "@types/color": "^3.0.3",
