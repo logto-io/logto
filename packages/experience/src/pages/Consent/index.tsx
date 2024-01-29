@@ -13,6 +13,7 @@ import OrganizationSelector, { type Organization } from './OrganizationSelector'
 import ScopesListCard from './ScopesListCard';
 import UserProfile from './UserProfile';
 import * as styles from './index.module.scss';
+import { getRedirectUriOrigin } from './util';
 
 const Consent = () => {
   const handleError = useErrorHandler();
@@ -103,7 +104,7 @@ const Consent = () => {
         <Button title="action.authorize" onClick={consentHandler} />
       </div>
       <div className={styles.redirectUri}>
-        {t('description.redirect_to', { name: consentData.redirectUri })}
+        {t('description.redirect_to', { name: getRedirectUriOrigin(consentData.redirectUri) })}
       </div>
       <div className={styles.footerLink}>
         {t('description.not_you')}{' '}
