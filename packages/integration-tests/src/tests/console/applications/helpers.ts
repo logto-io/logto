@@ -12,9 +12,18 @@ import { expectNavigation } from '#src/utils.js';
 
 import { frameworkGroupLabels, type ApplicationCase } from './constants.js';
 
-export const expectFrameworksInGroup = async (page: Page, groupSelector: string) => {
+export const expectFrameworksInGroup = async (
+  page: Page,
+  groupSelector: string,
+  isTablePlaceHolder = false
+) => {
   /* eslint-disable no-await-in-loop */
-  for (const groupLabel of frameworkGroupLabels) {
+  // Expect the framework group to be visible, Third-party and Machine-to-machine are not visible in table placeholder
+  for (const groupLabel of isTablePlaceHolder
+    ? frameworkGroupLabels.filter(
+        (label) => label !== 'Third-party' && label !== 'Machine-to-machine'
+      )
+    : frameworkGroupLabels) {
     const frameGroup = await expect(page).toMatchElement(groupSelector, {
       text: groupLabel,
     });
