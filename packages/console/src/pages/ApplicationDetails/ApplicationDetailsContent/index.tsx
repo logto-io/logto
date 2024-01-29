@@ -106,7 +106,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
   return (
     <>
       <DetailsPageHeader
-        icon={<ApplicationIcon type={data.type} />}
+        icon={<ApplicationIcon type={data.type} isThirdParty={data.isThirdParty} />}
         title={data.name}
         primaryTag={
           data.isThirdParty
