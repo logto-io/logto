@@ -31,26 +31,38 @@ const OrganizationSelectorModal = ({
   const updatePosition = useCallback(() => {
     const parent = parentElementRef.current;
 
-    if (!parent || isMobile) {
+    if (!parent || isMobile || !isOpen) {
       setPosition({});
       return;
     }
 
-    const offset = 8;
     const { top, left, height, width } = parent.getBoundingClientRect();
-    setPosition({ top: top + height + offset, left, width });
-  }, [isMobile, parentElementRef]);
+
+    // Offset the modal from the parent element
+    const offset = 8;
+
+    // The height of each organization item
+    const organizationItemHeight = 40;
+    // The padding around the modal content
+    const organizationModalPadding = 8;
+
+    // Calculate the max top position so that the modal doesn't go off the screen
+    const modalContentHeight =
+      organizations.length * organizationItemHeight + organizationModalPadding * 2;
+    const windowHeight = window.innerHeight;
+    const maxTop = windowHeight - modalContentHeight;
+
+    setPosition({ top: Math.min(top + height + offset, maxTop), left, width });
+  }, [isMobile, isOpen, organizations.length, parentElementRef]);
 
   useLayoutEffect(() => {
     updatePosition();
     window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition);
 
     return () => {
       window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition);
     };
-  }, [updatePosition]);
+  }, [updatePosition, isOpen]);
 
   return (
     <ReactModal
