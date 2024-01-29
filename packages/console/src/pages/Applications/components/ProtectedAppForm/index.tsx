@@ -1,7 +1,7 @@
 import { isValidUrl } from '@logto/core-kit';
 import { ApplicationType, type Application, type RequestErrorBody } from '@logto/schemas';
 import { isValidSubdomain } from '@logto/shared/universal';
-import { conditional } from '@silverhand/essentials';
+import { condString, conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { HTTPError } from 'ky';
 import { useForm } from 'react-hook-form';
@@ -115,7 +115,11 @@ function ProtectedAppForm({
                   t('protected_app.form.errors.domain_required'))
               }
             />
-            {defaultDomain && <div className={styles.domain}>{defaultDomain}</div>}
+            {defaultDomain && (
+              <div className={styles.domain}>
+                {condString(defaultDomain && `.${defaultDomain}`)}
+              </div>
+            )}
           </div>
         </FormField>
       </div>
