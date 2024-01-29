@@ -17,7 +17,7 @@ form {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: var(--color-surface-5);
+    background: var(--color-function-n-overlay-primary-focused);
     color: var(--color-text-link);
     font: var(--font-title-3);
     position: relative;
@@ -74,5 +74,6 @@ form {
 
   &.leftAligned {
     align-self: flex-start;
+    margin-left: _.unit(15);
   }
 }

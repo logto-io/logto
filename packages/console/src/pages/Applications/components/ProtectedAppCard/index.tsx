@@ -16,16 +16,17 @@ import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
+  /** When used in application creation modal, card has a "PROTECTED APP" label on top of it */
+  isInAppCreationPage?: boolean;
   hasBorder?: boolean;
-  hasLabel?: boolean;
   hasCreateButton?: boolean;
   onCreateSuccess?: (app: Application) => void;
 };
 
 function ProtectedAppCard({
   className,
+  isInAppCreationPage,
   hasBorder,
-  hasLabel,
   hasCreateButton,
   onCreateSuccess,
 }: Props) {
@@ -38,11 +39,13 @@ function ProtectedAppCard({
   return (
     <>
       <div className={classNames(styles.container, className)}>
-        {hasLabel && <label>{t('name')}</label>}
+        {isInAppCreationPage && <label>{t('name')}</label>}
         <div className={classNames(styles.card, hasBorder && styles.hasBorder)}>
           <Icon className={styles.logo} />
           <div className={styles.wrapper}>
-            <div className={styles.name}>{t('title')}</div>
+            <div className={isInAppCreationPage ? styles.label : styles.title}>
+              {t(isInAppCreationPage ? 'name' : 'title')}
+            </div>
             <div className={styles.description}>
               <Trans
                 components={{

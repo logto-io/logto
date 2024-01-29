@@ -35,7 +35,12 @@
       display: flex;
       flex-direction: column;
 
-      .name {
+      .title {
+        font: var(--font-title-2);
+        color: var(--color-text);
+      }
+
+      .label {
         font: var(--font-label-2);
         color: var(--color-text);
       }

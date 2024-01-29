@@ -1,47 +1,49 @@
 const protected_app = {
   /** UNTRANSLATED */
-  name: 'Protected App',
+  name: 'Protected app',
   /** UNTRANSLATED */
-  title: 'Create a Protected App with epic speed and simplicity',
+  title: 'Create a Protected App: Epic speed, simplicity, non-SDK integration',
   /** UNTRANSLATED */
   description:
-    "Deploy with Logto secure workers, powered by Cloudflare's edge network for top-tier performance and 0ms cold starts worldwide. <a>Learn more</a>",
+    'Serverless deployment with Logto Workers, powered by Cloudflare for top-tier performance and 0ms cold starts worldwide. <a>Learn more</a>',
   /** UNTRANSLATED */
   fast_create: 'Fast create',
   /** UNTRANSLATED */
   modal_title: 'Create protected app',
   /** UNTRANSLATED */
-  modal_subtitle: 'No more integrating Logto SDK. Create you web app easily.',
+  modal_subtitle:
+    'No more integrating Logto SDK. Add authentication to your existing web app with ease.',
   form: {
     /** UNTRANSLATED */
-    domain_field_label: 'App domain protected',
-    /** UNTRANSLATED */
-    domain_field_placeholder: 'Custom subdomain',
-    /** UNTRANSLATED */
-    domain_field_description:
-      'Specify the app domain that will be protected by authentication and redirected to the Origin URL. Custom domain can be added after creation.',
-    /** UNTRANSLATED */
-    domain_field_description_short:
-      'Specify the app domain that will be protected by authentication and redirected to the Origin URL.',
-    /** UNTRANSLATED */
-    domain_field_tooltip:
-      "You can use a 'protected.app' subdomain powered by Logto for quick testing or online access, which remains consistently valid. After creation, your custom domain name can be added.",
-    /** UNTRANSLATED */
-    url_field_label: 'Origin URL',
+    url_field_label: 'Your origin URL',
     /** UNTRANSLATED */
     url_field_placeholder: 'https://',
     /** UNTRANSLATED */
-    url_field_description: 'Enter the primary website address of your application.',
+    url_field_description:
+      'Enter the primary website address of your application requiring authentication.',
     /** UNTRANSLATED */
     url_field_modification_notice:
-      'Modifications to the Origin URL may take up to 1-2 minutes to propagate and become effective across global network locations.',
+      'Modifications to the Origin URL may take up to 1-2 minutes to become effective across global network locations.',
     /** UNTRANSLATED */
     url_field_tooltip:
-      "Enter primary website address of your application, excluding any '/pathname'. After creation, you can customize route authentication rules.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
+      "Enter primary website address of your application, excluding any '/pathname'. After creation, you can customize route authentication rules.\n\nNote: The Origin URL itself doesn't necessitate authentication; protection is applied exclusively to accesses via the designated app domain.",
+    /** UNTRANSLATED */
+    domain_field_label: 'App domain',
+    /** UNTRANSLATED */
+    domain_field_placeholder: 'your-domain',
+    /** UNTRANSLATED */
+    domain_field_description:
+      'This URL serves as an authentication protection proxy for the original URL. Custom domain can be applied after creation.',
+    /** UNTRANSLATED */
+    domain_field_description_short:
+      'This URL serves as an authentication protection proxy for the original URL.',
+    /** UNTRANSLATED */
+    domain_field_tooltip:
+      "Apps protected by Logto will be hosted at 'your-domain.{{domain}}' by default. Custom domain can be applied after creation.",
     /** UNTRANSLATED */
     create_application: 'Create application',
     /** UNTRANSLATED */
-    create_protected_app: 'Create and experience auth protection',
+    create_protected_app: 'Create and experience instantly',
     errors: {
       /** UNTRANSLATED */
       domain_required: 'Subdomain is required',

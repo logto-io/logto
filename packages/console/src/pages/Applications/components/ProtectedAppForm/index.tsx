@@ -23,6 +23,7 @@ type Props = {
   buttonAlignment?: 'left' | 'right';
   buttonText?: ButtonProps['title'];
   buttonSize?: ButtonProps['size'];
+  /** Detailed instructions are displayed when creating from get-started page */
   hasDetailedInstructions?: boolean;
   hasRequiredLabel?: boolean;
   onCreateSuccess?: (createdApp: Application) => void;
@@ -104,12 +105,41 @@ function ProtectedAppForm({
         <FormField
           isRequired={hasRequiredLabel}
           className={styles.field}
+          title="protected_app.form.url_field_label"
+          description={conditional(
+            hasDetailedInstructions && 'protected_app.form.url_field_description'
+          )}
+          descriptionPosition={conditional(hasDetailedInstructions && 'top')}
+          tip={conditional(!hasDetailedInstructions && t('protected_app.form.url_field_tooltip'))}
+        >
+          <TextInput
+            {...register('origin', {
+              required: true,
+              validate: (value) =>
+                validateUriOrigin(value) || t('protected_app.form.errors.invalid_url'),
+            })}
+            placeholder={t('protected_app.form.url_field_placeholder')}
+            error={
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              errors.origin?.message ||
+              (errors.origin?.type === 'required' && t('protected_app.form.errors.url_required'))
+            }
+          />
+        </FormField>
+      </div>
+      <div className={styles.formFieldWrapper}>
+        {hasDetailedInstructions && <div className={styles.index}>2</div>}
+        <FormField
+          isRequired={hasRequiredLabel}
+          className={styles.field}
           title="protected_app.form.domain_field_label"
           description={`protected_app.form.domain_field_description${
             hasDetailedInstructions ? '' : '_short'
           }`}
+          descriptionPosition={conditional(hasDetailedInstructions && 'top')}
           tip={conditional(
-            !hasDetailedInstructions && t('protected_app.form.domain_field_tooltip')
+            !hasDetailedInstructions &&
+              t('protected_app.form.domain_field_tooltip', { domain: defaultDomain })
           )}
         >
           <div className={styles.domainFieldWrapper}>
@@ -134,32 +164,6 @@ function ProtectedAppForm({
               </div>
             )}
           </div>
-        </FormField>
-      </div>
-      <div className={styles.formFieldWrapper}>
-        {hasDetailedInstructions && <div className={styles.index}>2</div>}
-        <FormField
-          isRequired={hasRequiredLabel}
-          className={styles.field}
-          title="protected_app.form.url_field_label"
-          description={conditional(
-            hasDetailedInstructions && 'protected_app.form.url_field_description'
-          )}
-          tip={conditional(!hasDetailedInstructions && t('protected_app.form.url_field_tooltip'))}
-        >
-          <TextInput
-            {...register('origin', {
-              required: true,
-              validate: (value) =>
-                validateUriOrigin(value) || t('protected_app.form.errors.invalid_url'),
-            })}
-            placeholder={t('protected_app.form.url_field_placeholder')}
-            error={
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              errors.origin?.message ||
-              (errors.origin?.type === 'required' && t('protected_app.form.errors.url_required'))
-            }
-          />
         </FormField>
       </div>
       <Button
