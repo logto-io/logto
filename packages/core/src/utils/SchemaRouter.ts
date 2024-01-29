@@ -2,7 +2,6 @@ import { type SchemaLike, type GeneratedSchema } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type DeepPartial } from '@silverhand/essentials';
 import camelcase from 'camelcase';
-import deepmerge from 'deepmerge';
 import { type MiddlewareType } from 'koa';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
@@ -14,6 +13,17 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import { type TwoRelationsQueries } from './RelationQueries.js';
 import type SchemaQueries from './SchemaQueries.js';
 import { parseSearchOptions } from './search.js';
+
+const defaultConfig = Object.freeze({
+  disabled: {
+    get: false,
+    post: false,
+    getById: false,
+    patchById: false,
+    deleteById: false,
+  },
+  searchFields: [],
+});
 
 /**
  * Generate the pathname for from a table name.
@@ -112,19 +122,16 @@ export default class SchemaRouter<
   ) {
     super({ prefix: '/' + tableToPathname(schema.table) });
 
-    this.config = deepmerge<typeof this.config, DeepPartial<typeof this.config>>(
-      {
-        disabled: {
-          get: false,
-          post: false,
-          getById: false,
-          patchById: false,
-          deleteById: false,
-        },
-        searchFields: [],
+    const { disabled, ...rest } = config;
+
+    this.config = {
+      ...defaultConfig,
+      disabled: {
+        ...defaultConfig.disabled,
+        ...disabled,
       },
-      config
-    );
+      ...rest,
+    };
 
     if (this.config.middlewares?.length) {
       this.use(...this.config.middlewares);
