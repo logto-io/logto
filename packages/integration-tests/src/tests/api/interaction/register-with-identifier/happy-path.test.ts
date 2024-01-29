@@ -79,7 +79,7 @@ describe('register with passwordless identifier', () => {
       email: primaryEmail,
     });
 
-    const verificationCodeRecord = await readVerificationCode();
+    const verificationCodeRecord = await readVerificationCode('Email');
 
     expect(verificationCodeRecord).toMatchObject({
       address: primaryEmail,
@@ -125,7 +125,7 @@ describe('register with passwordless identifier', () => {
       email: primaryEmail,
     });
 
-    const verificationCodeRecord = await readVerificationCode();
+    const verificationCodeRecord = await readVerificationCode('Email');
 
     const { code } = verificationCodeRecord;
 
@@ -186,7 +186,7 @@ describe('register with passwordless identifier', () => {
       phone: primaryPhone,
     });
 
-    const verificationCodeRecord = await readVerificationCode();
+    const verificationCodeRecord = await readVerificationCode('Sms');
 
     expect(verificationCodeRecord).toMatchObject({
       phone: primaryPhone,
@@ -232,7 +232,7 @@ describe('register with passwordless identifier', () => {
       phone: primaryPhone,
     });
 
-    const { code } = await readVerificationCode();
+    const { code } = await readVerificationCode('Sms');
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
@@ -296,7 +296,7 @@ describe('register with passwordless identifier', () => {
       email: primaryEmail,
     });
 
-    const verificationCodeRecord = await readVerificationCode();
+    const verificationCodeRecord = await readVerificationCode('Email');
 
     expect(verificationCodeRecord).toMatchObject({
       address: primaryEmail,
@@ -351,7 +351,7 @@ describe('register with passwordless identifier', () => {
       phone: primaryPhone,
     });
 
-    const verificationCodeRecord = await readVerificationCode();
+    const verificationCodeRecord = await readVerificationCode('Sms');
 
     expect(verificationCodeRecord).toMatchObject({
       phone: primaryPhone,

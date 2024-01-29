@@ -131,9 +131,12 @@ export default class ExpectExperience extends ExpectPage {
    *
    * @param type The type of experience to expect.
    */
-  async toCompleteVerification(type: ExperienceType) {
+  async toCompleteVerification(
+    type: ExperienceType,
+    connectorType: Parameters<typeof readVerificationCode>['0']
+  ) {
     this.toBeAt(`${type}/verification-code`);
-    const { code } = await readVerificationCode();
+    const { code } = await readVerificationCode(connectorType);
     await this.toFillVerificationCode(code);
   }
 

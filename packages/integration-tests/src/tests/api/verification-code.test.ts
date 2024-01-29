@@ -26,7 +26,7 @@ describe('Generic verification code through management API', () => {
   });
 
   afterEach(async () => {
-    await removeVerificationCode();
+    await Promise.all([removeVerificationCode('Sms'), removeVerificationCode('Email')]);
   });
 
   it('should create an email verification code on server side', async () => {
@@ -34,7 +34,7 @@ describe('Generic verification code through management API', () => {
     const response = await requestVerificationCode(payload);
     expect(response.statusCode).toBe(204);
 
-    const { code, type, address } = await readVerificationCode();
+    const { code, type, address } = await readVerificationCode('Email');
 
     expect(type).toBe(TemplateType.Generic);
     expect(address).toBe(mockEmail);
@@ -46,7 +46,7 @@ describe('Generic verification code through management API', () => {
     const response = await requestVerificationCode(payload);
     expect(response.statusCode).toBe(204);
 
-    const { code, type, phone } = await readVerificationCode();
+    const { code, type, phone } = await readVerificationCode('Sms');
 
     expect(type).toBe(TemplateType.Generic);
     expect(phone).toBe(mockPhone);
@@ -59,7 +59,8 @@ describe('Generic verification code through management API', () => {
       statusCode: 400,
     });
 
-    await expect(readVerificationCode()).rejects.toThrow();
+    await expect(readVerificationCode('Email')).rejects.toThrow();
+    await expect(readVerificationCode('Sms')).rejects.toThrow();
   });
 
   it('should fail to send a verification code on server side when no email connector has been set', async () => {
@@ -113,7 +114,7 @@ describe('Generic verification code through management API', () => {
   it('should be able to verify the email verification code', async () => {
     await requestVerificationCode({ email: mockEmail });
 
-    const { code } = await readVerificationCode();
+    const { code } = await readVerificationCode('Email');
 
     await expect(
       verifyVerificationCode({ email: mockEmail, verificationCode: code })
@@ -123,7 +124,7 @@ describe('Generic verification code through management API', () => {
   it('should be able to verify the sms verification code', async () => {
     await requestVerificationCode({ phone: mockPhone });
 
-    const { code } = await readVerificationCode();
+    const { code } = await readVerificationCode('Sms');
 
     await expect(
       verifyVerificationCode({ phone: mockPhone, verificationCode: code })
@@ -132,7 +133,7 @@ describe('Generic verification code through management API', () => {
 
   it('should throw when the code is not valid', async () => {
     await requestVerificationCode({ phone: mockPhone });
-    await readVerificationCode();
+    await readVerificationCode('Sms');
     await expectRejects(verifyVerificationCode({ phone: mockPhone, verificationCode: '666' }), {
       code: 'verification_code.code_mismatch',
       statusCode: 400,
@@ -143,7 +144,7 @@ describe('Generic verification code through management API', () => {
     const phoneToVerify = '666';
     const phoneToGetCode = mockPhone;
     await requestVerificationCode({ phone: phoneToGetCode });
-    const { code, phone } = await readVerificationCode();
+    const { code, phone } = await readVerificationCode('Sms');
     expect(phoneToGetCode).toEqual(phone);
     await expectRejects(verifyVerificationCode({ phone: phoneToVerify, verificationCode: code }), {
       code: 'verification_code.not_found',
@@ -155,7 +156,7 @@ describe('Generic verification code through management API', () => {
     const emailToVerify = 'verify_email@mail.com';
     const emailToGetCode = mockEmail;
     await requestVerificationCode({ email: emailToGetCode });
-    const { code, address } = await readVerificationCode();
+    const { code, address } = await readVerificationCode('Email');
     expect(emailToGetCode).toEqual(address);
     await expectRejects(verifyVerificationCode({ email: emailToVerify, verificationCode: code }), {
       code: 'verification_code.not_found',

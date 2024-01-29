@@ -32,7 +32,7 @@ const happyPath = async (email: string) => {
     email,
   });
 
-  const verificationCodeRecord = await readVerificationCode();
+  const verificationCodeRecord = await readVerificationCode('Email');
 
   expect(verificationCodeRecord).toMatchObject({
     address: email,
@@ -124,7 +124,7 @@ describe('test register with email with SSO feature', () => {
       email,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readVerificationCode('Email');
 
     await expectRejects(
       client.send(patchInteractionIdentifiers, {

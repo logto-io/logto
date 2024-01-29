@@ -48,7 +48,7 @@ describe('MFA - TOTP', () => {
     const experience = new ExpectTotpExperience(await browser.newPage());
     await experience.startWith(demoAppUrl, 'sign-in');
     await experience.toFillInput('identifier', userProfile.primaryEmail, { submit: true });
-    await experience.toCompleteVerification('sign-in');
+    await experience.toCompleteVerification('sign-in', 'Email');
 
     // Add missing password
     await experience.toFillInput('newPassword', 'l0gt0_T3st_P@ssw0rd', { submit: true });
@@ -99,7 +99,7 @@ describe('MFA - TOTP', () => {
     // Add missing phone number
     await waitFor(500);
     await experience.toFillInput('identifier', generatePhone(), { submit: true });
-    await experience.toCompleteVerification('continue');
+    await experience.toCompleteVerification('continue', 'Sms');
 
     // Bind TOTP
     await experience.toBindTotp();
@@ -147,7 +147,7 @@ describe('MFA - TOTP', () => {
     // Add missing email number
     await waitFor(500);
     await experience.toFillInput('identifier', generateEmail(), { submit: true });
-    await experience.toCompleteVerification('continue');
+    await experience.toCompleteVerification('continue', 'Email');
 
     // Bind TOTP
     await experience.toBindTotp();
@@ -230,7 +230,7 @@ describe('MFA - TOTP', () => {
 
     // Add missing email
     await verificationExperience.toFillInput('identifier', generateEmail(), { submit: true });
-    await verificationExperience.toCompleteVerification('continue');
+    await verificationExperience.toCompleteVerification('continue', 'Email');
     // Wait for the page to load
     await waitFor(500);
     await verificationExperience.verifyThenEnd();

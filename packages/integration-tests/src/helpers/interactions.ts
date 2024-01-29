@@ -101,7 +101,9 @@ export const resetPassword = async (
     ...profile,
   });
 
-  const { code: verificationCode } = await readVerificationCode();
+  const { code: verificationCode } = await readVerificationCode(
+    'email' in profile ? 'Email' : 'Sms'
+  );
   await client.successSend(patchInteractionIdentifiers, {
     ...profile,
     verificationCode,

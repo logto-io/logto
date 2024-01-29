@@ -1,14 +1,11 @@
 import fs from 'node:fs/promises';
 import { createServer, type RequestListener } from 'node:http';
-import path from 'node:path';
 
-import { mockSmsVerificationCodeFileName } from '@logto/connector-kit';
+import { mockConnectorFilePaths } from '@logto/connector-kit';
 import { RequestError } from 'got';
 
 import { createUser } from '#src/api/index.js';
 import { generateUsername } from '#src/utils.js';
-
-const temporaryVerificationCodeFilePath = path.join('/tmp', mockSmsVerificationCodeFileName);
 
 export const createUserByAdmin = async (
   username?: string,
@@ -33,8 +30,10 @@ type VerificationCodeRecord = {
   type: string;
 };
 
-export const readVerificationCode = async (): Promise<VerificationCodeRecord> => {
-  const buffer = await fs.readFile(temporaryVerificationCodeFilePath);
+export const readVerificationCode = async (
+  forType: keyof typeof mockConnectorFilePaths
+): Promise<VerificationCodeRecord> => {
+  const buffer = await fs.readFile(mockConnectorFilePaths[forType]);
   const content = buffer.toString();
 
   // For test use only
@@ -42,9 +41,11 @@ export const readVerificationCode = async (): Promise<VerificationCodeRecord> =>
   return JSON.parse(content) as VerificationCodeRecord;
 };
 
-export const removeVerificationCode = async (): Promise<void> => {
+export const removeVerificationCode = async (
+  forType: keyof typeof mockConnectorFilePaths
+): Promise<void> => {
   try {
-    await fs.unlink(temporaryVerificationCodeFilePath);
+    await fs.unlink(mockConnectorFilePaths[forType]);
   } catch {
     // Do nothing
   }

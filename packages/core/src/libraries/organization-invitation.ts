@@ -14,8 +14,6 @@ import type Queries from '#src/tenants/Queries.js';
 
 import { type ConnectorLibrary } from './connector.js';
 
-const invitationLinkPath = '/invitation';
-
 /**
  * The ending statuses of an organization invitation per RFC 0003. It means that the invitation
  * status cannot be changed anymore.

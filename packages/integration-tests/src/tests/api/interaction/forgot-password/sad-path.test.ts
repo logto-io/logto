@@ -31,7 +31,7 @@ describe('reset password flow sad path', () => {
       email: primaryEmail,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readVerificationCode('Email');
     await client.successSend(patchInteractionIdentifiers, {
       email: primaryEmail,
       verificationCode,
@@ -59,7 +59,7 @@ describe('reset password flow sad path', () => {
       phone: primaryPhone,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readVerificationCode('Sms');
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
       verificationCode,
@@ -95,7 +95,7 @@ describe('reset password flow sad path', () => {
       phone: primaryPhone,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readVerificationCode('Sms');
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
       verificationCode,

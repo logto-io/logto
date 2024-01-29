@@ -5,6 +5,7 @@ import {
   ConnectorErrorCodes,
   sendMessagePayloadKeys,
   type SendMessagePayload,
+  ConnectorType,
 } from './types/index.js';
 
 export * from './types/index.js';
@@ -42,7 +43,17 @@ export const parseJsonObject = (...args: Parameters<typeof parseJson>) => {
   return parsed;
 };
 
+/** @deprecated Use {@link mockConnectorFilePaths} instead. */
 export const mockSmsVerificationCodeFileName = 'logto_mock_verification_code_record.txt';
+
+/**
+ * The file paths for storing the mock sms/email connector records. You can use these file paths to
+ * read the records for testing.
+ */
+export const mockConnectorFilePaths = Object.freeze({
+  [ConnectorType.Sms]: '/tmp/logto_mock_sms_record.txt',
+  [ConnectorType.Email]: '/tmp/logto_mock_email_record.txt',
+});
 
 /**
  * Replace all handlebars that match the keys in {@link SendMessagePayload} with the payload

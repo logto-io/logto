@@ -1,6 +1,5 @@
 import { assert } from '@silverhand/essentials';
 import fs from 'node:fs/promises';
-import path from 'node:path';
 
 import type {
   GetConnectorConfig,
@@ -13,6 +12,7 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  mockConnectorFilePaths,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
@@ -36,8 +36,8 @@ const sendMessage =
     );
 
     await fs.writeFile(
-      path.join('/tmp', 'logto_mock_verification_code_record.txt'),
-      JSON.stringify({ phone: to, code: payload.code, type }) + '\n'
+      mockConnectorFilePaths.Sms,
+      JSON.stringify({ phone: to, code: payload.code, type, payload }) + '\n'
     );
 
     return { phone: to, data: payload };

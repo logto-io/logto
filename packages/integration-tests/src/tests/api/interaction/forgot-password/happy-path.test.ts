@@ -48,7 +48,7 @@ describe('reset password', () => {
       email: userProfile.primaryEmail,
     });
 
-    const verificationCodeRecord = await readVerificationCode();
+    const verificationCodeRecord = await readVerificationCode('Email');
 
     expect(verificationCodeRecord).toMatchObject({
       address: userProfile.primaryEmail,
@@ -108,7 +108,7 @@ describe('reset password', () => {
       phone: userProfile.primaryPhone,
     });
 
-    const verificationCodeRecord = await readVerificationCode();
+    const verificationCodeRecord = await readVerificationCode('Sms');
 
     expect(verificationCodeRecord).toMatchObject({
       phone: userProfile.primaryPhone,
