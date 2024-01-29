@@ -5,6 +5,7 @@ import {
   NotFoundError,
   InvalidInputError,
   CheckIntegrityConstraintViolationError,
+  UniqueIntegrityConstraintViolationError,
 } from 'slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -22,6 +23,16 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
       if (error instanceof InvalidInputError) {
         throw new RequestError({
           code: 'entity.invalid_input',
+          status: 422,
+        });
+      }
+
+      if (
+        error instanceof UniqueIntegrityConstraintViolationError &&
+        error.constraint === 'applications__protected_app_metadata_host'
+      ) {
+        throw new RequestError({
+          code: 'application.protected_application_subdomain_exists',
           status: 422,
         });
       }

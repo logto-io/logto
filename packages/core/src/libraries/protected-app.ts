@@ -62,6 +62,46 @@ const getDefaultDomain = async () => {
 };
 
 /**
+ * Build application data for protected app
+ * check if subdomain is valid
+ * generate host based on subdomain
+ * generate default protectedAppMetadata based on host and origin
+ * generate redirectUris and postLogoutRedirectUris based on host
+ */
+const buildProtectedAppData = async ({
+  subDomain,
+  origin,
+}: {
+  subDomain: string;
+  origin: string;
+}): Promise<Pick<Application, 'protectedAppMetadata' | 'oidcClientMetadata'>> => {
+  assertThat(
+    isValidSubdomain(subDomain),
+    new RequestError({
+      code: 'application.invalid_subdomain',
+      status: 422,
+    })
+  );
+
+  // Skip for integration test, use empty value instead
+  const { domain } = EnvSet.values.isIntegrationTest ? { domain: '' } : await getProviderConfig();
+  const host = `${subDomain}.${domain}`;
+
+  return {
+    protectedAppMetadata: {
+      host,
+      origin,
+      sessionDuration: defaultProtectedAppSessionDuration,
+      pageRules: defaultProtectedAppPageRules,
+    },
+    oidcClientMetadata: {
+      redirectUris: [`https://${host}/${protectedAppSignInCallbackUrl}`],
+      postLogoutRedirectUris: [`https://${host}`],
+    },
+  };
+};
+
+/**
  * Call Cloudflare API to add the domain (custom hostname) to the remote
  * and get the DNS records to be added to the DNS provider
  */
@@ -107,7 +147,7 @@ const deleteDomainFromRemote = async (id: string) => {
 
 export const createProtectedAppLibrary = (queries: Queries) => {
   const {
-    applications: { findApplicationById, findApplicationByProtectedAppHost, updateApplicationById },
+    applications: { findApplicationById, updateApplicationById },
   } = queries;
 
   const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
@@ -152,56 +192,6 @@ export const createProtectedAppLibrary = (queries: Queries) => {
         })
       );
     }
-  };
-
-  /**
-   * Build application data for protected app
-   * check if subdomain is valid
-   * generate host based on subdomain
-   * generate default protectedAppMetadata based on host and origin
-   * generate redirectUris and postLogoutRedirectUris based on host
-   */
-  const checkAndBuildProtectedAppData = async ({
-    subDomain,
-    origin,
-  }: {
-    subDomain: string;
-    origin: string;
-  }): Promise<Pick<Application, 'protectedAppMetadata' | 'oidcClientMetadata'>> => {
-    assertThat(
-      isValidSubdomain(subDomain),
-      new RequestError({
-        code: 'application.invalid_subdomain',
-        status: 422,
-      })
-    );
-
-    // Skip for integration test, use empty value instead
-    const { domain } = EnvSet.values.isIntegrationTest ? { domain: '' } : await getProviderConfig();
-    const host = `${subDomain}.${domain}`;
-
-    const application = await findApplicationByProtectedAppHost(host);
-
-    assertThat(
-      !application,
-      new RequestError({
-        code: 'application.protected_application_subdomain_exists',
-        status: 422,
-      })
-    );
-
-    return {
-      protectedAppMetadata: {
-        host,
-        origin,
-        sessionDuration: defaultProtectedAppSessionDuration,
-        pageRules: defaultProtectedAppPageRules,
-      },
-      oidcClientMetadata: {
-        redirectUris: [`https://${host}/${protectedAppSignInCallbackUrl}`],
-        postLogoutRedirectUris: [`https://${host}`],
-      },
-    };
   };
 
   /**
@@ -280,7 +270,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
   return {
     syncAppConfigsToRemote,
     deleteRemoteAppConfigs,
-    checkAndBuildProtectedAppData,
+    buildProtectedAppData,
     getDefaultDomain,
     addDomainToRemote,
     syncAppCustomDomainStatus,

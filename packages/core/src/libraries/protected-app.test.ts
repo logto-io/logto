@@ -33,14 +33,13 @@ const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createProtectedAppLibrary } = await import('./protected-app.js');
 
 const findApplicationById = jest.fn(async (): Promise<Application> => mockProtectedApplication);
-const findApplicationByProtectedAppHost = jest.fn();
 const updateApplicationById = jest.fn(async (id: string, data: Partial<Application>) => ({
   ...mockProtectedApplication,
   ...data,
 }));
 const {
   syncAppConfigsToRemote,
-  checkAndBuildProtectedAppData,
+  buildProtectedAppData,
   syncAppCustomDomainStatus,
   getDefaultDomain,
   deleteDomainFromRemote,
@@ -48,7 +47,6 @@ const {
   new MockQueries({
     applications: {
       findApplicationById,
-      findApplicationByProtectedAppHost,
       updateApplicationById,
     },
   })
@@ -140,23 +138,13 @@ describe('syncAppConfigsToRemote()', () => {
   });
 });
 
-describe('checkAndBuildProtectedAppData()', () => {
+describe('buildProtectedAppData()', () => {
   const origin = 'https://example.com';
 
   it('should throw if subdomain is invalid', async () => {
-    await expect(checkAndBuildProtectedAppData({ subDomain: 'a-', origin })).rejects.toThrowError(
+    await expect(buildProtectedAppData({ subDomain: 'a-', origin })).rejects.toThrowError(
       new RequestError({
         code: 'application.invalid_subdomain',
-        status: 422,
-      })
-    );
-  });
-
-  it('should throw if subdomain is not available', async () => {
-    findApplicationByProtectedAppHost.mockResolvedValueOnce(mockProtectedApplication);
-    await expect(checkAndBuildProtectedAppData({ subDomain: 'a', origin })).rejects.toThrowError(
-      new RequestError({
-        code: 'application.protected_application_subdomain_exists',
         status: 422,
       })
     );
@@ -165,7 +153,7 @@ describe('checkAndBuildProtectedAppData()', () => {
   it('should return data if subdomain is available', async () => {
     const subDomain = 'a';
     const host = `${subDomain}.${mockProtectedAppConfigProviderConfig.domain}`;
-    await expect(checkAndBuildProtectedAppData({ subDomain, origin })).resolves.toEqual({
+    await expect(buildProtectedAppData({ subDomain, origin })).resolves.toEqual({
       protectedAppMetadata: {
         host,
         origin,
