@@ -54,7 +54,7 @@ describe('applications', () => {
       { text: 'Select a framework or tutorial', timeout: 2000 }
     );
 
-    await expectFrameworksInGroup(page, 'div[class$=guideGroup]:has(>label)');
+    await expectFrameworksInGroup(page, 'div[class$=guideGroup]:has(>label)', true);
   });
 
   it('create the initial application from the table placeholder', async () => {
