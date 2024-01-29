@@ -67,7 +67,7 @@ export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'>
     host: 'mock.protected.dev',
     origin: 'https://my-blog.com',
     sessionDuration: 1_209_600,
-    pageRules: [{ path: '^/' }],
+    pageRules: [],
   },
   isThirdParty: false,
   createdAt: 1_645_334_775_356,
