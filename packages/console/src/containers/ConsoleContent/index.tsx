@@ -14,7 +14,6 @@ import {
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
-import useUserPreferences from '@/hooks/use-user-preferences';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
@@ -70,9 +69,6 @@ import * as styles from './index.module.scss';
 
 function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
-  const {
-    data: { getStartedHidden },
-  } = useUserPreferences();
   const { isDevTenant } = useContext(TenantsContext);
 
   return (
@@ -82,7 +78,7 @@ function ConsoleContent() {
         <div ref={scrollableContent} className={styles.main}>
           <Routes>
             <Route path="*" element={<NotFound />} />
-            {!getStartedHidden && <Route path="get-started" element={<GetStarted />} />}
+            <Route path="get-started" element={<GetStarted />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="applications">
               <Route index element={<Applications />} />
