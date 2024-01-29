@@ -1,11 +1,5 @@
 import { type GeneratedSchema } from '@logto/schemas';
-import {
-  type SchemaLike,
-  conditionalSql,
-  convertToIdentifiers,
-  type Table,
-  type FieldIdentifiers,
-} from '@logto/shared';
+import { type SchemaLike, conditionalSql, convertToIdentifiers, type Table } from '@logto/shared';
 import { type SqlSqlToken, sql } from 'slonik';
 
 /**
@@ -62,48 +56,3 @@ export const expandFields = <Keys extends string>(schema: Table<Keys>, tablePref
   const { fields } = convertToIdentifiers(schema, tablePrefix);
   return sql.join(Object.values(fields), sql`, `);
 };
-
-/**
- * Given a set of identifiers, build a SQL that converts them into a JSON object by mapping
- * the keys to the values.
- *
- * @example
- * ```ts
- * buildJsonObjectSql({
- *   id: sql.identifier(['id']),
- *   firstName: sql.identifier(['first_name']),
- *   lastName: sql.identifier(['last_name']),
- *   createdAt: sql.identifier(['created_at']),
- * );
- * ```
- *
- * will generate
- *
- * ```sql
- * json_build_object(
- *   'id', "id",
- *   'firstName', "first_name",
- *   'lastName', "last_name",
- *   'createdAt', trunc(extract(epoch from "created_at") * 1000)
- * )
- * ```
- *
- * @remarks The values will be converted to epoch milliseconds if the key ends with `At` since
- * slonik has a default parser that converts timestamps to epoch milliseconds, but it does not
- * work for JSON objects.
- */
-export const buildJsonObjectSql = <Identifiers extends FieldIdentifiers<string>>(
-  identifiers: Identifiers
-) => sql`
-  json_build_object(
-    ${sql.join(
-      Object.entries(identifiers).map(
-        ([key, value]) =>
-          sql`${sql.literalValue(key)}, ${
-            key.endsWith('At') ? sql`trunc(extract(epoch from ${value}) * 1000)` : value
-          }`
-      ),
-      sql`, `
-    )}
-  )
-`;

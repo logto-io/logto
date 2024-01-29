@@ -15,14 +15,13 @@ import {
   type CreateOrganizationInvitation,
   type OrganizationInvitation,
   type OrganizationInvitationEntity,
-  MagicLinks,
   OrganizationInvitationRoleRelations,
   OrganizationInvitationStatus,
 } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 
-import { type SearchOptions, buildSearchSql, buildJsonObjectSql } from '#src/database/utils.js';
+import { type SearchOptions, buildSearchSql } from '#src/database/utils.js';
 import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 
@@ -116,7 +115,6 @@ class OrganizationInvitationsQueries extends SchemaQueries<
     search?: SearchOptions<OrganizationInvitationKeys>
   ) {
     const { table, fields } = convertToIdentifiers(OrganizationInvitations, true);
-    const magicLinks = convertToIdentifiers(MagicLinks, true);
     const roleRelations = convertToIdentifiers(OrganizationInvitationRoleRelations, true);
     const roles = convertToIdentifiers(OrganizationRoles, true);
 
@@ -143,20 +141,17 @@ class OrganizationInvitationsQueries extends SchemaQueries<
             ) order by ${roles.fields.name}
           ) filter (where ${roles.fields.id} is not null),
           '[]'
-        ) as "organizationRoles", -- left join could produce nulls
-        ${buildJsonObjectSql(magicLinks.fields)} as "magicLink"
+        ) as "organizationRoles" -- left join could produce nulls
       from ${table}
       left join ${roleRelations.table}
         on ${roleRelations.fields.organizationInvitationId} = ${fields.id}
       left join ${roles.table}
         on ${roles.fields.id} = ${roleRelations.fields.organizationRoleId}
-      left join ${magicLinks.table}
-        on ${magicLinks.fields.id} = ${fields.magicLinkId}
       ${conditionalSql(invitationId, (id) => {
         return sql`where ${fields.id} = ${id}`;
       })}
       ${buildSearchSql(OrganizationInvitations, search)}
-      group by ${fields.id}, ${magicLinks.fields.id}
+      group by ${fields.id}
       ${conditionalSql(this.orderBy, ({ field, order }) => {
         return sql`order by ${fields[field]} ${order === 'desc' ? sql`desc` : sql`asc`}`;
       })}

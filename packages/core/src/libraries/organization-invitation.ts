@@ -5,12 +5,9 @@ import {
   type OrganizationInvitationEntity,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { appendPath, removeUndefinedKeys } from '@silverhand/essentials';
+import { removeUndefinedKeys } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
-import { getTenantEndpoint } from '#src/env-set/utils.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import MagicLinkQueries from '#src/queries/magic-link.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUserQueries } from '#src/queries/user.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -62,18 +59,11 @@ export class OrganizationInvitationLibrary {
 
     return this.queries.pool.transaction(async (connection) => {
       const organizationQueries = new OrganizationQueries(connection);
-      const magicLinkQueries = new MagicLinkQueries(connection);
-
-      const magicLink = await magicLinkQueries.insert({
-        id: generateStandardId(),
-        token: generateStandardId(32),
-      });
       const invitation = await organizationQueries.invitations.insert({
         id: generateStandardId(),
         inviterId,
         invitee,
         organizationId,
-        magicLinkId: magicLink.id,
         status: OrganizationInvitationStatus.Pending,
         expiresAt,
       });
@@ -85,7 +75,7 @@ export class OrganizationInvitationLibrary {
       }
 
       if (!skipEmail) {
-        await this.sendEmail(invitee, magicLink.token);
+        await this.sendEmail(invitee);
       }
 
       // Additional query to get the full invitation data
@@ -195,14 +185,13 @@ export class OrganizationInvitationLibrary {
     });
   }
 
-  protected async sendEmail(to: string, token: string) {
+  protected async sendEmail(to: string) {
     const emailConnector = await this.connector.getMessageConnector(ConnectorType.Email);
     return emailConnector.sendMessage({
       to,
       type: TemplateType.OrganizationInvitation,
       payload: {
-        link: appendPath(getTenantEndpoint(this.tenantId, EnvSet.values), invitationLinkPath, token)
-          .href,
+        link: 'TODO',
       },
     });
   }

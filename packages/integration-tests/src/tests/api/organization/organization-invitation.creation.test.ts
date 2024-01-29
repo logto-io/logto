@@ -138,7 +138,6 @@ describe('organization invitation creation', () => {
       true
     );
     expect(invitation.organizationRoles.map((role) => role.id)).toEqual([role.id]);
-    expect(invitation.magicLink).toBeDefined();
 
     // Test if get invitation by id works
     const invitationById = await invitationApi.get(invitation.id);
