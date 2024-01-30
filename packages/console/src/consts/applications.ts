@@ -30,3 +30,7 @@ export const darkModeApplicationIconMap: ApplicationIconMap = Object.freeze({
   [ApplicationType.MachineToMachine]: MachineToMachineDark,
   [ApplicationType.Protected]: ProtectedAppDark,
 } as const);
+
+export { default as thirdPartyApplicationIconDark } from '@/assets/icons/third-party-app-dark.svg';
+
+export { default as thirdPartyApplicationIcon } from '@/assets/icons/third-party-app.svg';

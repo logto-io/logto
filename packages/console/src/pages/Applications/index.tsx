@@ -152,7 +152,13 @@ function Applications({ tab }: Props) {
                       ? t(`${applicationTypeI18nKey.thirdParty}.title`)
                       : t(`${applicationTypeI18nKey[type]}.title`)
                   }
-                  icon={<ApplicationIcon className={styles.icon} type={type} />}
+                  icon={
+                    <ApplicationIcon
+                      className={styles.icon}
+                      type={type}
+                      isThirdParty={isThirdParty}
+                    />
+                  }
                   to={buildDetailsPathname(id)}
                 />
               ),
