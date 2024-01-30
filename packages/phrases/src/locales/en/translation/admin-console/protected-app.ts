@@ -26,7 +26,7 @@ const protected_app = {
       domain_required: 'Subdomain is required',
       domain_in_use: 'This subdomain name is already in use.',
       invalid_domain_format:
-        "Invalid subdomain format: use only lowercase letters, hyphens '-', and underscores '_'.",
+        "Invalid subdomain format: use only lowercase letters, numbers, and hyphens '-'.",
       url_required: 'Origin URL is required.',
       invalid_url:
         "Invalid Origin URL format: Use http:// or https://. Note: '/routes' is not currently supported.",
