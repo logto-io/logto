@@ -28,8 +28,8 @@ importers:
         specifier: ^8.6.6
         version: 8.6.6
       husky:
-        specifier: ^8.0.0
-        version: 8.0.1
+        specifier: ^9.0.0
+        version: 9.0.7
       pg:
         specifier: ^8.8.0
         version: 8.8.0
@@ -14307,9 +14307,9 @@ packages:
     resolution: {integrity: sha1-EcCvakcWQ2M1iFiASPF5lUFInBg=}
     dev: false
 
-  /husky@8.0.1:
-    resolution: {integrity: sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==}
-    engines: {node: '>=14'}
+  /husky@9.0.7:
+    resolution: {integrity: sha512-vWdusw+y12DUEeoZqW1kplOFqk3tedGV8qlga8/SF6a3lOiWLqGZZQvfWvY0fQYdfiRi/u1DFNpudTSV9l1aCg==}
+    engines: {node: '>=18'}
     hasBin: true
     dev: true
 

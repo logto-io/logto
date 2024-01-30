@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "pnpm:devPreinstall": "cd packages/connectors && node templates/sync-preset.js",
-    "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
+    "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky ; fi",
     "prepack": "pnpm -r prepack",
     "dev": "pnpm -r prepack && pnpm start:dev",
     "dev:cloud": "IS_CLOUD=1 CONSOLE_PUBLIC_URL=/ pnpm dev",
@@ -29,7 +29,7 @@
     "@commitlint/config-conventional": "^18.0.0",
     "@commitlint/types": "^18.0.0",
     "@types/pg": "^8.6.6",
-    "husky": "^8.0.0",
+    "husky": "^9.0.0",
     "pg": "^8.8.0",
     "typescript": "^5.0.0"
   },
