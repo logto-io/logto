@@ -91,6 +91,9 @@ const quota_table = {
   tokens_tip: 'Logto에서 발행한 모든 종류의 토큰, 액세스 토큰, 리프레시 토큰 등을 포함합니다.',
   mao_tip:
     'MAO (월간 활성 조직)는 빌링 주기 내에서 적어도 하나의 MAU (월간 활성 사용자)를 가진 고유한 조직의 수를 의미합니다.',
+  /** UNTRANSLATED */
+  third_party_tip:
+    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
   included: '{{value, number}} 포함',
   included_mao: '{{value, number}} MAO 포함',
   extra_quota_price: '이후 월당 ${{value, number}} / 각각',

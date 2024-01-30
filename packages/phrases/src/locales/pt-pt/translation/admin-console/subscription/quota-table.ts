@@ -92,6 +92,9 @@ const quota_table = {
     'Todos os tipos de tokens emitidos pelo Logto, incluindo token de acesso, token de atualização, etc.',
   mao_tip:
     'MAO (Organização Ativa Mensal) significa o número de organizações únicas que têm pelo menos um MAU (Utilizador Ativo Mensal) num ciclo de faturação.',
+  /** UNTRANSLATED */
+  third_party_tip:
+    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
   included: 'incluído{{value, number}}',
   included_mao: '{{value, number}} MAO incluída',
   extra_quota_price: 'Depois ${{value, number}} por mês / cada um depois',

@@ -92,6 +92,9 @@ const quota_table = {
     'Все виды токенов, выпущенных Logto, включая токены доступа, токены обновления и т. д.',
   mao_tip:
     'MAO (ежемесячно активная организация) означает количество уникальных организаций, у которых есть хотя бы один MAU (ежемесячно активный пользователь) в биллинговом цикле.',
+  /** UNTRANSLATED */
+  third_party_tip:
+    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
   included: 'включено{{value, number}}',
   included_mao: '{{value, number}} MAO включено',
   extra_quota_price: 'Затем ${{value, number}} в месяц / за каждый после',

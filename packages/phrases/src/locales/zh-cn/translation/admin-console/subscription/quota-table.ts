@@ -89,6 +89,9 @@ const quota_table = {
   mau_tip: 'MAU（月活跃用户）是指在计费周期内与Logto交换过至少一个令牌的独立用户数量。',
   tokens_tip: 'Logto 发行的所有类型令牌，包括访问令牌、刷新令牌等。',
   mao_tip: 'MAO（月度活跃组织）是指在计费周期内至少有一个MAU（月度活跃用户）的独特组织数量。',
+  /** UNTRANSLATED */
+  third_party_tip:
+    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
   included: '已包含{{value, number}}',
   included_mao: '已包含 {{value, number}} MAO',
   extra_quota_price: '然后每月 ${{value, number}} / 每个之后',
