@@ -89,7 +89,7 @@
     "slonik-interceptor-preset": "^1.2.10",
     "slonik-sql-tag-raw": "^1.1.4",
     "snake-case": "^3.0.4",
-    "snakecase-keys": "^5.4.4",
+    "snakecase-keys": "^6.0.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

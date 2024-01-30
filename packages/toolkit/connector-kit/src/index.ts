@@ -33,10 +33,26 @@ export const parseJson = (
   }
 };
 
+const isRecordOrArray = (parsed: unknown): parsed is Record<string, unknown> | unknown[] => {
+  if (Array.isArray(parsed)) {
+    return true;
+  }
+
+  if (!(parsed !== null && typeof parsed === 'object')) {
+    return false;
+  }
+
+  if (Object.getOwnPropertySymbols(parsed).length > 0) {
+    return false;
+  }
+
+  return true;
+};
+
 export const parseJsonObject = (...args: Parameters<typeof parseJson>) => {
   const parsed = parseJson(...args);
 
-  if (!(parsed !== null && typeof parsed === 'object')) {
+  if (!isRecordOrArray(parsed)) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, parsed);
   }
 
