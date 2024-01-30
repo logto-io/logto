@@ -99,7 +99,7 @@ describe('koaSlonikErrorHandler middleware', () => {
     );
   });
 
-  it('UniqueIntegrityConstraintViolationError for protected application', async () => {
+  it('UniqueIntegrityConstraintViolationError for protected application host', async () => {
     const error = new UniqueIntegrityConstraintViolationError(
       new Error(' '),
       'applications__protected_app_metadata_host'
@@ -111,6 +111,23 @@ describe('koaSlonikErrorHandler middleware', () => {
     await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
       new RequestError({
         code: 'application.protected_application_subdomain_exists',
+        status: 422,
+      })
+    );
+  });
+
+  it('UniqueIntegrityConstraintViolationError for protected application custom domain', async () => {
+    const error = new UniqueIntegrityConstraintViolationError(
+      new Error(' '),
+      'applications__protected_app_metadata_custom_domain'
+    );
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError({
+        code: 'domain.hostname_already_exists',
         status: 422,
       })
     );

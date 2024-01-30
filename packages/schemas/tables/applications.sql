@@ -28,3 +28,8 @@ create unique index applications__protected_app_metadata_host
   on applications (
     (protected_app_metadata->>'host')
   );
+
+create unique index applications__protected_app_metadata_custom_domain
+  on applications (
+    (protected_app_metadata->'customDomains'->0->>'domain')
+  );
