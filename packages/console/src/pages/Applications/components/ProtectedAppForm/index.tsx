@@ -74,8 +74,18 @@ function ProtectedAppForm({
 
         if (code === 'application.protected_application_subdomain_exists') {
           setError('subDomain', { type: 'custom', message });
+          return;
         }
+
+        if (error.response.status !== 401) {
+          toast.error(message);
+          return;
+        }
+
+        throw error;
       }
+
+      throw error;
     }
   });
 
