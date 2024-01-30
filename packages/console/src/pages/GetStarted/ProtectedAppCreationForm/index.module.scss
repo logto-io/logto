@@ -10,14 +10,14 @@
   }
 
   .form {
-    background: var(--color-layer-1);
-    padding: _.unit(6) _.unit(8);
+    background: var(--color-layer-light);
+    padding: _.unit(6) _.unit(8) _.unit(8) _.unit(11);
   }
 
   .protectedApps {
     display: flex;
     flex-direction: column;
-    gap: _.unit(3);
+    gap: _.unit(8);
     background: var(--color-success-container);
     padding: _.unit(5) _.unit(9);
 

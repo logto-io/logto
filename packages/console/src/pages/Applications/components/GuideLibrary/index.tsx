@@ -143,7 +143,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
                 (filterCategories.length === 0 ||
                   filterCategories.includes(ApplicationType.Protected)) && (
                   <ProtectedAppCard
-                    hasLabel
+                    isInAppCreationPage
                     hasCreateButton
                     hasBorder={hasCardBorder}
                     className={styles.protectedAppCard}
