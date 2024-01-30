@@ -15,7 +15,6 @@ const userPreferencesGuard = z.object({
   language: z.enum(builtInConsoleLanguages).optional(),
   appearanceMode: appearanceModeGuard.optional(),
   experienceNoticeConfirmed: z.boolean().optional(),
-  getStartedHidden: z.boolean().optional(),
   connectorSieNoticeConfirmed: z.boolean().optional(),
   managementApiAcknowledged: z.boolean().optional(),
 });

@@ -17,7 +17,6 @@ import SecurityLock from '@/assets/icons/security-lock.svg';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg';
 import Web from '@/assets/icons/web.svg';
 import { isCloud } from '@/consts/env';
-import useUserPreferences from '@/hooks/use-user-preferences';
 
 type SidebarItem = {
   Icon: FC;
@@ -47,10 +46,6 @@ export const useSidebarMenuItems = (): {
   sections: SidebarSection[];
   firstItem: Optional<SidebarItem>;
 } => {
-  const {
-    data: { getStartedHidden },
-  } = useUserPreferences();
-
   const allSections: SidebarSection[] = [
     {
       title: 'overview',
@@ -58,7 +53,6 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Bolt,
           title: 'get_started',
-          isHidden: getStartedHidden,
         },
         {
           Icon: BarGraph,
