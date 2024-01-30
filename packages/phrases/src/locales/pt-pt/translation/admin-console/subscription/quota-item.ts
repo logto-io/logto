@@ -34,6 +34,18 @@ const quota_item = {
     not_eligible: 'Remover as tuas aplicações de máquina para máquina',
     add_on: 'Aplicações adicionais de máquina para máquina',
   },
+  third_party_applications_limit: {
+    /** UNTRANSLATED */
+    name: 'Third-party apps',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} third-party app',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} third-party apps',
+    /** UNTRANSLATED */
+    unlimited: 'Unlimited third-party apps',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your third-party apps',
+  },
   resources_limit: {
     name: 'Recursos de API',
     limited: '{{count, number}} recurso de API',

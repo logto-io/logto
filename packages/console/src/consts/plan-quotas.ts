@@ -173,7 +173,11 @@ export const enterprisePlanTableData: SubscriptionPlanTableData = {
 
 export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.freeze({
   [SubscriptionPlanTableGroupKey.base]: ['basePrice', 'mauLimit', 'tokenLimit'],
-  [SubscriptionPlanTableGroupKey.applications]: ['applicationsLimit', 'machineToMachineLimit'],
+  [SubscriptionPlanTableGroupKey.applications]: [
+    'applicationsLimit',
+    'machineToMachineLimit',
+    'thirdPartyApplicationsLimit',
+  ],
   [SubscriptionPlanTableGroupKey.resources]: ['resourcesLimit', 'scopesPerResourceLimit'],
   [SubscriptionPlanTableGroupKey.branding]: [
     'customDomainEnabled',

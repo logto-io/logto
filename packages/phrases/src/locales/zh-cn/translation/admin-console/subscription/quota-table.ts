@@ -9,6 +9,8 @@ const quota_table = {
     title: '应用',
     total: '总应用数',
     m2m: '机器对机器',
+    /** UNTRANSLATED */
+    third_party: 'Third-party apps',
   },
   resource: {
     title: 'API 资源',

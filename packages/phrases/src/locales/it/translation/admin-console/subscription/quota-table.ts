@@ -9,6 +9,8 @@ const quota_table = {
     title: 'Applicazioni',
     total: 'Totale applicazioni',
     m2m: 'Machine-to-machine',
+    /** UNTRANSLATED */
+    third_party: 'Third-party apps',
   },
   resource: {
     title: 'Risorse API',

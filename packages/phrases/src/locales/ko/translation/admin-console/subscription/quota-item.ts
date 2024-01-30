@@ -34,6 +34,18 @@ const quota_item = {
     not_eligible: '기계 간 앱을 제거하십시오',
     add_on: '추가 기계간 앱',
   },
+  third_party_applications_limit: {
+    /** UNTRANSLATED */
+    name: 'Third-party apps',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} third-party app',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} third-party apps',
+    /** UNTRANSLATED */
+    unlimited: 'Unlimited third-party apps',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your third-party apps',
+  },
   resources_limit: {
     name: 'API 리소스',
     limited: '{{count, number}} API 리소스',

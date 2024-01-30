@@ -1,15 +1,18 @@
-import { ApplicationType, type Application } from '@logto/schemas';
+import { ApplicationType, type Application, ReservedPlanId } from '@logto/schemas';
+import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
 import SearchIcon from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
@@ -39,6 +42,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
   const { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
   const isApplicationCreateModal = pathname.includes('/applications/create');
+  const { currentPlan } = useContext(SubscriptionDataContext);
 
   const structuredMetadata = useMemo(
     () => getStructuredAppGuideMetadata({ categories: filterCategories }),
@@ -111,6 +115,17 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
                       .map((category) => ({
                         title: `guide.categories.${category}`,
                         value: category,
+                        ...cond(
+                          isCloud &&
+                            category === 'ThirdParty' && {
+                              tag: (
+                                <FeatureTag
+                                  isVisible={currentPlan.quota.thirdPartyApplicationsLimit === 0}
+                                  plan={ReservedPlanId.Pro}
+                                />
+                              ),
+                            }
+                        ),
                       }))}
                     value={filterCategories}
                     onChange={(value) => {

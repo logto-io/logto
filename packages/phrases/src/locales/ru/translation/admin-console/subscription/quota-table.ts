@@ -9,6 +9,8 @@ const quota_table = {
     title: 'Приложения',
     total: 'Всего приложений',
     m2m: 'Приложения "машина-машина"',
+    /** UNTRANSLATED */
+    third_party: 'Third-party apps',
   },
   resource: {
     title: 'Ресурсы API',

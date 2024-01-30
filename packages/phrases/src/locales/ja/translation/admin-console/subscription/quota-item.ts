@@ -34,6 +34,18 @@ const quota_item = {
     not_eligible: 'マシン間アプリケーションを削除してください',
     add_on: '追加のマシン間アプリケーション',
   },
+  third_party_applications_limit: {
+    /** UNTRANSLATED */
+    name: 'Third-party apps',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} third-party app',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} third-party apps',
+    /** UNTRANSLATED */
+    unlimited: 'Unlimited third-party apps',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your third-party apps',
+  },
   resources_limit: {
     name: 'APIリソース',
     limited: '{{count, number}} APIリソース',

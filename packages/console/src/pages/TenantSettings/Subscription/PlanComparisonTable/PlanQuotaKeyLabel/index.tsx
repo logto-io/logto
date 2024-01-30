@@ -17,6 +17,7 @@ const planQuotaKeyPhraseMap: {
   tokenLimit: 'quota.included_tokens',
   applicationsLimit: 'application.total',
   machineToMachineLimit: 'application.m2m',
+  thirdPartyApplicationsLimit: 'application.third_party',
   resourcesLimit: 'resource.resource_count',
   scopesPerResourceLimit: 'resource.scopes_per_resource',
   customDomainEnabled: 'branding.custom_domain',

@@ -9,6 +9,8 @@ const quota_table = {
     title: '應用程式',
     total: '總應用程式數',
     m2m: '機器對機器',
+    /** UNTRANSLATED */
+    third_party: 'Third-party apps',
   },
   resource: {
     title: 'API 資源',

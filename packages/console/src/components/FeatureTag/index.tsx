@@ -6,6 +6,8 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import * as styles from './index.module.scss';
 
+export { default as BetaTag } from './BetaTag';
+
 type Props = {
   /**
    * Whether the tag should be visible. It should be `true` if the tenant's subscription

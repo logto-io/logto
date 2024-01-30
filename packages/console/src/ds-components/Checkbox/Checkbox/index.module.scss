@@ -57,6 +57,9 @@
     color: var(--color-text);
     white-space: nowrap;
     cursor: inherit;
+    display: flex;
+    align-items: center;
+    gap: _.unit(1);
   }
 
   &.disabled {
