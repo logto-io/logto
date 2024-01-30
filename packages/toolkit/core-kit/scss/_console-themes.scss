@@ -92,6 +92,7 @@
   --color-alert-99: #fff5eb;
 
   // color aliases
+  --color-static-white: #fff;
   --color-primary: var(--color-primary-40);
   --color-on-primary: var(--color-all-100);
   --color-primary-container: var(--color-primary-90);
@@ -189,7 +190,7 @@
   // Background
   --color-bg-body-base: var(--color-neutral-95);
   --color-bg-body: var(--color-neutral-100);
-  --color-bg-layer-1: var(--color-static-white);
+  --color-bg-layer-1: var(--color-all-100);
   --color-bg-layer-2: var(--color-neutral-95);
   --color-bg-body-overlay: var(--color-neutral-100);
   --color-bg-float-base: var(--color-neutral-variant-90);
@@ -296,6 +297,7 @@
   --color-alert-99: #2b1700;
 
   // color aliases
+  --color-static-white: #fff;
   --color-primary: var(--color-primary-70);
   --color-on-primary: var(--color-all-0);
   --color-primary-container: var(--color-primary-30);
