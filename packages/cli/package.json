@@ -50,7 +50,7 @@
     "@logto/phrases-experience": "workspace:^1.5.0",
     "@logto/schemas": "workspace:1.12.0",
     "@logto/shared": "workspace:^3.0.0",
-    "@silverhand/essentials": "^2.8.4",
+    "@silverhand/essentials": "^2.8.8",
     "chalk": "^5.0.0",
     "decamelize": "^6.0.0",
     "dotenv": "^16.0.0",

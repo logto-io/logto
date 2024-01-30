@@ -72,17 +72,6 @@
       "get": {
         "summary": "Get organization invitation",
         "description": "Get an organization invitation by ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The organization invitation ID.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "The organization invitation, also contains the organization roles to be assigned to the user when they accept the invitation, and the corresponding magic link data."
@@ -92,20 +81,38 @@
       "delete": {
         "summary": "Delete organization invitation",
         "description": "Delete an organization invitation by ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The organization invitation ID.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "204": {
             "description": "The organization invitation was deleted successfully."
+          }
+        }
+      }
+    },
+    "/api/organization-invitations/{id}/status": {
+      "put": {
+        "summary": "Update organization invitation status",
+        "description": "Update the status of an organization invitation by ID.",
+        "requestBody": {
+          "description": "The organization invitation status to update.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "status": {
+                    "description": "The status of the organization invitation."
+                  },
+                  "acceptedUserId": {
+                    "description": "The ID of the user who accepted the organization invitation. Required if the status is \"Accepted\"."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The organization invitation status was updated successfully."
           }
         }
       }

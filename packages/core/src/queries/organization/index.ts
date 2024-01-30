@@ -17,6 +17,7 @@ import {
   type OrganizationInvitationEntity,
   MagicLinks,
   OrganizationInvitationRoleRelations,
+  OrganizationInvitationStatus,
 } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
@@ -121,7 +122,19 @@ class OrganizationInvitationsQueries extends SchemaQueries<
 
     return sql<OrganizationInvitationEntity>`
       select
-        ${table}.*,
+        ${sql.join(
+          Object.values(fields).filter((field) => field !== fields.status),
+          sql`, `
+        )},
+        -- Dynamically calculate the status of the invitation, note that the
+        -- actual status of the invitation is not changed.
+        case
+          when 
+            ${fields.status} = ${OrganizationInvitationStatus.Pending} and
+            ${fields.expiresAt} < now()
+          then ${OrganizationInvitationStatus.Expired}
+          else ${fields.status}
+        end as "status",
         coalesce(
           json_agg(
             json_build_object(

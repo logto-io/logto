@@ -15,7 +15,7 @@ const expectErrorResponse = (error: unknown, status: number, code: string) => {
   expect(body).toMatchObject({ code });
 };
 
-describe('organization invitations', () => {
+describe('organization invitation creation', () => {
   const invitationApi = new OrganizationInvitationApiTest();
   const organizationApi = new OrganizationApiTest();
 

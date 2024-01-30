@@ -37,7 +37,7 @@
     "@react-spring/web": "^9.6.1",
     "@silverhand/eslint-config": "5.0.0",
     "@silverhand/eslint-config-react": "5.0.0",
-    "@silverhand/essentials": "^2.8.4",
+    "@silverhand/essentials": "^2.8.8",
     "@silverhand/ts-config": "5.0.0",
     "@silverhand/ts-config-react": "5.0.0",
     "@simplewebauthn/browser": "^8.3.1",
