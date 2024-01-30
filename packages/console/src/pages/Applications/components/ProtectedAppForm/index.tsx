@@ -1,4 +1,4 @@
-import { isValidUrl } from '@logto/core-kit';
+import { validateUriOrigin } from '@logto/core-kit';
 import { ApplicationType, type Application, type RequestErrorBody } from '@logto/schemas';
 import { isValidSubdomain } from '@logto/shared/universal';
 import { condString, conditional } from '@silverhand/essentials';
@@ -147,7 +147,8 @@ function ProtectedAppForm({
           <TextInput
             {...register('origin', {
               required: true,
-              validate: (value) => isValidUrl(value) || t('protected_app.form.errors.invalid_url'),
+              validate: (value) =>
+                validateUriOrigin(value) || t('protected_app.form.errors.invalid_url'),
             })}
             placeholder={t('protected_app.form.url_field_placeholder')}
             error={
