@@ -22,7 +22,6 @@ const { createApplicationQueries } = await import('./application.js');
 const {
   findTotalNumberOfApplications,
   findApplicationById,
-  findApplicationByProtectedAppHost,
   findApplicationByProtectedAppCustomDomain,
   insertApplication,
   updateApplicationById,
@@ -66,27 +65,6 @@ describe('application query', () => {
     });
 
     await findApplicationById(id);
-  });
-
-  it('findApplicationByProtectedAppHost', async () => {
-    const host = 'host.protected.app';
-    const rowData = { host };
-
-    const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.protectedAppMetadata}->>'host' = $1
-      and ${fields.type} = $2
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([host, ApplicationType.Protected]);
-
-      return createMockQueryResult([rowData]);
-    });
-
-    await findApplicationByProtectedAppHost(host);
   });
 
   it('findApplicationByProtectedAppCustomDomain', async () => {

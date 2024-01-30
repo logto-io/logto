@@ -173,7 +173,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
         ...conditional(
           rest.type === ApplicationType.Protected &&
             protectedAppMetadata &&
-            (await protectedApps.checkAndBuildProtectedAppData(protectedAppMetadata))
+            (await protectedApps.buildProtectedAppData(protectedAppMetadata))
         ),
         ...rest,
       });

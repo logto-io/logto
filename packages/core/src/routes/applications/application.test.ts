@@ -19,7 +19,7 @@ const findApplicationById = jest.fn(async () => mockApplication);
 const deleteApplicationById = jest.fn();
 const syncAppConfigsToRemote = jest.fn();
 const deleteRemoteAppConfigs = jest.fn();
-const checkAndBuildProtectedAppData = jest.fn(async () => {
+const buildProtectedAppData = jest.fn(async () => {
   const { oidcClientMetadata, protectedAppMetadata } = mockProtectedApplication;
 
   return { oidcClientMetadata, protectedAppMetadata };
@@ -60,7 +60,7 @@ const tenantContext = new MockTenant(
     protectedApps: {
       syncAppConfigsToRemote,
       deleteRemoteAppConfigs,
-      checkAndBuildProtectedAppData,
+      buildProtectedAppData,
       getDefaultDomain: jest.fn(async () => mockProtectedAppConfigProviderConfig.domain),
     },
   }

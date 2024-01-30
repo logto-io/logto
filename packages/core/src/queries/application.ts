@@ -130,14 +130,6 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
 
   const findApplicationById = buildFindEntityByIdWithPool(pool)(Applications);
 
-  const findApplicationByProtectedAppHost = async (host: string) =>
-    pool.maybeOne<Application>(sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.protectedAppMetadata}->>'host' = ${host}
-      and ${fields.type} = ${ApplicationType.Protected}
-    `);
-
   /**
    * Find an protected application by its custom domain.
    * the domain is stored in the `customDomains` field of the `protectedAppMetadata` field.
@@ -252,7 +244,6 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     findApplications,
     findTotalNumberOfApplications,
     findApplicationById,
-    findApplicationByProtectedAppHost,
     findApplicationByProtectedAppCustomDomain,
     insertApplication,
     updateApplication,

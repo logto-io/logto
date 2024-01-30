@@ -1,5 +1,5 @@
 import { Users } from '@logto/schemas';
-import { NotFoundError, SlonikError } from 'slonik';
+import { NotFoundError, SlonikError, UniqueIntegrityConstraintViolationError } from 'slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError, InsertionError, UpdateError } from '#src/errors/SlonikError/index.js';
@@ -95,6 +95,23 @@ describe('koaSlonikErrorHandler middleware', () => {
       new RequestError({
         code: 'entity.not_found',
         status: 404,
+      })
+    );
+  });
+
+  it('UniqueIntegrityConstraintViolationError for protected application', async () => {
+    const error = new UniqueIntegrityConstraintViolationError(
+      new Error(' '),
+      'applications__protected_app_metadata_host'
+    );
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError({
+        code: 'application.protected_application_subdomain_exists',
+        status: 422,
       })
     );
   });
