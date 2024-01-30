@@ -14,7 +14,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
+import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import { generatePassword } from '#src/utils.js';
@@ -48,7 +48,7 @@ describe('reset password', () => {
       email: userProfile.primaryEmail,
     });
 
-    const verificationCodeRecord = await readVerificationCode();
+    const verificationCodeRecord = await readConnectorMessage('Email');
 
     expect(verificationCodeRecord).toMatchObject({
       address: userProfile.primaryEmail,
@@ -108,7 +108,7 @@ describe('reset password', () => {
       phone: userProfile.primaryPhone,
     });
 
-    const verificationCodeRecord = await readVerificationCode();
+    const verificationCodeRecord = await readConnectorMessage('Sms');
 
     expect(verificationCodeRecord).toMatchObject({
       phone: userProfile.primaryPhone,

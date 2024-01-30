@@ -13,7 +13,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
+import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
 import { generatePassword, generateUsername } from '#src/utils.js';
@@ -30,7 +30,7 @@ describe('Register with identifiers sad path', () => {
     await clearSsoConnectors();
   });
 
-  it('Should fail to register if sign-in mode is sign-in only', async () => {
+  it('should fail to register if sign-in mode is sign-in only', async () => {
     await updateSignInExperience({ signInMode: SignInMode.SignIn });
     const client = await initClient();
 
@@ -48,13 +48,13 @@ describe('Register with identifiers sad path', () => {
     await updateSignInExperience({ signInMode: SignInMode.SignInAndRegister });
   });
 
-  describe('Should fail to register with identifiers if sign-up settings are not enabled', () => {
+  describe('should fail to register with identifiers if sign-up settings are not enabled', () => {
     beforeAll(async () => {
       // This function call will disable all sign-up settings by default
       await enableAllPasswordSignInMethods();
     });
 
-    it('Should fail to register with username and password', async () => {
+    it('should fail to register with username and password', async () => {
       const client = await initClient();
 
       await expectRejects(
@@ -72,7 +72,7 @@ describe('Register with identifiers sad path', () => {
       );
     });
 
-    it('Should fail to register with email', async () => {
+    it('should fail to register with email', async () => {
       await setEmailConnector();
       const { primaryEmail } = generateNewUserProfile({ primaryEmail: true });
       const client = await initClient();
@@ -85,7 +85,7 @@ describe('Register with identifiers sad path', () => {
         email: primaryEmail,
       });
 
-      const { code: verificationCode } = await readVerificationCode();
+      const { code: verificationCode } = await readConnectorMessage('Email');
 
       await expectRejects(
         client.send(patchInteractionIdentifiers, {
@@ -102,7 +102,7 @@ describe('Register with identifiers sad path', () => {
       await clearConnectorsByTypes([ConnectorType.Email]);
     });
 
-    it('Should fail to register with phone', async () => {
+    it('should fail to register with phone', async () => {
       await setSmsConnector();
 
       const { primaryPhone } = generateNewUserProfile({ primaryPhone: true });
@@ -116,7 +116,7 @@ describe('Register with identifiers sad path', () => {
         phone: primaryPhone,
       });
 
-      const { code: verificationCode } = await readVerificationCode();
+      const { code: verificationCode } = await readConnectorMessage('Sms');
 
       await expectRejects(
         client.send(patchInteractionIdentifiers, {

@@ -70,7 +70,7 @@ describe('password policy', () => {
 
     // Complete verification code flow
     await experience.toFillInput('id', email, { submit: true });
-    await experience.toCompleteVerification('register');
+    await experience.toCompleteVerification('register', 'Email');
 
     // Wait for the password page to load
     await waitFor(100);
@@ -98,7 +98,7 @@ describe('password policy', () => {
     await experience.toClickSubmit();
 
     // Complete verification code flow
-    await experience.toCompleteVerification('forgot-password');
+    await experience.toCompleteVerification('forgot-password', 'Email');
 
     // Wait for the password page to load
     await waitFor(100);

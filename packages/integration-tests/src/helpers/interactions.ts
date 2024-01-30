@@ -15,7 +15,7 @@ import {
 import { generateUserId } from '#src/utils.js';
 
 import { initClient, processSession, logoutClient } from './client.js';
-import { expectRejects, readVerificationCode } from './index.js';
+import { expectRejects, readConnectorMessage } from './index.js';
 import { enableAllPasswordSignInMethods } from './sign-in-experience.js';
 import { generateNewUser } from './user.js';
 
@@ -101,7 +101,9 @@ export const resetPassword = async (
     ...profile,
   });
 
-  const { code: verificationCode } = await readVerificationCode();
+  const { code: verificationCode } = await readConnectorMessage(
+    'email' in profile ? 'Email' : 'Sms'
+  );
   await client.successSend(patchInteractionIdentifiers, {
     ...profile,
     verificationCode,

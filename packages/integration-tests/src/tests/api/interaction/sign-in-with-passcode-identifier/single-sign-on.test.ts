@@ -16,7 +16,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
+import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateEmail, generateSsoConnectorName } from '#src/utils.js';
 
@@ -32,7 +32,7 @@ const happyPath = async (email: string) => {
     email,
   });
 
-  const verificationCodeRecord = await readVerificationCode();
+  const verificationCodeRecord = await readConnectorMessage('Email');
 
   expect(verificationCodeRecord).toMatchObject({
     address: email,
@@ -70,7 +70,7 @@ describe('test sign-in with email passcode identifier with SSO feature', () => {
     await clearSsoConnectors();
   });
 
-  it('Should fail to sign in with email and passcode if the email domain is enabled for SSO only', async () => {
+  it('should fail to sign in with email and passcode if the email domain is enabled for SSO only', async () => {
     const email = generateEmail('sso-sad-path.io');
     const user = await createUser({ primaryEmail: email });
     await updateSignInExperience({ singleSignOnEnabled: true });
@@ -91,7 +91,7 @@ describe('test sign-in with email passcode identifier with SSO feature', () => {
       email,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readConnectorMessage('Email');
 
     await expectRejects(
       client.send(patchInteractionIdentifiers, {
@@ -108,7 +108,7 @@ describe('test sign-in with email passcode identifier with SSO feature', () => {
     await deleteSsoConnectorById(id);
   });
 
-  it('Should sign-in with email with SSO disabled', async () => {
+  it('should sign-in with email with SSO disabled', async () => {
     await updateSignInExperience({ singleSignOnEnabled: false });
 
     const { id } = await createSsoConnector({
@@ -123,7 +123,7 @@ describe('test sign-in with email passcode identifier with SSO feature', () => {
     await deleteSsoConnectorById(id);
   });
 
-  it('Should sign-in with email with SSO enabled but no connector found', async () => {
+  it('should sign-in with email with SSO enabled but no connector found', async () => {
     await updateSignInExperience({ singleSignOnEnabled: true });
 
     const { id } = await createSsoConnector({

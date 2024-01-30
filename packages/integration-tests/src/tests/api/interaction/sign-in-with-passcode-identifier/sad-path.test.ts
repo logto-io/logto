@@ -15,7 +15,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
+import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import { generateEmail, generatePhone } from '#src/utils.js';
@@ -33,7 +33,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
     await clearSsoConnectors();
   });
 
-  it('Should fail to sign in with passcode if sign-in mode is register only', async () => {
+  it('should fail to sign in with passcode if sign-in mode is register only', async () => {
     await updateSignInExperience({ signInMode: SignInMode.Register });
     const client = await initClient();
 
@@ -51,7 +51,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
     await enableAllVerificationCodeSignInMethods();
   });
 
-  it('Should fail to sign in if related identifiers are not enabled', async () => {
+  it('should fail to sign in if related identifiers are not enabled', async () => {
     await updateSignInExperience({
       signIn: {
         methods: [],
@@ -72,7 +72,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       email: primaryEmail,
     });
 
-    const { code: emailVerificationCode } = await readVerificationCode();
+    const { code: emailVerificationCode } = await readConnectorMessage('Email');
 
     await expectRejects(
       client.send(patchInteractionIdentifiers, {
@@ -90,7 +90,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       phone: primaryPhone,
     });
 
-    const { code: phoneVerificationCode } = await readVerificationCode();
+    const { code: phoneVerificationCode } = await readConnectorMessage('Sms');
 
     await expectRejects(
       client.send(patchInteractionIdentifiers, {
@@ -107,7 +107,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
     await enableAllVerificationCodeSignInMethods();
   });
 
-  it('Should fail to update sign in email identifier if verification code is incorrect or mismatch', async () => {
+  it('should fail to update sign in email identifier if verification code is incorrect or mismatch', async () => {
     const {
       userProfile: { primaryEmail },
     } = await generateNewUser({ primaryEmail: true });
@@ -121,7 +121,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       email: primaryEmail,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readConnectorMessage('Email');
 
     await expectRejects(
       client.send(patchInteractionIdentifiers, {
@@ -146,7 +146,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
     );
   });
 
-  it('Should fail to update sign in phone identifier if verification code is incorrect or mismatch', async () => {
+  it('should fail to update sign in phone identifier if verification code is incorrect or mismatch', async () => {
     const {
       userProfile: { primaryPhone },
     } = await generateNewUser({ primaryPhone: true });
@@ -160,7 +160,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       phone: primaryPhone,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readConnectorMessage('Sms');
 
     await expectRejects(
       client.send(patchInteractionIdentifiers, {
@@ -185,7 +185,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
     );
   });
 
-  it('Should fail to sign in with email and passcode if related user is not exist', async () => {
+  it('should fail to sign in with email and passcode if related user is not exist', async () => {
     const notExistUserEmail = generateEmail();
 
     const client = await initClient();
@@ -198,7 +198,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       email: notExistUserEmail,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readConnectorMessage('Email');
 
     await client.successSend(patchInteractionIdentifiers, {
       email: notExistUserEmail,
@@ -211,7 +211,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
     });
   });
 
-  it('Should fail to sign in with phone and passcode if related user is not exist', async () => {
+  it('should fail to sign in with phone and passcode if related user is not exist', async () => {
     const notExistUserPhone = generatePhone();
 
     const client = await initClient();
@@ -224,7 +224,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       phone: notExistUserPhone,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readConnectorMessage('Sms');
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: notExistUserPhone,
@@ -237,7 +237,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
     });
   });
 
-  it('Should fail to sign in if related user is suspended', async () => {
+  it('should fail to sign in if related user is suspended', async () => {
     const {
       userProfile: { primaryEmail },
       user: { id: userId },
@@ -254,7 +254,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       email: primaryEmail,
     });
 
-    const { code: verificationCode } = await readVerificationCode();
+    const { code: verificationCode } = await readConnectorMessage('Email');
 
     await client.successSend(patchInteractionIdentifiers, {
       email: primaryEmail,
