@@ -23,25 +23,37 @@ export const createUserByAdmin = async (
   });
 };
 
-type VerificationCodeRecord = {
+type ConnectorMessageRecord = {
   phone?: string;
   address?: string;
   code: string;
   type: string;
 };
 
-export const readVerificationCode = async (
+/**
+ * Read the most recent connector message record from file system that is created by mock connectors.
+ *
+ * @param forType The type of connector to read message from.
+ * @returns A promise that resolves to the connector message record.
+ */
+export const readConnectorMessage = async (
   forType: keyof typeof mockConnectorFilePaths
-): Promise<VerificationCodeRecord> => {
+): Promise<ConnectorMessageRecord> => {
   const buffer = await fs.readFile(mockConnectorFilePaths[forType]);
   const content = buffer.toString();
 
   // For test use only
   // eslint-disable-next-line no-restricted-syntax
-  return JSON.parse(content) as VerificationCodeRecord;
+  return JSON.parse(content) as ConnectorMessageRecord;
 };
 
-export const removeVerificationCode = async (
+/**
+ * Remove the connector message record file from file system. If the file does not exist, do nothing.
+ *
+ * @param forType The type of connector to remove message from.
+ * @returns A promise that resolves to void.
+ */
+export const removeConnectorMessage = async (
   forType: keyof typeof mockConnectorFilePaths
 ): Promise<void> => {
   try {

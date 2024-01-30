@@ -13,7 +13,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
+import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
 import { generatePassword, generateUsername } from '#src/utils.js';
@@ -85,7 +85,7 @@ describe('Register with identifiers sad path', () => {
         email: primaryEmail,
       });
 
-      const { code: verificationCode } = await readVerificationCode('Email');
+      const { code: verificationCode } = await readConnectorMessage('Email');
 
       await expectRejects(
         client.send(patchInteractionIdentifiers, {
@@ -116,7 +116,7 @@ describe('Register with identifiers sad path', () => {
         phone: primaryPhone,
       });
 
-      const { code: verificationCode } = await readVerificationCode('Sms');
+      const { code: verificationCode } = await readConnectorMessage('Sms');
 
       await expectRejects(
         client.send(patchInteractionIdentifiers, {

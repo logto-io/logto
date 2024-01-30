@@ -16,7 +16,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
+import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateEmail, generateSsoConnectorName } from '#src/utils.js';
 
@@ -32,7 +32,7 @@ const happyPath = async (email: string) => {
     email,
   });
 
-  const verificationCodeRecord = await readVerificationCode('Email');
+  const verificationCodeRecord = await readConnectorMessage('Email');
 
   expect(verificationCodeRecord).toMatchObject({
     address: email,
@@ -91,7 +91,7 @@ describe('test sign-in with email passcode identifier with SSO feature', () => {
       email,
     });
 
-    const { code: verificationCode } = await readVerificationCode('Email');
+    const { code: verificationCode } = await readConnectorMessage('Email');
 
     await expectRejects(
       client.send(patchInteractionIdentifiers, {

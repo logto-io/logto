@@ -17,7 +17,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { readVerificationCode, expectRejects } from '#src/helpers/index.js';
+import { readConnectorMessage, expectRejects } from '#src/helpers/index.js';
 import {
   enableAllVerificationCodeSignInMethods,
   enableAllPasswordSignInMethods,
@@ -79,7 +79,7 @@ describe('register with passwordless identifier', () => {
       email: primaryEmail,
     });
 
-    const verificationCodeRecord = await readVerificationCode('Email');
+    const verificationCodeRecord = await readConnectorMessage('Email');
 
     expect(verificationCodeRecord).toMatchObject({
       address: primaryEmail,
@@ -125,7 +125,7 @@ describe('register with passwordless identifier', () => {
       email: primaryEmail,
     });
 
-    const verificationCodeRecord = await readVerificationCode('Email');
+    const verificationCodeRecord = await readConnectorMessage('Email');
 
     const { code } = verificationCodeRecord;
 
@@ -186,7 +186,7 @@ describe('register with passwordless identifier', () => {
       phone: primaryPhone,
     });
 
-    const verificationCodeRecord = await readVerificationCode('Sms');
+    const verificationCodeRecord = await readConnectorMessage('Sms');
 
     expect(verificationCodeRecord).toMatchObject({
       phone: primaryPhone,
@@ -232,7 +232,7 @@ describe('register with passwordless identifier', () => {
       phone: primaryPhone,
     });
 
-    const { code } = await readVerificationCode('Sms');
+    const { code } = await readConnectorMessage('Sms');
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
@@ -296,7 +296,7 @@ describe('register with passwordless identifier', () => {
       email: primaryEmail,
     });
 
-    const verificationCodeRecord = await readVerificationCode('Email');
+    const verificationCodeRecord = await readConnectorMessage('Email');
 
     expect(verificationCodeRecord).toMatchObject({
       address: primaryEmail,
@@ -351,7 +351,7 @@ describe('register with passwordless identifier', () => {
       phone: primaryPhone,
     });
 
-    const verificationCodeRecord = await readVerificationCode('Sms');
+    const verificationCodeRecord = await readConnectorMessage('Sms');
 
     expect(verificationCodeRecord).toMatchObject({
       phone: primaryPhone,

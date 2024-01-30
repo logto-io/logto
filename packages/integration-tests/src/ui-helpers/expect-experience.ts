@@ -2,7 +2,7 @@ import { type MfaFactor } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
 import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
-import { readVerificationCode } from '#src/helpers/index.js';
+import { readConnectorMessage } from '#src/helpers/index.js';
 import { dcls } from '#src/utils.js';
 
 import ExpectPage from './expect-page.js';
@@ -133,10 +133,10 @@ export default class ExpectExperience extends ExpectPage {
    */
   async toCompleteVerification(
     type: ExperienceType,
-    connectorType: Parameters<typeof readVerificationCode>['0']
+    connectorType: Parameters<typeof readConnectorMessage>['0']
   ) {
     this.toBeAt(`${type}/verification-code`);
-    const { code } = await readVerificationCode(connectorType);
+    const { code } = await readConnectorMessage(connectorType);
     await this.toFillVerificationCode(code);
   }
 
