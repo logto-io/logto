@@ -14,6 +14,7 @@ import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import * as styles from './index.module.scss';
 
@@ -40,6 +41,7 @@ function ProtectedAppForm({
     isDevFeaturesEnabled && isCloud && 'api/systems/application'
   );
   const defaultDomain = data?.protectedApps.defaultDomain ?? '';
+  const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
@@ -68,6 +70,7 @@ function ProtectedAppForm({
         .json<Application>();
       toast.success(t('applications.application_created'));
       onCreateSuccess?.(createdApp);
+      navigate(`/applications/${createdApp.id}`);
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const { code, message } = await error.response.json<RequestErrorBody>();
