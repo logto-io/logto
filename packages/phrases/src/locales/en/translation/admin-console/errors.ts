@@ -7,6 +7,7 @@ const errors = {
   invalid_uri_format: 'Invalid URI format',
   invalid_origin_format: 'Invalid URI origin format',
   invalid_json_format: 'Invalid JSON format',
+  invalid_regex: 'Invalid regular expression',
   invalid_error_message_format: 'The error message format is invalid.',
   required_field_missing: 'Please enter {{field}}',
   required_field_missing_plural: 'You have to enter at least one {{field}}',

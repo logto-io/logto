@@ -15,7 +15,9 @@ const domain = {
     custom_domain_field: 'Пользовательский домен',
     custom_domain_placeholder: 'Ваш.домен.com',
     add_domain: 'Добавить домен',
-    invalid_domain_format: 'Некорректный формат поддомена. Введите поддомен с минимум 3 секциями.',
+    /** UNTRANSLATED */
+    invalid_domain_format:
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: 'Проверить домен',
     enable_ssl: 'Включить SSL',
     checking_dns_tip:

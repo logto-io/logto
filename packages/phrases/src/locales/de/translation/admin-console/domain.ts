@@ -15,8 +15,9 @@ const domain = {
     custom_domain_field: 'Benutzerdefinierte Domain',
     custom_domain_placeholder: 'ihre.domain.com',
     add_domain: 'Domain hinzufügen',
+    /** UNTRANSLATED */
     invalid_domain_format:
-      'Ungültiges Subdomänen-Format. Bitte geben Sie eine Subdomäne mit mindestens drei Teilen ein.',
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: 'Domain überprüfen',
     enable_ssl: 'SSL aktivieren',
     checking_dns_tip:

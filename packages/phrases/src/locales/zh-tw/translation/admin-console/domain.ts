@@ -13,7 +13,9 @@ const domain = {
     custom_domain_field: '自訂網域',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '新增網域',
-    invalid_domain_format: '子網域格式無效，請輸入至少三個部分的子網域。',
+    /** UNTRANSLATED */
+    invalid_domain_format:
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: '驗證網域',
     enable_ssl: '啟用 SSL',
     checking_dns_tip:

@@ -46,7 +46,7 @@ const protected_app = {
     create_protected_app: 'Create and experience instantly',
     errors: {
       /** UNTRANSLATED */
-      domain_required: 'Subdomain is required',
+      domain_required: 'Subdomain is required.',
       /** UNTRANSLATED */
       domain_in_use: 'This subdomain name is already in use.',
       /** UNTRANSLATED */

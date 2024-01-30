@@ -14,8 +14,9 @@ const domain = {
     custom_domain_field: '사용자 지정 도메인',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '도메인 추가',
+    /** UNTRANSLATED */
     invalid_domain_format:
-      '잘못된 하위 도메인 형식입니다. 하위 도메인은 적어도 3부분으로 구성돼야 합니다.',
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: '도메인 확인',
     enable_ssl: 'SSL 사용',
     checking_dns_tip:

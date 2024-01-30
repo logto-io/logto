@@ -14,8 +14,9 @@ const domain = {
     custom_domain_field: 'カスタムドメイン',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: 'ドメインを追加',
+    /** UNTRANSLATED */
     invalid_domain_format:
-      '無効なドメイン形式または少なくとも3つのサブドメインを含む有効なドメインを入力してください。',
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: 'ドメインを検証',
     enable_ssl: 'SSLを有効にする',
     checking_dns_tip:

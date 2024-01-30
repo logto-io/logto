@@ -49,7 +49,7 @@ function ProtectedAppForm({
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<ProtectedAppForm>();
+  } = useForm<ProtectedAppForm>({ mode: 'onBlur' });
 
   const api = useApi({ hideErrorToast: true });
 

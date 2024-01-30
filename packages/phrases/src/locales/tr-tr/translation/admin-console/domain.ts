@@ -15,8 +15,9 @@ const domain = {
     custom_domain_field: 'Özel alan adı',
     custom_domain_placeholder: 'alan_adınız.com',
     add_domain: 'Alan Adı Ekle',
+    /** UNTRANSLATED */
     invalid_domain_format:
-      'Geçersiz alt alan adı biçimi. Lütfen en az üç parçadan oluşan bir alt alan adı girin.',
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: 'Alan adınızı doğrulayın',
     enable_ssl: 'SSL etkinleştirilsin mi',
     checking_dns_tip:

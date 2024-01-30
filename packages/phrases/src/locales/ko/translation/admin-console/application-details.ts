@@ -80,12 +80,10 @@ const application_details = {
   application_deleted: '{{name}} 어플리케이션이 성공적으로 삭제되었어요.',
   redirect_uri_required: '반드시 최소 하나의 Redirect URI 를 입력해야 해요.',
   /** UNTRANSLATED */
-  app_domain_protected: 'App domain protected',
-  /** UNTRANSLATED */
-  app_domain_protected_description_1:
+  app_domain_description_1:
     'Feel free to use your subdomain with protected.app powered by Logto, which is permanently valid.',
   /** UNTRANSLATED */
-  app_domain_protected_description_2:
+  app_domain_description_2:
     'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
   /** UNTRANSLATED */
   origin_url_tip:

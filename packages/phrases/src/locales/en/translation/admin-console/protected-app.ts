@@ -27,7 +27,7 @@ const protected_app = {
     create_application: 'Create application',
     create_protected_app: 'Create and experience instantly',
     errors: {
-      domain_required: 'Subdomain is required',
+      domain_required: 'Subdomain is required.',
       domain_in_use: 'This subdomain name is already in use.',
       invalid_domain_format:
         "Invalid subdomain format: use only lowercase letters, numbers, and hyphens '-'.",
