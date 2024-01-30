@@ -1,5 +1,5 @@
 import type { Application, CreateApplication } from '@logto/schemas';
-import { ApplicationType, Applications } from '@logto/schemas';
+import { ApplicationType, Applications, SearchJointMode } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { convertToIdentifiers, conditionalSql, conditionalArraySql } from '@logto/shared';
 import type { CommonQueryMethods, SqlSqlToken } from 'slonik';
@@ -162,15 +162,15 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     set: Partial<OmitAutoSetFields<CreateApplication>>
   ) => updateApplication({ set, where: { id }, jsonbMode: 'merge' });
 
-  const countNonM2mApplications = async () => {
-    const { count } = await pool.one<{ count: string }>(sql`
-      select count(*)
-      from ${table}
-      where ${fields.type} != ${ApplicationType.MachineToMachine}
-    `);
-
-    return { count: Number(count) };
-  };
+  const countAllApplications = async () =>
+    countApplications(
+      {
+        matches: [],
+        joint: SearchJointMode.And, // Dummy since there is no match
+        isCaseSensitive: false, // Dummy since there is no match
+      },
+      []
+    );
 
   const countM2mApplications = async () => {
     const { count } = await pool.one<{ count: string }>(sql`
@@ -257,7 +257,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     insertApplication,
     updateApplication,
     updateApplicationById,
-    countNonM2mApplications,
+    countAllApplications,
     countM2mApplications,
     countM2mApplicationsByIds,
     findM2mApplicationsByIds,
