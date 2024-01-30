@@ -21,9 +21,6 @@ create table organization_invitations (
     references organizations (id) on update cascade on delete cascade,
   /** The status of the invitation. */
   status organization_invitation_status not null,
-  /** The ID of the magic link that can be used to accept the invitation. */
-  magic_link_id varchar(21)
-    references magic_links (id) on update cascade on delete cascade,
   /** The time when the invitation was created. */
   created_at timestamptz not null default (now()),
   /** The time when the invitation status was last updated. */

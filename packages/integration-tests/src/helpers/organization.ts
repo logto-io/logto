@@ -27,10 +27,9 @@ export class OrganizationInvitationApiTest extends OrganizationInvitationApi {
   }
 
   override async create(
-    data: PostOrganizationInvitationData,
-    skipEmail = false
+    data: PostOrganizationInvitationData
   ): Promise<OrganizationInvitationEntity> {
-    const created = await super.create(data, skipEmail);
+    const created = await super.create(data);
     this.invitations.push(created);
     return created;
   }

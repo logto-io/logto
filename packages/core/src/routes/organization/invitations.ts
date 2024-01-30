@@ -1,9 +1,9 @@
+import { sendMessagePayloadGuard } from '@logto/connector-kit';
 import {
   OrganizationInvitationStatus,
   OrganizationInvitations,
   organizationInvitationEntityGuard,
 } from '@logto/schemas';
-import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -38,9 +38,6 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
   router.post(
     '/',
     koaGuard({
-      query: z.object({
-        skipEmail: z.string().optional(),
-      }),
       body: OrganizationInvitations.createGuard
         .pick({
           inviterId: true,
@@ -51,12 +48,15 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
         .extend({
           invitee: z.string().email(),
           organizationRoleIds: z.string().array().optional(),
+          messagePayload: sendMessagePayloadGuard.or(z.literal(false)).default(false),
         }),
       response: organizationInvitationEntityGuard,
       status: [201],
     }),
     async (ctx, next) => {
-      const { query, body } = ctx.guard;
+      const {
+        body: { messagePayload, ...body },
+      } = ctx.guard;
 
       assertThat(
         body.expiresAt > Date.now(),
@@ -66,7 +66,7 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
         })
       );
 
-      ctx.body = await organizationInvitations.insert(body, yes(query.skipEmail));
+      ctx.body = await organizationInvitations.insert(body, messagePayload);
       ctx.status = 201;
       return next();
     }

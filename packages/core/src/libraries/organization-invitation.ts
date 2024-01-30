@@ -1,16 +1,13 @@
-import { ConnectorType, TemplateType } from '@logto/connector-kit';
+import { ConnectorType, type SendMessagePayload, TemplateType } from '@logto/connector-kit';
 import {
   OrganizationInvitationStatus,
   type CreateOrganizationInvitation,
   type OrganizationInvitationEntity,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { appendPath, removeUndefinedKeys } from '@silverhand/essentials';
+import { removeUndefinedKeys } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
-import { getTenantEndpoint } from '#src/env-set/utils.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import MagicLinkQueries from '#src/queries/magic-link.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUserQueries } from '#src/queries/user.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -49,31 +46,25 @@ export class OrganizationInvitationLibrary {
    * @param data.organizationId The ID of the organization to invite to.
    * @param data.expiresAt The epoch time in milliseconds when the invitation expires.
    * @param data.organizationRoleIds The IDs of the organization roles to assign to the invitee.
-   * @param skipEmail Whether to skip sending the invitation email. Defaults to `false`.
+   * @param messagePayload The payload to send in the email. If it is `false`, the email will be
+   * skipped.
    */
   async insert(
     data: Pick<
       CreateOrganizationInvitation,
       'inviterId' | 'invitee' | 'organizationId' | 'expiresAt'
     > & { organizationRoleIds?: string[] },
-    skipEmail = false
+    messagePayload: SendMessagePayload | false
   ) {
     const { inviterId, invitee, organizationId, expiresAt, organizationRoleIds } = data;
 
     return this.queries.pool.transaction(async (connection) => {
       const organizationQueries = new OrganizationQueries(connection);
-      const magicLinkQueries = new MagicLinkQueries(connection);
-
-      const magicLink = await magicLinkQueries.insert({
-        id: generateStandardId(),
-        token: generateStandardId(32),
-      });
       const invitation = await organizationQueries.invitations.insert({
         id: generateStandardId(),
         inviterId,
         invitee,
         organizationId,
-        magicLinkId: magicLink.id,
         status: OrganizationInvitationStatus.Pending,
         expiresAt,
       });
@@ -84,8 +75,8 @@ export class OrganizationInvitationLibrary {
         );
       }
 
-      if (!skipEmail) {
-        await this.sendEmail(invitee, magicLink.token);
+      if (messagePayload) {
+        await this.sendEmail(invitee, messagePayload);
       }
 
       // Additional query to get the full invitation data
@@ -195,15 +186,12 @@ export class OrganizationInvitationLibrary {
     });
   }
 
-  protected async sendEmail(to: string, token: string) {
+  protected async sendEmail(to: string, payload: SendMessagePayload) {
     const emailConnector = await this.connector.getMessageConnector(ConnectorType.Email);
     return emailConnector.sendMessage({
       to,
       type: TemplateType.OrganizationInvitation,
-      payload: {
-        link: appendPath(getTenantEndpoint(this.tenantId, EnvSet.values), invitationLinkPath, token)
-          .href,
-      },
+      payload,
     });
   }
 }

@@ -29,27 +29,21 @@ describe('organization invitation creation', () => {
 
   it('should be able to create an invitation without sending email', async () => {
     const organization = await organizationApi.create({ name: 'test' });
-    await invitationApi.create(
-      {
-        organizationId: organization.id,
-        invitee: `${randomId()}@example.com`,
-        expiresAt: Date.now() + 1_000_000,
-      },
-      true
-    );
+    await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+    });
   });
 
   it('should not be able to create invitations with the same email', async () => {
     const organization = await organizationApi.create({ name: 'test' });
     const email = `${randomId()}@example.com`;
-    await invitationApi.create(
-      {
-        organizationId: organization.id,
-        invitee: email,
-        expiresAt: Date.now() + 1_000_000,
-      },
-      true
-    );
+    await invitationApi.create({
+      organizationId: organization.id,
+      invitee: email,
+      expiresAt: Date.now() + 1_000_000,
+    });
     const error = await invitationApi
       .create({
         organizationId: organization.id,
@@ -68,22 +62,16 @@ describe('organization invitation creation', () => {
     ]);
     const email = `${randomId()}@example.com`;
     await Promise.all([
-      invitationApi.create(
-        {
-          organizationId: organization1.id,
-          invitee: email,
-          expiresAt: Date.now() + 1_000_000,
-        },
-        true
-      ),
-      invitationApi.create(
-        {
-          organizationId: organization2.id,
-          invitee: email,
-          expiresAt: Date.now() + 1_000_000,
-        },
-        true
-      ),
+      invitationApi.create({
+        organizationId: organization1.id,
+        invitee: email,
+        expiresAt: Date.now() + 1_000_000,
+      }),
+      invitationApi.create({
+        organizationId: organization2.id,
+        invitee: email,
+        expiresAt: Date.now() + 1_000_000,
+      }),
     ]);
   });
 
@@ -128,17 +116,13 @@ describe('organization invitation creation', () => {
   it('should be able to create invitations with organization role ids', async () => {
     const organization = await organizationApi.create({ name: 'test' });
     const role = await organizationApi.roleApi.create({ name: 'test' });
-    const invitation = await invitationApi.create(
-      {
-        organizationId: organization.id,
-        invitee: `${randomId()}@example.com`,
-        expiresAt: Date.now() + 1_000_000,
-        organizationRoleIds: [role.id],
-      },
-      true
-    );
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+      organizationRoleIds: [role.id],
+    });
     expect(invitation.organizationRoles.map((role) => role.id)).toEqual([role.id]);
-    expect(invitation.magicLink).toBeDefined();
 
     // Test if get invitation by id works
     const invitationById = await invitationApi.get(invitation.id);
