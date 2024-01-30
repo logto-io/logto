@@ -150,18 +150,40 @@ export default function koaGuard<
       GuardResponseT
     >
   > = async function (ctx, next) {
-    await (body ?? files
-      ? koaBody<StateT, ContextT>({ multipart: Boolean(files) })(ctx, async () => guard(ctx, next))
-      : guard(ctx, next));
+    /**
+     * Assert the status code matches the value(s) in the config. If the config does not
+     * specify a status code, it will not assert anything.
+     *
+     * @param value The status code to assert.
+     * @throws {StatusCodeError} If the status code does not match the value(s) in the config.
+     */
+    const assertStatusCode = (value: number) => {
+      if (status === undefined) {
+        return;
+      }
 
-    if (status !== undefined) {
       assertThat(
-        Array.isArray(status)
-          ? status.includes(ctx.response.status)
-          : status === ctx.response.status,
-        new StatusCodeError(status, ctx.response.status)
+        Array.isArray(status) ? status.includes(value) : status === value,
+        new StatusCodeError(status, value)
       );
+    };
+
+    try {
+      await (body ?? files
+        ? koaBody<StateT, ContextT>({ multipart: Boolean(files) })(ctx, async () =>
+            guard(ctx, next)
+          )
+        : guard(ctx, next));
+    } catch (error: unknown) {
+      // Assert the status code from `RequestError` that is thrown by inner middleware.
+      if (error instanceof RequestError) {
+        assertStatusCode(error.status);
+      }
+
+      throw error;
     }
+
+    assertStatusCode(ctx.response.status);
 
     if (response !== undefined) {
       const result = response.safeParse(ctx.body);
