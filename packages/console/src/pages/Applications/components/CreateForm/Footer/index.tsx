@@ -12,13 +12,18 @@ import useApplicationsUsage from '@/hooks/use-applications-usage';
 type Props = {
   selectedType?: ApplicationType;
   isLoading: boolean;
+  isThirdParty?: boolean;
   onClickCreate: () => void;
 };
 
-function Footer({ selectedType, isLoading, onClickCreate }: Props) {
+function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
   const { currentPlan } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
-  const { hasAppsReachedLimit, hasMachineToMachineAppsReachedLimit } = useApplicationsUsage();
+  const {
+    hasAppsReachedLimit,
+    hasMachineToMachineAppsReachedLimit,
+    hasThirdPartyAppsReachedLimit,
+  } = useApplicationsUsage();
 
   if (selectedType) {
     const { id: planId, name: planName, quota } = currentPlan;
@@ -37,6 +42,21 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
             }}
           >
             {t('machine_to_machine_feature')}
+          </Trans>
+        </QuotaGuardFooter>
+      );
+    }
+
+    // Third party app is only available for paid plan (pro plan).
+    if (isThirdParty && hasThirdPartyAppsReachedLimit) {
+      return (
+        <QuotaGuardFooter>
+          <Trans
+            components={{
+              a: <ContactUsPhraseLink />,
+            }}
+          >
+            {t('third_party_apps')}
           </Trans>
         </QuotaGuardFooter>
       );

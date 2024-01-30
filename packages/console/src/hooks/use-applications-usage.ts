@@ -21,6 +21,11 @@ const useApplicationsUsage = () => {
     [allApplications]
   );
 
+  const thirdPartyAppCount = useMemo(
+    () => allApplications?.filter(({ isThirdParty }) => isThirdParty).length ?? 0,
+    [allApplications]
+  );
+
   const hasMachineToMachineAppsReachedLimit = useMemo(
     () =>
       hasReachedQuotaLimit({
@@ -41,6 +46,16 @@ const useApplicationsUsage = () => {
     [currentPlan, m2mAppCount]
   );
 
+  const hasThirdPartyAppsReachedLimit = useMemo(
+    () =>
+      hasReachedQuotaLimit({
+        quotaKey: 'thirdPartyApplicationsLimit',
+        plan: currentPlan,
+        usage: thirdPartyAppCount,
+      }),
+    [currentPlan, thirdPartyAppCount]
+  );
+
   const hasAppsReachedLimit = useMemo(
     () =>
       hasReachedQuotaLimit({
@@ -55,6 +70,7 @@ const useApplicationsUsage = () => {
     hasMachineToMachineAppsReachedLimit,
     hasMachineToMachineAppsSurpassedLimit,
     hasAppsReachedLimit,
+    hasThirdPartyAppsReachedLimit,
   };
 };
 
