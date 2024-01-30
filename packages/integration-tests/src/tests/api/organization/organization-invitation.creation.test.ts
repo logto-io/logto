@@ -1,8 +1,11 @@
 import assert from 'node:assert';
 
+import { ConnectorType } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared';
 import { HTTPError } from 'got';
 
+import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
+import { readConnectorMessage } from '#src/helpers/index.js';
 import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
 
 const randomId = () => generateStandardId(4);
@@ -34,6 +37,43 @@ describe('organization invitation creation', () => {
       invitee: `${randomId()}@example.com`,
       expiresAt: Date.now() + 1_000_000,
     });
+  });
+
+  it('should be able to create an invitation with sending email', async () => {
+    await setEmailConnector();
+
+    const organization = await organizationApi.create({ name: 'test' });
+    await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+      messagePayload: {
+        link: 'https://example.com',
+      },
+    });
+    expect(await readConnectorMessage('Email')).toMatchObject({
+      type: 'OrganizationInvitation',
+      payload: {
+        link: 'https://example.com',
+      },
+    });
+  });
+
+  it('should throw error if email connector is not set', async () => {
+    await clearConnectorsByTypes([ConnectorType.Email]);
+    const organization = await organizationApi.create({ name: 'test' });
+    const error = await invitationApi
+      .create({
+        organizationId: organization.id,
+        invitee: `${randomId()}@example.com`,
+        expiresAt: Date.now() + 1_000_000,
+        messagePayload: {
+          link: 'https://example.com',
+        },
+      })
+      .catch((error: unknown) => error);
+
+    expectErrorResponse(error, 501, 'connector.not_found');
   });
 
   it('should not be able to create invitations with the same email', async () => {

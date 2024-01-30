@@ -157,6 +157,12 @@ export const mockEmailConnectorConfig = {
       subject: 'Logto Test Template',
       content: 'This is for testing purposes only. Your passcode is {{code}}.',
     },
+    {
+      usageType: 'OrganizationInvitation',
+      type: 'text/plain',
+      subject: 'Logto Organization Invitation Template',
+      content: 'This is for organization invitation purposes only. Your link is {{link}}.',
+    },
   ],
 };
 

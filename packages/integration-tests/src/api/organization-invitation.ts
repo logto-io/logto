@@ -13,7 +13,7 @@ export type PostOrganizationInvitationData = {
   organizationId: string;
   expiresAt: number;
   organizationRoleIds?: string[];
-  emailPayload?: SendMessagePayload | false;
+  messagePayload?: SendMessagePayload | false;
 };
 
 export class OrganizationInvitationApi extends ApiFactory<
