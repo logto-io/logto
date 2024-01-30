@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 # Keep concurrency 1 to avoid lint-staged issue
 # Which may cause ALL your work LOST WITHOUT STASH
 FORCE_COLOR=1 pnpm -r --workspace-concurrency 1 --filter "[HEAD]" precommit
