@@ -3,6 +3,7 @@ import {
   type Application,
   type CustomDomain as CustomDomainType,
 } from '@logto/schemas';
+import { cond } from '@silverhand/essentials';
 import { type ChangeEvent } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -45,6 +46,7 @@ function ProtectedAppSettings({ data }: Props) {
   const {
     control,
     register,
+    getFieldState,
     formState: { errors },
   } = useFormContext<ApplicationForm>();
 
@@ -146,6 +148,10 @@ function ProtectedAppSettings({ data }: Props) {
         <FormField
           isRequired
           title="protected_app.form.url_field_label"
+          description={cond(
+            getFieldState('protectedAppMetadata.origin').isDirty &&
+              'protected_app.form.url_field_modification_notice'
+          )}
           tip={<span className={styles.tip}>{t('application_details.origin_url_tip')}</span>}
         >
           <TextInput
