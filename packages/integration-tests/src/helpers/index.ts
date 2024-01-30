@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import { createServer, type RequestListener } from 'node:http';
 
-import { mockConnectorFilePaths } from '@logto/connector-kit';
+import { mockConnectorFilePaths, type SendMessagePayload } from '@logto/connector-kit';
 import { RequestError } from 'got';
 
 import { createUser } from '#src/api/index.js';
@@ -28,6 +28,7 @@ type ConnectorMessageRecord = {
   address?: string;
   code: string;
   type: string;
+  payload: SendMessagePayload;
 };
 
 /**
