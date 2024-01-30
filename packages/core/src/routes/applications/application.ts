@@ -314,7 +314,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       response: z.undefined(),
-      status: [204, 404],
+      status: [204, 404, 422],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
@@ -322,7 +322,8 @@ export default function applicationRoutes<T extends AuthedRouter>(
       if (type === ApplicationType.Protected && protectedAppMetadata) {
         assertThat(
           !protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0,
-          'application.should_delete_custom_domains_first'
+          'application.should_delete_custom_domains_first',
+          422
         );
         await protectedApps.deleteRemoteAppConfigs(protectedAppMetadata.host);
       }

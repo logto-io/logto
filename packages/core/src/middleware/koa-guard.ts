@@ -49,8 +49,11 @@ export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
    */
   response?: ZodType<ResponseT, ZodTypeDef, unknown>;
   /**
-   * Guard response status code. It produces a `ServerError` (500)
-   * if the response does not satisfy any of the given value(s).
+   * Guard response status code. It produces a `ServerError` (500) if the response does not satisfy
+   * any of the given value(s).
+   *
+   * Note: It will also guard the status code from `RequestError` that is thrown by inner
+   * middleware.
    */
   status?: number | number[];
   files?: ZodType<FilesT, ZodTypeDef, unknown>;
@@ -176,7 +179,9 @@ export default function koaGuard<
         : guard(ctx, next));
     } catch (error: unknown) {
       // Assert the status code from `RequestError` that is thrown by inner middleware.
-      if (error instanceof RequestError) {
+      // Ignore guard errors since they will be always 400 and can be automatically documented
+      // in the OpenAPI route.
+      if (error instanceof RequestError && !error.code.startsWith('guard.')) {
         assertStatusCode(error.status);
       }
 

@@ -69,7 +69,7 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
     koaGuard({
       params: z.object(params),
       body: z.object({ domain: z.string() }),
-      status: [201, 404, 422],
+      status: [201, 400, 404, 422],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;

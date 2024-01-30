@@ -263,7 +263,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
   router.post(
     `${interactionPrefix}/${verificationPath}/webauthn-authentication`,
     koaGuard({
-      status: [200],
+      status: [200, 400],
       response: webAuthnAuthenticationOptionsGuard,
     }),
     async (ctx, next) => {
