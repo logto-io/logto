@@ -80,12 +80,10 @@ const application_details = {
   application_deleted: 'Se ha eliminado exitosamente la aplicación {{name}}',
   redirect_uri_required: 'Debes ingresar al menos un URI de Redireccionamiento',
   /** UNTRANSLATED */
-  app_domain_protected: 'App domain protected',
-  /** UNTRANSLATED */
-  app_domain_protected_description_1:
+  app_domain_description_1:
     'Feel free to use your subdomain with protected.app powered by Logto, which is permanently valid.',
   /** UNTRANSLATED */
-  app_domain_protected_description_2:
+  app_domain_description_2:
     'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
   /** UNTRANSLATED */
   origin_url_tip:

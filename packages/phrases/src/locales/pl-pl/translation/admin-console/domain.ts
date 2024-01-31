@@ -15,8 +15,9 @@ const domain = {
     custom_domain_field: 'Niestandardowa domena',
     custom_domain_placeholder: 'twoja.domena.com',
     add_domain: 'Dodaj domenę',
+    /** UNTRANSLATED */
     invalid_domain_format:
-      'Nieprawidłowy format poddomeny. Wprowadź poddomenę z co najmniej trzema elementami.',
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: 'Zweryfikuj domenę',
     enable_ssl: 'Włącz SSL',
     checking_dns_tip:

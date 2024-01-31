@@ -16,7 +16,7 @@ const domain = {
     custom_domain_placeholder: 'your.domain.com',
     add_domain: 'Add domain',
     invalid_domain_format:
-      'Invalid subdomain format. Please enter a subdomain with at least three parts.',
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: 'Verify domain',
     enable_ssl: 'Enable SSL',
     checking_dns_tip:

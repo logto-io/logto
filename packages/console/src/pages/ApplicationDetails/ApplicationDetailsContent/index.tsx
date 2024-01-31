@@ -51,6 +51,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
 
   const formMethods = useForm<ApplicationForm>({
     defaultValues: applicationFormDataParser.fromResponse(data),
+    mode: 'onBlur',
   });
 
   const {

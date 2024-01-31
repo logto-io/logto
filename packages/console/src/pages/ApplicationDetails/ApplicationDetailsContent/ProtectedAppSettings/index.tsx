@@ -1,3 +1,4 @@
+import { isValidRegEx, validateUriOrigin } from '@logto/core-kit';
 import {
   DomainStatus,
   type Application,
@@ -95,8 +96,32 @@ function ProtectedAppSettings({ data }: Props) {
             placeholder={t('application_details.application_name_placeholder')}
           />
         </FormField>
+        <FormField
+          isRequired
+          title="protected_app.form.url_field_label"
+          description={cond(
+            getFieldState('protectedAppMetadata.origin').isDirty &&
+              'protected_app.form.url_field_modification_notice'
+          )}
+          tip={<span className={styles.tip}>{t('application_details.origin_url_tip')}</span>}
+        >
+          <TextInput
+            {...register('protectedAppMetadata.origin', {
+              required: true,
+              validate: (value) =>
+                validateUriOrigin(value) || t('protected_app.form.errors.invalid_url'),
+            })}
+            error={
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              errors.protectedAppMetadata?.origin?.message ||
+              (errors.protectedAppMetadata?.origin?.type === 'required' &&
+                t('protected_app.form.errors.url_required'))
+            }
+            placeholder={t('protected_app.form.url_field_placeholder')}
+          />
+        </FormField>
         {!!host && (
-          <FormField title="application_details.app_domain_protected">
+          <FormField title="domain.custom.custom_domain_field">
             {!customDomain && (
               <AddDomainForm
                 className={styles.customDomain}
@@ -125,7 +150,7 @@ function ProtectedAppSettings({ data }: Props) {
             {customDomain?.status !== DomainStatus.Active && (
               <>
                 <div className={styles.label}>
-                  {t('application_details.app_domain_protected_description_1')}
+                  {t('application_details.app_domain_description_1')}
                 </div>
                 <div className={styles.hostInUse}>
                   <span className={styles.host}>{host}</span>
@@ -139,27 +164,12 @@ function ProtectedAppSettings({ data }: Props) {
             {customDomain?.status === DomainStatus.Active && (
               <span className={styles.label}>
                 <Trans components={{ domain: <span className={styles.inlineCode} /> }}>
-                  {t('application_details.app_domain_protected_description_2', { domain: host })}
+                  {t('application_details.app_domain_description_2', { domain: host })}
                 </Trans>
               </span>
             )}
           </FormField>
         )}
-        <FormField
-          isRequired
-          title="protected_app.form.url_field_label"
-          description={cond(
-            getFieldState('protectedAppMetadata.origin').isDirty &&
-              'protected_app.form.url_field_modification_notice'
-          )}
-          tip={<span className={styles.tip}>{t('application_details.origin_url_tip')}</span>}
-        >
-          <TextInput
-            {...register('protectedAppMetadata.origin', { required: true })}
-            error={Boolean(errors.protectedAppMetadata?.origin)}
-            placeholder={t('protected_app.form.url_field_placeholder')}
-          />
-        </FormField>
         <FormField
           title="application_details.custom_rules"
           description="application_details.custom_rules_description"
@@ -175,7 +185,9 @@ function ProtectedAppSettings({ data }: Props) {
           {fields.map((field, index) => (
             <TextInput
               key={field.id}
-              {...register(`protectedAppMetadata.pageRules.${index}.path`)}
+              {...register(`protectedAppMetadata.pageRules.${index}.path`, {
+                validate: (value) => !value || isValidRegEx(value) || t('errors.invalid_regex'),
+              })}
               error={Boolean(errors.protectedAppMetadata?.pageRules?.[index]?.path)}
               placeholder={t('application_details.custom_rules_placeholder')}
             />

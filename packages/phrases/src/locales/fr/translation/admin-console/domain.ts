@@ -15,8 +15,9 @@ const domain = {
     custom_domain_field: 'Domaine personnalisé',
     custom_domain_placeholder: 'votre.domaine.com',
     add_domain: 'Ajouter un domaine',
+    /** UNTRANSLATED */
     invalid_domain_format:
-      'Format de sous-domaine invalide. Veuillez entrer un sous-domaine d’au moins trois parties.',
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: 'Vérifier le domaine',
     enable_ssl: 'Activer SSL',
     checking_dns_tip:

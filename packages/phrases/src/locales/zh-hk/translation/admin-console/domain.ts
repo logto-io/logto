@@ -13,7 +13,9 @@ const domain = {
     custom_domain_field: '自定義域名',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '添加域名',
-    invalid_domain_format: '子域名格式無效，請輸入至少三個子域名部分。',
+    /** UNTRANSLATED */
+    invalid_domain_format:
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: '驗證域名',
     enable_ssl: '啟用 SSL',
     checking_dns_tip:
