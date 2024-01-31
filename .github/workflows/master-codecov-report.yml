@@ -23,13 +23,13 @@ jobs:
         run: pnpm ci:test
 
       - name: Codecov Core
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: core
           directory: ./packages/core
 
       - name: Codecov UI
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: experience
           directory: ./packages/experience
