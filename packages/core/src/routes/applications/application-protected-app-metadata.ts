@@ -13,11 +13,7 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
     router,
     {
       queries: {
-        applications: {
-          findApplicationById,
-          updateApplicationById,
-          findApplicationByProtectedAppCustomDomain,
-        },
+        applications: { findApplicationById, updateApplicationById },
       },
       libraries: {
         applications: { validateProtectedApplicationById },
@@ -78,17 +74,11 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
       const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
       assertThat(protectedAppMetadata, 'application.protected_app_not_configured');
 
+      // Only allow one domain, be careful when changing this, the unique index on the database
+      // is based on this assumption
       assertThat(
         !protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0,
         'domain.limit_to_one_domain'
-      );
-
-      assertThat(
-        !(await findApplicationByProtectedAppCustomDomain(domain)),
-        new RequestError({
-          code: 'domain.hostname_already_exists',
-          status: 422,
-        })
       );
 
       const customDomain = await addDomainToRemote(domain);
