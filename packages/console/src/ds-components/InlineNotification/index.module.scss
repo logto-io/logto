@@ -35,10 +35,6 @@
 
   &.alert {
     background: var(--color-alert-container);
-
-    .icon {
-      color: var(--color-on-alert-container);
-    }
   }
 
   &.success {

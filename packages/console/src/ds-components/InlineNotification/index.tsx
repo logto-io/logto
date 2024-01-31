@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { forwardRef } from 'react';
 import type { ReactNode, Ref } from 'react';
 
+import Alert from '@/assets/icons/alert.svg';
 import Info from '@/assets/icons/info.svg';
 import Error from '@/assets/icons/toast-error.svg';
 import Success from '@/assets/icons/toast-success.svg';
@@ -29,9 +30,11 @@ type Props = {
 
 function NotificationIcon({ severity }: Required<Pick<Props, 'severity'>>) {
   switch (severity) {
-    case 'info':
-    case 'alert': {
+    case 'info': {
       return <Info />;
+    }
+    case 'alert': {
+      return <Alert />;
     }
     case 'success': {
       return <Success />;

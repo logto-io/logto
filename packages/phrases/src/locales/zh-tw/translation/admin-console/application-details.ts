@@ -108,7 +108,7 @@ const application_details = {
   implement_jwt_verification: 'Implement JWT verification',
   /** UNTRANSLATED */
   implement_jwt_verification_description:
-    'Configure JWT in your service for essential security communication. Follow the <a>JWT implementation guide</a>.',
+    'Validating JWT in your service before going online is essential for secure communications. Without it, your app will remain vulnerable to unauthorized access. Please <a>follow the guide</a>.',
   /** UNTRANSLATED */
   session_duration: 'Session duration (days)',
   /** UNTRANSLATED */
