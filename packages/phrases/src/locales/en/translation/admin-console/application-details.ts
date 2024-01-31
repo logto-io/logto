@@ -84,7 +84,7 @@ const application_details = {
     'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
   implement_jwt_verification: 'Implement JWT verification',
   implement_jwt_verification_description:
-    'Configure JWT in your service for essential security communication. Follow the <a>JWT implementation guide</a>.',
+    'Validating JWT in your service before going online is essential for secure communications. Without it, your app will remain vulnerable to unauthorized access. Please <a>follow the guide</a>.',
   session_duration: 'Session duration (days)',
   try_it: 'Try it',
   branding: {

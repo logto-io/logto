@@ -17,9 +17,11 @@ import OpenExternalLink from '@/components/OpenExternalLink';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import Spacer from '@/ds-components/Spacer';
 import TextInput from '@/ds-components/TextInput';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
+import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import AddDomainForm from '@/pages/TenantSettings/TenantDomainSettings/AddDomainForm';
@@ -208,6 +210,25 @@ function ProtectedAppSettings({ data }: Props) {
               <CopyToClipboard key={route} variant="border" value={route} />
             ))}
           </div>
+        </FormField>
+        <FormField title="application_details.implement_jwt_verification">
+          <InlineNotification severity="alert">
+            <Trans
+              components={{
+                a: (
+                  <TextLink
+                    // TODO: @charles please update the doc link
+                    href={getDocumentationUrl(
+                      '/docs/recipes/protect-your-api/#validate-the-api-requests-authorization-token'
+                    )}
+                    targetBlank="noopener"
+                  />
+                ),
+              }}
+            >
+              {t('application_details.implement_jwt_verification_description')}
+            </Trans>
+          </InlineNotification>
         </FormField>
       </FormCard>
       <FormCard title="application_details.session">
