@@ -1,7 +1,7 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { type SsoConnectorWithProviderConfig, ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useContext, useCallback } from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
@@ -13,7 +13,6 @@ import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
 import { isCloud } from '@/consts/env';
-import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -45,10 +44,6 @@ function EnterpriseSsoConnectors() {
   });
 
   const isSsoEnabled = !isCloud || currentPlan.quota.ssoEnabled;
-
-  const handleButtonClick = useCallback(() => {
-    navigate(isSsoEnabled ? createEnterpriseSsoPathname : subscriptionPage);
-  }, [isSsoEnabled, navigate]);
 
   const url = buildUrl('api/sso-connectors', {
     page: String(page),
@@ -150,11 +145,13 @@ function EnterpriseSsoConnectors() {
             description="enterprise_sso.placeholder_description"
             action={
               <Button
-                title={isSsoEnabled ? 'enterprise_sso.create' : 'upsell.upgrade_plan'}
+                title="enterprise_sso.create"
                 type="primary"
                 size="large"
-                icon={conditional(isSsoEnabled && <Plus />)}
-                onClick={handleButtonClick}
+                icon={<Plus />}
+                onClick={() => {
+                  navigate(createEnterpriseSsoPathname);
+                }}
               />
             }
           />
