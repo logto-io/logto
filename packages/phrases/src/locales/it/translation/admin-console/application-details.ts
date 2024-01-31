@@ -81,20 +81,17 @@ const application_details = {
   redirect_uri_required: 'Devi inserire almeno un URI di reindirizzamento',
   /** UNTRANSLATED */
   app_domain_description_1:
-    'Feel free to use your subdomain with protected.app powered by Logto, which is permanently valid.',
+    'Feel free to use your domain with {{domain}} powered by Logto, which is permanently valid.',
   /** UNTRANSLATED */
   app_domain_description_2:
     'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
-  /** UNTRANSLATED */
-  origin_url_tip:
-    "Enter primary website address of your application, excluding any '/pathname'.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
   /** UNTRANSLATED */
   custom_rules: 'Custom authentication rules',
   /** UNTRANSLATED */
   custom_rules_placeholder: '^/(admin|privacy)/.+$',
   /** UNTRANSLATED */
   custom_rules_description:
-    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if blank.',
+    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if left blank.',
   /** UNTRANSLATED */
   authentication_routes: 'Authentication routes',
   /** UNTRANSLATED */

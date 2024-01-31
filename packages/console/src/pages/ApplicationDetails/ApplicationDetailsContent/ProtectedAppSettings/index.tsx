@@ -10,11 +10,13 @@ import { type ChangeEvent, useState } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
 
 import ExternalLinkIcon from '@/assets/icons/external-link.svg';
 import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
 import OpenExternalLink from '@/components/OpenExternalLink';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
@@ -48,6 +50,9 @@ function ProtectedAppSettings({ data }: Props) {
     mutate,
   } = useSWR<CustomDomainType[]>(
     `api/applications/${data.id}/protected-app-metadata/custom-domains`
+  );
+  const { data: systemDomainData } = useSWRImmutable<ProtectedAppsDomainConfig>(
+    isDevFeaturesEnabled && isCloud && 'api/systems/application'
   );
   const api = useApi();
   const [isDeletingCustomDomain, setIsDeletingCustomDomain] = useState(false);
@@ -113,7 +118,7 @@ function ProtectedAppSettings({ data }: Props) {
             getFieldState('protectedAppMetadata.origin').isDirty &&
               'protected_app.form.url_field_modification_notice'
           )}
-          tip={<span className={styles.tip}>{t('application_details.origin_url_tip')}</span>}
+          tip={t('protected_app.form.url_field_tooltip')}
         >
           <TextInput
             {...register('protectedAppMetadata.origin', {
@@ -168,7 +173,9 @@ function ProtectedAppSettings({ data }: Props) {
             {customDomain?.status !== DomainStatus.Active && (
               <>
                 <div className={styles.label}>
-                  {t('application_details.app_domain_description_1')}
+                  {t('application_details.app_domain_description_1', {
+                    domain: systemDomainData?.protectedApps.defaultDomain,
+                  })}
                 </div>
                 <div className={styles.hostInUse}>
                   <span className={styles.host}>{host}</span>

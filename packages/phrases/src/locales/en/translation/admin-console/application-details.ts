@@ -68,15 +68,13 @@ const application_details = {
   application_deleted: 'Application {{name}} has been successfully deleted',
   redirect_uri_required: 'You must enter at least one redirect URI',
   app_domain_description_1:
-    'Feel free to use your subdomain with protected.app powered by Logto, which is permanently valid.',
+    'Feel free to use your domain with {{domain}} powered by Logto, which is permanently valid.',
   app_domain_description_2:
     'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
-  origin_url_tip:
-    "Enter primary website address of your application, excluding any '/pathname'.\n\nNote: The Origin URL itself won't require authentication; only accesses via the added app domain will be protected.",
   custom_rules: 'Custom authentication rules',
   custom_rules_placeholder: '^/(admin|privacy)/.+$',
   custom_rules_description:
-    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if blank.',
+    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if left blank.',
   authentication_routes: 'Authentication routes',
   custom_rules_tip:
     "Here are two case scenarios:<ol><li>To only protect routes '/admin' and '/privacy' with authentication: ^/(admin|privacy)/.*</li><li>To exclude JPG images from authentication: ^(?!.*\\.jpg$).*$</li></ol>",
