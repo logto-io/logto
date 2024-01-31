@@ -52,6 +52,9 @@ const paywall = {
   mfa: 'Разблокируйте MFA для повышения безопасности с помощью перехода на платный план. Не стесняйтесь <a>связаться с нами</a>, если вам нужна помощь.',
   organizations:
     'Разблокируйте организации, перейдя на платный план. Не стесняйтесь <a>связаться с нами</a>, если вам нужна помощь.',
+  /** UNTRANSLATED */
+  third_party_apps:
+    'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
 };
 
 export default Object.freeze(paywall);

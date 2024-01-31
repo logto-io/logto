@@ -52,6 +52,9 @@ const paywall = {
   mfa: 'Schalten Sie MFA zur Sicherheitsüberprüfung frei, indem Sie auf einen kostenpflichtigen Plan aktualisieren. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Unterstützung benötigen.',
   organizations:
     'Organisationen freischalten, indem Sie auf einen kostenpflichtigen Plan aktualisieren. Zögern Sie nicht, <a>kontaktieren Sie uns</a>, wenn Sie Unterstützung benötigen.',
+  /** UNTRANSLATED */
+  third_party_apps:
+    'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
 };
 
 export default Object.freeze(paywall);

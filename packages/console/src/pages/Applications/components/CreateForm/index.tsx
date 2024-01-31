@@ -105,7 +105,14 @@ function CreateForm({
         title="applications.create"
         subtitle={subtitleElement}
         size={defaultCreateType ? 'medium' : 'large'}
-        footer={<Footer selectedType={value} isLoading={isSubmitting} onClickCreate={onSubmit} />}
+        footer={
+          <Footer
+            selectedType={value}
+            isLoading={isSubmitting}
+            isThirdParty={isDefaultCreateThirdParty}
+            onClickCreate={onSubmit}
+          />
+        }
         onClose={onClose}
       >
         <form>
