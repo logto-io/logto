@@ -6,7 +6,7 @@ import {
 } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { type ChangeEvent, useState } from 'react';
+import { type ChangeEvent, useState, useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -56,6 +56,7 @@ function ProtectedAppSettings({ data }: Props) {
     control,
     register,
     getFieldState,
+    setValue,
     formState: { errors },
   } = useFormContext<ApplicationForm>();
 
@@ -63,6 +64,12 @@ function ProtectedAppSettings({ data }: Props) {
     control,
     name: 'protectedAppMetadata.pageRules',
   });
+
+  useEffect(() => {
+    if (fields.length === 0) {
+      setValue('protectedAppMetadata.pageRules', [{ path: '' }]);
+    }
+  }, [fields.length, setValue]);
 
   if (!data.protectedAppMetadata) {
     return null;
