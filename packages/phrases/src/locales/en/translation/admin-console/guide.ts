@@ -7,7 +7,7 @@ const guide = {
     SPA: 'Single page app',
     Native: 'Native',
     MachineToMachine: 'Machine-to-machine',
-    Protected: 'Protected app',
+    Protected: 'Non-SDK Integration',
     ThirdParty: 'Third-party app',
   },
   filter: {

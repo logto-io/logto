@@ -7,7 +7,8 @@ const guide = {
     SPA: 'Aplicação de página única',
     Native: 'Nativo',
     MachineToMachine: 'Máquina-a-máquina',
-    Protected: 'Aplicação protegida',
+    /** UNTRANSLATED */
+    Protected: 'Non-SDK Integration',
     /** UNTRANSLATED */
     ThirdParty: 'Third-party app',
   },

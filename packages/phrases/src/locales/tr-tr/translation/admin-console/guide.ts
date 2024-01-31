@@ -7,7 +7,8 @@ const guide = {
     SPA: 'Tek sayfalık uygulama',
     Native: 'Doğal',
     MachineToMachine: 'Makineden makineye',
-    Protected: 'Korunan uygulama',
+    /** UNTRANSLATED */
+    Protected: 'Non-SDK Integration',
     /** UNTRANSLATED */
     ThirdParty: 'Third-party app',
   },
