@@ -324,7 +324,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router.post(
     `${interactionPrefix}/submit`,
     koaGuard({
-      status: [200, 204, 400, 401, 404, 422],
+      status: [200, 204, 400, 401, 403, 404, 422],
       response: z
         .object({
           redirectTo: z.string(),

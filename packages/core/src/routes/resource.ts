@@ -291,7 +291,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       params: object({ resourceId: string().min(1), scopeId: string().min(1) }),
       body: Scopes.createGuard.pick({ name: true, description: true }).partial(),
       response: Scopes.guard,
-      status: [200, 404, 422],
+      status: [200, 400, 404, 422],
     }),
     async (ctx, next) => {
       const {

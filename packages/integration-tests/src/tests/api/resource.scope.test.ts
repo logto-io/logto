@@ -1,3 +1,5 @@
+import assert from 'node:assert';
+
 import { defaultManagementApi } from '@logto/schemas';
 import { HTTPError } from 'got';
 
@@ -89,7 +91,9 @@ describe('scopes', () => {
     const response = await updateScope(resource.id, scope.id, {
       name: 'scope name',
     }).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+
+    assert(response instanceof HTTPError);
+    expect(response.response.statusCode).toBe(400);
   });
 
   it('should return 404 when update scope with invalid resource id', async () => {

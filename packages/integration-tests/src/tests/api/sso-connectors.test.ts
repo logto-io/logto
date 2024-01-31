@@ -64,7 +64,7 @@ describe('post sso-connectors', () => {
         providerName: 'OIDC',
         connectorName: 'test connector name',
       }),
-      { code: 'single_sign_on.duplicate_connector_name', statusCode: 400 }
+      { code: 'single_sign_on.duplicate_connector_name', statusCode: 409 }
     );
 
     await deleteSsoConnectorById(id);
@@ -202,7 +202,7 @@ describe('patch sso-connector by id', () => {
       patchSsoConnectorById(id2, {
         connectorName: 'test connector name',
       }),
-      { code: 'single_sign_on.duplicate_connector_name', statusCode: 400 }
+      { code: 'single_sign_on.duplicate_connector_name', statusCode: 409 }
     );
 
     await deleteSsoConnectorById(id);

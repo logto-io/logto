@@ -91,7 +91,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
     `${interactionPrefix}/${verificationPath}/verification-code`,
     koaGuard({
       body: requestVerificationCodePayloadGuard,
-      status: [204, 400, 404],
+      status: [204, 400, 404, 501],
     }),
     async (ctx, next) => {
       const { interactionDetails, guard, createLog } = ctx;

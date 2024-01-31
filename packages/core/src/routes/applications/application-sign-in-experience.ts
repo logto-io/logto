@@ -43,7 +43,7 @@ function applicationSignInExperienceRoutes<T extends AuthedRouter>(
       }),
       body: applicationSignInExperienceCreateGuard,
       response: ApplicationSignInExperiences.guard,
-      status: [200, 201, 404],
+      status: [200, 201, 404, 422],
     }),
     async (ctx, next) => {
       const {
