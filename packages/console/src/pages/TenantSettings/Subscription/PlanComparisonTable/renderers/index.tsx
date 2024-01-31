@@ -71,6 +71,9 @@ export const quotaValueRenderer: Record<
       />
     );
   },
+  thirdPartyApplicationsLimit: ({ id, table: { thirdPartyApplicationsLimit } }) => {
+    return <GenericQuotaLimit quota={thirdPartyApplicationsLimit} />;
+  },
   // Resources
   resourcesLimit: ({ id, table: { resourcesLimit } }) => {
     const isPaidPlan = id === ReservedPlanId.Hobby;

@@ -37,6 +37,12 @@
     flex-shrink: 0;
   }
 
+  .tagWrapper {
+    display: flex;
+    align-items: center;
+    gap: _.unit(1);
+  }
+
   .infoWrapper {
     display: flex;
     flex-direction: column;

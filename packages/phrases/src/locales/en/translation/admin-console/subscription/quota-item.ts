@@ -34,6 +34,13 @@ const quota_item = {
     not_eligible: 'Remove your machine to machine apps',
     add_on: 'Additional machine-to-machine apps',
   },
+  third_party_applications_limit: {
+    name: 'Third-party apps',
+    limited: '{{count, number}} third-party app',
+    limited_other: '{{count, number}} third-party apps',
+    unlimited: 'Unlimited third-party apps',
+    not_eligible: 'Remove your third-party apps',
+  },
   resources_limit: {
     name: 'API resources',
     limited: '{{count, number}} API resource',

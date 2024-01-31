@@ -9,6 +9,8 @@ const quota_table = {
     title: 'アプリケーション',
     total: '総アプリケーション数',
     m2m: 'マシン・ツー・マシン',
+    /** UNTRANSLATED */
+    third_party: 'Third-party apps',
   },
   resource: {
     title: 'APIリソース',
@@ -90,6 +92,9 @@ const quota_table = {
     'Logtoによって発行されたすべての種類のトークン、アクセストークン、リフレッシュトークンなどを含みます。',
   mao_tip:
     'MAO（月間アクティブ組織）は、請求サイクル内で少なくとも1つのMAU（月間アクティブユーザー）を持つユニークな組織の数を意味します。',
+  /** UNTRANSLATED */
+  third_party_tip:
+    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
   included: '{{value, number}} 込み',
   included_mao: '{{value, number}} MAO込み',
   extra_quota_price: 'その後、各${{value, number}} / 月ごと',

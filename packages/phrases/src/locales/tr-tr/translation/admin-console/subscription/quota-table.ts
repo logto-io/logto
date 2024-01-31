@@ -9,6 +9,8 @@ const quota_table = {
     title: 'Uygulamalar',
     total: 'Toplam uygulama sayısı',
     m2m: 'Makine-makine uygulamaları',
+    /** UNTRANSLATED */
+    third_party: 'Third-party apps',
   },
   resource: {
     title: 'API Kaynakları',
@@ -90,6 +92,9 @@ const quota_table = {
     'Logto tarafından ihraç edilen erişim tokeni, yenileme tokeni vb. dahil olmak üzere tüm token türleri.',
   mao_tip:
     "MAO (aylık aktif kuruluş) bir fatura döngüsünde en az bir MAU'ya (aylık aktif kullanıcı) sahip olan benzersiz kuruluşların sayısını ifade eder.",
+  /** UNTRANSLATED */
+  third_party_tip:
+    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
   included: '{{value, number}} dahil',
   included_mao: '{{value, number}} MAO dahil',
   extra_quota_price: 'Sonra aylık ${{value, number}} / sonrasında her biri',

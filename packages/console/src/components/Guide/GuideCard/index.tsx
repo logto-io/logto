@@ -1,7 +1,11 @@
+import { ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
-import { Suspense, useCallback } from 'react';
+import { Suspense, useCallback, useContext } from 'react';
 
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
+import FeatureTag, { BetaTag } from '@/components/FeatureTag';
+import { isCloud } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -29,10 +33,14 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
   } = data;
 
   const buttonText = target === 'API' ? 'guide.get_started' : 'guide.start_building';
+  const { currentPlan } = useContext(SubscriptionDataContext);
+
+  const showPaywallTag = isCloud && isThirdParty;
+  const showBetaTag = isCloud && isThirdParty;
 
   const handleClick = useCallback(() => {
     onClick({ id, target, name, isThirdParty });
-  }, [id, name, target, onClick]);
+  }, [onClick, id, target, name, isThirdParty]);
 
   return (
     <div
@@ -55,6 +63,18 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
         <div className={styles.infoWrapper}>
           <div className={styles.flexRow}>
             <div className={styles.name}>{name}</div>
+            {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+            {showPaywallTag || showBetaTag ? (
+              <div className={styles.tagWrapper}>
+                {showPaywallTag && (
+                  <FeatureTag
+                    isVisible={currentPlan.quota.thirdPartyApplicationsLimit === 0}
+                    plan={ReservedPlanId.Pro}
+                  />
+                )}
+                {showBetaTag && <BetaTag />}
+              </div>
+            ) : null}
           </div>
           <div className={styles.description} title={description}>
             {description}

@@ -9,6 +9,8 @@ const quota_table = {
     title: 'Aplicações',
     total: 'Total de aplicações',
     m2m: 'Aplicação máquina-a-máquina',
+    /** UNTRANSLATED */
+    third_party: 'Third-party apps',
   },
   resource: {
     title: 'Recursos de API',
@@ -90,6 +92,9 @@ const quota_table = {
     'Todos os tipos de tokens emitidos pelo Logto, incluindo token de acesso, token de atualização, etc.',
   mao_tip:
     'MAO (Organização Ativa Mensal) significa o número de organizações únicas que têm pelo menos um MAU (Usuário Ativo Mensal) em um ciclo de faturamento.',
+  /** UNTRANSLATED */
+  third_party_tip:
+    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
   included: 'incluído{{value, number}}',
   included_mao: '{{value, number}} MAO incluído',
   extra_quota_price: 'Então ${{value, number}} por mês / cada depois',

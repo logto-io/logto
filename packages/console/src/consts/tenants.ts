@@ -66,6 +66,7 @@ export const defaultSubscriptionPlan: SubscriptionPlan = {
     ssoEnabled: true,
     communitySupportEnabled: true,
     ticketSupportResponseTime: 48,
+    thirdPartyApplicationsLimit: null,
   },
 };
 

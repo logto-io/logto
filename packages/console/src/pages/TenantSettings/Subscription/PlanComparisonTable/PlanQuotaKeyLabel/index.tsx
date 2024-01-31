@@ -17,6 +17,7 @@ const planQuotaKeyPhraseMap: {
   tokenLimit: 'quota.included_tokens',
   applicationsLimit: 'application.total',
   machineToMachineLimit: 'application.m2m',
+  thirdPartyApplicationsLimit: 'application.third_party',
   resourcesLimit: 'resource.resource_count',
   scopesPerResourceLimit: 'resource.scopes_per_resource',
   customDomainEnabled: 'branding.custom_domain',
@@ -60,6 +61,7 @@ const planQuotaTipPhraseMap: Partial<
   mauLimit: 'mau_tip',
   tokenLimit: 'tokens_tip',
   organizationsEnabled: 'mao_tip',
+  thirdPartyApplicationsLimit: 'third_party_tip',
 };
 
 type Props = {
