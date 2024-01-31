@@ -72,7 +72,7 @@ export default function singleSignOnConnectorsRoutes<T extends AuthedRouter>(
     koaGuard({
       body: ssoConnectorCreateGuard,
       response: SsoConnectors.guard,
-      status: [200, 422],
+      status: [200, 409, 422],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
@@ -98,7 +98,7 @@ export default function singleSignOnConnectorsRoutes<T extends AuthedRouter>(
       // Validate the connector name is unique
       if (connectorName) {
         const duplicateConnector = await ssoConnectors.findByConnectorName(connectorName);
-        assertThat(!duplicateConnector, 'single_sign_on.duplicate_connector_name');
+        assertThat(!duplicateConnector, 'single_sign_on.duplicate_connector_name', 409);
       }
 
       const connectorId = generateStandardShortId();
@@ -212,7 +212,7 @@ export default function singleSignOnConnectorsRoutes<T extends AuthedRouter>(
       params: z.object({ id: z.string().min(1) }),
       body: ssoConnectorPatchGuard,
       response: ssoConnectorWithProviderConfigGuard,
-      status: [200, 404, 422],
+      status: [200, 404, 409, 422],
     }),
     async (ctx, next) => {
       const {
@@ -238,7 +238,8 @@ export default function singleSignOnConnectorsRoutes<T extends AuthedRouter>(
         // Should not block the update of the current connector.
         assertThat(
           !duplicateConnector || duplicateConnector.id === id,
-          'single_sign_on.duplicate_connector_name'
+          'single_sign_on.duplicate_connector_name',
+          409
         );
       }
 

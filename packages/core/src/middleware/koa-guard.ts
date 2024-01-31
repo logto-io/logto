@@ -49,8 +49,11 @@ export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
    */
   response?: ZodType<ResponseT, ZodTypeDef, unknown>;
   /**
-   * Guard response status code. It produces a `ServerError` (500)
-   * if the response does not satisfy any of the given value(s).
+   * Guard response status code. It produces a `ServerError` (500) if the response does not satisfy
+   * any of the given value(s).
+   *
+   * Note: It will also guard the status code from `RequestError` that is thrown by inner
+   * middleware.
    */
   status?: number | number[];
   files?: ZodType<FilesT, ZodTypeDef, unknown>;
@@ -150,18 +153,42 @@ export default function koaGuard<
       GuardResponseT
     >
   > = async function (ctx, next) {
-    await (body ?? files
-      ? koaBody<StateT, ContextT>({ multipart: Boolean(files) })(ctx, async () => guard(ctx, next))
-      : guard(ctx, next));
+    /**
+     * Assert the status code matches the value(s) in the config. If the config does not
+     * specify a status code, it will not assert anything.
+     *
+     * @param value The status code to assert.
+     * @throws {StatusCodeError} If the status code does not match the value(s) in the config.
+     */
+    const assertStatusCode = (value: number) => {
+      if (status === undefined) {
+        return;
+      }
 
-    if (status !== undefined) {
       assertThat(
-        Array.isArray(status)
-          ? status.includes(ctx.response.status)
-          : status === ctx.response.status,
-        new StatusCodeError(status, ctx.response.status)
+        Array.isArray(status) ? status.includes(value) : status === value,
+        new StatusCodeError(status, value)
       );
+    };
+
+    try {
+      await (body ?? files
+        ? koaBody<StateT, ContextT>({ multipart: Boolean(files) })(ctx, async () =>
+            guard(ctx, next)
+          )
+        : guard(ctx, next));
+    } catch (error: unknown) {
+      // Assert the status code from `RequestError` that is thrown by inner middleware.
+      // Ignore guard errors since they will be always 400 and can be automatically documented
+      // in the OpenAPI route.
+      if (error instanceof RequestError && !error.code.startsWith('guard.')) {
+        assertStatusCode(error.status);
+      }
+
+      throw error;
     }
+
+    assertStatusCode(ctx.response.status);
 
     if (response !== undefined) {
       const result = response.safeParse(ctx.body);

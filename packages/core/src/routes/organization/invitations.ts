@@ -51,7 +51,7 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
           messagePayload: sendMessagePayloadGuard.or(z.literal(false)).default(false),
         }),
       response: organizationInvitationEntityGuard,
-      status: [201],
+      status: [201, 400, 501],
     }),
     async (ctx, next) => {
       const {
@@ -89,7 +89,7 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
           ]),
         }),
       response: organizationInvitationEntityGuard,
-      status: [200],
+      status: [200, 422],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;

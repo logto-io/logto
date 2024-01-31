@@ -45,7 +45,7 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
     customDomainsPathname,
     koaGuard({
       params: z.object(params),
-      status: [200, 400, 404],
+      status: [200, 400, 404, 501],
       response: customDomainsGuard,
     }),
     async (ctx, next) => {
@@ -65,20 +65,21 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
     koaGuard({
       params: z.object(params),
       body: z.object({ domain: z.string() }),
-      status: [201, 404, 422],
+      status: [201, 400, 404, 422, 501],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       const { domain } = ctx.guard.body;
 
       const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
-      assertThat(protectedAppMetadata, 'application.protected_app_not_configured');
+      assertThat(protectedAppMetadata, 'application.protected_app_not_configured', 501);
 
       // Only allow one domain, be careful when changing this, the unique index on the database
       // is based on this assumption
       assertThat(
         !protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0,
-        'domain.limit_to_one_domain'
+        'domain.limit_to_one_domain',
+        422
       );
 
       const customDomain = await addDomainToRemote(domain);
@@ -116,7 +117,7 @@ export default function applicationProtectedAppMetadataRoutes<T extends AuthedRo
         ...params,
         domain: z.string(),
       }),
-      status: [204, 404],
+      status: [204, 404, 501],
     }),
     async (ctx, next) => {
       const { id, domain } = ctx.guard.params;

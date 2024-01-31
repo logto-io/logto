@@ -354,7 +354,7 @@ describe('application route', () => {
     });
     await expect(applicationRequest.delete('/applications/foo')).resolves.toHaveProperty(
       'status',
-      400
+      422
     );
   });
 });

@@ -21,7 +21,7 @@ export default function verificationCodeRoutes<T extends AuthedRouter>(
     '/verification-codes',
     koaGuard({
       body: requestVerificationCodePayloadGuard,
-      status: [204, 400],
+      status: [204, 400, 501],
     }),
     async (ctx, next) => {
       const code = await createPasscode(undefined, codeType, ctx.guard.body);

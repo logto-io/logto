@@ -56,7 +56,7 @@ describe('application sign in experience', () => {
     );
   });
 
-  it('should throw 400 if application is not third-party', async () => {
+  it('should throw if application is not third-party', async () => {
     await expectRejects(
       setApplicationSignInExperience(
         applications.get('firstPartyApp')!.id,

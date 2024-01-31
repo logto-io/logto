@@ -54,6 +54,9 @@
           "201": {
             "description": "The organization invitation was created successfully."
           },
+          "400": {
+            "description": "The organization invitation could not be created. This can happen if the input is invalid or if the expiration date is in the past."
+          },
           "501": {
             "description": "No email connector is configured for the tenant."
           }
@@ -105,6 +108,9 @@
         "responses": {
           "200": {
             "description": "The organization invitation status was updated successfully."
+          },
+          "422": {
+            "description": "The organization invitation status could not be updated. This can happen if the current status is not \"Pending\" or if the status is \"Accepted\" and the accepted user ID is not provided."
           }
         }
       }

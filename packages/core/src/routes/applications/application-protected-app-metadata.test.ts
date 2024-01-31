@@ -126,7 +126,7 @@ describe('application protected app metadata routes', () => {
         .send({
           domain: mockDomain,
         });
-      expect(response.status).toEqual(400);
+      expect(response.status).toEqual(422);
     });
   });
 

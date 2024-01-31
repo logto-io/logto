@@ -68,7 +68,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
         */
         .merge(Connectors.createGuard.pick({ id: true }).partial()),
       response: connectorResponseGuard,
-      status: [200, 422],
+      status: [200, 400, 422],
     }),
     async (ctx, next) => {
       const {

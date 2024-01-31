@@ -110,7 +110,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: jsonObjectGuard,
       params: z.object({ connectorId: z.string().min(1) }),
-      status: 302,
+      status: [302, 404],
     }),
     async (ctx, next) => {
       const {

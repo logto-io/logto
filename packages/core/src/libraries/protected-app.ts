@@ -31,14 +31,14 @@ export type ProtectedAppLibrary = ReturnType<typeof createProtectedAppLibrary>;
 
 const getProviderConfig = async () => {
   const { protectedAppConfigProviderConfig } = SystemContext.shared;
-  assertThat(protectedAppConfigProviderConfig, 'application.protected_app_not_configured');
+  assertThat(protectedAppConfigProviderConfig, 'application.protected_app_not_configured', 501);
 
   return protectedAppConfigProviderConfig;
 };
 
 const getHostnameProviderConfig = async () => {
   const { protectedAppHostnameProviderConfig } = SystemContext.shared;
-  assertThat(protectedAppHostnameProviderConfig, 'application.protected_app_not_configured');
+  assertThat(protectedAppHostnameProviderConfig, 'application.protected_app_not_configured', 501);
 
   return protectedAppHostnameProviderConfig;
 };
@@ -114,7 +114,8 @@ const addDomainToRemote = async (
     !(blockedDomains ?? []).some(
       (domain) => hostname === domain || isSubdomainOf(hostname, domain)
     ),
-    'domain.domain_is_not_allowed'
+    'domain.domain_is_not_allowed',
+    422
   );
 
   const [fallbackOrigin, cloudflareData] = await Promise.all([
@@ -205,11 +206,11 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     }
   > => {
     const { protectedAppHostnameProviderConfig } = SystemContext.shared;
-    assertThat(protectedAppHostnameProviderConfig, 'domain.not_configured');
+    assertThat(protectedAppHostnameProviderConfig, 'domain.not_configured', 501);
 
     const application = await findApplicationById(applicationId);
     const { protectedAppMetadata } = application;
-    assertThat(protectedAppMetadata, 'application.protected_app_not_configured');
+    assertThat(protectedAppMetadata, 'application.protected_app_not_configured', 501);
 
     if (!protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0) {
       return {
@@ -220,7 +221,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
 
     const customDomains: CustomDomain[] = await Promise.all(
       protectedAppMetadata.customDomains.map(async (domain) => {
-        assertThat(domain.cloudflareData, 'domain.cloudflare_data_missing');
+        assertThat(domain.cloudflareData, 'domain.cloudflare_data_missing', 501);
 
         const cloudflareData = await getCustomHostname(
           protectedAppHostnameProviderConfig,
@@ -259,7 +260,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       }
     );
     // Not expected to happen, just to make TS happy
-    assertThat(updatedProtectedAppMetadata, 'application.protected_app_not_configured');
+    assertThat(updatedProtectedAppMetadata, 'application.protected_app_not_configured', 501);
 
     return {
       ...application,
