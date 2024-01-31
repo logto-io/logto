@@ -9,6 +9,7 @@
   padding: _.unit(0.5) _.unit(2);
   color: var(--color-white);
   text-transform: capitalize;
+  user-select: none;
 }
 
 .beta {
