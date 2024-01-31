@@ -3327,8 +3327,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-c6ed487
-        version: 0.2.5-c6ed487(zod@3.22.4)
+        specifier: 0.2.5-faca9a9
+        version: 0.2.5-faca9a9(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -15511,7 +15511,7 @@ packages:
       jest: ^28.1.0 || ^29.1.2
       react: ^17.0.0 || ^18.0.0
     dependencies:
-      jest: 29.7.0(@types/node@18.19.3)
+      jest: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2)
       react: 18.2.0
     dev: true
 

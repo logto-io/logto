@@ -23,7 +23,7 @@ export const createQuotaLibrary = (
   connectorLibrary: ConnectorLibrary
 ) => {
   const {
-    applications: { countAllApplications, countM2mApplications },
+    applications: { countThirdPartyApplications, countAllApplications, countM2mApplications },
     resources: { findTotalNumberOfResources },
     hooks: { getTotalNumberOfHooks },
     roles: { countRoles },
@@ -38,6 +38,7 @@ export const createQuotaLibrary = (
     (queryKey?: string) => Promise<{ count: number }>
   > = {
     applicationsLimit: countAllApplications,
+    thirdPartyApplicationsLimit: countThirdPartyApplications,
     hooksLimit: getTotalNumberOfHooks,
     machineToMachineLimit: countM2mApplications,
     resourcesLimit: async () => {
