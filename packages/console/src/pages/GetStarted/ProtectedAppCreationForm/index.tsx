@@ -6,6 +6,7 @@ import useSWR from 'swr';
 
 import OpenExternalLink from '@/components/OpenExternalLink';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ProtectedAppCard from '@/pages/Applications/components/ProtectedAppCard';
 import ProtectedAppForm from '@/pages/Applications/components/ProtectedAppForm';
@@ -16,7 +17,9 @@ function ProtectedAppCreationForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getTo } = useTenantPathname();
   const { data, mutate } = useSWR<Application[]>('api/applications?types=Protected');
+  const { hasAppsReachedLimit } = useApplicationsUsage();
   const hasProtectedApps = !!data?.length;
+  const showCreationForm = !hasProtectedApps && !hasAppsReachedLimit;
 
   const mutateApps = useCallback(
     (app: Application) => {
@@ -27,18 +30,20 @@ function ProtectedAppCreationForm() {
 
   return (
     <div className={styles.container}>
-      <ProtectedAppCard hasCreateButton={hasProtectedApps} onCreateSuccess={mutateApps} />
-      <div className={styles.separator} />
-      {!hasProtectedApps && (
-        <div className={styles.form}>
-          <ProtectedAppForm
-            hasDetailedInstructions
-            buttonAlignment="left"
-            buttonText="protected_app.form.create_protected_app"
-            buttonSize="medium"
-            onCreateSuccess={mutateApps}
-          />
-        </div>
+      <ProtectedAppCard hasCreateButton={!showCreationForm} onCreateSuccess={mutateApps} />
+      {showCreationForm && (
+        <>
+          <div className={styles.separator} />
+          <div className={styles.form}>
+            <ProtectedAppForm
+              hasDetailedInstructions
+              buttonAlignment="left"
+              buttonText="protected_app.form.create_protected_app"
+              buttonSize="medium"
+              onCreateSuccess={mutateApps}
+            />
+          </div>
+        </>
       )}
       {hasProtectedApps && (
         <div className={styles.protectedApps}>

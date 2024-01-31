@@ -4,16 +4,22 @@ import { isValidSubdomain } from '@logto/shared/universal';
 import { condString, conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { HTTPError } from 'ky';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import useSWRImmutable from 'swr/immutable';
 
+import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
+import PlanName from '@/components/PlanName';
+import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import * as styles from './index.module.scss';
@@ -41,6 +47,9 @@ function ProtectedAppForm({
   const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(
     isDevFeaturesEnabled && isCloud && 'api/systems/application'
   );
+  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { hasAppsReachedLimit } = useApplicationsUsage();
+  const { name: planName, quota } = currentPlan;
   const defaultDomain = data?.protectedApps.defaultDomain ?? '';
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -166,17 +175,30 @@ function ProtectedAppForm({
           </div>
         </FormField>
       </div>
-      <Button
-        className={classNames(
-          styles.submitButton,
-          buttonAlignment === 'left' && styles.leftAligned
-        )}
-        size={buttonSize}
-        type="primary"
-        title={buttonText}
-        isLoading={isSubmitting}
-        onClick={onSubmit}
-      />
+      {hasAppsReachedLimit ? (
+        <QuotaGuardFooter>
+          <Trans
+            components={{
+              a: <ContactUsPhraseLink />,
+              planName: <PlanName name={planName} />,
+            }}
+          >
+            {t('upsell.paywall.applications', { count: quota.applicationsLimit ?? 0 })}
+          </Trans>
+        </QuotaGuardFooter>
+      ) : (
+        <Button
+          className={classNames(
+            styles.submitButton,
+            buttonAlignment === 'left' && styles.leftAligned
+          )}
+          size={buttonSize}
+          type="primary"
+          title={buttonText}
+          isLoading={isSubmitting}
+          onClick={onSubmit}
+        />
+      )}
     </form>
   );
 }
