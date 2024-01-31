@@ -16,6 +16,7 @@ import * as styles from './index.module.scss';
 const featuredQuotaKeys = new Set<keyof SubscriptionPlanQuota>([
   'mauLimit',
   'machineToMachineLimit',
+  'thirdPartyApplicationsLimit',
   'rolesLimit',
   'scopesPerRoleLimit',
   'mfaEnabled',
