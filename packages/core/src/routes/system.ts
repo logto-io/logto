@@ -18,7 +18,7 @@ export default function systemRoutes<T extends AuthedRouter>(
       '/systems/application',
       koaGuard({
         response: object({ protectedApps: object({ defaultDomain: string() }) }),
-        status: [200],
+        status: [200, 501],
       }),
       async (ctx, next) => {
         const defaultDomain = await protectedApps.getDefaultDomain();
