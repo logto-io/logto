@@ -43,7 +43,7 @@
     "@logto/phrases-experience": "workspace:^1.5.0",
     "@logto/schemas": "workspace:^1.12.0",
     "@logto/shared": "workspace:^3.0.0",
-    "@silverhand/essentials": "^2.8.8",
+    "@silverhand/essentials": "^2.9.0",
     "@simplewebauthn/server": "^8.2.0",
     "@withtyped/client": "^0.7.22",
     "camelcase": "^8.0.0",

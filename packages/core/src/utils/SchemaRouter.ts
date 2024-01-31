@@ -1,7 +1,8 @@
 import { type SchemaLike, type GeneratedSchema } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { type DeepPartial } from '@silverhand/essentials';
+import { type DeepPartial, isPlainObject } from '@silverhand/essentials';
 import camelcase from 'camelcase';
+import deepmerge from 'deepmerge';
 import { type MiddlewareType } from 'koa';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
@@ -122,16 +123,7 @@ export default class SchemaRouter<
   ) {
     super({ prefix: '/' + tableToPathname(schema.table) });
 
-    const { disabled, ...rest } = config;
-
-    this.config = {
-      ...defaultConfig,
-      disabled: {
-        ...defaultConfig.disabled,
-        ...disabled,
-      },
-      ...rest,
-    };
+    this.config = deepmerge(defaultConfig, config, { isMergeableObject: isPlainObject });
 
     if (this.config.middlewares?.length) {
       this.use(...this.config.middlewares);
