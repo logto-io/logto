@@ -122,6 +122,7 @@ function ProtectedAppForm({
           tip={conditional(!hasDetailedInstructions && t('protected_app.form.url_field_tooltip'))}
         >
           <TextInput
+            className={styles.input}
             {...register('origin', {
               required: true,
               validate: (value) =>
@@ -153,7 +154,7 @@ function ProtectedAppForm({
         >
           <div className={styles.domainFieldWrapper}>
             <TextInput
-              className={styles.subdomain}
+              className={classNames(styles.input, styles.subdomain)}
               {...register('subDomain', {
                 required: true,
                 validate: (value) =>
