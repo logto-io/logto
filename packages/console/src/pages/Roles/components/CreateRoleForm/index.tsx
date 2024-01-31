@@ -1,17 +1,14 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import type { Role, ScopeResponse } from '@logto/schemas';
-import { ReservedPlanId, RoleType, internalRolePrefix } from '@logto/schemas';
+import { RoleType, internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
-import FeatureTag from '@/components/FeatureTag';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { isCloud } from '@/consts/env';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -24,11 +21,11 @@ import { trySubmitSafe } from '@/utils/form';
 import Footer from './Footer';
 import * as styles from './index.module.scss';
 
-type RadioOption = { key: AdminConsoleKey; value: RoleType; hasPaywall: boolean };
+type RadioOption = { key: AdminConsoleKey; value: RoleType };
 
 const radioOptions: RadioOption[] = [
-  { key: 'roles.type_user', value: RoleType.User, hasPaywall: false },
-  { key: 'roles.type_machine_to_machine', value: RoleType.MachineToMachine, hasPaywall: true },
+  { key: 'roles.type_user', value: RoleType.User },
+  { key: 'roles.type_machine_to_machine', value: RoleType.MachineToMachine },
 ];
 
 export type Props = {
@@ -46,7 +43,6 @@ type CreateRolePayload = Pick<Role, 'name' | 'description' | 'type'> & {
 function CreateRoleForm({ onClose }: Props) {
   const [isTypeSelectorVisible, setIsTypeSelectorVisible] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan } = useContext(SubscriptionDataContext);
 
   const {
     control,
@@ -143,22 +139,8 @@ function CreateRoleForm({ onClose }: Props) {
                     onChange(value);
                   }}
                 >
-                  {radioOptions.map(({ key, value, hasPaywall }) => (
-                    <Radio
-                      key={value}
-                      title={<DynamicT forKey={key} />}
-                      value={value}
-                      trailingIcon={
-                        hasPaywall &&
-                        isCloud && (
-                          <FeatureTag
-                            isVisible={!currentPlan.quota.machineToMachineLimit}
-                            plan={ReservedPlanId.Pro}
-                            className={styles.proTag}
-                          />
-                        )
-                      }
-                    />
+                  {radioOptions.map(({ key, value }) => (
+                    <Radio key={value} title={<DynamicT forKey={key} />} value={value} />
                   ))}
                 </RadioGroup>
               )}
