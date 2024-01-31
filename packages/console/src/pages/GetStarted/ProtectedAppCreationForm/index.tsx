@@ -1,4 +1,5 @@
 import { type Application } from '@logto/schemas';
+import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -16,7 +17,7 @@ import * as styles from './index.module.scss';
 function ProtectedAppCreationForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getTo } = useTenantPathname();
-  const { data, mutate } = useSWR<Application[]>('api/applications?types=Protected');
+  const { data, isLoading, mutate } = useSWR<Application[]>('api/applications?types=Protected');
   const { hasAppsReachedLimit } = useApplicationsUsage();
   const hasProtectedApps = !!data?.length;
   const showCreationForm = !hasProtectedApps && !hasAppsReachedLimit;
@@ -27,6 +28,18 @@ function ProtectedAppCreationForm() {
     },
     [data, mutate]
   );
+
+  if (isLoading) {
+    return (
+      <div className={styles.loadingSkeleton}>
+        <div className={classNames(styles.bone, styles.icon)} />
+        <div className={styles.columnWrapper}>
+          <div className={classNames(styles.bone, styles.title)} />
+          <div className={classNames(styles.bone, styles.description)} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>

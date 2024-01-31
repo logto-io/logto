@@ -5,7 +5,8 @@ import {
   type CustomDomain as CustomDomainType,
 } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
-import { type ChangeEvent } from 'react';
+import classNames from 'classnames';
+import { type ChangeEvent, useState } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -41,10 +42,15 @@ const maxSessionDuration = 365; // 1 year
 function ProtectedAppSettings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
-  const { data: customDomains = [], mutate } = useSWR<CustomDomainType[]>(
+  const {
+    data: customDomains = [],
+    isLoading: isLoadingCustomDomain,
+    mutate,
+  } = useSWR<CustomDomainType[]>(
     `api/applications/${data.id}/protected-app-metadata/custom-domains`
   );
   const api = useApi();
+  const [isDeletingCustomDomain, setIsDeletingCustomDomain] = useState(false);
 
   const {
     control,
@@ -68,6 +74,8 @@ function ProtectedAppSettings({ data }: Props) {
   const externalLink = `https://${
     customDomain?.status === DomainStatus.Active ? customDomain.domain : host
   }`;
+
+  const showCustomDomainLoadingMask = isLoadingCustomDomain || isDeletingCustomDomain;
 
   return (
     <>
@@ -124,7 +132,13 @@ function ProtectedAppSettings({ data }: Props) {
         </FormField>
         {!!host && (
           <FormField title="domain.custom.custom_domain_field">
-            {!customDomain && (
+            {showCustomDomainLoadingMask && (
+              <div className={styles.loadingSkeleton}>
+                <div className={classNames(styles.bone, styles.title)} />
+                <div className={classNames(styles.bone, styles.description)} />
+              </div>
+            )}
+            {!customDomain && !showCustomDomainLoadingMask && (
               <AddDomainForm
                 className={styles.customDomain}
                 onSubmitCustomDomain={async (json) => {
@@ -136,15 +150,17 @@ function ProtectedAppSettings({ data }: Props) {
                 }}
               />
             )}
-            {customDomain && (
+            {customDomain && !showCustomDomainLoadingMask && (
               <CustomDomain
                 hasOpenExternalLink
                 className={styles.customDomain}
                 customDomain={customDomain}
                 onDeleteCustomDomain={async () => {
+                  setIsDeletingCustomDomain(true);
                   await api.delete(
                     `api/applications/${data.id}/protected-app-metadata/custom-domains/${customDomain.domain}`
                   );
+                  setIsDeletingCustomDomain(false);
                   void mutate();
                 }}
               />
