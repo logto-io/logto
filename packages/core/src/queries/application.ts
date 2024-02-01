@@ -161,6 +161,16 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     return { count: Number(count) };
   };
 
+  const countThirdPartyApplications = async () => {
+    const { count } = await pool.one<{ count: string }>(sql`
+      select count(*)
+      from ${table}
+      where ${fields.isThirdParty} = true
+    `);
+
+    return { count: Number(count) };
+  };
+
   const countM2mApplicationsByIds = async (search: Search, applicationIds: string[]) => {
     if (applicationIds.length === 0) {
       return { count: 0 };
@@ -228,6 +238,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
 
   return {
     countApplications,
+    countThirdPartyApplications,
     findApplications,
     findTotalNumberOfApplications,
     findApplicationById,

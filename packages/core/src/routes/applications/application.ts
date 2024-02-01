@@ -151,6 +151,12 @@ export default function applicationRoutes<T extends AuthedRouter>(
       if (rest.type === ApplicationType.MachineToMachine) {
         await quota.guardKey('machineToMachineLimit');
       }
+
+      // Guard third party application limit
+      if (rest.isThirdParty) {
+        await quota.guardKey('thirdPartyApplicationsLimit');
+      }
+
       await quota.guardKey('applicationsLimit');
 
       assertThat(
