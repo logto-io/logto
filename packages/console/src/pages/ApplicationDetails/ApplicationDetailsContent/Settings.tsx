@@ -31,7 +31,7 @@ function Settings({ data }: Props) {
     formState: { errors },
   } = useFormContext<Application>();
 
-  const { type: applicationType, isThirdParty } = data;
+  const { type: applicationType } = data;
 
   const isNativeApp = applicationType === ApplicationType.Native;
   const isProtectedApp = applicationType === ApplicationType.Protected;

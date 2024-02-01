@@ -80,9 +80,9 @@ const application_details = {
     "Here are two case scenarios:<ol><li>To only protect routes '/admin' and '/privacy' with authentication: ^/(admin|privacy)/.*</li><li>To exclude JPG images from authentication: ^(?!.*\\.jpg$).*$</li></ol>",
   authentication_routes_description:
     'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
-  implement_jwt_verification: 'Implement JWT verification',
-  implement_jwt_verification_description:
-    'Validating JWT in your service before going online is essential for secure communications. Without it, your app will remain vulnerable to unauthorized access. Please <a>follow the guide</a>.',
+  protect_origin_server: 'Protect your origin server',
+  protect_origin_server_description:
+    'Ensure to protect your origin server from direct access. Refer to the guide for more <a>detailed instructions</a>.',
   session_duration: 'Session duration (days)',
   try_it: 'Try it',
   branding: {

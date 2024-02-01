@@ -140,7 +140,11 @@ function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidc
       <FormField title="application_details.application_id">
         <CopyToClipboard isFullWidth value={id} variant="border" />
       </FormField>
-      {[ApplicationType.Traditional, ApplicationType.MachineToMachine].includes(type) && (
+      {[
+        ApplicationType.Traditional,
+        ApplicationType.MachineToMachine,
+        ApplicationType.Protected,
+      ].includes(type) && (
         <FormField title="application_details.application_secret">
           <CopyToClipboard hasVisibilityToggle isFullWidth value={secret} variant="border" />
         </FormField>
