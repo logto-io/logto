@@ -84,18 +84,14 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
   );
 
   const onDelete = async () => {
-    if (isDeleting) {
-      return;
-    }
-
+    setIsDeleting(true);
     try {
       await api.delete(`api/applications/${data.id}`);
       setIsDeleted(true);
-      setIsDeleting(false);
       setIsDeleteFormOpen(false);
       toast.success(t('application_details.application_deleted', { name: data.name }));
       navigate(`/applications`);
-    } catch {
+    } finally {
       setIsDeleting(false);
     }
   };
