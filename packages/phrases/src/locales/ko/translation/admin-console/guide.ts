@@ -7,7 +7,8 @@ const guide = {
     SPA: '싱글 페이지 앱',
     Native: '네이티브',
     MachineToMachine: '기계 간 통신',
-    Protected: '보호된 앱',
+    /** UNTRANSLATED */
+    Protected: 'Non-SDK Integration',
     /** UNTRANSLATED */
     ThirdParty: 'Third-party app',
   },

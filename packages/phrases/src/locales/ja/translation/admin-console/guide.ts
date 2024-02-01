@@ -7,7 +7,8 @@ const guide = {
     SPA: 'シングルページアプリ',
     Native: 'ネイティブ',
     MachineToMachine: 'Machine-to-machine',
-    Protected: '保護されたアプリ',
+    /** UNTRANSLATED */
+    Protected: 'Non-SDK Integration',
     /** UNTRANSLATED */
     ThirdParty: 'Third-party app',
   },

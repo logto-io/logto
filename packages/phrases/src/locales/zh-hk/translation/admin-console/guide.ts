@@ -7,7 +7,8 @@ const guide = {
     SPA: '單頁應用',
     Native: '原生應用',
     MachineToMachine: '機器對機器',
-    Protected: '受保護的應用程式',
+    /** UNTRANSLATED */
+    Protected: 'Non-SDK Integration',
     /** UNTRANSLATED */
     ThirdParty: 'Third-party app',
   },
