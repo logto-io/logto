@@ -51,10 +51,13 @@ const createRouters = (tenant: TenantContext) => {
   applicationRoutes(managementRouter, tenant);
   applicationRoleRoutes(managementRouter, tenant);
 
+  // Third-party application related routes
+  applicationUserConsentScopeRoutes(managementRouter, tenant);
+  applicationSignInExperienceRoutes(managementRouter, tenant);
+  applicationUserConsentOrganizationRoutes(managementRouter, tenant);
+
+  // FIXME: @wangsijie: remove this after the feature is enabled by default
   if (EnvSet.values.isDevFeaturesEnabled) {
-    applicationUserConsentScopeRoutes(managementRouter, tenant);
-    applicationSignInExperienceRoutes(managementRouter, tenant);
-    applicationUserConsentOrganizationRoutes(managementRouter, tenant);
     applicationProtectedAppMetadataRoutes(managementRouter, tenant);
   }
 

@@ -16,7 +16,6 @@ import { type IRouterParamContext } from 'koa-router';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { consent, getMissingScopes } from '#src/libraries/session.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -125,10 +124,8 @@ export default function consentRoutes<T extends IRouterParamContext>(
         },
       } = ctx;
 
-      // FIXME: @simeng-li remove this when the IdP is ready
-
       // Grant the organizations to the application if the user has selected the organizations
-      if (organizationIds?.length && EnvSet.values.isDevFeaturesEnabled) {
+      if (organizationIds?.length) {
         const {
           session,
           params: { client_id: applicationId },
@@ -162,11 +159,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
       return next();
     }
   );
-
-  // FIXME: @simeng-li remove this when the IdP is ready
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
 
   /**
    * Get the consent info for the experience consent page.

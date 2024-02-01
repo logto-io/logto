@@ -108,25 +108,21 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
                 <div className={styles.checkboxGroupContainer}>
                   <CheckboxGroup
                     className={styles.checkboxGroup}
-                    options={allAppGuideCategories
-                      .filter(
-                        (category) => isDevFeaturesEnabled || category !== thirdPartyAppCategory
-                      )
-                      .map((category) => ({
-                        title: `guide.categories.${category}`,
-                        value: category,
-                        ...cond(
-                          isCloud &&
-                            category === 'ThirdParty' && {
-                              tag: (
-                                <FeatureTag
-                                  isVisible={currentPlan.quota.thirdPartyApplicationsLimit === 0}
-                                  plan={ReservedPlanId.Pro}
-                                />
-                              ),
-                            }
-                        ),
-                      }))}
+                    options={allAppGuideCategories.map((category) => ({
+                      title: `guide.categories.${category}`,
+                      value: category,
+                      ...cond(
+                        isCloud &&
+                          category === 'ThirdParty' && {
+                            tag: (
+                              <FeatureTag
+                                isVisible={currentPlan.quota.thirdPartyApplicationsLimit === 0}
+                                plan={ReservedPlanId.Pro}
+                              />
+                            ),
+                          }
+                      ),
+                    }))}
                     value={filterCategories}
                     onChange={(value) => {
                       const sortedValue = allAppGuideCategories.filter((category) =>

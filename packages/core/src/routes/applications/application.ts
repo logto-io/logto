@@ -9,7 +9,6 @@ import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -27,6 +26,14 @@ import {
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
+
+const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false' | undefined) => {
+  if (isThirdPartyQuery === undefined) {
+    return;
+  }
+
+  return isThirdPartyQuery === 'true';
+};
 
 const applicationTypeGuard = z.nativeEnum(ApplicationType);
 
@@ -48,26 +55,15 @@ export default function applicationRoutes<T extends AuthedRouter>(
     countApplications,
     findApplications,
   } = queries.applications;
+
   const {
     findApplicationsRolesByApplicationId,
     insertApplicationsRoles,
     deleteApplicationRole,
     findApplicationsRolesByRoleId,
   } = queries.applicationsRoles;
+
   const { findRoleByRoleName } = queries.roles;
-
-  const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false ' | undefined) => {
-    // FIXME:  @simeng-li Remove this guard once Logto as IdP is ready
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return false;
-    }
-
-    if (isThirdPartyQuery === undefined) {
-      return;
-    }
-
-    return isThirdPartyQuery === 'true';
-  };
 
   router.get(
     '/applications',
@@ -83,12 +79,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
           .or(applicationTypeGuard.transform((type) => [type]))
           .optional(),
         excludeRoleId: string().optional(),
-        // FIXME:  @simeng-li Remove this guard once Logto as IdP is ready
-        ...conditional(
-          EnvSet.values.isDevFeaturesEnabled && {
-            isThirdParty: z.union([z.literal('true'), z.literal('false')]).optional(),
-          }
-        ),
+        isThirdParty: z.union([z.literal('true'), z.literal('false')]).optional(),
       }),
       response: z.array(applicationResponseGuard),
       status: 200,
@@ -98,7 +89,6 @@ export default function applicationRoutes<T extends AuthedRouter>(
       const { searchParams } = ctx.URL;
       const { types, excludeRoleId, isThirdParty: isThirdPartyParam } = ctx.guard.query;
 
-      // @ts-expect-error FIXME: unknown type will be fixed once we have the isDevFeaturesEnabled guard removed
       const isThirdParty = parseIsThirdPartQueryParam(isThirdPartyParam);
 
       // This will only parse the `search` query param, other params will be ignored. Please use query guard to validate them.
