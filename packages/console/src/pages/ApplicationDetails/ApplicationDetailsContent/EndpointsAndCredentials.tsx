@@ -11,7 +11,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import CaretDown from '@/assets/icons/caret-down.svg';
 import CaretUp from '@/assets/icons/caret-up.svg';
 import FormCard from '@/components/FormCard';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
@@ -51,8 +50,8 @@ function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidc
         targetBlank: true,
       }}
     >
-      {/* Hide logto endpoint field in third-party application's form. @simeng-li FIXME: remove isDevFeatureEnabled flag */}
-      {tenantEndpoint && (!isDevFeaturesEnabled || !isThirdParty) && (
+      {/* Hide logto endpoint field in third-party application's form. */}
+      {tenantEndpoint && !isThirdParty && (
         <FormField title="application_details.logto_endpoint">
           <CopyToClipboard
             isFullWidth

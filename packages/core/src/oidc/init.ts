@@ -19,7 +19,7 @@ import koaBody from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -129,13 +129,8 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
           const scopes = await findResourceScopes(queries, libraries, ctx, indicator);
           const { client } = ctx.oidc;
 
-          // FIXME: @simeng-li Remove this check after the third-party client scope feature is released
           // Need to filter out the unsupported scopes for the third-party application.
-          if (
-            EnvSet.values.isDevFeaturesEnabled &&
-            client &&
-            (await isThirdPartyApplication(queries, client.clientId))
-          ) {
+          if (client && (await isThirdPartyApplication(queries, client.clientId))) {
             const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
               libraries,
               client.clientId,

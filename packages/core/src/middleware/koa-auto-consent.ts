@@ -4,7 +4,6 @@ import { type IRouterParamContext } from 'koa-router';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { consent } from '#src/libraries/session.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -34,8 +33,7 @@ export default function koaAutoConsent<StateT, ContextT extends IRouterParamCont
     const application =
       clientId === demoAppApplicationId ? undefined : await findApplicationById(clientId);
 
-    // FIXME: @simeng-li remove this when the IdP is ready
-    const shouldAutoConsent = !EnvSet.values.isDevFeaturesEnabled || !application?.isThirdParty;
+    const shouldAutoConsent = !application?.isThirdParty;
 
     if (shouldAutoConsent) {
       const redirectTo = await consent(ctx, provider, query, interactionDetails);

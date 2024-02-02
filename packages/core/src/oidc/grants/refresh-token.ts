@@ -33,7 +33,7 @@ import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
 import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -233,9 +233,7 @@ export const buildHandler: (
     }
 
     // Check if the organization is granted (third-party application only) by the user
-    // FIXME @simeng-li: remove the `isDevFeaturesEnabled` check when the feature is enabled
     if (
-      EnvSet.values.isDevFeaturesEnabled &&
       (await isThirdPartyApplication(queries, client.clientId)) &&
       !(await isOrganizationConsentedToApplication(
         queries,

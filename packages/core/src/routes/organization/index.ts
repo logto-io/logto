@@ -240,6 +240,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
   organizationRoleRoutes(...args);
   organizationScopeRoutes(...args);
 
+  // FIXME: @gao-sun
   if (EnvSet.values.isDevFeaturesEnabled) {
     organizationInvitationRoutes(...args);
   }

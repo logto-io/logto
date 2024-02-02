@@ -18,7 +18,6 @@ import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -165,7 +164,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             </TabNavItem>
           </>
         )}
-        {isDevFeaturesEnabled && data.isThirdParty && (
+        {data.isThirdParty && (
           <>
             <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Permissions}`}>
               {t('application_details.permissions.name')}
@@ -218,7 +217,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
           </TabWrapper>
         </>
       )}
-      {isDevFeaturesEnabled && data.isThirdParty && (
+      {data.isThirdParty && (
         <>
           <TabWrapper
             isActive={tab === ApplicationDetailsTabs.Permissions}

@@ -8,7 +8,7 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import ChargeNotification from '@/components/ChargeNotification';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
-import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -23,7 +23,6 @@ import { buildUrl } from '@/utils/url';
 import GuideLibrary from './components/GuideLibrary';
 import GuideLibraryModal from './components/GuideLibraryModal';
 import useApplicationsData from './hooks/use-application-data';
-import useLegacyApplicationsData from './hooks/use-legacy-application-data';
 import * as styles from './index.module.scss';
 
 const tabs = Object.freeze({
@@ -42,11 +41,6 @@ const buildTabPathWithPagePagination = (page: number, tab?: keyof typeof tabs) =
 
   return page > 1 ? buildUrl(pathname, { page: String(page) }) : pathname;
 };
-
-// @simeng-li FIXME: Remove this when the third party applications is production ready
-const useApplicationDataHook = isDevFeaturesEnabled
-  ? useApplicationsData
-  : useLegacyApplicationsData;
 
 type Props = {
   tab?: keyof typeof tabs;
@@ -68,7 +62,7 @@ function Applications({ tab }: Props) {
     updatePagination,
     paginationRecords,
     showThirdPartyApplicationTab,
-  } = useApplicationDataHook(tab === 'thirdPartyApplications');
+  } = useApplicationsData(tab === 'thirdPartyApplications');
 
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];

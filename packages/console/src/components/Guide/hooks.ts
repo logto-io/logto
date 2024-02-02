@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 
 import guides from '@/assets/docs/guides';
 import { type Guide } from '@/assets/docs/guides/types';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import {
   thirdPartyAppCategory,
   type AppGuideCategory,
@@ -34,12 +33,7 @@ export const useAppGuideMetadata = (): {
   ) => Record<AppGuideCategory, readonly Guide[]>;
 } => {
   const appGuides = useMemo(
-    () =>
-      guides.filter(
-        ({ metadata: { target, isThirdParty } }) =>
-          // @simeng-li #FIXME: remove isDevFeaturesEnabled check once we have all guides ready
-          target !== 'API' && (isDevFeaturesEnabled || !isThirdParty)
-      ),
+    () => guides.filter(({ metadata: { target } }) => target !== 'API'),
     []
   );
 

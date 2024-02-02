@@ -13,6 +13,7 @@ export default function systemRoutes<T extends AuthedRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
+  // FIXME: @wangsijie
   if (EnvSet.values.isDevFeaturesEnabled) {
     router.get(
       '/systems/application',
