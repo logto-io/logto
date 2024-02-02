@@ -17,7 +17,7 @@ import ExternalLinkIcon from '@/assets/icons/external-link.svg';
 import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
 import OpenExternalLink from '@/components/OpenExternalLink';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -58,7 +58,7 @@ function ProtectedAppSettings({ data }: Props) {
     `api/applications/${data.id}/protected-app-metadata/custom-domains`
   );
   const { data: systemDomainData } = useSWRImmutable<ProtectedAppsDomainConfig>(
-    isDevFeaturesEnabled && isCloud && 'api/systems/application'
+    isCloud && 'api/systems/application'
   );
   const api = useApi();
   const [isDeletingCustomDomain, setIsDeletingCustomDomain] = useState(false);

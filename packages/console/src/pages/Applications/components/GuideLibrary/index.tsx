@@ -11,7 +11,7 @@ import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -108,21 +108,23 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
                 <div className={styles.checkboxGroupContainer}>
                   <CheckboxGroup
                     className={styles.checkboxGroup}
-                    options={allAppGuideCategories.map((category) => ({
-                      title: `guide.categories.${category}`,
-                      value: category,
-                      ...cond(
-                        isCloud &&
-                          category === 'ThirdParty' && {
-                            tag: (
-                              <FeatureTag
-                                isVisible={currentPlan.quota.thirdPartyApplicationsLimit === 0}
-                                plan={ReservedPlanId.Pro}
-                              />
-                            ),
-                          }
-                      ),
-                    }))}
+                    options={allAppGuideCategories
+                      .filter((category) => isCloud || category !== 'Protected')
+                      .map((category) => ({
+                        title: `guide.categories.${category}`,
+                        value: category,
+                        ...cond(
+                          isCloud &&
+                            category === 'ThirdParty' && {
+                              tag: (
+                                <FeatureTag
+                                  isVisible={currentPlan.quota.thirdPartyApplicationsLimit === 0}
+                                  plan={ReservedPlanId.Pro}
+                                />
+                              ),
+                            }
+                        ),
+                      }))}
                     value={filterCategories}
                     onChange={(value) => {
                       const sortedValue = allAppGuideCategories.filter((category) =>
@@ -149,8 +151,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
             ))}
           {!keyword && (
             <>
-              {isDevFeaturesEnabled &&
-                isCloud &&
+              {isCloud &&
                 (filterCategories.length === 0 ||
                   filterCategories.includes(ApplicationType.Protected)) && (
                   <ProtectedAppCard
