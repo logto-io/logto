@@ -100,10 +100,10 @@ const application_details = {
   authentication_routes_description:
     'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
   /** UNTRANSLATED */
-  implement_jwt_verification: 'Implement JWT verification',
+  protect_origin_server: 'Protect your origin server',
   /** UNTRANSLATED */
-  implement_jwt_verification_description:
-    'Validating JWT in your service before going online is essential for secure communications. Without it, your app will remain vulnerable to unauthorized access. Please <a>follow the guide</a>.',
+  protect_origin_server_description:
+    'Ensure to protect your origin server from direct access. Refer to the guide for more <a>detailed instructions</a>.',
   /** UNTRANSLATED */
   session_duration: 'Session duration (days)',
   /** UNTRANSLATED */

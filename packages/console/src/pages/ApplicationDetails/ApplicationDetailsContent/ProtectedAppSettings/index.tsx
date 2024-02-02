@@ -3,6 +3,7 @@ import {
   DomainStatus,
   type Application,
   type CustomDomain as CustomDomainType,
+  type SnakeCaseOidcConfig,
 } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
@@ -17,6 +18,7 @@ import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
 import OpenExternalLink from '@/components/OpenExternalLink';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { openIdProviderConfigPath } from '@/consts/oidc';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
@@ -25,11 +27,12 @@ import Spacer from '@/ds-components/Spacer';
 import TextInput from '@/ds-components/TextInput';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
 import TextLink from '@/ds-components/TextLink';
-import useApi from '@/hooks/use-api';
+import useApi, { type RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import AddDomainForm from '@/pages/TenantSettings/TenantDomainSettings/AddDomainForm';
 import CustomDomain from '@/pages/TenantSettings/TenantDomainSettings/CustomDomain';
 
+import EndpointsAndCredentials from '../EndpointsAndCredentials';
 import { type ApplicationForm } from '../utils';
 
 import * as styles from './index.module.scss';
@@ -44,6 +47,9 @@ const maxSessionDuration = 365; // 1 year
 function ProtectedAppSettings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
+  const { data: oidcConfig } = useSWRImmutable<SnakeCaseOidcConfig, RequestError>(
+    openIdProviderConfigPath
+  );
   const {
     data: customDomains = [],
     isLoading: isLoadingCustomDomain,
@@ -76,7 +82,7 @@ function ProtectedAppSettings({ data }: Props) {
     }
   }, [fields.length, setValue]);
 
-  if (!data.protectedAppMetadata) {
+  if (!data.protectedAppMetadata || !oidcConfig) {
     return null;
   }
 
@@ -241,7 +247,7 @@ function ProtectedAppSettings({ data }: Props) {
             ))}
           </div>
         </FormField>
-        <FormField title="application_details.implement_jwt_verification">
+        <FormField title="application_details.protect_origin_server">
           <InlineNotification severity="alert">
             <Trans
               components={{
@@ -256,11 +262,12 @@ function ProtectedAppSettings({ data }: Props) {
                 ),
               }}
             >
-              {t('application_details.implement_jwt_verification_description')}
+              {t('application_details.protect_origin_server_description')}
             </Trans>
           </InlineNotification>
         </FormField>
       </FormCard>
+      <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
       <FormCard title="application_details.session">
         <FormField title="application_details.session_duration">
           <Controller

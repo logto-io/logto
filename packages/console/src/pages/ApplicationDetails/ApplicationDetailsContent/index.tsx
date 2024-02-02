@@ -192,6 +192,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             onSubmit={onSubmit}
           >
             <Settings data={data} />
+            {/* Protected apps will reference this section in <ProtectedAppSettings /> component */}
             {data.type !== ApplicationType.Protected && (
               <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
             )}
