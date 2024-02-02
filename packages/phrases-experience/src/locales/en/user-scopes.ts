@@ -5,7 +5,7 @@ const user_scopes = {
     [UserScope.CustomData]: 'Your custom data',
     [UserScope.Email]: 'Your email address',
     [UserScope.Phone]: 'Your phone number',
-    [UserScope.Profile]: 'Your name and avatar',
+    [UserScope.Profile]: 'Your name, username and avatar',
     [UserScope.Roles]: 'Your roles',
     [UserScope.Identities]: 'Your linked social identities',
     [UserScope.Organizations]: 'Your organizations info',
