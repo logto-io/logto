@@ -1,24 +1,21 @@
 import { dateRegex } from '@logto/core-kit';
 import { getNewUsersResponseGuard, getActiveUsersResponseGuard } from '@logto/schemas';
-import { endOfDay, format, subDays } from 'date-fns';
+import { subDays } from 'date-fns';
 import { number, object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
+import { getUtcDateString, getUtcEndOfTheDay } from '#src/utils/utc.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-const getDateString = (date: Date | number) => format(date, 'yyyy-MM-dd');
-
 const indices = (length: number) => [...Array.from({ length }).keys()];
-
-const getEndOfDayTimestamp = (date: Date | number) => endOfDay(date).valueOf();
 
 export default function dashboardRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {
-    logs: { countActiveUsersByTimeInterval, getDailyActiveUserCountsByTimeInterval },
     users: { countUsers, getDailyNewUserCountsByTimeInterval },
+    dailyActiveUsers: { getDailyActiveUserCountsByTimeInterval, countActiveUsersByTimeInterval },
   } = queries;
 
   router.get(
@@ -47,24 +44,24 @@ export default function dashboardRoutes<T extends AuthedRouter>(
       const today = Date.now();
       const dailyNewUserCounts = await getDailyNewUserCountsByTimeInterval(
         // (14 days ago 23:59:59.999, today 23:59:59.999]
-        getEndOfDayTimestamp(subDays(today, 14)),
-        getEndOfDayTimestamp(today)
+        getUtcEndOfTheDay(subDays(today, 14)),
+        getUtcEndOfTheDay(today)
       );
 
       const last14DaysNewUserCounts = new Map(
         dailyNewUserCounts.map(({ date, count }) => [date, count])
       );
 
-      const todayNewUserCount = last14DaysNewUserCounts.get(getDateString(today)) ?? 0;
+      const todayNewUserCount = last14DaysNewUserCounts.get(getUtcDateString(today)) ?? 0;
       const yesterday = subDays(today, 1);
-      const yesterdayNewUserCount = last14DaysNewUserCounts.get(getDateString(yesterday)) ?? 0;
+      const yesterdayNewUserCount = last14DaysNewUserCounts.get(getUtcDateString(yesterday)) ?? 0;
       const todayDelta = todayNewUserCount - yesterdayNewUserCount;
 
       const last7DaysNewUserCount = indices(7)
-        .map((index) => getDateString(subDays(today, index)))
+        .map((index) => getUtcDateString(subDays(today, index)))
         .reduce((sum, date) => sum + (last14DaysNewUserCounts.get(date) ?? 0), 0);
       const newUserCountFrom13DaysAgoTo7DaysAgo = indices(7)
-        .map((index) => getDateString(subDays(today, index + 7)))
+        .map((index) => getUtcDateString(subDays(today, index + 7)))
         .reduce((sum, date) => sum + (last14DaysNewUserCounts.get(date) ?? 0), 0);
       const last7DaysDelta = last7DaysNewUserCount - newUserCountFrom13DaysAgoTo7DaysAgo;
 
@@ -108,39 +105,39 @@ export default function dashboardRoutes<T extends AuthedRouter>(
       ] = await Promise.all([
         getDailyActiveUserCountsByTimeInterval(
           // (30 days ago 23:59:59.999, target day 23:59:59.999]
-          getEndOfDayTimestamp(subDays(targetDay, 30)),
-          getEndOfDayTimestamp(targetDay)
+          getUtcEndOfTheDay(subDays(targetDay, 30)),
+          getUtcEndOfTheDay(targetDay)
         ),
         countActiveUsersByTimeInterval(
           // (14 days ago 23:59:59.999, 7 days ago 23:59:59.999]
-          getEndOfDayTimestamp(subDays(targetDay, 14)),
-          getEndOfDayTimestamp(subDays(targetDay, 7))
+          getUtcEndOfTheDay(subDays(targetDay, 14)),
+          getUtcEndOfTheDay(subDays(targetDay, 7))
         ),
         countActiveUsersByTimeInterval(
           // (7 days ago 23:59:59.999, target day 23:59:59.999]
-          getEndOfDayTimestamp(subDays(targetDay, 7)),
-          getEndOfDayTimestamp(targetDay)
+          getUtcEndOfTheDay(subDays(targetDay, 7)),
+          getUtcEndOfTheDay(targetDay)
         ),
         countActiveUsersByTimeInterval(
           // (60 days ago 23:59:59.999, 30 days ago 23:59:59.999]
-          getEndOfDayTimestamp(subDays(targetDay, 60)),
-          getEndOfDayTimestamp(subDays(targetDay, 30))
+          getUtcEndOfTheDay(subDays(targetDay, 60)),
+          getUtcEndOfTheDay(subDays(targetDay, 30))
         ),
         countActiveUsersByTimeInterval(
           // (30 days ago 23:59:59.999, target day 23:59:59.999]
-          getEndOfDayTimestamp(subDays(targetDay, 30)),
-          getEndOfDayTimestamp(targetDay)
+          getUtcEndOfTheDay(subDays(targetDay, 30)),
+          getUtcEndOfTheDay(targetDay)
         ),
       ]);
 
-      const previousDate = getDateString(subDays(targetDay, 1));
-      const targetDate = getDateString(targetDay);
+      const previousDate = getUtcDateString(subDays(targetDay, 1));
+      const targetDate = getUtcDateString(targetDay);
 
       const previousDAU = last30DauCounts.find(({ date }) => date === previousDate)?.count ?? 0;
       const dau = last30DauCounts.find(({ date }) => date === targetDate)?.count ?? 0;
 
       const dauCurve = indices(30).map((index) => {
-        const dateString = getDateString(subDays(targetDay, 29 - index));
+        const dateString = getUtcDateString(subDays(targetDay, 29 - index));
         const count = last30DauCounts.find(({ date }) => date === dateString)?.count ?? 0;
 
         return { date: dateString, count };

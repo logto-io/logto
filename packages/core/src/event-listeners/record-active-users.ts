@@ -1,7 +1,7 @@
 import { generateStandardId } from '@logto/shared';
 
-import { getUtcStartOfTheDay } from '#src/oidc/utils.js';
 import type Queries from '#src/tenants/Queries.js';
+import { getUtcStartOfTheDay } from '#src/utils/utc.js';
 
 export const recordActiveUsers = async (accessToken: { accountId?: string }, queries: Queries) => {
   const { accountId } = accessToken;
@@ -16,6 +16,6 @@ export const recordActiveUsers = async (accessToken: { accountId?: string }, que
   await insertActiveUser({
     id: generateStandardId(),
     userId: accountId,
-    date: getUtcStartOfTheDay(new Date()).getTime(),
+    date: getUtcStartOfTheDay(new Date()),
   });
 };

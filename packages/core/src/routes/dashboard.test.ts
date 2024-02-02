@@ -1,11 +1,12 @@
 // The FP version works better for `format()`
 /* eslint-disable import/no-duplicates */
 import { pickDefault } from '@logto/shared/esm';
-import { endOfDay, subDays } from 'date-fns';
+import { subDays } from 'date-fns';
 import { format } from 'date-fns/fp';
 
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
+import { getUtcEndOfTheDay } from '#src/utils/utc.js';
 /* eslint-enable import/no-duplicates */
 
 const { jest } = import.meta;
@@ -41,13 +42,13 @@ const users = {
 };
 const { countUsers, getDailyNewUserCountsByTimeInterval } = users;
 
-const logs = {
+const dailyActiveUsers = {
   getDailyActiveUserCountsByTimeInterval: jest.fn().mockResolvedValue(mockDailyActiveUserCounts),
   countActiveUsersByTimeInterval: jest.fn().mockResolvedValue({ count: mockActiveUserCount }),
 };
-const { getDailyActiveUserCountsByTimeInterval, countActiveUsersByTimeInterval } = logs;
+const { getDailyActiveUserCountsByTimeInterval, countActiveUsersByTimeInterval } = dailyActiveUsers;
 
-const tenantContext = new MockTenant(undefined, { logs, users });
+const tenantContext = new MockTenant(undefined, { dailyActiveUsers, users });
 const dashboardRoutes = await pickDefault(import('./dashboard.js'));
 
 describe('dashboardRoutes', () => {
@@ -72,14 +73,14 @@ describe('dashboardRoutes', () => {
 
   describe('GET /dashboard/users/new', () => {
     beforeEach(() => {
-      jest.useFakeTimers().setSystemTime(new Date('2022-05-14'));
+      jest.useFakeTimers().setSystemTime(Date.UTC(2022, 4, 14));
     });
 
     it('should call getDailyNewUserCountsByTimeInterval with the time interval (14 days ago 23:59:59.999, today 23:59:59.999]', async () => {
       await logRequest.get('/dashboard/users/new');
       expect(getDailyNewUserCountsByTimeInterval).toHaveBeenCalledWith(
-        subDays(endOfDay(Date.now()), 14).valueOf(),
-        endOfDay(Date.now()).valueOf()
+        getUtcEndOfTheDay(subDays(Date.now(), 14)),
+        getUtcEndOfTheDay(Date.now())
       );
     });
 
@@ -100,7 +101,7 @@ describe('dashboardRoutes', () => {
   });
 
   describe('GET /dashboard/users/active', () => {
-    const mockToday = new Date(2022, 4, 30);
+    const mockToday = Date.UTC(2022, 4, 30);
 
     beforeEach(() => {
       jest.useFakeTimers().setSystemTime(mockToday);
@@ -112,44 +113,44 @@ describe('dashboardRoutes', () => {
     });
 
     it('should call getDailyActiveUserCountsByTimeInterval with the time interval (2022-05-31, 2022-06-30] when the parameter `date` is 2022-06-30', async () => {
-      const targetDate = new Date(2022, 5, 30);
+      const targetDate = Date.UTC(2022, 5, 30);
       await logRequest.get(`/dashboard/users/active?date=${formatToQueryDate(targetDate)}`);
       expect(getDailyActiveUserCountsByTimeInterval).toHaveBeenCalledWith(
-        endOfDay(new Date(2022, 4, 31)).valueOf(),
-        endOfDay(targetDate).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 4, 31)),
+        getUtcEndOfTheDay(targetDate)
       );
     });
 
     it('should call getDailyActiveUserCountsByTimeInterval with the time interval (30 days ago, tomorrow] when there is no parameter `date`', async () => {
       await logRequest.get('/dashboard/users/active');
       expect(getDailyActiveUserCountsByTimeInterval).toHaveBeenCalledWith(
-        endOfDay(new Date(2022, 3, 30)).valueOf(),
-        endOfDay(mockToday).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 3, 30)),
+        getUtcEndOfTheDay(mockToday)
       );
     });
 
     it('should call countActiveUsersByTimeInterval with correct parameters when the parameter `date` is 2022-06-30', async () => {
-      const targetDate = new Date(2022, 5, 30);
+      const targetDate = Date.UTC(2022, 5, 30);
       await logRequest.get(`/dashboard/users/active?date=${formatToQueryDate(targetDate)}`);
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         1,
-        endOfDay(new Date(2022, 5, 16)).valueOf(),
-        endOfDay(new Date(2022, 5, 23)).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 5, 16)),
+        getUtcEndOfTheDay(Date.UTC(2022, 5, 23))
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         2,
-        endOfDay(new Date(2022, 5, 23)).valueOf(),
-        endOfDay(targetDate).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 5, 23)),
+        getUtcEndOfTheDay(targetDate)
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         3,
-        endOfDay(new Date(2022, 4, 1)).valueOf(),
-        endOfDay(new Date(2022, 4, 31)).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 4, 1)),
+        getUtcEndOfTheDay(Date.UTC(2022, 4, 31))
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         4,
-        endOfDay(new Date(2022, 4, 31)).valueOf(),
-        endOfDay(targetDate).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 4, 31)),
+        getUtcEndOfTheDay(targetDate)
       );
     });
 
@@ -157,23 +158,23 @@ describe('dashboardRoutes', () => {
       await logRequest.get('/dashboard/users/active');
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         1,
-        endOfDay(new Date(2022, 4, 16)).valueOf(),
-        endOfDay(new Date(2022, 4, 23)).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 4, 16)),
+        getUtcEndOfTheDay(Date.UTC(2022, 4, 23))
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         2,
-        endOfDay(new Date(2022, 4, 23)).valueOf(),
-        endOfDay(mockToday).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 4, 23)),
+        getUtcEndOfTheDay(mockToday)
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         3,
-        endOfDay(new Date(2022, 2, 31)).valueOf(),
-        endOfDay(new Date(2022, 3, 30)).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 2, 31)),
+        getUtcEndOfTheDay(Date.UTC(2022, 3, 30))
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         4,
-        endOfDay(new Date(2022, 3, 30)).valueOf(),
-        endOfDay(mockToday).valueOf()
+        getUtcEndOfTheDay(Date.UTC(2022, 3, 30)),
+        getUtcEndOfTheDay(mockToday)
       );
     });
 

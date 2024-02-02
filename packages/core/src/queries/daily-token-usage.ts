@@ -3,7 +3,7 @@ import { convertToIdentifiers, generateStandardId } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
-import { getUtcStartOfTheDay } from '#src/oidc/utils.js';
+import { getUtcStartOfTheDay } from '#src/utils/utc.js';
 
 const { table, fields } = convertToIdentifiers(DailyTokenUsage);
 const { fields: fieldsWithPrefix } = convertToIdentifiers(DailyTokenUsage, true);
@@ -33,7 +33,7 @@ export const createDailyTokenUsageQueries = (pool: CommonQueryMethods) => {
       insert into ${table} (${fields.id}, ${fields.date}, ${fields.usage})
       values (${generateStandardId()}, to_timestamp(${getUtcStartOfTheDay(
         date
-      ).getTime()}::double precision / 1000), 1)
+      )}::double precision / 1000), 1)
       on conflict (${fields.date}, ${fields.tenantId}) do update set ${fields.usage} = ${
         fieldsWithPrefix.usage
       } + 1

@@ -1,5 +1,5 @@
 import {
-  token,
+  type token,
   type hook,
   Logs,
   type HookExecutionStats,
@@ -77,33 +77,6 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
 
   const findLogById = buildFindEntityByIdWithPool(pool)(Logs);
 
-  const getDailyActiveUserCountsByTimeInterval = async (
-    startTimeExclusive: number,
-    endTimeInclusive: number
-  ) =>
-    pool.any<{ date: string; count: number }>(sql`
-      select date(${fields.createdAt}), count(distinct(${fields.payload}->>'userId'))
-      from ${table}
-      where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
-      and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-      and ${fields.key} like ${`${token.Type.ExchangeTokenBy}.%`}
-      and ${fields.payload}->>'result' = 'Success'
-      group by date(${fields.createdAt})
-    `);
-
-  const countActiveUsersByTimeInterval = async (
-    startTimeExclusive: number,
-    endTimeInclusive: number
-  ) =>
-    pool.one<{ count: number }>(sql`
-      select count(distinct(${fields.payload}->>'userId'))
-      from ${table}
-      where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
-      and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-      and ${fields.key} like ${`${token.Type.ExchangeTokenBy}.%`}
-      and ${fields.payload}->>'result' = 'Success'
-    `);
-
   const getHookExecutionStatsByHookId = async (hookId: string) => {
     const startTimeExclusive = subDays(new Date(), 1).getTime();
     return pool.one<HookExecutionStats>(sql`
@@ -120,8 +93,6 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     countLogs,
     findLogs,
     findLogById,
-    getDailyActiveUserCountsByTimeInterval,
-    countActiveUsersByTimeInterval,
     getHookExecutionStatsByHookId,
   };
 };

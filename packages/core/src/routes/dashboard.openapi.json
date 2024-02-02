@@ -21,7 +21,7 @@
     "/api/dashboard/users/new": {
       "get": {
         "summary": "Get new user count",
-        "description": "Get new user count in the past 7 days.",
+        "description": "Get new user count in the past 7 days. Based on UTC time.",
         "parameters": [],
         "responses": {
           "200": {
@@ -33,12 +33,12 @@
     "/api/dashboard/users/active": {
       "get": {
         "summary": "Get active user data",
-        "description": "Get active user data, including daily active user (DAU), weekly active user (WAU) and monthly active user (MAU). It also includes an array of DAU in the past 30 days.",
+        "description": "Get active user data, including daily active user (DAU), weekly active user (WAU) and monthly active user (MAU). It also includes an array of DAU in the past 30 days. Based on UTC time.",
         "parameters": [
           {
             "in": "query",
             "name": "date",
-            "description": "The date to get active user data."
+            "description": "The date (based on UTC) to get active user data."
           }
         ],
         "responses": {

@@ -253,12 +253,17 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     startTimeExclusive: number,
     endTimeInclusive: number
   ) =>
+    /**
+     * Since the DAU data stored in the `daily_active_users` table is in UTC, we need to convert
+     * the `created_at` time to UTC in the result. This keeps the result consistent with the daily
+     * active user counts.
+     */
     pool.any<{ date: string; count: number }>(sql`
-      select date(${fields.createdAt}), count(*)
+      select date(${fields.createdAt} at time zone 'UTC'), count(*)
       from ${table}
       where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
       and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-      group by date(${fields.createdAt})
+      group by date(${fields.createdAt} at time zone 'UTC')
     `);
 
   return {
