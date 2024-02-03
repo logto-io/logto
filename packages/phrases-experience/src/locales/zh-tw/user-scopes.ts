@@ -9,7 +9,7 @@ const user_scopes = {
     /** UNTRANSLATED */
     [UserScope.Phone]: 'Your phone number',
     /** UNTRANSLATED */
-    [UserScope.Profile]: 'Your name and avatar',
+    [UserScope.Profile]: 'Your name, username and avatar',
     /** UNTRANSLATED */
     [UserScope.Roles]: 'Your roles',
     /** UNTRANSLATED */
