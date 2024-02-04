@@ -30,6 +30,7 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
   // eslint-disable-next-line react/boolean-prop-naming
   alwaysShowSuffix?: boolean;
   isConfidential?: boolean;
+  inputContainerClassName?: string;
 };
 
 function TextInput(
@@ -43,6 +44,7 @@ function TextInput(
     readOnly,
     type = 'text',
     isConfidential = false,
+    inputContainerClassName,
     ...rest
   }: Props,
   reference: Ref<Nullable<HTMLInputElement>>
@@ -96,7 +98,8 @@ function TextInput(
           isConfidential && isContentHidden && type === 'text' && styles.hideTextContainerContent,
           icon && styles.withIcon,
           disabled && styles.disabled,
-          readOnly && styles.readOnly
+          readOnly && styles.readOnly,
+          inputContainerClassName
         )}
       >
         {icon && <span className={styles.icon}>{icon}</span>}
