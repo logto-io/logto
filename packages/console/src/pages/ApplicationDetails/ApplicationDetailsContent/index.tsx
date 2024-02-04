@@ -3,7 +3,6 @@ import {
   type ApplicationResponse,
   type SnakeCaseOidcConfig,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -17,7 +16,7 @@ import DetailsForm from '@/components/DetailsForm';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { ApplicationDetailsTabs } from '@/consts';
+import { ApplicationDetailsTabs, logtoThirdPartyGuideLink } from '@/consts';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -110,15 +109,19 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             : t(`${applicationTypeI18nKey[data.type]}.title`)
         }
         identifier={{ name: 'App ID', value: data.id }}
-        additionalActionButton={conditional(
-          !data.isThirdParty && {
-            title: 'application_details.check_guide',
-            icon: <File />,
-            onClick: () => {
-              setIsReadmeOpen(true);
-            },
-          }
-        )}
+        additionalActionButton={{
+          title: 'application_details.check_guide',
+          icon: <File />,
+          onClick: () => {
+            // Open IdP docs link in new tab if it's a third party app
+            if (data.isThirdParty) {
+              window.open(logtoThirdPartyGuideLink, '_blank');
+              return;
+            }
+
+            setIsReadmeOpen(true);
+          },
+        }}
         actionMenuItems={[
           {
             type: 'danger',
