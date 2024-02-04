@@ -1,0 +1,225 @@
+import UriInputField from '@/mdx-components/UriInputField';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+
+<Steps>
+
+<Step title="Get started">
+
+This tutorial will show you how to use Logto ASP.NET Core authentication middleware to protect your web application.
+
+<ul>
+  <li>It assumes your website is hosted on <code>{props.sampleUrls.origin}</code>.</li>
+</ul>
+
+### Installation
+
+```bash
+dotnet add package Logto.AspNetCore.Authentication
+```
+
+</Step>
+
+<Step title="Add Logto authentication">
+
+Open `Startup.cs` (or `Program.cs`) and add the following code to register Logto authentication middleware:
+
+<pre>
+  <code className="language-csharp">
+{`using Logto.AspNetCore.Authentication;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddLogtoAuthentication(options =>
+{
+  options.Endpoint = "${props.endpoint}";
+  options.AppId = "${props.app.id}";
+  options.AppSecret = "${props.app.secret}";
+});
+
+app.UseAuthentication();`}
+  </code>
+</pre>
+
+The `AddLogtoAuthentication` method will do the following things:
+
+- Set the default authentication scheme to `LogtoDefaults.CookieScheme`.
+- Set the default challenge scheme to `LogtoDefaults.AuthenticationScheme`.
+- Set the default sign-out scheme to `LogtoDefaults.AuthenticationScheme`.
+- Add cookie and OpenID Connect authentication handlers to the authentication scheme.
+
+</Step>
+
+<Step title="Add routes">
+
+Since Blazor Server uses SignalR to communicate between the server and the client, this means methods that directly manipulate the HTTP context (like issuing challenges or redirects) don't work as expected when called from a Blazor component.
+
+To make it right, we need to explicitly add two endpoints for sign-in and sign-out redirects:
+
+```csharp
+app.MapGet("/SignIn", async context =>
+{
+    if (!(context.User?.Identity?.IsAuthenticated ?? false))
+    {
+        await context.ChallengeAsync(new AuthenticationProperties { RedirectUri = "/" });
+    } else {
+        context.Response.Redirect("/");
+    }
+});
+
+app.MapGet("/SignOut", async context =>
+{
+    if (context.User?.Identity?.IsAuthenticated ?? false)
+    {
+        await context.SignOutAsync(new AuthenticationProperties { RedirectUri = "/" });
+    } else {
+        context.Response.Redirect("/");
+    }
+});
+```
+
+Now we can redirect to these endpoints to trigger sign-in and sign-out.
+
+</Step>
+
+<Step title="Set up redirect URIs">
+
+<p>
+First, let's enter your redirect URI. E.g. <code>{props.sampleUrls.origin + 'Callback'}</code> (replace the endpoint with yours). This is where Logto will redirect users after they sign in.
+</p>
+
+<UriInputField name="redirectUris" />
+
+Remember to keep the path `/Callback` in the URI as it's the default value for the Logto authentication middleware.
+
+---
+
+To clean up both ASP.NET session and Logto session, we can designate a post sign-out redierct URI. This is where Logto will redirect users after they sign out.
+
+<p>
+For example, set the URI to <code>{props.sampleUrls.origin + 'SignedOutCallback'}</code> (replace the endpoint with yours):
+</p>
+
+<UriInputField name="postLogoutRedirectUris" />
+
+Remember to keep the path `/SignedOutCallback` in the URI as it's the default value for the Logto authentication middleware.
+
+</Step>
+
+<Step title="Sign-in and sign-out">
+
+In the Razor component, add the following code:
+
+```cshtml
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+@* ... *@
+
+<p>Is authenticated: @User.Identity?.IsAuthenticated</p>
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <button @onclick="SignOut">Sign out</button>
+}
+else
+{
+    <button @onclick="SignIn">Sign in</button>
+}
+
+@* ... *@
+
+@code {
+    private ClaimsPrincipal? User { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        User = authState.User;
+    }
+
+    private void SignIn()
+    {
+        NavigationManager.NavigateTo("/SignIn", forceLoad: true);
+    }
+
+    private void SignOut()
+    {
+        NavigationManager.NavigateTo("/SignOut", forceLoad: true);
+    }
+}
+```
+
+**Explanation**:
+
+- The injected `AuthenticationStateProvider` is used to get the current user's authentication state, and populate the `User` property.
+- The `SignIn` and `SignOut` methods are used to redirect the user to the sign-in and sign-out endpoints respectively. Since the nature of Blazor Server, we need to use `NavigationManager` with force load to trigger the redirection.
+
+The page will show the "Sign in" button if the user is not authenticated, and show the "Sign out" button if the user is authenticated.
+
+</Step>
+
+<Step title="Checkpoint: Test your application">
+
+Now you can run the web application and try to sign in and sign out with Logto:
+
+1. Open the web application in your browser, you should see "Is authenticated: False" and the "Sign in" button.
+2. Click the "Sign in" button, and you should be redirected to the Logto sign-in page.
+3. After you have signed in, you should be redirected back to the web application, and you should see "Is authenticated: True" and the "Sign out" button.
+4. Click the "Sign out" button, and you should be redirected to the Logto sign-out page, and then redirected back to the web application.
+
+</Step>
+
+<Step title="The user object">
+
+To know if the user is authenticated, you can check the `User.Identity?.IsAuthenticated` property.
+
+To get the user profile claims, you can use the `User.Claims` property:
+
+```csharp
+var claims = User.Claims;
+
+// Get the user ID
+var userId = claims.FirstOrDefault(c => c.Type == LogtoParameters.Claims.Subject)?.Value;
+```
+
+See the [full tutorial](https://docs.logto.io/sdk/dotnet-core/blazor-server/) for more details.
+
+</Step>
+
+<Step title="The `<AuthorizeView />` component">
+
+Alternatively, you can use the `AuthorizeView` component to conditionally render content based on the user's authentication state. This component is useful when you want to show different content to authenticated and unauthenticated users.
+
+In your Razor component, add the following code:
+
+```cshtml
+@using Microsoft.AspNetCore.Components.Authorization
+
+@* ... *@
+
+<AuthorizeView>
+    <Authorized>
+        <p>Name: @User?.Identity?.Name</p>
+        @* Content for authenticated users *@
+    </Authorized>
+    <NotAuthorized>
+        @* Content for unauthenticated users *@
+    </NotAuthorized>
+</AuthorizeView>
+
+@* ... *@
+```
+
+The `AuthorizeView` component requires a cascading parameter of type `Task<AuthenticationState>`. A direct way to get this parameter is to add the `<CascadingAuthenticationState>` component. However, due to the nature of Blazor Server, we cannot simply add the component to the layout or the root component (it may not work as expected). Instead, we can add the following code to the builder (`Program.cs` or `Startup.cs`) to provide the cascading parameter:
+
+```csharp
+builder.Services.AddCascadingAuthenticationState();
+```
+
+Then you can use the `AuthorizeView` component in every component that needs it.
+
+</Step>
+
+</Steps>

@@ -15,8 +15,9 @@ import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
 import thirdPartyOidc from './third-party-oidc/index';
 import { type Guide } from './types';
-import webAspNetCore from './web-asp-net-core/index';
-import webAspNetCoreMvc from './web-asp-net-core-mvc/index';
+import webDotnetCore from './web-dotnet-core/index';
+import webDotnetCoreBlazorServer from './web-dotnet-core-blazor-server/index';
+import webDotnetCoreMvc from './web-dotnet-core-mvc/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
 import webGptPlugin from './web-gpt-plugin/index';
@@ -30,13 +31,6 @@ import webRemix from './web-remix/index';
 
 const guides: Readonly<Guide[]> = Object.freeze([
   {
-    order: 1,
-    id: 'web-next',
-    Logo: lazy(async () => import('./web-next/logo.svg')),
-    Component: lazy(async () => import('./web-next/README.mdx')),
-    metadata: webNext,
-  },
-  {
     order: 1.1,
     id: 'spa-react',
     Logo: lazy(async () => import('./spa-react/logo.svg')),
@@ -45,17 +39,17 @@ const guides: Readonly<Guide[]> = Object.freeze([
   },
   {
     order: 1.1,
-    id: 'web-next-server-actions',
-    Logo: lazy(async () => import('./web-next-server-actions/logo.svg')),
-    Component: lazy(async () => import('./web-next-server-actions/README.mdx')),
-    metadata: webNextServerActions,
-  },
-  {
-    order: 1.1,
     id: 'web-next-app-router',
     Logo: lazy(async () => import('./web-next-app-router/logo.svg')),
     Component: lazy(async () => import('./web-next-app-router/README.mdx')),
     metadata: webNextAppRouter,
+  },
+  {
+    order: 1.1,
+    id: 'web-next-server-actions',
+    Logo: lazy(async () => import('./web-next-server-actions/logo.svg')),
+    Component: lazy(async () => import('./web-next-server-actions/README.mdx')),
+    metadata: webNextServerActions,
   },
   {
     order: 1.2,
@@ -70,6 +64,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-express/logo.svg')),
     Component: lazy(async () => import('./web-express/README.mdx')),
     metadata: webExpress,
+  },
+  {
+    order: 1.2,
+    id: 'web-next',
+    Logo: lazy(async () => import('./web-next/logo.svg')),
+    Component: lazy(async () => import('./web-next/README.mdx')),
+    metadata: webNext,
   },
   {
     order: 1.3,
@@ -150,17 +151,24 @@ const guides: Readonly<Guide[]> = Object.freeze([
   },
   {
     order: 5,
-    id: 'web-asp-net-core',
-    Logo: lazy(async () => import('./web-asp-net-core/logo.svg')),
-    Component: lazy(async () => import('./web-asp-net-core/README.mdx')),
-    metadata: webAspNetCore,
+    id: 'web-dotnet-core',
+    Logo: lazy(async () => import('./web-dotnet-core/logo.svg')),
+    Component: lazy(async () => import('./web-dotnet-core/README.mdx')),
+    metadata: webDotnetCore,
   },
   {
     order: 5.1,
-    id: 'web-asp-net-core-mvc',
-    Logo: lazy(async () => import('./web-asp-net-core-mvc/logo.svg')),
-    Component: lazy(async () => import('./web-asp-net-core-mvc/README.mdx')),
-    metadata: webAspNetCoreMvc,
+    id: 'web-dotnet-core-mvc',
+    Logo: lazy(async () => import('./web-dotnet-core-mvc/logo.svg')),
+    Component: lazy(async () => import('./web-dotnet-core-mvc/README.mdx')),
+    metadata: webDotnetCoreMvc,
+  },
+  {
+    order: 5.2,
+    id: 'web-dotnet-core-blazor-server',
+    Logo: lazy(async () => import('./web-dotnet-core-blazor-server/logo.svg')),
+    Component: lazy(async () => import('./web-dotnet-core-blazor-server/README.mdx')),
+    metadata: webDotnetCoreBlazorServer,
   },
   {
     order: 6,
