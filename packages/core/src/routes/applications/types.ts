@@ -1,29 +1,10 @@
 import {
-  Applications,
   applicationCreateGuard as originalApplicationCreateGuard,
   applicationPatchGuard as originalApplicationPatchGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
-
-enum OriginalApplicationType {
-  Native = 'Native',
-  SPA = 'SPA',
-  Traditional = 'Traditional',
-  MachineToMachine = 'MachineToMachine',
-}
-
-// FIXME:  @wangsijie Remove this guard once protected app is ready
-// @ts-expect-error -- hide the dev feature field from the guard type, but always return the full type to make the api logic simpler
-export const applicationResponseGuard: typeof Applications.guard = EnvSet.values
-  .isDevFeaturesEnabled
-  ? Applications.guard
-  : Applications.guard
-      .omit({ type: true, protectedAppMetadata: true })
-      .extend({ type: z.nativeEnum(OriginalApplicationType) });
-
-const applicationCreateGuardWithProtectedAppMetadata = originalApplicationCreateGuard
+export const applicationCreateGuard = originalApplicationCreateGuard
   .omit({
     protectedAppMetadata: true,
   })
@@ -36,7 +17,7 @@ const applicationCreateGuardWithProtectedAppMetadata = originalApplicationCreate
       .optional(),
   });
 
-const applicationPatchGuardWithProtectedAppMetadata = originalApplicationPatchGuard
+export const applicationPatchGuard = originalApplicationPatchGuard
   .deepPartial()
   .omit({
     protectedAppMetadata: true,
@@ -57,19 +38,3 @@ const applicationPatchGuardWithProtectedAppMetadata = originalApplicationPatchGu
       })
       .optional(),
   });
-
-// FIXME:  @wangsijie Remove this guard once protected app is ready
-// @ts-expect-error -- hide the dev feature field from the guard type, but always return the full type to make the api logic simpler
-export const applicationCreateGuard: typeof applicationCreateGuardWithProtectedAppMetadata = EnvSet
-  .values.isDevFeaturesEnabled
-  ? applicationCreateGuardWithProtectedAppMetadata
-  : applicationCreateGuardWithProtectedAppMetadata
-      .omit({ type: true, protectedAppMetadata: true })
-      .extend({ type: z.nativeEnum(OriginalApplicationType) });
-
-// FIXME:  @wangsijie Remove this guard once protected app is ready
-// @ts-expect-error -- hide the dev feature field from the guard type, but always return the full type to make the api logic simpler
-export const applicationPatchGuard: typeof applicationPatchGuardWithProtectedAppMetadata = EnvSet
-  .values.isDevFeaturesEnabled
-  ? applicationPatchGuardWithProtectedAppMetadata
-  : applicationPatchGuardWithProtectedAppMetadata.omit({ protectedAppMetadata: true });

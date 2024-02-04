@@ -4,6 +4,7 @@ import {
   buildDemoAppDataForTenant,
   InternalRole,
   ApplicationType,
+  Applications,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -18,11 +19,7 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
-import {
-  applicationResponseGuard,
-  applicationCreateGuard,
-  applicationPatchGuard,
-} from './types.js';
+import { applicationCreateGuard, applicationPatchGuard } from './types.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
@@ -81,7 +78,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
         excludeRoleId: string().optional(),
         isThirdParty: z.union([z.literal('true'), z.literal('false')]).optional(),
       }),
-      response: z.array(applicationResponseGuard),
+      response: z.array(Applications.guard),
       status: 200,
     }),
     async (ctx, next) => {
@@ -131,7 +128,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
     '/applications',
     koaGuard({
       body: applicationCreateGuard,
-      response: applicationResponseGuard,
+      response: Applications.guard,
       status: [200, 400, 422],
     }),
     async (ctx, next) => {
@@ -194,7 +191,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      response: applicationResponseGuard.merge(z.object({ isAdmin: z.boolean() })),
+      response: Applications.guard.merge(z.object({ isAdmin: z.boolean() })),
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -230,7 +227,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
           isAdmin: boolean().optional(),
         })
       ),
-      response: applicationResponseGuard,
+      response: Applications.guard,
       status: [200, 404, 422, 500],
     }),
     async (ctx, next) => {
