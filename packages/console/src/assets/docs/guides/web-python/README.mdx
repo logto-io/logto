@@ -1,7 +1,4 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
-import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 
@@ -46,12 +43,13 @@ Also replace the default memory storage with a persistent storage, for example:
 ```python
 from logto import LogtoClient, LogtoConfig, Storage
 from flask import session
+from typing import Union
 
 class SessionStorage(Storage):
-    def get(self, key: str) -> str | None:
+    def get(self, key: str) -> Union[str, None]:
         return session.get(key, None)
 
-    def set(self, key: str, value: str | None) -> None:
+    def set(self, key: str, value: Union[str, None]) -> None:
         session[key] = value
 
     def delete(self, key: str) -> None:
