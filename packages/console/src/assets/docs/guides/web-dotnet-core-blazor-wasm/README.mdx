@@ -1,0 +1,216 @@
+import UriInputField from '@/mdx-components/UriInputField';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+
+<Steps>
+
+<Step title="Get started">
+
+This tutorial will show you how to use [Blorc.OpenIdConnect](https://github.com/WildGums/Blorc.OpenIdConnect) to add Logto authentication to a Blazor WebAssembly application.
+
+<ul>
+  <li>It assumes your website is hosted on <code>{props.sampleUrls.origin}</code>.</li>
+</ul>
+
+### Installation
+
+```bash
+dotnet add package Blorc.OpenIdConnect
+```
+
+</Step>
+
+<Step title="Add Blorc.OpenIdConnect to the project">
+
+### Add script references
+
+Include `Blorc.Core/injector.js` the `index.html` file:
+
+```html
+<head>
+  <!-- ... -->
+  <script src="_content/Blorc.Core/injector.js"></script>
+  <!-- ... -->
+</head>
+```
+
+### Register services
+
+Add the following code to the `Program.cs` file:
+
+```csharp
+using Blorc.OpenIdConnect;
+using Blorc.Services;
+
+builder.Services.AddBlorcCore();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddBlorcOpenIdConnect(
+    options =>
+    {
+        builder.Configuration.Bind("IdentityServer", options);
+    });
+
+var webAssemblyHost = builder.Build();
+
+await webAssemblyHost
+    .ConfigureDocumentAsync(async documentService =>
+    {
+        await documentService.InjectBlorcCoreJsAsync();
+        await documentService.InjectOpenIdConnectAsync();
+    });
+
+await webAssemblyHost.RunAsync();
+```
+
+Note: There's no need to use the `Microsoft.AspNetCore.Components.WebAssembly.Authentication` package. The `Blorc.OpenIdConnect` package will take care of the authentication process.
+
+</Step>
+
+<Step title="Configure Logto">
+
+### Configure redirect URI
+
+<p>
+First, let's enter your redirect URI. E.g. <code>{props.sampleUrls.origin + 'Callback'}</code> (replace the endpoint with yours). This is where Logto will redirect users after they sign in.
+</p>
+
+<UriInputField name="redirectUris" />
+
+### Configure post sign-out redirect URI
+
+To clean up both ASP.NET session and Logto session, we can designate a post sign-out redierct URI. This is where Logto will redirect users after they sign out.
+
+<p>
+For example, set the URI to <code>{props.sampleUrls.origin + 'SignedOutCallback'}</code> (replace the endpoint with yours):
+</p>
+
+<UriInputField name="postLogoutRedirectUris" />
+
+### Configure application
+
+Add the following code to the `appsettings.json` file:
+
+<pre>
+  <code className="language-json5">
+{`// ...
+  IdentityServer: {
+    Authority: '${props.endpoint}oidc',
+    ClientId: '${props.app.id}',
+    RedirectUri: '${props.redirectUris[0] ?? props.sampleUrls.callback}',
+    PostLogoutRedirectUri: '${props.postLogoutRedirectUris[0] ?? props.sampleUrls.origin}',
+    ResponseType: 'code',
+    Scope: 'openid profile', // Add more scopes if needed
+  },
+}
+`}
+    </code>
+</pre>
+
+</Step>
+
+<Step title="Sign-in and sign-out">
+
+### Add `AuthorizeView` component
+
+In the Razor pages that require authentication, add the `AuthorizeView` component. Let's assume it's the `Home.razor` page:
+
+```cshtml
+@using Microsoft.AspNetCore.Components.Authorization
+@page "/"
+
+<AuthorizeView>
+    <Authorized>
+        @* Signed in view *@
+        <button @onclick="OnLogoutButtonClickAsync">
+            Sign out
+        </button>
+    </Authorized>
+    <NotAuthorized>
+        @* Unauthenticated view *@
+        <button @onclick="OnLoginButtonClickAsync">
+            Sign in
+        </button>
+    </NotAuthorized>
+</AuthorizeView>
+```
+
+### Set up authentication
+
+In the `Home.razor.cs` file (create it if it doesn't exist), add the following code:
+
+```csharp
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Blorc.OpenIdConnect;
+using Microsoft.AspNetCore.Components.Authorization;
+
+[Authorize]
+public partial class Home : ComponentBase
+{
+    [Inject]
+    public required IUserManager UserManager { get; set; }
+
+    public User<Profile>? User { get; set; }
+
+    [CascadingParameter]
+    protected Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        User = await UserManager.GetUserAsync<User<Profile>>(AuthenticationStateTask!);
+    }
+
+    private async Task OnLoginButtonClickAsync(MouseEventArgs obj)
+    {
+        await UserManager.SignInRedirectAsync();
+    }
+
+    private async Task OnLogoutButtonClickAsync(MouseEventArgs obj)
+    {
+        await UserManager.SignOutRedirectAsync();
+    }
+}
+```
+
+Once the user is authenticated, the `User` property will be populated with the user information.
+
+### Display user information
+
+Here are some examples of how to display user information in the `Home.razor` page:
+
+```cshtml
+<AuthorizeView>
+    <Authorized>
+        @* Signed in view *@
+        @* ... *@
+        <p>You are signed in as @(@User?.Profile?.Name ?? "(unknown name)").</p>
+    </Authorized>
+    @* ... *@
+</AuthorizeView>
+```
+
+For more properties and claims, check the `User` and `Profile` classes in the `Blorc.OpenIdConnect` package.
+
+</Step>
+
+<Step title="Checkpoint: Test your application">
+
+Now you can run the web application and try to sign in and sign out with Logto:
+
+1. Open the web application in your browser, you should see "Is authenticated: False" and the "Sign in" button.
+2. Click the "Sign in" button, and you should be redirected to the Logto sign-in page.
+3. After you have signed in, you should be redirected back to the web application, and you should see "Is authenticated: True" and the "Sign out" button.
+4. Click the "Sign out" button, and you should be redirected to the Logto sign-out page, and then redirected back to the web application.
+
+</Step>
+
+<Step title="The user object">
+
+To get the user profile, you can use the `User?.Profile` property; to fetch the access token, you can use the `User?.AccessToken` property or add it to your HTTP client using `.AddAccessToken()`.
+
+See the [full tutorial](https://docs.logto.io/sdk/dotnet-core/blazor-wasm/) for more details.
+
+</Step>
+
+</Steps>
