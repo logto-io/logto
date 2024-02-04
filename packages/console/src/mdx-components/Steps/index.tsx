@@ -41,7 +41,7 @@ export default function Steps({ children: reactChildren }: Props) {
   const isApiResourceGuide = metadata.target === 'API';
 
   const furtherReadings = useMemo(
-    () => <FurtherReadings title="Further readings" subtitle="4 articles" />,
+    () => <FurtherReadings title="Further readings" subtitle="3 articles" />,
     []
   );
   const children: Array<ReactElement<StepProps, typeof Step>> = useMemo(() => {

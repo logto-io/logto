@@ -17,10 +17,18 @@ function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
         </li>
         <li>
           <TextLink
-            href="https://docs.logto.io/docs/recipes/protect-your-api/"
+            href="https://docs.logto.io/docs/recipes/configure-connectors/"
             targetBlank="noopener"
           >
-            Protect your API
+            Configure connectors
+          </TextLink>
+        </li>
+        <li>
+          <TextLink
+            href="https://docs.logto.io/docs/recipes/rbac/protect-resource/#client"
+            targetBlank="noopener"
+          >
+            Configure client to use RBAC
           </TextLink>
         </li>
       </ul>
