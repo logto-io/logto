@@ -1,8 +1,9 @@
 import { type ApplicationSignInExperience } from '@logto/schemas';
 import useSWR from 'swr';
 
-import useApi, { RequestError } from '@/hooks/use-api';
+import useApi, { type RequestError } from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
+import { shouldRetryOnError } from '@/utils/request';
 
 /**
  * SWR fetcher for application sign-in experience
@@ -18,13 +19,7 @@ const useApplicationSignInExperienceSWR = (applicationId: string) => {
     `api/applications/${applicationId}/sign-in-experience`,
     {
       fetcher,
-      shouldRetryOnError: (error: unknown) => {
-        if (error instanceof RequestError) {
-          return error.status !== 404;
-        }
-
-        return true;
-      },
+      shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),
     }
   );
 };

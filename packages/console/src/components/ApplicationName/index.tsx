@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
-import useApi, { RequestError } from '@/hooks/use-api';
+import useApi, { type RequestError } from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { shouldRetryOnError } from '@/utils/request';
 
 import * as styles from './index.module.scss';
 
@@ -25,13 +26,7 @@ function ApplicationName({ applicationId, isLink = false }: Props) {
     !isAdminConsole && `api/applications/${applicationId}`,
     {
       fetcher,
-      shouldRetryOnError: (error: unknown) => {
-        if (error instanceof RequestError) {
-          return error.status !== 404;
-        }
-
-        return true;
-      },
+      shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),
     }
   );
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

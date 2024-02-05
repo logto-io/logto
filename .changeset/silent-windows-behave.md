@@ -3,4 +3,4 @@
 "@logto/phrases": patch
 ---
 
-Improve error handling when user associated application is removed.
+improve error handling when user associated application is removed
