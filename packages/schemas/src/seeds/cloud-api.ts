@@ -68,6 +68,10 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
       CloudScope.ManageAffiliate,
       'Allow managing affiliates, including create, update, and delete.'
     ),
+    buildScope(
+      CloudScope.CleanupOutdatedLogs,
+      'Allow cleaning up outdated logs. This scope is only available to M2M application.'
+    ),
   ]);
 };
 

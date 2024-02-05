@@ -156,13 +156,19 @@ export const seedTables = async (
   // Create tenant application role
   const applicationRole = createTenantApplicationRole();
   await connection.query(insertInto(applicationRole, Roles.table));
+
+  const m2mAppOnlyScopes = new Set<string>([
+    CloudScope.SendSms,
+    CloudScope.SendEmail,
+    CloudScope.CleanupOutdatedLogs,
+  ]);
+
+  // Assign scopes which are only available for M2M applications to the tenant application role
   await assignScopesToRole(
     connection,
     adminTenantId,
     applicationRole.id,
-    ...cloudAdditionalScopes
-      .filter(({ name }) => name === CloudScope.SendSms || name === CloudScope.SendEmail)
-      .map(({ id }) => id)
+    ...cloudAdditionalScopes.filter(({ name }) => m2mAppOnlyScopes.has(name)).map(({ id }) => id)
   );
 
   await Promise.all([
