@@ -12,6 +12,7 @@ import { logtoThirdPartyAppBrandingLink } from '@/consts';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
@@ -28,6 +29,7 @@ type Props = {
 
 function Branding({ application, isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const formMethods = useForm<ApplicationSignInExperience>({
     defaultValues: {
@@ -109,7 +111,7 @@ function Branding({ application, isActive }: Props) {
             title="application_details.branding.name"
             description="application_details.branding.description"
             learnMoreLink={{
-              href: logtoThirdPartyAppBrandingLink,
+              href: getDocumentationUrl(logtoThirdPartyAppBrandingLink),
               targetBlank: 'noopener',
             }}
           >

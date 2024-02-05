@@ -14,6 +14,7 @@ import TemplateTable from '@/components/TemplateTable';
 import { logtoThirdPartyAppPermissionsLink } from '@/consts';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import ApplicationScopesAssignmentModal from './ApplicationScopesAssignmentModal';
 import ApplicationScopesManagementModal, {
@@ -28,6 +29,7 @@ type Props = {
 
 function Permissions({ application }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const [isAssignScopesModalOpen, setIsAssignScopesModalOpen] = useState(false);
   const [editScopeModalData, setEditScopeModalData] = useState<EditableScopeData>();
@@ -47,7 +49,7 @@ function Permissions({ application }: Props) {
         title="application_details.permissions.name"
         description="application_details.permissions.description"
         learnMoreLink={{
-          href: logtoThirdPartyAppPermissionsLink,
+          href: getDocumentationUrl(logtoThirdPartyAppPermissionsLink),
           targetBlank: 'noopener',
         }}
       >

@@ -253,9 +253,8 @@ function ProtectedAppSettings({ data }: Props) {
               components={{
                 a: (
                   <TextLink
-                    // TODO: @charles please update the doc link
                     href={getDocumentationUrl(
-                      '/docs/recipes/protect-your-api/#validate-the-api-requests-authorization-token'
+                      '/docs/recipes/protected-app/#protect-your-origin-server'
                     )}
                     targetBlank="noopener"
                   />

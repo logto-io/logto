@@ -15,9 +15,9 @@ export const pricingLink = 'https://logto.io/pricing';
 export const newPlansBlogLink = 'https://blog.logto.io/logto-pricing-v2';
 
 /** Docs link */
-export const envTagsFeatureLink = '/docs/recipes/tenant-type';
-export const logtoThirdPartyGuideLink = 'https://docs.logto.io/docs/recipes/logto-as-idp';
+export const envTagsFeatureLink = '/docs/recipes/tenant-type/';
+export const protectedAppLink = '/docs/recipes/protected-app/';
+export const logtoThirdPartyGuideLink = '/docs/recipes/logto-as-idp/';
 export const logtoThirdPartyAppPermissionsLink =
-  'https://docs.logto.io/docs/recipes/logto-as-idp/permissions-management/';
-export const logtoThirdPartyAppBrandingLink =
-  'https://docs.logto.io/docs/recipes/logto-as-idp/branding-customization/';
+  '/docs/recipes/logto-as-idp/permissions-management/';
+export const logtoThirdPartyAppBrandingLink = '/docs/recipes/logto-as-idp/branding-customization/';

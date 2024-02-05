@@ -32,7 +32,7 @@ function ProtectedAppCard({
   onCreateSuccess,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.protected_app' });
-  const { documentationSiteUrl } = useDocumentationUrl();
+  const { getDocumentationUrl } = useDocumentationUrl();
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
   const theme = useTheme();
   const Icon = theme === Theme.Light ? ProtectedAppIcon : ProtectedAppDarkIcon;
@@ -53,8 +53,12 @@ function ProtectedAppCard({
             <div className={styles.description}>
               <Trans
                 components={{
-                  // TODO: @charles Update documentation URL when it's ready
-                  a: <TextLink href={documentationSiteUrl} targetBlank="noopener" />,
+                  a: (
+                    <TextLink
+                      href={getDocumentationUrl('/docs/recipes/protected-app/')}
+                      targetBlank="noopener"
+                    />
+                  ),
                 }}
               >
                 {t('description')}
