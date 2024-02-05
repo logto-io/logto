@@ -120,7 +120,7 @@ function ProtectedAppForm({
           tip={conditional(!hasDetailedInstructions && t('protected_app.form.url_field_tooltip'))}
         >
           <TextInput
-            className={styles.input}
+            inputContainerClassName={styles.input}
             {...register('origin', {
               required: true,
               validate: (value) =>
