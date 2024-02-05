@@ -13,7 +13,7 @@ import useSWRImmutable from 'swr/immutable';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -44,9 +44,7 @@ function ProtectedAppForm({
   hasRequiredLabel,
   onCreateSuccess,
 }: Props) {
-  const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(
-    isDevFeaturesEnabled && isCloud && 'api/systems/application'
-  );
+  const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(isCloud && 'api/systems/application');
   const { currentPlan } = useContext(SubscriptionDataContext);
   const { hasAppsReachedLimit } = useApplicationsUsage();
   const { name: planName, quota } = currentPlan;

@@ -15,7 +15,7 @@ import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useApiGuideMetadata, useAppGuideMetadata } from '@/components/Guide/hooks';
 import PageMeta from '@/components/PageMeta';
 import { ConnectorsTabs } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { LinkButton } from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
@@ -110,11 +110,9 @@ function GetStarted() {
       </div>
       <Card className={styles.card}>
         <div className={styles.title}>
-          {isCloud && isDevFeaturesEnabled
-            ? t('get_started.develop.title_cloud')
-            : t('get_started.develop.title')}
+          {t(`get_started.develop.title${isCloud ? '_cloud' : ''}`)}
         </div>
-        {isCloud && isDevFeaturesEnabled && (
+        {isCloud && (
           <>
             <ProtectedAppCreationForm />
             <div className={styles.subtitle}>{t('get_started.develop.subtitle_cloud')}</div>
