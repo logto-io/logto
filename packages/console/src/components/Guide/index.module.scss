@@ -54,6 +54,10 @@
       padding: _.unit(1);
       border-radius: 4px;
     }
+
+    hr {
+      border-color: var(--color-border);
+    }
   }
 }
 

@@ -1,7 +1,4 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
-import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 
@@ -63,10 +60,10 @@ First, let's enter your redirect URI. E.g. <code>{props.sampleUrls.origin + 'Cal
 
 Remember to keep the path `/Callback` in the URI as it's the default value for the Logto authentication middleware.
 
-To sign-in with Logto, you can use the `Challenge` method of `ControllerBase`:
+To sign-in with Logto, you can use the `ChallengeAsync` method:
 
 ```csharp
-Challenge(new AuthenticationProperties
+await HttpContext.ChallengeAsync(new AuthenticationProperties
 {
   // The URI below is different from the redirect URI you entered above.
   // It's the URI where users will be redirected after successfully signed in.
@@ -75,23 +72,29 @@ Challenge(new AuthenticationProperties
 });
 ```
 
-For example, you can add the following code to the controller:
+For example, if you are using Razor Pages, you can add the following code to the `Index` page model:
 
 ```csharp
-public class HomeController : Controller
+public class IndexModel : PageModel
 {
-  public IActionResult SignIn()
+  // ...
+  public async Task OnPostSignInAsync()
   {
-    return Challenge(new AuthenticationProperties { RedirectUri = "/" });
+    await HttpContext.ChallengeAsync(new AuthenticationProperties
+    {
+      RedirectUri = "/"
+    });
   }
 }
 ```
 
-And then add the following code to your View:
+And then add the following code to the `Index` page:
 
 ```html
 <p>Is authenticated: @User.Identity?.IsAuthenticated</p>
-<a asp-controller="Home" asp-action="SignIn">Sign in</a>
+<form method="post">
+  <button type="submit" asp-page-handler="SignIn">Sign in</button>
+</form>
 ```
 
 </Step>
@@ -108,10 +111,10 @@ For example, set the URI to <code>{props.sampleUrls.origin + 'SignedOutCallback'
 
 Remember to keep the path `/SignedOutCallback` in the URI as it's the default value for the Logto authentication middleware.
 
-To sign-out with Logto, you can use the `SignOut` method of `ControllerBase`:
+To sign-out with Logto, you can use the `SignOutAsync` method:
 
 ```csharp
-SignOut(new AuthenticationProperties
+await HttpContext.SignOutAsync(new AuthenticationProperties
 {
   // The URI below is different from the post sign-out redirect URI you entered above.
   // It's the URI where users will be redirected after successfully signed out.
@@ -120,35 +123,39 @@ SignOut(new AuthenticationProperties
 });
 ```
 
-The `SignOut` method will clear the authentication cookie and redirect the user to the Logto sign-out page.
+The `SignOutAsync` method will clear the authentication cookie and redirect the user to the Logto sign-out page.
 
-For example, you can add the following code to your controller:
+For example, if you are using Razor Pages, you can add the following code to the `Index` page model:
 
 ```csharp
-public class HomeController : Controller
+public class IndexModel : PageModel
 {
   // ...
-  // Use the `new` keyword to avoid conflict with the `ControllerBase.SignOut` method
-  new public IActionResult SignOut()
+  public async Task OnPostSignOutAsync()
   {
-    return SignOut(new AuthenticationProperties { RedirectUri = "/" });
+    await HttpContext.SignOutAsync(new AuthenticationProperties
+    {
+      RedirectUri = "/"
+    });
   }
 }
 ```
 
-Then, update the form on your View:
+Then, update the form on your Razor page:
 
 ```html
 <p>Is authenticated: @User.Identity?.IsAuthenticated</p>
-@if (User.Identity?.IsAuthenticated == true)
-{
-  <a asp-controller="Home" asp-action="SignOut">Sign out</a>
-} else {
-  <a asp-controller="Home" asp-action="SignIn">Sign in</a>
-}
+<form method="post">
+  @if (User.Identity?.IsAuthenticated == true)
+  {
+    <button type="submit" asp-page-handler="SignOut">Sign out</button>
+  } else {
+    <button type="submit" asp-page-handler="SignIn">Sign in</button>
+  }
+</form>
 ```
 
-It will show the "Sign in" link if the user is not authenticated, and show the "Sign out" link if the user is authenticated.
+It will show the "Sign in" button if the user is not authenticated, and show the "Sign out" button if the user is authenticated.
 
 </Step>
 
@@ -156,10 +163,10 @@ It will show the "Sign in" link if the user is not authenticated, and show the "
 
 Now you can run the web application and try to sign in and sign out with Logto:
 
-1. Open the web application in your browser, you should see "Is authenticated: False" and the "Sign in" link.
-2. Click the "Sign in" link, and you should be redirected to the Logto sign-in page.
-3. After you have signed in, you should be redirected back to the web application, and you should see "Is authenticated: True" and the "Sign out" link.
-4. Click the "Sign out" link, and you should be redirected to the Logto sign-out page, and then redirected back to the web application.
+1. Open the web application in your browser, you should see "Is authenticated: False" and the "Sign in" button.
+2. Click the "Sign in" button, and you should be redirected to the Logto sign-in page.
+3. After you have signed in, you should be redirected back to the web application, and you should see "Is authenticated: True" and the "Sign out" button.
+4. Click the "Sign out" button, and you should be redirected to the Logto sign-out page, and then redirected back to the web application.
 
 </Step>
 
@@ -176,7 +183,7 @@ var claims = User.Claims;
 var userId = claims.FirstOrDefault(c => c.Type == LogtoParameters.Claims.Subject)?.Value;
 ```
 
-See the [full tutorial](https://github.com/logto-io/csharp/tree/HEAD/src/Logto.AspNetCore.Authentication/docs/tutorial.md) for more details.
+See the [full tutorial](https://docs.logto.io/sdk/dotnet-core/razor/) for more details.
 
 </Step>
 
