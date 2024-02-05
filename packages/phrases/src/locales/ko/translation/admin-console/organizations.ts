@@ -2,16 +2,18 @@ const organizations = {
   organization: '조직',
   page_title: '조직',
   title: '조직',
+  /** UNTRANSLATED */
   subtitle:
-    '조직은 팀, 비즈니스 고객 및 파트너 업체가 응용 프로그램을 사용하는 사용자의 집합입니다.',
+    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
   organization_template: '조직 템플릿',
   organization_id: '조직 ID',
   members: '회원',
   create_organization: '조직 만들기',
   setup_organization: '조직 설정',
   organization_list_placeholder_title: '조직',
+  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    '조직은 일반적으로 SaaS 또는 SaaS와 유사한 멀티 테넌시 앱에서 사용됩니다. 조직 기능을 사용하면 B2B 고객이 파트너 및 고객을 효과적으로 관리하고 최종 사용자가 응용 프로그램에 액세스하는 방식을 사용자 정의할 수 있게 됩니다.',
+    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
   organization_name_placeholder: '내 조직',
   organization_description_placeholder: '조직에 대한 간략한 설명',
   organization_permission: '조직 권한',

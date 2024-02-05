@@ -2,16 +2,18 @@ const organizations = {
   organization: 'Kuruluş',
   page_title: 'Kuruluşlar',
   title: 'Kuruluşlar',
+  /** UNTRANSLATED */
   subtitle:
-    'Bir kuruluş, uygulamalarını kullanan ekipleri, iş müşterilerini ve iş ortaklarını içeren bir kullanıcı koleksiyonudur.',
+    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
   organization_template: 'Kuruluş şablonu',
   organization_id: 'Kuruluş Kimliği',
   members: 'Üyeler',
   create_organization: 'Kuruluş oluştur',
   setup_organization: 'Kuruluşunuzu ayarlayın',
   organization_list_placeholder_title: 'Kuruluş',
+  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    'Kuruluşlar genellikle SaaS veya benzeri çok kiracılı uygulamalarda kullanılır. B2B müşterilerinizin ortaklarını ve müşterilerini daha iyi yönetmelerine ve son kullanıcıların uygulamalarına erişim şekillerini özelleştirmelerine izin verir.',
+    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
   organization_name_placeholder: 'Benim kuruluşum',
   organization_description_placeholder: 'Kuruluşun kısa açıklaması',
   organization_permission: 'Kuruluş izni',

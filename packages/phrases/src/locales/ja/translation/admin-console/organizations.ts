@@ -2,16 +2,18 @@ const organizations = {
   organization: '組織',
   page_title: '組織',
   title: '組織',
+  /** UNTRANSLATED */
   subtitle:
-    '組織とは、チーム、ビジネス顧客、およびパートナー企業で構成されるユーザーの集合体で、アプリケーションを使用します。',
+    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
   organization_template: 'Organization template',
   organization_id: '組織ID',
   members: 'メンバー',
   create_organization: '組織を作成',
   setup_organization: '組織を設定',
   organization_list_placeholder_title: '組織',
+  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    '組織は、通常、SaaSまたはSaaSのようなマルチテナントアプリで使用されます。組織機能により、B2B顧客はパートナーや顧客をよりよく管理し、エンドユーザーがアプリケーションにアクセスする方法をカスタマイズできます。',
+    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
   organization_name_placeholder: '私の組織',
   organization_description_placeholder: '組織の簡単な説明',
   organization_permission: '組織権限',

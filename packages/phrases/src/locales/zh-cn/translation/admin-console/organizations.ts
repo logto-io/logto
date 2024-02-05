@@ -2,15 +2,18 @@ const organizations = {
   organization: '组织',
   page_title: '组织',
   title: '组织',
-  subtitle: '组织是一组用户的集合，包括使用您的应用程序的团队、业务客户和合作伙伴公司。',
+  /** UNTRANSLATED */
+  subtitle:
+    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
   organization_template: '组织模板',
   organization_id: '组织 ID',
   members: '成员',
   create_organization: '创建组织',
   setup_organization: '设置您的组织',
   organization_list_placeholder_title: '组织',
+  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    '组织通常用于SaaS或类SaaS的多租户应用程序。组织功能使您的B2B客户能更好地管理其合作伙伴和客户，并自定义最终用户访问其应用程序的方式。',
+    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
   organization_name_placeholder: '我的组织',
   organization_description_placeholder: '组织的简要描述',
   organization_permission: '组织权限',

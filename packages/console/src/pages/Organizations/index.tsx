@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg';
 import PageMeta from '@/components/PageMeta';
+import { organizationsFeatureLink } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -14,6 +15,7 @@ import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useConfigs from '@/hooks/use-configs';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
 
@@ -34,6 +36,7 @@ type Props = {
 
 function Organizations({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
   const { currentPlan } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
 
@@ -73,6 +76,10 @@ function Organizations({ tab }: Props) {
           paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
           title="organizations.title"
           subtitle="organizations.subtitle"
+          learnMoreLink={{
+            href: getDocumentationUrl(organizationsFeatureLink),
+            targetBlank: 'noopener',
+          }}
         />
         {!isInitialSetup && (
           <Button
