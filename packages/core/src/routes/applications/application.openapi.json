@@ -32,7 +32,7 @@
               "schema": {
                 "properties": {
                   "protectedAppMetadata": {
-                    "description": "The data for protected app.",
+                    "description": "The data for protected app, this feature is not available for open source version.",
                     "properties": {
                       "subDomain": {
                         "description": "The subdomain prefix, e.g., my-site."
