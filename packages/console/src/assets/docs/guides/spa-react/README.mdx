@@ -8,8 +8,8 @@ import Step from '@/mdx-components/Step';
 <Steps>
 
 <Step
-  title="Install Logto SDK"
-  subtitle="Please select your favorite package manager"
+  title="Installation"
+  subtitle="Install Logto SDK for your project"
 >
 <Tabs>
 <TabItem value="npm" label="npm">
@@ -36,10 +36,7 @@ pnpm add @logto/react
 </Tabs>
 </Step>
 
-<Step
-  title="Init LogtoClient"
-  subtitle="1 step"
->
+<Step title="Init LogtoClient">
 
 Import and use `LogtoProvider` to provide a Logto context:
 
@@ -63,7 +60,7 @@ const App = () => (
 </Step>
 
 <Step
-  title="Sign in"
+  title="Implement sign-in"
   subtitle="3 steps"
 >
 
@@ -133,10 +130,7 @@ Finally insert the code below to create a `/callback` route which does NOT requi
 
 </Step>
 
-<Step
-  title="Sign out"
-  subtitle="1 step"
->
+<Step title="Implement sign-out">
 
 Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
 
@@ -161,6 +155,54 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 };`}
   </code>
 </pre>
+
+</Step>
+
+<Step title="Handle authentication status">
+
+In Logto SDK, generally we can use `logtoClient.isAuthenticated` to check the authentication status, if the user is signed in, the value will be `true`, otherwise, the value will be `false`.
+
+In Logto React SDK, the `isAuthenticated` status can be checked by using the `useLogto` hook. In the example code below, we can use it to programmatically show and hide the sign-in and sign-out buttons. And also use `getIdTokenClaims` to get the id of the currently logged-in user.
+
+```tsx
+const Home = () => {
+  const { isAuthenticated, getIdTokenClaims, signIn, signOut } = useLogto();
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      if (isAuthenticated) {
+        const claims = await getIdTokenClaims();
+        setUserId(claims.sub);
+      }
+    })();
+  }, [isAuthenticated]);
+
+  return (
+    <div>
+      {userId && <p>Logged in as {userId}</p>}
+      {isAuthenticated ? (
+        <button onClick={signOut}>Sign Out</button>
+      ) : (
+        <button onClick={() => signIn('http://localhost:3000/callback')}>Sign In</button>
+      )}
+    </div>
+  );
+};
+```
+
+</Step>
+
+<Step
+  title="Checkpoint: Test your application"
+>
+
+Now, you can test your application:
+
+1. Run your application, you will see the sign-in button.
+2. Click the sign-in button, the SDK will init the sign-in process and redirect you to the Logto sign-in page.
+3. After you signed in, you will be redirected back to your application and see user ID and the sign-out button.
+4. Click the sign-out button to sign-out.
 
 </Step>
 
