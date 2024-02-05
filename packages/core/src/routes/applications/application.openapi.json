@@ -26,6 +26,27 @@
       "post": {
         "summary": "Create an application",
         "description": "Create a new application with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "protectedAppMetadata": {
+                    "description": "The data for protected app.",
+                    "properties": {
+                      "subDomain": {
+                        "description": "The subdomain prefix, e.g., my-site."
+                      },
+                      "origin": {
+                        "description": "The origin of target website, e.g., https://example.com."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The application was created successfully."
