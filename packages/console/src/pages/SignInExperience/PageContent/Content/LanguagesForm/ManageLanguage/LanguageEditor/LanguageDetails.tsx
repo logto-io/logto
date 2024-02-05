@@ -24,11 +24,12 @@ import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import Textarea from '@/ds-components/Textarea';
 import { Tooltip } from '@/ds-components/Tip';
-import useApi, { RequestError } from '@/hooks/use-api';
+import useApi, { type RequestError } from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import type { CustomPhraseResponse } from '@/types/custom-phrase';
 import { trySubmitSafe } from '@/utils/form';
+import { shouldRetryOnError } from '@/utils/request';
 
 import * as styles from './LanguageDetails.module.scss';
 import { hiddenLocalePhraseGroups, hiddenLocalePhrases } from './constants';
@@ -79,13 +80,7 @@ function LanguageDetails() {
     `api/custom-phrases/${selectedLanguage}`,
     {
       fetcher,
-      shouldRetryOnError: (error: unknown) => {
-        if (error instanceof RequestError) {
-          return error.status !== 404;
-        }
-
-        return true;
-      },
+      shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),
     }
   );
 

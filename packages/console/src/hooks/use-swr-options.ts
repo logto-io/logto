@@ -2,7 +2,9 @@ import type React from 'react';
 import { useMemo } from 'react';
 import type { SWRConfig } from 'swr';
 
-import useApi, { RequestError } from './use-api';
+import { shouldRetryOnError } from '@/utils/request';
+
+import useApi from './use-api';
 import useSwrFetcher from './use-swr-fetcher';
 
 const useSwrOptions = (): Partial<React.ComponentProps<typeof SWRConfig>['value']> => {
@@ -12,15 +14,7 @@ const useSwrOptions = (): Partial<React.ComponentProps<typeof SWRConfig>['value'
   const config = useMemo(
     () => ({
       fetcher,
-      shouldRetryOnError: (error: unknown) => {
-        if (error instanceof RequestError) {
-          const { status } = error;
-
-          return status !== 401 && status !== 403;
-        }
-
-        return true;
-      },
+      shouldRetryOnError: shouldRetryOnError({ ignore: [401, 403] }),
     }),
     [fetcher]
   );

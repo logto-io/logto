@@ -26,6 +26,8 @@ const general = {
   enable: '有効にする',
   reminder: 'リマインダー',
   delete: '削除',
+  /** UNTRANSLATED */
+  deleted: 'Deleted',
   more_options: 'その他のオプション',
   close: '閉じる',
   copy: 'コピーする',
