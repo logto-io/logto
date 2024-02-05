@@ -11,6 +11,7 @@ import ActionsButton from '@/components/ActionsButton';
 import Breakable from '@/components/Breakable';
 import FormCard from '@/components/FormCard';
 import TemplateTable from '@/components/TemplateTable';
+import { logtoThirdPartyAppPermissionsLink } from '@/consts';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 
@@ -45,6 +46,10 @@ function Permissions({ application }: Props) {
       <FormCard
         title="application_details.permissions.name"
         description="application_details.permissions.description"
+        learnMoreLink={{
+          href: logtoThirdPartyAppPermissionsLink,
+          targetBlank: 'noopener',
+        }}
       >
         <TemplateTable
           className={styles.permissionsModal}

@@ -8,6 +8,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import RequestDataError from '@/components/RequestDataError';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { logtoThirdPartyAppBrandingLink } from '@/consts';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
@@ -107,6 +108,10 @@ function Branding({ application, isActive }: Props) {
           <FormCard
             title="application_details.branding.name"
             description="application_details.branding.description"
+            learnMoreLink={{
+              href: logtoThirdPartyAppBrandingLink,
+              targetBlank: 'noopener',
+            }}
           >
             <FormField title="application_details.branding.display_name">
               <TextInput {...register('displayName')} placeholder={application.name} />
