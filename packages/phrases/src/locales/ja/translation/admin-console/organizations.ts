@@ -68,7 +68,8 @@ const organizations = {
       '最初の組織を作成しましょう。これにはユニークなIDが付いており、さまざまなビジネスに関連するエンティティを取り扱うコンテナとなります。',
     more_next_steps: 'その他の次のステップ',
     add_members: '組織にメンバーを追加',
-    add_members_action: 'メンバーを一括追加して役割を割り当てる',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: '組織権限',
     permission_name: '権限名',
     permissions: '権限',

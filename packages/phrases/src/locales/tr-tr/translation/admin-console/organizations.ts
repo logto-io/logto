@@ -68,7 +68,8 @@ const organizations = {
       'İlk kuruluşunuzu oluşturma zamanı geldi. Bu kuruluş benzersiz bir kimliğe sahip olacak ve çeşitli işe yönelik kimlikleri işleme koymak için bir kap olarak hizmet verecektir.',
     more_next_steps: 'Daha fazla adım',
     add_members: 'Kuruluşunuza üyeler ekleyin',
-    add_members_action: 'Topluca üyeler ekleyin ve roller atayın',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: 'Kuruluş izinleri',
     permission_name: 'İzin adı',
     permissions: 'İzinler',

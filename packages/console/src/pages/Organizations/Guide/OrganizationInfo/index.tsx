@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import OrganizationFeatureDark from '@/assets/icons/organization-feature-dark.svg';
 import OrganizationFeature from '@/assets/icons/organization-feature.svg';
 import ActionBar from '@/components/ActionBar';
+import { organizationConfigGuideLink } from '@/consts';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import FormField from '@/ds-components/FormField';
@@ -14,6 +15,7 @@ import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { trySubmitSafe } from '@/utils/form';
@@ -27,6 +29,7 @@ type OrganizationForm = {
 
 function OrganizationInfo() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.organizations' });
+  const { getDocumentationUrl } = useDocumentationUrl();
   const theme = useTheme();
   const Icon = theme === Theme.Light ? OrganizationFeature : OrganizationFeatureDark;
   const { navigate } = useTenantPathname();
@@ -79,12 +82,13 @@ function OrganizationInfo() {
             <div className={styles.section}>
               <div className={styles.title}>{t('guide.more_next_steps')}</div>
               <div className={styles.subtitle}>{t('guide.add_members')}</div>
-              {/* eslint-disable-next-line no-warning-comments */}
-              {/* TODO: @charles Documentation links will be updated later */}
               <ul>
                 <li>
-                  <TextLink href="https://docs.logto.io/docs/tutorials/" targetBlank="noopener">
-                    {t('guide.add_members_action')}
+                  <TextLink
+                    href={getDocumentationUrl(organizationConfigGuideLink)}
+                    targetBlank="noopener"
+                  >
+                    {t('guide.config_organization')}
                   </TextLink>
                 </li>
               </ul>

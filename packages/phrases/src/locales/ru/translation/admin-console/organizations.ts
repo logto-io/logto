@@ -68,7 +68,8 @@ const organizations = {
       'Давайте создадим вашу первую организацию. Она имеет уникальный идентификатор и служит контейнером для обработки различных бизнес-ориентированных идентификаторов.',
     more_next_steps: 'Дополнительные следующие шаги',
     add_members: 'Добавьте участников в вашу организацию',
-    add_members_action: 'Массово добавьте участников и назначьте роли',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: 'Разрешения организации',
     permission_name: 'Название разрешения',
     permissions: 'Разрешения',

@@ -68,7 +68,7 @@ const organizations = {
       "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
     more_next_steps: 'More next steps',
     add_members: 'Add members to your organization',
-    add_members_action: 'Bulk add members and assign roles',
+    config_organization: 'Configure organization',
     organization_permissions: 'Organization permissions',
     permission_name: 'Permission name',
     permissions: 'Permissions',

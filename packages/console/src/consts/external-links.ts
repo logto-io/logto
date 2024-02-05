@@ -16,6 +16,7 @@ export const newPlansBlogLink = 'https://blog.logto.io/logto-pricing-v2';
 
 /** Docs link */
 export const envTagsFeatureLink = '/docs/recipes/tenant-type/';
+export const organizationConfigGuideLink = '/docs/recipes/organizations/configuration/';
 export const protectedAppLink = '/docs/recipes/protected-app/';
 export const logtoThirdPartyGuideLink = '/docs/recipes/logto-as-idp/';
 export const logtoThirdPartyAppPermissionsLink =
