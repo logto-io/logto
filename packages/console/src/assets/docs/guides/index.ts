@@ -17,6 +17,7 @@ import thirdPartyOidc from './third-party-oidc/index';
 import { type Guide } from './types';
 import webDotnetCore from './web-dotnet-core/index';
 import webDotnetCoreBlazorServer from './web-dotnet-core-blazor-server/index';
+import webDotnetCoreBlazorWasm from './web-dotnet-core-blazor-wasm/index';
 import webDotnetCoreMvc from './web-dotnet-core-mvc/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
@@ -169,6 +170,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-dotnet-core-blazor-server/logo.svg')),
     Component: lazy(async () => import('./web-dotnet-core-blazor-server/README.mdx')),
     metadata: webDotnetCoreBlazorServer,
+  },
+  {
+    order: 5.3,
+    id: 'web-dotnet-core-blazor-wasm',
+    Logo: lazy(async () => import('./web-dotnet-core-blazor-wasm/logo.svg')),
+    Component: lazy(async () => import('./web-dotnet-core-blazor-wasm/README.mdx')),
+    metadata: webDotnetCoreBlazorWasm,
   },
   {
     order: 6,
