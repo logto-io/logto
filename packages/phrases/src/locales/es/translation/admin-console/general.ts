@@ -26,6 +26,8 @@ const general = {
   enable: 'Habilitar',
   reminder: 'Recordatorio',
   delete: 'Eliminar',
+  /** UNTRANSLATED */
+  deleted: 'Deleted',
   more_options: 'MÁS OPCIONES',
   close: 'Cerrar',
   copy: 'Copiar',

@@ -26,6 +26,8 @@ const general = {
   enable: '활성화',
   reminder: '리마인더',
   delete: '삭제',
+  /** UNTRANSLATED */
+  deleted: 'Deleted',
   more_options: '더 많은 설정',
   close: '닫기',
   copy: '복사',

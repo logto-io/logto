@@ -26,6 +26,8 @@ const general = {
   enable: 'Etkinleştir',
   reminder: 'Hatırlatıcı',
   delete: 'Sil',
+  /** UNTRANSLATED */
+  deleted: 'Deleted',
   more_options: 'DAHA FAZLA SEÇENEK',
   close: 'Kapat',
   copy: 'Kopyala',

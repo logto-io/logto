@@ -26,6 +26,8 @@ const general = {
   enable: '启用',
   reminder: '提示',
   delete: '删除',
+  /** UNTRANSLATED */
+  deleted: 'Deleted',
   more_options: '更多选项',
   close: '关闭',
   copy: '复制',
