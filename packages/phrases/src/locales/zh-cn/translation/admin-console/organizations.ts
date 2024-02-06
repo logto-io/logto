@@ -65,7 +65,8 @@ const organizations = {
       '让我们创建您的第一个组织。它具有唯一的ID，并且可以作为处理各种业务向身份的容器。',
     more_next_steps: '更多下一步',
     add_members: '向您的组织添加成员',
-    add_members_action: '批量添加成员并分配角色',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: '组织权限',
     permission_name: '权限名',
     permissions: '权限',

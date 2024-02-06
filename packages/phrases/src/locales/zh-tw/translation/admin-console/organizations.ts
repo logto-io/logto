@@ -66,7 +66,8 @@ const organizations = {
       '讓我們創建您的第一個組繹。它具有唯一的 ID，並用作處理各種面向商業的身分的容器。',
     more_next_steps: '更多下一步',
     add_members: '將成員加入您的組繹',
-    add_members_action: '批量添加成員並分配角色',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: '組繹權限',
     permission_name: '權限名稱',
     permissions: '權限',

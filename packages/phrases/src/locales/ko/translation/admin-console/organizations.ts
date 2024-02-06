@@ -66,7 +66,8 @@ const organizations = {
       '첫 번째 조직을 만들어보세요. 고유 ID가 포함되어 다양한 비즈니스 관련 식별자를 처리하는 컨테이너 역할을 합니다.',
     more_next_steps: '추가 다음 단계',
     add_members: '조직에 구성원 추가',
-    add_members_action: '구성원을 대량 추가하고 역할을 할당하십시오',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: '조직 권한',
     permission_name: '권한 이름',
     permissions: '권한',

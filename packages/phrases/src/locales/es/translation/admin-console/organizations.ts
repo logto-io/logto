@@ -69,7 +69,8 @@ const organizations = {
       'Creemos su primera organización. Viene con un ID único y sirve como contenedor para manejar varias identidades dirigidas hacia empresas.',
     more_next_steps: 'Más pasos siguientes',
     add_members: 'Agregar miembros a su organización',
-    add_members_action: 'Agregar miembros en masa y asignar roles',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: 'Permisos de la organización',
     permission_name: 'Nombre del permiso',
     permissions: 'Permisos',

@@ -68,7 +68,8 @@ const organizations = {
       'Erstellen Sie Ihre erste Organisation. Sie erhält eine eindeutige ID und dient als Container für die Bearbeitung verschiedener geschäftsbezogener Identitäten.',
     more_next_steps: 'Weitere Schritte',
     add_members: 'Fügen Sie Mitglieder zu Ihrer Organisation hinzu',
-    add_members_action: 'Massenhafte Mitglieder hinzufügen und Rollen zuweisen',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: 'Organisationsberechtigungen',
     permission_name: 'Berechtigungsname',
     permissions: 'Berechtigungen',

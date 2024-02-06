@@ -65,7 +65,8 @@ const organizations = {
       '讓我們一起建立您的第一個組織。它具有唯一的 ID，可以作為處理各種面向業務的實體的容器。',
     more_next_steps: '更多下一步',
     add_members: '將成員添加到您的組織',
-    add_members_action: '批量添加成員並分配角色',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: '組織權限',
     permission_name: '權限名稱',
     permissions: '權限列表',

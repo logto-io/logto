@@ -69,7 +69,8 @@ const organizations = {
       'Creiamo la tua prima organizzazione. Ha un ID univoco e serve come contenitore per gestire varie entità più orientate al business.',
     more_next_steps: 'Altri passaggi successivi',
     add_members: 'Aggiungi membri alla tua organizzazione',
-    add_members_action: 'Aggiungi membri in blocco e assegna ruoli',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: 'Permessi organizzazione',
     permission_name: 'Nome del permesso',
     permissions: 'Permessi',

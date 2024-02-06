@@ -69,7 +69,8 @@ const organizations = {
       'Vamos criar a sua primeira organização. Ela possui um ID único e serve como contentor para lidar com várias entidades empresariais adicionais.',
     more_next_steps: 'Mais passos seguintes',
     add_members: 'Adicionar membros à sua organização',
-    add_members_action: 'Adicionar membros em massa e atribuir funções',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: 'Permissões da organização',
     permission_name: 'Nome da permissão',
     permissions: 'Permissões',

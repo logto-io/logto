@@ -69,7 +69,8 @@ const organizations = {
       'Créez votre première organisation. Elle possède un identifiant unique et sert de conteneur pour gérer diverses identités orientées vers les entreprises.',
     more_next_steps: 'Autres étapes suivantes',
     add_members: 'Ajouter des membres à votre organisation',
-    add_members_action: 'Ajouter en masse des membres et attribuer des rôles',
+    /** UNTRANSLATED */
+    config_organization: 'Configure organization',
     organization_permissions: "Autorisations de l'organisation",
     permission_name: "Nom de l'autorisation",
     permissions: 'Autorisations',
