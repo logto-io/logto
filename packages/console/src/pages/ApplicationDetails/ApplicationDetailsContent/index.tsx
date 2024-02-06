@@ -16,11 +16,12 @@ import DetailsForm from '@/components/DetailsForm';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { ApplicationDetailsTabs, logtoThirdPartyGuideLink } from '@/consts';
+import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedAppLink } from '@/consts';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
 import useApi from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
@@ -46,6 +47,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { navigate } = useTenantPathname();
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const formMethods = useForm<ApplicationForm>({
     defaultValues: applicationFormDataParser.fromResponse(data),
@@ -115,7 +117,12 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
           onClick: () => {
             // Open IdP docs link in new tab if it's a third party app
             if (data.isThirdParty) {
-              window.open(logtoThirdPartyGuideLink, '_blank');
+              window.open(getDocumentationUrl(logtoThirdPartyGuideLink), '_blank');
+              return;
+            }
+            // Open protected app docs link in new tab
+            if (data.type === ApplicationType.Protected) {
+              window.open(getDocumentationUrl(protectedAppLink), '_blank');
               return;
             }
 
