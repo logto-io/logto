@@ -3,7 +3,7 @@ const organizations = {
   page_title: 'Organizations',
   title: 'Organizations',
   subtitle:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
+    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
   organization_template: 'Organization template',
   organization_id: 'Organization ID',
   members: 'Members',
@@ -11,7 +11,7 @@ const organizations = {
   setup_organization: 'Set up your organization',
   organization_list_placeholder_title: 'Organization',
   organization_list_placeholder_text:
-    'Organization is usually used in SaaS or SaaS-like multi-tenancy apps. The Organizations feature allows your B2B customers to better manage their partners and customers, and to customize the ways that end-users access their applications.',
+    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
   organization_name_placeholder: 'My organization',
   organization_description_placeholder: 'A brief description of the organization',
   organization_permission: 'Organization permission',

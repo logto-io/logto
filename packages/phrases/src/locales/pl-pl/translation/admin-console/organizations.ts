@@ -2,16 +2,18 @@ const organizations = {
   organization: 'Organizacja',
   page_title: 'Organizacje',
   title: 'Organizacje',
+  /** UNTRANSLATED */
   subtitle:
-    'Organizacja to zbiór użytkowników, w tym zespołów, klientów biznesowych i partnerów firm, którzy korzystają z Twoich aplikacji.',
+    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
   organization_template: 'Szablon organizacji',
   organization_id: 'ID organizacji',
   members: 'Członkowie',
   create_organization: 'Utwórz organizację',
   setup_organization: 'Skonfiguruj swoją organizację',
   organization_list_placeholder_title: 'Organizacja',
+  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    'Organizacja jest zazwyczaj stosowana w aplikacjach wielomandantowych typu SaaS lub podobnych. Funkcja organizacji umożliwia klientom B2B lepsze zarządzanie swoimi partnerami i klientami oraz dostosowywanie sposobów, w jakie końcowi użytkownicy mają dostęp do ich aplikacji.',
+    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
   organization_name_placeholder: 'Moja organizacja',
   organization_description_placeholder: 'Krótki opis organizacji',
   organization_permission: 'Uprawnienie organizacji',

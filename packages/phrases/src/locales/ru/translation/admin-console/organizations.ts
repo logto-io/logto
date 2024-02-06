@@ -2,16 +2,18 @@ const organizations = {
   organization: 'Организация',
   page_title: 'Организации',
   title: 'Организации',
+  /** UNTRANSLATED */
   subtitle:
-    'Организация - это совокупность пользователей, включая команды, бизнес-клиентов и партнерские фирмы, использующих ваши приложения.',
+    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
   organization_template: 'Шаблон организации',
   organization_id: 'Идентификатор организации',
   members: 'Участники',
   create_organization: 'Создать организацию',
   setup_organization: 'Настройка вашей организации',
   organization_list_placeholder_title: 'Организация',
+  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    'Организация обычно используется в приложениях с мультиарендой или похожих на мультиаренду SaaS. Функция "Организации" позволяет вашим B2B-клиентам лучше управлять своими партнерами и клиентами, а также настраивать способы доступа конечных пользователей к их приложениям.',
+    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
   organization_name_placeholder: 'Моя организация',
   organization_description_placeholder: 'Краткое описание организации',
   organization_permission: 'Разрешение организации',
