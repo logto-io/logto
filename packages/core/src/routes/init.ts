@@ -57,7 +57,7 @@ const createRouters = (tenant: TenantContext) => {
   applicationUserConsentOrganizationRoutes(managementRouter, tenant);
 
   // FIXME: @wangsijie: remove this after the feature is enabled by default
-  if (EnvSet.values.isDevFeaturesEnabled) {
+  if (!EnvSet.values.isCloud) {
     applicationProtectedAppMetadataRoutes(managementRouter, tenant);
   }
 

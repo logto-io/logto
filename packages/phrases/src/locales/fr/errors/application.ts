@@ -12,7 +12,8 @@ const application = {
   consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: "Les métadonnées d'application protégée sont requises.",
   /** UNTRANSLATED */
-  protected_app_not_configured: 'Protected app provider is not configured.',
+  protected_app_not_configured:
+    'Protected app provider is not configured. This feature is not available for open source version.',
   /** UNTRANSLATED */
   cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
   /** UNTRANSLATED */

@@ -10,7 +10,8 @@ const application = {
   consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: '보호된 응용 프로그램 메타데이터가 필요합니다.',
   /** UNTRANSLATED */
-  protected_app_not_configured: 'Protected app provider is not configured.',
+  protected_app_not_configured:
+    'Protected app provider is not configured. This feature is not available for open source version.',
   /** UNTRANSLATED */
   cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
   /** UNTRANSLATED */
