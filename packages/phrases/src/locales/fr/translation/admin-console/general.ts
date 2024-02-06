@@ -70,8 +70,6 @@ const general = {
   edit_field: 'Modifier {{field}}',
   delete_field: 'Supprimer {{field}}',
   coming_soon: 'Bientôt disponible',
-  beta_notice:
-    '🎉  {{feature}} est actuellement en version bêta. Bienvenue pour l`explorer et <ContactLink>partager vos commentaires</ContactLink>.',
 };
 
 export default Object.freeze(general);

@@ -69,8 +69,6 @@ const general = {
   edit_field: '{{field}} 편집',
   delete_field: '{{field}} 삭제',
   coming_soon: '곧 출시 예정',
-  beta_notice:
-    '🎉  {{feature}}는 현재 베타 버전입니다. 탐색하고 <ContactLink>피드백을 공유</ContactLink>해주세요.',
 };
 
 export default Object.freeze(general);

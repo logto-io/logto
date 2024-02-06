@@ -69,8 +69,6 @@ const general = {
   edit_field: '{{field}}を編集',
   delete_field: '{{field}}を削除',
   coming_soon: '近日公開予定',
-  beta_notice:
-    '🎉  {{feature}} は現在ベータ版です。お試しいただき、<ContactLink>フィードバックを共有</ContactLink>してください。',
 };
 
 export default Object.freeze(general);
