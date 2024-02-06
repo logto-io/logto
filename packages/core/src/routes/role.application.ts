@@ -1,3 +1,4 @@
+import { Applications } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
@@ -7,7 +8,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import { applicationResponseGuard } from './applications/types.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function roleApplicationRoutes<T extends AuthedRouter>(
@@ -29,7 +29,7 @@ export default function roleApplicationRoutes<T extends AuthedRouter>(
     koaPagination(),
     koaGuard({
       params: object({ id: string().min(1) }),
-      response: applicationResponseGuard.array(),
+      response: Applications.guard.array(),
       status: [200, 204, 400, 404],
     }),
     async (ctx, next) => {

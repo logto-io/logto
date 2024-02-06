@@ -56,10 +56,7 @@ const createRouters = (tenant: TenantContext) => {
   applicationSignInExperienceRoutes(managementRouter, tenant);
   applicationUserConsentOrganizationRoutes(managementRouter, tenant);
 
-  // FIXME: @wangsijie: remove this after the feature is enabled by default
-  if (!EnvSet.values.isCloud) {
-    applicationProtectedAppMetadataRoutes(managementRouter, tenant);
-  }
+  applicationProtectedAppMetadataRoutes(managementRouter, tenant);
 
   logtoConfigRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);
