@@ -140,15 +140,7 @@ jobs:
         working-directory: ./alteration
         run: |
           cd packages/cli
-          pnpm start db seed
-        env:
-          DB_URL: postgres://postgres:postgres@localhost:5432/alteration
-
-      # FIXME: Last version of CLI doesn't support test data seeding. Here's a temporary workaround.
-      # We will remove this step when a new version of CLI is released.
-      - name: Setup alteration database test data
-        working-directory: ./fresh
-        run: pnpm cli db seed --legacy-test-data
+          pnpm start db seed --test
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/alteration
 
@@ -169,15 +161,7 @@ jobs:
         working-directory: ./alteration
         run: |
           cd packages/cli
-          pnpm start db seed
-        env:
-          DB_URL: postgres://postgres:postgres@localhost:5432/old
-
-      # FIXME: Last version of CLI doesn't support test data seeding. Here's a temporary workaround.
-      # We will remove this step when a new version of CLI is released.
-      - name: Setup old database test data
-        working-directory: ./fresh
-        run: pnpm cli db seed --legacy-test-data
+          pnpm start db seed --test
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/old
 
