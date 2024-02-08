@@ -1,5 +1,17 @@
 # @logto/app-insights
 
+## 1.4.0
+
+### Minor Changes
+
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+### Patch Changes
+
+- 9089dbf84: upgrade TypeScript to 5.3.3
+
 ## 1.3.1
 
 ### Patch Changes

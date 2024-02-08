@@ -1,5 +1,30 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+- 570a4ea9e: add `replaceSendMessageHandlebars()` for replacing `SendMessagePayload` handlebars in a message template
+- 570a4ea9e: support magic link feature
+
+  - Removed `VerificationCodeType`: Since we are adding the magic link feature, `VerificationCodeType` is no longer precise for our use cases.
+  - Replaced `VerificationCodeType` with `TemplateType`.
+  - Removed `TemplateNotSupported` error code since it is useless for dynamic template checking.
+  - Added `link` property to `SendMessagePayload`.
+
+- 6befe6014: add `mockConnectorFilePaths` and deprecate `mockSmsVerificationCodeFileName`
+
+### Patch Changes
+
+- 9089dbf84: upgrade TypeScript to 5.3.3
+- Updated dependencies [9089dbf84]
+- Updated dependencies [31e60811d]
+  - @logto/language-kit@1.1.0
+
 ## 2.0.0
 
 ### Major Changes

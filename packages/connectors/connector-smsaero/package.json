@@ -1,10 +1,10 @@
 {
   "name": "@logto/connector-smsaero",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "SMSAero connector implementation.",
   "author": "Danil Tankov <danil.tankoff@yandex.ru>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^2.0.0"
+    "@logto/connector-kit": "workspace:^2.1.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",

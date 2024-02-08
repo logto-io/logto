@@ -1,5 +1,36 @@
 # Change Log
 
+## 1.13.0
+
+### Minor Changes
+
+- e4c73e7bb: Add "--skip-core-check" option in translate cli commands, in order to support any arbitrary package name other than "phrases" and "phrases-experience".
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+### Patch Changes
+
+- 9089dbf84: upgrade TypeScript to 5.3.3
+- b40bae9c5: update translate concurrency to 10
+- Updated dependencies [a2ce0be46]
+- Updated dependencies [acb7fd3fe]
+- Updated dependencies [9089dbf84]
+- Updated dependencies [04ec78a91]
+- Updated dependencies [32df9acde]
+- Updated dependencies [31e60811d]
+- Updated dependencies [32df9acde]
+- Updated dependencies [570a4ea9e]
+- Updated dependencies [570a4ea9e]
+- Updated dependencies [6befe6014]
+  - @logto/schemas@1.13.0
+  - @logto/shared@3.1.0
+  - @logto/connector-kit@2.1.0
+  - @logto/language-kit@1.1.0
+  - @logto/phrases-experience@1.6.0
+  - @logto/core-kit@2.3.0
+  - @logto/phrases@1.9.0
+
 ## 1.12.0
 
 ### Minor Changes

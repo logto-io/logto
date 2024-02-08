@@ -1,5 +1,18 @@
 # Change Log
 
+## 3.1.0
+
+### Minor Changes
+
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+### Patch Changes
+
+- acb7fd3fe: Add case sensitive username env variable
+- 9089dbf84: upgrade TypeScript to 5.3.3
+
 ## 3.0.0
 
 ### Major Changes
