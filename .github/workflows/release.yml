@@ -1,6 +1,9 @@
 name: Release
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
 
 concurrency:
@@ -8,6 +11,7 @@ concurrency:
 
 jobs:
   dockerize:
+    if: startsWith(github.ref, 'refs/tags/')
     environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' || '' }}
     runs-on: ubuntu-latest
     permissions:
