@@ -129,7 +129,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
     koaGuard({
       body: applicationCreateGuard,
       response: Applications.guard,
-      status: [200, 400, 422],
+      status: [200, 400, 422, 500],
     }),
     async (ctx, next) => {
       const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;

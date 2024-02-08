@@ -4,6 +4,7 @@ import { type Response } from 'got';
 import { type ZodType } from 'zod';
 
 import assertThat from '../assert-that.js';
+import { consoleLog } from '../console.js';
 
 import { type HandleResponse, cloudflareResponseGuard } from './types.js';
 
@@ -18,6 +19,7 @@ const parseCloudflareResponse = (body: string) => {
 export const buildHandleResponse = (handleError: (statusCode: number) => never) => {
   const handleResponse: HandleResponse = <T>(response: Response<string>, guard?: ZodType<T>) => {
     if (!response.ok) {
+      consoleLog.error('Cloudflare API error', response.statusCode, response.body);
       handleError(response.statusCode);
     }
 
