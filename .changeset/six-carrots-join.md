@@ -3,7 +3,7 @@
 "@logto/phrases-experience": minor
 ---
 
-Add all third-party related console, experience phrases.
+add all third-party related console, experience phrases
 
 - Add new i18n phrases for the third-party application management pages on the Admin Console.
 - Add new i18n phrases for the user consent page.

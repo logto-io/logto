@@ -2,13 +2,13 @@
 "@logto/core": minor
 ---
 
-Logto core API implementation to support the new third-party application feature, and user consent interaction flow.
+implement Logto core API to support the new third-party application feature, and user consent interaction flow
 
 ### Management API
 
-- add new endpoint `/applications/sign-in-experiences` with `PUT`, `GET` methods to manage the application level sign-in experiences.
-- add new endpoint `/applications/:id/users/:userId/consent-organizations` with `PUT`, `GET`, `POST`, `DELETE` methods to manage the user granted organizations for the third-party application.
-- and new endpoint `/applications/:id/user-consent-scopes` with `GET`, `POST`, `DELETE` methods to manage the user consent resource, organization, and user scopes for the third-party application.
+- Add new endpoint `/applications/sign-in-experiences` with `PUT`, `GET` methods to manage the application level sign-in experiences.
+- Add new endpoint `/applications/:id/users/:userId/consent-organizations` with `PUT`, `GET`, `POST`, `DELETE` methods to manage the user granted organizations for the third-party application.
+- Add new endpoint `/applications/:id/user-consent-scopes` with `GET`, `POST`, `DELETE` methods to manage the user consent resource, organization, and user scopes for the third-party application.
 - Update the `/applications` endpoint to include the new `is_third_party` field. Support create third-party applications, and query by `is_third_party` field.
 
 ### Interaction API

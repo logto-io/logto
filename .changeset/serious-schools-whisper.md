@@ -2,7 +2,7 @@
 "@logto/console": minor
 ---
 
-Add third-party application management pages
+add third-party application management pages
 
 - Add the new application category `Third-party` to the application creation page.
 - Add the new application framework `OIDC IdP` to the application creation page.
