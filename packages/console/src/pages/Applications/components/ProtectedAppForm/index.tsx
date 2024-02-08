@@ -152,7 +152,8 @@ function ProtectedAppForm({
         >
           <div className={styles.domainFieldWrapper}>
             <TextInput
-              className={classNames(styles.input, styles.subdomain)}
+              className={styles.subdomain}
+              inputContainerClassName={styles.input}
               {...register('subDomain', {
                 required: true,
                 validate: (value) =>
