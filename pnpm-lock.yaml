@@ -2439,8 +2439,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       nodemailer:
-        specifier: ^6.9.1
-        version: 6.9.1
+        specifier: ^6.9.9
+        version: 6.9.9
       snakecase-keys:
         specifier: ^6.0.0
         version: 6.0.0
@@ -17373,8 +17373,8 @@ packages:
     resolution: {integrity: sha512-71UV2HRUP+djvHpdyatiuv+Y1o8hI4ZI7bMfuuoACMLR1JJCErM4WXAclNeHd6BgHXkqeqnnAk3wpDkSQWmFXw==}
     dev: false
 
-  /nodemailer@6.9.1:
-    resolution: {integrity: sha512-qHw7dOiU5UKNnQpXktdgQ1d3OFgRAekuvbJLcdG5dnEo/GtcTHRYM7+UfJARdOFU9WUQO8OiIamgWPmiSFHYAA==}
+  /nodemailer@6.9.9:
+    resolution: {integrity: sha512-dexTll8zqQoVJEZPwQAKzxxtFn0qTnjdQTchoU6Re9BUUGBJiOy3YMn/0ShTW6J5M0dfQ1NeDeRTTl4oIWgQMA==}
     engines: {node: '>=6.0.0'}
     dev: false
 
