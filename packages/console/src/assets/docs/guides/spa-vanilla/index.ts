@@ -10,6 +10,10 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'js',
     path: 'packages/browser-sample',
   },
+  fullTutorial: {
+    title: 'Full vanilla JS SDK tutorial',
+    url: 'https://docs.logto.io/sdk/vanilla-js',
+  },
 });
 
 export default metadata;

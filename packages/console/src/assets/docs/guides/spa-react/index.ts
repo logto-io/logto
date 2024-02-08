@@ -11,6 +11,10 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'packages/react-sample',
   },
   isFeatured: true,
+  fullTutorial: {
+    title: 'Full React SDK tutorial',
+    url: 'https://docs.logto.io/sdk/react',
+  },
 });
 
 export default metadata;

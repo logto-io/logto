@@ -12,6 +12,10 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'packages/vue-sample',
   },
   isFeatured: true,
+  fullTutorial: {
+    title: 'Full Vue SDK tutorial',
+    url: 'https://docs.logto.io/sdk/vue',
+  },
 });
 
 export default metadata;
