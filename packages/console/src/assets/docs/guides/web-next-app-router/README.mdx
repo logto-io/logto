@@ -9,8 +9,8 @@ import Step from '@/mdx-components/Step';
 <Steps>
 
 <Step
-  title="Add Logto SDK as a dependency"
-  subtitle="Please select your favorite package manager"
+  title="Installation"
+  subtitle="Install Logto SDK for your project"
 >
 <Tabs>
 <TabItem value="npm" label="npm">
@@ -39,7 +39,6 @@ pnpm add @logto/next
 
 <Step
   title="Init LogtoClient"
-  subtitle="1 step"
 >
 
 <InlineNotification>
@@ -51,7 +50,9 @@ Import and initialize LogtoClient:
 <pre>
   <code className="language-ts">
     {`// libraries/logto.js
-import LogtoClient from '@logto/next/edge';
+'use server';
+
+import LogtoClient from '@logto/next/server-actions';
 
 export const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
@@ -67,8 +68,7 @@ export const logtoClient = new LogtoClient({
 </Step>
 
 <Step
-  title="Sign in"
-  subtitle="3 steps, 4 API routes"
+  title="Implement sign-in"
 >
 
 ### Configure Redirect URI
@@ -77,177 +77,123 @@ First, let’s enter your redirect URI. E.g. `http://localhost:3000/api/logto/si
 
 <UriInputField name="redirectUris" />
 
-### Prepare API routes
+### Prepare helper functions
 
-Prepare [API routes](https://nextjs.org/docs/api-routes/introduction) to connect with Logto.
+First, let's prepare helper functions to connect with Logto.
 
-Go back to your IDE/editor, use the following code to implement the API routes first:
-
-```ts
-// app/api/logto/sign-in/route.ts
-import { type NextRequest } from 'next/server';
-
-import { logtoClient } from '../../../../libraries/logto';
-
-export const runtime = 'edge';
-
-export async function GET(request: NextRequest) {
-  return logtoClient.handleSignIn()(request);
-}
-```
+Go back to your IDE/editor, add the following code to `/libraries/logto.ts`:
 
 ```ts
-// app/api/logto/sign-in-callback/route.ts
-import { type NextRequest } from 'next/server';
+const cookieName = `logto:${config.appId}`;
 
-import { logtoClient } from '../../../../libraries/logto';
+const setCookies = (value?: string) => {
+  if (value === undefined) {
+    return;
+  }
 
-export const runtime = 'edge';
+  cookies().set(cookieName, value, {
+    maxAge: 14 * 3600 * 24,
+    secure: config.cookieSecure,
+  });
+};
 
-export async function GET(request: NextRequest) {
-  return logtoClient.handleSignInCallback()(request);
-}
+const getCookie = () => {
+  return cookies().get(cookieName)?.value ?? '';
+};
+
+export const signIn = async () => {
+  const { url, newCookie } = await logtoClient.handleSignIn(
+    getCookie(),
+    `${config.baseUrl}/callback`
+  );
+
+  setCookies(newCookie);
+
+  return url;
+};
+
+export const handleSignIn = async (searchParams: URLSearchParams) => {
+  const search = searchParams.toString();
+
+  const newCookie = await logtoClient.handleSignInCallback(
+    getCookie(),
+    `${config.baseUrl}/callback?${search}`
+  );
+
+  setCookies(newCookie);
+};
+
+export const signOut = async () => {
+  const url = await logtoClient.handleSignOut(getCookie(), `${config.baseUrl}/callback`);
+
+  setCookies('');
+
+  return url;
+};
+
+export const getLogtoContext = async (config?: GetContextParameters) => {
+  return await logtoClient.getLogtoContext(getCookie(), config);
+};
 ```
+### Implement callback route
+
+Create a "callback" route by adding the following code to `/app/callback/route.ts`:
 
 ```ts
-// app/api/logto/sign-out/route.ts
-import { type NextRequest } from 'next/server';
-
-import { logtoClient } from '../../../../libraries/logto';
-
-export const runtime = 'edge';
+import { redirect } from 'next/navigation';
+import { NextRequest } from 'next/server';
+import { handleSignIn } from '../../libraries/logto';
 
 export async function GET(request: NextRequest) {
-  return logtoClient.handleSignOut()(request);
+  const searchParams = request.nextUrl.searchParams;
+  await handleSignIn(searchParams);
+
+  redirect('/');
 }
 ```
-
-```ts
-// app/api/logto/user/route.ts
-import { type NextRequest } from 'next/server';
-
-import { logtoClient } from '../../../../libraries/logto';
-
-export const runtime = 'edge';
-
-export async function GET(request: NextRequest) {
-  return logtoClient.handleUser()(request);
-}
-```
-
-This will create 4 routes automatically:
-
-1. `/api/logto/sign-in`: Sign in with Logto.
-2. `/api/logto/sign-in-callback`: Handle sign-in callback.
-3. `/api/logto/sign-out`: Sign out with Logto.
-4. `/api/logto/user`: Check if user is authenticated with Logto, if yes, return user info.
 
 ### Implement sign-in button
 
-We're almost there! In the last step, we will create a sign-in button:
+We're almost there! In the last step, we will create a sign-in button, which will navigate to Logto sign-in page when clicked.
 
-```tsx
-import { useRouter } from 'next/router';
+This is a client component, so we will create it in `/app/sign-in.tsx`:
 
-const { push } = useRouter();
+```ts
+'use client';
 
-<button onClick={() => push('/api/logto/sign-in')}>Sign In</button>;
+import { useRouter } from 'next/navigation';
+import { signIn } from '../libraries/logto';
+
+const SignIn = () => {
+  const router = useRouter();
+
+  const handleClick = async () => {
+    const redirectUrl = await signIn();
+
+    router.push(redirectUrl);
+  };
+
+  return <button onClick={handleClick}>Sign In</button>;
+};
+
+export default SignIn;
 ```
 
 Now you will be navigated to Logto sign-in page when you click the button.
 
-</Step>
-
-<Step
-  title="Get user profile"
-  subtitle="2 steps"
->
-
-We'll use "async component" to get user profile, check the [Data Fetching](https://nextjs.org/docs/app/building-your-application/data-fetching) doc to learn more.
-
-### Create `getUser` helper
+Add this button to home page at `/app/page.tsx`:
 
 ```tsx
-// app/api/logto/user/get-user.ts
-import { type LogtoContext } from '@logto/next';
-import { cookies } from 'next/headers';
+import SignIn from './sign-in';
 
-// `server-only` guarantees any modules that import code in file
-// will never run on the client. Even though this particular api
-// doesn't currently use sensitive environment variables, it's
-// good practise to add `server-only` preemptively.
-// eslint-disable-next-line import/no-unassigned-import
-import 'server-only';
-import { config } from '../../../../libraries/config';
-
-export async function getUser() {
-  const response = await fetch(`${config.baseUrl}/api/logto/user`, {
-    cache: 'no-store',
-    headers: {
-      cookie: cookies().toString(),
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Something went wrong!');
-  }
-
-  // eslint-disable-next-line no-restricted-syntax
-  const user = (await response.json()) as LogtoContext;
-
-  return user;
-}
-```
-
-### Create an async component to fetch
-
-```tsx
-import { getUser } from './api/logto/user/get-user';
-
-const Page = async () => {
-  const user = await getUser();
-
-  console.log(user); // You'll get user profile here.
-
+export default async function Home() {
   return (
-    <div>
-      <header>
-        <h1>Hello Logto.</h1>
-      </header>
-    </div>
-  );
-};
-
-export default Page;
-```
-
-</Step>
-
-<Step
-  title="Protect API resources"
->
-
-Call `logtoClient.getLogtoContext` to get user authentication state.
-
-```ts
-// pages/api/protected-resource.ts
-import { type NextRequest } from 'next/server';
-
-import { logtoClient } from '../../../../libraries/logto-edge';
-
-export const runtime = 'edge';
-
-export async function GET(request: NextRequest) {
-  const { isAuthenticated, scopes } = await logtoClient.getLogtoContext(request);
-
-  if (!isAuthenticated) {
-    return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
-  }
-
-  return new Response(
-    JSON.stringify({
-      data: 'this_is_protected_resource',
-    })
+    <main>
+      <h1>Hello Logto.</h1>
+      <div>
+        <SignIn />
+      </div>
+    </main>
   );
 }
 ```
@@ -255,20 +201,61 @@ export async function GET(request: NextRequest) {
 </Step>
 
 <Step
-  title="Sign out"
-  subtitle="1 step"
+  title="Implement sign-out"
 >
 
-Calling `/api/logto/sign-out` will clear all the Logto data in memory and cookies if they exist.
-
-After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below before calling `/api/logto/sign-out`.
+After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI first.
 
 <UriInputField name="postLogoutRedirectUris" />
 
 ### Implement a sign-out button
 
+This is also a client component, so we will create it in `/app/sign-out.tsx`:
+
 ```tsx
-<button onClick={() => push('/api/logto/sign-out')}>Sign Out</button>
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { signOut } from '../libraries/logto';
+
+const SignOut = () => {
+  const router = useRouter();
+
+  const handleClick = async () => {
+    const redirectUrl = await signOut();
+
+    router.push(redirectUrl);
+  };
+
+  return <button onClick={handleClick}>Sign Out</button>;
+};
+
+export default SignOut;
+```
+
+</Step>
+
+<Step
+  title="Handle authentication status"
+>
+
+We can call the function `getLogtoContext` to get context as the authentication state, let's modify the home page:
+
+```tsx
+import { getLogtoContext } from '../libraries/logto';
+import SignIn from './sign-in';
+import SignOut from './sign-out';
+
+export default async function Home() {
+  const { isAuthenticated } = await getLogtoContext();
+
+  return (
+    <main>
+      <h1>Hello Logto.</h1>
+      <div>{isAuthenticated ? <SignOut /> : <SignIn />}</div>
+    </main>
+  );
+}
 ```
 
 </Step>
