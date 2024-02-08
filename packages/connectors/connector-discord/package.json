@@ -1,10 +1,10 @@
 {
   "name": "@logto/connector-discord",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Discord connector implementation.",
   "author": "ZR3SYSTEMS. <https://github.com/FlurryNight>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^2.0.0"
+    "@logto/connector-kit": "workspace:^2.1.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",

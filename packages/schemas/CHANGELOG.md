@@ -1,5 +1,41 @@
 # Change Log
 
+## 1.13.0
+
+### Minor Changes
+
+- a2ce0be46: add tenant role enum and scope enum
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+- 32df9acde: update Logto application schemas to support the new third-party application feature (Logto as IdP)
+
+  - Applications table alteration. Add new column `is_third_party` to indicate if the application is a third-party application.
+  - Create new table `application_user_consent_resource_scopes` to store the enabled user consent resource scopes for the third-party application.
+  - Create new table `application_user_consent_organization_scopes` to store the enabled user consent organization scopes for the third-party application.
+  - Create new table `application_user_consent_user_scopes` to store the enabled user consent user scopes for the third-party application.
+  - Create new table `application_user_consent_organizations` to store the user granted organizations for the third-party application.
+  - Create new table `application_sign_in_experiences` to store the application level sign-in experiences for the third-party application.
+
+### Patch Changes
+
+- 9089dbf84: upgrade TypeScript to 5.3.3
+- Updated dependencies [acb7fd3fe]
+- Updated dependencies [9089dbf84]
+- Updated dependencies [04ec78a91]
+- Updated dependencies [32df9acde]
+- Updated dependencies [31e60811d]
+- Updated dependencies [570a4ea9e]
+- Updated dependencies [570a4ea9e]
+- Updated dependencies [6befe6014]
+  - @logto/shared@3.1.0
+  - @logto/connector-kit@2.1.0
+  - @logto/language-kit@1.1.0
+  - @logto/phrases-experience@1.6.0
+  - @logto/core-kit@2.3.0
+  - @logto/phrases@1.9.0
+
 ## 1.12.0
 
 ### Minor Changes

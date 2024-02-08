@@ -1,5 +1,30 @@
 # Change Log
 
+## 1.12.0
+
+### Minor Changes
+
+- c14cd1827: add .NET Core Blazor Server guide
+- 32df9acde: add third-party application management pages
+
+  - Add the new application category `Third-party` to the application creation page.
+  - Add the new application framework `OIDC IdP` to the application creation page.
+  - Add new tab `Third-party apps` to the applications management page. Split the existing applications list into `My apps` and `Third-party apps` two different tab for better management.
+  - Reorg the application details page form. Remove the `Advance settings` tab and merge all the OIDC configuration fields into the `Settings` tab.
+  - Add new `Permissions` tab to the third-party application details page. Display the user consent resource, organization, and user scopes. And allow the user to manage the user granted organizations for the third-party application.
+  - Add new `Branding` tab to the third-party application details page. Allow the user to manage the application level sign-in experiences for the third-party application.
+
+- 715dba2ce: add .NET Core Blazor WASM guide
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+### Patch Changes
+
+- 9089dbf84: upgrade TypeScript to 5.3.3
+- 04ec78a91: improve error handling when user associated application is removed
+- 8c4bfbce1: Remove the upsell tag on social connectors creation modal in OSS version.
+
 ## 1.11.0
 
 ### Minor Changes

@@ -1,5 +1,27 @@
 # Change Log
 
+## 1.9.0
+
+### Minor Changes
+
+- 32df9acde: add all third-party related console, experience phrases
+
+  - Add new i18n phrases for the third-party application management pages on the Admin Console.
+  - Add new i18n phrases for the user consent page.
+  - Add new i18n phrases for the user scopes as the description for all the Logto user claim scopes. Will be displayed on the user consent page.
+
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+### Patch Changes
+
+- 9089dbf84: upgrade TypeScript to 5.3.3
+- 04ec78a91: improve error handling when user associated application is removed
+- Updated dependencies [9089dbf84]
+- Updated dependencies [31e60811d]
+  - @logto/language-kit@1.1.0
+
 ## 1.8.0
 
 ### Minor Changes

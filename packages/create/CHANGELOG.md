@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.13.0
+
+### Minor Changes
+
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+### Patch Changes
+
+- 9089dbf84: upgrade TypeScript to 5.3.3
+- Updated dependencies [e4c73e7bb]
+- Updated dependencies [9089dbf84]
+- Updated dependencies [b40bae9c5]
+- Updated dependencies [31e60811d]
+  - @logto/cli@1.13.0
+
 ## 1.12.0
 
 ### Patch Changes

@@ -1,5 +1,66 @@
 # Change Log
 
+## 1.13.0
+
+### Minor Changes
+
+- 32df9acde: implement Logto core API to support the new third-party application feature, and user consent interaction flow
+
+  ### Management API
+
+  - Add new endpoint `/applications/sign-in-experiences` with `PUT`, `GET` methods to manage the application level sign-in experiences.
+  - Add new endpoint `/applications/:id/users/:userId/consent-organizations` with `PUT`, `GET`, `POST`, `DELETE` methods to manage the user granted organizations for the third-party application.
+  - Add new endpoint `/applications/:id/user-consent-scopes` with `GET`, `POST`, `DELETE` methods to manage the user consent resource, organization, and user scopes for the third-party application.
+  - Update the `/applications` endpoint to include the new `is_third_party` field. Support create third-party applications, and query by `is_third_party` field.
+
+  ### Interaction API
+
+  - Add the `koaAutoConsent` to support the auto-consent interaction flow for the first-party application. If is the first-party application we can auto-consent the requested scopes. If is the third-party application we need to redirect the user to the consent page to get the user consent manually.
+  - Add the `GET /interaction/consent` endpoint to support fetching the consent context for the user consent page. Including the application detail, authenticated user info, all the requested scopes and user organizations info (if requested scopes include the organization scope).
+  - Update the `POST /interaction/consent` endpoint to support the user consent interaction flow. Including grant all the missing scopes, and update the user granted organizations for the third-party application.
+
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+### Patch Changes
+
+- 9222eb9f8: Set `on conflict do nothing` for all the `RelationQueries` insert operation.
+
+  - For all the relation table entities, we want to safely insert them into the database. If the relation entity already exists, instead of throwing an error, we ignore the insert operation, especially on a batch insert. Unlike other resource data entities, user does not care if the relation entity already exists. Therefore, we want to silently ignore the insert operation if the relation entity already exists.
+
+- acb7fd3fe: Add case sensitive username env variable
+- 9089dbf84: upgrade TypeScript to 5.3.3
+- Updated dependencies [a2ce0be46]
+- Updated dependencies [e4c73e7bb]
+- Updated dependencies [acb7fd3fe]
+- Updated dependencies [32df9acde]
+- Updated dependencies [9089dbf84]
+- Updated dependencies [c14cd1827]
+- Updated dependencies [b40bae9c5]
+- Updated dependencies [32df9acde]
+- Updated dependencies [04ec78a91]
+- Updated dependencies [32df9acde]
+- Updated dependencies [715dba2ce]
+- Updated dependencies [31e60811d]
+- Updated dependencies [8c4bfbce1]
+- Updated dependencies [32df9acde]
+- Updated dependencies [570a4ea9e]
+- Updated dependencies [570a4ea9e]
+- Updated dependencies [6befe6014]
+  - @logto/schemas@1.13.0
+  - @logto/cli@1.13.0
+  - @logto/shared@3.1.0
+  - @logto/experience@1.5.0
+  - @logto/connector-kit@2.1.0
+  - @logto/language-kit@1.1.0
+  - @logto/phrases-experience@1.6.0
+  - @logto/core-kit@2.3.0
+  - @logto/app-insights@1.4.0
+  - @logto/demo-app@1.1.0
+  - @logto/console@1.12.0
+  - @logto/phrases@1.9.0
+
 ## 1.12.0
 
 ### Minor Changes

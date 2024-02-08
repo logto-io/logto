@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.5.0
+
+### Minor Changes
+
+- 32df9acde: update user consent page to support the new third-party application feature
+
+  - Only show the user consent page if current application is a third-party application, otherwise auto-consent the requested scopes.
+  - Add the new fetching API to get the user consent context. Including the application detail, authenticated user info, all the requested scopes and user organizations info (if requested scopes include the organization scope).
+  - Add the new user consent interaction API and authorize button. User have to manually authorize the requested scopes for the third-party application before continue the authentication flow.
+
+- 31e60811d: use Node 20 LTS for engine requirement.
+
+  Note: We mark it as minor because Logto is shipping with Docker image and it's not a breaking change for users.
+
+### Patch Changes
+
+- 9089dbf84: upgrade TypeScript to 5.3.3
+
 ## 1.4.0
 
 ### Minor Changes
