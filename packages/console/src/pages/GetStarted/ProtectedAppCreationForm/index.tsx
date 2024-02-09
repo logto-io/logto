@@ -19,7 +19,7 @@ function ProtectedAppCreationForm() {
   const { getTo } = useTenantPathname();
   const { data, isLoading, mutate } = useSWR<Application[]>('api/applications?types=Protected');
   const { hasAppsReachedLimit } = useApplicationsUsage();
-  const hasProtectedApps = !!data?.length;
+  const hasProtectedApps = !isLoading && !!data?.length;
   const showCreationForm = !hasProtectedApps && !hasAppsReachedLimit;
 
   const mutateApps = useCallback(
