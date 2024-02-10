@@ -10,6 +10,10 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'python',
     path: 'samples',
   },
+  fullTutorial: {
+    title: 'Full Python SDK tutorial',
+    url: 'https://docs.logto.io/sdk/python',
+  },
 });
 
 export default metadata;

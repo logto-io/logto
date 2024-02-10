@@ -30,6 +30,12 @@ export type GuideMetadata = {
 
   /** Indicate whether the application is for third-party use */
   isThirdParty?: boolean;
+
+  /** The related complete tutorial doc for this guide which will be displayed in the 'Further readings' section. */
+  fullTutorial?: {
+    title: string;
+    url: string;
+  };
 };
 
 /** The guide instance to build in the console. */

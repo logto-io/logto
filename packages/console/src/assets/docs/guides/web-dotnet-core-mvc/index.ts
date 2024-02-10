@@ -10,6 +10,10 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'csharp',
     path: '/',
   },
+  fullTutorial: {
+    title: 'Full .NET Core (MVC) integration tutorial',
+    url: 'https://docs.logto.io/sdk/dotnet-core/mvc',
+  },
 });
 
 export default metadata;
