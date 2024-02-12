@@ -141,7 +141,7 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
   }
 
   if (!authorization.startsWith('Bearer')) {
-    throw an Error('Authorization header is not in the Bearer scheme');
+    throw new Error('Authorization header is not in the Bearer scheme');
   }
 
   return authorization.slice(7); // The length of 'Bearer ' is 7
