@@ -9,7 +9,12 @@ import { getAlterationDirectory } from '../alteration/utils.js';
 
 import { createTables, seedCloud, seedTables, seedTest } from './tables.js';
 
-export const seedByPool = async (pool: DatabasePool, cloud = false, test = false) => {
+export const seedByPool = async (
+  pool: DatabasePool,
+  cloud = false,
+  test = false,
+  encryptBaseRole = false
+) => {
   await pool.transaction(async (connection) => {
     // Check alteration scripts available in order to insert correct timestamp
     const latestTimestamp = await getLatestAlterationTimestamp();
@@ -21,9 +26,14 @@ export const seedByPool = async (pool: DatabasePool, cloud = false, test = false
       );
     }
 
-    await oraPromise(createTables(connection), {
+    const tableInfo = await oraPromise(createTables(connection, encryptBaseRole), {
       text: 'Create tables',
     });
+
+    if (tableInfo.password.length > 0) {
+      consoleLog.info('base role password:', tableInfo.password);
+    }
+
     await seedTables(connection, latestTimestamp, cloud);
 
     if (cloud) {
@@ -44,7 +54,13 @@ const seedLegacyTestData = async (pool: DatabasePool) => {
 
 const seed: CommandModule<
   Record<string, unknown>,
-  { swe?: boolean; cloud?: boolean; test?: boolean; 'legacy-test-data'?: boolean }
+  {
+    swe?: boolean;
+    cloud?: boolean;
+    test?: boolean;
+    'legacy-test-data'?: boolean;
+    'encrypt-base-role'?: boolean;
+  }
 > = {
   command: 'seed [type]',
   describe: 'Create database then seed tables and data',
@@ -67,8 +83,12 @@ const seed: CommandModule<
         describe:
           'Seed test data only for legacy Logto versions (<=1.12.0), this option conflicts with others',
         type: 'boolean',
+      })
+      .option('encrypt-base-role', {
+        describe: 'Seed base role with password',
+        type: 'boolean',
       }),
-  handler: async ({ swe, cloud, test, legacyTestData }) => {
+  handler: async ({ swe, cloud, test, legacyTestData, encryptBaseRole }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (legacyTestData) {
@@ -92,7 +112,7 @@ const seed: CommandModule<
     }
 
     try {
-      await seedByPool(pool, cloud, test);
+      await seedByPool(pool, cloud, test, encryptBaseRole);
     } catch (error: unknown) {
       consoleLog.error(error);
       consoleLog.error(

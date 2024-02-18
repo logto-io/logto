@@ -82,7 +82,10 @@ const lifecycleNames: readonly string[] = Object.freeze([
   'after_each',
 ] satisfies Lifecycle[]);
 
-export const createTables = async (connection: DatabaseTransactionConnection) => {
+export const createTables = async (
+  connection: DatabaseTransactionConnection,
+  encryptBaseRole: boolean
+): Promise<{ password: string }> => {
   const tableDirectory = getPathInModule('@logto/schemas', 'tables');
   const directoryFiles = await readdir(tableDirectory);
   const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
@@ -119,7 +122,7 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
   ];
   const sorted = allQueries.slice().sort(compareQuery);
   const database = await getDatabaseName(connection, true);
-  const password = generateStandardId(32);
+  const password = encryptBaseRole ? generateStandardId(32) : '';
 
   await runLifecycleQuery('before_all', { database, password });
 
@@ -134,6 +137,8 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
   /* eslint-enable no-await-in-loop */
 
   await runLifecycleQuery('after_all', { database });
+
+  return { password };
 };
 
 export const seedTables = async (
