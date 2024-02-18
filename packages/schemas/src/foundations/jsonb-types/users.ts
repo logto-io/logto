@@ -4,7 +4,7 @@ import { MfaFactor } from './sign-in-experience.js';
 
 export const roleNamesGuard = z.string().array();
 
-const identityGuard = z.object({
+export const identityGuard = z.object({
   userId: z.string(),
   details: z.record(z.unknown()).optional(), // Connector's userinfo details, schemaless
 });
