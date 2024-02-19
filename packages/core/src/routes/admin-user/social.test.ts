@@ -18,6 +18,11 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 const notExistedUserId = 'notExistedUserId';
 
+const newTarget = 'newTarget';
+const newIdentity = {
+  userId: 'newUserId',
+};
+
 const mockHasUserWithIdentity = jest.fn(async () => false);
 const mockedQueries = {
   users: {
@@ -78,6 +83,65 @@ describe('Admin user social identities APIs', () => {
   });
 
   const userRequest = createRequester({ authedRoutes: adminUserSocialRoutes, tenantContext });
+
+  describe('PUT /users/:userId/identities/:target', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should throw if user cannot be found', async () => {
+      await expect(
+        userRequest.put(`/users/${notExistedUserId}/identities/${newTarget}`).send(newIdentity)
+      ).resolves.toHaveProperty('status', 404);
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('should throw if user already has the social identity', async () => {
+      mockHasUserWithIdentity.mockResolvedValueOnce(true);
+      const mockedFindUserById = findUserById as jest.Mock;
+      mockedFindUserById.mockImplementationOnce(() => ({
+        ...mockUser,
+        identities: {},
+      }));
+      await expect(
+        userRequest.put(`/users/foo/identities/${newTarget}`).send(newIdentity)
+      ).resolves.toHaveProperty('status', 422);
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('should update user with new social identity (response status 200)', async () => {
+      const mockedFindUserById = findUserById as jest.Mock;
+      mockedFindUserById.mockImplementationOnce(() => ({
+        ...mockUser,
+        identities: { [newTarget]: { userId: 'socialIdForTarget1' } },
+      }));
+      await expect(
+        userRequest.put(`/users/foo/identities/${newTarget}`).send(newIdentity)
+      ).resolves.toHaveProperty('status', 200);
+      expect(updateUserById).toHaveBeenCalledWith('foo', {
+        identities: {
+          [newTarget]: newIdentity,
+        },
+      });
+    });
+
+    it('should add new social identity to the user (response status 201)', async () => {
+      const mockedFindUserById = findUserById as jest.Mock;
+      mockedFindUserById.mockImplementationOnce(() => ({
+        ...mockUser,
+        identities: { connectorTarget1: { userId: 'socialIdForTarget1' } },
+      }));
+      await expect(
+        userRequest.put(`/users/foo/identities/${newTarget}`).send(newIdentity)
+      ).resolves.toHaveProperty('status', 201);
+      expect(updateUserById).toHaveBeenCalledWith('foo', {
+        identities: {
+          connectorTarget1: { userId: 'socialIdForTarget1' },
+          [newTarget]: newIdentity,
+        },
+      });
+    });
+  });
 
   describe('POST /users/:userId/identities', () => {
     it('should throw if user cannot be found', async () => {

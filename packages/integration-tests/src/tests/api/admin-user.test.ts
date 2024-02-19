@@ -16,6 +16,7 @@ import {
   deleteConnectorById,
   postUserIdentity,
   verifyUserPassword,
+  putUserIdentity,
 } from '#src/api/index.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import { createNewSocialUserWithUsernameAndPassword } from '#src/helpers/interactions.js';
@@ -141,6 +142,15 @@ describe('admin console user management', () => {
     const code = 'random_code_from_social';
     const socialUserId = 'social_platform_user_id';
     const socialUserEmail = 'johndoe@gmail.com';
+    const anotherSocialUserId = 'another_social_platform_user_id';
+    const socialTarget = 'social_target';
+    const socialIdentity = {
+      userId: 'social_identity_user_id',
+      details: {
+        age: 21,
+        email: 'foo@logto.io',
+      },
+    };
 
     const { id: userId } = await createUserByAdmin();
     const { redirectTo } = await getConnectorAuthorizationUri(connectorId, state, redirectUri);
@@ -162,6 +172,22 @@ describe('admin console user management', () => {
         id: socialUserId,
         email: socialUserEmail,
       },
+    });
+
+    const updatedIdentity = await putUserIdentity(userId, mockSocialConnectorTarget, {
+      userId: anotherSocialUserId,
+    });
+    expect(updatedIdentity).toHaveProperty(mockSocialConnectorTarget);
+    expect(updatedIdentity[mockSocialConnectorTarget]).toMatchObject({
+      userId: anotherSocialUserId,
+    });
+
+    const updatedIdentities = await putUserIdentity(userId, socialTarget, socialIdentity);
+    expect(updatedIdentities).toMatchObject({
+      [mockSocialConnectorTarget]: {
+        userId: anotherSocialUserId,
+      },
+      [socialTarget]: socialIdentity,
     });
 
     await deleteConnectorById(connectorId);

@@ -1,5 +1,6 @@
 import type {
   Identities,
+  Identity,
   MfaFactor,
   MfaVerification,
   Role,
@@ -92,6 +93,9 @@ export const postUserIdentity = async (
       },
     })
     .json<Identities>();
+
+export const putUserIdentity = async (userId: string, target: string, identity: Identity) =>
+  authedAdminApi.put(`users/${userId}/identities/${target}`, { json: identity }).json<Identities>();
 
 export const verifyUserPassword = async (userId: string, password: string) =>
   authedAdminApi.post(`users/${userId}/password/verify`, { json: { password } });

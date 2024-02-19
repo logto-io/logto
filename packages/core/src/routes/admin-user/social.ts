@@ -1,6 +1,7 @@
 import { notImplemented } from '@logto/cli/lib/connector/consts.js';
 import {
   ConnectorType,
+  identityGuard,
   identitiesGuard,
   userInfoSelectFields,
   userProfileResponseGuard,
@@ -23,6 +24,48 @@ export default function adminUserSocialRoutes<T extends AuthedRouter>(
     },
     connectors: { getLogtoConnectorById },
   } = tenant;
+
+  router.put(
+    '/users/:userId/identities/:target',
+    koaGuard({
+      params: object({ userId: string(), target: string() }),
+      body: identityGuard,
+      response: identitiesGuard,
+      status: [200, 201, 404, 422],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId, target },
+        body: identity,
+      } = ctx.guard;
+
+      const user = await findUserById(userId);
+
+      assertThat(
+        !(await hasUserWithIdentity(target, identity.userId, userId)),
+        new RequestError({
+          code: 'user.identity_already_in_use',
+          status: 422,
+        })
+      );
+
+      // The identity is being created if the `target` does not exist in the user's identities.
+      if (!(target in user.identities)) {
+        ctx.status = 201;
+      }
+
+      const updatedUser = await updateUserById(userId, {
+        identities: {
+          ...user.identities,
+          [target]: identity,
+        },
+      });
+
+      ctx.body = updatedUser.identities;
+
+      return next();
+    }
+  );
 
   router.post(
     '/users/:userId/identities',

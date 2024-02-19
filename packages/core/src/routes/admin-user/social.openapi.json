@@ -38,6 +38,35 @@
         },
         "summary": "Delete social identity from user",
         "description": "Delete a social identity from the user."
+      },
+      "put": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The identity is updated."
+          },
+          "201": {
+            "description": "The identity is created."
+          }
+        },
+        "summary": "Update social identity of user",
+        "description": "Directly update a social identity of the user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "userId": {
+                    "description": "The user's social identity ID."
+                  },
+                  "details": {
+                    "description": "The user's social identity details."
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
