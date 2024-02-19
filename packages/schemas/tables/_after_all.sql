@@ -13,7 +13,7 @@ revoke all privileges
   from logto_tenant_${database};
 
 -- Allow limited select to perform the RLS policy query in `after_each` (using select ... from tenants ...)
-grant select (id, db_user)
+grant select (id, db_user, is_suspended)
   on table tenants
   to logto_tenant_${database};
 

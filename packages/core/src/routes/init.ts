@@ -46,7 +46,7 @@ const createRouters = (tenant: TenantContext) => {
 
   const managementRouter: AuthedRouter = new Router();
   managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
-  managementRouter.use(koaTenantGuard(tenant.cloudConnection));
+  managementRouter.use(koaTenantGuard(tenant.id, tenant.queries));
 
   applicationRoutes(managementRouter, tenant);
   applicationRoleRoutes(managementRouter, tenant);
