@@ -111,7 +111,8 @@ function TextInput(
               // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               suffixIcon.props.className,
               styles.suffix,
-              alwaysShowSuffix && styles.visible
+              // The view/hide content toggle should always be visible if this is a confidential input
+              (isConfidential || alwaysShowSuffix) && styles.visible
             ),
           })}
       </div>
