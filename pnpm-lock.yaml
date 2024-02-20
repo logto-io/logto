@@ -2828,6 +2828,85 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
+  packages/connectors/connector-wecom:
+    dependencies:
+      '@logto/connector-kit':
+        specifier: workspace:^2.0.0
+        version: link:../../toolkit/connector-kit
+      '@silverhand/essentials':
+        specifier: ^2.9.0
+        version: 2.9.0
+      got:
+        specifier: ^14.0.0
+        version: 14.0.0
+      snakecase-keys:
+        specifier: ^6.0.0
+        version: 6.0.0
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@jest/types':
+        specifier: ^29.5.0
+        version: 29.6.3
+      '@rollup/plugin-commonjs':
+        specifier: ^25.0.0
+        version: 25.0.7(rollup@4.12.0)
+      '@rollup/plugin-json':
+        specifier: ^6.0.0
+        version: 6.1.0(rollup@4.12.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.0.1
+        version: 15.2.3(rollup@4.12.0)
+      '@rollup/plugin-typescript':
+        specifier: ^11.0.0
+        version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
+      '@silverhand/eslint-config':
+        specifier: 5.0.0
+        version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
+      '@silverhand/ts-config':
+        specifier: 5.0.0
+        version: 5.0.0(typescript@5.3.3)
+      '@types/jest':
+        specifier: ^29.4.0
+        version: 29.4.0
+      '@types/node':
+        specifier: ^20.9.5
+        version: 20.10.4
+      '@types/supertest':
+        specifier: ^6.0.0
+        version: 6.0.1
+      eslint:
+        specifier: ^8.44.0
+        version: 8.44.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.10.4)
+      jest-matcher-specific-error:
+        specifier: ^1.0.0
+        version: 1.0.0
+      lint-staged:
+        specifier: ^15.0.0
+        version: 15.0.2
+      nock:
+        specifier: ^13.2.2
+        version: 13.3.1
+      prettier:
+        specifier: ^3.0.0
+        version: 3.0.0
+      rollup:
+        specifier: ^4.0.0
+        version: 4.12.0
+      rollup-plugin-summary:
+        specifier: ^2.0.0
+        version: 2.0.0(rollup@4.12.0)
+      supertest:
+        specifier: ^6.2.2
+        version: 6.2.2
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
   packages/console:
     devDependencies:
       '@fontsource/roboto-mono':
