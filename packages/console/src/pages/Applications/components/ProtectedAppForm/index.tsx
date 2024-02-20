@@ -1,4 +1,4 @@
-import { validateUriOrigin } from '@logto/core-kit';
+import { isLocalhost, validateUriOrigin } from '@logto/core-kit';
 import { ApplicationType, type Application, type RequestErrorBody } from '@logto/schemas';
 import { isValidSubdomain } from '@logto/shared/universal';
 import { condString, conditional } from '@silverhand/essentials';
@@ -18,6 +18,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -123,14 +124,36 @@ function ProtectedAppForm({
             inputContainerClassName={styles.input}
             {...register('origin', {
               required: true,
-              validate: (value) =>
-                validateUriOrigin(value) || t('protected_app.form.errors.invalid_url'),
+              validate: (value) => {
+                if (!validateUriOrigin(value)) {
+                  return t('protected_app.form.errors.invalid_url');
+                }
+
+                if (isLocalhost(value)) {
+                  return t('protected_app.form.errors.localhost');
+                }
+
+                return true;
+              },
             })}
             placeholder={t('protected_app.form.url_field_placeholder')}
             error={
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              errors.origin?.message ||
-              (errors.origin?.type === 'required' && t('protected_app.form.errors.url_required'))
+              // Error message can only be string, manually add link to the message
+              errors.origin?.message === t('protected_app.form.errors.localhost') ? (
+                <Trans
+                  components={{
+                    a: (
+                      <TextLink to="https://docs.logto.io/docs/recipes/protected-app/#local-development" />
+                    ),
+                  }}
+                >
+                  {t('protected_app.form.errors.localhost')}
+                </Trans>
+              ) : (
+                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                errors.origin?.message ||
+                (errors.origin?.type === 'required' && t('protected_app.form.errors.url_required'))
+              )
             }
           />
         </FormField>

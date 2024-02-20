@@ -57,6 +57,9 @@ const protected_app = {
       /** UNTRANSLATED */
       invalid_url:
         "Invalid Origin URL format: Use http:// or https://. Note: '/pathname' is not currently supported.",
+      /** UNTRANSLATED */
+      localhost:
+        'Please expose your local server to the internet first. Learn more about <a>local development</a>.',
     },
   },
   /** UNTRANSLATED */

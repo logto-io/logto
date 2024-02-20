@@ -19,7 +19,7 @@ import IconButton from '@/ds-components/IconButton';
 import * as styles from './index.module.scss';
 
 type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
-  error?: string | boolean;
+  error?: string | boolean | ReactElement;
   icon?: ReactElement;
   /**
    * An element to be rendered on the right side of the input.
@@ -116,7 +116,7 @@ function TextInput(
             ),
           })}
       </div>
-      {Boolean(error) && typeof error === 'string' && (
+      {Boolean(error) && typeof error !== 'boolean' && (
         <div className={styles.errorMessage}>{error}</div>
       )}
     </div>

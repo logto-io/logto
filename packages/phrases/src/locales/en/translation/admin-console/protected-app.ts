@@ -34,6 +34,8 @@ const protected_app = {
       url_required: 'Origin URL is required.',
       invalid_url:
         "Invalid Origin URL format: Use http:// or https://. Note: '/pathname' is not currently supported.",
+      localhost:
+        'Please expose your local server to the internet first. Learn more about <a>local development</a>.',
     },
   },
   success_message:
