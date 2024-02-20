@@ -7,5 +7,6 @@ export const mobileUriSchemeProtocolRegEx = /^[a-z][\d+_a-z-]*(\.[\d+_a-z-]+)+:$
 export const hexColorRegEx = /^#[\da-f]{3}([\da-f]{3})?$/i;
 export const dateRegex = /^\d{4}(-\d{2}){2}/;
 export const noSpaceRegEx = /^\S+$/;
-/** Full domain that consists of at least 3 parts, e.g. foo.bar.com */
-export const domainRegEx = /^[\dA-Za-z]+(\.[\dA-Za-z]+){2,}$/;
+/** Full domain that consists of at least 3 parts, e.g. foo.bar.com or example-foo.bar.com */
+export const domainRegEx =
+  /^[\dA-Za-z](?:[\dA-Za-z-]*[\dA-Za-z])?(?:\.[\dA-Za-z](?:[\dA-Za-z-]*[\dA-Za-z])?){2,}$/;

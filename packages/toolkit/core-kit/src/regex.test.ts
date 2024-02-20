@@ -15,4 +15,11 @@ describe('Regular expressions should work as expected', () => {
     expect(domainRegEx.test('bar.com')).toBe(false);
     expect(domainRegEx.test('b.co')).toBe(false);
   });
+
+  it('should handle domains that contains dash in the middle. E.g. auth-gate.bar.com', () => {
+    expect(domainRegEx.test('auth-gate.bar.com')).toBe(true);
+    expect(domainRegEx.test('auth-.bar.com')).toBe(false);
+    expect(domainRegEx.test('-auth.bar.com')).toBe(false);
+    expect(domainRegEx.test('auth.bar-foo.com')).toBe(true);
+  });
 });
