@@ -1,12 +1,9 @@
-// The FP version works better for `format()`
-/* eslint-disable import/no-duplicates */
 import { pickDefault } from '@logto/shared/esm';
 import { endOfDay, subDays } from 'date-fns';
 import { format } from 'date-fns/fp';
 
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
-/* eslint-enable import/no-duplicates */
 
 const { jest } = import.meta;
 
