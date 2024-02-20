@@ -28,8 +28,8 @@ importers:
         specifier: ^8.6.6
         version: 8.6.6
       husky:
-        specifier: ^8.0.0
-        version: 8.0.1
+        specifier: ^9.0.0
+        version: 9.0.11
       pg:
         specifier: ^8.8.0
         version: 8.8.0
@@ -49,8 +49,8 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(tslib@2.4.1)(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       applicationinsights:
         specifier: ^2.7.0
         version: 2.7.0
@@ -104,29 +104,29 @@ importers:
   packages/cli:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.2.1
+        specifier: workspace:^2.3.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.8.0
+        specifier: workspace:^1.9.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:1.12.0
+        specifier: workspace:1.13.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../shared
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       chalk:
         specifier: ^5.0.0
         version: 5.1.2
@@ -149,8 +149,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       ora:
-        specifier: ^6.1.2
-        version: 6.1.2
+        specifier: ^8.0.1
+        version: 8.0.1
       p-limit:
         specifier: ^5.0.0
         version: 5.0.0
@@ -240,11 +240,11 @@ importers:
   packages/connectors/connector-alipay-native:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       dayjs:
         specifier: ^1.10.5
         version: 1.11.6
@@ -255,8 +255,8 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -328,11 +328,11 @@ importers:
   packages/connectors/connector-alipay-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       dayjs:
         specifier: ^1.10.5
         version: 1.11.6
@@ -343,8 +343,8 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -416,17 +416,17 @@ importers:
   packages/connectors/connector-aliyun-dm:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -495,17 +495,17 @@ importers:
   packages/connectors/connector-aliyun-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -574,14 +574,14 @@ importers:
   packages/connectors/connector-apple:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@logto/shared':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../shared
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -589,8 +589,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.1
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -665,17 +665,17 @@ importers:
         specifier: ^3.226.0
         version: 3.226.0
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -747,17 +747,17 @@ importers:
         specifier: ^1.12.0
         version: 1.12.0
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -826,17 +826,17 @@ importers:
   packages/connectors/connector-discord:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -905,17 +905,17 @@ importers:
   packages/connectors/connector-facebook:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -984,17 +984,17 @@ importers:
   packages/connectors/connector-feishu-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1063,11 +1063,11 @@ importers:
   packages/connectors/connector-github:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1075,8 +1075,8 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1145,17 +1145,17 @@ importers:
   packages/connectors/connector-google:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1224,17 +1224,17 @@ importers:
   packages/connectors/connector-kakao:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1303,17 +1303,17 @@ importers:
   packages/connectors/connector-logto-email:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1385,17 +1385,17 @@ importers:
   packages/connectors/connector-logto-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1464,17 +1464,17 @@ importers:
   packages/connectors/connector-logto-social-demo:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1543,17 +1543,17 @@ importers:
   packages/connectors/connector-mailgun:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1622,17 +1622,17 @@ importers:
   packages/connectors/connector-mock-email:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1701,17 +1701,17 @@ importers:
   packages/connectors/connector-mock-email-alternative:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1780,17 +1780,17 @@ importers:
   packages/connectors/connector-mock-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1859,17 +1859,17 @@ importers:
   packages/connectors/connector-mock-social:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1938,17 +1938,17 @@ importers:
   packages/connectors/connector-naver:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2017,11 +2017,11 @@ importers:
   packages/connectors/connector-oauth2:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2029,8 +2029,8 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2099,14 +2099,14 @@ importers:
   packages/connectors/connector-oidc:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@logto/shared':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../shared
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2117,8 +2117,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2187,11 +2187,11 @@ importers:
   packages/connectors/connector-saml:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       fast-xml-parser:
         specifier: ^4.2.5
         version: 4.2.5
@@ -2202,8 +2202,8 @@ importers:
         specifier: 2.8.10
         version: 2.8.10
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2272,17 +2272,17 @@ importers:
   packages/connectors/connector-sendgrid-email:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2351,17 +2351,17 @@ importers:
   packages/connectors/connector-smsaero:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2430,20 +2430,20 @@ importers:
   packages/connectors/connector-smtp:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       nodemailer:
-        specifier: ^6.9.1
-        version: 6.9.1
+        specifier: ^6.9.9
+        version: 6.9.9
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2515,17 +2515,17 @@ importers:
   packages/connectors/connector-tencent-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2594,17 +2594,17 @@ importers:
   packages/connectors/connector-twilio-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2673,17 +2673,17 @@ importers:
   packages/connectors/connector-wechat-native:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2752,17 +2752,17 @@ importers:
   packages/connectors/connector-wechat-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.6
+        specifier: ^2.9.0
+        version: 2.9.0
       got:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2837,34 +2837,34 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/app-insights':
-        specifier: workspace:^1.3.1
+        specifier: workspace:^1.4.0
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-c6ed487
-        version: 0.2.5-c6ed487(zod@3.22.4)
+        specifier: 0.2.5-faca9a9
+        version: 0.2.5-faca9a9(zod@3.22.4)
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.2.1
+        specifier: workspace:^2.3.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.8.0
+        specifier: workspace:^1.9.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../phrases-experience
       '@logto/react':
         specifier: ^2.2.1
         version: 2.2.1(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.12.0
+        specifier: workspace:^1.13.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../shared
       '@mdx-js/react':
         specifier: ^1.6.22
@@ -2894,8 +2894,8 @@ importers:
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.0.0)(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
@@ -3146,19 +3146,19 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       '@logto/app-insights':
-        specifier: workspace:^1.3.1
+        specifier: workspace:^1.4.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.12.0
+        specifier: workspace:^1.13.0
         version: link:../cli
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
       '@logto/console':
         specifier: workspace:*
         version: link:../console
       '@logto/core-kit':
-        specifier: workspace:^2.2.1
+        specifier: workspace:^2.3.0
         version: link:../toolkit/core-kit
       '@logto/demo-app':
         specifier: workspace:*
@@ -3167,23 +3167,23 @@ importers:
         specifier: workspace:*
         version: link:../experience
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.8.0
+        specifier: workspace:^1.9.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.12.0
+        specifier: workspace:^1.13.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../shared
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       '@simplewebauthn/server':
         specifier: ^8.2.0
         version: 8.2.0
@@ -3320,15 +3320,15 @@ importers:
         specifier: ^3.0.4
         version: 3.0.4
       snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-c6ed487
-        version: 0.2.5-c6ed487(zod@3.22.4)
+        specifier: 0.2.5-faca9a9
+        version: 0.2.5-faca9a9(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -3363,8 +3363,8 @@ importers:
         specifier: ^4.1.3
         version: 4.1.3
       '@types/koa__cors':
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
@@ -3426,25 +3426,25 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.12.0
+        specifier: workspace:^1.13.0
         version: link:../cli
 
   packages/demo-app:
     devDependencies:
       '@logto/core-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.3.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.9.0
         version: link:../phrases
       '@logto/react':
         specifier: ^2.2.1
         version: 2.2.1(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.2.3
+        specifier: workspace:^1.13.0
         version: link:../schemas
       '@parcel/core':
         specifier: 2.9.3
@@ -3522,25 +3522,25 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/app-insights':
-        specifier: workspace:^1.3.1
+        specifier: workspace:^1.4.0
         version: link:../app-insights
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.2.1
+        specifier: workspace:^2.3.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.8.0
+        specifier: workspace:^1.9.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.12.0
+        specifier: workspace:^1.13.0
         version: link:../schemas
       '@parcel/compressor-brotli':
         specifier: 2.9.3
@@ -3570,8 +3570,8 @@ importers:
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.0.0)(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
@@ -3751,7 +3751,7 @@ importers:
         specifier: ^29.1.2
         version: 29.1.2
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
         specifier: workspace:^
@@ -3763,17 +3763,17 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
       '@logto/schemas':
-        specifier: workspace:^1.12.0
+        specifier: workspace:^1.13.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../shared
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
@@ -3832,11 +3832,11 @@ importers:
   packages/phrases:
     dependencies:
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3863,14 +3863,14 @@ importers:
   packages/phrases-experience:
     dependencies:
       '@logto/core-kit':
-        specifier: workspace:^2.2.1
+        specifier: workspace:^2.3.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3900,22 +3900,22 @@ importers:
   packages/schemas:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.2.1
+        specifier: workspace:^2.3.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.8.0
+        specifier: workspace:^1.9.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../phrases-experience
       '@logto/shared':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../shared
       '@withtyped/server':
         specifier: ^0.12.9
@@ -3928,8 +3928,8 @@ importers:
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
@@ -3982,8 +3982,8 @@ importers:
   packages/shared:
     dependencies:
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       chalk:
         specifier: ^5.0.0
         version: 5.1.2
@@ -4001,7 +4001,7 @@ importers:
         version: 30.1.2
     devDependencies:
       '@logto/connector-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
       '@silverhand/eslint-config':
         specifier: 5.0.0
@@ -4034,11 +4034,11 @@ importers:
   packages/toolkit/connector-kit:
     dependencies:
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../language-kit
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       '@withtyped/client':
         specifier: ^0.7.22
         version: 0.7.22(zod@3.22.4)
@@ -4087,10 +4087,10 @@ importers:
   packages/toolkit/core-kit:
     dependencies:
       '@logto/language-kit':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../language-kit
       '@logto/shared':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../shared
       color:
         specifier: ^4.2.3
@@ -4107,8 +4107,8 @@ importers:
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^2.9.0
+        version: 2.9.0
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
@@ -7576,7 +7576,7 @@ packages:
     resolution: {integrity: sha512-yDWSZMI2Qo/xoYU92tnwSP/gnSvq8+CLK5DqD/4brO42QJa7xjt7eA+HSyuMmSUrKffY2nP3riU81gs+nR8DkA==}
     engines: {node: ^18.12.0}
     dependencies:
-      '@silverhand/essentials': 2.8.6
+      '@silverhand/essentials': 2.9.0
       tiny-cookie: 2.4.1
     dev: false
 
@@ -7584,7 +7584,7 @@ packages:
     resolution: {integrity: sha512-8kKh1EcAm19smnEMvw0M51d2EQXEEH77G1JEKh1iLifUScmxD+c7HcN/5mLekaBz36MUVNiA2gE7s9L2GOpWrg==}
     dependencies:
       '@logto/client': 2.3.0
-      '@silverhand/essentials': 2.8.6
+      '@silverhand/essentials': 2.9.0
       js-base64: 3.7.5
     dev: true
 
@@ -7592,7 +7592,7 @@ packages:
     resolution: {integrity: sha512-VrzsF+QtnrVXnDFbsdYTeGatjThlTFwtjTT/jJMaFdyRg0lno8vHxsjuyG8ba4wVSu22tSmJAr7okpAwRyhtcg==}
     dependencies:
       '@logto/js': 3.0.1
-      '@silverhand/essentials': 2.8.6
+      '@silverhand/essentials': 2.9.0
       camelcase-keys: 7.0.2
       jose: 5.0.1
     dev: true
@@ -7601,7 +7601,17 @@ packages:
     resolution: {integrity: sha512-cDKxCBFeZcG0CiGIa6mBY1Zgu3+tuvhYxs/qN0nQcj7MLSQ0AXHK9m1GeSJQH+Nu/jspggLmg27Ks8gdCHQUcg==}
     engines: {node: ^20.9.0}
     dependencies:
-      '@silverhand/essentials': 2.8.6
+      '@silverhand/essentials': 2.9.0
+      '@withtyped/server': 0.12.9(zod@3.22.4)
+    transitivePeerDependencies:
+      - zod
+    dev: true
+
+  /@logto/cloud@0.2.5-faca9a9(zod@3.22.4):
+    resolution: {integrity: sha512-hUiuzOPd4bKIV6fIKZLQW2Fc8JYmwKWWps7gZoxGbL3uLmAYYci5JHIP+vM7nbNS+oK1V141sy3JjNS1vAkvGA==}
+    engines: {node: ^20.9.0}
+    dependencies:
+      '@silverhand/essentials': 2.9.0
       '@withtyped/server': 0.12.9(zod@3.22.4)
     transitivePeerDependencies:
       - zod
@@ -7610,7 +7620,7 @@ packages:
   /@logto/js@3.0.1:
     resolution: {integrity: sha512-vsU6mH5oiiW3k00pMyVA4V31K2Bd0rOT9qWch2l5e5o1yCQLJ3zUIOjGjChu3m2TRu1d920iiUpZU3Lzf6Pwdw==}
     dependencies:
-      '@silverhand/essentials': 2.8.6
+      '@silverhand/essentials': 2.9.0
       camelcase-keys: 7.0.2
       jose: 5.0.1
     dev: true
@@ -7619,7 +7629,7 @@ packages:
     resolution: {integrity: sha512-xzVCnlrev/bqLtXOAw9I35h7njU1bed1jt6fL/VZfY4RUUJVZ36LG7fq2b7GsGg5xGRLchJ//+/VP1ac3+27YA==}
     dependencies:
       '@logto/client': 2.3.0
-      '@silverhand/essentials': 2.8.6
+      '@silverhand/essentials': 2.9.0
       js-base64: 3.7.5
       node-fetch: 2.7.0
     transitivePeerDependencies:
@@ -7632,7 +7642,7 @@ packages:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
       '@logto/browser': 2.2.0
-      '@silverhand/essentials': 2.8.6
+      '@silverhand/essentials': 2.9.0
       react: 18.2.0
     dev: true
 
@@ -9305,13 +9315,9 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /@silverhand/essentials@2.8.4:
-    resolution: {integrity: sha512-VaI00QyD2trA7n7/wHNcGNGRXoSr8dUGs/hQCu4Rju4Edl3vso7CeCXdfGU2aNDuT2uMs75of6Ph8gqVJhWlYQ==}
-    engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
-
-  /@silverhand/essentials@2.8.6:
-    resolution: {integrity: sha512-qNyc6CvZRngP66hTA8sbpXGsiu9j6Hu62jCy7LV3tJiytg/hmxJB5oM9k5tpaUa9kHwYJ2X9CManX7SYYNrzHg==}
-    engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
+  /@silverhand/essentials@2.9.0:
+    resolution: {integrity: sha512-n9mSO/gsLj0GRFXBRNhaQLRK6qbn6pBnKjMQdFwweKgT12ODBXpgkpXohpOBqSofnoaCQWqiDAT6xpCy/5dMIg==}
+    engines: {node: ^18.12.0 || ^20.9.0, pnpm: ^8.0.0}
 
   /@silverhand/ts-config-react@5.0.0(typescript@5.3.3):
     resolution: {integrity: sha512-DQpaG49sY36FhpyFIRAmTA5bG9ASFUVXu+yi29bMdLls51r9nEoBuWxWv2Sh3GnSGxKLq4gmFf+U8Zy/qcnX1w==}
@@ -10024,8 +10030,8 @@ packages:
       '@types/node': 20.10.4
     dev: true
 
-  /@types/koa__cors@4.0.0:
-    resolution: {integrity: sha512-qpwswNgQ2GxiDGNnKbDSBY5XmQTVJ6fspNvInLsAJ+jSwINxihvVzblj5anujNBg2BtL0xpUrcIt3UYwGzu05A==}
+  /@types/koa__cors@5.0.0:
+    resolution: {integrity: sha512-LCk/n25Obq5qlernGOK/2LUwa/2YJb2lxHUkkvYFDOpLXlVI6tKcdfCHRBQnOY4LwH6el5WOLs6PD/a8Uzau6g==}
     dependencies:
       '@types/koa': 2.13.4
     dev: true
@@ -10473,7 +10479,7 @@ packages:
     peerDependencies:
       zod: ^3.19.1
     dependencies:
-      '@silverhand/essentials': 2.8.4
+      '@silverhand/essentials': 2.9.0
       '@withtyped/shared': 0.2.2
       zod: 3.22.4
 
@@ -11380,6 +11386,11 @@ packages:
 
   /cli-spinners@2.7.0:
     resolution: {integrity: sha512-qu3pN8Y3qHNgE2AFweciB1IfMnmZ/fsNTEE+NOFjmGB2F/7rLhnhzppvpCnN4FovtP26k8lHyy9ptEbNwWFLzw==}
+    engines: {node: '>=6'}
+    dev: false
+
+  /cli-spinners@2.9.2:
+    resolution: {integrity: sha512-ywqV+5MmyL4E7ybXgKys4DugZbX0FC6LnwrhjuykIjnK9k8OQacQ7axGKnjDXWNhns0xot3bZI5h55H8yo9cJg==}
     engines: {node: '>=6'}
     dev: false
 
@@ -12399,6 +12410,10 @@ packages:
     resolution: {integrity: sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==}
     engines: {node: '>=12'}
     dev: true
+
+  /emoji-regex@10.3.0:
+    resolution: {integrity: sha512-QpLs9D9v9kArv4lfDEgg1X/gN5XLnf/A6l9cs8SPZLRZR3ZkY9+kwIQTxm+fsSej5UMYGE8fdoaZVIBlqG0XTw==}
+    dev: false
 
   /emoji-regex@7.0.3:
     resolution: {integrity: sha512-CwBLREIQ7LvYFB0WyRvwhq5N5qPhc6PMjD6bYggFlI5YyDgl+0vxq5VHbMOFqLg7hfWzmu8T5Z1QofhmTIhItA==}
@@ -13620,6 +13635,11 @@ packages:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
     engines: {node: 6.* || 8.* || >= 10.*}
 
+  /get-east-asian-width@1.2.0:
+    resolution: {integrity: sha512-2nk+7SIVb14QrgXFHcm84tD4bKQz0RxPuMT8Ag5KPOq7J5fEmAg0UbXdTOSHqNuHSU28k55qnceesxXRZGzKWA==}
+    engines: {node: '>=18'}
+    dev: false
+
   /get-intrinsic@1.1.3:
     resolution: {integrity: sha512-QJVz1Tj7MS099PevUG5jvnt9tSkXN8K14dxQlikJuPt4uD9hHAHjLyLBiLR5zELelBdD9QNRAXZzsJx0WaDL9A==}
     dependencies:
@@ -14300,9 +14320,9 @@ packages:
     resolution: {integrity: sha1-EcCvakcWQ2M1iFiASPF5lUFInBg=}
     dev: false
 
-  /husky@8.0.1:
-    resolution: {integrity: sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==}
-    engines: {node: '>=14'}
+  /husky@9.0.11:
+    resolution: {integrity: sha512-AB6lFlbwwyIqMdHYhwPe+kjOC3Oc5P3nThEoW/AaO2BX3vJDjWPFxYLxokUZOo6RNX20He3AaT8sESs9NJcmEw==}
+    engines: {node: '>=18'}
     hasBin: true
     dev: true
 
@@ -14787,6 +14807,11 @@ packages:
   /is-unicode-supported@1.3.0:
     resolution: {integrity: sha512-43r2mRvz+8JRIKnWJ+3j8JtjRKZ6GmjzfaE/qiBJnikNnYv/6bagRJ1kUhNk8R5EX/GkobD+r+sfxCPJsiKBLQ==}
     engines: {node: '>=12'}
+    dev: false
+
+  /is-unicode-supported@2.0.0:
+    resolution: {integrity: sha512-FRdAyx5lusK1iHG0TWpVtk9+1i+GjrzRffhDg4ovQ7mcidMQ6mj+MhKPmvh7Xwyv5gIS06ns49CA7Sqg7lC22Q==}
+    engines: {node: '>=18'}
     dev: false
 
   /is-weakref@1.0.2:
@@ -16370,6 +16395,14 @@ packages:
       is-unicode-supported: 1.3.0
     dev: false
 
+  /log-symbols@6.0.0:
+    resolution: {integrity: sha512-i24m8rpwhmPIS4zscNzK6MSEhk0DUWa/8iYQWxhffV8jkI4Phvs3F+quL5xvS0gdQR0FyTCMMH33Y78dDTzzIw==}
+    engines: {node: '>=18'}
+    dependencies:
+      chalk: 5.3.0
+      is-unicode-supported: 1.3.0
+    dev: false
+
   /log-update@5.0.1:
     resolution: {integrity: sha512-5UtUDQ/6edw4ofyljDNcOVJQ4c7OjDro4h3y8e1GQL5iYElYclVHJ3zeWchylvMaKnDbDilC8irOVyexnA/Slw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -17347,8 +17380,8 @@ packages:
     resolution: {integrity: sha512-71UV2HRUP+djvHpdyatiuv+Y1o8hI4ZI7bMfuuoACMLR1JJCErM4WXAclNeHd6BgHXkqeqnnAk3wpDkSQWmFXw==}
     dev: false
 
-  /nodemailer@6.9.1:
-    resolution: {integrity: sha512-qHw7dOiU5UKNnQpXktdgQ1d3OFgRAekuvbJLcdG5dnEo/GtcTHRYM7+UfJARdOFU9WUQO8OiIamgWPmiSFHYAA==}
+  /nodemailer@6.9.9:
+    resolution: {integrity: sha512-dexTll8zqQoVJEZPwQAKzxxtFn0qTnjdQTchoU6Re9BUUGBJiOy3YMn/0ShTW6J5M0dfQ1NeDeRTTl4oIWgQMA==}
     engines: {node: '>=6.0.0'}
     dev: false
 
@@ -17610,14 +17643,29 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       bl: 5.1.0
-      chalk: 5.1.2
+      chalk: 5.3.0
       cli-cursor: 4.0.0
       cli-spinners: 2.7.0
       is-interactive: 2.0.0
       is-unicode-supported: 1.3.0
       log-symbols: 5.1.0
-      strip-ansi: 7.0.1
+      strip-ansi: 7.1.0
       wcwidth: 1.0.1
+    dev: false
+
+  /ora@8.0.1:
+    resolution: {integrity: sha512-ANIvzobt1rls2BDny5fWZ3ZVKyD6nscLvfFRpQgfWsythlcsVUC9kL0zq6j2Z5z9wwp1kd7wpsD/T9qNPVLCaQ==}
+    engines: {node: '>=18'}
+    dependencies:
+      chalk: 5.3.0
+      cli-cursor: 4.0.0
+      cli-spinners: 2.9.2
+      is-interactive: 2.0.0
+      is-unicode-supported: 2.0.0
+      log-symbols: 6.0.0
+      stdin-discarder: 0.2.2
+      string-width: 7.1.0
+      strip-ansi: 7.1.0
     dev: false
 
   /ordered-binary@1.4.0:
@@ -19847,13 +19895,13 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /snakecase-keys@5.4.4:
-    resolution: {integrity: sha512-YTywJG93yxwHLgrYLZjlC75moVEX04LZM4FHfihjHe1FCXm+QaLOFfSf535aXOAd0ArVQMWUAe8ZPm4VtWyXaA==}
-    engines: {node: '>=12'}
+  /snakecase-keys@6.0.0:
+    resolution: {integrity: sha512-E5a0C3rcj+Cvq+dt41mw6tV6Wx78/JpQyR71GDiyGSXdp3jEvKxv8pIP0tOHmEMiqKVZSwflXtlWwqNn5oTbbQ==}
+    engines: {node: '>=18'}
     dependencies:
       map-obj: 4.3.0
       snake-case: 3.0.4
-      type-fest: 2.19.0
+      type-fest: 3.13.1
     dev: false
 
   /socks-proxy-agent@8.0.1:
@@ -20017,6 +20065,11 @@ packages:
     engines: {node: '>= 0.8'}
     dev: false
 
+  /stdin-discarder@0.2.2:
+    resolution: {integrity: sha512-UhDfHmA92YAlNnCfhmq0VeNL5bDbiZGg7sZ2IvPsXubGkiNa9EC+tUTsjBRsYUAz87btI6/1wf4XoVvQ3uRnmQ==}
+    engines: {node: '>=18'}
+    dev: false
+
   /stream-events@1.0.5:
     resolution: {integrity: sha512-E1GUzBSgvct8Jsb3v2X15pjzN1tYebtbLaMg+eBOUOAxgbLoSbT2NS91ckc5lJD1KfLjId+jXJRgo0qnV5Nerg==}
     dependencies:
@@ -20084,6 +20137,15 @@ packages:
       eastasianwidth: 0.2.0
       emoji-regex: 9.2.2
       strip-ansi: 7.1.0
+
+  /string-width@7.1.0:
+    resolution: {integrity: sha512-SEIJCWiX7Kg4c129n48aDRwLbFb2LJmXXFrWBG4NGaRtMQ3myKPKbwrD1BKqQn74oCoNMBVrfDEr5M9YxCsrkw==}
+    engines: {node: '>=18'}
+    dependencies:
+      emoji-regex: 10.3.0
+      get-east-asian-width: 1.2.0
+      strip-ansi: 7.1.0
+    dev: false
 
   /string.prototype.matchall@4.0.8:
     resolution: {integrity: sha512-6zOCOcJ+RJAQshcTvXPHoxoQGONa3e/Lqx90wUA+wEzX78sg5Bo+1tQo4N0pohS0erG9qtCqJDjNCQBjeWVxyg==}
@@ -20922,11 +20984,6 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest@2.19.0:
-    resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
-    engines: {node: '>=12.20'}
-    dev: false
-
   /type-fest@3.13.1:
     resolution: {integrity: sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==}
     engines: {node: '>=14.16'}
@@ -21413,7 +21470,7 @@ packages:
     dependencies:
       ansi-styles: 6.2.1
       string-width: 5.1.2
-      strip-ansi: 7.0.1
+      strip-ansi: 7.1.0
     dev: false
 
   /wrap-ansi@8.1.0:
