@@ -43,7 +43,7 @@ const protected_app = {
     /** UNTRANSLATED */
     create_application: 'Create application',
     /** UNTRANSLATED */
-    create_protected_app: 'Create and experience instantly',
+    create_protected_app: 'Fast create',
     errors: {
       /** UNTRANSLATED */
       domain_required: 'Your domain is required.',
