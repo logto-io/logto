@@ -37,6 +37,7 @@ const quota_table = {
     built_in_email_connector: 'Connettore e-mail integrato',
     mfa: 'Autenticazione a più fattori',
     sso: 'SSO aziendale',
+    adaptive_mfa: 'MFA adattativa',
   },
   user_management: {
     title: 'Gestione utenti',
