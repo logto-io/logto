@@ -44,7 +44,7 @@
     "@logto/schemas": "workspace:^1.13.0",
     "@logto/shared": "workspace:^3.1.0",
     "@silverhand/essentials": "^2.9.0",
-    "@simplewebauthn/server": "^8.2.0",
+    "@simplewebauthn/server": "^9.0.0",
     "@withtyped/client": "^0.7.22",
     "camelcase": "^8.0.0",
     "camelcase-keys": "^9.0.0",

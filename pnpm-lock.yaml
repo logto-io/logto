@@ -3185,8 +3185,8 @@ importers:
         specifier: ^2.9.0
         version: 2.9.0
       '@simplewebauthn/server':
-        specifier: ^8.2.0
-        version: 8.2.0
+        specifier: ^9.0.0
+        version: 9.0.1
       '@withtyped/client':
         specifier: ^0.7.22
         version: 0.7.22(zod@3.22.4)
@@ -8810,48 +8810,48 @@ packages:
       nullthrows: 1.1.1
     dev: true
 
-  /@peculiar/asn1-android@2.3.6:
-    resolution: {integrity: sha512-zkYh4DsiRhiNfg6tWaUuRc+huwlb9XJbmeZLrjTz9v76UK1Ehq3EnfJFED6P3sdznW/nqWe46LoM9JrqxcD58g==}
+  /@peculiar/asn1-android@2.3.10:
+    resolution: {integrity: sha512-z9Rx9cFJv7UUablZISe7uksNbFJCq13hO0yEAOoIpAymALTLlvUOSLnGiQS7okPaM5dP42oTLhezH6XDXRXjGw==}
     dependencies:
-      '@peculiar/asn1-schema': 2.3.6
+      '@peculiar/asn1-schema': 2.3.8
       asn1js: 3.0.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
-  /@peculiar/asn1-ecc@2.3.6:
-    resolution: {integrity: sha512-Hu1xzMJQWv8/GvzOiinaE6XiD1/kEhq2C/V89UEoWeZ2fLUcGNIvMxOr/pMyL0OmpRWj/mhCTXOZp4PP+a0aTg==}
+  /@peculiar/asn1-ecc@2.3.8:
+    resolution: {integrity: sha512-Ah/Q15y3A/CtxbPibiLM/LKcMbnLTdUdLHUgdpB5f60sSvGkXzxJCu5ezGTFHogZXWNX3KSmYqilCrfdmBc6pQ==}
     dependencies:
-      '@peculiar/asn1-schema': 2.3.6
-      '@peculiar/asn1-x509': 2.3.6
+      '@peculiar/asn1-schema': 2.3.8
+      '@peculiar/asn1-x509': 2.3.8
       asn1js: 3.0.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
-  /@peculiar/asn1-rsa@2.3.6:
-    resolution: {integrity: sha512-DswjJyAXZnvESuImGNTvbNKvh1XApBVqU+r3UmrFFTAI23gv62byl0f5OFKWTNhCf66WQrd3sklpsCZc/4+jwA==}
+  /@peculiar/asn1-rsa@2.3.8:
+    resolution: {integrity: sha512-ES/RVEHu8VMYXgrg3gjb1m/XG0KJWnV4qyZZ7mAg7rrF3VTmRbLxO8mk+uy0Hme7geSMebp+Wvi2U6RLLEs12Q==}
     dependencies:
-      '@peculiar/asn1-schema': 2.3.6
-      '@peculiar/asn1-x509': 2.3.6
+      '@peculiar/asn1-schema': 2.3.8
+      '@peculiar/asn1-x509': 2.3.8
       asn1js: 3.0.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
-  /@peculiar/asn1-schema@2.3.6:
-    resolution: {integrity: sha512-izNRxPoaeJeg/AyH8hER6s+H7p4itk+03QCa4sbxI3lNdseQYCuxzgsuNK8bTXChtLTjpJz6NmXKA73qLa3rCA==}
+  /@peculiar/asn1-schema@2.3.8:
+    resolution: {integrity: sha512-ULB1XqHKx1WBU/tTFIA+uARuRoBVZ4pNdOA878RDrRbBfBGcSzi5HBkdScC6ZbHn8z7L8gmKCgPC1LHRrP46tA==}
     dependencies:
       asn1js: 3.0.5
       pvtsutils: 1.3.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
-  /@peculiar/asn1-x509@2.3.6:
-    resolution: {integrity: sha512-dRwX31R1lcbIdzbztiMvLNTDoGptxdV7HocNx87LfKU0fEWh7fTWJjx4oV+glETSy6heF/hJHB2J4RGB3vVSYg==}
+  /@peculiar/asn1-x509@2.3.8:
+    resolution: {integrity: sha512-voKxGfDU1c6r9mKiN5ZUsZWh3Dy1BABvTM3cimf0tztNwyMJPhiXY94eRTgsMQe6ViLfT6EoXxkWVzcm3mFAFw==}
     dependencies:
-      '@peculiar/asn1-schema': 2.3.6
+      '@peculiar/asn1-schema': 2.3.8
       asn1js: 3.0.5
       ipaddr.js: 2.1.0
       pvtsutils: 1.3.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@pkgr/utils@2.3.1:
@@ -9337,17 +9337,17 @@ packages:
       '@simplewebauthn/types': 9.0.1
     dev: true
 
-  /@simplewebauthn/server@8.2.0:
-    resolution: {integrity: sha512-nknf7kCa5V61Kk2zn1vTuKeAlyut9aWduIcbHNQWpMCEJqH/m8cXpb+9UV42MEQRIk8JVC1GSNeEx56QVTfJHw==}
+  /@simplewebauthn/server@9.0.1:
+    resolution: {integrity: sha512-XnilMoBygy2BOZjIHPxby+7ENx5ChN2wXfhd14mOgO/XitYMqdphTo/kwgxEI4/Je3lELK1h/eLDJqM2fIKS1w==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@hexagon/base64': 1.1.28
-      '@peculiar/asn1-android': 2.3.6
-      '@peculiar/asn1-ecc': 2.3.6
-      '@peculiar/asn1-rsa': 2.3.6
-      '@peculiar/asn1-schema': 2.3.6
-      '@peculiar/asn1-x509': 2.3.6
-      '@simplewebauthn/typescript-types': 8.0.0
+      '@peculiar/asn1-android': 2.3.10
+      '@peculiar/asn1-ecc': 2.3.8
+      '@peculiar/asn1-rsa': 2.3.8
+      '@peculiar/asn1-schema': 2.3.8
+      '@peculiar/asn1-x509': 2.3.8
+      '@simplewebauthn/types': 9.0.1
       cbor-x: 1.5.4
       cross-fetch: 4.0.0
     transitivePeerDependencies:
@@ -9356,11 +9356,6 @@ packages:
 
   /@simplewebauthn/types@9.0.1:
     resolution: {integrity: sha512-tGSRP1QvsAvsJmnOlRQyw/mvK9gnPtjEc5fg2+m8n+QUa+D7rvrKkOYyfpy42GTs90X3RDOnqJgfHt+qO67/+w==}
-    dev: true
-
-  /@simplewebauthn/typescript-types@8.0.0:
-    resolution: {integrity: sha512-d7Izb2H+LZJteXMkS8DmpAarD6mZdpIOu/av/yH4/u/3Pd6DKFLyBM3j8BMmUvUqpzvJvHARNrRfQYto58mtTQ==}
-    dev: false
 
   /@sinclair/typebox@0.24.46:
     resolution: {integrity: sha512-ng4ut1z2MCBhK/NwDVwIQp3pAUOCs/KNaW3cBxdFB2xTDrOuo1xuNmpr/9HHFhxqIvHrs1NTH3KJg6q+JSy1Kw==}
@@ -10800,7 +10795,7 @@ packages:
     dependencies:
       pvtsutils: 1.3.5
       pvutils: 1.1.3
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /ast-types-flow@0.0.7:
