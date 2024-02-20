@@ -3,7 +3,7 @@ import { Theme, ConnectorType } from '@logto/schemas';
 import type { ConnectorMetadata, SignInExperience, ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { format } from 'date-fns';
+import { formatDate } from 'date-fns';
 import { useContext, useRef, useMemo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -123,7 +123,7 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
         <div className={classNames(styles.device, styles[String(mode)])}>
           {platform !== PreviewPlatform.DesktopWeb && (
             <div className={styles.topBar}>
-              <div className={styles.time}>{format(Date.now(), 'HH:mm')}</div>
+              <div className={styles.time}>{formatDate(Date.now(), 'HH:mm')}</div>
               <PhoneInfo />
             </div>
           )}
