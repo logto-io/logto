@@ -25,7 +25,7 @@ const protected_app = {
     domain_field_tooltip:
       "Apps protected by Logto will be hosted at 'your-domain.{{domain}}' by default. Custom domain can be applied after creation.",
     create_application: 'Create application',
-    create_protected_app: 'Create and experience instantly',
+    create_protected_app: 'Fast create',
     errors: {
       domain_required: 'Your domain is required.',
       domain_in_use: 'This subdomain name is already in use.',
