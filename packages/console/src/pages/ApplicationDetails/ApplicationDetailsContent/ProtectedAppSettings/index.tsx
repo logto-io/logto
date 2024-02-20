@@ -1,4 +1,4 @@
-import { isValidRegEx, validateUriOrigin } from '@logto/core-kit';
+import { isLocalhost, isValidRegEx, validateUriOrigin } from '@logto/core-kit';
 import {
   DomainStatus,
   type Application,
@@ -7,8 +7,8 @@ import {
 } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { type ChangeEvent, useState, useEffect } from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { useState, useEffect } from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 import useSWRImmutable from 'swr/immutable';
@@ -25,7 +25,6 @@ import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Spacer from '@/ds-components/Spacer';
 import TextInput from '@/ds-components/TextInput';
-import NumericInput from '@/ds-components/TextInput/NumericInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -35,6 +34,7 @@ import CustomDomain from '@/pages/TenantSettings/TenantDomainSettings/CustomDoma
 import EndpointsAndCredentials from '../EndpointsAndCredentials';
 import { type ApplicationForm } from '../utils';
 
+import SessionForm from './components/SessionForm';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -42,7 +42,6 @@ type Props = {
 };
 
 const routes = Object.freeze(['/register', '/sign-in', '/sign-in-callback', '/sign-out']);
-const maxSessionDuration = 365; // 1 year
 
 function ProtectedAppSettings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -136,14 +135,36 @@ function ProtectedAppSettings({ data }: Props) {
           <TextInput
             {...register('protectedAppMetadata.origin', {
               required: true,
-              validate: (value) =>
-                validateUriOrigin(value) || t('protected_app.form.errors.invalid_url'),
+              validate: (value) => {
+                if (!validateUriOrigin(value)) {
+                  return t('protected_app.form.errors.invalid_url');
+                }
+
+                if (isLocalhost(value)) {
+                  return t('protected_app.form.errors.localhost');
+                }
+
+                return true;
+              },
             })}
             error={
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              errors.protectedAppMetadata?.origin?.message ||
-              (errors.protectedAppMetadata?.origin?.type === 'required' &&
-                t('protected_app.form.errors.url_required'))
+              errors.protectedAppMetadata?.origin?.message ===
+              t('protected_app.form.errors.localhost') ? (
+                <Trans
+                  components={{
+                    a: (
+                      <TextLink to="https://docs.logto.io/docs/recipes/protected-app/#local-development" />
+                    ),
+                  }}
+                >
+                  {t('protected_app.form.errors.localhost')}
+                </Trans>
+              ) : (
+                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                errors.protectedAppMetadata?.origin?.message ||
+                (errors.protectedAppMetadata?.origin?.type === 'required' &&
+                  t('protected_app.form.errors.url_required'))
+              )
             }
             placeholder={t('protected_app.form.url_field_placeholder')}
           />
@@ -267,44 +288,7 @@ function ProtectedAppSettings({ data }: Props) {
         </FormField>
       </FormCard>
       <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
-      <FormCard title="application_details.session">
-        <FormField title="application_details.session_duration">
-          <Controller
-            name="protectedAppMetadata.sessionDuration"
-            control={control}
-            rules={{
-              min: 1,
-            }}
-            render={({ field: { onChange, value, name } }) => (
-              <NumericInput
-                className={styles.sessionDuration}
-                name={name}
-                placeholder="14"
-                value={String(value)}
-                min={1}
-                max={maxSessionDuration}
-                error={Boolean(errors.protectedAppMetadata?.sessionDuration)}
-                onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-                  onChange(value && Number(value));
-                }}
-                onValueUp={() => {
-                  onChange(value + 1);
-                }}
-                onValueDown={() => {
-                  onChange(value - 1);
-                }}
-                onBlur={() => {
-                  if (value < 1) {
-                    onChange(1);
-                  } else if (value > maxSessionDuration) {
-                    onChange(maxSessionDuration);
-                  }
-                }}
-              />
-            )}
-          />
-        </FormField>
-      </FormCard>
+      <SessionForm data={data} />
     </>
   );
 }

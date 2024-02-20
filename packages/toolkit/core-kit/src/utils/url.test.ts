@@ -1,4 +1,4 @@
-import { isValidUrl, validateRedirectUrl } from './url.js';
+import { isLocalhost, isValidUrl, validateRedirectUrl } from './url.js';
 
 describe('url utilities', () => {
   it('should allow valid redirect URIs', () => {
@@ -39,5 +39,20 @@ describe('url utilities', () => {
     expect(isValidUrl('abc.com/callback')).toBeFalsy();
     expect(isValidUrl('abc.com/callback?test=123')).toBeFalsy();
     expect(isValidUrl('abc.com/callback#test=123')).toBeFalsy();
+  });
+});
+
+describe('isLocalhost()', () => {
+  it('should return true for localhost', () => {
+    expect(isLocalhost('http://localhost')).toBeTruthy();
+    expect(isLocalhost('http://localhost:3001')).toBeTruthy();
+    expect(isLocalhost('https://localhost:3001')).toBeTruthy();
+    expect(isLocalhost('http://localhost:3001/callback')).toBeTruthy();
+  });
+
+  it('should return false for non-localhost', () => {
+    expect(isLocalhost('https://localhost.dev/callback')).toBeFalsy();
+    expect(isLocalhost('https://my-company.com/callback?test=123')).toBeFalsy();
+    expect(isLocalhost('https://abc.com/callback?test=123#param=hash')).toBeFalsy();
   });
 });

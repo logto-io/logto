@@ -27,3 +27,12 @@ export const isValidUrl = (url?: string) => {
     return false;
   }
 };
+
+/**
+ * Check if the given URL is localhost
+ */
+export const isLocalhost = (url: string) => {
+  const parsedUrl = new URL(url);
+
+  return ['localhost', '127.0.0.1', '::1'].includes(parsedUrl.hostname);
+};

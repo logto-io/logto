@@ -124,4 +124,9 @@
   font: var(--font-body-2);
   color: var(--color-error);
   margin-top: _.unit(1);
+
+  a {
+    color: var(--color-error);
+    text-decoration: underline;
+  }
 }
