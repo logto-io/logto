@@ -27,7 +27,7 @@ export type SubscriptionPlan = Omit<SubscriptionPlanResponse, 'quota'> & {
   quota: SubscriptionPlanQuota;
 };
 
-export type SubscriptionPlanTable = Partial<
+type SubscriptionPlanTable = Partial<
   SubscriptionPlanQuota & {
     // Base quota
     basePrice: string;
@@ -54,10 +54,6 @@ export type SubscriptionPlanTable = Partial<
     hipaaOrBaaReportEnabled: boolean;
   }
 >;
-
-export type SubscriptionPlanTableData = Pick<SubscriptionPlanResponse, 'id' | 'name'> & {
-  table: SubscriptionPlanTable;
-};
 
 export enum SubscriptionPlanTableGroupKey {
   base = 'base',

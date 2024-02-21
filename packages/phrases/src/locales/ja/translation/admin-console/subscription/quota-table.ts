@@ -37,6 +37,7 @@ const quota_table = {
     built_in_email_connector: '組み込みE-mailコネクタ',
     mfa: '多要素認証',
     sso: 'エンタープライズ SSO',
+    adaptive_mfa: '適応型MFA',
   },
   user_management: {
     title: 'ユーザー管理',

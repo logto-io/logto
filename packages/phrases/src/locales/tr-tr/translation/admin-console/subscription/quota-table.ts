@@ -37,6 +37,7 @@ const quota_table = {
     built_in_email_connector: 'Dahili e-posta bağlayıcısı',
     mfa: 'Çoklu faktörlü kimlik doğrulama',
     sso: 'Kurumsal SSO',
+    adaptive_mfa: 'Uyarlamalı MFA',
   },
   user_management: {
     title: 'Kullanıcı Yönetimi',

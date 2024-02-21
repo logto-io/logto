@@ -37,6 +37,7 @@ const quota_table = {
     built_in_email_connector: '内置电子邮件连接器',
     mfa: '多因素认证',
     sso: '企业 SSO',
+    adaptive_mfa: '自适应MFA',
   },
   user_management: {
     title: '用户管理',

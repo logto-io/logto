@@ -37,6 +37,7 @@ const quota_table = {
     built_in_email_connector: '내장 이메일 커넥터',
     mfa: '다중 인증',
     sso: '기업 SSO',
+    adaptive_mfa: '적응형 MFA',
   },
   user_management: {
     title: '사용자 관리',

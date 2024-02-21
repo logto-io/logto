@@ -43,7 +43,7 @@ function Subscription() {
         subscriptionPlan={currentPlan}
         subscriptionUsage={subscriptionUsage}
       />
-      <PlanComparisonTable subscriptionPlans={reservedPlans} />
+      <PlanComparisonTable />
       <SwitchPlanActionBar
         currentSubscriptionPlanId={currentSubscription.planId}
         subscriptionPlans={reservedPlans}
