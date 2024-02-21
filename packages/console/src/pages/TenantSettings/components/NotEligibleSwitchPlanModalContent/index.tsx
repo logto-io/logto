@@ -22,7 +22,6 @@ import * as styles from './index.module.scss';
 
 const excludedQuotaKeys = new Set<keyof SubscriptionPlanQuota>([
   'auditLogsRetentionDays',
-  'communitySupportEnabled',
   'ticketSupportResponseTime',
 ]);
 

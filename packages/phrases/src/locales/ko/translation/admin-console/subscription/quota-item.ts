@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} 기계 간 앱',
     unlimited: '제한 없는 기계 간 앱',
     not_eligible: '기계 간 앱을 제거하십시오',
-    add_on: '추가 기계간 앱',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: '감사 로그 보존 기간: {{count, number}} 일',
     unlimited: '제한 없는 기간',
     not_eligible: '감사 로그 없음',
-  },
-  community_support_enabled: {
-    name: '커뮤니티 지원',
-    limited: '커뮤니티 지원',
-    unlimited: '커뮤니티 지원',
-    not_eligible: '커뮤니티 지원 없음',
   },
   email_ticket_support: {
     name: '이메일 지원 티켓',

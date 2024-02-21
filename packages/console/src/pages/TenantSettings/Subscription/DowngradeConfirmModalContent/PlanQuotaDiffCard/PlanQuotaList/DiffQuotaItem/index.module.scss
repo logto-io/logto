@@ -11,6 +11,19 @@
     gap: _.unit(2);
   }
 
+  .icon {
+    width: 16px;
+    height: 16px;
+
+    &.notCapable {
+      color: var(--color-error);
+    }
+  }
+
+  .lineThrough {
+    text-decoration: line-through;
+  }
+
   &.withIcon {
     list-style-type: none;
     // Unset a margin to the left for the list item marker

@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} machine to machine apps',
     unlimited: 'Unlimited machine to machine apps',
     not_eligible: 'Remove your machine to machine apps',
-    add_on: 'Additional machine-to-machine apps',
   },
   third_party_applications_limit: {
     name: 'Third-party apps',
@@ -127,12 +126,6 @@ const quota_item = {
     limited_other: 'Audit logs retention: {{count, number}} days',
     unlimited: 'Unlimited days',
     not_eligible: 'No audit logs',
-  },
-  community_support_enabled: {
-    name: 'Community support',
-    limited: 'Community support',
-    unlimited: 'Community support',
-    not_eligible: 'No community support',
   },
   email_ticket_support: {
     name: 'Email ticket support',

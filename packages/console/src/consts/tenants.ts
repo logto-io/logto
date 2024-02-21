@@ -64,7 +64,6 @@ export const defaultSubscriptionPlan: SubscriptionPlan = {
     hooksLimit: null,
     organizationsEnabled: true,
     ssoEnabled: true,
-    communitySupportEnabled: true,
     ticketSupportResponseTime: 48,
     thirdPartyApplicationsLimit: null,
   },

@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} aplicações de máquina para máquina',
     unlimited: 'Aplicações de máquina para máquina ilimitadas',
     not_eligible: 'Remover as tuas aplicações de máquina para máquina',
-    add_on: 'Aplicações adicionais de máquina para máquina',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: 'Conservação de registos de auditoria: {{count, number}} dias',
     unlimited: 'Dias ilimitados',
     not_eligible: 'Sem registos de auditoria',
-  },
-  community_support_enabled: {
-    name: 'Apoio da comunidade',
-    limited: 'Apoio da comunidade',
-    unlimited: 'Apoio da comunidade',
-    not_eligible: 'Sem apoio da comunidade',
   },
   email_ticket_support: {
     name: 'Suporte por e-mail',
