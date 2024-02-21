@@ -14,7 +14,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
-import FeaturedPlanQuotaList from './FeaturedPlanQuotaList';
+import FeaturedPlanContent from './FeaturedPlanContent';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -59,7 +59,7 @@ function PlanCardItem({ plan, onSelect }: Props) {
         </div>
       </div>
       <div className={styles.content}>
-        <FeaturedPlanQuotaList plan={plan} />
+        <FeaturedPlanContent planId={planId} />
         {isFreePlan && isFreeTenantExceeded && (
           <div className={classNames(styles.tip, styles.exceedFreeTenantsTip)}>
             {t('free_tenants_limit', { count: maxFreeTenantLimit })}

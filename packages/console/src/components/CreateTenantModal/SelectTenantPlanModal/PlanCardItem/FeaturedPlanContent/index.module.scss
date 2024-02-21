@@ -1,0 +1,33 @@
+@use '@/scss/underscore' as _;
+
+.list {
+  flex: 1;
+  margin-block: 0;
+  padding-inline: 0;
+  padding-bottom: _.unit(8);
+  list-style: none;
+
+  > li {
+    display: flex;
+    font: var(--font-body-2);
+    align-items: center;
+    gap: _.unit(2);
+
+    .icon {
+      width: 16px;
+      height: 16px;
+
+      &.failed {
+        color: var(--color-on-error-container);
+      }
+
+      &.success {
+        color: var(--color-on-success-container);
+      }
+    }
+
+    &:not(:first-child) {
+      margin-top: _.unit(3);
+    }
+  }
+}

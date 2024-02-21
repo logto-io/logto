@@ -1,3 +1,4 @@
+import featured_plan_content from './featured-plan-content.js';
 import paywall from './paywall.js';
 
 const upsell = {
@@ -38,6 +39,7 @@ const upsell = {
   charge_notification_for_quota_limit:
     '{{item}} 할당량 한도를 초과했습니다. Logto는 할당량을 초과하는 사용에 대한 요금을 추가합니다. 새로운 애드온 가격 디자인이 출시된 날부터 청구가 시작됩니다. <a>더 알아보기</a>',
   paywall,
+  featured_plan_content,
 };
 
 export default Object.freeze(upsell);
