@@ -1,3 +1,4 @@
+import featured_plan_content from './featured-plan-content.js';
 import paywall from './paywall.js';
 
 const upsell = {
@@ -38,6 +39,7 @@ const upsell = {
   charge_notification_for_quota_limit:
     '您已超出{{item}}額度限制。Logto將為超出額度限制的使用添加費用。計費將從新的附加價格設計發布當天開始。 <a>了解更多</a>',
   paywall,
+  featured_plan_content,
 };
 
 export default Object.freeze(upsell);

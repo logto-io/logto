@@ -1,3 +1,4 @@
+import featured_plan_content from './featured-plan-content.js';
 import paywall from './paywall.js';
 
 const upsell = {
@@ -38,6 +39,7 @@ const upsell = {
   charge_notification_for_quota_limit:
     'Przekroczyłeś limit kwoty {{item}}. Logto doliczy opłaty za korzystanie poza limitem kwoty. Fakturowanie rozpocznie się w dniu wprowadzenia nowego projektu cenowego dodatku. <a>Dowiedz się więcej</a>',
   paywall,
+  featured_plan_content,
 };
 
 export default Object.freeze(upsell);

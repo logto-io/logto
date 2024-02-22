@@ -1,3 +1,4 @@
+import featured_plan_content from './featured-plan-content.js';
 import paywall from './paywall.js';
 
 const upsell = {
@@ -38,6 +39,7 @@ const upsell = {
   charge_notification_for_quota_limit:
     '{{item}} のクォータ制限を超えています。Logto はクォータ制限を超える利用に対して料金を追加します。新しいアドオン価格設計がリリースされる日から請求が開始されます。 <a>詳細</a>',
   paywall,
+  featured_plan_content,
 };
 
 export default Object.freeze(upsell);
