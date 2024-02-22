@@ -85,6 +85,7 @@ function ApiResources() {
               hasSurpassedLimit={hasSurpassedLimit}
               quotaItemPhraseKey="api_resource"
               checkedFlagKey="apiResource"
+              className={styles.chargeNotification}
             />
           )
         }

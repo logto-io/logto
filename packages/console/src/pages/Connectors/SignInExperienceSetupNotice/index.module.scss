@@ -1,9 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.icon {
-  flex-shrink: 0;
-}
-
-.chargeNotification {
+.notice {
   margin-top: _.unit(4);
 }
