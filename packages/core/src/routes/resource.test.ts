@@ -34,7 +34,6 @@ const resources = {
   deleteResourceById: jest.fn(),
   findScopesByResourceId: async () => [mockScope],
 };
-const { findResourceById } = resources;
 
 const scopes = {
   findScopesByResourceId: async () => [mockScope],
@@ -46,7 +45,6 @@ const scopes = {
   deleteScopeById: jest.fn(),
   findScopeByNameAndResourceId: jest.fn(),
 };
-const { insertScope, updateScopeById } = scopes;
 
 await mockIdGenerators();
 
@@ -172,64 +170,5 @@ describe('resource routes', () => {
     deleteResourceById.mockRejectedValueOnce(new Error('not found'));
 
     await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 500);
-  });
-
-  it('GET /resources/:id/scopes', async () => {
-    const response = await resourceRequest.get('/resources/foo/scopes');
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockScope]);
-    expect(findResourceById).toHaveBeenCalledWith('foo');
-  });
-
-  it('POST /resources/:id/scopes', async () => {
-    const name = 'write:users';
-    const description = 'description';
-
-    const response = await resourceRequest
-      .post('/resources/foo/scopes')
-      .send({ name, description });
-
-    expect(response.status).toEqual(201);
-    expect(findResourceById).toHaveBeenCalledWith('foo');
-    expect(insertScope).toHaveBeenCalledWith({
-      id: mockId,
-      name,
-      description,
-      resourceId: 'foo',
-    });
-  });
-
-  it('POST /resources/:id/scopes should throw with spaces in name', async () => {
-    const name = 'write users';
-    const description = 'description';
-
-    const response = await resourceRequest
-      .post('/resources/foo/scopes')
-      .send({ name, description });
-
-    expect(response.status).toEqual(400);
-  });
-
-  it('PATCH /resources/:id/scopes/:scopeId', async () => {
-    const name = 'write:users';
-    const description = 'description';
-
-    const response = await resourceRequest
-      .patch('/resources/foo/scopes/foz')
-      .send({ name, description });
-
-    expect(response.status).toEqual(200);
-    expect(findResourceById).toHaveBeenCalledWith('foo');
-    expect(updateScopeById).toHaveBeenCalledWith('foz', {
-      name,
-      description,
-    });
-  });
-
-  it('DELETE /resources/:id/scopes/:scopeId', async () => {
-    await expect(resourceRequest.delete('/resources/foo/scopes/foz')).resolves.toHaveProperty(
-      'status',
-      204
-    );
   });
 });

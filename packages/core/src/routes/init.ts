@@ -28,6 +28,7 @@ import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config.js';
 import organizationRoutes from './organization/index.js';
 import resourceRoutes from './resource.js';
+import resourceScopeRoutes from './resource.scope.js';
 import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
@@ -61,6 +62,7 @@ const createRouters = (tenant: TenantContext) => {
   logtoConfigRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);
   resourceRoutes(managementRouter, tenant);
+  resourceScopeRoutes(managementRouter, tenant);
   signInExperiencesRoutes(managementRouter, tenant);
   adminUserRoutes(managementRouter, tenant);
   logRoutes(managementRouter, tenant);
