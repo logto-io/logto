@@ -220,16 +220,18 @@ function DetailsPageHeader({
             onClick={additionalActionButton.onClick}
           />
         )}
-        <ActionMenu
-          buttonProps={{ icon: <More />, size: 'large' }}
-          title={t('general.more_options')}
-        >
-          {actionMenuItems?.map(({ title, icon, type, onClick }) => (
-            <ActionMenuItem key={title} icon={icon} type={type} onClick={onClick}>
-              <DynamicT forKey={title} />
-            </ActionMenuItem>
-          ))}
-        </ActionMenu>
+        {actionMenuItems && actionMenuItems.length > 0 && (
+          <ActionMenu
+            buttonProps={{ icon: <More />, size: 'large' }}
+            title={t('general.more_options')}
+          >
+            {actionMenuItems.map(({ title, icon, type, onClick }) => (
+              <ActionMenuItem key={title} icon={icon} type={type} onClick={onClick}>
+                <DynamicT forKey={title} />
+              </ActionMenuItem>
+            ))}
+          </ActionMenu>
+        )}
       </div>
     </Card>
   );

@@ -122,6 +122,13 @@ describe('admin console api resources', () => {
     expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
   });
 
+  it('should throw when deleting management api resource', async () => {
+    const response = await deleteResource(defaultManagementApi.resource.id).catch(
+      (error: unknown) => error
+    );
+    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+  });
+
   it('should throw 404 when delete api resource not found', async () => {
     const response = await deleteResource('dummy_id').catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);

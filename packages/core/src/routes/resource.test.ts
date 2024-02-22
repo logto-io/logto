@@ -1,4 +1,8 @@
-import type { Resource, CreateResource } from '@logto/schemas';
+import {
+  type Resource,
+  type CreateResource,
+  getManagementApiResourceIndicator,
+} from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { type Nullable } from '@silverhand/essentials';
 
@@ -152,6 +156,15 @@ describe('resource routes', () => {
 
   it('DELETE /resources/:id', async () => {
     await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 204);
+  });
+
+  it('DELETE /resources/:id should throw when trying to delete management API', async () => {
+    const { findResourceById } = resources;
+    findResourceById.mockResolvedValueOnce({
+      ...mockResource,
+      indicator: getManagementApiResourceIndicator('mock'),
+    });
+    await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 400);
   });
 
   it('DELETE /resources/:id should throw with invalid id', async () => {

@@ -1,4 +1,4 @@
-import { Resources, Scopes } from '@logto/schemas';
+import { isManagementApi, Resources, Scopes } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat, yes } from '@silverhand/essentials';
 import { boolean, object, string } from 'zod';
@@ -183,9 +183,16 @@ export default function resourceRoutes<T extends AuthedRouter>(
 
   router.delete(
     '/resources/:id',
-    koaGuard({ params: object({ id: string().min(1) }), status: [204, 404] }),
+    koaGuard({ params: object({ id: string().min(1) }), status: [204, 400, 404] }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
+
+      const { indicator } = await findResourceById(id);
+      assertThat(
+        !isManagementApi(indicator),
+        new RequestError({ code: 'resource.cannot_delete_management_api' })
+      );
+
       await deleteResourceById(id);
       ctx.status = 204;
 
