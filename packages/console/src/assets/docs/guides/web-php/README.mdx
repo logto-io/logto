@@ -104,40 +104,6 @@ Route::get('/callback', function () {
 
 </Step>
 
-<Step title="Implement the home page">
-
-Here we implement a simple home page for demonstration:
-
-- If the user is not signed in, show a sign-in button;
-- If the user is signed in, show some basic information about the user.
-
-```php
-Route::get('/', function () {
-  if ($client->isAuthenticated() === false) {
-    return "Not authenticated <a href='/sign-in'>Sign in</a>";
-  }
-
-  return (
-    // Get local ID token claims
-    $client->getIdTokenClaims()->modelDumpJson(excludeUnset: true)
-    . "<br>"
-    // Fetch user info from Logto userinfo endpoint
-    $client->fetchUserInfo()->modelDumpJson(excludeUnset: true)
-    . "<br><a href='/sign-out'>Sign out</a>"
-  );
-});
-```
-
-Our data models are based on [JsonModel](https://github.com/logto-io/php/blob/HEAD/docs/api/classes/Logto/Sdk/Models/JsonModel.md), which is safe to accept undefined keys while encoding or decoding JSON.
-
-Note that a field (claim) with `null` value doesn't mean the field is set. The reason may be the related scope is not requested, or the user doesn't have the field.
-
-For example, if we didn't request the `email` scope when signing in, and the `email` field will be `null`. However, if we requested the `email` scope, the `email` field will be the user's email address if available.
-
-To learn more about scopes and claims, see [Scopes and claims](https://github.com/logto-io/php/blob/HEAD/docs/tutorial.md#scopes-and-claims).
-
-</Step>
-
 <Step title="Implement the sign-out route">
 
 To clean up the Python session and Logto session, we can designate a post sign-out redierct URI. This is where Logto will redirect users after they sign out.
@@ -161,6 +127,42 @@ The post sign-out redierct URI is optional, and if not provided, the user will b
 
 </Step>
 
+<Step title="Handle authentication status">
+
+In Logto SDK, we can use `$client->isAuthenticated()` to check the authentication status, if the user is signed in, the value will be true, otherwise, the value will be false.
+
+We also need to implement a home page for demonstration:
+
+- If the user is not signed in, show a sign-in button;
+- If the user is signed in, show some basic information about the user.
+
+```php
+Route::get('/', function () {
+  if ($client->isAuthenticated() === false) {
+    return "Not authenticated <a href='/sign-in'>Sign in</a>";
+  }
+
+  return (
+    // Get local ID token claims
+    json_decode($client->getIdTokenClaims())
+    . "<br>"
+    // Fetch user info from Logto userinfo endpoint
+    json_decode($client->fetchUserInfo())
+    . "<br><a href='/sign-out'>Sign out</a>"
+  );
+});
+```
+
+Our data models are based on [JsonModel](https://github.com/logto-io/php/blob/master/docs/api/classes/Logto/Sdk/Models/JsonModel.md), which is safe to accept undefined keys while encoding or decoding JSON.
+
+Note that a field (claim) with `null` value doesn't mean the field is set. The reason may be the related scope is not requested, or the user doesn't have the field.
+
+For example, if we didn't request the `email` scope when signing in, and the `email` field will be `null`. However, if we requested the `email` scope, the `email` field will be the user's email address if available.
+
+To learn more about scopes and claims, see [Get user information](https://docs.logto.io/sdk/php/#get-user-information).
+
+</Step>
+
 <Step title="Checkpoint: Test your application">
 
 Now, you can test your application:
@@ -171,37 +173,6 @@ Now, you can test your application:
   <li>After you sign in, you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see your user info and a "Sign out" button.</li>
   <li>Click the "Sign out" button, and you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
 </ol>
-
-</Step>
-
-<Step title="Protect your routes">
-
-Now, you have a working sign-in flow, but your routes are still unprotected. Per the framework you use, you can create a middleware to protect your routes. For example, in Laravel, you can create a middleware as follows:
-
-```php
-namespace App\Http\Middleware;
-
-use Closure;
-
-class LogtoAuth
-{
-  public function handle($request, Closure $next)
-  {
-    if ($client->isAuthenticated() === false) {
-      return redirect('/sign-in');
-    }
-    return $next($request);
-  }
-}
-```
-
-Then, you can apply this middleware to your routes:
-
-```php
-Route::get('/protected', function () {
-  return "Protected page";
-})->middleware(LogtoAuth::class);
-```
 
 </Step>
 

@@ -120,39 +120,6 @@ async def callback():
 
 </Step>
 
-<Step title="Implement the home page">
-
-Here we implement a simple home page for demonstration:
-
-- If the user is not signed in, show a sign-in button;
-- If the user is signed in, show some basic information about the user.
-
-```python
-@app.route("/")
-async def home():
-    if client.isAuthenticated() is False:
-        return "Not authenticated <a href='/sign-in'>Sign in</a>"
-
-    return (
-        # Get local ID token claims
-        client.getIdTokenClaims().model_dump_json(exclude_unset=True)
-        + "<br>"
-        # Fetch user info from Logto userinfo endpoint
-        (await client.fetchUserInfo()).model_dump_json(exclude_unset=True)
-        + "<br><a href='/sign-out'>Sign out</a>"
-    )
-```
-
-Our data models are based on [pydantic](https://docs.pydantic.dev/), so you can use `model_dump_json` to dump the data model to JSON.
-
-Adding `exclude_unset=True` will exclude unset fields from the JSON output, which makes the output more precise.
-
-For example, if we didn't request the `email` scope when signing in, and the `email` field will be excluded from the JSON output. However, if we requested the `email` scope, but the user doesn't have an email address, the `email` field will be included in the JSON output with a `null` value.
-
-To learn more about scopes and claims, see [Scopes and claims](https://github.com/logto-io/python/blob/HEAD/docs/tutorial.md#scopes-and-claims).
-
-</Step>
-
 <Step title="Implement the sign-out route">
 
 To clean up the Python session and Logto session, we can designate a post sign-out redierct URI. This is where Logto will redirect users after they sign out.
@@ -179,6 +146,41 @@ async def sign_out():
 
 </Step>
 
+<Step title="Handle authentication status">
+
+In Logto SDK, we can use `client.isAuthenticated()` to check the authentication status, if the user is signed in, the value will be true, otherwise, the value will be false.
+
+Here we also implement a simple home page for demonstration:
+
+- If the user is not signed in, show a sign-in button;
+- If the user is signed in, show some basic information about the user.
+
+```python
+@app.route("/")
+async def home():
+    if client.isAuthenticated() is False:
+        return "Not authenticated <a href='/sign-in'>Sign in</a>"
+
+    return (
+        # Get local ID token claims
+        client.getIdTokenClaims().model_dump_json(exclude_unset=True)
+        + "<br>"
+        # Fetch user info from Logto userinfo endpoint
+        (await client.fetchUserInfo()).model_dump_json(exclude_unset=True)
+        + "<br><a href='/sign-out'>Sign out</a>"
+    )
+```
+
+Our data models are based on [pydantic](https://docs.pydantic.dev/), so you can use `model_dump_json` to dump the data model to JSON.
+
+Adding `exclude_unset=True` will exclude unset fields from the JSON output, which makes the output more precise.
+
+For example, if we didn't request the `email` scope when signing in, and the `email` field will be excluded from the JSON output. However, if we requested the `email` scope, but the user doesn't have an email address, the `email` field will be included in the JSON output with a `null` value.
+
+To learn more about scopes and claims, see [Get user information](https://docs.logto.io/sdk/python/#get-user-information).
+
+</Step>
+
 <Step title="Checkpoint: Test your application">
 
 Now, you can test your application:
@@ -189,36 +191,6 @@ Now, you can test your application:
   <li>After you sign in, you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see your user info and a "Sign out" button.</li>
   <li>Click the "Sign out" button, and you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
 </ol>
-
-</Step>
-
-<Step title="Protect your routes">
-
-Now, you have a working sign-in flow, but your routes are still unprotected. Per the framework you use, you can create a decorator such as `@authenticated` to protect your routes. For example:
-
-```python
-from functools import wraps
-
-def authenticated(func):
-    @wraps(func)
-    async def wrapper(*args, **kwargs):
-        if client.isAuthenticated() is False:
-            return redirect("/sign-in") # Or directly call `client.signIn`
-        return await func(*args, **kwargs)
-
-    return wrapper
-```
-
-Then, you can use the decorator to protect your routes:
-
-```python
-@app.route("/protected")
-@authenticated
-async def protected():
-    return "Protected page"
-```
-
-You can also create a middleware to achieve the same goal.
 
 </Step>
 
