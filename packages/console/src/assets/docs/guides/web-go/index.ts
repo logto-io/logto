@@ -11,7 +11,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'go',
     path: 'gin-sample',
   },
-  fullTutorial: {
+  fullGuide: {
     title: 'Full Go SDK tutorial',
     url: 'https://docs.logto.io/sdk/go',
   },

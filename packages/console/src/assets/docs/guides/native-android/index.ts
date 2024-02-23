@@ -10,7 +10,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'kotlin',
     path: 'android-sample-kotlin',
   },
-  fullTutorial: {
+  fullGuide: {
     title: 'Full Android SDK tutorial',
     url: 'https://docs.logto.io/sdk/android',
   },
