@@ -1,4 +1,4 @@
-import { Prompt } from '@logto/js';
+import { Prompt } from '@logto/node';
 import { InteractionEvent, demoAppApplicationId } from '@logto/schemas';
 
 import { assignRolesToUser, putInteraction } from '#src/api/index.js';
