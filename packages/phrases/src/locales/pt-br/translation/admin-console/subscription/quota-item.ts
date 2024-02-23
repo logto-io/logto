@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} aplicações de máquina a máquina',
     unlimited: 'Aplicações de máquina a máquina ilimitadas',
     not_eligible: 'Remova suas aplicações de máquina a máquina',
-    add_on: 'Aplicativos adicionais de máquina a máquina',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: 'Permanência de registros de auditoria: {{count, number}} dias',
     unlimited: 'Dias ilimitados',
     not_eligible: 'Nenhum registro de auditoria',
-  },
-  community_support_enabled: {
-    name: 'Suporte da comunidade',
-    limited: 'Suporte da comunidade',
-    unlimited: 'Suporte da comunidade',
-    not_eligible: 'Nenhum suporte da comunidade',
   },
   email_ticket_support: {
     name: 'Suporte de ingressos de e-mail',

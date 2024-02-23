@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} Maschine-zu-Maschine-Apps',
     unlimited: 'Unbegrenzte Maschine-zu-Maschine-Apps',
     not_eligible: 'Entferne deine Maschine-zu-Maschine-Apps',
-    add_on: 'Zusätzliche Maschine-zu-Maschine-Apps',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: 'Audit-Log-Retention: {{count, number}} Tage',
     unlimited: 'Unbegrenzte Tage',
     not_eligible: 'Keine Audit-Logs',
-  },
-  community_support_enabled: {
-    name: 'Community-Support',
-    limited: 'Community-Support',
-    unlimited: 'Community-Support',
-    not_eligible: 'Kein Community-Support',
   },
   email_ticket_support: {
     name: 'E-Mail-Ticket-Support',

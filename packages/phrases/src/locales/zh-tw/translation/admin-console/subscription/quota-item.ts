@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} 機器對機器應用程式',
     unlimited: '不限機器對機器應用程式數',
     not_eligible: '移除你的機器對機器應用程式',
-    add_on: '額外的機器對機器應用程式',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: '審計記錄保留天數：{{count, number}} 天',
     unlimited: '不限天數',
     not_eligible: '無審計記錄',
-  },
-  community_support_enabled: {
-    name: '社群支援',
-    limited: '社群支援',
-    unlimited: '社群支援',
-    not_eligible: '無社群支援',
   },
   email_ticket_support: {
     name: '電子郵件票務支援',

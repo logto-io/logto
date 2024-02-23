@@ -1,14 +1,16 @@
+import { useMemo } from 'react';
 import { Trans } from 'react-i18next';
 
 import PlanName from '@/components/PlanName';
-import PlanQuotaList from '@/components/PlanQuotaList';
+import { planQuotaItemOrder } from '@/consts/plan-quotas';
 import DynamicT from '@/ds-components/DynamicT';
 import {
   type SubscriptionPlanQuotaEntries,
   type SubscriptionPlanQuota,
 } from '@/types/subscriptions';
+import { sortBy } from '@/utils/sort';
 
-import DiffQuotaItem from './DiffQuotaItem';
+import PlanQuotaList from './PlanQuotaList';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -18,6 +20,17 @@ type Props = {
 };
 
 function PlanQuotaDiffCard({ planName, quotaDiff, isDowngradeTargetPlan = false }: Props) {
+  // eslint-disable-next-line no-restricted-syntax
+  const sortedEntries = useMemo(
+    () =>
+      Object.entries(quotaDiff)
+        .slice()
+        .sort(([preQuotaKey], [nextQuotaKey]) =>
+          sortBy(planQuotaItemOrder)(preQuotaKey, nextQuotaKey)
+        ),
+    [quotaDiff]
+  ) as SubscriptionPlanQuotaEntries;
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>
@@ -31,20 +44,7 @@ function PlanQuotaDiffCard({ planName, quotaDiff, isDowngradeTargetPlan = false 
           />
         </Trans>
       </div>
-      <PlanQuotaList
-        entries={
-          // eslint-disable-next-line no-restricted-syntax
-          Object.entries(quotaDiff) as SubscriptionPlanQuotaEntries
-        }
-        itemRenderer={(quotaKey, quotaValue) => (
-          <DiffQuotaItem
-            key={quotaKey}
-            quotaKey={quotaKey}
-            quotaValue={quotaValue}
-            isForDowngradeTargetPlan={isDowngradeTargetPlan}
-          />
-        )}
-      />
+      <PlanQuotaList entries={sortedEntries} isDowngradeTargetPlan={isDowngradeTargetPlan} />
     </div>
   );
 }

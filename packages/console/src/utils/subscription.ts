@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
-import { communitySupportEnabledMap, ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
+import { ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
 import { featuredPlanIdOrder, featuredPlanIds } from '@/consts/subscriptions';
 import { type SubscriptionPlanQuota, type SubscriptionPlan } from '@/types/subscriptions';
 
@@ -15,7 +15,9 @@ export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlan
     ...subscriptionPlanResponse,
     quota: {
       ...quota,
-      communitySupportEnabled: communitySupportEnabledMap[id] ?? false, // Fallback to not supported
+      /**
+       * Manually add this support quota item to the plan since it will be compared in the downgrade plan notification modal.
+       */
       ticketSupportResponseTime: ticketSupportResponseTimeMap[id] ?? 0, // Fallback to not supported
     },
   };

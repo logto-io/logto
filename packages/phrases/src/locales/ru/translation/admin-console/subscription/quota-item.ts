@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} приложения для машин ко машине',
     unlimited: 'Неограниченное количество приложений для машин ко машине',
     not_eligible: 'Удалите свои приложения для машин ко машине',
-    add_on: 'Дополнительные приложения для машины ко машине',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: 'Время хранения аудит-логов: {{count, number}} дней',
     unlimited: 'Неограниченное количество дней',
     not_eligible: 'Без аудит-логов',
-  },
-  community_support_enabled: {
-    name: 'Поддержка сообщества',
-    limited: 'Поддержка сообщества',
-    unlimited: 'Поддержка сообщества',
-    not_eligible: 'Без поддержки сообщества',
   },
   email_ticket_support: {
     name: 'Поддержка по электронной почте',

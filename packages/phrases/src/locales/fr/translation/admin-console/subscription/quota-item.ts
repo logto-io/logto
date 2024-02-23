@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} applications machine à machine',
     unlimited: 'Illimité applications machine à machine',
     not_eligible: 'Supprimez vos applications machine à machine',
-    add_on: 'Applications machine à machine supplémentaires',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: "Conservation des journaux d'audit: {{count, number}} jours",
     unlimited: 'Jours illimités',
     not_eligible: "Pas de journalisation d'audit",
-  },
-  community_support_enabled: {
-    name: 'Support de la communauté',
-    limited: 'Support de la communauté',
-    unlimited: 'Support de la communauté',
-    not_eligible: 'Pas de support de la communauté',
   },
   email_ticket_support: {
     name: 'Assistance par ticket de messagerie électronique',

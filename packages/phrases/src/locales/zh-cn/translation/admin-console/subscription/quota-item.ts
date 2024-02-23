@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} 个机器到机器应用',
     unlimited: '无限制机器到机器应用',
     not_eligible: '移除你的机器到机器应用',
-    add_on: '更多机器到机器应用',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: '审计日志保留：{{count, number}} 天',
     unlimited: '无限制天数',
     not_eligible: '无审计日志',
-  },
-  community_support_enabled: {
-    name: '社区支持',
-    limited: '社区支持',
-    unlimited: '社区支持',
-    not_eligible: '无社区支持',
   },
   email_ticket_support: {
     name: '电子邮件支持',

@@ -22,7 +22,6 @@ export const quotaItemPhrasesMap: Record<
   scopesPerRoleLimit: 'scopes_per_role_limit.name',
   hooksLimit: 'hooks_limit.name',
   auditLogsRetentionDays: 'audit_logs_retention_days.name',
-  communitySupportEnabled: 'community_support_enabled.name',
   ticketSupportResponseTime: 'email_ticket_support.name',
   mfaEnabled: 'mfa_enabled.name',
   organizationsEnabled: 'organizations_enabled.name',
@@ -49,7 +48,6 @@ export const quotaItemUnlimitedPhrasesMap: Record<
   scopesPerRoleLimit: 'scopes_per_role_limit.unlimited',
   hooksLimit: 'hooks_limit.unlimited',
   auditLogsRetentionDays: 'audit_logs_retention_days.unlimited',
-  communitySupportEnabled: 'community_support_enabled.unlimited',
   ticketSupportResponseTime: 'email_ticket_support.unlimited',
   mfaEnabled: 'mfa_enabled.unlimited',
   organizationsEnabled: 'organizations_enabled.unlimited',
@@ -76,7 +74,6 @@ export const quotaItemLimitedPhrasesMap: Record<
   scopesPerRoleLimit: 'scopes_per_role_limit.limited',
   hooksLimit: 'hooks_limit.limited',
   auditLogsRetentionDays: 'audit_logs_retention_days.limited',
-  communitySupportEnabled: 'community_support_enabled.limited',
   ticketSupportResponseTime: 'email_ticket_support.limited',
   mfaEnabled: 'mfa_enabled.limited',
   organizationsEnabled: 'organizations_enabled.limited',
@@ -103,18 +100,8 @@ export const quotaItemNotEligiblePhrasesMap: Record<
   scopesPerRoleLimit: 'scopes_per_role_limit.not_eligible',
   hooksLimit: 'hooks_limit.not_eligible',
   auditLogsRetentionDays: 'audit_logs_retention_days.not_eligible',
-  communitySupportEnabled: 'community_support_enabled.not_eligible',
   ticketSupportResponseTime: 'email_ticket_support.not_eligible',
   mfaEnabled: 'mfa_enabled.not_eligible',
   organizationsEnabled: 'organizations_enabled.not_eligible',
   ssoEnabled: 'sso_enabled.not_eligible',
-};
-
-export const quotaItemAddOnPhrasesMap: Partial<
-  Record<
-    keyof SubscriptionPlanQuota,
-    TFuncKey<'translation', 'admin_console.subscription.quota_item'>
-  >
-> = {
-  machineToMachineLimit: 'machine_to_machine_limit.add_on',
 };

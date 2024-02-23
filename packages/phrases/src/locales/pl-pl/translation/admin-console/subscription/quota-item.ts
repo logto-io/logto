@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} aplikacje machine to machine',
     unlimited: 'Nieograniczona liczba aplikacji machine to machine',
     not_eligible: 'Usuń swoje aplikacje machine to machine',
-    add_on: 'Dodatkowe aplikacje machine-to-machine',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: 'Przechowywanie dzienników audytowych: {{count, number}} dni',
     unlimited: 'Nieograniczona liczba dni',
     not_eligible: 'Brak dzienników audytowych',
-  },
-  community_support_enabled: {
-    name: 'Wsparcie społeczności',
-    limited: 'Wsparcie społeczności',
-    unlimited: 'Wsparcie społeczności',
-    not_eligible: 'Brak wsparcia społecznościowego',
   },
   email_ticket_support: {
     name: 'Wsparcie poprzez e-maile',

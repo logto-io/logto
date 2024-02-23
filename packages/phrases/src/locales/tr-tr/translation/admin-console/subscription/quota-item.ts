@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} makineye makine uygulamalar',
     unlimited: 'Sınırsız makineye makine uygulamalar',
     not_eligible: 'Makineye makine uygulamalarınızı kaldırın',
-    add_on: 'Ek makineye makine uygulamaları',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: 'Denetim günlükleri saklama süresi: {{count, number}} gün',
     unlimited: 'Sınırsız günler',
     not_eligible: 'Denetim günlüğünüz yok',
-  },
-  community_support_enabled: {
-    name: 'Topluluk desteği',
-    limited: 'Topluluk desteği',
-    unlimited: 'Topluluk desteği',
-    not_eligible: 'Topluluk desteği yok',
   },
   email_ticket_support: {
     name: 'E-posta bilet desteği',

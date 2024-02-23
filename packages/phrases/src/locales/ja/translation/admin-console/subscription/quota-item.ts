@@ -32,7 +32,6 @@ const quota_item = {
     limited_other: '{{count, number}} マシン間アプリケーション',
     unlimited: '無制限のマシン間アプリケーション',
     not_eligible: 'マシン間アプリケーションを削除してください',
-    add_on: '追加のマシン間アプリケーション',
   },
   third_party_applications_limit: {
     /** UNTRANSLATED */
@@ -132,12 +131,6 @@ const quota_item = {
     limited_other: '監査ログの保持期間: {{count, number}} 日',
     unlimited: '無制限の日数',
     not_eligible: '監査ログがありません',
-  },
-  community_support_enabled: {
-    name: 'コミュニティサポート',
-    limited: 'コミュニティサポート',
-    unlimited: 'コミュニティサポート',
-    not_eligible: 'コミュニティサポートなし',
   },
   email_ticket_support: {
     name: 'メールチケットサポート',
