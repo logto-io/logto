@@ -1,6 +1,7 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import type { Resource } from '@logto/schemas';
 import { isManagementApi, Theme } from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -15,7 +16,7 @@ import File from '@/assets/icons/file.svg';
 import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg';
 import ManagementApiResource from '@/assets/icons/management-api-resource.svg';
 import DetailsPage from '@/components/DetailsPage';
-import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
+import DetailsPageHeader, { type MenuItem } from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
@@ -133,37 +134,41 @@ function ApiResourceDetails() {
                 }
               },
             }}
-            actionMenuItems={[
-              {
+            actionMenuItems={conditionalArray<MenuItem>(
+              // Should not show delete button for management api resource.
+              !isLogtoManagementApiResource && {
                 icon: <Delete />,
                 title: 'general.delete',
                 type: 'danger',
                 onClick: () => {
                   setIsDeleteFormOpen(true);
                 },
-              },
-            ]}
+              }
+            )}
           />
           <Drawer isOpen={isGuideDrawerOpen} onClose={onCloseDrawer}>
             <GuideDrawer apiResource={data} onClose={onCloseDrawer} />
           </Drawer>
-          <DeleteConfirmModal
-            isOpen={isDeleteFormOpen}
-            isLoading={isDeleting}
-            expectedInput={data.name}
-            className={styles.deleteConfirm}
-            inputPlaceholder={t('api_resource_details.enter_your_api_resource_name')}
-            onCancel={() => {
-              setIsDeleteFormOpen(false);
-            }}
-            onConfirm={onDelete}
-          >
-            <div className={styles.description}>
-              <Trans components={{ span: <span className={styles.highlight} /> }}>
-                {t('api_resource_details.delete_description', { name: data.name })}
-              </Trans>
-            </div>
-          </DeleteConfirmModal>
+          {/* Can not delete management api resource. */}
+          {!isLogtoManagementApiResource && (
+            <DeleteConfirmModal
+              isOpen={isDeleteFormOpen}
+              isLoading={isDeleting}
+              expectedInput={data.name}
+              className={styles.deleteConfirm}
+              inputPlaceholder={t('api_resource_details.enter_your_api_resource_name')}
+              onCancel={() => {
+                setIsDeleteFormOpen(false);
+              }}
+              onConfirm={onDelete}
+            >
+              <div className={styles.description}>
+                <Trans components={{ span: <span className={styles.highlight} /> }}>
+                  {t('api_resource_details.delete_description', { name: data.name })}
+                </Trans>
+              </div>
+            </DeleteConfirmModal>
+          )}
           <TabNav>
             <TabNavItem href={`/api-resources/${data.id}/${ApiResourceDetailsTabs.Settings}`}>
               {t('api_resource_details.settings_tab')}
