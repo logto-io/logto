@@ -3802,8 +3802,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       jest-puppeteer:
-        specifier: ^9.0.0
-        version: 9.0.0(puppeteer@21.0.0)
+        specifier: ^10.0.0
+        version: 10.0.1(puppeteer@21.0.0)(typescript@5.3.3)
       jose:
         specifier: ^5.0.0
         version: 5.0.1
@@ -9189,14 +9189,14 @@ packages:
       - supports-color
     dev: true
 
-  /@sideway/address@4.1.4:
-    resolution: {integrity: sha512-7vwq+rOHVWjyXxVlR76Agnvhy8I9rpzjosTESvmhNeXOXdZZB15Fl+TI9x1SiHZH5Jv2wTGduSxFDIaq0m3DUw==}
+  /@sideway/address@4.1.5:
+    resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
     dependencies:
       '@hapi/hoek': 9.3.0
     dev: true
 
-  /@sideway/formula@3.0.0:
-    resolution: {integrity: sha512-vHe7wZ4NOXVfkoRb8T5otiENVlT7a3IAiw7H5M2+GO+9CDgcVUUsX1zalAztCmwyOr2RUTGJdgB+ZvSVqmdHmg==}
+  /@sideway/formula@3.0.1:
+    resolution: {integrity: sha512-/poHZJJVjx3L+zVD6g9KgHfYnb443oi7wLu/XKojDviHy6HOEOA6z1Trk5aR1dGcmPenJEgb2sK2I80LeS3MIg==}
     dev: true
 
   /@sideway/pinpoint@2.0.0:
@@ -10848,11 +10848,12 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
+  /axios@1.6.7:
+    resolution: {integrity: sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==}
     dependencies:
-      follow-redirects: 1.15.1
+      follow-redirects: 1.15.5
       form-data: 4.0.0
+      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: true
@@ -13449,6 +13450,17 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
+
+  /follow-redirects@1.15.5:
+    resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: true
 
   /form-data-encoder@2.1.4:
     resolution: {integrity: sha512-yDYSgNMraqvnxiEXO4hi88+YZxaHC6QKzb5N84iRCTDeRO7ZALpir/lVmf/uXUhnwUr2O4HU8s/n6x+yNjQkHw==}
@@ -15094,17 +15106,17 @@ packages:
       - supports-color
     dev: true
 
-  /jest-dev-server@9.0.0:
-    resolution: {integrity: sha512-N43EDJLy3JBHZwtTxqHy+6lxu7Zw5PLD8Jzq2+ePV3v90hQc4UoUA/fnxoKdTCgZY3P1qPl6Zmj8m/886APxoQ==}
+  /jest-dev-server@10.0.0:
+    resolution: {integrity: sha512-FtyBBDxrAIfTX3hyKSOwj5KU6Z7fFLew5pQYOFpwyf+qpPpULL8aYxtsFkbkAwcs+Mb7qhcNbVLeiWsLOd7CKw==}
     engines: {node: '>=16'}
     dependencies:
       chalk: 4.1.2
       cwd: 0.10.0
       find-process: 1.4.7
       prompts: 2.4.2
-      spawnd: 9.0.0
+      spawnd: 10.0.0
       tree-kill: 1.2.2
-      wait-on: 7.0.1
+      wait-on: 7.2.0
     transitivePeerDependencies:
       - debug
       - supports-color
@@ -15171,18 +15183,6 @@ packages:
       - utf-8-validate
     dev: true
 
-  /jest-environment-node@29.5.0:
-    resolution: {integrity: sha512-ExxuIK/+yQ+6PRGaHkKewYtg6hto2uGCgvKdb2nfJfKXgZ17DfXjvbZ+jA1Qt9A8EQSfPnt5FKIfnOO3u1h9qw==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dependencies:
-      '@jest/environment': 29.5.0
-      '@jest/fake-timers': 29.5.0
-      '@jest/types': 29.6.3
-      '@types/node': 20.10.4
-      jest-mock: 29.5.0
-      jest-util: 29.5.0
-    dev: true
-
   /jest-environment-node@29.7.0:
     resolution: {integrity: sha512-DOSwCRqXirTOyheM+4d5YZOrWcdu0LNZ87ewUoywbcb2XR4wKgqiG8vNeYwhjFMbEkfju7wx2GYH0P2gevGvFw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -15195,18 +15195,19 @@ packages:
       jest-util: 29.7.0
     dev: true
 
-  /jest-environment-puppeteer@9.0.0:
-    resolution: {integrity: sha512-+3MczPbZrtdmrnB6pevDxnC5uNX0yzRK5W+A8pYZ5eev5CH63YsgU2R0HI+gfLq0U4ljis/sl0rNrU7SOZ0bag==}
+  /jest-environment-puppeteer@10.0.1(typescript@5.3.3):
+    resolution: {integrity: sha512-FxMzVRyqieQqSy5CPWiwdK5t9dkRHid5eoRTVa8RtYeXLlpW6lU0dAmxEfPkdnDVCiPUhC2APeKOXq0J72bgag==}
     engines: {node: '>=16'}
     dependencies:
       chalk: 4.1.2
-      cosmiconfig: 8.2.0
+      cosmiconfig: 8.3.6(typescript@5.3.3)
       deepmerge: 4.3.1
-      jest-dev-server: 9.0.0
-      jest-environment-node: 29.5.0
+      jest-dev-server: 10.0.0
+      jest-environment-node: 29.7.0
     transitivePeerDependencies:
       - debug
       - supports-color
+      - typescript
     dev: true
 
   /jest-get-type@29.4.3:
@@ -15349,18 +15350,19 @@ packages:
       jest-resolve: 29.7.0
     dev: true
 
-  /jest-puppeteer@9.0.0(puppeteer@21.0.0):
-    resolution: {integrity: sha512-LCon1dWydLcrq6Qnv/K8NgawVW+nllUVGzKBa/ETZV8yrlzp6d53Ydli3ngsX/maMkiQANl5ID/9GQqo9BY7Mw==}
+  /jest-puppeteer@10.0.1(puppeteer@21.0.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-FzC35XbqeuQEt1smXh1EOqhJaRkWqJkyWDMfGkcZ8C59QHXeJ7F/iOmiNqYi6l/OsycUuOPCk+IkjfGfS9YbrQ==}
     engines: {node: '>=16'}
     peerDependencies:
       puppeteer: '>=19'
     dependencies:
-      expect-puppeteer: 9.0.0
-      jest-environment-puppeteer: 9.0.0
+      expect-puppeteer: 10.0.0
+      jest-environment-puppeteer: 10.0.1(typescript@5.3.3)
       puppeteer: 21.0.0
     transitivePeerDependencies:
       - debug
       - supports-color
+      - typescript
     dev: true
 
   /jest-regex-util@29.4.3:
@@ -15637,13 +15639,13 @@ packages:
     hasBin: true
     dev: true
 
-  /joi@17.7.0:
-    resolution: {integrity: sha512-1/ugc8djfn93rTE3WRKdCzGGt/EtiYKxITMO4Wiv6q5JL1gl9ePt4kBsl1S499nbosspfctIQTpYIhSmHA3WAg==}
+  /joi@17.12.2:
+    resolution: {integrity: sha512-RonXAIzCiHLc8ss3Ibuz45u28GOsWE1UpfDXLbN/9NKbL4tCJf8TWYVKsoYuuh+sAUt7fsSNpA+r2+TBA6Wjmw==}
     dependencies:
       '@hapi/hoek': 9.3.0
       '@hapi/topo': 5.1.0
-      '@sideway/address': 4.1.4
-      '@sideway/formula': 3.0.0
+      '@sideway/address': 4.1.5
+      '@sideway/formula': 3.0.1
       '@sideway/pinpoint': 2.0.0
     dev: true
 
@@ -19492,6 +19494,12 @@ packages:
     dependencies:
       tslib: 2.5.0
 
+  /rxjs@7.8.1:
+    resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
+    dependencies:
+      tslib: 2.6.2
+    dev: true
+
   /safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
 
@@ -19934,8 +19942,8 @@ packages:
     resolution: {integrity: sha512-ekwEbFp5aqSPKaqeY1PGrlGQxPNaq+Cnx4+bE2D8sciBQrHpbwoBbawqTN2+6jPs9IdWxxiUcN0K2pkczD3zmw==}
     dev: true
 
-  /spawnd@9.0.0:
-    resolution: {integrity: sha512-YJRGf0loiLsHTQZztPSI5pb9RmlKE5y6Nvxko6dNtGrkra+1BaJ7PN86GQ1/2ldLZgMhMG9ITopkDJ+7lHkBYw==}
+  /spawnd@10.0.0:
+    resolution: {integrity: sha512-6GKcakMTryb5b1SWCvdubCDHEsR2k+5VZUD5G19umZRarkvj1RyCGyizcqhjewI7cqZo8fTVD8HpnDZbVOLMtg==}
     engines: {node: '>=16'}
     dependencies:
       signal-exit: 4.1.0
@@ -21287,16 +21295,16 @@ packages:
       xml-name-validator: 4.0.0
     dev: true
 
-  /wait-on@7.0.1:
-    resolution: {integrity: sha512-9AnJE9qTjRQOlTZIldAaf/da2eW0eSRSgcqq85mXQja/DW3MriHxkpODDSUEg+Gri/rKEcXUZHe+cevvYItaog==}
+  /wait-on@7.2.0:
+    resolution: {integrity: sha512-wCQcHkRazgjG5XoAq9jbTMLpNIjoSlZslrJ2+N9MxDsGEv1HnFoVjOCexL0ESva7Y9cu350j+DWADdk54s4AFQ==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     dependencies:
-      axios: 0.27.2
-      joi: 17.7.0
+      axios: 1.6.7
+      joi: 17.12.2
       lodash: 4.17.21
       minimist: 1.2.8
-      rxjs: 7.8.0
+      rxjs: 7.8.1
     transitivePeerDependencies:
       - debug
     dev: true
