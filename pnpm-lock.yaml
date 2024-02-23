@@ -1322,8 +1322,8 @@ importers:
         specifier: ^29.5.0
         version: 29.6.3
       '@logto/cloud':
-        specifier: 0.2.5-c6ed487
-        version: 0.2.5-c6ed487(zod@3.22.4)
+        specifier: 0.2.5-faca9a9
+        version: 0.2.5-faca9a9(zod@3.22.4)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -7590,16 +7590,6 @@ packages:
       jose: 5.0.1
     dev: true
 
-  /@logto/cloud@0.2.5-c6ed487(zod@3.22.4):
-    resolution: {integrity: sha512-cDKxCBFeZcG0CiGIa6mBY1Zgu3+tuvhYxs/qN0nQcj7MLSQ0AXHK9m1GeSJQH+Nu/jspggLmg27Ks8gdCHQUcg==}
-    engines: {node: ^20.9.0}
-    dependencies:
-      '@silverhand/essentials': 2.9.0
-      '@withtyped/server': 0.12.9(zod@3.22.4)
-    transitivePeerDependencies:
-      - zod
-    dev: true
-
   /@logto/cloud@0.2.5-faca9a9(zod@3.22.4):
     resolution: {integrity: sha512-hUiuzOPd4bKIV6fIKZLQW2Fc8JYmwKWWps7gZoxGbL3uLmAYYci5JHIP+vM7nbNS+oK1V141sy3JjNS1vAkvGA==}
     engines: {node: ^20.9.0}
@@ -10344,7 +10334,7 @@ packages:
       debug: 4.3.4
       eslint: 8.44.0
       graphemer: 1.4.0
-      ignore: 5.2.4
+      ignore: 5.3.0
       natural-compare-lite: 1.4.0
       semver: 7.5.4
       tsutils: 3.21.0(typescript@5.3.3)
@@ -13217,17 +13207,6 @@ packages:
       micromatch: 4.0.5
     dev: true
 
-  /fast-glob@3.3.1:
-    resolution: {integrity: sha512-kNFPyjhh5cKjrUltxs+wFx+ZkbRaxxmZ+X0ZU31SOsxCEtP9VPgtq2teZw1DebupL5GmDaNQ6yKMMVcM41iqDg==}
-    engines: {node: '>=8.6.0'}
-    dependencies:
-      '@nodelib/fs.stat': 2.0.5
-      '@nodelib/fs.walk': 1.2.8
-      glob-parent: 5.1.2
-      merge2: 1.4.1
-      micromatch: 4.0.5
-    dev: true
-
   /fast-glob@3.3.2:
     resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
     engines: {node: '>=8.6.0'}
@@ -13819,7 +13798,7 @@ packages:
       array-union: 2.1.0
       dir-glob: 3.0.1
       fast-glob: 3.3.0
-      ignore: 5.2.4
+      ignore: 5.3.0
       merge2: 1.4.1
       slash: 3.0.0
     dev: true
@@ -13829,8 +13808,8 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       dir-glob: 3.0.1
-      fast-glob: 3.3.1
-      ignore: 5.2.4
+      fast-glob: 3.3.2
+      ignore: 5.3.0
       merge2: 1.4.1
       slash: 4.0.0
     dev: true
@@ -17636,7 +17615,7 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       bl: 5.1.0
-      chalk: 5.1.2
+      chalk: 5.3.0
       cli-cursor: 4.0.0
       cli-spinners: 2.7.0
       is-interactive: 2.0.0
@@ -19661,11 +19640,6 @@ packages:
   /signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
 
-  /signal-exit@4.0.2:
-    resolution: {integrity: sha512-MY2/qGx4enyjprQnFaZsHib3Yadh3IXyV2C321GY0pjGfVBu4un0uDJkwgdxqO+Rdx8JMT8IfJIRwbYVz3Ob3Q==}
-    engines: {node: '>=14'}
-    dev: true
-
   /signal-exit@4.1.0:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
@@ -19959,7 +19933,7 @@ packages:
     resolution: {integrity: sha512-YJRGf0loiLsHTQZztPSI5pb9RmlKE5y6Nvxko6dNtGrkra+1BaJ7PN86GQ1/2ldLZgMhMG9ITopkDJ+7lHkBYw==}
     engines: {node: '>=16'}
     dependencies:
-      signal-exit: 4.0.2
+      signal-exit: 4.1.0
       tree-kill: 1.2.2
     dev: true
 
