@@ -1,3 +1,4 @@
+import { defaultManagementApi } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { createResource } from '#src/api/resource.js';
@@ -55,6 +56,14 @@ describe('roles', () => {
     const response = await createRole({ name: '#internal:foo' }).catch((error: unknown) => error);
 
     expect(response instanceof HTTPError && response.response.statusCode).toBe(403);
+  });
+
+  it('should fail when try to create role with management API scope(s)', async () => {
+    const response = await createRole({ scopeIds: [defaultManagementApi.scopes[0]!.id] }).catch(
+      (error: unknown) => error
+    );
+
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
   });
 
   it('should get role detail successfully', async () => {

@@ -35,7 +35,6 @@ const { findRoleByRoleName, findRoleById, deleteRoleById } = roles;
 const scopes = {
   findScopeById: jest.fn(),
 };
-const { findScopeById } = scopes;
 
 const rolesScopes = {
   insertRolesScopes: jest.fn(),
@@ -63,6 +62,11 @@ const applicationsRoles = {
 };
 const { countApplicationsRolesByRoleId, findApplicationsRolesByRoleId } = applicationsRoles;
 
+const rolesScopesLibrary = {
+  validateRoleScopeAssignment: jest.fn(),
+};
+const { validateRoleScopeAssignment } = rolesScopesLibrary;
+
 const roleRoutes = await pickDefault(import('./role.js'));
 
 const tenantContext = new MockTenant(
@@ -77,7 +81,7 @@ const tenantContext = new MockTenant(
     applications,
   },
   undefined,
-  { quota: createMockQuotaLibrary() }
+  { quota: createMockQuotaLibrary(), roleScopes: rolesScopesLibrary }
 );
 
 describe('role routes', () => {
@@ -127,7 +131,11 @@ describe('role routes', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockAdminUserRole);
     expect(findRoleByRoleName).toHaveBeenCalled();
-    expect(findScopeById).toHaveBeenCalledWith(mockScope.id);
+    expect(validateRoleScopeAssignment).toHaveBeenCalledWith(
+      [mockScope.id],
+      response.body.id,
+      true
+    );
     expect(insertRolesScopes).toHaveBeenCalled();
   });
 

@@ -8,6 +8,7 @@ import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createProtectedAppLibrary } from '#src/libraries/protected-app.js';
 import { createQuotaLibrary } from '#src/libraries/quota.js';
+import { createRoleScopeLibrary } from '#src/libraries/role-scope.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
@@ -24,6 +25,7 @@ export default class Libraries {
   passcodes = createPasscodeLibrary(this.queries, this.connectors);
   applications = createApplicationLibrary(this.queries);
   verificationStatuses = createVerificationStatusLibrary(this.queries);
+  roleScopes = createRoleScopeLibrary(this.queries);
   domains = createDomainLibrary(this.queries);
   protectedApps = createProtectedAppLibrary(this.queries);
   quota = createQuotaLibrary(this.queries, this.cloudConnection, this.connectors);
