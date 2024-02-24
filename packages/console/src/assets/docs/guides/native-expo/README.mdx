@@ -1,0 +1,172 @@
+import UriInputField from '@/mdx-components/UriInputField';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+import Checkpoint from '../../fragments/_checkpoint.md';
+
+<Steps>
+
+<Step
+  title="Installation"
+  subtitle="Install Logto SDK and peer dependencies"
+>
+
+<Tabs>
+
+  <TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/rn
+npm i expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage
+```
+
+  </TabItem>
+  <TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/rn
+yarn add expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage
+```
+
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/rn
+pnpm add expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage
+```
+
+  </TabItem>
+
+</Tabs>
+
+The `@logto/rn` package is the SDK for Logto. The remaining packages are its peer dependencies. They couldn't be listed as direct dependencies because the Expo CLI requires that all dependencies for native modules be installed directly within the root project's `package.json`.
+
+<InlineNotification>
+
+If you're installing this in a [bare React Native app](https://docs.expo.dev/bare/overview), you should also follow these [additional installation instructions](https://docs.expo.dev/bare/installing-expo-modules/).
+
+</InlineNotification>
+
+</Step>
+
+<Step title="Init Logto provider">
+
+Import and use `LogtoProvider` to provide a Logto context:
+
+<pre>
+  <code className="language-tsx">
+    {`import { LogtoProvider, LogtoConfig } from '@logto/rn';
+
+const config: LogtoConfig = {
+  endpoint: '${props.endpoint}',
+  appId: '${props.app.id}',
+};
+
+const App = () => (
+  <LogtoProvider config={config}>
+    <YourAppContent />
+  </LogtoProvider>
+);`}
+  </code>
+</pre>
+
+</Step>
+
+<Step title="Implement sign-in and sign-out">
+
+Add a native redirect URI (for example, `io.logto://callback`), then click "Save".
+
+<UriInputField name="redirectUris" />
+
+- For iOS, the redirect URI scheme does not really matter since the `ASWebAuthenticationSession` class will listen to the redirect URI regardless of if it's registered.
+- For Android, the redirect URI scheme must be filled in Expo's `app.json` file, for example:
+
+  ```json
+  {
+    "expo": {
+      "scheme": "io.logto"
+    }
+  }
+  ```
+
+The redirect URI is used to redirect the user back to your app after they sign in.
+
+</Step>
+
+<Step title="Implement sign-in and sign-out">
+
+You can use `useLogto` hook to sign in and sign out:
+
+<pre>
+  <code className="language-tsx">
+    {`import { useLogto } from '@logto/rn';
+import { Button } from 'react-native';
+
+const Content = () => {
+  const { signIn, signOut, isAuthenticated } = useLogto();
+
+  return (
+    <div>
+      {isAuthenticated ? (
+        <Button title="Sign out" onPress={async () => signOut()} />
+      ) : (
+        <Button title="Sign in" onPress={async () => signIn('${props.redirectUris[0] ?? 'io.logto://callback'}')} />
+      )}
+    </div>
+  );
+};`}
+  </code>
+</pre>
+
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can use the `getIdTokenClaims()` method:
+
+<pre>
+  <code className="language-tsx">
+    {`import { useLogto } from '@logto/rn';
+import { Button, Text } from 'react-native';
+
+const Content = () => {
+  const { getIdTokenClaims, isAuthenticated } = useLogto();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getIdTokenClaims().then((claims) => {
+        setUser(claims);
+      });
+    }
+  }, [isAuthenticated]);
+
+  return (
+    <div>
+      {isAuthenticated ? (
+        <>
+          <Text>{user?.name}</Text>
+          <Text>{user?.email}</Text>
+          <Button title="Sign out" onPress={async () => signOut()} />
+        </>
+      ) : (
+        <Button title="Sign in" onPress={async () => signIn('${props.redirectUris[0] ?? 'io.logto://callback'}')} />
+      )}
+    </div>
+  );
+};`}
+  </code>
+</pre>
+
+</Step>
+
+<Step title="Checkpoint: Test your app">
+
+<Checkpoint />
+
+</Step>
+
+</Steps>

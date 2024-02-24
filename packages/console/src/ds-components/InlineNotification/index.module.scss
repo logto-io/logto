@@ -23,6 +23,11 @@
     flex: 1;
     overflow: hidden;
     overflow-wrap: break-word;
+
+    // Cancel the margin from MDX generated paragraphs
+    &:has(> p) {
+      margin: _.unit(-4) 0;
+    }
   }
 
   &.info {
