@@ -6,18 +6,18 @@ import TextLink from '@/ds-components/TextLink';
 import Step, { type Props as StepProps } from '../Step';
 
 type Props = Omit<StepProps, 'children'> & {
-  fullTutorial: GuideMetadata['fullTutorial'];
+  fullGuide: GuideMetadata['fullGuide'];
 };
 
 function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
-  const { fullTutorial, ...stepProps } = props;
+  const { fullGuide, ...stepProps } = props;
   return (
     <Step ref={ref} {...stepProps}>
       <ul>
-        {fullTutorial && (
+        {fullGuide && (
           <li>
-            <TextLink href={fullTutorial.url} targetBlank="noopener">
-              {fullTutorial.title}
+            <TextLink href={fullGuide.url} targetBlank="noopener">
+              {fullGuide.title}
             </TextLink>
           </li>
         )}
