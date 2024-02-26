@@ -8,8 +8,10 @@ import apiSpringBoot from './api-spring-boot/index';
 import m2mGeneral from './m2m-general/index';
 import nativeAndroid from './native-android/index';
 import nativeCapacitor from './native-capacitor/index';
+import nativeExpo from './native-expo/index';
 import nativeFlutter from './native-flutter/index';
 import nativeIosSwift from './native-ios-swift/index';
+import spaAngular from './spa-angular/index';
 import spaReact from './spa-react/index';
 import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
@@ -25,12 +27,28 @@ import webGptPlugin from './web-gpt-plugin/index';
 import webNext from './web-next/index';
 import webNextAppRouter from './web-next-app-router/index';
 import webNextServerActions from './web-next-server-actions/index';
+import webNuxt from './web-nuxt/index';
 import webOutline from './web-outline/index';
 import webPhp from './web-php/index';
 import webPython from './web-python/index';
 import webRemix from './web-remix/index';
+import webSveltekit from './web-sveltekit/index';
 
 const guides: Readonly<Guide[]> = Object.freeze([
+  {
+    order: 1.1,
+    id: 'native-expo',
+    Logo: lazy(async () => import('./native-expo/logo.svg')),
+    Component: lazy(async () => import('./native-expo/README.mdx')),
+    metadata: nativeExpo,
+  },
+  {
+    order: 1.1,
+    id: 'spa-angular',
+    Logo: lazy(async () => import('./spa-angular/logo.svg')),
+    Component: lazy(async () => import('./spa-angular/README.mdx')),
+    metadata: spaAngular,
+  },
   {
     order: 1.1,
     id: 'spa-react',
@@ -74,6 +92,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     metadata: webNext,
   },
   {
+    order: 1.2,
+    id: 'web-sveltekit',
+    Logo: lazy(async () => import('./web-sveltekit/logo.svg')),
+    Component: lazy(async () => import('./web-sveltekit/README.mdx')),
+    metadata: webSveltekit,
+  },
+  {
     order: 1.3,
     id: 'web-go',
     Logo: lazy(async () => import('./web-go/logo.svg')),
@@ -114,6 +139,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./spa-vanilla/logo.svg')),
     Component: lazy(async () => import('./spa-vanilla/README.mdx')),
     metadata: spaVanilla,
+  },
+  {
+    order: 2,
+    id: 'web-nuxt',
+    Logo: lazy(async () => import('./web-nuxt/logo.svg')),
+    Component: lazy(async () => import('./web-nuxt/README.mdx')),
+    metadata: webNuxt,
   },
   {
     order: 2,

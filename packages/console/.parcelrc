@@ -4,6 +4,9 @@
     "raw:*": ["@parcel/transformer-raw"],
     "**/assets/**/*.svg": [
       "@parcel/transformer-svg-react"
+    ],
+    "*.{md,mdx}": [
+      "@parcel/transformer-mdx"
     ]
   },
   "compressors": {

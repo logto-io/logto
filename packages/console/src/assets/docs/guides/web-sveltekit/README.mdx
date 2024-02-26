@@ -1,0 +1,204 @@
+import UriInputField from '@/mdx-components/UriInputField';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+import Checkpoint from '../../fragments/_checkpoint.md';
+import { generateStandardSecret } from '@logto/shared/universal';
+
+export const cookieEncryptionKey = generateStandardSecret();
+
+<Steps>
+
+<Step
+  title="Installation"
+  subtitle="Install Logto SDK"
+>
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/sveltekit
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/sveltekit
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/sveltekit
+```
+
+</TabItem>
+</Tabs>
+</Step>
+
+<Step title="Add Logto hook">
+
+In your `hooks.server.ts` file, add the following code to inject the Logto hook into your server:
+
+<pre>
+  <code className="language-tsx">
+    {`import { handleLogto } from '@logto/sveltekit';
+
+export const handle = handleLogto(
+  {
+    endpoint: '${props.endpoint}',
+    appId: '${props.app.id}',
+    appSecret: '${props.app.secret}',
+  },
+  {
+    encryptionKey: '${cookieEncryptionKey}', // Random-generated
+  }
+);`}
+  </code>
+</pre>
+
+Since these information are sensitive, it's recommended to use environment variables:
+
+<pre>
+  <code className="language-ts">
+    {`import { handleLogto } from '@logto/sveltekit';
+import { env } from '$env/dynamic/private';
+
+export const handle = handleLogto(
+  {
+    endpoint: env.LOGTO_ENDPOINT,
+    appId: env.LOGTO_APP_ID,
+    appSecret: env.LOGTO_APP_SECRET,
+  },
+  {
+    encryptionKey: env.LOGTO_COOKIE_ENCRYPTION_KEY,
+  }
+);`}
+  </code>
+</pre>
+
+If you have multiple hooks, you can use [the sequence() helper function](https://kit.svelte.dev/docs/modules#sveltejs-kit-hooks) to chain them:
+
+```ts
+import { sequence } from '@sveltejs/kit/hooks';
+
+export const handle = sequence(handleLogto, handleOtherHook);
+```
+
+Now you can access the Logto client in the `locals` object. For TypeScript, you can add the type to `app.d.ts`:
+
+```ts
+import type { LogtoClient, UserInfoResponse } from '@logto/sveltekit';
+
+declare global {
+  namespace App {
+    interface Locals {
+      logtoClient: LogtoClient;
+      user?: UserInfoResponse;
+    }
+  }
+}
+```
+
+We'll discuss the `user` object later.
+
+</Step>
+
+<Step title="Implement sign-in and sign-out">
+
+<InlineNotification>
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
+</InlineNotification>
+
+First, let's enter your redirect URI. E.g. `http://localhost:3000/callback`. [Redirect URI](https://www.oauth.com/oauth2-servers/redirect-uris/) is an OAuth 2.0 concept which implies the location should redirect after authentication.
+
+<UriInputField name="redirectUris" />
+
+After signing out, it'll be great to redirect user back to your website. For example, add `http://localhost:3000` as the post sign-out redirect URI below.
+
+<UriInputField name="postLogoutRedirectUris" />
+
+In the page where you want to implement sign-in and sign-out, define the following actions:
+
+<pre>
+  <code className="language-ts">
+    {`// +page.server.ts
+import type { Actions } from './$types';
+
+export const actions: Actions = {
+  signIn: async ({ locals }) => {
+    await locals.logtoClient.signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}');
+  },
+  signOut: async ({ locals }) => {
+    await locals.logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}');
+  },
+};
+`}
+  </code>
+</pre>
+
+Then use these actions in your Svelte component:
+
+```html
+{/* +page.svelte */}
+<form method="POST" action="?/{data.user ? 'signOut' : 'signIn'}">
+  <button type="submit">Sign {data.user ? 'out' : 'in'}</button>
+</form>
+```
+
+</Step>
+
+<Step title="Implement sign-in and sign-out">
+
+Since Nuxt pages will be hydrated and become a single-page application (SPA) after the initial load, we need to redirect the user to the sign-in or sign-out route when needed.
+
+```html
+<a :href="/sign-in">Sign in</a>
+<br />
+<a :href="/sign-out">Sign out</a>
+```
+
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can inject the `locals.user` object into the layout, thus making it available to all pages:
+
+```ts
+import type { LayoutServerLoad } from './$types';
+
+export const load: LayoutServerLoad = async ({ locals }) => {
+  return { user: locals.user };
+};
+```
+
+In your Svelte component:
+
+```html
+<script>
+  /** @type {import('./$types').PageData} */
+  export let data;
+</script>
+
+{#if data.user}
+<ul>
+  {#each Object.entries(data.user) as [key, value]}
+  <li>{key}: {value}</li>
+  {/each}
+</ul>
+{/if}
+```
+
+</Step>
+
+<Step title="Checkpoint: Test your app">
+
+<Checkpoint />
+
+</Step>
+
+</Steps>
