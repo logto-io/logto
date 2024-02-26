@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.12.1
+
+### Patch Changes
+
+- 677054a24: add Angular, Nuxt, SvelteKit, Expo (React Native) guides
+
 ## 1.12.0
 
 ### Minor Changes

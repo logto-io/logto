@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.13.1
+
+### Patch Changes
+
+- Updated dependencies [677054a24]
+  - @logto/console@1.12.1
+  - @logto/schemas@1.13.1
+  - @logto/cli@1.13.1
+
 ## 1.13.0
 
 ### Minor Changes
