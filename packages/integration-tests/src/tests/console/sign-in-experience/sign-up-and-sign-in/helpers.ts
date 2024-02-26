@@ -1,7 +1,8 @@
 import { type Page } from 'puppeteer';
 
+import { selectDropdownMenuItem } from '#src/ui-helpers/select-dropdown-menu-item.js';
+
 import { expectToSaveSignInExperience } from '../helpers.js';
-import { selectDropdownMenuItem } from '#src/ui-helpers/select-dropdown-menu-item.js';}
 
 export const expectToSelectSignUpIdentifier = async (page: Page, identifier: string) => {
   const signUpIdentifierField = await expect(page).toMatchElement(
