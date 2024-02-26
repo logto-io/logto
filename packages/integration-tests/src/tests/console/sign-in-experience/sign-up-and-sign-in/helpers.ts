@@ -1,6 +1,7 @@
 import { type Page } from 'puppeteer';
 
 import { expectToSaveSignInExperience } from '../helpers.js';
+import { selectDropdownMenuItem } from '#src/ui-helpers/select-dropdown-menu-item.js';}
 
 export const expectToSelectSignUpIdentifier = async (page: Page, identifier: string) => {
   const signUpIdentifierField = await expect(page).toMatchElement(
@@ -13,14 +14,7 @@ export const expectToSelectSignUpIdentifier = async (page: Page, identifier: str
   await expect(signUpIdentifierField).toClick('div[role=button][class*=select]');
 
   // Wait for the dropdown to be rendered in the correct position
-  await page.waitForTimeout(500);
-
-  await expect(page).toClick(
-    '.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem] div',
-    {
-      text: identifier,
-    }
-  );
+  await selectDropdownMenuItem(page, 'div[role=menuitem] div', identifier);
 
   await page.waitForSelector('.ReactModalPortal div[class$=dropdownContainer]', {
     hidden: true,
@@ -188,15 +182,7 @@ export const expectToAddSocialSignInConnector = async (page: Page, name: string)
     text: 'Add Social Connector',
   });
 
-  // Wait for the dropdown to be rendered in the correct position
-  await page.waitForTimeout(500);
-
-  await expect(page).toClick(
-    '.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem] span[class$=name]',
-    {
-      text: name,
-    }
-  );
+  await selectDropdownMenuItem(page, 'div[role=menuitem] span[class$=name]', name);
 
   await page.waitForSelector('.ReactModalPortal div[class$=dropdownContainer]', {
     hidden: true,

@@ -56,8 +56,11 @@ describe('sign-in experience: sign-in preview', () => {
       'form div[class$=field] label[class$=switch]:has(input[name="color.isDarkModeEnabled"])'
     );
 
-    // Wait for the preview to update since we don't have a reliable way to match the dark mode icon
-    await page.waitForTimeout(500);
+    await page.evaluate(() => {
+      return document.querySelector<HTMLInputElement>(
+        'form div[class$=field] input[name="color.isDarkModeEnabled"]'
+      )?.checked;
+    });
 
     // Switch to dark mode
     await expect(page).toClick(

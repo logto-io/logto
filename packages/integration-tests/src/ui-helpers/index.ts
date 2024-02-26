@@ -11,6 +11,8 @@ import {
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { dcls, expectNavigation, waitFor } from '#src/utils.js';
 
+import { selectDropdownMenuItem } from './select-dropdown-menu-item.js';
+
 export const goToAdminConsole = async () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
   await expectNavigation(page.goto(logtoConsoleUrl.href));
@@ -66,6 +68,7 @@ export const expectToDiscardChanges = async (page: Page) => {
 
 export const expectToClickDetailsPageOption = async (page: Page, optionText: string) => {
   await expect(page).toClick('div[class$=header] div[class$=operations] div button span:has(svg)');
+
   await expect(page).toMatchElement(
     '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownTitle]',
     {
@@ -73,12 +76,7 @@ export const expectToClickDetailsPageOption = async (page: Page, optionText: str
     }
   );
 
-  // Wait for the dropdown menu to be rendered in the correct position
-  await waitFor(500);
-
-  await expect(page).toClick('.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]', {
-    text: optionText,
-  });
+  await selectDropdownMenuItem(page, 'div[role=menuitem]', optionText);
 
   await page.waitForSelector(
     '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownTitle]',
