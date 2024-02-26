@@ -2858,8 +2858,8 @@ importers:
         specifier: workspace:^1.6.0
         version: link:../phrases-experience
       '@logto/react':
-        specifier: ^2.2.1
-        version: 2.2.1(react@18.2.0)
+        specifier: ^3.0.0
+        version: 3.0.0(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.13.0
         version: link:../schemas
@@ -3441,8 +3441,8 @@ importers:
         specifier: workspace:^1.9.0
         version: link:../phrases
       '@logto/react':
-        specifier: ^2.2.1
-        version: 2.2.1(react@18.2.0)
+        specifier: ^3.0.0
+        version: 3.0.0(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.13.0
         version: link:../schemas
@@ -3757,11 +3757,11 @@ importers:
         specifier: workspace:^
         version: link:../toolkit/core-kit
       '@logto/js':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^4.0.0
+        version: 4.0.0
       '@logto/node':
-        specifier: ^2.2.0
-        version: 2.2.0
+        specifier: ^2.4.0
+        version: 2.4.0
       '@logto/schemas':
         specifier: workspace:^1.13.0
         version: link:../schemas
@@ -7573,21 +7573,21 @@ packages:
       tiny-cookie: 2.4.1
     dev: false
 
-  /@logto/browser@2.2.0:
-    resolution: {integrity: sha512-8kKh1EcAm19smnEMvw0M51d2EQXEEH77G1JEKh1iLifUScmxD+c7HcN/5mLekaBz36MUVNiA2gE7s9L2GOpWrg==}
+  /@logto/browser@2.2.3:
+    resolution: {integrity: sha512-9xVLXhdF1s82HnCy7H7/uQBGlrhIYg/NQIs+ZtjImH5xrp3wGqw8qtxIKqOa30gC0zA4uTcE1wfUyAp9yFGMLQ==}
     dependencies:
-      '@logto/client': 2.3.0
+      '@logto/client': 2.4.0
       '@silverhand/essentials': 2.9.0
       js-base64: 3.7.5
     dev: true
 
-  /@logto/client@2.3.0:
-    resolution: {integrity: sha512-VrzsF+QtnrVXnDFbsdYTeGatjThlTFwtjTT/jJMaFdyRg0lno8vHxsjuyG8ba4wVSu22tSmJAr7okpAwRyhtcg==}
+  /@logto/client@2.4.0:
+    resolution: {integrity: sha512-gdswqI5yuov7H/8SU2GoFDKRrlwTbhhRleq2Pnf5Yphq+Kvggu7j7EsixGE97QzomPfe2x8eeWtWoHyI96Q5qA==}
     dependencies:
-      '@logto/js': 3.0.1
+      '@logto/js': 4.0.0
       '@silverhand/essentials': 2.9.0
       camelcase-keys: 7.0.2
-      jose: 5.0.1
+      jose: 5.2.2
     dev: true
 
   /@logto/cloud@0.2.5-faca9a9(zod@3.22.4):
@@ -7600,31 +7600,27 @@ packages:
       - zod
     dev: true
 
-  /@logto/js@3.0.1:
-    resolution: {integrity: sha512-vsU6mH5oiiW3k00pMyVA4V31K2Bd0rOT9qWch2l5e5o1yCQLJ3zUIOjGjChu3m2TRu1d920iiUpZU3Lzf6Pwdw==}
+  /@logto/js@4.0.0:
+    resolution: {integrity: sha512-eKLS0HqFjQyf7imKTf2a7FUmMuNeebxFZ2b5A/1qUWSyO+BIxSu0XYI4JZ9qjtWNPvlGmL+jPOkIUuWQ9DZYZw==}
     dependencies:
       '@silverhand/essentials': 2.9.0
       camelcase-keys: 7.0.2
-      jose: 5.0.1
     dev: true
 
-  /@logto/node@2.2.0:
-    resolution: {integrity: sha512-xzVCnlrev/bqLtXOAw9I35h7njU1bed1jt6fL/VZfY4RUUJVZ36LG7fq2b7GsGg5xGRLchJ//+/VP1ac3+27YA==}
+  /@logto/node@2.4.0:
+    resolution: {integrity: sha512-7e6uUfAqFIKdOrVqEBrLF5mY3oM1lJeix7vME/llbBSZQ4wtFzQOQlPaa62tzA1n77ZSHV5LxOqvdBqcTIkW4Q==}
     dependencies:
-      '@logto/client': 2.3.0
+      '@logto/client': 2.4.0
       '@silverhand/essentials': 2.9.0
       js-base64: 3.7.5
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
     dev: true
 
-  /@logto/react@2.2.1(react@18.2.0):
-    resolution: {integrity: sha512-Sma+vi8rD68gBSDMDm8RRJe0M/089hUVQjIxhbDkLABx3MCC865WTmwbVMUlGQKzq+her5O/Hk0Mogzej0FinA==}
+  /@logto/react@3.0.0(react@18.2.0):
+    resolution: {integrity: sha512-+c0AaPGTLlPszjQJK6qpDULwtZsiaEFoPcgipazvqmj85PRehZplrM2qoBPT/Z/IjJhnA8GM3fin/TPILEbnKQ==}
     peerDependencies:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
-      '@logto/browser': 2.2.0
+      '@logto/browser': 2.2.3
       '@silverhand/essentials': 2.9.0
       react: 18.2.0
     dev: true
@@ -15655,6 +15651,10 @@ packages:
 
   /jose@5.0.1:
     resolution: {integrity: sha512-gRVzy7s3RRdGbXmcTdlOswJOjhwPLx1ijIgAqLY6ktzFpOJxxYn4l0fC2vHaHHi4YBX/5FOL3aY+6W0cvQgpug==}
+
+  /jose@5.2.2:
+    resolution: {integrity: sha512-/WByRr4jDcsKlvMd1dRJnPfS1GVO3WuKyaurJ/vvXcOaUQO8rnNObCQMlv/5uCceVQIq5Q4WLF44ohsdiTohdg==}
+    dev: true
 
   /js-base64@3.7.5:
     resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}

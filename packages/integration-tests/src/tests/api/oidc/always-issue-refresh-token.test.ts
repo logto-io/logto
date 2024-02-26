@@ -1,4 +1,4 @@
-import { Prompt } from '@logto/js';
+import { Prompt } from '@logto/node';
 import { ApplicationType, InteractionEvent } from '@logto/schemas';
 
 import { createApplication, deleteApplication, putInteraction } from '#src/api/index.js';
