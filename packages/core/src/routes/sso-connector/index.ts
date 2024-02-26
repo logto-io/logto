@@ -72,7 +72,7 @@ export default function singleSignOnConnectorsRoutes<T extends AuthedRouter>(
     koaGuard({
       body: ssoConnectorCreateGuard,
       response: SsoConnectors.guard,
-      status: [200, 409, 422],
+      status: [200, 400, 409, 422],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
@@ -212,7 +212,7 @@ export default function singleSignOnConnectorsRoutes<T extends AuthedRouter>(
       params: z.object({ id: z.string().min(1) }),
       body: ssoConnectorPatchGuard,
       response: ssoConnectorWithProviderConfigGuard,
-      status: [200, 404, 409, 422],
+      status: [200, 400, 404, 409, 422],
     }),
     async (ctx, next) => {
       const {

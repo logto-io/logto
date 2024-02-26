@@ -1,6 +1,9 @@
+import fs from 'node:fs';
+
 import { conditional, conditionalString } from '@silverhand/essentials';
 import { type Page } from 'puppeteer';
 
+import { metadataXml } from '#src/__mocks__/sso-connectors-mock.js';
 import { expectToSaveChanges, waitForToast } from '#src/ui-helpers/index.js';
 import { dcls, cls } from '#src/utils.js';
 
@@ -115,7 +118,8 @@ const configureSsoConnectorConnection = async (
   protocol: Protocol,
   previewResults: Record<string, string>
 ) => {
-  await expect(page).toFillForm(dcls('form'), formData);
+  await fillSsoConnectorConnectionForm(page, formData, protocol);
+
   await expectToSaveChanges(page);
   await waitForToast(page, { text: 'Saved' });
 
@@ -126,6 +130,58 @@ const configureSsoConnectorConnection = async (
   if (protocol === 'SAML') {
     await checkSamlConfigPreview(previewResults);
   }
+};
+
+const fillSsoConnectorConnectionForm = async (
+  page: Page,
+  formData: Record<string, string>,
+  protocol: Protocol
+) => {
+  if (protocol === 'OIDC') {
+    await expect(page).toFillForm(dcls('form'), formData);
+    return;
+  }
+
+  // Click on the switch config method link
+  await expect(page).toClick([dcls('form'), 'button'].join(' '));
+
+  // Click on the "Upload the metadata XML file" option
+  const dropdownMenu = await page.waitForSelector(
+    ['.ReactModalPortal', dcls('dropdownContainer')].join(' ')
+  );
+
+  await page.evaluate((dropdownMenu) => {
+    if (dropdownMenu) {
+      const optionElement = dropdownMenu.querySelectorAll('div[role=menuitem] div');
+      const uploadMetadataXmlOption = Array.from(optionElement).find(
+        (element) => element.textContent === 'Upload the metadata XML file'
+      );
+
+      if (uploadMetadataXmlOption) {
+        const clickEvent = new MouseEvent('click', { bubbles: true });
+        uploadMetadataXmlOption.dispatchEvent(clickEvent);
+      }
+    }
+  }, dropdownMenu);
+
+  await uploadMetadataXml(page);
+};
+
+export const uploadMetadataXml = async (page: Page) => {
+  const fileInputElement = await page.waitForSelector('form input[type=file]');
+  expect(fileInputElement).toBeTruthy();
+
+  if (!fileInputElement) {
+    throw new Error('File input element is not found.');
+  }
+
+  const metadataFilePath = './metadata.xml';
+  fs.writeFileSync(metadataFilePath, metadataXml);
+
+  await fileInputElement.uploadFile(metadataFilePath);
+
+  // Delete the mock file
+  fs.unlinkSync(metadataFilePath);
 };
 
 export const findModalFooterButton = async (isButtonDisabled = false) => {
