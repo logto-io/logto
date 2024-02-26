@@ -11,7 +11,7 @@ type Props = {
  * is intended to be translated.
  */
 function DangerousRaw({ children }: Props) {
-  return <span>{children}</span>;
+  return children ? <span>{children}</span> : null;
 }
 
 export default DangerousRaw;
