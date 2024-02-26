@@ -119,7 +119,7 @@ importers:
         specifier: workspace:^1.6.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:1.13.0
+        specifier: workspace:1.13.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.1.0
@@ -2861,7 +2861,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.13.0
+        specifier: workspace:^1.13.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.1.0
@@ -3149,7 +3149,7 @@ importers:
         specifier: workspace:^1.4.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.13.0
+        specifier: workspace:^1.13.1
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^2.1.0
@@ -3176,7 +3176,7 @@ importers:
         specifier: workspace:^1.6.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.13.0
+        specifier: workspace:^1.13.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.1.0
@@ -3426,7 +3426,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.13.0
+        specifier: workspace:^1.13.1
         version: link:../cli
 
   packages/demo-app:
@@ -13116,11 +13116,6 @@ packages:
     engines: {node: '>=16'}
     dev: true
 
-  /expect-puppeteer@9.0.0:
-    resolution: {integrity: sha512-mxejfYy6hsCpBgaUbKGZzoAy4SgzVhPkVZHuBaJ+xbt+BryolxLzdKU4HhJYH/Ooo9AWghAh7ofAkKEZQ2XzcA==}
-    engines: {node: '>=16'}
-    dev: true
-
   /expect@29.5.0:
     resolution: {integrity: sha512-yM7xqUrCO2JdpFo4XpM82t+PJBFybdqoQuJLDGeDX2ij8NZzqRHyu3Hp188/JX7SWqud+7t4MUdvcgGBICMHZg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -17827,9 +17822,6 @@ packages:
     resolution: {integrity: sha512-2GTVocFkwblV/TIg9AmT7TI2fO4xdWkyN8aFUEVtiVNWt96GTR3FgQyHFValfCbcj1k9Xf962Ws2hYXYUr9k1Q==}
     engines: {node: '>= 12.0.0'}
     hasBin: true
-    peerDependenciesMeta:
-      '@parcel/core':
-        optional: true
     dependencies:
       '@parcel/config-default': 2.9.3(@parcel/core@2.9.3)(postcss@8.4.31)
       '@parcel/core': 2.9.3
