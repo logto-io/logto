@@ -55,6 +55,11 @@ const users = {
   findUserById: jest.fn(),
 };
 
+const rolesScopesLibrary = {
+  validateRoleScopeAssignment: jest.fn(),
+};
+const { validateRoleScopeAssignment } = rolesScopesLibrary;
+
 const roleRoutes = await pickDefault(import('./role.scope.js'));
 
 const tenantContext = new MockTenant(
@@ -69,6 +74,7 @@ const tenantContext = new MockTenant(
   undefined,
   {
     quota: createMockQuotaLibrary(),
+    roleScopes: rolesScopesLibrary,
   }
 );
 
@@ -94,13 +100,13 @@ describe('role scope routes', () => {
   });
 
   it('POST /roles/:id/scopes', async () => {
-    findRoleById.mockResolvedValueOnce(mockAdminUserRole);
     findRolesScopesByRoleId.mockResolvedValue([]);
     findScopesByIds.mockResolvedValueOnce([]);
     const response = await roleRequester.post(`/roles/${mockAdminUserRole.id}/scopes`).send({
       scopeIds: [mockScope.id],
     });
     expect(response.status).toEqual(200);
+    expect(validateRoleScopeAssignment).toHaveBeenCalledWith([mockScope.id], mockAdminUserRole.id);
     expect(insertRolesScopes).toHaveBeenCalledWith([
       { id: mockId, roleId: mockAdminUserRole.id, scopeId: mockScope.id },
     ]);

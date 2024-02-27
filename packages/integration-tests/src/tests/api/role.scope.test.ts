@@ -84,6 +84,16 @@ describe('roles scopes', () => {
     expect(response instanceof HTTPError && response.response.statusCode).toBe(422);
   });
 
+  it('should fail if try to assign management API scope(s) to user role', async () => {
+    // Create `RoleType.User` role by default if `type` is not specified.
+    const userRole = await createRole({});
+    const response = await assignScopesToRole(
+      [defaultManagementApi.scopes[0]!.id],
+      userRole.id
+    ).catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+  });
+
   it('should remove scope from role successfully', async () => {
     const role = await createRole({});
     const resource = await createResource();

@@ -13,20 +13,18 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function roleScopeRoutes<T extends AuthedRouter>(
-  ...[
-    router,
-    {
-      queries,
-      libraries: { quota },
-    },
-  ]: RouterInitArgs<T>
+  ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
     resources: { findResourcesByIds },
     rolesScopes: { deleteRolesScope, findRolesScopesByRoleId, insertRolesScopes },
     roles: { findRoleById },
-    scopes: { findScopeById, findScopesByIds, countScopesByScopeIds, searchScopesByScopeIds },
+    scopes: { findScopesByIds, countScopesByScopeIds, searchScopesByScopeIds },
   } = queries;
+  const {
+    quota,
+    roleScopes: { validateRoleScopeAssignment },
+  } = libraries;
 
   const attachResourceToScopes = async (scopes: readonly Scope[]): Promise<ScopeResponse[]> => {
     const resources = await findResourcesByIds(scopes.map(({ resourceId }) => resourceId));
@@ -103,7 +101,7 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
       params: object({ id: string().min(1) }),
       body: object({ scopeIds: string().min(1).array().nonempty() }),
       response: Scopes.guard.array(),
-      status: [200, 404, 422],
+      status: [200, 400, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -111,24 +109,9 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
         body: { scopeIds },
       } = ctx.guard;
 
-      await findRoleById(id);
-
       await quota.guardKey('scopesPerRoleLimit', id);
 
-      const rolesScopes = await findRolesScopesByRoleId(id);
-
-      for (const scopeId of scopeIds) {
-        assertThat(
-          !rolesScopes.some(({ scopeId: _scopeId }) => _scopeId === scopeId),
-          new RequestError({
-            code: 'role.scope_exists',
-            status: 422,
-            scopeId,
-          })
-        );
-      }
-
-      await Promise.all(scopeIds.map(async (scopeId) => findScopeById(scopeId)));
+      await validateRoleScopeAssignment(scopeIds, id);
       await insertRolesScopes(
         scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: id, scopeId }))
       );

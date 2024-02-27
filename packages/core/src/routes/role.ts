@@ -16,10 +16,7 @@ import roleUserRoutes from './role.user.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: RouterInitArgs<T>) {
-  const {
-    queries,
-    libraries: { quota },
-  } = tenant;
+  const { queries, libraries } = tenant;
   const {
     rolesScopes: { insertRolesScopes },
     roles: {
@@ -31,7 +28,6 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
       insertRole,
       updateRoleById,
     },
-    scopes: { findScopeById },
     users: { findUsersByIds },
     usersRoles: { countUsersRolesByRoleId, findUsersRolesByRoleId, findUsersRolesByUserId },
     applications: { findApplicationsByIds },
@@ -41,6 +37,10 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
       findApplicationsRolesByApplicationId,
     },
   } = queries;
+  const {
+    quota,
+    roleScopes: { validateRoleScopeAssignment },
+  } = libraries;
 
   router.use('/roles(/.*)?', koaRoleRlsErrorHandler());
 
@@ -136,7 +136,7 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
       body: Roles.createGuard
         .omit({ id: true })
         .extend({ scopeIds: z.string().min(1).array().optional() }),
-      status: [200, 422],
+      status: [200, 400, 404, 422], // Throws 404 when invalid `scopeId(s)` are provided.
       response: Roles.guard,
     }),
     async (ctx, next) => {
@@ -165,7 +165,8 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
       });
 
       if (scopeIds) {
-        await Promise.all(scopeIds.map(async (scopeId) => findScopeById(scopeId)));
+        // Skip scope existence check because the role is newly created.
+        await validateRoleScopeAssignment(scopeIds, role.id, { skipScopeExistenceCheck: true });
         await insertRolesScopes(
           scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: role.id, scopeId }))
         );

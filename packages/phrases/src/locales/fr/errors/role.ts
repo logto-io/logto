@@ -1,6 +1,9 @@
 const role = {
   name_in_use: 'Ce nom de rôle {{name}} est déjà utilisé',
   scope_exists: "L'identifiant de portée {{scopeId}} a déjà été ajouté à ce rôle",
+  /** UNTRANSLATED */
+  management_api_scopes_not_assignable_to_user_role:
+    'Cannot assign management API scopes to a user role.',
   user_exists: "L'identifiant d'utilisateur {{userId}} a déjà été ajouté à ce rôle",
   application_exists: "L'identifiant d'application {{applicationId}} a déjà été ajouté à ce rôle",
   default_role_missing:

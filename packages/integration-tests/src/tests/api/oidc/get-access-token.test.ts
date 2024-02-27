@@ -1,12 +1,13 @@
 import path from 'node:path';
 
 import { fetchTokenByRefreshToken } from '@logto/js';
-import { defaultManagementApi, InteractionEvent, RoleType } from '@logto/schemas';
+import { InteractionEvent, type Resource, RoleType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 
-import { putInteraction } from '#src/api/index.js';
+import { createResource, putInteraction } from '#src/api/index.js';
 import { assignUsersToRole, createRole } from '#src/api/role.js';
+import { createScope } from '#src/api/scope.js';
 import MockClient, { defaultConfig } from '#src/client/index.js';
 import { logtoUrl } from '#src/constants.js';
 import { processSession } from '#src/helpers/client.js';
@@ -18,24 +19,35 @@ describe('get access token', () => {
   const username = generateUsername();
   const password = generatePassword();
   const guestUsername = generateUsername();
+  const testApiResourceInfo: Pick<Resource, 'name' | 'indicator'> = {
+    name: 'test-api-resource',
+    indicator: 'https://foo.logto.io/api',
+  };
+  const testApiScopeNames = ['read', 'write', 'delete', 'update'];
 
   beforeAll(async () => {
     await createUserByAdmin(guestUsername, password);
     const user = await createUserByAdmin(username, password);
-    const { scopes } = defaultManagementApi;
-    const defaultManagementApiUserRole = await createRole({
-      name: 'management-api-user-role',
+    const testApiResource = await createResource(
+      testApiResourceInfo.name,
+      testApiResourceInfo.indicator
+    );
+    const testApiScopes = await Promise.all(
+      testApiScopeNames.map(async (name) => createScope(testApiResource.id, name))
+    );
+    const testApiUserRole = await createRole({
+      name: 'test-api-user-role',
       type: RoleType.User,
-      scopeIds: scopes.map(({ id }) => id),
+      scopeIds: testApiScopes.map(({ id }) => id),
     });
-    await assignUsersToRole([user.id], defaultManagementApiUserRole.id);
+    await assignUsersToRole([user.id], testApiUserRole.id);
     await enableAllPasswordSignInMethods();
   });
 
   it('can sign in and getAccessToken with admin user', async () => {
     const client = new MockClient({
-      resources: [defaultManagementApi.resource.indicator],
-      scopes: defaultManagementApi.scopes.map(({ name }) => name),
+      resources: [testApiResourceInfo.indicator],
+      scopes: testApiScopeNames,
     });
     await client.initSession();
     await client.successSend(putInteraction, {
@@ -44,12 +56,9 @@ describe('get access token', () => {
     });
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
-    const accessToken = await client.getAccessToken(defaultManagementApi.resource.indicator);
+    const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
     expect(accessToken).not.toBeNull();
-    expect(getAccessTokenPayload(accessToken)).toHaveProperty(
-      'scope',
-      defaultManagementApi.scopes.map(({ name }) => name).join(' ')
-    );
+    expect(getAccessTokenPayload(accessToken)).toHaveProperty('scope', testApiScopeNames.join(' '));
 
     // Request for invalid resource should throw
     void expect(client.getAccessToken('api.foo.com')).rejects.toThrow();
@@ -57,8 +66,8 @@ describe('get access token', () => {
 
   it('can sign in and getAccessToken with guest user', async () => {
     const client = new MockClient({
-      resources: [defaultManagementApi.resource.indicator],
-      scopes: defaultManagementApi.scopes.map(({ name }) => name),
+      resources: [testApiResourceInfo.indicator],
+      scopes: testApiScopeNames,
     });
     await client.initSession();
     await client.successSend(putInteraction, {
@@ -67,16 +76,16 @@ describe('get access token', () => {
     });
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
-    const accessToken = await client.getAccessToken(defaultManagementApi.resource.indicator);
+    const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
 
     expect(getAccessTokenPayload(accessToken)).not.toHaveProperty(
       'scope',
-      defaultManagementApi.scopes.map(({ name }) => name).join(' ')
+      testApiScopeNames.join(' ')
     );
   });
 
   it('can sign in and get multiple Access Tokens by the same Refresh Token within refreshTokenReuseInterval', async () => {
-    const client = new MockClient({ resources: [defaultManagementApi.resource.indicator] });
+    const client = new MockClient({ resources: [testApiResourceInfo.indicator] });
 
     await client.initSession();
 
@@ -99,7 +108,7 @@ describe('get access token', () => {
           clientId: defaultConfig.appId,
           tokenEndpoint: path.join(logtoUrl, '/oidc/token'),
           refreshToken,
-          resource: defaultManagementApi.resource.indicator,
+          resource: testApiResourceInfo.indicator,
         },
         async <T>(...args: Parameters<typeof fetch>): Promise<T> => {
           const response = await fetch(...args);
