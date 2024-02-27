@@ -131,11 +131,9 @@ describe('role routes', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockAdminUserRole);
     expect(findRoleByRoleName).toHaveBeenCalled();
-    expect(validateRoleScopeAssignment).toHaveBeenCalledWith(
-      [mockScope.id],
-      response.body.id,
-      true
-    );
+    expect(validateRoleScopeAssignment).toHaveBeenCalledWith([mockScope.id], response.body.id, {
+      skipScopeExistenceCheck: true,
+    });
     expect(insertRolesScopes).toHaveBeenCalled();
   });
 

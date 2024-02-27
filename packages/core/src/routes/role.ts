@@ -166,7 +166,7 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
 
       if (scopeIds) {
         // Skip scope existence check because the role is newly created.
-        await validateRoleScopeAssignment(scopeIds, role.id, true);
+        await validateRoleScopeAssignment(scopeIds, role.id, { skipScopeExistenceCheck: true });
         await insertRolesScopes(
           scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: role.id, scopeId }))
         );

@@ -15,13 +15,14 @@ export const createRoleScopeLibrary = (queries: Queries) => {
   const validateRoleScopeAssignment = async (
     scopeIds: string[],
     roleId: string,
-    skipScopeExistenceCheck = false
+    options: { skipScopeExistenceCheck?: boolean } = {}
   ) => {
     // No need to validate if no scopes are being assigned.
     if (scopeIds.length === 0) {
       return;
     }
 
+    const { skipScopeExistenceCheck } = options;
     const role = await findRoleById(roleId);
 
     // Make sure all scopes have not been assigned to the role.
