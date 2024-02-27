@@ -170,7 +170,6 @@ export const defaultMetadata: ConnectorMetadata = {
       key: 'secure',
       label: 'Secure',
       type: ConnectorConfigFormItemType.Switch,
-      required: true,
       defaultValue: false,
     },
     {
@@ -179,7 +178,6 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Json,
       required: false,
       defaultValue: {},
-      showConditions: [{ targetKey: 'secure', expectValue: true }],
     },
     {
       key: 'servername',
@@ -187,21 +185,18 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: false,
       placeholder: '<servername>',
-      showConditions: [{ targetKey: 'secure', expectValue: true }],
     },
     {
       key: 'ignoreTLS',
       label: 'Ignore TLS',
       type: ConnectorConfigFormItemType.Switch,
       required: false,
-      showConditions: [{ targetKey: 'secure', expectValue: true }],
     },
     {
       key: 'requireTLS',
       label: 'Require TLS',
       type: ConnectorConfigFormItemType.Switch,
       required: false,
-      showConditions: [{ targetKey: 'secure', expectValue: true }],
     },
   ],
 };
