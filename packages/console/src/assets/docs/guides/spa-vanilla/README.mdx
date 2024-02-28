@@ -8,8 +8,8 @@ import Step from '@/mdx-components/Step';
 <Steps>
 
 <Step
-  title="Add Logto SDK as a dependency"
-  subtitle="Please select your favorite package manager"
+  title="Installation"
+  subtitle="Install Logto SDK for your project"
 >
 <Tabs>
 <TabItem value="npm" label="npm">
@@ -36,12 +36,9 @@ pnpm add @logto/browser
 </Tabs>
 </Step>
 
-<Step
-  title="Init LogtoClient"
-  subtitle="1 step"
->
+<Step title="Init LogtoClient">
 
-Import and init `LogtoClient` by passing config:
+Import and init `LogtoClient` with configs:
 
 <pre>
   <code className="language-ts">
@@ -57,7 +54,7 @@ const logtoClient = new LogtoClient({
 </Step>
 
 <Step
-  title="Sign in"
+  title="Implement sign-in"
   subtitle="3 steps"
 >
 
@@ -92,22 +89,23 @@ We're almost there! In the last step, we use `http://localhost:3000/callback` as
 Insert the code below in your `/callback` route:
 
 ```ts
-try {
-  await logtoClient.handleSignInCallback(window.location.href);
-  console.log(await logtoClient.isAuthenticated()); // true
-} catch {
-  // Handle error
+await logtoClient.handleSignInCallback(window.location.href);
+
+if (!logtoClient.isAuthenticated) {
+  // Handle failed sign-in
+  alert('Failed to sign in');
+  return;
 }
+
+// Handle successful sign-in. E.g. redirect to home page.
+window.location.assign('http://localhost:3000/');
 ```
 
 Now you can test the sign-in flow.
 
 </Step>
 
-<Step
-  title="Sign out"
-  subtitle="1 step"
->
+<Step title="Implement sign-out">
 
 Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
 
@@ -130,6 +128,45 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 </button>`}
   </code>
 </pre>
+
+</Step>
+
+<Step title="Handle authentication status">
+
+In Logto SDK, generally we can use `logtoClient.isAuthenticated` to check the authentication status, if the user is signed in, the value will be `true`, otherwise, the value will be `false`.
+
+In your vanilla JS app, you can use the `isAuthenticated` status to programmatically show and hide the sign-in and sign-out buttons. Let's see how to do it.
+
+```ts
+const redirectUrl = 'http://localhost:3000/callback';
+const baseUrl = 'http://localhost:3000';
+
+// Conditional rendering of sign-in and sign-out buttons
+const isAuthenticated = await logtoClient.isAuthenticated();
+
+// Assuming there's a div with id 'container' in your HTML
+const container = document.querySelector('#container');
+
+const onClickSignIn = () => logtoClient.signIn(redirectUrl);
+const onClickSignOut = () => logtoClient.signOut(baseUrl);
+
+const button = document.createElement('button');
+button.innerHTML = isAuthenticated ? 'Sign Out' : 'Sign In';
+button.addEventListener('click', isAuthenticated ? onClickSignOut : onClickSignIn);
+
+container.append(button);
+```
+
+</Step>
+
+<Step title="Checkpoint: Test your application">
+
+Now, you can test your application:
+
+1. Run your application, you will see the sign-in button.
+2. Click the sign-in button, the SDK will init the sign-in process and redirect you to the Logto sign-in page.
+3. After you signed in, you will be redirected back to your application and see user ID and the sign-out button.
+4. Click the sign-out button to sign-out.
 
 </Step>
 
