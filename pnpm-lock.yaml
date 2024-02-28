@@ -1072,8 +1072,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       query-string:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^9.0.0
+        version: 9.0.0
       snakecase-keys:
         specifier: ^6.0.0
         version: 6.0.0
@@ -2026,8 +2026,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       query-string:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^9.0.0
+        version: 9.0.0
       snakecase-keys:
         specifier: ^6.0.0
         version: 6.0.0
@@ -12169,9 +12169,9 @@ packages:
       character-entities: 2.0.1
     dev: true
 
-  /decode-uri-component@0.2.2:
-    resolution: {integrity: sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==}
-    engines: {node: '>=0.10'}
+  /decode-uri-component@0.4.1:
+    resolution: {integrity: sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==}
+    engines: {node: '>=14.16'}
     dev: false
 
   /decompress-response@6.0.0:
@@ -18797,13 +18797,13 @@ packages:
     resolution: {integrity: sha512-EbZYNarm6138UKKq46tdx08Yo/q9ZhFoAXAI1meAFd2GtbRDhbZY2WQSICskT0c5q99aFzLG1D4nvTk9tqfXIw==}
     engines: {node: '>=0.6'}
 
-  /query-string@8.0.0:
-    resolution: {integrity: sha512-mB9U/uR7+1ZTzHMMlkk06qH74bKeNkZXzZXxLpoOfypAR9AVhVcYhvOnFtiosoS6Mf7rNwsLhnzeefgZMgCE/A==}
-    engines: {node: '>=14.16'}
+  /query-string@9.0.0:
+    resolution: {integrity: sha512-4EWwcRGsO2H+yzq6ddHcVqkCQ2EFUSfDMEjF8ryp8ReymyZhIuaFRGLomeOQLkrzacMHoyky2HW0Qe30UbzkKw==}
+    engines: {node: '>=18'}
     dependencies:
-      decode-uri-component: 0.2.2
+      decode-uri-component: 0.4.1
       filter-obj: 5.1.0
-      split-on-first: 1.1.0
+      split-on-first: 3.0.0
     dev: false
 
   /querystringify@2.2.0:
@@ -20193,9 +20193,9 @@ packages:
     resolution: {integrity: sha512-XkD+zwiqXHikFZm4AX/7JSCXA98U5Db4AFd5XUg/+9UNtnH75+Z9KxtpYiJZx36mUDVOwH83pl7yvCer6ewM3w==}
     dev: true
 
-  /split-on-first@1.1.0:
-    resolution: {integrity: sha512-43ZssAJaMusuKWL8sKUBQXHWOpq8d6CfN/u1p4gUzfJkM05C8rxTmYrkIPTXapZpORA6LkkzcUulJ8FqA7Uudw==}
-    engines: {node: '>=6'}
+  /split-on-first@3.0.0:
+    resolution: {integrity: sha512-qxQJTx2ryR0Dw0ITYyekNQWpz6f8dGd7vffGNflQQ3Iqj9NJ6qiZ7ELpZsJ/QBhIVAiDfXdag3+Gp8RvWa62AA==}
+    engines: {node: '>=12'}
     dev: false
 
   /split2@3.2.2:
