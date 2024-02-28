@@ -7,6 +7,7 @@ import {
 import { appendPath, getEnv } from '@silverhand/essentials';
 
 export const logtoUrl = getEnv('INTEGRATION_TESTS_LOGTO_URL', 'http://localhost:3001');
+export const logtoOidcUrl = appendPath(new URL(logtoUrl), 'oidc').toString();
 export const logtoConsoleUrl = getEnv(
   'INTEGRATION_TESTS_LOGTO_CONSOLE_URL',
   'http://localhost:3002'

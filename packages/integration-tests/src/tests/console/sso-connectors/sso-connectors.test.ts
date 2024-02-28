@@ -1,15 +1,16 @@
+import { getSsoConnectors, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import {
   goToAdminConsole,
   expectModalWithTitle,
-  expectToClickDetailsPageOption,
   expectConfirmModalAndAct,
+  expectToClickDetailsPageOption,
   expectToSaveChanges,
   waitForToast,
 } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname, dcls, cls } from '#src/utils.js';
 
-import { findModalFooterButton, fillSsoConnectorCreationModal } from './helpers.js';
+import { fillSsoConnectorCreationModal, findModalFooterButton } from './helpers.js';
 import { ssoConnectorTestCases } from './sso-connectors-test-cases.js';
 
 await page.setViewport({ width: 1920, height: 1080 });
@@ -30,6 +31,12 @@ describe('create SSO connectors', () => {
   beforeAll(async () => {
     // Enter admin console
     await goToAdminConsole();
+  });
+
+  afterAll(async () => {
+    // Delete all SSO connectors
+    const connectors = await getSsoConnectors();
+    await Promise.all(connectors.map(async ({ id }) => deleteSsoConnectorById(id)));
   });
 
   it('navigate to Enterprise SSO connectors listing page', async () => {
