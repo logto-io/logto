@@ -1,5 +1,5 @@
 import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
-import { RoleType } from '@logto/schemas';
+import { RoleType, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
@@ -133,6 +133,20 @@ describe('adminUserRoutes', () => {
     // Invalid input format
     await expect(
       userRequest.post('/users').send({ username, password: 'abc', name })
+    ).resolves.toHaveProperty('status', 200);
+  });
+
+  it('POST /users with password digest', async () => {
+    const username = 'MJAtLogto';
+    const name = 'Michael';
+
+    await expect(
+      userRequest.post('/users').send({
+        username,
+        name,
+        passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
+        passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+      })
     ).resolves.toHaveProperty('status', 200);
   });
 

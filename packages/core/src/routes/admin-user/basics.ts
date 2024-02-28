@@ -1,7 +1,12 @@
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
-import { jsonObjectGuard, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
+import {
+  UsersPasswordEncryptionMethod,
+  jsonObjectGuard,
+  userInfoSelectFields,
+  userProfileResponseGuard,
+} from '@logto/schemas';
 import { conditional, pick, yes } from '@silverhand/essentials';
-import { boolean, literal, object, string } from 'zod';
+import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js';
@@ -111,13 +116,26 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         primaryEmail: string().regex(emailRegEx),
         username: string().regex(usernameRegEx),
         password: string().min(1),
+        passwordDigest: string(),
+        passwordAlgorithm: nativeEnum(UsersPasswordEncryptionMethod),
         name: string(),
       }).partial(),
       response: userProfileResponseGuard,
       status: [200, 404, 422],
     }),
     async (ctx, next) => {
-      const { primaryEmail, primaryPhone, username, password, name } = ctx.guard.body;
+      const {
+        primaryEmail,
+        primaryPhone,
+        username,
+        password,
+        name,
+        passwordDigest,
+        passwordAlgorithm,
+      } = ctx.guard.body;
+
+      assertThat(!(password && passwordDigest), new RequestError('user.password_and_digest'));
+      assertThat(!passwordDigest || passwordAlgorithm, 'user.password_algorithm_required');
 
       assertThat(
         !username || !(await hasUser(username)),
@@ -148,6 +166,12 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
           username,
           name,
           ...conditional(password && (await encryptUserPassword(password))),
+          ...conditional(
+            passwordDigest && {
+              passwordEncrypted: passwordDigest,
+              passwordEncryptionMethod: passwordAlgorithm,
+            }
+          ),
         },
         []
       );

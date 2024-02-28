@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import { createServer, type RequestListener } from 'node:http';
 
 import { mockConnectorFilePaths, type SendMessagePayload } from '@logto/connector-kit';
+import { type UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { RequestError } from 'got';
 
 import { createUser } from '#src/api/index.js';
@@ -12,7 +13,9 @@ export const createUserByAdmin = async (
   password?: string,
   primaryEmail?: string,
   primaryPhone?: string,
-  name?: string
+  name?: string,
+  passwordDigest?: string,
+  passwordAlgorithm?: UsersPasswordEncryptionMethod
 ) => {
   return createUser({
     username: username ?? generateUsername(),
@@ -20,6 +23,8 @@ export const createUserByAdmin = async (
     name: name ?? username ?? 'John',
     primaryEmail,
     primaryPhone,
+    passwordDigest,
+    passwordAlgorithm,
   });
 };
 
