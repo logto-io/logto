@@ -486,7 +486,10 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
     });
 
     it('select not applicable as sign-up identifier', async () => {
-      await expectToSelectSignUpIdentifier(page, 'Not applicable');
+      await expectToSelectSignUpIdentifier(
+        page,
+        'Not applicable(This apply to social only account creation)'
+      );
       await expectToRemoveSignInMethod(page, 'Username');
       await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });

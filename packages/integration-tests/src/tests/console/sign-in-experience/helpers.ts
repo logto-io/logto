@@ -5,6 +5,7 @@ import {
   expectConfirmModalAndAct,
   waitForToast,
 } from '#src/ui-helpers/index.js';
+import { selectDropdownMenuItem } from '#src/ui-helpers/select-dropdown-menu-item.js';
 
 export const waitForFormCard = async (page: Page, title: string) => {
   await expect(page).toMatchElement('div[class$=tabContent] div[class$=card] div[class$=title]', {
@@ -65,14 +66,5 @@ export const expectToSelectPreviewLanguage = async (page: Page, language: string
   // Click on the language selector
   await expect(page).toClick('div[class$=preview] div[class*=select][class*=language]');
 
-  // Wait for the dropdown menu to render in the correct position
-  await page.waitForTimeout(500);
-
-  await expect(page).toClick('.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]', {
-    text: language,
-  });
-
-  await page.waitForSelector('.ReactModalPortal div[class$=dropdownContainer]', {
-    hidden: true,
-  });
+  await selectDropdownMenuItem(page, 'div[role=menuitem]', language);
 };
