@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import type { User, CreateUser, Scope, BindMfa, MfaVerification } from '@logto/schemas';
 import { MfaFactor, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
@@ -40,9 +42,42 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
     new RequestError({ code: 'session.invalid_credentials', status: 422 })
   );
 
-  const result = await argon2Verify({ password, hash: passwordEncrypted });
+  switch (passwordEncryptionMethod) {
+    case UsersPasswordEncryptionMethod.Argon2i: {
+      const result = await argon2Verify({ password, hash: passwordEncrypted });
+      assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+      break;
+    }
+    case UsersPasswordEncryptionMethod.md5: {
+      const expectedEncrypted = createHash('md5').update(password).digest('hex');
+      assertThat(
+        expectedEncrypted === passwordEncrypted,
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+      break;
+    }
+    case UsersPasswordEncryptionMethod.sha1: {
+      const expectedEncrypted = createHash('sha1').update(password).digest('hex');
+      assertThat(
+        expectedEncrypted === passwordEncrypted,
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+      break;
+    }
+    case UsersPasswordEncryptionMethod.sha256: {
+      const expectedEncrypted = createHash('sha256').update(password).digest('hex');
+      assertThat(
+        expectedEncrypted === passwordEncrypted,
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+      break;
+    }
+    default: {
+      throw new RequestError({ code: 'session.invalid_credentials', status: 422 });
+    }
+  }
 
-  assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+  // TODO(@sijie) migrate to use argon2
 
   return user;
 };

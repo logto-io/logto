@@ -8,7 +8,8 @@ export const mockUser: User = {
   username: 'foo',
   primaryEmail: 'foo@logto.io',
   primaryPhone: '111111',
-  passwordEncrypted: 'password',
+  passwordEncrypted:
+    '$argon2i$v=19$m=4096,t=256,p=1$SYD0xSoVR8l+CN63Nz8fGw$ln5T09X9u4yd0DwLBKnlNV/eUHxwSWo32scw40ov4kI',
   passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
   name: null,
   avatar: null,
