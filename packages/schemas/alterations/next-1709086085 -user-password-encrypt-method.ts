@@ -15,8 +15,8 @@ const alteration: AlterationScript = {
       create type users_password_encryption_method_revised as enum ('Argon2i');
 
       alter table users 
-      alter column encryption_method type users_password_encryption_method_revised 
-      using encryption_method::text::users_password_encryption_method_revised;
+      alter column password_encryption_method type users_password_encryption_method_revised 
+      using password_encryption_method::text::users_password_encryption_method_revised;
 
       drop type users_password_encryption_method;
       alter type users_password_encryption_method_revised rename to users_password_encryption_method;
