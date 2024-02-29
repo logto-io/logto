@@ -11,7 +11,6 @@ export const encryptPassword = async (
   method: UsersPasswordEncryptionMethod
 ): Promise<string> => {
   assertThat(
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     method === UsersPasswordEncryptionMethod.Argon2i,
     new RequestError({ code: 'password.unsupported_encryption_method', method })
   );
