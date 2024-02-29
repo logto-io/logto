@@ -28,7 +28,7 @@ import Dashboard from '@/pages/Dashboard';
 import EnterpriseSsoConnectors from '@/pages/EnterpriseSso';
 import EnterpriseSsoConnectorDetails from '@/pages/EnterpriseSsoDetails';
 import GetStarted from '@/pages/GetStarted';
-import JwtClaims from '@/pages/JwtClaims';
+import JwtClaims, { JwtTokenType } from '@/pages/JwtClaims';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import OrganizationDetails from '@/pages/OrganizationDetails';
@@ -204,7 +204,19 @@ function ConsoleContent() {
                 )}
               </Route>
             )}
-            {isDevFeaturesEnabled && <Route path="jwt-claims" element={<JwtClaims />} />}
+            {isDevFeaturesEnabled && (
+              <Route path="jwt-claims">
+                <Route index element={<Navigate replace to={JwtTokenType.UserAccessToken} />} />
+                <Route
+                  path={JwtTokenType.UserAccessToken}
+                  element={<JwtClaims tab={JwtTokenType.UserAccessToken} />}
+                />
+                <Route
+                  path={JwtTokenType.MachineToMachineAccessToken}
+                  element={<JwtClaims tab={JwtTokenType.MachineToMachineAccessToken} />}
+                />
+              </Route>
+            )}
           </Routes>
         </div>
       </OverlayScrollbar>
