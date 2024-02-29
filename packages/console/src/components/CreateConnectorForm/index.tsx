@@ -2,21 +2,17 @@ import {
   ConnectorType,
   type ConnectorFactoryResponse,
   type ConnectorResponse,
-  ReservedPlanId,
 } from '@logto/schemas';
-import { useContext, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
-import { isCloud } from '@/consts/env';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
-import FeatureTag from '../FeatureTag';
 
 import ConnectorRadioGroup from './ConnectorRadioGroup';
 import Footer from './Footer';
@@ -44,13 +40,6 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const [activeGroupId, setActiveGroupId] = useState<string>();
   const [activeFactoryId, setActiveFactoryId] = useState<string>();
   const isCreatingSocialConnector = type === ConnectorType.Social;
-  const { currentPlan } = useContext(SubscriptionDataContext);
-
-  const {
-    quota: { standardConnectorsLimit },
-  } = currentPlan;
-
-  const isStandardConnectorDisabled = isCloud && standardConnectorsLimit === 0;
 
   const groups = useMemo(() => {
     if (!factories || !existingConnectors) {
@@ -164,9 +153,6 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
           <>
             <div className={styles.standardLabel}>
               <DynamicT forKey="connectors.standard_connectors" />
-              {isCloud && (
-                <FeatureTag isVisible={isStandardConnectorDisabled} plan={ReservedPlanId.Pro} />
-              )}
             </div>
             <ConnectorRadioGroup
               name="group"
