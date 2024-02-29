@@ -5,12 +5,21 @@ import type { AlterationScript } from '../lib/types/alteration.js';
 const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
-      alter type users_password_encryption_method add value 'sha1';
-      alter type users_password_encryption_method add value 'sha256';
-      alter type users_password_encryption_method add value 'md5';
+      alter type users_password_encryption_method add value 'SHA1';
+      alter type users_password_encryption_method add value 'SHA256';
+      alter type users_password_encryption_method add value 'MD5';
+      alter type users_password_encryption_method add value 'BCrypt';
     `);
   },
   down: async (pool) => {
+    const { rows } = await pool.query(sql`
+      select id from users
+      where password_encryption_method <> ${'Argon2i'}
+    `);
+    if (rows.length > 0) {
+      throw new Error('There are users with password encryption methods other than Argon2i.');
+    }
+
     await pool.query(sql`
       create type users_password_encryption_method_revised as enum ('Argon2i');
 
