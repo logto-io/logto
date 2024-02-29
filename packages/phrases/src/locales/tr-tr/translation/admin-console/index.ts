@@ -15,6 +15,7 @@ import errors from './errors.js';
 import general from './general.js';
 import get_started from './get-started.js';
 import guide from './guide.js';
+import jwt_claims from './jwt-claims.js';
 import log_details from './log-details.js';
 import logs from './logs.js';
 import menu from './menu.js';
@@ -85,6 +86,7 @@ const admin_console = {
   organizations,
   organization_details,
   protected_app,
+  jwt_claims,
 };
 
 export default Object.freeze(admin_console);

@@ -22,10 +22,10 @@ import CloudAppRoutes from '@/cloud/AppRoutes';
 import AppLoading from '@/components/AppLoading';
 import { isCloud } from '@/consts/env';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
+import { ConsoleRoutes } from '@/containers/ConsoleRoutes';
 import useTrackUserId from '@/hooks/use-track-user-id';
 import { OnboardingRoutes } from '@/onboarding';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
-import { ConsoleRoutes } from '@/pages/ConsoleRoutes';
 
 import { adminTenantEndpoint, mainTitle } from './consts';
 import ErrorBoundary from './containers/ErrorBoundary';

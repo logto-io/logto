@@ -14,11 +14,10 @@ import { GlobalRoute } from '@/contexts/TenantsProvider';
 import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
+import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
+import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 import Welcome from '@/pages/Welcome';
 import { dropLeadingSlash } from '@/utils/url';
-
-import CheckoutSuccessCallback from '../CheckoutSuccessCallback';
-import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
 
 function Layout() {
   const swrOptions = useSwrOptions();

@@ -11,7 +11,7 @@ import {
   ApplicationDetailsTabs,
   EnterpriseSsoDetailsTabs,
 } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
@@ -28,6 +28,7 @@ import Dashboard from '@/pages/Dashboard';
 import EnterpriseSsoConnectors from '@/pages/EnterpriseSso';
 import EnterpriseSsoConnectorDetails from '@/pages/EnterpriseSsoDetails';
 import GetStarted from '@/pages/GetStarted';
+import JwtClaims from '@/pages/JwtClaims';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import OrganizationDetails from '@/pages/OrganizationDetails';
@@ -203,6 +204,7 @@ function ConsoleContent() {
                 )}
               </Route>
             )}
+            {isDevFeaturesEnabled && <Route path="jwt-claims" element={<JwtClaims />} />}
           </Routes>
         </div>
       </OverlayScrollbar>
