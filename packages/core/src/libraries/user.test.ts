@@ -84,7 +84,7 @@ describe('verifyUserPassword()', () => {
     });
   });
 
-  describe('md5', () => {
+  describe('MD5', () => {
     const user = {
       ...mockUser,
       passwordEncrypted: '5f4dcc3b5aa765d61d8327deb882cf99',
@@ -101,7 +101,7 @@ describe('verifyUserPassword()', () => {
     });
   });
 
-  describe('sha1', () => {
+  describe('SHA1', () => {
     const user = {
       ...mockUser,
       passwordEncrypted: '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',
@@ -118,11 +118,28 @@ describe('verifyUserPassword()', () => {
     });
   });
 
-  describe('sha256', () => {
+  describe('SHA256', () => {
     const user = {
       ...mockUser,
       passwordEncrypted: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
       passwordEncryptionMethod: UsersPasswordEncryptionMethod.SHA256,
+    };
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('BCrypt', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '$2a$12$WQMqTfbtcZFBC1C1u8wpie6lXOSciUr5kk/8yEydoIMKltb9UKJ.6',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.BCrypt,
     };
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();

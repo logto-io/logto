@@ -6,6 +6,7 @@ import { generateStandardShortId, generateStandardId } from '@logto/shared';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
+import bcrypt from 'bcrypt';
 import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';
 
@@ -70,6 +71,19 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
         expectedEncrypted === passwordEncrypted,
         new RequestError({ code: 'session.invalid_credentials', status: 422 })
       );
+      break;
+    }
+    case UsersPasswordEncryptionMethod.BCrypt: {
+      const result = await new Promise<boolean>((resolve, reject) => {
+        bcrypt.compare(password, passwordEncrypted, (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+      assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
       break;
     }
     default: {
