@@ -88,7 +88,7 @@ describe('verifyUserPassword()', () => {
     const user = {
       ...mockUser,
       passwordEncrypted: '5f4dcc3b5aa765d61d8327deb882cf99',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.md5,
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.MD5,
     };
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
@@ -105,7 +105,7 @@ describe('verifyUserPassword()', () => {
     const user = {
       ...mockUser,
       passwordEncrypted: '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.sha1,
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.SHA1,
     };
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
@@ -122,7 +122,7 @@ describe('verifyUserPassword()', () => {
     const user = {
       ...mockUser,
       passwordEncrypted: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.sha256,
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.SHA256,
     };
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();

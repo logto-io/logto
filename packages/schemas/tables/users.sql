@@ -1,6 +1,6 @@
 /* init_order = 1 */
 
-create type users_password_encryption_method as enum ('Argon2i', 'sha1', 'sha256', 'md5');
+create type users_password_encryption_method as enum ('Argon2i', 'SHA1', 'SHA256', 'MD5');
 
 create table users (
   tenant_id varchar(21) not null

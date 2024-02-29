@@ -48,7 +48,7 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
       assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
       break;
     }
-    case UsersPasswordEncryptionMethod.md5: {
+    case UsersPasswordEncryptionMethod.MD5: {
       const expectedEncrypted = createHash('md5').update(password).digest('hex');
       assertThat(
         expectedEncrypted === passwordEncrypted,
@@ -56,7 +56,7 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
       );
       break;
     }
-    case UsersPasswordEncryptionMethod.sha1: {
+    case UsersPasswordEncryptionMethod.SHA1: {
       const expectedEncrypted = createHash('sha1').update(password).digest('hex');
       assertThat(
         expectedEncrypted === passwordEncrypted,
@@ -64,7 +64,7 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
       );
       break;
     }
-    case UsersPasswordEncryptionMethod.sha256: {
+    case UsersPasswordEncryptionMethod.SHA256: {
       const expectedEncrypted = createHash('sha256').update(password).digest('hex');
       assertThat(
         expectedEncrypted === passwordEncrypted,
