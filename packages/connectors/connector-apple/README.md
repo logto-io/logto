@@ -4,12 +4,13 @@ The official Logto connector for Apple social sign-in.
 
 **Table of contents**
 
-- [Apple connector](#apple-connector)
-  - [Get started](#get-started)
-    - [Enable Sign in with Apple for your app](#enable-sign-in-with-apple-for-your-app)
-    - [Create an identifier](#create-an-identifier)
-    - [Enable Sign in with Apple for your identifier](#enable-sign-in-with-apple-for-your-identifier)
-  - [Test Apple connector](#test-apple-connector)
+- [Get started](#get-started)
+  - [Enable Sign in with Apple for your app](#enable-sign-in-with-apple-for-your-app)
+  - [Create an identifier](#create-an-identifier)
+  - [Enable Sign in with Apple for your identifier](#enable-sign-in-with-apple-for-your-identifier)
+- [Configure scope](#configure-scope)
+  - [Pitfalls of configuring scope](#pitfalls-of-configuring-scope)
+- [Test Apple connector](#test-apple-connector)
 
 ## Get started
 
@@ -61,11 +62,23 @@ Click "Next" then "Done" to close the modal. Click "Continue" on the top-right c
 > 
 > If you want to test locally, you need to edit `/etc/hosts` file to map localhost to a custom domain and set up a local HTTPS environment. [mkcert](https://github.com/FiloSottile/mkcert) can help you for setting up local HTTPS.
 
+## Configure scope
+
+To get user's email from Apple, you need to configure the scope to include `email`. For both email and name, you can use `name email` as the scope. See [Apple official docs](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113) for more info.
+
 > ℹ️ **Note**
 > 
-> This connector doesn't support customizing `scope` (e.g., name, email) yet since Apple requires `form_post` response mode when `scope` is not empty, which is incompatible with the current connector design.
-> 
-> We'll figure out this later.
+> The user may choose to hide their email address from your app. In this case, you will not be able to retrieve the real email address. An email address like `random@privaterelay.appleid.com` will be returned instead.
+
+### Pitfalls of configuring scope
+
+If you have configured your app to request users' email addresses after they have already signed in with Apple, you will not be able to retrieve the email addresses for those existing users, even if they sign in again using Apple ID. To address this, you need to instruct your users to visit the [Apple ID account management page](https://appleid.apple.com/account/manage) and remove your application from the "Sign in with Apple" section. This can be done by selecting "Stop using Apple Sign In" on your app's detail page.
+
+For instance, if your app requests both the users' email and name (`email name` scope), the consent page that new users see during their first sign-in should look similar to this:
+
+![Sign in with Apple consent page](/packages/connectors/connector-apple/docs/sign-in-with-apple-consent-page.png)
+
+See developer discussion [here](https://forums.developer.apple.com/forums/thread/132223).
 
 ## Test Apple connector
 
