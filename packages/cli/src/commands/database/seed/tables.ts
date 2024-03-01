@@ -82,7 +82,10 @@ const lifecycleNames: readonly string[] = Object.freeze([
   'after_each',
 ] satisfies Lifecycle[]);
 
-export const createTables = async (connection: DatabaseTransactionConnection) => {
+export const createTables = async (
+  connection: DatabaseTransactionConnection,
+  encryptBaseRole: boolean
+): Promise<{ password: string }> => {
   const tableDirectory = getPathInModule('@logto/schemas', 'tables');
   const directoryFiles = await readdir(tableDirectory);
   const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
@@ -95,7 +98,7 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
 
   const runLifecycleQuery = async (
     lifecycle: Lifecycle,
-    parameters: { name?: string; database?: string } = {}
+    parameters: { name?: string; database?: string; password?: string } = {}
   ) => {
     const query = queries.find(([file]) => file.slice(1, -4) === lifecycle)?.[1];
 
@@ -106,6 +109,7 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
           query
             .replaceAll('${name}', parameters.name ?? '')
             .replaceAll('${database}', parameters.database ?? '')
+            .replaceAll('${password}', parameters.password ?? '')
           /* eslint-enable no-template-curly-in-string */
         )}`
       );
@@ -118,8 +122,9 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
   ];
   const sorted = allQueries.slice().sort(compareQuery);
   const database = await getDatabaseName(connection, true);
+  const password = encryptBaseRole ? generateStandardId(32) : '';
 
-  await runLifecycleQuery('before_all', { database });
+  await runLifecycleQuery('before_all', { database, password });
 
   /* eslint-disable no-await-in-loop */
   for (const [file, query] of sorted) {
@@ -132,6 +137,8 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
   /* eslint-enable no-await-in-loop */
 
   await runLifecycleQuery('after_all', { database });
+
+  return { password };
 };
 
 export const seedTables = async (

@@ -1,3 +1,3 @@
 /* This SQL will run before all other queries. */
 
-create role logto_tenant_${database} noinherit;
+create role logto_tenant_${database} password '${password}' noinherit;
