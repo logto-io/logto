@@ -1,5 +1,11 @@
 # @logto/connector-smtp
 
+## 1.1.1
+
+### Patch Changes
+
+- a7e69bd72: Always show TLS configurations in the admin console.
+
 ## 1.1.0
 
 ### Minor Changes

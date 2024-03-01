@@ -1,5 +1,18 @@
 # Change Log
 
+## 1.14.0
+
+### Minor Changes
+
+- 532454b92: support form post callback for social connectors
+
+  Add the `POST /callback/:connectorId` endpoint to handle the form post callback for social connectors. This usefull for the connectors that require a form post callback to complete the authentication process, such as Apple.
+
+### Patch Changes
+
+- @logto/schemas@1.14.0
+- @logto/cli@1.14.0
+
 ## 1.13.1
 
 ### Patch Changes
