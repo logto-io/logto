@@ -17,7 +17,7 @@ export default function dashboardRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {
-    logs: { countActiveUsersByTimeInterval, getDailyActiveUserCountsByTimeInterval },
+    dailyActiveUsers: { countActiveUsersByTimeInterval, getDailyActiveUserCountsByTimeInterval },
     users: { countUsers, getDailyNewUserCountsByTimeInterval },
   } = queries;
 
