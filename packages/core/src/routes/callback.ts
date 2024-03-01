@@ -17,8 +17,9 @@ function callbackRoutes<T extends Router>(router: T) {
       new RequestError('oidc.invalid_request')
     );
 
+    ctx.status = 303;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    ctx.redirect(ctx.request.path + '?' + new URLSearchParams(ctx.request.body).toString());
+    ctx.set('Location', ctx.request.path + '?' + new URLSearchParams(ctx.request.body).toString());
   });
 }
 

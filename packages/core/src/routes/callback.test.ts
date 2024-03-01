@@ -11,7 +11,7 @@ describe('social connector form post callback', () => {
   it('should redirect to the same path with query string', async () => {
     const response = await request.post('/callback/some_connector_id').send({ some: 'data' });
 
-    expect(response.status).toBe(302);
+    expect(response.status).toBe(303);
     expect(response.header.location).toBe('/callback/some_connector_id?some=data');
   });
 
