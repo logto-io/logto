@@ -104,6 +104,52 @@
           }
         }
       }
+    },
+    "/api/configs/jwt-customizer/{tokenType}": {
+      "post": {
+        "summary": "Create JWT customizer",
+        "description": "Create a JWT customizer for the given token type.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tokenType",
+            "description": "The token type to create a JWT customizer for."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "script": {
+                    "description": "The script of the JWT customizer."
+                  },
+                  "envVars": {
+                    "description": "The environment variables for the JWT customizer."
+                  },
+                  "contextSample": {
+                    "description": "The sample context for the JWT customizer script testing purpose."
+                  },
+                  "tokenSample": {
+                    "description": "The sample raw token payload for the JWT customizer script testing purpose."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created JWT customizer."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "409": {
+            "description": "The JWT customizer already exists."
+          }
+        }
+      }
     }
   }
 }

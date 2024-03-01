@@ -12,11 +12,16 @@ import {
   type OidcConfigKeysResponse,
   type OidcConfigKey,
   LogtoOidcConfigKeyType,
+  LogtoJwtTokenKeyType,
+  jwtCustomizerAccessTokenGuard,
+  jwtCustomizerClientCredentialsGuard,
+  LogtoJwtTokenKey,
 } from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import koaGuard from '#src/middleware/koa-guard.js';
+import koaGuard, { tryParse } from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -28,6 +33,11 @@ const getOidcConfigKeyDatabaseColumnName = (key: LogtoOidcConfigKeyType): LogtoO
   key === LogtoOidcConfigKeyType.PrivateKeys
     ? LogtoOidcConfigKey.PrivateKeys
     : LogtoOidcConfigKey.CookieKeys;
+
+const getLogtoJwtTokenKey = (key: LogtoJwtTokenKeyType): LogtoJwtTokenKey =>
+  key === LogtoJwtTokenKeyType.AccessToken
+    ? LogtoJwtTokenKey.AccessToken
+    : LogtoJwtTokenKey.ClientCredentials;
 
 /**
  * Remove actual values of the private keys from response.
@@ -60,8 +70,13 @@ const getRedactedOidcKeyResponse = async (
 export default function logtoConfigRoutes<T extends AuthedRouter>(
   ...[router, { queries, logtoConfigs, invalidateCache }]: RouterInitArgs<T>
 ) {
-  const { getAdminConsoleConfig, updateAdminConsoleConfig, updateOidcConfigsByKey } =
-    queries.logtoConfigs;
+  const {
+    getAdminConsoleConfig,
+    getRowsByKeys,
+    insertJwtCustomizer,
+    updateAdminConsoleConfig,
+    updateOidcConfigsByKey,
+  } = queries.logtoConfigs;
   const { getOidcConfigs } = logtoConfigs;
 
   router.get(
@@ -178,6 +193,59 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
 
       // Remove actual values of the private keys from response
       ctx.body = await getRedactedOidcKeyResponse(configKey, updatedKeys);
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/configs/jwt-customizer/:tokenType',
+    koaGuard({
+      params: z.object({
+        tokenType: z.nativeEnum(LogtoJwtTokenKeyType),
+      }),
+      /**
+       * Use `z.unknown()` to guard the request body as a JSON object, since the actual guard depends
+       * on the `tokenType` and we can not get the value of `tokenType` before parsing the request body,
+       * we will do more specific guard as long as we can get the value of `tokenType`.
+       */
+      body: z.unknown(),
+      response: jwtCustomizerAccessTokenGuard.or(jwtCustomizerClientCredentialsGuard),
+      status: [201, 400, 409],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { tokenType },
+        body,
+      } = ctx.guard;
+
+      // Manually implement the request body type check, the flow aligns with the actual `koaGuard()`.
+      // Use ternary operator to get the specific guard brings difficulties to type inference.
+      if (tokenType === LogtoJwtTokenKeyType.AccessToken) {
+        tryParse('body', jwtCustomizerAccessTokenGuard, body);
+      } else {
+        tryParse('body', jwtCustomizerClientCredentialsGuard, body);
+      }
+
+      const { rows } = await getRowsByKeys([getLogtoJwtTokenKey(tokenType)]);
+      assertThat(
+        rows.length === 0,
+        new RequestError({
+          code: 'logto_config.jwt.customizer_exists',
+          tokenType,
+          status: 409,
+        })
+      );
+
+      const jwtCustomizer = await insertJwtCustomizer(
+        getLogtoJwtTokenKey(tokenType),
+        // Since we applied the detailed guard manually, we can safely cast the `body` to the specific type.
+        // eslint-disable-next-line no-restricted-syntax
+        body as Parameters<typeof insertJwtCustomizer>[1]
+      );
+
+      ctx.status = 201;
+      ctx.body = jwtCustomizer.value;
 
       return next();
     }

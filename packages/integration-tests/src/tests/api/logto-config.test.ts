@@ -2,6 +2,7 @@ import {
   SupportedSigningKeyAlgorithm,
   type AdminConsoleData,
   LogtoOidcConfigKeyType,
+  LogtoJwtTokenKeyType,
 } from '@logto/schemas';
 
 import {
@@ -10,6 +11,7 @@ import {
   getOidcKeys,
   rotateOidcKeys,
   updateAdminConsoleConfig,
+  insertJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -122,5 +124,32 @@ describe('admin console sign-in experience', () => {
       { id: expect.any(String), signingKeyAlgorithm: 'EC', createdAt: expect.any(Number) },
     ]);
     expect(privateKeys2[1]?.id).toBe(privateKeys[0]?.id);
+  });
+
+  it('should successfully add a new JWT customizer', async () => {
+    const accessTokenJwtCustomizerPayload = {
+      script: '',
+      envVars: {},
+      contextSample: {
+        user: {
+          username: 'test',
+          id: 'fake-id',
+        },
+      },
+    };
+    const clientCredentialsJwtCustomizerPayload = {
+      ...accessTokenJwtCustomizerPayload,
+      contextSample: {},
+    };
+    const accessToken = await insertJwtCustomizer(
+      LogtoJwtTokenKeyType.AccessToken,
+      accessTokenJwtCustomizerPayload
+    );
+    expect(accessToken).toMatchObject(accessTokenJwtCustomizerPayload);
+    const clientCredentials = await insertJwtCustomizer(
+      LogtoJwtTokenKeyType.ClientCredentials,
+      clientCredentialsJwtCustomizerPayload
+    );
+    expect(clientCredentials).toMatchObject(clientCredentialsJwtCustomizerPayload);
   });
 });

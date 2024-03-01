@@ -1,4 +1,4 @@
-import { LogtoOidcConfigKey, type AdminConsoleData } from '@logto/schemas';
+import { LogtoOidcConfigKey, type AdminConsoleData, LogtoJwtTokenKey } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import Sinon from 'sinon';
@@ -6,8 +6,9 @@ import Sinon from 'sinon';
 import {
   mockAdminConsoleData,
   mockCookieKeys,
-  mockLogtoConfigs,
   mockPrivateKeys,
+  mockLogtoConfigRows,
+  mockJwtCustomizerConfigForAccessToken,
 } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -52,13 +53,8 @@ const logtoConfigQueries = {
     },
   }),
   updateOidcConfigsByKey: jest.fn(),
-  getRowsByKeys: jest.fn(async () => ({
-    rows: mockLogtoConfigs,
-    rowCount: mockLogtoConfigs.length,
-    command: 'SELECT' as const,
-    fields: [],
-    notices: [],
-  })),
+  getRowsByKeys: jest.fn(async () => mockLogtoConfigRows),
+  insertJwtCustomizer: jest.fn(),
 };
 
 const logtoConfigLibraries = {
@@ -228,5 +224,38 @@ describe('configs routes', () => {
       LogtoOidcConfigKey.PrivateKeys,
       [newPrivateKey2, newPrivateKey]
     );
+  });
+
+  it('POST /configs/jwt-customizer/:tokenType should add a record successfully', async () => {
+    logtoConfigQueries.getRowsByKeys.mockResolvedValueOnce({
+      ...mockLogtoConfigRows,
+      rows: [],
+      rowCount: 0,
+    });
+    logtoConfigQueries.insertJwtCustomizer.mockResolvedValueOnce(
+      mockJwtCustomizerConfigForAccessToken
+    );
+    const response = await routeRequester
+      .post('/configs/jwt-customizer/access-token')
+      .send(mockJwtCustomizerConfigForAccessToken);
+    expect(logtoConfigQueries.insertJwtCustomizer).toHaveBeenCalledWith(
+      LogtoJwtTokenKey.AccessToken,
+      mockJwtCustomizerConfigForAccessToken
+    );
+    expect(response.status).toEqual(201);
+    expect(response.body).toEqual(mockJwtCustomizerConfigForAccessToken.value);
+  });
+
+  it('POST /configs/jwt-customizer/:tokenType should fail ', async () => {
+    logtoConfigQueries.getRowsByKeys.mockResolvedValueOnce({
+      ...mockLogtoConfigRows,
+      rows: [mockJwtCustomizerConfigForAccessToken],
+      rowCount: 1,
+    });
+    const response = await routeRequester
+      .post('/configs/jwt-customizer/access-token')
+      .send(mockJwtCustomizerConfigForAccessToken);
+    expect(logtoConfigQueries.insertJwtCustomizer).not.toHaveBeenCalled();
+    expect(response.status).toEqual(409);
   });
 });

@@ -92,7 +92,7 @@ export const isGuardMiddleware = <Type extends IMiddleware>(
 ): function_ is WithGuardConfig<Type> =>
   function_.name === 'guardMiddleware' && has(function_, 'config');
 
-const tryParse = <Output, Definition extends ZodTypeDef, Input>(
+export const tryParse = <Output, Definition extends ZodTypeDef, Input>(
   type: 'query' | 'body' | 'params' | 'files',
   guard: Optional<ZodType<Output, Definition, Input>>,
   data: unknown
