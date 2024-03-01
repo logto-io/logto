@@ -11,6 +11,10 @@ import {
 
 import { type UserInfo, type FeaturedUser, userInfoGuard } from './user.js';
 
+type ToZodObject<T> = z.ZodObject<{
+  [K in keyof T]: z.ZodType<T[K]>;
+}>;
+
 /**
  * The simplified organization scope entity that is returned for some endpoints.
  */
@@ -23,7 +27,7 @@ export type OrganizationRoleWithScopes = OrganizationRole & {
   scopes: OrganizationScopeEntity[];
 };
 
-export const organizationRoleWithScopesGuard: z.ZodType<OrganizationRoleWithScopes> =
+export const organizationRoleWithScopesGuard: ToZodObject<OrganizationRoleWithScopes> =
   OrganizationRoles.guard.extend({
     scopes: z
       .object({
@@ -42,7 +46,7 @@ export type OrganizationRoleEntity = {
   name: string;
 };
 
-const organizationRoleEntityGuard: z.ZodType<OrganizationRoleEntity> = z.object({
+const organizationRoleEntityGuard: ToZodObject<OrganizationRoleEntity> = z.object({
   id: z.string(),
   name: z.string(),
 });
@@ -56,7 +60,7 @@ export type OrganizationWithRoles = Organization & {
   organizationRoles: OrganizationRoleEntity[];
 };
 
-export const organizationWithOrganizationRolesGuard: z.ZodType<OrganizationWithRoles> =
+export const organizationWithOrganizationRolesGuard: ToZodObject<OrganizationWithRoles> =
   Organizations.guard.extend({
     organizationRoles: organizationRoleEntityGuard.array(),
   });
@@ -70,7 +74,7 @@ export type UserWithOrganizationRoles = UserInfo & {
   organizationRoles: OrganizationRoleEntity[];
 };
 
-export const userWithOrganizationRolesGuard: z.ZodType<UserWithOrganizationRoles> =
+export const userWithOrganizationRolesGuard: ToZodObject<UserWithOrganizationRoles> =
   userInfoGuard.extend({
     organizationRoles: organizationRoleEntityGuard.array(),
   });
@@ -93,7 +97,7 @@ export type OrganizationInvitationEntity = OrganizationInvitation & {
   organizationRoles: OrganizationRoleEntity[];
 };
 
-export const organizationInvitationEntityGuard: z.ZodType<OrganizationInvitationEntity> =
+export const organizationInvitationEntityGuard: ToZodObject<OrganizationInvitationEntity> =
   OrganizationInvitations.guard.extend({
     organizationRoles: organizationRoleEntityGuard.array(),
   });
