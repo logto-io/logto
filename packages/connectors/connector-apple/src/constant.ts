@@ -7,9 +7,6 @@ export const authorizationEndpoint = `${issuer}/auth/authorize`;
 export const accessTokenEndpoint = `${issuer}/auth/token`;
 export const jwksUri = `${issuer}/auth/keys`;
 
-// Note: only support fixed scope for v1.
-export const scope = ''; // Note: `openid` is required when adding more scope(s)
-
 export const defaultMetadata: ConnectorMetadata = {
   id: 'apple-universal',
   target: 'apple',
@@ -34,8 +31,15 @@ export const defaultMetadata: ConnectorMetadata = {
       key: 'clientId',
       type: ConnectorConfigFormItemType.Text,
       required: true,
-      label: 'Client ID',
-      placeholder: '<client-id>',
+      label: 'Identifier',
+      placeholder: '<your-registered-identifier>',
+    },
+    {
+      key: 'scope',
+      type: ConnectorConfigFormItemType.Text,
+      required: false,
+      label: 'Scope',
+      placeholder: 'email name',
     },
   ],
 };

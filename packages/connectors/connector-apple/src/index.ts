@@ -16,7 +16,7 @@ import {
 import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
-import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant.js';
+import { defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant.js';
 import { appleConfigGuard, dataGuard } from './types.js';
 
 const generateNonce = () => generateStandardId();
@@ -33,12 +33,12 @@ const getAuthorizationUri =
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
       redirect_uri: redirectUri,
-      scope,
+      scope: config.scope ?? '',
       state,
       nonce,
       // https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
       response_type: 'code id_token',
-      response_mode: 'fragment',
+      response_mode: 'form_post',
     });
 
     assert(
@@ -55,7 +55,7 @@ const getAuthorizationUri =
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data, getSession) => {
-    const { id_token: idToken } = await authorizationCallbackHandler(data);
+    const { id_token: idToken, user } = await authorizationCallbackHandler(data);
 
     if (!idToken) {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
@@ -103,6 +103,15 @@ const getUserInfo =
 
       return {
         id: payload.sub,
+        // The `user` object is only available at the first sign-in. Didn't find this in Apple's
+        // docs but it seems to be the case. Fallback to the `email` field in the ID token just in
+        // case.
+        // See desperate developer discussion here:
+        // https://forums.developer.apple.com/forums/thread/132223
+        email:
+          user?.email ??
+          (payload.email && payload.email_verified === true ? String(payload.email) : undefined),
+        name: [user?.name?.firstName, user?.name?.lastName].filter(Boolean).join(' ') || undefined,
       };
     } catch {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);

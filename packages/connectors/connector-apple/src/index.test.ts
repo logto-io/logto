@@ -42,8 +42,8 @@ describe('getAuthorizationUri', () => {
     expect(searchParams.get('redirect_uri')).toEqual('http://localhost:3000/callback');
     expect(searchParams.get('state')).toEqual('some_state');
     expect(searchParams.get('response_type')).toEqual('code id_token');
-    expect(searchParams.get('response_mode')).toEqual('fragment');
-    expect(searchParams.has('scope')).toBeTruthy();
+    expect(searchParams.get('response_mode')).toEqual('form_post');
+    expect(searchParams.get('scope')).toEqual('scope');
     expect(searchParams.has('nonce')).toBeTruthy();
   });
 });
@@ -55,11 +55,41 @@ describe('getUserInfo', () => {
 
   it('should get user info from id token payload', async () => {
     const userId = 'userId';
-    const mockJwtVerify = jwtVerify;
-    mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: userId } }));
+    jwtVerify.mockImplementationOnce(() => ({
+      payload: { sub: userId, email: 'foo@bar.com', email_verified: true },
+    }));
     const connector = await createConnector({ getConfig });
     const userInfo = await connector.getUserInfo({ id_token: 'idToken' }, jest.fn());
-    expect(userInfo).toEqual({ id: userId });
+    expect(userInfo).toEqual({ id: userId, email: 'foo@bar.com' });
+  });
+
+  it('should ignore unverified email', async () => {
+    jwtVerify.mockImplementationOnce(() => ({
+      payload: { sub: 'userId', email: 'foo@bar.com' },
+    }));
+    const connector = await createConnector({ getConfig });
+    const userInfo = await connector.getUserInfo({ id_token: 'idToken' }, jest.fn());
+    expect(userInfo).toEqual({ id: 'userId' });
+  });
+
+  it('should get user info from the `user` field', async () => {
+    const userId = 'userId';
+    const connector = await createConnector({ getConfig });
+    jwtVerify.mockImplementationOnce(() => ({
+      payload: { sub: userId, email: 'foo@bar.com', email_verified: true },
+    }));
+    const userInfo = await connector.getUserInfo(
+      {
+        id_token: 'idToken',
+        user: JSON.stringify({
+          email: 'foo2@bar.com',
+          name: { firstName: 'foo', lastName: 'bar' },
+        }),
+      },
+      jest.fn()
+    );
+    // Should use info from `user` field first
+    expect(userInfo).toEqual({ id: userId, email: 'foo2@bar.com', name: 'foo bar' });
   });
 
   it('should throw if id token is missing', async () => {
@@ -70,8 +100,7 @@ describe('getUserInfo', () => {
   });
 
   it('should throw if verify id token failed', async () => {
-    const mockJwtVerify = jwtVerify;
-    mockJwtVerify.mockImplementationOnce(() => {
+    jwtVerify.mockImplementationOnce(() => {
       throw new Error('jwtVerify failed');
     });
     const connector = await createConnector({ getConfig });
@@ -81,8 +110,7 @@ describe('getUserInfo', () => {
   });
 
   it('should throw if the id token payload does not contains sub', async () => {
-    const mockJwtVerify = jwtVerify;
-    mockJwtVerify.mockImplementationOnce(() => ({
+    jwtVerify.mockImplementationOnce(() => ({
       payload: { iat: 123_456 },
     }));
     const connector = await createConnector({ getConfig });
