@@ -1,5 +1,11 @@
 # @logto/connector-apple
 
+## 1.2.0
+
+### Minor Changes
+
+- 532454b92: support `scope`
+
 ## 1.1.0
 
 ### Minor Changes
