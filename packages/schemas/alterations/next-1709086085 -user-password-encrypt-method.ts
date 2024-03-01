@@ -8,7 +8,7 @@ const alteration: AlterationScript = {
       alter type users_password_encryption_method add value 'SHA1';
       alter type users_password_encryption_method add value 'SHA256';
       alter type users_password_encryption_method add value 'MD5';
-      alter type users_password_encryption_method add value 'BCrypt';
+      alter type users_password_encryption_method add value 'Bcrypt';
     `);
   },
   down: async (pool) => {

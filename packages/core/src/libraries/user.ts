@@ -1,13 +1,10 @@
-import { createHash } from 'node:crypto';
-
 import type { User, CreateUser, Scope, BindMfa, MfaVerification } from '@logto/schemas';
 import { MfaFactor, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
-import bcrypt from 'bcrypt';
-import { argon2Verify } from 'hash-wasm';
+import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
 import pRetry from 'p-retry';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
@@ -50,7 +47,7 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
       break;
     }
     case UsersPasswordEncryptionMethod.MD5: {
-      const expectedEncrypted = createHash('md5').update(password).digest('hex');
+      const expectedEncrypted = await md5(password);
       assertThat(
         expectedEncrypted === passwordEncrypted,
         new RequestError({ code: 'session.invalid_credentials', status: 422 })
@@ -58,7 +55,7 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
       break;
     }
     case UsersPasswordEncryptionMethod.SHA1: {
-      const expectedEncrypted = createHash('sha1').update(password).digest('hex');
+      const expectedEncrypted = await sha1(password);
       assertThat(
         expectedEncrypted === passwordEncrypted,
         new RequestError({ code: 'session.invalid_credentials', status: 422 })
@@ -66,23 +63,15 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
       break;
     }
     case UsersPasswordEncryptionMethod.SHA256: {
-      const expectedEncrypted = createHash('sha256').update(password).digest('hex');
+      const expectedEncrypted = await sha256(password);
       assertThat(
         expectedEncrypted === passwordEncrypted,
         new RequestError({ code: 'session.invalid_credentials', status: 422 })
       );
       break;
     }
-    case UsersPasswordEncryptionMethod.BCrypt: {
-      const result = await new Promise<boolean>((resolve, reject) => {
-        bcrypt.compare(password, passwordEncrypted, (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result);
-          }
-        });
-      });
+    case UsersPasswordEncryptionMethod.Bcrypt: {
+      const result = await bcryptVerify({ password, hash: passwordEncrypted });
       assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
       break;
     }

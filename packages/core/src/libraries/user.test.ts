@@ -135,11 +135,11 @@ describe('verifyUserPassword()', () => {
     });
   });
 
-  describe('BCrypt', () => {
+  describe('Bcrypt', () => {
     const user = {
       ...mockUser,
       passwordEncrypted: '$2a$12$WQMqTfbtcZFBC1C1u8wpie6lXOSciUr5kk/8yEydoIMKltb9UKJ.6',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.BCrypt,
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Bcrypt,
     };
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
