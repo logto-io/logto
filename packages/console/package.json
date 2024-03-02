@@ -60,7 +60,7 @@
     "@types/react-helmet": "^6.1.6",
     "@types/react-modal": "^3.13.1",
     "@types/react-syntax-highlighter": "^15.5.1",
-    "@withtyped/client": "^0.7.22",
+    "@withtyped/client": "^0.8.0",
     "buffer": "^5.7.1",
     "classnames": "^2.3.1",
     "clean-deep": "^3.4.0",
