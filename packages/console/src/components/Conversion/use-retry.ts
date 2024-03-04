@@ -5,10 +5,8 @@ type UseRetryOptions = {
   precondition: boolean;
   /** The function to execute when the precondition is not met. */
   onPreconditionFailed?: () => void;
-  /** The function to check the condition. */
-  checkCondition: () => boolean;
-  /** The function to execute when the condition is met. */
-  execute: () => void;
+  /** The function to execute. If it returns `true`, the retry will stop. */
+  execute: () => boolean;
   /**
    * The maximum number of retries.
    *
@@ -23,7 +21,6 @@ type UseRetryOptions = {
 export const useRetry = ({
   precondition,
   onPreconditionFailed,
-  checkCondition,
   execute,
   maxRetry = 3,
 }: UseRetryOptions) => {
@@ -41,18 +38,15 @@ export const useRetry = ({
     // eslint-disable-next-line @silverhand/fp/no-let
     let retry = 0;
     const interval = setInterval(() => {
-      if (checkCondition()) {
-        clearInterval(interval);
-        execute();
-      } else if (retry >= maxRetry) {
+      if (execute() || retry >= maxRetry) {
         clearInterval(interval);
       }
       // eslint-disable-next-line @silverhand/fp/no-mutation
-      retry++;
+      retry += 1;
     }, 1000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [checkCondition, execute, maxRetry, precondition]);
+  }, [execute, maxRetry, precondition]);
 };

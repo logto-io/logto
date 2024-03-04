@@ -1,12 +1,38 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 
+import { isProduction } from '@/consts/env';
 import useCurrentUser from '@/hooks/use-current-user';
 
 import { useRetry } from './use-retry';
 import { shouldReport, gtagAwTrackingId, redditPixelId, hashEmail } from './utils';
 
-function GoogleScripts() {
+const debug = (...args: Parameters<(typeof console)['debug']>) => {
+  if (!isProduction) {
+    console.debug(...args);
+  }
+};
+
+type ScriptProps = {
+  userEmailHash?: string;
+};
+
+function GoogleScripts({ userEmailHash }: ScriptProps) {
+  useRetry({
+    precondition: Boolean(userEmailHash),
+    execute: () => {
+      if (!window.gtag) {
+        return false;
+      }
+
+      debug('<GoogleScripts>:', 'userEmailHash =', userEmailHash);
+      window.gtag('set', 'user_data', {
+        sha256_email_address: userEmailHash,
+      });
+      return true;
+    },
+  });
+
   return (
     <Helmet>
       <script
@@ -18,31 +44,13 @@ function GoogleScripts() {
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', '${gtagAwTrackingId}');
+        gtag('config', '${gtagAwTrackingId}', {'allow_enhanced_conversions': true});
       `}</script>
     </Helmet>
   );
 }
 
-function RedditScripts() {
-  const { user, isLoaded } = useCurrentUser();
-  const [userEmailHash, setUserEmailHash] = useState<string>();
-
-  /**
-   * Initiate Reddit Pixel when user is loaded.
-   * Use user email to prevent duplicate conversion, and it is hashed before sending
-   * to protect user privacy.
-   */
-  useEffect(() => {
-    const init = async () => {
-      setUserEmailHash(await hashEmail(user?.primaryEmail ?? undefined));
-    };
-
-    if (isLoaded) {
-      void init();
-    }
-  }, [user, isLoaded]);
-
+function RedditScripts({ userEmailHash }: ScriptProps) {
   if (!userEmailHash) {
     return null;
   }
@@ -65,11 +73,23 @@ function RedditScripts() {
  * Renders global scripts for conversion tracking.
  */
 export function GlobalScripts() {
+  const { user, isLoaded } = useCurrentUser();
+  const [userEmailHash, setUserEmailHash] = useState<string>();
+
+  /**
+   * Initiate Reddit Pixel when user is loaded.
+   * Use user email to prevent duplicate conversion, and it is hashed before sending
+   * to protect user privacy.
+   */
   useEffect(() => {
-    if (!shouldReport) {
-      console.debug("Not initiating global scripts because it's not production");
+    const init = async () => {
+      setUserEmailHash(await hashEmail(user?.primaryEmail ?? undefined));
+    };
+
+    if (isLoaded) {
+      void init();
     }
-  }, []);
+  }, [user, isLoaded]);
 
   if (!shouldReport) {
     return null;
@@ -77,8 +97,8 @@ export function GlobalScripts() {
 
   return (
     <>
-      <GoogleScripts />
-      <RedditScripts />
+      <GoogleScripts userEmailHash={userEmailHash} />
+      <RedditScripts userEmailHash={userEmailHash} />
     </>
   );
 }
@@ -92,33 +112,31 @@ type ReportConversionOptions = {
 export const useReportConversion = ({ gtagId, redditType }: ReportConversionOptions) => {
   useRetry({
     precondition: Boolean(shouldReport && gtagId),
-    onPreconditionFailed: () => {
-      if (shouldReport) {
-        console.debug('gtag ID is not available for this conversion, skipping');
-      }
-    },
-    checkCondition: () => Boolean(window.gtag),
     execute: () => {
-      if (gtagId) {
-        window.gtag?.('event', 'conversion', {
-          send_to: gtagId,
-        });
+      if (!window.gtag) {
+        return false;
       }
+
+      debug('useReportConversion():', 'gtagId =', gtagId);
+      window.gtag('event', 'conversion', {
+        send_to: gtagId,
+      });
+
+      return true;
     },
   });
 
   useRetry({
     precondition: Boolean(shouldReport && redditType),
-    onPreconditionFailed: () => {
-      if (shouldReport) {
-        console.debug('Reddit Pixel type is not available for this conversion, skipping');
-      }
-    },
-    checkCondition: () => Boolean(window.rdt),
     execute: () => {
-      if (redditType) {
-        window.rdt?.('track', redditType);
+      if (!window.rdt) {
+        return false;
       }
+
+      debug('useReportConversion():', 'redditType =', redditType);
+      window.rdt('track', redditType);
+
+      return true;
     },
   });
 };
