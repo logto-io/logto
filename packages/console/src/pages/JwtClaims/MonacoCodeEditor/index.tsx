@@ -101,14 +101,13 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
         )}
         <div className={styles.actions}>
           {actions}
-          <IconButton className={styles.copyButton} size="small" onClick={handleCodeCopy}>
+          <IconButton size="small" onClick={handleCodeCopy}>
             <Copy />
           </IconButton>
         </div>
       </header>
       <div className={styles.editorContainer}>
         <Editor
-          className={styles.editorWindow}
           height="100%"
           language="typescript"
           // TODO: need to check on the usage of value and defaultValue

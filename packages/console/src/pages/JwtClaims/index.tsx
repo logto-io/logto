@@ -66,7 +66,7 @@ function JwtClaims({ tab }: Props) {
           </div>
           <MonacoCodeEditor className={styles.flexGrow} models={[activeModel]} />
         </Card>
-        <div className={styles.column}>Form Panel</div>
+        <div>Form Panel</div>
       </form>
     </div>
   );
