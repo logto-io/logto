@@ -67,6 +67,15 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
       `
     );
 
+  const getJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) =>
+    pool.one<{ value: JwtCustomizerType[T] }>(
+      sql`
+        select ${fields.value}
+        from ${table}
+        where ${fields.key} = ${key}
+      `
+    );
+
   return {
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
@@ -74,5 +83,6 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     getRowsByKeys,
     updateOidcConfigsByKey,
     upsertJwtCustomizer,
+    getJwtCustomizer,
   };
 };

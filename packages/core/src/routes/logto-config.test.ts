@@ -54,7 +54,7 @@ const logtoConfigQueries = {
   }),
   updateOidcConfigsByKey: jest.fn(),
   getRowsByKeys: jest.fn(async () => mockLogtoConfigRows),
-  // UpsertJwtCustomizer: jest.fn(),
+  getJwtCustomizer: jest.fn(),
 };
 
 const logtoConfigLibraries = {
@@ -263,6 +263,15 @@ describe('configs routes', () => {
       LogtoJwtTokenKey.AccessToken,
       mockJwtCustomizerConfigForAccessToken.value
     );
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(mockJwtCustomizerConfigForAccessToken.value);
+  });
+
+  it('GET /configs/jwt-customizer/:tokenType should return the record', async () => {
+    logtoConfigQueries.getJwtCustomizer.mockResolvedValueOnce(
+      mockJwtCustomizerConfigForAccessToken
+    );
+    const response = await routeRequester.get('/configs/jwt-customizer/access-token');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockJwtCustomizerConfigForAccessToken.value);
   });

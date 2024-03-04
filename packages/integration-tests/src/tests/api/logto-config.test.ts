@@ -11,6 +11,7 @@ import {
   rotateOidcKeys,
   updateAdminConsoleConfig,
   upsertJwtCustomizer,
+  getJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -125,7 +126,7 @@ describe('admin console sign-in experience', () => {
     expect(privateKeys2[1]?.id).toBe(privateKeys[0]?.id);
   });
 
-  it('should successfully add a new JWT customizer', async () => {
+  it('should successfully POST and GET a JWT customizer (access token)', async () => {
     const accessTokenJwtCustomizerPayload = {
       script: '',
       envVars: {},
@@ -136,11 +137,11 @@ describe('admin console sign-in experience', () => {
         },
       },
     };
-    const clientCredentialsJwtCustomizerPayload = {
-      ...accessTokenJwtCustomizerPayload,
-      contextSample: {},
-    };
 
+    await expectRejects(getJwtCustomizer('access-token'), {
+      code: 'entity.not_found',
+      statusCode: 404,
+    });
     const accessToken = await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
     expect(accessToken).toMatchObject(accessTokenJwtCustomizerPayload);
     const newAccessTokenJwtCustomizerPayload = {
@@ -152,7 +153,22 @@ describe('admin console sign-in experience', () => {
       newAccessTokenJwtCustomizerPayload
     );
     expect(updatedAccessToken).toMatchObject(newAccessTokenJwtCustomizerPayload);
+    await expect(getJwtCustomizer('access-token')).resolves.toMatchObject(
+      newAccessTokenJwtCustomizerPayload
+    );
+  });
 
+  it('should successfully POST and GET a JWT customizer (client credentials)', async () => {
+    const clientCredentialsJwtCustomizerPayload = {
+      script: '',
+      envVars: {},
+      contextSample: {},
+    };
+
+    await expectRejects(getJwtCustomizer('client-credentials'), {
+      code: 'entity.not_found',
+      statusCode: 404,
+    });
     const clientCredentials = await upsertJwtCustomizer(
       'client-credentials',
       clientCredentialsJwtCustomizerPayload
@@ -167,5 +183,8 @@ describe('admin console sign-in experience', () => {
       newClientCredentialsJwtCustomizerPayload
     );
     expect(updatedClientCredentials).toMatchObject(newClientCredentialsJwtCustomizerPayload);
+    await expect(getJwtCustomizer('client-credentials')).resolves.toMatchObject(
+      clientCredentialsJwtCustomizerPayload
+    );
   });
 });
