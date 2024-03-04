@@ -16,6 +16,8 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
+import { DeletionError } from '#src/errors/SlonikError/index.js';
+
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
 export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
@@ -85,6 +87,19 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     return z.object({ value: jwtCustomizerConfigGuard[key] }).parse(rows[0]);
   };
 
+  const deleteJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) => {
+    const { rowCount } = await pool.query(
+      sql`
+        delete from ${table}
+        where ${fields.key} = ${key}
+      `
+    );
+
+    if (rowCount < 1) {
+      throw new DeletionError(LogtoConfigs.table, key);
+    }
+  };
+
   return {
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
@@ -93,5 +108,6 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     updateOidcConfigsByKey,
     upsertJwtCustomizer,
     getJwtCustomizer,
+    deleteJwtCustomizer,
   };
 };

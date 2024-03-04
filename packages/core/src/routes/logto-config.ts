@@ -93,6 +93,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     updateAdminConsoleConfig,
     updateOidcConfigsByKey,
     getJwtCustomizer,
+    deleteJwtCustomizer,
   } = queries.logtoConfigs;
   const { getOidcConfigs } = logtoConfigs;
 >>>>>>> 8086c9bc6 (feat(core): add GET /configs/jwt-customizer API)
@@ -272,6 +273,25 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
           : LogtoJwtTokenKey.ClientCredentials
       );
       ctx.body = value;
+      return next();
+    }
+  );
+
+  router.delete(
+    '/configs/jwt-customizer/:tokenType',
+    koaGuard({
+      params: z.object({
+        tokenType: z.nativeEnum(LogtoJwtTokenKeyType),
+      }),
+      status: [204, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { tokenType },
+      } = ctx.guard;
+
+      await deleteJwtCustomizer(getLogtoJwtTokenKey(tokenType));
+      ctx.status = 204;
       return next();
     }
   );

@@ -3,6 +3,7 @@ import {
   type AdminConsoleData,
   LogtoOidcConfigKeyType,
 } from '@logto/schemas';
+import { HTTPError } from 'got';
 
 import {
   deleteOidcKey,
@@ -12,6 +13,7 @@ import {
   updateAdminConsoleConfig,
   upsertJwtCustomizer,
   getJwtCustomizer,
+  deleteJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -126,7 +128,7 @@ describe('admin console sign-in experience', () => {
     expect(privateKeys2[1]?.id).toBe(privateKeys[0]?.id);
   });
 
-  it('should successfully POST and GET a JWT customizer (access token)', async () => {
+  it('should successfully POST/GET/DELETE a JWT customizer (access token)', async () => {
     const accessTokenJwtCustomizerPayload = {
       script: '',
       envVars: {},
@@ -138,11 +140,25 @@ describe('admin console sign-in experience', () => {
       },
     };
 
+    const accessToken = await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
+    /**
+     * The 'access-token' JWT customizer has not been created, as a result:
+     * - GET request should fail with a 404 error
+     * - DELETE request should fail with a 404 error
+     */
     await expectRejects(getJwtCustomizer('access-token'), {
       code: 'entity.not_exists',
       statusCode: 404,
     });
-    const accessToken = await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
+    const response = await deleteJwtCustomizer('access-token').catch(
+      (error: unknown) => error
+    );
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+
+    const accessToken = await insertJwtCustomizer(
+      'access-token',
+      accessTokenJwtCustomizerPayload
+    );
     expect(accessToken).toMatchObject(accessTokenJwtCustomizerPayload);
     const newAccessTokenJwtCustomizerPayload = {
       ...accessTokenJwtCustomizerPayload,
@@ -156,21 +172,44 @@ describe('admin console sign-in experience', () => {
     await expect(getJwtCustomizer('access-token')).resolves.toMatchObject(
       newAccessTokenJwtCustomizerPayload
     );
+
+    /**
+     * The 'access-token' JWT customizer has been created, as a result:
+     * - DELETE request should succeed
+     * - GET request should fail with a 404 error after the successful DELETE request
+     */
+    await expect(deleteJwtCustomizer('access-token')).resolves.not.toThrow();
+    await expectRejects(getJwtCustomizer('access-token'), {
+      code: 'entity.not_found',
+      statusCode: 404,
+    });
   });
 
-  it('should successfully POST and GET a JWT customizer (client credentials)', async () => {
+  it('should successfully POST/GET/DELETE a JWT customizer (client credentials)', async () => {
     const clientCredentialsJwtCustomizerPayload = {
       script: '',
       envVars: {},
       contextSample: {},
     };
 
+    const clientCredentials = await upsertJwtCustomizer(
+      'client-credentials',
+    /**
+     * The 'client-credentials' JWT customizer has not been created, as a result:
+     * - GET request should fail with a 404 error
+     * - DELETE request should fail with a 404 error
+     */
     await expectRejects(getJwtCustomizer('client-credentials'), {
       code: 'entity.not_exists',
       statusCode: 404,
     });
-    const clientCredentials = await upsertJwtCustomizer(
-      'client-credentials',
+    const response = await deleteJwtCustomizer(LogtoJwtTokenKeyType.ClientCredentials).catch(
+      (error: unknown) => error
+    );
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+
+    const clientCredentials = await insertJwtCustomizer(
+      LogtoJwtTokenKeyType.ClientCredentials,
       clientCredentialsJwtCustomizerPayload
     );
     expect(clientCredentials).toMatchObject(clientCredentialsJwtCustomizerPayload);
@@ -186,5 +225,16 @@ describe('admin console sign-in experience', () => {
     await expect(getJwtCustomizer('client-credentials')).resolves.toMatchObject(
       newClientCredentialsJwtCustomizerPayload
     );
+
+    /**
+     * The 'client-credentials' JWT customizer has been created, as a result:
+     * - DELETE request should succeed
+     * - GET request should fail with a 404 error after the successful DELETE request
+     */
+    await deleteJwtCustomizer(LogtoJwtTokenKeyType.ClientCredentials);
+    await expectRejects(getJwtCustomizer(LogtoJwtTokenKeyType.ClientCredentials), {
+      code: 'entity.not_found',
+      statusCode: 404,
+    });
   });
 });
