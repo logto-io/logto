@@ -18,7 +18,7 @@
 .tabContent {
   display: flex;
   flex-direction: row;
-  gap: _.unit(2);
+  gap: _.unit(3);
   flex-grow: 1;
 
   > * {
