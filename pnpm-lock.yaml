@@ -3095,9 +3095,6 @@ importers:
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
-      monaco-editor:
-        specifier: ^0.46.0
-        version: 0.46.0
       nanoid:
         specifier: ^5.0.1
         version: 5.0.1
