@@ -4,7 +4,7 @@ import { generateStandardShortId, generateStandardId } from '@logto/shared';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
-import { argon2Verify } from 'hash-wasm';
+import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
 import pRetry from 'p-retry';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
@@ -40,9 +40,47 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
     new RequestError({ code: 'session.invalid_credentials', status: 422 })
   );
 
-  const result = await argon2Verify({ password, hash: passwordEncrypted });
+  switch (passwordEncryptionMethod) {
+    case UsersPasswordEncryptionMethod.Argon2i: {
+      const result = await argon2Verify({ password, hash: passwordEncrypted });
+      assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+      break;
+    }
+    case UsersPasswordEncryptionMethod.MD5: {
+      const expectedEncrypted = await md5(password);
+      assertThat(
+        expectedEncrypted === passwordEncrypted,
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+      break;
+    }
+    case UsersPasswordEncryptionMethod.SHA1: {
+      const expectedEncrypted = await sha1(password);
+      assertThat(
+        expectedEncrypted === passwordEncrypted,
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+      break;
+    }
+    case UsersPasswordEncryptionMethod.SHA256: {
+      const expectedEncrypted = await sha256(password);
+      assertThat(
+        expectedEncrypted === passwordEncrypted,
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+      break;
+    }
+    case UsersPasswordEncryptionMethod.Bcrypt: {
+      const result = await bcryptVerify({ password, hash: passwordEncrypted });
+      assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+      break;
+    }
+    default: {
+      throw new RequestError({ code: 'session.invalid_credentials', status: 422 });
+    }
+  }
 
-  assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+  // TODO(@sijie) migrate to use argon2
 
   return user;
 };

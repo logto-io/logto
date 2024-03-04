@@ -2,11 +2,12 @@ import { MfaFactor, UsersPasswordEncryptionMethod } from '@logto/schemas';
 
 import { mockResource, mockAdminUserRole, mockScope } from '#src/__mocks__/index.js';
 import { mockUser } from '#src/__mocks__/user.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
 
-const { encryptUserPassword, createUserLibrary } = await import('./user.js');
+const { encryptUserPassword, createUserLibrary, verifyUserPassword } = await import('./user.js');
 
 const hasUserWithId = jest.fn();
 const updateUserById = jest.fn();
@@ -65,6 +66,90 @@ describe('encryptUserPassword()', () => {
     const { passwordEncryptionMethod, passwordEncrypted } = await encryptUserPassword('password');
     expect(passwordEncryptionMethod).toEqual(UsersPasswordEncryptionMethod.Argon2i);
     expect(passwordEncrypted).toContain('argon2');
+  });
+});
+
+describe('verifyUserPassword()', () => {
+  describe('Argon2', () => {
+    it('resolves when password is correct', async () => {
+      await expect(
+        verifyUserPassword(mockUser, 'HOH2hTmW0xtYAJUfRSQjJdW5')
+      ).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(mockUser, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('MD5', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '5f4dcc3b5aa765d61d8327deb882cf99',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.MD5,
+    };
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('SHA1', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.SHA1,
+    };
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('SHA256', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.SHA256,
+    };
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('Bcrypt', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '$2a$12$WQMqTfbtcZFBC1C1u8wpie6lXOSciUr5kk/8yEydoIMKltb9UKJ.6',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Bcrypt,
+    };
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
   });
 });
 
