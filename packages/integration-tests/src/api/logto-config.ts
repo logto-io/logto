@@ -45,3 +45,8 @@ export const getJwtCustomizer = async (keyTypePath: 'access-token' | 'client-cre
   authedAdminApi
     .get(`configs/jwt-customizer/${keyTypePath}`)
     .json<JwtCustomizerAccessToken | JwtCustomizerClientCredentials>();
+
+export const getJwtCustomizer = async (keyType: LogtoJwtTokenKeyType) =>
+  authedAdminApi
+    .get(`configs/jwt-customizer/${keyType}`)
+    .json<JwtCustomizerAccessToken | JwtCustomizerClientCredentials>();

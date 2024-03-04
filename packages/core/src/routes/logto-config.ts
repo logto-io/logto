@@ -81,9 +81,21 @@ const getRedactedOidcKeyResponse = async (
 export default function logtoConfigRoutes<T extends AuthedRouter>(
   ...[router, { queries, logtoConfigs, invalidateCache }]: RouterInitArgs<T>
 ) {
+<<<<<<< HEAD
   const { getAdminConsoleConfig, getRowsByKeys, updateAdminConsoleConfig, updateOidcConfigsByKey } =
     queries.logtoConfigs;
   const { getOidcConfigs, upsertJwtCustomizer, getJwtCustomizer } = logtoConfigs;
+=======
+  const {
+    getAdminConsoleConfig,
+    getRowsByKeys,
+    insertJwtCustomizer,
+    updateAdminConsoleConfig,
+    updateOidcConfigsByKey,
+    getJwtCustomizer,
+  } = queries.logtoConfigs;
+  const { getOidcConfigs } = logtoConfigs;
+>>>>>>> 8086c9bc6 (feat(core): add GET /configs/jwt-customizer API)
 
   router.get(
     '/configs/admin-console',
