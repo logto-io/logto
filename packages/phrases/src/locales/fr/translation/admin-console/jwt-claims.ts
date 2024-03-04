@@ -7,7 +7,13 @@ const jwt_claims = {
   /** UNTRANSLATED */
   user_jwt_tab: 'User JWT',
   /** UNTRANSLATED */
-  machine_to_machine_jwt_tab: 'Machine-to-Machine JWT',
+  machine_to_machine_jwt_tab: 'Machine-to-machine JWT',
+  /** UNTRANSLATED */
+  user_jwt: 'user JWT',
+  /** UNTRANSLATED */
+  machine_to_machine_jwt: 'machine-to-machine JWT',
+  /** UNTRANSLATED */
+  code_editor_title: 'Customize the {{token}} claims',
 };
 
 export default Object.freeze(jwt_claims);

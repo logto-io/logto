@@ -9,6 +9,7 @@ body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: auto;
+  min-height: 100vh;
 }
 
 * {

@@ -5,8 +5,39 @@
   flex-direction: column;
   height: 100%;
 
-  .cardTitle {
+  .header {
     flex-shrink: 0;
     margin-bottom: _.unit(4);
+  }
+
+  .tabNav {
+    margin-bottom: _.unit(4);
+  }
+}
+
+.tabContent {
+  display: flex;
+  flex-direction: row;
+  gap: _.unit(2);
+  flex-grow: 1;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.codePanel {
+  margin-bottom: _.unit(6);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .cardTitle {
+    font: var(--font-title-2);
+    margin-bottom: _.unit(3);
+  }
+
+  .flexGrow {
+    flex-grow: 1;
   }
 }
