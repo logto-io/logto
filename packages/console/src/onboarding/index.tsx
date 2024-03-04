@@ -5,7 +5,8 @@ import { useContext, useEffect } from 'react';
 import { Route, Navigate, Outlet, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
-import ReportConversion from '@/components/ReportConversion';
+import { useReportConversion } from '@/components/Conversion';
+import { gtagSignUpConversionId } from '@/components/Conversion/utils';
 import AppBoundary from '@/containers/AppBoundary';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
@@ -30,6 +31,15 @@ function Layout() {
   const { setThemeOverride } = useContext(AppThemeContext);
   const { match, getTo } = useTenantPathname();
 
+  /**
+   * Report a sign-up conversion.
+   *
+   * Note it may run multiple times (e.g. a user visit multiple times to finish the onboarding process,
+   * which rarely happens). We should turn on deduplication settings in the provider's dashboard. For
+   * example, in Google, we should set conversion's "Count" to "One".
+   */
+  useReportConversion({ gtagId: gtagSignUpConversionId, redditType: 'SignUp' });
+
   useEffect(() => {
     setThemeOverride(Theme.Light);
 
@@ -53,7 +63,6 @@ function Layout() {
       <div className={styles.app}>
         <SWRConfig value={swrOptions}>
           <AppBoundary>
-            <ReportConversion />
             <Toast />
             <Outlet />
           </AppBoundary>
