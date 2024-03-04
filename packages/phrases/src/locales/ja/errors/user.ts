@@ -33,6 +33,10 @@ const user = {
   missing_mfa: 'MFAを追加してからサインインしてください。',
   totp_already_in_use: 'TOTPはすでに使用されています。',
   backup_code_already_in_use: 'バックアップコードはすでに使用されています。',
+  /** UNTRANSLATED */
+  password_algorithm_required: 'Password algorithm is required.',
+  /** UNTRANSLATED */
+  password_and_digest: 'You cannot set both plain text password and password digest.',
 };
 
 export default Object.freeze(user);

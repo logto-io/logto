@@ -1,3 +1,4 @@
+import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import {
@@ -34,6 +35,20 @@ describe('admin console user management', () => {
     // `ssoIdentities` field should be array type is specified that return user info with `includeSsoIdentities`.
     const userDetailsWithSsoIdentities = await getUser(user.id, true);
     expect(userDetailsWithSsoIdentities.ssoIdentities).toStrictEqual([]);
+  });
+
+  it('should create user with password digest successfully', async () => {
+    const user = await createUserByAdmin(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      '5f4dcc3b5aa765d61d8327deb882cf99',
+      UsersPasswordEncryptionMethod.MD5
+    );
+
+    await expect(verifyUserPassword(user.id, 'password')).resolves.not.toThrow();
   });
 
   it('should fail when create user with conflict identifiers', async () => {

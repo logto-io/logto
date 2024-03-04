@@ -31,6 +31,10 @@ const user = {
   missing_mfa: '你需要在登录之前绑定额外的MFA。',
   totp_already_in_use: 'TOTP已在使用中。',
   backup_code_already_in_use: '备用代码已在使用中。',
+  /** UNTRANSLATED */
+  password_algorithm_required: 'Password algorithm is required.',
+  /** UNTRANSLATED */
+  password_and_digest: 'You cannot set both plain text password and password digest.',
 };
 
 export default Object.freeze(user);
