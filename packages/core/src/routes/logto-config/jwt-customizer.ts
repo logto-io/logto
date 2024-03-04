@@ -34,7 +34,8 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
   ...[router, { id: tenantId, queries, logtoConfigs, cloudConnection }]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteJwtCustomizer } = queries.logtoConfigs;
-  const { upsertJwtCustomizer, getJwtCustomizer, getJwtCustomizers } = logtoConfigs;
+  const { upsertJwtCustomizer, getJwtCustomizer, getJwtCustomizers, updateJwtCustomizer } =
+    logtoConfigs;
 
   router.put(
     '/configs/jwt-customizer/:tokenTypePath',
@@ -76,6 +77,30 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
         ctx.status = 201;
       }
       ctx.body = jwtCustomizer.value;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/configs/jwt-customizer/:tokenTypePath',
+    // See comments in the `PUT /configs/jwt-customizer/:tokenTypePath` route, handle the request body manually.
+    koaGuard({
+      params: z.object({
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
+      }),
+      body: z.unknown(),
+      response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { tokenTypePath },
+        body: rawBody,
+      } = ctx.guard;
+      const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
+
+      ctx.body = await updateJwtCustomizer(key, body);
 
       return next();
     }

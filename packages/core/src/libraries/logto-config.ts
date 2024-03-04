@@ -119,11 +119,22 @@ export const createLogtoConfigLibrary = ({
     }
   };
 
+  const updateJwtCustomizer = async <T extends LogtoJwtTokenKey>(
+    key: T,
+    value: JwtCustomizerType[T]
+  ): Promise<JwtCustomizerType[T]> => {
+    const originValue = await getJwtCustomizer(key);
+    const result = jwtCustomizerConfigGuard[key].parse({ ...originValue, ...value });
+    const updatedRow = await upsertJwtCustomizer(key, result);
+    return updatedRow.value;
+  };
+
   return {
     getOidcConfigs,
     getCloudConnectionData,
     upsertJwtCustomizer,
     getJwtCustomizer,
     getJwtCustomizers,
+    updateJwtCustomizer,
   };
 };
