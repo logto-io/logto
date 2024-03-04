@@ -6,7 +6,7 @@ import { Route, Navigate, Outlet, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import { useReportConversion } from '@/components/Conversion';
-import { gtagSignUpConversionId } from '@/components/Conversion/utils';
+import { GtagConversionId } from '@/components/Conversion/utils';
 import AppBoundary from '@/containers/AppBoundary';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
@@ -38,7 +38,7 @@ function Layout() {
    * which rarely happens). We should turn on deduplication settings in the provider's dashboard. For
    * example, in Google, we should set conversion's "Count" to "One".
    */
-  useReportConversion({ gtagId: gtagSignUpConversionId, redditType: 'SignUp' });
+  useReportConversion({ gtagId: GtagConversionId.SignUp, redditType: 'SignUp' });
 
   useEffect(() => {
     setThemeOverride(Theme.Light);

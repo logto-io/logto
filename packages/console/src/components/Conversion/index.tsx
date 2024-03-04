@@ -1,37 +1,28 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 
-import { isProduction } from '@/consts/env';
 import useCurrentUser from '@/hooks/use-current-user';
 
 import { useRetry } from './use-retry';
-import { shouldReport, gtagAwTrackingId, redditPixelId, hashEmail } from './utils';
-
-const debug = (...args: Parameters<(typeof console)['debug']>) => {
-  if (!isProduction) {
-    console.debug(...args);
-  }
-};
+import {
+  shouldReport,
+  gtagAwTrackingId,
+  redditPixelId,
+  hashEmail,
+  type GtagConversionId,
+  type RedditReportType,
+  reportToGoogle,
+  reportToReddit,
+} from './utils';
 
 type ScriptProps = {
   userEmailHash?: string;
 };
 
 function GoogleScripts({ userEmailHash }: ScriptProps) {
-  useRetry({
-    precondition: Boolean(userEmailHash),
-    execute: () => {
-      if (!window.gtag) {
-        return false;
-      }
-
-      debug('<GoogleScripts>:', 'userEmailHash =', userEmailHash);
-      window.gtag('set', 'user_data', {
-        sha256_email_address: userEmailHash,
-      });
-      return true;
-    },
-  });
+  if (!userEmailHash) {
+    return null;
+  }
 
   return (
     <Helmet>
@@ -44,7 +35,8 @@ function GoogleScripts({ userEmailHash }: ScriptProps) {
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', '${gtagAwTrackingId}', {'allow_enhanced_conversions': true});
+        gtag('config', '${gtagAwTrackingId}', { 'allow_enhanced_conversions': true });
+        gtag('set', 'user_data', { 'sha256_email_address': '${userEmailHash}' });
       `}</script>
     </Helmet>
   );
@@ -77,7 +69,6 @@ export function GlobalScripts() {
   const [userEmailHash, setUserEmailHash] = useState<string>();
 
   /**
-   * Initiate Reddit Pixel when user is loaded.
    * Use user email to prevent duplicate conversion, and it is hashed before sending
    * to protect user privacy.
    */
@@ -104,39 +95,18 @@ export function GlobalScripts() {
 }
 
 type ReportConversionOptions = {
-  gtagId?: string;
-  // Add more if needed: https://reddit.my.site.com/helpcenter/s/article/Install-the-Reddit-Pixel-on-your-website
-  redditType?: 'PageVisit' | 'ViewContent' | 'Search' | 'Purchase' | 'Lead' | 'SignUp';
+  gtagId?: GtagConversionId;
+  redditType?: RedditReportType;
 };
 
 export const useReportConversion = ({ gtagId, redditType }: ReportConversionOptions) => {
   useRetry({
     precondition: Boolean(shouldReport && gtagId),
-    execute: () => {
-      if (!window.gtag) {
-        return false;
-      }
-
-      debug('useReportConversion():', 'gtagId =', gtagId);
-      window.gtag('event', 'conversion', {
-        send_to: gtagId,
-      });
-
-      return true;
-    },
+    execute: () => (gtagId ? reportToGoogle(gtagId) : false),
   });
 
   useRetry({
     precondition: Boolean(shouldReport && redditType),
-    execute: () => {
-      if (!window.rdt) {
-        return false;
-      }
-
-      debug('useReportConversion():', 'redditType =', redditType);
-      window.rdt('track', redditType);
-
-      return true;
-    },
+    execute: () => (redditType ? reportToReddit(redditType) : false),
   });
 };

@@ -9,6 +9,7 @@ import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppLoading from '@/components/AppLoading';
+import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils';
 import PlanName from '@/components/PlanName';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -80,6 +81,7 @@ function CheckoutSuccessCallback() {
 
   useEffect(() => {
     if (isCheckoutSuccessful) {
+      reportToGoogle(GtagConversionId.CreateProductionTenant);
       clearLocalCheckoutSession();
 
       const checkoutPlan = subscriptionPlans?.find((plan) => plan.id === checkoutPlanId);
