@@ -51,14 +51,6 @@ export const logtoOidcConfigGuard: Readonly<{
   [LogtoOidcConfigKey.CookieKeys]: oidcConfigKeyGuard.array(),
 });
 
-/**
- * Logto JWT customizer token types, used in REST API routes.
- */
-export enum LogtoJwtTokenKeyType {
-  AccessToken = 'access-token',
-  ClientCredentials = 'client-credentials',
-}
-
 export enum LogtoJwtTokenKey {
   AccessToken = 'jwt.accessToken',
   ClientCredentials = 'jwt.clientCredentials',
