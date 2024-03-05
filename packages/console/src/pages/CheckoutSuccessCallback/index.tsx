@@ -81,7 +81,6 @@ function CheckoutSuccessCallback() {
 
   useEffect(() => {
     if (isCheckoutSuccessful) {
-      reportToGoogle(GtagConversionId.CreateProductionTenant);
       clearLocalCheckoutSession();
 
       const checkoutPlan = subscriptionPlans?.find((plan) => plan.id === checkoutPlanId);
@@ -93,12 +92,20 @@ function CheckoutSuccessCallback() {
         );
       }
 
+      // No need to check `isDowngrade` here, since a downgrade must occur in a tenant with a Pro
+      // plan, and the purchase conversion has already been reported using the same tenant ID. We
+      // use the tenant ID as the transaction ID, so there's no concern about duplicate conversion
+      // reports.
+      reportToGoogle(GtagConversionId.PurchaseProPlan, { transactionId: checkoutTenantId });
+
+      // If the tenant is the current tenant, navigate to the callback page
       if (checkoutTenantId === currentTenantId) {
         navigate(conditional(callbackPage) ?? consoleHomePage, { replace: true });
         return;
       }
 
-      // Note: the tenant is created after checkout.
+      // New tenant created, navigate to the new tenant page
+      reportToGoogle(GtagConversionId.CreateProductionTenant, { transactionId: checkoutTenantId });
       navigateTenant(checkoutTenantId);
     }
   }, [

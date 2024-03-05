@@ -95,14 +95,19 @@ export function GlobalScripts() {
 }
 
 type ReportConversionOptions = {
+  transactionId?: string;
   gtagId?: GtagConversionId;
   redditType?: RedditReportType;
 };
 
-export const useReportConversion = ({ gtagId, redditType }: ReportConversionOptions) => {
+export const useReportConversion = ({
+  gtagId,
+  redditType,
+  transactionId,
+}: ReportConversionOptions) => {
   useRetry({
     precondition: Boolean(shouldReport && gtagId),
-    execute: () => (gtagId ? reportToGoogle(gtagId) : false),
+    execute: () => (gtagId ? reportToGoogle(gtagId, { transactionId }) : false),
   });
 
   useRetry({

@@ -12,6 +12,7 @@ import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import Toast from '@/ds-components/Toast';
+import useCurrentUser from '@/hooks/use-current-user';
 import useSwrOptions from '@/hooks/use-swr-options';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import NotFound from '@/pages/NotFound';
@@ -31,6 +32,10 @@ function Layout() {
   const { setThemeOverride } = useContext(AppThemeContext);
   const { match, getTo } = useTenantPathname();
 
+  // User object should be available at this point as it's rendered by the `<AppRoutes />`
+  // component in `packages/console/src/App.tsx`.
+  const { user } = useCurrentUser();
+
   /**
    * Report a sign-up conversion.
    *
@@ -38,7 +43,11 @@ function Layout() {
    * which rarely happens). We should turn on deduplication settings in the provider's dashboard. For
    * example, in Google, we should set conversion's "Count" to "One".
    */
-  useReportConversion({ gtagId: GtagConversionId.SignUp, redditType: 'SignUp' });
+  useReportConversion({
+    gtagId: GtagConversionId.SignUp,
+    redditType: 'SignUp',
+    transactionId: user?.id,
+  });
 
   useEffect(() => {
     setThemeOverride(Theme.Light);

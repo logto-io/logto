@@ -44,7 +44,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
         const { name, tag } = tenantData;
         const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
 
-        reportToGoogle(GtagConversionId.CreateProductionTenant);
+        reportToGoogle(GtagConversionId.CreateProductionTenant, { transactionId: newTenant.id });
         onClose(newTenant);
         return;
       }
