@@ -219,8 +219,8 @@ importers:
         specifier: ^17.0.13
         version: 17.0.13
       '@withtyped/server':
-        specifier: ^0.12.9
-        version: 0.12.9(zod@3.22.4)
+        specifier: ^0.13.3
+        version: 0.13.3(zod@3.22.4)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
@@ -3021,8 +3021,8 @@ importers:
         specifier: ^15.5.1
         version: 15.5.1
       '@withtyped/client':
-        specifier: ^0.7.22
-        version: 0.7.22(zod@3.22.4)
+        specifier: ^0.8.3
+        version: 0.8.3(zod@3.22.4)
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
@@ -3267,8 +3267,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1
       '@withtyped/client':
-        specifier: ^0.7.22
-        version: 0.7.22(zod@3.22.4)
+        specifier: ^0.8.3
+        version: 0.8.3(zod@3.22.4)
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -4119,11 +4119,11 @@ importers:
         specifier: ^2.9.0
         version: 2.9.0
       '@withtyped/client':
-        specifier: ^0.7.22
-        version: 0.7.22(zod@3.22.4)
+        specifier: ^0.8.3
+        version: 0.8.3(zod@3.22.4)
       '@withtyped/server':
-        specifier: ^0.12.9
-        version: 0.12.9(zod@3.22.4)
+        specifier: ^0.13.3
+        version: 0.13.3(zod@3.22.4)
     optionalDependencies:
       zod:
         specifier: ^3.22.4
@@ -10528,10 +10528,10 @@ packages:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
     dev: true
 
-  /@withtyped/client@0.7.22(zod@3.22.4):
-    resolution: {integrity: sha512-emNtcO0jc0dFWhvL7eUIRYzhTfn+JqgIvCmXb8ZUFOR8wdSSGrr9VDlm+wgQD06DEBBpmqtTHMMHTNXJdUC/Qw==}
+  /@withtyped/client@0.8.3(zod@3.22.4):
+    resolution: {integrity: sha512-JO/9UuYdVGl5TuS+A+skkrt9K4A0U9FIRhBGHqQNaBiyWn4fNVwy4uZ9fbtwF/Y2UvXVSAcqaHrQHQxSryH82w==}
     dependencies:
-      '@withtyped/server': 0.12.9(zod@3.22.4)
+      '@withtyped/server': 0.13.3(zod@3.22.4)
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
@@ -10544,6 +10544,7 @@ packages:
       '@silverhand/essentials': 2.9.0
       '@withtyped/shared': 0.2.2
       zod: 3.22.4
+    dev: true
 
   /@withtyped/server@0.13.3(zod@3.22.4):
     resolution: {integrity: sha512-MPyjRPQd5JySDnMnXPxGXXnw7AACAl8TLhWPjm4sdBgVMssSrmBbjRxBep0jY64PJ3xzICZh0ArWTRdXyNFIog==}
@@ -10553,7 +10554,6 @@ packages:
       '@silverhand/essentials': 2.9.0
       '@withtyped/shared': 0.2.2
       zod: 3.22.4
-    dev: false
 
   /@withtyped/shared@0.2.2:
     resolution: {integrity: sha512-Vpcj12NqaoZ8M5Z/1kffheI9FBZEm9goed0THmgTcMKXLHjXSRbMZMp0olVxovEgaTIAydshqJOQUXKZMctIZw==}
