@@ -20,26 +20,15 @@ const baseTokenGuardObject = {
   kind: z.string(),
 };
 
-// Ref: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/0b7b01b70c4c211a4f69caf05008228ac065413c/types/oidc-provider/index.d.ts#L144
-const claimsParameterMemberGuard = z
-  .object({
-    essential: z.boolean(),
-    value: z.string(),
-    values: z.array(z.string()),
-  })
-  .partial()
-  .catchall(jsonObjectGuard);
-
-// Ref: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/0b7b01b70c4c211a4f69caf05008228ac065413c/types/oidc-provider/index.d.ts#L152
-const claimsParameterGuard = z.object({
-  id_token: z.record(claimsParameterMemberGuard.nullable()).optional(),
-  userinfo: z.record(claimsParameterMemberGuard.nullable()).optional(),
-});
-
 /**
  * Ref:
  * https://github.com/DefinitelyTyped/DefinitelyTyped/blob/0b7b01b70c4c211a4f69caf05008228ac065413c/types/oidc-provider/index.d.ts#L550
  * https://github.com/panva/node-oidc-provider/blob/270af1da83dda4c49edb4aaab48908f737d73379/lib/models/access_token.js#L17
+ *
+ * We do not include `claims` field in this guard because we did not enabled the `feature.claimsParameter` in the oidc-provider.
+ * If we enable the `feature.claimsParameter` feature in the future, we should include and implement the `claims` field guard.
+ * `feature.claimsParameter`: https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#featuresclaimsparameter
+ * OIDC claims parameter: https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter
  */
 export const accessTokenGuard = z
   .object({
@@ -47,7 +36,6 @@ export const accessTokenGuard = z
     kind: z.literal('AccessToken'),
     accountId: z.string(),
     aud: z.string().or(z.array(z.string())),
-    claims: claimsParameterGuard.optional(),
     extra: jsonObjectGuard.optional(),
     grantId: z.string(),
     scope: z.string().optional(),

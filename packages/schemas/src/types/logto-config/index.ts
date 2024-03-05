@@ -64,13 +64,11 @@ export enum LogtoJwtTokenKey {
   ClientCredentials = 'jwt.clientCredentials',
 }
 
-export const jwtCustomizerGuard = z
+const jwtCustomizerGuard = z
   .object({
     script: z.string(),
     envVars: z.record(z.string()),
     contextSample: jsonObjectGuard,
-    // This `tokenSample` field will be overridden by the `tokenSample` field once the `tokenType` is determined.
-    tokenSample: jsonObjectGuard,
   })
   .partial();
 
