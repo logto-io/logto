@@ -27,6 +27,7 @@ import { OnboardingRoutes } from '@/onboarding';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import { ConsoleRoutes } from '@/pages/ConsoleRoutes';
 
+import { GlobalScripts } from './components/Conversion';
 import { adminTenantEndpoint, mainTitle } from './consts';
 import ErrorBoundary from './containers/ErrorBoundary';
 import LogtoErrorBoundary from './containers/LogtoErrorBoundary';
@@ -153,5 +154,10 @@ function AppRoutes() {
     return <AppLoading />;
   }
 
-  return isAuthenticated && isOnboarding ? <OnboardingRoutes /> : <ConsoleRoutes />;
+  return (
+    <>
+      <GlobalScripts />
+      {isAuthenticated && isOnboarding ? <OnboardingRoutes /> : <ConsoleRoutes />}
+    </>
+  );
 }
