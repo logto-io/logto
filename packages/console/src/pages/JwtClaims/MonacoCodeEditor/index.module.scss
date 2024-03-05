@@ -23,7 +23,8 @@
 
       .tab {
         padding: _.unit(1.5) _.unit(3);
-        font: 500 14px/20px 'Roboto Mono', monospace;
+        font: var(--font-label-2);
+        font-family: 'Roboto Mono', monospace;
         color: var(--color-code-grey);
         cursor: pointer;
 
@@ -37,7 +38,8 @@
     }
 
     .title {
-      font: 500 14px/20px 'Roboto Mono', monospace;
+      font: var(--font-label-2);
+      font-family: 'Roboto Mono', monospace;
       color: var(--color-code-white);
     }
 
