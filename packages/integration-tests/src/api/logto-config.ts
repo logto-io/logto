@@ -34,7 +34,7 @@ export const rotateOidcKeys = async (
     .post(`configs/oidc/${keyType}/rotate`, { json: { signingKeyAlgorithm } })
     .json<OidcConfigKeysResponse[]>();
 
-export const insertJwtCustomizer = async (keyType: LogtoJwtTokenKeyType, value: unknown) =>
+export const insertOrUpdateJwtCustomizer = async (keyType: LogtoJwtTokenKeyType, value: unknown) =>
   authedAdminApi
-    .post(`configs/jwt-customizer/${keyType}`, { json: value })
+    .put(`configs/jwt-customizer/${keyType}`, { json: value })
     .json<JwtCustomizerAccessToken | JwtCustomizerClientCredentials>();

@@ -7,7 +7,6 @@ import guard from './guard.js';
 import hook from './hook.js';
 import localization from './localization.js';
 import log from './log.js';
-import logto_config from './logto-config.js';
 import oidc from './oidc.js';
 import organization from './organization.js';
 import password from './password.js';
@@ -36,7 +35,6 @@ const errors = {
   verification_code,
   sign_in_experiences,
   localization,
-  logto_config,
   swagger,
   entity,
   log,

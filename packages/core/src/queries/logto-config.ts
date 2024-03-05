@@ -53,7 +53,7 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     `);
 
   // Can not narrow down the type of value if we utilize `buildInsertIntoWithPool` method.
-  const insertJwtCustomizer = async <T extends LogtoJwtTokenKey>(
+  const insertOrUpdateJwtCustomizer = async <T extends LogtoJwtTokenKey>(
     key: T,
     value: z.infer<(typeof jwtCustomizerConfigGuard)[T]>
   ) =>
@@ -61,7 +61,9 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
       sql`
         insert into ${table} (${fields.key}, ${fields.value})
           values (${key}, ${sql.jsonb(value)})
-          on conflict (${fields.tenantId}, ${fields.key}) do nothing
+          on conflict (${fields.tenantId}, ${fields.key}) do update set ${
+            fields.value
+          } = ${sql.jsonb(value)}
           returning *
       `
     );
@@ -72,6 +74,6 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     getCloudConnectionData,
     getRowsByKeys,
     updateOidcConfigsByKey,
-    insertJwtCustomizer,
+    insertOrUpdateJwtCustomizer,
   };
 };

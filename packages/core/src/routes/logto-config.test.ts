@@ -54,7 +54,7 @@ const logtoConfigQueries = {
   }),
   updateOidcConfigsByKey: jest.fn(),
   getRowsByKeys: jest.fn(async () => mockLogtoConfigRows),
-  insertJwtCustomizer: jest.fn(),
+  insertOrUpdateJwtCustomizer: jest.fn(),
 };
 
 const logtoConfigLibraries = {
@@ -226,36 +226,43 @@ describe('configs routes', () => {
     );
   });
 
-  it('POST /configs/jwt-customizer/:tokenType should add a record successfully', async () => {
+  it('PUT /configs/jwt-customizer/:tokenType should add a record successfully', async () => {
     logtoConfigQueries.getRowsByKeys.mockResolvedValueOnce({
       ...mockLogtoConfigRows,
       rows: [],
       rowCount: 0,
     });
-    logtoConfigQueries.insertJwtCustomizer.mockResolvedValueOnce(
+    logtoConfigQueries.insertOrUpdateJwtCustomizer.mockResolvedValueOnce(
       mockJwtCustomizerConfigForAccessToken
     );
     const response = await routeRequester
-      .post('/configs/jwt-customizer/access-token')
-      .send(mockJwtCustomizerConfigForAccessToken);
-    expect(logtoConfigQueries.insertJwtCustomizer).toHaveBeenCalledWith(
+      .put(`/configs/jwt-customizer/access-token`)
+      .send(mockJwtCustomizerConfigForAccessToken.value);
+    expect(logtoConfigQueries.insertOrUpdateJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.AccessToken,
-      mockJwtCustomizerConfigForAccessToken
+      mockJwtCustomizerConfigForAccessToken.value
     );
     expect(response.status).toEqual(201);
     expect(response.body).toEqual(mockJwtCustomizerConfigForAccessToken.value);
   });
 
-  it('POST /configs/jwt-customizer/:tokenType should fail ', async () => {
+  it('PUT /configs/jwt-customizer/:tokenType should update a record successfully', async () => {
     logtoConfigQueries.getRowsByKeys.mockResolvedValueOnce({
       ...mockLogtoConfigRows,
       rows: [mockJwtCustomizerConfigForAccessToken],
       rowCount: 1,
     });
+    logtoConfigQueries.insertOrUpdateJwtCustomizer.mockResolvedValueOnce(
+      mockJwtCustomizerConfigForAccessToken
+    );
     const response = await routeRequester
-      .post('/configs/jwt-customizer/access-token')
-      .send(mockJwtCustomizerConfigForAccessToken);
-    expect(logtoConfigQueries.insertJwtCustomizer).not.toHaveBeenCalled();
-    expect(response.status).toEqual(409);
+      .put('/configs/jwt-customizer/access-token')
+      .send(mockJwtCustomizerConfigForAccessToken.value);
+    expect(logtoConfigQueries.insertOrUpdateJwtCustomizer).toHaveBeenCalledWith(
+      LogtoJwtTokenKey.AccessToken,
+      mockJwtCustomizerConfigForAccessToken.value
+    );
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(mockJwtCustomizerConfigForAccessToken.value);
   });
 });

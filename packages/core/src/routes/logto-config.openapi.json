@@ -106,9 +106,9 @@
       }
     },
     "/api/configs/jwt-customizer/{tokenType}": {
-      "post": {
-        "summary": "Create JWT customizer",
-        "description": "Create a JWT customizer for the given token type.",
+      "put": {
+        "summary": "Create or update JWT customizer",
+        "description": "Create or update a JWT customizer for the given token type.",
         "parameters": [
           {
             "in": "path",
@@ -139,14 +139,14 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "The updated JWT customizer."
+          },
           "201": {
             "description": "The created JWT customizer."
           },
           "400": {
             "description": "The request body is invalid."
-          },
-          "409": {
-            "description": "The JWT customizer already exists."
           }
         }
       }

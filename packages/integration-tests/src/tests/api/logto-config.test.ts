@@ -11,7 +11,7 @@ import {
   getOidcKeys,
   rotateOidcKeys,
   updateAdminConsoleConfig,
-  insertJwtCustomizer,
+  insertOrUpdateJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -141,15 +141,35 @@ describe('admin console sign-in experience', () => {
       ...accessTokenJwtCustomizerPayload,
       contextSample: {},
     };
-    const accessToken = await insertJwtCustomizer(
+
+    const accessToken = await insertOrUpdateJwtCustomizer(
       LogtoJwtTokenKeyType.AccessToken,
       accessTokenJwtCustomizerPayload
     );
     expect(accessToken).toMatchObject(accessTokenJwtCustomizerPayload);
-    const clientCredentials = await insertJwtCustomizer(
+    const newAccessTokenJwtCustomizerPayload = {
+      ...accessTokenJwtCustomizerPayload,
+      script: 'new script',
+    };
+    const updatedAccessToken = await insertOrUpdateJwtCustomizer(
+      LogtoJwtTokenKeyType.AccessToken,
+      newAccessTokenJwtCustomizerPayload
+    );
+    expect(updatedAccessToken).toMatchObject(newAccessTokenJwtCustomizerPayload);
+
+    const clientCredentials = await insertOrUpdateJwtCustomizer(
       LogtoJwtTokenKeyType.ClientCredentials,
       clientCredentialsJwtCustomizerPayload
     );
     expect(clientCredentials).toMatchObject(clientCredentialsJwtCustomizerPayload);
+    const newClientCredentialsJwtCustomizerPayload = {
+      ...clientCredentialsJwtCustomizerPayload,
+      script: 'new script client credentials',
+    };
+    const updatedClientCredentials = await insertOrUpdateJwtCustomizer(
+      LogtoJwtTokenKeyType.ClientCredentials,
+      newClientCredentialsJwtCustomizerPayload
+    );
+    expect(updatedClientCredentials).toMatchObject(newClientCredentialsJwtCustomizerPayload);
   });
 });
