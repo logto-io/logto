@@ -38,7 +38,11 @@ import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
 import { consoleLog, getPathInModule } from '../../../utils.js';
 
-import { appendAdminConsoleRedirectUris, seedTenantCloudServiceApplication } from './cloud.js';
+import {
+  appendAdminConsoleRedirectUris,
+  setupLogsPrunerApplicationForAdminTenant,
+  seedTenantCloudServiceApplication,
+} from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
 import { seedTenantOrganizations } from './tenant-organizations.js';
 import {
@@ -198,6 +202,7 @@ export const seedCloud = async (connection: DatabaseTransactionConnection) => {
   await Promise.all([
     appendAdminConsoleRedirectUris(connection),
     seedTenantCloudServiceApplication(connection, adminTenantId),
+    setupLogsPrunerApplicationForAdminTenant(connection),
   ]);
 };
 
