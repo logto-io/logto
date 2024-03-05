@@ -215,7 +215,7 @@ export const fetchExternalDataEditorOptions: EditorProps['options'] = {
   folding: false,
 };
 
-export const fetchExternalDataExample = `const response = await fetch('https://api.example.com/data', {
+export const fetchExternalDataCodeExample = `const response = await fetch('https://api.example.com/data', {
   headers: {
     Authorization: \`{{API KEY}}\`,
   }

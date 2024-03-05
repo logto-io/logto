@@ -13,7 +13,7 @@ import {
   userDataDescription,
   tokenDataDescription,
   fetchExternalDataEditorOptions,
-  fetchExternalDataExample,
+  fetchExternalDataCodeExample,
 } from '../config';
 
 import GuideCard, { CardType } from './GuideCard';
@@ -101,7 +101,7 @@ function RightPanel({ tokenType }: Props) {
           <Editor
             language="typescript"
             className={styles.editor}
-            value={fetchExternalDataExample}
+            value={fetchExternalDataCodeExample}
             height="300px"
             theme="logto-dark"
             options={fetchExternalDataEditorOptions}
