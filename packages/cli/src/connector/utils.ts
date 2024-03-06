@@ -93,7 +93,7 @@ export const parseMetadata = async (
 
 export const buildRawConnector = async <
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends Router<any, BaseRoutes, string>,
+  T extends Router<any, any, BaseRoutes, string>,
   U extends AllConnector = AllConnector,
 >(
   connectorFactory: ConnectorFactory<T, U>,

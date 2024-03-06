@@ -1322,8 +1322,8 @@ importers:
         specifier: ^29.5.0
         version: 29.6.3
       '@logto/cloud':
-        specifier: 0.2.5-faca9a9
-        version: 0.2.5-faca9a9(zod@3.22.4)
+        specifier: 0.2.5-4ef0b45
+        version: 0.2.5-4ef0b45(zod@3.22.4)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2919,8 +2919,8 @@ importers:
         specifier: workspace:^1.4.0
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-faca9a9
-        version: 0.2.5-faca9a9(zod@3.22.4)
+        specifier: 0.2.5-4ef0b45
+        version: 0.2.5-4ef0b45(zod@3.22.4)
       '@logto/connector-kit':
         specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
@@ -3406,8 +3406,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-faca9a9
-        version: 0.2.5-faca9a9(zod@3.22.4)
+        specifier: 0.2.5-4ef0b45
+        version: 0.2.5-4ef0b45(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -7667,12 +7667,12 @@ packages:
       jose: 5.2.2
     dev: true
 
-  /@logto/cloud@0.2.5-faca9a9(zod@3.22.4):
-    resolution: {integrity: sha512-hUiuzOPd4bKIV6fIKZLQW2Fc8JYmwKWWps7gZoxGbL3uLmAYYci5JHIP+vM7nbNS+oK1V141sy3JjNS1vAkvGA==}
+  /@logto/cloud@0.2.5-4ef0b45(zod@3.22.4):
+    resolution: {integrity: sha512-mW+Olp8KBYwlJY0CTlMm6Qja0P1mOGy1P3P+RwkVjlMKu8MWq0zvodMU5/Bgxon5MsV5a5yj8DlT5t/Oj6vBJw==}
     engines: {node: ^20.9.0}
     dependencies:
       '@silverhand/essentials': 2.9.0
-      '@withtyped/server': 0.12.9(zod@3.22.4)
+      '@withtyped/server': 0.13.3(zod@3.22.4)
     transitivePeerDependencies:
       - zod
     dev: true
@@ -10535,16 +10535,6 @@ packages:
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
-
-  /@withtyped/server@0.12.9(zod@3.22.4):
-    resolution: {integrity: sha512-K5zoV9D+WpawbghtlJKF1KOshKkBjq+gYzNRWuZk13YmFWFLcmZn+QCblNP55z9IGdcHWpTRknqb1APuicdzgA==}
-    peerDependencies:
-      zod: ^3.19.1
-    dependencies:
-      '@silverhand/essentials': 2.9.0
-      '@withtyped/shared': 0.2.2
-      zod: 3.22.4
-    dev: true
 
   /@withtyped/server@0.13.3(zod@3.22.4):
     resolution: {integrity: sha512-MPyjRPQd5JySDnMnXPxGXXnw7AACAl8TLhWPjm4sdBgVMssSrmBbjRxBep0jY64PJ3xzICZh0ArWTRdXyNFIog==}
