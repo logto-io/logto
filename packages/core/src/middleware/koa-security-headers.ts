@@ -39,6 +39,14 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const developmentOrigins = conditionalArray(!isProduction && 'ws:');
   const appInsightsOrigins = ['https://*.applicationinsights.azure.com'];
 
+  // We use react-monaco-editor for code editing in the admin console. It loads the monaco editor asynchronously from a CDN.
+  // Allow the CDN src in the CSP.
+  // Allow blob: for monaco editor to load worker scripts
+  const monacoEditorCDNSource = [
+    'https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs/',
+    'blob:',
+  ];
+
   /**
    * Default Applied rules:
    * - crossOriginOpenerPolicy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#cross-origin-opener-policy-coop
@@ -107,6 +115,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         scriptSrc: [
           "'self'",
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
+          ...monacoEditorCDNSource,
         ],
         connectSrc: [
           "'self'",

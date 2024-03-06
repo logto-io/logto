@@ -1,0 +1,58 @@
+@use '@/scss/underscore' as _;
+@use '@/scss/code-editor' as codeEditor;
+
+.codeEditor {
+  @include codeEditor.color;
+  @include codeEditor.font;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: var(--color-code-bg);
+
+
+  header {
+    padding: _.unit(4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .tabList {
+      display: flex;
+      gap: _.unit(2);
+
+      .tab {
+        padding: _.unit(1.5) _.unit(3);
+        font: var(--font-label-2);
+        font-family: 'Roboto Mono', monospace;
+        color: var(--color-code-grey);
+        cursor: pointer;
+
+        &.active,
+        &:hover {
+          color: var(--color-code-white);
+          background-color: var(--color-code-tab-active-bg);
+          border-radius: 8px;
+        }
+      }
+    }
+
+    .title {
+      font: var(--font-label-2);
+      font-family: 'Roboto Mono', monospace;
+      color: var(--color-code-white);
+    }
+
+    .actions {
+      display: flex;
+      gap: _.unit(2);
+      align-items: center;
+    }
+  }
+
+  .editorContainer {
+    position: relative;
+    flex-grow: 1;
+    padding-bottom: _.unit(4);
+  }
+}
