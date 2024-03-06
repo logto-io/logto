@@ -1,4 +1,5 @@
 import {
+  LogtoConfigs,
   cloudApiIndicator,
   cloudConnectionDataGuard,
   logtoOidcConfigGuard,
@@ -6,13 +7,16 @@ import {
   jwtCustomizerConfigGuard,
 } from '@logto/schemas';
 import type { LogtoOidcConfigType, LogtoJwtTokenKey } from '@logto/schemas';
+import { convertToIdentifiers } from '@logto/shared';
 import chalk from 'chalk';
 import { z, ZodError } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
+const { table } = convertToIdentifiers(LogtoConfigs);
 
 export const createLogtoConfigLibrary = ({
   logtoConfigs: {
@@ -77,5 +81,21 @@ export const createLogtoConfigLibrary = ({
     };
   };
 
-  return { getOidcConfigs, getCloudConnectionData, upsertJwtCustomizer };
+  const getJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) => {
+    const { rows } = await getRowsByKeys([key]);
+
+    // If the record does not exist (`rows` is empty)
+    if (rows.length === 0) {
+      throw new RequestError({
+        code: 'entity.not_exists',
+        name: table,
+        id: key,
+        status: 404,
+      });
+    }
+
+    return z.object({ value: jwtCustomizerConfigGuard[key] }).parse(rows[0]);
+  };
+
+  return { getOidcConfigs, getCloudConnectionData, upsertJwtCustomizer, getJwtCustomizer };
 };
