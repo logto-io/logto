@@ -105,14 +105,14 @@
         }
       }
     },
-    "/api/configs/jwt-customizer/{tokenType}": {
+    "/api/configs/jwt-customizer/{tokenTypePath}": {
       "put": {
         "summary": "Create or update JWT customizer",
         "description": "Create or update a JWT customizer for the given token type.",
         "parameters": [
           {
             "in": "path",
-            "name": "tokenType",
+            "name": "tokenTypePath",
             "description": "The token type to create a JWT customizer for."
           }
         ],
