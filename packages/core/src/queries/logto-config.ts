@@ -53,7 +53,7 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     `);
 
   // Can not narrow down the type of value if we utilize `buildInsertIntoWithPool` method.
-  const insertOrUpdateJwtCustomizer = async <T extends LogtoJwtTokenKey>(
+  const upsertJwtCustomizer = async <T extends LogtoJwtTokenKey>(
     key: T,
     value: z.infer<(typeof jwtCustomizerConfigGuard)[T]>
   ) =>
@@ -74,6 +74,6 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     getCloudConnectionData,
     getRowsByKeys,
     updateOidcConfigsByKey,
-    insertOrUpdateJwtCustomizer,
+    upsertJwtCustomizer,
   };
 };

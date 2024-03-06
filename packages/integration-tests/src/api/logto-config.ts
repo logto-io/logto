@@ -33,7 +33,7 @@ export const rotateOidcKeys = async (
     .post(`configs/oidc/${keyType}/rotate`, { json: { signingKeyAlgorithm } })
     .json<OidcConfigKeysResponse[]>();
 
-export const insertOrUpdateJwtCustomizer = async (
+export const upsertJwtCustomizer = async (
   keyTypePath: 'access-token' | 'client-credentials',
   value: unknown
 ) =>

@@ -37,19 +37,17 @@ const getOidcConfigKeyDatabaseColumnName = (key: LogtoOidcConfigKeyType): LogtoO
     ? LogtoOidcConfigKey.PrivateKeys
     : LogtoOidcConfigKey.CookieKeys;
 
-const getLogtoJwtTokenKey = (key: LogtoJwtTokenPath): LogtoJwtTokenKey =>
-  key === LogtoJwtTokenPath.AccessToken
-    ? LogtoJwtTokenKey.AccessToken
-    : LogtoJwtTokenKey.ClientCredentials;
-
-const guardJwtCustomizerBody = (tokenTypePath: LogtoJwtTokenPath, body: unknown) => {
-  // Manually implement the request body type check, the flow aligns with the actual `koaGuard()`.
-  // Use ternary operator to get the specific guard brings difficulties to type inference.
-  if (tokenTypePath === LogtoJwtTokenPath.AccessToken) {
-    return parse('body', jwtCustomizerAccessTokenGuard, body);
+const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenPath, body: unknown) => {
+  if (tokenPath === LogtoJwtTokenPath.AccessToken) {
+    return {
+      key: LogtoJwtTokenKey.AccessToken,
+      body: parse('body', jwtCustomizerAccessTokenGuard, body),
+    };
   }
-
-  return parse('body', jwtCustomizerClientCredentialsGuard, body);
+  return {
+    key: LogtoJwtTokenKey.ClientCredentials,
+    body: parse('body', jwtCustomizerClientCredentialsGuard, body),
+  };
 };
 
 /**
@@ -86,7 +84,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
   const {
     getAdminConsoleConfig,
     getRowsByKeys,
-    insertOrUpdateJwtCustomizer,
+    upsertJwtCustomizer,
     updateAdminConsoleConfig,
     updateOidcConfigsByKey,
   } = queries.logtoConfigs;
@@ -233,12 +231,11 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
         params: { tokenTypePath },
         body: rawBody,
       } = ctx.guard;
-      const key = getLogtoJwtTokenKey(tokenTypePath);
-      const body = guardJwtCustomizerBody(tokenTypePath, rawBody);
+      const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
 
       const { rows } = await getRowsByKeys([key]);
 
-      const jwtCustomizer = await insertOrUpdateJwtCustomizer(key, body);
+      const jwtCustomizer = await upsertJwtCustomizer(key, body);
 
       if (rows.length === 0) {
         ctx.status = 201;
