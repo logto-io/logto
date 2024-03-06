@@ -1,7 +1,7 @@
 /**
  * Manually implement zod guards of some node OIDC provider types.
  *
- * Please note that we defined `accessTokenGuard` and `clientCredentialsGuard` in this file, they are used to make the user-defined token
+ * Please note that we defined `accessTokenPayloadGuard` and `clientCredentialsPayloadGuard` in this file, they are used to make the user-defined token
  * sample to be aligned with the real token payload given by the OIDC provider in a real use case.
  *
  * But these token payload is not a pure "claims" payload, it contains some OIDC provider specific fields (e.g. `kind`). These fields could
@@ -23,7 +23,7 @@ import { jsonObjectGuard } from '../../foundations/index.js';
  * https://github.com/panva/node-oidc-provider/blob/270af1da83dda4c49edb4aaab48908f737d73379/lib/models/base_model.js#L11
  * https://github.com/panva/node-oidc-provider/blob/270af1da83dda4c49edb4aaab48908f737d73379/lib/models/base_token.js#L62
  */
-const baseTokenGuardObject = {
+const baseTokenPayloadGuardObject = {
   jti: z.string(),
   iat: z.number(),
   exp: z.number().optional(),
@@ -41,8 +41,8 @@ const baseTokenGuardObject = {
  * `feature.claimsParameter`: https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#featuresclaimsparameter
  * OIDC claims parameter: https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter
  */
-export const accessTokenGuard = z.object({
-  ...baseTokenGuardObject,
+export const accessTokenPayloadGuard = z.object({
+  ...baseTokenPayloadGuardObject,
   kind: z.literal('AccessToken'),
   accountId: z.string(),
   aud: z.string().or(z.array(z.string())),
@@ -52,19 +52,19 @@ export const accessTokenGuard = z.object({
   sid: z.string().optional(),
 });
 
-export type AccessToken = z.infer<typeof accessTokenGuard>;
+export type AccessTokenPayload = z.infer<typeof accessTokenPayloadGuard>;
 
 /**
  * Ref:
  * https://github.com/DefinitelyTyped/DefinitelyTyped/blob/0b7b01b70c4c211a4f69caf05008228ac065413c/types/oidc-provider/index.d.ts#L515
  * https://github.com/panva/node-oidc-provider/blob/270af1da83dda4c49edb4aaab48908f737d73379/lib/models/client_credentials.js#L11
  */
-export const clientCredentialsGuard = z.object({
-  ...baseTokenGuardObject,
+export const clientCredentialsPayloadGuard = z.object({
+  ...baseTokenPayloadGuardObject,
   kind: z.literal('ClientCredentials'),
   aud: z.string().or(z.array(z.string())),
   extra: jsonObjectGuard.optional(),
   scope: z.string().optional(),
 });
 
-export type ClientCredentials = z.infer<typeof clientCredentialsGuard>;
+export type ClientCredentialsPayload = z.infer<typeof clientCredentialsPayloadGuard>;

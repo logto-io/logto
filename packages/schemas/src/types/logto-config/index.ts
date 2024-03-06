@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { jsonObjectGuard } from '../../foundations/index.js';
 
-import { accessTokenGuard, clientCredentialsGuard } from './oidc-provider.js';
+import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
 
 export * from './oidc-provider.js';
 
@@ -66,14 +66,14 @@ const jwtCustomizerGuard = z
 
 export const jwtCustomizerAccessTokenGuard = jwtCustomizerGuard.extend({
   // Use partial token guard since users customization may not rely on all fields.
-  tokenSample: accessTokenGuard.partial().optional(),
+  tokenSample: accessTokenPayloadGuard.partial().optional(),
 });
 
 export type JwtCustomizerAccessToken = z.infer<typeof jwtCustomizerAccessTokenGuard>;
 
 export const jwtCustomizerClientCredentialsGuard = jwtCustomizerGuard.extend({
   // Use partial token guard since users customization may not rely on all fields.
-  tokenSample: clientCredentialsGuard.partial().optional(),
+  tokenSample: clientCredentialsPayloadGuard.partial().optional(),
 });
 
 export type JwtCustomizerClientCredentials = z.infer<typeof jwtCustomizerClientCredentialsGuard>;
