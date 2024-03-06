@@ -14,14 +14,14 @@ export * from './social.js';
 export type GetConnectorConfig = (id: string) => Promise<unknown>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GetCloudServiceClient<T extends Router<any, BaseRoutes, string>> = () => Promise<
+export type GetCloudServiceClient<T extends Router<any, any, BaseRoutes, string>> = () => Promise<
   Client<T>
 >;
 
 export type CreateConnector<
   T extends AllConnector,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  U extends Router<any, BaseRoutes, string> = Router<any, BaseRoutes, string>,
+  U extends Router<any, any, BaseRoutes, string> = Router<any, any, BaseRoutes, string>,
 > = (options: {
   getConfig: GetConnectorConfig;
   getCloudServiceClient?: GetCloudServiceClient<U>;
