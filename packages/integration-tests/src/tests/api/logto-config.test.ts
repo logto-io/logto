@@ -184,7 +184,7 @@ describe('admin console sign-in experience', () => {
     );
     expect(updatedClientCredentials).toMatchObject(newClientCredentialsJwtCustomizerPayload);
     await expect(getJwtCustomizer('client-credentials')).resolves.toMatchObject(
-      clientCredentialsJwtCustomizerPayload
+      newClientCredentialsJwtCustomizerPayload
     );
   });
 });

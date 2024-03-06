@@ -156,7 +156,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "tokenType",
+            "name": "tokenTypePath",
             "description": "The token type to get the JWT customizer for."
           }
         ],
