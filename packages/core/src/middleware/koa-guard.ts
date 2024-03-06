@@ -92,27 +92,34 @@ export const isGuardMiddleware = <Type extends IMiddleware>(
 ): function_ is WithGuardConfig<Type> =>
   function_.name === 'guardMiddleware' && has(function_, 'config');
 
-export function tryParse<Output, Definition extends ZodTypeDef, Input>(
+/**
+ * Previous `tryParse` function's output type was `Output | undefined`.
+ * It can not properly infer the output type to be `Output` even if the guard is provided,
+ * which brings additional but unnecessary type checks.
+ */
+export const parse = <Output, Definition extends ZodTypeDef, Input>(
   type: 'query' | 'body' | 'params' | 'files',
   guard: ZodType<Output, Definition, Input>,
   data: unknown
-): Output;
-export function tryParse<Output, Definition extends ZodTypeDef, Input>(
-  type: 'query' | 'body' | 'params' | 'files',
-  guard: undefined,
-  data: unknown
-): undefined;
-export function tryParse<Output, Definition extends ZodTypeDef, Input>(
-  type: 'query' | 'body' | 'params' | 'files',
-  guard: Optional<ZodType<Output, Definition, Input>>,
-  data: unknown
-) {
+) => {
   try {
-    return guard?.parse(data);
+    return guard.parse(data);
   } catch (error: unknown) {
     throw new RequestError({ code: 'guard.invalid_input', type }, error);
   }
-}
+};
+
+const tryParse = <Output, Definition extends ZodTypeDef, Input>(
+  type: 'query' | 'body' | 'params' | 'files',
+  guard: Optional<ZodType<Output, Definition, Input>>,
+  data: unknown
+) => {
+  if (!guard) {
+    return;
+  }
+
+  return parse(type, guard, data);
+};
 
 export default function koaGuard<
   StateT,

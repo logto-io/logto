@@ -19,7 +19,7 @@ import {
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import koaGuard, { tryParse } from '#src/middleware/koa-guard.js';
+import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -41,12 +41,12 @@ const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenPath, body: unknown) => {
   if (tokenPath === LogtoJwtTokenPath.AccessToken) {
     return {
       key: LogtoJwtTokenKey.AccessToken,
-      body: tryParse('body', jwtCustomizerAccessTokenGuard, body),
+      body: parse('body', jwtCustomizerAccessTokenGuard, body),
     };
   }
   return {
     key: LogtoJwtTokenKey.ClientCredentials,
-    body: tryParse('body', jwtCustomizerClientCredentialsGuard, body),
+    body: parse('body', jwtCustomizerClientCredentialsGuard, body),
   };
 };
 
@@ -81,14 +81,9 @@ const getRedactedOidcKeyResponse = async (
 export default function logtoConfigRoutes<T extends AuthedRouter>(
   ...[router, { queries, logtoConfigs, invalidateCache }]: RouterInitArgs<T>
 ) {
-  const {
-    getAdminConsoleConfig,
-    getRowsByKeys,
-    upsertJwtCustomizer,
-    updateAdminConsoleConfig,
-    updateOidcConfigsByKey,
-  } = queries.logtoConfigs;
-  const { getOidcConfigs } = logtoConfigs;
+  const { getAdminConsoleConfig, getRowsByKeys, updateAdminConsoleConfig, updateOidcConfigsByKey } =
+    queries.logtoConfigs;
+  const { getOidcConfigs, upsertJwtCustomizer } = logtoConfigs;
 
   router.get(
     '/configs/admin-console',

@@ -54,7 +54,7 @@ const logtoConfigQueries = {
   }),
   updateOidcConfigsByKey: jest.fn(),
   getRowsByKeys: jest.fn(async () => mockLogtoConfigRows),
-  upsertJwtCustomizer: jest.fn(),
+  // UpsertJwtCustomizer: jest.fn(),
 };
 
 const logtoConfigLibraries = {
@@ -62,6 +62,7 @@ const logtoConfigLibraries = {
     [LogtoOidcConfigKey.PrivateKeys]: mockPrivateKeys,
     [LogtoOidcConfigKey.CookieKeys]: mockCookieKeys,
   })),
+  upsertJwtCustomizer: jest.fn(),
 };
 
 const settingRoutes = await pickDefault(import('./logto-config.js'));
@@ -232,13 +233,13 @@ describe('configs routes', () => {
       rows: [],
       rowCount: 0,
     });
-    logtoConfigQueries.upsertJwtCustomizer.mockResolvedValueOnce(
+    logtoConfigLibraries.upsertJwtCustomizer.mockResolvedValueOnce(
       mockJwtCustomizerConfigForAccessToken
     );
     const response = await routeRequester
       .put(`/configs/jwt-customizer/access-token`)
       .send(mockJwtCustomizerConfigForAccessToken.value);
-    expect(logtoConfigQueries.upsertJwtCustomizer).toHaveBeenCalledWith(
+    expect(logtoConfigLibraries.upsertJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.AccessToken,
       mockJwtCustomizerConfigForAccessToken.value
     );
@@ -252,13 +253,13 @@ describe('configs routes', () => {
       rows: [mockJwtCustomizerConfigForAccessToken],
       rowCount: 1,
     });
-    logtoConfigQueries.upsertJwtCustomizer.mockResolvedValueOnce(
+    logtoConfigLibraries.upsertJwtCustomizer.mockResolvedValueOnce(
       mockJwtCustomizerConfigForAccessToken
     );
     const response = await routeRequester
       .put('/configs/jwt-customizer/access-token')
       .send(mockJwtCustomizerConfigForAccessToken.value);
-    expect(logtoConfigQueries.upsertJwtCustomizer).toHaveBeenCalledWith(
+    expect(logtoConfigLibraries.upsertJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.AccessToken,
       mockJwtCustomizerConfigForAccessToken.value
     );

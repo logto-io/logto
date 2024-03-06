@@ -1,10 +1,11 @@
-import type { LogtoOidcConfigType } from '@logto/schemas';
 import {
   cloudApiIndicator,
   cloudConnectionDataGuard,
   logtoOidcConfigGuard,
   LogtoOidcConfigKey,
+  jwtCustomizerConfigGuard,
 } from '@logto/schemas';
+import type { LogtoOidcConfigType, LogtoJwtTokenKey } from '@logto/schemas';
 import chalk from 'chalk';
 import { z, ZodError } from 'zod';
 
@@ -14,7 +15,11 @@ import { consoleLog } from '#src/utils/console.js';
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
 
 export const createLogtoConfigLibrary = ({
-  logtoConfigs: { getRowsByKeys, getCloudConnectionData: queryCloudConnectionData },
+  logtoConfigs: {
+    getRowsByKeys,
+    getCloudConnectionData: queryCloudConnectionData,
+    upsertJwtCustomizer: queryUpsertJwtCustomizer,
+  },
 }: Pick<Queries, 'logtoConfigs'>) => {
   const getOidcConfigs = async (): Promise<LogtoOidcConfigType> => {
     try {
@@ -59,5 +64,18 @@ export const createLogtoConfigLibrary = ({
     };
   };
 
-  return { getOidcConfigs, getCloudConnectionData };
+  // Can not narrow down the type of value if we utilize `buildInsertIntoWithPool` method.
+  const upsertJwtCustomizer = async <T extends LogtoJwtTokenKey>(
+    key: T,
+    value: z.infer<(typeof jwtCustomizerConfigGuard)[T]>
+  ) => {
+    const { value: rawValue } = await queryUpsertJwtCustomizer(key, value);
+
+    return {
+      key,
+      value: jwtCustomizerConfigGuard[key].parse(rawValue),
+    };
+  };
+
+  return { getOidcConfigs, getCloudConnectionData, upsertJwtCustomizer };
 };

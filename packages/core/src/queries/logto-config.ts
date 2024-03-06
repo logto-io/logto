@@ -8,7 +8,6 @@ import {
   type LogtoOidcConfigKey,
   type OidcConfigKey,
   type LogtoJwtTokenKey,
-  type JwtCustomizerType,
 } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -57,7 +56,7 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     key: T,
     value: z.infer<(typeof jwtCustomizerConfigGuard)[T]>
   ) =>
-    pool.one<{ key: T; value: JwtCustomizerType[T] }>(
+    pool.one<{ key: T; value: Record<string, string> }>(
       sql`
         insert into ${table} (${fields.key}, ${fields.value})
           values (${key}, ${sql.jsonb(value)})
