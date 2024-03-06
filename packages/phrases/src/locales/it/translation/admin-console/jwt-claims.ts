@@ -56,11 +56,13 @@ const jwt_claims = {
   /** UNTRANSLATED */
   jwt_claims_hint:
     'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
-  test_data: {
+  tester: {
     /** UNTRANSLATED */
     title: 'Test',
     /** UNTRANSLATED */
     subtitle: "Edit the context to adjust the token's request states and test your custom claims.",
+    /** UNTRANSLATED */
+    run_button: 'Run',
   },
 };
 

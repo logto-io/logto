@@ -1,6 +1,7 @@
 import { Editor } from '@monaco-editor/react';
 import classNames from 'classnames';
 import { useCallback, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import BookIcon from '@/assets/icons/book.svg';
@@ -15,9 +16,11 @@ import {
   fetchExternalDataEditorOptions,
   fetchExternalDataCodeExample,
 } from '../config';
+import { type JwtClaimsFormType } from '../type';
 
 import EnvironmentVariablesField from './EnvironmentVariablesField';
 import GuideCard, { CardType } from './GuideCard';
+import Tester from './Tester';
 import * as styles from './index.module.scss';
 
 enum Tab {
@@ -25,11 +28,7 @@ enum Tab {
   Test = 'test_tab',
 }
 
-type Props = {
-  tokenType: JwtTokenType;
-};
-
-function RightPanel({ tokenType }: Props) {
+function RightPanel() {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.DataSource);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -55,8 +54,11 @@ function RightPanel({ tokenType }: Props) {
     [t]
   );
 
+  const { watch } = useFormContext<JwtClaimsFormType>();
+  const tokenType = watch('tokenType');
+
   return (
-    <div>
+    <div className={styles.flexColumn}>
       <div className={styles.tabs}>
         {Object.values(Tab).map((tab) => (
           <Button
@@ -101,7 +103,7 @@ function RightPanel({ tokenType }: Props) {
           </div>
           <Editor
             language="typescript"
-            className={styles.editor}
+            className={styles.sampleCode}
             value={fetchExternalDataCodeExample}
             height="300px"
             theme="logto-dark"
@@ -121,6 +123,9 @@ function RightPanel({ tokenType }: Props) {
            */}
           <EnvironmentVariablesField key={tokenType} />
         </GuideCard>
+      </div>
+      <div className={classNames(styles.tabContent, activeTab === Tab.Test && styles.active)}>
+        <Tester />
       </div>
     </div>
   );

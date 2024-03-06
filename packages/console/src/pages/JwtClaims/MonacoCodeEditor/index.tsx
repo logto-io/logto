@@ -12,6 +12,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import { logtoDarkTheme, defaultOptions } from './config.js';
 import * as styles from './index.module.scss';
 import type { IStandaloneCodeEditor, Model } from './type.js';
+import useEditorHeight from './use-editor-height.js';
 
 type Props = {
   className?: string;
@@ -29,6 +30,8 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
     () => models.find((model) => model.name === activeModelName),
     [activeModelName, models]
   );
+
+  const { containerRef, editorHeight } = useEditorHeight();
 
   // Set the first model as the active model
   useEffect(() => {
@@ -79,7 +82,7 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
       <header>
         {models.length > 1 ? (
           <div className={styles.tabList}>
-            {models.map(({ name }) => (
+            {models.map(({ name, title, icon }) => (
               <div
                 key={name}
                 className={classNames(styles.tab, name === activeModelName && styles.active)}
@@ -92,7 +95,8 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
                   setActiveModelName(name);
                 })}
               >
-                {name}
+                {icon}
+                {title}
               </div>
             ))}
           </div>
@@ -106,10 +110,10 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
           </IconButton>
         </div>
       </header>
-      <div className={styles.editorContainer}>
+      <div ref={containerRef} className={styles.editorContainer}>
         <Editor
-          height="100%"
-          language="typescript"
+          height={editorHeight}
+          language={activeModel?.language ?? 'typescript'}
           // TODO: need to check on the usage of value and defaultValue
           defaultValue={activeModel?.defaultValue}
           path={activeModel?.name}

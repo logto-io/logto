@@ -39,6 +39,7 @@
   display: none;
 
   &.active {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: _.unit(4);
@@ -48,47 +49,54 @@
     font: var(--font-body-2);
     color: var(--color-text-secondary);
   }
+}
 
-  .card {
+.card {
+  .headerRow {
+    display: flex;
+    flex-direction: row;
+    gap: _.unit(4);
+    align-items: center;
+  }
+
+  .cardHeader {
+    flex: 1;
+  }
+
+  .cardTitle {
+    font: var(--font-label-2);
+    color: var(--color-text);
+    margin-bottom: _.unit(1);
+  }
+
+  .cardSubtitle {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+  }
+
+  .cardContent {
+    > *:first-child {
+      margin-top: _.unit(6);
+    }
+  }
+
+  .expandButton {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+    color: var(--color-text-secondary);
+  }
+
+  &.collapsible {
     .headerRow {
-      display: flex;
-      flex-direction: row;
-      gap: _.unit(4);
-      align-items: center;
       cursor: pointer;
       user-select: none;
-    }
-
-    .cardHeader {
-      flex: 1;
-    }
-
-    .cardTitle {
-      font: var(--font-label-2);
-      color: var(--color-text);
-      margin-bottom: _.unit(1);
-    }
-
-    .cardSubtitle {
-      font: var(--font-body-2);
-      color: var(--color-text-secondary);
-    }
-
-    .expandButton {
-      width: 24px;
-      height: 24px;
-      transition: transform 0.3s ease;
-      color: var(--color-text-secondary);
     }
 
     .cardContent {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.3s ease;
-
-      > *:first-child {
-        margin-top: _.unit(6);
-      }
     }
 
     &.expanded {
@@ -100,37 +108,46 @@
         max-height: 1000;
       }
     }
-
-    .table {
-      .value {
-        display: inline-block;
-        padding: _.unit(0.5) _.unit(2);
-        color: var(--color-text);
-        background-color: var(--color-bg-info-tag);
-        border-radius: 4px;
-        font-family: 'Roboto Mono', monospace;
-      }
-    }
   }
+}
 
-  .editor {
-    margin-top: _.unit(4);
+.table {
+  .value {
+    display: inline-block;
+    padding: _.unit(0.5) _.unit(2);
+    color: var(--color-text);
+    background-color: var(--color-bg-info-tag);
+    border-radius: 4px;
+    font-family: 'Roboto Mono', monospace;
+  }
+}
 
-    :global {
+.sampleCode {
+  margin-top: _.unit(4);
+
+  :global {
+    /* stylelint-disable-next-line selector-class-pattern */
+    .monaco-editor {
+      border-radius: 8px;
+
       /* stylelint-disable-next-line selector-class-pattern */
-      .monaco-editor {
+      .overflow-guard {
         border-radius: 8px;
+      }
 
-        /* stylelint-disable-next-line selector-class-pattern */
-        .overflow-guard {
-          border-radius: 8px;
-        }
-
-        /* stylelint-disable-next-line selector-class-pattern */
-        .lines-content {
-          padding: 0 16px;
-        }
+      /* stylelint-disable-next-line selector-class-pattern */
+      .lines-content {
+        padding: 0 16px;
       }
     }
   }
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.flexGrow {
+  flex-grow: 1;
 }

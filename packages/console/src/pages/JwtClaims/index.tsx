@@ -43,12 +43,14 @@ function JwtClaims({ tab }: Props) {
 
   const userJwtClaimsForm = useForm<JwtClaimsFormType>({
     defaultValues: {
+      tokenType: JwtTokenType.UserAccessToken,
       environmentVariables: [{ key: '', value: '' }],
     },
   });
 
   const machineToMachineJwtClaimsForm = useForm<JwtClaimsFormType>({
     defaultValues: {
+      tokenType: JwtTokenType.MachineToMachineAccessToken,
       environmentVariables: [{ key: '', value: '' }],
     },
   });
@@ -86,7 +88,7 @@ function JwtClaims({ tab }: Props) {
             </div>
             <MonacoCodeEditor className={styles.flexGrow} models={[activeModel]} />
           </Card>
-          <RightPanel tokenType={tab} />
+          <RightPanel />
         </form>
       </FormProvider>
     </div>

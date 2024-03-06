@@ -35,9 +35,10 @@ const jwt_claims = {
   },
   jwt_claims_hint:
     'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
-  test_data: {
+  tester: {
     title: 'Test',
     subtitle: "Edit the context to adjust the token's request states and test your custom claims.",
+    run_button: 'Run',
   },
 };
 

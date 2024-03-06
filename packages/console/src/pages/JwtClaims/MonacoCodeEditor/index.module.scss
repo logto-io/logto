@@ -27,6 +27,9 @@
         font-family: 'Roboto Mono', monospace;
         color: var(--color-code-grey);
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: _.unit(1);
 
         &.active,
         &:hover {
@@ -53,6 +56,5 @@
   .editorContainer {
     position: relative;
     flex-grow: 1;
-    padding-bottom: _.unit(4);
   }
 }
