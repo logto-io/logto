@@ -2,7 +2,6 @@ import {
   SupportedSigningKeyAlgorithm,
   type AdminConsoleData,
   LogtoOidcConfigKeyType,
-  LogtoJwtTokenKeyType,
 } from '@logto/schemas';
 
 import {
@@ -143,7 +142,7 @@ describe('admin console sign-in experience', () => {
     };
 
     const accessToken = await insertOrUpdateJwtCustomizer(
-      LogtoJwtTokenKeyType.AccessToken,
+      'access-token',
       accessTokenJwtCustomizerPayload
     );
     expect(accessToken).toMatchObject(accessTokenJwtCustomizerPayload);
@@ -152,13 +151,13 @@ describe('admin console sign-in experience', () => {
       script: 'new script',
     };
     const updatedAccessToken = await insertOrUpdateJwtCustomizer(
-      LogtoJwtTokenKeyType.AccessToken,
+      'access-token',
       newAccessTokenJwtCustomizerPayload
     );
     expect(updatedAccessToken).toMatchObject(newAccessTokenJwtCustomizerPayload);
 
     const clientCredentials = await insertOrUpdateJwtCustomizer(
-      LogtoJwtTokenKeyType.ClientCredentials,
+      'client-credentials',
       clientCredentialsJwtCustomizerPayload
     );
     expect(clientCredentials).toMatchObject(clientCredentialsJwtCustomizerPayload);
@@ -167,7 +166,7 @@ describe('admin console sign-in experience', () => {
       script: 'new script client credentials',
     };
     const updatedClientCredentials = await insertOrUpdateJwtCustomizer(
-      LogtoJwtTokenKeyType.ClientCredentials,
+      'client-credentials',
       newClientCredentialsJwtCustomizerPayload
     );
     expect(updatedClientCredentials).toMatchObject(newClientCredentialsJwtCustomizerPayload);

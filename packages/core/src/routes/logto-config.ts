@@ -12,7 +12,6 @@ import {
   type OidcConfigKeysResponse,
   type OidcConfigKey,
   LogtoOidcConfigKeyType,
-  LogtoJwtTokenKeyType,
   jwtCustomizerAccessTokenGuard,
   jwtCustomizerClientCredentialsGuard,
   LogtoJwtTokenKey,
@@ -25,6 +24,11 @@ import { exportJWK } from '#src/utils/jwks.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
+enum LogtoJwtTokenPath {
+  AccessToken = 'access-token',
+  ClientCredentials = 'client-credentials',
+}
+
 /**
  * Provide a simple API router key type and DB config key mapping
  */
@@ -33,15 +37,15 @@ const getOidcConfigKeyDatabaseColumnName = (key: LogtoOidcConfigKeyType): LogtoO
     ? LogtoOidcConfigKey.PrivateKeys
     : LogtoOidcConfigKey.CookieKeys;
 
-const getLogtoJwtTokenKey = (key: LogtoJwtTokenKeyType): LogtoJwtTokenKey =>
-  key === LogtoJwtTokenKeyType.AccessToken
+const getLogtoJwtTokenKey = (key: LogtoJwtTokenPath): LogtoJwtTokenKey =>
+  key === LogtoJwtTokenPath.AccessToken
     ? LogtoJwtTokenKey.AccessToken
     : LogtoJwtTokenKey.ClientCredentials;
 
-const guardJwtCustomizerBody = (tokenType: LogtoJwtTokenKeyType, body: unknown) => {
+const guardJwtCustomizerBody = (tokenTypePath: LogtoJwtTokenPath, body: unknown) => {
   // Manually implement the request body type check, the flow aligns with the actual `koaGuard()`.
   // Use ternary operator to get the specific guard brings difficulties to type inference.
-  if (tokenType === LogtoJwtTokenKeyType.AccessToken) {
+  if (tokenTypePath === LogtoJwtTokenPath.AccessToken) {
     return parse('body', jwtCustomizerAccessTokenGuard, body);
   }
 
@@ -208,15 +212,15 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
   );
 
   router.put(
-    '/configs/jwt-customizer/:tokenType',
+    '/configs/jwt-customizer/:tokenTypePath',
     koaGuard({
       params: z.object({
-        tokenType: z.nativeEnum(LogtoJwtTokenKeyType),
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
       }),
       /**
        * Use `z.unknown()` to guard the request body as a JSON object, since the actual guard depends
-       * on the `tokenType` and we can not get the value of `tokenType` before parsing the request body,
-       * we will do more specific guard as long as we can get the value of `tokenType`.
+       * on the `tokenTypePath` and we can not get the value of `tokenTypePath` before parsing the request body,
+       * we will do more specific guard as long as we can get the value of `tokenTypePath`.
        *
        * Should specify `body` in koaGuard, otherwise the request body is not accessible even via `ctx.request.body`.
        */
@@ -226,11 +230,11 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     }),
     async (ctx, next) => {
       const {
-        params: { tokenType },
+        params: { tokenTypePath },
         body: rawBody,
       } = ctx.guard;
-      const key = getLogtoJwtTokenKey(tokenType);
-      const body = guardJwtCustomizerBody(tokenType, rawBody);
+      const key = getLogtoJwtTokenKey(tokenTypePath);
+      const body = guardJwtCustomizerBody(tokenTypePath, rawBody);
 
       const { rows } = await getRowsByKeys([key]);
 

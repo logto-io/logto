@@ -3,7 +3,6 @@ import {
   type AdminConsoleData,
   type OidcConfigKeysResponse,
   type LogtoOidcConfigKeyType,
-  type LogtoJwtTokenKeyType,
   type JwtCustomizerAccessToken,
   type JwtCustomizerClientCredentials,
 } from '@logto/schemas';
@@ -34,7 +33,10 @@ export const rotateOidcKeys = async (
     .post(`configs/oidc/${keyType}/rotate`, { json: { signingKeyAlgorithm } })
     .json<OidcConfigKeysResponse[]>();
 
-export const insertOrUpdateJwtCustomizer = async (keyType: LogtoJwtTokenKeyType, value: unknown) =>
+export const insertOrUpdateJwtCustomizer = async (
+  keyTypePath: 'access-token' | 'client-credentials',
+  value: unknown
+) =>
   authedAdminApi
-    .put(`configs/jwt-customizer/${keyType}`, { json: value })
+    .put(`configs/jwt-customizer/${keyTypePath}`, { json: value })
     .json<JwtCustomizerAccessToken | JwtCustomizerClientCredentials>();
