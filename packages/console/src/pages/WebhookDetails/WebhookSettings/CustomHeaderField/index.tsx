@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import FormField from '@/ds-components/FormField';
 import KeyValueInputField from '@/ds-components/KeyValueInputField';
 import { type WebhookDetailsFormType } from '@/pages/WebhookDetails/types';
 
@@ -96,16 +97,19 @@ function CustomHeaderField() {
   );
 
   return (
-    <KeyValueInputField
+    <FormField
       title="webhook_details.settings.custom_headers"
       tip={t('webhook_details.settings.custom_headers_tip')}
-      fields={fields}
-      // Force headerErrors to be an array, otherwise return undefined
-      errors={headerErrors?.map?.((error) => error)}
-      getInputFieldProps={getInputFieldProps}
-      onAppend={append}
-      onRemove={remove}
-    />
+    >
+      <KeyValueInputField
+        fields={fields}
+        // Force headerErrors to be an array, otherwise return undefined
+        errors={headerErrors?.map?.((error) => error)}
+        getInputFieldProps={getInputFieldProps}
+        onAppend={append}
+        onRemove={remove}
+      />
+    </FormField>
   );
 }
 
