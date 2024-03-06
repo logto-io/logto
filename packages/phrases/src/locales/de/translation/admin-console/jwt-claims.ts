@@ -50,6 +50,8 @@ const jwt_claims = {
     /** UNTRANSLATED */
     subtitle:
       'Use environment variables to store sensitive information and access them in your custom claims handler.',
+    /** UNTRANSLATED */
+    input_field_title: 'Add environment variables',
   },
   /** UNTRANSLATED */
   jwt_claims_hint:

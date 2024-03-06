@@ -31,6 +31,7 @@ const jwt_claims = {
     title: 'Set environment variables',
     subtitle:
       'Use environment variables to store sensitive information and access them in your custom claims handler.',
+    input_field_title: 'Add environment variables',
   },
   jwt_claims_hint:
     'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
