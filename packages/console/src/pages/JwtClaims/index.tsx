@@ -10,6 +10,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 
 import MonacoCodeEditor from './MonacoCodeEditor';
 import { type Model } from './MonacoCodeEditor/type';
+import RightPanel from './RightPanel';
 import { userJwtFile, machineToMachineJwtFile, JwtTokenType } from './config';
 import * as styles from './index.module.scss';
 
@@ -66,7 +67,7 @@ function JwtClaims({ tab }: Props) {
           </div>
           <MonacoCodeEditor className={styles.flexGrow} models={[activeModel]} />
         </Card>
-        <div>Form Panel</div>
+        <RightPanel tokenType={tab} />
       </form>
     </div>
   );
