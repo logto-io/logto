@@ -28,6 +28,20 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
     super(pool, OrganizationUserRelations.table, Organizations, Users);
   }
 
+  async isMember(organizationId: string, email: string): Promise<boolean> {
+    const users = convertToIdentifiers(Users, true);
+    const relations = convertToIdentifiers(OrganizationUserRelations, true);
+
+    return this.pool.exists(sql`
+      select 1
+      from ${relations.table}
+      join ${users.table}
+        on ${relations.fields.userId} = ${users.fields.id}
+      where ${relations.fields.organizationId} = ${organizationId}
+      and ${users.fields.primaryEmail} = ${email}
+    `);
+  }
+
   async getFeatured(
     organizationId: string
   ): Promise<[totalNumber: number, users: readonly FeaturedUser[]]> {

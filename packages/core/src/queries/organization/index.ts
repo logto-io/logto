@@ -88,32 +88,34 @@ class OrganizationRolesQueries extends SchemaQueries<
   }
 }
 
+type OrganizationInvitationSearchOptions = {
+  invitationId?: string;
+  organizationId?: string;
+  inviterId?: string;
+};
+
 class OrganizationInvitationsQueries extends SchemaQueries<
   OrganizationInvitationKeys,
   CreateOrganizationInvitation,
   OrganizationInvitation
 > {
-  override async findById(id: string): Promise<Readonly<OrganizationInvitationEntity>> {
-    return this.pool.one(this.#findEntity(id));
+  override async findById(invitationId: string): Promise<Readonly<OrganizationInvitationEntity>> {
+    return this.pool.one(this.#findEntity({ invitationId }));
   }
 
-  override async findAll(
-    limit: number,
-    offset: number,
-    search?: SearchOptions<OrganizationInvitationKeys>
-  ): Promise<[totalNumber: number, rows: Readonly<OrganizationInvitationEntity[]>]> {
-    return Promise.all([
-      this.findTotalNumber(search),
-      this.pool.any(this.#findEntity(undefined, limit, offset, search)),
-    ]);
+  /** @deprecated Use `findEntities` instead. */
+  override async findAll(): Promise<never> {
+    throw new Error('Use `findEntities` instead.');
   }
 
-  #findEntity(
-    invitationId?: string,
-    limit = 1,
-    offset = 0,
-    search?: SearchOptions<OrganizationInvitationKeys>
-  ) {
+  // We don't override `.findAll()` since the function signature is different from the base class.
+  async findEntities(
+    options: Omit<OrganizationInvitationSearchOptions, 'invitationId'>
+  ): Promise<Readonly<OrganizationInvitationEntity[]>> {
+    return this.pool.any(this.#findEntity({ ...options, invitationId: undefined }));
+  }
+
+  #findEntity({ invitationId, organizationId, inviterId }: OrganizationInvitationSearchOptions) {
     const { table, fields } = convertToIdentifiers(OrganizationInvitations, true);
     const roleRelations = convertToIdentifiers(OrganizationInvitationRoleRelations, true);
     const roles = convertToIdentifiers(OrganizationRoles, true);
@@ -147,16 +149,20 @@ class OrganizationInvitationsQueries extends SchemaQueries<
         on ${roleRelations.fields.organizationInvitationId} = ${fields.id}
       left join ${roles.table}
         on ${roles.fields.id} = ${roleRelations.fields.organizationRoleId}
+      where true
       ${conditionalSql(invitationId, (id) => {
-        return sql`where ${fields.id} = ${id}`;
+        return sql`and ${fields.id} = ${id}`;
       })}
-      ${buildSearchSql(OrganizationInvitations, search)}
+      ${conditionalSql(organizationId, (id) => {
+        return sql`and ${fields.organizationId} = ${id}`;
+      })}
+      ${conditionalSql(inviterId, (id) => {
+        return sql`and ${fields.inviterId} = ${id}`;
+      })}
       group by ${fields.id}
       ${conditionalSql(this.orderBy, ({ field, order }) => {
         return sql`order by ${fields[field]} ${order === 'desc' ? sql`desc` : sql`asc`}`;
       })}
-      limit ${limit}
-      offset ${offset}
     `;
   }
 }

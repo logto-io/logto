@@ -14,8 +14,6 @@ import type Queries from '#src/tenants/Queries.js';
 
 import { type ConnectorLibrary } from './connector.js';
 
-const invitationLinkPath = '/invitation';
-
 /**
  * The ending statuses of an organization invitation per RFC 0003. It means that the invitation
  * status cannot be changed anymore.
@@ -57,6 +55,14 @@ export class OrganizationInvitationLibrary {
     messagePayload: SendMessagePayload | false
   ) {
     const { inviterId, invitee, organizationId, expiresAt, organizationRoleIds } = data;
+
+    if (await this.queries.organizations.relations.users.isMember(organizationId, invitee)) {
+      throw new RequestError({
+        status: 422,
+        code: 'request.invalid_input',
+        details: 'The invitee is already a member of the organization.',
+      });
+    }
 
     return this.queries.pool.transaction(async (connection) => {
       const organizationQueries = new OrganizationQueries(connection);
@@ -186,7 +192,8 @@ export class OrganizationInvitationLibrary {
     });
   }
 
-  protected async sendEmail(to: string, payload: SendMessagePayload) {
+  /** Send an organization invitation email. */
+  async sendEmail(to: string, payload: SendMessagePayload) {
     const emailConnector = await this.connector.getMessageConnector(ConnectorType.Email);
     return emailConnector.sendMessage({
       to,
