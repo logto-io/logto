@@ -139,7 +139,7 @@ describe('admin console sign-in experience', () => {
     };
 
     await expectRejects(getJwtCustomizer('access-token'), {
-      code: 'entity.not_found',
+      code: 'entity.not_exists',
       statusCode: 404,
     });
     const accessToken = await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
@@ -166,7 +166,7 @@ describe('admin console sign-in experience', () => {
     };
 
     await expectRejects(getJwtCustomizer('client-credentials'), {
-      code: 'entity.not_found',
+      code: 'entity.not_exists',
       statusCode: 404,
     });
     const clientCredentials = await upsertJwtCustomizer(
