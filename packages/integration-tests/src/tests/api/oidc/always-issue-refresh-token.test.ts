@@ -34,7 +34,7 @@ describe('always issue Refresh Token config', () => {
   };
 
   beforeAll(async () => {
-    await createUserByAdmin(username, password);
+    await createUserByAdmin({ username, password });
     await enableAllPasswordSignInMethods();
   });
 

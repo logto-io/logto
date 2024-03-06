@@ -36,7 +36,7 @@ describe('admin console dashboard', () => {
 
     const password = generatePassword();
     const username = generateUsername();
-    await createUserByAdmin(username, password);
+    await createUserByAdmin({ username, password });
 
     const { totalUserCount } = await getTotalUsersCount();
 
@@ -63,7 +63,7 @@ describe('admin console dashboard', () => {
 
     const password = generatePassword();
     const username = generateUsername();
-    await createUserByAdmin(username, password);
+    await createUserByAdmin({ username, password });
 
     await signInWithPassword({ username, password });
 

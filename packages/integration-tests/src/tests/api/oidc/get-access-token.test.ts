@@ -26,8 +26,8 @@ describe('get access token', () => {
   const testApiScopeNames = ['read', 'write', 'delete', 'update'];
 
   beforeAll(async () => {
-    await createUserByAdmin(guestUsername, password);
-    const user = await createUserByAdmin(username, password);
+    await createUserByAdmin({ username: guestUsername, password });
+    const user = await createUserByAdmin({ username, password });
     const testApiResource = await createResource(
       testApiResourceInfo.name,
       testApiResourceInfo.indicator

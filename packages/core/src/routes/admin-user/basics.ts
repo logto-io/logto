@@ -119,6 +119,8 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         passwordDigest: string(),
         passwordAlgorithm: nativeEnum(UsersPasswordEncryptionMethod),
         name: string(),
+        avatar: string().url().or(literal('')).nullable(),
+        customData: jsonObjectGuard,
       }).partial(),
       response: userProfileResponseGuard,
       status: [200, 404, 422],
@@ -132,6 +134,8 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         name,
         passwordDigest,
         passwordAlgorithm,
+        avatar,
+        customData,
       } = ctx.guard.body;
 
       assertThat(!(password && passwordDigest), new RequestError('user.password_and_digest'));
@@ -165,6 +169,8 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
           primaryPhone,
           username,
           name,
+          avatar,
+          ...conditional(customData && { customData }),
           ...conditional(password && (await encryptUserPassword(password))),
           ...conditional(
             passwordDigest && {

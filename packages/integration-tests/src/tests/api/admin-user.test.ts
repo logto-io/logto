@@ -38,36 +38,39 @@ describe('admin console user management', () => {
   });
 
   it('should create user with password digest successfully', async () => {
-    const user = await createUserByAdmin(
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      '5f4dcc3b5aa765d61d8327deb882cf99',
-      UsersPasswordEncryptionMethod.MD5
-    );
+    const user = await createUserByAdmin({
+      passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
+      passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+    });
 
     await expect(verifyUserPassword(user.id, 'password')).resolves.not.toThrow();
   });
 
+  it('should create user with custom data successfully', async () => {
+    const user = await createUserByAdmin({
+      customData: { foo: 'bar' },
+    });
+    const { customData } = await getUser(user.id);
+    expect(customData).toStrictEqual({ foo: 'bar' });
+  });
+
   it('should fail when create user with conflict identifiers', async () => {
-    const [username, password, email, phone] = [
+    const [username, password, primaryEmail, primaryPhone] = [
       generateUsername(),
       generatePassword(),
       generateEmail(),
       generatePhone(),
     ];
-    await createUserByAdmin(username, password, email, phone);
-    await expectRejects(createUserByAdmin(username, password), {
+    await createUserByAdmin({ username, password, primaryEmail, primaryPhone });
+    await expectRejects(createUserByAdmin({ username, password }), {
       code: 'user.username_already_in_use',
       statusCode: 422,
     });
-    await expectRejects(createUserByAdmin(undefined, undefined, email), {
+    await expectRejects(createUserByAdmin({ primaryEmail }), {
       code: 'user.email_already_in_use',
       statusCode: 422,
     });
-    await expectRejects(createUserByAdmin(undefined, undefined, undefined, phone), {
+    await expectRejects(createUserByAdmin({ primaryPhone }), {
       code: 'user.phone_already_in_use',
       statusCode: 422,
     });
@@ -108,8 +111,12 @@ describe('admin console user management', () => {
   });
 
   it('should fail when update userinfo with conflict identifiers', async () => {
-    const [username, email, phone] = [generateUsername(), generateEmail(), generatePhone()];
-    await createUserByAdmin(username, undefined, email, phone);
+    const [username, primaryEmail, primaryPhone] = [
+      generateUsername(),
+      generateEmail(),
+      generatePhone(),
+    ];
+    await createUserByAdmin({ username, primaryEmail, primaryPhone });
     const anotherUser = await createUserByAdmin();
 
     await expectRejects(updateUser(anotherUser.id, { username }), {
@@ -117,12 +124,12 @@ describe('admin console user management', () => {
       statusCode: 422,
     });
 
-    await expectRejects(updateUser(anotherUser.id, { primaryEmail: email }), {
+    await expectRejects(updateUser(anotherUser.id, { primaryEmail }), {
       code: 'user.email_already_in_use',
       statusCode: 422,
     });
 
-    await expectRejects(updateUser(anotherUser.id, { primaryPhone: phone }), {
+    await expectRejects(updateUser(anotherUser.id, { primaryPhone }), {
       code: 'user.phone_already_in_use',
       statusCode: 422,
     });
@@ -229,13 +236,13 @@ describe('admin console user management', () => {
   });
 
   it('should return 204 if password is correct', async () => {
-    const user = await createUserByAdmin(undefined, 'new_password');
+    const user = await createUserByAdmin({ password: 'new_password' });
     expect(await verifyUserPassword(user.id, 'new_password')).toHaveProperty('statusCode', 204);
     await deleteUser(user.id);
   });
 
   it('should return 422 if password is incorrect', async () => {
-    const user = await createUserByAdmin(undefined, 'new_password');
+    const user = await createUserByAdmin({ password: 'new_password' });
     await expectRejects(verifyUserPassword(user.id, 'wrong_password'), {
       code: 'session.invalid_credentials',
       statusCode: 422,
