@@ -19,7 +19,7 @@ import {
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import koaGuard, { parse } from '#src/middleware/koa-guard.js';
+import koaGuard, { tryParse } from '#src/middleware/koa-guard.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -41,12 +41,12 @@ const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenPath, body: unknown) => {
   if (tokenPath === LogtoJwtTokenPath.AccessToken) {
     return {
       key: LogtoJwtTokenKey.AccessToken,
-      body: parse('body', jwtCustomizerAccessTokenGuard, body),
+      body: tryParse('body', jwtCustomizerAccessTokenGuard, body),
     };
   }
   return {
     key: LogtoJwtTokenKey.ClientCredentials,
-    body: parse('body', jwtCustomizerClientCredentialsGuard, body),
+    body: tryParse('body', jwtCustomizerClientCredentialsGuard, body),
   };
 };
 
