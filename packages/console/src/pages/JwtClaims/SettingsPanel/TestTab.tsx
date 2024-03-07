@@ -23,6 +23,7 @@ type Props = {
 
 function TestTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });
+
   const { watch } = useFormContext<JwtClaimsFormType>();
   const tokenType = watch('tokenType');
 
