@@ -22,7 +22,7 @@ function TestResult({ testResult, onClose }: Props) {
     <div className={styles.testResult}>
       <div className={styles.testResultHeader}>
         <span>{t('tester.result_title')}</span>
-        <IconButton className={styles.closeIcon} onClick={onClose}>
+        <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </div>
