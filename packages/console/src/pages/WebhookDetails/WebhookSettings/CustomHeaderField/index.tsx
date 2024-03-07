@@ -33,7 +33,7 @@ function CustomHeaderField() {
     name: 'headers',
   });
 
-  const keyValidator = useCallback(
+  const validateKey = useCallback(
     (key: string, index: number) => {
       const headers = getValues('headers');
       if (!headers) {
@@ -58,7 +58,7 @@ function CustomHeaderField() {
     [getValues, t]
   );
 
-  const valueValidator = useCallback(
+  const validateValue = useCallback(
     (value: string, index: number) => {
       if (Boolean(value) && !isValidHeaderValue(value)) {
         return t('webhook_details.settings.invalid_value_error');
@@ -84,16 +84,16 @@ function CustomHeaderField() {
     () => ({
       key: (index: number) =>
         register(`headers.${index}.key`, {
-          validate: (key) => keyValidator(key, index),
+          validate: (key) => validateKey(key, index),
           onChange: revalidate,
         }),
       value: (index: number) =>
         register(`headers.${index}.value`, {
-          validate: (value) => valueValidator(value, index),
+          validate: (value) => validateValue(value, index),
           onChange: revalidate,
         }),
     }),
-    [keyValidator, register, revalidate, valueValidator]
+    [validateKey, register, revalidate, validateValue]
   );
 
   return (

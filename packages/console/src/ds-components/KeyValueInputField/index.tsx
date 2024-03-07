@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { type FieldError } from 'react-hook-form';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg';
@@ -22,6 +21,21 @@ type ErrorType = {
 type InputFieldPropsGetter = {
   [K in keyof FieldType]: (index: number) => Omit<TextInputProps, 'ref'>;
 };
+
+type ErrorProps = {
+  error?: FieldError | string | undefined;
+};
+function Error({ error }: ErrorProps) {
+  if (!error) {
+    return null;
+  }
+
+  if (typeof error === 'string') {
+    return <div className={styles.error}>{error}</div>;
+  }
+
+  return <div className={styles.error}>{error.message}</div>;
+}
 
 type Props = {
   className?: string;
@@ -54,23 +68,6 @@ function KeyValueInputField({
   onRemove,
   onAppend,
 }: Props) {
-  const renderErrors = useCallback(
-    (index: number, key: keyof FieldType) => {
-      const error = errors?.[index]?.[key];
-
-      if (!error) {
-        return null;
-      }
-
-      if (typeof error === 'string') {
-        return <div className={styles.error}>{error}</div>;
-      }
-
-      return <div className={styles.error}>{error.message}</div>;
-    },
-    [errors]
-  );
-
   return (
     <div className={className}>
       {fields.map((field, index) => {
@@ -100,8 +97,8 @@ function KeyValueInputField({
                 </IconButton>
               )}
             </div>
-            {renderErrors(index, 'key')}
-            {renderErrors(index, 'value')}
+            <Error error={errors?.[index]?.key} />
+            <Error error={errors?.[index]?.value} />
           </div>
         );
       })}
