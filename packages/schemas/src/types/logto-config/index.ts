@@ -1,6 +1,12 @@
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
+import { jsonObjectGuard } from '../../foundations/index.js';
+
+import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
+
+export * from './oidc-provider.js';
+
 /**
  * Logto OIDC signing key types, used mainly in REST API routes.
  */
@@ -43,6 +49,45 @@ export const logtoOidcConfigGuard: Readonly<{
 }> = Object.freeze({
   [LogtoOidcConfigKey.PrivateKeys]: oidcConfigKeyGuard.array(),
   [LogtoOidcConfigKey.CookieKeys]: oidcConfigKeyGuard.array(),
+});
+
+export enum LogtoJwtTokenKey {
+  AccessToken = 'jwt.accessToken',
+  ClientCredentials = 'jwt.clientCredentials',
+}
+
+const jwtCustomizerGuard = z
+  .object({
+    script: z.string(),
+    envVars: z.record(z.string()),
+    contextSample: jsonObjectGuard,
+  })
+  .partial();
+
+export const jwtCustomizerAccessTokenGuard = jwtCustomizerGuard.extend({
+  // Use partial token guard since users customization may not rely on all fields.
+  tokenSample: accessTokenPayloadGuard.partial().optional(),
+});
+
+export type JwtCustomizerAccessToken = z.infer<typeof jwtCustomizerAccessTokenGuard>;
+
+export const jwtCustomizerClientCredentialsGuard = jwtCustomizerGuard.extend({
+  // Use partial token guard since users customization may not rely on all fields.
+  tokenSample: clientCredentialsPayloadGuard.partial().optional(),
+});
+
+export type JwtCustomizerClientCredentials = z.infer<typeof jwtCustomizerClientCredentialsGuard>;
+
+export type JwtCustomizerType = {
+  [LogtoJwtTokenKey.AccessToken]: JwtCustomizerAccessToken;
+  [LogtoJwtTokenKey.ClientCredentials]: JwtCustomizerClientCredentials;
+};
+
+export const jwtCustomizerConfigGuard: Readonly<{
+  [key in LogtoJwtTokenKey]: ZodType<JwtCustomizerType[key]>;
+}> = Object.freeze({
+  [LogtoJwtTokenKey.AccessToken]: jwtCustomizerAccessTokenGuard,
+  [LogtoJwtTokenKey.ClientCredentials]: jwtCustomizerClientCredentialsGuard,
 });
 
 /* --- Logto tenant configs --- */
@@ -101,17 +146,21 @@ export const logtoTenantConfigGuard: Readonly<{
 });
 
 /* --- Summary --- */
-export type LogtoConfigKey = LogtoOidcConfigKey | LogtoTenantConfigKey;
-export type LogtoConfigType = LogtoOidcConfigType | LogtoTenantConfigType;
-export type LogtoConfigGuard = typeof logtoOidcConfigGuard & typeof logtoTenantConfigGuard;
+export type LogtoConfigKey = LogtoOidcConfigKey | LogtoJwtTokenKey | LogtoTenantConfigKey;
+export type LogtoConfigType = LogtoOidcConfigType | JwtCustomizerType | LogtoTenantConfigType;
+export type LogtoConfigGuard = typeof logtoOidcConfigGuard &
+  typeof jwtCustomizerConfigGuard &
+  typeof logtoTenantConfigGuard;
 
 export const logtoConfigKeys: readonly LogtoConfigKey[] = Object.freeze([
   ...Object.values(LogtoOidcConfigKey),
+  ...Object.values(LogtoJwtTokenKey),
   ...Object.values(LogtoTenantConfigKey),
 ]);
 
 export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
   ...logtoOidcConfigGuard,
+  ...jwtCustomizerConfigGuard,
   ...logtoTenantConfigGuard,
 });
 
