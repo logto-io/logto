@@ -46,10 +46,5 @@ export const getJwtCustomizer = async (keyTypePath: 'access-token' | 'client-cre
     .get(`configs/jwt-customizer/${keyTypePath}`)
     .json<JwtCustomizerAccessToken | JwtCustomizerClientCredentials>();
 
-export const getJwtCustomizer = async (keyType: LogtoJwtTokenKeyType) =>
-  authedAdminApi
-    .get(`configs/jwt-customizer/${keyType}`)
-    .json<JwtCustomizerAccessToken | JwtCustomizerClientCredentials>();
-
-export const deleteJwtCustomizer = async (keyType: LogtoJwtTokenKeyType) =>
-  authedAdminApi.delete(`configs/jwt-customizer/${keyType}`);
+export const deleteJwtCustomizer = async (keyTypePath: 'access-token' | 'client-credentials') =>
+  authedAdminApi.delete(`configs/jwt-customizer/${keyTypePath}`);

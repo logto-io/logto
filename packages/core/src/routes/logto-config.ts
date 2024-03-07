@@ -81,22 +81,14 @@ const getRedactedOidcKeyResponse = async (
 export default function logtoConfigRoutes<T extends AuthedRouter>(
   ...[router, { queries, logtoConfigs, invalidateCache }]: RouterInitArgs<T>
 ) {
-<<<<<<< HEAD
-  const { getAdminConsoleConfig, getRowsByKeys, updateAdminConsoleConfig, updateOidcConfigsByKey } =
-    queries.logtoConfigs;
-  const { getOidcConfigs, upsertJwtCustomizer, getJwtCustomizer } = logtoConfigs;
-=======
   const {
     getAdminConsoleConfig,
     getRowsByKeys,
-    insertJwtCustomizer,
     updateAdminConsoleConfig,
     updateOidcConfigsByKey,
-    getJwtCustomizer,
     deleteJwtCustomizer,
   } = queries.logtoConfigs;
-  const { getOidcConfigs } = logtoConfigs;
->>>>>>> 8086c9bc6 (feat(core): add GET /configs/jwt-customizer API)
+  const { getOidcConfigs, upsertJwtCustomizer, getJwtCustomizer } = logtoConfigs;
 
   router.get(
     '/configs/admin-console',
@@ -278,19 +270,23 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
   );
 
   router.delete(
-    '/configs/jwt-customizer/:tokenType',
+    '/configs/jwt-customizer/:tokenTypePath',
     koaGuard({
       params: z.object({
-        tokenType: z.nativeEnum(LogtoJwtTokenKeyType),
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
       }),
       status: [204, 404],
     }),
     async (ctx, next) => {
       const {
-        params: { tokenType },
+        params: { tokenTypePath },
       } = ctx.guard;
 
-      await deleteJwtCustomizer(getLogtoJwtTokenKey(tokenType));
+      await deleteJwtCustomizer(
+        tokenTypePath === LogtoJwtTokenPath.AccessToken
+          ? LogtoJwtTokenKey.AccessToken
+          : LogtoJwtTokenKey.ClientCredentials
+      );
       ctx.status = 204;
       return next();
     }
