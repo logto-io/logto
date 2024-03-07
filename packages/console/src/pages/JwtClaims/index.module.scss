@@ -18,22 +18,25 @@
 .tabContent {
   display: flex;
   flex-direction: row;
-  gap: _.unit(3);
   flex-grow: 1;
 
   > * {
     flex: 1;
+    margin-bottom: _.unit(6);
+
+    &:first-child {
+      margin-right: _.unit(3);
+    }
   }
 }
 
 .codePanel {
-  margin-bottom: _.unit(6);
   position: relative;
   display: flex;
   flex-direction: column;
 
   .cardTitle {
-    font: var(--font-title-2);
+    font: var(--font-label-2);
     margin-bottom: _.unit(3);
   }
 

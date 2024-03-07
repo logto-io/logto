@@ -1,0 +1,153 @@
+@use '@/scss/underscore' as _;
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: _.unit(4);
+  margin-bottom: _.unit(4);
+
+
+  .tab {
+    display: flex;
+    align-items: center;
+    border-radius: 100px;
+    color: var(--color-text);
+    background: transparent;
+    border: 1px solid var(--color-specific-selected-disabled);
+
+    svg {
+      width: 16px;
+      height: 16px;
+      object-fit: cover;
+      color: var(--color-text-link);
+    }
+
+    &.active,
+    &:hover {
+      background: var(--color-inverse-primary);
+      color: var(--color-white);
+      border-color: var(--color-inverse-primary);
+
+      svg {
+        color: var(--color-button-icon);
+      }
+    }
+  }
+}
+
+.tabContent {
+  display: none;
+
+  &.active {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: _.unit(4);
+  }
+
+  .description {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+  }
+}
+
+.card {
+  .headerRow {
+    display: flex;
+    flex-direction: row;
+    gap: _.unit(4);
+    align-items: center;
+  }
+
+  .cardHeader {
+    flex: 1;
+  }
+
+  .cardTitle {
+    font: var(--font-label-2);
+    color: var(--color-text);
+    margin-bottom: _.unit(1);
+  }
+
+  .cardSubtitle {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+  }
+
+  .cardContent {
+    > *:first-child {
+      margin-top: _.unit(6);
+    }
+  }
+
+  .expandButton {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+    color: var(--color-text-secondary);
+  }
+
+  &.collapsible {
+    .headerRow {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .cardContent {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    &.expanded {
+      .expandButton {
+        transform: rotate(180deg);
+      }
+
+      .cardContent {
+        max-height: 1000;
+      }
+    }
+  }
+}
+
+.table {
+  .value {
+    display: inline-block;
+    padding: _.unit(0.5) _.unit(2);
+    color: var(--color-text);
+    background-color: var(--color-bg-info-tag);
+    border-radius: 4px;
+    font-family: 'Roboto Mono', monospace;
+  }
+}
+
+.sampleCode {
+  margin-top: _.unit(4);
+
+  :global {
+    /* stylelint-disable-next-line selector-class-pattern */
+    .monaco-editor {
+      border-radius: 8px;
+
+      /* stylelint-disable-next-line selector-class-pattern */
+      .overflow-guard {
+        border-radius: 8px;
+      }
+
+      /* stylelint-disable-next-line selector-class-pattern */
+      .lines-content {
+        padding: 0 16px;
+      }
+    }
+  }
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.flexGrow {
+  flex-grow: 1;
+}

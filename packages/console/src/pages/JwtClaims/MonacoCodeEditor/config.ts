@@ -21,4 +21,6 @@ export const defaultOptions: EditorProps['options'] = {
   renderLineHighlight: 'none',
   fontFamily: 'Roboto Mono, monospace',
   fontSize: 14,
+  automaticLayout: true,
+  tabSize: 2,
 };

@@ -12,6 +12,9 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import { logtoDarkTheme, defaultOptions } from './config.js';
 import * as styles from './index.module.scss';
 import type { IStandaloneCodeEditor, Model } from './type.js';
+import useEditorHeight from './use-editor-height.js';
+
+export type { Model } from './type.js';
 
 type Props = {
   className?: string;
@@ -25,10 +28,15 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
   const editorRef = useRef<Nullable<IStandaloneCodeEditor>>(null);
 
   const [activeModelName, setActiveModelName] = useState<string>();
+
   const activeModel = useMemo(
     () => models.find((model) => model.name === activeModelName),
     [activeModelName, models]
   );
+
+  const isMultiModals = useMemo(() => models.length > 1, [models]);
+
+  const { containerRef, editorHeight } = useEditorHeight();
 
   // Set the first model as the active model
   useEffect(() => {
@@ -77,28 +85,31 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
   return (
     <div className={classNames(className, styles.codeEditor)}>
       <header>
-        {models.length > 1 ? (
-          <div className={styles.tabList}>
-            {models.map(({ name }) => (
-              <div
-                key={name}
-                className={classNames(styles.tab, name === activeModelName && styles.active)}
-                role="button"
-                tabIndex={0}
-                onClick={() => {
+        <div className={styles.tabList}>
+          {models.map(({ name, title, icon }) => (
+            <div
+              key={name}
+              className={classNames(
+                styles.tab,
+                isMultiModals && styles.tabButton,
+                name === activeModelName && styles.active
+              )}
+              {...(isMultiModals && {
+                role: 'button',
+                tabIndex: 0,
+                onClick: () => {
                   setActiveModelName(name);
-                }}
-                onKeyDown={onKeyDownHandler(() => {
+                },
+                onKeyDown: onKeyDownHandler(() => {
                   setActiveModelName(name);
-                })}
-              >
-                {name}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className={styles.title}>{activeModel?.title}</div>
-        )}
+                }),
+              })}
+            >
+              {icon}
+              {title}
+            </div>
+          ))}
+        </div>
         <div className={styles.actions}>
           {actions}
           <IconButton size="small" onClick={handleCodeCopy}>
@@ -106,10 +117,10 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
           </IconButton>
         </div>
       </header>
-      <div className={styles.editorContainer}>
+      <div ref={containerRef} className={styles.editorContainer}>
         <Editor
-          height="100%"
-          language="typescript"
+          height={editorHeight}
+          language={activeModel?.language ?? 'typescript'}
           // TODO: need to check on the usage of value and defaultValue
           defaultValue={activeModel?.defaultValue}
           path={activeModel?.name}

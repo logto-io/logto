@@ -1,5 +1,8 @@
 import { type EditorProps } from '@monaco-editor/react';
 
+import TokenFileIcon from '@/assets/icons/token-file-icon.svg';
+import UserFileIcon from '@/assets/icons/user-file-icon.svg';
+
 import type { Model } from './MonacoCodeEditor/type.js';
 
 /**
@@ -171,33 +174,34 @@ export const userDataDescription: GuideTableData[] = [
 
 export const tokenDataDescription: GuideTableData[] = [
   {
-    value: 'iss',
-    description: '(issuer) Issuer of the JWT.',
-  },
-  {
-    value: 'sub',
-    description: '(subject) Subject of the JWT.',
-  },
-  {
-    value: 'aud',
-    description: '(audience) Recipient for which the JWT is intended.',
-  },
-  {
-    value: 'exp',
-    description: '(expiration) Time after which the JWT expires.',
-  },
-  {
-    value: 'nbf',
-    description: '(not before) Time before which the JWT must not be accepted for processing.',
+    value: 'jti',
+    description:
+      '(JWT ID) Unique identifier for the JWT. Useful for tracking and preventing reuse of the token.',
   },
   {
     value: 'iat',
     description: '(issued at) Time at which the JWT was issued.',
   },
   {
-    value: 'jti',
+    value: 'exp',
+    description: '(expiration) Time after which the JWT expires.',
+  },
+  {
+    value: 'client_id',
+    description: 'Client ID of the application that requested the JWT.',
+  },
+  {
+    value: 'kind',
     description:
-      '(JWT ID) Unique identifier for the JWT. Useful for tracking and preventing reuse of the token.',
+      'Type of the token. `AccessToken` for user access tokens and `ClientCredentials` for machine-to-machine access tokens.',
+  },
+  {
+    value: 'scope',
+    description: 'Scopes requested by the client joint by space.',
+  },
+  {
+    value: 'aud',
+    description: '(audience) Audience for which the JWT is intended.',
   },
 ];
 
@@ -226,3 +230,62 @@ const data = await response.json();
 return {
   externalData: data,
 };`;
+
+/**
+ * Tester Code Editor configs
+ */
+const standardTokenPayloadData = {
+  jti: '1234567890',
+  iat: 1_516_239_022,
+  exp: 1_516_239_022,
+  client_id: 'my_app',
+  scope: 'read write',
+  aud: 'http://localhost:3000/api',
+};
+
+const defaultUserTokenPayloadData = {
+  ...standardTokenPayloadData,
+  kind: 'AccessToken',
+};
+
+const defaultMachineToMachineTokenPayloadData = {
+  ...standardTokenPayloadData,
+  kind: 'ClientCredentials',
+};
+
+const defaultUserTokenContextData = {
+  user: {
+    id: '123',
+    primaryEmail: 'foo@logto.io',
+    primaryPhone: '+1234567890',
+    username: 'foo',
+    name: 'Foo Bar',
+    avatar: 'https://example.com/avatar.png',
+    identities: {},
+    customData: {},
+  },
+};
+
+export const userTokenPayloadTestModel: Model = {
+  language: 'json',
+  icon: <TokenFileIcon />,
+  name: 'user-token-payload.json',
+  title: 'Token',
+  defaultValue: JSON.stringify(defaultUserTokenPayloadData, null, '\t'),
+};
+
+export const machineToMachineTokenPayloadTestModel: Model = {
+  language: 'json',
+  icon: <TokenFileIcon />,
+  name: 'machine-to-machine-token-payload.json',
+  title: 'Token',
+  defaultValue: JSON.stringify(defaultMachineToMachineTokenPayloadData, null, '\t'),
+};
+
+export const userTokenContextTestModel: Model = {
+  language: 'json',
+  icon: <UserFileIcon />,
+  name: 'user-token-context.json',
+  title: 'User Context',
+  defaultValue: JSON.stringify(defaultUserTokenContextData, null, '\t'),
+};

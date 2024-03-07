@@ -22,25 +22,26 @@
       gap: _.unit(2);
 
       .tab {
-        padding: _.unit(1.5) _.unit(3);
         font: var(--font-label-2);
         font-family: 'Roboto Mono', monospace;
-        color: var(--color-code-grey);
-        cursor: pointer;
+        padding: _.unit(1.5) _.unit(3);
+        color: var(--color-code-white);
+        display: flex;
+        align-items: center;
+        gap: _.unit(1);
 
-        &.active,
-        &:hover {
-          color: var(--color-code-white);
-          background-color: var(--color-code-tab-active-bg);
-          border-radius: 8px;
+        &.tabButton {
+          color: var(--color-code-grey);
+          cursor: pointer;
+
+          &.active,
+          &:hover {
+            color: var(--color-code-white);
+            background-color: var(--color-code-tab-active-bg);
+            border-radius: 8px;
+          }
         }
       }
-    }
-
-    .title {
-      font: var(--font-label-2);
-      font-family: 'Roboto Mono', monospace;
-      color: var(--color-code-white);
     }
 
     .actions {
@@ -53,6 +54,5 @@
   .editorContainer {
     position: relative;
     flex-grow: 1;
-    padding-bottom: _.unit(4);
   }
 }

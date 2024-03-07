@@ -25,7 +25,7 @@ function GuideCard({ name, children }: GuardCardProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });
 
   return (
-    <Card className={classNames(styles.card, expanded && styles.expanded)}>
+    <Card className={classNames(styles.card, styles.collapsible, expanded && styles.expanded)}>
       <div
         className={styles.headerRow}
         role="button"
