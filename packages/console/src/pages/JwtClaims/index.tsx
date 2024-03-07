@@ -2,6 +2,7 @@ import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
 import { useMemo } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Card from '@/ds-components/Card';
@@ -13,6 +14,7 @@ import { type Model } from './MonacoCodeEditor/type';
 import RightPanel from './RightPanel';
 import { userJwtFile, machineToMachineJwtFile, JwtTokenType } from './config';
 import * as styles from './index.module.scss';
+import { type JwtClaimsFormType } from './type';
 
 export { JwtTokenType } from './config';
 
@@ -39,6 +41,18 @@ const getPath = (tab: JwtTokenType) => `/jwt-claims/${tab}`;
 function JwtClaims({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
+  const userJwtClaimsForm = useForm<JwtClaimsFormType>({
+    defaultValues: {
+      environmentVariables: [{ key: '', value: '' }],
+    },
+  });
+
+  const machineToMachineJwtClaimsForm = useForm<JwtClaimsFormType>({
+    defaultValues: {
+      environmentVariables: [{ key: '', value: '' }],
+    },
+  });
+
   // TODO: API integration, read/write the custom claims code value
   const activeModel = useMemo<Model>(() => {
     return tab === JwtTokenType.UserAccessToken ? userJwtFile : machineToMachineJwtFile;
@@ -58,17 +72,23 @@ function JwtClaims({ tab }: Props) {
           </TabNavItem>
         ))}
       </TabNav>
-      <form className={classNames(styles.tabContent)}>
-        <Card className={styles.codePanel}>
-          <div className={styles.cardTitle}>
-            {t('jwt_claims.code_editor_title', {
-              token: t(`jwt_claims.${phrases.token[tab]}`),
-            })}
-          </div>
-          <MonacoCodeEditor className={styles.flexGrow} models={[activeModel]} />
-        </Card>
-        <RightPanel tokenType={tab} />
-      </form>
+      <FormProvider
+        {...(tab === JwtTokenType.UserAccessToken
+          ? userJwtClaimsForm
+          : machineToMachineJwtClaimsForm)}
+      >
+        <form className={classNames(styles.tabContent)}>
+          <Card className={styles.codePanel}>
+            <div className={styles.cardTitle}>
+              {t('jwt_claims.code_editor_title', {
+                token: t(`jwt_claims.${phrases.token[tab]}`),
+              })}
+            </div>
+            <MonacoCodeEditor className={styles.flexGrow} models={[activeModel]} />
+          </Card>
+          <RightPanel tokenType={tab} />
+        </form>
+      </FormProvider>
     </div>
   );
 }

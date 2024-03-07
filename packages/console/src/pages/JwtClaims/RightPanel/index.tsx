@@ -16,6 +16,7 @@ import {
   fetchExternalDataCodeExample,
 } from '../config';
 
+import EnvironmentVariablesField from './EnvironmentVariablesField';
 import GuideCard, { CardType } from './GuideCard';
 import * as styles from './index.module.scss';
 
@@ -107,7 +108,19 @@ function RightPanel({ tokenType }: Props) {
             options={fetchExternalDataEditorOptions}
           />
         </GuideCard>
-        <GuideCard name={CardType.EnvironmentVariables} />
+        <GuideCard name={CardType.EnvironmentVariables}>
+          {/**
+           * We use useFieldArray hook to manage the list of environment variables in the EnvironmentVariablesField component.
+           * useFieldArray will read the form context and return the necessary methods and values to manage the list.
+           * The form context will mutate when the tokenType changes. It will provide different form state and methods based on the tokenType. (@see JwtClaims component.)
+           * However, the form context/controller updates did not trigger a re-render of the useFieldArray hook. (@see {@link https://github.com/react-hook-form/react-hook-form/blob/master/src/useFieldArray.ts#L95})
+           *
+           * This cause issues when the tokenType changes and the environment variables list is not rerendered. The form state will be stale.
+           * In order to fix this, we need to re-render the EnvironmentVariablesField component when the tokenType changes.
+           * Achieve this by adding a key to the EnvironmentVariablesField component. Force a re-render when the tokenType changes.
+           */}
+          <EnvironmentVariablesField key={tokenType} />
+        </GuideCard>
       </div>
     </div>
   );
