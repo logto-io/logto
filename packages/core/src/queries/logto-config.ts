@@ -1,14 +1,18 @@
-import type {
-  AdminConsoleData,
-  LogtoConfig,
-  LogtoConfigKey,
-  LogtoOidcConfigKey,
-  OidcConfigKey,
+import {
+  type jwtCustomizerConfigGuard,
+  LogtoTenantConfigKey,
+  LogtoConfigs,
+  type AdminConsoleData,
+  type LogtoConfig,
+  type LogtoConfigKey,
+  type LogtoOidcConfigKey,
+  type OidcConfigKey,
+  type LogtoJwtTokenKey,
 } from '@logto/schemas';
-import { LogtoTenantConfigKey, LogtoConfigs } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
+import type { z } from 'zod';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
@@ -47,11 +51,28 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
       returning *
     `);
 
+  // Can not narrow down the type of value if we utilize `buildInsertIntoWithPool` method.
+  const upsertJwtCustomizer = async <T extends LogtoJwtTokenKey>(
+    key: T,
+    value: z.infer<(typeof jwtCustomizerConfigGuard)[T]>
+  ) =>
+    pool.one<{ key: T; value: Record<string, string> }>(
+      sql`
+        insert into ${table} (${fields.key}, ${fields.value})
+          values (${key}, ${sql.jsonb(value)})
+          on conflict (${fields.tenantId}, ${fields.key}) do update set ${
+            fields.value
+          } = ${sql.jsonb(value)}
+          returning *
+      `
+    );
+
   return {
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
     getCloudConnectionData,
     getRowsByKeys,
     updateOidcConfigsByKey,
+    upsertJwtCustomizer,
   };
 };

@@ -10,6 +10,7 @@ import {
   getOidcKeys,
   rotateOidcKeys,
   updateAdminConsoleConfig,
+  upsertJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -122,5 +123,49 @@ describe('admin console sign-in experience', () => {
       { id: expect.any(String), signingKeyAlgorithm: 'EC', createdAt: expect.any(Number) },
     ]);
     expect(privateKeys2[1]?.id).toBe(privateKeys[0]?.id);
+  });
+
+  it('should successfully add a new JWT customizer', async () => {
+    const accessTokenJwtCustomizerPayload = {
+      script: '',
+      envVars: {},
+      contextSample: {
+        user: {
+          username: 'test',
+          id: 'fake-id',
+        },
+      },
+    };
+    const clientCredentialsJwtCustomizerPayload = {
+      ...accessTokenJwtCustomizerPayload,
+      contextSample: {},
+    };
+
+    const accessToken = await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
+    expect(accessToken).toMatchObject(accessTokenJwtCustomizerPayload);
+    const newAccessTokenJwtCustomizerPayload = {
+      ...accessTokenJwtCustomizerPayload,
+      script: 'new script',
+    };
+    const updatedAccessToken = await upsertJwtCustomizer(
+      'access-token',
+      newAccessTokenJwtCustomizerPayload
+    );
+    expect(updatedAccessToken).toMatchObject(newAccessTokenJwtCustomizerPayload);
+
+    const clientCredentials = await upsertJwtCustomizer(
+      'client-credentials',
+      clientCredentialsJwtCustomizerPayload
+    );
+    expect(clientCredentials).toMatchObject(clientCredentialsJwtCustomizerPayload);
+    const newClientCredentialsJwtCustomizerPayload = {
+      ...clientCredentialsJwtCustomizerPayload,
+      script: 'new script client credentials',
+    };
+    const updatedClientCredentials = await upsertJwtCustomizer(
+      'client-credentials',
+      newClientCredentialsJwtCustomizerPayload
+    );
+    expect(updatedClientCredentials).toMatchObject(newClientCredentialsJwtCustomizerPayload);
   });
 });

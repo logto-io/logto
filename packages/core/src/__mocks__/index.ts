@@ -159,7 +159,7 @@ export const mockCookieKeys: OidcConfigKey[] = [
   { id: 'cookie', value: 'bar', createdAt: 987_654_321 },
 ];
 
-export const mockLogtoConfigs: LogtoConfig[] = [
+const mockLogtoConfigs: LogtoConfig[] = [
   {
     tenantId: 'fake_tenant',
     key: LogtoOidcConfigKey.PrivateKeys,
@@ -171,6 +171,14 @@ export const mockLogtoConfigs: LogtoConfig[] = [
     value: mockCookieKeys,
   },
 ];
+
+export const mockLogtoConfigRows = {
+  rows: mockLogtoConfigs,
+  rowCount: mockLogtoConfigs.length,
+  command: 'SELECT' as const,
+  fields: [],
+  notices: [],
+};
 
 export const mockPasscode: Passcode = {
   tenantId: 'fake_tenant',
@@ -197,4 +205,20 @@ export const mockApplicationRole: ApplicationsRole = {
   id: 'application_role_id',
   applicationId: 'application_id',
   roleId: 'role_id',
+};
+
+export const mockJwtCustomizerConfigForAccessToken = {
+  tenantId: 'fake_tenant',
+  key: 'jwt.accessToken',
+  value: {
+    script: 'console.log("hello world");',
+    envVars: {
+      API_KEY: '<api-key>',
+    },
+    contextSample: {
+      user: {
+        username: 'user',
+      },
+    },
+  },
 };

@@ -12,14 +12,22 @@ import {
   type OidcConfigKeysResponse,
   type OidcConfigKey,
   LogtoOidcConfigKeyType,
+  jwtCustomizerAccessTokenGuard,
+  jwtCustomizerClientCredentialsGuard,
+  LogtoJwtTokenKey,
 } from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import koaGuard from '#src/middleware/koa-guard.js';
+import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
+
+enum LogtoJwtTokenPath {
+  AccessToken = 'access-token',
+  ClientCredentials = 'client-credentials',
+}
 
 /**
  * Provide a simple API router key type and DB config key mapping
@@ -28,6 +36,19 @@ const getOidcConfigKeyDatabaseColumnName = (key: LogtoOidcConfigKeyType): LogtoO
   key === LogtoOidcConfigKeyType.PrivateKeys
     ? LogtoOidcConfigKey.PrivateKeys
     : LogtoOidcConfigKey.CookieKeys;
+
+const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenPath, body: unknown) => {
+  if (tokenPath === LogtoJwtTokenPath.AccessToken) {
+    return {
+      key: LogtoJwtTokenKey.AccessToken,
+      body: parse('body', jwtCustomizerAccessTokenGuard, body),
+    };
+  }
+  return {
+    key: LogtoJwtTokenKey.ClientCredentials,
+    body: parse('body', jwtCustomizerClientCredentialsGuard, body),
+  };
+};
 
 /**
  * Remove actual values of the private keys from response.
@@ -60,9 +81,9 @@ const getRedactedOidcKeyResponse = async (
 export default function logtoConfigRoutes<T extends AuthedRouter>(
   ...[router, { queries, logtoConfigs, invalidateCache }]: RouterInitArgs<T>
 ) {
-  const { getAdminConsoleConfig, updateAdminConsoleConfig, updateOidcConfigsByKey } =
+  const { getAdminConsoleConfig, getRowsByKeys, updateAdminConsoleConfig, updateOidcConfigsByKey } =
     queries.logtoConfigs;
-  const { getOidcConfigs } = logtoConfigs;
+  const { getOidcConfigs, upsertJwtCustomizer } = logtoConfigs;
 
   router.get(
     '/configs/admin-console',
@@ -178,6 +199,43 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
 
       // Remove actual values of the private keys from response
       ctx.body = await getRedactedOidcKeyResponse(configKey, updatedKeys);
+
+      return next();
+    }
+  );
+
+  router.put(
+    '/configs/jwt-customizer/:tokenTypePath',
+    koaGuard({
+      params: z.object({
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
+      }),
+      /**
+       * Use `z.unknown()` to guard the request body as a JSON object, since the actual guard depends
+       * on the `tokenTypePath` and we can not get the value of `tokenTypePath` before parsing the request body,
+       * we will do more specific guard as long as we can get the value of `tokenTypePath`.
+       *
+       * Should specify `body` in koaGuard, otherwise the request body is not accessible even via `ctx.request.body`.
+       */
+      body: z.unknown(),
+      response: jwtCustomizerAccessTokenGuard.or(jwtCustomizerClientCredentialsGuard),
+      status: [200, 201, 400],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { tokenTypePath },
+        body: rawBody,
+      } = ctx.guard;
+      const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
+
+      const { rows } = await getRowsByKeys([key]);
+
+      const jwtCustomizer = await upsertJwtCustomizer(key, body);
+
+      if (rows.length === 0) {
+        ctx.status = 201;
+      }
+      ctx.body = jwtCustomizer.value;
 
       return next();
     }
