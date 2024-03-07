@@ -38,4 +38,12 @@ export class OrganizationInvitationApi extends ApiFactory<
       })
       .json<OrganizationInvitationEntity>();
   }
+
+  async resendMessage(id: string, messagePayload: SendMessagePayload) {
+    return authedAdminApi
+      .post(`${this.path}/${id}/message`, {
+        json: messagePayload,
+      })
+      .json();
+  }
 }
