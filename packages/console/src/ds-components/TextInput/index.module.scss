@@ -28,7 +28,7 @@
   transition-duration: 0.2s;
   padding: 0 _.unit(3);
   height: 36px;
-  background-color: inherit;
+  background-color: var(--color-layer-1);
   font: var(--font-body-2);
 
   &.withIcon {
@@ -85,6 +85,7 @@
 
     &[type='number'] {
       -moz-appearance: textfield;
+      appearance: textfield;
 
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button {
