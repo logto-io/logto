@@ -5,13 +5,12 @@ import { useMemo } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 
-import MonacoCodeEditor from './MonacoCodeEditor';
 import { type Model } from './MonacoCodeEditor/type';
-import RightPanel from './RightPanel';
+import ScriptPanel from './ScriptPanel';
+import SettingsPanel from './SettingsPanel';
 import { userJwtFile, machineToMachineJwtFile, JwtTokenType } from './config';
 import * as styles from './index.module.scss';
 import { type JwtClaimsFormType } from './type';
@@ -80,15 +79,13 @@ function JwtClaims({ tab }: Props) {
           : machineToMachineJwtClaimsForm)}
       >
         <form className={classNames(styles.tabContent)}>
-          <Card className={styles.codePanel}>
-            <div className={styles.cardTitle}>
-              {t('jwt_claims.code_editor_title', {
-                token: t(`jwt_claims.${phrases.token[tab]}`),
-              })}
-            </div>
-            <MonacoCodeEditor className={styles.flexGrow} models={[activeModel]} />
-          </Card>
-          <RightPanel />
+          <ScriptPanel
+            title={t('jwt_claims.code_editor_title', {
+              token: t(`jwt_claims.${phrases.token[tab]}`),
+            })}
+            activeModel={activeModel}
+          />
+          <SettingsPanel />
         </form>
       </FormProvider>
     </div>
