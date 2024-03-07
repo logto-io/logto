@@ -38,11 +38,7 @@ function Tester() {
           <div className={styles.cardTitle}>{t('tester.title')}</div>
           <div className={styles.cardSubtitle}>{t('tester.subtitle')}</div>
         </div>
-        <Button
-          className={styles.actionButton}
-          title="jwt_claims.tester.run_button"
-          type="primary"
-        />
+        <Button title="jwt_claims.tester.run_button" type="primary" />
       </div>
       <div className={classNames(styles.cardContent, styles.flexColumn, styles.flexGrow)}>
         <MonacoCodeEditor models={editorModels} className={styles.flexGrow} />
