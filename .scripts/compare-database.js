@@ -200,7 +200,13 @@ const queryDatabaseData = async (database) => {
         'db_user_password'
       );
 
-      return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
+      const keyOrder = Object.keys(data[0] ?? {}).sort();
+      const sortedData = data.sort(buildSortByKeys(keyOrder));
+      if (table_name === 'applications') {
+        console.log(sortedData);
+      }
+
+      return [table_name, sortedData];
     })
   );
 
