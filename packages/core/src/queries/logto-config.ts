@@ -1,5 +1,5 @@
 import {
-  jwtCustomizerConfigGuard,
+  type jwtCustomizerConfigGuard,
   LogtoTenantConfigKey,
   LogtoConfigs,
   type AdminConsoleData,
@@ -12,9 +12,9 @@ import {
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
-import { z } from 'zod';
+import { type z } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
@@ -45,6 +45,17 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
         where ${fields.key} in (${sql.join(keys, sql`,`)})
     `);
 
+  const deleteRowByKey = async (key: LogtoConfigKey) => {
+    const { rowCount } = await pool.query(sql`
+      delete from ${table}
+      where ${fields.key}=${key}
+    `);
+
+    if (rowCount < 1) {
+      throw new DeletionError(LogtoConfigs.table, key);
+    }
+  };
+
   const updateOidcConfigsByKey = async (key: LogtoOidcConfigKey, value: OidcConfigKey[]) =>
     pool.query(sql`
       update ${table}
@@ -69,21 +80,7 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
       `
     );
 
-  const getJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) => {
-    const { rows } = await getRowsByKeys([key]);
-
-    // If the record does not exist (`rows` is empty)
-    if (rows.length === 0) {
-      throw new RequestError({
-        code: 'entity.not_exists',
-        name: table,
-        id: key,
-        status: 404,
-      });
-    }
-
-    return z.object({ value: jwtCustomizerConfigGuard[key] }).parse(rows[0]);
-  };
+  const deleteJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) => deleteRowByKey(key);
 
   return {
     getAdminConsoleConfig,
@@ -92,6 +89,6 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     getRowsByKeys,
     updateOidcConfigsByKey,
     upsertJwtCustomizer,
-    getJwtCustomizer,
+    deleteJwtCustomizer,
   };
 };

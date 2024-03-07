@@ -54,6 +54,7 @@ const logtoConfigQueries = {
   }),
   updateOidcConfigsByKey: jest.fn(),
   getRowsByKeys: jest.fn(async () => mockLogtoConfigRows),
+  deleteJwtCustomizer: jest.fn(),
 };
 
 const logtoConfigLibraries = {
@@ -274,5 +275,13 @@ describe('configs routes', () => {
     const response = await routeRequester.get('/configs/jwt-customizer/access-token');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockJwtCustomizerConfigForAccessToken.value);
+  });
+
+  it('DELETE /configs/jwt-customizer/:tokenType should delete the record', async () => {
+    const response = await routeRequester.delete('/configs/jwt-customizer/client-credentials');
+    expect(logtoConfigQueries.deleteJwtCustomizer).toHaveBeenCalledWith(
+      LogtoJwtTokenKey.ClientCredentials
+    );
+    expect(response.status).toEqual(204);
   });
 });

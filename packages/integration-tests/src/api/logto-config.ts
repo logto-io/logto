@@ -45,3 +45,6 @@ export const getJwtCustomizer = async (keyTypePath: 'access-token' | 'client-cre
   authedAdminApi
     .get(`configs/jwt-customizer/${keyTypePath}`)
     .json<JwtCustomizerAccessToken | JwtCustomizerClientCredentials>();
+
+export const deleteJwtCustomizer = async (keyTypePath: 'access-token' | 'client-credentials') =>
+  authedAdminApi.delete(`configs/jwt-customizer/${keyTypePath}`);

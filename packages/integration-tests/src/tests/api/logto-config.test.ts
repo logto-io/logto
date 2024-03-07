@@ -12,6 +12,7 @@ import {
   updateAdminConsoleConfig,
   upsertJwtCustomizer,
   getJwtCustomizer,
+  deleteJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -126,7 +127,7 @@ describe('admin console sign-in experience', () => {
     expect(privateKeys2[1]?.id).toBe(privateKeys[0]?.id);
   });
 
-  it('should successfully POST and GET a JWT customizer (access token)', async () => {
+  it('should successfully PUT/GET/DELETE a JWT customizer (access token)', async () => {
     const accessTokenJwtCustomizerPayload = {
       script: '',
       envVars: {},
@@ -140,6 +141,10 @@ describe('admin console sign-in experience', () => {
 
     await expectRejects(getJwtCustomizer('access-token'), {
       code: 'entity.not_exists',
+      statusCode: 404,
+    });
+    await expectRejects(deleteJwtCustomizer('access-token'), {
+      code: 'entity.not_found',
       statusCode: 404,
     });
     const accessToken = await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
@@ -156,9 +161,14 @@ describe('admin console sign-in experience', () => {
     await expect(getJwtCustomizer('access-token')).resolves.toMatchObject(
       newAccessTokenJwtCustomizerPayload
     );
+    await expect(deleteJwtCustomizer('access-token')).resolves.not.toThrow();
+    await expectRejects(getJwtCustomizer('access-token'), {
+      code: 'entity.not_exists',
+      statusCode: 404,
+    });
   });
 
-  it('should successfully POST and GET a JWT customizer (client credentials)', async () => {
+  it('should successfully PUT/GET/DELETE a JWT customizer (client credentials)', async () => {
     const clientCredentialsJwtCustomizerPayload = {
       script: '',
       envVars: {},
@@ -167,6 +177,10 @@ describe('admin console sign-in experience', () => {
 
     await expectRejects(getJwtCustomizer('client-credentials'), {
       code: 'entity.not_exists',
+      statusCode: 404,
+    });
+    await expectRejects(deleteJwtCustomizer('client-credentials'), {
+      code: 'entity.not_found',
       statusCode: 404,
     });
     const clientCredentials = await upsertJwtCustomizer(
@@ -186,5 +200,10 @@ describe('admin console sign-in experience', () => {
     await expect(getJwtCustomizer('client-credentials')).resolves.toMatchObject(
       newClientCredentialsJwtCustomizerPayload
     );
+    await expect(deleteJwtCustomizer('client-credentials')).resolves.not.toThrow();
+    await expectRejects(getJwtCustomizer('client-credentials'), {
+      code: 'entity.not_exists',
+      statusCode: 404,
+    });
   });
 });

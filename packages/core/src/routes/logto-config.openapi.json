@@ -168,6 +168,25 @@
             "description": "The JWT customizer does not exist."
           }
         }
+      },
+      "delete": {
+        "summary": "Delete JWT customizer",
+        "description": "Delete the JWT customizer for the given token type.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tokenTypePath",
+            "description": "The token type path to delete the JWT customizer for."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The JWT customizer was deleted successfully."
+          },
+          "404": {
+            "description": "The JWT customizer does not exist."
+          }
+        }
       }
     }
   }
