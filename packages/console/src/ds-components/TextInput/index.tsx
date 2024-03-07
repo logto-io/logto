@@ -18,7 +18,7 @@ import IconButton from '@/ds-components/IconButton';
 
 import * as styles from './index.module.scss';
 
-type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
+export type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
   error?: string | boolean | ReactElement;
   icon?: ReactElement;
   /**
