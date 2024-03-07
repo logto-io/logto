@@ -39,6 +39,7 @@ const jwt_claims = {
     title: 'Test',
     subtitle: "Edit the context to adjust the token's request states and test your custom claims.",
     run_button: 'Run',
+    result_title: 'Test result',
   },
 };
 

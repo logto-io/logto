@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +15,7 @@ import {
 } from '../config.js';
 import { type JwtClaimsFormType } from '../type.js';
 
+import TestResult, { type TestResultData } from './TestResult.js';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -23,6 +24,7 @@ type Props = {
 
 function TestTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });
+  const [testResult, setTestResult] = useState<TestResultData>();
 
   const { watch } = useFormContext<JwtClaimsFormType>();
   const tokenType = watch('tokenType');
@@ -35,6 +37,10 @@ function TestTab({ isActive }: Props) {
     [tokenType]
   );
 
+  const onTestHandler = useCallback(() => {
+    // TODO: API integration, read form data and send the request to the server
+  }, []);
+
   return (
     <div className={classNames(styles.tabContent, isActive && styles.active)}>
       <Card className={classNames(styles.card, styles.flexGrow, styles.flexColumn)}>
@@ -43,10 +49,18 @@ function TestTab({ isActive }: Props) {
             <div className={styles.cardTitle}>{t('tester.title')}</div>
             <div className={styles.cardSubtitle}>{t('tester.subtitle')}</div>
           </div>
-          <Button title="jwt_claims.tester.run_button" type="primary" />
+          <Button title="jwt_claims.tester.run_button" type="primary" onClick={onTestHandler} />
         </div>
         <div className={classNames(styles.cardContent, styles.flexColumn, styles.flexGrow)}>
           <MonacoCodeEditor models={editorModels} className={styles.flexGrow} />
+          {testResult && (
+            <TestResult
+              testResult={testResult}
+              onClose={() => {
+                setTestResult(undefined);
+              }}
+            />
+          )}
         </div>
       </Card>
     </div>
