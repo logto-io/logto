@@ -83,7 +83,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
 ) {
   const { getAdminConsoleConfig, getRowsByKeys, updateAdminConsoleConfig, updateOidcConfigsByKey } =
     queries.logtoConfigs;
-  const { getOidcConfigs, upsertJwtCustomizer } = logtoConfigs;
+  const { getOidcConfigs, upsertJwtCustomizer, getJwtCustomizer } = logtoConfigs;
 
   router.get(
     '/configs/admin-console',
@@ -237,6 +237,29 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       }
       ctx.body = jwtCustomizer.value;
 
+      return next();
+    }
+  );
+
+  router.get(
+    '/configs/jwt-customizer/:tokenTypePath',
+    koaGuard({
+      params: z.object({
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
+      }),
+      response: jwtCustomizerAccessTokenGuard.or(jwtCustomizerClientCredentialsGuard),
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { tokenTypePath },
+      } = ctx.guard;
+      const { value } = await getJwtCustomizer(
+        tokenTypePath === LogtoJwtTokenPath.AccessToken
+          ? LogtoJwtTokenKey.AccessToken
+          : LogtoJwtTokenKey.ClientCredentials
+      );
+      ctx.body = value;
       return next();
     }
   );
