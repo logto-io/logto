@@ -26,3 +26,4 @@ export * from './tenant.js';
 export * from './tenant-organization.js';
 export * from './mapi-proxy.js';
 export * from './consent.js';
+export * from './jwt-customizer.js';
