@@ -63,6 +63,8 @@ const jwt_claims = {
     subtitle: "Edit the context to adjust the token's request states and test your custom claims.",
     /** UNTRANSLATED */
     run_button: 'Run',
+    /** UNTRANSLATED */
+    result_title: 'Test result',
   },
 };
 

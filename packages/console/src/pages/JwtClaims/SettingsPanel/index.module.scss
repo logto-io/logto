@@ -75,6 +75,7 @@
   }
 
   .cardContent {
+    // Collapsible content should be hidden by default, margin space can only be set at the child level
     > *:first-child {
       margin-top: _.unit(6);
     }
@@ -138,6 +139,42 @@
       /* stylelint-disable-next-line selector-class-pattern */
       .lines-content {
         padding: 0 16px;
+      }
+    }
+  }
+}
+
+.testResult {
+  margin-top: _.unit(3);
+  height: calc(50% - _.unit(3));
+  background-color: var(--color-bg-layer-2);
+  border-radius: 8px;
+  border: 1px solid var(--color-divider);
+  font-family: 'Roboto Mono', monospace;
+
+  .testResultHeader {
+    padding: _.unit(3) _.unit(4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font: var(--font-label-2);
+    font-family: 'Roboto Mono', monospace;
+    color: var(--color-text);
+  }
+
+  .testResultContent {
+    padding: _.unit(2) _.unit(4);
+    font: var(--font-body-2);
+
+    pre {
+      white-space: pre-wrap;
+
+      &.error {
+        color: var(--color-error);
+      }
+
+      &:first-child {
+        margin-top: 0;
       }
     }
   }
