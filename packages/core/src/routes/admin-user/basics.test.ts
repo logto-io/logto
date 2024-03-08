@@ -69,17 +69,14 @@ const { revokeInstanceByUserId } = mockedQueries.oidcModelInstances;
 const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
   mockedQueries.users;
 
-const { encryptUserPassword, verifyUserPassword } = await mockEsmWithActual(
-  '#src/libraries/user.js',
-  () => ({
-    encryptUserPassword: jest.fn(() => ({
-      passwordEncrypted: 'password',
-      passwordEncryptionMethod: 'Argon2i',
-    })),
-    verifyUserPassword: jest.fn(),
-  })
-);
+const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
+  encryptUserPassword: jest.fn(() => ({
+    passwordEncrypted: 'password',
+    passwordEncryptionMethod: 'Argon2i',
+  })),
+}));
 
+const verifyUserPassword = jest.fn();
 const usersLibraries = {
   generateUserId: jest.fn(async () => 'fooId'),
   insertUser: jest.fn(
@@ -88,6 +85,7 @@ const usersLibraries = {
       ...removeUndefinedKeys(user), // No undefined values will be returned from database
     })
   ),
+  verifyUserPassword,
 } satisfies Partial<Libraries['users']>;
 
 const adminUserRoutes = await pickDefault(import('./basics.js'));

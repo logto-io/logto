@@ -31,60 +31,6 @@ export const encryptUserPassword = async (
   return { passwordEncrypted, passwordEncryptionMethod };
 };
 
-export const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
-  assertThat(user, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
-  const { passwordEncrypted, passwordEncryptionMethod } = user;
-
-  assertThat(
-    passwordEncrypted && passwordEncryptionMethod,
-    new RequestError({ code: 'session.invalid_credentials', status: 422 })
-  );
-
-  switch (passwordEncryptionMethod) {
-    case UsersPasswordEncryptionMethod.Argon2i: {
-      const result = await argon2Verify({ password, hash: passwordEncrypted });
-      assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
-      break;
-    }
-    case UsersPasswordEncryptionMethod.MD5: {
-      const expectedEncrypted = await md5(password);
-      assertThat(
-        expectedEncrypted === passwordEncrypted,
-        new RequestError({ code: 'session.invalid_credentials', status: 422 })
-      );
-      break;
-    }
-    case UsersPasswordEncryptionMethod.SHA1: {
-      const expectedEncrypted = await sha1(password);
-      assertThat(
-        expectedEncrypted === passwordEncrypted,
-        new RequestError({ code: 'session.invalid_credentials', status: 422 })
-      );
-      break;
-    }
-    case UsersPasswordEncryptionMethod.SHA256: {
-      const expectedEncrypted = await sha256(password);
-      assertThat(
-        expectedEncrypted === passwordEncrypted,
-        new RequestError({ code: 'session.invalid_credentials', status: 422 })
-      );
-      break;
-    }
-    case UsersPasswordEncryptionMethod.Bcrypt: {
-      const result = await bcryptVerify({ password, hash: passwordEncrypted });
-      assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
-      break;
-    }
-    default: {
-      throw new RequestError({ code: 'session.invalid_credentials', status: 422 });
-    }
-  }
-
-  // TODO(@sijie) migrate to use argon2
-
-  return user;
-};
-
 /**
  * Convert bindMfa to mfaVerification, add common fields like "id" and "createdAt"
  * and transpile formats like "codes" to "code" for backup code
@@ -255,6 +201,68 @@ export const createUserLibrary = (queries: Queries) => {
     });
   };
 
+  const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
+    assertThat(user, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+    const { passwordEncrypted, passwordEncryptionMethod, id } = user;
+
+    assertThat(
+      passwordEncrypted && passwordEncryptionMethod,
+      new RequestError({ code: 'session.invalid_credentials', status: 422 })
+    );
+
+    switch (passwordEncryptionMethod) {
+      case UsersPasswordEncryptionMethod.Argon2i: {
+        const result = await argon2Verify({ password, hash: passwordEncrypted });
+        assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+        break;
+      }
+      case UsersPasswordEncryptionMethod.MD5: {
+        const expectedEncrypted = await md5(password);
+        assertThat(
+          expectedEncrypted === passwordEncrypted,
+          new RequestError({ code: 'session.invalid_credentials', status: 422 })
+        );
+        break;
+      }
+      case UsersPasswordEncryptionMethod.SHA1: {
+        const expectedEncrypted = await sha1(password);
+        assertThat(
+          expectedEncrypted === passwordEncrypted,
+          new RequestError({ code: 'session.invalid_credentials', status: 422 })
+        );
+        break;
+      }
+      case UsersPasswordEncryptionMethod.SHA256: {
+        const expectedEncrypted = await sha256(password);
+        assertThat(
+          expectedEncrypted === passwordEncrypted,
+          new RequestError({ code: 'session.invalid_credentials', status: 422 })
+        );
+        break;
+      }
+      case UsersPasswordEncryptionMethod.Bcrypt: {
+        const result = await bcryptVerify({ password, hash: passwordEncrypted });
+        assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+        break;
+      }
+      default: {
+        throw new RequestError({ code: 'session.invalid_credentials', status: 422 });
+      }
+    }
+
+    // Migrate password to default algorithm: argon2i
+    if (passwordEncryptionMethod !== UsersPasswordEncryptionMethod.Argon2i) {
+      const { passwordEncrypted: newEncrypted, passwordEncryptionMethod: newMethod } =
+        await encryptUserPassword(password);
+      return updateUserById(id, {
+        passwordEncrypted: newEncrypted,
+        passwordEncryptionMethod: newMethod,
+      });
+    }
+
+    return user;
+  };
+
   return {
     generateUserId,
     insertUser,
@@ -263,5 +271,6 @@ export const createUserLibrary = (queries: Queries) => {
     findUserScopesForResourceIndicator,
     findUserRoles,
     addUserMfaVerification,
+    verifyUserPassword,
   };
 };

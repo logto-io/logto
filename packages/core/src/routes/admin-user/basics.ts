@@ -9,7 +9,7 @@ import { conditional, pick, yes } from '@silverhand/essentials';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js';
+import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -30,7 +30,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
     userSsoIdentities,
   } = queries;
   const {
-    users: { checkIdentifierCollision, generateUserId, insertUser },
+    users: { checkIdentifierCollision, generateUserId, insertUser, verifyUserPassword },
   } = libraries;
 
   router.get(
