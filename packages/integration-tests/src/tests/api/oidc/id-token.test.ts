@@ -39,7 +39,7 @@ describe('OpenID Connect ID token', () => {
   };
 
   beforeAll(async () => {
-    const { id } = await createUserByAdmin(username, password);
+    const { id } = await createUserByAdmin({ username, password });
     // eslint-disable-next-line @silverhand/fp/no-mutation
     userId = id;
     await enableAllPasswordSignInMethods();
