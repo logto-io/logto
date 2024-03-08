@@ -14,7 +14,7 @@ enum Tab {
   Test = 'test_tab',
 }
 
-function SettingsPanel() {
+function SettingsSection() {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.DataSource);
 
   return (
@@ -39,4 +39,4 @@ function SettingsPanel() {
   );
 }
 
-export default SettingsPanel;
+export default SettingsSection;

@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 
-import ScriptPanel from './ScriptPanel';
-import SettingsPanel from './SettingsPanel';
+import ScriptSection from './ScriptSection';
+import SettingsSection from './SettingsSection';
 import { JwtTokenType } from './config';
 import * as styles from './index.module.scss';
 import { type JwtClaimsFormType } from './type';
@@ -62,8 +62,8 @@ function JwtClaims({ tab }: Props) {
           : machineToMachineJwtClaimsForm)}
       >
         <form className={classNames(styles.tabContent)}>
-          <ScriptPanel />
-          <SettingsPanel />
+          <ScriptSection />
+          <SettingsSection />
         </form>
       </FormProvider>
     </div>

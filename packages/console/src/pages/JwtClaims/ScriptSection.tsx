@@ -15,7 +15,7 @@ const titlePhrases = Object.freeze({
   [JwtTokenType.MachineToMachineAccessToken]: 'machine_to_machine_jwt',
 });
 
-function ScriptPanel() {
+function ScriptSection() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { watch } = useFormContext<JwtClaimsFormType>();
@@ -38,4 +38,4 @@ function ScriptPanel() {
   );
 }
 
-export default ScriptPanel;
+export default ScriptSection;
