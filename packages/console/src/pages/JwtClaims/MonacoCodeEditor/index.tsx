@@ -5,8 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import Copy from '@/assets/icons/copy.svg';
-import IconButton from '@/ds-components/IconButton';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import { logtoDarkTheme, defaultOptions } from './config.js';
@@ -110,11 +109,9 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
             </div>
           ))}
         </div>
-        <div className={styles.actions}>
+        <div className={styles.actionButtons}>
           {actions}
-          <IconButton size="small" onClick={handleCodeCopy}>
-            <Copy />
-          </IconButton>
+          <CopyToClipboard variant="icon" value={editorRef.current?.getValue() ?? ''} />
         </div>
       </header>
       <div ref={containerRef} className={styles.editorContainer}>
