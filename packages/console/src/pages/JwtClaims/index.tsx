@@ -25,6 +25,7 @@ type Props = {
   tab: JwtTokenType;
 };
 
+// TODO: API integration
 function JwtClaims({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 

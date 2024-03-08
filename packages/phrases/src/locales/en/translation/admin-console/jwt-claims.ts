@@ -7,6 +7,10 @@ const jwt_claims = {
   user_jwt: 'user JWT',
   machine_to_machine_jwt: 'machine-to-machine JWT',
   code_editor_title: 'Customize the {{token}} claims',
+  clear: 'Clear',
+  cleared: 'Cleared',
+  restore: 'Restore defaults',
+  restored: 'Restored',
   data_source_tab: 'Data source',
   test_tab: 'Test claim',
   jwt_claims_description:

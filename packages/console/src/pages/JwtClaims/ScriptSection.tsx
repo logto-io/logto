@@ -1,6 +1,6 @@
 /* Code Editor for the custom JWT claims script. */
 import { useMemo } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Card from '@/ds-components/Card';
@@ -15,16 +15,19 @@ const titlePhrases = Object.freeze({
   [JwtTokenType.MachineToMachineAccessToken]: 'machine_to_machine_jwt',
 });
 
+const userJwtModel = userJwtFile;
+
 function ScriptSection() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { watch } = useFormContext<JwtClaimsFormType>();
+  const { watch, control } = useFormContext<JwtClaimsFormType>();
+
   const tokenType = watch('tokenType');
 
-  // TODO: API integration, read/write the custom claims code value
-  const activeModel = useMemo<Model>(() => {
-    return tokenType === JwtTokenType.UserAccessToken ? userJwtFile : machineToMachineJwtFile;
-  }, [tokenType]);
+  const activeModel = useMemo<Model>(
+    () => (tokenType === JwtTokenType.UserAccessToken ? userJwtFile : machineToMachineJwtFile),
+    [tokenType]
+  );
 
   return (
     <Card className={styles.codePanel}>
@@ -33,7 +36,24 @@ function ScriptSection() {
           token: t(`jwt_claims.${titlePhrases[tokenType]}`),
         })}
       </div>
-      <MonacoCodeEditor className={styles.flexGrow} models={[activeModel]} />
+      <Controller
+        shouldUnregister // Unregister the input value when the token type changes
+        control={control}
+        name="script"
+        render={({ field: { onChange, value } }) => (
+          <MonacoCodeEditor
+            className={styles.flexGrow}
+            enabledActions={['clear', 'copy']}
+            models={[
+              {
+                ...activeModel,
+                value: value ?? activeModel.defaultValue,
+              },
+            ]}
+            onChange={onChange}
+          />
+        )}
+      />
     </Card>
   );
 }

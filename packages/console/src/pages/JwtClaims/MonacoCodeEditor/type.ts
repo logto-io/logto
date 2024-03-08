@@ -11,7 +11,13 @@ export type Model = {
   icon?: React.ReactNode;
   /** The title of the model */
   title: string;
-  defaultValue: string;
+  /** The default value of the file */
+  defaultValue?: string;
+  value?: string;
   language: string;
+  /** ExtraLibs can be loaded to the code editor
+   * @see {@link https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.typescript.LanguageServiceDefaults.html#setExtraLibs}
+   * We use this to load the global type declarations for the active model
+   */
   globalDeclarations?: string;
 };

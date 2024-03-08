@@ -4,6 +4,8 @@ export type JwtClaimsFormType = {
   tokenType: JwtTokenType;
   script?: string;
   environmentVariables?: Array<{ key: string; value: string }>;
-  contextSample?: string;
-  tokenSample?: string;
+  testSample?: {
+    contextSample?: string;
+    tokenSample?: string;
+  };
 };

@@ -15,6 +15,14 @@ const jwt_claims = {
   /** UNTRANSLATED */
   code_editor_title: 'Customize the {{token}} claims',
   /** UNTRANSLATED */
+  clear: 'Clear',
+  /** UNTRANSLATED */
+  cleared: 'Cleared',
+  /** UNTRANSLATED */
+  restore: 'Restore defaults',
+  /** UNTRANSLATED */
+  restored: 'Restored',
+  /** UNTRANSLATED */
   data_source_tab: 'Data source',
   /** UNTRANSLATED */
   test_tab: 'Test claim',
