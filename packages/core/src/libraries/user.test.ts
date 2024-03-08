@@ -7,7 +7,7 @@ import { MockQueries } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
 
-const { encryptUserPassword, createUserLibrary, verifyUserPassword } = await import('./user.js');
+const { encryptUserPassword, createUserLibrary } = await import('./user.js');
 
 const hasUserWithId = jest.fn();
 const updateUserById = jest.fn();
@@ -70,6 +70,8 @@ describe('encryptUserPassword()', () => {
 });
 
 describe('verifyUserPassword()', () => {
+  const { verifyUserPassword } = createUserLibrary(queries);
+
   describe('Argon2', () => {
     it('resolves when password is correct', async () => {
       await expect(
@@ -149,6 +151,22 @@ describe('verifyUserPassword()', () => {
       await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
         new RequestError({ code: 'session.invalid_credentials', status: 422 })
       );
+    });
+  });
+
+  describe('Migrate other algorithms to Argon2', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '5f4dcc3b5aa765d61d8327deb882cf99',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.MD5,
+    };
+    it('migrates password to Argon2', async () => {
+      await verifyUserPassword(user, 'password');
+      expect(updateUserById).toHaveBeenCalledWith(user.id, {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        passwordEncrypted: expect.stringContaining('argon2'),
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      });
     });
   });
 });

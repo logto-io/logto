@@ -12,7 +12,6 @@ import { type Optional, isKeyInObject } from '@silverhand/essentials';
 import { sha256 } from 'hash-wasm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { verifyUserPassword } from '#src/libraries/user.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -56,7 +55,7 @@ const verifyPasswordIdentifier = async (
   log.append({ ...identity });
 
   const user = await findUserByIdentifier(tenant, identity);
-  const verifiedUser = await verifyUserPassword(user, password);
+  const verifiedUser = await tenant.libraries.users.verifyUserPassword(user, password);
 
   const { isSuspended, id } = verifiedUser;
 
