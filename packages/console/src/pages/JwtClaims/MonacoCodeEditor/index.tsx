@@ -26,7 +26,19 @@ type Props = {
   value?: string;
   onChange?: (value: string | undefined) => void;
 };
-
+/**
+ * Monaco code editor component.
+ * @param {Props} prop
+ * @param {string} [prop.className] - The class name of the component.
+ * @param {ActionButtonType[]} prop.enabledActions - The enabled action buttons, available values are 'clear', 'restore', 'copy'.
+ * @param {ModelSettings[]} prop.models - The static model settings (all tabs) for the code editor.
+ * @param {string} prop.activeModelName - The active model name.
+ * @param {(name: string) => void} prop.setActiveModel - The callback function to set the active model. Used to switch between tabs.
+ * @param {string} prop.value - The value of the code editor for the current active model.
+ * @param {(value: string | undefined) => void} prop.onChange - The callback function to handle the value change of the code editor.
+ *
+ * @returns
+ */
 function MonacoCodeEditor({
   className,
   enabledActions = ['copy'],
