@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* istanbul ignore file */
 
 import assert from 'node:assert';
@@ -12,16 +13,21 @@ import {
   inSeconds,
   logtoCookieKey,
   type LogtoUiCookie,
+  LogtoJwtTokenKey,
+  type JsonObject,
 } from '@logto/schemas';
-import { conditional, tryThat } from '@silverhand/essentials';
+import { conditional, trySafe, tryThat } from '@silverhand/essentials';
+import { got } from 'got';
 import i18next from 'i18next';
 import koaBody from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
+import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
+import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import postgresAdapter from '#src/oidc/adapter.js';
@@ -45,7 +51,13 @@ import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
-export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Libraries): Provider {
+export default function initOidc(
+  envSet: EnvSet,
+  queries: Queries,
+  libraries: Libraries,
+  logtoConfigs: LogtoConfigLibrary,
+  cloudConnection: CloudConnectionLibrary
+): Provider {
   const {
     resources: { findDefaultResource },
     users: { findUserById },
@@ -198,6 +210,64 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
       },
     },
     extraParams: [OIDCExtraParametersKey.InteractionMode],
+    extraTokenClaims: async (ctx, token) => {
+      if (!EnvSet.values.isDevFeaturesEnabled) {
+        return;
+      }
+
+      /**
+       * The execution on this function relies on the existence of authenticated cloud connection client.
+       *
+       * The process that cloud connection get access token also includes this function (`extraTokenClaims`
+       * is a function that will always be executed during the process of generating an access token), it
+       * could trigger infinite loop if we do not terminal the process early.
+       */
+      if (!cloudConnection.isAuthenticated) {
+        return;
+      }
+
+      const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
+
+      const {
+        value: { script, envVars },
+      } = (await trySafe(
+        logtoConfigs.getJwtCustomizer(
+          isTokenClientCredentials
+            ? LogtoJwtTokenKey.ClientCredentials
+            : LogtoJwtTokenKey.AccessToken
+        )
+      )) ?? { value: {} };
+
+      if (script) {
+        // Wait for cloud API to be ready and we can use cloud connection client to request the API.
+        const accessToken = await cloudConnection.getAccessToken();
+        const { endpoint: cloudApiEndpoint } = await cloudConnection.getCloudConnectionData();
+
+        // We pass context to the cloud API only when it is a user's access token.
+        const logtoUserInfo = conditional(
+          !isTokenClientCredentials &&
+            token.accountId &&
+            (await libraries.jwtCustomizers.getUserContext(token.accountId))
+        );
+        const result =
+          (await trySafe(
+            got
+              .post(`${cloudApiEndpoint}/services/custom-jwt`, {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+                json: {
+                  script,
+                  envVars,
+                  token,
+                  ...conditional(logtoUserInfo && { context: { user: logtoUserInfo } }),
+                },
+              })
+              .json<JsonObject>()
+          )) ?? {};
+        return result;
+      }
+    },
     extraClientMetadata: {
       properties: Object.values(CustomClientMetadataKey),
       validator: (_, key, value) => {
@@ -351,3 +421,4 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
 
   return oidc;
 }
+/* eslint-enable max-lines */

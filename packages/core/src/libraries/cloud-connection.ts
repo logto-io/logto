@@ -27,16 +27,26 @@ const accessTokenResponseGuard = z.object({
 /**
  * The scope here can be empty and still work, because the cloud API requests made using this client do not rely on scope verification.
  * The `CloudScope.SendEmail` is added for now because it needs to call the cloud email service API.
+ * The `CloudScope.FetchCustomJwt` is added for now because it needs to call the cloud custom JWT service API.
  */
 const scopes: string[] = [CloudScope.SendEmail, CloudScope.FetchCustomJwt];
 const accessTokenExpirationMargin = 60;
 
 /** The library for connecting to Logto Cloud service. */
 export class CloudConnectionLibrary {
+  private _isAuthenticated = false;
   private client?: Client<typeof router>;
   private accessTokenCache?: { expiresAt: number; accessToken: string };
 
   constructor(private readonly logtoConfigs: LogtoConfigLibrary) {}
+
+  get isAuthenticated() {
+    return this._isAuthenticated;
+  }
+
+  private set isAuthenticated(value: boolean) {
+    this._isAuthenticated = value;
+  }
 
   public getCloudConnectionData = async (): Promise<CloudConnection> => {
     const { getCloudConnectionData: getCloudServiceM2mCredentials } = this.logtoConfigs;
@@ -66,6 +76,8 @@ export class CloudConnectionLibrary {
       if (expiresAt > Date.now() / 1000 + accessTokenExpirationMargin) {
         return accessToken;
       }
+      // Set the cloud connection to not authenticated if the access token is expired.
+      this.isAuthenticated = false;
     }
 
     const { tokenEndpoint, appId, appSecret, resource } = await this.getCloudConnectionData();
@@ -93,6 +105,8 @@ export class CloudConnectionLibrary {
       expiresAt: Date.now() / 1000 + result.data.expires_in,
       accessToken: result.data.access_token,
     };
+    // Set the cloud connection to `authenticated` if the access token is valid.
+    this.isAuthenticated = true;
 
     return result.data.access_token;
   };
