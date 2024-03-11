@@ -3,7 +3,7 @@ import { type EditorProps } from '@monaco-editor/react';
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg';
 import UserFileIcon from '@/assets/icons/user-file-icon.svg';
 
-import type { Model } from './MonacoCodeEditor/type.js';
+import type { ModelSettings } from './MonacoCodeEditor/type.js';
 
 /**
  * JWT token types
@@ -112,7 +112,7 @@ exports.getCustomJwtClaims = async (token) => {
   return {};
 }`;
 
-export const userJwtFile: Model = {
+export const userJwtFile: ModelSettings = {
   name: 'user-jwt.ts',
   title: 'TypeScript',
   language: 'typescript',
@@ -120,7 +120,7 @@ export const userJwtFile: Model = {
   globalDeclarations: userJwtGlobalDeclarations,
 };
 
-export const machineToMachineJwtFile: Model = {
+export const machineToMachineJwtFile: ModelSettings = {
   name: 'machine-to-machine-jwt.ts',
   title: 'TypeScript',
   language: 'typescript',
@@ -266,7 +266,7 @@ const defaultUserTokenContextData = {
   },
 };
 
-export const userTokenPayloadTestModel: Model = {
+export const userTokenPayloadTestModel: ModelSettings = {
   language: 'json',
   icon: <TokenFileIcon />,
   name: 'user-token-payload.json',
@@ -274,7 +274,7 @@ export const userTokenPayloadTestModel: Model = {
   defaultValue: JSON.stringify(defaultUserTokenPayloadData, null, '\t'),
 };
 
-export const machineToMachineTokenPayloadTestModel: Model = {
+export const machineToMachineTokenPayloadTestModel: ModelSettings = {
   language: 'json',
   icon: <TokenFileIcon />,
   name: 'machine-to-machine-token-payload.json',
@@ -282,7 +282,7 @@ export const machineToMachineTokenPayloadTestModel: Model = {
   defaultValue: JSON.stringify(defaultMachineToMachineTokenPayloadData, null, '\t'),
 };
 
-export const userTokenContextTestModel: Model = {
+export const userTokenContextTestModel: ModelSettings = {
   language: 'json',
   icon: <UserFileIcon />,
   name: 'user-token-context.json',

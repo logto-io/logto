@@ -4,7 +4,7 @@ export type IStandaloneThemeData = Parameters<Monaco['editor']['defineTheme']>[1
 
 export type IStandaloneCodeEditor = Parameters<OnMount>[0];
 
-export type Model = {
+export type ModelSettings = {
   /** Used as the unique key for the monaco editor model @see {@link https://github.com/suren-atoyan/monaco-react?tab=readme-ov-file#multi-model-editor} */
   name: string;
   /** The icon of the model, will be displayed on the tab */
@@ -20,4 +20,9 @@ export type Model = {
    * We use this to load the global type declarations for the active model
    */
   globalDeclarations?: string;
+};
+
+export type ModelControl = {
+  value?: string;
+  onChange?: (value: string | undefined) => void;
 };

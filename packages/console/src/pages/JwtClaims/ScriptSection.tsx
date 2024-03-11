@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Card from '@/ds-components/Card';
 
-import MonacoCodeEditor, { type Model } from './MonacoCodeEditor';
+import MonacoCodeEditor, { type ModelSettings } from './MonacoCodeEditor';
 import { userJwtFile, machineToMachineJwtFile, JwtTokenType } from './config';
 import * as styles from './index.module.scss';
 import { type JwtClaimsFormType } from './type';
@@ -15,20 +15,16 @@ const titlePhrases = Object.freeze({
   [JwtTokenType.MachineToMachineAccessToken]: 'machine_to_machine_jwt',
 });
 
-const userJwtModel = userJwtFile;
-
 function ScriptSection() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { watch, control } = useFormContext<JwtClaimsFormType>();
-
   const tokenType = watch('tokenType');
 
-  const activeModel = useMemo<Model>(
+  const activeModel = useMemo<ModelSettings>(
     () => (tokenType === JwtTokenType.UserAccessToken ? userJwtFile : machineToMachineJwtFile),
     [tokenType]
   );
-
   return (
     <Card className={styles.codePanel}>
       <div className={styles.cardTitle}>
@@ -37,20 +33,22 @@ function ScriptSection() {
         })}
       </div>
       <Controller
-        shouldUnregister // Unregister the input value when the token type changes
+        // Force rerender the controller when the token type changes
+        // Otherwise the input field will not be updated
+        key={tokenType}
+        shouldUnregister
         control={control}
         name="script"
         render={({ field: { onChange, value } }) => (
           <MonacoCodeEditor
             className={styles.flexGrow}
             enabledActions={['clear', 'copy']}
-            models={[
-              {
-                ...activeModel,
-                value: value ?? activeModel.defaultValue,
-              },
-            ]}
-            onChange={onChange}
+            models={[activeModel]}
+            activeModelName={activeModel.name}
+            value={value}
+            onChange={(newValue) => {
+              onChange(newValue);
+            }}
           />
         )}
       />
