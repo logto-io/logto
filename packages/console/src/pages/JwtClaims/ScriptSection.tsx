@@ -1,11 +1,11 @@
 /* Code Editor for the custom JWT claims script. */
 import { useMemo } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Card from '@/ds-components/Card';
 
-import MonacoCodeEditor, { type Model } from './MonacoCodeEditor';
+import MonacoCodeEditor, { type ModelSettings } from './MonacoCodeEditor';
 import { userJwtFile, machineToMachineJwtFile, JwtTokenType } from './config';
 import * as styles from './index.module.scss';
 import { type JwtClaimsFormType } from './type';
@@ -18,14 +18,13 @@ const titlePhrases = Object.freeze({
 function ScriptSection() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { watch } = useFormContext<JwtClaimsFormType>();
+  const { watch, control } = useFormContext<JwtClaimsFormType>();
   const tokenType = watch('tokenType');
 
-  // TODO: API integration, read/write the custom claims code value
-  const activeModel = useMemo<Model>(() => {
-    return tokenType === JwtTokenType.UserAccessToken ? userJwtFile : machineToMachineJwtFile;
-  }, [tokenType]);
-
+  const activeModel = useMemo<ModelSettings>(
+    () => (tokenType === JwtTokenType.UserAccessToken ? userJwtFile : machineToMachineJwtFile),
+    [tokenType]
+  );
   return (
     <Card className={styles.codePanel}>
       <div className={styles.cardTitle}>
@@ -33,7 +32,26 @@ function ScriptSection() {
           token: t(`jwt_claims.${titlePhrases[tokenType]}`),
         })}
       </div>
-      <MonacoCodeEditor className={styles.flexGrow} models={[activeModel]} />
+      <Controller
+        // Force rerender the controller when the token type changes
+        // Otherwise the input field will not be updated
+        key={tokenType}
+        shouldUnregister
+        control={control}
+        name="script"
+        render={({ field: { onChange, value } }) => (
+          <MonacoCodeEditor
+            className={styles.flexGrow}
+            enabledActions={['clear', 'copy']}
+            models={[activeModel]}
+            activeModelName={activeModel.name}
+            value={value}
+            onChange={(newValue) => {
+              onChange(newValue);
+            }}
+          />
+        )}
+      />
     </Card>
   );
 }

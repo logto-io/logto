@@ -1,51 +1,69 @@
 import { Editor, type BeforeMount, type OnMount, useMonaco } from '@monaco-editor/react';
 import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import Copy from '@/assets/icons/copy.svg';
-import IconButton from '@/ds-components/IconButton';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import { onKeyDownHandler } from '@/utils/a11y';
 
+import CodeClearButton from './ActionButton/CodeClearButton.js';
+import CodeRestoreButton from './ActionButton/CodeRestoreButton.js';
 import { logtoDarkTheme, defaultOptions } from './config.js';
 import * as styles from './index.module.scss';
-import type { IStandaloneCodeEditor, Model } from './type.js';
+import type { IStandaloneCodeEditor, ModelSettings } from './type.js';
 import useEditorHeight from './use-editor-height.js';
 
-export type { Model } from './type.js';
+export type { ModelSettings, ModelControl } from './type.js';
+
+type ActionButtonType = 'clear' | 'restore' | 'copy';
 
 type Props = {
   className?: string;
-  actions?: React.ReactNode;
-  models: Model[];
+  enabledActions?: ActionButtonType[];
+  models: ModelSettings[];
+  activeModelName?: string;
+  setActiveModel?: (name: string) => void;
+  value?: string;
+  onChange?: (value: string | undefined) => void;
 };
-
-function MonacoCodeEditor({ className, actions, models }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+/**
+ * Monaco code editor component.
+ * @param {Props} prop
+ * @param {string} [prop.className] - The class name of the component.
+ * @param {ActionButtonType[]} prop.enabledActions - The enabled action buttons, available values are 'clear', 'restore', 'copy'.
+ * @param {ModelSettings[]} prop.models - The static model settings (all tabs) for the code editor.
+ * @param {string} prop.activeModelName - The active model name.
+ * @param {(name: string) => void} prop.setActiveModel - The callback function to set the active model. Used to switch between tabs.
+ * @param {string} prop.value - The value of the code editor for the current active model.
+ * @param {(value: string | undefined) => void} prop.onChange - The callback function to handle the value change of the code editor.
+ *
+ * @returns
+ */
+function MonacoCodeEditor({
+  className,
+  enabledActions = ['copy'],
+  models,
+  activeModelName,
+  value,
+  setActiveModel,
+  onChange,
+}: Props) {
   const monaco = useMonaco();
   const editorRef = useRef<Nullable<IStandaloneCodeEditor>>(null);
-
-  const [activeModelName, setActiveModelName] = useState<string>();
+  console.log('code', value);
 
   const activeModel = useMemo(
-    () => models.find((model) => model.name === activeModelName),
+    () => activeModelName && models.find((model) => model.name === activeModelName),
     [activeModelName, models]
   );
 
   const isMultiModals = useMemo(() => models.length > 1, [models]);
 
+  // Get the container ref and the editor height
   const { containerRef, editorHeight } = useEditorHeight();
 
-  // Set the first model as the active model
   useEffect(() => {
-    setActiveModelName(models[0]?.name);
-  }, [models]);
-
-  useEffect(() => {
-    // Add global declarations
-    // monaco will be ready after the editor is mounted, useEffect will be called after the monaco is ready
+    // Monaco will be ready after the editor is mounted, useEffect will be called after the monaco is ready
     if (!monaco || !activeModel) {
       return;
     }
@@ -61,16 +79,6 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
       ]);
     }
   }, [activeModel, monaco]);
-
-  const handleCodeCopy = useCallback(async () => {
-    const editor = editorRef.current;
-
-    if (editor) {
-      const code = editor.getValue();
-      await navigator.clipboard.writeText(code);
-      toast.success(t('general.copied'));
-    }
-  }, [t]);
 
   const handleEditorWillMount = useCallback<BeforeMount>((monaco) => {
     // Register the new logto theme
@@ -98,10 +106,10 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
                 role: 'button',
                 tabIndex: 0,
                 onClick: () => {
-                  setActiveModelName(name);
+                  setActiveModel?.(name);
                 },
                 onKeyDown: onKeyDownHandler(() => {
-                  setActiveModelName(name);
+                  setActiveModel?.(name);
                 }),
               })}
             >
@@ -110,25 +118,44 @@ function MonacoCodeEditor({ className, actions, models }: Props) {
             </div>
           ))}
         </div>
-        <div className={styles.actions}>
-          {actions}
-          <IconButton size="small" onClick={handleCodeCopy}>
-            <Copy />
-          </IconButton>
+        <div className={styles.actionButtons}>
+          {enabledActions.includes('clear') && (
+            <CodeClearButton
+              onClick={() => {
+                if (activeModel) {
+                  onChange?.(undefined);
+                }
+              }}
+            />
+          )}
+          {enabledActions.includes('restore') && (
+            <CodeRestoreButton
+              onClick={() => {
+                if (activeModel) {
+                  onChange?.(activeModel.defaultValue);
+                }
+              }}
+            />
+          )}
+          {enabledActions.includes('copy') && (
+            <CopyToClipboard variant="icon" value={editorRef.current?.getValue() ?? ''} />
+          )}
         </div>
       </header>
       <div ref={containerRef} className={styles.editorContainer}>
-        <Editor
-          height={editorHeight}
-          language={activeModel?.language ?? 'typescript'}
-          // TODO: need to check on the usage of value and defaultValue
-          defaultValue={activeModel?.defaultValue}
-          path={activeModel?.name}
-          theme="logto-dark"
-          options={defaultOptions}
-          beforeMount={handleEditorWillMount}
-          onMount={handleEditorDidMount}
-        />
+        {activeModel && (
+          <Editor
+            height={editorHeight}
+            language={activeModel.language}
+            path={activeModel.name}
+            theme="logto-dark"
+            options={defaultOptions}
+            value={value ?? activeModel.defaultValue}
+            beforeMount={handleEditorWillMount}
+            onMount={handleEditorDidMount}
+            onChange={onChange}
+          />
+        )}
       </div>
     </div>
   );
