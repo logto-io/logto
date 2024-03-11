@@ -3,6 +3,8 @@ const tenants = {
   description: 'Effizientes Verwalten von Mandanteneinstellungen und Anpassen Ihrer Domain.',
   tabs: {
     settings: 'Einstellungen',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domänen',
     subscription: 'Plan und Abrechnung',
     billing_history: 'Abrechnungshistorie',

@@ -3,6 +3,8 @@ const tenants = {
   description: 'Kiracı ayarlarını verimli bir şekilde yönetin ve alan adınızı özelleştirin.',
   tabs: {
     settings: 'Ayarlar',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Alan adları',
     subscription: 'Plan ve faturalandırma',
     billing_history: 'Fatura geçmişi',

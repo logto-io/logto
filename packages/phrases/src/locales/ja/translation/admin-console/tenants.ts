@@ -3,6 +3,8 @@ const tenants = {
   description: 'テナントの設定を効率的に管理し、ドメインをカスタマイズします。',
   tabs: {
     settings: '設定',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'ドメイン',
     subscription: 'プランと請求',
     billing_history: '請求履歴',

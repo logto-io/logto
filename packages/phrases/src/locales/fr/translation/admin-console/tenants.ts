@@ -3,6 +3,8 @@ const tenants = {
   description: 'Gérez efficacement les paramètres du locataire et personnalisez votre domaine.',
   tabs: {
     settings: 'Paramètres',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domaines',
     subscription: 'Plan et facturation',
     billing_history: 'Historique de facturation',

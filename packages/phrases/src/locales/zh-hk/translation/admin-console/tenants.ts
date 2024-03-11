@@ -3,6 +3,8 @@ const tenants = {
   description: '高效管理租戶設置並自訂您的域名。',
   tabs: {
     settings: '設定',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: '網域',
     subscription: '方案與計費',
     billing_history: '帳單記錄',

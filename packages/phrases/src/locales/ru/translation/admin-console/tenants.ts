@@ -3,6 +3,8 @@ const tenants = {
   description: 'Эффективное управление настройками арендатора и настройка вашего домена.',
   tabs: {
     settings: 'Настройки',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Домены',
     subscription: 'План и выставление счетов',
     billing_history: 'История выставления счетов',

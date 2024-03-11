@@ -4,6 +4,8 @@ const tenants = {
     "Gestisci efficacemente le impostazioni dell'inquilino e personalizza il tuo dominio.",
   tabs: {
     settings: 'Impostazioni',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domini',
     subscription: 'Piano e fatturazione',
     billing_history: 'Storico fatturazione',

@@ -3,6 +3,8 @@ const tenants = {
   description: 'Skuteczne zarządzanie ustawieniami najemcy i dostosowywanie domeny.',
   tabs: {
     settings: 'Ustawienia',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domeny',
     subscription: 'Plan i rozliczenia',
     billing_history: 'Historia rozliczeń',

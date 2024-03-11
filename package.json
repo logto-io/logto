@@ -29,9 +29,12 @@
     "@commitlint/config-conventional": "^19.0.0",
     "@commitlint/types": "^19.0.0",
     "@types/pg": "^8.6.6",
+    "assert": "^2.0.0",
+    "console-browserify": "^1.2.0",
     "husky": "^9.0.0",
     "pg": "^8.8.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "util": "^0.12.3"
   },
   "engines": {
     "node": "^20.9.0",

@@ -3,6 +3,7 @@ const tenants = {
   description: 'Efficiently manage tenant settings and customize your domain.',
   tabs: {
     settings: 'Settings',
+    members: 'Members',
     domains: 'Domains',
     subscription: 'Plan and billing',
     billing_history: 'Billing history',

@@ -3,6 +3,8 @@ const tenants = {
   description: 'Gerir eficientemente as configurações do inquilino e personalizar o seu domínio.',
   tabs: {
     settings: 'Definições',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domínios',
     subscription: 'Plano e faturação',
     billing_history: 'Histórico de faturação',
