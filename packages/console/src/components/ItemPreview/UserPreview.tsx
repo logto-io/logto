@@ -9,7 +9,8 @@ import UserAvatar from '../UserAvatar';
 import ItemPreview from '.';
 
 type Props = {
-  user: User;
+  user: Pick<User, 'id' | 'avatar' | 'name' | 'primaryEmail' | 'primaryPhone' | 'username'> &
+    Partial<Pick<User, 'isSuspended'>>;
 };
 
 /** A component that renders a preview of a user. It's useful for displaying a user in a list. */
