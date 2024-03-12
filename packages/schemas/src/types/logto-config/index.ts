@@ -56,7 +56,7 @@ export enum LogtoJwtTokenKey {
   ClientCredentials = 'jwt.clientCredentials',
 }
 
-const jwtCustomizerGuard = z
+export const jwtCustomizerGuard = z
   .object({
     script: z.string(),
     envVars: z.record(z.string()),

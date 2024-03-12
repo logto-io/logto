@@ -8,8 +8,9 @@ import {
   Scopes,
   UserSsoIdentities,
 } from '../db-entries/index.js';
-import { mfaFactorsGuard } from '../foundations/index.js';
+import { mfaFactorsGuard, jsonObjectGuard } from '../foundations/index.js';
 
+import { jwtCustomizerGuard } from './logto-config/index.js';
 import { userInfoGuard } from './user.js';
 
 const organizationDetailGuard = z.object({
@@ -40,3 +41,16 @@ export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
 });
 
 export type JwtCustomizerUserContext = z.infer<typeof jwtCustomizerUserContextGuard>;
+
+/**
+ * This guard is for cloud API use (request body guard).
+ * Since the cloud API will be use by both testing and production, should keep the fields as general as possible.
+ * The response guard for the cloud API is `jsonObjectGuard` since it extends the `token` with extra claims.
+ */
+export const customJwtFetcherGuard = jwtCustomizerGuard
+  .pick({ script: true, envVars: true })
+  .required({ script: true })
+  .extend({
+    token: jsonObjectGuard,
+    context: jsonObjectGuard.optional(),
+  });
