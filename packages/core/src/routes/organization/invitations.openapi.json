@@ -114,6 +114,21 @@
           }
         }
       }
+    },
+    "/api/organization-invitations/{id}/message": {
+      "post": {
+        "summary": "Resend invitation message",
+        "description": "Resend the invitation message to the invitee.",
+        "requestBody": {
+          "description": "The message payload for the \"OrganizationInvitation\" template to use when sending the invitation via email.",
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The invitation message was resent successfully."
+          }
+        }
+      }
     }
   }
 }

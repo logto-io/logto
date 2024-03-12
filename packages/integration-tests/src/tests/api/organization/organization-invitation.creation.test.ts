@@ -4,6 +4,7 @@ import { ConnectorType } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared';
 import { HTTPError } from 'got';
 
+import { createUser } from '#src/api/admin-user.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
 import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
@@ -55,6 +56,37 @@ describe('organization invitation creation', () => {
       type: 'OrganizationInvitation',
       payload: {
         link: 'https://example.com',
+      },
+    });
+  });
+
+  it('should be able to resend an email after creating an invitation', async () => {
+    await setEmailConnector();
+
+    const organization = await organizationApi.create({ name: 'test' });
+    const email = `${randomId()}@example.com`;
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: email,
+      expiresAt: Date.now() + 1_000_000,
+      messagePayload: {
+        link: 'https://example.com',
+      },
+    });
+    expect(await readConnectorMessage('Email')).toMatchObject({
+      type: 'OrganizationInvitation',
+      payload: {
+        link: 'https://example.com',
+      },
+    });
+
+    await invitationApi.resendMessage(invitation.id, {
+      link: 'https://example1.com',
+    });
+    expect(await readConnectorMessage('Email')).toMatchObject({
+      type: 'OrganizationInvitation',
+      payload: {
+        link: 'https://example1.com',
       },
     });
   });
@@ -126,6 +158,23 @@ describe('organization invitation creation', () => {
       .catch((error: unknown) => error);
 
     expectErrorResponse(error, 400, 'request.invalid_input');
+  });
+
+  it('should not be able to create invitations if the invitee is already a member of the organization', async () => {
+    const organization = await organizationApi.create({ name: 'test' });
+    const email = `${randomId()}@example.com`;
+    const user = await createUser({ primaryEmail: email });
+    await organizationApi.addUsers(organization.id, [user.id]);
+
+    const error = await invitationApi
+      .create({
+        organizationId: organization.id,
+        invitee: email,
+        expiresAt: Date.now() + 1_000_000,
+      })
+      .catch((error: unknown) => error);
+
+    expectErrorResponse(error, 422, 'request.invalid_input');
   });
 
   it('should not be able to create invitations with an invalid email', async () => {
