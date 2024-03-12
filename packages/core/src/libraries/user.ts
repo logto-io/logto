@@ -22,11 +22,7 @@ export const encryptUserPassword = async (
   passwordEncryptionMethod: UsersPasswordEncryptionMethod;
 }> => {
   const passwordEncryptionMethod = UsersPasswordEncryptionMethod.Argon2i;
-  const passwordEncrypted = await encryptPassword(
-    password,
-
-    passwordEncryptionMethod
-  );
+  const passwordEncrypted = await encryptPassword(password, passwordEncryptionMethod);
 
   return { passwordEncrypted, passwordEncryptionMethod };
 };
