@@ -37,16 +37,29 @@ const getOidcConfigKeyDatabaseColumnName = (key: LogtoOidcConfigKeyType): LogtoO
     ? LogtoOidcConfigKey.PrivateKeys
     : LogtoOidcConfigKey.CookieKeys;
 
-const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenPath, body: unknown) => {
+const getJwtTokenKeyAndBody = (
+  tokenPath: LogtoJwtTokenPath,
+  body: unknown,
+  partiallyGuard = false
+) => {
+  /**
+   * Can not use
+   * `parse('body', partiallyGuard ? jwtCustomizerAccessTokenGuard.partial() : jwtCustomizerAccessTokenGuard, body)`
+   * since it can not properly narrow down the type of `body` if we use `jwtCustomizerAccessTokenGuard.partial()`.
+   */
   if (tokenPath === LogtoJwtTokenPath.AccessToken) {
     return {
       key: LogtoJwtTokenKey.AccessToken,
-      body: parse('body', jwtCustomizerAccessTokenGuard, body),
+      body: partiallyGuard
+        ? parse('body', jwtCustomizerAccessTokenGuard.partial(), body)
+        : parse('body', jwtCustomizerAccessTokenGuard, body),
     };
   }
   return {
     key: LogtoJwtTokenKey.ClientCredentials,
-    body: parse('body', jwtCustomizerClientCredentialsGuard, body),
+    body: partiallyGuard
+      ? parse('body', jwtCustomizerClientCredentialsGuard.partial(), body)
+      : parse('body', jwtCustomizerClientCredentialsGuard, body),
   };
 };
 
@@ -88,7 +101,8 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     updateOidcConfigsByKey,
     deleteJwtCustomizer,
   } = queries.logtoConfigs;
-  const { getOidcConfigs, upsertJwtCustomizer, getJwtCustomizer } = logtoConfigs;
+  const { getOidcConfigs, upsertJwtCustomizer, getJwtCustomizer, updateJwtCustomizer } =
+    logtoConfigs;
 
   router.get(
     '/configs/admin-console',
@@ -241,6 +255,31 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
         ctx.status = 201;
       }
       ctx.body = jwtCustomizer.value;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/configs/jwt-customizer/:tokenTypePath',
+    // See comments in the `PUT /configs/jwt-customizer/:tokenTypePath` route, handle the request body manually.
+    koaGuard({
+      params: z.object({
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
+      }),
+      body: z.unknown(),
+      response: jwtCustomizerAccessTokenGuard.or(jwtCustomizerClientCredentialsGuard),
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { tokenTypePath },
+        body: rawBody,
+      } = ctx.guard;
+      const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody, true);
+      const updatedJwtCustomizer = await updateJwtCustomizer(key, body);
+
+      ctx.body = updatedJwtCustomizer.value;
 
       return next();
     }

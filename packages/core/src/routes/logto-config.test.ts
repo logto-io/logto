@@ -64,6 +64,7 @@ const logtoConfigLibraries = {
   })),
   upsertJwtCustomizer: jest.fn(),
   getJwtCustomizer: jest.fn(),
+  updateJwtCustomizer: jest.fn(),
 };
 
 const settingRoutes = await pickDefault(import('./logto-config.js'));
@@ -261,6 +262,21 @@ describe('configs routes', () => {
       .put('/configs/jwt-customizer/access-token')
       .send(mockJwtCustomizerConfigForAccessToken.value);
     expect(logtoConfigLibraries.upsertJwtCustomizer).toHaveBeenCalledWith(
+      LogtoJwtTokenKey.AccessToken,
+      mockJwtCustomizerConfigForAccessToken.value
+    );
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(mockJwtCustomizerConfigForAccessToken.value);
+  });
+
+  it('PATCH /configs/jwt-customizer/:tokenType should update a record successfully', async () => {
+    logtoConfigLibraries.updateJwtCustomizer.mockResolvedValueOnce(
+      mockJwtCustomizerConfigForAccessToken
+    );
+    const response = await routeRequester
+      .patch('/configs/jwt-customizer/access-token')
+      .send(mockJwtCustomizerConfigForAccessToken.value);
+    expect(logtoConfigLibraries.updateJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.AccessToken,
       mockJwtCustomizerConfigForAccessToken.value
     );

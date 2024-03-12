@@ -3,6 +3,7 @@ import {
   type AdminConsoleData,
   LogtoOidcConfigKeyType,
 } from '@logto/schemas';
+import { HTTPError } from 'got';
 
 import {
   deleteOidcKey,
@@ -11,6 +12,7 @@ import {
   rotateOidcKeys,
   updateAdminConsoleConfig,
   upsertJwtCustomizer,
+  updateJwtCustomizer,
   getJwtCustomizer,
   deleteJwtCustomizer,
 } from '#src/api/index.js';
@@ -127,7 +129,7 @@ describe('admin console sign-in experience', () => {
     expect(privateKeys2[1]?.id).toBe(privateKeys[0]?.id);
   });
 
-  it('should successfully PUT/GET/DELETE a JWT customizer (access token)', async () => {
+  it('should successfully PUT/PATCH/GET/DELETE a JWT customizer (access token)', async () => {
     const accessTokenJwtCustomizerPayload = {
       script: '',
       envVars: {},
@@ -158,9 +160,20 @@ describe('admin console sign-in experience', () => {
       newAccessTokenJwtCustomizerPayload
     );
     expect(updatedAccessToken).toMatchObject(newAccessTokenJwtCustomizerPayload);
-    await expect(getJwtCustomizer('access-token')).resolves.toMatchObject(
-      newAccessTokenJwtCustomizerPayload
+    const response = await updateJwtCustomizer('access-token', { abc: 'abc' }).catch(
+      (error: unknown) => error
     );
+    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+    const overwritePayload = { script: 'abc' };
+    const updatedValue = await updateJwtCustomizer('access-token', overwritePayload);
+    expect(updatedValue).toMatchObject({
+      ...newAccessTokenJwtCustomizerPayload,
+      script: 'abc',
+    });
+    await expect(getJwtCustomizer('access-token')).resolves.toMatchObject({
+      ...newAccessTokenJwtCustomizerPayload,
+      script: 'abc',
+    });
     await expect(deleteJwtCustomizer('access-token')).resolves.not.toThrow();
     await expectRejects(getJwtCustomizer('access-token'), {
       code: 'entity.not_exists',
@@ -197,9 +210,20 @@ describe('admin console sign-in experience', () => {
       newClientCredentialsJwtCustomizerPayload
     );
     expect(updatedClientCredentials).toMatchObject(newClientCredentialsJwtCustomizerPayload);
-    await expect(getJwtCustomizer('client-credentials')).resolves.toMatchObject(
-      newClientCredentialsJwtCustomizerPayload
+    const response = await updateJwtCustomizer('client-credentials', { abc: 'abc' }).catch(
+      (error: unknown) => error
     );
+    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+    const overwritePayload = { script: 'abc' };
+    const updatedValue = await updateJwtCustomizer('client-credentials', overwritePayload);
+    expect(updatedValue).toMatchObject({
+      ...newClientCredentialsJwtCustomizerPayload,
+      script: 'abc',
+    });
+    await expect(getJwtCustomizer('client-credentials')).resolves.toMatchObject({
+      ...newClientCredentialsJwtCustomizerPayload,
+      script: 'abc',
+    });
     await expect(deleteJwtCustomizer('client-credentials')).resolves.not.toThrow();
     await expectRejects(getJwtCustomizer('client-credentials'), {
       code: 'entity.not_exists',

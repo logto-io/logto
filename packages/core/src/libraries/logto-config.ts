@@ -5,8 +5,9 @@ import {
   logtoOidcConfigGuard,
   LogtoOidcConfigKey,
   jwtCustomizerConfigGuard,
+  type LogtoOidcConfigType,
+  type LogtoJwtTokenKey,
 } from '@logto/schemas';
-import type { LogtoOidcConfigType, LogtoJwtTokenKey } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import chalk from 'chalk';
 import { z, ZodError } from 'zod';
@@ -69,9 +70,12 @@ export const createLogtoConfigLibrary = ({
   };
 
   // Can not narrow down the type of value if we utilize `buildInsertIntoWithPool` method.
-  const upsertJwtCustomizer = async <T extends LogtoJwtTokenKey>(
+  const upsertJwtCustomizer = async <
+    T extends LogtoJwtTokenKey,
+    U extends z.infer<(typeof jwtCustomizerConfigGuard)[T]>,
+  >(
     key: T,
-    value: z.infer<(typeof jwtCustomizerConfigGuard)[T]>
+    value: U
   ) => {
     const { value: rawValue } = await queryUpsertJwtCustomizer(key, value);
 
@@ -97,5 +101,28 @@ export const createLogtoConfigLibrary = ({
     return z.object({ value: jwtCustomizerConfigGuard[key] }).parse(rows[0]);
   };
 
-  return { getOidcConfigs, getCloudConnectionData, upsertJwtCustomizer, getJwtCustomizer };
+  /**
+   * We only guard the type of `key` field here.
+   *
+   * The guard of `value` field is handle on:
+   * 1. API request interface.
+   * 2. Manually run zod guard after merging the `value` and the existing record.
+   */
+  const updateJwtCustomizer = async <T extends LogtoJwtTokenKey>(
+    key: T,
+    value: Record<string, unknown>
+  ) => {
+    const { value: rawValue } = await getJwtCustomizer(key);
+    const newValue = { ...rawValue, ...value };
+    const result = jwtCustomizerConfigGuard[key].parse(newValue);
+    return upsertJwtCustomizer(key, result);
+  };
+
+  return {
+    getOidcConfigs,
+    getCloudConnectionData,
+    upsertJwtCustomizer,
+    getJwtCustomizer,
+    updateJwtCustomizer,
+  };
 };
