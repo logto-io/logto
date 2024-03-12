@@ -48,7 +48,7 @@ function ScriptSection() {
             activeModelName={activeModel.name}
             value={value}
             onChange={(newValue) => {
-              // If the value is the same as the default code and the field is dirty, reset the form value to undefined
+              // If the value is the same as the default code and the original form script value is undefined, reset the value to undefined as well
               if (newValue === activeModel.defaultValue && !defaultValues?.script) {
                 onChange();
                 return;
