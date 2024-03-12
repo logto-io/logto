@@ -168,7 +168,12 @@ export const seedTables = async (
     adminTenantId,
     applicationRole.id,
     ...cloudAdditionalScopes
-      .filter(({ name }) => name === CloudScope.SendSms || name === CloudScope.SendEmail)
+      .filter(
+        ({ name }) =>
+          name === CloudScope.SendSms ||
+          name === CloudScope.SendEmail ||
+          name === CloudScope.FetchCustomJwt
+      )
       .map(({ id }) => id)
   );
 
