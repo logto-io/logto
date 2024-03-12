@@ -1,13 +1,13 @@
 import {
   type LogtoJwtTokenPath,
-  type JwtCustomizerAccessToken,
-  type JwtCustomizerClientCredentials,
+  type AccessTokenJwtCustomizer,
+  type ClientCredentialsJwtCustomizer,
 } from '@logto/schemas';
 
 import type { JwtClaimsFormType } from './type';
 
 const formatEnvVariablesResponseToFormData = (
-  enVariables?: JwtCustomizerAccessToken['envVars']
+  enVariables?: AccessTokenJwtCustomizer['envVars']
 ) => {
   if (!enVariables) {
     return;
@@ -16,9 +16,7 @@ const formatEnvVariablesResponseToFormData = (
   return Object.entries(enVariables).map(([key, value]) => ({ key, value }));
 };
 
-const formatSampleCodeJsonToString = (
-  sampleJson?: JwtCustomizerAccessToken['contextSample'] | JwtCustomizerAccessToken['tokenSample']
-) => {
+const formatSampleCodeJsonToString = (sampleJson?: AccessTokenJwtCustomizer['contextSample']) => {
   if (!sampleJson) {
     return;
   }
@@ -29,8 +27,8 @@ const formatSampleCodeJsonToString = (
 export const formatResponseDataToFormData = <T extends LogtoJwtTokenPath>(
   tokenType: T,
   data?: T extends LogtoJwtTokenPath.AccessToken
-    ? JwtCustomizerAccessToken
-    : JwtCustomizerClientCredentials
+    ? AccessTokenJwtCustomizer
+    : ClientCredentialsJwtCustomizer
 ): JwtClaimsFormType => {
   return {
     script: data?.script,

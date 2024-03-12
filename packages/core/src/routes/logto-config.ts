@@ -12,8 +12,8 @@ import {
   type OidcConfigKeysResponse,
   type OidcConfigKey,
   LogtoOidcConfigKeyType,
-  jwtCustomizerAccessTokenGuard,
-  jwtCustomizerClientCredentialsGuard,
+  accessTokenJwtCustomizerGuard,
+  clientCredentialsJwtCustomizerGuard,
   LogtoJwtTokenKey,
   LogtoJwtTokenPath,
 } from '@logto/schemas';
@@ -37,12 +37,12 @@ const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenPath, body: unknown) => {
   if (tokenPath === LogtoJwtTokenPath.AccessToken) {
     return {
       key: LogtoJwtTokenKey.AccessToken,
-      body: parse('body', jwtCustomizerAccessTokenGuard, body),
+      body: parse('body', accessTokenJwtCustomizerGuard, body),
     };
   }
   return {
     key: LogtoJwtTokenKey.ClientCredentials,
-    body: parse('body', jwtCustomizerClientCredentialsGuard, body),
+    body: parse('body', clientCredentialsJwtCustomizerGuard, body),
   };
 };
 
@@ -219,7 +219,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
        * Should specify `body` in koaGuard, otherwise the request body is not accessible even via `ctx.request.body`.
        */
       body: z.unknown(),
-      response: jwtCustomizerAccessTokenGuard.or(jwtCustomizerClientCredentialsGuard),
+      response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 201, 400],
     }),
     async (ctx, next) => {
@@ -248,7 +248,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       params: z.object({
         tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
       }),
-      response: jwtCustomizerAccessTokenGuard.or(jwtCustomizerClientCredentialsGuard),
+      response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 404],
     }),
     async (ctx, next) => {

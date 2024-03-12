@@ -1,7 +1,7 @@
 import {
   LogtoJwtTokenPath,
-  type JwtCustomizerAccessToken,
-  type JwtCustomizerClientCredentials,
+  type AccessTokenJwtCustomizer,
+  type ClientCredentialsJwtCustomizer,
 } from '@logto/schemas';
 import { type ResponseError } from '@withtyped/client';
 import { useMemo } from 'react';
@@ -15,15 +15,15 @@ import { getApiPath } from './utils';
 
 function useJwtCustomizer() {
   const fetchApi = useApi({ hideErrorToast: true });
-  const accessTokenFetcher = useSwrFetcher<JwtCustomizerAccessToken>(fetchApi);
-  const clientCredentialsFetcher = useSwrFetcher<JwtCustomizerClientCredentials>(fetchApi);
+  const accessTokenFetcher = useSwrFetcher<AccessTokenJwtCustomizer>(fetchApi);
+  const clientCredentialsFetcher = useSwrFetcher<ClientCredentialsJwtCustomizer>(fetchApi);
 
   const {
     data: accessTokenJwtCustomizer,
     mutate: mutateAccessTokenJwtCustomizer,
     isLoading: isAccessTokenJwtDataLoading,
     error: accessTokenError,
-  } = useSWR<JwtCustomizerAccessToken, ResponseError>(getApiPath(LogtoJwtTokenPath.AccessToken), {
+  } = useSWR<AccessTokenJwtCustomizer, ResponseError>(getApiPath(LogtoJwtTokenPath.AccessToken), {
     fetcher: accessTokenFetcher,
     shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),
   });
@@ -33,7 +33,7 @@ function useJwtCustomizer() {
     mutate: mutateClientCredentialsJwtCustomizer,
     isLoading: isClientCredentialsJwtDataLoading,
     error: clientCredentialsError,
-  } = useSWR<JwtCustomizerClientCredentials, ResponseError>(
+  } = useSWR<ClientCredentialsJwtCustomizer, ResponseError>(
     getApiPath(LogtoJwtTokenPath.ClientCredentials),
     {
       fetcher: clientCredentialsFetcher,
