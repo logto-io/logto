@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -17,6 +18,7 @@ import EditMemberModal from '../EditMemberModal';
 import * as styles from './index.module.scss';
 
 function Members() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const cloudApi = useAuthedCloudApi();
   const { currentTenantId } = useContext(TenantsContext);
 
@@ -39,13 +41,13 @@ function Members() {
         columns={[
           {
             dataIndex: 'user',
-            title: 'User',
+            title: t('user'),
             colSpan: 4,
-            render: (user) => <UserPreview user={user} />,
+            render: (user) => <UserPreview user={user} userDetailsLink={false} />,
           },
           {
             dataIndex: 'roles',
-            title: 'Organization roles',
+            title: t('roles'),
             colSpan: 6,
             render: ({ organizationRoles }) => {
               if (organizationRoles.length === 0) {
@@ -77,7 +79,7 @@ function Members() {
                   deleteConfirmation: 'general.remove',
                 }}
                 onEdit={() => {
-                  // SetUserToBeEdited(user);
+                  setUserToBeEdited(user);
                 }}
                 onDelete={async () => {
                   await cloudApi.delete(`/api/tenants/:tenantId/members/:userId`, {

@@ -1,7 +1,9 @@
 import { TenantRole } from '@logto/schemas';
-import { useContext, useState } from 'react';
+import { getUserDisplayName } from '@logto/shared/universal';
+import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
+import { z } from 'zod';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantMemberResponse } from '@/cloud/types/router';
@@ -18,22 +20,28 @@ type Props = {
   onClose: () => void;
 };
 
-const roles = Object.freeze([TenantRole.Admin, TenantRole.Member]);
-
 function EditMemberModal({ user, isOpen, onClose }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const { currentTenantId } = useContext(TenantsContext);
 
-  const name = user.name ?? '';
   const [isLoading, setIsLoading] = useState(false);
+  const [role, setRole] = useState(TenantRole.Member);
   const cloudApi = useAuthedCloudApi();
+
+  const roleOptions = useMemo(
+    () => [
+      { value: TenantRole.Admin, title: t('admin') },
+      { value: TenantRole.Member, title: t('member') },
+    ],
+    [t]
+  );
 
   const onSubmit = async () => {
     setIsLoading(true);
     try {
       await cloudApi.put(`/api/tenants/:tenantId/members/:userId/roles`, {
         params: { tenantId: currentTenantId, userId: user.id },
-        body: { roleName: TenantRole.Admin },
+        body: { roleName: role },
       });
       onClose();
     } finally {
@@ -49,14 +57,7 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
       onRequestClose={onClose}
     >
       <ModalLayout
-        title={
-          <>
-            {t('organization_details.edit_organization_roles_of_user', {
-              name,
-            })}
-          </>
-        }
-        subtitle={<>{t('organization_details.authorize_to_roles', { name })}</>}
+        title={<>{t('edit_modal.title', { name: getUserDisplayName(user) })}</>}
         footer={
           <Button
             size="large"
@@ -68,8 +69,15 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
         }
         onClose={onClose}
       >
-        <FormField title="organizations.organization_role_other">
-          <Select options={roles} />
+        <FormField title="tenant_members.roles">
+          <Select
+            options={roleOptions}
+            value={role}
+            onChange={(value) => {
+              const guardResult = z.nativeEnum(TenantRole).safeParse(value);
+              setRole(guardResult.success ? guardResult.data : TenantRole.Member);
+            }}
+          />
         </FormField>
       </ModalLayout>
     </ReactModal>

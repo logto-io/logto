@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import { Route, Routes } from 'react-router-dom';
 
 import InvitationIcon from '@/assets/icons/invitation.svg';
@@ -18,7 +17,6 @@ import * as styles from './index.module.scss';
 const invitationsRoute = 'invitations';
 
 function TenantMembers() {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate, match } = useTenantPathname();
 
   const isInvitationTab = match(
