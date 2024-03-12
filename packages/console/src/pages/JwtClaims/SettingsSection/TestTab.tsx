@@ -1,3 +1,4 @@
+import { LogtoJwtTokenPath } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFormContext, Controller, type ControllerRenderProps } from 'react-hook-form';
@@ -11,7 +12,6 @@ import {
   userTokenPayloadTestModel,
   machineToMachineTokenPayloadTestModel,
   userTokenContextTestModel,
-  JwtTokenType,
 } from '../config.js';
 import { type JwtClaimsFormType } from '../type.js';
 
@@ -35,7 +35,7 @@ function TestTab({ isActive }: Props) {
 
   const editorModels = useMemo(
     () =>
-      tokenType === JwtTokenType.UserAccessToken
+      tokenType === LogtoJwtTokenPath.AccessToken
         ? userTokenModelSettings
         : machineToMachineTokenModelSettings,
     [tokenType]

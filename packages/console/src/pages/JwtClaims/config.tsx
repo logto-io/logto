@@ -6,14 +6,6 @@ import UserFileIcon from '@/assets/icons/user-file-icon.svg';
 import type { ModelSettings } from './MonacoCodeEditor/type.js';
 
 /**
- * JWT token types
- */
-export enum JwtTokenType {
-  UserAccessToken = 'user-access-token',
-  MachineToMachineAccessToken = 'm2m-access-token',
-}
-
-/**
  * JWT token code editor configuration
  */
 const userJwtGlobalDeclarations = `

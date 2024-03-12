@@ -1,3 +1,4 @@
+import { LogtoJwtTokenPath } from '@logto/schemas';
 import { useContext } from 'react';
 import { Navigate, Route, Routes, useOutletContext } from 'react-router-dom';
 
@@ -28,7 +29,7 @@ import Dashboard from '@/pages/Dashboard';
 import EnterpriseSsoConnectors from '@/pages/EnterpriseSso';
 import EnterpriseSsoConnectorDetails from '@/pages/EnterpriseSsoDetails';
 import GetStarted from '@/pages/GetStarted';
-import JwtClaims, { JwtTokenType } from '@/pages/JwtClaims';
+import JwtClaims from '@/pages/JwtClaims';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import OrganizationDetails from '@/pages/OrganizationDetails';
@@ -206,14 +207,14 @@ function ConsoleContent() {
             )}
             {isDevFeaturesEnabled && (
               <Route path="jwt-claims">
-                <Route index element={<Navigate replace to={JwtTokenType.UserAccessToken} />} />
+                <Route index element={<Navigate replace to={LogtoJwtTokenPath.AccessToken} />} />
                 <Route
-                  path={JwtTokenType.UserAccessToken}
-                  element={<JwtClaims tab={JwtTokenType.UserAccessToken} />}
+                  path={LogtoJwtTokenPath.AccessToken}
+                  element={<JwtClaims tab={LogtoJwtTokenPath.AccessToken} />}
                 />
                 <Route
-                  path={JwtTokenType.MachineToMachineAccessToken}
-                  element={<JwtClaims tab={JwtTokenType.MachineToMachineAccessToken} />}
+                  path={LogtoJwtTokenPath.ClientCredentials}
+                  element={<JwtClaims tab={LogtoJwtTokenPath.ClientCredentials} />}
                 />
               </Route>
             )}

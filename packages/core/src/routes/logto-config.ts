@@ -15,6 +15,7 @@ import {
   jwtCustomizerAccessTokenGuard,
   jwtCustomizerClientCredentialsGuard,
   LogtoJwtTokenKey,
+  LogtoJwtTokenPath,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -23,11 +24,6 @@ import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
-
-enum LogtoJwtTokenPath {
-  AccessToken = 'access-token',
-  ClientCredentials = 'client-credentials',
-}
 
 /**
  * Provide a simple API router key type and DB config key mapping

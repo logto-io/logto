@@ -1,4 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
+import { LogtoJwtTokenPath } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -11,21 +12,18 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 
 import ScriptSection from './ScriptSection';
 import SettingsSection from './SettingsSection';
-import { JwtTokenType } from './config';
 import * as styles from './index.module.scss';
 import { type JwtClaimsFormType } from './type';
 
-export { JwtTokenType } from './config';
-
 const tabPhrases = Object.freeze({
-  [JwtTokenType.UserAccessToken]: 'user_jwt_tab',
-  [JwtTokenType.MachineToMachineAccessToken]: 'machine_to_machine_jwt_tab',
+  [LogtoJwtTokenPath.AccessToken]: 'user_jwt_tab',
+  [LogtoJwtTokenPath.ClientCredentials]: 'machine_to_machine_jwt_tab',
 });
 
-const getPath = (tab: JwtTokenType) => `/jwt-claims/${tab}`;
+const getPath = (tab: LogtoJwtTokenPath) => `/jwt-claims/${tab}`;
 
 type Props = {
-  tab: JwtTokenType;
+  tab: LogtoJwtTokenPath;
 };
 
 // TODO: API integration
@@ -34,21 +32,21 @@ function JwtClaims({ tab }: Props) {
 
   const userJwtClaimsForm = useForm<JwtClaimsFormType>({
     defaultValues: {
-      tokenType: JwtTokenType.UserAccessToken,
+      tokenType: LogtoJwtTokenPath.AccessToken,
       environmentVariables: [{ key: '', value: '' }],
     },
   });
 
   const machineToMachineJwtClaimsForm = useForm<JwtClaimsFormType>({
     defaultValues: {
-      tokenType: JwtTokenType.MachineToMachineAccessToken,
+      tokenType: LogtoJwtTokenPath.ClientCredentials,
       environmentVariables: [{ key: '', value: '' }],
     },
   });
 
   const activeForm = useMemo(
     () =>
-      tab === JwtTokenType.UserAccessToken ? userJwtClaimsForm : machineToMachineJwtClaimsForm,
+      tab === LogtoJwtTokenPath.AccessToken ? userJwtClaimsForm : machineToMachineJwtClaimsForm,
     [machineToMachineJwtClaimsForm, tab, userJwtClaimsForm]
   );
 
@@ -70,7 +68,7 @@ function JwtClaims({ tab }: Props) {
         className={styles.header}
       />
       <TabNav className={styles.tabNav}>
-        {Object.values(JwtTokenType).map((tokenType) => (
+        {Object.values(LogtoJwtTokenPath).map((tokenType) => (
           <TabNavItem key={tokenType} href={getPath(tokenType)} isActive={tokenType === tab}>
             {t(`jwt_claims.${tabPhrases[tokenType]}`)}
           </TabNavItem>

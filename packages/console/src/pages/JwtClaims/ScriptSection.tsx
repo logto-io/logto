@@ -1,4 +1,5 @@
 /* Code Editor for the custom JWT claims script. */
+import { LogtoJwtTokenPath } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -6,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 import Card from '@/ds-components/Card';
 
 import MonacoCodeEditor, { type ModelSettings } from './MonacoCodeEditor';
-import { userJwtFile, machineToMachineJwtFile, JwtTokenType } from './config';
+import { userJwtFile, machineToMachineJwtFile } from './config';
 import * as styles from './index.module.scss';
 import { type JwtClaimsFormType } from './type';
 
 const titlePhrases = Object.freeze({
-  [JwtTokenType.UserAccessToken]: 'user_jwt',
-  [JwtTokenType.MachineToMachineAccessToken]: 'machine_to_machine_jwt',
+  [LogtoJwtTokenPath.AccessToken]: 'user_jwt',
+  [LogtoJwtTokenPath.ClientCredentials]: 'machine_to_machine_jwt',
 });
 
 function ScriptSection() {
@@ -22,7 +23,7 @@ function ScriptSection() {
   const tokenType = watch('tokenType');
 
   const activeModel = useMemo<ModelSettings>(
-    () => (tokenType === JwtTokenType.UserAccessToken ? userJwtFile : machineToMachineJwtFile),
+    () => (tokenType === LogtoJwtTokenPath.AccessToken ? userJwtFile : machineToMachineJwtFile),
     [tokenType]
   );
   return (
