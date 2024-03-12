@@ -46,14 +46,6 @@ function useJwtCustomizer() {
     (isAccessTokenJwtDataLoading && !accessTokenError) ||
     (isClientCredentialsJwtDataLoading && !clientCredentialsError);
 
-  console.log({
-    isLoading,
-    isAccessTokenJwtDataLoading,
-    isClientCredentialsJwtDataLoading,
-    accessTokenJwtCustomizer,
-    clientCredentialsJwtCustomizer,
-  });
-
   return useMemo(
     () => ({
       accessTokenJwtCustomizer,
