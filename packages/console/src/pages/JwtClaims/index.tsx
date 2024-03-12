@@ -1,5 +1,6 @@
 import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import classNames from 'classnames';
+import { useMemo } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -45,8 +46,11 @@ function JwtClaims({ tab }: Props) {
     },
   });
 
-  const activeForm =
-    tab === JwtTokenType.UserAccessToken ? userJwtClaimsForm : machineToMachineJwtClaimsForm;
+  const activeForm = useMemo(
+    () =>
+      tab === JwtTokenType.UserAccessToken ? userJwtClaimsForm : machineToMachineJwtClaimsForm,
+    [machineToMachineJwtClaimsForm, tab, userJwtClaimsForm]
+  );
 
   const {
     formState: { isDirty, isSubmitting },
