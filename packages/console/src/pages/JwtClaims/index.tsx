@@ -1,8 +1,11 @@
 import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import classNames from 'classnames';
+import { useMemo } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 
@@ -43,6 +46,22 @@ function JwtClaims({ tab }: Props) {
     },
   });
 
+  const activeForm = useMemo(
+    () =>
+      tab === JwtTokenType.UserAccessToken ? userJwtClaimsForm : machineToMachineJwtClaimsForm,
+    [machineToMachineJwtClaimsForm, tab, userJwtClaimsForm]
+  );
+
+  const {
+    formState: { isDirty, isSubmitting },
+    reset,
+    handleSubmit,
+  } = activeForm;
+
+  const onSubmitHandler = handleSubmit(async (data) => {
+    // TODO: API integration
+  });
+
   return (
     <div className={styles.container}>
       <CardTitle
@@ -57,16 +76,19 @@ function JwtClaims({ tab }: Props) {
           </TabNavItem>
         ))}
       </TabNav>
-      <FormProvider
-        {...(tab === JwtTokenType.UserAccessToken
-          ? userJwtClaimsForm
-          : machineToMachineJwtClaimsForm)}
-      >
+      <FormProvider {...activeForm}>
         <form className={classNames(styles.tabContent)}>
           <ScriptSection />
           <SettingsSection />
         </form>
       </FormProvider>
+      <SubmitFormChangesActionBar
+        isOpen={isDirty}
+        isSubmitting={isSubmitting}
+        onDiscard={reset}
+        onSubmit={onSubmitHandler}
+      />
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty && !isSubmitting} />
     </div>
   );
 }
