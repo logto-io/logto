@@ -206,7 +206,7 @@ function ConsoleContent() {
               </Route>
             )}
             {isDevFeaturesEnabled && (
-              <Route path="jwt-claims">
+              <Route path="jwt-customizer">
                 <Route index element={<Navigate replace to={LogtoJwtTokenPath.AccessToken} />} />
                 <Route
                   path={LogtoJwtTokenPath.AccessToken}

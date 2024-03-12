@@ -1,0 +1,85 @@
+import {
+  type LogtoJwtTokenPath,
+  type JwtCustomizerAccessToken,
+  type JwtCustomizerClientCredentials,
+} from '@logto/schemas';
+
+import type { JwtClaimsFormType } from './type';
+
+const formatEnvVariablesResponseToFormData = (
+  enVariables?: JwtCustomizerAccessToken['envVars']
+) => {
+  if (!enVariables) {
+    return;
+  }
+
+  return Object.entries(enVariables).map(([key, value]) => ({ key, value }));
+};
+
+const formatSampleCodeJsonToString = (
+  sampleJson?: JwtCustomizerAccessToken['contextSample'] | JwtCustomizerAccessToken['tokenSample']
+) => {
+  if (!sampleJson) {
+    return;
+  }
+
+  return JSON.stringify(sampleJson, null, 2);
+};
+
+export const formatResponseDataToFormData = <T extends LogtoJwtTokenPath>(
+  tokenType: T,
+  data?: T extends LogtoJwtTokenPath.AccessToken
+    ? JwtCustomizerAccessToken
+    : JwtCustomizerClientCredentials
+): JwtClaimsFormType => {
+  return {
+    script: data?.script,
+    tokenType,
+    environmentVariables: formatEnvVariablesResponseToFormData(data?.envVars) ?? [
+      { key: '', value: '' },
+    ],
+    testSample: {
+      tokenSample: formatSampleCodeJsonToString(data?.tokenSample),
+      // Technically, contextSample is always undefined for client credentials token type
+      contextSample: formatSampleCodeJsonToString(data?.contextSample),
+    },
+  };
+};
+
+const formatEnvVariablesFormData = (envVariables: JwtClaimsFormType['environmentVariables']) => {
+  if (!envVariables) {
+    return;
+  }
+
+  const entries = envVariables.filter(({ key, value }) => key && value);
+
+  if (entries.length === 0) {
+    return;
+  }
+
+  return Object.fromEntries(entries.map(({ key, value }) => [key, value]));
+};
+
+const formatSampleCodeStringToJson = (sampleCode?: string) => {
+  if (!sampleCode) {
+    return;
+  }
+
+  try {
+    // eslint-disable-next-line no-restricted-syntax -- guarded by back-end validation
+    return JSON.parse(sampleCode) as Record<string, unknown>;
+  } catch {}
+};
+
+export const formatFormDataToRequestData = (data: JwtClaimsFormType) => {
+  return {
+    script: data.script,
+    envVars: formatEnvVariablesFormData(data.environmentVariables),
+    tokenSample: formatSampleCodeStringToJson(data.testSample?.tokenSample),
+    // Technically, contextSample is always undefined for client credentials token type
+    contextSample: formatSampleCodeStringToJson(data.testSample?.contextSample),
+  };
+};
+
+export const getApiPath = (tokenType: LogtoJwtTokenPath) =>
+  `api/configs/jwt-customizer/${tokenType}`;

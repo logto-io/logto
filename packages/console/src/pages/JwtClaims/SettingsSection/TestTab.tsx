@@ -30,7 +30,7 @@ function TestTab({ isActive }: Props) {
   const [testResult, setTestResult] = useState<TestResultData>();
   const [activeModelName, setActiveModelName] = useState<string>();
 
-  const { watch, control } = useFormContext<JwtClaimsFormType>();
+  const { watch, control, formState } = useFormContext<JwtClaimsFormType>();
   const tokenType = watch('tokenType');
 
   const editorModels = useMemo(
@@ -78,6 +78,27 @@ function TestTab({ isActive }: Props) {
     [activeModelName]
   );
 
+  const validateSampleCode = useCallback(
+    (value: JwtClaimsFormType['testSample']) => {
+      if (!value) {
+        return true;
+      }
+
+      for (const [_, sampleCode] of Object.entries(value)) {
+        if (sampleCode) {
+          try {
+            JSON.parse(sampleCode);
+          } catch {
+            return t('form_error.invalid_json');
+          }
+        }
+      }
+
+      return true;
+    },
+    [t]
+  );
+
   return (
     <div className={classNames(styles.tabContent, isActive && styles.active)}>
       <Card className={classNames(styles.card, styles.flexGrow, styles.flexColumn)}>
@@ -89,13 +110,18 @@ function TestTab({ isActive }: Props) {
           <Button title="jwt_claims.tester.run_button" type="primary" onClick={onTestHandler} />
         </div>
         <div className={classNames(styles.cardContent, styles.flexColumn, styles.flexGrow)}>
+          {formState.errors.testSample && (
+            <div className={styles.error}>{formState.errors.testSample.message}</div>
+          )}
           <Controller
             // Force rerender the controller when the token type changes
             // Otherwise the input field will not be updated
             key={tokenType}
-            shouldUnregister
             control={control}
             name="testSample"
+            rules={{
+              validate: validateSampleCode,
+            }}
             render={({ field }) => (
               <MonacoCodeEditor
                 className={styles.flexGrow}
@@ -108,7 +134,6 @@ function TestTab({ isActive }: Props) {
               />
             )}
           />
-
           {testResult && (
             <TestResult
               testResult={testResult}

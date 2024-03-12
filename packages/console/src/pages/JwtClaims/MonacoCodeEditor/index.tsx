@@ -50,7 +50,6 @@ function MonacoCodeEditor({
 }: Props) {
   const monaco = useMonaco();
   const editorRef = useRef<Nullable<IStandaloneCodeEditor>>(null);
-  console.log('code', value);
 
   const activeModel = useMemo(
     () => activeModelName && models.find((model) => model.name === activeModelName),

@@ -63,7 +63,7 @@ function EnvironmentVariablesField() {
 
   const valueValidator = useCallback(
     (value: string, index: number) => {
-      return getValues(`environmentVariables.${index}.value`)
+      return getValues(`environmentVariables.${index}.key`)
         ? Boolean(value) || t('webhook_details.settings.value_missing_error')
         : true;
     },

@@ -180,6 +180,11 @@
   }
 }
 
+.error {
+  margin: _.unit(4) 0;
+  color: var(--color-error);
+}
+
 .flexColumn {
   display: flex;
   flex-direction: column;

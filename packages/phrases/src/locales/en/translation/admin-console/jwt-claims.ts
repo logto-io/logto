@@ -45,6 +45,9 @@ const jwt_claims = {
     run_button: 'Run',
     result_title: 'Test result',
   },
+  form_error: {
+    invalid_json: 'Invalid JSON format',
+  },
 };
 
 export default Object.freeze(jwt_claims);
