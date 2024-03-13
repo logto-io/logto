@@ -20,6 +20,7 @@ import { type JwtClaimsFormType } from './type';
 import { formatResponseDataToFormData, formatFormDataToRequestData, getApiPath } from './utils';
 
 type Props = {
+  className?: string;
   tab: LogtoJwtTokenPath;
   accessTokenJwtCustomizer: AccessTokenJwtCustomizer | undefined;
   clientCredentialsJwtCustomizer: ClientCredentialsJwtCustomizer | undefined;
@@ -28,6 +29,7 @@ type Props = {
 };
 
 function Main({
+  className,
   tab,
   accessTokenJwtCustomizer,
   clientCredentialsJwtCustomizer,
@@ -87,7 +89,7 @@ function Main({
   return (
     <>
       <FormProvider {...activeForm}>
-        <form className={classNames(styles.tabContent)}>
+        <form className={classNames(styles.tabContent, className)}>
           <ScriptSection />
           <SettingsSection />
         </form>

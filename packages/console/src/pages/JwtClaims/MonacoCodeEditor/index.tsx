@@ -25,6 +25,7 @@ type Props = {
   setActiveModel?: (name: string) => void;
   value?: string;
   onChange?: (value: string | undefined) => void;
+  onMountHandler?: (editor: IStandaloneCodeEditor) => void;
 };
 /**
  * Monaco code editor component.
@@ -47,6 +48,7 @@ function MonacoCodeEditor({
   value,
   setActiveModel,
   onChange,
+  onMountHandler,
 }: Props) {
   const monaco = useMonaco();
   const editorRef = useRef<Nullable<IStandaloneCodeEditor>>(null);
@@ -84,10 +86,14 @@ function MonacoCodeEditor({
     monaco.editor.defineTheme('logto-dark', logtoDarkTheme);
   }, []);
 
-  const handleEditorDidMount = useCallback<OnMount>((editor) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    editorRef.current = editor;
-  }, []);
+  const handleEditorDidMount = useCallback<OnMount>(
+    (editor) => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      editorRef.current = editor;
+      onMountHandler?.(editor);
+    },
+    [onMountHandler]
+  );
 
   return (
     <div className={classNames(className, styles.codeEditor)}>
