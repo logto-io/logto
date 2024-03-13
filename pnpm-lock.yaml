@@ -2913,8 +2913,8 @@ importers:
         specifier: workspace:^1.4.0
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-4ef0b45
-        version: 0.2.5-4ef0b45(zod@3.22.4)
+        specifier: 0.2.5-d9576f9
+        version: 0.2.5-d9576f9(zod@3.22.4)
       '@logto/connector-kit':
         specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
@@ -7670,8 +7670,8 @@ packages:
       - zod
     dev: true
 
-  /@logto/cloud@0.2.5-ceb63ed(zod@3.22.4):
-    resolution: {integrity: sha512-mF4ce41qc4nnmLjlyvTxiy3i1K88xC91yjWcmyrJ66Zujr+w7AaR/Ye0g8TZ1B93qlDt5EJBFuBW/gqYDuwEEQ==}
+  /@logto/cloud@0.2.5-d9576f9(zod@3.22.4):
+    resolution: {integrity: sha512-RTDFH/JhkXmkXTYGxEY6QnN7ueLr/GCJikM5uzUV6PI2SyXCYNKFSN3yRo665TxsHethkd4a+RIVjhaXgTvQLw==}
     engines: {node: ^20.9.0}
     dependencies:
       '@silverhand/essentials': 2.9.0

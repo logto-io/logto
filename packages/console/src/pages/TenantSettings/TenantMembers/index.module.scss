@@ -1,0 +1,48 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+
+  .tabButtons {
+    display: flex;
+    align-items: center;
+    gap: _.unit(4);
+
+    .button {
+      border-radius: 100px;
+      border-color: var(--color-specific-focused-inside);
+      background: none;
+      height: 32px;
+      padding: 0 _.unit(3);
+
+      svg {
+        color: var(--color-text-link);
+      }
+
+      &:hover {
+        background: var(--color-overlay-primary-hover);
+      }
+
+      &:active {
+        background: var(--color-overlay-primary-pressed);
+      }
+
+      &.active {
+        background: var(--color-specific-tag-upsell);
+        border-color: var(--color-specific-tag-upsell);
+        color: var(--color-static-white);
+        cursor: default;
+
+        svg {
+          color: var(--color-specific-button-icon);
+        }
+
+        &:hover {
+          background: var(--color-specific-tag-upsell);
+        }
+      }
+    }
+  }
+}

@@ -1,12 +1,15 @@
 import type router from '@logto/cloud/routes';
+import { type tenantAuthRouter } from '@logto/cloud/routes';
 import { useLogto } from '@logto/react';
+import { getTenantOrganizationId } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import Client, { ResponseError } from '@withtyped/client';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 
 import { cloudApi } from '@/consts';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 
 const responseErrorBodyGuard = z.object({
   message: z.string(),
@@ -53,6 +56,37 @@ export const useCloudApi = ({ hideErrorToast = false }: UseCloudApiProps = {}): 
         },
       }),
     [getAccessToken, hideErrorToast, isAuthenticated]
+  );
+
+  return api;
+};
+
+/**
+ * This hook is used to request the cloud `tenantAuthRouter` endpoints, with an organization token.
+ */
+export const useAuthedCloudApi = ({ hideErrorToast = false }: UseCloudApiProps = {}): Client<
+  typeof tenantAuthRouter
+> => {
+  const { currentTenantId } = useContext(TenantsContext);
+  const { isAuthenticated, getOrganizationToken } = useLogto();
+  const api = useMemo(
+    () =>
+      new Client<typeof tenantAuthRouter>({
+        baseUrl: window.location.origin,
+        headers: async () => {
+          if (isAuthenticated) {
+            return {
+              Authorization: `Bearer ${
+                (await getOrganizationToken(getTenantOrganizationId(currentTenantId))) ?? ''
+              }`,
+            };
+          }
+        },
+        before: {
+          ...conditional(!hideErrorToast && { error: toastResponseError }),
+        },
+      }),
+    [currentTenantId, getOrganizationToken, hideErrorToast, isAuthenticated]
   );
 
   return api;

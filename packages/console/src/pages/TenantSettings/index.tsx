@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { TenantSettingsTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
@@ -11,6 +12,7 @@ import * as styles from './index.module.scss';
 
 function TenantSettings() {
   const { isDevTenant } = useContext(TenantsContext);
+
   return (
     <div className={styles.container}>
       <CardTitle
@@ -22,6 +24,11 @@ function TenantSettings() {
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Settings}`}>
           <DynamicT forKey="tenants.tabs.settings" />
         </TabNavItem>
+        {isDevFeaturesEnabled && (
+          <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Members}`}>
+            <DynamicT forKey="tenants.tabs.members" />
+          </TabNavItem>
+        )}
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Domains}`}>
           <DynamicT forKey="tenants.tabs.domains" />
         </TabNavItem>
