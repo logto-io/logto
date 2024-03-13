@@ -64,30 +64,30 @@ export const jwtCustomizerGuard = z
   })
   .partial();
 
-export const jwtCustomizerAccessTokenGuard = jwtCustomizerGuard.extend({
+export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard.extend({
   // Use partial token guard since users customization may not rely on all fields.
   tokenSample: accessTokenPayloadGuard.partial().optional(),
 });
 
-export type JwtCustomizerAccessToken = z.infer<typeof jwtCustomizerAccessTokenGuard>;
+export type AccessTokenJwtCustomizer = z.infer<typeof accessTokenJwtCustomizerGuard>;
 
-export const jwtCustomizerClientCredentialsGuard = jwtCustomizerGuard.extend({
+export const clientCredentialsJwtCustomizerGuard = jwtCustomizerGuard.extend({
   // Use partial token guard since users customization may not rely on all fields.
   tokenSample: clientCredentialsPayloadGuard.partial().optional(),
 });
 
-export type JwtCustomizerClientCredentials = z.infer<typeof jwtCustomizerClientCredentialsGuard>;
+export type ClientCredentialsJwtCustomizer = z.infer<typeof clientCredentialsJwtCustomizerGuard>;
 
 export type JwtCustomizerType = {
-  [LogtoJwtTokenKey.AccessToken]: JwtCustomizerAccessToken;
-  [LogtoJwtTokenKey.ClientCredentials]: JwtCustomizerClientCredentials;
+  [LogtoJwtTokenKey.AccessToken]: AccessTokenJwtCustomizer;
+  [LogtoJwtTokenKey.ClientCredentials]: ClientCredentialsJwtCustomizer;
 };
 
 export const jwtCustomizerConfigGuard: Readonly<{
   [key in LogtoJwtTokenKey]: ZodType<JwtCustomizerType[key]>;
 }> = Object.freeze({
-  [LogtoJwtTokenKey.AccessToken]: jwtCustomizerAccessTokenGuard,
-  [LogtoJwtTokenKey.ClientCredentials]: jwtCustomizerClientCredentialsGuard,
+  [LogtoJwtTokenKey.AccessToken]: accessTokenJwtCustomizerGuard,
+  [LogtoJwtTokenKey.ClientCredentials]: clientCredentialsJwtCustomizerGuard,
 });
 
 /* --- Logto tenant configs --- */

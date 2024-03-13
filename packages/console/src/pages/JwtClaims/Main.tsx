@@ -1,7 +1,7 @@
 import {
-  type JwtCustomizerAccessToken,
+  type AccessTokenJwtCustomizer,
   LogtoJwtTokenPath,
-  type JwtCustomizerClientCredentials,
+  type ClientCredentialsJwtCustomizer,
 } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo } from 'react';
@@ -21,10 +21,10 @@ import { formatResponseDataToFormData, formatFormDataToRequestData, getApiPath }
 
 type Props = {
   tab: LogtoJwtTokenPath;
-  accessTokenJwtCustomizer: JwtCustomizerAccessToken | undefined;
-  clientCredentialsJwtCustomizer: JwtCustomizerClientCredentials | undefined;
-  mutateAccessTokenJwtCustomizer: KeyedMutator<JwtCustomizerAccessToken>;
-  mutateClientCredentialsJwtCustomizer: KeyedMutator<JwtCustomizerClientCredentials>;
+  accessTokenJwtCustomizer: AccessTokenJwtCustomizer | undefined;
+  clientCredentialsJwtCustomizer: ClientCredentialsJwtCustomizer | undefined;
+  mutateAccessTokenJwtCustomizer: KeyedMutator<AccessTokenJwtCustomizer>;
+  mutateClientCredentialsJwtCustomizer: KeyedMutator<ClientCredentialsJwtCustomizer>;
 };
 
 function Main({

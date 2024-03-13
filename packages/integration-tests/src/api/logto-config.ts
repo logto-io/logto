@@ -3,8 +3,8 @@ import {
   type AdminConsoleData,
   type OidcConfigKeysResponse,
   type LogtoOidcConfigKeyType,
-  type JwtCustomizerAccessToken,
-  type JwtCustomizerClientCredentials,
+  type AccessTokenJwtCustomizer,
+  type ClientCredentialsJwtCustomizer,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -39,12 +39,12 @@ export const upsertJwtCustomizer = async (
 ) =>
   authedAdminApi
     .put(`configs/jwt-customizer/${keyTypePath}`, { json: value })
-    .json<JwtCustomizerAccessToken | JwtCustomizerClientCredentials>();
+    .json<AccessTokenJwtCustomizer | ClientCredentialsJwtCustomizer>();
 
 export const getJwtCustomizer = async (keyTypePath: 'access-token' | 'client-credentials') =>
   authedAdminApi
     .get(`configs/jwt-customizer/${keyTypePath}`)
-    .json<JwtCustomizerAccessToken | JwtCustomizerClientCredentials>();
+    .json<AccessTokenJwtCustomizer | ClientCredentialsJwtCustomizer>();
 
 export const deleteJwtCustomizer = async (keyTypePath: 'access-token' | 'client-credentials') =>
   authedAdminApi.delete(`configs/jwt-customizer/${keyTypePath}`);
