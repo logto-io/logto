@@ -43,7 +43,12 @@ function TenantMembers() {
           }}
         />
         <Spacer />
-        <Button type="primary" size="large" icon={<PlusIcon />} title="tenant_members.new_member" />
+        <Button
+          type="primary"
+          size="large"
+          icon={<PlusIcon />}
+          title="tenant_members.invite_member"
+        />
       </div>
       <Routes>
         <Route path="*" element={<NotFound />} />

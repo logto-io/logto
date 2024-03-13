@@ -23,3 +23,7 @@ export type TenantResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api
 export type TenantMemberResponse = GetArrayElementType<
   GuardedResponse<GetTenantAuthRoutes['/api/tenants/:tenantId/members']>
 >;
+
+export type TenantInvitationResponse = GetArrayElementType<
+  GuardedResponse<GetTenantAuthRoutes['/api/tenants/:tenantId/invitations']>
+>;

@@ -15,8 +15,6 @@ import { type RequestError } from '@/hooks/use-api';
 
 import EditMemberModal from '../EditMemberModal';
 
-import * as styles from './index.module.scss';
-
 function Members() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const cloudApi = useAuthedCloudApi();
@@ -43,7 +41,7 @@ function Members() {
             dataIndex: 'user',
             title: t('user'),
             colSpan: 4,
-            render: (user) => <UserPreview user={user} userDetailsLink={false} />,
+            render: (user) => <UserPreview user={user} hasUserDetailsLink={false} />,
           },
           {
             dataIndex: 'roles',
@@ -54,15 +52,11 @@ function Members() {
                 return '-';
               }
 
-              return (
-                <div className={styles.roles}>
-                  {organizationRoles.map(({ id, name }) => (
-                    <Tag key={id} variant="cell">
-                      <RoleOption value={id} title={name} />
-                    </Tag>
-                  ))}
-                </div>
-              );
+              return organizationRoles.map(({ id, name }) => (
+                <Tag key={id} variant="cell">
+                  <RoleOption value={id} title={name} />
+                </Tag>
+              ));
             },
           },
           {
@@ -71,11 +65,11 @@ function Members() {
             colSpan: 1,
             render: (user) => (
               <ActionsButton
-                deleteConfirmation="organization_details.remove_user_from_organization_description"
-                fieldName="organization_details.user"
+                deleteConfirmation="tenant_members.delete_user_confirm"
+                fieldName="tenant_members.user"
                 textOverrides={{
-                  edit: 'organization_details.edit_organization_roles',
-                  delete: 'organization_details.remove_user_from_organization',
+                  edit: 'tenant_members.menu_options.edit',
+                  delete: 'tenant_members.menu_options.delete',
                   deleteConfirmation: 'general.remove',
                 }}
                 onEdit={() => {

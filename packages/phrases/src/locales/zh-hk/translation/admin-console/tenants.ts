@@ -34,6 +34,17 @@ const tenants = {
     tenant_deletion_description: '刪除租戶將導致永久刪除所有相關的用戶數據和配置。請謹慎操作。',
     tenant_deletion_button: '刪除租戶',
   },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+  },
   create_modal: {
     title: '創建租戶',
     subtitle: '創建一個具有隔離資源和用戶的新租戶。數據托管的區域和租戶類型在創建後無法修改。',
@@ -66,6 +77,12 @@ const tenants = {
     cannot_delete_title: '無法刪除此租戶',
     cannot_delete_description:
       '抱歉，您現在無法刪除此租戶。請確保您處於免費計劃並已支付所有未結賬單。',
+  },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
   },
   tenant_landing_page: {
     title: '您尚未建立租戶',
