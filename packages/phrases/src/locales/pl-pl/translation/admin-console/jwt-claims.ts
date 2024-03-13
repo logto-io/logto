@@ -74,6 +74,10 @@ const jwt_claims = {
     /** UNTRANSLATED */
     result_title: 'Test result',
   },
+  form_error: {
+    /** UNTRANSLATED */
+    invalid_json: 'Invalid JSON format',
+  },
 };
 
 export default Object.freeze(jwt_claims);

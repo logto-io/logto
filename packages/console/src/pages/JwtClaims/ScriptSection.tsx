@@ -26,6 +26,7 @@ function ScriptSection() {
     () => (tokenType === LogtoJwtTokenPath.AccessToken ? userJwtFile : machineToMachineJwtFile),
     [tokenType]
   );
+
   return (
     <Card className={styles.codePanel}>
       <div className={styles.cardTitle}>
@@ -37,10 +38,9 @@ function ScriptSection() {
         // Force rerender the controller when the token type changes
         // Otherwise the input field will not be updated
         key={tokenType}
-        shouldUnregister
         control={control}
         name="script"
-        render={({ field: { onChange, value } }) => (
+        render={({ field: { onChange, value }, formState: { defaultValues } }) => (
           <MonacoCodeEditor
             className={styles.flexGrow}
             enabledActions={['clear', 'copy']}
@@ -48,6 +48,12 @@ function ScriptSection() {
             activeModelName={activeModel.name}
             value={value}
             onChange={(newValue) => {
+              // If the value is the same as the default code and the original form script value is undefined, reset the value to undefined as well
+              if (newValue === activeModel.defaultValue && !defaultValues?.script) {
+                onChange();
+                return;
+              }
+
               onChange(newValue);
             }}
           />
