@@ -155,7 +155,8 @@ function MonacoCodeEditor({
             path={activeModel.name}
             theme="logto-dark"
             options={defaultOptions}
-            value={value ?? activeModel.defaultValue}
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- empty string is falsy
+            value={value || activeModel.defaultValue}
             beforeMount={handleEditorWillMount}
             onMount={handleEditorDidMount}
             onChange={onChange}

@@ -57,11 +57,12 @@ function ScriptSection() {
             onChange={(newValue) => {
               // If the value is the same as the default code and the original form script value is undefined, reset the value to undefined as well
               if (newValue === activeModel.defaultValue && !defaultValues?.script) {
-                onChange();
+                onChange('');
                 return;
               }
 
-              onChange(newValue);
+              // Input value should not be undefined for react-hook-form @see https://react-hook-form.com/docs/usecontroller/controller
+              onChange(newValue ?? '');
             }}
             onMountHandler={onMountHandler}
           />
