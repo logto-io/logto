@@ -3,6 +3,7 @@ const tenants = {
   description: 'Efficiently manage tenant settings and customize your domain.',
   tabs: {
     settings: 'Settings',
+    members: 'Members',
     domains: 'Domains',
     subscription: 'Plan and billing',
     billing_history: 'Billing history',
@@ -33,6 +34,13 @@ const tenants = {
     tenant_deletion_description:
       'Deleting the tenant will result in the permanent removal of all associated user data and configuration. Please proceed with caution.',
     tenant_deletion_button: 'Delete tenant',
+  },
+  leave_tenant_card: {
+    title: 'LEAVE',
+    leave_tenant: 'Leave tenant',
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Create tenant',
@@ -69,6 +77,10 @@ const tenants = {
     cannot_delete_title: 'Cannot delete this tenant',
     cannot_delete_description:
       "Sorry, you can't delete this tenant right now. Please make sure you're on the Free Plan and have paid all outstanding billings.",
+  },
+  leave_tenant_modal: {
+    description: 'Are you sure you want to leave this tenant?',
+    leave_button: 'Leave',
   },
   tenant_landing_page: {
     title: "You haven't created a tenant yet",

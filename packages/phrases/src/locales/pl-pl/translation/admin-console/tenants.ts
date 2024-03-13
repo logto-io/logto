@@ -3,6 +3,8 @@ const tenants = {
   description: 'Skuteczne zarządzanie ustawieniami najemcy i dostosowywanie domeny.',
   tabs: {
     settings: 'Ustawienia',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domeny',
     subscription: 'Plan i rozliczenia',
     billing_history: 'Historia rozliczeń',
@@ -35,6 +37,17 @@ const tenants = {
     tenant_deletion_description:
       'Usunięcie najemcy spowoduje trwałe usunięcie wszystkich powiązanych danych użytkowników i konfiguracji. Proszę postępować ostrożnie.',
     tenant_deletion_button: 'Usuń najemcę',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Utwórz nowego najemcę',
@@ -74,6 +87,12 @@ const tenants = {
     cannot_delete_title: 'Nie można usunąć tego najemcy',
     cannot_delete_description:
       'Przepraszam, nie możesz teraz usunąć tego najemcy. Upewnij się, że korzystasz z planu darmowego i uregulowałeś wszystkie zaległe płatności.',
+  },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
   },
   tenant_landing_page: {
     title: 'Nie utworzyłeś jeszcze najemcy',

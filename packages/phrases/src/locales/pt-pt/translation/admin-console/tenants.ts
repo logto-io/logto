@@ -3,6 +3,8 @@ const tenants = {
   description: 'Gerir eficientemente as configurações do inquilino e personalizar o seu domínio.',
   tabs: {
     settings: 'Definições',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domínios',
     subscription: 'Plano e faturação',
     billing_history: 'Histórico de faturação',
@@ -35,6 +37,17 @@ const tenants = {
     tenant_deletion_description:
       'A eliminação do inquilino resultará na remoção permanente de todos os dados de utilizador e configuração associados. Por favor, proceda com cuidado.',
     tenant_deletion_button: 'Eliminar inquilino',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Criar inquilino',
@@ -73,6 +86,12 @@ const tenants = {
     cannot_delete_title: 'Não é possível apagar este inquilino',
     cannot_delete_description:
       'Desculpe, não é possível apagar este inquilino neste momento. Certifique-se de estar no Plano Gratuito e de ter pago todas as faturas em atraso.',
+  },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
   },
   tenant_landing_page: {
     title: 'Ainda não criou um inquilino',

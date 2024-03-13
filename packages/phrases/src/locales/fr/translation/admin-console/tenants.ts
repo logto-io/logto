@@ -3,6 +3,8 @@ const tenants = {
   description: 'Gérez efficacement les paramètres du locataire et personnalisez votre domaine.',
   tabs: {
     settings: 'Paramètres',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domaines',
     subscription: 'Plan et facturation',
     billing_history: 'Historique de facturation',
@@ -35,6 +37,17 @@ const tenants = {
     tenant_deletion_description:
       'La suppression du locataire entraînera la suppression permanente de toutes les données utilisateur et configurations associées. Veuillez procéder avec prudence.',
     tenant_deletion_button: 'Supprimer le locataire',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Créer un locataire',
@@ -74,6 +87,12 @@ const tenants = {
     cannot_delete_title: 'Impossible de supprimer ce locataire',
     cannot_delete_description:
       "Désolé, vous ne pouvez pas supprimer ce locataire pour le moment. Assurez-vous d'être sur le Plan Gratuit et d'avoir payé toutes les factures en cours.",
+  },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
   },
   tenant_landing_page: {
     title: "Vous n'avez pas encore créé de locataire",
