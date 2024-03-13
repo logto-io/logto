@@ -1,3 +1,4 @@
+import { LogtoJwtTokenPath } from '@logto/schemas';
 import { Editor } from '@monaco-editor/react';
 import classNames from 'classnames';
 import { useCallback } from 'react';
@@ -7,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import Table from '@/ds-components/Table';
 
 import {
-  JwtTokenType,
   userDataDescription,
   tokenDataDescription,
   fetchExternalDataEditorOptions,
@@ -55,7 +55,7 @@ function InstructionTab({ isActive }: Props) {
   return (
     <div className={classNames(styles.tabContent, isActive && styles.active)}>
       <div className={styles.description}>{t('jwt_claims.jwt_claims_description')}</div>
-      {tokenType === JwtTokenType.UserAccessToken && (
+      {tokenType === LogtoJwtTokenPath.AccessToken && (
         <GuideCard name={CardType.UserData}>
           <Table
             hasBorder

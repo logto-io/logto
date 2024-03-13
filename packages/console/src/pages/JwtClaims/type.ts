@@ -1,7 +1,7 @@
-import { type JwtTokenType } from './config.js';
+import type { LogtoJwtTokenPath } from '@logto/schemas';
 
 export type JwtClaimsFormType = {
-  tokenType: JwtTokenType;
+  tokenType: LogtoJwtTokenPath;
   script?: string;
   environmentVariables?: Array<{ key: string; value: string }>;
   testSample?: {
