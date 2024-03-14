@@ -3,6 +3,8 @@ const tenants = {
   description: 'Effizientes Verwalten von Mandanteneinstellungen und Anpassen Ihrer Domain.',
   tabs: {
     settings: 'Einstellungen',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domänen',
     subscription: 'Plan und Abrechnung',
     billing_history: 'Abrechnungshistorie',
@@ -35,6 +37,17 @@ const tenants = {
     tenant_deletion_description:
       'Das Löschen des Mandanten führt zur dauerhaften Entfernung aller zugehörigen Benutzerdaten und Konfigurationen. Bitte gehen Sie vorsichtig vor.',
     tenant_deletion_button: 'Mieter löschen',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Mieter erstellen',
@@ -74,6 +87,12 @@ const tenants = {
     cannot_delete_title: 'Diesen Mandanten kann nicht gelöscht werden',
     cannot_delete_description:
       'Entschuldigung, Sie können diesen Mandanten momentan nicht löschen. Stellen Sie sicher, dass Sie sich im kostenlosen Tarif befinden und alle ausstehenden Rechnungen bezahlt haben.',
+  },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
   },
   tenant_landing_page: {
     title: 'Du hast noch keinen Mandanten erstellt',

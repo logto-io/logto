@@ -3,6 +3,8 @@ const tenants = {
   description: '高效管理租戶設定並自訂您的網域。',
   tabs: {
     settings: '設置',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: '網域',
     subscription: '方案與計費',
     billing_history: '帳單歷史記錄',
@@ -31,6 +33,17 @@ const tenants = {
     tenant_deletion: '刪除租戶',
     tenant_deletion_description: '刪除租戶將導致所有相關的使用者資料和設定永久移除。請謹慎進行。',
     tenant_deletion_button: '刪除租戶',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: '建立客戶',
@@ -64,6 +77,12 @@ const tenants = {
     cannot_delete_title: '無法刪除此租戶',
     cannot_delete_description:
       '抱歉，您現在無法刪除此租戶。請確保您處於免費方案並已支付所有未結賬單。',
+  },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
   },
   tenant_landing_page: {
     title: '您尚未建立租戶',

@@ -32,6 +32,7 @@ import sign_in_exp from './sign-in-exp/index.js';
 import subscription from './subscription/index.js';
 import tab_sections from './tab-sections.js';
 import tabs from './tabs.js';
+import tenant_members from './tenant-members.js';
 import tenants from './tenants.js';
 import topbar from './topbar.js';
 import upsell from './upsell/index.js';
@@ -78,6 +79,7 @@ const admin_console = {
   webhook_details,
   domain,
   tenants,
+  tenant_members,
   topbar,
   subscription,
   upsell,
