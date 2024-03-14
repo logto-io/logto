@@ -1,11 +1,14 @@
 import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { LogtoJwtTokenPath } from '@logto/schemas';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 
+import { CodeEditorLoadingContext } from './CodeEditorLoadingContext';
 import Main from './Main';
+import PageLoadingSkeleton from './PageLoadingSkeleton';
 import * as styles from './index.module.scss';
 import useJwtCustomizer from './use-jwt-customizer';
 
@@ -24,6 +27,12 @@ function JwtClaims({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { isLoading, ...rest } = useJwtCustomizer();
+  const [isMonacoLoaded, setIsMonacoLoaded] = useState(false);
+
+  const codeEditorContextValue = useMemo(
+    () => ({ isMonacoLoaded, setIsMonacoLoaded }),
+    [isMonacoLoaded]
+  );
 
   return (
     <div className={styles.container}>
@@ -39,8 +48,13 @@ function JwtClaims({ tab }: Props) {
           </TabNavItem>
         ))}
       </TabNav>
-      {/* TODO: Loading skelton */}
-      {!isLoading && <Main tab={tab} {...rest} />}
+      {(isLoading || !isMonacoLoaded) && <PageLoadingSkeleton tokenType={tab} />}
+
+      {!isLoading && (
+        <CodeEditorLoadingContext.Provider value={codeEditorContextValue}>
+          <Main tab={tab} {...rest} className={isMonacoLoaded ? undefined : styles.hidden} />
+        </CodeEditorLoadingContext.Provider>
+      )}
     </div>
   );
 }

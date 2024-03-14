@@ -1,11 +1,12 @@
 /* Code Editor for the custom JWT claims script. */
 import { LogtoJwtTokenPath } from '@logto/schemas';
-import { useMemo } from 'react';
+import { useMemo, useContext, useCallback } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Card from '@/ds-components/Card';
 
+import { CodeEditorLoadingContext } from './CodeEditorLoadingContext';
 import MonacoCodeEditor, { type ModelSettings } from './MonacoCodeEditor';
 import { userJwtFile, machineToMachineJwtFile } from './config';
 import * as styles from './index.module.scss';
@@ -22,10 +23,16 @@ function ScriptSection() {
   const { watch, control } = useFormContext<JwtClaimsFormType>();
   const tokenType = watch('tokenType');
 
+  const { setIsMonacoLoaded } = useContext(CodeEditorLoadingContext);
+
   const activeModel = useMemo<ModelSettings>(
     () => (tokenType === LogtoJwtTokenPath.AccessToken ? userJwtFile : machineToMachineJwtFile),
     [tokenType]
   );
+
+  const onMountHandler = useCallback(() => {
+    setIsMonacoLoaded(true);
+  }, [setIsMonacoLoaded]);
 
   return (
     <Card className={styles.codePanel}>
@@ -56,6 +63,7 @@ function ScriptSection() {
 
               onChange(newValue);
             }}
+            onMountHandler={onMountHandler}
           />
         )}
       />
