@@ -84,7 +84,7 @@ export default class MockClient {
     assert(this.interactionCookie, new Error('Get cookie from authorization endpoint failed'));
   }
 
-  public async processSession(redirectTo: string) {
+  public async processSession(redirectTo: string, consent = true) {
     // Note: should redirect to OIDC auth endpoint
     assert(
       redirectTo.startsWith(`${this.config.endpoint}/oidc/auth`),
@@ -105,6 +105,11 @@ export default class MockClient {
     );
 
     this.rawCookies = authResponse.headers['set-cookie'] ?? [];
+
+    // Manually handle the consent flow
+    if (!consent) {
+      return;
+    }
 
     const signInCallbackUri = await this.consent();
     await this.logto.handleSignInCallback(signInCallbackUri);
