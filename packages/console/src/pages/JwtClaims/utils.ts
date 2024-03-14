@@ -31,7 +31,7 @@ export const formatResponseDataToFormData = <T extends LogtoJwtTokenPath>(
     : ClientCredentialsJwtCustomizer
 ): JwtClaimsFormType => {
   return {
-    script: data?.script,
+    script: data?.script ?? '', // React-hook-form won't mutate the value if it's undefined
     tokenType,
     environmentVariables: formatEnvVariablesResponseToFormData(data?.envVars) ?? [
       { key: '', value: '' },
@@ -71,7 +71,8 @@ const formatSampleCodeStringToJson = (sampleCode?: string) => {
 
 export const formatFormDataToRequestData = (data: JwtClaimsFormType) => {
   return {
-    script: data.script,
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- parse empty string as undefined
+    script: data.script || undefined,
     envVars: formatEnvVariablesFormData(data.environmentVariables),
     tokenSample: formatSampleCodeStringToJson(data.testSample?.tokenSample),
     // Technically, contextSample is always undefined for client credentials token type
