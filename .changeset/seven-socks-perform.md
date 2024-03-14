@@ -2,23 +2,26 @@
 "@logto/schemas": patch
 ---
 
-## Fix third-party app get /interaction/consent 500 bug
+## Resolve Third-Party App's /interaction/consent Endpoint 500 Error
 
-### Steps to reproduce
+### Reproduction Steps
 
-1. Create a organization scope with empty description, add assign the scope to a third-party app
-2. Sign in the third-party app and request for the organization scope
-3. Follow the interaction flow till the consent page
-4. A internal server error 500 is returned
+- Establish an organization scope with an empty description and assign this scope to a third-party application.
 
-### Root cause
+- Login to the third-party application and request the organization scope.
 
-For the get /interaction/consent endpoint, organization scope is returned with other resource scopes in the `missingResourceScopes` property.
+- Proceed through the interaction flow until reaching the consent page.
 
-In the `consentInfoResponseGuard`, we use the resource `Scopes` zod guard to validate the `missingResourceScopes` property. However, the description field in resource scope is required. A organization scope with empty description will fail the validation.
+- An internal server error 500 is returned.
 
-### Fix
+### Root Cause
 
-Update the `consentInfoResponseGuard`'s missingResourceScopes property. Use the organization scope zod guard which does not require the description field.
+For the /interaction/consent endpoint, the organization scope is returned alongside other resource scopes in the missingResourceScopes property.
 
-The alignment of the resource scope and organization scope type will be handled in the next release.
+In the consentInfoResponseGuard, we utilize the resource Scopes zod guard to validate the missingResourceScopes property. However, the description field in the resource scope is mandatory while organization scopes'description is optional. An organization scope with an empty description will not pass the validation.
+
+### Solution
+
+Modify the consentInfoResponseGuard's missingResourceScopes property. Use the organization scope zod guard which does not necessitate the description field.
+
+The alignment of the resource scope and organization scope types will be addressed in the next release.
