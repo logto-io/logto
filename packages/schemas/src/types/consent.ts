@@ -7,6 +7,7 @@ import {
   Resources,
   Scopes,
   ApplicationSignInExperiences,
+  OrganizationScopes,
 } from '../db-entries/index.js';
 
 /**
@@ -44,11 +45,17 @@ export const publicOrganizationGuard = Organizations.guard.pick({
   id: true,
   name: true,
 });
+
 export const missingResourceScopesGuard = z.object({
   // The original resource id has a maximum length of 21 restriction. We need to make it compatible with the logto reserved organization name.
   // use string here, as we do not care about the resource id length here.
   resource: Resources.guard.pick({ name: true }).extend({ id: z.string() }),
-  scopes: Scopes.guard.pick({ id: true, name: true, description: true }).array(),
+  scopes: Scopes.guard
+    .pick({ id: true, name: true })
+    // The description is optional for organization scopes. Manually extend the schema to make it optional.
+    // TODO: make the resource scopes description optional at the schema level.
+    .merge(OrganizationScopes.guard.pick({ description: true }).partial())
+    .array(),
 });
 
 /**
