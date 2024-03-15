@@ -53,9 +53,12 @@ export const clearCustomDomainCache = async (url: URL | string) => {
   await trySafe(async () => redisCache.delete(getDomainCacheKey(url)));
 };
 
-const getTenantIdFromCustomDomain = async (
+/**
+ * Get tenant ID from the custom domain URL.
+ */
+export const getTenantIdFromCustomDomain = async (
   url: URL,
-  pool: CommonQueryMethods
+  pool?: CommonQueryMethods
 ): Promise<string | undefined> => {
   const cachedValue = await trySafe(async () => redisCache.get(getDomainCacheKey(url)));
 
@@ -63,7 +66,7 @@ const getTenantIdFromCustomDomain = async (
     return cachedValue;
   }
 
-  const { findActiveDomain } = createDomainsQueries(pool);
+  const { findActiveDomain } = createDomainsQueries(pool ?? (await EnvSet.sharedPool));
 
   const domain = await findActiveDomain(url.hostname);
 
@@ -74,7 +77,17 @@ const getTenantIdFromCustomDomain = async (
   return domain?.tenantId;
 };
 
-export const getTenantId = async (url: URL) => {
+/**
+ * Get tenant ID from the current request's URL.
+ *
+ * @param url The current request's URL
+ * @param skipCustomDomain Indicating whether to skip looking for custom domain
+ * @returns tenantId or undefined
+ */
+export const getTenantId = async (
+  url: URL,
+  skipCustomDomain?: boolean
+): Promise<string | undefined> => {
   const {
     values: {
       isMultiTenancy,
@@ -107,10 +120,12 @@ export const getTenantId = async (url: URL) => {
     return matchPathBasedTenantId(urlSet, url);
   }
 
-  const customDomainTenantId = await getTenantIdFromCustomDomain(url, pool);
+  if (!skipCustomDomain) {
+    const customDomainTenantId = await getTenantIdFromCustomDomain(url, pool);
 
-  if (customDomainTenantId) {
-    return customDomainTenantId;
+    if (customDomainTenantId) {
+      return customDomainTenantId;
+    }
   }
 
   return matchDomainBasedTenantId(urlSet.endpoint, url);

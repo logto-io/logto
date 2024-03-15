@@ -15,8 +15,9 @@ export class TenantPool {
     },
   });
 
-  async get(tenantId: string): Promise<Tenant> {
-    const tenantPromise = this.cache.get(tenantId);
+  async get(tenantId: string, customDomain?: string): Promise<Tenant> {
+    const cacheKey = `${tenantId}-${customDomain ?? 'default'}`;
+    const tenantPromise = this.cache.get(cacheKey);
 
     if (tenantPromise) {
       const tenant = await tenantPromise;
@@ -27,9 +28,9 @@ export class TenantPool {
       // Otherwise, create a new tenant instance and store in LRU cache, using the code below.
     }
 
-    consoleLog.info('Init tenant:', tenantId);
-    const newTenantPromise = Tenant.create(tenantId, redisCache);
-    this.cache.set(tenantId, newTenantPromise);
+    consoleLog.info('Init tenant:', tenantId, customDomain);
+    const newTenantPromise = Tenant.create(tenantId, redisCache, customDomain);
+    this.cache.set(cacheKey, newTenantPromise);
 
     return newTenantPromise;
   }

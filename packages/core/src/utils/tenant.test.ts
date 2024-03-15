@@ -153,4 +153,14 @@ describe('getTenantId()', () => {
     findActiveDomain.mockResolvedValueOnce({ domain: 'logto.mock.com', tenantId: 'mock' });
     await expect(getTenantId(new URL('https://logto.mock.com'))).resolves.toBe('mock');
   });
+
+  it('should skip custom domain searching', async () => {
+    process.env = {
+      ...backupEnv,
+      ENDPOINT: 'https://foo.*.logto.mock/app',
+      NODE_ENV: 'production',
+    };
+    findActiveDomain.mockResolvedValueOnce({ domain: 'logto.mock.com', tenantId: 'mock' });
+    await expect(getTenantId(new URL('https://logto.mock.com'), true)).resolves.toBeUndefined();
+  });
 });
