@@ -1,20 +1,14 @@
+import type { SchemaValue, SchemaValuePrimitive, Table } from '@logto/shared';
 import type { Falsy } from '@silverhand/essentials';
 import { notFalsy } from '@silverhand/essentials';
-import type { SqlSqlToken, SqlToken, QueryResult, IdentifierSqlToken } from 'slonik';
+import type { SqlSqlToken, SqlToken, IdentifierSqlToken } from 'slonik';
 import { sql } from 'slonik';
-
-import type { FieldIdentifiers, SchemaValue, SchemaValuePrimitive, Table } from './types.js';
 
 export const conditionalSql = <T>(value: T, buildSql: (value: Exclude<T, Falsy>) => SqlSqlToken) =>
   notFalsy(value) ? buildSql(value) : sql``;
-export const conditionalArraySql = <T>(
-  value: T[],
-  buildSql: (value: Exclude<T[], Falsy>) => SqlSqlToken
-) => (value.length > 0 ? buildSql(value) : sql``);
 
 export const autoSetFields = Object.freeze(['tenantId', 'createdAt', 'updatedAt'] as const);
-export type OmitAutoSetFields<T> = Omit<T, (typeof autoSetFields)[number]>;
-export type ExcludeAutoSetFields<T> = Exclude<T, (typeof autoSetFields)[number]>;
+
 export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
   Object.freeze(
     fields.filter(
@@ -33,10 +27,10 @@ export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
  * @param value The value to convert.
  * @returns A primitive that can be saved into database.
  */
-
 export const convertToPrimitiveOrSql = (
   key: string,
   value: SchemaValue
+  // eslint-disable-next-line @typescript-eslint/ban-types
 ): NonNullable<SchemaValuePrimitive> | SqlToken | null => {
   if (value === null) {
     return null;
@@ -68,6 +62,10 @@ export const convertToPrimitiveOrSql = (
   throw new Error(`Cannot convert ${key} to primitive`);
 };
 
+type FieldIdentifiers<Key extends string> = {
+  [key in Key]: IdentifierSqlToken;
+};
+
 export const convertToIdentifiers = <Key extends string>(
   { table, fields }: Table<Key>,
   withPrefix = false
@@ -87,9 +85,3 @@ export const convertToIdentifiers = <Key extends string>(
 
 export const convertToTimestamp = (time = new Date()) =>
   sql`to_timestamp(${time.valueOf() / 1000})`;
-
-export const manyRows = async <T>(query: Promise<QueryResult<T>>): Promise<readonly T[]> => {
-  const { rows } = await query;
-
-  return rows;
-};

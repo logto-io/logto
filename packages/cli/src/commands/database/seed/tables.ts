@@ -28,7 +28,7 @@ import {
 } from '@logto/schemas';
 import { getTenantRole } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
-import { convertToIdentifiers, generateStandardId } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import type { DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
@@ -36,6 +36,7 @@ import { raw } from 'slonik-sql-tag-raw';
 import { insertInto } from '../../../database.js';
 import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
+import { convertToIdentifiers } from '../../../sql.js';
 import { consoleLog, getPathInModule } from '../../../utils.js';
 
 import { appendAdminConsoleRedirectUris, seedTenantCloudServiceApplication } from './cloud.js';

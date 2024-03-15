@@ -4078,9 +4078,6 @@ importers:
       nanoid:
         specifier: ^5.0.1
         version: 5.0.1
-      slonik:
-        specifier: ^30.0.0
-        version: 30.1.2
     devDependencies:
       '@logto/connector-kit':
         specifier: workspace:^2.1.0
