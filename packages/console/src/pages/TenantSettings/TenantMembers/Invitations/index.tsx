@@ -15,10 +15,12 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
-import Tag from '@/ds-components/Tag';
+import Tag, { type Props as TagProps } from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 
-const convertInvitationStatusToTagStatus = (status: OrganizationInvitationStatus) => {
+const convertInvitationStatusToTagStatus = (
+  status: OrganizationInvitationStatus
+): TagProps['status'] => {
   switch (status) {
     case OrganizationInvitationStatus.Pending: {
       return 'alert';

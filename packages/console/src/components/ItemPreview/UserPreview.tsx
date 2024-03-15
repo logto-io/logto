@@ -9,12 +9,18 @@ import UserAvatar from '../UserAvatar';
 import ItemPreview from '.';
 
 type Props = {
-  user: Pick<UserInfo, 'id' | 'avatar' | 'name' | 'primaryEmail' | 'primaryPhone' | 'username'> &
-    Partial<Pick<UserInfo, 'isSuspended'>>;
   /**
-   * Whether to show the user's avatar. Explicitly set to `false` to hide it.
+   * A subset of User schema type that is used in the preview component.
    */
-  showAvatar?: false;
+  user: {
+    id: UserInfo['id'];
+    avatar?: UserInfo['avatar'];
+    name?: UserInfo['name'];
+    primaryEmail?: UserInfo['primaryEmail'];
+    primaryPhone?: UserInfo['primaryPhone'];
+    username?: UserInfo['username'];
+    isSuspended?: UserInfo['isSuspended'];
+  };
   /**
    * Whether to provide a link to user details page. Explicitly set to `false` to hide it.
    */
@@ -22,12 +28,12 @@ type Props = {
 };
 
 /** A component that renders a preview of a user. It's useful for displaying a user in a list. */
-function UserPreview({ user, showAvatar, hasUserDetailsLink }: Props) {
+function UserPreview({ user, hasUserDetailsLink }: Props) {
   return (
     <ItemPreview
       title={getUserTitle(user)}
       subtitle={getUserSubtitle(user)}
-      icon={conditional(showAvatar !== false && <UserAvatar size="large" user={user} />)}
+      icon={<UserAvatar size="large" user={user} />}
       to={conditional(hasUserDetailsLink !== false && `/users/${user.id}`)}
       suffix={conditional(user.isSuspended && <SuspendedTag />)}
     />
