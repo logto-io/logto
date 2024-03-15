@@ -121,6 +121,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
           <FormField title="api_resource_details.permission.description">
             <TextInput
               placeholder={t('api_resource_details.permission.description_placeholder')}
+              {...register('description')}
               error={Boolean(errors.description)}
             />
           </FormField>
