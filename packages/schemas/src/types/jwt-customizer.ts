@@ -54,6 +54,9 @@ export const customJwtFetcherGuard = jwtCustomizerGuard
     token: jsonObjectGuard,
     context: jsonObjectGuard.optional(),
   });
+
+export type CustomJwtFetcher = z.infer<typeof customJwtFetcherGuard>;
+
 export enum LogtoJwtTokenPath {
   AccessToken = 'access-token',
   ClientCredentials = 'client-credentials',
