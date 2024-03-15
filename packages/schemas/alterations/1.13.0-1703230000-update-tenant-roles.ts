@@ -1,7 +1,8 @@
-import { ConsoleLog } from '@logto/shared';
 import { sql } from 'slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
+
+import ConsoleLog from './utils/1710517460-console-log.js';
 
 const consoleLog = new ConsoleLog();
 

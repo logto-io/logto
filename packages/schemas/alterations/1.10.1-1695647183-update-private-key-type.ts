@@ -1,8 +1,9 @@
-import { generateStandardId } from '@logto/shared';
 import type { DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
+
+import { generateStandardId } from './utils/1710517459-generate-standard-id.js';
 
 const targetConfigKeys = ['oidc.cookieKeys', 'oidc.privateKeys'];
 

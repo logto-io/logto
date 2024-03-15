@@ -1,5 +1,3 @@
-import { GlobalValues } from '@logto/shared';
-import { appendPath } from '@silverhand/essentials';
 import { sql } from 'slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
@@ -53,35 +51,18 @@ const alteration: AlterationScript = {
     const { rows: cloudConnections } = await pool.query<CloudConnectionData>(sql`
       select tenant_id, value from logto_configs where key = ${cloudConnectionKey};
     `);
-
-    /** Get `endpoint` and `tokenEndpoints` */
-    const globalValues = new GlobalValues();
-    const { cloudUrlSet, adminUrlSet } = globalValues;
-    const endpoint = appendPath(cloudUrlSet.endpoint, 'api').toString();
-    const tokenEndpoint = appendPath(adminUrlSet.endpoint, 'oidc/token').toString();
-
     const { rows: rawEmailServiceConnectors } = await pool.query<EmailServiceConnector>(sql`
       select tenant_id, config from connectors where connector_id = ${ServiceConnector.Email};
     `);
-    const tenantIdsWithM2mCredentials = new Set(cloudConnections.map(({ tenantId }) => tenantId));
-    const emailServiceConnectors = rawEmailServiceConnectors.filter(({ tenantId }) =>
-      tenantIdsWithM2mCredentials.has(tenantId)
-    );
-    for (const emailServiceConnector of emailServiceConnectors) {
-      const { tenantId: currentTenantId, config } = emailServiceConnector;
-      const newConfig = {
-        ...config,
-        endpoint,
-        tokenEndpoint,
-        ...cloudConnections.find(({ tenantId }) => tenantId === currentTenantId)?.value,
-      };
-      // eslint-disable-next-line no-await-in-loop
-      await pool.query(sql`
-        update connectors set config = ${JSON.stringify(
-          newConfig
-        )} where tenant_id = ${currentTenantId} and connector_id = ${ServiceConnector.Email};
-      `);
+
+    if (cloudConnections.length === 0 || rawEmailServiceConnectors.length === 0) {
+      console.log('No cloud connections or email service connectors found. Skipping...');
+      return;
     }
+
+    throw new Error(
+      'Down migration is removed due to dependency cleanup. Please see the pull request for more details.'
+    );
   },
 };
 

@@ -14,10 +14,12 @@
  * new tenants before running this script and deploying the changes.
  */
 
-import { ConsoleLog, generateStandardId } from '@logto/shared';
 import { sql } from 'slonik';
 
 import { type AlterationScript } from '../lib/types/alteration.js';
+
+import { generateStandardId } from './utils/1710517459-generate-standard-id.js';
+import ConsoleLog from './utils/1710517460-console-log.js';
 
 const adminTenantId = 'admin';
 const consoleLog = new ConsoleLog();

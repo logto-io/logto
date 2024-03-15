@@ -3996,9 +3996,6 @@ importers:
       '@logto/phrases-experience':
         specifier: workspace:^1.6.0
         version: link:../phrases-experience
-      '@logto/shared':
-        specifier: workspace:^3.1.0
-        version: link:../shared
       '@withtyped/server':
         specifier: ^0.13.3
         version: 0.13.3(zod@3.22.4)
@@ -4042,6 +4039,9 @@ importers:
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
+      nanoid:
+        specifier: ^5.0.1
+        version: 5.0.1
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
