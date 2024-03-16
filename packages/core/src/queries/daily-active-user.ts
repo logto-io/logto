@@ -1,8 +1,8 @@
 import { DailyActiveUsers } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(DailyActiveUsers);
 

@@ -7,13 +7,13 @@ import {
   jwtCustomizerConfigGuard,
 } from '@logto/schemas';
 import type { LogtoOidcConfigType, LogtoJwtTokenKey } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import chalk from 'chalk';
 import { z, ZodError } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
 const { table } = convertToIdentifiers(LogtoConfigs);

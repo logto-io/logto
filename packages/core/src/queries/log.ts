@@ -7,7 +7,6 @@ import {
   type interaction,
   type LogKeyUnknown,
 } from '@logto/schemas';
-import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { sql } from 'slonik';
@@ -15,6 +14,7 @@ import type { CommonQueryMethods } from 'slonik';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 

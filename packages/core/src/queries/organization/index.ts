@@ -18,12 +18,12 @@ import {
   OrganizationInvitationRoleRelations,
   OrganizationInvitationStatus,
 } from '@logto/schemas';
-import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 
 import { type SearchOptions, buildSearchSql } from '#src/database/utils.js';
 import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 import { RoleUserRelationQueries, UserRelationQueries } from './relations.js';
 

@@ -1,4 +1,4 @@
-import { type Table, conditionalSql } from '@logto/shared';
+import { type Table } from '@logto/shared';
 import { type KeysToCamelCase } from '@silverhand/essentials';
 import { sql, type CommonQueryMethods } from 'slonik';
 import snakecaseKeys from 'snakecase-keys';
@@ -6,6 +6,8 @@ import { type z } from 'zod';
 
 import { expandFields } from '#src/database/utils.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+
+import { conditionalSql } from './sql.js';
 
 type AtLeast2<T extends unknown[]> = `${T['length']}` extends '0' | '1' ? never : T;
 

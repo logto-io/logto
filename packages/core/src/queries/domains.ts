@@ -1,6 +1,4 @@
 import { type CreateDomain, type Domain, DomainStatus, Domains } from '@logto/schemas';
-import type { OmitAutoSetFields } from '@logto/shared';
-import { convertToIdentifiers, manyRows } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -8,6 +6,7 @@ import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js'
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { convertToIdentifiers, manyRows, type OmitAutoSetFields } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Domains);
 

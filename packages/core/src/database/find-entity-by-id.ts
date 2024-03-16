@@ -1,11 +1,11 @@
 import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql, NotFoundError } from 'slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isKeyOf } from '#src/utils/schema.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 type WithId<Key> = Key | 'id';
 
