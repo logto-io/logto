@@ -1,6 +1,6 @@
 import type { CreateSignInExperience } from '@logto/schemas';
 import { SignInExperiences } from '@logto/schemas';
-import type { CommonQueryMethods } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';

@@ -1,4 +1,4 @@
-import { sql } from 'slonik';
+import { sql } from '@silverhand/slonik';
 import { raw } from 'slonik-sql-tag-raw';
 
 import type { AlterationScript } from '../lib/types/alteration.js';

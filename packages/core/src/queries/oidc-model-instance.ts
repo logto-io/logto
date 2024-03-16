@@ -2,9 +2,9 @@ import type { OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas
 import { OidcModelInstances } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
+import type { CommonQueryMethods, ValueExpression } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 import { addSeconds, isBefore } from 'date-fns';
-import type { CommonQueryMethods, ValueExpression } from 'slonik';
-import { sql } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { convertToIdentifiers, convertToTimestamp } from '#src/utils/sql.js';

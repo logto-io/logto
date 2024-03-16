@@ -1,6 +1,6 @@
 import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
-import type { CommonQueryMethods } from 'slonik';
-import { sql, NotFoundError } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql, NotFoundError } from '@silverhand/slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';

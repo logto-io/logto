@@ -1,6 +1,6 @@
 import { Users } from '@logto/schemas';
+import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 import Sinon from 'sinon';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockUser } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';

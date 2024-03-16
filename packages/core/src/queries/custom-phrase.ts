@@ -1,8 +1,8 @@
 import type { CustomPhrase, Translation } from '@logto/schemas';
 import { CustomPhrases } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';

@@ -8,7 +8,7 @@
  */
 
 import { type SchemaValue, type SchemaValuePrimitive, type Table } from '@logto/shared';
-import { type IdentifierSqlToken, type SqlToken, sql } from 'slonik';
+import { type IdentifierSqlToken, type SqlToken, sql } from '@silverhand/slonik';
 
 /**
  * Note `undefined` is removed from the acceptable list,

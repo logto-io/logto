@@ -1,4 +1,4 @@
-import type { CommonQueryMethods } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
 import createApplicationSignInExperienceQueries from '#src/queries/application-sign-in-experience.js';

@@ -1,5 +1,5 @@
 import { assert } from '@silverhand/essentials';
-import { createMockPool, createMockQueryResult, createPool, parseDsn } from 'slonik';
+import { createMockPool, createMockQueryResult, createPool, parseDsn } from '@silverhand/slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 
 const createPoolByEnv = async (

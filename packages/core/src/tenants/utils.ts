@@ -2,8 +2,8 @@ import { ServiceLogs, Systems } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
 import { isKeyInObject } from '@logto/shared';
 import { conditional, conditionalString } from '@silverhand/essentials';
-import type { CommonQueryMethods } from 'slonik';
-import { parseDsn, sql, stringifyDsn } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { parseDsn, sql, stringifyDsn } from '@silverhand/slonik';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';

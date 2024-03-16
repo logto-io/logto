@@ -29,8 +29,8 @@ import {
 import { getTenantRole } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
 import { generateStandardId } from '@logto/shared';
-import type { DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
+import type { DatabaseTransactionConnection } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 import { raw } from 'slonik-sql-tag-raw';
 
 import { insertInto } from '../../../database.js';

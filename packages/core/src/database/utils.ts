@@ -1,6 +1,6 @@
 import { type GeneratedSchema } from '@logto/schemas';
 import { type SchemaLike, type Table } from '@logto/shared';
-import { type SqlSqlToken, sql } from 'slonik';
+import { type SqlSqlToken, sql } from '@silverhand/slonik';
 
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 

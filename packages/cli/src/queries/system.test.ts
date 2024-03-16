@@ -1,6 +1,6 @@
 import { AlterationStateKey, Systems } from '@logto/schemas';
+import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 import { DatabaseError } from 'pg-protocol';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { convertToIdentifiers } from '../sql.js';
 import type { QueryType } from '../test-utils.js';

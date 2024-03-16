@@ -9,8 +9,8 @@ import {
   type OidcConfigKey,
   type LogtoJwtTokenKey,
 } from '@logto/schemas';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 import { type z } from 'zod';
 
 import { DeletionError } from '#src/errors/SlonikError/index.js';

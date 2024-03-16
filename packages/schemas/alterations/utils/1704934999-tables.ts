@@ -1,4 +1,4 @@
-import { type CommonQueryMethods, sql } from 'slonik';
+import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 const getId = (value: string) => sql.identifier([value]);
 

@@ -1,5 +1,5 @@
 declare module 'slonik-interceptor-preset' {
-  import type { Interceptor } from 'slonik';
+  import type { Interceptor } from '@silverhand/slonik';
 
   export const createInterceptors: (config?: {
     benchmarkQueries: boolean;

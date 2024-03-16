@@ -1,8 +1,8 @@
 import type { User, CreateUser } from '@logto/schemas';
 import { Users } from '@logto/schemas';
 import { conditionalArray, pick } from '@silverhand/essentials';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { EnvSet } from '#src/env-set/index.js';

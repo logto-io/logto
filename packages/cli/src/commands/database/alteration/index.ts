@@ -1,7 +1,7 @@
 import type { AlterationScript } from '@logto/schemas/lib/types/alteration.js';
 import { conditionalString } from '@silverhand/essentials';
+import type { DatabasePool } from '@silverhand/slonik';
 import chalk from 'chalk';
-import type { DatabasePool } from 'slonik';
 import type { CommandModule } from 'yargs';
 
 import { createPoolFromConfig } from '../../../database.js';

@@ -1,5 +1,5 @@
 import { type GeneratedSchema, type SchemaLike } from '@logto/schemas';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { conditionalSql, convertToIdentifiers, manyRows } from '#src/utils/sql.js';
 

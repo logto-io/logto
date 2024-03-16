@@ -1,5 +1,5 @@
 import { DailyActiveUsers } from '@logto/schemas';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';

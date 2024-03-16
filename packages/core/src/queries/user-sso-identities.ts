@@ -5,7 +5,7 @@ import {
   UserSsoIdentities,
 } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { manyRows } from '#src/utils/sql.js';

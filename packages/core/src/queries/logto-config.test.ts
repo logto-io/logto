@@ -4,7 +4,7 @@ import {
   LogtoOidcConfigKey,
   LogtoTenantConfigKey,
 } from '@logto/schemas';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
+import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
 import { convertToIdentifiers } from '#src/utils/sql.js';
 import { expectSqlAssert, type QueryType } from '#src/utils/test-utils.js';

@@ -1,5 +1,5 @@
 import { Tenants, type TenantModel } from '@logto/schemas/models';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { convertToIdentifiers } from '#src/utils/sql.js';
 

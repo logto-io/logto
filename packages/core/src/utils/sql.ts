@@ -1,8 +1,8 @@
 import type { SchemaValue, SchemaValuePrimitive, Table } from '@logto/shared';
 import type { Falsy } from '@silverhand/essentials';
 import { notFalsy } from '@silverhand/essentials';
-import type { SqlSqlToken, SqlToken, IdentifierSqlToken, QueryResult } from 'slonik';
-import { sql } from 'slonik';
+import type { SqlSqlToken, SqlToken, IdentifierSqlToken, QueryResult } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 export const conditionalSql = <T>(value: T, buildSql: (value: Exclude<T, Falsy>) => SqlSqlToken) =>
   notFalsy(value) ? buildSql(value) : sql``;

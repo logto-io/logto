@@ -9,8 +9,8 @@ import {
 } from '@logto/schemas';
 import { GlobalValues } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { insertInto } from '../../../database.js';
 import { consoleLog } from '../../../utils.js';

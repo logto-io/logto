@@ -1,5 +1,5 @@
 import { generateStandardId } from '@logto/shared/universal';
-import { sql } from 'slonik';
+import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 

@@ -17,8 +17,8 @@ import {
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
-import type { CommonQueryMethods, DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods, DatabaseTransactionConnection } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 import { raw } from 'slonik-sql-tag-raw';
 
 import { insertInto } from '../../../database.js';

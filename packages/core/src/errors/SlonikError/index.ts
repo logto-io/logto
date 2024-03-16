@@ -1,6 +1,6 @@
 import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import type { UpdateWhereData } from '@logto/shared';
-import { SlonikError } from 'slonik';
+import { SlonikError } from '@silverhand/slonik';
 
 import { type OmitAutoSetFields } from '#src/utils/sql.js';
 

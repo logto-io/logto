@@ -1,8 +1,8 @@
 import type { SchemaLike } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
+import { createPool, parseDsn, sql, stringifyDsn } from '@silverhand/slonik';
 import decamelize from 'decamelize';
 import { DatabaseError } from 'pg-protocol';
-import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 
 import { convertToPrimitiveOrSql } from './sql.js';

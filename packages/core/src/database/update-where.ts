@@ -2,8 +2,8 @@ import type { SchemaLike, GeneratedSchema, SchemaValue } from '@logto/schemas';
 import type { UpdateWhereData } from '@logto/shared';
 import type { Truthy } from '@silverhand/essentials';
 import { notFalsy } from '@silverhand/essentials';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { UpdateError } from '#src/errors/SlonikError/index.js';
 import assertThat from '#src/utils/assert-that.js';

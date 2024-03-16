@@ -1,5 +1,5 @@
-import type { DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
+import type { DatabaseTransactionConnection } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 
