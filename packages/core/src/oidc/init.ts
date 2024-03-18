@@ -215,18 +215,17 @@ export default function initOidc(
         return;
       }
 
-      /**
-       * The execution on this function relies on the existence of authenticated cloud connection client.
-       *
-       * The process that cloud connection get access token also includes this function (`extraTokenClaims`
-       * is a function that will always be executed during the process of generating an access token), it
-       * could trigger infinite loop if we do not terminal the process early.
-       */
-      if (!cloudConnection.isAuthenticated) {
-        return;
-      }
-
       const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
+
+      /**
+       * Cloud connection should not go through this custom JWT logic.
+       */
+      if (isTokenClientCredentials) {
+        const { appId } = await cloudConnection.getCloudConnectionData();
+        if (token.clientId === appId) {
+          return;
+        }
+      }
 
       const {
         value: { script, envVars },

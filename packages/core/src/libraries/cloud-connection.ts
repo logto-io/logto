@@ -34,19 +34,10 @@ const accessTokenExpirationMargin = 60;
 
 /** The library for connecting to Logto Cloud service. */
 export class CloudConnectionLibrary {
-  private _isAuthenticated = false;
   private client?: Client<typeof router>;
   private accessTokenCache?: { expiresAt: number; accessToken: string };
 
   constructor(private readonly logtoConfigs: LogtoConfigLibrary) {}
-
-  get isAuthenticated() {
-    return this._isAuthenticated;
-  }
-
-  private set isAuthenticated(value: boolean) {
-    this._isAuthenticated = value;
-  }
 
   public getCloudConnectionData = async (): Promise<CloudConnection> => {
     const { getCloudConnectionData: getCloudServiceM2mCredentials } = this.logtoConfigs;
@@ -76,8 +67,6 @@ export class CloudConnectionLibrary {
       if (expiresAt > Date.now() / 1000 + accessTokenExpirationMargin) {
         return accessToken;
       }
-      // Set the cloud connection to not authenticated if the access token is expired.
-      this.isAuthenticated = false;
     }
 
     const { tokenEndpoint, appId, appSecret, resource } = await this.getCloudConnectionData();
@@ -105,8 +94,6 @@ export class CloudConnectionLibrary {
       expiresAt: Date.now() / 1000 + result.data.expires_in,
       accessToken: result.data.access_token,
     };
-    // Set the cloud connection to `authenticated` if the access token is valid.
-    this.isAuthenticated = true;
 
     return result.data.access_token;
   };
