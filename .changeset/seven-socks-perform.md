@@ -4,9 +4,9 @@
 
 ## Resolve Third-Party App's /interaction/consent Endpoint 500 Error
 
-### Reproduction Steps
+### Reproduction steps
 
-- Establish an organization scope with an empty description and assign this scope to a third-party application.
+- Create an organization scope with an empty description and assign this scope to a third-party application.
 
 - Login to the third-party application and request the organization scope.
 
@@ -16,12 +16,12 @@
 
 ### Root Cause
 
-For the /interaction/consent endpoint, the organization scope is returned alongside other resource scopes in the missingResourceScopes property.
+For the `/interaction/consent` endpoint, the organization scope is returned alongside other resource scopes in the `missingResourceScopes` property.
 
-In the consentInfoResponseGuard, we utilize the resource Scopes zod guard to validate the missingResourceScopes property. However, the description field in the resource scope is mandatory while organization scopes'description is optional. An organization scope with an empty description will not pass the validation.
+In the `consentInfoResponseGuard`, we utilize the resource Scopes zod guard to validate the `missingResourceScopes` property. However, the description field in the resource scope is mandatory while organization scopes'description is optional. An organization scope with an empty description will not pass the validation.
 
 ### Solution
 
-Modify the consentInfoResponseGuard's missingResourceScopes property. Use the organization scope zod guard which does not necessitate the description field.
+Modify the consentInfoResponseGuard's `missingResourceScopes` property. Use the organization scope zod guard which does not necessitate the description field.
 
 The alignment of the resource scope and organization scope types will be addressed in the next release.
