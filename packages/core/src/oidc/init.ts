@@ -14,10 +14,9 @@ import {
   logtoCookieKey,
   type LogtoUiCookie,
   LogtoJwtTokenKey,
-  type JsonObject,
+  type CustomJwtFetcher,
 } from '@logto/schemas';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
-import { got } from 'got';
 import i18next from 'i18next';
 import koaBody from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
@@ -239,8 +238,7 @@ export default function initOidc(
 
       if (script) {
         // Wait for cloud API to be ready and we can use cloud connection client to request the API.
-        const accessToken = await cloudConnection.getAccessToken();
-        const { endpoint: cloudApiEndpoint } = await cloudConnection.getCloudConnectionData();
+        const client = await cloudConnection.getClient();
 
         // We pass context to the cloud API only when it is a user's access token.
         const logtoUserInfo = conditional(
@@ -248,23 +246,27 @@ export default function initOidc(
             token.accountId &&
             (await libraries.jwtCustomizers.getUserContext(token.accountId))
         );
-        const result =
+        /**
+         * `token` and `context` can not be assigned to Record<string, Json> according to the type inference,
+         * use request body guard to ensure the type.
+         *
+         * Use direct type casting to avoid the type inference issue since if the type is not correct the client
+         * will throw an Zod type error, there is no need to implement the zod guard and error handling here.
+         */
+        // eslint-disable-next-line no-restricted-syntax
+        const payload = {
+          script,
+          envVars,
+          token,
+          context: conditional(logtoUserInfo && { user: logtoUserInfo }),
+        } as unknown as CustomJwtFetcher;
+        return (
           (await trySafe(
-            got
-              .post(`${cloudApiEndpoint}/services/custom-jwt`, {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
-                json: {
-                  script,
-                  envVars,
-                  token,
-                  ...conditional(logtoUserInfo && { context: { user: logtoUserInfo } }),
-                },
-              })
-              .json<JsonObject>()
-          )) ?? {};
-        return result;
+            client.post(`/api/services/custom-jwt`, {
+              body: payload,
+            })
+          )) ?? {}
+        );
       }
     },
     extraClientMetadata: {
