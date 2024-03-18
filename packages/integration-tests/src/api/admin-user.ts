@@ -6,7 +6,7 @@ import type {
   Role,
   User,
   UserSsoIdentity,
-  UsersPasswordEncryptionMethod,
+  UsersPasswordAlgorithm,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -19,7 +19,7 @@ export type CreateUserPayload = Partial<{
   password: string;
   name: string;
   passwordDigest: string;
-  passwordAlgorithm: UsersPasswordEncryptionMethod;
+  passwordAlgorithm: UsersPasswordAlgorithm;
 }>;
 
 export const createUser = async (payload: CreateUserPayload = {}) =>

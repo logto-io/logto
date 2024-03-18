@@ -27,8 +27,8 @@ const { assignInteractionResults } = mockEsm('#src/libraries/session.js', () => 
 
 const { encryptUserPassword } = mockEsm('#src/libraries/user.js', () => ({
   encryptUserPassword: jest.fn().mockResolvedValue({
-    passwordEncrypted: 'passwordEncrypted',
-    passwordEncryptionMethod: 'plain',
+    passwordDigest: 'passwordDigest',
+    passwordAlgorithm: 'plain',
   }),
 }));
 
@@ -103,8 +103,8 @@ describe('submit action', () => {
     username: 'username',
     primaryPhone: '123456',
     primaryEmail: 'email@logto.io',
-    passwordEncrypted: 'passwordEncrypted',
-    passwordEncryptionMethod: 'plain',
+    passwordDigest: 'passwordDigest',
+    passwordAlgorithm: 'plain',
     identities: {
       logto: { userId: userInfo.id, details: userInfo },
     },
@@ -312,8 +312,8 @@ describe('submit action', () => {
     expect(getLogtoConnectorById).toBeCalledWith('logto');
 
     expect(updateUserById).toBeCalledWith('foo', {
-      passwordEncrypted: 'passwordEncrypted',
-      passwordEncryptionMethod: 'plain',
+      passwordDigest: 'passwordDigest',
+      passwordAlgorithm: 'plain',
       identities: {
         logto: { userId: userInfo.id, details: userInfo },
         google: { userId: 'googleId', details: {} },
@@ -341,8 +341,8 @@ describe('submit action', () => {
     await submitInteraction(interaction, ctx, tenant);
 
     expect(updateUserById).toBeCalledWith('foo', {
-      passwordEncrypted: 'passwordEncrypted',
-      passwordEncryptionMethod: 'plain',
+      passwordDigest: 'passwordDigest',
+      passwordAlgorithm: 'plain',
       identities: {
         logto: { userId: userInfo.id, details: userInfo },
         google: { userId: 'googleId', details: {} },
@@ -394,8 +394,8 @@ describe('submit action', () => {
     expect(encryptUserPassword).toBeCalledWith('password');
 
     expect(updateUserById).toBeCalledWith('foo', {
-      passwordEncrypted: 'passwordEncrypted',
-      passwordEncryptionMethod: 'plain',
+      passwordDigest: 'passwordDigest',
+      passwordAlgorithm: 'plain',
     });
 
     expect(assignInteractionResults).not.toBeCalled();

@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-import { UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { UsersPasswordAlgorithm } from '@logto/schemas';
 import { argon2i } from 'hash-wasm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -8,10 +8,10 @@ import assertThat from '#src/utils/assert-that.js';
 
 export const encryptPassword = async (
   password: string,
-  method: UsersPasswordEncryptionMethod
+  method: UsersPasswordAlgorithm
 ): Promise<string> => {
   assertThat(
-    method === UsersPasswordEncryptionMethod.Argon2i,
+    method === UsersPasswordAlgorithm.Argon2i,
     new RequestError({ code: 'password.unsupported_encryption_method', method })
   );
 

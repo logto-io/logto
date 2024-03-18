@@ -32,7 +32,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
 
     const responseData = {
       ...pick(user, ...userInfoSelectFields),
-      ...conditional(user.passwordEncrypted && { hasPassword: Boolean(user.passwordEncrypted) }),
+      ...conditional(user.passwordDigest && { hasPassword: Boolean(user.passwordDigest) }),
     };
 
     ctx.body = responseData;
@@ -128,16 +128,16 @@ export default function userRoutes<T extends AuthedMeRouter>(
       const { id: userId } = ctx.auth;
       const { password } = ctx.guard.body;
 
-      const { isSuspended, passwordEncrypted: oldPasswordEncrypted } = await findUserById(userId);
+      const { isSuspended, passwordDigest: oldPasswordDigest } = await findUserById(userId);
 
       assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-      if (oldPasswordEncrypted) {
+      if (oldPasswordDigest) {
         await checkVerificationStatus(userId);
       }
 
-      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
-      await updateUserById(userId, { passwordEncrypted, passwordEncryptionMethod });
+      const { passwordDigest, passwordAlgorithm } = await encryptUserPassword(password);
+      await updateUserById(userId, { passwordDigest, passwordAlgorithm });
 
       ctx.status = 204;
 

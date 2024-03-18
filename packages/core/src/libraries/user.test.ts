@@ -1,4 +1,4 @@
-import { MfaFactor, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { MfaFactor, UsersPasswordAlgorithm } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockResource, mockAdminUserRole, mockScope } from '#src/__mocks__/index.js';
@@ -88,10 +88,10 @@ describe('generateUserId()', () => {
 });
 
 describe('encryptUserPassword()', () => {
-  it('generates salt, encrypted and method', async () => {
-    const { passwordEncryptionMethod, passwordEncrypted } = await encryptUserPassword('password');
-    expect(passwordEncryptionMethod).toEqual(UsersPasswordEncryptionMethod.Argon2i);
-    expect(passwordEncrypted).toContain('argon2');
+  it('generates salt, digest and method', async () => {
+    const { passwordAlgorithm, passwordDigest } = await encryptUserPassword('password');
+    expect(passwordAlgorithm).toEqual(UsersPasswordAlgorithm.Argon2i);
+    expect(passwordDigest).toContain('argon2');
   });
 });
 
@@ -113,8 +113,8 @@ describe('verifyUserPassword()', () => {
   describe('MD5', () => {
     const user = {
       ...mockUser,
-      passwordEncrypted: '5f4dcc3b5aa765d61d8327deb882cf99',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.MD5,
+      passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
+      passwordAlgorithm: UsersPasswordAlgorithm.MD5,
     };
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
@@ -130,8 +130,8 @@ describe('verifyUserPassword()', () => {
   describe('SHA1', () => {
     const user = {
       ...mockUser,
-      passwordEncrypted: '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.SHA1,
+      passwordDigest: '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',
+      passwordAlgorithm: UsersPasswordAlgorithm.SHA1,
     };
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
@@ -147,8 +147,8 @@ describe('verifyUserPassword()', () => {
   describe('SHA256', () => {
     const user = {
       ...mockUser,
-      passwordEncrypted: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.SHA256,
+      passwordDigest: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
+      passwordAlgorithm: UsersPasswordAlgorithm.SHA256,
     };
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
@@ -164,8 +164,8 @@ describe('verifyUserPassword()', () => {
   describe('Bcrypt', () => {
     const user = {
       ...mockUser,
-      passwordEncrypted: '$2a$12$WQMqTfbtcZFBC1C1u8wpie6lXOSciUr5kk/8yEydoIMKltb9UKJ.6',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Bcrypt,
+      passwordDigest: '$2a$12$WQMqTfbtcZFBC1C1u8wpie6lXOSciUr5kk/8yEydoIMKltb9UKJ.6',
+      passwordAlgorithm: UsersPasswordAlgorithm.Bcrypt,
     };
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
@@ -181,15 +181,15 @@ describe('verifyUserPassword()', () => {
   describe('Migrate other algorithms to Argon2', () => {
     const user = {
       ...mockUser,
-      passwordEncrypted: '5f4dcc3b5aa765d61d8327deb882cf99',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.MD5,
+      passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
+      passwordAlgorithm: UsersPasswordAlgorithm.MD5,
     };
     it('migrates password to Argon2', async () => {
       await verifyUserPassword(user, 'password');
       expect(updateUserById).toHaveBeenCalledWith(user.id, {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        passwordEncrypted: expect.stringContaining('argon2'),
-        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+        passwordDigest: expect.stringContaining('argon2'),
+        passwordAlgorithm: UsersPasswordAlgorithm.Argon2i,
       });
     });
   });

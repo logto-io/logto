@@ -1,6 +1,6 @@
 /* init_order = 1 */
 
-create type users_password_encryption_method as enum ('Argon2i', 'SHA1', 'SHA256', 'MD5', 'Bcrypt');
+create type users_password_algorithm as enum ('Argon2i', 'SHA1', 'SHA256', 'MD5', 'Bcrypt');
 
 create table users (
   tenant_id varchar(21) not null
@@ -9,8 +9,8 @@ create table users (
   username varchar(128),
   primary_email varchar(128),
   primary_phone varchar(128),
-  password_encrypted varchar(128),
-  password_encryption_method users_password_encryption_method,
+  password_digest varchar(128),
+  password_algorithm users_password_algorithm,
   name varchar(128),
   /** The URL that points to the user's profile picture. Mapped to OpenID Connect's `picture` claim. */ 
   avatar varchar(2048),
