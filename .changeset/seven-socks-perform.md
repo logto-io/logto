@@ -2,7 +2,7 @@
 "@logto/schemas": patch
 ---
 
-## Resolve Third-Party App's /interaction/consent Endpoint 500 Error
+## Resolve third-party app's /interaction/consent endpoint 500 error
 
 ### Reproduction steps
 
@@ -14,7 +14,7 @@
 
 - An internal server error 500 is returned.
 
-### Root Cause
+### Root cause
 
 For the `/interaction/consent` endpoint, the organization scope is returned alongside other resource scopes in the `missingResourceScopes` property.
 
