@@ -36,7 +36,7 @@ mockEsm('@logto/shared', () => ({
 }));
 
 mockEsm('#src/utils/tenant.js', () => ({
-  getTenantId: () => adminTenantId,
+  getTenantId: () => [adminTenantId],
 }));
 
 const userQueries = {

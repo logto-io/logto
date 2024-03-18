@@ -36,10 +36,11 @@ import type TenantContext from './TenantContext.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
 export default class Tenant implements TenantContext {
-  static async create(id: string, redisCache: RedisCache): Promise<Tenant> {
+  static async create(id: string, redisCache: RedisCache, customDomain?: string): Promise<Tenant> {
     // Treat the default database URL as the management URL
     const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
-    await envSet.load();
+    // Custom endpoint is used for building OIDC issuer URL when the request is a custom domain
+    await envSet.load(customDomain);
 
     return new Tenant(envSet, id, new WellKnownCache(id, redisCache));
   }

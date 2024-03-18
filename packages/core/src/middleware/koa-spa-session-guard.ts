@@ -52,7 +52,7 @@ export default function koaSpaSessionGuard<
           return;
         }
 
-        const tenantId = await getTenantId(ctx.URL);
+        const [tenantId] = await getTenantId(ctx.URL);
 
         if (!tenantId) {
           throw new RequestError({ code: 'session.not_found', status: 404 });

@@ -63,7 +63,7 @@ export class EnvSet {
     return this.#oidc;
   }
 
-  async load() {
+  async load(customDomain?: string) {
     const pool = await createPoolByEnv(
       this.databaseUrl,
       EnvSet.values.isUnitTest,
@@ -77,7 +77,9 @@ export class EnvSet {
     });
 
     const oidcConfigs = await getOidcConfigs();
-    const endpoint = getTenantEndpoint(this.tenantId, EnvSet.values);
+    const endpoint = customDomain
+      ? new URL(customDomain)
+      : getTenantEndpoint(this.tenantId, EnvSet.values);
     this.#oidc = await loadOidcValues(appendPath(endpoint, '/oidc').href, oidcConfigs);
   }
 
