@@ -131,81 +131,8 @@ export const clientCredentialsModel: ModelSettings = {
 /**
  * JWT claims guide card configs
  */
-// TODO: align user properties and then i18n the descriptions
-type GuideTableData = {
-  value: string;
-  description: string;
-};
 
-export const userDataDescription: GuideTableData[] = [
-  {
-    value: 'user.id',
-    description: 'Unique identifier of the user.',
-  },
-  {
-    value: 'user.username',
-    description: 'Username for sign-in',
-  },
-  {
-    value: 'user.primary_email',
-    description: 'Primary email address of the user.',
-  },
-  {
-    value: 'user.primary_phone',
-    description: 'Primary phone number of the user.',
-  },
-  {
-    value: 'user.name',
-    description: 'Full name of the user.',
-  },
-  {
-    value: 'user.avatar',
-    description: "URL pointing to user's avatar image	",
-  },
-  {
-    value: 'user.identities',
-    description: 'User info retrieved from social sign-in',
-  },
-  {
-    value: 'user.custom_data',
-    description: 'Additional info in customizable properties	',
-  },
-];
-
-export const tokenDataDescription: GuideTableData[] = [
-  {
-    value: 'jti',
-    description:
-      '(JWT ID) Unique identifier for the JWT. Useful for tracking and preventing reuse of the token.',
-  },
-  {
-    value: 'iat',
-    description: '(issued at) Time at which the JWT was issued.',
-  },
-  {
-    value: 'exp',
-    description: '(expiration) Time after which the JWT expires.',
-  },
-  {
-    value: 'client_id',
-    description: 'Client ID of the application that requested the JWT.',
-  },
-  {
-    value: 'kind',
-    description:
-      'Type of the token. `AccessToken` for user access tokens and `ClientCredentials` for machine-to-machine access tokens.',
-  },
-  {
-    value: 'scope',
-    description: 'Scopes requested by the client joint by space.',
-  },
-  {
-    value: 'aud',
-    description: '(audience) Audience for which the JWT is intended.',
-  },
-];
-
-export const fetchExternalDataEditorOptions: EditorProps['options'] = {
+export const sampleCodeEditorOptions: EditorProps['options'] = {
   readOnly: true,
   wordWrap: 'on',
   minimap: { enabled: false },
@@ -217,6 +144,13 @@ export const fetchExternalDataEditorOptions: EditorProps['options'] = {
   lineNumbers: 'off',
   scrollbar: { vertical: 'hidden', horizontal: 'hidden', handleMouseWheel: false },
   folding: false,
+  tabSize: 2,
+};
+
+export const typeDefinitionCodeEditorOptions: EditorProps['options'] = {
+  ...sampleCodeEditorOptions,
+  scrollbar: { vertical: 'auto', horizontal: 'auto' },
+  folding: true,
 };
 
 export const fetchExternalDataCodeExample = `const response = await fetch('https://api.example.com/data', {

@@ -32,3 +32,18 @@ export const buildEnvironmentVariablesTypeDefinition = (
 
   return `declare type ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables} = ${typeDefinition}`;
 };
+
+export const buildJwtCustomizerUserContextType = () => `type ${
+  JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext
+} = ${getJwtCustomizerUserContextTsDefinition()}
+`;
+
+export const buildJwtCustomizerAccessTokenPayloadType = () => `type ${
+  JwtCustomizerTypeDefinitionKey.AccessTokenPayload
+} = ${getAccessTokenPayloadTsDefinition()}
+`;
+
+export const buildJwtCustomizerClientCredentialsPayloadType = () => `type ${
+  JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload
+} = ${getClientCredentialsPayloadTsDefinition()}
+`;

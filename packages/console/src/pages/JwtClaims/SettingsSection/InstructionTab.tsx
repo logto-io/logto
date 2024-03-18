@@ -1,19 +1,20 @@
 import { LogtoJwtTokenPath } from '@logto/schemas';
 import { Editor } from '@monaco-editor/react';
 import classNames from 'classnames';
-import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Table from '@/ds-components/Table';
-
 import { type JwtClaimsFormType } from '../type';
 import {
-  userDataDescription,
-  tokenDataDescription,
-  fetchExternalDataEditorOptions,
+  sampleCodeEditorOptions,
+  typeDefinitionCodeEditorOptions,
   fetchExternalDataCodeExample,
 } from '../utils/config';
+import {
+  buildJwtCustomizerAccessTokenPayloadType,
+  buildJwtCustomizerClientCredentialsPayloadType,
+  buildJwtCustomizerUserContextType,
+} from '../utils/type-definitions';
 
 import EnvironmentVariablesField from './EnvironmentVariablesField';
 import GuideCard, { CardType } from './GuideCard';
@@ -23,6 +24,10 @@ type Props = {
   isActive: boolean;
 };
 
+const jwtCustomizerUserContextSchema = buildJwtCustomizerUserContextType();
+const accessTokenPayloadSchema = buildJwtCustomizerAccessTokenPayloadType();
+const clientCredentialsPayloadSchema = buildJwtCustomizerClientCredentialsPayloadType();
+
 /* Instructions and environment variable settings for the custom JWT claims script. */
 function InstructionTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -30,51 +35,33 @@ function InstructionTab({ isActive }: Props) {
   const { watch } = useFormContext<JwtClaimsFormType>();
   const tokenType = watch('tokenType');
 
-  const getDataColumns = useCallback(
-    (valueColSpan = 10) => [
-      {
-        title: t('domain.custom.dns_table.value_field'),
-        dataIndex: 'value',
-        colSpan: valueColSpan,
-        render: ({ value }: (typeof userDataDescription)[0]) => (
-          <span className={styles.value}>{value}</span>
-        ),
-      },
-      {
-        title: t('general.description'),
-        dataIndex: 'description',
-        colSpan: 24 - valueColSpan,
-        render: ({ description }: (typeof userDataDescription)[0]) => (
-          <span className={styles.description}>{description}</span>
-        ),
-      },
-    ],
-    [t]
-  );
-
   return (
     <div className={classNames(styles.tabContent, isActive && styles.active)}>
       <div className={styles.description}>{t('jwt_claims.jwt_claims_description')}</div>
       {tokenType === LogtoJwtTokenPath.AccessToken && (
         <GuideCard name={CardType.UserData}>
-          <Table
-            hasBorder
-            isRowHoverEffectDisabled
-            className={styles.table}
-            rowIndexKey="value"
-            columns={getDataColumns()}
-            rowGroups={[{ key: 'user_data', data: userDataDescription }]}
+          <Editor
+            language="typescript"
+            className={styles.sampleCode}
+            value={jwtCustomizerUserContextSchema}
+            height="700px"
+            theme="logto-dark"
+            options={typeDefinitionCodeEditorOptions}
           />
         </GuideCard>
       )}
       <GuideCard name={CardType.TokenData}>
-        <Table
-          hasBorder
-          isRowHoverEffectDisabled
-          className={styles.table}
-          rowIndexKey="value"
-          columns={getDataColumns(6)}
-          rowGroups={[{ key: 'token_data', data: tokenDataDescription }]}
+        <Editor
+          language="typescript"
+          className={styles.sampleCode}
+          value={
+            tokenType === LogtoJwtTokenPath.AccessToken
+              ? accessTokenPayloadSchema
+              : clientCredentialsPayloadSchema
+          }
+          height="400px"
+          theme="logto-dark"
+          options={typeDefinitionCodeEditorOptions}
         />
       </GuideCard>
       <GuideCard name={CardType.FetchExternalData}>
@@ -85,7 +72,7 @@ function InstructionTab({ isActive }: Props) {
           value={fetchExternalDataCodeExample}
           height="300px"
           theme="logto-dark"
-          options={fetchExternalDataEditorOptions}
+          options={sampleCodeEditorOptions}
         />
       </GuideCard>
       <GuideCard name={CardType.EnvironmentVariables}>
