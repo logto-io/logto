@@ -1,22 +1,31 @@
 import { OrganizationInvitationStatus } from '@logto/schemas';
 import { format } from 'date-fns';
 import { useContext, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import Delete from '@/assets/icons/delete.svg';
+import Invite from '@/assets/icons/invitation.svg';
+import More from '@/assets/icons/more.svg';
 import Plus from '@/assets/icons/plus.svg';
+import Redo from '@/assets/icons/redo.svg';
 import UsersEmptyDark from '@/assets/images/users-empty-dark.svg';
 import UsersEmpty from '@/assets/images/users-empty.svg';
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantInvitationResponse } from '@/cloud/types/router';
-import ActionsButton from '@/components/ActionsButton';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag, { type Props as TagProps } from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
+
+import InviteMemberModal from '../InviteMemberModal';
 
 const convertInvitationStatusToTagStatus = (
   status: OrganizationInvitationStatus
@@ -49,6 +58,42 @@ function Invitations() {
   );
 
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const { show } = useConfirmModal();
+
+  const handleRevoke = async (invitationId: string) => {
+    const [result] = await show({
+      ModalContent: t('revoke_invitation_confirm'),
+      confirmButtonText: 'general.confirm',
+    });
+
+    if (!result) {
+      return;
+    }
+
+    await cloudApi.patch(`/api/tenants/:tenantId/invitations/:invitationId/status`, {
+      params: { tenantId: currentTenantId, invitationId },
+      body: { status: OrganizationInvitationStatus.Revoked },
+    });
+    void mutate();
+    toast.success(t('messages.invitation_revoked'));
+  };
+
+  const handleDelete = async (invitationId: string) => {
+    const [result] = await show({
+      ModalContent: t('delete_user_confirm'),
+      confirmButtonText: 'general.delete',
+    });
+
+    if (!result) {
+      return;
+    }
+
+    await cloudApi.delete(`/api/tenants/:tenantId/invitations/:invitationId`, {
+      params: { tenantId: currentTenantId, invitationId },
+    });
+    void mutate();
+    toast.success(t('messages.invitation_deleted'));
+  };
 
   return (
     <>
@@ -62,7 +107,7 @@ function Invitations() {
             description="tenant_members.invitation_empty_placeholder.description"
             action={
               <Button
-                title="tenant_members.invite_member"
+                title="tenant_members.invite_members"
                 type="primary"
                 size="large"
                 icon={<Plus />}
@@ -124,29 +169,65 @@ function Invitations() {
           {
             dataIndex: 'actions',
             title: null,
-            render: (invitation) => (
-              <ActionsButton
-                deleteConfirmation="tenant_members.delete_user_confirm"
-                fieldName="tenant_members.user"
-                textOverrides={{
-                  edit: 'tenant_members.menu_options.resend_invite',
-                  delete: 'tenant_members.menu_options.revoke',
-                  deleteConfirmation: 'general.remove',
-                }}
-                onDelete={async () => {
-                  await cloudApi.delete(`/api/tenants/:tenantId/invitations/:invitationId`, {
-                    params: { tenantId: currentTenantId, invitationId: invitation.id },
-                  });
-                  void mutate();
-                }}
-              />
+            render: ({ id, status }) => (
+              <ActionMenu
+                icon={<More />}
+                iconSize="small"
+                title={<DynamicT forKey="general.more_options" />}
+              >
+                {status !== OrganizationInvitationStatus.Accepted && (
+                  <ActionMenuItem
+                    icon={<Invite />}
+                    onClick={async () => {
+                      await cloudApi.post(
+                        '/api/tenants/:tenantId/invitations/:invitationId/message',
+                        {
+                          params: { tenantId: currentTenantId, invitationId: id },
+                        }
+                      );
+                      toast.success(t('messages.invitation_sent'));
+                    }}
+                  >
+                    {t('menu_options.resend_invite')}
+                  </ActionMenuItem>
+                )}
+                {status === OrganizationInvitationStatus.Pending && (
+                  <ActionMenuItem
+                    icon={<Redo />}
+                    type="danger"
+                    onClick={() => {
+                      void handleRevoke(id);
+                    }}
+                  >
+                    {t('menu_options.revoke')}
+                  </ActionMenuItem>
+                )}
+                {status !== OrganizationInvitationStatus.Pending && (
+                  <ActionMenuItem
+                    icon={<Delete />}
+                    type="danger"
+                    onClick={() => {
+                      void handleDelete(id);
+                    }}
+                  >
+                    {t('menu_options.delete_invitation_record')}
+                  </ActionMenuItem>
+                )}
+              </ActionMenu>
             ),
           },
         ]}
         rowIndexKey="id"
       />
-      {/* TODO: Implemented in the follow-up PR */}
-      {/* {showInviteModal && <InviteModal isOpen={showInviteModal} />} */}
+      {showInviteModal && (
+        <InviteMemberModal
+          isOpen={showInviteModal}
+          onClose={() => {
+            setShowInviteModal(false);
+            void mutate();
+          }}
+        />
+      )}
     </>
   );
 }
