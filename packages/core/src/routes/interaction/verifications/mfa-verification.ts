@@ -135,20 +135,6 @@ const isMfaSkipped = (logtoConfig: JsonObject): boolean => {
 
   return parsed.success ? parsed.data[userMfaDataKey].skipped === true : false;
 };
-/**
- * Mark MFA as skipped in user custom data
- */
-export const markMfaSkipped = async (tenant: TenantContext, accountId: string) => {
-  const { customData } = await tenant.queries.users.findUserById(accountId);
-  await tenant.queries.users.updateUserById(accountId, {
-    customData: {
-      ...customData,
-      [userMfaDataKey]: {
-        skipped: true,
-      },
-    },
-  });
-};
 
 export const validateMandatoryBindMfa = async (
   tenant: TenantContext,
