@@ -85,7 +85,7 @@
     "roarr": "^7.11.0",
     "samlify": "2.8.10",
     "semver": "^7.3.8",
-    "slonik": "30.4.0",
+    "slonik": "30.4.4",
     "slonik-interceptor-preset": "^1.2.10",
     "slonik-sql-tag-raw": "^1.1.4",
     "snake-case": "^3.0.4",
