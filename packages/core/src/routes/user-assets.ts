@@ -63,7 +63,7 @@ export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: Ro
         'guard.mime_type_not_allowed'
       );
 
-      const tenantId = await getTenantId(ctx.URL);
+      const [tenantId] = await getTenantId(ctx.URL);
       assertThat(tenantId, 'guard.can_not_get_tenant_id');
 
       const { storageProviderConfig } = SystemContext.shared;

@@ -105,7 +105,8 @@ async function handleSubmitRegister(
   const { client_id } = ctx.interactionDetails.params;
 
   const { isCloud } = EnvSet.values;
-  const isInAdminTenant = (await getTenantId(ctx.URL)) === adminTenantId;
+  const [currentTenantId] = await getTenantId(ctx.URL);
+  const isInAdminTenant = currentTenantId === adminTenantId;
   const isCreatingFirstAdminUser =
     isInAdminTenant && String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
 

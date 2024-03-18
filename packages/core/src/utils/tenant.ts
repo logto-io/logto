@@ -56,9 +56,9 @@ export const clearCustomDomainCache = async (url: URL | string) => {
 /**
  * Get tenant ID from the custom domain URL.
  */
-export const getTenantIdFromCustomDomain = async (
+const getTenantIdFromCustomDomain = async (
   url: URL,
-  pool?: CommonQueryMethods
+  pool: CommonQueryMethods
 ): Promise<string | undefined> => {
   const cachedValue = await trySafe(async () => redisCache.get(getDomainCacheKey(url)));
 
@@ -66,7 +66,7 @@ export const getTenantIdFromCustomDomain = async (
     return cachedValue;
   }
 
-  const { findActiveDomain } = createDomainsQueries(pool ?? (await EnvSet.sharedPool));
+  const { findActiveDomain } = createDomainsQueries(pool);
 
   const domain = await findActiveDomain(url.hostname);
 
@@ -81,13 +81,11 @@ export const getTenantIdFromCustomDomain = async (
  * Get tenant ID from the current request's URL.
  *
  * @param url The current request's URL
- * @param skipCustomDomain Indicating whether to skip looking for custom domain
- * @returns tenantId or undefined
+ * @returns The tenant ID and whether the URL is a custom domain
  */
 export const getTenantId = async (
-  url: URL,
-  skipCustomDomain?: boolean
-): Promise<string | undefined> => {
+  url: URL
+): Promise<[tenantId: string | undefined, isCustomDomain: boolean]> => {
   const {
     values: {
       isMultiTenancy,
@@ -103,30 +101,28 @@ export const getTenantId = async (
   const pool = await sharedPool;
 
   if (adminUrlSet.deduplicated().some((endpoint) => isEndpointOf(url, endpoint))) {
-    return adminTenantId;
+    return [adminTenantId, false];
   }
 
   if ((!isProduction || isIntegrationTest) && developmentTenantId) {
     consoleLog.warn(`Found dev tenant ID ${developmentTenantId}.`);
 
-    return developmentTenantId;
+    return [developmentTenantId, false];
   }
 
   if (!isMultiTenancy) {
-    return defaultTenantId;
+    return [defaultTenantId, false];
   }
 
   if (isPathBasedMultiTenancy) {
-    return matchPathBasedTenantId(urlSet, url);
+    return [matchPathBasedTenantId(urlSet, url), false];
   }
 
-  if (!skipCustomDomain) {
-    const customDomainTenantId = await getTenantIdFromCustomDomain(url, pool);
+  const customDomainTenantId = await getTenantIdFromCustomDomain(url, pool);
 
-    if (customDomainTenantId) {
-      return customDomainTenantId;
-    }
+  if (customDomainTenantId) {
+    return [customDomainTenantId, true];
   }
 
-  return matchDomainBasedTenantId(urlSet.endpoint, url);
+  return [matchDomainBasedTenantId(urlSet.endpoint, url), false];
 };

@@ -9,7 +9,7 @@ import type Koa from 'koa';
 import { EnvSet } from '#src/env-set/index.js';
 import { TenantNotFoundError, tenantPool } from '#src/tenants/index.js';
 import { consoleLog } from '#src/utils/console.js';
-import { getTenantId, getTenantIdFromCustomDomain } from '#src/utils/tenant.js';
+import { getTenantId } from '#src/utils/tenant.js';
 
 const logListening = (type: 'core' | 'admin' = 'core') => {
   const urlSet = type === 'core' ? EnvSet.values.urlSet : EnvSet.values.adminUrlSet;
@@ -29,8 +29,7 @@ export default async function initApp(app: Koa): Promise<void> {
       return next();
     }
 
-    const tenantIdFromCustomDomain = await getTenantIdFromCustomDomain(ctx.URL);
-    const tenantId = tenantIdFromCustomDomain ?? (await getTenantId(ctx.URL, true));
+    const [tenantId, isCustomDomain] = await getTenantId(ctx.URL);
 
     if (!tenantId) {
       ctx.status = 404;
@@ -40,7 +39,7 @@ export default async function initApp(app: Koa): Promise<void> {
 
     // If the request is a custom domain of the tenant, use the custom endpoint to build "OIDC issuer"
     // otherwise, build from the default endpoint (subdomain).
-    const customEndpoint = tenantIdFromCustomDomain ? ctx.URL.origin : undefined;
+    const customEndpoint = isCustomDomain ? ctx.URL.origin : undefined;
 
     const tenant = await trySafe(tenantPool.get(tenantId, customEndpoint), (error) => {
       ctx.status = error instanceof TenantNotFoundError ? 404 : 500;
