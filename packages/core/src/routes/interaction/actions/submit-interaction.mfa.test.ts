@@ -26,8 +26,8 @@ const { assignInteractionResults } = mockEsm('#src/libraries/session.js', () => 
 
 mockEsm('#src/libraries/user.js', () => ({
   encryptUserPassword: jest.fn().mockResolvedValue({
-    passwordEncrypted: 'passwordEncrypted',
-    passwordEncryptionMethod: 'plain',
+    passwordDigest: 'passwordDigest',
+    passwordAlgorithm: 'plain',
   }),
 }));
 
@@ -102,8 +102,8 @@ describe('submit action', () => {
     username: 'username',
     primaryPhone: '123456',
     primaryEmail: 'email@logto.io',
-    passwordEncrypted: 'passwordEncrypted',
-    passwordEncryptionMethod: 'plain',
+    passwordDigest: 'passwordDigest',
+    passwordAlgorithm: 'plain',
     identities: {
       logto: { userId: userInfo.id, details: userInfo },
     },

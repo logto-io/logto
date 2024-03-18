@@ -1,5 +1,5 @@
 import type { User, CreateUser, Scope, BindMfa, MfaVerification } from '@logto/schemas';
-import { MfaFactor, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { MfaFactor, Users, UsersPasswordAlgorithm } from '@logto/schemas';
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
@@ -18,13 +18,13 @@ import type { OmitAutoSetFields } from '#src/utils/sql.js';
 export const encryptUserPassword = async (
   password: string
 ): Promise<{
-  passwordEncrypted: string;
-  passwordEncryptionMethod: UsersPasswordEncryptionMethod;
+  passwordDigest: string;
+  passwordAlgorithm: UsersPasswordAlgorithm;
 }> => {
-  const passwordEncryptionMethod = UsersPasswordEncryptionMethod.Argon2i;
-  const passwordEncrypted = await encryptPassword(password, passwordEncryptionMethod);
+  const passwordAlgorithm = UsersPasswordAlgorithm.Argon2i;
+  const passwordDigest = await encryptPassword(password, passwordAlgorithm);
 
-  return { passwordEncrypted, passwordEncryptionMethod };
+  return { passwordDigest, passwordAlgorithm };
 };
 
 /**
@@ -199,45 +199,45 @@ export const createUserLibrary = (queries: Queries) => {
 
   const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
     assertThat(user, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
-    const { passwordEncrypted, passwordEncryptionMethod, id } = user;
+    const { passwordDigest, passwordAlgorithm, id } = user;
 
     assertThat(
-      passwordEncrypted && passwordEncryptionMethod,
+      passwordDigest && passwordAlgorithm,
       new RequestError({ code: 'session.invalid_credentials', status: 422 })
     );
 
-    switch (passwordEncryptionMethod) {
-      case UsersPasswordEncryptionMethod.Argon2i: {
-        const result = await argon2Verify({ password, hash: passwordEncrypted });
+    switch (passwordAlgorithm) {
+      case UsersPasswordAlgorithm.Argon2i: {
+        const result = await argon2Verify({ password, hash: passwordDigest });
         assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
         break;
       }
-      case UsersPasswordEncryptionMethod.MD5: {
-        const expectedEncrypted = await md5(password);
+      case UsersPasswordAlgorithm.MD5: {
+        const expectedDigest = await md5(password);
         assertThat(
-          expectedEncrypted === passwordEncrypted,
+          expectedDigest === passwordDigest,
           new RequestError({ code: 'session.invalid_credentials', status: 422 })
         );
         break;
       }
-      case UsersPasswordEncryptionMethod.SHA1: {
-        const expectedEncrypted = await sha1(password);
+      case UsersPasswordAlgorithm.SHA1: {
+        const expectedDigest = await sha1(password);
         assertThat(
-          expectedEncrypted === passwordEncrypted,
+          expectedDigest === passwordDigest,
           new RequestError({ code: 'session.invalid_credentials', status: 422 })
         );
         break;
       }
-      case UsersPasswordEncryptionMethod.SHA256: {
-        const expectedEncrypted = await sha256(password);
+      case UsersPasswordAlgorithm.SHA256: {
+        const expectedDigest = await sha256(password);
         assertThat(
-          expectedEncrypted === passwordEncrypted,
+          expectedDigest === passwordDigest,
           new RequestError({ code: 'session.invalid_credentials', status: 422 })
         );
         break;
       }
-      case UsersPasswordEncryptionMethod.Bcrypt: {
-        const result = await bcryptVerify({ password, hash: passwordEncrypted });
+      case UsersPasswordAlgorithm.Bcrypt: {
+        const result = await bcryptVerify({ password, hash: passwordDigest });
         assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
         break;
       }
@@ -247,12 +247,12 @@ export const createUserLibrary = (queries: Queries) => {
     }
 
     // Migrate password to default algorithm: argon2i
-    if (passwordEncryptionMethod !== UsersPasswordEncryptionMethod.Argon2i) {
-      const { passwordEncrypted: newEncrypted, passwordEncryptionMethod: newMethod } =
+    if (passwordAlgorithm !== UsersPasswordAlgorithm.Argon2i) {
+      const { passwordDigest: newDigest, passwordAlgorithm: newAlgorithm } =
         await encryptUserPassword(password);
       return updateUserById(id, {
-        passwordEncrypted: newEncrypted,
-        passwordEncryptionMethod: newMethod,
+        passwordDigest: newDigest,
+        passwordAlgorithm: newAlgorithm,
       });
     }
 

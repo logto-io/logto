@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-import { UsersPasswordEncryptionMethod, ConnectorType } from '@logto/schemas';
+import { UsersPasswordAlgorithm, ConnectorType } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import {
@@ -61,7 +61,7 @@ describe('admin console user management', () => {
   it('should create user with password digest successfully', async () => {
     const user = await createUserByAdmin({
       passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
-      passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+      passwordAlgorithm: UsersPasswordAlgorithm.MD5,
     });
 
     await expect(verifyUserPassword(user.id, 'password')).resolves.not.toThrow();

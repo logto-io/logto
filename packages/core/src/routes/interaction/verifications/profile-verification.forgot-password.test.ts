@@ -9,7 +9,7 @@ import type { Identifier } from '../types/index.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const findUserById = jest.fn().mockResolvedValue({ id: 'foo', passwordEncrypted: 'passwordHash' });
+const findUserById = jest.fn().mockResolvedValue({ id: 'foo', passwordDigest: 'passwordHash' });
 
 const tenantContext = new MockTenant(undefined, { users: { findUserById } });
 

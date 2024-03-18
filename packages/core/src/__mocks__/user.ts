@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { MfaFactor, userInfoSelectFields, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { MfaFactor, userInfoSelectFields, UsersPasswordAlgorithm } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 
 export const mockUser: User = {
@@ -8,9 +8,9 @@ export const mockUser: User = {
   username: 'foo',
   primaryEmail: 'foo@logto.io',
   primaryPhone: '111111',
-  passwordEncrypted:
+  passwordDigest:
     '$argon2i$v=19$m=4096,t=256,p=1$SYD0xSoVR8l+CN63Nz8fGw$ln5T09X9u4yd0DwLBKnlNV/eUHxwSWo32scw40ov4kI',
-  passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+  passwordAlgorithm: UsersPasswordAlgorithm.Argon2i,
   name: null,
   avatar: null,
   identities: {
@@ -58,15 +58,15 @@ export const mockUserWithMfaVerifications: User = {
 
 export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
 
-export const mockPasswordEncrypted = 'a1b2c3';
+export const mockPasswordDigest = 'a1b2c3';
 export const mockUserWithPassword: User = {
   tenantId: 'fake_tenant',
   id: 'id',
   username: 'username',
   primaryEmail: 'foo@logto.io',
   primaryPhone: '111111',
-  passwordEncrypted: mockPasswordEncrypted,
-  passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+  passwordDigest: mockPasswordDigest,
+  passwordAlgorithm: UsersPasswordAlgorithm.Argon2i,
   name: null,
   avatar: null,
   identities: {
@@ -90,8 +90,8 @@ export const mockUserList: User[] = [
     username: 'foo1',
     primaryEmail: 'foo1@logto.io',
     primaryPhone: '111111',
-    passwordEncrypted: null,
-    passwordEncryptionMethod: null,
+    passwordDigest: null,
+    passwordAlgorithm: null,
     name: null,
     avatar: null,
     identities: {},
@@ -111,8 +111,8 @@ export const mockUserList: User[] = [
     username: 'foo2',
     primaryEmail: 'foo2@logto.io',
     primaryPhone: '111111',
-    passwordEncrypted: null,
-    passwordEncryptionMethod: null,
+    passwordDigest: null,
+    passwordAlgorithm: null,
     name: null,
     avatar: null,
     identities: {},
@@ -132,8 +132,8 @@ export const mockUserList: User[] = [
     username: 'foo3',
     primaryEmail: 'foo3@logto.io',
     primaryPhone: '111111',
-    passwordEncrypted: null,
-    passwordEncryptionMethod: null,
+    passwordDigest: null,
+    passwordAlgorithm: null,
     name: null,
     avatar: null,
     identities: {},
@@ -153,8 +153,8 @@ export const mockUserList: User[] = [
     username: 'bar1',
     primaryEmail: 'bar1@logto.io',
     primaryPhone: '111111',
-    passwordEncrypted: null,
-    passwordEncryptionMethod: null,
+    passwordDigest: null,
+    passwordAlgorithm: null,
     name: null,
     avatar: null,
     identities: {},
@@ -174,8 +174,8 @@ export const mockUserList: User[] = [
     username: 'bar2',
     primaryEmail: 'bar2@logto.io',
     primaryPhone: '111111',
-    passwordEncrypted: null,
-    passwordEncryptionMethod: null,
+    passwordDigest: null,
+    passwordAlgorithm: null,
     name: null,
     avatar: null,
     identities: {},

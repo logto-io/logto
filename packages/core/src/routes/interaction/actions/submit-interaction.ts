@@ -248,11 +248,9 @@ export default async function submitInteraction(
   }
 
   // Forgot Password
-  const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(
-    profile.password
-  );
+  const { passwordDigest, passwordAlgorithm } = await encryptUserPassword(profile.password);
 
-  await updateUserById(accountId, { passwordEncrypted, passwordEncryptionMethod });
+  await updateUserById(accountId, { passwordDigest, passwordAlgorithm });
   ctx.assignInteractionHookResult({ userId: accountId });
   await clearInteractionStorage(ctx, provider);
   ctx.status = 204;

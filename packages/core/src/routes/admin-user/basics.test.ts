@@ -1,5 +1,5 @@
 import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
-import { RoleType, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { RoleType, UsersPasswordAlgorithm } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
@@ -71,8 +71,8 @@ const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserByI
 
 const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
   encryptUserPassword: jest.fn(() => ({
-    passwordEncrypted: 'password',
-    passwordEncryptionMethod: 'Argon2i',
+    passwordDigest: 'password',
+    passwordAlgorithm: 'Argon2i',
   })),
 }));
 
@@ -143,7 +143,7 @@ describe('adminUserRoutes', () => {
         username,
         name,
         passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
-        passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+        passwordAlgorithm: UsersPasswordAlgorithm.MD5,
       })
     ).resolves.toHaveProperty('status', 200);
   });
@@ -365,7 +365,7 @@ describe('adminUserRoutes', () => {
   });
 
   it('GET /users/:userId/has-password should return false if user does not have password', async () => {
-    findUserById.mockImplementationOnce(async () => ({ ...mockUser, passwordEncrypted: null }));
+    findUserById.mockImplementationOnce(async () => ({ ...mockUser, passwordDigest: null }));
     const response = await userRequest.get(`/users/foo/has-password`);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({ hasPassword: false });

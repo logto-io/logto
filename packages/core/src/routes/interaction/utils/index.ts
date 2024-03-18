@@ -22,8 +22,8 @@ export const isSocialIdentifier = (
 
 // Social identities can take place the role of password
 export const isUserPasswordSet = ({
-  passwordEncrypted,
+  passwordDigest,
   identities,
-}: Pick<User, 'passwordEncrypted' | 'identities'>): boolean => {
-  return Boolean(passwordEncrypted) || Object.keys(identities).length > 0;
+}: Pick<User, 'passwordDigest' | 'identities'>): boolean => {
+  return Boolean(passwordDigest) || Object.keys(identities).length > 0;
 };
