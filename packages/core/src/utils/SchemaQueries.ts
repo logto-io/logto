@@ -1,5 +1,5 @@
 import { type GeneratedSchema } from '@logto/schemas';
-import { type UpdateWhereData, type OmitAutoSetFields, type SchemaLike } from '@logto/shared';
+import { type UpdateWhereData, type SchemaLike } from '@logto/shared';
 import { type CommonQueryMethods } from 'slonik';
 
 import { buildDeleteByIdWithPool } from '#src/database/delete-by-id.js';
@@ -12,6 +12,8 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildGetTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { type SearchOptions } from '#src/database/utils.js';
+
+import { type OmitAutoSetFields } from './sql.js';
 
 /**
  * Query class that contains all the necessary CRUD queries for a schema. It is

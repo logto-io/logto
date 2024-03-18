@@ -1,9 +1,9 @@
 import type { CreateUser } from '@logto/schemas';
 import { Users } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import decamelize from 'decamelize';
 
 import { InsertionError } from '#src/errors/SlonikError/index.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 import { createTestPool } from '#src/utils/test-utils.js';
 
 const { buildInsertIntoWithPool } = await import('./insert-into.js');

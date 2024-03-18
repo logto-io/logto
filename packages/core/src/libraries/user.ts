@@ -1,7 +1,6 @@
 import type { User, CreateUser, Scope, BindMfa, MfaVerification } from '@logto/schemas';
 import { MfaFactor, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
-import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
 import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
@@ -14,6 +13,7 @@ import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { encryptPassword } from '#src/utils/password.js';
+import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
 export const encryptUserPassword = async (
   password: string

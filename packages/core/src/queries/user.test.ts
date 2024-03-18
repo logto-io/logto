@@ -1,11 +1,11 @@
 import { Users } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import Sinon from 'sinon';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockUser } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 

@@ -1,8 +1,8 @@
 import { AlterationStateKey, Systems } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import { DatabaseError } from 'pg-protocol';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
+import { convertToIdentifiers } from '../sql.js';
 import type { QueryType } from '../test-utils.js';
 import { expectSqlAssert } from '../test-utils.js';
 

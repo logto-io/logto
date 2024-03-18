@@ -1,6 +1,5 @@
 import type { CreateHook } from '@logto/schemas';
 import { Hooks } from '@logto/schemas';
-import { type OmitAutoSetFields, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -10,6 +9,7 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { getTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { convertToIdentifiers, type OmitAutoSetFields } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Hooks);
 

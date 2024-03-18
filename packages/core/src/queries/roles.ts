@@ -1,7 +1,5 @@
 import type { CreateRole, Role, RoleType } from '@logto/schemas';
 import { internalRolePrefix, SearchJointMode, Roles } from '@logto/schemas';
-import type { OmitAutoSetFields } from '@logto/shared';
-import { conditionalArraySql, conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -11,6 +9,8 @@ import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
+import { conditionalArraySql, conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
+import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Roles);
 

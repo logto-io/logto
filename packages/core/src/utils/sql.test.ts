@@ -1,3 +1,4 @@
+import type { Table } from '@logto/shared';
 import { sql } from 'slonik';
 import { SqlToken } from 'slonik/dist/src/tokens.js';
 
@@ -9,7 +10,6 @@ import {
   convertToTimestamp,
   conditionalSql,
 } from './sql.js';
-import type { Table } from './types.js';
 
 const { jest } = import.meta;
 

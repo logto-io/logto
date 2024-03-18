@@ -1,11 +1,11 @@
 import type { SchemaLike } from '@logto/schemas';
-import { convertToPrimitiveOrSql } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import decamelize from 'decamelize';
 import { DatabaseError } from 'pg-protocol';
 import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 
+import { convertToPrimitiveOrSql } from './sql.js';
 import { ConfigKey, consoleLog, getCliConfigWithPrompt } from './utils.js';
 
 export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';

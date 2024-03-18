@@ -11,7 +11,6 @@ import {
   type FeaturedUser,
   type OrganizationScopeEntity,
 } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 
 import { type SearchOptions, buildSearchSql, expandFields } from '#src/database/utils.js';
@@ -19,6 +18,7 @@ import RelationQueries, {
   type GetEntitiesOptions,
   TwoRelationsQueries,
 } from '#src/utils/RelationQueries.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 import { type userSearchKeys } from '../user.js';
 

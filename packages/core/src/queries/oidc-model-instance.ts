@@ -1,6 +1,5 @@
 import type { OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
 import { OidcModelInstances } from '@logto/schemas';
-import { convertToIdentifiers, convertToTimestamp } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { addSeconds, isBefore } from 'date-fns';
@@ -8,6 +7,7 @@ import type { CommonQueryMethods, ValueExpression } from 'slonik';
 import { sql } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { convertToIdentifiers, convertToTimestamp } from '#src/utils/sql.js';
 
 export type WithConsumed<T> = T & { consumed?: boolean };
 export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;

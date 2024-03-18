@@ -9,12 +9,12 @@ import {
   type OidcConfigKey,
   type LogtoJwtTokenKey,
 } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 import { type z } from 'zod';
 
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 

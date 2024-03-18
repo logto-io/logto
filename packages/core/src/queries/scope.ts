@@ -1,7 +1,5 @@
 import type { CreateScope, Scope } from '@logto/schemas';
 import { Resources, Scopes } from '@logto/schemas';
-import type { OmitAutoSetFields } from '@logto/shared';
-import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -11,6 +9,8 @@ import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
+import type { OmitAutoSetFields } from '#src/utils/sql.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Scopes, true);
 const resources = convertToIdentifiers(Resources, true);

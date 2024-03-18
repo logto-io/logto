@@ -1,9 +1,10 @@
 import { DailyTokenUsage } from '@logto/schemas';
-import { convertToIdentifiers, generateStandardId } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
 import { getUtcStartOfTheDay } from '#src/oidc/utils.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(DailyTokenUsage);
 const { fields: fieldsWithPrefix } = convertToIdentifiers(DailyTokenUsage, true);
