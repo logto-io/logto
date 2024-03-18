@@ -8,12 +8,12 @@ import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 
 import MonacoCodeEditor, { type ModelControl } from '../MonacoCodeEditor/index.js';
+import { type JwtClaimsFormType } from '../type.js';
 import {
   userTokenPayloadTestModel,
   machineToMachineTokenPayloadTestModel,
   userTokenContextTestModel,
-} from '../config.js';
-import { type JwtClaimsFormType } from '../type.js';
+} from '../utils/config.js';
 
 import TestResult, { type TestResultData } from './TestResult.js';
 import * as styles from './index.module.scss';

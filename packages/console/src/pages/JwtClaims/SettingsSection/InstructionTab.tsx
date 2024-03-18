@@ -7,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 
 import Table from '@/ds-components/Table';
 
+import { type JwtClaimsFormType } from '../type';
 import {
   userDataDescription,
   tokenDataDescription,
   fetchExternalDataEditorOptions,
   fetchExternalDataCodeExample,
-} from '../config';
-import { type JwtClaimsFormType } from '../type';
+} from '../utils/config';
 
 import EnvironmentVariablesField from './EnvironmentVariablesField';
 import GuideCard, { CardType } from './GuideCard';
