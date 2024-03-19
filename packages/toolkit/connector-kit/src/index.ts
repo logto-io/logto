@@ -3,7 +3,6 @@ import type { ZodType, ZodTypeDef } from 'zod';
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  sendMessagePayloadKeys,
   type SendMessagePayload,
   ConnectorType,
 } from './types/index.js';
@@ -96,7 +95,7 @@ export const replaceSendMessageHandlebars = (
   template: string,
   payload: SendMessagePayload
 ): string => {
-  return sendMessagePayloadKeys.reduce(
+  return Object.keys(payload).reduce(
     (accumulator, key) =>
       accumulator.replaceAll(new RegExp(`{{\\s*${key}\\s*}}`, 'g'), payload[key] ?? ''),
     template
