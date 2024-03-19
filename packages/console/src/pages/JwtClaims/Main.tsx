@@ -104,7 +104,7 @@ function Main({
         onDiscard={reset}
         onSubmit={onSubmitHandler}
       />
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty && !isSubmitting} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty && !isSubmitting} onConfirm={reset} />
     </>
   );
 }

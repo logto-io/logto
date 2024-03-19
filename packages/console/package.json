@@ -11,6 +11,8 @@
     "dist"
   ],
   "scripts": {
+    "prepack": "pnpm generate",
+    "generate": "./generate.sh",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
     "dev": "cross-env PORT=5002 parcel src/index.html --public-url ${CONSOLE_PUBLIC_URL:-/console} --no-cache --hmr-port 6002",
@@ -142,6 +144,12 @@
   },
   "eslintConfig": {
     "extends": "@silverhand/react",
+    "parserOptions": {
+      "project": [
+        "./tsconfig.json",
+        "./tsconfig.scripts.gen.json"
+      ]
+    },
     "rules": {
       "react/function-component-definition": [
         "error",
