@@ -1,5 +1,9 @@
 import { Users } from '@logto/schemas';
-import { NotFoundError, SlonikError, UniqueIntegrityConstraintViolationError } from 'slonik';
+import {
+  NotFoundError,
+  SlonikError,
+  UniqueIntegrityConstraintViolationError,
+} from '@silverhand/slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError, InsertionError, UpdateError } from '#src/errors/SlonikError/index.js';

@@ -4,7 +4,7 @@ import {
   Organizations,
   Users,
 } from '@logto/schemas';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import RelationQueries from '#src/utils/RelationQueries.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';

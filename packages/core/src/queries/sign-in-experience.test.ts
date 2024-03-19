@@ -1,4 +1,4 @@
-import { createMockPool, createMockQueryResult } from 'slonik';
+import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import { MockWellKnownCache } from '#src/test-utils/tenant.js';

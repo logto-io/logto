@@ -1,7 +1,7 @@
 import type { CreateRolesScope, RolesScope } from '@logto/schemas';
 import { RolesScopes } from '@logto/schemas';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';

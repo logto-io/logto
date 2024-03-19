@@ -1,5 +1,5 @@
 import { Resources } from '@logto/schemas';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
+import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
 import { mockResource } from '#src/__mocks__/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';

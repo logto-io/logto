@@ -1,7 +1,7 @@
 import { GlobalValues } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath } from '@silverhand/essentials';
-import type { DatabasePool } from 'slonik';
+import type { DatabasePool } from '@silverhand/slonik';
 
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';

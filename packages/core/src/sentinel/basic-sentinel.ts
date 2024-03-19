@@ -10,8 +10,8 @@ import {
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type Nullable } from '@silverhand/essentials';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 import { addMinutes } from 'date-fns';
-import { sql, type CommonQueryMethods } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';

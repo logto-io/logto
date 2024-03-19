@@ -8,9 +8,9 @@ import {
   type LogKeyUnknown,
 } from '@logto/schemas';
 import { conditional, conditionalArray } from '@silverhand/essentials';
+import { sql } from '@silverhand/slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
 import { subDays } from 'date-fns';
-import { sql } from 'slonik';
-import type { CommonQueryMethods } from 'slonik';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';

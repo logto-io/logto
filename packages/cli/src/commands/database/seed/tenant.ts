@@ -17,9 +17,8 @@ import {
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
-import type { CommonQueryMethods, DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
-import { raw } from 'slonik-sql-tag-raw';
+import type { CommonQueryMethods, DatabaseTransactionConnection } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { insertInto } from '../../../database.js';
 import { getDatabaseName } from '../../../queries/database.js';
@@ -37,7 +36,7 @@ export const createTenant = async (pool: CommonQueryMethods, tenantId: string) =
   await pool.query(insertInto(createTenant, 'tenants'));
   await pool.query(sql`
     create role ${sql.identifier([role])} with inherit login
-      password '${raw(password)}'
+      password '${sql.raw(password)}'
       in role ${sql.identifier([parentRole])};
   `);
 };

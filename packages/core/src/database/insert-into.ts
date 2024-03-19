@@ -1,7 +1,7 @@
 import type { GeneratedSchema, SchemaLike } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
-import type { CommonQueryMethods, IdentifierSqlToken } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods, IdentifierSqlToken } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { InsertionError } from '#src/errors/SlonikError/index.js';
 import assertThat from '#src/utils/assert-that.js';

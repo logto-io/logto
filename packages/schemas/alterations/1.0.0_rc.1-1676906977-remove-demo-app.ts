@@ -1,7 +1,7 @@
 import { generateStandardId } from '@logto/shared/universal';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { sql } from 'slonik';
+import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 

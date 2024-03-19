@@ -1,7 +1,7 @@
 import { type GeneratedSchema } from '@logto/schemas';
 import { type SchemaLike } from '@logto/shared';
-import type { CommonQueryMethods, IdentifierSqlToken } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods, IdentifierSqlToken } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { type SearchOptions, buildSearchSql } from './utils.js';
 

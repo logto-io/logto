@@ -4,8 +4,8 @@ import type { LogtoOidcConfigType } from '@logto/schemas';
 import { LogtoOidcConfigKey, logtoConfigGuards } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { getEnvAsStringArray } from '@silverhand/essentials';
+import type { DatabaseTransactionConnection } from '@silverhand/slonik';
 import chalk from 'chalk';
-import type { DatabaseTransactionConnection } from 'slonik';
 import { z } from 'zod';
 
 import { getRowsByKeys, updateValueByKey } from '../../../queries/logto-config.js';

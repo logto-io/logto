@@ -1,7 +1,7 @@
 import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType, Applications, SearchJointMode } from '@logto/schemas';
-import type { CommonQueryMethods, SqlSqlToken } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods, SqlSqlToken } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';

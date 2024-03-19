@@ -1,6 +1,6 @@
 import type { CreateOidcModelInstance } from '@logto/schemas';
 import { OidcModelInstances } from '@logto/schemas';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
+import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
 import { convertToIdentifiers } from '#src/utils/sql.js';
 import type { QueryType } from '#src/utils/test-utils.js';

@@ -1,7 +1,6 @@
 import { generateStandardId } from '@logto/shared/universal';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
-import { raw } from 'slonik-sql-tag-raw';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 
@@ -154,7 +153,7 @@ const alteration: AlterationScript = {
     `);
     await pool.query(sql`
       create role ${getId(role)} with inherit login
-        password '${raw(password)}'
+        password '${sql.raw(password)}'
         in role ${getId(baseRole)};
     `);
 

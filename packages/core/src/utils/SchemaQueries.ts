@@ -1,6 +1,6 @@
 import { type GeneratedSchema } from '@logto/schemas';
 import { type UpdateWhereData, type SchemaLike } from '@logto/shared';
-import { type CommonQueryMethods } from 'slonik';
+import { type CommonQueryMethods } from '@silverhand/slonik';
 
 import { buildDeleteByIdWithPool } from '#src/database/delete-by-id.js';
 import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';

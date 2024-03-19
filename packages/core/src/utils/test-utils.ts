@@ -1,13 +1,13 @@
+import type { QueryResult, QueryResultRow } from '@silverhand/slonik';
+import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
+import type {
+  PrimitiveValueExpression,
+  TaggedTemplateLiteralInvocation,
+} from '@silverhand/slonik/dist/src/types.js';
 import type { MiddlewareType, Context, Middleware } from 'koa';
 import Koa from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import Router from 'koa-router';
-import type { QueryResult, QueryResultRow } from 'slonik';
-import { createMockPool, createMockQueryResult } from 'slonik';
-import type {
-  PrimitiveValueExpression,
-  TaggedTemplateLiteralInvocation,
-} from 'slonik/dist/src/types.js';
 import request from 'supertest';
 
 import type { AuthedRouter, AnonymousRouter } from '#src/routes/types.js';

@@ -55,8 +55,7 @@
     "pluralize": "^8.0.0",
     "prettier": "^3.0.0",
     "roarr": "^7.11.0",
-    "slonik": "30.4.0",
-    "slonik-sql-tag-raw": "^1.1.4",
+    "@silverhand/slonik": "31.0.0-beta.2",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {

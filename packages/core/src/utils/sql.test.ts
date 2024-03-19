@@ -1,6 +1,6 @@
 import type { Table } from '@logto/shared';
-import { sql } from 'slonik';
-import { SqlToken } from 'slonik/dist/src/tokens.js';
+import { sql } from '@silverhand/slonik';
+import { SqlToken } from '@silverhand/slonik/dist/src/tokens.js';
 
 import {
   excludeAutoSetFields,

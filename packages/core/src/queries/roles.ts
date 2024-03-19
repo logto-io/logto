@@ -1,7 +1,7 @@
 import type { CreateRole, Role, RoleType } from '@logto/schemas';
 import { internalRolePrefix, SearchJointMode, Roles } from '@logto/schemas';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';

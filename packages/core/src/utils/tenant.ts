@@ -1,7 +1,7 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import { type UrlSet } from '@logto/shared';
 import { conditionalString, trySafe } from '@silverhand/essentials';
-import { type CommonQueryMethods } from 'slonik';
+import { type CommonQueryMethods } from '@silverhand/slonik';
 
 import { redisCache } from '#src/caches/index.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';

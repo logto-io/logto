@@ -18,7 +18,7 @@ import {
   OrganizationInvitationRoleRelations,
   OrganizationInvitationStatus,
 } from '@logto/schemas';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { type SearchOptions, buildSearchSql } from '#src/database/utils.js';
 import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';

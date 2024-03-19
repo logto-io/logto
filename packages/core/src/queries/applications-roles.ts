@@ -1,8 +1,8 @@
 import type { ApplicationsRole, CreateApplicationsRole, Role } from '@logto/schemas';
 import { Roles, ApplicationsRoles, RolesScopes } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers, conditionalSql } from '#src/utils/sql.js';

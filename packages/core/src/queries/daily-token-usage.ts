@@ -1,7 +1,7 @@
 import { DailyTokenUsage } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { getUtcStartOfTheDay } from '#src/oidc/utils.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';

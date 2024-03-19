@@ -8,8 +8,8 @@ import {
   LogtoConfigs,
 } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
+import { sql } from '@silverhand/slonik';
 import type { JWK } from 'jose';
-import { sql } from 'slonik';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import { exportJWK } from '#src/utils/jwks.js';

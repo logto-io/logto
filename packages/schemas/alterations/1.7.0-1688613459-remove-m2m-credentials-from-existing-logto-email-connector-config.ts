@@ -1,6 +1,6 @@
 import { GlobalValues } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
-import { sql } from 'slonik';
+import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 

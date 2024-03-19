@@ -1,9 +1,9 @@
 import type { AlterationState, System, SystemKey } from '@logto/schemas';
 import { systemGuards, Systems, AlterationStateKey } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
+import type { CommonQueryMethods, DatabaseTransactionConnection } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 import { DatabaseError } from 'pg-protocol';
-import type { CommonQueryMethods, DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
 import type { z } from 'zod';
 
 import { convertToIdentifiers } from '../sql.js';

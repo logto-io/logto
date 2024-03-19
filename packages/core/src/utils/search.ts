@@ -1,7 +1,7 @@
 import { SearchJointMode, SearchMatchMode } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
 import { yes, conditionalString, cond } from '@silverhand/essentials';
-import { sql } from 'slonik';
+import { sql } from '@silverhand/slonik';
 import { snakeCase } from 'snake-case';
 
 import { type SearchOptions } from '#src/database/utils.js';

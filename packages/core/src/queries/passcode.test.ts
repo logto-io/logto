@@ -1,6 +1,6 @@
 import { TemplateType } from '@logto/connector-kit';
 import { Passcodes } from '@logto/schemas';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
+import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 import { snakeCase } from 'snake-case';
 
 import { mockPasscode } from '#src/__mocks__/index.js';

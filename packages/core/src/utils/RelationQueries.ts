@@ -1,6 +1,6 @@
-import { type Table } from '@logto/shared';
+import { type SchemaLike, type Table } from '@logto/shared';
 import { type KeysToCamelCase } from '@silverhand/essentials';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 import snakecaseKeys from 'snakecase-keys';
 import { type z } from 'zod';
 
@@ -15,7 +15,7 @@ type TableInfo<
   TableName extends string,
   TableSingular extends string,
   Key extends string,
-  Schema,
+  Schema extends SchemaLike<string>,
 > = Table<Key, TableName> & {
   tableSingular: TableSingular;
   guard: z.ZodType<Schema, z.ZodTypeDef, unknown>;
@@ -74,7 +74,7 @@ export type GetEntitiesOptions = {
  * group with the id `group-id-1`.
  */
 export default class RelationQueries<
-  Schemas extends Array<TableInfo<string, string, string, unknown>>,
+  Schemas extends Array<TableInfo<string, string, string, SchemaLike<string>>>,
   Length = AtLeast2<Schemas>['length'],
 > {
   protected get table() {
@@ -267,8 +267,8 @@ export default class RelationQueries<
  * @see {@link RelationQueries} for more information.
  */
 export class TwoRelationsQueries<
-  Schema1 extends TableInfo<string, string, string, unknown>,
-  Schema2 extends TableInfo<string, string, string, unknown>,
+  Schema1 extends TableInfo<string, string, string, SchemaLike<string>>,
+  Schema2 extends TableInfo<string, string, string, SchemaLike<string>>,
 > extends RelationQueries<[Schema1, Schema2]> {
   /**
    * Replace all relations for a specific `Schema1` entity with the given `Schema2` entities.

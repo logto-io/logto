@@ -1,5 +1,5 @@
 import { ApplicationSignInExperiences, type ApplicationSignInExperience } from '@logto/schemas';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';

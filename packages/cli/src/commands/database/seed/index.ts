@@ -1,4 +1,4 @@
-import type { DatabasePool } from 'slonik';
+import type { DatabasePool } from '@silverhand/slonik';
 import type { CommandModule } from 'yargs';
 
 import { createPoolAndDatabaseIfNeeded } from '../../../database.js';

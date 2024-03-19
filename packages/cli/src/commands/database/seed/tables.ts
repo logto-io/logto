@@ -29,9 +29,8 @@ import {
 import { getTenantRole } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
 import { generateStandardId } from '@logto/shared';
-import type { DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
-import { raw } from 'slonik-sql-tag-raw';
+import type { DatabaseTransactionConnection } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { insertInto } from '../../../database.js';
 import { getDatabaseName } from '../../../queries/database.js';
@@ -105,7 +104,7 @@ export const createTables = async (
 
     if (query) {
       await connection.query(
-        sql`${raw(
+        sql`${sql.raw(
           /* eslint-disable no-template-curly-in-string */
           query
             .replaceAll('${name}', parameters.name ?? '')
@@ -129,7 +128,7 @@ export const createTables = async (
 
   /* eslint-disable no-await-in-loop */
   for (const [file, query] of sorted) {
-    await connection.query(sql`${raw(query)}`);
+    await connection.query(sql`${sql.raw(query)}`);
 
     if (!query.includes('/* no_after_each */')) {
       await runLifecycleQuery('after_each', { name: file.split('.')[0], database });

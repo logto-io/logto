@@ -1,6 +1,6 @@
 import { createMockUtils } from '@logto/shared/esm';
+import { createMockPool } from '@silverhand/slonik';
 import Sinon from 'sinon';
-import { createMockPool } from 'slonik';
 
 import { chooseAlterationsByVersion } from './version.js';
 
