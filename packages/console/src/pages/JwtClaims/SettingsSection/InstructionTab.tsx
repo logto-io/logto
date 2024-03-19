@@ -11,9 +11,9 @@ import {
   fetchExternalDataCodeExample,
 } from '../utils/config';
 import {
-  buildJwtCustomizerAccessTokenPayloadType,
-  buildJwtCustomizerClientCredentialsPayloadType,
-  buildJwtCustomizerUserContextType,
+  accessTokenPayloadTypeDefinition,
+  clientCredentialsPayloadTypeDefinition,
+  jwtCustomizerUserContextTypeDefinition,
 } from '../utils/type-definitions';
 
 import EnvironmentVariablesField from './EnvironmentVariablesField';
@@ -23,10 +23,6 @@ import * as styles from './index.module.scss';
 type Props = {
   isActive: boolean;
 };
-
-const jwtCustomizerUserContextSchema = buildJwtCustomizerUserContextType();
-const accessTokenPayloadSchema = buildJwtCustomizerAccessTokenPayloadType();
-const clientCredentialsPayloadSchema = buildJwtCustomizerClientCredentialsPayloadType();
 
 /* Instructions and environment variable settings for the custom JWT claims script. */
 function InstructionTab({ isActive }: Props) {
@@ -43,7 +39,7 @@ function InstructionTab({ isActive }: Props) {
           <Editor
             language="typescript"
             className={styles.sampleCode}
-            value={jwtCustomizerUserContextSchema}
+            value={jwtCustomizerUserContextTypeDefinition}
             height="700px"
             theme="logto-dark"
             options={typeDefinitionCodeEditorOptions}
@@ -56,10 +52,10 @@ function InstructionTab({ isActive }: Props) {
           className={styles.sampleCode}
           value={
             tokenType === LogtoJwtTokenPath.AccessToken
-              ? accessTokenPayloadSchema
-              : clientCredentialsPayloadSchema
+              ? accessTokenPayloadTypeDefinition
+              : clientCredentialsPayloadTypeDefinition
           }
-          height="400px"
+          height="350px"
           theme="logto-dark"
           options={typeDefinitionCodeEditorOptions}
         />
