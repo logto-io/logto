@@ -61,6 +61,20 @@ describe('organization invitation creation', () => {
     await Promise.all([deleteUser(inviter.id), deleteUser(inviter2.id)]);
   });
 
+  it('should be able to get invitations by invitee', async () => {
+    const organization = await organizationApi.create({ name: 'test' });
+    const invitee = `${randomId()}@example.com`;
+    await invitationApi.create({
+      organizationId: organization.id,
+      invitee,
+      expiresAt: Date.now() + 1_000_000,
+    });
+
+    const invitations = await invitationApi.getList(new URLSearchParams({ invitee }));
+    expect(invitations.length).toBe(1);
+    expect(invitations[0]?.invitee).toBe(invitee);
+  });
+
   it('should have no pagination', async () => {
     const organization = await organizationApi.create({ name: 'test' });
     await Promise.all(

@@ -39,7 +39,9 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
   router.get(
     '/',
     koaGuard({
-      query: z.object({ organizationId: z.string().optional(), inviterId: z.string().optional() }),
+      query: z
+        .object({ organizationId: z.string(), inviterId: z.string(), invitee: z.string() })
+        .partial(),
       response: organizationInvitationEntityGuard.array(),
       status: [200],
     }),
