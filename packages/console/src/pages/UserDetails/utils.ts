@@ -1,11 +1,11 @@
-import type { User } from '@logto/schemas';
+import type { UserProfileResponse } from '@logto/schemas';
 import { formatToInternationalPhoneNumber } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 
 import type { UserDetailsForm } from './types';
 
 export const userDetailsParser = {
-  toLocalForm: (data: User): UserDetailsForm => {
+  toLocalForm: (data: UserProfileResponse): UserDetailsForm => {
     const { primaryEmail, primaryPhone, username, name, avatar, customData } = data;
     const parsedPhoneNumber = conditional(
       primaryPhone && formatToInternationalPhoneNumber(primaryPhone)
