@@ -25,6 +25,7 @@
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
+    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "vitest src",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
