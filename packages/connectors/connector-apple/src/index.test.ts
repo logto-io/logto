@@ -60,7 +60,11 @@ describe('getUserInfo', () => {
     }));
     const connector = await createConnector({ getConfig });
     const userInfo = await connector.getUserInfo({ id_token: 'idToken' }, jest.fn());
-    expect(userInfo).toEqual({ id: userId, email: 'foo@bar.com' });
+    expect(userInfo).toEqual({
+      id: userId,
+      email: 'foo@bar.com',
+      rawData: { id_token: 'idToken' },
+    });
   });
 
   it('should ignore unverified email', async () => {
@@ -69,7 +73,7 @@ describe('getUserInfo', () => {
     }));
     const connector = await createConnector({ getConfig });
     const userInfo = await connector.getUserInfo({ id_token: 'idToken' }, jest.fn());
-    expect(userInfo).toEqual({ id: 'userId' });
+    expect(userInfo).toEqual({ id: 'userId', rawData: { id_token: 'idToken' } });
   });
 
   it('should get user info from the `user` field', async () => {
@@ -89,7 +93,18 @@ describe('getUserInfo', () => {
       jest.fn()
     );
     // Should use info from `user` field first
-    expect(userInfo).toEqual({ id: userId, email: 'foo2@bar.com', name: 'foo bar' });
+    expect(userInfo).toEqual({
+      id: userId,
+      email: 'foo2@bar.com',
+      name: 'foo bar',
+      rawData: {
+        id_token: 'idToken',
+        user: JSON.stringify({
+          email: 'foo2@bar.com',
+          name: { firstName: 'foo', lastName: 'bar' },
+        }),
+      },
+    });
   });
 
   it('should throw if id token is missing', async () => {

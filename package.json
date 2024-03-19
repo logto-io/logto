@@ -15,7 +15,7 @@
     "cli": "logto",
     "changeset": "changeset",
     "alteration": "logto db alt",
-    "connectors:build": "pnpm -r --filter \"./packages/connectors/connector-*\" build",
+    "connectors": "pnpm -r --filter \"./packages/connectors/connector-*\"",
     "//": "# `changeset version` won't run version lifecycle scripts, see https://github.com/changesets/changesets/issues/860",
     "ci:version": "changeset version && pnpm -r version",
     "ci:build": "pnpm -r build",

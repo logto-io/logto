@@ -142,10 +142,23 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
     const connector = await createConnector({ getConfig });
-    const { id, name, avatar } = await connector.getUserInfo({ auth_code: 'code' }, jest.fn());
+    const { id, name, avatar, rawData } = await connector.getUserInfo(
+      { auth_code: 'code' },
+      jest.fn()
+    );
     expect(id).toEqual('2088000000000000');
     expect(name).toEqual('PlayboyEric');
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
+    expect(rawData).toEqual({
+      alipay_user_info_share_response: {
+        code: '10000',
+        msg: 'Success',
+        user_id: '2088000000000000',
+        nick_name: 'PlayboyEric',
+        avatar: 'https://www.alipay.com/xxx.jpg',
+      },
+      sign: '<signature>',
+    });
   });
 
   it('throw General error if auth_code not provided in input', async () => {

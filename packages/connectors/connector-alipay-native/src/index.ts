@@ -131,8 +131,8 @@ const getUserInfo =
       searchParams: signedSearchParameters,
       timeout: { request: defaultTimeout },
     });
-
-    const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
+    const rawData = parseJson(httpResponse.body);
+    const result = userInfoResponseGuard.safeParse(rawData);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
@@ -148,7 +148,7 @@ const getUserInfo =
       throw new ConnectorError(ConnectorErrorCodes.InvalidResponse);
     }
 
-    return { id, avatar, name };
+    return { id, avatar, name, rawData };
   };
 
 const errorHandler: ErrorHandler = ({ code, msg, sub_code, sub_msg }) => {

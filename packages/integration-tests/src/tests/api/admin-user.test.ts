@@ -193,6 +193,13 @@ describe('admin console user management', () => {
       details: {
         id: socialUserId,
         email: socialUserEmail,
+        rawData: {
+          code,
+          email: socialUserEmail,
+          redirectUri,
+          state,
+          userId: socialUserId,
+        },
       },
     });
 
@@ -202,6 +209,13 @@ describe('admin console user management', () => {
     expect(updatedIdentity).toHaveProperty(mockSocialConnectorTarget);
     expect(updatedIdentity[mockSocialConnectorTarget]).toMatchObject({
       userId: anotherSocialUserId,
+      rawData: {
+        code,
+        email: socialUserEmail,
+        redirectUri,
+        state,
+        userId: anotherSocialUserId,
+      },
     });
 
     const updatedIdentities = await putUserIdentity(userId, socialTarget, socialIdentity);

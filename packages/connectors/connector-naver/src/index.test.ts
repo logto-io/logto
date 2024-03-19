@@ -79,22 +79,21 @@ describe('naver connector', () => {
     });
 
     it('should get valid SocialUserInfo', async () => {
-      nock(userInfoEndpoint)
-        .post('')
-        .reply(200, {
-          resultcode: '00',
-          message: 'success',
-          response: {
-            email: 'openapi@naver.com',
-            nickname: 'OpenAPI',
-            profile_image: 'https://ssl.pstatic.net/static/pwe/address/nodata_33x33.gif',
-            age: '40-49',
-            gender: 'F',
-            id: '32742776',
-            name: '오픈 API',
-            birthday: '10-01',
-          },
-        });
+      const jsonResponse = Object.freeze({
+        resultcode: '00',
+        message: 'success',
+        response: {
+          email: 'openapi@naver.com',
+          nickname: 'OpenAPI',
+          profile_image: 'https://ssl.pstatic.net/static/pwe/address/nodata_33x33.gif',
+          age: '40-49',
+          gender: 'F',
+          id: '32742776',
+          name: '오픈 API',
+          birthday: '10-01',
+        },
+      });
+      nock(userInfoEndpoint).post('').reply(200, jsonResponse);
       const connector = await createConnector({ getConfig });
       const socialUserInfo = await connector.getUserInfo(
         {
@@ -108,6 +107,7 @@ describe('naver connector', () => {
         avatar: 'https://ssl.pstatic.net/static/pwe/address/nodata_33x33.gif',
         name: 'OpenAPI',
         email: 'openapi@naver.com',
+        rawData: jsonResponse,
       });
     });
 

@@ -101,11 +101,18 @@ describe('Discord connector', () => {
         },
         jest.fn()
       );
-      expect(socialUserInfo).toMatchObject({
+      expect(socialUserInfo).toStrictEqual({
         id: '1234567890',
         name: 'Whumpus',
         avatar: 'https://cdn.discordapp.com/avatars/1234567890/avatar_id',
         email: 'whumpus@discord.com',
+        rawData: {
+          id: '1234567890',
+          username: 'Whumpus',
+          avatar: 'avatar_id',
+          email: 'whumpus@discord.com',
+          verified: true,
+        },
       });
     });
 

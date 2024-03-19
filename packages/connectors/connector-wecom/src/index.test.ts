@@ -135,9 +135,14 @@ describe('getUserInfo', () => {
   const parameters = new URLSearchParams({ access_token: 'access_token', code: 'code' });
 
   it('should get valid SocialUserInfo', async () => {
-    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(0, {
+    const jsonResponse = Object.freeze({
       userid: 'wecom_id',
+      foo: 'bar',
     });
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(parameters)
+      .reply(0, jsonResponse);
     const connector = await createConnector({ getConfig });
     const socialUserInfo = await connector.getUserInfo(
       {
@@ -149,6 +154,7 @@ describe('getUserInfo', () => {
       id: 'wecom_id',
       avatar: '',
       name: 'wecom_id',
+      rawData: jsonResponse,
     });
   });
 

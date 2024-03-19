@@ -91,14 +91,22 @@ describe('getUserInfo', () => {
       avatar_url: 'https://github.com/images/error/octocat_happy.gif',
       name: 'monalisa octocat',
       email: 'octocat@github.com',
+      foo: 'bar',
     });
     const connector = await createConnector({ getConfig });
     const socialUserInfo = await connector.getUserInfo({ code: 'code' }, jest.fn());
-    expect(socialUserInfo).toMatchObject({
+    expect(socialUserInfo).toStrictEqual({
       id: '1',
       avatar: 'https://github.com/images/error/octocat_happy.gif',
       name: 'monalisa octocat',
       email: 'octocat@github.com',
+      rawData: {
+        id: 1,
+        avatar_url: 'https://github.com/images/error/octocat_happy.gif',
+        name: 'monalisa octocat',
+        email: 'octocat@github.com',
+        foo: 'bar',
+      },
     });
   });
 
@@ -113,6 +121,12 @@ describe('getUserInfo', () => {
     const socialUserInfo = await connector.getUserInfo({ code: 'code' }, jest.fn());
     expect(socialUserInfo).toMatchObject({
       id: '1',
+      rawData: {
+        id: 1,
+        avatar_url: null,
+        name: null,
+        email: null,
+      },
     });
   });
 

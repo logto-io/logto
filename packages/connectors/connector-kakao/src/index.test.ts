@@ -79,20 +79,19 @@ describe('kakao connector', () => {
     });
 
     it('should get valid SocialUserInfo', async () => {
-      nock(userInfoEndpoint)
-        .post('')
-        .reply(200, {
-          id: 1_234_567_890,
-          kakao_account: {
-            is_email_valid: true,
-            email: 'ruddbs5302@gmail.com',
-            profile: {
-              nickname: 'pemassi',
-              profile_image_url: 'https://github.com/images/error/octocat_happy.gif',
-              is_default_image: false,
-            },
+      const jsonResponse = Object.freeze({
+        id: 1_234_567_890,
+        kakao_account: {
+          is_email_valid: true,
+          email: 'ruddbs5302@gmail.com',
+          profile: {
+            nickname: 'pemassi',
+            profile_image_url: 'https://github.com/images/error/octocat_happy.gif',
+            is_default_image: false,
           },
-        });
+        },
+      });
+      nock(userInfoEndpoint).post('').reply(200, jsonResponse);
       const connector = await createConnector({ getConfig });
       const socialUserInfo = await connector.getUserInfo(
         {
@@ -101,11 +100,12 @@ describe('kakao connector', () => {
         },
         jest.fn()
       );
-      expect(socialUserInfo).toMatchObject({
+      expect(socialUserInfo).toStrictEqual({
         id: '1234567890',
         avatar: 'https://github.com/images/error/octocat_happy.gif',
         name: 'pemassi',
         email: 'ruddbs5302@gmail.com',
+        rawData: jsonResponse,
       });
     });
 

@@ -112,7 +112,7 @@ describe('getUserInfo', () => {
   const accessTokenUrl = new URL(accessTokenEndpoint);
 
   it('should get userInfo with accessToken', async () => {
-    nock(userInfoUrl.origin).get(userInfoUrl.pathname).query(true).once().reply(200, {
+    const jsonResponse = Object.freeze({
       sub: 'ou_caecc734c2e3328a62489fe0648c4b98779515d3',
       name: '李雷',
       picture: 'https://www.feishu.cn/avatar',
@@ -129,9 +129,10 @@ describe('getUserInfo', () => {
       employee_no: '111222333',
       mobile: '+86130xxxx0000',
     });
+    nock(userInfoUrl.origin).get(userInfoUrl.pathname).query(true).once().reply(200, jsonResponse);
 
     const connector = await createConnector({ getConfig });
-    const { id, name, avatar } = await connector.getUserInfo(
+    const { id, name, avatar, rawData } = await connector.getUserInfo(
       {
         code: 'code',
         redirectUri: 'http://localhost:3000',
@@ -141,6 +142,7 @@ describe('getUserInfo', () => {
     expect(id).toEqual('ou_caecc734c2e3328a62489fe0648c4b98779515d3');
     expect(name).toEqual('李雷');
     expect(avatar).toEqual('www.feishu.cn/avatar/icon');
+    expect(rawData).toEqual(jsonResponse);
   });
 
   it('throw General error if code not provided in input', async () => {

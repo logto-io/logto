@@ -12,7 +12,7 @@ tasks:
       cd packages/core
       pnpm build
       cd -
-      pnpm connectors:build
+      pnpm connectors build
       pnpm cli connector link
     command: |
       gp ports await 5432
