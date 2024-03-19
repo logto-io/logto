@@ -16,9 +16,12 @@ import {
   clientCredentialsJwtCustomizerGuard,
   LogtoJwtTokenKey,
   LogtoJwtTokenPath,
+  jsonObjectGuard,
+  customJwtFetcherGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import { exportJWK } from '#src/utils/jwks.js';
@@ -75,7 +78,7 @@ const getRedactedOidcKeyResponse = async (
   );
 
 export default function logtoConfigRoutes<T extends AuthedRouter>(
-  ...[router, { queries, logtoConfigs, invalidateCache }]: RouterInitArgs<T>
+  ...[router, { queries, logtoConfigs, invalidateCache, cloudConnection }]: RouterInitArgs<T>
 ) {
   const {
     getAdminConsoleConfig,
@@ -284,6 +287,47 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
           : LogtoJwtTokenKey.ClientCredentials
       );
       ctx.status = 204;
+      return next();
+    }
+  );
+
+  if (!EnvSet.values.isCloud) {
+    return;
+  }
+
+  router.post(
+    '/configs/jwt-customizer/:tokenTypePath/test',
+    koaGuard({
+      params: z.object({
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
+      }),
+      body: z.unknown(),
+      response: jsonObjectGuard,
+      /**
+       * 400 for cloud service zod error (data type does not match expectation, can be either request body or response body)
+       * 422 for cloud service syntax error
+       */
+      status: [200, 400, 422],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { tokenTypePath },
+        body: rawBody,
+      } = ctx.guard;
+      const {
+        body: { tokenSample, contextSample, ...rest },
+      } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
+
+      const client = await cloudConnection.getClient();
+      const testResult = await client.post(`/api/services/custom-jwt`, {
+        body: customJwtFetcherGuard.parse({
+          ...rest,
+          tokenSample,
+          contextSample,
+        }),
+      });
+
+      ctx.body = testResult;
       return next();
     }
   );
