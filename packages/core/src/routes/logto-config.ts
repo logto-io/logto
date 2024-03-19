@@ -17,7 +17,7 @@ import {
   LogtoJwtTokenKey,
   LogtoJwtTokenPath,
   jsonObjectGuard,
-  customJwtFetcherGuard,
+  type CustomJwtFetcher,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -296,38 +296,47 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
   }
 
   router.post(
-    '/configs/jwt-customizer/:tokenTypePath/test',
+    '/configs/jwt-customizer/test',
     koaGuard({
-      params: z.object({
-        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
-      }),
-      body: z.unknown(),
+      body: z.discriminatedUnion('tokenType', [
+        z.object({
+          tokenType: z.literal(LogtoJwtTokenKey.AccessToken),
+          payload: accessTokenJwtCustomizerGuard,
+        }),
+        z.object({
+          tokenType: z.literal(LogtoJwtTokenKey.ClientCredentials),
+          payload: clientCredentialsJwtCustomizerGuard,
+        }),
+      ]),
       response: jsonObjectGuard,
       /**
-       * 400 for cloud service zod error (data type does not match expectation, can be either request body or response body)
-       * 422 for cloud service syntax error
+       * Code 400 indicates Zod errors in cloud service (data type does not match expectation, can be either request body or response body).
+       * Code 422 indicates syntax errors in cloud service.
        */
       status: [200, 400, 422],
     }),
     async (ctx, next) => {
       const {
-        params: { tokenTypePath },
-        body: rawBody,
+        body: {
+          payload: { tokenSample, contextSample, ...rest },
+        },
       } = ctx.guard;
-      const {
-        body: { tokenSample, contextSample, ...rest },
-      } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
 
+      /**
+       * We have ensured the API request body via koa guard, manually cast the cloud service API call's
+       * `requestBody` type and let the cloud service API to throw if needed.
+       */
+      // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/consistent-type-assertions
+      const requestBody = {
+        ...rest,
+        token: tokenSample,
+        context: contextSample,
+      } as CustomJwtFetcher;
       const client = await cloudConnection.getClient();
-      const testResult = await client.post(`/api/services/custom-jwt`, {
-        body: customJwtFetcherGuard.parse({
-          ...rest,
-          tokenSample,
-          contextSample,
-        }),
-      });
 
-      ctx.body = testResult;
+      ctx.body = await client.post(`/api/services/custom-jwt`, {
+        body: requestBody,
+      });
       return next();
     }
   );
