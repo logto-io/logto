@@ -26,8 +26,6 @@ export enum CloudScope {
   ManageAffiliate = 'manage:affiliate',
   /** The user can create new affiliates and logs. */
   CreateAffiliate = 'create:affiliate',
-  /** The user can prune logs which are expired. */
-  PruneLogs = 'prune:logs',
 }
 
 export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> => {
