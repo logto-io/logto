@@ -14,6 +14,7 @@ import { jwtCustomizerGuard } from './logto-config/index.js';
 import { userInfoGuard } from './user.js';
 
 const organizationDetailGuard = z.object({
+  id: z.string(),
   roles: z.array(
     OrganizationRoles.guard.pick({ id: true, name: true }).extend({
       scopes: z.array(OrganizationScopes.guard.pick({ id: true, name: true, description: true })),
@@ -37,7 +38,7 @@ export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
       ),
     })
   ),
-  organizations: z.record(organizationDetailGuard),
+  organizations: z.array(organizationDetailGuard),
 });
 
 export type JwtCustomizerUserContext = z.infer<typeof jwtCustomizerUserContextGuard>;

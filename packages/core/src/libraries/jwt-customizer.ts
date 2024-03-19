@@ -49,29 +49,23 @@ export const createJwtCustomizerLibrary = (queries: Queries, userLibrary: UserLi
           };
         })
       ),
-      // No need to deal with the type here, the type will be enforced by the guard when return the result.
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      organizations: Object.fromEntries(
-        await Promise.all(
-          organizationsWithRoles.map(async ({ organizationRoles, ...organization }) => [
-            organization.id,
-            {
-              roles: await Promise.all(
-                organizationRoles.map(async ({ id, name }) => {
-                  const [_, fullOrganizationScopes] = await relations.rolesScopes.getEntities(
-                    OrganizationScopes,
-                    { organizationRoleId: id }
-                  );
-                  return {
-                    id,
-                    name,
-                    scopes: fullOrganizationScopes.map(pickState('id', 'name', 'description')),
-                  };
-                })
-              ),
-            },
-          ])
-        )
+      organizations: await Promise.all(
+        organizationsWithRoles.map(async ({ organizationRoles, ...organization }) => ({
+          id: organization.id,
+          roles: await Promise.all(
+            organizationRoles.map(async ({ id, name }) => {
+              const [_, fullOrganizationScopes] = await relations.rolesScopes.getEntities(
+                OrganizationScopes,
+                { organizationRoleId: id }
+              );
+              return {
+                id,
+                name,
+                scopes: fullOrganizationScopes.map(pickState('id', 'name', 'description')),
+              };
+            })
+          ),
+        }))
       ),
     };
 
