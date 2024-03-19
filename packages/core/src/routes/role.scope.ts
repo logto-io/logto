@@ -1,4 +1,3 @@
-import type { Scope, ScopeResponse } from '@logto/schemas';
 import { scopeResponseGuard, Scopes } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
@@ -7,7 +6,6 @@ import { object, string } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -16,7 +14,6 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    resources: { findResourcesByIds },
     rolesScopes: { deleteRolesScope, findRolesScopesByRoleId, insertRolesScopes },
     roles: { findRoleById },
     scopes: { findScopesByIds, countScopesByScopeIds, searchScopesByScopeIds },
@@ -24,21 +21,8 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
   const {
     quota,
     roleScopes: { validateRoleScopeAssignment },
+    scopes: { attachResourceToScopes },
   } = libraries;
-
-  const attachResourceToScopes = async (scopes: readonly Scope[]): Promise<ScopeResponse[]> => {
-    const resources = await findResourcesByIds(scopes.map(({ resourceId }) => resourceId));
-    return scopes.map((scope) => {
-      const resource = resources.find(({ id }) => id === scope.resourceId);
-
-      assertThat(resource, new Error(`Cannot find resource for id ${scope.resourceId}`));
-
-      return {
-        ...scope,
-        resource,
-      };
-    });
-  };
 
   router.get(
     '/roles/:id/scopes',

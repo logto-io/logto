@@ -1,71 +1,64 @@
 import type { JwtCustomizerUserContext } from '@logto/schemas';
-import {
-  userInfoSelectFields,
-  OrganizationScopes,
-  jwtCustomizerUserContextGuard,
-} from '@logto/schemas';
+import { userInfoSelectFields, jwtCustomizerUserContextGuard } from '@logto/schemas';
 import { deduplicate, pick, pickState } from '@silverhand/essentials';
 
+import { type ScopeLibrary } from '#src/libraries/scope.js';
 import { type UserLibrary } from '#src/libraries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 
-export const createJwtCustomizerLibrary = (queries: Queries, userLibrary: UserLibrary) => {
+// Show top 20 organization roles.
+const limit = 20;
+const offset = 0;
+
+export const createJwtCustomizerLibrary = (
+  queries: Queries,
+  userLibrary: UserLibrary,
+  scopeLibrary: ScopeLibrary
+) => {
   const {
     users: { findUserById },
-    rolesScopes: { findRolesScopesByRoleId },
-    scopes: { findScopeById },
-    resources: { findResourceById },
+    rolesScopes: { findRolesScopesByRoleIds },
+    scopes: { findScopesByIds },
     userSsoIdentities,
-    organizations: { relations },
+    organizations: { relations, roles: organizationRoles },
   } = queries;
   const { findUserRoles } = userLibrary;
+  const { attachResourceToScopes } = scopeLibrary;
 
   const getUserContext = async (userId: string): Promise<JwtCustomizerUserContext> => {
     const user = await findUserById(userId);
     const fullSsoIdentities = await userSsoIdentities.findUserSsoIdentitiesByUserId(userId);
     const roles = await findUserRoles(userId);
+    const rolesScopes = await findRolesScopesByRoleIds(roles.map(({ id }) => id));
+    const scopeIds = rolesScopes.map(({ scopeId }) => scopeId);
+    const scopes = await findScopesByIds(scopeIds);
+    const scopesWithResources = await attachResourceToScopes(scopes);
     const organizationsWithRoles = await relations.users.getOrganizationsByUserId(userId);
+    const [_, organizationRolesWithScopes] = await organizationRoles.findAll(limit, offset);
     const userContext = {
       ...pick(user, ...userInfoSelectFields),
       ssoIdentities: fullSsoIdentities.map(pickState('issuer', 'identityId', 'detail')),
       mfaVerificationFactors: deduplicate(user.mfaVerifications.map(({ type }) => type)),
-      roles: await Promise.all(
-        roles.map(async (role) => {
-          const fullRolesScopes = await findRolesScopesByRoleId(role.id);
-          const scopeIds = fullRolesScopes.map(({ scopeId }) => scopeId);
-          return {
-            ...pick(role, 'id', 'name', 'description'),
-            scopes: await Promise.all(
-              scopeIds.map(async (scopeId) => {
-                const scope = await findScopeById(scopeId);
-                return {
-                  ...pick(scope, 'id', 'name', 'description'),
-                  ...(await findResourceById(scope.resourceId).then(
-                    ({ indicator, id: resourceId }) => ({ indicator, resourceId })
-                  )),
-                };
-              })
-            ),
-          };
-        })
-      ),
-      organizations: await Promise.all(
-        organizationsWithRoles.map(async ({ organizationRoles, ...organization }) => ({
-          id: organization.id,
-          roles: await Promise.all(
-            organizationRoles.map(async ({ id, name }) => {
-              const [_, fullOrganizationScopes] = await relations.rolesScopes.getEntities(
-                OrganizationScopes,
-                { organizationRoleId: id }
-              );
-              return {
-                id,
-                name,
-                scopes: fullOrganizationScopes.map(pickState('id', 'name', 'description')),
-              };
-            })
-          ),
-        }))
+      roles: roles.map((role) => {
+        const scopeIds = new Set(
+          rolesScopes.filter(({ roleId }) => roleId === role.id).map(({ scopeId }) => scopeId)
+        );
+        return {
+          ...pick(role, 'id', 'name', 'description'),
+          scopes: scopesWithResources
+            .filter(({ id }) => scopeIds.has(id))
+            .map(pickState('id', 'name', 'description', 'resourceId', 'resource')),
+        };
+      }),
+      organizations: organizationsWithRoles.map(pickState('id', 'name', 'description')),
+      organizationRoles: organizationsWithRoles.flatMap(
+        ({ id: organizationId, organizationRoles }) =>
+          organizationRoles.map(({ id: roleId, name: roleName }) => ({
+            organizationId,
+            roleId,
+            roleName,
+            scopes: organizationRolesWithScopes.find(({ id }) => id === roleId)?.scopes ?? [],
+          }))
       ),
     };
 

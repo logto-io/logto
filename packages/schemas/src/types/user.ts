@@ -18,24 +18,13 @@ export const userInfoSelectFields = Object.freeze([
   'isSuspended',
 ] as const);
 
-/**
- * The `pick` method of previous implementation will be overridden by `merge`/`extend` method, should explicitly specify keys in `pick` method.
- * DO REMEMBER TO UPDATE THIS GUARD WHEN YOU UPDATE `userInfoSelectFields`.
- */
-export const userInfoGuard = Users.guard.pick({
-  id: true,
-  username: true,
-  primaryEmail: true,
-  primaryPhone: true,
-  name: true,
-  avatar: true,
-  customData: true,
-  identities: true,
-  lastSignInAt: true,
-  createdAt: true,
-  applicationId: true,
-  isSuspended: true,
-});
+export const userInfoGuard = Users.guard.pick(
+  // eslint-disable-next-line no-restricted-syntax
+  Object.fromEntries(userInfoSelectFields.map((field) => [field, true])) as Record<
+    (typeof userInfoSelectFields)[number],
+    true
+  >
+);
 
 export type UserInfo = z.infer<typeof userInfoGuard>;
 

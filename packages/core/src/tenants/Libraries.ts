@@ -10,6 +10,7 @@ import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createProtectedAppLibrary } from '#src/libraries/protected-app.js';
 import { createQuotaLibrary } from '#src/libraries/quota.js';
 import { createRoleScopeLibrary } from '#src/libraries/role-scope.js';
+import { createScopeLibrary } from '#src/libraries/scope.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
@@ -22,8 +23,9 @@ export default class Libraries {
   users = createUserLibrary(this.queries);
   phrases = createPhraseLibrary(this.queries);
   hooks = createHookLibrary(this.queries);
+  scopes = createScopeLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
-  jwtCustomizers = createJwtCustomizerLibrary(this.queries, this.users);
+  jwtCustomizers = createJwtCustomizerLibrary(this.queries, this.users, this.scopes);
   passcodes = createPasscodeLibrary(this.queries, this.connectors);
   applications = createApplicationLibrary(this.queries);
   verificationStatuses = createVerificationStatusLibrary(this.queries);
