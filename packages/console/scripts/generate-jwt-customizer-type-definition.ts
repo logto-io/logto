@@ -5,6 +5,7 @@ import {
   accessTokenPayloadGuard,
   clientCredentialsPayloadGuard,
 } from '@logto/schemas';
+import prettier from 'prettier';
 import { type ZodTypeAny } from 'zod';
 import { zodToTs, printNode } from 'zod-to-ts';
 
@@ -25,7 +26,7 @@ const inferTsDefinitionFromZod = (zodSchema: ZodTypeAny, identifier: string): st
 };
 
 // Create the jwt-customizer-type-definition.ts file
-const createJwtCustomizerTypeDefinitions = () => {
+const createJwtCustomizerTypeDefinitions = async () => {
   const jwtCustomizerUserContextTypeDefinition = inferTsDefinitionFromZod(
     jwtCustomizerUserContextGuard,
     'JwtCustomizerUserContext'
@@ -44,17 +45,20 @@ const createJwtCustomizerTypeDefinitions = () => {
   const fileContent = `/* This file is auto-generated. Do not modify it manually. */
 ${typeIdentifiers}
 
-export const jwtCustomizerUserContextTypeDefinition = \`
-  ${jwtCustomizerUserContextTypeDefinition}\`;
+export const jwtCustomizerUserContextTypeDefinition = \`${jwtCustomizerUserContextTypeDefinition}\`;
 
-export const accessTokenPayloadTypeDefinition = \`
-  ${accessTokenPayloadTypeDefinition}\`;
+export const accessTokenPayloadTypeDefinition = \`${accessTokenPayloadTypeDefinition}\`;
 
-export const clientCredentialsPayloadTypeDefinition = 
-  \`${clientCredentialsPayloadTypeDefinition}\`;
+export const clientCredentialsPayloadTypeDefinition = \`${clientCredentialsPayloadTypeDefinition}\`;
 `;
 
-  fs.writeFileSync(filePath, fileContent);
+  const formattedFileContent = await prettier.format(fileContent, {
+    parser: 'typescript',
+    tabWidth: 2,
+    singleQuote: true,
+  });
+
+  fs.writeFileSync(filePath, formattedFileContent);
 };
 
-createJwtCustomizerTypeDefinitions();
+void createJwtCustomizerTypeDefinitions();
