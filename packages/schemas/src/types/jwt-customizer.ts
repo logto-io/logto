@@ -47,18 +47,6 @@ export const customJwtFetcherGuard = jwtCustomizerGuard
 
 export type CustomJwtFetcher = z.infer<typeof customJwtFetcherGuard>;
 
-/**
- * This guard is for testing use (request body guard), renamed previous `token` and `context`
- * fields (in `customJwtFetcherGuard`) to `tokenSample` and `contextSample`, which can bring
- * convenience to the testing use case.
- */
-export const customJwtTesterGuard = customJwtFetcherGuard
-  .pick({ script: true, envVars: true })
-  .extend({
-    tokenSample: jsonObjectGuard,
-    contextSample: jsonObjectGuard.optional(),
-  });
-
 export enum LogtoJwtTokenPath {
   AccessToken = 'access-token',
   ClientCredentials = 'client-credentials',
