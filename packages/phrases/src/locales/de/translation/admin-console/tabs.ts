@@ -14,6 +14,8 @@ const tabs = {
   docs: 'Dokumentation',
   tenant_settings: 'Einstellungen',
   mfa: 'Multi-Faktor-Authentifizierung',
+  /** UNTRANSLATED */
+  jwt_customizer: 'JWT Claims',
 };
 
 export default Object.freeze(tabs);

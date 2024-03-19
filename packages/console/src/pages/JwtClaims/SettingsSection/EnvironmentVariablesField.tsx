@@ -11,7 +11,11 @@ const isValidKey = (key: string) => {
   return /^\w+$/.test(key);
 };
 
-function EnvironmentVariablesField() {
+type Props = {
+  className?: string;
+};
+
+function EnvironmentVariablesField({ className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -98,7 +102,7 @@ function EnvironmentVariablesField() {
   );
 
   return (
-    <FormField title="jwt_claims.environment_variables.input_field_title">
+    <FormField title="jwt_claims.environment_variables.input_field_title" className={className}>
       <KeyValueInputField
         fields={fields}
         // Force envVariableErrors to be an array, otherwise return undefined

@@ -1,4 +1,4 @@
-import { type Monaco, type OnMount } from '@monaco-editor/react';
+import { type EditorProps, type Monaco, type OnMount } from '@monaco-editor/react';
 
 export type IStandaloneThemeData = Parameters<Monaco['editor']['defineTheme']>[1];
 
@@ -25,6 +25,7 @@ export type ModelSettings = {
    * We use this to load the global type declarations for the active model
    */
   extraLibs?: ExtraLibrary[];
+  options?: EditorProps['options'];
 };
 
 export type ModelControl = {

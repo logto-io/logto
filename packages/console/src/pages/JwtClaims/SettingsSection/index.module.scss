@@ -79,6 +79,10 @@
     > *:first-child {
       margin-top: _.unit(6);
     }
+
+    > *:not(:last-child) {
+      margin-bottom: _.unit(4);
+    }
   }
 
   .expandButton {
@@ -124,8 +128,6 @@
 }
 
 .sampleCode {
-  margin-top: _.unit(4);
-
   :global {
     /* stylelint-disable-next-line selector-class-pattern */
     .monaco-editor {
@@ -142,6 +144,10 @@
       }
     }
   }
+}
+
+.envVariablesField {
+  margin-bottom: _.unit(4);
 }
 
 .testResult {

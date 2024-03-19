@@ -14,6 +14,8 @@ const tabs = {
   docs: 'Documentação',
   tenant_settings: 'Definições do inquilino',
   mfa: 'Autenticação multi-fator',
+  /** UNTRANSLATED */
+  jwt_customizer: 'JWT Claims',
 };
 
 export default Object.freeze(tabs);
