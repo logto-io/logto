@@ -257,12 +257,11 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       const {
         params: { tokenTypePath },
       } = ctx.guard;
-      const { value } = await getJwtCustomizer(
+      ctx.body = await getJwtCustomizer(
         tokenTypePath === LogtoJwtTokenPath.AccessToken
           ? LogtoJwtTokenKey.AccessToken
           : LogtoJwtTokenKey.ClientCredentials
       );
-      ctx.body = value;
       return next();
     }
   );
