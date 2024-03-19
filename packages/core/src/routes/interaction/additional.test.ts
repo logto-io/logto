@@ -44,6 +44,10 @@ const { getInteractionStorage, storeInteractionResult } = await mockEsmWithActua
   })
 );
 
+await mockEsmWithActual('./utils/totp-validation.js', () => ({
+  generateTotpSecret: jest.fn().mockReturnValue('secret'),
+}));
+
 const { sendVerificationCodeToIdentifier } = await mockEsmWithActual(
   './utils/verification-code-validation.js',
   () => ({
@@ -229,7 +233,7 @@ describe('interaction routes', () => {
       expect(getInteractionStorage).toBeCalled();
       expect(storeInteractionResult).toBeCalled();
       expect(response.statusCode).toEqual(200);
-      expect(response.body).toHaveProperty('secret');
+      expect(response.body).toHaveProperty('secret', 'secret');
       expect(response.body).toHaveProperty('secretQrCode');
     });
   });
