@@ -14,9 +14,11 @@ export const userInfoSelectFields = Object.freeze([
   'identities',
   'lastSignInAt',
   'createdAt',
+  'updatedAt',
+  'profile',
   'applicationId',
   'isSuspended',
-] as const);
+] satisfies Array<keyof User>);
 
 export const userInfoGuard = Users.guard.pick(
   Object.fromEntries(userInfoSelectFields.map((key) => [key, true]))
