@@ -7,7 +7,12 @@ import {
 
 import { type JwtClaimsFormType } from '../type';
 
-export { JwtCustomizerTypeDefinitionKey } from '@/consts/jwt-customizer-type-definition';
+export {
+  JwtCustomizerTypeDefinitionKey,
+  accessTokenPayloadTypeDefinition,
+  clientCredentialsPayloadTypeDefinition,
+  jwtCustomizerUserContextTypeDefinition,
+} from '@/consts/jwt-customizer-type-definition';
 
 export const buildAccessTokenJwtCustomizerContextTsDefinition = () => {
   return `declare ${jwtCustomizerUserContextTypeDefinition}
