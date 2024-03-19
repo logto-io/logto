@@ -35,3 +35,6 @@ dump.rdb
 
 # connectors
 /packages/core/connectors
+
+# console auto generated files
+/packages/console/src/consts/jwt-customizer-type-definition.ts

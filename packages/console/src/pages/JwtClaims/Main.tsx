@@ -17,7 +17,11 @@ import ScriptSection from './ScriptSection';
 import SettingsSection from './SettingsSection';
 import * as styles from './index.module.scss';
 import { type JwtClaimsFormType } from './type';
-import { formatResponseDataToFormData, formatFormDataToRequestData, getApiPath } from './utils';
+import {
+  formatResponseDataToFormData,
+  formatFormDataToRequestData,
+  getApiPath,
+} from './utils/format';
 
 type Props = {
   className?: string;
@@ -100,7 +104,7 @@ function Main({
         onDiscard={reset}
         onSubmit={onSubmitHandler}
       />
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty && !isSubmitting} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty && !isSubmitting} onConfirm={reset} />
     </>
   );
 }

@@ -1,0 +1,7 @@
+{
+  "extends": "@silverhand/ts-config/tsconfig.base",
+  "compilerOptions": {
+    "outDir": "scripts-js"
+  },
+  "include": ["scripts"]
+}

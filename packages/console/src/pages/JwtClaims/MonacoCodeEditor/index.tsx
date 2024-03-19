@@ -24,6 +24,7 @@ type Props = {
   activeModelName?: string;
   setActiveModel?: (name: string) => void;
   value?: string;
+  environmentVariablesDefinition?: string;
   onChange?: (value: string | undefined) => void;
   onMountHandler?: (editor: IStandaloneCodeEditor) => void;
 };
@@ -37,6 +38,7 @@ type Props = {
  * @param {(name: string) => void} prop.setActiveModel - The callback function to set the active model. Used to switch between tabs.
  * @param {string} prop.value - The value of the code editor for the current active model.
  * @param {(value: string | undefined) => void} prop.onChange - The callback function to handle the value change of the code editor.
+ * @param {string} [prop.environmentVariablesDefinition] - The environment variables type definition for the script section.
  *
  * @returns
  */
@@ -46,6 +48,7 @@ function MonacoCodeEditor({
   models,
   activeModelName,
   value,
+  environmentVariablesDefinition,
   setActiveModel,
   onChange,
   onMountHandler,
@@ -71,19 +74,28 @@ function MonacoCodeEditor({
 
     // Set the global declarations for the active model
     // @see {@link https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.typescript.LanguageServiceDefaults.html#setExtraLibs}
-    if (activeModel.globalDeclarations) {
-      monaco.languages.typescript.typescriptDefaults.setExtraLibs([
-        {
-          content: activeModel.globalDeclarations,
-          filePath: `file:///global.d.ts`,
-        },
-      ]);
+    if (activeModel.extraLibs) {
+      monaco.languages.typescript.typescriptDefaults.setExtraLibs(activeModel.extraLibs);
     }
-  }, [activeModel, monaco]);
+
+    // Set the environment variables type definition for the active model
+    if (environmentVariablesDefinition) {
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
+        environmentVariablesDefinition,
+        'environmentVariables.d.ts'
+      );
+    }
+  }, [activeModel, monaco, environmentVariablesDefinition]);
 
   const handleEditorWillMount = useCallback<BeforeMount>((monaco) => {
     // Register the new logto theme
     monaco.editor.defineTheme('logto-dark', logtoDarkTheme);
+
+    // Set the typescript compiler options
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      allowNonTsExtensions: true,
+      strictNullChecks: true,
+    });
   }, []);
 
   const handleEditorDidMount = useCallback<OnMount>(

@@ -4,7 +4,7 @@ import {
   type ClientCredentialsJwtCustomizer,
 } from '@logto/schemas';
 
-import type { JwtClaimsFormType } from './type';
+import type { JwtClaimsFormType } from '../type';
 
 const formatEnvVariablesResponseToFormData = (
   enVariables?: AccessTokenJwtCustomizer['envVars']

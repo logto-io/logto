@@ -3,52 +3,40 @@ import { type EditorProps } from '@monaco-editor/react';
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg';
 import UserFileIcon from '@/assets/icons/user-file-icon.svg';
 
-import type { ModelSettings } from './MonacoCodeEditor/type.js';
+import type { ModelSettings } from '../MonacoCodeEditor/type.js';
+
+import {
+  JwtCustomizerTypeDefinitionKey,
+  buildAccessTokenJwtCustomizerContextTsDefinition,
+  buildClientCredentialsJwtCustomizerContextTsDefinition,
+} from './type-definitions.js';
 
 /**
  * JWT token code editor configuration
  */
-const userJwtGlobalDeclarations = `
+const accessTokenJwtCustomizerDefinition = `
 declare global {
   export interface CustomJwtClaims extends Record<string, any> {}
-
-  /** The user info associated with the token. 
-   * 
-   * @param {string} id - The user id
-   * @param {string} [primaryEmail] - The user email
-   * @param {string} [primaryPhone] - The user phone
-   * @param {string} [username] - The user username
-   * @param {string} [name] - The user name
-   * @param {string} [avatar] - The user avatar
-   * 
-  */
-  export type User = {
-    id: string;
-    primaryEmail?: string;
-    primaryPhone?: string;
-    username?: string;
-    name?: string;
-    avatar?: string;
-  }
 
   /** Logto internal data that can be used to pass additional information
-   * @param {User} user - The user info associated with the token.
+   * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
    */
   export type Data = {
-    user: User;
+    user: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext};
   }
 
   export interface Exports {
     /**
      * This function is called to get custom claims for the JWT token.
      * 
-     * @param {string} token -The JWT token.
+     * @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token -The JWT token.
      * @param {Data} data - Logto internal data that can be used to pass additional information
-     * @param {User} data.user - The user info associated with the token.
+     * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} data.user - The user info associated with the token.
+     * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} envVariables - The environment variables.
      * 
      * @returns The custom claims.
      */
-    getCustomJwtClaims: (token: string, data: Data) => Promise<CustomJwtClaims>;
+    getCustomJwtClaims: (token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}, data: Data, envVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}) => Promise<CustomJwtClaims>;
   }
 
   const exports: Exports;
@@ -57,7 +45,7 @@ declare global {
 export { exports as default };
 `;
 
-const machineToMachineJwtGlobalDeclarations = `
+const clientCredentialsJwtCustomizerDefinition = `
 declare global {
   export interface CustomJwtClaims extends Record<string, any> {}
 
@@ -65,11 +53,11 @@ declare global {
     /**
      * This function is called to get custom claims for the JWT token.
      * 
-     * @param {string} token -The JWT token.
+     * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
      * 
      * @returns The custom claims.
      */
-    getCustomJwtClaims: (token: string) => Promise<CustomJwtClaims>;
+    getCustomJwtClaims: (token: ${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}, envVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}) => Promise<CustomJwtClaims>;
   }
 
   const exports: Exports;
@@ -78,12 +66,13 @@ declare global {
 export { exports as default };
 `;
 
-const defaultUserJwtClaimsCode = `/**
+const defaultAccessTokenJwtCustomizerCode = `/**
 * This function is called to get custom claims for the JWT token.
 * 
-* @param {string} token -The JWT token.
+* @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token -The JWT token.
 * @param {Data} data - Logto internal data that can be used to pass additional information
-* @param {User} data.user - The user info associated with the token.
+* @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} data.user - The user info associated with the token.
+* @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [envVariables] - The environment variables.
 *
 * @returns The custom claims.
 */
@@ -92,10 +81,11 @@ exports.getCustomJwtClaims = async (token, data) => {
   return {};
 }`;
 
-const defaultMachineToMachineJwtClaimsCode = `/**
+const defaultClientCredentialsJwtCustomizerCode = `/**
 * This function is called to get custom claims for the JWT token.
 *
-* @param {string} token -The JWT token.
+* @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
+* @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [envVariables] - The environment variables.
 *
 * @returns The custom claims.
 */
@@ -104,20 +94,38 @@ exports.getCustomJwtClaims = async (token) => {
   return {};
 }`;
 
-export const userJwtFile: ModelSettings = {
+export const accessTokenJwtCustomizerModel: ModelSettings = {
   name: 'user-jwt.ts',
   title: 'TypeScript',
   language: 'typescript',
-  defaultValue: defaultUserJwtClaimsCode,
-  globalDeclarations: userJwtGlobalDeclarations,
+  defaultValue: defaultAccessTokenJwtCustomizerCode,
+  extraLibs: [
+    {
+      content: accessTokenJwtCustomizerDefinition,
+      filePath: `file:///logto-jwt-customizer.d.ts`,
+    },
+    {
+      content: buildAccessTokenJwtCustomizerContextTsDefinition(),
+      filePath: `file:///logto-jwt-customizer-context.d.ts`,
+    },
+  ],
 };
 
-export const machineToMachineJwtFile: ModelSettings = {
+export const clientCredentialsModel: ModelSettings = {
   name: 'machine-to-machine-jwt.ts',
   title: 'TypeScript',
   language: 'typescript',
-  defaultValue: defaultMachineToMachineJwtClaimsCode,
-  globalDeclarations: machineToMachineJwtGlobalDeclarations,
+  defaultValue: defaultClientCredentialsJwtCustomizerCode,
+  extraLibs: [
+    {
+      content: clientCredentialsJwtCustomizerDefinition,
+      filePath: `file:///logto-jwt-customizer.d.ts`,
+    },
+    {
+      content: buildClientCredentialsJwtCustomizerContextTsDefinition(),
+      filePath: `file:///logto-jwt-customizer-context.d.ts`,
+    },
+  ],
 };
 
 /**

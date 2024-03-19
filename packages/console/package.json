@@ -11,11 +11,13 @@
     "dist"
   ],
   "scripts": {
+    "prepack": "pnpm generate",
+    "generate": "./generate.sh",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
     "dev": "cross-env PORT=5002 parcel src/index.html --public-url ${CONSOLE_PUBLIC_URL:-/console} --no-cache --hmr-port 6002",
     "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --public-url ${CONSOLE_PUBLIC_URL:-/console}",
+    "build": "pnpm generate && pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --public-url ${CONSOLE_PUBLIC_URL:-/console}",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\"",
@@ -121,7 +123,8 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.4.1",
     "typescript": "^5.3.3",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zod-to-ts": "^1.2.0"
   },
   "engines": {
     "node": "^20.9.0"
@@ -141,6 +144,12 @@
   },
   "eslintConfig": {
     "extends": "@silverhand/react",
+    "parserOptions": {
+      "project": [
+        "./tsconfig.json",
+        "./tsconfig.scripts.gen.json"
+      ]
+    },
     "rules": {
       "react/function-component-definition": [
         "error",

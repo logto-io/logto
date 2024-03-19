@@ -11,7 +11,7 @@ import useApi from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import { shouldRetryOnError } from '@/utils/request';
 
-import { getApiPath } from './utils';
+import { getApiPath } from './utils/format';
 
 function useJwtCustomizer() {
   const fetchApi = useApi({ hideErrorToast: true });
