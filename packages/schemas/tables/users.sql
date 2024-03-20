@@ -39,3 +39,8 @@ create index users__id
 
 create index users__name
   on users (tenant_id, name);
+
+create trigger set_updated_at
+  before update on users
+  for each row
+  execute procedure set_updated_at();

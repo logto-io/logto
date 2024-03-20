@@ -18,6 +18,7 @@ import {
   postUserIdentity,
   verifyUserPassword,
   putUserIdentity,
+  updateUserProfile,
 } from '#src/api/index.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import { createNewSocialUserWithUsernameAndPassword } from '#src/helpers/interactions.js';
@@ -46,12 +47,14 @@ describe('admin console user management', () => {
     await expect(verifyUserPassword(user.id, 'password')).resolves.not.toThrow();
   });
 
-  it('should create user with custom data successfully', async () => {
+  it('should create user with custom data and profile successfully', async () => {
     const user = await createUserByAdmin({
       customData: { foo: 'bar' },
+      profile: { gender: 'neutral' },
     });
-    const { customData } = await getUser(user.id);
+    const { customData, profile } = await getUser(user.id);
     expect(customData).toStrictEqual({ foo: 'bar' });
+    expect(profile).toStrictEqual({ gender: 'neutral' });
   });
 
   it('should fail when create user with conflict identifiers', async () => {
@@ -95,11 +98,38 @@ describe('admin console user management', () => {
       customData: {
         level: 1,
       },
+      profile: {
+        familyName: 'new family name',
+        address: {
+          formatted: 'new formatted address',
+        },
+      },
     };
 
     const updatedUser = await updateUser(user.id, newUserData);
 
     expect(updatedUser).toMatchObject(newUserData);
+    expect(updatedUser.updatedAt).toBeGreaterThan(user.updatedAt);
+  });
+
+  it('should able to update profile partially', async () => {
+    const user = await createUserByAdmin();
+    const profile = {
+      familyName: 'new family name',
+      address: {
+        formatted: 'new formatted address',
+      },
+    };
+
+    const updatedProfile = await updateUserProfile(user.id, profile);
+    expect(updatedProfile).toStrictEqual(profile);
+
+    const patchProfile = {
+      familyName: 'another name',
+      website: 'https://logto.io/',
+    };
+    const updatedProfile2 = await updateUserProfile(user.id, patchProfile);
+    expect(updatedProfile2).toStrictEqual({ ...profile, ...patchProfile });
   });
 
   it('should respond 422 when no update data provided', async () => {

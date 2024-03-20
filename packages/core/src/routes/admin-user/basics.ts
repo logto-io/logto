@@ -3,6 +3,7 @@ import {
   UsersPasswordEncryptionMethod,
   jsonObjectGuard,
   userInfoSelectFields,
+  userProfileGuard,
   userProfileResponseGuard,
 } from '@logto/schemas';
 import { conditional, pick, yes } from '@silverhand/essentials';
@@ -108,6 +109,32 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
     }
   );
 
+  router.patch(
+    '/users/:userId/profile',
+    koaGuard({
+      params: object({ userId: string() }),
+      body: object({ profile: userProfileGuard }),
+      response: userProfileGuard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { profile },
+      } = ctx.guard;
+
+      await findUserById(userId);
+
+      const user = await updateUserById(userId, {
+        profile,
+      });
+
+      ctx.body = user.profile;
+
+      return next();
+    }
+  );
+
   router.post(
     '/users',
     koaGuard({
@@ -121,6 +148,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         name: string(),
         avatar: string().url().or(literal('')).nullable(),
         customData: jsonObjectGuard,
+        profile: userProfileGuard,
       }).partial(),
       response: userProfileResponseGuard,
       status: [200, 404, 422],
@@ -136,6 +164,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         passwordAlgorithm,
         avatar,
         customData,
+        profile,
       } = ctx.guard.body;
 
       assertThat(!(password && passwordDigest), new RequestError('user.password_and_digest'));
@@ -178,6 +207,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
               passwordEncryptionMethod: passwordAlgorithm,
             }
           ),
+          ...conditional(profile && { profile }),
         },
         []
       );
@@ -199,6 +229,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         name: string().or(literal('')).nullable(),
         avatar: string().url().or(literal('')).nullable(),
         customData: jsonObjectGuard,
+        profile: userProfileGuard,
       }).partial(),
       response: userProfileResponseGuard,
       status: [200, 404, 422],
@@ -317,6 +348,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
 
       return next();
     }
+    // eslint-disable-next-line max-lines
   );
 
   router.delete(

@@ -115,6 +115,15 @@ export const getUserClaimsData = async (
         }
         default: {
           if (isUserProfileClaim(claim)) {
+            // Unlike other database fields (e.g. `name`), the claims stored in the `profile` field
+            // will fall back to `undefined` rather than `null`. We refrain from using `?? null`
+            // here to reduce the size of ID tokens, since `undefined` fields will be stripped in
+            // tokens.
+            //
+            // The only consideration here is the inconsistency for `name` and `picture`, which are
+            // also standard claims but they will fall back to `null`. While it's possible to align
+            // their behavior by having their fallback to `undefined`, it's better to maintain the
+            // current setup for now to prevent breaking changes.
             return [claim, user.profile[claimToUserProfileKey[claim]]];
           }
 
