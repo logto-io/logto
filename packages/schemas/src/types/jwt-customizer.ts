@@ -1,11 +1,6 @@
 import { z } from 'zod';
 
-import {
-  Organizations,
-  OrganizationScopes,
-  Roles,
-  UserSsoIdentities,
-} from '../db-entries/index.js';
+import { Organizations, Roles, UserSsoIdentities } from '../db-entries/index.js';
 import { mfaFactorsGuard, jsonObjectGuard } from '../foundations/index.js';
 
 import { jwtCustomizerGuard } from './logto-config/index.js';
@@ -31,7 +26,6 @@ export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
       organizationId: z.string(),
       roleId: z.string(),
       roleName: z.string(),
-      scopes: OrganizationScopes.guard.pick({ id: true, name: true }).array(),
     })
     .array(),
 });

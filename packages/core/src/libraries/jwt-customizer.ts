@@ -6,10 +6,6 @@ import { type ScopeLibrary } from '#src/libraries/scope.js';
 import { type UserLibrary } from '#src/libraries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 
-// Show top 20 organization roles.
-const limit = 20;
-const offset = 0;
-
 export const createJwtCustomizerLibrary = (
   queries: Queries,
   userLibrary: UserLibrary,
@@ -20,7 +16,7 @@ export const createJwtCustomizerLibrary = (
     rolesScopes: { findRolesScopesByRoleIds },
     scopes: { findScopesByIds },
     userSsoIdentities,
-    organizations: { relations, roles: organizationRoles },
+    organizations: { relations },
   } = queries;
   const { findUserRoles } = userLibrary;
   const { attachResourceToScopes } = scopeLibrary;
@@ -34,7 +30,6 @@ export const createJwtCustomizerLibrary = (
     const scopes = await findScopesByIds(scopeIds);
     const scopesWithResources = await attachResourceToScopes(scopes);
     const organizationsWithRoles = await relations.users.getOrganizationsByUserId(userId);
-    const [_, organizationRolesWithScopes] = await organizationRoles.findAll(limit, offset);
     const userContext = {
       ...pick(user, ...userInfoSelectFields),
       ssoIdentities: fullSsoIdentities.map(pickState('issuer', 'identityId', 'detail')),
@@ -57,7 +52,6 @@ export const createJwtCustomizerLibrary = (
             organizationId,
             roleId,
             roleName,
-            scopes: organizationRolesWithScopes.find(({ id }) => id === roleId)?.scopes ?? [],
           }))
       ),
     };
