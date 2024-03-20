@@ -314,9 +314,8 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
        *
        * Code 400 indicates Zod errors in cloud service (data type does not match expectation, can be either request body or response body).
        * Code 422 indicates syntax errors in cloud service.
-       * Code 500 indicates internal server errors in cloud service.
        */
-      status: [200, 400, 422, 500],
+      status: [200, 400, 422],
     }),
     async (ctx, next) => {
       const {
