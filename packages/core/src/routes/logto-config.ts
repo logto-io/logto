@@ -310,6 +310,8 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       ]),
       response: jsonObjectGuard,
       /**
+       * TODO (LOG-8450): Add this path to openapi.json file, since now the swagger.json can not automatically adapt the path validation for OSS version.
+       *
        * Code 400 indicates Zod errors in cloud service (data type does not match expectation, can be either request body or response body).
        * Code 422 indicates syntax errors in cloud service.
        * Code 500 indicates internal server errors in cloud service.
