@@ -21,6 +21,12 @@ export const createJwtCustomizerLibrary = (
   const { findUserRoles } = userLibrary;
   const { attachResourceToScopes } = scopeLibrary;
 
+  /**
+   * We does not include org roles' scopes for the following reason:
+   * 1. The org scopes query method requires `limit` and `offset` parameters. Other management API get
+   * these APIs from console setup while this library method is a backend used method.
+   * 2. Logto developers can get the org roles' id from this user context and hence query the org roles' scopes via management API.
+   */
   const getUserContext = async (userId: string): Promise<JwtCustomizerUserContext> => {
     const user = await findUserById(userId);
     const fullSsoIdentities = await userSsoIdentities.findUserSsoIdentitiesByUserId(userId);
