@@ -17,7 +17,6 @@ import {
   LogtoJwtTokenKey,
   LogtoJwtTokenPath,
   jsonObjectGuard,
-  type CustomJwtFetcher,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -298,14 +297,25 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
   router.post(
     '/configs/jwt-customizer/test',
     koaGuard({
+      /**
+       * Early throws when:
+       * 1. no `script` provided.
+       * 2. no `tokenSample` provided.
+       */
       body: z.discriminatedUnion('tokenType', [
         z.object({
           tokenType: z.literal(LogtoJwtTokenKey.AccessToken),
-          payload: accessTokenJwtCustomizerGuard,
+          payload: accessTokenJwtCustomizerGuard.required({
+            script: true,
+            tokenSample: true,
+          }),
         }),
         z.object({
           tokenType: z.literal(LogtoJwtTokenKey.ClientCredentials),
-          payload: clientCredentialsJwtCustomizerGuard,
+          payload: clientCredentialsJwtCustomizerGuard.required({
+            script: true,
+            tokenSample: true,
+          }),
         }),
       ]),
       response: jsonObjectGuard,
@@ -324,20 +334,14 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
         },
       } = ctx.guard;
 
-      /**
-       * We have ensured the API request body via koa guard, manually cast the cloud service API call's
-       * `requestBody` type and let the cloud service API to throw if needed.
-       */
-      // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/consistent-type-assertions
-      const requestBody = {
-        ...rest,
-        token: tokenSample,
-        context: contextSample,
-      } as CustomJwtFetcher;
       const client = await cloudConnection.getClient();
 
       ctx.body = await client.post(`/api/services/custom-jwt`, {
-        body: requestBody,
+        body: {
+          ...rest,
+          token: tokenSample,
+          context: contextSample,
+        },
       });
       return next();
     }
