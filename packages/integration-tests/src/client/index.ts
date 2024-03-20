@@ -84,6 +84,11 @@ export default class MockClient {
     assert(this.interactionCookie, new Error('Get cookie from authorization endpoint failed'));
   }
 
+  /**
+   *
+   * @param {string} redirectTo the sign-in or register redirect uri
+   * @param {boolean} [consent=true] whether to automatically consent. Need to manually handle the consent flow if set to false
+   */
   public async processSession(redirectTo: string, consent = true) {
     // Note: should redirect to OIDC auth endpoint
     assert(

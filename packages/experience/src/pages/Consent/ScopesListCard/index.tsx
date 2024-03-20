@@ -21,7 +21,7 @@ type ScopeGroupProps = {
   scopes: Array<{
     id: string;
     name: string;
-    description?: Nullable<string>; // Organization scopes description is nullable
+    description?: Nullable<string>; // Organization scope description cloud be `null`
   }>;
 };
 
