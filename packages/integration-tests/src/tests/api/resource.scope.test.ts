@@ -5,7 +5,7 @@ import { HTTPError } from 'got';
 
 import { createResource } from '#src/api/index.js';
 import { createScope, deleteScope, getScopes, updateScope } from '#src/api/scope.js';
-import { generateScopeName } from '#src/utils.js';
+import { generateName, generateScopeName } from '#src/utils.js';
 
 describe('scopes', () => {
   it('should get management api resource scopes successfully', async () => {
@@ -63,7 +63,7 @@ describe('scopes', () => {
     expect(scope).toBeTruthy();
 
     const newScopeName = `new_${scope.name}`;
-    const newScopeDescription = `new_${scope.description}`;
+    const newScopeDescription = scope.description ? `new_${scope.description}` : generateName();
 
     const updatesScope = await updateScope(resource.id, scope.id, {
       name: newScopeName,

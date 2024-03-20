@@ -5,6 +5,7 @@ import type {
   RequestVerificationCodePayload,
   BindMfaPayload,
   VerifyMfaPayload,
+  ConsentInfoResponse,
 } from '@logto/schemas';
 import type { Got } from 'got';
 
@@ -153,6 +154,14 @@ export const consent = async (api: Got, cookie: string) =>
       followRedirect: false,
     })
     .json<RedirectResponse>();
+
+export const getConsentInfo = async (cookie: string) =>
+  api
+    .get('interaction/consent', {
+      headers: { cookie },
+      followRedirect: false,
+    })
+    .json<ConsentInfoResponse>();
 
 export const createSingleSignOnAuthorizationUri = async (
   cookie: string,

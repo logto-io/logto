@@ -44,6 +44,7 @@ export const publicOrganizationGuard = Organizations.guard.pick({
   id: true,
   name: true,
 });
+
 export const missingResourceScopesGuard = z.object({
   // The original resource id has a maximum length of 21 restriction. We need to make it compatible with the logto reserved organization name.
   // use string here, as we do not care about the resource id length here.
