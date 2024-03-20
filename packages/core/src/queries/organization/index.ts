@@ -92,6 +92,7 @@ type OrganizationInvitationSearchOptions = {
   invitationId?: string;
   organizationId?: string;
   inviterId?: string;
+  invitee?: string;
 };
 
 class OrganizationInvitationsQueries extends SchemaQueries<
@@ -115,7 +116,12 @@ class OrganizationInvitationsQueries extends SchemaQueries<
     return this.pool.any(this.#findEntity({ ...options, invitationId: undefined }));
   }
 
-  #findEntity({ invitationId, organizationId, inviterId }: OrganizationInvitationSearchOptions) {
+  #findEntity({
+    invitationId,
+    organizationId,
+    inviterId,
+    invitee,
+  }: OrganizationInvitationSearchOptions) {
     const { table, fields } = convertToIdentifiers(OrganizationInvitations, true);
     const roleRelations = convertToIdentifiers(OrganizationInvitationRoleRelations, true);
     const roles = convertToIdentifiers(OrganizationRoles, true);
@@ -158,6 +164,9 @@ class OrganizationInvitationsQueries extends SchemaQueries<
       })}
       ${conditionalSql(inviterId, (id) => {
         return sql`and ${fields.inviterId} = ${id}`;
+      })}
+      ${conditionalSql(invitee, (email) => {
+        return sql`and ${fields.invitee} = ${email}`;
       })}
       group by ${fields.id}
       ${conditionalSql(this.orderBy, ({ field, order }) => {
