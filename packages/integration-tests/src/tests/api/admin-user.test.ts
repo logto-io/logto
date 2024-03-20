@@ -1,4 +1,6 @@
-import { UsersPasswordEncryptionMethod } from '@logto/schemas';
+import crypto from 'node:crypto';
+
+import { UsersPasswordEncryptionMethod, ConnectorType } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import {
@@ -19,11 +21,18 @@ import {
   verifyUserPassword,
   putUserIdentity,
 } from '#src/api/index.js';
+import { clearConnectorsByTypes } from '#src/helpers/connector.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import { createNewSocialUserWithUsernameAndPassword } from '#src/helpers/interactions.js';
 import { generateUsername, generateEmail, generatePhone, generatePassword } from '#src/utils.js';
 
+const randomString = () => crypto.randomBytes(8).toString('hex');
+
 describe('admin console user management', () => {
+  beforeAll(async () => {
+    await clearConnectorsByTypes([ConnectorType.Social]);
+  });
+
   it('should create and get user successfully', async () => {
     const user = await createUserByAdmin();
 
@@ -162,12 +171,12 @@ describe('admin console user management', () => {
     const state = 'random_state';
     const redirectUri = 'http://mock.social.com/callback/random_string';
     const code = 'random_code_from_social';
-    const socialUserId = 'social_platform_user_id';
-    const socialUserEmail = 'johndoe@gmail.com';
-    const anotherSocialUserId = 'another_social_platform_user_id';
+    const socialUserId = 'social_platform_user_id_' + randomString();
+    const socialUserEmail = `johndoe_${randomString()}@gmail.com`;
+    const anotherSocialUserId = 'another_social_platform_user_id_' + randomString();
     const socialTarget = 'social_target';
     const socialIdentity = {
-      userId: 'social_identity_user_id',
+      userId: 'social_identity_user_id_' + randomString(),
       details: {
         age: 21,
         email: 'foo@logto.io',
@@ -205,16 +214,22 @@ describe('admin console user management', () => {
 
     const updatedIdentity = await putUserIdentity(userId, mockSocialConnectorTarget, {
       userId: anotherSocialUserId,
+      details: {
+        id: anotherSocialUserId,
+        rawData: {
+          userId: anotherSocialUserId,
+        },
+      },
     });
+
     expect(updatedIdentity).toHaveProperty(mockSocialConnectorTarget);
     expect(updatedIdentity[mockSocialConnectorTarget]).toMatchObject({
       userId: anotherSocialUserId,
-      rawData: {
-        code,
-        email: socialUserEmail,
-        redirectUri,
-        state,
-        userId: anotherSocialUserId,
+      details: {
+        id: anotherSocialUserId,
+        rawData: {
+          userId: anotherSocialUserId,
+        },
       },
     });
 
