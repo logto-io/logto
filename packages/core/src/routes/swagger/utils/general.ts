@@ -6,6 +6,7 @@ import { isKeyInObject, type Optional } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { consoleLog } from '#src/utils/console.js';
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
@@ -200,4 +201,54 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
       assert(tag.description, `Tag \`${tag.name}\` must have a description.`);
     }
   }
+};
+
+/**
+ * Some path are only available in the cloud version, so we need to prune them out in the OSS.
+ */
+export const pruneSupplementPaths = (supplement: Record<string, unknown>) => {
+  if (EnvSet.values.isCloud) {
+    return supplement;
+  }
+
+  // eslint-disable-next-line no-restricted-syntax
+  const supplementName = ((supplement.tags ?? []) as OpenAPIV3.TagObject[])[0]?.name;
+
+  if (!supplementName) {
+    return supplement;
+  }
+
+  if (!supplement.paths) {
+    return supplement;
+  }
+
+  // eslint-disable-next-line no-restricted-syntax
+  const supplementPaths = supplement.paths as OpenAPIV3.PathsObject;
+
+  if (Object.entries(supplement.paths).length === 0) {
+    return supplement;
+  }
+
+  // eslint-disable-next-line no-restricted-syntax
+  const newPaths = Object.fromEntries(
+    Object.entries(supplementPaths)
+      .map(([path, pathBody]) => [
+        path,
+        Object.fromEntries(
+          // eslint-disable-next-line no-restricted-syntax
+          Object.entries(pathBody as OpenAPIV3.PathItemObject).filter(
+            ([_, operationBody]) =>
+              // eslint-disable-next-line no-restricted-syntax
+              !((operationBody as OpenAPIV3.OperationObject).tags ?? []).includes('cloud-only')
+          )
+        ),
+      ])
+      // eslint-disable-next-line no-restricted-syntax
+      .filter(([_, pathBody]) => Object.entries(pathBody as OpenAPIV3.PathItemObject).length > 0)
+  ) as OpenAPIV3.PathsObject;
+
+  return {
+    ...supplement,
+    paths: newPaths,
+  };
 };

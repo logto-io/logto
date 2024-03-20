@@ -24,6 +24,7 @@ import {
   buildTag,
   findSupplementFiles,
   normalizePath,
+  pruneSupplementPaths,
   validateSupplement,
   validateSwaggerDocument,
 } from './utils/general.js';
@@ -192,11 +193,14 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     assertThat(routesDirectory, new Error('Cannot find routes directory.'));
 
     const supplementPaths = await findSupplementFiles(routesDirectory);
-    const supplementDocuments = await Promise.all(
+    const rawSupplementDocuments = await Promise.all(
       supplementPaths.map(
         // eslint-disable-next-line no-restricted-syntax
         async (path) => JSON.parse(await fs.readFile(path, 'utf8')) as Record<string, unknown>
       )
+    );
+    const supplementDocuments = rawSupplementDocuments.map((document) =>
+      pruneSupplementPaths(document)
     );
 
     const baseDocument: OpenAPIV3.Document = {

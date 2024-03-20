@@ -188,6 +188,50 @@
           }
         }
       }
+    },
+    "/api/configs/jwt-customizer/test": {
+      "post": {
+        "tags": ["cloud-only"],
+        "summary": "Test JWT customizer",
+        "description": "Test the JWT customizer script with the given sample context and sample token payload.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "tokenType": {
+                    "description": "The token type to test the JWT customizer for."
+                  },
+                  "payload": {
+                    "properties": {
+                      "script": {
+                        "description": "The code snippet of the JWT customizer."
+                      },
+                      "envVars": {
+                        "description": "The environment variables for the JWT customizer."
+                      },
+                      "contextSample": {
+                        "description": "The sample context for the JWT customizer script testing purpose."
+                      },
+                      "tokenSample": {
+                        "description": "The sample token payload for the JWT customizer script testing purpose."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The result of the JWT customizer script testing."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          }
+        }
+      }
     }
   }
 }
