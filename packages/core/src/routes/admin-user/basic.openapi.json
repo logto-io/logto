@@ -108,6 +108,30 @@
         "description": "Update custom data for the given user ID. This method performs a partial update of the custom data object."
       }
     },
+    "/api/users/{userId}/profile": {
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "profile": {
+                    "description": "Partial profile object to update for the given user ID."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated profile in JSON for the given user ID."
+          }
+        },
+        "summary": "Update user profile",
+        "description": "Update profile for the given user ID. This method performs a partial update of the profile object."
+      }
+    },
     "/api/users": {
       "post": {
         "requestBody": {
