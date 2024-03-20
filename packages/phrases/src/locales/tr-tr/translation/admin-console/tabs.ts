@@ -14,6 +14,8 @@ const tabs = {
   docs: 'Dökümanlar',
   tenant_settings: 'Ayarlar',
   mfa: 'Çoklu faktörlü kimlik doğrulama',
+  /** UNTRANSLATED */
+  jwt_customizer: 'JWT Claims',
 };
 
 export default Object.freeze(tabs);

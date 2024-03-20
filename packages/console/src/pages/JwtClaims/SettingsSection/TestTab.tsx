@@ -10,9 +10,9 @@ import Card from '@/ds-components/Card';
 import MonacoCodeEditor, { type ModelControl } from '../MonacoCodeEditor/index.js';
 import { type JwtClaimsFormType } from '../type.js';
 import {
-  userTokenPayloadTestModel,
-  machineToMachineTokenPayloadTestModel,
-  userTokenContextTestModel,
+  accessTokenPayloadTestModel,
+  clientCredentialsPayloadTestModel,
+  userContextTestModel,
 } from '../utils/config.js';
 
 import TestResult, { type TestResultData } from './TestResult.js';
@@ -22,8 +22,8 @@ type Props = {
   isActive: boolean;
 };
 
-const userTokenModelSettings = [userTokenPayloadTestModel, userTokenContextTestModel];
-const machineToMachineTokenModelSettings = [machineToMachineTokenPayloadTestModel];
+const userTokenModelSettings = [accessTokenPayloadTestModel, userContextTestModel];
+const machineToMachineTokenModelSettings = [clientCredentialsPayloadTestModel];
 
 function TestTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });
@@ -52,7 +52,7 @@ function TestTab({ isActive }: Props) {
   const getModelControllerProps = useCallback(
     ({ value, onChange }: ControllerRenderProps<JwtClaimsFormType, 'testSample'>): ModelControl => {
       // User access token context test model (user data)
-      if (activeModelName === userTokenContextTestModel.name) {
+      if (activeModelName === userContextTestModel.name) {
         return {
           value: value?.contextSample,
           onChange: (newValue: string | undefined) => {

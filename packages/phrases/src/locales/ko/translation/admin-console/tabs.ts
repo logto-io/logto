@@ -14,6 +14,8 @@ const tabs = {
   docs: '문서',
   tenant_settings: '테넌트 설정',
   mfa: '다중 요소 인증',
+  /** UNTRANSLATED */
+  jwt_customizer: 'JWT Claims',
 };
 
 export default Object.freeze(tabs);

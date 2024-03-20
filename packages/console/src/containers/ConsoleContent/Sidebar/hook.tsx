@@ -8,6 +8,7 @@ import Box from '@/assets/icons/box.svg';
 import Connection from '@/assets/icons/connection.svg';
 import Gear from '@/assets/icons/gear.svg';
 import Hook from '@/assets/icons/hook.svg';
+import JwtClaims from '@/assets/icons/jwt-claims.svg';
 import List from '@/assets/icons/list.svg';
 import Organization from '@/assets/icons/organization.svg';
 import UserProfile from '@/assets/icons/profile.svg';
@@ -16,7 +17,7 @@ import Role from '@/assets/icons/role.svg';
 import SecurityLock from '@/assets/icons/security-lock.svg';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg';
 import Web from '@/assets/icons/web.svg';
-import { isCloud } from '@/consts/env';
+import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
 
 type SidebarItem = {
   Icon: FC;
@@ -116,6 +117,11 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Hook,
           title: 'webhooks',
+        },
+        {
+          Icon: JwtClaims,
+          title: 'jwt_customizer',
+          isHidden: !isDevFeaturesEnabled,
         },
       ],
     },

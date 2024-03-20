@@ -23,4 +23,5 @@ export const defaultOptions: EditorProps['options'] = {
   fontSize: 14,
   automaticLayout: true,
   tabSize: 2,
+  scrollBeyondLastLine: false,
 };

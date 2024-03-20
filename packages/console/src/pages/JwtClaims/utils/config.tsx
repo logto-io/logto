@@ -1,3 +1,4 @@
+import { type AccessTokenPayload, type ClientCredentialsPayload } from '@logto/schemas';
 import { type EditorProps } from '@monaco-editor/react';
 
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg';
@@ -131,7 +132,6 @@ export const clientCredentialsModel: ModelSettings = {
 /**
  * JWT claims guide card configs
  */
-
 export const sampleCodeEditorOptions: EditorProps['options'] = {
   readOnly: true,
   wordWrap: 'on',
@@ -142,14 +142,13 @@ export const sampleCodeEditorOptions: EditorProps['options'] = {
   overviewRulerBorder: false,
   overviewRulerLanes: 0,
   lineNumbers: 'off',
-  scrollbar: { vertical: 'hidden', horizontal: 'hidden', handleMouseWheel: false },
   folding: false,
   tabSize: 2,
+  scrollBeyondLastLine: false,
 };
 
 export const typeDefinitionCodeEditorOptions: EditorProps['options'] = {
   ...sampleCodeEditorOptions,
-  scrollbar: { vertical: 'auto', horizontal: 'auto' },
   folding: true,
 };
 
@@ -165,24 +164,42 @@ return {
   externalData: data,
 };`;
 
+export const environmentVariablesCodeExample = `exports.getCustomJwtClaims = async (token, data, envVariables) => {
+  const { apiKey } = envVariables;
+
+  const response = await fetch('https://api.example.com/data', {
+    headers: {
+      Authorization: apiKey,
+    }
+  });
+  
+  const data = await response.json();
+
+  return {
+    externalData: data,
+  };
+};`;
+
 /**
  * Tester Code Editor configs
  */
 const standardTokenPayloadData = {
-  jti: '1234567890',
-  iat: 1_516_239_022,
-  exp: 1_516_239_022,
+  jti: 'f1d3d2d1-1f2d-3d4e-5d6f-7d8a9d0e1d2',
+  iat: 1_516_235_022,
+  exp: 1_516_235_022 + 3600,
   client_id: 'my_app',
   scope: 'read write',
-  aud: 'http://localhost:3000/api',
+  aud: 'http://localhost:3000/api/test',
 };
 
-const defaultUserTokenPayloadData = {
+const defaultAccessTokenPayload: AccessTokenPayload = {
   ...standardTokenPayloadData,
+  grantId: 'grant_123',
+  accountId: 'uid_123',
   kind: 'AccessToken',
 };
 
-const defaultMachineToMachineTokenPayloadData = {
+const defaultClientCredentialsPayload: ClientCredentialsPayload = {
   ...standardTokenPayloadData,
   kind: 'ClientCredentials',
 };
@@ -200,23 +217,23 @@ const defaultUserTokenContextData = {
   },
 };
 
-export const userTokenPayloadTestModel: ModelSettings = {
+export const accessTokenPayloadTestModel: ModelSettings = {
   language: 'json',
   icon: <TokenFileIcon />,
   name: 'user-token-payload.json',
   title: 'Token',
-  defaultValue: JSON.stringify(defaultUserTokenPayloadData, null, '\t'),
+  defaultValue: JSON.stringify(defaultAccessTokenPayload, null, '\t'),
 };
 
-export const machineToMachineTokenPayloadTestModel: ModelSettings = {
+export const clientCredentialsPayloadTestModel: ModelSettings = {
   language: 'json',
   icon: <TokenFileIcon />,
   name: 'machine-to-machine-token-payload.json',
   title: 'Token',
-  defaultValue: JSON.stringify(defaultMachineToMachineTokenPayloadData, null, '\t'),
+  defaultValue: JSON.stringify(defaultClientCredentialsPayload, null, '\t'),
 };
 
-export const userTokenContextTestModel: ModelSettings = {
+export const userContextTestModel: ModelSettings = {
   language: 'json',
   icon: <UserFileIcon />,
   name: 'user-token-context.json',

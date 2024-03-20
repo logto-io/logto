@@ -9,6 +9,7 @@ import {
   sampleCodeEditorOptions,
   typeDefinitionCodeEditorOptions,
   fetchExternalDataCodeExample,
+  environmentVariablesCodeExample,
 } from '../utils/config';
 import {
   accessTokenPayloadTypeDefinition,
@@ -82,7 +83,18 @@ function InstructionTab({ isActive }: Props) {
          * In order to fix this, we need to re-render the EnvironmentVariablesField component when the tokenType changes.
          * Achieve this by adding a key to the EnvironmentVariablesField component. Force a re-render when the tokenType changes.
          */}
-        <EnvironmentVariablesField key={tokenType} />
+        <EnvironmentVariablesField key={tokenType} className={styles.envVariablesField} />
+        <div className={styles.description}>
+          {t('jwt_claims.environment_variables.sample_code')}
+        </div>
+        <Editor
+          language="typescript"
+          className={styles.sampleCode}
+          value={environmentVariablesCodeExample}
+          height="400px"
+          theme="logto-dark"
+          options={sampleCodeEditorOptions}
+        />
       </GuideCard>
     </div>
   );
