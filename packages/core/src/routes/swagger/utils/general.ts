@@ -7,9 +7,13 @@ import { OpenAPIV3 } from 'openapi-types';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { type DeepPartial } from '#src/test-utils/tenant.js';
 import { consoleLog } from '#src/utils/console.js';
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+
+/** The tag name used in the supplement document to indicate that the operation is cloud only. */
+const cloudOnlyTag = 'Cloud only';
 
 /**
  * Get the root component name from the given absolute path.
@@ -106,9 +110,14 @@ const validateSupplementPaths = (
           );
         }
 
-        if (isKeyInObject(operations[method], 'tags')) {
+        const operation = operations[method];
+        if (
+          isKeyInObject(operation, 'tags') &&
+          Array.isArray(operation.tags) &&
+          (operation.tags.length > 1 || operation.tags[0] !== cloudOnlyTag)
+        ) {
           throw new TypeError(
-            `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\`. Define tags in the document root instead.`
+            `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\` except for \`${cloudOnlyTag}\`.  Define tags in the document root instead.`
           );
         }
       }
@@ -125,7 +134,7 @@ const validateSupplementPaths = (
  */
 export const validateSupplement = (
   original: OpenAPIV3.Document,
-  supplement: Record<string, unknown>
+  supplement: DeepPartial<OpenAPIV3.Document>
 ) => {
   if (supplement.tags) {
     const supplementTags = z.array(z.object({ name: z.string() })).parse(supplement.tags);
@@ -204,51 +213,32 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
 };
 
 /**
- * Some path are only available in the cloud version, so we need to prune them out in the OSS.
+ * **CAUTION**: This function mutates the input document.
+ *
+ * Remove operations (path + method) that are tagged with `Cloud only` if the application is not
+ * running in the cloud. This will prevent the swagger validation from failing in the OSS
+ * environment.
  */
-export const pruneSupplementPaths = (supplement: Record<string, unknown>) => {
-  if (EnvSet.values.isCloud) {
-    return supplement;
+export const removeCloudOnlyOperations = (
+  document: DeepPartial<OpenAPIV3.Document>
+): DeepPartial<OpenAPIV3.Document> => {
+  if (EnvSet.values.isCloud || !document.paths) {
+    return document;
   }
 
-  // eslint-disable-next-line no-restricted-syntax
-  const supplementName = ((supplement.tags ?? []) as OpenAPIV3.TagObject[])[0]?.name;
+  for (const [path, pathItem] of Object.entries(document.paths)) {
+    for (const method of Object.values(OpenAPIV3.HttpMethods)) {
+      if (pathItem?.[method]?.tags?.includes(cloudOnlyTag)) {
+        // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete -- intended
+        delete pathItem[method];
+      }
+    }
 
-  if (!supplementName) {
-    return supplement;
+    if (Object.keys(pathItem ?? {}).length === 0) {
+      // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete -- intended
+      delete document.paths[path];
+    }
   }
 
-  if (!supplement.paths) {
-    return supplement;
-  }
-
-  // eslint-disable-next-line no-restricted-syntax
-  const supplementPaths = supplement.paths as OpenAPIV3.PathsObject;
-
-  if (Object.entries(supplement.paths).length === 0) {
-    return supplement;
-  }
-
-  // eslint-disable-next-line no-restricted-syntax
-  const newPaths = Object.fromEntries(
-    Object.entries(supplementPaths)
-      .map(([path, pathBody]) => [
-        path,
-        Object.fromEntries(
-          // eslint-disable-next-line no-restricted-syntax
-          Object.entries(pathBody as OpenAPIV3.PathItemObject).filter(
-            ([_, operationBody]) =>
-              // eslint-disable-next-line no-restricted-syntax
-              !((operationBody as OpenAPIV3.OperationObject).tags ?? []).includes('cloud-only')
-          )
-        ),
-      ])
-      // eslint-disable-next-line no-restricted-syntax
-      .filter(([_, pathBody]) => Object.entries(pathBody as OpenAPIV3.PathItemObject).length > 0)
-  ) as OpenAPIV3.PathsObject;
-
-  return {
-    ...supplement,
-    paths: newPaths,
-  };
+  return document;
 };

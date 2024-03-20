@@ -7,13 +7,14 @@ import deepmerge from 'deepmerge';
 import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
-import type { OpenAPIV3 } from 'openapi-types';
+import { type OpenAPIV3 } from 'openapi-types';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { isKoaAuthMiddleware } from '#src/middleware/koa-auth/index.js';
 import type { WithGuardConfig } from '#src/middleware/koa-guard.js';
 import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
 import { isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
+import { type DeepPartial } from '#src/test-utils/tenant.js';
 import assertThat from '#src/utils/assert-that.js';
 import { consoleLog } from '#src/utils/console.js';
 import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
@@ -24,7 +25,7 @@ import {
   buildTag,
   findSupplementFiles,
   normalizePath,
-  pruneSupplementPaths,
+  removeCloudOnlyOperations,
   validateSupplement,
   validateSwaggerDocument,
 } from './utils/general.js';
@@ -193,14 +194,13 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     assertThat(routesDirectory, new Error('Cannot find routes directory.'));
 
     const supplementPaths = await findSupplementFiles(routesDirectory);
-    const rawSupplementDocuments = await Promise.all(
-      supplementPaths.map(
-        // eslint-disable-next-line no-restricted-syntax
-        async (path) => JSON.parse(await fs.readFile(path, 'utf8')) as Record<string, unknown>
+    const supplementDocuments = await Promise.all(
+      supplementPaths.map(async (path) =>
+        removeCloudOnlyOperations(
+          // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
+          JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
+        )
       )
-    );
-    const supplementDocuments = rawSupplementDocuments.map((document) =>
-      pruneSupplementPaths(document)
     );
 
     const baseDocument: OpenAPIV3.Document = {
@@ -232,8 +232,11 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       tags: [...tags].map((tag) => ({ name: tag })),
     };
 
-    const data = supplementDocuments.reduce(
-      (document, supplement) => deepmerge(document, supplement, { arrayMerge: mergeParameters }),
+    const data = supplementDocuments.reduce<OpenAPIV3.Document>(
+      (document, supplement) =>
+        deepmerge<OpenAPIV3.Document, DeepPartial<OpenAPIV3.Document>>(document, supplement, {
+          arrayMerge: mergeParameters,
+        }),
       baseDocument
     );
 

@@ -191,7 +191,7 @@
     },
     "/api/configs/jwt-customizer/test": {
       "post": {
-        "tags": ["cloud-only"],
+        "tags": ["Cloud only"],
         "summary": "Test JWT customizer",
         "description": "Test the JWT customizer script with the given sample context and sample token payload.",
         "requestBody": {
