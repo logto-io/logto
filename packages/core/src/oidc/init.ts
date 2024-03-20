@@ -218,16 +218,6 @@ export default function initOidc(
 
       const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
 
-      /**
-       * Cloud connection should not go through this custom JWT logic.
-       */
-      if (isTokenClientCredentials) {
-        const { appId } = await cloudConnection.getCloudConnectionData();
-        if (token.clientId === appId) {
-          return;
-        }
-      }
-
       const { script, envVars } =
         (await trySafe(
           logtoConfigs.getJwtCustomizer(
