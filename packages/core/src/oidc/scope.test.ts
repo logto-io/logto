@@ -5,18 +5,33 @@ const use = {
   userinfo: 'userinfo',
 } as const;
 
+const profileExpectation = Object.freeze([
+  'name',
+  'family_name',
+  'given_name',
+  'middle_name',
+  'nickname',
+  'preferred_username',
+  'profile',
+  'picture',
+  'website',
+  'gender',
+  'birthdate',
+  'zoneinfo',
+  'locale',
+  'updated_at',
+  'username',
+  'created_at',
+]);
+
 describe('OIDC getUserClaims()', () => {
   it('should return proper ID Token claims', () => {
-    expect(getAcceptedUserClaims(use.idToken, 'openid profile', {}, [])).toEqual([
-      'name',
-      'picture',
-      'username',
-    ]);
+    expect(getAcceptedUserClaims(use.idToken, 'openid profile', {}, [])).toEqual(
+      profileExpectation
+    );
 
     expect(getAcceptedUserClaims(use.idToken, 'openid profile email phone', {}, [])).toEqual([
-      'name',
-      'picture',
-      'username',
+      ...profileExpectation,
       'email',
       'email_verified',
       'phone_number',
@@ -25,23 +40,23 @@ describe('OIDC getUserClaims()', () => {
 
     expect(
       getAcceptedUserClaims(use.idToken, 'openid profile custom_data identities', {}, [])
-    ).toEqual(['name', 'picture', 'username']);
+    ).toEqual(profileExpectation);
 
     expect(
       getAcceptedUserClaims(use.idToken, 'openid profile email', {}, ['email_verified'])
-    ).toEqual(['name', 'picture', 'username', 'email']);
+    ).toEqual([...profileExpectation, 'email']);
   });
 
   it('should return proper Userinfo claims', () => {
     expect(
       getAcceptedUserClaims(use.userinfo, 'openid profile custom_data identities', {}, [])
-    ).toEqual(['name', 'picture', 'username', 'custom_data', 'identities']);
+    ).toEqual([...profileExpectation, 'custom_data', 'identities']);
   });
 
   // Ignore `_claims` since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled
   it('should ignore claims parameter', () => {
     expect(
       getAcceptedUserClaims(use.idToken, 'openid profile custom_data', { email: null }, [])
-    ).toEqual(['name', 'picture', 'username']);
+    ).toEqual(profileExpectation);
   });
 });

@@ -19,9 +19,11 @@ export const mockUser: User = {
   logtoConfig: {},
   mfaVerifications: [],
   customData: {},
+  profile: {},
   applicationId: 'bar',
   lastSignInAt: 1_650_969_465_789,
   createdAt: 1_650_969_000_000,
+  updatedAt: 1_650_969_000_000,
   isSuspended: false,
 };
 
@@ -73,9 +75,11 @@ export const mockUserWithPassword: User = {
   customData: {},
   logtoConfig: {},
   mfaVerifications: [],
+  profile: {},
   applicationId: 'bar',
   lastSignInAt: 1_650_969_465_789,
   createdAt: 1_650_969_000_000,
+  updatedAt: 1_650_969_000_000,
   isSuspended: false,
 };
 
@@ -94,9 +98,11 @@ export const mockUserList: User[] = [
     customData: {},
     logtoConfig: {},
     mfaVerifications: [],
+    profile: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    updatedAt: 1_650_969_000_000,
     isSuspended: false,
   },
   {
@@ -113,9 +119,11 @@ export const mockUserList: User[] = [
     customData: {},
     logtoConfig: {},
     mfaVerifications: [],
+    profile: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    updatedAt: 1_650_969_000_000,
     isSuspended: false,
   },
   {
@@ -132,9 +140,11 @@ export const mockUserList: User[] = [
     customData: {},
     logtoConfig: {},
     mfaVerifications: [],
+    profile: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    updatedAt: 1_650_969_000_000,
     isSuspended: false,
   },
   {
@@ -151,9 +161,11 @@ export const mockUserList: User[] = [
     customData: {},
     logtoConfig: {},
     mfaVerifications: [],
+    profile: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    updatedAt: 1_650_969_000_000,
     isSuspended: false,
   },
   {
@@ -170,9 +182,11 @@ export const mockUserList: User[] = [
     customData: {},
     logtoConfig: {},
     mfaVerifications: [],
+    profile: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    updatedAt: 1_650_969_000_000,
     isSuspended: false,
   },
 ];
