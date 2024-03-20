@@ -1,10 +1,16 @@
 import {
-  type LogtoJwtTokenPath,
+  LogtoJwtTokenPath,
   type AccessTokenJwtCustomizer,
   type ClientCredentialsJwtCustomizer,
 } from '@logto/schemas';
 
 import type { JwtClaimsFormType } from '../type';
+
+import {
+  defaultAccessTokenPayload,
+  defaultClientCredentialsPayload,
+  defaultUserTokenContextData,
+} from './config';
 
 const formatEnvVariablesResponseToFormData = (
   enVariables?: AccessTokenJwtCustomizer['envVars']
@@ -77,6 +83,24 @@ export const formatFormDataToRequestData = (data: JwtClaimsFormType) => {
     tokenSample: formatSampleCodeStringToJson(data.testSample?.tokenSample),
     // Technically, contextSample is always undefined for client credentials token type
     contextSample: formatSampleCodeStringToJson(data.testSample?.contextSample),
+  };
+};
+
+export const formatFormDataToTestRequestPayload = (data: JwtClaimsFormType) => {
+  const defaultTokenPayload =
+    data.tokenType === LogtoJwtTokenPath.AccessToken
+      ? defaultAccessTokenPayload
+      : defaultClientCredentialsPayload;
+
+  const defaultContext =
+    data.tokenType === LogtoJwtTokenPath.AccessToken ? defaultUserTokenContextData : undefined;
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- parse empty string as undefined
+    script: data.script || undefined,
+    envVars: formatEnvVariablesFormData(data.environmentVariables),
+    token: formatSampleCodeStringToJson(data.testSample?.tokenSample) ?? defaultTokenPayload,
+    context: formatSampleCodeStringToJson(data.testSample?.contextSample) ?? defaultContext,
   };
 };
 
