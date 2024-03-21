@@ -17,7 +17,10 @@ import {
   LogtoJwtTokenPath,
   ExtraParamsKey,
   type Json,
+  jwtCustomizer as jwtCustomizerLog,
+  LogResult,
 } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
 import koaBody from 'koa-body';
@@ -29,7 +32,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
-import koaAuditLog from '#src/middleware/koa-audit-log.js';
+import koaAuditLog, { LogEntry } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
@@ -65,6 +68,7 @@ export default function initOidc(
     resources: { findDefaultResource },
     users: { findUserById },
     organizations,
+    logs: { insertLog },
   } = queries;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
   const logoutSuccessSource = readFileSync('static/html/post-logout/index.html', 'utf8');
@@ -206,7 +210,7 @@ export default function initOidc(
       },
     },
     extraParams: Object.values(ExtraParamsKey),
-
+    // eslint-disable-next-line complexity
     extraTokenClaims: async (ctx, token) => {
       const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
 
@@ -215,9 +219,14 @@ export default function initOidc(
         return;
       }
 
-      try {
-        const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
+      const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
 
+      try {
+        /**
+         * It is by design to use `trySafe` here to catch the error but not log it since we do not
+         * want to insert an error log every time the OIDC provider issues a token when the JWT
+         * customizer is not configured.
+         */
         const { script, envVars } =
           (await trySafe(
             logtoConfigs.getJwtCustomizer(
@@ -270,8 +279,28 @@ export default function initOidc(
                 context: { user: logtoUserInfo as Record<string, Json> },
               },
         });
-      } catch {
-        // TODO: Log the error
+      } catch (error: unknown) {
+        const entry = new LogEntry(
+          `${jwtCustomizerLog.prefix}.${
+            isTokenClientCredentials
+              ? jwtCustomizerLog.Type.ClientCredentials
+              : jwtCustomizerLog.Type.AccessToken
+          }`
+        );
+        entry.append({
+          result: LogResult.Error,
+          error: { message: String(error) },
+        });
+        const { payload } = entry;
+        await insertLog({
+          id: generateStandardId(),
+          key: payload.key,
+          payload: {
+            ...payload,
+            tenantId: envSet.tenantId,
+            token,
+          },
+        });
       }
     },
     extraClientMetadata: {
