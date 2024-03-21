@@ -55,7 +55,7 @@ declare global {
      * This function is called to get custom claims for the JWT token.
      * 
      * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
-     * @param {undefined} data - Logto internal data placeholder that can be used to pass additional information (temporarily not used but should be kept for future use)
+     * @param {undefined} data - Logto internal data placeholder that can be used to pass additional information (undefined for M2M accesstoken)
      * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} envVariables - The environment variables.
      * 
      * @returns The custom claims.
