@@ -7670,6 +7670,16 @@ packages:
       - zod
     dev: true
 
+  /@logto/cloud@0.2.5-ceb63ed(zod@3.22.4):
+    resolution: {integrity: sha512-mF4ce41qc4nnmLjlyvTxiy3i1K88xC91yjWcmyrJ66Zujr+w7AaR/Ye0g8TZ1B93qlDt5EJBFuBW/gqYDuwEEQ==}
+    engines: {node: ^20.9.0}
+    dependencies:
+      '@silverhand/essentials': 2.9.0
+      '@withtyped/server': 0.13.3(zod@3.22.4)
+    transitivePeerDependencies:
+      - zod
+    dev: true
+
   /@logto/cloud@0.2.5-d9576f9(zod@3.22.4):
     resolution: {integrity: sha512-RTDFH/JhkXmkXTYGxEY6QnN7ueLr/GCJikM5uzUV6PI2SyXCYNKFSN3yRo665TxsHethkd4a+RIVjhaXgTvQLw==}
     engines: {node: ^20.9.0}
@@ -17859,9 +17869,6 @@ packages:
     resolution: {integrity: sha512-2GTVocFkwblV/TIg9AmT7TI2fO4xdWkyN8aFUEVtiVNWt96GTR3FgQyHFValfCbcj1k9Xf962Ws2hYXYUr9k1Q==}
     engines: {node: '>= 12.0.0'}
     hasBin: true
-    peerDependenciesMeta:
-      '@parcel/core':
-        optional: true
     dependencies:
       '@parcel/config-default': 2.9.3(@parcel/core@2.9.3)(postcss@8.4.31)
       '@parcel/core': 2.9.3
