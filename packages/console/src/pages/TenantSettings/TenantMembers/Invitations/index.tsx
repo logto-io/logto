@@ -113,13 +113,13 @@ function Invitations() {
             dataIndex: 'sentAt',
             colSpan: 4,
             title: t('invitation_sent'),
-            render: ({ createdAt }) => <span>{format(createdAt, 'MMM Lo, yyyy')}</span>,
+            render: ({ createdAt }) => <span>{format(createdAt, 'MMM do, yyyy')}</span>,
           },
           {
             dataIndex: 'expiresAt',
             colSpan: 4,
             title: t('expiration_date'),
-            render: ({ expiresAt }) => <span>{format(expiresAt, 'MMM Lo, yyyy')}</span>,
+            render: ({ expiresAt }) => <span>{format(expiresAt, 'MMM do, yyyy')}</span>,
           },
           {
             dataIndex: 'actions',
