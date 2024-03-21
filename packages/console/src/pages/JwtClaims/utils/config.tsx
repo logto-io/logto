@@ -30,8 +30,8 @@ declare global {
     /**
      * This function is called to get custom claims for the JWT token.
      * 
-     * @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token -The JWT token.
-     * @param {Data} data - Logto internal data that can be used to pass additional information
+     * @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token - The JWT token.
+     * @param {Data} data - Logto internal data that can be used to pass additional information.
      * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} data.user - The user info associated with the token.
      * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} envVariables - The environment variables.
      * 
@@ -54,8 +54,8 @@ declare global {
     /**
      * This function is called to get custom claims for the JWT token.
      * 
-     * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
-     * @param {undefined} data - Logto internal data placeholder that can be used to pass additional information (undefined for M2M accesstoken)
+     * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token - The JWT token.
+     * @param {undefined} data - Logto internal data placeholder that can be used to pass additional information (undefined for M2M accesstoken).
      * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} envVariables - The environment variables.
      * 
      * @returns The custom claims.
@@ -72,8 +72,8 @@ export { exports as default };
 const defaultAccessTokenJwtCustomizerCode = `/**
 * This function is called to get custom claims for the JWT token.
 * 
-* @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token -The JWT token.
-* @param {Data} data - Logto internal data that can be used to pass additional information
+* @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token - The JWT token.
+* @param {Data} data - Logto internal data that can be used to pass additional information.
 * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} data.user - The user info associated with the token.
 * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [envVariables] - The environment variables.
 *
@@ -87,8 +87,8 @@ exports.getCustomJwtClaims = async (token, data) => {
 const defaultClientCredentialsJwtCustomizerCode = `/**
 * This function is called to get custom claims for the JWT token.
 *
-* @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
-* @param {undefined} data - Logto internal data placeholder that can be used to pass additional information (undefined for M2M accesstoken)
+* @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token - The JWT token.
+* @param {undefined} data - Logto internal data placeholder that can be used to pass additional information (undefined for M2M accesstoken).
 * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [envVariables] - The environment variables.
 *
 * @returns The custom claims.
