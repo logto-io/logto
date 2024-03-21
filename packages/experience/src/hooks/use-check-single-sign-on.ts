@@ -1,11 +1,10 @@
-import { type SsoConnectorMetadata } from '@logto/schemas';
+import { experience, type SsoConnectorMetadata } from '@logto/schemas';
 import { useCallback, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
 import { getSingleSignOnConnectors } from '@/apis/single-sign-on';
-import { singleSignOnPath } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 
@@ -81,7 +80,7 @@ const useCheckSingleSignOn = () => {
         return true;
       }
 
-      navigate(`/${singleSignOnPath}/connectors`);
+      navigate(`/${experience.routes.sso}/connectors`);
       return true;
     },
     [

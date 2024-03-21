@@ -1,13 +1,13 @@
-import { useParams } from 'react-router-dom';
+import { experience } from '@logto/schemas';
+import { Navigate, useParams } from 'react-router-dom';
 
 import useConnectors from '@/hooks/use-connectors';
-
-import SignIn from '../SignIn';
 
 import SingleSignOn from './SingleSignOn';
 import SocialSignIn from './SocialSignIn';
 
-const SocialSignInCallback = () => {
+/** The real callback page for social sign-in in web browsers. */
+const SocialSignInWebCallback = () => {
   const parameters = useParams<{ connectorId: string }>();
   const { findConnectorById } = useConnectors();
   const result = findConnectorById(parameters.connectorId);
@@ -21,7 +21,7 @@ const SocialSignInCallback = () => {
   }
 
   // Connector not found, return sign in page
-  return <SignIn />;
+  return <Navigate to={experience.routes.signIn} />;
 };
 
-export default SocialSignInCallback;
+export default SocialSignInWebCallback;

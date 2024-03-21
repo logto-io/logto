@@ -12,7 +12,7 @@ type Parameters = {
 };
 
 /**
- * Callback page for SocialSignIn and SingleSignOn
+ * Callback landing page for social sign-in and single sign-on.
  */
 const Callback = () => {
   const { connectorId } = useParams<Parameters>();

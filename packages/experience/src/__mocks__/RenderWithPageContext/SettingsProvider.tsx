@@ -12,11 +12,16 @@ type Props = {
 };
 
 const SettingsProvider = ({ settings = mockSignInExperienceSettings, children }: Props) => {
-  const { setExperienceSettings } = useContext(PageContext);
+  const { setExperienceSettings, experienceSettings } = useContext(PageContext);
 
   useEffect(() => {
     setExperienceSettings(settings);
   }, [setExperienceSettings, settings]);
+
+  // Don't render children until the settings are set to avoid false positives
+  if (!experienceSettings) {
+    return null;
+  }
 
   return children;
 };

@@ -1,5 +1,5 @@
 import type { SignIn, SsoConnectorMetadata } from '@logto/schemas';
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, experience } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, act, waitFor } from '@testing-library/react';
 
@@ -13,7 +13,6 @@ import {
   mockSsoConnectors,
 } from '@/__mocks__/logto';
 import { sendVerificationCodeApi } from '@/apis/utils';
-import { singleSignOnPath } from '@/constants/env';
 import { UserFlow } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -310,7 +309,7 @@ describe('IdentifierSignInForm', () => {
       });
 
       await waitFor(() => {
-        expect(mockedNavigate).toBeCalledWith(`/${singleSignOnPath}/connectors`);
+        expect(mockedNavigate).toBeCalledWith(`/${experience.routes.sso}/connectors`);
       });
     });
   });

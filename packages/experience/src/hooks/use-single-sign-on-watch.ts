@@ -1,4 +1,4 @@
-import { SignInIdentifier, type SsoConnectorMetadata } from '@logto/schemas';
+import { SignInIdentifier, experience, type SsoConnectorMetadata } from '@logto/schemas';
 import { useEffect, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,7 +6,6 @@ import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleS
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import { getSingleSignOnConnectors } from '@/apis/single-sign-on';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
-import { singleSignOnPath } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
 import { validateEmail } from '@/utils/form';
@@ -72,7 +71,7 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
       return;
     }
 
-    navigate(`/${singleSignOnPath}/connectors`);
+    navigate(`/${experience.routes.sso}/connectors`);
   }, [navigate, showSingleSignOnForm, singleSignOn, ssoConnectors]);
 
   useEffect(() => {
