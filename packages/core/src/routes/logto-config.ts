@@ -304,14 +304,14 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
        */
       body: z.discriminatedUnion('tokenType', [
         z.object({
-          tokenType: z.literal(LogtoJwtTokenKey.AccessToken),
+          tokenType: z.literal(LogtoJwtTokenPath.AccessToken),
           payload: accessTokenJwtCustomizerGuard.required({
             script: true,
             tokenSample: true,
           }),
         }),
         z.object({
-          tokenType: z.literal(LogtoJwtTokenKey.ClientCredentials),
+          tokenType: z.literal(LogtoJwtTokenPath.ClientCredentials),
           payload: clientCredentialsJwtCustomizerGuard.required({
             script: true,
             tokenSample: true,

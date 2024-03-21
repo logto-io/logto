@@ -1,10 +1,16 @@
 import {
-  type LogtoJwtTokenPath,
+  LogtoJwtTokenPath,
   type AccessTokenJwtCustomizer,
   type ClientCredentialsJwtCustomizer,
 } from '@logto/schemas';
 
 import type { JwtClaimsFormType } from '../type';
+
+import {
+  defaultAccessTokenPayload,
+  defaultClientCredentialsPayload,
+  defaultUserTokenContextData,
+} from './config';
 
 const formatEnvVariablesResponseToFormData = (
   enVariables?: AccessTokenJwtCustomizer['envVars']
@@ -77,6 +83,32 @@ export const formatFormDataToRequestData = (data: JwtClaimsFormType) => {
     tokenSample: formatSampleCodeStringToJson(data.testSample?.tokenSample),
     // Technically, contextSample is always undefined for client credentials token type
     contextSample: formatSampleCodeStringToJson(data.testSample?.contextSample),
+  };
+};
+
+export const formatFormDataToTestRequestPayload = ({
+  tokenType,
+  script,
+  environmentVariables,
+  testSample,
+}: JwtClaimsFormType) => {
+  const defaultTokenSample =
+    tokenType === LogtoJwtTokenPath.AccessToken
+      ? defaultAccessTokenPayload
+      : defaultClientCredentialsPayload;
+
+  const defaultContextSample =
+    tokenType === LogtoJwtTokenPath.AccessToken ? defaultUserTokenContextData : undefined;
+
+  return {
+    tokenType,
+    payload: {
+      script,
+      envVars: formatEnvVariablesFormData(environmentVariables),
+      tokenSample: formatSampleCodeStringToJson(testSample?.tokenSample) ?? defaultTokenSample,
+      contextSample:
+        formatSampleCodeStringToJson(testSample?.contextSample) ?? defaultContextSample,
+    },
   };
 };
 

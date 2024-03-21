@@ -192,19 +192,19 @@ const standardTokenPayloadData = {
   aud: 'http://localhost:3000/api/test',
 };
 
-const defaultAccessTokenPayload: AccessTokenPayload = {
+export const defaultAccessTokenPayload: AccessTokenPayload = {
   ...standardTokenPayloadData,
   grantId: 'grant_123',
   accountId: 'uid_123',
   kind: 'AccessToken',
 };
 
-const defaultClientCredentialsPayload: ClientCredentialsPayload = {
+export const defaultClientCredentialsPayload: ClientCredentialsPayload = {
   ...standardTokenPayloadData,
   kind: 'ClientCredentials',
 };
 
-const defaultUserTokenContextData = {
+export const defaultUserTokenContextData = {
   user: {
     id: '123',
     primaryEmail: 'foo@logto.io',

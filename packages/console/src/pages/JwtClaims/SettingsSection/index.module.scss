@@ -150,9 +150,13 @@
   margin-bottom: _.unit(4);
 }
 
+.shrinkCodeEditor {
+  height: 50%;
+}
+
 .testResult {
   margin-top: _.unit(3);
-  height: calc(50% - _.unit(3));
+  flex: 1;
   background-color: var(--color-bg-layer-2);
   border-radius: 8px;
   border: 1px solid var(--color-divider);
@@ -197,5 +201,5 @@
 }
 
 .flexGrow {
-  flex-grow: 1;
+  flex: 1;
 }

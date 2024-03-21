@@ -64,7 +64,7 @@ function MonacoCodeEditor({
   const isMultiModals = useMemo(() => models.length > 1, [models]);
 
   // Get the container ref and the editor height
-  const { containerRef, editorHeight } = useEditorHeight();
+  const { containerRef, headerRef, editorHeight } = useEditorHeight();
 
   useEffect(() => {
     // Monaco will be ready after the editor is mounted, useEffect will be called after the monaco is ready
@@ -108,8 +108,8 @@ function MonacoCodeEditor({
   );
 
   return (
-    <div className={classNames(className, styles.codeEditor)}>
-      <header>
+    <div ref={containerRef} className={classNames(className, styles.codeEditor)}>
+      <header ref={headerRef}>
         <div className={styles.tabList}>
           {models.map(({ name, title, icon }) => (
             <div
@@ -159,7 +159,7 @@ function MonacoCodeEditor({
           )}
         </div>
       </header>
-      <div ref={containerRef} className={styles.editorContainer}>
+      <div className={styles.editorContainer}>
         {activeModel && (
           <Editor
             height={editorHeight}
