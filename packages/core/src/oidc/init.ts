@@ -13,7 +13,10 @@ import {
   logtoCookieKey,
   type LogtoUiCookie,
   LogtoJwtTokenKey,
+  jwtCustomizer as jwtCustomizerLog,
+  LogResult,
 } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
 import koaBody from 'koa-body';
@@ -25,7 +28,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
-import koaAuditLog from '#src/middleware/koa-audit-log.js';
+import koaAuditLog, { LogEntry } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
@@ -59,6 +62,7 @@ export default function initOidc(
     resources: { findDefaultResource },
     users: { findUserById },
     organizations,
+    logs: { insertLog },
   } = queries;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
   const logoutSuccessSource = readFileSync('static/html/post-logout/index.html', 'utf8');
@@ -207,6 +211,7 @@ export default function initOidc(
       },
     },
     extraParams: [OIDCExtraParametersKey.InteractionMode],
+    // eslint-disable-next-line complexity
     extraTokenClaims: async (ctx, token) => {
       const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
 
@@ -215,9 +220,9 @@ export default function initOidc(
         return;
       }
 
-      try {
-        const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
+      const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
 
+      try {
         const { script, envVars } =
           (await trySafe(
             logtoConfigs.getJwtCustomizer(
@@ -247,17 +252,38 @@ export default function initOidc(
             (await libraries.jwtCustomizers.getUserContext(token.accountId))
         );
 
-        // `context` parameter is only eligible for user's access token for now.
-        return await client.post(`/api/services/custom-jwt`, {
-          body: {
-            script,
-            envVars,
-            token: readOnlyToken,
-            ...conditional(logtoUserInfo && { context: { user: logtoUserInfo } }),
+        return (
+          (await client.post(`/api/services/custom-jwt`, {
+            body: {
+              script,
+              envVars,
+              token: readOnlyToken,
+              ...conditional(logtoUserInfo && { context:{user: logtoUserInfo} }),
+            },
+          }))
+        );
+      } catch (error: unknown) {
+        const entry = new LogEntry(
+          `${jwtCustomizerLog.prefix}.${
+            isTokenClientCredentials
+              ? jwtCustomizerLog.Type.ClientCredentials
+              : jwtCustomizerLog.Type.AccessToken
+          }`
+        );
+        entry.append({
+          result: LogResult.Error,
+          error: { message: String(error) },
+        });
+        const { payload } = entry;
+        await insertLog({
+          id: generateStandardId(),
+          key: payload.key,
+          payload: {
+            ...payload,
+            tenantId: envSet.tenantId,
+            token,
           },
         });
-      } catch {
-        // TODO: Log the error
       }
     },
     extraClientMetadata: {
