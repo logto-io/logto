@@ -55,10 +55,12 @@ declare global {
      * This function is called to get custom claims for the JWT token.
      * 
      * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
+     * @param {undefined} data - Logto internal data placeholder that can be used to pass additional information (temporarily not used but should be kept for future use)
+     * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} envVariables - The environment variables.
      * 
      * @returns The custom claims.
      */
-    getCustomJwtClaims: (token: ${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}, envVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}) => Promise<CustomJwtClaims>;
+    getCustomJwtClaims: (token: ${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}, data: undefined, envVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}) => Promise<CustomJwtClaims>;
   }
 
   const exports: Exports;
@@ -86,6 +88,7 @@ const defaultClientCredentialsJwtCustomizerCode = `/**
 * This function is called to get custom claims for the JWT token.
 *
 * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
+* @param {undefined} data - Logto internal data placeholder that can be used to pass additional information (temporarily not used but should be kept for future use)
 * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [envVariables] - The environment variables.
 *
 * @returns The custom claims.
@@ -172,7 +175,7 @@ export const environmentVariablesCodeExample = `exports.getCustomJwtClaims = asy
       Authorization: apiKey,
     }
   });
-  
+
   const data = await response.json();
 
   return {
