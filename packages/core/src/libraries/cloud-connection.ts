@@ -36,24 +36,18 @@ const accessTokenExpirationMargin = 60;
 export class CloudConnectionLibrary {
   private client?: Client<typeof router>;
   private accessTokenCache?: { expiresAt: number; accessToken: string };
-  private credentialsCache?: CloudConnection;
 
   constructor(private readonly logtoConfigs: LogtoConfigLibrary) {}
 
   public getCloudConnectionData = async (): Promise<CloudConnection> => {
-    if (this.credentialsCache) {
-      return this.credentialsCache;
-    }
-
     const { getCloudConnectionData: getCloudServiceM2mCredentials } = this.logtoConfigs;
     const credentials = await getCloudServiceM2mCredentials();
     const { cloudUrlSet, adminUrlSet } = EnvSet.values;
-    this.credentialsCache = {
+    return {
       ...credentials,
       tokenEndpoint: appendPath(adminUrlSet.endpoint, 'oidc/token').toString(),
       endpoint: appendPath(cloudUrlSet.endpoint, 'api').toString(),
     };
-    return this.credentialsCache;
   };
 
   /**
