@@ -178,9 +178,10 @@ describe('admin console user management', () => {
   });
 
   it('should update user password successfully', async () => {
-    const user = await createUserByAdmin();
-    const userEntity = await updateUserPassword(user.id, 'new_password');
-    expect(userEntity).toMatchObject(user);
+    const { updatedAt, ...rest } = await createUserByAdmin();
+    const userEntity = await updateUserPassword(rest.id, 'new_password');
+    expect(userEntity).toMatchObject(rest);
+    expect(userEntity.updatedAt).toBeGreaterThan(updatedAt);
   });
 
   it('should link social identity successfully', async () => {

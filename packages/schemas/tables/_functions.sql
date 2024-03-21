@@ -14,7 +14,7 @@ $$ begin
   return new;
 end; $$ language plpgsql;
 
-/** A function to set the created_at column to the current time. */
+/** A function to set the `updated_at` column to the current time. */
 create function set_updated_at() returns trigger as
 $$ begin
   new.updated_at = now();
