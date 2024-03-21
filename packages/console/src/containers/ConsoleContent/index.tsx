@@ -53,6 +53,7 @@ import BillingHistory from '@/pages/TenantSettings/BillingHistory';
 import Subscription from '@/pages/TenantSettings/Subscription';
 import TenantBasicSettings from '@/pages/TenantSettings/TenantBasicSettings';
 import TenantDomainSettings from '@/pages/TenantSettings/TenantDomainSettings';
+import TenantMembers from '@/pages/TenantSettings/TenantMembers';
 import UserDetails from '@/pages/UserDetails';
 import UserLogs from '@/pages/UserDetails/UserLogs';
 import UserOrganizations from '@/pages/UserDetails/UserOrganizations';
@@ -196,6 +197,9 @@ function ConsoleContent() {
               <Route path="tenant-settings" element={<TenantSettings />}>
                 <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
                 <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
+                {isDevFeaturesEnabled && (
+                  <Route path={`${TenantSettingsTabs.Members}/*`} element={<TenantMembers />} />
+                )}
                 <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
                 {!isDevTenant && (
                   <>
