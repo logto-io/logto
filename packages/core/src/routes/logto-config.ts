@@ -16,9 +16,11 @@ import {
   clientCredentialsJwtCustomizerGuard,
   LogtoJwtTokenKey,
   LogtoJwtTokenPath,
+  jsonObjectGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import { exportJWK } from '#src/utils/jwks.js';
@@ -75,7 +77,7 @@ const getRedactedOidcKeyResponse = async (
   );
 
 export default function logtoConfigRoutes<T extends AuthedRouter>(
-  ...[router, { queries, logtoConfigs, invalidateCache }]: RouterInitArgs<T>
+  ...[router, { queries, logtoConfigs, invalidateCache, cloudConnection }]: RouterInitArgs<T>
 ) {
   const {
     getAdminConsoleConfig,
@@ -284,6 +286,57 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
           : LogtoJwtTokenKey.ClientCredentials
       );
       ctx.status = 204;
+      return next();
+    }
+  );
+
+  if (!EnvSet.values.isCloud) {
+    return;
+  }
+
+  router.post(
+    '/configs/jwt-customizer/test',
+    koaGuard({
+      /**
+       * Early throws when:
+       * 1. no `script` provided.
+       * 2. no `tokenSample` provided.
+       */
+      body: z.discriminatedUnion('tokenType', [
+        z.object({
+          tokenType: z.literal(LogtoJwtTokenKey.AccessToken),
+          payload: accessTokenJwtCustomizerGuard.required({
+            script: true,
+            tokenSample: true,
+          }),
+        }),
+        z.object({
+          tokenType: z.literal(LogtoJwtTokenKey.ClientCredentials),
+          payload: clientCredentialsJwtCustomizerGuard.required({
+            script: true,
+            tokenSample: true,
+          }),
+        }),
+      ]),
+      response: jsonObjectGuard,
+      status: [200, 400, 403, 422],
+    }),
+    async (ctx, next) => {
+      const {
+        body: {
+          payload: { tokenSample, contextSample, ...rest },
+        },
+      } = ctx.guard;
+
+      const client = await cloudConnection.getClient();
+
+      ctx.body = await client.post(`/api/services/custom-jwt`, {
+        body: {
+          ...rest,
+          token: tokenSample,
+          context: contextSample,
+        },
+      });
       return next();
     }
   );

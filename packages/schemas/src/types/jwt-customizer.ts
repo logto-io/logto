@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { Organizations, Roles, UserSsoIdentities } from '../db-entries/index.js';
-import { mfaFactorsGuard, jsonObjectGuard } from '../foundations/index.js';
+import { Roles, UserSsoIdentities, Organizations } from '../db-entries/index.js';
+import { jsonObjectGuard, mfaFactorsGuard } from '../foundations/index.js';
 
 import { jwtCustomizerGuard } from './logto-config/index.js';
 import { scopeResponseGuard } from './scope.js';

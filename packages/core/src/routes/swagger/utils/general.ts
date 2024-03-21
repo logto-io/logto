@@ -6,9 +6,14 @@ import { isKeyInObject, type Optional } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+import { type DeepPartial } from '#src/test-utils/tenant.js';
 import { consoleLog } from '#src/utils/console.js';
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+
+/** The tag name used in the supplement document to indicate that the operation is cloud only. */
+const cloudOnlyTag = 'Cloud only';
 
 /**
  * Get the root component name from the given absolute path.
@@ -105,9 +110,14 @@ const validateSupplementPaths = (
           );
         }
 
-        if (isKeyInObject(operations[method], 'tags')) {
+        const operation = operations[method];
+        if (
+          isKeyInObject(operation, 'tags') &&
+          Array.isArray(operation.tags) &&
+          (operation.tags.length > 1 || operation.tags[0] !== cloudOnlyTag)
+        ) {
           throw new TypeError(
-            `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\`. Define tags in the document root instead.`
+            `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\` except for tag \`${cloudOnlyTag}\`.  Define tags in the document root instead.`
           );
         }
       }
@@ -124,7 +134,7 @@ const validateSupplementPaths = (
  */
 export const validateSupplement = (
   original: OpenAPIV3.Document,
-  supplement: Record<string, unknown>
+  supplement: DeepPartial<OpenAPIV3.Document>
 ) => {
   if (supplement.tags) {
     const supplementTags = z.array(z.object({ name: z.string() })).parse(supplement.tags);
@@ -200,4 +210,35 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
       assert(tag.description, `Tag \`${tag.name}\` must have a description.`);
     }
   }
+};
+
+/**
+ * **CAUTION**: This function mutates the input document.
+ *
+ * Remove operations (path + method) that are tagged with `Cloud only` if the application is not
+ * running in the cloud. This will prevent the swagger validation from failing in the OSS
+ * environment.
+ */
+export const removeCloudOnlyOperations = (
+  document: DeepPartial<OpenAPIV3.Document>
+): DeepPartial<OpenAPIV3.Document> => {
+  if (EnvSet.values.isCloud || !document.paths) {
+    return document;
+  }
+
+  for (const [path, pathItem] of Object.entries(document.paths)) {
+    for (const method of Object.values(OpenAPIV3.HttpMethods)) {
+      if (pathItem?.[method]?.tags?.includes(cloudOnlyTag)) {
+        // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete -- intended
+        delete pathItem[method];
+      }
+    }
+
+    if (Object.keys(pathItem ?? {}).length === 0) {
+      // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete -- intended
+      delete document.paths[path];
+    }
+  }
+
+  return document;
 };
