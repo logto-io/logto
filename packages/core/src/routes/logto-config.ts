@@ -319,7 +319,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
         }),
       ]),
       response: jsonObjectGuard,
-      status: [200, 400, 422],
+      status: [200, 400, 403, 422],
     }),
     async (ctx, next) => {
       const {
