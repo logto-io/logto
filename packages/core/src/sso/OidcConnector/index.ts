@@ -95,7 +95,6 @@ class OidcConnector {
    * @param data unknown oidc authorization response
    * @param connectorSession The connector session data from the oidc provider session storage
    * @returns The user info from the OIDC provider
-
    */
   async getUserInfo(
     connectorSession: SingleSignOnConnectorSession,

@@ -31,7 +31,7 @@ export const azureAdSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.AZU
     'zh-TW': '以前是 Azure AD，全面的基於雲端的身份管理服務。',
   },
   name: {
-    en: 'Microsoft Entra ID',
+    en: 'Microsoft Entra ID (SAML)',
   },
   configGuard: samlConnectorConfigGuard,
   constructor: AzureAdSsoConnector,

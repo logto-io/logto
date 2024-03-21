@@ -20,6 +20,7 @@ export enum SsoProviderName {
   AZURE_AD = 'AzureAD',
   GOOGLE_WORKSPACE = 'GoogleWorkspace',
   OKTA = 'Okta',
+  AZURE_AD_OIDC = 'AzureAdOidc',
 }
 
 export const singleSignOnDomainBlackList = Object.freeze([
