@@ -2,12 +2,16 @@ import assert from 'node:assert';
 
 import type { UserClaim } from '@logto/core-kit';
 import { idTokenClaims, userinfoClaims, UserScope } from '@logto/core-kit';
-import { type User } from '@logto/schemas';
+import { type UserProfile, type User, userProfileKeys } from '@logto/schemas';
 import { pick, type Nullable, cond } from '@silverhand/essentials';
 import type { ClaimsParameterMember } from 'oidc-provider';
+import { snakeCase } from 'snake-case';
+import { type SnakeCaseKeys } from 'snakecase-keys';
 
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
+
+type UserProfileClaimSnakeCase = keyof SnakeCaseKeys<UserProfile>;
 
 const claimToUserKey: Readonly<
   Record<
@@ -19,6 +23,7 @@ const claimToUserKey: Readonly<
       | 'organizations'
       | 'organization_data'
       | 'organization_roles'
+      | UserProfileClaimSnakeCase
     >,
     keyof User
   >
@@ -30,7 +35,28 @@ const claimToUserKey: Readonly<
   phone_number: 'primaryPhone',
   custom_data: 'customData',
   identities: 'identities',
+  created_at: 'createdAt',
+  updated_at: 'updatedAt',
 });
+
+const claimToUserProfileKey: Readonly<Record<UserProfileClaimSnakeCase, keyof UserProfile>> =
+  Object.freeze({
+    family_name: 'familyName',
+    given_name: 'givenName',
+    middle_name: 'middleName',
+    nickname: 'nickname',
+    preferred_username: 'preferredUsername',
+    profile: 'profile',
+    website: 'website',
+    gender: 'gender',
+    birthdate: 'birthdate',
+    zoneinfo: 'zoneinfo',
+    locale: 'locale',
+    address: 'address',
+  });
+
+const isUserProfileClaim = (claim: string): claim is UserProfileClaimSnakeCase =>
+  userProfileKeys.some((key) => snakeCase(key) === claim);
 
 /**
  * Get user claims data according to the claims.
@@ -88,6 +114,19 @@ export const getUserClaimsData = async (
           ];
         }
         default: {
+          if (isUserProfileClaim(claim)) {
+            // Unlike other database fields (e.g. `name`), the claims stored in the `profile` field
+            // will fall back to `undefined` rather than `null`. We refrain from using `?? null`
+            // here to reduce the size of ID tokens, since `undefined` fields will be stripped in
+            // tokens.
+            //
+            // The only consideration here is the inconsistency for `name` and `picture`, which are
+            // also standard claims but they will fall back to `null`. While it's possible to align
+            // their behavior by having their fallback to `undefined`, it's better to maintain the
+            // current setup for now to prevent breaking changes.
+            return [claim, user.profile[claimToUserProfileKey[claim]]];
+          }
+
           return [claim, user[claimToUserKey[claim]]];
         }
       }

@@ -1,23 +1,23 @@
-import { UserScope } from '@logto/core-kit';
-
 const user_scopes = {
   descriptions: {
     /** UNTRANSLATED */
-    [UserScope.CustomData]: 'Your custom data',
+    custom_data: 'Your custom data',
     /** UNTRANSLATED */
-    [UserScope.Email]: 'Your email address',
+    email: 'Your email address',
     /** UNTRANSLATED */
-    [UserScope.Phone]: 'Your phone number',
+    phone: 'Your phone number',
     /** UNTRANSLATED */
-    [UserScope.Profile]: 'Your name, username and avatar',
+    profile: 'Your name, username, avatar, and other profile info',
     /** UNTRANSLATED */
-    [UserScope.Roles]: 'Your roles',
+    roles: 'Your roles',
     /** UNTRANSLATED */
-    [UserScope.Identities]: 'Your linked social identities',
+    identities: 'Your linked social identities',
     /** UNTRANSLATED */
-    [UserScope.Organizations]: 'Your organizations info',
+    'urn:logto:scope:organizations': 'Your organizations info',
     /** UNTRANSLATED */
-    [UserScope.OrganizationRoles]: 'Your organization roles',
+    'urn:logto:scope:organization_roles': 'Your organization roles',
+    /** UNTRANSLATED */
+    address: 'Your address',
   },
 };
 

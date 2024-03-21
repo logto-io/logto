@@ -15,19 +15,35 @@ export enum ReservedResource {
 }
 
 export type UserClaim =
+  // OIDC standard claims
   | 'name'
+  | 'given_name'
+  | 'family_name'
+  | 'middle_name'
+  | 'nickname'
+  | 'preferred_username'
+  | 'profile'
   | 'picture'
-  | 'username'
+  | 'website'
   | 'email'
   | 'email_verified'
+  | 'gender'
+  | 'birthdate'
+  | 'zoneinfo'
+  | 'locale'
   | 'phone_number'
   | 'phone_number_verified'
+  | 'address'
+  | 'updated_at'
+  // Custom claims
+  | 'username'
   | 'roles'
   | 'organizations'
   | 'organization_data'
   | 'organization_roles'
   | 'custom_data'
-  | 'identities';
+  | 'identities'
+  | 'created_at';
 
 /**
  * Scopes for ID Token and Userinfo Endpoint.
@@ -51,6 +67,12 @@ export enum UserScope {
    * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
    */
   Phone = 'phone',
+  /**
+   * Scope for user address.
+   *
+   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   */
+  Address = 'address',
   /**
    * Scope for user's custom data.
    *
@@ -85,11 +107,33 @@ export enum UserScope {
 
 /**
  * Mapped claims that ID Token includes.
+ *
+ * @see {@link https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims | OpenID Connect Core 1.0} for standard scope - claim mapping.
  */
 export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.freeze({
-  [UserScope.Profile]: ['name', 'picture', 'username'],
+  [UserScope.Profile]: [
+    // Standard claims
+    'name',
+    'family_name',
+    'given_name',
+    'middle_name',
+    'nickname',
+    'preferred_username',
+    'profile',
+    'picture',
+    'website',
+    'gender',
+    'birthdate',
+    'zoneinfo',
+    'locale',
+    'updated_at',
+    // Custom claims
+    'username',
+    'created_at',
+  ],
   [UserScope.Email]: ['email', 'email_verified'],
   [UserScope.Phone]: ['phone_number', 'phone_number_verified'],
+  [UserScope.Address]: ['address'],
   [UserScope.Roles]: ['roles'],
   [UserScope.Organizations]: ['organizations'],
   [UserScope.OrganizationRoles]: ['organization_roles'],
@@ -104,6 +148,7 @@ export const userinfoClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.f
   [UserScope.Profile]: [],
   [UserScope.Email]: [],
   [UserScope.Phone]: [],
+  [UserScope.Address]: [],
   [UserScope.Roles]: [],
   [UserScope.Organizations]: ['organization_data'],
   [UserScope.OrganizationRoles]: [],

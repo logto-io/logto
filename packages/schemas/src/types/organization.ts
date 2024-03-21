@@ -8,12 +8,9 @@ import {
   type OrganizationInvitation,
   OrganizationInvitations,
 } from '../db-entries/index.js';
+import { type ToZodObject } from '../utils/zod.js';
 
 import { type UserInfo, type FeaturedUser, userInfoGuard } from './user.js';
-
-type ToZodObject<T> = z.ZodObject<{
-  [K in keyof T]: z.ZodType<T[K]>;
-}>;
 
 /**
  * The simplified organization scope entity that is returned for some endpoints.

@@ -14,9 +14,11 @@ export const userInfoSelectFields = Object.freeze([
   'identities',
   'lastSignInAt',
   'createdAt',
+  'updatedAt',
+  'profile',
   'applicationId',
   'isSuspended',
-] as const);
+] satisfies Array<keyof User>);
 
 export const userInfoGuard = Users.guard.pick(
   // eslint-disable-next-line no-restricted-syntax
