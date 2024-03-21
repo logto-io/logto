@@ -86,21 +86,29 @@ export const formatFormDataToRequestData = (data: JwtClaimsFormType) => {
   };
 };
 
-export const formatFormDataToTestRequestPayload = (data: JwtClaimsFormType) => {
-  const defaultTokenPayload =
-    data.tokenType === LogtoJwtTokenPath.AccessToken
+export const formatFormDataToTestRequestPayload = ({
+  tokenType,
+  script,
+  environmentVariables,
+  testSample,
+}: JwtClaimsFormType) => {
+  const defaultTokenSample =
+    tokenType === LogtoJwtTokenPath.AccessToken
       ? defaultAccessTokenPayload
       : defaultClientCredentialsPayload;
 
-  const defaultContext =
-    data.tokenType === LogtoJwtTokenPath.AccessToken ? defaultUserTokenContextData : undefined;
+  const defaultContextSample =
+    tokenType === LogtoJwtTokenPath.AccessToken ? defaultUserTokenContextData : undefined;
 
   return {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- parse empty string as undefined
-    script: data.script || undefined,
-    envVars: formatEnvVariablesFormData(data.environmentVariables),
-    token: formatSampleCodeStringToJson(data.testSample?.tokenSample) ?? defaultTokenPayload,
-    context: formatSampleCodeStringToJson(data.testSample?.contextSample) ?? defaultContext,
+    tokenType,
+    payload: {
+      script,
+      envVars: formatEnvVariablesFormData(environmentVariables),
+      tokenSample: formatSampleCodeStringToJson(testSample?.tokenSample) ?? defaultTokenSample,
+      contextSample:
+        formatSampleCodeStringToJson(testSample?.contextSample) ?? defaultContextSample,
+    },
   };
 };
 

@@ -26,7 +26,7 @@ type Props = {
 
 const userTokenModelSettings = [accessTokenPayloadTestModel, userContextTestModel];
 const machineToMachineTokenModelSettings = [clientCredentialsPayloadTestModel];
-const testEndpointPath = 'api/config/jwt-customizer/test';
+const testEndpointPath = 'api/configs/jwt-customizer/test';
 
 function TestTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });
