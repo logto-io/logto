@@ -69,6 +69,6 @@ describe('getUserInfo', () => {
         return { nonce: 'nonce', redirectUri: 'http://localhost:3001/callback' };
       })
     );
-    expect(userInfo).toEqual({ id: userId });
+    expect(userInfo).toMatchObject({ id: userId, rawData: { sub: userId, nonce: 'nonce' } });
   });
 });

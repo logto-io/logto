@@ -1,6 +1,9 @@
 import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
-import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
+import {
+  mockSocialConnectorId,
+  mockSocialConnectorTarget,
+} from '#src/__mocks__/connectors-mock.js';
 import {
   createSocialAuthorizationUri,
   putInteraction,
@@ -131,8 +134,24 @@ describe('Social Identifier Interactions', () => {
 
       const uid = await processSession(client, redirectTo);
 
-      const { primaryEmail } = await getUser(uid);
+      const { primaryEmail, identities } = await getUser(uid);
       expect(primaryEmail).toBe(socialEmail);
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      expect(identities[mockSocialConnectorTarget]).toStrictEqual({
+        details: {
+          email: expect.any(String),
+          id: expect.any(String),
+          rawData: {
+            code: 'auth_code_foo',
+            email: expect.any(String),
+            redirectUri: 'http://foo.dev/callback',
+            state: 'foo_state',
+            userId: expect.any(String),
+          },
+        },
+        userId: expect.any(String),
+      });
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
 
       await logoutClient(client);
       await deleteUser(uid);

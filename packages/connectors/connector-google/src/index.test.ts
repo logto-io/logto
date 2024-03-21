@@ -79,7 +79,7 @@ describe('google connector', () => {
     });
 
     it('should get valid SocialUserInfo', async () => {
-      nock(userInfoEndpoint).post('').reply(200, {
+      const jsonResponse = Object.freeze({
         sub: '1234567890',
         name: 'monalisa octocat',
         given_name: 'monalisa',
@@ -89,6 +89,7 @@ describe('google connector', () => {
         email_verified: true,
         locale: 'en',
       });
+      nock(userInfoEndpoint).post('').reply(200, jsonResponse);
       const connector = await createConnector({ getConfig });
       const socialUserInfo = await connector.getUserInfo(
         {
@@ -97,11 +98,12 @@ describe('google connector', () => {
         },
         jest.fn()
       );
-      expect(socialUserInfo).toMatchObject({
+      expect(socialUserInfo).toStrictEqual({
         id: '1234567890',
         avatar: 'https://github.com/images/error/octocat_happy.gif',
         name: 'monalisa octocat',
         email: 'octocat@google.com',
+        rawData: jsonResponse,
       });
     });
 

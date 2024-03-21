@@ -100,8 +100,8 @@ const getUserInfo =
         searchParams: { access_token: accessToken, openid },
         timeout: { request: defaultTimeout },
       });
-
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
+      const rawData = parseJson(httpResponse.body);
+      const result = userInfoResponseGuard.safeParse(rawData);
 
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
@@ -114,7 +114,7 @@ const getUserInfo =
       // 'errmsg' and 'errcode' turn to non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
       userInfoResponseMessageParser(result.data);
 
-      return { id: unionid ?? openid, avatar: headimgurl, name: nickname };
+      return { id: unionid ?? openid, avatar: headimgurl, name: nickname, rawData };
     } catch (error: unknown) {
       return getUserInfoErrorHandler(error);
     }

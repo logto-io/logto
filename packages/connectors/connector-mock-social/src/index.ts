@@ -7,7 +7,12 @@ import type {
   CreateConnector,
   SocialConnector,
 } from '@logto/connector-kit';
-import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  ConnectorType,
+  jsonGuard,
+} from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
 import { mockSocialConfigGuard } from './types.js';
@@ -35,6 +40,7 @@ const getUserInfo: GetUserInfo = async (data) => {
   return {
     id: userId ?? `mock-social-sub-${randomUUID()}`,
     ...rest,
+    rawData: jsonGuard.parse(data),
   };
 };
 

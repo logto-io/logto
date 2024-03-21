@@ -71,8 +71,9 @@ const getUserInfo =
         },
         timeout: { request: defaultTimeout },
       });
+      const rawData = parseJsonObject(httpResponse.body);
 
-      return userProfileMapping(parseJsonObject(httpResponse.body), parsedConfig.profileMap);
+      return { ...userProfileMapping(rawData, parsedConfig.profileMap), rawData };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));

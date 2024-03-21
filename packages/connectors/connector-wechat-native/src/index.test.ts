@@ -139,17 +139,22 @@ describe('getUserInfo', () => {
   const parameters = new URLSearchParams({ access_token: 'access_token', openid: 'openid' });
 
   it('should get valid SocialUserInfo', async () => {
-    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(0, {
+    const jsonResponse = Object.freeze({
       unionid: 'this_is_an_arbitrary_wechat_union_id',
       headimgurl: 'https://github.com/images/error/octocat_happy.gif',
       nickname: 'wechat bot',
     });
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(parameters)
+      .reply(0, jsonResponse);
     const connector = await createConnector({ getConfig });
     const socialUserInfo = await connector.getUserInfo({ code: 'code' }, jest.fn());
     expect(socialUserInfo).toMatchObject({
       id: 'this_is_an_arbitrary_wechat_union_id',
       avatar: 'https://github.com/images/error/octocat_happy.gif',
       name: 'wechat bot',
+      rawData: jsonResponse,
     });
   });
 

@@ -59,6 +59,7 @@ describe('getUserInfo', () => {
     const userInfoEndpointUrl = new URL(mockConfig.userInfoEndpoint);
     nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(true).reply(200, {
       sub: userId,
+      foo: 'bar',
     });
     const connector = await createConnector({ getConfig });
     const userInfo = await connector.getUserInfo(
@@ -67,6 +68,6 @@ describe('getUserInfo', () => {
         return { redirectUri: 'http://localhost:3001/callback' };
       })
     );
-    expect(userInfo).toEqual({ id: userId });
+    expect(userInfo).toStrictEqual({ id: userId, rawData: { sub: userId, foo: 'bar' } });
   });
 });

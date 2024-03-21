@@ -3,7 +3,7 @@ import { got, HTTPError } from 'got';
 import path from 'node:path';
 
 import type { AuthorizationCodeRequest, AuthorizationUrlRequest } from '@azure/msal-node';
-import { ConfidentialClientApplication, CryptoProvider } from '@azure/msal-node';
+import { ConfidentialClientApplication } from '@azure/msal-node';
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -30,10 +30,6 @@ import {
 
 // eslint-disable-next-line @silverhand/fp/no-let
 let authCodeRequest: AuthorizationCodeRequest;
-
-// This `cryptoProvider` seems not used.
-// Temporarily keep this as this is a refactor, which should not change the logics.
-const cryptoProvider = new CryptoProvider();
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
@@ -85,7 +81,6 @@ const getAccessToken = async (config: AzureADConfig, code: string, redirectUri: 
   });
 
   const authResult = await clientApplication.acquireTokenByCode(codeRequest);
-
   const result = accessTokenResponseGuard.safeParse(authResult);
 
   if (!result.success) {
@@ -117,8 +112,8 @@ const getUserInfo =
         },
         timeout: { request: defaultTimeout },
       });
-
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
+      const rawData = parseJson(httpResponse.body);
+      const result = userInfoResponseGuard.safeParse(rawData);
 
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
@@ -130,6 +125,7 @@ const getUserInfo =
         id,
         email: conditional(mail),
         name: conditional(displayName),
+        rawData,
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {

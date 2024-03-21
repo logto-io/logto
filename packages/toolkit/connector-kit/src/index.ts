@@ -1,3 +1,4 @@
+import { type Json, type JsonObject } from '@withtyped/server';
 import type { ZodType, ZodTypeDef } from 'zod';
 
 import {
@@ -5,6 +6,8 @@ import {
   ConnectorErrorCodes,
   type SendMessagePayload,
   ConnectorType,
+  jsonGuard,
+  jsonObjectGuard,
 } from './types/index.js';
 
 export * from './types/index.js';
@@ -24,38 +27,24 @@ export const parseJson = (
   jsonString: string,
   errorCode: ConnectorErrorCodes = ConnectorErrorCodes.InvalidResponse,
   errorPayload?: unknown
-): unknown => {
+): Json => {
   try {
-    return JSON.parse(jsonString);
+    return jsonGuard.parse(JSON.parse(jsonString));
   } catch {
     throw new ConnectorError(errorCode, errorPayload ?? jsonString);
   }
 };
 
-const isRecordOrArray = (parsed: unknown): parsed is Record<string, unknown> | unknown[] => {
-  if (Array.isArray(parsed)) {
-    return true;
+export const parseJsonObject = (
+  ...[jsonString, errorCode = ConnectorErrorCodes.InvalidResponse, errorPayload]: Parameters<
+    typeof parseJson
+  >
+): JsonObject => {
+  try {
+    return jsonObjectGuard.parse(JSON.parse(jsonString));
+  } catch {
+    throw new ConnectorError(errorCode, errorPayload ?? jsonString);
   }
-
-  if (!(parsed !== null && typeof parsed === 'object')) {
-    return false;
-  }
-
-  if (Object.getOwnPropertySymbols(parsed).length > 0) {
-    return false;
-  }
-
-  return true;
-};
-
-export const parseJsonObject = (...args: Parameters<typeof parseJson>) => {
-  const parsed = parseJson(...args);
-
-  if (!isRecordOrArray(parsed)) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, parsed);
-  }
-
-  return parsed;
 };
 
 /** @deprecated Use {@link mockConnectorFilePaths} instead. */

@@ -1,8 +1,8 @@
 import {
   type CreateSsoConnector,
   SignInIdentifier,
-  demoAppApplicationId,
   SsoProviderName,
+  demoAppApplicationId,
 } from '@logto/schemas';
 import { appendPath, getEnv } from '@silverhand/essentials';
 
@@ -17,7 +17,7 @@ export const demoAppUrl = appendPath(new URL(logtoUrl), 'demo-app');
 
 export const discoveryUrl = `${logtoUrl}/oidc/.well-known/openid-configuration`;
 
-export const demoAppRedirectUri = `${logtoUrl}/${demoAppApplicationId}`;
+export const demoAppRedirectUri = appendPath(new URL(logtoUrl), demoAppApplicationId).href;
 export const adminConsoleRedirectUri = `${logtoConsoleUrl}/console/callback`;
 
 export const signUpIdentifiers = {

@@ -132,11 +132,17 @@ describe('Facebook connector', () => {
         },
         jest.fn()
       );
-      expect(socialUserInfo).toMatchObject({
+      expect(socialUserInfo).toStrictEqual({
         id: '1234567890',
         avatar,
         name: 'monalisa octocat',
         email: 'octocat@facebook.com',
+        rawData: {
+          id: '1234567890',
+          name: 'monalisa octocat',
+          email: 'octocat@facebook.com',
+          picture: { data: { url: avatar } },
+        },
       });
     });
 

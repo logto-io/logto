@@ -1,4 +1,5 @@
 // MARK: Social connector
+import { type Json } from '@withtyped/server';
 import { z } from 'zod';
 
 import { type BaseConnector, type ConnectorType } from './foundation.js';
@@ -22,20 +23,38 @@ export type GetAuthorizationUri = (
   setSession: SetSession
 ) => Promise<string>;
 
+// Copied from https://github.com/colinhacks/zod#json-type
+const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+
+export const jsonGuard: z.ZodType<Json> = z.lazy(() =>
+  z.union([literalSchema, z.array(jsonGuard), z.record(jsonGuard)])
+);
+
+export const jsonObjectGuard = z.record(jsonGuard);
+
+/**
+ * Normalized social user info that can be used in the system. The raw data returned from the
+ * social provider is also included in the `rawData` field.
+ */
+export type SocialUserInfo = {
+  id: string;
+  email?: string;
+  phone?: string;
+  name?: string;
+  avatar?: string;
+  rawData?: Json;
+};
+
 export const socialUserInfoGuard = z.object({
   id: z.string(),
   email: z.string().optional(),
   phone: z.string().optional(),
   name: z.string().optional(),
   avatar: z.string().optional(),
-});
+  rawData: jsonGuard.optional(),
+}) satisfies z.ZodType<SocialUserInfo>;
 
-export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
-
-export type GetUserInfo = (
-  data: unknown,
-  getSession: GetSession
-) => Promise<SocialUserInfo & Record<string, string | boolean | number | undefined>>;
+export type GetUserInfo = (data: unknown, getSession: GetSession) => Promise<SocialUserInfo>;
 
 export const connectorSessionGuard = z
   .object({
