@@ -1,4 +1,4 @@
-import type { RoleResponse, User, Application } from '@logto/schemas';
+import type { RoleResponse, UserProfileResponse, Application } from '@logto/schemas';
 import { RoleType } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -15,7 +15,7 @@ import { getUserTitle } from '@/utils/user';
 
 type Props =
   | {
-      entity: User;
+      entity: UserProfileResponse;
       onClose: (success?: boolean) => void;
       type: RoleType.User;
     }

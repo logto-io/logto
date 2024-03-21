@@ -1,5 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import type { User } from '@logto/schemas';
+import type { UserProfileResponse } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -15,7 +15,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import * as styles from './index.module.scss';
 
 type Props = {
-  user: User;
+  user: UserProfileResponse;
   password: string;
   title: AdminConsoleKey;
   onClose: () => void;

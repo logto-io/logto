@@ -19,7 +19,11 @@ export const userInfoSelectFields = Object.freeze([
 ] as const);
 
 export const userInfoGuard = Users.guard.pick(
-  Object.fromEntries(userInfoSelectFields.map((key) => [key, true]))
+  // eslint-disable-next-line no-restricted-syntax
+  Object.fromEntries(userInfoSelectFields.map((field) => [field, true])) as Record<
+    (typeof userInfoSelectFields)[number],
+    true
+  >
 );
 
 export type UserInfo = z.infer<typeof userInfoGuard>;
