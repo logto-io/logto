@@ -7,7 +7,7 @@ import {
   singleSignOnConnectorSessionGuard,
   singleSignOnInteractionIdentifierResultGuard,
   type SingleSignOnInteractionIdentifierResult,
-} from '#src/sso/types/session.js';
+} from '#src/sso/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 /**

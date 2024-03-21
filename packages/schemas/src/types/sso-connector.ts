@@ -23,6 +23,11 @@ export enum SsoProviderName {
   AZURE_AD_OIDC = 'AzureAdOidc',
 }
 
+export enum SsoProviderType {
+  OIDC = 'oidc',
+  SAML = 'saml',
+}
+
 export const singleSignOnDomainBlackList = Object.freeze([
   'gmail.com',
   'yahoo.com',
@@ -67,9 +72,11 @@ export type SsoConnectorProvidersResponse = z.infer<typeof ssoConnectorProviders
 export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard
   .omit({ providerName: true })
   .merge(
+    // Static provider configs defined in the SSO factory.
     z.object({
       name: z.string(), // For display purpose, generate from i18n key name defined by SSO factory.
-      providerName: z.nativeEnum(SsoProviderName),
+      providerName: z.nativeEnum(SsoProviderName), // Must be a supported SSO provider name.
+      providerType: z.nativeEnum(SsoProviderType),
       providerLogo: z.string(),
       providerLogoDark: z.string(),
       providerConfig: z.record(z.unknown()).optional(),

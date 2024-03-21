@@ -29,15 +29,7 @@ export const singleSignOnConnectorSessionGuard = z.object({
 
 export type SingleSignOnConnectorSession = z.infer<typeof singleSignOnConnectorSessionGuard>;
 
-export const samlConnectorAssertionSessionGuard = z.object({
-  state: z.string(),
-  redirectUri: z.string(),
-  connectorId: z.string(),
-});
-
 export type CreateSingleSignOnSession = (storage: SingleSignOnConnectorSession) => Promise<void>;
-
-export type GetSingleSignOnSession = () => Promise<SingleSignOnConnectorSession>;
 
 /**
  * Single sign on interaction identifier session
