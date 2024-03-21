@@ -117,7 +117,7 @@ const validateSupplementPaths = (
           (operation.tags.length > 1 || operation.tags[0] !== cloudOnlyTag)
         ) {
           throw new TypeError(
-            `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\` except for \`${cloudOnlyTag}\`.  Define tags in the document root instead.`
+            `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\` except for tag \`${cloudOnlyTag}\`.  Define tags in the document root instead.`
           );
         }
       }

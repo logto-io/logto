@@ -228,7 +228,10 @@
             "description": "The result of the JWT customizer script testing."
           },
           "400": {
-            "description": "The request body is invalid."
+            "description": "Zod errors in cloud service (data type does not match expectation, can be either request body or response body)."
+          },
+          "422": {
+            "description": "Syntax errors in cloud service."
           }
         }
       }
