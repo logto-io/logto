@@ -210,57 +210,61 @@ export default function initOidc(
     },
     extraParams: [OIDCExtraParametersKey.InteractionMode],
     extraTokenClaims: async (ctx, token) => {
-      const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
-      // No cloud connection for OSS version, skip.
-      if (!isDevFeaturesEnabled || !isCloud) {
-        return;
+      try {
+        const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
+        // No cloud connection for OSS version, skip.
+        if (!isDevFeaturesEnabled || !isCloud) {
+          return;
+        }
+
+        const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
+
+        const { script, envVars } =
+          (await trySafe(
+            logtoConfigs.getJwtCustomizer(
+              isTokenClientCredentials
+                ? LogtoJwtTokenKey.ClientCredentials
+                : LogtoJwtTokenKey.AccessToken
+            )
+          )) ?? {};
+
+        if (!script) {
+          return;
+        }
+
+        // Wait for cloud API to be ready and we can use cloud connection client to request the API.
+        const client = await cloudConnection.getClient();
+
+        // We pass context to the cloud API only when it is a user's access token.
+        const logtoUserInfo = conditional(
+          !isTokenClientCredentials &&
+            token.accountId &&
+            (await libraries.jwtCustomizers.getUserContext(token.accountId))
+        );
+        /**
+         * `token` and `context` can not be assigned to Record<string, Json> according to the type inference,
+         * use request body guard to ensure the type.
+         *
+         * Use direct type casting to avoid the type inference issue since if the type is not correct the client
+         * will throw an Zod type error, there is no need to implement the zod guard and error handling here.
+         */
+        // eslint-disable-next-line no-restricted-syntax
+        const payload = {
+          script,
+          envVars,
+          token,
+          context: conditional(logtoUserInfo && { user: logtoUserInfo }),
+        } as unknown as CustomJwtFetcher;
+        return (
+          (await trySafe(
+            client.post(`/api/services/custom-jwt`, {
+              body: payload,
+            })
+          )) ?? {}
+        );
+      } catch {
+        // TODO: Log the error
       }
-
-      const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
-
-      const { script, envVars } =
-        (await trySafe(
-          logtoConfigs.getJwtCustomizer(
-            isTokenClientCredentials
-              ? LogtoJwtTokenKey.ClientCredentials
-              : LogtoJwtTokenKey.AccessToken
-          )
-        )) ?? {};
-
-      if (!script) {
-        return;
-      }
-
-      // Wait for cloud API to be ready and we can use cloud connection client to request the API.
-      const client = await cloudConnection.getClient();
-
-      // We pass context to the cloud API only when it is a user's access token.
-      const logtoUserInfo = conditional(
-        !isTokenClientCredentials &&
-          token.accountId &&
-          (await libraries.jwtCustomizers.getUserContext(token.accountId))
-      );
-      /**
-       * `token` and `context` can not be assigned to Record<string, Json> according to the type inference,
-       * use request body guard to ensure the type.
-       *
-       * Use direct type casting to avoid the type inference issue since if the type is not correct the client
-       * will throw an Zod type error, there is no need to implement the zod guard and error handling here.
-       */
-      // eslint-disable-next-line no-restricted-syntax
-      const payload = {
-        script,
-        envVars,
-        token,
-        context: conditional(logtoUserInfo && { user: logtoUserInfo }),
-      } as unknown as CustomJwtFetcher;
-      return (
-        (await trySafe(
-          client.post(`/api/services/custom-jwt`, {
-            body: payload,
-          })
-        )) ?? {}
-      );
     },
     extraClientMetadata: {
       properties: Object.values(CustomClientMetadataKey),
