@@ -3,6 +3,14 @@ import { type TFuncKey } from 'i18next';
 import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import {
+  freePlanAuditLogsRetentionDays,
+  freePlanM2mLimit,
+  freePlanMauLimit,
+  freePlanPermissionsLimit,
+  freePlanRoleLimit,
+  proPlanAuditLogsRetentionDays,
+} from '@/consts/subscriptions';
 import DynamicT from '@/ds-components/DynamicT';
 
 import TableDataWrapper from './TableDataWrapper';
@@ -113,8 +121,8 @@ function PlanComparisonTable() {
 
     // Audit logs
     const auditLogRetention = t('audit_logs.retention');
-    const freePlanLogRetention = t('days', { count: 3 });
-    const paidPlanLogRetention = t('days', { count: 14 });
+    const freePlanLogRetention = t('days', { count: freePlanAuditLogsRetentionDays });
+    const paidPlanLogRetention = t('days', { count: proPlanAuditLogsRetentionDays });
 
     // Webhooks
     const webhooks = t('hooks.hooks');
@@ -130,7 +138,10 @@ function PlanComparisonTable() {
         title: 'quota.title',
         rows: [
           { name: basePrice, data: ['0', proPlanBasePrice, contact] },
-          { name: `${mauLimit}|${mauLimitTip}`, data: ['50,000', unlimited, contact] },
+          {
+            name: `${mauLimit}|${mauLimitTip}`,
+            data: [freePlanMauLimit.toLocaleString(), unlimited, contact],
+          },
           {
             name: `${includedTokens}|${includedTokensTip}`,
             data: ['500,000', `${proPlanIncludedTokens}|${proPlanIncludedTokensTip}`, contact],
@@ -144,7 +155,7 @@ function PlanComparisonTable() {
           {
             name: m2mApps,
             data: [
-              '1',
+              `${freePlanM2mLimit}`,
               `${proPlanM2mAppLimit}|${paidQuotaLimitTip}|${proPlanM2mAppPrice}`,
               contact,
             ],
@@ -197,9 +208,9 @@ function PlanComparisonTable() {
         title: 'user_management.title',
         rows: [
           { name: userManagement, data: ['✓', '✓', '✓'] },
-          { name: userRoles, data: ['1', unlimited, contact] },
+          { name: userRoles, data: [`${freePlanRoleLimit}`, unlimited, contact] },
           { name: m2mRoles, data: ['1', unlimited, contact] },
-          { name: permissionsPerRole, data: ['1', unlimited, contact] },
+          { name: permissionsPerRole, data: [`${freePlanPermissionsLimit}`, unlimited, contact] },
         ],
       },
       {
