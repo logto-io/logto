@@ -20,11 +20,12 @@ const mockTenantId = 'mock_tenant_id';
 
 describe('parseFactoryDetail', () => {
   it.each(Object.values(SsoProviderName))('should return correct detail for %s', (providerName) => {
-    const { logo, logoDark, description, name } = ssoConnectorFactories[providerName];
+    const { logo, logoDark, description, name, providerType } = ssoConnectorFactories[providerName];
     const detail = parseFactoryDetail(ssoConnectorFactories[providerName], 'en');
 
     expect(detail).toEqual({
       providerName,
+      providerType,
       logo,
       logoDark,
       description: description.en,
@@ -35,11 +36,13 @@ describe('parseFactoryDetail', () => {
   it.each(Object.values(SsoProviderName))(
     'should return correct detail for %s with unknown locale',
     (providerName) => {
-      const { logo, logoDark, description, name } = ssoConnectorFactories[providerName];
+      const { logo, logoDark, description, name, providerType } =
+        ssoConnectorFactories[providerName];
       const detail = parseFactoryDetail(ssoConnectorFactories[providerName], 'zh');
 
       expect(detail).toEqual({
         providerName,
+        providerType,
         logo,
         logoDark,
         description: description.en,
