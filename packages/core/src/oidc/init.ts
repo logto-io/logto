@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
 /* istanbul ignore file */
-
 import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
 
@@ -14,7 +13,6 @@ import {
   logtoCookieKey,
   type LogtoUiCookie,
   LogtoJwtTokenKey,
-  type CustomJwtFetcher,
 } from '@logto/schemas';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
@@ -219,6 +217,12 @@ export default function initOidc(
 
       try {
         const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
+        const pickedFields = isTokenClientCredentials
+          ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
+          : ctx.oidc.provider.AccessToken.IN_PAYLOAD;
+        const readOnlyToken = Object.fromEntries(
+          pickedFields.map((field) => [field, Reflect.get(token, field)])
+        );
 
         const { script, envVars } =
           (await trySafe(
@@ -233,7 +237,6 @@ export default function initOidc(
           return;
         }
 
-        // Wait for cloud API to be ready and we can use cloud connection client to request the API.
         const client = await cloudConnection.getClient();
 
         // We pass context to the cloud API only when it is a user's access token.
@@ -242,27 +245,16 @@ export default function initOidc(
             token.accountId &&
             (await libraries.jwtCustomizers.getUserContext(token.accountId))
         );
-        /**
-         * `token` and `context` can not be assigned to Record<string, Json> according to the type inference,
-         * use request body guard to ensure the type.
-         *
-         * Use direct type casting to avoid the type inference issue since if the type is not correct the client
-         * will throw an Zod type error, there is no need to implement the zod guard and error handling here.
-         */
-        // eslint-disable-next-line no-restricted-syntax
-        const payload = {
-          script,
-          envVars,
-          token,
-          context: conditional(logtoUserInfo && { user: logtoUserInfo }),
-        } as unknown as CustomJwtFetcher;
-        return (
-          (await trySafe(
-            client.post(`/api/services/custom-jwt`, {
-              body: payload,
-            })
-          )) ?? {}
-        );
+
+        // `context` parameter is only eligible for user's access token for now.
+        return await client.post(`/api/services/custom-jwt`, {
+          body: {
+            script,
+            envVars,
+            token: readOnlyToken,
+            ...conditional(logtoUserInfo && { context: { user: logtoUserInfo } }),
+          },
+        });
       } catch {
         // TODO: Log the error
       }
