@@ -210,13 +210,14 @@ export default function initOidc(
     },
     extraParams: [OIDCExtraParametersKey.InteractionMode],
     extraTokenClaims: async (ctx, token) => {
-      try {
-        const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
-        // No cloud connection for OSS version, skip.
-        if (!isDevFeaturesEnabled || !isCloud) {
-          return;
-        }
+      const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
 
+      // No cloud connection for OSS version, skip.
+      if (!isDevFeaturesEnabled || !isCloud) {
+        return;
+      }
+
+      try {
         const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
 
         const { script, envVars } =

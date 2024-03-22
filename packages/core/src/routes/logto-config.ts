@@ -211,44 +211,49 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     }
   );
 
-  if (tenantId !== adminTenantId) {
-    router.put(
-      '/configs/jwt-customizer/:tokenTypePath',
-      koaGuard({
-        params: z.object({
-          tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
-        }),
-        /**
-         * Use `z.unknown()` to guard the request body as a JSON object, since the actual guard depends
-         * on the `tokenTypePath` and we can not get the value of `tokenTypePath` before parsing the request body,
-         * we will do more specific guard as long as we can get the value of `tokenTypePath`.
-         *
-         * Should specify `body` in koaGuard, otherwise the request body is not accessible even via `ctx.request.body`.
-         */
-        body: z.unknown(),
-        response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
-        status: [200, 201, 400],
+  router.put(
+    '/configs/jwt-customizer/:tokenTypePath',
+    koaGuard({
+      params: z.object({
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
       }),
-      async (ctx, next) => {
-        const {
-          params: { tokenTypePath },
-          body: rawBody,
-        } = ctx.guard;
-        const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
-
-        const { rows } = await getRowsByKeys([key]);
-
-        const jwtCustomizer = await upsertJwtCustomizer(key, body);
-
-        if (rows.length === 0) {
-          ctx.status = 201;
-        }
-        ctx.body = jwtCustomizer.value;
-
-        return next();
+      /**
+       * Use `z.unknown()` to guard the request body as a JSON object, since the actual guard depends
+       * on the `tokenTypePath` and we can not get the value of `tokenTypePath` before parsing the request body,
+       * we will do more specific guard as long as we can get the value of `tokenTypePath`.
+       *
+       * Should specify `body` in koaGuard, otherwise the request body is not accessible even via `ctx.request.body`.
+       */
+      body: z.unknown(),
+      response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
+      status: [200, 201, 400, 403],
+    }),
+    async (ctx, next) => {
+      if (
+        tenantId !== adminTenantId &&
+        !(EnvSet.values.isUnitTest || EnvSet.values.isIntegrationTest)
+      ) {
+        throw new RequestError({ code: 'auth.forbidden', status: 403 });
       }
-    );
-  }
+
+      const {
+        params: { tokenTypePath },
+        body: rawBody,
+      } = ctx.guard;
+      const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
+
+      const { rows } = await getRowsByKeys([key]);
+
+      const jwtCustomizer = await upsertJwtCustomizer(key, body);
+
+      if (rows.length === 0) {
+        ctx.status = 201;
+      }
+      ctx.body = jwtCustomizer.value;
+
+      return next();
+    }
+  );
 
   router.get(
     '/configs/jwt-customizer/:tokenTypePath',

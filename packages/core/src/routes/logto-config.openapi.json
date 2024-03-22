@@ -147,6 +147,9 @@
           },
           "400": {
             "description": "The request body is invalid."
+          },
+          "403": {
+            "description": "Permission denied."
           }
         }
       },
