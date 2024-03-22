@@ -103,7 +103,8 @@ export const formatFormDataToTestRequestPayload = ({
   return {
     tokenType,
     payload: {
-      script,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- parse empty string as undefined
+      script: script || undefined,
       envVars: formatEnvVariablesFormData(environmentVariables),
       tokenSample: formatSampleCodeStringToJson(testSample?.tokenSample) ?? defaultTokenSample,
       contextSample:

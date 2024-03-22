@@ -37,6 +37,8 @@
 
 .tabContent {
   display: none;
+  // restrict the height of the tab content to the height of the container
+  overflow: hidden;
 
   &.active {
     flex: 1;
@@ -85,6 +87,14 @@
     }
   }
 
+  &.fixHeight {
+    overflow: hidden;
+
+    .cardContent {
+      overflow: hidden;
+    }
+  }
+
   .expandButton {
     width: 24px;
     height: 24px;
@@ -116,17 +126,6 @@
   }
 }
 
-.table {
-  .value {
-    display: inline-block;
-    padding: _.unit(0.5) _.unit(2);
-    color: var(--color-text);
-    background-color: var(--color-bg-info-tag);
-    border-radius: 4px;
-    font-family: 'Roboto Mono', monospace;
-  }
-}
-
 .sampleCode {
   :global {
     /* stylelint-disable-next-line selector-class-pattern */
@@ -150,6 +149,8 @@
   margin-bottom: _.unit(4);
 }
 
+/** Test Tab */
+
 .shrinkCodeEditor {
   height: 50%;
 }
@@ -161,6 +162,7 @@
   border-radius: 8px;
   border: 1px solid var(--color-divider);
   font-family: 'Roboto Mono', monospace;
+  overflow: auto;
 
   .testResultHeader {
     padding: _.unit(3) _.unit(4);
@@ -175,6 +177,7 @@
   .testResultContent {
     padding: _.unit(2) _.unit(4);
     font: var(--font-body-2);
+    overflow: auto;
 
     pre {
       white-space: pre-wrap;
@@ -194,6 +197,9 @@
   margin: _.unit(4) 0;
   color: var(--color-error);
 }
+
+
+/** Flexbox */
 
 .flexColumn {
   display: flex;

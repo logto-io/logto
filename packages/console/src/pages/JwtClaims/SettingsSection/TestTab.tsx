@@ -24,8 +24,8 @@ type Props = {
   isActive: boolean;
 };
 
-const userTokenModelSettings = [accessTokenPayloadTestModel, userContextTestModel];
-const machineToMachineTokenModelSettings = [clientCredentialsPayloadTestModel];
+const accessTokenModelSettings = [accessTokenPayloadTestModel, userContextTestModel];
+const clientCredentialsModelSettings = [clientCredentialsPayloadTestModel];
 const testEndpointPath = 'api/configs/jwt-customizer/test';
 
 function TestTab({ isActive }: Props) {
@@ -40,14 +40,19 @@ function TestTab({ isActive }: Props) {
   const editorModels = useMemo(
     () =>
       tokenType === LogtoJwtTokenPath.AccessToken
-        ? userTokenModelSettings
-        : machineToMachineTokenModelSettings,
+        ? accessTokenModelSettings
+        : clientCredentialsModelSettings,
     [tokenType]
   );
 
   useEffect(() => {
     setActiveModelName(editorModels[0]?.name);
   }, [editorModels, tokenType]);
+
+  // Clear the test result when the token type changes
+  useEffect(() => {
+    setTestResult(undefined);
+  }, [tokenType]);
 
   const onTestHandler = useCallback(async () => {
     const payload = getValues();
@@ -120,7 +125,9 @@ function TestTab({ isActive }: Props) {
 
   return (
     <div className={classNames(styles.tabContent, isActive && styles.active)}>
-      <Card className={classNames(styles.card, styles.flexGrow, styles.flexColumn)}>
+      <Card
+        className={classNames(styles.card, styles.flexGrow, styles.flexColumn, styles.fixHeight)}
+      >
         <div className={styles.headerRow}>
           <div className={styles.cardHeader}>
             <div className={styles.cardTitle}>{t('tester.title')}</div>
