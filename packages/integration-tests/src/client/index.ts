@@ -1,4 +1,4 @@
-import type { LogtoConfig } from '@logto/node';
+import type { LogtoConfig, SignInOptions } from '@logto/node';
 import LogtoClient from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
@@ -59,8 +59,11 @@ export default class MockClient {
     return map;
   }
 
-  public async initSession(callbackUri = demoAppRedirectUri) {
-    await this.logto.signIn(callbackUri);
+  public async initSession(
+    redirectUri = demoAppRedirectUri,
+    options: Omit<SignInOptions, 'redirectUri'> = {}
+  ) {
+    await this.logto.signIn({ redirectUri, ...options });
 
     assert(this.navigateUrl, new Error('Unable to navigate to sign in uri'));
     assert(
@@ -75,7 +78,8 @@ export default class MockClient {
 
     // Note: should redirect to sign-in page
     assert(
-      response.statusCode === 303 && response.headers.location?.startsWith('/sign-in'),
+      response.statusCode === 303 &&
+        response.headers.location?.startsWith(options.directSignIn ? '/direct/' : '/sign-in'),
       new Error('Visit sign in uri failed')
     );
 

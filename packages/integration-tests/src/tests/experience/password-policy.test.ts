@@ -1,5 +1,7 @@
 /* Test the sign-in with different password policies. */
 
+import crypto from 'node:crypto';
+
 import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -7,11 +9,12 @@ import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 import { setupUsernameAndEmailExperience } from '#src/ui-helpers/index.js';
-import { waitFor } from '#src/utils.js';
+
+const randomString = () => crypto.randomBytes(8).toString('hex');
 
 describe('password policy', () => {
-  const username = 'test_pass_policy_30';
-  const emailName = 'a_good_foo_30';
+  const username = 'test_' + randomString();
+  const emailName = 'foo_' + randomString();
   const email = emailName + '@bar.com';
   const invalidPasswords: Array<[string, string | RegExp]> = [
     ['123', 'minimum length'],
@@ -44,7 +47,7 @@ describe('password policy', () => {
     await experience.toFillInput('id', username, { submit: true });
 
     // Password tests
-    experience.toBeAt('register/password');
+    await experience.waitForPathname('register/password');
     await experience.toFillNewPasswords(
       ...invalidPasswords,
       [username + 'A', /product context .* personal information/],
@@ -72,9 +75,7 @@ describe('password policy', () => {
     await experience.toFillInput('id', email, { submit: true });
     await experience.toCompleteVerification('register', 'Email');
 
-    // Wait for the password page to load
-    await waitFor(100);
-    experience.toBeAt('continue/password');
+    await experience.waitForPathname('continue/password');
     await experience.toFillNewPasswords(
       ...invalidPasswords,
       [emailName, 'personal information'],
@@ -101,8 +102,7 @@ describe('password policy', () => {
     await experience.toCompleteVerification('forgot-password', 'Email');
 
     // Wait for the password page to load
-    await waitFor(100);
-    experience.toBeAt('forgot-password/reset');
+    await experience.waitForPathname('forgot-password/reset');
     await experience.toFillNewPasswords(
       ...invalidPasswords,
       [emailName, 'personal information'],
@@ -110,7 +110,8 @@ describe('password policy', () => {
       emailName + 'ABCD135'
     );
 
-    experience.toBeAt('sign-in');
+    await experience.waitForPathname('sign-in');
+    await experience.waitForToast(/password changed/i);
     await experience.toFillInput('identifier', email, { submit: true });
     await experience.toFillInput('password', emailName + 'ABCD135', { submit: true });
     await experience.verifyThenEnd();

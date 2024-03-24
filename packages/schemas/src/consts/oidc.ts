@@ -37,14 +37,20 @@ export enum ExtraParamsKey {
   DirectSignIn = 'direct_sign_in',
 }
 
+/** @deprecated Use {@link FirstScreen} instead. */
+export enum InteractionMode {
+  SignIn = 'signIn',
+  SignUp = 'signUp',
+}
+
 export enum FirstScreen {
-  signIn = 'signIn',
-  signUp = 'signUp',
+  SignIn = 'signIn',
+  Register = 'register',
 }
 
 export const extraParamsObjectGuard = z
   .object({
-    [ExtraParamsKey.InteractionMode]: z.nativeEnum(FirstScreen),
+    [ExtraParamsKey.InteractionMode]: z.nativeEnum(InteractionMode),
     [ExtraParamsKey.FirstScreen]: z.nativeEnum(FirstScreen),
     [ExtraParamsKey.DirectSignIn]: z.string(),
   })

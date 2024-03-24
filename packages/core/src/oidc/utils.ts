@@ -84,7 +84,7 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
     params[ExtraParamsKey.InteractionMode] ??
-    FirstScreen.signIn;
+    FirstScreen.SignIn;
   const firstScreen =
     firstScreenKey === 'signUp' ? experience.routes.register : experience.routes[firstScreenKey];
   const directSignIn = params[ExtraParamsKey.DirectSignIn];
