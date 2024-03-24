@@ -1,8 +1,10 @@
-import { type JsonObject, LogtoJwtTokenPath } from '@logto/schemas';
+import { type JsonObject, LogtoJwtTokenPath, type RequestErrorBody } from '@logto/schemas';
 import classNames from 'classnames';
+import { HTTPError } from 'ky';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFormContext, Controller, type ControllerRenderProps } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
@@ -27,6 +29,7 @@ type Props = {
 const userTokenModelSettings = [accessTokenPayloadTestModel, userContextTestModel];
 const machineToMachineTokenModelSettings = [clientCredentialsPayloadTestModel];
 const testEndpointPath = 'api/configs/jwt-customizer/test';
+const jwtCustomizerGeneralErrorCode = 'jwt_customizer.general';
 
 function TestTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });
@@ -57,7 +60,21 @@ function TestTab({ isActive }: Props) {
         json: formatFormDataToTestRequestPayload(payload),
       })
       .json<JsonObject>()
-      .catch((error: unknown) => {
+      .catch(async (error: unknown) => {
+        if (error instanceof HTTPError) {
+          const { response } = error;
+          const metadata = await response.clone().json<RequestErrorBody>();
+          if (metadata.code === jwtCustomizerGeneralErrorCode) {
+            const result = z.object({ message: z.string() }).safeParse(metadata.data);
+            if (result.success) {
+              setTestResult({
+                error: result.data.message,
+              });
+              return;
+            }
+          }
+        }
+
         setTestResult({
           error: error instanceof Error ? error.message : String(error),
         });

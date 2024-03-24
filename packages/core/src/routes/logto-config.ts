@@ -19,6 +19,7 @@ import {
   jsonObjectGuard,
 } from '@logto/schemas';
 import { adminTenantId } from '@logto/schemas';
+import { ResponseError } from '@withtyped/client';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -340,13 +341,23 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
 
       const client = await cloudConnection.getClient();
 
-      ctx.body = await client.post(`/api/services/custom-jwt`, {
-        body: {
-          ...rest,
-          token: tokenSample,
-          context: contextSample,
-        },
-      });
+      try {
+        ctx.body = await client.post(`/api/services/custom-jwt`, {
+          body: {
+            ...rest,
+            token: tokenSample,
+            context: contextSample,
+          },
+        });
+      } catch (error: unknown) {
+        if (error instanceof ResponseError) {
+          const { message } = z.object({ message: z.string() }).parse(await error.response.json());
+          throw new RequestError({ code: 'jwt_customizer.general', status: 422 }, { message });
+        }
+
+        throw error;
+      }
+
       return next();
     }
   );
