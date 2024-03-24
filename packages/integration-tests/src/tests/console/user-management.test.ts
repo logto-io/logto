@@ -15,6 +15,7 @@ import {
   generateName,
   generatePhone,
   generateUsername,
+  waitFor,
 } from '#src/utils.js';
 
 await page.setViewport({ width: 1280, height: 720 });
@@ -158,14 +159,14 @@ describe('user management', () => {
       text: newEmail,
     });
 
-    await page.waitForTimeout(500);
+    await waitFor(500);
     await expect(page).toFillForm('form', { primaryEmail: '' });
     await expectToSaveChanges(page);
     // After removing email, top userinfo card shows the phone number as the title
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: formatPhoneNumberToInternational(newPhone),
     });
-    await page.waitForTimeout(500);
+    await waitFor(500);
 
     await expect(page).toFillForm('form', { primaryPhone: '' });
     await expectToSaveChanges(page);
@@ -173,7 +174,7 @@ describe('user management', () => {
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: newUsername,
     });
-    await page.waitForTimeout(500);
+    await waitFor(500);
 
     await expect(page).toFillForm('form', { username: '' });
     await expectToSaveChanges(page);
