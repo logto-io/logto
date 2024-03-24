@@ -1,9 +1,9 @@
 import { type webcrypto } from 'node:crypto';
 
-import { yes, type DeepPartial } from '@silverhand/essentials';
+import { type DeepPartial } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { getPwnPasswordsForTest } from './utils/integration-test.js';
+import { getPwnPasswordsForTest, isIntegrationTest } from './utils/integration-test.js';
 
 /** Password policy configuration type. */
 export type PasswordPolicy = {
@@ -302,7 +302,7 @@ export class PasswordPolicyChecker {
    * @returns Whether the password has been pwned.
    */
   async hasBeenPwned(password: string): Promise<boolean> {
-    if (yes(process.env.INTEGRATION_TEST)) {
+    if (isIntegrationTest()) {
       return getPwnPasswordsForTest().includes(password);
     }
 

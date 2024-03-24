@@ -39,7 +39,6 @@ const Main = () => {
     // If user is not authenticated, redirect to sign-in page
     if (!isAuthenticated) {
       void signIn({
-        // @ts-expect-error -- remove after upgrading the SDK
         redirectUri: window.location.origin + window.location.pathname,
         extraParams: Object.fromEntries(new URLSearchParams(window.location.search).entries()),
       });
