@@ -1322,8 +1322,8 @@ importers:
         specifier: ^29.5.0
         version: 29.6.3
       '@logto/cloud':
-        specifier: 0.2.5-4ef0b45
-        version: 0.2.5-4ef0b45(zod@3.22.4)
+        specifier: 0.2.5-2a72cc4
+        version: 0.2.5-2a72cc4(zod@3.22.4)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2919,8 +2919,8 @@ importers:
         specifier: workspace:^1.4.0
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-d9576f9
-        version: 0.2.5-d9576f9(zod@3.22.4)
+        specifier: 0.2.5-2a72cc4
+        version: 0.2.5-2a72cc4(zod@3.22.4)
       '@logto/connector-kit':
         specifier: workspace:^2.1.0
         version: link:../toolkit/connector-kit
@@ -2937,8 +2937,8 @@ importers:
         specifier: workspace:^1.6.0
         version: link:../phrases-experience
       '@logto/react':
-        specifier: ^3.0.0
-        version: 3.0.0(react@18.2.0)
+        specifier: ^3.0.3
+        version: 3.0.3(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.13.1
         version: link:../schemas
@@ -3406,8 +3406,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-ceb63ed
-        version: 0.2.5-ceb63ed(zod@3.22.4)
+        specifier: 0.2.5-2a72cc4
+        version: 0.2.5-2a72cc4(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -3520,8 +3520,8 @@ importers:
         specifier: workspace:^1.9.0
         version: link:../phrases
       '@logto/react':
-        specifier: ^3.0.0
-        version: 3.0.0(react@18.2.0)
+        specifier: ^3.0.3
+        version: 3.0.3(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.13.0
         version: link:../schemas
@@ -3836,11 +3836,11 @@ importers:
         specifier: workspace:^
         version: link:../toolkit/core-kit
       '@logto/js':
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^4.1.1
+        version: 4.1.1
       '@logto/node':
-        specifier: ^2.4.0
-        version: 2.4.0
+        specifier: ^2.4.2
+        version: 2.4.2
       '@logto/schemas':
         specifier: workspace:^1.13.0
         version: link:../schemas
@@ -7912,25 +7912,25 @@ packages:
       tiny-cookie: 2.4.1
     dev: false
 
-  /@logto/browser@2.2.3:
-    resolution: {integrity: sha512-9xVLXhdF1s82HnCy7H7/uQBGlrhIYg/NQIs+ZtjImH5xrp3wGqw8qtxIKqOa30gC0zA4uTcE1wfUyAp9yFGMLQ==}
+  /@logto/browser@2.2.5:
+    resolution: {integrity: sha512-oeMeTEJwpJamM8oEjGXo2cSTeimJyVWygpq57URp39VY+5v23vFzJwh1tUE5lGgTrVIcLdn4dUAKtHVO69bXsA==}
     dependencies:
-      '@logto/client': 2.4.0
+      '@logto/client': 2.6.1
       '@silverhand/essentials': 2.9.0
       js-base64: 3.7.5
     dev: true
 
-  /@logto/client@2.4.0:
-    resolution: {integrity: sha512-gdswqI5yuov7H/8SU2GoFDKRrlwTbhhRleq2Pnf5Yphq+Kvggu7j7EsixGE97QzomPfe2x8eeWtWoHyI96Q5qA==}
+  /@logto/client@2.6.1:
+    resolution: {integrity: sha512-gsUAfR8fTGdSAOItqS1rNb89NzOggL014UGS+1LIx8YxeerbDCbrVPcEHLZRDgq1MBVzhAz41P0ePQ0JWxj8Rg==}
     dependencies:
-      '@logto/js': 4.0.0
+      '@logto/js': 4.1.1
       '@silverhand/essentials': 2.9.0
       camelcase-keys: 7.0.2
       jose: 5.2.2
     dev: true
 
-  /@logto/cloud@0.2.5-4ef0b45(zod@3.22.4):
-    resolution: {integrity: sha512-mW+Olp8KBYwlJY0CTlMm6Qja0P1mOGy1P3P+RwkVjlMKu8MWq0zvodMU5/Bgxon5MsV5a5yj8DlT5t/Oj6vBJw==}
+  /@logto/cloud@0.2.5-2a72cc4(zod@3.22.4):
+    resolution: {integrity: sha512-7+2VAQBzTix/uaz5XzF/IVtU6AHLIwXLR05/sEO6dgJnhHQhcmk+PHIw4Gw9wBMVoFa3k6DiF0NQJmay80LIUA==}
     engines: {node: ^20.9.0}
     dependencies:
       '@silverhand/essentials': 2.9.0
@@ -7939,47 +7939,27 @@ packages:
       - zod
     dev: true
 
-  /@logto/cloud@0.2.5-ceb63ed(zod@3.22.4):
-    resolution: {integrity: sha512-mF4ce41qc4nnmLjlyvTxiy3i1K88xC91yjWcmyrJ66Zujr+w7AaR/Ye0g8TZ1B93qlDt5EJBFuBW/gqYDuwEEQ==}
-    engines: {node: ^20.9.0}
-    dependencies:
-      '@silverhand/essentials': 2.9.0
-      '@withtyped/server': 0.13.3(zod@3.22.4)
-    transitivePeerDependencies:
-      - zod
-    dev: true
-
-  /@logto/cloud@0.2.5-d9576f9(zod@3.22.4):
-    resolution: {integrity: sha512-RTDFH/JhkXmkXTYGxEY6QnN7ueLr/GCJikM5uzUV6PI2SyXCYNKFSN3yRo665TxsHethkd4a+RIVjhaXgTvQLw==}
-    engines: {node: ^20.9.0}
-    dependencies:
-      '@silverhand/essentials': 2.9.0
-      '@withtyped/server': 0.13.3(zod@3.22.4)
-    transitivePeerDependencies:
-      - zod
-    dev: true
-
-  /@logto/js@4.0.0:
-    resolution: {integrity: sha512-eKLS0HqFjQyf7imKTf2a7FUmMuNeebxFZ2b5A/1qUWSyO+BIxSu0XYI4JZ9qjtWNPvlGmL+jPOkIUuWQ9DZYZw==}
+  /@logto/js@4.1.1:
+    resolution: {integrity: sha512-+RgthBvDw30UojirtAjZeHNfOwDQVURmpjcIBYTIf6afx5F5jJq8b1D/eaFbrCFrmXmatkT2iN7X8kYHui86WQ==}
     dependencies:
       '@silverhand/essentials': 2.9.0
       camelcase-keys: 7.0.2
     dev: true
 
-  /@logto/node@2.4.0:
-    resolution: {integrity: sha512-7e6uUfAqFIKdOrVqEBrLF5mY3oM1lJeix7vME/llbBSZQ4wtFzQOQlPaa62tzA1n77ZSHV5LxOqvdBqcTIkW4Q==}
+  /@logto/node@2.4.2:
+    resolution: {integrity: sha512-Pkcrmh/uhD0rN/euiARuSAeYoYIWZnxCpNhRV0I9aLnEMmKzBDLHLnKnpORa1A6sCKBEKW2S6J6T2R2euni4CQ==}
     dependencies:
-      '@logto/client': 2.4.0
+      '@logto/client': 2.6.1
       '@silverhand/essentials': 2.9.0
       js-base64: 3.7.5
     dev: true
 
-  /@logto/react@3.0.0(react@18.2.0):
-    resolution: {integrity: sha512-+c0AaPGTLlPszjQJK6qpDULwtZsiaEFoPcgipazvqmj85PRehZplrM2qoBPT/Z/IjJhnA8GM3fin/TPILEbnKQ==}
+  /@logto/react@3.0.3(react@18.2.0):
+    resolution: {integrity: sha512-DgldhAs3T8lWXF8AtPcaSc4MQqpFmUl5y9sOv42g76RN1ijDGC2L/AY+X0RV22IxdcZ3qe2SxNAG6sXlulf+XA==}
     peerDependencies:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
-      '@logto/browser': 2.2.3
+      '@logto/browser': 2.2.5
       '@silverhand/essentials': 2.9.0
       react: 18.2.0
     dev: true
@@ -18362,9 +18342,6 @@ packages:
     resolution: {integrity: sha512-2GTVocFkwblV/TIg9AmT7TI2fO4xdWkyN8aFUEVtiVNWt96GTR3FgQyHFValfCbcj1k9Xf962Ws2hYXYUr9k1Q==}
     engines: {node: '>= 12.0.0'}
     hasBin: true
-    peerDependenciesMeta:
-      '@parcel/core':
-        optional: true
     dependencies:
       '@parcel/config-default': 2.9.3(@parcel/core@2.9.3)(postcss@8.4.31)
       '@parcel/core': 2.9.3
