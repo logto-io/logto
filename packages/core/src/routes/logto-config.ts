@@ -18,6 +18,7 @@ import {
   LogtoJwtTokenPath,
   jsonObjectGuard,
 } from '@logto/schemas';
+import { adminTenantId } from '@logto/schemas';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -77,7 +78,10 @@ const getRedactedOidcKeyResponse = async (
   );
 
 export default function logtoConfigRoutes<T extends AuthedRouter>(
-  ...[router, { queries, logtoConfigs, invalidateCache, cloudConnection }]: RouterInitArgs<T>
+  ...[
+    router,
+    { id: tenantId, queries, logtoConfigs, invalidateCache, cloudConnection },
+  ]: RouterInitArgs<T>
 ) {
   const {
     getAdminConsoleConfig,
@@ -222,9 +226,16 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
        */
       body: z.unknown(),
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
-      status: [200, 201, 400],
+      status: [200, 201, 400, 403],
     }),
     async (ctx, next) => {
+      if (
+        tenantId !== adminTenantId &&
+        !(EnvSet.values.isUnitTest || EnvSet.values.isIntegrationTest)
+      ) {
+        throw new RequestError({ code: 'auth.forbidden', status: 403 });
+      }
+
       const {
         params: { tokenTypePath },
         body: rawBody,
@@ -257,12 +268,11 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       const {
         params: { tokenTypePath },
       } = ctx.guard;
-      const { value } = await getJwtCustomizer(
+      ctx.body = await getJwtCustomizer(
         tokenTypePath === LogtoJwtTokenPath.AccessToken
           ? LogtoJwtTokenKey.AccessToken
           : LogtoJwtTokenKey.ClientCredentials
       );
-      ctx.body = value;
       return next();
     }
   );

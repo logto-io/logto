@@ -270,7 +270,7 @@ describe('configs routes', () => {
 
   it('GET /configs/jwt-customizer/:tokenType should return the record', async () => {
     logtoConfigLibraries.getJwtCustomizer.mockResolvedValueOnce(
-      mockJwtCustomizerConfigForAccessToken
+      mockJwtCustomizerConfigForAccessToken.value
     );
     const response = await routeRequester.get('/configs/jwt-customizer/access-token');
     expect(response.status).toEqual(200);

@@ -1,3 +1,4 @@
+import { jsonObjectGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
 import { MfaFactor } from './sign-in-experience.js';
@@ -56,7 +57,7 @@ export const roleNamesGuard = z.string().array();
 
 export const identityGuard = z.object({
   userId: z.string(),
-  details: z.record(z.unknown()).optional(), // Connector's userinfo details, schemaless
+  details: jsonObjectGuard.optional(), // Connector's userinfo details, schemaless
 });
 export const identitiesGuard = z.record(identityGuard);
 

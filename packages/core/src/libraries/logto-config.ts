@@ -6,7 +6,7 @@ import {
   LogtoOidcConfigKey,
   jwtCustomizerConfigGuard,
 } from '@logto/schemas';
-import type { LogtoOidcConfigType, LogtoJwtTokenKey } from '@logto/schemas';
+import type { LogtoOidcConfigType, LogtoJwtTokenKey, CloudConnectionData } from '@logto/schemas';
 import chalk from 'chalk';
 import { z, ZodError } from 'zod';
 
@@ -53,7 +53,7 @@ export const createLogtoConfigLibrary = ({
     }
   };
 
-  const getCloudConnectionData = async () => {
+  const getCloudConnectionData = async (): Promise<CloudConnectionData> => {
     const { value } = await queryCloudConnectionData();
     const result = cloudConnectionDataGuard.safeParse(value);
 
@@ -94,7 +94,7 @@ export const createLogtoConfigLibrary = ({
       });
     }
 
-    return z.object({ value: jwtCustomizerConfigGuard[key] }).parse(rows[0]);
+    return z.object({ value: jwtCustomizerConfigGuard[key] }).parse(rows[0]).value;
   };
 
   return { getOidcConfigs, getCloudConnectionData, upsertJwtCustomizer, getJwtCustomizer };

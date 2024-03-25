@@ -1,5 +1,5 @@
+/* eslint-disable max-lines */
 /* istanbul ignore file */
-
 import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
 
@@ -12,16 +12,19 @@ import {
   inSeconds,
   logtoCookieKey,
   type LogtoUiCookie,
+  LogtoJwtTokenKey,
 } from '@logto/schemas';
-import { conditional, tryThat } from '@silverhand/essentials';
+import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
 import koaBody from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
+import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
+import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import postgresAdapter from '#src/oidc/adapter.js';
@@ -45,7 +48,13 @@ import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
-export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Libraries): Provider {
+export default function initOidc(
+  envSet: EnvSet,
+  queries: Queries,
+  libraries: Libraries,
+  logtoConfigs: LogtoConfigLibrary,
+  cloudConnection: CloudConnectionLibrary
+): Provider {
   const {
     resources: { findDefaultResource },
     users: { findUserById },
@@ -198,6 +207,59 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
       },
     },
     extraParams: [OIDCExtraParametersKey.InteractionMode],
+    extraTokenClaims: async (ctx, token) => {
+      const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
+
+      // No cloud connection for OSS version, skip.
+      if (!isDevFeaturesEnabled || !isCloud) {
+        return;
+      }
+
+      try {
+        const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
+
+        const { script, envVars } =
+          (await trySafe(
+            logtoConfigs.getJwtCustomizer(
+              isTokenClientCredentials
+                ? LogtoJwtTokenKey.ClientCredentials
+                : LogtoJwtTokenKey.AccessToken
+            )
+          )) ?? {};
+
+        if (!script) {
+          return;
+        }
+
+        const pickedFields = isTokenClientCredentials
+          ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
+          : ctx.oidc.provider.AccessToken.IN_PAYLOAD;
+        const readOnlyToken = Object.fromEntries(
+          pickedFields.map((field) => [field, Reflect.get(token, field)])
+        );
+
+        const client = await cloudConnection.getClient();
+
+        // We pass context to the cloud API only when it is a user's access token.
+        const logtoUserInfo = conditional(
+          !isTokenClientCredentials &&
+            token.accountId &&
+            (await libraries.jwtCustomizers.getUserContext(token.accountId))
+        );
+
+        // `context` parameter is only eligible for user's access token for now.
+        return await client.post(`/api/services/custom-jwt`, {
+          body: {
+            script,
+            envVars,
+            token: readOnlyToken,
+            ...conditional(logtoUserInfo && { context: { user: logtoUserInfo } }),
+          },
+        });
+      } catch {
+        // TODO: Log the error
+      }
+    },
     extraClientMetadata: {
       properties: Object.values(CustomClientMetadataKey),
       validator: (_, key, value) => {
@@ -351,3 +413,4 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
 
   return oidc;
 }
+/* eslint-enable max-lines */
