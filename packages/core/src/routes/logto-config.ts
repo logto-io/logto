@@ -230,11 +230,12 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       status: [200, 201, 400, 403],
     }),
     async (ctx, next) => {
-      if (
-        tenantId !== adminTenantId &&
-        !(EnvSet.values.isUnitTest || EnvSet.values.isIntegrationTest)
-      ) {
-        throw new RequestError({ code: 'auth.forbidden', status: 403 });
+      const { isCloud, isUnitTest, isIntegrationTest } = EnvSet.values;
+      if (tenantId === adminTenantId && isCloud && !(isUnitTest || isIntegrationTest)) {
+        throw new RequestError({
+          code: 'jwt_customizer.can_not_create_for_admin_tenant',
+          status: 422,
+        });
       }
 
       const {
