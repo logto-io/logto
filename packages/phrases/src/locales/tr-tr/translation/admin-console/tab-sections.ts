@@ -1,11 +1,10 @@
 const tab_sections = {
   overview: 'Genel Bakış',
-  resources: 'Kaynaklar',
+  authentication: 'Kimlik doğrulama',
+  authorization: 'Yetkilendirme',
   users: 'Kullanıcılar',
-  access_control: 'Erişim Kontrolü',
-  help_and_support: 'Yardım ve Destek',
+  developer: 'Geliştirici',
   tenant: 'Kiracı',
-  automation: 'Otomasyon',
 };
 
 export default Object.freeze(tab_sections);

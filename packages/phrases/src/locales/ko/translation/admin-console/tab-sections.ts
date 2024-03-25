@@ -1,11 +1,10 @@
 const tab_sections = {
-  overview: '살펴보기',
-  resources: '자원',
+  overview: '개요',
+  authentication: '인증',
+  authorization: '인가',
   users: '사용자',
-  access_control: '접근 제어',
-  help_and_support: '고객센터',
-  tenant: '세입자',
-  automation: '자동화',
+  developer: '개발자',
+  tenant: '임차인',
 };
 
 export default Object.freeze(tab_sections);
