@@ -217,12 +217,6 @@ export default function initOidc(
 
       try {
         const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
-        const pickedFields = isTokenClientCredentials
-          ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
-          : ctx.oidc.provider.AccessToken.IN_PAYLOAD;
-        const readOnlyToken = Object.fromEntries(
-          pickedFields.map((field) => [field, Reflect.get(token, field)])
-        );
 
         const { script, envVars } =
           (await trySafe(
@@ -236,6 +230,13 @@ export default function initOidc(
         if (!script) {
           return;
         }
+
+        const pickedFields = isTokenClientCredentials
+          ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
+          : ctx.oidc.provider.AccessToken.IN_PAYLOAD;
+        const readOnlyToken = Object.fromEntries(
+          pickedFields.map((field) => [field, Reflect.get(token, field)])
+        );
 
         const client = await cloudConnection.getClient();
 
