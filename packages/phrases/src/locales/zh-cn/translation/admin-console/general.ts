@@ -69,6 +69,8 @@ const general = {
   edit_field: '编辑{{field}}',
   delete_field: '删除{{field}}',
   coming_soon: '即将上线',
+  /** UNTRANSLATED */
+  or: 'Or',
 };
 
 export default Object.freeze(general);
