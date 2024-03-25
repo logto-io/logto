@@ -60,7 +60,7 @@ export default function domainRoutes<T extends AuthedRouter>(
     koaGuard({
       body: Domains.createGuard.pick({ domain: true }),
       response: domainResponseGuard,
-      status: [201, 422],
+      status: [201, 422, 400],
     }),
     async (ctx, next) => {
       const existingDomains = await findAllDomains();
@@ -72,6 +72,7 @@ export default function domainRoutes<T extends AuthedRouter>(
         })
       );
 
+      // Throw 400 error if domain is invalid
       const syncedDomain = await addDomain(ctx.guard.body.domain);
 
       ctx.status = 201;
