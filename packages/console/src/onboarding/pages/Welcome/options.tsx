@@ -1,11 +1,11 @@
+import { AdditionalFeatures, Project, Stage } from '@logto/schemas';
+
 import Building from '@/assets/icons/building.svg';
 import Pizza from '@/assets/icons/pizza.svg';
 import type {
   CardSelectorOption,
   MultiCardSelectorOption,
 } from '@/onboarding/components/CardSelector';
-
-import { Project, Stage, AdditionalFeatures } from '../../types';
 
 export const projectOptions: CardSelectorOption[] = [
   {
