@@ -4,6 +4,7 @@ import {
   httpCodeToMessage,
   organizationUrnPrefix,
 } from '@logto/core-kit';
+import { type LogtoErrorCode } from '@logto/phrases';
 import { useLogto } from '@logto/react';
 import {
   getTenantOrganizationId,
@@ -37,21 +38,18 @@ export class RequestError extends Error {
 
 export type StaticApiProps = {
   prefixUrl?: URL;
-  hideErrorToast?: boolean;
+  hideErrorToast?: boolean | LogtoErrorCode[];
   resourceIndicator: string;
 };
 
-export const useStaticApi = ({
-  prefixUrl,
-  hideErrorToast,
-  resourceIndicator,
-}: StaticApiProps): KyInstance => {
-  const { isAuthenticated, getAccessToken, getOrganizationToken, signOut } = useLogto();
-  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: LogtoErrorCode[]) => {
+  const { signOut } = useLogto();
   const { show } = useConfirmModal();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   const postSignOutRedirectUri = useRedirectUri('signOut');
 
-  const toastError = useCallback(
+  const handleError = useCallback(
     async (response: Response) => {
       const fallbackErrorMessage = t('errors.unknown_server_error');
 
@@ -81,13 +79,47 @@ export const useStaticApi = ({
           return;
         }
 
+        // Skip showing toast for specific error codes.
+        if (toastDisabledErrorCodes?.includes(data.code)) {
+          return;
+        }
+
         toast.error([data.message, data.details].join('\n') || fallbackErrorMessage);
       } catch {
         toast.error(httpCodeToMessage[response.status] ?? fallbackErrorMessage);
       }
     },
-    [show, signOut, t, postSignOutRedirectUri]
+    [t, toastDisabledErrorCodes, signOut, postSignOutRedirectUri.href, show]
   );
+
+  return {
+    handleError,
+  };
+};
+
+/**
+ *
+ * @param {StaticApiProps} props
+ * @param {URL} props.prefixUrl  The base URL for the API.
+ * @param {boolean} props.hideErrorToast  Whether to disable the global error handling.
+ * @param {string} props.resourceIndicator  The resource indicator for the API. Used by the Logto SDK to validate the access token.
+ *
+ * @returns
+ */
+export const useStaticApi = ({
+  prefixUrl,
+  hideErrorToast,
+  resourceIndicator,
+}: StaticApiProps): KyInstance => {
+  const { isAuthenticated, getAccessToken, getOrganizationToken } = useLogto();
+  const { i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  // Disable global error handling if `hideErrorToast` is true.
+  const disableGlobalErrorHandling = hideErrorToast === true;
+  // Disable toast for specific error codes.
+  const toastDisabledErrorCodes = Array.isArray(hideErrorToast) ? hideErrorToast : undefined;
+
+  const { handleError } = useGlobalRequestErrorHandler(toastDisabledErrorCodes);
 
   const api = useMemo(
     () =>
@@ -96,9 +128,9 @@ export const useStaticApi = ({
         timeout: requestTimeout,
         hooks: {
           beforeError: conditionalArray(
-            !hideErrorToast &&
+            !disableGlobalErrorHandling &&
               (async (error) => {
-                await toastError(error.response);
+                await handleError(error.response);
                 return error;
               })
           ),
@@ -117,8 +149,8 @@ export const useStaticApi = ({
       }),
     [
       prefixUrl,
-      hideErrorToast,
-      toastError,
+      disableGlobalErrorHandling,
+      handleError,
       isAuthenticated,
       resourceIndicator,
       getOrganizationToken,
