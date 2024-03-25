@@ -70,6 +70,8 @@ const general = {
   edit_field: 'Modifica {{field}}',
   delete_field: 'Elimina {{field}}',
   coming_soon: 'Prossimamente',
+  /** UNTRANSLATED */
+  or: 'Or',
 };
 
 export default Object.freeze(general);

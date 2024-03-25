@@ -69,6 +69,8 @@ const general = {
   edit_field: '{{field}}を編集',
   delete_field: '{{field}}を削除',
   coming_soon: '近日公開予定',
+  /** UNTRANSLATED */
+  or: 'Or',
 };
 
 export default Object.freeze(general);
