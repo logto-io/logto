@@ -6,19 +6,16 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextInput from '@/ds-components/TextInput';
-import {
-  type ParsedSsoIdentityProviderConfig,
-  type OidcGuideFormType,
-  type SsoConnectorConfig,
-} from '@/pages/EnterpriseSso/types.js';
 import { uriValidator } from '@/utils/validator';
+
+import { type OidcConnectorConfig, type OidcProviderConfig } from '../../types/oidc';
 
 import ParsedConfigPreview from './ParsedConfigPreview';
 import * as styles from './index.module.scss';
 
 type Props = {
-  providerConfig?: ParsedSsoIdentityProviderConfig<SsoProviderName.OIDC>;
-  config?: SsoConnectorConfig<SsoProviderName.OIDC>;
+  providerConfig?: OidcProviderConfig;
+  config?: OidcConnectorConfig;
   providerName: SsoProviderName;
 };
 
@@ -28,7 +25,7 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
   const {
     register,
     formState: { errors },
-  } = useFormContext<OidcGuideFormType>();
+  } = useFormContext<OidcConnectorConfig>();
 
   const isConfigEmpty = !config || Object.keys(config).length === 0;
 

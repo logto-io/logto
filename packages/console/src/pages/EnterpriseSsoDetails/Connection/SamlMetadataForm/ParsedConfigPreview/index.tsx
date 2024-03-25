@@ -1,5 +1,4 @@
 import { isLanguageTag } from '@logto/language-kit';
-import { type SsoProviderName } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import i18next from 'i18next';
@@ -7,12 +6,12 @@ import { useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
-import { type ParsedSsoIdentityProviderConfig } from '@/pages/EnterpriseSso/types.js';
+import { type SamlProviderConfig } from '@/pages/EnterpriseSsoDetails/types/saml';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  identityProviderConfig: ParsedSsoIdentityProviderConfig<SsoProviderName.SAML>['identityProvider'];
+  identityProviderConfig: SamlProviderConfig['identityProvider'];
 };
 
 type CertificatePreviewProps = {

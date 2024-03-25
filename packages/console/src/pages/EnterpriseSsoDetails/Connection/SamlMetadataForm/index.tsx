@@ -1,4 +1,3 @@
-import { type SsoProviderName } from '@logto/schemas';
 import { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -7,10 +6,9 @@ import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextInput from '@/ds-components/TextInput';
 import {
-  type ParsedSsoIdentityProviderConfig,
-  type SamlGuideFormType,
-  type SsoConnectorConfig,
-} from '@/pages/EnterpriseSso/types.js';
+  type SamlConnectorConfig,
+  type SamlProviderConfig,
+} from '@/pages/EnterpriseSsoDetails/types/saml';
 import { uriValidator } from '@/utils/validator';
 
 import FileReader, { type Props as FileReaderProps } from '../FileReader';
@@ -20,17 +18,13 @@ import SwitchFormatButton, { FormFormat } from './SwitchFormatButton';
 import * as styles from './index.module.scss';
 
 type SamlMetadataFormFieldsProps = Pick<SamlMetadataFormProps, 'config'> & {
-  identityProviderConfig?: ParsedSsoIdentityProviderConfig<SsoProviderName.SAML>['identityProvider'];
+  identityProviderConfig?: SamlProviderConfig['identityProvider'];
   formFormat: FormFormat;
 };
 
-type SamlMetadataFormProps = {
-  config?: SsoConnectorConfig<SsoProviderName.SAML>;
-  providerConfig?: ParsedSsoIdentityProviderConfig<SsoProviderName.SAML>;
-};
+type FileValueKeyType = keyof Pick<SamlConnectorConfig, 'metadata' | 'x509Certificate'>; // I.e. 'metadata' | 'x509Certificate'.
 
-type KeyType = keyof Pick<SamlGuideFormType, 'metadata' | 'x509Certificate'>; // I.e. 'metadata' | 'x509Certificate'.
-const keyToAttributes: Record<KeyType, FileReaderProps['attributes']> = {
+const fileReaderAttributesMap: Record<FileValueKeyType, FileReaderProps['attributes']> = {
   // Accept xml file.
   metadata: {
     buttonTitle: 'enterprise_sso.metadata.saml.metadata_xml_uploader_text',
@@ -59,12 +53,13 @@ function SamlMetadataFormFields({
   config,
 }: SamlMetadataFormFieldsProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   const {
     setError,
     control,
     register,
     formState: { errors },
-  } = useFormContext<SamlGuideFormType>();
+  } = useFormContext<SamlConnectorConfig>();
 
   switch (formFormat) {
     case FormFormat.Manual: {
@@ -107,7 +102,7 @@ function SamlMetadataFormFields({
               render={({ field: { onChange, value } }) => (
                 <>
                   <FileReader
-                    attributes={keyToAttributes.x509Certificate}
+                    attributes={fileReaderAttributesMap.x509Certificate}
                     value={value}
                     fieldError={errors.x509Certificate}
                     setError={(error) => {
@@ -137,7 +132,7 @@ function SamlMetadataFormFields({
               name="metadata"
               render={({ field: { onChange, value } }) => (
                 <FileReader
-                  attributes={keyToAttributes.metadata}
+                  attributes={fileReaderAttributesMap.metadata}
                   value={value}
                   fieldError={errors.metadata}
                   setError={(error) => {
@@ -166,7 +161,7 @@ function SamlMetadataFormFields({
                 validate: (value) =>
                   !value || uriValidator(value) || t('errors.invalid_uri_format'),
               })}
-              error={Boolean(errors.metadataUrl)}
+              error={errors.metadataUrl?.message}
               placeholder="https://"
             />
             <div className={styles.description}>
@@ -187,10 +182,15 @@ function SamlMetadataFormFields({
   }
 }
 
+type SamlMetadataFormProps = {
+  config?: SamlConnectorConfig;
+  providerConfig?: SamlProviderConfig;
+};
+
 // Do not show inline notification and parsed config preview if it is on guide page.
 function SamlMetadataForm({ config, providerConfig }: SamlMetadataFormProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { setValue } = useFormContext<SamlGuideFormType>();
+  const { setValue } = useFormContext<SamlConnectorConfig>();
   const identityProviderConfig = providerConfig?.identityProvider;
 
   const isConfigEmpty = !config || Object.keys(config).length === 0;
