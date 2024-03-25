@@ -62,16 +62,13 @@ export const useSidebarMenuItems = (): {
       ],
     },
     {
-      title: 'resources',
+      title: 'authentication',
       items: [
         {
           Icon: Box,
           title: 'applications',
         },
-        {
-          Icon: ResourceIcon,
-          title: 'api_resources',
-        },
+
         {
           Icon: Web,
           title: 'sign_in_experience',
@@ -91,6 +88,19 @@ export const useSidebarMenuItems = (): {
       ],
     },
     {
+      title: 'authorization',
+      items: [
+        {
+          Icon: ResourceIcon,
+          title: 'api_resources',
+        },
+        {
+          Icon: Role,
+          title: 'roles',
+        },
+      ],
+    },
+    {
       title: 'users',
       items: [
         {
@@ -101,27 +111,23 @@ export const useSidebarMenuItems = (): {
           Icon: UserProfile,
           title: 'users',
         },
-        {
-          Icon: List,
-          title: 'audit_logs',
-        },
-        {
-          Icon: Role,
-          title: 'roles',
-        },
       ],
     },
     {
-      title: 'automation',
+      title: 'developer',
       items: [
+        {
+          Icon: JwtClaims,
+          title: 'jwt_customizer',
+          isHidden: !isDevFeaturesEnabled,
+        },
         {
           Icon: Hook,
           title: 'webhooks',
         },
         {
-          Icon: JwtClaims,
-          title: 'jwt_customizer',
-          isHidden: !isDevFeaturesEnabled,
+          Icon: List,
+          title: 'audit_logs',
         },
       ],
     },
