@@ -1,6 +1,6 @@
 import { AppInsightsBoundary } from '@logto/app-insights/react';
 import { UserScope } from '@logto/core-kit';
-import { LogtoProvider, useLogto } from '@logto/react';
+import { LogtoProvider, Prompt, useLogto } from '@logto/react';
 import {
   adminConsoleApplicationId,
   defaultTenantId,
@@ -110,6 +110,7 @@ function Providers() {
         appId: adminConsoleApplicationId,
         resources,
         scopes,
+        prompt: [Prompt.Login, Prompt.Consent],
       }}
     >
       <AppThemeProvider>

@@ -28,6 +28,7 @@ export enum GlobalAnonymousRoute {
  */
 export enum GlobalRoute {
   CheckoutSuccessCallback = '/checkout-success-callback',
+  AcceptInvitation = '/accept',
 }
 
 const reservedRoutes: Readonly<string[]> = Object.freeze([
@@ -101,7 +102,12 @@ function TenantsProvider({ children }: Props) {
       return defaultTenantId;
     }
 
-    if (!match || reservedRoutes.includes(match.pathname)) {
+    if (
+      !match ||
+      reservedRoutes.some(
+        (route) => match.pathname === route || match.pathname.startsWith(route + '/')
+      )
+    ) {
       return '';
     }
 
