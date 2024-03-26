@@ -17,9 +17,12 @@ export type SubscriptionUsage = GuardedResponse<GetRoutes['/api/tenants/:tenantI
 
 export type InvoicesResponse = GuardedResponse<GetRoutes['/api/tenants/:tenantId/invoices']>;
 
+export type InvitationResponse = GuardedResponse<GetRoutes['/api/invitations/:invitationId']>;
+
 // The response of GET /api/tenants is TenantResponse[].
 export type TenantResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/tenants']>>;
 
+// Start of the auth routes types. Accessing the auth routes requires an organization token.
 export type TenantMemberResponse = GetArrayElementType<
   GuardedResponse<GetTenantAuthRoutes['/api/tenants/:tenantId/members']>
 >;
@@ -27,3 +30,4 @@ export type TenantMemberResponse = GetArrayElementType<
 export type TenantInvitationResponse = GetArrayElementType<
   GuardedResponse<GetTenantAuthRoutes['/api/tenants/:tenantId/invitations']>
 >;
+// End of the auth routes types
