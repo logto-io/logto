@@ -32,22 +32,31 @@ export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
 
 export type JwtCustomizerUserContext = z.infer<typeof jwtCustomizerUserContextGuard>;
 
+export enum LogtoJwtTokenPath {
+  AccessToken = 'access-token',
+  ClientCredentials = 'client-credentials',
+}
+
 /**
  * This guard is for cloud API use (request body guard).
  * Since the cloud API will be use by both testing and production, should keep the fields as general as possible.
  * The response guard for the cloud API is `jsonObjectGuard` since it extends the `token` with extra claims.
  */
-export const customJwtFetcherGuard = jwtCustomizerGuard
+const commonJwtCustomizerGuard = jwtCustomizerGuard
   .pick({ script: true, envVars: true })
   .required({ script: true })
   .extend({
     token: jsonObjectGuard,
-    context: jsonObjectGuard.optional(),
   });
 
-export type CustomJwtFetcher = z.infer<typeof customJwtFetcherGuard>;
+export const customJwtFetcherGuard = z.discriminatedUnion('tokenType', [
+  commonJwtCustomizerGuard.extend({
+    tokenType: z.literal(LogtoJwtTokenPath.AccessToken),
+    context: jsonObjectGuard,
+  }),
+  commonJwtCustomizerGuard.extend({
+    tokenType: z.literal(LogtoJwtTokenPath.ClientCredentials),
+  }),
+]);
 
-export enum LogtoJwtTokenPath {
-  AccessToken = 'access-token',
-  ClientCredentials = 'client-credentials',
-}
+export type CustomJwtFetcher = z.infer<typeof customJwtFetcherGuard>;
