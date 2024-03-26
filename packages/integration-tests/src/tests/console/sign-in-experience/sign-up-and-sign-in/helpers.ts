@@ -27,7 +27,7 @@ export const expectToSelectSignUpIdentifier = async (page: Page, identifier: str
   });
 
   // Wait for the config to update
-  await waitFor(500);
+  await waitFor(100);
 };
 
 export const expectToClickSignUpAuthnOption = async (page: Page, option: string) => {
@@ -57,7 +57,7 @@ export const expectToAddSignInMethod = async (page: Page, method: string, isAddA
   });
 
   // Wait for the dropdown to be rendered in the correct position
-  await waitFor(500);
+  await waitFor(100);
 
   await expect(page).toClick('.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]', {
     text: method,
@@ -89,7 +89,7 @@ export const expectToClickSignInMethodAuthnOption = async (
   });
 
   // Wait for the config to update
-  await waitFor(500);
+  await waitFor(100);
 };
 
 export const expectToSwapSignInMethodAuthnOption = async (page: Page, method: string) => {
@@ -114,7 +114,7 @@ export const expectToRemoveSignInMethod = async (page: Page, method: string) => 
   await expect(methodItem).toClick('div[class$=anchor] button:last-of-type');
 
   // Wait for the config to update
-  await waitFor(500);
+  await waitFor(100);
 };
 
 export const expectSignInMethodError = async (page: Page, method: string) => {
