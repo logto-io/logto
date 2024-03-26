@@ -1,4 +1,4 @@
-import { adminTenantId } from '@logto/schemas';
+import { adminTenantId, experience } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import Koa from 'koa';
 import compose from 'koa-compose';
@@ -25,7 +25,6 @@ import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import initOidc from '#src/oidc/init.js';
 import { mountCallbackRouter } from '#src/routes/callback.js';
-import { routes } from '#src/routes/consts.js';
 import initApis from '#src/routes/init.js';
 import initMeApis from '#src/routes-me/init.js';
 import BasicSentinel from '#src/sentinel/basic-sentinel.js';
@@ -147,7 +146,7 @@ export default class Tenant implements TenantContext {
     app.use(
       compose([
         koaSpaSessionGuard(provider, queries),
-        mount(`${routes.consent}`, koaAutoConsent(provider, queries)),
+        mount(`/${experience.routes.consent}`, koaAutoConsent(provider, queries)),
         koaSpaProxy(mountedApps),
       ])
     );

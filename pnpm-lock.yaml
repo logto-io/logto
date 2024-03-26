@@ -4165,6 +4165,9 @@ importers:
       '@logto/shared':
         specifier: workspace:^3.1.0
         version: link:../../shared
+      '@silverhand/essentials':
+        specifier: ^2.9.0
+        version: 2.9.0
       color:
         specifier: ^4.2.3
         version: 4.2.3
@@ -4179,9 +4182,6 @@ importers:
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
-      '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)

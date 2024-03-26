@@ -38,7 +38,10 @@ const Main = () => {
 
     // If user is not authenticated, redirect to sign-in page
     if (!isAuthenticated) {
-      void signIn(window.location.href);
+      void signIn({
+        redirectUri: window.location.origin + window.location.pathname,
+        extraParams: Object.fromEntries(new URLSearchParams(window.location.search).entries()),
+      });
     }
   }, [getIdTokenClaims, isAuthenticated, isInCallback, isLoading, signIn, user]);
 

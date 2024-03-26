@@ -30,7 +30,7 @@ const state = 'foo_state';
 const redirectUri = 'http://foo.dev/callback';
 const code = 'auth_code_foo';
 
-describe('Social Identifier Interactions', () => {
+describe('social sign-in', () => {
   const connectorIdMap = new Map<string, string>();
 
   beforeAll(async () => {
@@ -47,7 +47,7 @@ describe('Social Identifier Interactions', () => {
     await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email, ConnectorType.Sms]);
   });
 
-  describe('register new and sign-in', () => {
+  describe.only('register and sign-in', () => {
     const socialUserId = generateUserId();
 
     it('register with social', async () => {
@@ -191,6 +191,39 @@ describe('Social Identifier Interactions', () => {
 
       await logoutClient(client);
       await deleteUser(uid);
+    });
+
+    it('can perform direct sign-in with a new social account', async () => {
+      const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
+
+      const client = await initClient(undefined, undefined, {
+        directSignIn: { method: 'social', target: mockSocialConnectorTarget },
+      });
+
+      await client.successSend(putInteraction, {
+        event: InteractionEvent.SignIn,
+      });
+
+      await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
+
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        connectorData: { state, redirectUri, code, userId: socialUserId },
+      });
+
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.identity_not_exist',
+        statusCode: 422,
+      });
+
+      await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
+      await client.successSend(putInteractionProfile, { connectorId });
+
+      const { redirectTo } = await client.submitInteraction();
+
+      const id = await processSession(client, redirectTo);
+      await logoutClient(client);
+      await deleteUser(id);
     });
   });
 

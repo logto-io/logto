@@ -1,11 +1,15 @@
-import type { LogtoConfig } from '@logto/node';
+import type { LogtoConfig, SignInOptions } from '@logto/node';
 import { assert } from '@silverhand/essentials';
 
 import MockClient from '#src/client/index.js';
 
-export const initClient = async (config?: Partial<LogtoConfig>, redirectUri?: string) => {
+export const initClient = async (
+  config?: Partial<LogtoConfig>,
+  redirectUri?: string,
+  options: Omit<SignInOptions, 'redirectUri'> = {}
+) => {
   const client = new MockClient(config);
-  await client.initSession(redirectUri);
+  await client.initSession(redirectUri, options);
   assert(client.interactionCookie, new Error('Session not found'));
 
   return client;

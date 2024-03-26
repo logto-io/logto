@@ -8,11 +8,13 @@ import type { I18nKey } from '@logto/phrases';
 import {
   customClientMetadataDefault,
   CustomClientMetadataKey,
-  demoAppApplicationId,
+  experience,
+  extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
   type LogtoUiCookie,
   LogtoJwtTokenKey,
+  ExtraParamsKey,
 } from '@logto/schemas';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
@@ -28,8 +30,11 @@ import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import postgresAdapter from '#src/oidc/adapter.js';
-import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
-import { routes } from '#src/routes/consts.js';
+import {
+  buildLoginPromptUrl,
+  isOriginAllowed,
+  validateCustomClientMetadata,
+} from '#src/oidc/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -43,7 +48,6 @@ import {
   filterResourceScopesForTheThirdPartyApplication,
 } from './resource.js';
 import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
-import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
@@ -174,8 +178,6 @@ export default function initOidc(
     },
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
-        const isDemoApp = appId === demoAppApplicationId;
-
         ctx.cookies.set(
           logtoCookieKey,
           JSON.stringify({
@@ -184,20 +186,15 @@ export default function initOidc(
           { sameSite: 'lax', overwrite: true, httpOnly: false }
         );
 
-        const appendParameters = (path: string) => {
-          return isDemoApp ? path + `?no_cache` : path;
-        };
+        const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
 
         switch (prompt.name) {
           case 'login': {
-            const isSignUp =
-              ctx.oidc.params?.[OIDCExtraParametersKey.InteractionMode] === InteractionMode.signUp;
-
-            return appendParameters(isSignUp ? routes.signUp : routes.signIn);
+            return '/' + buildLoginPromptUrl(params, appId);
           }
 
           case 'consent': {
-            return routes.consent;
+            return '/' + experience.routes.consent;
           }
 
           default: {
@@ -206,7 +203,7 @@ export default function initOidc(
         }
       },
     },
-    extraParams: [OIDCExtraParametersKey.InteractionMode],
+    extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
       const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
 

@@ -3,6 +3,8 @@ import { type webcrypto } from 'node:crypto';
 import { type DeepPartial } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { getPwnPasswordsForTest, isIntegrationTest } from './utils/integration-test.js';
+
 /** Password policy configuration type. */
 export type PasswordPolicy = {
   /** Policy about password length. */
@@ -300,6 +302,10 @@ export class PasswordPolicyChecker {
    * @returns Whether the password has been pwned.
    */
   async hasBeenPwned(password: string): Promise<boolean> {
+    if (isIntegrationTest()) {
+      return getPwnPasswordsForTest().includes(password);
+    }
+
     const hash = await this.subtle.digest('SHA-1', new TextEncoder().encode(password));
     const hashHex = Array.from(new Uint8Array(hash))
       .map((binary) => binary.toString(16).padStart(2, '0'))

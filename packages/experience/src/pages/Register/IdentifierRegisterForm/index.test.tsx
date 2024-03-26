@@ -1,4 +1,4 @@
-import { SignInIdentifier, type SsoConnectorMetadata } from '@logto/schemas';
+import { SignInIdentifier, experience, type SsoConnectorMetadata } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, act, waitFor } from '@testing-library/react';
 
@@ -10,7 +10,6 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import { registerWithUsernamePassword } from '@/apis/interaction';
 import { sendVerificationCodeApi } from '@/apis/utils';
-import { singleSignOnPath } from '@/constants/env';
 import { UserFlow } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -401,7 +400,7 @@ describe('<IdentifierRegisterForm />', () => {
       });
 
       await waitFor(() => {
-        expect(mockedNavigate).toBeCalledWith(`/${singleSignOnPath}/connectors`);
+        expect(mockedNavigate).toBeCalledWith(`/${experience.routes.sso}/connectors`);
       });
     });
   });

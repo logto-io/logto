@@ -1,4 +1,4 @@
-import SignIn from '../SignIn';
+import LoadingLayer from '@/components/LoadingLayer';
 
 import useSocialSignInListener from './use-social-sign-in-listener';
 
@@ -12,7 +12,7 @@ type Props = {
 const SocialSignIn = ({ connectorId }: Props) => {
   useSocialSignInListener(connectorId);
 
-  return <SignIn />;
+  return <LoadingLayer />;
 };
 
 export default SocialSignIn;
