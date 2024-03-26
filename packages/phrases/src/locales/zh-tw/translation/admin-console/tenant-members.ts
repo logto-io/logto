@@ -4,7 +4,7 @@ const tenant_members = {
   /** UNTRANSLATED */
   invitations: 'Invitations',
   /** UNTRANSLATED */
-  invite_member: 'Invite member',
+  invite_members: 'Invite members',
   /** UNTRANSLATED */
   user: 'User',
   /** UNTRANSLATED */
@@ -28,6 +28,8 @@ const tenant_members = {
     to: 'To',
     /** UNTRANSLATED */
     added_as: 'Added as roles',
+    /** UNTRANSLATED */
+    email_input_placeholder: 'johndoe@example.com',
   },
   invitation_statuses: {
     /** UNTRANSLATED */
@@ -67,11 +69,29 @@ const tenant_members = {
   /** UNTRANSLATED */
   assign_admin_confirm:
     'Are you sure you want to make the selected user(s) admin? Granting admin access will give the user(s) the following permissions.<ul><li>Change the tenant billing plan</li><li>Add or remove collaborators</li><li>Delete the tenant</li></ul>',
+  /** UNTRANSLATED */
+  revoke_invitation_confirm: 'Are you sure you want to revoke this invitation?',
+  /** UNTRANSLATED */
+  delete_invitation_confirm: 'Are you sure you want to delete this invitation record?',
+  messages: {
+    /** UNTRANSLATED */
+    invitation_sent: 'Invitation sent.',
+    /** UNTRANSLATED */
+    invitation_revoked: 'Invitation revoked.',
+    /** UNTRANSLATED */
+    invitation_resend: 'Invitation resent.',
+    /** UNTRANSLATED */
+    invitation_deleted: 'Invitation record deleted.',
+  },
   errors: {
     /** UNTRANSLATED */
-    user_exists: 'This user is already in this organization',
+    email_required: 'Invitee email is required.',
+    /** UNTRANSLATED */
+    user_exists: 'This user is already in this organization.',
     /** UNTRANSLATED */
     invalid_email: 'Email address is invalid. Please make sure it is in the right format.',
+    /** UNTRANSLATED */
+    max_member_limit: 'You have reached the maximum number of members ({{limit}}) for this tenant.',
   },
 };
 

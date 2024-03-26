@@ -3,7 +3,6 @@ import { getUserDisplayName } from '@logto/shared/universal';
 import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { z } from 'zod';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantMemberResponse } from '@/cloud/types/router';
@@ -11,7 +10,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
-import Select from '@/ds-components/Select';
+import Select, { type Option } from '@/ds-components/Select';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 type Props = {
@@ -28,7 +27,7 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
   const [role, setRole] = useState(TenantRole.Member);
   const cloudApi = useAuthedCloudApi();
 
-  const roleOptions = useMemo(
+  const roleOptions: Array<Option<TenantRole>> = useMemo(
     () => [
       { value: TenantRole.Admin, title: t('admin') },
       { value: TenantRole.Member, title: t('member') },
@@ -74,8 +73,9 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
             options={roleOptions}
             value={role}
             onChange={(value) => {
-              const guardResult = z.nativeEnum(TenantRole).safeParse(value);
-              setRole(guardResult.success ? guardResult.data : TenantRole.Member);
+              if (value) {
+                setRole(value);
+              }
             }}
           />
         </FormField>

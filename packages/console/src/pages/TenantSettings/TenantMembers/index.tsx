@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import InvitationIcon from '@/assets/icons/invitation.svg';
@@ -11,6 +12,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import NotFound from '@/pages/NotFound';
 
 import Invitations from './Invitations';
+import InviteMemberModal from './InviteMemberModal';
 import Members from './Members';
 import * as styles from './index.module.scss';
 
@@ -18,6 +20,7 @@ const invitationsRoute = 'invitations';
 
 function TenantMembers() {
   const { navigate, match } = useTenantPathname();
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   const isInvitationTab = match(
     `/tenant-settings/${TenantSettingsTabs.Members}/${invitationsRoute}`
@@ -47,7 +50,10 @@ function TenantMembers() {
           type="primary"
           size="large"
           icon={<PlusIcon />}
-          title="tenant_members.invite_member"
+          title="tenant_members.invite_members"
+          onClick={() => {
+            setShowInviteModal(true);
+          }}
         />
       </div>
       <Routes>
@@ -55,6 +61,17 @@ function TenantMembers() {
         <Route index element={<Members />} />
         <Route path={invitationsRoute} element={<Invitations />} />
       </Routes>
+      {showInviteModal && (
+        <InviteMemberModal
+          isOpen={showInviteModal}
+          onClose={(isSuccessful) => {
+            setShowInviteModal(false);
+            if (isSuccessful) {
+              navigate('invitations');
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

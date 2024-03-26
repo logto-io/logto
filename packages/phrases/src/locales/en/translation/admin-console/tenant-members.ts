@@ -1,7 +1,7 @@
 const tenant_members = {
   members: 'Members',
   invitations: 'Invitations',
-  invite_member: 'Invite member',
+  invite_members: 'Invite members',
   user: 'User',
   roles: 'Roles',
   admin: 'Admin',
@@ -14,6 +14,7 @@ const tenant_members = {
     subtitle: 'To invite members to an organization, they must accept the invitation.',
     to: 'To',
     added_as: 'Added as roles',
+    email_input_placeholder: 'johndoe@example.com',
   },
   invitation_statuses: {
     pending: 'Pending',
@@ -39,9 +40,19 @@ const tenant_members = {
   delete_user_confirm: 'Are you sure you want to remove this user from this tenant?',
   assign_admin_confirm:
     'Are you sure you want to make the selected user(s) admin? Granting admin access will give the user(s) the following permissions.<ul><li>Change the tenant billing plan</li><li>Add or remove collaborators</li><li>Delete the tenant</li></ul>',
+  revoke_invitation_confirm: 'Are you sure you want to revoke this invitation?',
+  delete_invitation_confirm: 'Are you sure you want to delete this invitation record?',
+  messages: {
+    invitation_sent: 'Invitation sent.',
+    invitation_revoked: 'Invitation revoked.',
+    invitation_resend: 'Invitation resent.',
+    invitation_deleted: 'Invitation record deleted.',
+  },
   errors: {
-    user_exists: 'This user is already in this organization',
+    email_required: 'Invitee email is required.',
+    user_exists: 'This user is already in this organization.',
     invalid_email: 'Email address is invalid. Please make sure it is in the right format.',
+    max_member_limit: 'You have reached the maximum number of members ({{limit}}) for this tenant.',
   },
 };
 
