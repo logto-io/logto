@@ -185,9 +185,7 @@ export const environmentVariablesCodeExample = `exports.getCustomJwtClaims = asy
  */
 const standardTokenPayloadData = {
   jti: 'f1d3d2d1-1f2d-3d4e-5d6f-7d8a9d0e1d2',
-  iat: 1_516_235_022,
-  exp: 1_516_235_022 + 3600,
-  clientId: 'my_app',
+  client_id: 'my_app',
   scope: 'read write',
   aud: 'http://localhost:3000/api/test',
 };
@@ -197,6 +195,7 @@ export const defaultAccessTokenPayload: AccessTokenPayload = {
   grantId: 'grant_123',
   accountId: 'uid_123',
   kind: 'AccessToken',
+  gty: 'authorization_code',
 };
 
 export const defaultClientCredentialsPayload: ClientCredentialsPayload = {
