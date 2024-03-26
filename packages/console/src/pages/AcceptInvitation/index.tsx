@@ -35,7 +35,7 @@ function AcceptInvitation() {
       return;
     }
     (async () => {
-      const { id, tenantId } = invitation;
+      const { id, organizationId } = invitation;
 
       // Accept the invitation and redirect to the tenant page.
       await cloudApi.patch(`/api/invitations/:invitationId/status`, {
@@ -43,7 +43,7 @@ function AcceptInvitation() {
         body: { status: OrganizationInvitationStatus.Accepted },
       });
 
-      navigateTenant(tenantId);
+      navigateTenant(organizationId.slice(2));
     })();
   }, [cloudApi, error, invitation, navigateTenant, t]);
 
