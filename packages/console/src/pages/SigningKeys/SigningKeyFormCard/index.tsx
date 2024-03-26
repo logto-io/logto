@@ -13,24 +13,25 @@ import Delete from '@/assets/icons/delete.svg';
 import FormCard from '@/components/FormCard';
 import Button from '@/ds-components/Button';
 import DangerConfirmModal from '@/ds-components/DeleteConfirmModal';
-import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import IconButton from '@/ds-components/IconButton';
 import Select from '@/ds-components/Select';
-import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
 
 import * as styles from './index.module.scss';
 
-function SigningKeys() {
+type Props = {
+  keyType: LogtoOidcConfigKeyType;
+};
+
+function SigningKeyFormCard({ keyType }: Props) {
   const api = useApi();
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenants.signing_keys' });
-  const [keyType, setKeyType] = useState<LogtoOidcConfigKeyType>(
-    LogtoOidcConfigKeyType.PrivateKeys
-  );
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.signing_keys' });
+
   const isPrivateKey = keyType === LogtoOidcConfigKeyType.PrivateKeys;
+  const keyTypePhrase = isPrivateKey ? 'private' : 'cookie';
 
   const { data, error, mutate } = useSWR<OidcConfigKeysResponse[], RequestError>(
     `api/configs/oidc/${keyType}`
@@ -96,26 +97,11 @@ function SigningKeys() {
   );
 
   return (
-    <FormCard title="tenants.signing_keys.title" description="tenants.signing_keys.description">
-      <TabNav>
-        <TabNavItem
-          isActive={keyType === LogtoOidcConfigKeyType.PrivateKeys}
-          onClick={() => {
-            setKeyType(LogtoOidcConfigKeyType.PrivateKeys);
-          }}
-        >
-          <DynamicT forKey="tenants.signing_keys.type.private_key" />
-        </TabNavItem>
-        <TabNavItem
-          isActive={keyType === LogtoOidcConfigKeyType.CookieKeys}
-          onClick={() => {
-            setKeyType(LogtoOidcConfigKeyType.CookieKeys);
-          }}
-        >
-          <DynamicT forKey="tenants.signing_keys.type.cookie_key" />
-        </TabNavItem>
-      </TabNav>
-      <FormField title={`tenants.signing_keys.${isPrivateKey ? 'private' : 'cookie'}_keys_in_use`}>
+    <FormCard
+      title={`signing_keys.${keyTypePhrase}_key`}
+      description={`signing_keys.${keyTypePhrase}_keys_description`}
+    >
+      <FormField title={`signing_keys.${keyTypePhrase}_keys_in_use`}>
         <Table
           hasBorder
           isRowHoverEffectDisabled
@@ -126,13 +112,11 @@ function SigningKeys() {
           columns={tableColumns}
         />
       </FormField>
-      <FormField title={`tenants.signing_keys.rotate_${isPrivateKey ? 'private' : 'cookie'}_keys`}>
+      <FormField title={`signing_keys.rotate_${keyTypePhrase}_keys`}>
         <div className={styles.rotateKey}>
-          <div className={styles.description}>
-            {t(`rotate_${isPrivateKey ? 'private' : 'cookie'}_keys_description`)}
-          </div>
+          <div className={styles.description}>{t(`rotate_${keyTypePhrase}_keys_description`)}</div>
           <Button
-            title={`tenants.signing_keys.rotate_${isPrivateKey ? 'private' : 'cookie'}_keys`}
+            title={`signing_keys.rotate_${keyTypePhrase}_keys`}
             type="default"
             onClick={() => {
               setShowRotateConfirmModal(true);
@@ -141,7 +125,7 @@ function SigningKeys() {
         </div>
       </FormField>
       <DangerConfirmModal
-        confirmButtonText="tenants.signing_keys.rotate_button"
+        confirmButtonText="signing_keys.rotate_button"
         isOpen={showRotateConfirmModal}
         onCancel={() => {
           setShowRotateConfirmModal(false);
@@ -164,11 +148,11 @@ function SigningKeys() {
       >
         <span>
           <Trans components={{ strong: <strong /> }}>
-            {t(`reminder.rotate_${isPrivateKey ? 'private' : 'cookie'}_key`)}
+            {t(`reminder.rotate_${keyTypePhrase}_key`)}
           </Trans>
         </span>
         {isPrivateKey && (
-          <FormField title="tenants.signing_keys.select_private_key_algorithm">
+          <FormField title="signing_keys.select_private_key_algorithm">
             <Select
               options={Object.values(SupportedSigningKeyAlgorithm).map((value) => ({
                 title: value,
@@ -205,7 +189,7 @@ function SigningKeys() {
       >
         <span>
           <Trans components={{ strong: <strong /> }}>
-            {t(`reminder.delete_${isPrivateKey ? 'private' : 'cookie'}_key`)}
+            {t(`reminder.delete_${keyTypePhrase}_key`)}
           </Trans>
         </span>
       </DangerConfirmModal>
@@ -213,4 +197,4 @@ function SigningKeys() {
   );
 }
 
-export default SigningKeys;
+export default SigningKeyFormCard;

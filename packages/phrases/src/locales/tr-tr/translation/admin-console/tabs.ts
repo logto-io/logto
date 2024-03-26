@@ -16,6 +16,7 @@ const tabs = {
   mfa: 'Çoklu faktörlü kimlik doğrulama',
   /** UNTRANSLATED */
   jwt_customizer: 'JWT Claims',
+  signing_keys: 'İmza anahtarları',
 };
 
 export default Object.freeze(tabs);

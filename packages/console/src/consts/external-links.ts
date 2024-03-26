@@ -23,3 +23,4 @@ export const logtoThirdPartyGuideLink = '/docs/recipes/logto-as-idp/';
 export const logtoThirdPartyAppPermissionsLink =
   '/docs/recipes/logto-as-idp/permissions-management/';
 export const logtoThirdPartyAppBrandingLink = '/docs/recipes/logto-as-idp/branding-customization/';
+export const signingKeysLink = '/docs/recipes/openid-connect/signing-keys-rotation/';
