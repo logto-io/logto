@@ -13,6 +13,7 @@ const api_resources = {
   default_api_label:
     'Only zero or one default API can be set per tenant.\nWhen a default API is designated, the resource parameter can be omitted in the auth request. Subsequent token exchanges will use that API as the audience by default, resulting in the issuance of JWTs. <a>Learn more</a>',
   api_resource_created: 'The API resource {{name}} has been successfully created',
+  invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 
 export default Object.freeze(api_resources);
