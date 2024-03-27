@@ -13,7 +13,7 @@ import {
   goToAdminConsole,
   waitForToast,
 } from '#src/ui-helpers/index.js';
-import { expectNavigation, appendPathname, dcls } from '#src/utils.js';
+import { expectNavigation, appendPathname, dcls, waitFor } from '#src/utils.js';
 
 import {
   type ApplicationMetadata,
@@ -145,7 +145,7 @@ describe('applications', () => {
     await expect(page).toClick('div[class$=header] button span', { text: 'Check guide' });
 
     // Wait for the guide drawer to be ready
-    await page.waitForTimeout(500);
+    await waitFor(500);
 
     // Close guide
     await expect(page).toClick(
@@ -201,7 +201,7 @@ describe('applications', () => {
     await waitForToast(page, { text: 'Saved' });
 
     // Wait for the redirect uri field to be updated
-    await page.waitForTimeout(500);
+    await waitFor(500);
 
     // Remove Redirect Uri
     await expect(page).toFill(`input[value="${testApp.redirectUri}"]`, '');

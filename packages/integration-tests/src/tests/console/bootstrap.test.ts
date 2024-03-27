@@ -7,7 +7,7 @@ import {
   consoleUsername,
   logtoConsoleUrl as logtoConsoleUrlString,
 } from '#src/constants.js';
-import { appendPathname, cls, dcls, expectNavigation } from '#src/utils.js';
+import { appendPathname, cls, dcls, expectNavigation, waitFor } from '#src/utils.js';
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
@@ -85,7 +85,7 @@ describe('smoke testing for console admin account creation and sign-in', () => {
     await expect(page).toClick('div[class$=topbar] > div[class$=container]');
 
     // Try awaiting for 500ms before clicking sign-out button
-    await page.waitForTimeout(500);
+    await waitFor(500);
 
     await expectNavigation(
       expect(page).toClick(
