@@ -6,13 +6,17 @@ import {
   azureAdSsoConnectorFactory,
 } from './AzureAdSsoConnector/index.js';
 import {
+  type AzureOidcSsoConnector,
+  azureOidcSsoConnectorFactory,
+} from './AzureOidcSsoConnector/index.js';
+import {
   type GoogleWorkspaceSsoConnector,
   googleWorkSpaceSsoConnectorFactory,
   type googleWorkspaceSsoConnectorConfigGuard,
 } from './GoogleWorkspaceSsoConnector/index.js';
 import { oidcSsoConnectorFactory, type OidcSsoConnector } from './OidcSsoConnector/index.js';
 import { oktaSsoConnectorFactory, type OktaSsoConnector } from './OktaSsoConnector/index.js';
-import { type SamlSsoConnector, samlSsoConnectorFactory } from './SamlSsoConnector/index.js';
+import { samlSsoConnectorFactory, type SamlSsoConnector } from './SamlSsoConnector/index.js';
 import { type basicOidcConnectorConfigGuard } from './types/oidc.js';
 import { type samlConnectorConfigGuard } from './types/saml.js';
 
@@ -22,6 +26,7 @@ type SingleSignOnConstructor = {
   [SsoProviderName.AZURE_AD]: typeof AzureAdSsoConnector;
   [SsoProviderName.GOOGLE_WORKSPACE]: typeof GoogleWorkspaceSsoConnector;
   [SsoProviderName.OKTA]: typeof OktaSsoConnector;
+  [SsoProviderName.AZURE_AD_OIDC]: typeof AzureOidcSsoConnector;
 };
 
 export type SingleSignOnConnectorConfig = {
@@ -30,6 +35,7 @@ export type SingleSignOnConnectorConfig = {
   [SsoProviderName.AZURE_AD]: typeof samlConnectorConfigGuard;
   [SsoProviderName.GOOGLE_WORKSPACE]: typeof googleWorkspaceSsoConnectorConfigGuard;
   [SsoProviderName.OKTA]: typeof basicOidcConnectorConfigGuard;
+  [SsoProviderName.AZURE_AD_OIDC]: typeof basicOidcConnectorConfigGuard;
 };
 
 export type SingleSignOnFactory<T extends SsoProviderName> = {
@@ -50,6 +56,7 @@ export const ssoConnectorFactories: {
   [SsoProviderName.AZURE_AD]: azureAdSsoConnectorFactory,
   [SsoProviderName.GOOGLE_WORKSPACE]: googleWorkSpaceSsoConnectorFactory,
   [SsoProviderName.OKTA]: oktaSsoConnectorFactory,
+  [SsoProviderName.AZURE_AD_OIDC]: azureOidcSsoConnectorFactory,
 };
 
 export const standardSsoConnectorProviders = Object.freeze([
