@@ -1,13 +1,12 @@
-import { type SsoProviderName } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import { type ParsedSsoIdentityProviderConfig } from '@/pages/EnterpriseSso/types.js';
+import { type OidcProviderConfig } from '@/pages/EnterpriseSsoDetails/types/oidc';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  providerConfig: ParsedSsoIdentityProviderConfig<SsoProviderName.OIDC>;
+  providerConfig: OidcProviderConfig;
   className?: string;
 };
 

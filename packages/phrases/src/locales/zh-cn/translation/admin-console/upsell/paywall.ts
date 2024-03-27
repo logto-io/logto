@@ -54,6 +54,9 @@ const paywall = {
   /** UNTRANSLATED */
   third_party_apps:
     'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
+  /** UNTRANSLATED */
+  sso_connectors:
+    'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
 };
 
 export default Object.freeze(paywall);

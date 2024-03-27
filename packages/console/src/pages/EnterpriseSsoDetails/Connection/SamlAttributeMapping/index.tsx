@@ -1,39 +1,25 @@
-import { socialUserInfoGuard } from '@logto/connector-kit';
-import { type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { conditional, conditionalString } from '@silverhand/essentials';
 import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import TextInput from '@/ds-components/TextInput';
-
-import { attributeKeys, type SamlGuideFormType } from '../../../EnterpriseSso/types.js';
+import {
+  samlAttributeKeys,
+  type SamlProviderConfig,
+  type SamlConnectorConfig,
+} from '@/pages/EnterpriseSsoDetails/types/saml';
 
 import * as styles from './index.module.scss';
 
-type Props = Pick<SsoConnectorWithProviderConfig, 'providerConfig'>;
-
-/**
- * TODO: Should align this with the guard `samlAttributeMappingGuard` defined in {@link logto/core/src/sso/types/saml.ts}.
- * This only applies to SAML-protocol-based SSO connectors.
- */
-const providerPropertiesGuard = z.object({
-  defaultAttributeMapping: socialUserInfoGuard
-    .pick({
-      id: true,
-      email: true,
-      name: true,
-    })
-    .required(),
-});
+type Props = {
+  samlProviderConfig?: SamlProviderConfig;
+};
 
 const primaryKey = 'attributeMapping';
 
-function SamlAttributeMapping({ providerConfig }: Props) {
-  const { register } = useFormContext<SamlGuideFormType>();
-
-  const result = providerPropertiesGuard.safeParse(providerConfig);
+function SamlAttributeMapping({ samlProviderConfig }: Props) {
+  const { register } = useFormContext<SamlConnectorConfig>();
 
   return (
     <table className={styles.table}>
@@ -48,7 +34,7 @@ function SamlAttributeMapping({ providerConfig }: Props) {
         </tr>
       </thead>
       <tbody className={styles.body}>
-        {attributeKeys.map((key) => {
+        {samlAttributeKeys.map((key) => {
           return (
             <tr key={key} className={styles.row}>
               <td>
@@ -61,16 +47,12 @@ function SamlAttributeMapping({ providerConfig }: Props) {
                   <CopyToClipboard
                     className={styles.copyToClipboard}
                     variant="border"
-                    value={conditionalString(
-                      result.success && result.data.defaultAttributeMapping[key]
-                    )}
+                    value={conditionalString(samlProviderConfig?.defaultAttributeMapping[key])}
                   />
                 ) : (
                   <TextInput
                     {...register(`${primaryKey}.${key}`)}
-                    placeholder={conditional(
-                      result.success && result.data.defaultAttributeMapping[key]
-                    )}
+                    placeholder={conditional(samlProviderConfig?.defaultAttributeMapping[key])}
                   />
                 )}
               </td>
