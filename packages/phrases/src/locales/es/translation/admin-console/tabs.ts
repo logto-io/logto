@@ -16,6 +16,7 @@ const tabs = {
   mfa: 'Autenticación multifactor',
   /** UNTRANSLATED */
   jwt_customizer: 'JWT Claims',
+  signing_keys: 'Claves de firma',
 };
 
 export default Object.freeze(tabs);

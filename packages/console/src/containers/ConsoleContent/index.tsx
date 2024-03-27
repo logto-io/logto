@@ -48,6 +48,7 @@ import RoleUsers from '@/pages/RoleDetails/RoleUsers';
 import Roles from '@/pages/Roles';
 import SignInExperience from '@/pages/SignInExperience';
 import { SignInExperienceTab } from '@/pages/SignInExperience/types';
+import SigningKeys from '@/pages/SigningKeys';
 import TenantSettings from '@/pages/TenantSettings';
 import BillingHistory from '@/pages/TenantSettings/BillingHistory';
 import Subscription from '@/pages/TenantSettings/Subscription';
@@ -193,6 +194,7 @@ function ConsoleContent() {
               <Route path="link-email" element={<LinkEmailModal />} />
               <Route path="verification-code" element={<VerificationCodeModal />} />
             </Route>
+            <Route path="signing-keys" element={<SigningKeys />} />
             {isCloud && (
               <Route path="tenant-settings" element={<TenantSettings />}>
                 <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />

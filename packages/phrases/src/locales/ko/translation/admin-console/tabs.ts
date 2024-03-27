@@ -16,6 +16,7 @@ const tabs = {
   mfa: '다중 요소 인증',
   /** UNTRANSLATED */
   jwt_customizer: 'JWT Claims',
+  signing_keys: '서명 키',
 };
 
 export default Object.freeze(tabs);

@@ -15,6 +15,7 @@ const tabs = {
   tenant_settings: 'Settings',
   mfa: 'Multi-factor auth',
   jwt_customizer: 'JWT Claims',
+  signing_keys: 'Signing keys',
 };
 
 export default Object.freeze(tabs);

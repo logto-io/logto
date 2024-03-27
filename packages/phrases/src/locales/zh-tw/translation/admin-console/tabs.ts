@@ -16,6 +16,7 @@ const tabs = {
   mfa: '多重認證',
   /** UNTRANSLATED */
   jwt_customizer: 'JWT Claims',
+  signing_keys: '簽署密鑰',
 };
 
 export default Object.freeze(tabs);

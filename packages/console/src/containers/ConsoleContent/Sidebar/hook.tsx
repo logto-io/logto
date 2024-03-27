@@ -9,6 +9,7 @@ import Connection from '@/assets/icons/connection.svg';
 import Gear from '@/assets/icons/gear.svg';
 import Hook from '@/assets/icons/hook.svg';
 import JwtClaims from '@/assets/icons/jwt-claims.svg';
+import Key from '@/assets/icons/key.svg';
 import List from '@/assets/icons/list.svg';
 import Organization from '@/assets/icons/organization.svg';
 import UserProfile from '@/assets/icons/profile.svg';
@@ -116,6 +117,10 @@ export const useSidebarMenuItems = (): {
     {
       title: 'developer',
       items: [
+        {
+          Icon: Key,
+          title: 'signing_keys',
+        },
         {
           Icon: JwtClaims,
           title: 'jwt_customizer',
