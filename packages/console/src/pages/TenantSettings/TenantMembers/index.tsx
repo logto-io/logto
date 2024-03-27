@@ -8,6 +8,7 @@ import PlusIcon from '@/assets/icons/plus.svg';
 import { TenantSettingsTabs } from '@/consts';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import NotFound from '@/pages/NotFound';
 
@@ -21,6 +22,7 @@ const invitationsRoute = 'invitations';
 function TenantMembers() {
   const { navigate, match } = useTenantPathname();
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const { canInviteMember } = useCurrentTenantScopes();
 
   const isInvitationTab = match(
     `/tenant-settings/${TenantSettingsTabs.Members}/${invitationsRoute}`
@@ -37,31 +39,35 @@ function TenantMembers() {
             navigate('.');
           }}
         />
-        <Button
-          className={classNames(styles.button, isInvitationTab && styles.active)}
-          icon={<InvitationIcon />}
-          title="tenant_members.invitations"
-          onClick={() => {
-            navigate('invitations');
-          }}
-        />
+        {canInviteMember && (
+          <Button
+            className={classNames(styles.button, isInvitationTab && styles.active)}
+            icon={<InvitationIcon />}
+            title="tenant_members.invitations"
+            onClick={() => {
+              navigate('invitations');
+            }}
+          />
+        )}
         <Spacer />
-        <Button
-          type="primary"
-          size="large"
-          icon={<PlusIcon />}
-          title="tenant_members.invite_members"
-          onClick={() => {
-            setShowInviteModal(true);
-          }}
-        />
+        {canInviteMember && (
+          <Button
+            type="primary"
+            size="large"
+            icon={<PlusIcon />}
+            title="tenant_members.invite_members"
+            onClick={() => {
+              setShowInviteModal(true);
+            }}
+          />
+        )}
       </div>
       <Routes>
         <Route path="*" element={<NotFound />} />
         <Route index element={<Members />} />
-        <Route path={invitationsRoute} element={<Invitations />} />
+        {canInviteMember && <Route path={invitationsRoute} element={<Invitations />} />}
       </Routes>
-      {showInviteModal && (
+      {canInviteMember && (
         <InviteMemberModal
           isOpen={showInviteModal}
           onClose={(isSuccessful) => {

@@ -15,6 +15,7 @@ import {
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
@@ -74,6 +75,7 @@ import * as styles from './index.module.scss';
 function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
   const { isDevTenant } = useContext(TenantsContext);
+  const { canManageTenant } = useCurrentTenantScopes();
 
   return (
     <div className={styles.content}>
@@ -197,13 +199,25 @@ function ConsoleContent() {
             <Route path="signing-keys" element={<SigningKeys />} />
             {isCloud && (
               <Route path="tenant-settings" element={<TenantSettings />}>
-                <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
+                <Route
+                  index
+                  element={
+                    <Navigate
+                      replace
+                      to={
+                        canManageTenant ? TenantSettingsTabs.Settings : TenantSettingsTabs.Members
+                      }
+                    />
+                  }
+                />
                 <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
                 {isDevFeaturesEnabled && (
                   <Route path={`${TenantSettingsTabs.Members}/*`} element={<TenantMembers />} />
                 )}
-                <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
-                {!isDevTenant && (
+                {canManageTenant && (
+                  <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
+                )}
+                {!isDevTenant && canManageTenant && (
                   <>
                     <Route path={TenantSettingsTabs.Subscription} element={<Subscription />} />
                     <Route path={TenantSettingsTabs.BillingHistory} element={<BillingHistory />} />

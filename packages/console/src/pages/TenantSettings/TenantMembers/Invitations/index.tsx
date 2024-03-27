@@ -1,4 +1,5 @@
 import { OrganizationInvitationStatus } from '@logto/schemas';
+import { condArray, conditional } from '@silverhand/essentials';
 import { format } from 'date-fns';
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -13,7 +14,7 @@ import Redo from '@/assets/icons/redo.svg';
 import UsersEmptyDark from '@/assets/images/users-empty-dark.svg';
 import UsersEmpty from '@/assets/images/users-empty.svg';
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type TenantInvitationResponse } from '@/cloud/types/router';
+import type { InvitationResponse, TenantInvitationResponse } from '@/cloud/types/router';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
@@ -24,6 +25,7 @@ import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag, { type Props as TagProps } from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import InviteMemberModal from '../InviteMemberModal';
 
@@ -50,6 +52,7 @@ function Invitations() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const cloudApi = useAuthedCloudApi();
   const { currentTenantId } = useContext(TenantsContext);
+  const { canInviteMember, canRemoveMember } = useCurrentTenantScopes();
 
   const { data, error, isLoading, mutate } = useSWR<TenantInvitationResponse[], RequestError>(
     `api/tenant/${currentTenantId}/invitations`,
@@ -105,17 +108,19 @@ function Invitations() {
             imageDark={<UsersEmptyDark />}
             title="tenant_members.invitation_empty_placeholder.title"
             description="tenant_members.invitation_empty_placeholder.description"
-            action={
-              <Button
-                title="tenant_members.invite_members"
-                type="primary"
-                size="large"
-                icon={<Plus />}
-                onClick={() => {
-                  setShowInviteModal(true);
-                }}
-              />
-            }
+            action={conditional(
+              canInviteMember && (
+                <Button
+                  title="tenant_members.invite_members"
+                  type="primary"
+                  size="large"
+                  icon={<Plus />}
+                  onClick={() => {
+                    setShowInviteModal(true);
+                  }}
+                />
+              )
+            )}
           />
         }
         isLoading={isLoading}
@@ -166,60 +171,64 @@ function Invitations() {
             title: t('expiration_date'),
             render: ({ expiresAt }) => <span>{format(expiresAt, 'MMM do, yyyy')}</span>,
           },
-          {
-            dataIndex: 'actions',
-            title: null,
-            render: ({ id, status }) => (
-              <ActionMenu
-                icon={<More />}
-                iconSize="small"
-                title={<DynamicT forKey="general.more_options" />}
-              >
-                {status !== OrganizationInvitationStatus.Accepted && (
-                  <ActionMenuItem
-                    icon={<Invite />}
-                    onClick={async () => {
-                      await cloudApi.post(
-                        '/api/tenants/:tenantId/invitations/:invitationId/message',
-                        {
-                          params: { tenantId: currentTenantId, invitationId: id },
-                        }
-                      );
-                      toast.success(t('messages.invitation_sent'));
-                    }}
+          ...condArray(
+            (canInviteMember || canRemoveMember) && [
+              {
+                dataIndex: 'actions',
+                title: null,
+                render: ({ id, status }: InvitationResponse) => (
+                  <ActionMenu
+                    icon={<More />}
+                    iconSize="small"
+                    title={<DynamicT forKey="general.more_options" />}
                   >
-                    {t('menu_options.resend_invite')}
-                  </ActionMenuItem>
-                )}
-                {status === OrganizationInvitationStatus.Pending && (
-                  <ActionMenuItem
-                    icon={<Redo />}
-                    type="danger"
-                    onClick={() => {
-                      void handleRevoke(id);
-                    }}
-                  >
-                    {t('menu_options.revoke')}
-                  </ActionMenuItem>
-                )}
-                {status !== OrganizationInvitationStatus.Pending && (
-                  <ActionMenuItem
-                    icon={<Delete />}
-                    type="danger"
-                    onClick={() => {
-                      void handleDelete(id);
-                    }}
-                  >
-                    {t('menu_options.delete_invitation_record')}
-                  </ActionMenuItem>
-                )}
-              </ActionMenu>
-            ),
-          },
+                    {status !== OrganizationInvitationStatus.Accepted && canInviteMember && (
+                      <ActionMenuItem
+                        icon={<Invite />}
+                        onClick={async () => {
+                          await cloudApi.post(
+                            '/api/tenants/:tenantId/invitations/:invitationId/message',
+                            {
+                              params: { tenantId: currentTenantId, invitationId: id },
+                            }
+                          );
+                          toast.success(t('messages.invitation_sent'));
+                        }}
+                      >
+                        {t('menu_options.resend_invite')}
+                      </ActionMenuItem>
+                    )}
+                    {status === OrganizationInvitationStatus.Pending && canRemoveMember && (
+                      <ActionMenuItem
+                        icon={<Redo />}
+                        type="danger"
+                        onClick={() => {
+                          void handleRevoke(id);
+                        }}
+                      >
+                        {t('menu_options.revoke')}
+                      </ActionMenuItem>
+                    )}
+                    {status !== OrganizationInvitationStatus.Pending && canRemoveMember && (
+                      <ActionMenuItem
+                        icon={<Delete />}
+                        type="danger"
+                        onClick={() => {
+                          void handleDelete(id);
+                        }}
+                      >
+                        {t('menu_options.delete_invitation_record')}
+                      </ActionMenuItem>
+                    )}
+                  </ActionMenu>
+                ),
+              },
+            ]
+          ),
         ]}
         rowIndexKey="id"
       />
-      {showInviteModal && (
+      {canInviteMember && (
         <InviteMemberModal
           isOpen={showInviteModal}
           onClose={() => {

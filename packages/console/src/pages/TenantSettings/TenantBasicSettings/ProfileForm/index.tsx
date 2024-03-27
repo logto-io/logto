@@ -4,6 +4,7 @@ import FormCard from '@/components/FormCard';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import { type TenantSettingsForm } from '../types.js';
 
@@ -15,6 +16,7 @@ type Props = {
 };
 
 function ProfileForm({ currentTenantId }: Props) {
+  const { canManageTenant } = useCurrentTenantScopes();
   const {
     register,
     formState: { errors },
@@ -29,6 +31,7 @@ function ProfileForm({ currentTenantId }: Props) {
       <FormField isRequired title="tenants.settings.tenant_name">
         <TextInput
           {...register('profile.name', { required: true })}
+          readOnly={!canManageTenant}
           error={Boolean(errors.profile?.name)}
         />
       </FormField>

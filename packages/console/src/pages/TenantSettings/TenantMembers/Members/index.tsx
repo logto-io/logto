@@ -1,3 +1,4 @@
+import { condArray, conditional } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -12,6 +13,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import EditMemberModal from '../EditMemberModal';
 
@@ -19,6 +21,7 @@ function Members() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const cloudApi = useAuthedCloudApi();
   const { currentTenantId } = useContext(TenantsContext);
+  const { canInviteMember, canRemoveMember, canUpdateMemberRole } = useCurrentTenantScopes();
 
   const { data, error, isLoading, mutate } = useSWR<TenantMemberResponse[], RequestError>(
     `api/tenant/${currentTenantId}/members`,
@@ -59,35 +62,45 @@ function Members() {
               ));
             },
           },
-          {
-            dataIndex: 'actions',
-            title: null,
-            colSpan: 1,
-            render: (user) => (
-              <ActionsButton
-                deleteConfirmation="tenant_members.delete_user_confirm"
-                fieldName="tenant_members.user"
-                textOverrides={{
-                  edit: 'tenant_members.menu_options.edit',
-                  delete: 'tenant_members.menu_options.delete',
-                  deleteConfirmation: 'general.remove',
-                }}
-                onEdit={() => {
-                  setUserToBeEdited(user);
-                }}
-                onDelete={async () => {
-                  await cloudApi.delete(`/api/tenants/:tenantId/members/:userId`, {
-                    params: { tenantId: currentTenantId, userId: user.id },
-                  });
-                  void mutate();
-                }}
-              />
-            ),
-          },
+          ...condArray(
+            (canUpdateMemberRole || canRemoveMember) && [
+              {
+                dataIndex: 'actions',
+                title: null,
+                colSpan: 1,
+                render: (user: TenantMemberResponse) => (
+                  <ActionsButton
+                    deleteConfirmation="tenant_members.delete_user_confirm"
+                    fieldName="tenant_members.user"
+                    textOverrides={{
+                      edit: 'tenant_members.menu_options.edit',
+                      delete: 'tenant_members.menu_options.delete',
+                      deleteConfirmation: 'general.remove',
+                    }}
+                    onEdit={conditional(
+                      canUpdateMemberRole &&
+                        (() => {
+                          setUserToBeEdited(user);
+                        })
+                    )}
+                    onDelete={conditional(
+                      canRemoveMember &&
+                        (async () => {
+                          await cloudApi.delete(`/api/tenants/:tenantId/members/:userId`, {
+                            params: { tenantId: currentTenantId, userId: user.id },
+                          });
+                          void mutate();
+                        })
+                    )}
+                  />
+                ),
+              },
+            ]
+          ),
         ]}
         rowIndexKey="id"
       />
-      {userToBeEdited && (
+      {canUpdateMemberRole && userToBeEdited && (
         <EditMemberModal
           isOpen
           user={userToBeEdited}

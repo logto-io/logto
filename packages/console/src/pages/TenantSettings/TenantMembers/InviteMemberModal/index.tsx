@@ -28,11 +28,8 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const { currentPlan } = useContext(SubscriptionDataContext);
   const { currentTenantId, isDevTenant } = useContext(TenantsContext);
   const tenantMembersMaxLimit = useMemo(() => {
-    if (isDevTenant) {
+    if (currentPlan.id === ReservedPlanId.Pro || isDevTenant) {
       return 10;
-    }
-    if (currentPlan.id === ReservedPlanId.Pro) {
-      return 3;
     }
     // Free plan can only have 1 admin, no other members allowed.
     return 1;
