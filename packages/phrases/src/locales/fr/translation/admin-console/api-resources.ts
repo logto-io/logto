@@ -13,6 +13,8 @@ const api_resources = {
   default_api_label:
     'Seulement zéro ou une API par défaut peut être définie par tenant. Lorsqu\'une API par défaut est désignée, le paramètre "resource" peut être omis dans la demande d\'authentification. Les échanges de jetons ultérieurs utiliseront cette API comme public cible par défaut, ce qui entraînera la délivrance de JWT. <a>En savoir plus</a>',
   api_resource_created: 'La ressource API {{name}} a été créée avec succès.',
+  /** UNTRANSLATED */
+  invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 
 export default Object.freeze(api_resources);

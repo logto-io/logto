@@ -13,6 +13,8 @@ const api_resources = {
   default_api_label:
     'Tylko jedno API domyślne może być ustawione na jeden najem. Kiedy określone zostanie API domyślne, parametr zasobu może zostać pominięty w żądaniu autoryzacji. Następujące procesy wymiany tokenu będą domyślnie korzystać z tego API, co umożliwi wydanie JWT. <a>Dowiedz się więcej</a>',
   api_resource_created: 'Zasób API {{name}} został pomyślnie utworzony',
+  /** UNTRANSLATED */
+  invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 
 export default Object.freeze(api_resources);

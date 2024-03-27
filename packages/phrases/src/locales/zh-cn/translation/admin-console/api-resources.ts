@@ -13,6 +13,8 @@ const api_resources = {
   default_api_label:
     '每个租户只能设置零个或一个默认 API。当指定默认 API 时，可以在认证请求中省略资源参数。后续令牌交换将默认使用该 API 作为 Audience，从而签发 JWT。<a>了解更多</a>',
   api_resource_created: ' API 资源 {{name}} 已成功创建。',
+  /** UNTRANSLATED */
+  invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 
 export default Object.freeze(api_resources);
