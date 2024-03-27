@@ -6,13 +6,11 @@ import { alipayEndpoint, authorizationEndpoint } from './constant.js';
 import createConnector, { getAccessToken } from './index.js';
 import { mockedAlipayConfigWithValidPrivateKey } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedAlipayConfigWithValidPrivateKey);
+const getConfig = vi.fn().mockResolvedValue(mockedAlipayConfigWithValidPrivateKey);
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
@@ -26,7 +24,7 @@ describe('getAuthorizationUri', () => {
         jti: 'some_jti',
         headers: {},
       },
-      jest.fn()
+      vi.fn()
     );
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?app_id=2021000000000000&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&scope=auth_user&state=some_state`
@@ -37,7 +35,7 @@ describe('getAuthorizationUri', () => {
 describe('getAccessToken', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const alipayEndpointUrl = new URL(alipayEndpoint);
@@ -78,7 +76,7 @@ describe('getAccessToken', () => {
 
     await expect(
       getAccessToken('code', mockedAlipayConfigWithValidPrivateKey)
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+    ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
   });
 
   it('should fail with wrong code', async () => {
@@ -96,7 +94,7 @@ describe('getAccessToken', () => {
 
     await expect(
       getAccessToken('wrong_code', mockedAlipayConfigWithValidPrivateKey)
-    ).rejects.toMatchError(
+    ).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid code')
     );
   });
@@ -105,7 +103,7 @@ describe('getAccessToken', () => {
 describe('getUserInfo', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   beforeEach(() => {
@@ -144,7 +142,7 @@ describe('getUserInfo', () => {
     const connector = await createConnector({ getConfig });
     const { id, name, avatar, rawData } = await connector.getUserInfo(
       { auth_code: 'code' },
-      jest.fn()
+      vi.fn()
     );
     expect(id).toEqual('2088000000000000');
     expect(name).toEqual('PlayboyEric');
@@ -163,7 +161,7 @@ describe('getUserInfo', () => {
 
   it('throw General error if auth_code not provided in input', async () => {
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({}, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({}, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse, '{}')
     );
   });
@@ -182,9 +180,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
     const connector = await createConnector({ getConfig });
-    await expect(
-      connector.getUserInfo({ auth_code: 'wrong_code' }, jest.fn())
-    ).rejects.toMatchError(
+    await expect(connector.getUserInfo({ auth_code: 'wrong_code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
     );
   });
@@ -203,9 +199,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
     const connector = await createConnector({ getConfig });
-    await expect(
-      connector.getUserInfo({ auth_code: 'wrong_code' }, jest.fn())
-    ).rejects.toMatchError(
+    await expect(connector.getUserInfo({ auth_code: 'wrong_code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid auth code')
     );
   });
@@ -224,9 +218,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
     const connector = await createConnector({ getConfig });
-    await expect(
-      connector.getUserInfo({ auth_code: 'wrong_code' }, jest.fn())
-    ).rejects.toMatchError(
+    await expect(connector.getUserInfo({ auth_code: 'wrong_code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.General, {
         errorDescription: 'Invalid parameter',
         code: '40002',
@@ -251,7 +243,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ auth_code: 'code' }, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({ auth_code: 'code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse)
     );
   });
@@ -259,6 +251,6 @@ describe('getUserInfo', () => {
   it('should throw with other request errors', async () => {
     nock(alipayEndpointUrl.origin).post(alipayEndpointUrl.pathname).query(true).reply(500);
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ auth_code: 'code' }, jest.fn())).rejects.toThrow();
+    await expect(connector.getUserInfo({ auth_code: 'code' }, vi.fn())).rejects.toThrow();
   });
 });

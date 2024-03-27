@@ -1,10 +1,8 @@
 import { mockedRandomCode } from './mock.js';
 
-const { jest } = import.meta;
+const request = vi.fn();
 
-const request = jest.fn();
-
-jest.unstable_mockModule('./utils.js', () => ({ request }));
+vi.mock('./utils.js', () => ({ request }));
 
 const { sendSms } = await import('./single-send-text.js');
 

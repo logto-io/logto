@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
-    "types": ["node", "jest", "jest-matcher-specific-error"]
+    "types": ["node", "vitest/globals"]
   },
   "include": ["src", "types"]
 }

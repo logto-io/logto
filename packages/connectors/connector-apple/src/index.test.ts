@@ -2,15 +2,13 @@ import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 
 import { mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const jwtVerify = vi.fn();
 
-const jwtVerify = jest.fn();
-
-jest.unstable_mockModule('jose', () => ({
+vi.mock('jose', () => ({
   jwtVerify,
-  createRemoteJWKSet: jest.fn(),
+  createRemoteJWKSet: vi.fn(),
 }));
 
 const { authorizationEndpoint } = await import('./constant.js');
@@ -18,12 +16,12 @@ const { default: createConnector } = await import('./index.js');
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
     const connector = await createConnector({ getConfig });
-    const setSession = jest.fn();
+    const setSession = vi.fn();
     const authorizationUri = await connector.getAuthorizationUri(
       {
         state: 'some_state',
@@ -50,7 +48,7 @@ describe('getAuthorizationUri', () => {
 
 describe('getUserInfo', () => {
   afterAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get user info from id token payload', async () => {
@@ -59,7 +57,7 @@ describe('getUserInfo', () => {
       payload: { sub: userId, email: 'foo@bar.com', email_verified: true },
     }));
     const connector = await createConnector({ getConfig });
-    const userInfo = await connector.getUserInfo({ id_token: 'idToken' }, jest.fn());
+    const userInfo = await connector.getUserInfo({ id_token: 'idToken' }, vi.fn());
     expect(userInfo).toEqual({
       id: userId,
       email: 'foo@bar.com',
@@ -72,7 +70,7 @@ describe('getUserInfo', () => {
       payload: { sub: 'userId', email: 'foo@bar.com' },
     }));
     const connector = await createConnector({ getConfig });
-    const userInfo = await connector.getUserInfo({ id_token: 'idToken' }, jest.fn());
+    const userInfo = await connector.getUserInfo({ id_token: 'idToken' }, vi.fn());
     expect(userInfo).toEqual({ id: 'userId', rawData: { id_token: 'idToken' } });
   });
 
@@ -90,7 +88,7 @@ describe('getUserInfo', () => {
           name: { firstName: 'foo', lastName: 'bar' },
         }),
       },
-      jest.fn()
+      vi.fn()
     );
     // Should use info from `user` field first
     expect(userInfo).toEqual({
@@ -109,7 +107,7 @@ describe('getUserInfo', () => {
 
   it('should throw if id token is missing', async () => {
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({}, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({}, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.General, '{}')
     );
   });
@@ -119,7 +117,7 @@ describe('getUserInfo', () => {
       throw new Error('jwtVerify failed');
     });
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ id_token: 'id_token' }, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({ id_token: 'id_token' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid)
     );
   });
@@ -129,7 +127,7 @@ describe('getUserInfo', () => {
       payload: { iat: 123_456 },
     }));
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ id_token: 'id_token' }, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({ id_token: 'id_token' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid)
     );
   });

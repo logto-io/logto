@@ -1,18 +1,16 @@
 import createConnector, { validateSamlAssertion } from './index.js';
 import { mockAttributes, mockedConfig, mockSamlResponse } from './mock.js';
 
-const { jest } = import.meta;
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
-
-const setSession = jest.fn();
-const getSession = jest.fn();
+const setSession = vi.fn();
+const getSession = vi.fn();
 
 const connector = await createConnector({ getConfig });
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get a valid uri and save required information to storage', async () => {
@@ -39,11 +37,11 @@ describe('getAuthorizationUri', () => {
 
 describe('validateSamlAssertion', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('Should return right redirectUri', async () => {
-    jest.useFakeTimers().setSystemTime(new Date('2023-01-18T14:55:45.406Z'));
+    vi.useFakeTimers().setSystemTime(new Date('2023-01-18T14:55:45.406Z'));
     getSession.mockResolvedValue({
       connectorFactoryId: 'saml',
       state: 'some_state',
@@ -61,13 +59,13 @@ describe('validateSamlAssertion', () => {
     );
     expect(setSession).toHaveBeenCalledWith(expect.anything());
     expect(redirectUri).toEqual('http://localhost:3000/callback?state=some_state');
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 });
 
 describe('getUserInfo', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('get right profile', async () => {

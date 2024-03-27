@@ -5,9 +5,7 @@ import { TemplateType } from '@logto/connector-kit';
 import createMailgunConnector from './index.js';
 import { type MailgunConfig } from './types.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn();
+const getConfig = vi.fn();
 
 const domain = 'example.com';
 const apiKey = 'apiKey';
@@ -210,7 +208,7 @@ describe('Maligun connector', () => {
           code: '123456',
         },
       })
-    ).rejects.toThrowErrorMatchingInlineSnapshot('"ConnectorError: template_not_found"');
+    ).rejects.toThrowErrorMatchingInlineSnapshot('[Error: ConnectorError: template_not_found]');
 
     await expect(
       connector.sendMessage({
@@ -221,7 +219,7 @@ describe('Maligun connector', () => {
           code: '123456',
         },
       })
-    ).rejects.toThrowErrorMatchingInlineSnapshot('"ConnectorError: template_not_found"');
+    ).rejects.toThrowErrorMatchingInlineSnapshot('[Error: ConnectorError: template_not_found]');
   });
 
   it('should throw error if mailgun returns error', async () => {
@@ -247,7 +245,7 @@ describe('Maligun connector', () => {
         },
       })
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      '"ConnectorError: {"statusCode":400,"body":"{\\"message\\":\\"error\\"}"}"'
+      '[Error: ConnectorError: {"statusCode":400,"body":"{\\"message\\":\\"error\\"}"}]'
     );
   });
 });

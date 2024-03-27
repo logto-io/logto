@@ -2,14 +2,12 @@ import createConnector from './index.js';
 import type { SocialDemoConfig } from './types.js';
 import { SocialProvider } from './types.js';
 
-const { jest } = import.meta;
-
 const mockedConfig: SocialDemoConfig = {
   provider: SocialProvider.GitHub,
   clientId: 'client-id',
   redirectUri: 'http://localhost:3000/callback',
 };
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('getAuthorizationUri', () => {
   it('should get a valid uri by redirectUri and state', async () => {
@@ -23,7 +21,7 @@ describe('getAuthorizationUri', () => {
         jti: 'some_jti',
         headers: {},
       },
-      jest.fn()
+      vi.fn()
     );
     expect(authorizationUri).toContain(encodeURIComponent(mockedConfig.redirectUri));
     expect(authorizationUri).toContain(

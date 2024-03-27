@@ -2,14 +2,12 @@ import { methodForAccessToken } from './constant.js';
 import { mockedAlipayConfigWithValidPrivateKey, mockedAlipayPublicParameters } from './mock.js';
 import { signingParameters } from './utils.js';
 
-const { jest } = import.meta;
-
-const listenJSONParse = jest.spyOn(JSON, 'parse');
-const listenJSONStringify = jest.spyOn(JSON, 'stringify');
+const listenJSONParse = vi.spyOn(JSON, 'parse');
+const listenJSONStringify = vi.spyOn(JSON, 'stringify');
 
 describe('signingParameters', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const testingParameters = {

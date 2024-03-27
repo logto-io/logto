@@ -6,13 +6,11 @@ import { accessTokenEndpoint, codeEndpoint, userInfoEndpoint } from './constant.
 import createConnector, { buildAuthorizationUri, getAccessToken } from './index.js';
 import { mockedFeishuConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedFeishuConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedFeishuConfig);
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should build authorization uri', function () {
@@ -33,7 +31,7 @@ describe('getAuthorizationUri', () => {
         jti: 'some_jti',
         headers: {},
       },
-      jest.fn()
+      vi.fn()
     );
     expect(authorizationUri).toEqual(
       `${codeEndpoint}?client_id=1112233&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&response_type=code&state=some_state`
@@ -44,7 +42,7 @@ describe('getAuthorizationUri', () => {
 describe('getAccessToken', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const accessTokenUrl = new URL(accessTokenEndpoint);
@@ -73,7 +71,7 @@ describe('getAccessToken', () => {
 
     await expect(
       getAccessToken('code', '123', '123', 'http://localhost:3000')
-    ).rejects.toMatchError(
+    ).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'access_token is empty')
     );
   });
@@ -86,7 +84,7 @@ describe('getAccessToken', () => {
 
     await expect(
       getAccessToken('code', '123', '123', 'http://localhost:3000')
-    ).rejects.toMatchError(
+    ).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'invalid code')
     );
   });
@@ -95,7 +93,7 @@ describe('getAccessToken', () => {
 describe('getUserInfo', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   beforeEach(() => {
@@ -137,7 +135,7 @@ describe('getUserInfo', () => {
         code: 'code',
         redirectUri: 'http://localhost:3000',
       },
-      jest.fn()
+      vi.fn()
     );
     expect(id).toEqual('ou_caecc734c2e3328a62489fe0648c4b98779515d3');
     expect(name).toEqual('李雷');
@@ -147,7 +145,7 @@ describe('getUserInfo', () => {
 
   it('throw General error if code not provided in input', async () => {
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({}, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({}, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse, '{}')
     );
   });
@@ -159,8 +157,8 @@ describe('getUserInfo', () => {
     });
     const connector = await createConnector({ getConfig });
     await expect(
-      connector.getUserInfo({ code: 'error_code', redirectUri: 'http://localhost:3000' }, jest.fn())
-    ).rejects.toMatchError(
+      connector.getUserInfo({ code: 'error_code', redirectUri: 'http://localhost:3000' }, vi.fn())
+    ).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'invalid access token')
     );
   });
@@ -171,8 +169,8 @@ describe('getUserInfo', () => {
     });
     const connector = await createConnector({ getConfig });
     await expect(
-      connector.getUserInfo({ code: 'code', redirectUri: 'http://localhost:3000' }, jest.fn())
-    ).rejects.toMatchError(
+      connector.getUserInfo({ code: 'code', redirectUri: 'http://localhost:3000' }, vi.fn())
+    ).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse, 'invalid user response')
     );
   });
@@ -181,7 +179,7 @@ describe('getUserInfo', () => {
     nock(userInfoUrl.origin).get(userInfoUrl.pathname).query(true).reply(500);
     const connector = await createConnector({ getConfig });
     await expect(
-      connector.getUserInfo({ code: 'code', redirectUri: 'http://localhost:3000' }, jest.fn())
+      connector.getUserInfo({ code: 'code', redirectUri: 'http://localhost:3000' }, vi.fn())
     ).rejects.toThrow();
   });
 });
