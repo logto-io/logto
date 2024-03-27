@@ -10,7 +10,7 @@ import {
 import {
   type SingleSignOnConnectorSession,
   singleSignOnConnectorSessionGuard,
-} from '#src/sso/types/index.js';
+} from '#src/sso/index.js';
 import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 
 import assertThat from './assert-that.js';

@@ -1,4 +1,4 @@
-import { SsoProviderName } from '@logto/schemas';
+import { SsoProviderName, SsoProviderType } from '@logto/schemas';
 
 import { OidcSsoConnector } from '../OidcSsoConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
@@ -10,6 +10,7 @@ export class OktaSsoConnector extends OidcSsoConnector {}
 
 export const oktaSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OKTA> = {
   providerName: SsoProviderName.OKTA,
+  providerType: SsoProviderType.OIDC,
   logo: logoBase64,
   logoDark: logoDarkBase64,
   description: {

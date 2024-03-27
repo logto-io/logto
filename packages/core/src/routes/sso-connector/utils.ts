@@ -11,7 +11,7 @@ import { trySafe } from '@silverhand/essentials';
 import RequestError from '#src/errors/RequestError/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
-import { type SingleSignOnConnectorData } from '#src/sso/types/index.js';
+import { type SingleSignOnConnectorData } from '#src/sso/types/connector.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
@@ -20,10 +20,11 @@ export const parseFactoryDetail = (
   factory: SingleSignOnFactory<SsoProviderName>,
   locale: string
 ) => {
-  const { providerName, logo, logoDark, description, name } = factory;
+  const { providerName, logo, logoDark, description, name, providerType } = factory;
 
   return {
     providerName,
+    providerType,
     logo,
     logoDark,
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- falsy value expected
@@ -61,7 +62,7 @@ export const fetchConnectorProviderDetails = async (
 ): Promise<SsoConnectorWithProviderConfig> => {
   const { providerName } = connector;
 
-  const { logo, logoDark, constructor, name } = ssoConnectorFactories[providerName];
+  const { logo, logoDark, constructor, name, providerType } = ssoConnectorFactories[providerName];
 
   /* 
     Safely fetch and parse the detailed connector config from provider. 
@@ -76,6 +77,7 @@ export const fetchConnectorProviderDetails = async (
     ...connector,
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- falsy value expected
     name: (isKeyOfI18nPhrases(locale, name) && name[locale]) || name.en,
+    providerType,
     providerLogo: logo,
     providerLogoDark: logoDark,
     providerConfig,
