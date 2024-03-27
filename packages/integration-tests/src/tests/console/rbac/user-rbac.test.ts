@@ -17,9 +17,11 @@ import {
   generateRoleName,
 } from '#src/utils.js';
 
+import { expectToSelectPermissionAction } from './helper.js';
+
 await page.setViewport({ width: 1920, height: 1080 });
 
-describe('RBAC', () => {
+describe('User RBAC', () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
   const apiResourceName = generateResourceName();
   const apiResourceIndicator = generateResourceIndicator();
@@ -103,6 +105,18 @@ describe('RBAC', () => {
     });
   });
 
+  it('be able to edit the permission description', async () => {
+    await expectToSelectPermissionAction(page, { permissionName, action: 'Edit permission' });
+    await expectModalWithTitle(page, 'Edit API permission');
+    const newDescription = `New: ${permissionDescription}`;
+    await expect(page).toFillForm('.ReactModalPortal form', { description: newDescription });
+    await expect(page).toClick('.ReactModalPortal button[type=submit]');
+    await waitForToast(page, { text: 'Permission updated.', type: 'success' });
+    await expect(page).toMatchElement('table tbody tr td div', {
+      text: newDescription,
+    });
+  });
+
   it('navigate to user management page', async () => {
     await expectNavigation(page.goto(appendPathname('/console/users', logtoConsoleUrl).href));
     await expect(page).toMatchElement(
@@ -183,10 +197,10 @@ describe('RBAC', () => {
       text: 'Permissions',
     });
 
-    const permissionRow = await expect(page).toMatchElement('table tbody tr:has(td div)', {
-      text: permissionName,
+    await expectToSelectPermissionAction(page, {
+      permissionName,
+      action: 'Remove permission',
     });
-    await expect(permissionRow).toClick('td[class$=deleteColumn] button');
 
     await expectConfirmModalAndAct(page, {
       title: 'Reminder',
@@ -378,12 +392,16 @@ describe('RBAC', () => {
     await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
       text: 'Permissions',
     });
-    const permissionRow = await expect(page).toMatchElement('table tbody tr:has(td div)', {
-      text: permissionName,
-    });
-    await expect(permissionRow).toClick('td[class$=deleteColumn] button');
 
-    await expectConfirmModalAndAct(page, { title: 'Reminder', actionText: 'Delete' });
+    await expectToSelectPermissionAction(page, {
+      permissionName,
+      action: 'Delete permission',
+    });
+
+    await expectConfirmModalAndAct(page, {
+      title: 'Reminder',
+      actionText: 'Delete',
+    });
 
     await waitForToast(page, {
       text: `The permission "${permissionName}" was successfully deleted.`,

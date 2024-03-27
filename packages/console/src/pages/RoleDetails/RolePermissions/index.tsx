@@ -1,4 +1,4 @@
-import type { Scope, ScopeResponse } from '@logto/schemas';
+import type { ScopeResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -8,7 +8,6 @@ import useSWR from 'swr';
 
 import PermissionsTable from '@/components/PermissionsTable';
 import { defaultPageSize } from '@/consts';
-import ConfirmModal from '@/ds-components/ConfirmModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
@@ -46,27 +45,13 @@ function RolePermissions() {
   const [scopes, totalCount] = data ?? [];
 
   const [isAssignPermissionsModalOpen, setIsAssignPermissionsModalOpen] = useState(false);
-  const [scopeToBeDeleted, setScopeToBeDeleted] = useState<Scope>();
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const api = useApi();
 
-  const handleDelete = async () => {
-    if (!scopeToBeDeleted || isDeleting) {
-      return;
-    }
-    setIsDeleting(true);
-
-    try {
-      await api.delete(`api/roles/${roleId}/scopes/${scopeToBeDeleted.id}`);
-      toast.success(
-        t('role_details.permission.permission_deleted', { name: scopeToBeDeleted.name })
-      );
-      await mutate();
-      setScopeToBeDeleted(undefined);
-    } finally {
-      setIsDeleting(false);
-    }
+  const handleDelete = async (scope: ScopeResponse) => {
+    await api.delete(`api/roles/${roleId}/scopes/${scope.id}`);
+    toast.success(t('role_details.permission.permission_deleted', { name: scope.name }));
+    await mutate();
   };
 
   return (
@@ -76,11 +61,15 @@ function RolePermissions() {
         scopes={scopes}
         isLoading={isLoading}
         createButtonTitle="role_details.permission.assign_button"
-        deleteButtonTitle="general.remove"
+        deletionText={{
+          actionButton: 'permissions.remove',
+          confirmation: 'role_details.permission.deletion_description',
+          confirmButton: 'general.remove',
+        }}
         createHandler={() => {
           setIsAssignPermissionsModalOpen(true);
         }}
-        deleteHandler={setScopeToBeDeleted}
+        deleteHandler={handleDelete}
         errorMessage={error?.body?.message ?? error?.message}
         retryHandler={async () => mutate(undefined, true)}
         pagination={{
@@ -100,20 +89,8 @@ function RolePermissions() {
             updateSearchParameters({ keyword: '', page: 1 });
           },
         }}
+        onPermissionUpdated={mutate}
       />
-      {scopeToBeDeleted && (
-        <ConfirmModal
-          isOpen
-          isLoading={isDeleting}
-          confirmButtonText="general.remove"
-          onCancel={() => {
-            setScopeToBeDeleted(undefined);
-          }}
-          onConfirm={handleDelete}
-        >
-          {t('role_details.permission.deletion_description')}
-        </ConfirmModal>
-      )}
       {isAssignPermissionsModalOpen && totalCount !== undefined && (
         <AssignPermissionsModal
           roleId={roleId}

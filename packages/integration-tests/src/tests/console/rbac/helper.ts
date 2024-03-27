@@ -6,7 +6,22 @@ import {
   expectToClickModalAction,
   waitForToast,
 } from '#src/ui-helpers/index.js';
+import { selectDropdownMenuItem } from '#src/ui-helpers/select-dropdown-menu-item.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
+
+export const expectToSelectPermissionAction = async (
+  page: Page,
+  { permissionName, action }: { permissionName: string; action: string }
+) => {
+  const permissionRow = await expect(page).toMatchElement('table tbody tr:has(td div)', {
+    text: permissionName,
+  });
+
+  // Click the action button from the permission row
+  await expect(permissionRow).toClick('td[class$=actionColumn] button');
+
+  await selectDropdownMenuItem(page, 'div[role=menuitem]', action);
+};
 
 /**
  * Create a machine-to-machine role and assign permissions to it by operating on the Web

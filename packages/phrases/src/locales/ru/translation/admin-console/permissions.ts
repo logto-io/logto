@@ -7,6 +7,11 @@ const permissions = {
   placeholder_title: 'Разрешение',
   placeholder_description:
     'Разрешение относится к авторизации доступа к ресурсу (мы называем это ресурсом API).',
+  edit: 'Разрешение на редактирование',
+  delete: 'Разрешение на удаление',
+  remove: 'Разрешение на удаление',
+  updated: 'Разрешение обновлено.',
+  edit_title: 'Редактировать разрешение API',
 };
 
 export default Object.freeze(permissions);
