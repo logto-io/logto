@@ -24,6 +24,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "build:test": "pnpm build",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",

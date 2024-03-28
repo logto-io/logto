@@ -26,6 +26,7 @@
     "precommit": "lint-staged",
     "dev": "tsc --watch --preserveWatchOutput --incremental",
     "build": "rm -rf lib/ && tsc",
+    "build:test": "pnpm build",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
