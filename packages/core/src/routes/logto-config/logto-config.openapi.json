@@ -105,6 +105,17 @@
         }
       }
     },
+    "/api/configs/jwt-customizer": {
+      "get": {
+        "summary": "Get all JWT customizers",
+        "description": "Get all JWT customizers for the tenant.",
+        "responses": {
+          "200": {
+            "description": "The JWT customizers."
+          }
+        }
+      }
+    },
     "/api/configs/jwt-customizer/{tokenTypePath}": {
       "put": {
         "summary": "Create or update JWT customizer",

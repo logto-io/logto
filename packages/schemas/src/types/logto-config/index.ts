@@ -90,6 +90,19 @@ export const jwtCustomizerConfigGuard: Readonly<{
   [LogtoJwtTokenKey.ClientCredentials]: clientCredentialsJwtCustomizerGuard,
 });
 
+export const jwtCustomizerConfigsGuard = z.discriminatedUnion('key', [
+  z.object({
+    key: z.literal(LogtoJwtTokenKey.AccessToken),
+    value: accessTokenJwtCustomizerGuard,
+  }),
+  z.object({
+    key: z.literal(LogtoJwtTokenKey.ClientCredentials),
+    value: clientCredentialsJwtCustomizerGuard,
+  }),
+]);
+
+export type JwtCustomizerConfigs = z.infer<typeof jwtCustomizerConfigsGuard>;
+
 /* --- Logto tenant configs --- */
 export const adminConsoleDataGuard = z.object({
   signInExperienceCustomized: z.boolean(),
