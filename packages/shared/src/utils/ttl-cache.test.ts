@@ -1,31 +1,31 @@
-import { TtlCache } from './ttl-cache.js';
+import { afterEach, describe, expect, it, beforeEach, vi } from 'vitest';
 
-const { jest } = import.meta;
+import { TtlCache } from './ttl-cache.js';
 
 describe('TtlCache', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should return cached value after a long time if ttl is not set', () => {
-    jest.setSystemTime(0);
+    vi.setSystemTime(0);
 
     const cache = new TtlCache();
     const someObject = Object.freeze({ foo: 'bar', baz: 123 });
 
     cache.set('foo', someObject);
 
-    jest.setSystemTime(100_000_000);
+    vi.setSystemTime(100_000_000);
     expect(cache.get('foo')).toBe(someObject);
     expect(cache.has('foo')).toBe(true);
   });
 
   it('should return cached value and honor ttl', () => {
-    jest.setSystemTime(0);
+    vi.setSystemTime(0);
 
     const cache = new TtlCache(100);
     const someObject = Object.freeze({ foo: 'bar', baz: 123 });
@@ -33,7 +33,7 @@ describe('TtlCache', () => {
     cache.set(123, someObject);
     cache.set('foo', someObject, 99);
 
-    jest.setSystemTime(100);
+    vi.setSystemTime(100);
     expect(cache.get(123)).toBe(someObject);
     expect(cache.has(123)).toBe(true);
     expect(cache.get('123')).toBe(undefined);
@@ -41,7 +41,7 @@ describe('TtlCache', () => {
     expect(cache.get('foo')).toBe(undefined);
     expect(cache.has('foo')).toBe(false);
 
-    jest.setSystemTime(101);
+    vi.setSystemTime(101);
     expect(cache.get(123)).toBe(undefined);
     expect(cache.has(123)).toBe(false);
   });

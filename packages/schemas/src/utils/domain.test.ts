@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest';
+
 import { findDuplicatedOrBlockedEmailDomains } from './domain.js';
 
 describe('findDuplicatedOrBlockedEmailDomains', () => {
