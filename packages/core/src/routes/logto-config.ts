@@ -17,6 +17,9 @@ import {
   LogtoJwtTokenKey,
   LogtoJwtTokenPath,
   jsonObjectGuard,
+  type CustomJwtFetcher,
+  jwtCustomizerTestRequestBodyGuard,
+  type JwtCustomizerTestRequestBody,
 } from '@logto/schemas';
 import { adminTenantId } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
@@ -47,6 +50,37 @@ const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenPath, body: unknown) => {
   return {
     key: LogtoJwtTokenKey.ClientCredentials,
     body: parse('body', clientCredentialsJwtCustomizerGuard, body),
+  };
+};
+
+/**
+ * Transpile the request body of the JWT customizer test API to the request body of the Cloud JWT customizer test API.
+ *
+ * @param body Core JWT customizer test API request body.
+ * @returns Request body of the Cloud JWT customizer test API.
+ */
+const transpileJwtCustomizerTestRequestBody = (
+  body: JwtCustomizerTestRequestBody
+): CustomJwtFetcher => {
+  const { tokenType, payload } = body;
+  /**
+   * We have to deal with the `tokenType` and `payload` at the same time since they are put together as one of the discriminated union type.
+   * Otherwise the type inference will not work as expected.
+   */
+  if (tokenType === LogtoJwtTokenPath.AccessToken) {
+    const { tokenSample: token, contextSample: context, ...rest } = payload;
+    return {
+      tokenType,
+      token,
+      context,
+      ...rest,
+    };
+  }
+  const { tokenSample: token, contextSample, ...rest } = payload;
+  return {
+    tokenType,
+    token,
+    ...rest,
   };
 };
 
@@ -314,41 +348,18 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
        * 1. no `script` provided.
        * 2. no `tokenSample` provided.
        */
-      body: z.discriminatedUnion('tokenType', [
-        z.object({
-          tokenType: z.literal(LogtoJwtTokenPath.AccessToken),
-          payload: accessTokenJwtCustomizerGuard.required({
-            script: true,
-            tokenSample: true,
-          }),
-        }),
-        z.object({
-          tokenType: z.literal(LogtoJwtTokenPath.ClientCredentials),
-          payload: clientCredentialsJwtCustomizerGuard.required({
-            script: true,
-            tokenSample: true,
-          }),
-        }),
-      ]),
+      body: jwtCustomizerTestRequestBodyGuard,
       response: jsonObjectGuard,
       status: [200, 400, 403, 422],
     }),
     async (ctx, next) => {
-      const {
-        body: {
-          payload: { tokenSample, contextSample, ...rest },
-        },
-      } = ctx.guard;
+      const { body } = ctx.guard;
 
       const client = await cloudConnection.getClient();
 
       try {
         ctx.body = await client.post(`/api/services/custom-jwt`, {
-          body: {
-            ...rest,
-            token: tokenSample,
-            context: contextSample,
-          },
+          body: transpileJwtCustomizerTestRequestBody(body),
         });
       } catch (error: unknown) {
         /**
