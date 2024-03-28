@@ -1,5 +1,15 @@
 # @logto/connector-mock-sms
 
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [57d97a4df]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [2c10c2423]
+  - @logto/connector-kit@3.0.0
+
 ## 2.0.0
 
 ### Major Changes
