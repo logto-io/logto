@@ -25,6 +25,8 @@ const general = {
   customize: 'Özelleştir',
   enable: 'Etkinleştir',
   reminder: 'Hatırlatıcı',
+  /** UNTRANSLATED */
+  edit: 'Edit',
   delete: 'Sil',
   /** UNTRANSLATED */
   deleted: 'Deleted',

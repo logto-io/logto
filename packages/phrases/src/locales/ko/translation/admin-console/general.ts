@@ -25,6 +25,8 @@ const general = {
   customize: '사용자화',
   enable: '활성화',
   reminder: '리마인더',
+  /** UNTRANSLATED */
+  edit: 'Edit',
   delete: '삭제',
   /** UNTRANSLATED */
   deleted: 'Deleted',

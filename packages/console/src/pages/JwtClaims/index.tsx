@@ -13,8 +13,8 @@ import * as styles from './index.module.scss';
 import useJwtCustomizer from './use-jwt-customizer';
 
 const tabPhrases = Object.freeze({
-  [LogtoJwtTokenPath.AccessToken]: 'user_jwt_tab',
-  [LogtoJwtTokenPath.ClientCredentials]: 'machine_to_machine_jwt_tab',
+  [LogtoJwtTokenPath.AccessToken]: 'user_jwt.card_field',
+  [LogtoJwtTokenPath.ClientCredentials]: 'machine_to_machine_jwt.card_field',
 });
 
 const getPagePath = (tokenType: LogtoJwtTokenPath) => `/jwt-customizer/${tokenType}`;
@@ -59,4 +59,5 @@ function JwtClaims({ tab }: Props) {
   );
 }
 
+// eslint-disable-next-line import/no-unused-modules -- will update this later
 export default withAppInsights(JwtClaims);
