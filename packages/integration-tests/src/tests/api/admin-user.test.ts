@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 
 import { UsersPasswordEncryptionMethod, ConnectorType } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import {
   mockSocialConnectorConfig,
@@ -183,7 +183,7 @@ describe('admin console user management', () => {
     await deleteUser(user.id);
 
     const response = await getUser(user.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   it('should update user password successfully', async () => {

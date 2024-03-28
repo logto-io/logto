@@ -31,14 +31,13 @@ export const postConnector = async (
   payload: Pick<CreateConnector, 'connectorId' | 'config' | 'metadata' | 'syncProfile'>
 ) =>
   authedAdminApi
-    .post({
-      url: `connectors`,
+    .post('connectors', {
       json: payload,
     })
     .json<Connector>();
 
 export const deleteConnectorById = async (id: string) =>
-  authedAdminApi.delete({ url: `connectors/${id}` }).json();
+  authedAdminApi.delete(`connectors/${id}`).json();
 
 export const updateConnectorConfig = async (
   id: string,
@@ -46,8 +45,7 @@ export const updateConnectorConfig = async (
   metadata?: Record<string, unknown>
 ) =>
   authedAdminApi
-    .patch({
-      url: `connectors/${id}`,
+    .patch(`connectors/${id}`, {
       json: { config, metadata },
     })
     .json<ConnectorResponse>();
@@ -70,8 +68,7 @@ const sendTestMessage = async (
   receiver: string,
   config: Record<string, unknown>
 ) =>
-  authedAdminApi.post({
-    url: `connectors/${connectorFactoryId}/test`,
+  authedAdminApi.post(`connectors/${connectorFactoryId}/test`, {
     json: { [receiverType]: receiver, config },
   });
 
@@ -81,8 +78,7 @@ export const getConnectorAuthorizationUri = async (
   redirectUri: string
 ) =>
   authedAdminApi
-    .post({
-      url: `connectors/${connectorId}/authorization-uri`,
+    .post(`connectors/${connectorId}/authorization-uri`, {
       json: { state, redirectUri },
     })
     .json<{ redirectTo: string }>();

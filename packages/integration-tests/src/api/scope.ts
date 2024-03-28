@@ -1,11 +1,11 @@
 import type { Scope, CreateScope } from '@logto/schemas';
-import type { OptionsOfTextResponseBody } from 'got';
+import { type Options } from 'ky';
 
 import { generateScopeName } from '#src/utils.js';
 
 import { authedAdminApi } from './api.js';
 
-export const getScopes = async (resourceId: string, options?: OptionsOfTextResponseBody) =>
+export const getScopes = async (resourceId: string, options?: Options) =>
   authedAdminApi.get(`resources/${resourceId}/scopes`, options).json<Scope[]>();
 
 export const createScope = async (resourceId: string, name?: string) => {

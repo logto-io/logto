@@ -10,10 +10,10 @@ describe('Swagger check', () => {
   it('should provide a valid swagger.json', async () => {
     const response = await api.get('swagger.json');
     expect(response).toHaveProperty('statusCode', 200);
-    expect(response.headers['content-type']).toContain('application/json');
+    expect(response.headers.get('content-type')).toContain('application/json');
 
     // Use multiple validators to be more confident
-    const object: unknown = JSON.parse(response.body);
+    const object: unknown = await response.json();
 
     const validator = new OpenApiSchemaValidator({ version: 3 });
     const result = validator.validate(object as OpenAPI.Document);

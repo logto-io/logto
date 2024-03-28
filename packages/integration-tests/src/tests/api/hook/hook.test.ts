@@ -61,7 +61,7 @@ describe('hooks', () => {
 
     const response = await authedAdminApi.get('hooks?page=1&page_size=20');
 
-    expect(response.statusCode).toBe(200);
+    expect(response.status).toBe(200);
     expect(response.headers).toHaveProperty('total-number');
 
     // Clean up

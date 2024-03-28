@@ -37,7 +37,7 @@ export class OrganizationApi extends ApiFactory<
     query?: Query
   ): Promise<[rows: UserWithOrganizationRoles[], totalCount: number]> {
     const got = await authedAdminApi.get(`${this.path}/${id}/users`, { searchParams: query });
-    return [JSON.parse(got.body), Number(got.headers['total-number'] ?? 0)];
+    return [await got.json(), Number(got.headers.get('total-number') ?? 0)];
   }
 
   async deleteUser(id: string, userId: string): Promise<void> {

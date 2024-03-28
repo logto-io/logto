@@ -7,7 +7,7 @@ import {
   type JsonObject,
   type UsersPasswordEncryptionMethod,
 } from '@logto/schemas';
-import { RequestError } from 'got';
+import { HTTPError } from 'ky';
 
 import { createUser } from '#src/api/index.js';
 import { generateUsername } from '#src/utils.js';
@@ -97,13 +97,13 @@ export const expectRejects = async <T = void>(
 export const expectRequestError = <T = void>(error: unknown, expected: ExpectedErrorInfo) => {
   const { code, statusCode, messageIncludes } = expected;
 
-  if (!(error instanceof RequestError)) {
+  if (!(error instanceof HTTPError)) {
     fail('Error should be an instance of RequestError');
   }
 
   // JSON.parse returns `any`. Directly use `as` since we've already know the response body structure.
   // eslint-disable-next-line no-restricted-syntax
-  const body = JSON.parse(String(error.response?.body)) as {
+  const body = JSON.parse(String(error.response.body)) as {
     code: string;
     message: string;
     data: T;
@@ -111,7 +111,7 @@ export const expectRequestError = <T = void>(error: unknown, expected: ExpectedE
 
   expect(body.code).toEqual(code);
 
-  expect(error.response?.statusCode).toEqual(statusCode);
+  expect(error.response.status).toEqual(statusCode);
 
   if (messageIncludes) {
     expect(body.message.includes(messageIncludes)).toBeTruthy();

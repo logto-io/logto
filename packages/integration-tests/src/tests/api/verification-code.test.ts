@@ -32,7 +32,7 @@ describe('Generic verification code through management API', () => {
   it('should create an email verification code on server side', async () => {
     const payload: RequestVerificationCodePayload = { email: mockEmail };
     const response = await requestVerificationCode(payload);
-    expect(response.statusCode).toBe(204);
+    expect(response.status).toBe(204);
 
     const { code, type, address } = await readConnectorMessage('Email');
 
@@ -44,7 +44,7 @@ describe('Generic verification code through management API', () => {
   it('should create an SMS verification code on server side', async () => {
     const payload: RequestVerificationCodePayload = { phone: mockPhone };
     const response = await requestVerificationCode(payload);
-    expect(response.statusCode).toBe(204);
+    expect(response.status).toBe(204);
 
     const { code, type, phone } = await readConnectorMessage('Sms');
 

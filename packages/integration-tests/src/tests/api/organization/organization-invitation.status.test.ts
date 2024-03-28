@@ -2,7 +2,7 @@ import assert from 'node:assert';
 
 import { OrganizationInvitationStatus } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
@@ -11,7 +11,7 @@ const randomId = () => generateStandardId(4);
 
 const expectErrorResponse = (error: unknown, status: number, code: string) => {
   assert(error instanceof HTTPError);
-  const { statusCode, body: raw } = error.response;
+  const { status: statusCode, body: raw } = error.response;
   const body: unknown = JSON.parse(String(raw));
   expect(statusCode).toBe(status);
   expect(body).toMatchObject({ code });

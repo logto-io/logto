@@ -2,7 +2,7 @@ import assert from 'node:assert';
 
 import { ConnectorType } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { createUser } from '#src/api/admin-user.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
@@ -13,7 +13,7 @@ const randomId = () => generateStandardId(4);
 
 const expectErrorResponse = (error: unknown, status: number, code: string) => {
   assert(error instanceof HTTPError);
-  const { statusCode, body: raw } = error.response;
+  const { status: statusCode, body: raw } = error.response;
   const body: unknown = JSON.parse(String(raw));
   expect(statusCode).toBe(status);
   expect(body).toMatchObject({ code });

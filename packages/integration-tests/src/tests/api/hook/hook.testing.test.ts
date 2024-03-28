@@ -37,7 +37,7 @@ describe('hook testing', () => {
     const response = await authedAdminApi.post(`hooks/${created.id}/test`, {
       json: { events: [HookEvent.PostSignIn], config: { url: responseSuccessEndpoint } },
     });
-    expect(response.statusCode).toBe(204);
+    expect(response.status).toBe(204);
 
     // Clean Up
     await authedAdminApi.delete(`hooks/${created.id}`);

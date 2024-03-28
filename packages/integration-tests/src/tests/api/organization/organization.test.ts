@@ -1,4 +1,4 @@
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
@@ -95,7 +95,7 @@ describe('organization APIs', () => {
   it('should fail when try to get an organization that does not exist', async () => {
     const response = await organizationApi.get('0').catch((error: unknown) => error);
 
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should be able to update organization', async () => {
@@ -117,11 +117,11 @@ describe('organization APIs', () => {
     const response = await organizationApi
       .get(createdOrganization.id)
       .catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail when try to delete an organization that does not exist', async () => {
     const response = await organizationApi.delete('0').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 });

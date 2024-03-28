@@ -1,5 +1,5 @@
 import { type SignInExperience, type Translation, type SsoConnectorMetadata } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import api, { adminTenantApi, authedAdminApi } from '#src/api/api.js';
 import { updateSignInExperience } from '#src/api/index.js';
@@ -15,7 +15,7 @@ describe('.well-known api', () => {
 
   it('should not found API route in non-admin tenant', async () => {
     const response = await api.get('.well-known/endpoints/123').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   it('get /.well-known/sign-in-exp for console', async () => {

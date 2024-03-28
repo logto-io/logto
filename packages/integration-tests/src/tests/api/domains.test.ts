@@ -1,4 +1,4 @@
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { createDomain, deleteDomain, getDomain, getDomains } from '#src/api/domain.js';
 import { generateDomain } from '#src/utils.js';
@@ -27,7 +27,7 @@ describe('domains', () => {
     await createDomain();
 
     const response = await createDomain().catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(422);
+    expect(response instanceof HTTPError && response.response.status).toBe(422);
   });
 
   it('should get domain detail successfully', async () => {
@@ -40,7 +40,7 @@ describe('domains', () => {
   it('should return 404 if domain does not exist', async () => {
     const response = await getDomain('non_existent_domain').catch((error: unknown) => error);
 
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should delete domain successfully', async () => {
@@ -49,6 +49,6 @@ describe('domains', () => {
     await deleteDomain(domain.id);
 
     const response = await getDomain(domain.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 });
