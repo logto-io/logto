@@ -155,10 +155,5 @@ export const getTenantRole = (role: TenantRole): Readonly<OrganizationRole> =>
 export const tenantRoleScopes: Readonly<Record<TenantRole, Readonly<TenantScope[]>>> =
   Object.freeze({
     [TenantRole.Admin]: allTenantScopes,
-    [TenantRole.Member]: [
-      TenantScope.ReadData,
-      TenantScope.WriteData,
-      TenantScope.DeleteData,
-      TenantScope.InviteMember,
-    ],
+    [TenantRole.Member]: [TenantScope.ReadData, TenantScope.WriteData, TenantScope.DeleteData],
   });
