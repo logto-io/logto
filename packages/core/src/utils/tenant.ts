@@ -110,18 +110,18 @@ export const getTenantId = async (
     return [developmentTenantId, false];
   }
 
+  // Find custom domains before check multi-tenancy, custom domain should have higher priority
+  const customDomainTenantId = await getTenantIdFromCustomDomain(url, pool);
+  if (customDomainTenantId) {
+    return [customDomainTenantId, true];
+  }
+
   if (!isMultiTenancy) {
     return [defaultTenantId, false];
   }
 
   if (isPathBasedMultiTenancy) {
     return [matchPathBasedTenantId(urlSet, url), false];
-  }
-
-  const customDomainTenantId = await getTenantIdFromCustomDomain(url, pool);
-
-  if (customDomainTenantId) {
-    return [customDomainTenantId, true];
   }
 
   return [matchDomainBasedTenantId(urlSet.endpoint, url), false];
