@@ -1,10 +1,8 @@
 import { userProfileMapping } from './utils.js';
 
-const { jest } = import.meta;
-
 describe('userProfileMapping', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should return right user profile', () => {

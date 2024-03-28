@@ -255,9 +255,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -279,24 +276,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -318,6 +309,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-alipay-web:
     dependencies:
@@ -343,9 +337,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -367,24 +358,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -406,6 +391,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-aliyun-dm:
     dependencies:
@@ -425,9 +413,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -446,24 +431,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -485,6 +464,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-aliyun-sms:
     dependencies:
@@ -504,9 +486,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -525,24 +504,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -564,6 +537,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-apple:
     dependencies:
@@ -589,9 +565,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -610,24 +583,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -649,6 +616,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-aws-ses:
     dependencies:
@@ -674,9 +644,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -695,24 +662,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -734,6 +695,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-azuread:
     dependencies:
@@ -756,9 +720,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -777,9 +738,6 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
@@ -792,12 +750,6 @@ importers:
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -841,9 +793,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -862,24 +811,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -901,6 +844,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-facebook:
     dependencies:
@@ -920,9 +866,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -941,24 +884,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -980,6 +917,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-feishu-web:
     dependencies:
@@ -999,9 +939,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1020,24 +957,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1059,6 +990,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-github:
     dependencies:
@@ -1081,9 +1015,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1102,24 +1033,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1141,6 +1066,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-google:
     dependencies:
@@ -1160,9 +1088,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1181,24 +1106,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1220,6 +1139,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-kakao:
     dependencies:
@@ -1239,9 +1161,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1260,24 +1179,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1299,6 +1212,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-logto-email:
     dependencies:
@@ -1318,9 +1234,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@logto/cloud':
         specifier: 0.2.5-2a72cc4
         version: 0.2.5-2a72cc4(zod@3.22.4)
@@ -1342,24 +1255,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1381,6 +1288,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-logto-sms:
     dependencies:
@@ -1400,9 +1310,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1421,24 +1328,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1460,6 +1361,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-logto-social-demo:
     dependencies:
@@ -1479,9 +1383,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1500,24 +1401,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1539,6 +1434,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-mailgun:
     dependencies:
@@ -1558,9 +1456,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1579,24 +1474,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1618,6 +1507,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-mock-email:
     dependencies:
@@ -1637,9 +1529,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1658,24 +1547,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1697,6 +1580,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-mock-email-alternative:
     dependencies:
@@ -1716,9 +1602,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1737,24 +1620,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1776,6 +1653,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-mock-sms:
     dependencies:
@@ -1795,9 +1675,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1816,24 +1693,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1855,6 +1726,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-mock-social:
     dependencies:
@@ -1874,9 +1748,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1895,24 +1766,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -1934,6 +1799,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-naver:
     dependencies:
@@ -1953,9 +1821,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -1974,24 +1839,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2013,6 +1872,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-oauth2:
     dependencies:
@@ -2035,9 +1897,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2056,24 +1915,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2095,6 +1948,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-oidc:
     dependencies:
@@ -2123,9 +1979,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2144,24 +1997,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2183,6 +2030,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-saml:
     dependencies:
@@ -2208,9 +2058,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2229,24 +2076,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2268,6 +2109,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-sendgrid-email:
     dependencies:
@@ -2287,9 +2131,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2308,24 +2149,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2347,6 +2182,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-smsaero:
     dependencies:
@@ -2366,9 +2204,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2387,24 +2222,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2426,6 +2255,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-smtp:
     dependencies:
@@ -2448,9 +2280,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2469,9 +2298,6 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
@@ -2481,15 +2307,12 @@ importers:
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2511,6 +2334,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-tencent-sms:
     dependencies:
@@ -2530,9 +2356,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2551,24 +2374,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2590,6 +2407,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-twilio-sms:
     dependencies:
@@ -2609,9 +2429,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2630,24 +2447,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2669,6 +2480,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-wechat-native:
     dependencies:
@@ -2688,9 +2502,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2709,24 +2520,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2748,6 +2553,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-wechat-web:
     dependencies:
@@ -2767,9 +2575,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2788,24 +2593,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.11.20
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.20)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2827,6 +2626,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.20)
 
   packages/connectors/connector-wecom:
     dependencies:
@@ -2846,9 +2648,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.6.3
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2867,24 +2666,18 @@ importers:
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.1
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -2906,6 +2699,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.10.4)
 
   packages/console:
     devDependencies:
@@ -6217,14 +6013,14 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/template': 7.18.10
-      '@babel/types': 7.20.2
+      '@babel/types': 7.24.0
     dev: true
 
   /@babel/helper-hoist-variables@7.18.6:
     resolution: {integrity: sha512-UlJQPkFqFULIcyW5sbzgbkxn2FKRgwWiRexcuaR8RNJRy8+LLveqPjwZV/bwrLZCN0eUHD/x8D0heK1ozuoo6Q==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.20.2
+      '@babel/types': 7.24.0
     dev: true
 
   /@babel/helper-module-imports@7.18.6:
@@ -6540,8 +6336,8 @@ packages:
       '@babel/helper-function-name': 7.19.0
       '@babel/helper-hoist-variables': 7.18.6
       '@babel/helper-split-export-declaration': 7.18.6
-      '@babel/parser': 7.20.3
-      '@babel/types': 7.20.2
+      '@babel/parser': 7.24.0
+      '@babel/types': 7.24.0
       debug: 4.3.4
       globals: 11.12.0
     transitivePeerDependencies:
@@ -10962,7 +10758,7 @@ packages:
     resolution: {integrity: sha512-umOSDSDrfHbTNPuNpC2NSnnA3LUrqpevPb4T9jRx4MagXNS0rs+gwiTcAvqCRmsD6utzsrzNt+ebm00SNWiC3Q==}
     dependencies:
       acorn: 8.10.0
-      acorn-walk: 8.2.0
+      acorn-walk: 8.3.2
     dev: true
 
   /acorn-jsx@5.3.2(acorn@8.10.0):
@@ -21615,7 +21411,7 @@ packages:
     resolution: {integrity: sha512-/EH/sDgxU2eGxajKdwLCDmQ4FWq+kpi3uCmBGpw1xJtnAxEjlD8j8PEiGWpCIMIs3ciNAgH0d3TTJiUkYzyZjA==}
     engines: {node: '>=10.12.0'}
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.18
+      '@jridgewell/trace-mapping': 0.3.25
       '@types/istanbul-lib-coverage': 2.0.4
       convert-source-map: 2.0.0
     dev: true
@@ -21666,6 +21462,27 @@ packages:
       vfile-message: 4.0.2
     dev: true
 
+  /vite-node@1.4.0(@types/node@20.10.4):
+    resolution: {integrity: sha512-VZDAseqjrHgNd4Kh8icYHWzTKSCZMhia7GyHfhtzLW33fZlG9SwsB6CEhgyVOWkJfJ2pFLrp/Gj1FSfAiqH9Lw==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    dependencies:
+      cac: 6.7.14
+      debug: 4.3.4
+      pathe: 1.1.2
+      picocolors: 1.0.0
+      vite: 5.1.6(@types/node@20.10.4)
+    transitivePeerDependencies:
+      - '@types/node'
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+    dev: true
+
   /vite-node@1.4.0(@types/node@20.11.20):
     resolution: {integrity: sha512-VZDAseqjrHgNd4Kh8icYHWzTKSCZMhia7GyHfhtzLW33fZlG9SwsB6CEhgyVOWkJfJ2pFLrp/Gj1FSfAiqH9Lw==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -21685,6 +21502,42 @@ packages:
       - sugarss
       - supports-color
       - terser
+    dev: true
+
+  /vite@5.1.6(@types/node@20.10.4):
+    resolution: {integrity: sha512-yYIAZs9nVfRJ/AiOLCA91zzhjsHUgMjB+EigzFb6W2XTLO8JixBCKCjvhKZaye+NKYHCrkv3Oh50dH9EdLU2RA==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^18.0.0 || >=20.0.0
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 20.10.4
+      esbuild: 0.19.12
+      postcss: 8.4.35
+      rollup: 4.12.0
+    optionalDependencies:
+      fsevents: 2.3.3
     dev: true
 
   /vite@5.1.6(@types/node@20.11.20):
@@ -21721,6 +21574,62 @@ packages:
       rollup: 4.12.0
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
+
+  /vitest@1.4.0(@types/node@20.10.4):
+    resolution: {integrity: sha512-gujzn0g7fmwf83/WzrDTnncZt2UiXP41mHuFYFrdwaLRVQ6JYQEiME2IfEjU3vcFL3VKa75XhI3lFgn+hfVsQw==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    peerDependencies:
+      '@edge-runtime/vm': '*'
+      '@types/node': ^18.0.0 || >=20.0.0
+      '@vitest/browser': 1.4.0
+      '@vitest/ui': 1.4.0
+      happy-dom: '*'
+      jsdom: '*'
+    peerDependenciesMeta:
+      '@edge-runtime/vm':
+        optional: true
+      '@types/node':
+        optional: true
+      '@vitest/browser':
+        optional: true
+      '@vitest/ui':
+        optional: true
+      happy-dom:
+        optional: true
+      jsdom:
+        optional: true
+    dependencies:
+      '@types/node': 20.10.4
+      '@vitest/expect': 1.4.0
+      '@vitest/runner': 1.4.0
+      '@vitest/snapshot': 1.4.0
+      '@vitest/spy': 1.4.0
+      '@vitest/utils': 1.4.0
+      acorn-walk: 8.3.2
+      chai: 4.4.1
+      debug: 4.3.4
+      execa: 8.0.1
+      local-pkg: 0.5.0
+      magic-string: 0.30.7
+      pathe: 1.1.2
+      picocolors: 1.0.0
+      std-env: 3.7.0
+      strip-literal: 2.0.0
+      tinybench: 2.6.0
+      tinypool: 0.8.2
+      vite: 5.1.6(@types/node@20.10.4)
+      vite-node: 1.4.0(@types/node@20.10.4)
+      why-is-node-running: 2.2.2
+    transitivePeerDependencies:
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
     dev: true
 
   /vitest@1.4.0(@types/node@20.11.20):

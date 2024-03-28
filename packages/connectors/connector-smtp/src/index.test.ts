@@ -16,18 +16,16 @@ import {
 } from './mock.js';
 import { smtpConfigGuard } from './types.js';
 
-const { jest } = import.meta;
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
-
-const sendMail = jest.fn();
+const sendMail = vi.fn();
 
 // @ts-expect-error for testing
-jest.spyOn(nodemailer, 'createTransport').mockReturnValue({ sendMail } as Transporter);
+vi.spyOn(nodemailer, 'createTransport').mockReturnValue({ sendMail } as Transporter);
 
 describe('SMTP connector', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('init without throwing errors', async () => {

@@ -2,11 +2,9 @@ import { TemplateType } from '@logto/connector-kit';
 
 import { codeTest, mockedConnectorConfig, mockedTemplateCode, phoneTest } from './mock.js';
 
-const { jest } = import.meta;
+const getConfig = vi.fn().mockResolvedValue(mockedConnectorConfig);
 
-const getConfig = jest.fn().mockResolvedValue(mockedConnectorConfig);
-
-const sendSmsRequest = jest.fn(() => {
+const sendSmsRequest = vi.fn(() => {
   return {
     body: {
       Response: {
@@ -27,10 +25,10 @@ const sendSmsRequest = jest.fn(() => {
   };
 });
 
-jest.unstable_mockModule('./http.js', () => {
+vi.mock('./http.js', () => {
   return {
     sendSmsRequest,
-    isSmsErrorResponse: jest.fn((response) => {
+    isSmsErrorResponse: vi.fn((response) => {
       return response.Response.Error !== undefined;
     }),
   };
@@ -40,7 +38,7 @@ const { default: createConnector } = await import('./index.js');
 
 describe('sendMessage()', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should call sendSmsRequest() and replace code in content', async () => {

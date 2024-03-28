@@ -2,16 +2,14 @@ import { TemplateType } from '@logto/connector-kit';
 
 import { mockedConfigWithAllRequiredTemplates } from './mock.js';
 
-const { jest } = import.meta;
+const getConfig = vi.fn().mockResolvedValue(mockedConfigWithAllRequiredTemplates);
 
-const getConfig = jest.fn().mockResolvedValue(mockedConfigWithAllRequiredTemplates);
-
-const singleSendMail = jest.fn(() => ({
+const singleSendMail = vi.fn(() => ({
   body: JSON.stringify({ EnvId: 'env-id', RequestId: 'request-id' }),
   statusCode: 200,
 }));
 
-jest.unstable_mockModule('./single-send-mail.js', () => ({
+vi.mock('./single-send-mail.js', () => ({
   singleSendMail,
 }));
 
@@ -19,7 +17,7 @@ const { default: createConnector } = await import('./index.js');
 
 describe('sendMessage()', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should call singleSendMail() with correct template and content', async () => {

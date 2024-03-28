@@ -17,10 +17,8 @@ const templateKeys = Object.keys(templateJson);
 
 /**
  * An object that contains exceptions for scripts that are allowed to be different from the template.
- *
- * This is useful when we transiting from Jest to Vitest, as they have different scripts.
  */
-const scriptExceptions = { 'connector-azuread': ['test', 'test:ci'] };
+const scriptExceptions = {};
 
 const sync = async () => {
   const packagesDirectory = './';

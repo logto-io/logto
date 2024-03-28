@@ -6,14 +6,12 @@ import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './
 import createConnector, { getAccessToken } from './index.js';
 import { mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('google connector', () => {
   describe('getAuthorizationUri', () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get a valid authorizationUri with redirectUri and state', async () => {
@@ -27,7 +25,7 @@ describe('google connector', () => {
           jti: 'some_jti',
           headers: {},
         },
-        jest.fn()
+        vi.fn()
       );
       expect(authorizationUri).toEqual(
         `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&state=some_state&scope=openid+profile+email`
@@ -38,7 +36,7 @@ describe('google connector', () => {
   describe('getAccessToken', () => {
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get an accessToken by exchanging with code', async () => {
@@ -60,7 +58,7 @@ describe('google connector', () => {
         .reply(200, { access_token: '', scope: 'scope', token_type: 'token_type' });
       await expect(
         getAccessToken(mockedConfig, { code: 'code', redirectUri: 'dummyRedirectUri' })
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
     });
   });
 
@@ -75,7 +73,7 @@ describe('google connector', () => {
 
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get valid SocialUserInfo', async () => {
@@ -96,7 +94,7 @@ describe('google connector', () => {
           code: 'code',
           redirectUri: 'redirectUri',
         },
-        jest.fn()
+        vi.fn()
       );
       expect(socialUserInfo).toStrictEqual({
         id: '1234567890',
@@ -111,8 +109,8 @@ describe('google connector', () => {
       nock(userInfoEndpoint).post('').reply(401);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code: 'code', redirectUri: '' }, jest.fn())
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+        connector.getUserInfo({ code: 'code', redirectUri: '' }, vi.fn())
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
     it('throws General error', async () => {
@@ -133,9 +131,9 @@ describe('google connector', () => {
             error: 'general_error',
             error_description: 'General error encountered.',
           },
-          jest.fn()
+          vi.fn()
         )
-      ).rejects.toMatchError(
+      ).rejects.toStrictEqual(
         new ConnectorError(
           ConnectorErrorCodes.General,
           '{"error":"general_error","error_description":"General error encountered."}'
@@ -147,7 +145,7 @@ describe('google connector', () => {
       nock(userInfoEndpoint).post('').reply(500);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code: 'code', redirectUri: '' }, jest.fn())
+        connector.getUserInfo({ code: 'code', redirectUri: '' }, vi.fn())
       ).rejects.toThrow();
     });
   });

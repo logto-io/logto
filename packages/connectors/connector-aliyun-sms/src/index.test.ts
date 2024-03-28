@@ -2,16 +2,14 @@ import { TemplateType } from '@logto/connector-kit';
 
 import { mockedConnectorConfig, phoneTest, codeTest } from './mock.js';
 
-const { jest } = import.meta;
+const getConfig = vi.fn().mockResolvedValue(mockedConnectorConfig);
 
-const getConfig = jest.fn().mockResolvedValue(mockedConnectorConfig);
-
-const sendSms = jest.fn().mockResolvedValue({
+const sendSms = vi.fn().mockResolvedValue({
   body: JSON.stringify({ Code: 'OK', RequestId: 'request-id', Message: 'OK' }),
   statusCode: 200,
 });
 
-jest.unstable_mockModule('./single-send-text.js', () => ({
+vi.mock('./single-send-text.js', () => ({
   sendSms,
 }));
 
@@ -19,7 +17,7 @@ const { default: createConnector } = await import('./index.js');
 
 describe('sendMessage()', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should call singleSendMail() and replace code in content', async () => {

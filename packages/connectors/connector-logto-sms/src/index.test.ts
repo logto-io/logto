@@ -5,9 +5,7 @@ import { TemplateType } from '@logto/connector-kit';
 import { smsEndpoint } from './constant.js';
 import { mockedAccessTokenResponse, mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 const { default: createConnector } = await import('./index.js');
 

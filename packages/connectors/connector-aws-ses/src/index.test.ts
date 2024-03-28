@@ -4,11 +4,9 @@ import { TemplateType } from '@logto/connector-kit';
 import createConnector from './index.js';
 import { mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
-
-jest.spyOn(SESv2Client.prototype, 'send').mockResolvedValue({
+vi.spyOn(SESv2Client.prototype, 'send').mockResolvedValue({
   MessageId: 'mocked-message-id',
   $metadata: {
     httpStatusCode: 200,
@@ -17,7 +15,7 @@ jest.spyOn(SESv2Client.prototype, 'send').mockResolvedValue({
 
 describe('sendMessage()', () => {
   afterAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should call SendMail() with correct template and content', async () => {

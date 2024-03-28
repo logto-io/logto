@@ -2,20 +2,18 @@ import nock from 'nock';
 
 import { mockConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockConfig);
+const getConfig = vi.fn().mockResolvedValue(mockConfig);
 
 const { default: createConnector } = await import('./index.js');
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
     const connector = await createConnector({ getConfig });
-    const setSession = jest.fn();
+    const setSession = vi.fn();
     const authorizationUri = await connector.getAuthorizationUri(
       {
         state: 'some_state',
@@ -40,7 +38,7 @@ describe('getAuthorizationUri', () => {
 describe('getUserInfo', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get valid userInfo', async () => {
@@ -64,7 +62,7 @@ describe('getUserInfo', () => {
     const connector = await createConnector({ getConfig });
     const userInfo = await connector.getUserInfo(
       { code: 'code' },
-      jest.fn().mockImplementationOnce(() => {
+      vi.fn().mockImplementationOnce(() => {
         return { redirectUri: 'http://localhost:3001/callback' };
       })
     );
