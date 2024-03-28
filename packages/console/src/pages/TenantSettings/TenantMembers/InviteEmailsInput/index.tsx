@@ -12,8 +12,8 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import type { InviteeEmailItem, InviteMemberForm } from '../types';
 
+import useEmailInputUtils from './hooks';
 import * as styles from './index.module.scss';
-import { emailOptionsParser } from './utils';
 
 type Props = {
   className?: string;
@@ -34,9 +34,10 @@ function InviteEmailsInput({
   const [focusedValueId, setFocusedValueId] = useState<Nullable<string>>(null);
   const [currentValue, setCurrentValue] = useState('');
   const { setError, clearErrors } = useFormContext<InviteMemberForm>();
+  const { parseEmailOptions } = useEmailInputUtils();
 
   const onChange = (values: InviteeEmailItem[]) => {
-    const { values: parsedValues, errorMessage } = emailOptionsParser(values);
+    const { values: parsedValues, errorMessage } = parseEmailOptions(values);
     if (errorMessage) {
       setError('emails', { type: 'custom', message: errorMessage });
     } else {

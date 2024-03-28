@@ -15,7 +15,7 @@ import Select, { type Option } from '@/ds-components/Select';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import InviteEmailsInput from '../InviteEmailsInput';
-import { emailOptionsParser } from '../InviteEmailsInput/utils';
+import useEmailInputUtils from '../InviteEmailsInput/hooks';
 import { type InviteMemberForm } from '../types';
 
 type Props = {
@@ -37,6 +37,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
 
   const [isLoading, setIsLoading] = useState(false);
   const cloudApi = useAuthedCloudApi();
+  const { parseEmailOptions } = useEmailInputUtils();
 
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
@@ -123,7 +124,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
                   if (value.length === 0) {
                     return t('errors.email_required');
                   }
-                  const { errorMessage } = emailOptionsParser(value);
+                  const { errorMessage } = parseEmailOptions(value);
                   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                   return errorMessage || true;
                 },

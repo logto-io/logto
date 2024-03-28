@@ -87,7 +87,7 @@ const tenant_members = {
     /** UNTRANSLATED */
     email_required: 'Invitee email is required.',
     /** UNTRANSLATED */
-    user_exists: 'This user is already in this organization.',
+    user_exists: 'This user is already invited to this organization.',
     /** UNTRANSLATED */
     invalid_email: 'Email address is invalid. Please make sure it is in the right format.',
     /** UNTRANSLATED */
