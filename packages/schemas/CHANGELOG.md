@@ -1,5 +1,63 @@
 # Change Log
 
+## 1.15.0
+
+### Minor Changes
+
+- abffb9f95: full oidc standard claims support
+
+  We have added support for the remaining [OpenID Connect standard claims](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims). Now, these claims are accessible in both ID tokens and the response from the `/me` endpoint.
+
+  Additionally, we adhere to the standard scopes - claims mapping. This means that you can retrieve most of the profile claims using the `profile` scope, and the `address` claim can be obtained by using the `address` scope.
+
+  For all newly introduced claims, we store them in the `user.profile` field.
+
+  > ![Note]
+  > Unlike other database fields (e.g. `name`), the claims stored in the `profile` field will fall back to `undefined` rather than `null`. We refrain from using `?? null` here to reduce the size of ID tokens, since `undefined` fields will be stripped in tokens.
+
+- 2cbc591ff: add oidc params variables and types
+
+  - Add `ExtraParamsKey` enum for all possible OIDC extra parameters that Logto supports.
+  - Add `FirstScreen` enum for the `first_screen` parameter.
+  - Add `extraParamsObjectGuard` guard and `ExtraParamsObject` type for shaping the extra parameters object in the OIDC authentication request.
+
+- cc01acbd0: Create a new user through API with password digest and corresponding algorithm
+
+### Patch Changes
+
+- 951865859: ## Resolve third-party app's /interaction/consent endpoint 500 error
+
+  ### Reproduction steps
+
+  - Create an organization scope with an empty description and assign this scope to a third-party application.
+  - Login to the third-party application and request the organization scope.
+  - Proceed through the interaction flow until reaching the consent page.
+  - An internal server error 500 is returned.
+
+  ### Root cause
+
+  For the `/interaction/consent` endpoint, the organization scope is returned alongside other resource scopes in the `missingResourceScopes` property.
+
+  In the `consentInfoResponseGuard`, we utilize the resource Scopes zod guard to validate the `missingResourceScopes` property. However, the description field in the resource scope is mandatory while organization scopes'description is optional. An organization scope with an empty description will not pass the validation.
+
+  ### Solution
+
+  Alter the resource scopes table to make the description field nullable. Related Scope zod guard and the consentInfoResponseGuard will be updated to reflect this change. Align the resource scopes table with the organization scopes table to ensure consistency.
+
+- Updated dependencies [5758f84f5]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [abffb9f95]
+- Updated dependencies [746483c49]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [cc01acbd0]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [2c10c2423]
+  - @logto/phrases@1.10.0
+  - @logto/connector-kit@3.0.0
+  - @logto/core-kit@2.4.0
+  - @logto/phrases-experience@1.6.1
+  - @logto/shared@3.1.0
+
 ## 1.14.0
 
 ## 1.13.1

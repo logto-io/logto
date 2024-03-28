@@ -1,5 +1,26 @@
 # Change Log
 
+## 1.15.0
+
+### Patch Changes
+
+- Updated dependencies [5758f84f5]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [abffb9f95]
+- Updated dependencies [746483c49]
+- Updated dependencies [2cbc591ff]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [cc01acbd0]
+- Updated dependencies [951865859]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [2c10c2423]
+  - @logto/phrases@1.10.0
+  - @logto/connector-kit@3.0.0
+  - @logto/core-kit@2.4.0
+  - @logto/schemas@1.15.0
+  - @logto/phrases-experience@1.6.1
+  - @logto/shared@3.1.0
+
 ## 1.14.0
 
 ### Patch Changes

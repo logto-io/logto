@@ -1,6 +1,6 @@
 {
   "name": "@logto/phrases-experience",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Logto shared phrases (i18n) for experience.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -33,7 +33,7 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/core-kit": "workspace:^2.3.0",
+    "@logto/core-kit": "workspace:^2.4.0",
     "@logto/language-kit": "workspace:^1.1.0",
     "@silverhand/essentials": "^2.9.0"
   },

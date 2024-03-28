@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@logto/connector-kit": "workspace:^2.1.0",
+    "@logto/connector-kit": "workspace:^3.0.0",
     "@silverhand/eslint-config": "5.0.0",
     "@silverhand/ts-config": "5.0.0",
     "@types/node": "^20.9.5",

@@ -1,5 +1,26 @@
 # Change Log
 
+## 3.0.0
+
+### Major Changes
+
+- 57d97a4df: update `SocialUserInfo` and `GetUserInfo` types
+
+  - Added `rawData?: Json` to `SocialUserInfo`
+  - `GetUserInfo` now does not accept unknown keys in the return object, since the raw data is now stored in `SocialUserInfo`
+
+- 57d97a4df: guard results of `parseJson` and `parseJsonObject`
+
+  Now `parseJson` and `parseJsonObject` are type safe.
+
+### Minor Changes
+
+- 57d97a4df: add `jsonGuard()` and `jsonObjectGuard()`
+
+### Patch Changes
+
+- 2c10c2423: allow unknown properties in send message payload
+
 ## 2.1.0
 
 ### Minor Changes
