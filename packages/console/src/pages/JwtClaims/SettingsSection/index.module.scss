@@ -37,8 +37,6 @@
 
 .tabContent {
   display: none;
-  // restrict the height of the tab content to the height of the container
-  overflow: hidden;
 
   &.active {
     flex: 1;
@@ -84,14 +82,6 @@
 
     > *:not(:last-child) {
       margin-bottom: _.unit(4);
-    }
-  }
-
-  &.fixHeight {
-    overflow: hidden;
-
-    .cardContent {
-      overflow: hidden;
     }
   }
 
