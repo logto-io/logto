@@ -1,6 +1,7 @@
 import { type CloudflareData, type Domain, DomainStatus } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import SystemContext from '#src/tenants/SystemContext.js';
@@ -79,7 +80,10 @@ export const createDomainLibrary = (queries: Queries) => {
       domain: hostname,
       id: generateStandardId(),
       cloudflareData,
-      status: DomainStatus.PendingVerification,
+      // For integration tests, automatically set the domain to active
+      status: EnvSet.values.isIntegrationTest
+        ? DomainStatus.Active
+        : DomainStatus.PendingVerification,
       dnsRecords: [
         {
           type: 'CNAME',
