@@ -5,6 +5,7 @@ import {
   type LogtoOidcConfigKeyType,
   type AccessTokenJwtCustomizer,
   type ClientCredentialsJwtCustomizer,
+  type JwtCustomizerConfigs,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -45,6 +46,9 @@ export const getJwtCustomizer = async (keyTypePath: 'access-token' | 'client-cre
   authedAdminApi
     .get(`configs/jwt-customizer/${keyTypePath}`)
     .json<AccessTokenJwtCustomizer | ClientCredentialsJwtCustomizer>();
+
+export const getJwtCustomizers = async () =>
+  authedAdminApi.get(`configs/jwt-customizer`).json<JwtCustomizerConfigs[]>();
 
 export const deleteJwtCustomizer = async (keyTypePath: 'access-token' | 'client-credentials') =>
   authedAdminApi.delete(`configs/jwt-customizer/${keyTypePath}`);

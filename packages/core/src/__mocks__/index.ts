@@ -11,7 +11,13 @@ import type {
   Scope,
   UsersRole,
 } from '@logto/schemas';
-import { RoleType, ApplicationType, LogtoOidcConfigKey, DomainStatus } from '@logto/schemas';
+import {
+  RoleType,
+  ApplicationType,
+  LogtoOidcConfigKey,
+  DomainStatus,
+  LogtoJwtTokenKey,
+} from '@logto/schemas';
 
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import { mockId } from '#src/test-utils/nanoid.js';
@@ -209,7 +215,7 @@ export const mockApplicationRole: ApplicationsRole = {
 
 export const mockJwtCustomizerConfigForAccessToken = {
   tenantId: 'fake_tenant',
-  key: 'jwt.accessToken',
+  key: LogtoJwtTokenKey.AccessToken,
   value: {
     script: 'console.log("hello world");',
     envVars: {
@@ -219,6 +225,17 @@ export const mockJwtCustomizerConfigForAccessToken = {
       user: {
         username: 'user',
       },
+    },
+  },
+};
+
+export const mockJwtCustomizerConfigForClientCredentials = {
+  tenantId: 'fake_tenant',
+  key: LogtoJwtTokenKey.ClientCredentials,
+  value: {
+    script: 'console.log("hello world");',
+    envVars: {
+      API_KEY: '<api-key>',
     },
   },
 };

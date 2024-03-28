@@ -5,6 +5,7 @@ import {
   LogtoJwtTokenPath,
   jsonObjectGuard,
   adminTenantId,
+  jwtCustomizerConfigsGuard,
 } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import { z } from 'zod';
@@ -32,7 +33,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
   ...[router, { id: tenantId, queries, logtoConfigs, cloudConnection }]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteJwtCustomizer } = queries.logtoConfigs;
-  const { upsertJwtCustomizer, getJwtCustomizer } = logtoConfigs;
+  const { upsertJwtCustomizer, getJwtCustomizer, getJwtCustomizers } = logtoConfigs;
 
   router.put(
     '/configs/jwt-customizer/:tokenTypePath',
@@ -52,8 +53,8 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       status: [200, 201, 400, 403],
     }),
     async (ctx, next) => {
-      const { isCloud, isUnitTest, isIntegrationTest } = EnvSet.values;
-      if (tenantId === adminTenantId && isCloud && !(isUnitTest || isIntegrationTest)) {
+      const { isCloud, isIntegrationTest } = EnvSet.values;
+      if (tenantId === adminTenantId && isCloud && !isIntegrationTest) {
         throw new RequestError({
           code: 'jwt_customizer.can_not_create_for_admin_tenant',
           status: 422,
@@ -75,6 +76,21 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       }
       ctx.body = jwtCustomizer.value;
 
+      return next();
+    }
+  );
+
+  router.get(
+    '/configs/jwt-customizer',
+    koaGuard({
+      response: jwtCustomizerConfigsGuard.array(),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const jwtCustomizer = await getJwtCustomizers();
+      ctx.body = Object.values(LogtoJwtTokenKey)
+        .filter((key) => jwtCustomizer[key])
+        .map((key) => ({ key, value: jwtCustomizer[key] }));
       return next();
     }
   );

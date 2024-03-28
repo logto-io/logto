@@ -1,10 +1,12 @@
 import { LogtoJwtTokenKey } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
+import { pick } from '@silverhand/essentials';
 import Sinon from 'sinon';
 
 import {
   mockLogtoConfigRows,
   mockJwtCustomizerConfigForAccessToken,
+  mockJwtCustomizerConfigForClientCredentials,
 } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -19,6 +21,7 @@ const logtoConfigQueries = {
 const logtoConfigLibraries = {
   upsertJwtCustomizer: jest.fn(),
   getJwtCustomizer: jest.fn(),
+  getJwtCustomizers: jest.fn(),
 };
 
 const settingRoutes = await pickDefault(import('./index.js'));
@@ -74,6 +77,19 @@ describe('configs JWT customizer routes', () => {
     );
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockJwtCustomizerConfigForAccessToken.value);
+  });
+
+  it('GET /configs/jwt-customizer should return all records', async () => {
+    logtoConfigLibraries.getJwtCustomizers.mockResolvedValueOnce({
+      [LogtoJwtTokenKey.AccessToken]: mockJwtCustomizerConfigForAccessToken.value,
+      [LogtoJwtTokenKey.ClientCredentials]: mockJwtCustomizerConfigForClientCredentials.value,
+    });
+    const response = await routeRequester.get('/configs/jwt-customizer');
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual([
+      pick(mockJwtCustomizerConfigForAccessToken, 'key', 'value'),
+      pick(mockJwtCustomizerConfigForClientCredentials, 'key', 'value'),
+    ]);
   });
 
   it('GET /configs/jwt-customizer/:tokenType should return the record', async () => {
