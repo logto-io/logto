@@ -155,9 +155,7 @@ function TestTab({ isActive }: Props) {
 
   return (
     <div className={classNames(styles.tabContent, isActive && styles.active)}>
-      <Card
-        className={classNames(styles.card, styles.flexGrow, styles.flexColumn, styles.fixHeight)}
-      >
+      <Card className={classNames(styles.card, styles.flexGrow, styles.flexColumn)}>
         <div className={styles.headerRow}>
           <div className={styles.cardHeader}>
             <div className={styles.cardTitle}>{t('tester.title')}</div>
