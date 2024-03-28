@@ -54,6 +54,9 @@ importers:
       applicationinsights:
         specifier: ^2.7.0
         version: 2.7.0
+      tslib:
+        specifier: ^2.4.1
+        version: 2.4.1
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 5.0.0
@@ -67,9 +70,6 @@ importers:
       '@silverhand/ts-config-react':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
@@ -82,9 +82,6 @@ importers:
       history:
         specifier: ^5.3.0
         version: 5.3.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -94,12 +91,12 @@ importers:
       react:
         specifier: ^18.0.0
         version: 18.2.0
-      tslib:
-        specifier: ^2.4.1
-        version: 2.4.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.10.4)
 
   packages/cli:
     dependencies:
@@ -194,9 +191,6 @@ importers:
       '@types/inquirer':
         specifier: ^9.0.0
         version: 9.0.3
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
@@ -218,9 +212,6 @@ importers:
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -230,6 +221,9 @@ importers:
       sinon:
         specifier: ^17.0.0
         version: 17.0.0
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.10.4)
 
   packages/connectors/connector-alipay-native:
     dependencies:
@@ -3395,7 +3389,7 @@ importers:
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
-        version: 29.5.0
+        version: 29.6.3
       '@logto/app-insights':
         specifier: workspace:^1.4.0
         version: link:../app-insights
@@ -7427,7 +7421,7 @@ packages:
     dependencies:
       '@babel/core': 7.20.2
       '@jest/types': 29.6.3
-      '@jridgewell/trace-mapping': 0.3.18
+      '@jridgewell/trace-mapping': 0.3.25
       babel-plugin-istanbul: 6.1.1
       chalk: 4.1.2
       convert-source-map: 2.0.0
@@ -13811,7 +13805,7 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       extend: 3.0.2
-      https-proxy-agent: 7.0.1
+      https-proxy-agent: 7.0.4
       is-stream: 2.0.1
       node-fetch: 2.7.0
     transitivePeerDependencies:
@@ -14510,16 +14504,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /https-proxy-agent@7.0.1:
-    resolution: {integrity: sha512-Eun8zV0kcYS1g19r78osiQLEFIRspRUDd9tIfBCTBPBeMieF/EsJNL8VI3xOIdYRDEkjQnqOYPsZ2DsWsVsFwQ==}
-    engines: {node: '>= 14'}
-    dependencies:
-      agent-base: 7.1.0
-      debug: 4.3.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /https-proxy-agent@7.0.4:
     resolution: {integrity: sha512-wlwpilI7YdjSkWaQ/7omYBMTliDcmCN8OLihO6I9B86g06lMyAoqgoDpV0XqoaPOKj+0DIdAvnsWfyAAhmimcg==}
     engines: {node: '>= 14'}
@@ -14528,7 +14512,6 @@ packages:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /human-id@1.0.2:
     resolution: {integrity: sha512-UNopramDEhHJD+VR+ehk8rOslwSfByxPIZyJRfV739NDhN5LF1fa1MqnzKm2lGTQRjNrjK19Q5fhkgIfjlVUKw==}
@@ -15734,7 +15717,7 @@ packages:
       '@babel/generator': 7.20.4
       '@babel/plugin-syntax-jsx': 7.18.6(@babel/core@7.20.2)
       '@babel/plugin-syntax-typescript': 7.18.6(@babel/core@7.20.2)
-      '@babel/types': 7.20.2
+      '@babel/types': 7.24.0
       '@jest/expect-utils': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
@@ -15991,7 +15974,7 @@ packages:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
-      ws: 8.13.0
+      ws: 8.16.0
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -21860,19 +21843,6 @@ packages:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
-    dev: true
-
-  /ws@8.13.0:
-    resolution: {integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
     dev: true
 
   /ws@8.16.0:
