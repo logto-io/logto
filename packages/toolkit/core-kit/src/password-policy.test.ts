@@ -1,14 +1,13 @@
+import { describe, expect, it, beforeAll, afterAll, vi } from 'vitest';
 import { ZodError } from 'zod';
 
 import { PasswordPolicyChecker } from './password-policy.js';
-
-const { jest } = import.meta;
 
 const mockPwnResponse = () => {
   const originalFetch = global.fetch;
   beforeAll(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    global.fetch = jest.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
       // Return hash suffixes for '123456'.
       text: async () =>
         'D032E84B0AEB4E773555C73D6B13BEA7A44:1\nD09CA3762AF61E59520943DC26494F8941B:37615252',

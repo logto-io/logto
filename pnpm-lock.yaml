@@ -3919,39 +3919,30 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.0.3
-        version: 29.1.2
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
-      tslib:
-        specifier: ^2.4.1
-        version: 2.4.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.10.4)
 
   packages/toolkit/core-kit:
     dependencies:
@@ -3972,9 +3963,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.0.3
-        version: 29.3.1
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -3987,9 +3975,6 @@ importers:
       '@types/color':
         specifier: ^3.0.3
         version: 3.0.3
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
@@ -3999,9 +3984,6 @@ importers:
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -4014,12 +3996,12 @@ importers:
       stylelint:
         specifier: ^15.0.0
         version: 15.0.0
-      tslib:
-        specifier: ^2.4.1
-        version: 2.4.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.10.4)
 
   packages/toolkit/language-kit:
     optionalDependencies:
@@ -4027,39 +4009,30 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@jest/types':
-        specifier: ^29.0.3
-        version: 29.3.1
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 5.0.0
         version: 5.0.0(typescript@5.3.3)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
-      tslib:
-        specifier: ^2.4.1
-        version: 2.4.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.10.4)
 
 packages:
 
@@ -7484,18 +7457,6 @@ packages:
 
   /@jest/types@29.1.2:
     resolution: {integrity: sha512-DcXGtoTykQB5jiwCmVr8H4vdg2OJhQex3qPkG+ISyDO7xQXbt/4R6dowcRyPemRnkH7JoHvZuxPBdlq+9JxFCg==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dependencies:
-      '@jest/schemas': 29.0.0
-      '@types/istanbul-lib-coverage': 2.0.4
-      '@types/istanbul-reports': 3.0.1
-      '@types/node': 20.11.20
-      '@types/yargs': 17.0.13
-      chalk: 4.1.2
-    dev: true
-
-  /@jest/types@29.3.1:
-    resolution: {integrity: sha512-d0S0jmmTpjnhCmNpApgX3jrUZgZ22ivKJRvL2lli5hpCRoNnp1f85r2/wpKfXuYu8E7Jjh1hGfhPyup1NM5AmA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/schemas': 29.0.0

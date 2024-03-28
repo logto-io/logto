@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { isLocalhost, isValidUrl, validateRedirectUrl } from './url.js';
 
 describe('url utilities', () => {
