@@ -23,6 +23,12 @@ import {
   enableAllPasswordSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, generateNewUser } from '#src/helpers/user.js';
+import { waitFor } from '#src/utils.js';
+
+afterEach(async () => {
+  // Try to mitigate the issue of "Socket hang up". See https://github.com/nodejs/node/issues/47130
+  await waitFor(0);
+});
 
 describe('register with username and password', () => {
   it('register with username and password', async () => {
