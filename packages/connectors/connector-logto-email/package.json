@@ -48,6 +48,6 @@
     "access": "public"
   },
   "devDependencies": {
-    "@logto/cloud": "0.2.5-2a72cc4"
+    "@logto/cloud": "0.2.5-81f06ea"
   }
 }

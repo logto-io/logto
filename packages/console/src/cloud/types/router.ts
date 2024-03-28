@@ -19,6 +19,8 @@ export type InvoicesResponse = GuardedResponse<GetRoutes['/api/tenants/:tenantId
 
 export type InvitationResponse = GuardedResponse<GetRoutes['/api/invitations/:invitationId']>;
 
+export type InvitationListResponse = GuardedResponse<GetRoutes['/api/invitations']>;
+
 // The response of GET /api/tenants is TenantResponse[].
 export type TenantResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/tenants']>>;
 
