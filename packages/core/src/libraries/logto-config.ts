@@ -5,8 +5,9 @@ import {
   LogtoOidcConfigKey,
   jwtCustomizerConfigGuard,
   LogtoConfigs,
+  LogtoJwtTokenKey,
 } from '@logto/schemas';
-import type { LogtoOidcConfigType, LogtoJwtTokenKey, CloudConnectionData } from '@logto/schemas';
+import type { LogtoOidcConfigType, CloudConnectionData, JwtCustomizerType } from '@logto/schemas';
 import chalk from 'chalk';
 import { z, ZodError } from 'zod';
 
@@ -95,5 +96,34 @@ export const createLogtoConfigLibrary = ({
     return z.object({ value: jwtCustomizerConfigGuard[key] }).parse(rows[0]).value;
   };
 
-  return { getOidcConfigs, getCloudConnectionData, upsertJwtCustomizer, getJwtCustomizer };
+  const getJwtCustomizers = async (): Promise<Partial<JwtCustomizerType>> => {
+    try {
+      const { rows } = await getRowsByKeys(Object.values(LogtoJwtTokenKey));
+
+      return z
+        .object(jwtCustomizerConfigGuard)
+        .partial()
+        .parse(Object.fromEntries(rows.map(({ key, value }) => [key, value])));
+    } catch (error: unknown) {
+      if (error instanceof ZodError) {
+        consoleLog.error(
+          error.issues
+            .map(({ message, path }) => `${message} at ${chalk.green(path.join('.'))}`)
+            .join('\n')
+        );
+      } else {
+        consoleLog.error(error);
+      }
+
+      throw new Error('Failed to get JWT customizers');
+    }
+  };
+
+  return {
+    getOidcConfigs,
+    getCloudConnectionData,
+    upsertJwtCustomizer,
+    getJwtCustomizer,
+    getJwtCustomizers,
+  };
 };
