@@ -1,3 +1,7 @@
+/**
+ * @fileoverview This file is used for jest only. This package does not need jest for testing.
+ */
+
 const { jest } = import.meta;
 
 // For testing

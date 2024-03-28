@@ -24,12 +24,12 @@
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
-    "build:test": "rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
+    "build:test": "pnpm build",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build:test && pnpm test:only",
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage",
     "prepack": "pnpm build"
   },
   "devDependencies": {
@@ -37,17 +37,16 @@
     "@silverhand/eslint-config-react": "5.0.0",
     "@silverhand/ts-config": "5.0.0",
     "@silverhand/ts-config-react": "5.0.0",
-    "@types/jest": "^29.4.0",
     "@types/node": "^20.9.5",
     "@types/react": "^18.0.31",
+    "@vitest/coverage-v8": "^1.4.0",
     "eslint": "^8.44.0",
     "history": "^5.3.0",
-    "jest": "^29.7.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "react": "^18.0.0",
-    "tslib": "^2.4.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.4.0"
   },
   "engines": {
     "node": "^20.9.0"

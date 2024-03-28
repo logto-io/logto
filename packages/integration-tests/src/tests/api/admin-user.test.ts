@@ -25,9 +25,20 @@ import {
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import { createNewSocialUserWithUsernameAndPassword } from '#src/helpers/interactions.js';
-import { generateUsername, generateEmail, generatePhone, generatePassword } from '#src/utils.js';
+import {
+  generateUsername,
+  generateEmail,
+  generatePhone,
+  generatePassword,
+  waitFor,
+} from '#src/utils.js';
 
 const randomString = () => crypto.randomBytes(8).toString('hex');
+
+afterEach(async () => {
+  // Try to mitigate the issue of "Socket hang up". See https://github.com/nodejs/node/issues/47130
+  await waitFor(0);
+});
 
 describe('admin console user management', () => {
   beforeAll(async () => {

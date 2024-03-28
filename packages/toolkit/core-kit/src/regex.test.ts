@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { domainRegEx } from './regex.js';
 
 describe('Regular expressions should work as expected', () => {

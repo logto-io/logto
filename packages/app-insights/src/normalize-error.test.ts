@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { normalizeError } from './normalize-error.js';
 
 describe('normalizeError()', () => {

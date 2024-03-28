@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { number, ZodError } from 'zod';
 
 import { fallback, isLanguageTag, languageTagGuard } from './utility.js';

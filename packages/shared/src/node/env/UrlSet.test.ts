@@ -1,3 +1,5 @@
+import { afterEach, describe, expect, it } from 'vitest';
+
 import UrlSet from './UrlSet.js';
 
 describe('UrlSet', () => {
