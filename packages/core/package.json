@@ -86,7 +86,7 @@
     "samlify": "2.8.10",
     "semver": "^7.3.8",
     "@silverhand/slonik": "31.0.0-beta.2",
-    "snake-case": "^3.0.4",
+    "snake-case": "^4.0.0",
     "snakecase-keys": "^7.0.0",
     "zod": "^3.22.4"
   },
