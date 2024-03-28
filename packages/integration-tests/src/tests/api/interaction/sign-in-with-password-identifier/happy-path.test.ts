@@ -2,7 +2,7 @@ import {
   InteractionEvent,
   ConnectorType,
   SignInIdentifier,
-  UsersPasswordEncryptionMethod,
+  UsersPasswordAlgorithm,
 } from '@logto/schemas';
 
 import {
@@ -64,7 +64,7 @@ describe('Sign-in flow using password identifiers', () => {
     const user = await createUserByAdmin({
       username,
       passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
-      passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+      passwordAlgorithm: UsersPasswordAlgorithm.MD5,
     });
     const client = await initClient();
 

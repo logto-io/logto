@@ -192,11 +192,11 @@ export default async function verifyProfile(
 
   const passwordProfile = passwordProfileResult.data;
 
-  const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(accountId);
+  const { passwordDigest: oldPasswordDigest } = await findUserById(accountId);
 
   assertThat(
-    !oldPasswordEncrypted ||
-      !(await argon2Verify({ password: passwordProfile.password, hash: oldPasswordEncrypted })),
+    !oldPasswordDigest ||
+      !(await argon2Verify({ password: passwordProfile.password, hash: oldPasswordDigest })),
     new RequestError({ code: 'user.same_password', status: 422 })
   );
 
