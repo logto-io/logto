@@ -21,6 +21,7 @@ import { readConnectorMessage, expectRejects } from '#src/helpers/index.js';
 import {
   enableAllVerificationCodeSignInMethods,
   enableAllPasswordSignInMethods,
+  resetPasswordPolicy,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, generateNewUser } from '#src/helpers/user.js';
 
@@ -31,6 +32,8 @@ describe('register with username and password', () => {
       password: true,
       verify: false,
     });
+    // Run it sequentially to avoid race condition
+    await resetPasswordPolicy();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const client = await initClient();
@@ -56,7 +59,10 @@ describe('register with passwordless identifier', () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     await setSmsConnector();
+    // Run it sequentially to avoid race condition
+    await resetPasswordPolicy();
   });
+
   afterAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
