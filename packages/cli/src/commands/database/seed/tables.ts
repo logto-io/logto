@@ -191,10 +191,17 @@ export const seedTables = async (
     ),
     connection.query(insertInto(createAdminTenantSignInExperience(), SignInExperiences.table)),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
-    updateDatabaseTimestamp(connection, latestTimestamp),
+  ]);
+
+  // The below seed data is for the Logto Cloud only. We put it here for the sack of simplicity.
+  // The data is not harmful for OSS, since they are all admin tenant data. OSS will not use them
+  // and they cannot be seen by the Console.
+  await Promise.all([
     seedTenantOrganizations(connection),
     seedManagementApiProxyApplications(connection),
   ]);
+
+  await updateDatabaseTimestamp(connection, latestTimestamp);
 
   consoleLog.succeed('Seed data');
 };
