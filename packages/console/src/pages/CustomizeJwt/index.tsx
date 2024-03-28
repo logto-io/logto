@@ -6,8 +6,8 @@ import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import CardTitle from '@/ds-components/CardTitle';
 import FormField from '@/ds-components/FormField';
 
-import CreateButton from './components/CreateButton';
-import CustomizerItem from './components/CustomizerItem';
+import CreateButton from './CreateButton';
+import CustomizerItem from './CustomizerItem';
 import * as styles from './index.module.scss';
 import useJwtCustomizer from './use-jwt-customizer';
 
