@@ -3192,8 +3192,8 @@ importers:
         specifier: ^7.3.8
         version: 7.5.2
       snake-case:
-        specifier: ^3.0.4
-        version: 3.0.4
+        specifier: ^4.0.0
+        version: 4.0.0
       snakecase-keys:
         specifier: ^7.0.0
         version: 7.0.0
@@ -17416,6 +17416,11 @@ packages:
       tslib: 2.5.0
     dev: false
 
+  /no-case@4.0.0:
+    resolution: {integrity: sha512-WmS3EUGw+vXHlTgiUPi3NzbZNwH6+uGX0QLGgqG+aFSJ5rkX/Ee0nuwHBJfZTfQwwR8lGO819NEIwQ7CGhkdEQ==}
+    deprecated: Use `change-case`
+    dev: false
+
   /nock@13.3.1:
     resolution: {integrity: sha512-vHnopocZuI93p2ccivFyGuUfzjq2fxNyNurp7816mlT5V5HF4SzXu8lvLrVzBbNqzs+ODooZ6OksuSUNM7Njkw==}
     engines: {node: '>= 10.13'}
@@ -19905,6 +19910,13 @@ packages:
     dependencies:
       dot-case: 3.0.4
       tslib: 2.4.1
+    dev: false
+
+  /snake-case@4.0.0:
+    resolution: {integrity: sha512-slvG6efKZ3GYUUZdhPOq/lLIqutwQ4TdPViD1VKqsbf0u76U/aPRswPKjOaAS9T7fAPmRmXuN6C/nM0xsMaFLQ==}
+    deprecated: Use `change-case`
+    dependencies:
+      no-case: 4.0.0
     dev: false
 
   /snakecase-keys@7.0.0:
