@@ -55,6 +55,8 @@ export enum TenantScope {
   WriteData = 'write:data',
   /** Delete data of the tenant. */
   DeleteData = 'delete:data',
+  /** Read members of the tenant. */
+  ReadMember = 'read:member',
   /** Invite members to the tenant. */
   InviteMember = 'invite:member',
   /** Remove members from the tenant. */
@@ -97,6 +99,7 @@ const tenantScopeDescriptions: Readonly<Record<TenantScope, string>> = Object.fr
   [TenantScope.ReadData]: 'Read the tenant data.',
   [TenantScope.WriteData]: 'Write the tenant data, including creating and updating the tenant.',
   [TenantScope.DeleteData]: 'Delete data of the tenant.',
+  [TenantScope.ReadMember]: 'Read members of the tenant.',
   [TenantScope.InviteMember]: 'Invite members to the tenant.',
   [TenantScope.RemoveMember]: 'Remove members from the tenant.',
   [TenantScope.UpdateMemberRole]: 'Update the role of a member in the tenant.',
@@ -155,5 +158,10 @@ export const getTenantRole = (role: TenantRole): Readonly<OrganizationRole> =>
 export const tenantRoleScopes: Readonly<Record<TenantRole, Readonly<TenantScope[]>>> =
   Object.freeze({
     [TenantRole.Admin]: allTenantScopes,
-    [TenantRole.Member]: [TenantScope.ReadData, TenantScope.WriteData, TenantScope.DeleteData],
+    [TenantRole.Member]: [
+      TenantScope.ReadData,
+      TenantScope.WriteData,
+      TenantScope.DeleteData,
+      TenantScope.ReadMember,
+    ],
   });
