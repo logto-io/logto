@@ -4,8 +4,8 @@ import { decodeAccessToken } from '@logto/js';
 import { type LogtoConfig, Prompt, PersistKey } from '@logto/node';
 import { GrantType, InteractionEvent, demoAppApplicationId } from '@logto/schemas';
 import { isKeyInObject, removeUndefinedKeys } from '@silverhand/essentials';
-import { HTTPError, got } from 'got';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
+import ky, { HTTPError } from 'ky';
 
 import { putInteraction } from '#src/api/index.js';
 import MockClient, { defaultConfig } from '#src/client/index.js';
@@ -14,7 +14,7 @@ import { processSession } from '#src/helpers/client.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest } from '#src/helpers/user.js';
-import { generateUsername, generatePassword } from '#src/utils.js';
+import { generateUsername, generatePassword, createFormData } from '#src/utils.js';
 
 /** A helper class to simplify the test on grant errors. */
 class GrantError extends Error {
@@ -49,15 +49,17 @@ class MockOrganizationClient extends MockClient {
   async fetchOrganizationToken(organizationId?: string, scopes?: string[]) {
     const refreshToken = await this.getRefreshToken();
     try {
-      const json = await got
+      const json = await ky
         .post(`${this.config.endpoint}/oidc/token`, {
-          form: removeUndefinedKeys({
-            grant_type: GrantType.RefreshToken,
-            client_id: this.config.appId,
-            refresh_token: refreshToken,
-            organization_id: organizationId,
-            scope: scopes?.join(' '),
-          }),
+          body: createFormData(
+            removeUndefinedKeys({
+              grant_type: GrantType.RefreshToken,
+              client_id: this.config.appId,
+              refresh_token: refreshToken,
+              organization_id: organizationId,
+              scope: scopes?.join(' '),
+            })
+          ),
         })
         .json();
       if (isKeyInObject(json, 'refresh_token')) {
@@ -66,7 +68,7 @@ class MockOrganizationClient extends MockClient {
       return json;
     } catch (error) {
       if (error instanceof HTTPError) {
-        throw new GrantError(error.response.statusCode, JSON.parse(String(error.response.body)));
+        throw new GrantError(error.response.status, JSON.parse(String(error.response.body)));
       }
       throw error;
     }

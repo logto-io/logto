@@ -1,5 +1,5 @@
 import { RoleType } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { assignRolesToUser, getUserRoles, deleteRoleFromUser } from '#src/api/index.js';
 import { createRole } from '#src/api/role.js';
@@ -65,6 +65,6 @@ describe('admin console user management (roles)', () => {
     const role = await createRole({});
 
     const response = await deleteRoleFromUser(user.id, role.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 });

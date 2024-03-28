@@ -1,5 +1,5 @@
 import { SsoProviderName } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import {
   providerNames,

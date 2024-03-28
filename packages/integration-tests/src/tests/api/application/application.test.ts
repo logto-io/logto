@@ -1,5 +1,5 @@
 import { ApplicationType } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import {
   createApplication,
@@ -256,6 +256,6 @@ describe('admin console application', () => {
     await deleteApplication(application.id);
 
     const response = await getApplication(application.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 });

@@ -2,7 +2,7 @@ import assert from 'node:assert';
 
 import { generateStandardId } from '@logto/shared';
 import { isKeyInObject, pick } from '@silverhand/essentials';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { OrganizationRoleApiTest, OrganizationScopeApiTest } from '#src/helpers/organization.js';
 
@@ -25,7 +25,7 @@ describe('organization role APIs', () => {
 
       assert(response instanceof HTTPError);
 
-      const { statusCode, body: raw } = response.response;
+      const { status: statusCode, body: raw } = response.response;
       const body: unknown = JSON.parse(String(raw));
       expect(statusCode).toBe(422);
       expect(isKeyInObject(body, 'code') && body.code).toBe('entity.unique_integrity_violation');
@@ -97,7 +97,7 @@ describe('organization role APIs', () => {
     it('should fail when try to get an organization role that does not exist', async () => {
       const response = await roleApi.get('0').catch((error: unknown) => error);
 
-      expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+      expect(response instanceof HTTPError && response.response.status).toBe(404);
     });
 
     it('should be able to update organization role', async () => {
@@ -126,7 +126,7 @@ describe('organization role APIs', () => {
         .catch((error: unknown) => error);
 
       assert(response instanceof HTTPError);
-      expect(response.response.statusCode).toBe(422);
+      expect(response.response.status).toBe(422);
       expect(JSON.parse(String(response.response.body))).toMatchObject(
         expect.objectContaining({
           code: 'entity.unique_integrity_violation',
@@ -138,12 +138,12 @@ describe('organization role APIs', () => {
       const createdRole = await roleApi.create({ name: 'test' + randomId() });
       await roleApi.delete(createdRole.id);
       const response = await roleApi.get(createdRole.id).catch((error: unknown) => error);
-      expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+      expect(response instanceof HTTPError && response.response.status).toBe(404);
     });
 
     it('should fail when try to delete an organization role that does not exist', async () => {
       const response = await roleApi.delete('0').catch((error: unknown) => error);
-      expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+      expect(response instanceof HTTPError && response.response.status).toBe(404);
     });
   });
 
@@ -212,7 +212,7 @@ describe('organization role APIs', () => {
         .catch((error: unknown) => error);
 
       assert(response instanceof HTTPError);
-      expect(response.response.statusCode).toBe(422);
+      expect(response.response.status).toBe(422);
       expect(JSON.parse(String(response.response.body))).toMatchObject(
         expect.objectContaining({
           code: 'entity.relation_foreign_key_not_found',
@@ -248,7 +248,7 @@ describe('organization role APIs', () => {
       const response = await roleApi.deleteScope(role.id, '0').catch((error: unknown) => error);
 
       assert(response instanceof HTTPError);
-      expect(response.response.statusCode).toBe(404);
+      expect(response.response.status).toBe(404);
     });
   });
 });

@@ -1,5 +1,5 @@
 import type { Resource, CreateResource } from '@logto/schemas';
-import type { OptionsOfTextResponseBody } from 'got';
+import { type Options } from 'ky';
 
 import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
 
@@ -17,7 +17,7 @@ export const createResource = async (name?: string, indicator?: string) =>
 
 export const getResources = async () => authedAdminApi.get('resources').json<Resource[]>();
 
-export const getResource = async (resourceId: string, options?: OptionsOfTextResponseBody) =>
+export const getResource = async (resourceId: string, options?: Options) =>
   authedAdminApi.get(`resources/${resourceId}`, options).json<Resource>();
 
 export const updateResource = async (

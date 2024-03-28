@@ -1,18 +1,19 @@
 import { demoAppApplicationId } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
-import { HTTPError, type Headers, got } from 'got';
+import ky, { HTTPError } from 'ky';
+import { type KyHeadersInit } from 'node_modules/ky/distribution/types/options.js';
 
 import { logtoUrl } from '#src/constants.js';
 
 describe('content-type: application/json compatibility', () => {
-  const api = got.extend({
+  const api = ky.extend({
     prefixUrl: new URL('/oidc', logtoUrl),
   });
 
   const expectErrorMessageForPayload = async (
     payload: Record<string, unknown>,
     errorMessage: string,
-    headers: Headers = {}
+    headers: KyHeadersInit = {}
   ) => {
     return trySafe(
       api.post('token', {
