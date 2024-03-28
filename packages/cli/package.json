@@ -79,6 +79,7 @@
     "@types/sinon": "^17.0.0",
     "@types/tar": "^6.1.2",
     "@types/yargs": "^17.0.13",
+    "@vitest/coverage-v8": "^1.4.0",
     "@withtyped/server": "^0.13.3",
     "eslint": "^8.44.0",
     "lint-staged": "^15.0.0",
