@@ -17,6 +17,15 @@ import { adminTenantId } from '../seeds/tenant.js';
 /** Given a tenant ID, return the corresponding organization ID in the admin tenant. */
 export const getTenantOrganizationId = (tenantId: string) => `t-${tenantId}`;
 
+/** Given an admin tenant organization ID, check the format and return the corresponding user tenant ID. */
+export const getTenantIdFromOrganizationId = (organizationId: string) => {
+  if (!organizationId.startsWith('t-')) {
+    throw new Error(`Invalid admin tenant organization ID: ${organizationId}`);
+  }
+
+  return organizationId.slice(2);
+};
+
 /**
  * Given a tenant ID, return the organization create data for the admin tenant. It follows a
  * convention to generate the organization ID and name which can be used across the system.
