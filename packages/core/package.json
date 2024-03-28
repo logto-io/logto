@@ -83,7 +83,7 @@
     "qrcode": "^1.5.3",
     "redis": "^4.6.5",
     "roarr": "^7.11.0",
-    "samlify": "2.8.10",
+    "samlify": "2.8.11",
     "semver": "^7.3.8",
     "@silverhand/slonik": "31.0.0-beta.2",
     "snake-case": "^4.0.0",
