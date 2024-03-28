@@ -232,7 +232,9 @@ export default function initOidc(
           ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
           : ctx.oidc.provider.AccessToken.IN_PAYLOAD;
         const readOnlyToken = Object.fromEntries(
-          pickedFields.map((field) => [field, Reflect.get(token, field)])
+          pickedFields
+            .filter((field) => Reflect.get(token, field) !== undefined)
+            .map((field) => [field, Reflect.get(token, field)])
         );
 
         const client = await cloudConnection.getClient();
