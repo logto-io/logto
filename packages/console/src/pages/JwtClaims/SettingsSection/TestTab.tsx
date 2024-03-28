@@ -1,8 +1,9 @@
-import { type JsonObject, LogtoJwtTokenPath, type RequestErrorBody } from '@logto/schemas';
+import { LogtoJwtTokenPath, type JsonObject, type RequestErrorBody } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { HTTPError } from 'ky';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useFormContext, Controller, type ControllerRenderProps } from 'react-hook-form';
+import { Controller, useFormContext, type ControllerRenderProps } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
@@ -10,7 +11,7 @@ import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import useApi from '@/hooks/use-api';
 
-import MonacoCodeEditor, { type ModelControl } from '../MonacoCodeEditor';
+import MonacoCodeEditor, { type ModelControl, type ModelSettings } from '../MonacoCodeEditor';
 import { type JwtClaimsFormType } from '../type';
 import {
   accessTokenPayloadTestModel,
@@ -30,6 +31,13 @@ const accessTokenModelSettings = [accessTokenPayloadTestModel, userContextTestMo
 const clientCredentialsModelSettings = [clientCredentialsPayloadTestModel];
 const testEndpointPath = 'api/configs/jwt-customizer/test';
 const jwtCustomizerGeneralErrorCode = 'jwt_customizer.general';
+/**
+ * SampleCode form filed value update formatter.
+ * Reset the field to undefined if the value is the same as the default value
+ */
+const updateSampleCodeValue = (model: ModelSettings, newValue: string | undefined) => {
+  return newValue === model.defaultValue ? undefined : newValue;
+};
 
 function TestTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });
@@ -92,27 +100,32 @@ function TestTab({ isActive }: Props) {
 
   const getModelControllerProps = useCallback(
     ({ value, onChange }: ControllerRenderProps<JwtClaimsFormType, 'testSample'>): ModelControl => {
-      // User access token context test model (user data)
-      if (activeModelName === userContextTestModel.name) {
-        return {
-          value: value?.contextSample,
-          onChange: (newValue: string | undefined) => {
-            onChange({
-              ...value,
-              contextSample: newValue,
-            });
-          },
-        };
-      }
-
-      // Token payload test model (user and machine to machine)
       return {
-        value: value?.tokenSample,
+        value:
+          activeModelName === userContextTestModel.name ? value?.contextSample : value?.tokenSample,
         onChange: (newValue: string | undefined) => {
-          onChange({
+          // Form value is a object we need to update the specific field
+          const updatedValue: JwtClaimsFormType['testSample'] = {
             ...value,
-            tokenSample: newValue,
-          });
+            ...conditional(
+              activeModelName === userContextTestModel.name && {
+                contextSample: updateSampleCodeValue(userContextTestModel, newValue),
+              }
+            ),
+            ...conditional(
+              activeModelName === accessTokenPayloadTestModel.name && {
+                tokenSample: updateSampleCodeValue(accessTokenPayloadTestModel, newValue),
+              }
+            ),
+            ...conditional(
+              activeModelName === clientCredentialsPayloadTestModel.name && {
+                // Reset the field to undefined if the value is the same as the default value
+                tokenSample: updateSampleCodeValue(clientCredentialsPayloadTestModel, newValue),
+              }
+            ),
+          };
+
+          onChange(updatedValue);
         },
       };
     },
