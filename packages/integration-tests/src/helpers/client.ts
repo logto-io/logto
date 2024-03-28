@@ -1,14 +1,18 @@
 import type { LogtoConfig, SignInOptions } from '@logto/node';
 import { assert } from '@silverhand/essentials';
+import { type KyInstance } from 'ky';
 
 import MockClient from '#src/client/index.js';
 
 export const initClient = async (
   config?: Partial<LogtoConfig>,
   redirectUri?: string,
-  options: Omit<SignInOptions, 'redirectUri'> = {}
+  options: Omit<SignInOptions, 'redirectUri'> & {
+    interactionApi?: KyInstance;
+    skipIdTokenVerification?: boolean;
+  } = {}
 ) => {
-  const client = new MockClient(config);
+  const client = new MockClient(config, options.interactionApi, options.skipIdTokenVerification);
   await client.initSession(redirectUri, options);
   assert(client.interactionCookie, new Error('Session not found'));
 

@@ -1,4 +1,4 @@
-import type { LogtoConfig, SignInOptions } from '@logto/node';
+import type { LogtoConfig, SignInOptions, JwtVerifier, StandardLogtoClient } from '@logto/node';
 import LogtoClient from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
@@ -15,6 +15,15 @@ export const defaultConfig = {
   appId: demoAppApplicationId,
   persistAccessToken: false,
 };
+
+class EmptyJwtVerifier implements JwtVerifier {
+  constructor(protected client: StandardLogtoClient) {}
+
+  async verifyIdToken(): Promise<void> {
+    // Do nothing
+  }
+}
+
 export default class MockClient {
   public rawCookies: string[] = [];
   protected readonly config: LogtoConfig;
@@ -23,18 +32,29 @@ export default class MockClient {
 
   private navigateUrl?: string;
   private readonly api: KyInstance;
+  private readonly interactionApi: KyInstance;
 
-  constructor(config?: Partial<LogtoConfig>) {
+  constructor(
+    config?: Partial<LogtoConfig>,
+    interactionApi?: KyInstance,
+    /* Skip ID token JWT verification */
+    skipIdTokenVerification = false
+  ) {
     this.storage = new MemoryStorage();
     this.config = { ...defaultConfig, ...config };
-    this.api = ky.extend({ prefixUrl: this.config.endpoint + '/api' });
+    this.interactionApi = interactionApi ?? ky;
+    this.api = this.interactionApi.extend({ prefixUrl: this.config.endpoint + '/api' });
 
-    this.logto = new LogtoClient(this.config, {
-      navigate: (url: string) => {
-        this.navigateUrl = url;
+    this.logto = new LogtoClient(
+      this.config,
+      {
+        navigate: (url: string) => {
+          this.navigateUrl = url;
+        },
+        storage: this.storage,
       },
-      storage: this.storage,
-    });
+      skipIdTokenVerification ? (client) => new EmptyJwtVerifier(client) : undefined
+    );
   }
 
   // TODO: Rename to sessionCookies or something accurate
@@ -71,7 +91,7 @@ export default class MockClient {
     );
 
     // Mock SDK sign-in navigation
-    const response = await ky(this.navigateUrl, {
+    const response = await this.interactionApi(this.navigateUrl, {
       redirect: 'manual',
       throwHttpErrors: false,
     });
@@ -102,7 +122,7 @@ export default class MockClient {
       new Error('SignIn or Register failed')
     );
 
-    const authResponse = await ky.get(redirectTo, {
+    const authResponse = await this.interactionApi.get(redirectTo, {
       headers: {
         cookie: this.interactionCookie,
       },
@@ -141,7 +161,7 @@ export default class MockClient {
     }
 
     await this.logto.signOut(postSignOutRedirectUri);
-    await ky(this.navigateUrl);
+    await this.interactionApi(this.navigateUrl);
   }
 
   public async isAuthenticated() {
@@ -179,7 +199,7 @@ export default class MockClient {
     assert(this.interactionCookie, new Error('Session not found'));
     assert(this.interactionCookie.includes('_session.sig'), new Error('Session not found'));
 
-    const consentResponse = await ky.get(`${this.config.endpoint}/consent`, {
+    const consentResponse = await this.interactionApi.get(`${this.config.endpoint}/consent`, {
       headers: {
         cookie: this.interactionCookie,
       },
@@ -194,7 +214,7 @@ export default class MockClient {
       throw new Error('Consent failed');
     }
 
-    const authCodeResponse = await ky.get(redirectTo, {
+    const authCodeResponse = await this.interactionApi.get(redirectTo, {
       headers: {
         cookie: this.interactionCookie,
       },
