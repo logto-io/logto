@@ -21,7 +21,7 @@ import {
   expectToProceedApplicationCreationFrom,
 } from '../applications/helpers.js';
 
-import { createM2mRoleAndAssignPermissions } from './utils.js';
+import { createM2mRoleAndAssignPermissions, expectToSelectPermissionAction } from './helper.js';
 
 await page.setViewport({ width: 1920, height: 1080 });
 
@@ -193,10 +193,10 @@ describe('M2M RBAC', () => {
         text: 'Permissions',
       });
 
-      const permissionRow = await expect(page).toMatchElement('table tbody tr:has(td div)', {
-        text: permissionName,
+      await expectToSelectPermissionAction(page, {
+        permissionName,
+        action: 'Remove permission',
       });
-      await expect(permissionRow).toClick('td[class$=deleteColumn] button');
 
       await expectConfirmModalAndAct(page, {
         title: 'Reminder',

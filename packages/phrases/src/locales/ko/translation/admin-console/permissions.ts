@@ -6,6 +6,11 @@ const permissions = {
   api_column: 'API',
   placeholder_title: '권한',
   placeholder_description: '권한은 리소스(API 리소스라고 함)에 액세스할 수 있는 권한을 의미해요.',
+  edit: '편집 권한',
+  delete: '삭제 권한',
+  remove: '제거 권한',
+  updated: '권한이 업데이트되었습니다.',
+  edit_title: 'API 권한 편집',
 };
 
 export default Object.freeze(permissions);

@@ -7,6 +7,11 @@ const permissions = {
   placeholder_title: 'Permission',
   placeholder_description:
     "La permission fait référence à l'autorisation d'accéder à une ressource (nous l'appelons ressource d'API).",
+  edit: 'Permission de modifier',
+  delete: 'Permission de supprimer',
+  remove: 'Permission de retirer',
+  updated: 'Permission mise à jour.',
+  edit_title: 'Modifier l’autorisation de l’API',
 };
 
 export default Object.freeze(permissions);
