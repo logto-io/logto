@@ -25,6 +25,8 @@ const general = {
   customize: 'Personalizar',
   enable: 'Habilitar',
   reminder: 'Lembrete',
+  /** UNTRANSLATED */
+  edit: 'Edit',
   delete: 'Excluir',
   /** UNTRANSLATED */
   deleted: 'Deleted',

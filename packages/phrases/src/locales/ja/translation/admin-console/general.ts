@@ -25,6 +25,8 @@ const general = {
   customize: 'カスタマイズする',
   enable: '有効にする',
   reminder: 'リマインダー',
+  /** UNTRANSLATED */
+  edit: 'Edit',
   delete: '削除',
   /** UNTRANSLATED */
   deleted: 'Deleted',
