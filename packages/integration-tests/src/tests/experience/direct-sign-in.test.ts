@@ -1,11 +1,16 @@
+import crypto from 'node:crypto';
+
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, SsoProviderName } from '@logto/schemas';
 
 import { mockSocialConnectorTarget } from '#src/__mocks__/connectors-mock.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { demoAppUrl } from '#src/constants.js';
+import { createSsoConnector } from '#src/api/sso-connector.js';
+import { demoAppUrl, logtoUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
+
+const randomString = () => crypto.randomBytes(8).toString('hex');
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
@@ -14,9 +19,26 @@ import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 // Tip: See https://github.com/argos-ci/jest-puppeteer/blob/main/packages/expect-puppeteer/README.md
 // for convenient expect methods
 describe('direct sign-in', () => {
+  const context = new (class Context {
+    ssoConnectorId?: string;
+  })();
+  const ssoOidcIssuer = `${logtoUrl}/oidc`;
+
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email, ConnectorType.Sms]);
     await setSocialConnector();
+    const ssoConnector = await createSsoConnector({
+      providerName: SsoProviderName.OIDC,
+      connectorName: 'test-oidc-' + randomString(),
+      domains: [`foo${randomString()}.com`],
+      config: {
+        clientId: 'foo',
+        clientSecret: 'bar',
+        issuer: ssoOidcIssuer,
+      },
+    });
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    context.ssoConnectorId = ssoConnector.id;
     await updateSignInExperience({
       signUp: { identifiers: [], password: true, verify: false },
       signIn: {
@@ -29,6 +51,7 @@ describe('direct sign-in', () => {
           },
         ],
       },
+      singleSignOnEnabled: true,
       socialSignInConnectorTargets: ['mock-social'],
     });
   });
@@ -42,6 +65,28 @@ describe('direct sign-in', () => {
     await experience.toProcessSocialSignIn({ socialUserId: 'foo', clickButton: false });
     experience.toMatchUrl(demoAppUrl);
     await experience.toClick('div[role=button]', /sign out/i);
+    await experience.page.close();
+  });
+
+  it('should be landed to the sso identity provider directly', async () => {
+    const experience = new ExpectExperience(await browser.newPage());
+    const url = new URL(demoAppUrl);
+
+    url.searchParams.set('direct_sign_in', `sso:${context.ssoConnectorId!}`);
+    await experience.page.goto(url.href);
+    await experience.toProcessSocialSignIn({
+      socialUserId: 'foo',
+      clickButton: false,
+      authUrl: ssoOidcIssuer + '/auth',
+    });
+
+    // The SSO sign-in flow won't succeed, but the user should be redirected back to the demo app
+    // with the code and user ID in the query string.
+    const callbackUrl = new URL(experience.page.url());
+    expect(callbackUrl.searchParams.get('code')).toBe('mock-code');
+    expect(callbackUrl.searchParams.get('userId')).toBe('foo');
+    expect(new URL(callbackUrl.pathname, callbackUrl.origin).href).toBe(demoAppUrl.href);
+
     await experience.page.close();
   });
 

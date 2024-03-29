@@ -31,8 +31,8 @@ export enum ExtraParamsKey {
    * @remark
    * The format of the value for this key is one of the following:
    *
-   * - `<method>` (e.g. `email`, `sms`)
-   * - `social:<target>` (e.g. `social:google`, `social:facebook`)
+   * - `social:<target>` (Use a social connector with the specified target, e.g. `social:google`)
+   * - `sso:<connector-id>` (Use the specified SSO connector, e.g. `sso:123456`)
    */
   DirectSignIn = 'direct_sign_in',
 }
