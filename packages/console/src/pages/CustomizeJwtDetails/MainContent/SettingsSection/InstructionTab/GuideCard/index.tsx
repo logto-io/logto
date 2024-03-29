@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CaretExpandedIcon from '@/assets/icons/caret-expanded.svg';
@@ -18,23 +17,24 @@ export enum CardType {
 type GuardCardProps = {
   name: CardType;
   children?: React.ReactNode;
+  isExpanded: boolean;
+  setExpanded: (expanded: boolean) => void;
 };
 
-function GuideCard({ name, children }: GuardCardProps) {
-  const [expanded, setExpanded] = useState(false);
+function GuideCard({ name, children, isExpanded, setExpanded }: GuardCardProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });
 
   return (
-    <Card className={classNames(styles.card, styles.collapsible, expanded && styles.expanded)}>
+    <Card className={classNames(styles.card, isExpanded && styles.expanded)}>
       <div
         className={styles.headerRow}
         role="button"
         tabIndex={0}
         onClick={() => {
-          setExpanded((expanded) => !expanded);
+          setExpanded(!isExpanded);
         }}
         onKeyDown={onKeyDownHandler(() => {
-          setExpanded((expanded) => !expanded);
+          setExpanded(!isExpanded);
         })}
       >
         <div className={styles.cardHeader}>

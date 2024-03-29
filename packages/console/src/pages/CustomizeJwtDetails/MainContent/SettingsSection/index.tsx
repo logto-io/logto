@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useState } from 'react';
 
 import BookIcon from '@/assets/icons/book.svg';
-import StartIcon from '@/assets/icons/start.svg';
+import FlaskIcon from '@/assets/icons/conical-flask.svg';
 import Button from '@/ds-components/Button';
 
 import InstructionTab from './InstructionTab';
@@ -24,7 +24,7 @@ function SettingsSection() {
           <Button
             key={tab}
             type="primary"
-            icon={tab === Tab.DataSource ? <BookIcon /> : <StartIcon />}
+            icon={tab === Tab.DataSource ? <BookIcon /> : <FlaskIcon />}
             title={`jwt_claims.${tab}`}
             className={classNames(styles.tab, activeTab === tab && styles.active)}
             onClick={() => {

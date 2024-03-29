@@ -8,6 +8,13 @@ export const logtoDarkTheme: IStandaloneThemeData = {
   inherit: true,
   rules: [],
   colors: {
+    'editor.background': '#090613', // :token/code/code-bg
+  },
+};
+
+export const logtoLightTheme: IStandaloneThemeData = {
+  ...logtoDarkTheme,
+  colors: {
     'editor.background': '#181133', // :token/code/code-bg
   },
 };

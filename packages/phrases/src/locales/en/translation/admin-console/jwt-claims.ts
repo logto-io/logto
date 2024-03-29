@@ -55,7 +55,7 @@ const jwt_claims = {
   tester: {
     title: 'Test',
     subtitle: "Edit the context to adjust the token's request states and test your custom claims.",
-    run_button: 'Run',
+    run_button: 'Run test',
     result_title: 'Test result',
   },
   form_error: {

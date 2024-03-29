@@ -1,17 +1,18 @@
 @use '@/scss/underscore' as _;
 
-
-.codePanel {
+.scripeSection {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  min-width: 50%;
 
-  .cardTitle {
-    font: var(--font-label-2);
-    margin-bottom: _.unit(3);
+  .fixHeightWrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
   }
 
-  .flexGrow {
+  .codeEditor {
+    min-height: 200px;
     flex-grow: 1;
   }
 }

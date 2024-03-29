@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import FormField from '@/ds-components/FormField';
 import KeyValueInputField from '@/ds-components/KeyValueInputField';
-
-import { type JwtCustomizerForm } from '../../type';
+import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 
 const isValidKey = (key: string) => {
   return /^\w+$/.test(key);
