@@ -79,6 +79,7 @@ function MainContent<T extends LogtoJwtTokenPath>({
         // Always show the action bar if is the create mode
         isOpen={isDirty || action === 'create'}
         isSubmitting={isSubmitting}
+        confirmText={action === 'create' ? 'general.create' : 'general.save_changes'}
         onDiscard={
           // If the form is in create mode, navigate back to the previous page
           action === 'create'
