@@ -2,7 +2,7 @@ import assert from 'node:assert';
 
 import { ConnectorType } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { createUser } from '#src/api/admin-user.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
@@ -11,12 +11,10 @@ import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers
 
 const randomId = () => generateStandardId(4);
 
-const expectErrorResponse = (error: unknown, status: number, code: string) => {
+const expectErrorResponse = async (error: unknown, statusCode: number, code: string) => {
   assert(error instanceof HTTPError);
-  const { statusCode, body: raw } = error.response;
-  const body: unknown = JSON.parse(String(raw));
-  expect(statusCode).toBe(status);
-  expect(body).toMatchObject({ code });
+  expect(error.response.status).toBe(statusCode);
+  expect(await error.response.json()).toMatchObject({ code });
 };
 
 describe('organization invitation creation', () => {
@@ -105,7 +103,7 @@ describe('organization invitation creation', () => {
       })
       .catch((error: unknown) => error);
 
-    expectErrorResponse(error, 501, 'connector.not_found');
+    await expectErrorResponse(error, 501, 'connector.not_found');
   });
 
   it('should not be able to create invitations with the same email', async () => {
@@ -124,7 +122,7 @@ describe('organization invitation creation', () => {
       })
       .catch((error: unknown) => error);
 
-    expectErrorResponse(error, 422, 'entity.unique_integrity_violation');
+    await expectErrorResponse(error, 422, 'entity.unique_integrity_violation');
   });
 
   it('should be able to create invitations with the same email for different organizations', async () => {
@@ -157,7 +155,7 @@ describe('organization invitation creation', () => {
       })
       .catch((error: unknown) => error);
 
-    expectErrorResponse(error, 400, 'request.invalid_input');
+    await expectErrorResponse(error, 400, 'request.invalid_input');
   });
 
   it('should not be able to create invitations if the invitee is already a member of the organization', async () => {
@@ -174,7 +172,7 @@ describe('organization invitation creation', () => {
       })
       .catch((error: unknown) => error);
 
-    expectErrorResponse(error, 422, 'request.invalid_input');
+    await expectErrorResponse(error, 422, 'request.invalid_input');
   });
 
   it('should not be able to create invitations with an invalid email', async () => {
@@ -187,7 +185,7 @@ describe('organization invitation creation', () => {
       })
       .catch((error: unknown) => error);
 
-    expectErrorResponse(error, 400, 'guard.invalid_input');
+    await expectErrorResponse(error, 400, 'guard.invalid_input');
   });
 
   it('should not be able to create invitations with an invalid organization id', async () => {
@@ -199,7 +197,7 @@ describe('organization invitation creation', () => {
       })
       .catch((error: unknown) => error);
 
-    expectErrorResponse(error, 422, 'entity.relation_foreign_key_not_found');
+    await expectErrorResponse(error, 422, 'entity.relation_foreign_key_not_found');
   });
 
   it('should be able to create invitations with organization role ids', async () => {

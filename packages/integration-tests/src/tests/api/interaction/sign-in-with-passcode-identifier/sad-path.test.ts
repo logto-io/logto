@@ -43,7 +43,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       }),
       {
         code: 'auth.forbidden',
-        statusCode: 403,
+        status: 403,
       }
     );
 
@@ -81,7 +81,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       }),
       {
         code: 'user.sign_in_method_not_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -99,7 +99,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       }),
       {
         code: 'user.sign_in_method_not_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -130,7 +130,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       }),
       {
         code: 'verification_code.code_mismatch',
-        statusCode: 400,
+        status: 400,
       }
     );
 
@@ -141,7 +141,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       }),
       {
         code: 'verification_code.email_mismatch',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -169,7 +169,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       }),
       {
         code: 'verification_code.code_mismatch',
-        statusCode: 400,
+        status: 400,
       }
     );
 
@@ -180,7 +180,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       }),
       {
         code: 'verification_code.phone_mismatch',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -207,7 +207,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.user_not_exist',
-      statusCode: 404,
+      status: 404,
     });
   });
 
@@ -233,7 +233,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.user_not_exist',
-      statusCode: 404,
+      status: 404,
     });
   });
 
@@ -263,7 +263,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.suspended',
-      statusCode: 401,
+      status: 401,
     });
   });
 });

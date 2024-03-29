@@ -146,7 +146,7 @@ describe('register with passwordless identifier', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(patchInteractionProfile, {
@@ -251,7 +251,7 @@ describe('register with passwordless identifier', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(patchInteractionProfile, {
@@ -322,7 +322,7 @@ describe('register with passwordless identifier', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.email_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(deleteInteractionProfile);
@@ -377,7 +377,7 @@ describe('register with passwordless identifier', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.phone_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(deleteInteractionProfile);

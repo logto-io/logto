@@ -51,7 +51,7 @@ describe('application sign in experience', () => {
       setApplicationSignInExperience('non-existent-application', applicationSignInExperiences),
       {
         code: 'entity.not_exists_with_id',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -64,7 +64,7 @@ describe('application sign in experience', () => {
       ),
       {
         code: 'application.third_party_application_only',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -112,7 +112,7 @@ describe('application sign in experience', () => {
 
     await expectRejects(getApplicationSignInExperience(application.id), {
       code: 'entity.not_exists_with_id',
-      statusCode: 404,
+      status: 404,
     });
   });
 });

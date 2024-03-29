@@ -15,7 +15,6 @@ export const getSsoAuthorizationUrl = async (
     .post(`interaction/${ssoPath}/${connectorId}/authorization-url`, {
       headers: { cookie },
       json: payload,
-      followRedirect: false,
     })
     .json<{ redirectTo: string }>();
 };

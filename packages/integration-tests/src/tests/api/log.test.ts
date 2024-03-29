@@ -22,7 +22,7 @@ describe('logs', () => {
   it('should throw on getting non-exist log detail', async () => {
     await expectRejects(getLog('non-exist-log-id'), {
       code: 'entity.not_exists_with_id',
-      statusCode: 404,
+      status: 404,
     });
   });
 });

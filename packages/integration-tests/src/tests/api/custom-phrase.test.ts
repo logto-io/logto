@@ -1,4 +1,4 @@
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import {
   listCustomPhrases,

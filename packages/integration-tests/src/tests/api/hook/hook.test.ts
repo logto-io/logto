@@ -19,10 +19,10 @@ describe('hooks', () => {
         .patch(`hooks/${created.id}`, { json: { events: [HookEvent.PostSignIn] } })
         .json<Hook>()
     ).toMatchObject({ ...created, events: [HookEvent.PostSignIn] });
-    expect(await authedAdminApi.delete(`hooks/${created.id}`)).toHaveProperty('statusCode', 204);
+    expect(await authedAdminApi.delete(`hooks/${created.id}`)).toHaveProperty('status', 204);
     await expectRejects(authedAdminApi.get(`hooks/${created.id}`), {
       code: 'entity.not_exists_with_id',
-      statusCode: 404,
+      status: 404,
     });
   });
 
@@ -48,10 +48,10 @@ describe('hooks', () => {
       ...created,
       event: HookEvent.PostSignIn,
     });
-    expect(await authedAdminApi.delete(`hooks/${created.id}`)).toHaveProperty('statusCode', 204);
+    expect(await authedAdminApi.delete(`hooks/${created.id}`)).toHaveProperty('status', 204);
     await expectRejects(authedAdminApi.get(`hooks/${created.id}`), {
       code: 'entity.not_exists_with_id',
-      statusCode: 404,
+      status: 404,
     });
   });
 
@@ -61,8 +61,8 @@ describe('hooks', () => {
 
     const response = await authedAdminApi.get('hooks?page=1&page_size=20');
 
-    expect(response.statusCode).toBe(200);
-    expect(response.headers).toHaveProperty('total-number');
+    expect(response.status).toBe(200);
+    expect(response.headers.get('total-number')).toEqual(expect.any(String));
 
     // Clean up
     await authedAdminApi.delete(`hooks/${created.id}`);
@@ -78,7 +78,7 @@ describe('hooks', () => {
     };
     await expectRejects(authedAdminApi.post('hooks', { json: payload }), {
       code: 'guard.invalid_input',
-      statusCode: 400,
+      status: 400,
     });
   });
 
@@ -91,7 +91,7 @@ describe('hooks', () => {
     };
     await expectRejects(authedAdminApi.post('hooks', { json: payload }), {
       code: 'hook.missing_events',
-      statusCode: 400,
+      status: 400,
     });
   });
 
@@ -102,14 +102,14 @@ describe('hooks', () => {
 
     await expectRejects(authedAdminApi.patch('hooks/invalid_id', { json: payload }), {
       code: 'entity.not_exists',
-      statusCode: 404,
+      status: 404,
     });
   });
 
   it('should throw error if regenerate a hook signing key with a invalid hook id', async () => {
     await expectRejects(authedAdminApi.patch('hooks/invalid_id/signing-key'), {
       code: 'entity.not_exists',
-      statusCode: 404,
+      status: 404,
     });
   });
 });

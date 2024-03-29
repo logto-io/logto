@@ -1,7 +1,5 @@
-import crypto from 'node:crypto';
-
 import { UsersPasswordEncryptionMethod, ConnectorType } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import {
   mockSocialConnectorConfig,
@@ -25,9 +23,13 @@ import {
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import { createNewSocialUserWithUsernameAndPassword } from '#src/helpers/interactions.js';
-import { generateUsername, generateEmail, generatePhone, generatePassword } from '#src/utils.js';
-
-const randomString = () => crypto.randomBytes(8).toString('hex');
+import {
+  generateUsername,
+  generateEmail,
+  generatePhone,
+  generatePassword,
+  randomString,
+} from '#src/utils.js';
 
 describe('admin console user management', () => {
   beforeAll(async () => {
@@ -62,8 +64,8 @@ describe('admin console user management', () => {
       profile: { gender: 'neutral' },
     });
     const { customData, profile } = await getUser(user.id);
-    expect(customData).toStrictEqual({ foo: 'bar' });
-    expect(profile).toStrictEqual({ gender: 'neutral' });
+    expect({ ...customData }).toStrictEqual({ foo: 'bar' });
+    expect({ ...profile }).toStrictEqual({ gender: 'neutral' });
   });
 
   it('should fail when create user with conflict identifiers', async () => {
@@ -76,22 +78,22 @@ describe('admin console user management', () => {
     await createUserByAdmin({ username, password, primaryEmail, primaryPhone });
     await expectRejects(createUserByAdmin({ username, password }), {
       code: 'user.username_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
     await expectRejects(createUserByAdmin({ primaryEmail }), {
       code: 'user.email_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
     await expectRejects(createUserByAdmin({ primaryPhone }), {
       code: 'user.phone_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
   });
 
   it('should fail when get user by invalid id', async () => {
     await expectRejects(getUser('invalid-user-id'), {
       code: 'entity.not_found',
-      statusCode: 404,
+      status: 404,
     });
   });
 
@@ -131,21 +133,21 @@ describe('admin console user management', () => {
     };
 
     const updatedProfile = await updateUserProfile(user.id, profile);
-    expect(updatedProfile).toStrictEqual(profile);
+    expect(updatedProfile).toMatchObject(profile);
 
     const patchProfile = {
       familyName: 'another name',
       website: 'https://logto.io/',
     };
     const updatedProfile2 = await updateUserProfile(user.id, patchProfile);
-    expect(updatedProfile2).toStrictEqual({ ...profile, ...patchProfile });
+    expect(updatedProfile2).toMatchObject({ ...profile, ...patchProfile });
   });
 
   it('should respond 422 when no update data provided', async () => {
     const user = await createUserByAdmin();
     await expectRejects(updateUser(user.id, {}), {
       code: 'entity.invalid_input',
-      statusCode: 422,
+      status: 422,
     });
   });
 
@@ -160,17 +162,17 @@ describe('admin console user management', () => {
 
     await expectRejects(updateUser(anotherUser.id, { username }), {
       code: 'user.username_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
 
     await expectRejects(updateUser(anotherUser.id, { primaryEmail }), {
       code: 'user.email_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
 
     await expectRejects(updateUser(anotherUser.id, { primaryPhone }), {
       code: 'user.phone_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
   });
 
@@ -183,7 +185,7 @@ describe('admin console user management', () => {
     await deleteUser(user.id);
 
     const response = await getUser(user.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   it('should update user password successfully', async () => {
@@ -297,7 +299,7 @@ describe('admin console user management', () => {
 
   it('should return 204 if password is correct', async () => {
     const user = await createUserByAdmin({ password: 'new_password' });
-    expect(await verifyUserPassword(user.id, 'new_password')).toHaveProperty('statusCode', 204);
+    expect(await verifyUserPassword(user.id, 'new_password')).toHaveProperty('status', 204);
     await deleteUser(user.id);
   });
 
@@ -305,7 +307,7 @@ describe('admin console user management', () => {
     const user = await createUserByAdmin({ password: 'new_password' });
     await expectRejects(verifyUserPassword(user.id, 'wrong_password'), {
       code: 'session.invalid_credentials',
-      statusCode: 422,
+      status: 422,
     });
     await deleteUser(user.id);
   });
@@ -314,7 +316,7 @@ describe('admin console user management', () => {
     const user = await createUserByAdmin();
     await expectRejects(verifyUserPassword(user.id, ''), {
       code: 'guard.invalid_input',
-      statusCode: 400,
+      status: 400,
     });
   });
 });

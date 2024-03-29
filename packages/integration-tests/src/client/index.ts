@@ -3,8 +3,7 @@ import LogtoClient from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
-import type { Got } from 'got';
-import { got } from 'got';
+import ky, { type KyInstance } from 'ky';
 
 import { submitInteraction } from '#src/api/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
@@ -23,12 +22,12 @@ export default class MockClient {
   protected readonly logto: LogtoClient;
 
   private navigateUrl?: string;
-  private readonly api: Got;
+  private readonly api: KyInstance;
 
   constructor(config?: Partial<LogtoConfig>) {
     this.storage = new MemoryStorage();
     this.config = { ...defaultConfig, ...config };
-    this.api = got.extend({ prefixUrl: this.config.endpoint + '/api' });
+    this.api = ky.extend({ prefixUrl: this.config.endpoint + '/api' });
 
     this.logto = new LogtoClient(this.config, {
       navigate: (url: string) => {
@@ -72,19 +71,22 @@ export default class MockClient {
     );
 
     // Mock SDK sign-in navigation
-    const response = await got(this.navigateUrl, {
-      followRedirect: false,
+    const response = await ky(this.navigateUrl, {
+      redirect: 'manual',
+      throwHttpErrors: false,
     });
 
     // Note: should redirect to sign-in page
     assert(
-      response.statusCode === 303 &&
-        response.headers.location?.startsWith(options.directSignIn ? '/direct/' : '/sign-in'),
+      response.status === 303 &&
+        response.headers
+          .get('location')
+          ?.startsWith(options.directSignIn ? '/direct/' : '/sign-in'),
       new Error('Visit sign in uri failed')
     );
 
     // Get session cookie
-    this.rawCookies = response.headers['set-cookie'] ?? [];
+    this.rawCookies = response.headers.getSetCookie();
     assert(this.interactionCookie, new Error('Get cookie from authorization endpoint failed'));
   }
 
@@ -100,20 +102,21 @@ export default class MockClient {
       new Error('SignIn or Register failed')
     );
 
-    const authResponse = await got.get(redirectTo, {
+    const authResponse = await ky.get(redirectTo, {
       headers: {
         cookie: this.interactionCookie,
       },
-      followRedirect: false,
+      redirect: 'manual',
+      throwHttpErrors: false,
     });
 
     // Note: Should redirect to logto consent page
     assert(
-      authResponse.statusCode === 303 && authResponse.headers.location === '/consent',
+      authResponse.status === 303 && authResponse.headers.get('location') === '/consent',
       new Error('Invoke auth before consent failed')
     );
 
-    this.rawCookies = authResponse.headers['set-cookie'] ?? [];
+    this.rawCookies = authResponse.headers.getSetCookie();
 
     // Manually handle the consent flow
     if (!consent) {
@@ -138,7 +141,7 @@ export default class MockClient {
     }
 
     await this.logto.signOut(postSignOutRedirectUri);
-    await got(this.navigateUrl);
+    await ky(this.navigateUrl);
   }
 
   public async isAuthenticated() {
@@ -176,30 +179,32 @@ export default class MockClient {
     assert(this.interactionCookie, new Error('Session not found'));
     assert(this.interactionCookie.includes('_session.sig'), new Error('Session not found'));
 
-    const consentResponse = await got.get(`${this.config.endpoint}/consent`, {
+    const consentResponse = await ky.get(`${this.config.endpoint}/consent`, {
       headers: {
         cookie: this.interactionCookie,
       },
-      followRedirect: false,
+      redirect: 'manual',
+      throwHttpErrors: false,
     });
 
     // Consent page should auto consent and redirect to auth endpoint
-    const redirectTo = consentResponse.headers.location;
+    const redirectTo = consentResponse.headers.get('location');
 
     if (!redirectTo?.startsWith(`${this.config.endpoint}/oidc/auth`)) {
       throw new Error('Consent failed');
     }
 
-    const authCodeResponse = await got.get(redirectTo, {
+    const authCodeResponse = await ky.get(redirectTo, {
       headers: {
         cookie: this.interactionCookie,
       },
-      followRedirect: false,
+      redirect: 'manual',
+      throwHttpErrors: false,
     });
 
     // Note: Should redirect to the signInCallbackUri
-    assert(authCodeResponse.statusCode === 303, new Error('Complete auth failed'));
-    const signInCallbackUri = authCodeResponse.headers.location;
+    assert(authCodeResponse.status === 303, new Error('Complete auth failed'));
+    const signInCallbackUri = authCodeResponse.headers.get('location');
     assert(signInCallbackUri, new Error('Get sign in callback uri failed'));
 
     return signInCallbackUri;

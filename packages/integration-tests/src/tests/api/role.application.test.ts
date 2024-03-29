@@ -1,6 +1,6 @@
 import { ApplicationType, RoleType } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { assignRolesToApplication, createApplication } from '#src/api/index.js';
 import {
@@ -27,7 +27,7 @@ describe('roles applications', () => {
 
   it('should return 404 if role not found', async () => {
     const response = await getRoleApplications('not-found').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should assign applications to role successfully', async () => {
@@ -52,13 +52,13 @@ describe('roles applications', () => {
   it('should fail when try to assign empty applications', async () => {
     const role = await createRole({ type: RoleType.MachineToMachine });
     const response = await assignApplicationsToRole([], role.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+    expect(response instanceof HTTPError && response.response.status).toBe(400);
   });
 
   it('should fail with invalid application input', async () => {
     const role = await createRole({ type: RoleType.MachineToMachine });
     const response = await assignApplicationsToRole([''], role.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+    expect(response instanceof HTTPError && response.response.status).toBe(400);
   });
 
   it('should fail if role not found', async () => {
@@ -66,7 +66,7 @@ describe('roles applications', () => {
     const response = await assignApplicationsToRole([m2mApp.id], 'not-found').catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail if application not found', async () => {
@@ -74,7 +74,7 @@ describe('roles applications', () => {
     const response = await assignApplicationsToRole(['not-found'], role.id).catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should remove application from role successfully', async () => {
@@ -95,7 +95,7 @@ describe('roles applications', () => {
     const response = await deleteApplicationFromRole(m2mApp.id, 'not-found').catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail if application not found when trying to remove application from role', async () => {
@@ -103,7 +103,7 @@ describe('roles applications', () => {
     const response = await deleteApplicationFromRole('not-found', role.id).catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   // This case tests GET operation on roles and filter by `type` parameter and `search` parameter.

@@ -32,7 +32,7 @@ describe('Generic verification code through management API', () => {
   it('should create an email verification code on server side', async () => {
     const payload: RequestVerificationCodePayload = { email: mockEmail };
     const response = await requestVerificationCode(payload);
-    expect(response.statusCode).toBe(204);
+    expect(response.status).toBe(204);
 
     const { code, type, address } = await readConnectorMessage('Email');
 
@@ -44,7 +44,7 @@ describe('Generic verification code through management API', () => {
   it('should create an SMS verification code on server side', async () => {
     const payload: RequestVerificationCodePayload = { phone: mockPhone };
     const response = await requestVerificationCode(payload);
-    expect(response.statusCode).toBe(204);
+    expect(response.status).toBe(204);
 
     const { code, type, phone } = await readConnectorMessage('Sms');
 
@@ -56,7 +56,7 @@ describe('Generic verification code through management API', () => {
   it('should fail to create a verification code on server side when the email and phone are not provided', async () => {
     await expectRejects(requestVerificationCode({ username: 'any_string' }), {
       code: 'guard.invalid_input',
-      statusCode: 400,
+      status: 400,
     });
 
     await expect(readConnectorMessage('Email')).rejects.toThrow();
@@ -68,20 +68,17 @@ describe('Generic verification code through management API', () => {
     await clearConnectorsByTypes([ConnectorType.Email]);
     await expectRejects(requestVerificationCode({ email: emailForTestSendCode }), {
       code: 'connector.not_found',
-      statusCode: 501,
+      status: 501,
     });
 
-    await expect(
-      verifyVerificationCode({ email: emailForTestSendCode, verificationCode: 'any_string' })
-    ).rejects.toMatchObject({
-      response: {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: 'Invalid verification code.',
-          code: 'verification_code.code_mismatch',
-        }),
-      },
-    });
+    await expectRejects(
+      verifyVerificationCode({ email: emailForTestSendCode, verificationCode: 'any_string' }),
+      {
+        messageIncludes: 'Invalid verification code.',
+        code: 'verification_code.code_mismatch',
+        status: 400,
+      }
+    );
 
     // Restore the email connector
     await setEmailConnector();
@@ -92,20 +89,17 @@ describe('Generic verification code through management API', () => {
     await clearConnectorsByTypes([ConnectorType.Sms]);
     await expectRejects(requestVerificationCode({ phone: phoneForTestSendCode }), {
       code: 'connector.not_found',
-      statusCode: 501,
+      status: 501,
     });
 
-    await expect(
-      verifyVerificationCode({ phone: phoneForTestSendCode, verificationCode: 'any_string' })
-    ).rejects.toMatchObject({
-      response: {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: 'Invalid verification code.',
-          code: 'verification_code.code_mismatch',
-        }),
-      },
-    });
+    await expectRejects(
+      verifyVerificationCode({ phone: phoneForTestSendCode, verificationCode: 'any_string' }),
+      {
+        messageIncludes: 'Invalid verification code.',
+        code: 'verification_code.code_mismatch',
+        status: 400,
+      }
+    );
 
     // Restore the SMS connector
     await setSmsConnector();
@@ -136,7 +130,7 @@ describe('Generic verification code through management API', () => {
     await readConnectorMessage('Sms');
     await expectRejects(verifyVerificationCode({ phone: mockPhone, verificationCode: '666' }), {
       code: 'verification_code.code_mismatch',
-      statusCode: 400,
+      status: 400,
     });
   });
 
@@ -148,7 +142,7 @@ describe('Generic verification code through management API', () => {
     expect(phoneToGetCode).toEqual(phone);
     await expectRejects(verifyVerificationCode({ phone: phoneToVerify, verificationCode: code }), {
       code: 'verification_code.not_found',
-      statusCode: 400,
+      status: 400,
     });
   });
 
@@ -160,7 +154,7 @@ describe('Generic verification code through management API', () => {
     expect(emailToGetCode).toEqual(address);
     await expectRejects(verifyVerificationCode({ email: emailToVerify, verificationCode: code }), {
       code: 'verification_code.not_found',
-      statusCode: 400,
+      status: 400,
     });
   });
 });

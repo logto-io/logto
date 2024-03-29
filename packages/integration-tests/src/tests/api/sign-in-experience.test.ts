@@ -45,7 +45,7 @@ describe('admin console sign-in experience', () => {
 
     await expectRejects(updateSignInExperience(newSignInExperience), {
       code: 'sign_in_experiences.username_requires_password',
-      statusCode: 400,
+      status: 400,
     });
   });
 });

@@ -62,7 +62,8 @@ export const putInteraction = async (cookie: string, payload: InteractionPayload
     .put('interaction', {
       headers: { cookie },
       json: payload,
-      followRedirect: false,
+      redirect: 'manual',
+      throwHttpErrors: false,
     })
     .json();
 

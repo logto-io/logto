@@ -35,7 +35,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'auth.forbidden',
-        statusCode: 403,
+        status: 403,
       }
     );
 
@@ -51,7 +51,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'auth.forbidden',
-        statusCode: 403,
+        status: 403,
       }
     );
 
@@ -67,7 +67,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'auth.forbidden',
-        statusCode: 403,
+        status: 403,
       }
     );
 
@@ -91,7 +91,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'user.sign_in_method_not_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -107,7 +107,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'user.sign_in_method_not_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -123,7 +123,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'user.sign_in_method_not_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -141,7 +141,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'session.invalid_credentials',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -159,7 +159,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'session.invalid_credentials',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -177,7 +177,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'session.invalid_credentials',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -199,7 +199,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
       }),
       {
         code: 'user.suspended',
-        statusCode: 401,
+        status: 401,
       }
     );
   });

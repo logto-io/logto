@@ -54,7 +54,7 @@ describe('PUT /interaction', () => {
       }),
       {
         code: 'user.sign_in_method_not_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -69,7 +69,7 @@ describe('PUT /interaction', () => {
       }),
       {
         code: 'user.sign_in_method_not_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -100,7 +100,7 @@ describe('PUT /interaction', () => {
       }),
       {
         code: 'user.sign_in_method_not_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -114,7 +114,7 @@ describe('PUT /interaction', () => {
       }),
       {
         code: 'user.sign_in_method_not_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -140,7 +140,7 @@ describe('PUT /interaction', () => {
       }),
       {
         code: 'verification_code.not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
 
@@ -155,7 +155,7 @@ describe('PUT /interaction', () => {
       }),
       {
         code: 'verification_code.not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
 
@@ -177,7 +177,7 @@ describe('PUT /interaction', () => {
       }),
       {
         code: 'session.invalid_connector_id',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -194,7 +194,7 @@ describe('PUT /interaction', () => {
       }),
       {
         code: 'session.connector_session_not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });

@@ -122,3 +122,5 @@ export const dcls = <C extends string>(className: C) => `div${cls(className)}` a
  * ```
  */
 export const generateTestName = () => `test_${generateStandardId(4)}`;
+
+export const randomString = () => crypto.randomBytes(8).toString('hex');

@@ -39,7 +39,7 @@ const registerWithMfa = async () => {
 
   const { codes } = await expectRejects<{ codes: string[] }>(client.submitInteraction(), {
     code: 'session.mfa.backup_code_required',
-    statusCode: 400,
+    status: 400,
   });
 
   await client.send(postInteractionBindMfa, {
@@ -81,7 +81,7 @@ describe('sign in and verify mfa (Backup Code)', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'session.mfa.require_mfa_verification',
-      statusCode: 403,
+      status: 403,
     });
 
     await deleteUser(id);

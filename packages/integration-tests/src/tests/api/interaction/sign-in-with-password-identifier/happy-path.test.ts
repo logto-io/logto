@@ -161,7 +161,7 @@ describe('Sign-in flow using password identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(sendVerificationCode, {
@@ -223,7 +223,7 @@ describe('Sign-in flow using password identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(sendVerificationCode, {

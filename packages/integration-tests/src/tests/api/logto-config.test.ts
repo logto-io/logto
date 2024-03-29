@@ -61,14 +61,14 @@ describe('admin console sign-in experience', () => {
     expect(privateKeys).toHaveLength(1);
     await expectRejects(deleteOidcKey(LogtoOidcConfigKeyType.PrivateKeys, privateKeys[0]!.id), {
       code: 'oidc.key_required',
-      statusCode: 422,
+      status: 422,
     });
 
     const cookieKeys = await getOidcKeys(LogtoOidcConfigKeyType.CookieKeys);
     expect(cookieKeys).toHaveLength(1);
     await expectRejects(deleteOidcKey(LogtoOidcConfigKeyType.CookieKeys, cookieKeys[0]!.id), {
       code: 'oidc.key_required',
-      statusCode: 422,
+      status: 422,
     });
   });
 
@@ -141,11 +141,11 @@ describe('admin console sign-in experience', () => {
 
     await expectRejects(getJwtCustomizer('access-token'), {
       code: 'entity.not_exists',
-      statusCode: 404,
+      status: 404,
     });
     await expectRejects(deleteJwtCustomizer('access-token'), {
       code: 'entity.not_found',
-      statusCode: 404,
+      status: 404,
     });
     const accessToken = await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
     expect(accessToken).toMatchObject(accessTokenJwtCustomizerPayload);
@@ -164,7 +164,7 @@ describe('admin console sign-in experience', () => {
     await expect(deleteJwtCustomizer('access-token')).resolves.not.toThrow();
     await expectRejects(getJwtCustomizer('access-token'), {
       code: 'entity.not_exists',
-      statusCode: 404,
+      status: 404,
     });
   });
 
@@ -177,11 +177,11 @@ describe('admin console sign-in experience', () => {
 
     await expectRejects(getJwtCustomizer('client-credentials'), {
       code: 'entity.not_exists',
-      statusCode: 404,
+      status: 404,
     });
     await expectRejects(deleteJwtCustomizer('client-credentials'), {
       code: 'entity.not_found',
-      statusCode: 404,
+      status: 404,
     });
     const clientCredentials = await upsertJwtCustomizer(
       'client-credentials',
@@ -203,7 +203,7 @@ describe('admin console sign-in experience', () => {
     await expect(deleteJwtCustomizer('client-credentials')).resolves.not.toThrow();
     await expectRejects(getJwtCustomizer('client-credentials'), {
       code: 'entity.not_exists',
-      statusCode: 404,
+      status: 404,
     });
   });
 });

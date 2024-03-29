@@ -76,7 +76,7 @@ describe('assign user consent organizations to application', () => {
         }),
         {
           code: 'entity.not_exists_with_id',
-          statusCode: 404,
+          status: 404,
         }
       );
     });
@@ -88,7 +88,7 @@ describe('assign user consent organizations to application', () => {
         }),
         {
           code: 'entity.not_found',
-          statusCode: 404,
+          status: 404,
         }
       );
     });
@@ -104,7 +104,7 @@ describe('assign user consent organizations to application', () => {
         ),
         {
           code: 'application.third_party_application_only',
-          statusCode: 422,
+          status: 422,
         }
       );
     });
@@ -120,7 +120,7 @@ describe('assign user consent organizations to application', () => {
         ),
         {
           code: 'organization.require_membership',
-          statusCode: 422,
+          status: 422,
         }
       );
     });
