@@ -18,7 +18,7 @@ import Role from '@/assets/icons/role.svg';
 import SecurityLock from '@/assets/icons/security-lock.svg';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg';
 import Web from '@/assets/icons/web.svg';
-import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 
 type SidebarItem = {
   Icon: FC;
@@ -128,7 +128,7 @@ export const useSidebarMenuItems = (): {
         },
         {
           Icon: JwtClaims,
-          title: 'jwt_customizer',
+          title: 'customize_jwt',
           isHidden: !isDevFeaturesEnabled,
         },
         {

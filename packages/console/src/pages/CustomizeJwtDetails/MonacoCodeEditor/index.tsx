@@ -1,4 +1,4 @@
-import { Editor, type BeforeMount, type OnMount, useMonaco } from '@monaco-editor/react';
+import { Editor, useMonaco, type BeforeMount, type OnMount } from '@monaco-editor/react';
 import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
@@ -6,16 +6,15 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import CodeClearButton from './ActionButton/CodeClearButton.js';
 import CodeRestoreButton from './ActionButton/CodeRestoreButton.js';
-import { logtoDarkTheme, defaultOptions } from './config.js';
+import { defaultOptions, logtoDarkTheme } from './config.js';
 import * as styles from './index.module.scss';
 import type { IStandaloneCodeEditor, ModelSettings } from './type.js';
 import useEditorHeight from './use-editor-height.js';
 
-export type { ModelSettings, ModelControl } from './type.js';
+export type { ModelControl, ModelSettings } from './type.js';
 
-type ActionButtonType = 'clear' | 'restore' | 'copy';
+type ActionButtonType = 'restore' | 'copy';
 
 type Props = {
   className?: string;
@@ -136,15 +135,6 @@ function MonacoCodeEditor({
           ))}
         </div>
         <div className={styles.actionButtons}>
-          {enabledActions.includes('clear') && (
-            <CodeClearButton
-              onClick={() => {
-                if (activeModel) {
-                  onChange?.(undefined);
-                }
-              }}
-            />
-          )}
           {enabledActions.includes('restore') && (
             <CodeRestoreButton
               onClick={() => {

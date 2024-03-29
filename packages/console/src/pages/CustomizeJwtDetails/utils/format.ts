@@ -1,13 +1,11 @@
-import {
-  LogtoJwtTokenPath,
-  type AccessTokenJwtCustomizer,
-  type ClientCredentialsJwtCustomizer,
-} from '@logto/schemas';
+import { LogtoJwtTokenPath, type AccessTokenJwtCustomizer } from '@logto/schemas';
 
-import type { JwtClaimsFormType } from '../type';
+import type { JwtCustomizer, JwtCustomizerForm } from '../type';
 
 import {
+  defaultAccessTokenJwtCustomizerCode,
   defaultAccessTokenPayload,
+  defaultClientCredentialsJwtCustomizerCode,
   defaultClientCredentialsPayload,
   defaultUserTokenContextData,
 } from './config';
@@ -22,35 +20,9 @@ const formatEnvVariablesResponseToFormData = (
   return Object.entries(enVariables).map(([key, value]) => ({ key, value }));
 };
 
-const formatSampleCodeJsonToString = (sampleJson?: AccessTokenJwtCustomizer['contextSample']) => {
-  if (!sampleJson) {
-    return;
-  }
-
-  return JSON.stringify(sampleJson, null, 2);
-};
-
-export const formatResponseDataToFormData = <T extends LogtoJwtTokenPath>(
-  tokenType: T,
-  data?: T extends LogtoJwtTokenPath.AccessToken
-    ? AccessTokenJwtCustomizer
-    : ClientCredentialsJwtCustomizer
-): JwtClaimsFormType => {
-  return {
-    script: data?.script ?? '', // React-hook-form won't mutate the value if it's undefined
-    tokenType,
-    environmentVariables: formatEnvVariablesResponseToFormData(data?.envVars) ?? [
-      { key: '', value: '' },
-    ],
-    testSample: {
-      tokenSample: formatSampleCodeJsonToString(data?.tokenSample),
-      // Technically, contextSample is always undefined for client credentials token type
-      contextSample: formatSampleCodeJsonToString(data?.contextSample),
-    },
-  };
-};
-
-const formatEnvVariablesFormData = (envVariables: JwtClaimsFormType['environmentVariables']) => {
+const formatEnvVariablesFormDataToRequest = (
+  envVariables: JwtCustomizerForm['environmentVariables']
+) => {
   if (!envVariables) {
     return;
   }
@@ -64,6 +36,14 @@ const formatEnvVariablesFormData = (envVariables: JwtClaimsFormType['environment
   return Object.fromEntries(entries.map(({ key, value }) => [key, value]));
 };
 
+const formatSampleCodeJsonToString = (sampleJson?: AccessTokenJwtCustomizer['contextSample']) => {
+  if (!sampleJson) {
+    return;
+  }
+
+  return JSON.stringify(sampleJson, null, 2);
+};
+
 const formatSampleCodeStringToJson = (sampleCode?: string) => {
   if (!sampleCode) {
     return;
@@ -75,14 +55,46 @@ const formatSampleCodeStringToJson = (sampleCode?: string) => {
   } catch {}
 };
 
-export const formatFormDataToRequestData = (data: JwtClaimsFormType) => {
+const defaultValues = Object.freeze({
+  [LogtoJwtTokenPath.AccessToken]: {
+    script: defaultAccessTokenJwtCustomizerCode,
+    tokenSample: defaultAccessTokenPayload,
+    contextSample: defaultUserTokenContextData,
+  },
+  [LogtoJwtTokenPath.ClientCredentials]: {
+    script: defaultClientCredentialsJwtCustomizerCode,
+    tokenSample: defaultClientCredentialsPayload,
+    contextSample: undefined,
+  },
+});
+
+export const formatResponseDataToFormData = <T extends LogtoJwtTokenPath>(
+  tokenType: T,
+  data?: JwtCustomizer<T>
+): JwtCustomizerForm => {
   return {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- parse empty string as undefined
-    script: data.script || undefined,
-    envVars: formatEnvVariablesFormData(data.environmentVariables),
-    tokenSample: formatSampleCodeStringToJson(data.testSample?.tokenSample),
-    // Technically, contextSample is always undefined for client credentials token type
-    contextSample: formatSampleCodeStringToJson(data.testSample?.contextSample),
+    tokenType,
+    script: data?.script ?? defaultValues[tokenType].script,
+    environmentVariables: formatEnvVariablesResponseToFormData(data?.envVars) ?? [
+      { key: '', value: '' },
+    ],
+    testSample: {
+      tokenSample: formatSampleCodeJsonToString(
+        data?.tokenSample ?? defaultValues[tokenType].tokenSample
+      ),
+      contextSample: formatSampleCodeJsonToString(
+        data?.contextSample ?? defaultValues[tokenType].contextSample
+      ),
+    },
+  };
+};
+
+export const formatFormDataToRequestData = (data: JwtCustomizerForm) => {
+  return {
+    script: data.script,
+    envVars: formatEnvVariablesFormDataToRequest(data.environmentVariables),
+    tokenSample: formatSampleCodeStringToJson(data.testSample.tokenSample),
+    contextSample: formatSampleCodeStringToJson(data.testSample.contextSample),
   };
 };
 
@@ -91,27 +103,18 @@ export const formatFormDataToTestRequestPayload = ({
   script,
   environmentVariables,
   testSample,
-}: JwtClaimsFormType) => {
-  const defaultTokenSample =
-    tokenType === LogtoJwtTokenPath.AccessToken
-      ? defaultAccessTokenPayload
-      : defaultClientCredentialsPayload;
-
-  const defaultContextSample =
-    tokenType === LogtoJwtTokenPath.AccessToken ? defaultUserTokenContextData : undefined;
-
+}: JwtCustomizerForm) => {
   return {
     tokenType,
     payload: {
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- parse empty string as undefined
-      script: script || undefined,
-      envVars: formatEnvVariablesFormData(environmentVariables),
-      tokenSample: formatSampleCodeStringToJson(testSample?.tokenSample) ?? defaultTokenSample,
+      script,
+      envVars: formatEnvVariablesFormDataToRequest(environmentVariables),
+      tokenSample:
+        formatSampleCodeStringToJson(testSample.tokenSample) ??
+        defaultValues[tokenType].tokenSample,
       contextSample:
-        formatSampleCodeStringToJson(testSample?.contextSample) ?? defaultContextSample,
+        formatSampleCodeStringToJson(testSample.contextSample) ??
+        defaultValues[tokenType].contextSample,
     },
   };
 };
-
-export const getApiPath = (tokenType: LogtoJwtTokenPath) =>
-  `api/configs/jwt-customizer/${tokenType}`;

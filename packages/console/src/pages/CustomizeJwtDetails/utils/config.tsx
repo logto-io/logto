@@ -71,7 +71,7 @@ declare global {
 export { exports as default };
 `;
 
-const defaultAccessTokenJwtCustomizerCode = `/**
+export const defaultAccessTokenJwtCustomizerCode = `/**
 * This function is called to get custom claims for the JWT token.
 * 
 * @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token -The JWT token.
@@ -86,7 +86,7 @@ exports.getCustomJwtClaims = async (token, data) => {
   return {};
 }`;
 
-const defaultClientCredentialsJwtCustomizerCode = `/**
+export const defaultClientCredentialsJwtCustomizerCode = `/**
 * This function is called to get custom claims for the JWT token.
 *
 * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
@@ -101,7 +101,7 @@ exports.getCustomJwtClaims = async (token) => {
 
 export const accessTokenJwtCustomizerModel: ModelSettings = {
   name: 'user-jwt.ts',
-  title: 'TypeScript',
+  title: 'User access token',
   language: 'typescript',
   defaultValue: defaultAccessTokenJwtCustomizerCode,
   extraLibs: [
@@ -118,7 +118,7 @@ export const accessTokenJwtCustomizerModel: ModelSettings = {
 
 export const clientCredentialsModel: ModelSettings = {
   name: 'machine-to-machine-jwt.ts',
-  title: 'TypeScript',
+  title: 'Machine-to-machine token',
   language: 'typescript',
   defaultValue: defaultClientCredentialsJwtCustomizerCode,
   extraLibs: [

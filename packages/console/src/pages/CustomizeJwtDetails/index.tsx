@@ -1,22 +1,26 @@
 import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { type LogtoJwtTokenPath } from '@logto/schemas';
 import { useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import CardTitle from '@/ds-components/CardTitle';
+import DetailsPage from '@/components/DetailsPage';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 
 import { CodeEditorLoadingContext } from './CodeEditorLoadingContext';
-import Main from './Main';
+import MainContent from './MainContent';
 import PageLoadingSkeleton from './PageLoadingSkeleton';
 import * as styles from './index.module.scss';
-import useJwtCustomizer from './use-jwt-customizer';
+import { pageParamsGuard, type Action } from './type';
+import useDataFetch from './use-data-fetch';
 
 type Props = {
   tokenType: LogtoJwtTokenPath;
-  action: 'create' | 'edit';
+  action: Action;
 };
 
-function CustomizeJwtDetails({ tokenType }: Props) {
-  const { isLoading, ...rest } = useJwtCustomizer();
+function CustomizeJwtDetails({ tokenType, action }: Props) {
+  const { isLoading, error, ...rest } = useDataFetch(tokenType, action);
+
   const [isMonacoLoaded, setIsMonacoLoaded] = useState(false);
 
   const codeEditorContextValue = useMemo(
@@ -25,22 +29,38 @@ function CustomizeJwtDetails({ tokenType }: Props) {
   );
 
   return (
-    <div className={styles.container}>
-      <CardTitle
-        title="jwt_claims.title"
-        subtitle="jwt_claims.description"
-        className={styles.header}
-      />
+    <DetailsPage
+      backLink="/customize-jwt"
+      backLinkTitle="jwt_claims.title"
+      className={styles.container}
+    >
       {(isLoading || !isMonacoLoaded) && <PageLoadingSkeleton tokenType={tokenType} />}
 
       {!isLoading && (
         <CodeEditorLoadingContext.Provider value={codeEditorContextValue}>
-          <Main tab={tokenType} {...rest} className={isMonacoLoaded ? undefined : styles.hidden} />
+          <MainContent
+            action={action}
+            token={tokenType}
+            {...rest}
+            className={isMonacoLoaded ? undefined : styles.hidden}
+          />
         </CodeEditorLoadingContext.Provider>
       )}
-    </div>
+    </DetailsPage>
   );
 }
 
-// eslint-disable-next-line import/no-unused-modules -- will update this later
-export default withAppInsights(CustomizeJwtDetails);
+// Guard the parameters to ensure they are valid
+function CustomizeJwtDetailsWrapper() {
+  const { tokenType, action } = useParams();
+
+  const params = pageParamsGuard.safeParse({ tokenType, action });
+
+  if (!params.success) {
+    return <EmptyDataPlaceholder />;
+  }
+
+  return <CustomizeJwtDetails tokenType={params.data.tokenType} action={params.data.action} />;
+}
+
+export default withAppInsights(CustomizeJwtDetailsWrapper);

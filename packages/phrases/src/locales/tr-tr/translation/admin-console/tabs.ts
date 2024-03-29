@@ -15,7 +15,7 @@ const tabs = {
   tenant_settings: 'Ayarlar',
   mfa: 'Çoklu faktörlü kimlik doğrulama',
   /** UNTRANSLATED */
-  jwt_customizer: 'JWT Claims',
+  customize_jwt: 'JWT Claims',
   signing_keys: 'İmza anahtarları',
   organization_template: 'Kuruluş şablonu',
 };

@@ -27,6 +27,7 @@ import AuditLogs from '@/pages/AuditLogs';
 import ConnectorDetails from '@/pages/ConnectorDetails';
 import Connectors from '@/pages/Connectors';
 import CustomizeJwt from '@/pages/CustomizeJwt';
+import CustomizeJwtDetails from '@/pages/CustomizeJwtDetails';
 import Dashboard from '@/pages/Dashboard';
 import EnterpriseSsoConnectors from '@/pages/EnterpriseSso';
 import EnterpriseSsoConnectorDetails from '@/pages/EnterpriseSsoDetails';
@@ -244,6 +245,7 @@ function ConsoleContent() {
             {isCloud && isDevFeaturesEnabled && (
               <Route path="jwt-customizer">
                 <Route index element={<CustomizeJwt />} />
+                <Route path=":tokenType/:action" element={<CustomizeJwtDetails />} />
               </Route>
             )}
           </Routes>

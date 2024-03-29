@@ -17,7 +17,6 @@ export const defaultOptions: EditorProps['options'] = {
   minimap: {
     enabled: false,
   },
-  wordWrap: 'on',
   renderLineHighlight: 'none',
   fontFamily: 'Roboto Mono, monospace',
   fontSize: 14,
