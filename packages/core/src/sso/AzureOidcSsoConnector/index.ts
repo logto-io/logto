@@ -91,7 +91,7 @@ export const azureOidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.A
   },
 
   name: {
-    en: 'Microsoft OpenID Connect',
+    en: 'Microsoft Entra ID (OIDC)',
   },
   configGuard: basicOidcConnectorConfigGuard,
   constructor: AzureOidcSsoConnector,

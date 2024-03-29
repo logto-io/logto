@@ -154,7 +154,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
             </QuotaGuardFooter>
           )
         }
-        size={radioGroupSize}
+        size="xlarge"
         onClose={onClose}
       >
         {isLoading && <Skeleton numberOfLoadingConnectors={2} />}

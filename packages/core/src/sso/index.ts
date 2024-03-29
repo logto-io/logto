@@ -8,7 +8,7 @@ import { oktaSsoConnectorFactory } from './OktaSsoConnector/index.js';
 import { samlSsoConnectorFactory } from './SamlSsoConnector/index.js';
 import { type SingleSignOnFactory } from './types/index.js';
 
-export { type SingleSignOnFactory, type SingleSignOnConnectorConfig } from './types/index.js';
+export { type SingleSignOnConnectorConfig, type SingleSignOnFactory } from './types/index.js';
 export * from './types/session.js';
 
 export const ssoConnectorFactories: {
@@ -17,9 +17,9 @@ export const ssoConnectorFactories: {
   [SsoProviderName.OIDC]: oidcSsoConnectorFactory,
   [SsoProviderName.SAML]: samlSsoConnectorFactory,
   [SsoProviderName.AZURE_AD]: azureAdSsoConnectorFactory,
+  [SsoProviderName.AZURE_AD_OIDC]: azureOidcSsoConnectorFactory,
   [SsoProviderName.GOOGLE_WORKSPACE]: googleWorkSpaceSsoConnectorFactory,
   [SsoProviderName.OKTA]: oktaSsoConnectorFactory,
-  [SsoProviderName.AZURE_AD_OIDC]: azureOidcSsoConnectorFactory,
 };
 
 export const standardSsoConnectorProviders = Object.freeze([
