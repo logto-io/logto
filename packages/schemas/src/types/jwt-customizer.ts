@@ -3,7 +3,11 @@ import { z } from 'zod';
 import { Roles, UserSsoIdentities, Organizations } from '../db-entries/index.js';
 import { jsonObjectGuard, mfaFactorsGuard } from '../foundations/index.js';
 
-import { jwtCustomizerGuard } from './logto-config/index.js';
+import {
+  jwtCustomizerGuard,
+  accessTokenJwtCustomizerGuard,
+  clientCredentialsJwtCustomizerGuard,
+} from './logto-config/index.js';
 import { scopeResponseGuard } from './scope.js';
 import { userInfoGuard } from './user.js';
 
@@ -36,6 +40,29 @@ export enum LogtoJwtTokenPath {
   AccessToken = 'access-token',
   ClientCredentials = 'client-credentials',
 }
+
+/**
+ * This guard is for the core JWT customizer testing API request body guard.
+ */
+export const jwtCustomizerTestRequestBodyGuard = z.discriminatedUnion('tokenType', [
+  z.object({
+    tokenType: z.literal(LogtoJwtTokenPath.AccessToken),
+    payload: accessTokenJwtCustomizerGuard.required({
+      script: true,
+      tokenSample: true,
+      contextSample: true,
+    }),
+  }),
+  z.object({
+    tokenType: z.literal(LogtoJwtTokenPath.ClientCredentials),
+    payload: clientCredentialsJwtCustomizerGuard.required({
+      script: true,
+      tokenSample: true,
+    }),
+  }),
+]);
+
+export type JwtCustomizerTestRequestBody = z.infer<typeof jwtCustomizerTestRequestBodyGuard>;
 
 /**
  * This guard is for cloud API use (request body guard).

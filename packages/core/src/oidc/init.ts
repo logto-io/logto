@@ -14,7 +14,9 @@ import {
   logtoCookieKey,
   type LogtoUiCookie,
   LogtoJwtTokenKey,
+  LogtoJwtTokenPath,
   ExtraParamsKey,
+  type Json,
 } from '@logto/schemas';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
@@ -204,6 +206,7 @@ export default function initOidc(
       },
     },
     extraParams: Object.values(ExtraParamsKey),
+
     extraTokenClaims: async (ctx, token) => {
       const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
 
@@ -239,6 +242,12 @@ export default function initOidc(
 
         const client = await cloudConnection.getClient();
 
+        const commonPayload = {
+          script,
+          envVars,
+          token: readOnlyToken,
+        };
+
         // We pass context to the cloud API only when it is a user's access token.
         const logtoUserInfo = conditional(
           !isTokenClientCredentials &&
@@ -248,12 +257,18 @@ export default function initOidc(
 
         // `context` parameter is only eligible for user's access token for now.
         return await client.post(`/api/services/custom-jwt`, {
-          body: {
-            script,
-            envVars,
-            token: readOnlyToken,
-            ...conditional(logtoUserInfo && { context: { user: logtoUserInfo } }),
-          },
+          body: isTokenClientCredentials
+            ? {
+                ...commonPayload,
+                tokenType: LogtoJwtTokenPath.ClientCredentials,
+              }
+            : {
+                ...commonPayload,
+                tokenType: LogtoJwtTokenPath.AccessToken,
+                // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
+                // eslint-disable-next-line no-restricted-syntax
+                context: { user: logtoUserInfo as Record<string, Json> },
+              },
         });
       } catch {
         // TODO: Log the error
