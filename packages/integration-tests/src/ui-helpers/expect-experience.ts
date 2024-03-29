@@ -248,15 +248,18 @@ export default class ExpectExperience extends ExpectPage {
     socialEmail,
     socialPhone,
     clickButton = true,
+    authUrl = mockSocialAuthPageUrl,
   }: {
     socialUserId: string;
     socialEmail?: string;
     socialPhone?: string;
     /** Whether to click the "Continue with [social name]" button on the page. */
     clickButton?: boolean;
+    /** The URL to wait for the social auth page. */
+    authUrl?: string;
   }) {
     const authPageRequestListener = this.page.waitForRequest((request) =>
-      request.url().startsWith(mockSocialAuthPageUrl)
+      request.url().startsWith(authUrl)
     );
 
     if (clickButton) {

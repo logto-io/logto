@@ -4,10 +4,14 @@ import { useParams } from 'react-router-dom';
 
 import LoadingLayer from '@/components/LoadingLayer';
 import useSocial from '@/containers/SocialSignInList/use-social';
+import { useSieMethods } from '@/hooks/use-sie';
+import useSingleSignOn from '@/hooks/use-single-sign-on';
 
 const DirectSignIn = () => {
   const { method, target } = useParams();
-  const { socialConnectors, invokeSocialSignIn } = useSocial();
+  const { socialConnectors, ssoConnectors } = useSieMethods();
+  const { invokeSocialSignIn } = useSocial();
+  const invokeSso = useSingleSignOn();
   const fallback = useMemo(() => {
     const fallbackKey = new URLSearchParams(window.location.search).get('fallback');
     return (
@@ -25,8 +29,17 @@ const DirectSignIn = () => {
       }
     }
 
+    if (method === 'sso') {
+      const sso = ssoConnectors.find((connector) => connector.id === target);
+
+      if (sso) {
+        void invokeSso(sso.id);
+        return;
+      }
+    }
+
     window.location.replace('/' + fallback);
-  }, [fallback, invokeSocialSignIn, method, socialConnectors, target]);
+  }, [fallback, invokeSocialSignIn, invokeSso, method, socialConnectors, ssoConnectors, target]);
 
   return <LoadingLayer />;
 };
