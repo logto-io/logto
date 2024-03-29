@@ -55,7 +55,7 @@ function Invitations() {
   const { canInviteMember, canRemoveMember } = useCurrentTenantScopes();
 
   const { data, error, isLoading, mutate } = useSWR<TenantInvitationResponse[], RequestError>(
-    `api/tenant/${currentTenantId}/invitations`,
+    'api/tenants/:tenantId/invitations',
     async () =>
       cloudApi.get('/api/tenants/:tenantId/invitations', { params: { tenantId: currentTenantId } })
   );
