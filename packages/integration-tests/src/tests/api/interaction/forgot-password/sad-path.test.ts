@@ -40,7 +40,7 @@ describe('reset password flow sad path', () => {
     await client.successSend(putInteractionProfile, { password: generatePassword() });
     await expectRejects(client.submitInteraction(), {
       code: 'user.user_not_exist',
-      statusCode: 404,
+      status: 404,
     });
 
     // Clear
@@ -68,7 +68,7 @@ describe('reset password flow sad path', () => {
     await client.successSend(putInteractionProfile, { password: generatePassword() });
     await expectRejects(client.submitInteraction(), {
       code: 'user.user_not_exist',
-      statusCode: 404,
+      status: 404,
     });
 
     // Clear
@@ -104,7 +104,7 @@ describe('reset password flow sad path', () => {
     await client.successSend(putInteractionProfile, { password: generatePassword() });
     await expectRejects(client.submitInteraction(), {
       code: 'user.suspended',
-      statusCode: 401,
+      status: 401,
     });
 
     // Clear

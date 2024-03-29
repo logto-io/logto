@@ -102,7 +102,7 @@ describe('organization user APIs', () => {
       const response = await organizationApi.addUsers('0', ['0']).catch((error: unknown) => error);
       assert(response instanceof HTTPError);
       expect(response.response.status).toBe(422);
-      expect(JSON.parse(String(response.response.body))).toMatchObject(
+      expect(await response.response.json()).toMatchObject(
         expect.objectContaining({ code: 'entity.relation_foreign_key_not_found' })
       );
     });
@@ -147,7 +147,7 @@ describe('organization user APIs', () => {
 
       assert(response instanceof HTTPError);
       expect(response.response.status).toBe(422);
-      expect(JSON.parse(String(response.response.body))).toMatchObject(
+      expect(await response.response.json()).toMatchObject(
         expect.objectContaining({ code: 'organization.require_membership' })
       );
 

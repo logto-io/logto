@@ -73,6 +73,7 @@ export default class MockClient {
     // Mock SDK sign-in navigation
     const response = await ky(this.navigateUrl, {
       redirect: 'manual',
+      throwHttpErrors: false,
     });
 
     // Note: should redirect to sign-in page
@@ -106,6 +107,7 @@ export default class MockClient {
         cookie: this.interactionCookie,
       },
       redirect: 'manual',
+      throwHttpErrors: false,
     });
 
     // Note: Should redirect to logto consent page
@@ -182,6 +184,7 @@ export default class MockClient {
         cookie: this.interactionCookie,
       },
       redirect: 'manual',
+      throwHttpErrors: false,
     });
 
     // Consent page should auto consent and redirect to auth endpoint
@@ -196,6 +199,7 @@ export default class MockClient {
         cookie: this.interactionCookie,
       },
       redirect: 'manual',
+      throwHttpErrors: false,
     });
 
     // Note: Should redirect to the signInCallbackUri

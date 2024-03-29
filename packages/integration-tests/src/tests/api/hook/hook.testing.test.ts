@@ -51,7 +51,7 @@ describe('hook testing', () => {
       }),
       {
         code: 'entity.not_exists_with_id',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -65,7 +65,7 @@ describe('hook testing', () => {
       }),
       {
         code: 'hook.send_test_payload_failed',
-        statusCode: 422,
+        status: 422,
       }
     );
 
@@ -82,7 +82,7 @@ describe('hook testing', () => {
       }),
       {
         code: 'hook.endpoint_responded_with_error',
-        statusCode: 422,
+        status: 422,
       }
     );
 

@@ -13,7 +13,7 @@ describe('me', () => {
   it('should only be available in admin tenant', async () => {
     await expectRejects(ky.get(new URL('/me/custom-data', logtoConsoleUrl)), {
       code: 'auth.authorization_header_missing',
-      statusCode: 401,
+      status: 401,
     });
 
     // Redirect to UI
@@ -31,7 +31,7 @@ describe('me', () => {
       }),
       {
         code: 'auth.unauthorized',
-        statusCode: 401,
+        status: 401,
       }
     );
 
@@ -39,7 +39,7 @@ describe('me', () => {
       ky.get(logtoConsoleUrl + '/me/custom-data', {
         headers: { authorization: `Bearer ${await client.getAccessToken(resourceMe)}` },
       })
-    ).resolves.toHaveProperty('statusCode', 200);
+    ).resolves.toHaveProperty('status', 200);
 
     await deleteUser(id);
   });
@@ -53,9 +53,9 @@ describe('me', () => {
       .json<Record<string, unknown>>();
     const newData = await ky
       .patch(logtoConsoleUrl + '/me/custom-data', { headers, json: { foo: 'bar' } })
-      .json();
+      .json<Record<string, unknown>>();
 
-    expect({ ...data, foo: 'bar' }).toStrictEqual(newData);
+    expect({ ...data, foo: 'bar' }).toStrictEqual({ ...newData });
 
     await deleteUser(id);
   });

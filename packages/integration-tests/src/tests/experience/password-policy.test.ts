@@ -1,7 +1,5 @@
 /* Test the sign-in with different password policies. */
 
-import crypto from 'node:crypto';
-
 import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -9,8 +7,7 @@ import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 import { setupUsernameAndEmailExperience } from '#src/ui-helpers/index.js';
-
-const randomString = () => crypto.randomBytes(8).toString('hex');
+import { randomString } from '#src/utils.js';
 
 describe('password policy', () => {
   const username = 'test_' + randomString();

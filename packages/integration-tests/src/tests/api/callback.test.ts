@@ -11,6 +11,7 @@ describe('social connector form post callback', () => {
     const response = await request.post('callback/some_connector_id', {
       json: { some: 'data' },
       redirect: 'manual',
+      throwHttpErrors: false,
     });
 
     expect(response.status).toBe(303);

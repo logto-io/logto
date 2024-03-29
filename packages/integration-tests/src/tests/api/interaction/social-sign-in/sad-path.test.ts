@@ -73,7 +73,7 @@ describe('Social identifier interaction sad path', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.identity_not_exist',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -101,7 +101,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'session.insufficient_info',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -121,7 +121,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'guard.invalid_input',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -141,7 +141,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'connector.unexpected_type',
-        statusCode: 400,
+        status: 400,
       }
     );
 
@@ -154,7 +154,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'connector.unexpected_type',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -173,7 +173,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'entity.not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -195,7 +195,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'session.invalid_connector_id',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -217,7 +217,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'session.invalid_connector_id',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -240,7 +240,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'session.connector_session_not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
 
@@ -252,7 +252,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'session.connector_session_not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -281,7 +281,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'session.connector_session_not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
 
@@ -293,7 +293,7 @@ describe('Social identifier interaction sad path', () => {
       }),
       {
         code: 'session.connector_session_not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -318,7 +318,7 @@ describe('Social identifier interaction sad path', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.suspended',
-      statusCode: 401,
+      status: 401,
     });
 
     // Reset
@@ -350,7 +350,7 @@ describe('Social identifier interaction sad path', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.identity_not_exist',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -361,7 +361,7 @@ describe('Social identifier interaction sad path', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'session.connector_session_not_found',
-      statusCode: 404,
+      status: 404,
     });
   });
 });

@@ -21,7 +21,7 @@ describe('admin console user management (roles)', () => {
     const m2mRole = await createRole({ type: RoleType.MachineToMachine });
     await expectRejects(assignRolesToUser(user.id, [m2mRole.id]), {
       code: 'user.invalid_role_type',
-      statusCode: 422,
+      status: 422,
     });
 
     await assignRolesToUser(user.id, [role1.id, role2.id]);

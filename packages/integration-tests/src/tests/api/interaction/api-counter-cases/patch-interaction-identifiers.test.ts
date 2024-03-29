@@ -31,7 +31,7 @@ describe('PATCH /interaction/identifiers', () => {
       }),
       {
         code: 'user.suspended',
-        statusCode: 401,
+        status: 401,
       }
     );
   });

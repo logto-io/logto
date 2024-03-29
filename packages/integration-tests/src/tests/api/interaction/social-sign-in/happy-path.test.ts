@@ -47,7 +47,7 @@ describe('social sign-in', () => {
     await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email, ConnectorType.Sms]);
   });
 
-  describe.only('register and sign-in', () => {
+  describe('register and sign-in', () => {
     const socialUserId = generateUserId();
 
     it('register with social', async () => {
@@ -68,7 +68,7 @@ describe('social sign-in', () => {
 
       await expectRejects(client.submitInteraction(), {
         code: 'user.identity_not_exist',
-        statusCode: 422,
+        status: 422,
       });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -124,7 +124,7 @@ describe('social sign-in', () => {
 
       await expectRejects(client.submitInteraction(), {
         code: 'user.identity_not_exist',
-        statusCode: 422,
+        status: 422,
       });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -137,7 +137,7 @@ describe('social sign-in', () => {
       const { primaryEmail, identities } = await getUser(uid);
       expect(primaryEmail).toBe(socialEmail);
       /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      expect(identities[mockSocialConnectorTarget]).toStrictEqual({
+      expect(identities[mockSocialConnectorTarget]).toMatchObject({
         details: {
           email: expect.any(String),
           id: expect.any(String),
@@ -176,7 +176,7 @@ describe('social sign-in', () => {
 
       await expectRejects(client.submitInteraction(), {
         code: 'user.identity_not_exist',
-        statusCode: 422,
+        status: 422,
       });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -213,7 +213,7 @@ describe('social sign-in', () => {
 
       await expectRejects(client.submitInteraction(), {
         code: 'user.identity_not_exist',
-        statusCode: 422,
+        status: 422,
       });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -255,7 +255,7 @@ describe('social sign-in', () => {
 
       await expectRejects(client.submitInteraction(), {
         code: 'user.identity_not_exist',
-        statusCode: 422,
+        status: 422,
       });
 
       await client.successSend(patchInteractionIdentifiers, {
@@ -319,7 +319,7 @@ describe('social sign-in', () => {
 
       await expectRejects(client.submitInteraction(), {
         code: 'user.identity_not_exist',
-        statusCode: 422,
+        status: 422,
       });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -327,7 +327,7 @@ describe('social sign-in', () => {
 
       await expectRejects(client.submitInteraction(), {
         code: 'user.missing_profile',
-        statusCode: 422,
+        status: 422,
       });
 
       await client.successSend(patchInteractionProfile, { username: generateUsername() });
@@ -363,7 +363,7 @@ describe('social sign-in', () => {
 
       await expectRejects(client.submitInteraction(), {
         code: 'user.identity_not_exist',
-        statusCode: 422,
+        status: 422,
       });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -400,7 +400,7 @@ describe('social sign-in', () => {
 
       await expectRejects(client.submitInteraction(), {
         code: 'user.identity_not_exist',
-        statusCode: 422,
+        status: 422,
       });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });

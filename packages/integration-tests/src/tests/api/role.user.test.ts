@@ -66,7 +66,7 @@ describe('roles users', () => {
     const user = await createUser(generateNewUserProfile({}));
     await expectRejects(assignUsersToRole([user.id], m2mRole.id), {
       code: 'entity.db_constraint_violated',
-      statusCode: 422,
+      status: 422,
     });
     const users = await getRoleUsers(m2mRole.id);
 

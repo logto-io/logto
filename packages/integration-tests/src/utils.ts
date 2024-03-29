@@ -123,10 +123,4 @@ export const dcls = <C extends string>(className: C) => `div${cls(className)}` a
  */
 export const generateTestName = () => `test_${generateStandardId(4)}`;
 
-export const createFormData = (data: Record<string, unknown>) => {
-  const formData = new FormData();
-  for (const [key, value] of Object.entries(data)) {
-    formData.append(key, String(value));
-  }
-  return formData;
-};
+export const randomString = () => crypto.randomBytes(8).toString('hex');

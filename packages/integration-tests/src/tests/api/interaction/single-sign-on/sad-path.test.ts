@@ -9,6 +9,7 @@ import { putInteraction } from '#src/api/interaction.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { initClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { randomString } from '#src/utils.js';
 
 describe('Single Sign On Sad Path', () => {
   const state = 'foo_state';
@@ -34,7 +35,7 @@ describe('Single Sign On Sad Path', () => {
     it('should throw if connector config is invalid', async () => {
       const { id } = await createSsoConnector({
         providerName: SsoProviderName.OIDC,
-        connectorName: 'test-oidc',
+        connectorName: `test-oidc-${randomString()}`,
       });
 
       const client = await initClient();
@@ -82,7 +83,7 @@ describe('Single Sign On Sad Path', () => {
         postSamlAssertion({ connectorId, RelayState: 'foo', SAMLResponse: samlAssertion }),
         {
           code: 'session.not_found',
-          statusCode: 400,
+          status: 400,
         }
       );
     });
@@ -103,7 +104,7 @@ describe('Single Sign On Sad Path', () => {
         postSamlAssertion({ connectorId, RelayState, SAMLResponse: samlAssertion }),
         {
           code: 'connector.authorization_failed',
-          statusCode: 401,
+          status: 401,
         }
       );
     });

@@ -26,7 +26,7 @@ describe('Interaction details results checking', () => {
       }),
       {
         code: 'session.verification_session_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -41,7 +41,7 @@ describe('Interaction details results checking', () => {
       }),
       {
         code: 'session.verification_session_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -55,7 +55,7 @@ describe('Interaction details results checking', () => {
       }),
       {
         code: 'session.verification_session_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -69,7 +69,7 @@ describe('Interaction details results checking', () => {
       }),
       {
         code: 'session.verification_session_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -78,7 +78,7 @@ describe('Interaction details results checking', () => {
     const client = await initClient();
     await expectRejects(client.send(deleteInteractionProfile), {
       code: 'session.verification_session_not_found',
-      statusCode: 404,
+      status: 404,
     });
   });
 
@@ -86,7 +86,7 @@ describe('Interaction details results checking', () => {
     const client = await initClient();
     await expectRejects(client.submitInteraction(), {
       code: 'session.verification_session_not_found',
-      statusCode: 404,
+      status: 404,
     });
   });
 
@@ -100,7 +100,7 @@ describe('Interaction details results checking', () => {
       }),
       {
         code: 'session.verification_session_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -113,7 +113,7 @@ describe('Interaction details results checking', () => {
       }),
       {
         code: 'session.verification_session_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });

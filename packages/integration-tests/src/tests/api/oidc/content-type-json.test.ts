@@ -20,14 +20,11 @@ describe('content-type: application/json compatibility', () => {
         headers,
         json: payload,
       }),
-      (error) => {
+      async (error) => {
         if (!(error instanceof HTTPError)) {
           throw new TypeError('Error is not a HTTPError instance.');
         }
-        expect(JSON.parse(String(error.response.body))).toHaveProperty(
-          'error_description',
-          errorMessage
-        );
+        expect(await error.response.json()).toHaveProperty('error_description', errorMessage);
       }
     );
   };

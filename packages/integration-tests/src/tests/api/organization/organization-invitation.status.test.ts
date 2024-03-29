@@ -9,12 +9,10 @@ import { UserApiTest } from '#src/helpers/user.js';
 
 const randomId = () => generateStandardId(4);
 
-const expectErrorResponse = (error: unknown, status: number, code: string) => {
+const expectErrorResponse = async (error: unknown, statusCode: number, code: string) => {
   assert(error instanceof HTTPError);
-  const { status: statusCode, body: raw } = error.response;
-  const body: unknown = JSON.parse(String(raw));
-  expect(statusCode).toBe(status);
-  expect(body).toMatchObject({ code });
+  expect(error.response.status).toBe(statusCode);
+  expect(await error.response.json()).toMatchObject({ code });
 };
 
 describe('organization invitation status update', () => {
@@ -50,7 +48,7 @@ describe('organization invitation status update', () => {
     const error = await invitationApi
       .updateStatus(invitation.id, OrganizationInvitationStatus.Accepted)
       .catch((error: unknown) => error);
-    expectErrorResponse(error, 422, 'request.invalid_input');
+    await expectErrorResponse(error, 422, 'request.invalid_input');
   });
 
   it('should be able to accept an invitation', async () => {
@@ -130,7 +128,7 @@ describe('organization invitation status update', () => {
       .updateStatus(invitation.id, OrganizationInvitationStatus.Accepted, user.id)
       .catch((error: unknown) => error);
 
-    expectErrorResponse(error, 422, 'request.invalid_input');
+    await expectErrorResponse(error, 422, 'request.invalid_input');
   });
 
   it('should not be able to accept an invitation with an invalid user id', async () => {
@@ -146,7 +144,7 @@ describe('organization invitation status update', () => {
       .updateStatus(invitation.id, OrganizationInvitationStatus.Accepted, 'invalid')
       .catch((error: unknown) => error);
 
-    expectErrorResponse(error, 404, 'entity.not_found');
+    await expectErrorResponse(error, 404, 'entity.not_found');
   });
 
   it('should not be able to update the status of an ended invitation', async () => {
@@ -164,6 +162,6 @@ describe('organization invitation status update', () => {
       .updateStatus(invitation.id, OrganizationInvitationStatus.Accepted)
       .catch((error: unknown) => error);
 
-    expectErrorResponse(error, 422, 'request.invalid_input');
+    await expectErrorResponse(error, 422, 'request.invalid_input');
   });
 });

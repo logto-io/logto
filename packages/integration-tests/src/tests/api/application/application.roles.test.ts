@@ -59,7 +59,7 @@ describe('admin console application management (roles)', () => {
     await assignRolesToApplication(application.id, [role.id]);
     await expectRejects(assignRolesToApplication(application.id, [role.id]), {
       code: 'application.role_exists',
-      statusCode: 422,
+      status: 422,
     });
   });
 
@@ -70,7 +70,7 @@ describe('admin console application management (roles)', () => {
 
     await expectRejects(assignRolesToApplication(application.id, [role.id]), {
       code: 'application.invalid_type',
-      statusCode: 422,
+      status: 422,
     });
   });
 

@@ -9,11 +9,11 @@ import { UserApiTest } from '#src/helpers/user.js';
 const getUsers = async <T>(
   init: string[][] | Record<string, string> | URLSearchParams
 ): Promise<{ headers: Headers; json: T }> => {
-  const { headers, json } = await authedAdminApi.get('users', {
+  const response = await authedAdminApi.get('users', {
     searchParams: new URLSearchParams(init),
   });
 
-  return { headers, json: (await json()) as T };
+  return { headers: response.headers, json: (await response.json()) as T };
 };
 
 describe('admin console user search params', () => {
@@ -172,7 +172,7 @@ describe('admin console user search params', () => {
         ['search.primaryEmail', 'jerry_swift_jr_2@geek.best'],
         ['search.primaryEmail', 'jerry_swift_jr_jr@gmail.com'],
       ]),
-      { code: 'request.invalid_input', statusCode: 400, messageIncludes: '`exact`' }
+      { code: 'request.invalid_input', status: 400, messageIncludes: '`exact`' }
     );
   });
 
@@ -184,7 +184,7 @@ describe('admin console user search params', () => {
       ]),
       {
         code: 'request.invalid_input',
-        statusCode: 400,
+        status: 400,
         messageIncludes: 'cannot be empty',
       }
     );
@@ -198,7 +198,7 @@ describe('admin console user search params', () => {
       ]),
       {
         code: 'request.invalid_input',
-        statusCode: 400,
+        status: 400,
         messageIncludes: 'case-insensitive',
       }
     );
@@ -213,13 +213,13 @@ describe('admin console user search params', () => {
         ]),
         {
           code: 'request.invalid_input',
-          statusCode: 400,
+          status: 400,
           messageIncludes: 'is not valid',
         }
       ),
       expectRejects(getUsers<User[]>([['search.email', '%gmail%']]), {
         code: 'request.invalid_input',
-        statusCode: 400,
+        status: 400,
         messageIncludes: 'is not valid',
       }),
       expectRejects(
@@ -229,7 +229,7 @@ describe('admin console user search params', () => {
         ]),
         {
           code: 'request.invalid_input',
-          statusCode: 400,
+          status: 400,
           messageIncludes: 'is not valid',
         }
       ),

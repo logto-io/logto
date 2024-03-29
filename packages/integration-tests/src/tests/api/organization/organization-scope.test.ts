@@ -22,9 +22,8 @@ describe('organization scope APIs', () => {
 
     assert(response instanceof HTTPError);
 
-    const { status: statusCode, body: raw } = response.response;
-    const body: unknown = JSON.parse(String(raw));
-    expect(statusCode).toBe(422);
+    const body: unknown = await response.response.json();
+    expect(response.response.status).toBe(422);
     expect(isKeyInObject(body, 'code') && body.code).toBe('entity.unique_integrity_violation');
   });
 
@@ -100,7 +99,7 @@ describe('organization scope APIs', () => {
 
     assert(response instanceof HTTPError);
     expect(response.response.status).toBe(422);
-    expect(JSON.parse(String(response.response.body))).toMatchObject(
+    expect(await response.response.json()).toMatchObject(
       expect.objectContaining({
         code: 'entity.unique_integrity_violation',
       })

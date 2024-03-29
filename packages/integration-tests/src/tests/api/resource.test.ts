@@ -49,7 +49,7 @@ describe('admin console api resources', () => {
     const resourceName2 = generateResourceName();
     await expectRejects(createResource(resourceName2, resourceIndicator), {
       code: 'resource.resource_identifier_in_use',
-      statusCode: 422,
+      status: 422,
     });
   });
 

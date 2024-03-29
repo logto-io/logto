@@ -78,7 +78,7 @@ describe('assign user consent scopes to application', () => {
       }),
       {
         code: 'application.third_party_application_only',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -90,7 +90,7 @@ describe('assign user consent scopes to application', () => {
       }),
       {
         code: 'application.user_consent_scopes_not_found',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -102,7 +102,7 @@ describe('assign user consent scopes to application', () => {
       }),
       {
         code: 'application.user_consent_scopes_not_found',
-        statusCode: 422,
+        status: 422,
       }
     );
   });
@@ -130,7 +130,7 @@ describe('assign user consent scopes to application', () => {
   it('should return 404 when trying to get consent scopes from non-existing application', async () => {
     await expectRejects(getUserConsentScopes('non-existing-application'), {
       code: 'entity.not_exists_with_id',
-      statusCode: 404,
+      status: 404,
     });
   });
 
@@ -184,7 +184,7 @@ describe('assign user consent scopes to application', () => {
       ),
       {
         code: 'entity.not_exists_with_id',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -198,7 +198,7 @@ describe('assign user consent scopes to application', () => {
       ),
       {
         code: 'entity.not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
 
@@ -210,7 +210,7 @@ describe('assign user consent scopes to application', () => {
       ),
       {
         code: 'entity.not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
 
@@ -222,7 +222,7 @@ describe('assign user consent scopes to application', () => {
       ),
       {
         code: 'entity.not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });

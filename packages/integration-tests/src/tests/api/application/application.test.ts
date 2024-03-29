@@ -31,7 +31,7 @@ describe('admin console application', () => {
       createApplication('test-create-app', ApplicationType.Native, {
         isThirdParty: true,
       }),
-      { code: 'application.invalid_third_party_application_type', statusCode: 400 }
+      { code: 'application.invalid_third_party_application_type', status: 400 }
     );
   });
 
@@ -86,7 +86,7 @@ describe('admin console application', () => {
       }),
       {
         code: 'application.protected_application_subdomain_exists',
-        statusCode: 422,
+        status: 422,
       }
     );
     await deleteApplication(application.id);
@@ -95,7 +95,7 @@ describe('admin console application', () => {
   it('should throw error when creating a protected application with invalid type', async () => {
     await expectRejects(createApplication('test-create-app', ApplicationType.Protected), {
       code: 'application.protected_app_metadata_is_required',
-      statusCode: 400,
+      status: 400,
     });
   });
 
@@ -120,7 +120,7 @@ describe('admin console application', () => {
 
     expect(updatedApplication.description).toBe(newApplicationDescription);
     expect(updatedApplication.oidcClientMetadata.redirectUris).toEqual(newRedirectUris);
-    expect(updatedApplication.customClientMetadata).toStrictEqual({
+    expect({ ...updatedApplication.customClientMetadata }).toStrictEqual({
       rotateRefreshToken: true,
       refreshTokenTtlInDays: 10,
     });

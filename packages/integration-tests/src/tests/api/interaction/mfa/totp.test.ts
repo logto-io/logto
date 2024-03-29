@@ -70,7 +70,7 @@ describe('register with mfa (mandatory TOTP)', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_mfa',
-      statusCode: 422,
+      status: 422,
     });
   });
 
@@ -94,7 +94,7 @@ describe('register with mfa (mandatory TOTP)', () => {
       }),
       {
         code: 'session.mfa.invalid_totp_code',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -151,7 +151,7 @@ describe('sign in and fulfill mfa (mandatory TOTP)', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_mfa',
-      statusCode: 422,
+      status: 422,
     });
 
     await deleteUser(user.id);
@@ -187,7 +187,7 @@ describe('sign in and fulfill mfa (user-controlled TOTP)', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_mfa',
-      statusCode: 422,
+      status: 422,
     });
 
     await deleteUser(user.id);
@@ -207,7 +207,7 @@ describe('sign in and fulfill mfa (user-controlled TOTP)', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_mfa',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(skipMfaBinding);
@@ -241,7 +241,7 @@ describe('sign in and verify mfa (TOTP)', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'session.mfa.require_mfa_verification',
-      statusCode: 403,
+      status: 403,
     });
 
     await deleteUser(id);

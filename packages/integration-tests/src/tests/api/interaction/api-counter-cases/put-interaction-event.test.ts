@@ -27,7 +27,7 @@ describe('PUT /interaction/event', () => {
       }),
       {
         code: 'auth.forbidden',
-        statusCode: 403,
+        status: 403,
       }
     );
 
@@ -41,7 +41,7 @@ describe('PUT /interaction/event', () => {
       }),
       {
         code: 'auth.forbidden',
-        statusCode: 403,
+        status: 403,
       }
     );
 
@@ -65,7 +65,7 @@ describe('PUT /interaction/event', () => {
       }),
       {
         code: 'session.interaction_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
 
@@ -75,7 +75,7 @@ describe('PUT /interaction/event', () => {
       }),
       {
         code: 'session.interaction_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });
@@ -96,7 +96,7 @@ describe('PUT /interaction/event', () => {
       }),
       {
         code: 'session.interaction_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
 
@@ -111,7 +111,7 @@ describe('PUT /interaction/event', () => {
       }),
       {
         code: 'session.interaction_not_found',
-        statusCode: 404,
+        status: 404,
       }
     );
   });

@@ -133,7 +133,7 @@ describe('test register with email with SSO feature', () => {
       }),
       {
         code: 'session.sso_enabled',
-        statusCode: 422,
+        status: 422,
       }
     );
   });

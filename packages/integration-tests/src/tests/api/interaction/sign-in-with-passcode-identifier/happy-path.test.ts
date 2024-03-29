@@ -127,7 +127,7 @@ describe('Sign-in flow using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.user_not_exist',
-      statusCode: 404,
+      status: 404,
     });
 
     await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -169,7 +169,7 @@ describe('Sign-in flow using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.user_not_exist',
-      statusCode: 404,
+      status: 404,
     });
 
     await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
@@ -214,7 +214,7 @@ describe('Sign-in flow using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     // Fulfill user profile
@@ -276,7 +276,7 @@ describe('Sign-in flow using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     // Fulfill user profile with existing password
@@ -287,7 +287,7 @@ describe('Sign-in flow using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.password_exists_in_profile',
-      statusCode: 400,
+      status: 400,
     });
 
     await client.successSend(putInteractionProfile, {
@@ -333,7 +333,7 @@ describe('Sign-in flow using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     // Fulfill user profile with existing password
@@ -344,7 +344,7 @@ describe('Sign-in flow using verification-code identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.username_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(putInteractionProfile, {

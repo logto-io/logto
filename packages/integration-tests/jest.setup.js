@@ -9,6 +9,10 @@ dotenv.config();
 /* eslint-disable @silverhand/fp/no-mutation */
 global.TextDecoder = TextDecoder;
 global.TextEncoder = TextEncoder;
+global.fail = (message) => {
+  throw new Error(message);
+};
+
 /* eslint-enable @silverhand/fp/no-mutation */
 
 // GitHub Actions default runners need more time for UI tests

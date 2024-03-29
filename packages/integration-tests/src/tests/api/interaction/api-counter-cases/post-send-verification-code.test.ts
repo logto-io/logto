@@ -1,9 +1,14 @@
-import { InteractionEvent } from '@logto/schemas';
+import { ConnectorType, InteractionEvent } from '@logto/schemas';
 
 import { putInteraction, sendVerificationCode } from '#src/api/interaction.js';
 import { initClient } from '#src/helpers/client.js';
+import { clearConnectorsByTypes } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateEmail, generatePhone } from '#src/utils.js';
+
+beforeAll(async () => {
+  await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+});
 
 /**
  * Note: These test cases are designed to cover exceptional scenarios of API calls that
@@ -23,7 +28,7 @@ describe('POST /interaction/verification/verification-code', () => {
       }),
       {
         code: 'connector.not_found',
-        statusCode: 501,
+        status: 501,
       }
     );
   });
@@ -41,7 +46,7 @@ describe('POST /interaction/verification/verification-code', () => {
       }),
       {
         code: 'connector.not_found',
-        statusCode: 501,
+        status: 501,
       }
     );
   });

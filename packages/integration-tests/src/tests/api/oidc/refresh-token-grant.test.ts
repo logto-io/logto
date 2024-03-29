@@ -14,12 +14,12 @@ import { processSession } from '#src/helpers/client.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest } from '#src/helpers/user.js';
-import { generateUsername, generatePassword, createFormData } from '#src/utils.js';
+import { generateUsername, generatePassword } from '#src/utils.js';
 
 /** A helper class to simplify the test on grant errors. */
 class GrantError extends Error {
   constructor(
-    public readonly statusCode: number,
+    public readonly status: number,
     public readonly body: unknown
   ) {
     super();
@@ -27,9 +27,9 @@ class GrantError extends Error {
 }
 
 /** Create a grant error matcher that matches certain elements of the error response. */
-const grantErrorContaining = (code: string, description: string, statusCode = 400) =>
+const grantErrorContaining = (code: string, description: string, status = 400) =>
   new GrantError(
-    statusCode,
+    status,
     expect.objectContaining({
       code,
       error_description: description,
@@ -51,11 +51,14 @@ class MockOrganizationClient extends MockClient {
     try {
       const json = await ky
         .post(`${this.config.endpoint}/oidc/token`, {
-          body: createFormData(
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(
             removeUndefinedKeys({
               grant_type: GrantType.RefreshToken,
               client_id: this.config.appId,
-              refresh_token: refreshToken,
+              refresh_token: refreshToken ?? undefined,
               organization_id: organizationId,
               scope: scopes?.join(' '),
             })
@@ -68,7 +71,9 @@ class MockOrganizationClient extends MockClient {
       return json;
     } catch (error) {
       if (error instanceof HTTPError) {
-        throw new GrantError(error.response.status, JSON.parse(String(error.response.body)));
+        const json: unknown = JSON.parse(await error.response.text());
+        console.error('HTTPError:', error.response.status, JSON.stringify(json, undefined, 2));
+        throw new GrantError(error.response.status, json);
       }
       throw error;
     }
