@@ -4,7 +4,6 @@ import { fetchTokenByRefreshToken } from '@logto/js';
 import { InteractionEvent, type Resource, RoleType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import fetch from 'node-fetch';
 
 import { createResource, deleteResource, deleteUser, putInteraction } from '#src/api/index.js';
 import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';

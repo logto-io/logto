@@ -43,7 +43,6 @@
     "jest-matcher-specific-error": "^1.0.0",
     "jest-puppeteer": "^10.0.1",
     "jose": "^5.0.0",
-    "node-fetch": "^3.3.0",
     "openapi-schema-validator": "^12.1.3",
     "openapi-types": "^12.1.3",
     "prettier": "^3.0.0",
