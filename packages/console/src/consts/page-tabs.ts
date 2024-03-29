@@ -47,3 +47,8 @@ export enum EnterpriseSsoDetailsTabs {
   Connection = 'connection',
   Experience = 'experience',
 }
+
+export enum OrganizationTemplateTabs {
+  OrgRoles = 'org-roles',
+  OrgPermissions = 'org-permissions',
+}

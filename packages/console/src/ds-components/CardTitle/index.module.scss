@@ -21,10 +21,6 @@
     color: var(--color-text-secondary);
   }
 
-  .learnMore:not(:first-child) {
-    margin-left: _.unit(1);
-  }
-
   &.large {
     .title {
       font: var(--font-title-1);

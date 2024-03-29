@@ -17,6 +17,7 @@ const tabs = {
   /** UNTRANSLATED */
   jwt_customizer: 'JWT Claims',
   signing_keys: 'İmza anahtarları',
+  organization_template: 'Kuruluş şablonu',
 };
 
 export default Object.freeze(tabs);

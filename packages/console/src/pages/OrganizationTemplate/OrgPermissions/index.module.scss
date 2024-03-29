@@ -1,0 +1,11 @@
+@use '@/scss/underscore' as _;
+
+.filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .createButton {
+    margin-left: _.unit(2);
+  }
+}
