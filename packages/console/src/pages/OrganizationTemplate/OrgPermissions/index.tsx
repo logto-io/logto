@@ -66,7 +66,7 @@ function OrgPermissions() {
           render: () => (
             <ActionsButton
               fieldName="organization_template.org_permissions.permission_column"
-              deleteConfirmation="organizations.organization_permission_delete_confirm"
+              deleteConfirmation="organization_template.org_permissions.delete_confirm"
               onEdit={() => {
                 // Todo @xiaoyijun implement edit
               }}

@@ -21,6 +21,8 @@ const organization_template = {
     placeholder_title: 'Organization permission',
     placeholder_description:
       'Organization permission refers to the authorization to access a resource in the context of organization.',
+    delete_confirm:
+      'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
   },
 };
 

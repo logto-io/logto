@@ -1,26 +1,28 @@
 const organization_template = {
-  title: 'Organization template',
+  title: 'Modello di organizzazione',
   subtitle:
-    'In multi-tenant SaaS applications, it\'s common for multiple organizations to share identical access control policies, including permissions and roles. In Logto, this concept is termed "organization template." Using it streamlines the process of constructing and designing your authorization model.',
+    'Nelle applicazioni SaaS multi-tenant, è comune che più organizzazioni condividano politiche di controllo dell’accesso identiche, incluse autorizzazioni e ruoli. In Logto, questo concetto è denominato "modello di organizzazione". Utilizzarlo semplifica il processo di costruzione e progettazione del tuo modello di autorizzazione.',
   org_roles: {
-    tab_name: 'Org roles',
-    search_placeholder: 'Search by role name',
-    create_org_roles: 'Create org role',
-    org_role_column: 'Org role',
-    permissions_column: 'Permissions',
-    placeholder_title: 'Organization role',
+    tab_name: 'Ruoli org',
+    search_placeholder: 'Cerca per nome del ruolo',
+    create_org_roles: 'Crea ruolo org',
+    org_role_column: 'Ruolo org',
+    permissions_column: 'Permessi',
+    placeholder_title: 'Ruolo di organizzazione',
     placeholder_description:
-      'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+      'Il ruolo di organizzazione è un raggruppamento di permessi che possono essere assegnati agli utenti. I permessi devono provenire dai permessi di organizzazione predefiniti.',
   },
   org_permissions: {
-    tab_name: 'Org permissions',
-    search_placeholder: 'Search by permission name',
-    create_org_permission: 'Create org permission',
-    permission_column: 'Permission',
-    description_column: 'Description',
-    placeholder_title: 'Organization permission',
+    tab_name: 'Permessi org',
+    search_placeholder: 'Cerca per nome del permesso',
+    create_org_permission: 'Crea permesso org',
+    permission_column: 'Permesso',
+    description_column: 'Descrizione',
+    placeholder_title: 'Permesso di organizzazione',
     placeholder_description:
-      'Organization permission refers to the authorization to access a resource in the context of organization.',
+      'Il permesso di organizzazione si riferisce all’autorizzazione ad accedere a una risorsa nel contesto dell’organizzazione.',
+    delete_confirm:
+      'Se questo permesso viene eliminato, tutti i ruoli di organizzazione che includono questo permesso perderanno tale permesso, e gli utenti che avevano questo permesso perderanno l’accesso concesso da esso.',
   },
 };
 

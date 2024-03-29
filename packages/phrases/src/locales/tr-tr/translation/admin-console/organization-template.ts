@@ -1,26 +1,28 @@
 const organization_template = {
-  title: 'Organization template',
+  title: 'Organizasyon şablonu',
   subtitle:
-    'In multi-tenant SaaS applications, it\'s common for multiple organizations to share identical access control policies, including permissions and roles. In Logto, this concept is termed "organization template." Using it streamlines the process of constructing and designing your authorization model.',
+    'Çok kiracılı SaaS uygulamalarında, birden fazla organizasyonun aynı erişim kontrol politikalarını, izinleri ve rolleri dahil olmak üzere paylaşması yaygındır. Logto\'da bu kavram "organizasyon şablonu" olarak adlandırılır. Bunu kullanmak, yetkilendirme modelinizi oluşturma ve tasarlama sürecini basitleştirir.',
   org_roles: {
-    tab_name: 'Org roles',
-    search_placeholder: 'Search by role name',
-    create_org_roles: 'Create org role',
-    org_role_column: 'Org role',
-    permissions_column: 'Permissions',
-    placeholder_title: 'Organization role',
+    tab_name: 'Org rolleri',
+    search_placeholder: 'Role adı ile ara',
+    create_org_roles: 'Org rolü oluştur',
+    org_role_column: 'Org rolü',
+    permissions_column: 'İzinler',
+    placeholder_title: 'Organizasyon rolü',
     placeholder_description:
-      'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+      'Organizasyon rolü, kullanıcılara atanabilecek izinlerin bir gruplamasıdır. İzinler, önceden belirlenmiş organizasyon izinlerinden gelmelidir.',
   },
   org_permissions: {
-    tab_name: 'Org permissions',
-    search_placeholder: 'Search by permission name',
-    create_org_permission: 'Create org permission',
-    permission_column: 'Permission',
-    description_column: 'Description',
-    placeholder_title: 'Organization permission',
+    tab_name: 'Org izinleri',
+    search_placeholder: 'İzin adı ile ara',
+    create_org_permission: 'Org izni oluştur',
+    permission_column: 'İzin',
+    description_column: 'Açıklama',
+    placeholder_title: 'Organizasyon izni',
     placeholder_description:
-      'Organization permission refers to the authorization to access a resource in the context of organization.',
+      'Organizasyon izni, organizasyon bağlamında bir kaynağa erişim yetkisi anlamına gelir.',
+    delete_confirm:
+      'Bu izin silinirse, bu izni içeren tüm organizasyon rolleri bu izni kaybeder ve bu izne sahip kullanıcılar, bu izin tarafından verilen erişimi kaybeder.',
   },
 };
 

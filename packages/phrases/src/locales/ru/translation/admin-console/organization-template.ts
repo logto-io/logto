@@ -1,26 +1,28 @@
 const organization_template = {
-  title: 'Organization template',
+  title: 'Шаблон организации',
   subtitle:
-    'In multi-tenant SaaS applications, it\'s common for multiple organizations to share identical access control policies, including permissions and roles. In Logto, this concept is termed "organization template." Using it streamlines the process of constructing and designing your authorization model.',
+    'В многоарендных SaaS-приложениях обычно несколько организаций делят идентичные политики контроля доступа, включая разрешения и роли. В Logto этот концепт называется "шаблон организации". Его использование упрощает процесс построения и проектирования вашей модели авторизации.',
   org_roles: {
-    tab_name: 'Org roles',
-    search_placeholder: 'Search by role name',
-    create_org_roles: 'Create org role',
-    org_role_column: 'Org role',
-    permissions_column: 'Permissions',
-    placeholder_title: 'Organization role',
+    tab_name: 'Роли орг',
+    search_placeholder: 'Поиск по названию роли',
+    create_org_roles: 'Создать роль орг',
+    org_role_column: 'Роль орг',
+    permissions_column: 'Разрешения',
+    placeholder_title: 'Роль организации',
     placeholder_description:
-      'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+      'Роль организации - это группировка разрешений, которые могут быть назначены пользователям. Разрешения должны происходить из предопределенных разрешений организации.',
   },
   org_permissions: {
-    tab_name: 'Org permissions',
-    search_placeholder: 'Search by permission name',
-    create_org_permission: 'Create org permission',
-    permission_column: 'Permission',
-    description_column: 'Description',
-    placeholder_title: 'Organization permission',
+    tab_name: 'Разрешения орг',
+    search_placeholder: 'Поиск по названию разрешения',
+    create_org_permission: 'Создать разрешение орг',
+    permission_column: 'Разрешение',
+    description_column: 'Описание',
+    placeholder_title: 'Разрешение организации',
     placeholder_description:
-      'Organization permission refers to the authorization to access a resource in the context of organization.',
+      'Разрешение организации относится к авторизации на доступ к ресурсу в контексте организации.',
+    delete_confirm:
+      'Если это разрешение будет удалено, все роли организации, включающие это разрешение, потеряют его, и пользователи, имевшие это разрешение, потеряют доступ, предоставленный им.',
   },
 };
 
