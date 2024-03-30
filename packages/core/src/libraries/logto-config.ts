@@ -1,10 +1,10 @@
 import {
-  LogtoConfigs,
   cloudApiIndicator,
   cloudConnectionDataGuard,
   logtoOidcConfigGuard,
   LogtoOidcConfigKey,
   jwtCustomizerConfigGuard,
+  LogtoConfigs,
 } from '@logto/schemas';
 import type { LogtoOidcConfigType, LogtoJwtTokenKey, CloudConnectionData } from '@logto/schemas';
 import chalk from 'chalk';
@@ -13,10 +13,8 @@ import { z, ZodError } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
-import { convertToIdentifiers } from '#src/utils/sql.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
-const { table } = convertToIdentifiers(LogtoConfigs);
 
 export const createLogtoConfigLibrary = ({
   logtoConfigs: {
@@ -87,8 +85,8 @@ export const createLogtoConfigLibrary = ({
     // If the record does not exist (`rows` is empty)
     if (rows.length === 0) {
       throw new RequestError({
-        code: 'entity.not_exists',
-        name: table,
+        code: 'entity.not_exists_with_id',
+        name: LogtoConfigs.tableSingular,
         id: key,
         status: 404,
       });

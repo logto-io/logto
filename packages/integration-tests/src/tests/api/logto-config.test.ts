@@ -140,7 +140,7 @@ describe('admin console sign-in experience', () => {
     };
 
     await expectRejects(getJwtCustomizer('access-token'), {
-      code: 'entity.not_exists',
+      code: 'entity.not_exists_with_id',
       status: 404,
     });
     await expectRejects(deleteJwtCustomizer('access-token'), {
@@ -163,7 +163,7 @@ describe('admin console sign-in experience', () => {
     );
     await expect(deleteJwtCustomizer('access-token')).resolves.not.toThrow();
     await expectRejects(getJwtCustomizer('access-token'), {
-      code: 'entity.not_exists',
+      code: 'entity.not_exists_with_id',
       status: 404,
     });
   });
@@ -176,7 +176,7 @@ describe('admin console sign-in experience', () => {
     };
 
     await expectRejects(getJwtCustomizer('client-credentials'), {
-      code: 'entity.not_exists',
+      code: 'entity.not_exists_with_id',
       status: 404,
     });
     await expectRejects(deleteJwtCustomizer('client-credentials'), {
@@ -202,7 +202,7 @@ describe('admin console sign-in experience', () => {
     );
     await expect(deleteJwtCustomizer('client-credentials')).resolves.not.toThrow();
     await expectRejects(getJwtCustomizer('client-credentials'), {
-      code: 'entity.not_exists',
+      code: 'entity.not_exists_with_id',
       status: 404,
     });
   });
