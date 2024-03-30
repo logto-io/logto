@@ -1,5 +1,6 @@
 import type router from '@logto/cloud/routes';
 import { cloudConnectionDataGuard, CloudScope } from '@logto/schemas';
+import { formUrlEncodedHeaders } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 import Client from '@withtyped/client';
 import ky from 'ky';
@@ -74,7 +75,7 @@ export class CloudConnectionLibrary {
     const text = await ky
       .post(tokenEndpoint, {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          ...formUrlEncodedHeaders,
           Authorization: `Basic ${Buffer.from(`${appId}:${appSecret}`).toString('base64')}`,
         },
         body: new URLSearchParams({
