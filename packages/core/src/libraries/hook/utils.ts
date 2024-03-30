@@ -5,15 +5,18 @@ import {
   type HookConfig,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
-import { got, type Response } from 'got';
+import ky, { type KyResponse } from 'ky';
 
 import { sign } from '#src/utils/sign.js';
 
-export const parseResponse = ({ statusCode, body }: Response) => ({
-  statusCode,
-  // eslint-disable-next-line no-restricted-syntax
-  body: trySafe(() => JSON.parse(String(body)) as unknown) ?? String(body),
-});
+export const parseResponse = async (response: KyResponse) => {
+  const body = await response.text();
+  return {
+    statusCode: response.status,
+    // eslint-disable-next-line no-restricted-syntax
+    body: trySafe(() => JSON.parse(body) as unknown) ?? String(body),
+  };
+};
 
 type SendWebhookRequest = {
   hookConfig: HookConfig;
@@ -28,7 +31,7 @@ export const sendWebhookRequest = async ({
 }: SendWebhookRequest) => {
   const { url, headers, retries } = hookConfig;
 
-  return got.post(url, {
+  return ky.post(url, {
     headers: {
       'user-agent': 'Logto (https://logto.io/)',
       ...headers,
@@ -36,7 +39,7 @@ export const sendWebhookRequest = async ({
     },
     json: payload,
     retry: { limit: retries ?? 3 },
-    timeout: { request: 10_000 },
+    timeout: 10_000,
   });
 };
 

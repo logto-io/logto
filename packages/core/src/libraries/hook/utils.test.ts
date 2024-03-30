@@ -1,13 +1,13 @@
 import { HookEvent } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
-import { got } from 'got';
+import ky from 'ky';
 
 const { jest } = import.meta;
 
 const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const post = jest
-  .spyOn(got, 'post')
+  .spyOn(ky, 'post')
   // @ts-expect-error
   .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
 
@@ -44,7 +44,7 @@ describe('sendWebhookRequest', () => {
       },
       json: testPayload,
       retry: { limit: 3 },
-      timeout: { request: 10_000 },
+      timeout: 10_000,
     });
   });
 });
