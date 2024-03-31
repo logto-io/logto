@@ -17,6 +17,7 @@ import { trySubmitSafe } from '@/utils/form';
 
 import DeleteCard from './DeleteCard';
 import DeleteModal from './DeleteModal';
+import LeaveCard from './LeaveCard';
 import ProfileForm from './ProfileForm';
 import * as styles from './index.module.scss';
 import { type TenantSettingsForm } from './types.js';
@@ -122,6 +123,7 @@ function TenantBasicSettings() {
         <FormProvider {...methods}>
           <div className={styles.fields}>
             <ProfileForm currentTenantId={currentTenantId} />
+            <LeaveCard />
             {canManageTenant && (
               <DeleteCard currentTenantId={currentTenantId} onClick={onClickDeletionButton} />
             )}
