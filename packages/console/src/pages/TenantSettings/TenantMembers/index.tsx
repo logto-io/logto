@@ -1,11 +1,14 @@
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import useSWRMutation from 'swr/mutation';
 
 import InvitationIcon from '@/assets/icons/invitation.svg';
 import MembersIcon from '@/assets/icons/members.svg';
 import PlusIcon from '@/assets/icons/plus.svg';
+import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { TenantSettingsTabs } from '@/consts';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
@@ -26,6 +29,14 @@ function TenantMembers() {
 
   const isInvitationTab = match(
     `/tenant-settings/${TenantSettingsTabs.Members}/${invitationsRoute}`
+  );
+
+  const { currentTenantId } = useContext(TenantsContext);
+  const cloudApi = useAuthedCloudApi();
+  const { trigger: mutateInvitations } = useSWRMutation(
+    'api/tenants/:tenantId/invitations',
+    async () =>
+      cloudApi.get('/api/tenants/:tenantId/invitations', { params: { tenantId: currentTenantId } })
   );
 
   return (
@@ -73,7 +84,11 @@ function TenantMembers() {
           onClose={(isSuccessful) => {
             setShowInviteModal(false);
             if (isSuccessful) {
-              navigate('invitations');
+              if (isInvitationTab) {
+                void mutateInvitations();
+              } else {
+                navigate('invitations');
+              }
             }
           }}
         />

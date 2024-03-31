@@ -21,10 +21,10 @@ function Members() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const cloudApi = useAuthedCloudApi();
   const { currentTenantId } = useContext(TenantsContext);
-  const { canInviteMember, canRemoveMember, canUpdateMemberRole } = useCurrentTenantScopes();
+  const { canRemoveMember, canUpdateMemberRole } = useCurrentTenantScopes();
 
   const { data, error, isLoading, mutate } = useSWR<TenantMemberResponse[], RequestError>(
-    `api/tenant/${currentTenantId}/members`,
+    `api/tenants/:tenantId/members`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/members', { params: { tenantId: currentTenantId } })
   );
