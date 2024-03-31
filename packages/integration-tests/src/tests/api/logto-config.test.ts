@@ -2,8 +2,13 @@ import {
   SupportedSigningKeyAlgorithm,
   type AdminConsoleData,
   LogtoOidcConfigKeyType,
+  LogtoJwtTokenKey,
 } from '@logto/schemas';
 
+import {
+  accessTokenJwtCustomizerPayload,
+  clientCredentialsJwtCustomizerPayload,
+} from '#src/__mocks__/jwt-customizer.js';
 import {
   deleteOidcKey,
   getAdminConsoleConfig,
@@ -12,6 +17,7 @@ import {
   updateAdminConsoleConfig,
   upsertJwtCustomizer,
   getJwtCustomizer,
+  getJwtCustomizers,
   deleteJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -128,17 +134,6 @@ describe('admin console sign-in experience', () => {
   });
 
   it('should successfully PUT/GET/DELETE a JWT customizer (access token)', async () => {
-    const accessTokenJwtCustomizerPayload = {
-      script: '',
-      envVars: {},
-      contextSample: {
-        user: {
-          username: 'test',
-          id: 'fake-id',
-        },
-      },
-    };
-
     await expectRejects(getJwtCustomizer('access-token'), {
       code: 'entity.not_exists_with_id',
       status: 404,
@@ -169,12 +164,6 @@ describe('admin console sign-in experience', () => {
   });
 
   it('should successfully PUT/GET/DELETE a JWT customizer (client credentials)', async () => {
-    const clientCredentialsJwtCustomizerPayload = {
-      script: '',
-      envVars: {},
-      contextSample: {},
-    };
-
     await expectRejects(getJwtCustomizer('client-credentials'), {
       code: 'entity.not_exists_with_id',
       status: 404,
@@ -205,5 +194,36 @@ describe('admin console sign-in experience', () => {
       code: 'entity.not_exists_with_id',
       status: 404,
     });
+  });
+
+  it('should successfully GET all JWT customizers', async () => {
+    await expect(getJwtCustomizers()).resolves.toEqual([]);
+    await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
+    await expect(getJwtCustomizers()).resolves.toEqual([
+      {
+        key: LogtoJwtTokenKey.AccessToken,
+        value: accessTokenJwtCustomizerPayload,
+      },
+    ]);
+    await upsertJwtCustomizer('client-credentials', clientCredentialsJwtCustomizerPayload);
+    const jwtCustomizers = await getJwtCustomizers();
+    expect(jwtCustomizers).toHaveLength(2);
+    expect(jwtCustomizers).toContainEqual({
+      key: LogtoJwtTokenKey.AccessToken,
+      value: accessTokenJwtCustomizerPayload,
+    });
+    expect(jwtCustomizers).toContainEqual({
+      key: LogtoJwtTokenKey.ClientCredentials,
+      value: clientCredentialsJwtCustomizerPayload,
+    });
+    await deleteJwtCustomizer('access-token');
+    await expect(getJwtCustomizers()).resolves.toEqual([
+      {
+        key: LogtoJwtTokenKey.ClientCredentials,
+        value: clientCredentialsJwtCustomizerPayload,
+      },
+    ]);
+    await deleteJwtCustomizer('client-credentials');
+    await expect(getJwtCustomizers()).resolves.toEqual([]);
   });
 });
