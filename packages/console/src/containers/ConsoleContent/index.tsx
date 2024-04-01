@@ -1,17 +1,16 @@
-import { LogtoJwtTokenPath } from '@logto/schemas';
 import { useContext } from 'react';
 import { Navigate, Route, Routes, useOutletContext } from 'react-router-dom';
 
 import {
   ApiResourceDetailsTabs,
-  ConnectorsTabs,
-  UserDetailsTabs,
-  RoleDetailsTabs,
-  WebhookDetailsTabs,
-  TenantSettingsTabs,
   ApplicationDetailsTabs,
+  ConnectorsTabs,
   EnterpriseSsoDetailsTabs,
   OrganizationTemplateTabs,
+  RoleDetailsTabs,
+  TenantSettingsTabs,
+  UserDetailsTabs,
+  WebhookDetailsTabs,
 } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -27,11 +26,11 @@ import AuditLogDetails from '@/pages/AuditLogDetails';
 import AuditLogs from '@/pages/AuditLogs';
 import ConnectorDetails from '@/pages/ConnectorDetails';
 import Connectors from '@/pages/Connectors';
+import CustomizeJwt from '@/pages/CustomizeJwt';
 import Dashboard from '@/pages/Dashboard';
 import EnterpriseSsoConnectors from '@/pages/EnterpriseSso';
 import EnterpriseSsoConnectorDetails from '@/pages/EnterpriseSsoDetails';
 import GetStarted from '@/pages/GetStarted';
-import JwtClaims from '@/pages/JwtClaims';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import OrganizationDetails from '@/pages/OrganizationDetails';
@@ -242,17 +241,9 @@ function ConsoleContent() {
                 )}
               </Route>
             )}
-            {isDevFeaturesEnabled && (
+            {isCloud && isDevFeaturesEnabled && (
               <Route path="jwt-customizer">
-                <Route index element={<Navigate replace to={LogtoJwtTokenPath.AccessToken} />} />
-                <Route
-                  path={LogtoJwtTokenPath.AccessToken}
-                  element={<JwtClaims tab={LogtoJwtTokenPath.AccessToken} />}
-                />
-                <Route
-                  path={LogtoJwtTokenPath.ClientCredentials}
-                  element={<JwtClaims tab={LogtoJwtTokenPath.ClientCredentials} />}
-                />
+                <Route index element={<CustomizeJwt />} />
               </Route>
             )}
           </Routes>

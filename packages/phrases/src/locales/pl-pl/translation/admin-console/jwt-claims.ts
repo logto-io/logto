@@ -4,16 +4,36 @@ const jwt_claims = {
   /** UNTRANSLATED */
   description:
     'Set up custom JWT claims to include in the access token. These claims can be used to pass additional information to your application.',
-  /** UNTRANSLATED */
-  user_jwt_tab: 'User JWT',
-  /** UNTRANSLATED */
-  machine_to_machine_jwt_tab: 'Machine-to-machine JWT',
-  /** UNTRANSLATED */
-  user_jwt: 'user JWT',
-  /** UNTRANSLATED */
-  machine_to_machine_jwt: 'machine-to-machine JWT',
+  user_jwt: {
+    /** UNTRANSLATED */
+    card_title: 'For user',
+    /** UNTRANSLATED */
+    card_field: 'User access token',
+    /** UNTRANSLATED */
+    card_description: 'Add user-specific data during access token issuance.',
+    /** UNTRANSLATED */
+    for: 'for user',
+  },
+  machine_to_machine_jwt: {
+    /** UNTRANSLATED */
+    card_title: 'For M2M',
+    /** UNTRANSLATED */
+    card_field: 'Machine-to-machine token',
+    /** UNTRANSLATED */
+    card_description: 'Add extra data fro machine-to-machine communication.',
+    /** UNTRANSLATED */
+    for: 'for M2M',
+  },
   /** UNTRANSLATED */
   code_editor_title: 'Customize the {{token}} claims',
+  /** UNTRANSLATED */
+  custom_jwt_create_button: 'Create custom claims',
+  /** UNTRANSLATED */
+  custom_jwt_item: 'Custom claims {{for}}',
+  /** UNTRANSLATED */
+  delete_modal_title: 'Delete custom claims',
+  /** UNTRANSLATED */
+  delete_modal_content: 'Are you sure you want to delete the custom claims?',
   /** UNTRANSLATED */
   clear: 'Clear',
   /** UNTRANSLATED */

@@ -25,6 +25,8 @@ const general = {
   customize: '自定义',
   enable: '启用',
   reminder: '提示',
+  /** UNTRANSLATED */
+  edit: 'Edit',
   delete: '删除',
   /** UNTRANSLATED */
   deleted: 'Deleted',
