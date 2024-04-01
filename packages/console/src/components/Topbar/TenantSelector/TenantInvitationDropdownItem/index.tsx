@@ -1,4 +1,8 @@
-import { OrganizationInvitationStatus, type TenantTag } from '@logto/schemas';
+import {
+  OrganizationInvitationStatus,
+  getTenantIdFromOrganizationId,
+  type TenantTag,
+} from '@logto/schemas';
 import { useContext } from 'react';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -37,10 +41,9 @@ function TenantInvitationDropdownItem({ data }: Props) {
             params: { invitationId: id },
             body: { status: OrganizationInvitationStatus.Accepted },
           });
-          // TODO: @charles, need to fetch only the target tenant instance instead of all.
           const data = await cloudApi.get('/api/tenants');
           resetTenants(data);
-          navigateTenant(organizationId.slice(2));
+          navigateTenant(getTenantIdFromOrganizationId(organizationId));
         }}
       />
     </div>

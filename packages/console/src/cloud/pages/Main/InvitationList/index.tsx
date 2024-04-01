@@ -1,4 +1,4 @@
-import { OrganizationInvitationStatus } from '@logto/schemas';
+import { OrganizationInvitationStatus, getTenantIdFromOrganizationId } from '@logto/schemas';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,7 +20,7 @@ type Props = {
 function InvitationList({ invitations }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const cloudApi = useCloudApi();
-  const { prependTenant, navigateTenant } = useContext(TenantsContext);
+  const { prependTenant, navigateTenant, resetTenants } = useContext(TenantsContext);
   const [isJoining, setIsJoining] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -48,7 +48,9 @@ function InvitationList({ invitations }: Props) {
                       params: { invitationId: id },
                       body: { status: OrganizationInvitationStatus.Accepted },
                     });
-                    navigateTenant(organizationId.slice(2));
+                    const data = await cloudApi.get('/api/tenants');
+                    resetTenants(data);
+                    navigateTenant(getTenantIdFromOrganizationId(organizationId));
                   } finally {
                     setIsJoining(false);
                   }
