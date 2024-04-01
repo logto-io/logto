@@ -243,7 +243,7 @@ function ConsoleContent() {
               </Route>
             )}
             {isCloud && isDevFeaturesEnabled && (
-              <Route path="jwt-customizer">
+              <Route path="customize-jwt">
                 <Route index element={<CustomizeJwt />} />
                 <Route path=":tokenType/:action" element={<CustomizeJwtDetails />} />
               </Route>
