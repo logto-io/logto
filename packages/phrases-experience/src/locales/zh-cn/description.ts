@@ -64,23 +64,23 @@ const description = {
     '你的企业已为电子邮件账户{{email}}启用了单点登录。你可以继续使用以下SSO提供商进行登录。',
   single_sign_on_enabled: '该帐户已启用单点登录',
   /** UNTRANSLATED */
-  authorize_title: 'Authorize {{name}}',
+  authorize_title: '授权给 {{name}}',
   /** UNTRANSLATED */
-  request_permission: '{{name}} is requesting access to:',
+  request_permission: '{{name}} 需要权限:',
   /** UNTRANSLATED */
-  grant_organization_access: 'Grant the organization access:',
+  grant_organization_access: '授予组织访问权限:',
   /** UNTRANSLATED */
-  user_scopes: 'Personal user data',
+  user_scopes: '用户个人信息',
   /** UNTRANSLATED */
-  organization_scopes: 'Organization access',
+  organization_scopes: '组织权限',
   /** UNTRANSLATED */
-  authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
+  authorize_agreement: `你将同意授权给{{name}} <link></link>.`,
   /** UNTRANSLATED */
-  not_you: 'Not you?',
+  not_you: '不是你本人吗?',
   /** UNTRANSLATED */
-  user_id: 'User ID: {{id}}',
+  user_id: '用户ID: {{id}}',
   /** UNTRANSLATED */
-  redirect_to: 'You will be redirected to {{name}}.',
+  redirect_to: '你将被重定向到 {{name}}.',
 };
 
 export default Object.freeze(description);
