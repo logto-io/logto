@@ -6,6 +6,7 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
@@ -22,7 +23,7 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
       queries: {
         organizations: {
           roles,
-          relations: { rolesScopes },
+          relations: { rolesScopes, rolesResourceScopes },
         },
       },
       libraries: { quota },
@@ -89,6 +90,9 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
   );
 
   router.addRelationRoutes(rolesScopes, 'scopes');
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.addRelationRoutes(rolesResourceScopes, 'resource-scopes');
+  }
 
   originalRouter.use(router.routes());
 }

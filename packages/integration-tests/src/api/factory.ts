@@ -26,6 +26,7 @@ export class ApiFactory<
   constructor(public readonly path: string) {}
 
   async create(data: PostData): Promise<Schema> {
+    console.log(this.path);
     return transform(await authedAdminApi.post(this.path, { json: data }).json<Schema>());
   }
 

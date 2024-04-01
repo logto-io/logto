@@ -5,6 +5,7 @@ import { isKeyInObject, pick } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 
 import { OrganizationRoleApiTest, OrganizationScopeApiTest } from '#src/helpers/organization.js';
+import { ScopeApiTest } from '#src/helpers/resource.js';
 
 const randomId = () => generateStandardId(4);
 
@@ -245,6 +246,117 @@ describe('organization role APIs', () => {
       const [role] = await Promise.all([roleApi.create({ name: 'test' + randomId() })]);
 
       const response = await roleApi.deleteScope(role.id, '0').catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(404);
+    });
+  });
+
+  describe('organization role - resource scope relations', () => {
+    const roleApi = new OrganizationRoleApiTest();
+    const scopeApi = new ScopeApiTest();
+
+    beforeEach(async () => {
+      await scopeApi.initResource();
+    });
+
+    afterEach(async () => {
+      await Promise.all([roleApi.cleanUp(), scopeApi.cleanUp()]);
+    });
+
+    it('should be able to add and get scopes of a role', async () => {
+      const [role, scope1, scope2] = await Promise.all([
+        roleApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+      ]);
+      await roleApi.addResourceScopes(role.id, [scope1.id, scope2.id]);
+      const scopes = await roleApi.getResourceScopes(role.id);
+
+      expect(scopes).toContainEqual(
+        expect.objectContaining({
+          name: scope1.name,
+        })
+      );
+      expect(scopes).toContainEqual(
+        expect.objectContaining({
+          name: scope2.name,
+        })
+      );
+    });
+
+    it('should safely add scopes to a role when some of them already exist', async () => {
+      const [role, scope1, scope2] = await Promise.all([
+        roleApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+      ]);
+
+      await roleApi.addResourceScopes(role.id, [scope1.id, scope2.id]);
+
+      await expect(roleApi.addResourceScopes(role.id, [scope2.id])).resolves.not.toThrow();
+
+      const scopes = await roleApi.getResourceScopes(role.id);
+
+      expect(scopes).toContainEqual(
+        expect.objectContaining({
+          name: scope1.name,
+        })
+      );
+      expect(scopes).toContainEqual(
+        expect.objectContaining({
+          name: scope2.name,
+        })
+      );
+    });
+
+    it('should fail when try to add non-existent scopes to a role', async () => {
+      const [role, scope1, scope2] = await Promise.all([
+        roleApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+      ]);
+      const response = await roleApi
+        .addResourceScopes(role.id, [scope1.id, scope2.id, '0'])
+        .catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({
+          code: 'entity.relation_foreign_key_not_found',
+        })
+      );
+    });
+
+    it('should be able to remove scopes from a role', async () => {
+      const [role, scope1, scope2] = await Promise.all([
+        roleApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+      ]);
+      await roleApi.addResourceScopes(role.id, [scope1.id, scope2.id]);
+      await roleApi.deleteResourceScope(role.id, scope1.id);
+      const scopes = await roleApi.getResourceScopes(role.id);
+
+      expect(scopes).not.toContainEqual(
+        expect.objectContaining({
+          name: scope1.name,
+        })
+      );
+      expect(scopes).toContainEqual(
+        expect.objectContaining({
+          name: scope2.name,
+        })
+      );
+    });
+
+    it('should fail when try to remove non-existent scopes from a role', async () => {
+      const [role] = await Promise.all([roleApi.create({ name: 'test' + randomId() })]);
+
+      const response = await roleApi
+        .deleteResourceScope(role.id, '0')
+        .catch((error: unknown) => error);
 
       assert(response instanceof HTTPError);
       expect(response.response.status).toBe(404);
