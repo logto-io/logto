@@ -17,6 +17,7 @@ const tabs = {
   /** UNTRANSLATED */
   jwt_customizer: 'JWT Claims',
   signing_keys: 'Chaves de assinatura',
+  organization_template: 'Modelo de organização',
 };
 
 export default Object.freeze(tabs);

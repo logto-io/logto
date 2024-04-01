@@ -11,6 +11,7 @@ import {
   TenantSettingsTabs,
   ApplicationDetailsTabs,
   EnterpriseSsoDetailsTabs,
+  OrganizationTemplateTabs,
 } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -34,6 +35,9 @@ import JwtClaims from '@/pages/JwtClaims';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import OrganizationDetails from '@/pages/OrganizationDetails';
+import OrganizationTemplate from '@/pages/OrganizationTemplate';
+import OrgPermissions from '@/pages/OrganizationTemplate/OrgPermissions';
+import OrgRoles from '@/pages/OrganizationTemplate/OrgRoles';
 import Organizations from '@/pages/Organizations';
 import OrganizationGuide from '@/pages/Organizations/Guide';
 import Profile from '@/pages/Profile';
@@ -182,6 +186,19 @@ function ConsoleContent() {
                 <Route path={RoleDetailsTabs.M2mApps} element={<RoleApplications />} />
               </Route>
             </Route>
+            {isDevFeaturesEnabled && (
+              <Route path="organization-template" element={<OrganizationTemplate />}>
+                <Route
+                  index
+                  element={<Navigate replace to={OrganizationTemplateTabs.OrgRoles} />}
+                />
+                <Route path={OrganizationTemplateTabs.OrgRoles} element={<OrgRoles />} />
+                <Route
+                  path={OrganizationTemplateTabs.OrgPermissions}
+                  element={<OrgPermissions />}
+                />
+              </Route>
+            )}
             <Route path="organizations">
               <Route index element={<Organizations />} />
               <Route path="create" element={<Organizations />} />

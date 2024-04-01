@@ -99,6 +99,11 @@ export const useSidebarMenuItems = (): {
           Icon: Role,
           title: 'roles',
         },
+        {
+          Icon: Role,
+          title: 'organization_template',
+          isHidden: !isDevFeaturesEnabled,
+        },
       ],
     },
     {

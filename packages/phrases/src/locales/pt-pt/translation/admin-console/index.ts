@@ -22,6 +22,7 @@ import logs from './logs.js';
 import menu from './menu.js';
 import mfa from './mfa.js';
 import organization_details from './organization-details.js';
+import organization_template from './organization-template.js';
 import organizations from './organizations.js';
 import permissions from './permissions.js';
 import profile from './profile.js';
@@ -93,6 +94,7 @@ const admin_console = {
   jwt_claims,
   invitation,
   signing_keys,
+  organization_template,
 };
 
 export default Object.freeze(admin_console);

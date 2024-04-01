@@ -55,13 +55,14 @@ function CardTitle({
             <span>{typeof subtitle === 'string' ? <DynamicT forKey={subtitle} /> : subtitle}</span>
           )}
           {learnMoreLink?.href && (
-            <TextLink
-              href={learnMoreLink.href}
-              targetBlank={learnMoreLink.targetBlank}
-              className={styles.learnMore}
-            >
-              {t('general.learn_more')}
-            </TextLink>
+            <>
+              {/* Use a space to keep the link and the text separate.
+               * Avoid using `margin-left` since it will cause an unexpected gap when the "learn more" text is at the start of a new line
+               */}{' '}
+              <TextLink href={learnMoreLink.href} targetBlank={learnMoreLink.targetBlank}>
+                {t('general.learn_more')}
+              </TextLink>
+            </>
           )}
         </div>
       )}
