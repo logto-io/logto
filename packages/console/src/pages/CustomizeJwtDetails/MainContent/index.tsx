@@ -56,14 +56,18 @@ function MainContent<T extends LogtoJwtTokenPath>({
 
       await api.put(getApiPath(tokenType), { json: payload });
 
-      if (action === 'create') {
-        navigate(-1);
-        return;
-      }
-
       const result = await mutate();
 
       reset(formatResponseDataToFormData(tokenType, result));
+
+      /**
+       * Should `reset` (to set `isDirty` to false) before navigating back to the custom JWT listing page.
+       * Otherwise, the unsaved changes alert modal will be triggered on clicking `create` button, which
+       * is not expected.
+       */
+      if (action === 'create') {
+        navigate(-1);
+      }
     })
   );
 
