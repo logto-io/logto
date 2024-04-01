@@ -209,20 +209,20 @@ export const defaultClientCredentialsPayload: ClientCredentialsPayload = {
 
 const defaultUserContext: Partial<JwtCustomizerUserContext> = {
   id: '123',
-  name: 'Foo Bar',
-  roles: [],
-  avatar: 'https://example.com/avatar.png',
-  profile: {},
   username: 'foo',
-  customData: {},
-  identities: {},
   primaryEmail: 'foo@logto.io',
   primaryPhone: '+1234567890',
+  name: 'Foo Bar',
+  avatar: 'https://example.com/avatar.png',
+  customData: {},
+  identities: {},
+  profile: {},
   applicationId: 'my-app',
-  organizations: [],
   ssoIdentities: [],
-  organizationRoles: [],
   mfaVerificationFactors: [],
+  roles: [],
+  organizations: [],
+  organizationRoles: [],
 };
 
 export const defaultUserTokenContextData = {

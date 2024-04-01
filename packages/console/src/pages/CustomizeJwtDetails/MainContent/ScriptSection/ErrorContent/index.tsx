@@ -17,7 +17,7 @@ function ErrorContent({ testResult }: Props) {
       )}
       {testResult.payload && (
         <pre>
-          {'JWT Payload: \n'}
+          {'Extra JWT claims: \n'}
           {testResult.payload}
         </pre>
       )}

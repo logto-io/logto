@@ -7,48 +7,15 @@ import {
   adminTenantId,
   jwtCustomizerConfigsGuard,
   jwtCustomizerTestRequestBodyGuard,
-  type JwtCustomizerTestRequestBody,
-  type CustomJwtFetcher,
 } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
-import { z } from 'zod';
+import { ZodError, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
-import RequestError from '#src/errors/RequestError/index.js';
+import RequestError, { formatZodError } from '#src/errors/RequestError/index.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
-
-/**
- * Transpile the request body of the JWT customizer test API to the request body of the Cloud JWT customizer test API.
- *
- * @param body Core JWT customizer test API request body.
- * @returns Request body of the Cloud JWT customizer test API.
- */
-const transpileJwtCustomizerTestRequestBody = (
-  body: JwtCustomizerTestRequestBody
-): CustomJwtFetcher => {
-  const { tokenType, payload } = body;
-  /**
-   * We have to deal with the `tokenType` and `payload` at the same time since they are put together as one of the discriminated union type.
-   * Otherwise the type inference will not work as expected.
-   */
-  if (tokenType === LogtoJwtTokenPath.AccessToken) {
-    const { tokenSample: token, contextSample: context, ...rest } = payload;
-    return {
-      tokenType,
-      token,
-      context,
-      ...rest,
-    };
-  }
-  const { tokenSample: token, contextSample, ...rest } = payload;
-  return {
-    tokenType,
-    token,
-    ...rest,
-  };
-};
 
 const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenPath, body: unknown) => {
   if (tokenPath === LogtoJwtTokenPath.AccessToken) {
@@ -197,16 +164,27 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
 
       try {
         ctx.body = await client.post(`/api/services/custom-jwt`, {
-          body: transpileJwtCustomizerTestRequestBody(body),
+          body,
         });
       } catch (error: unknown) {
         /**
+         * All APIs should throw `RequestError` instead of `Error`.
+         * In the admin console, we caught the error and recognized the error with the code `jwt_customizer.general`,
+         * and then we extract and show the error message to the user.
+         *
          * `ResponseError` comes from `@withtyped/client` and all `logto/core` API returns error in the
          * format of `RequestError`, we manually transform it here to keep the error format consistent.
          */
         if (error instanceof ResponseError) {
           const { message } = z.object({ message: z.string() }).parse(await error.response.json());
           throw new RequestError({ code: 'jwt_customizer.general', status: 422 }, { message });
+        }
+
+        if (error instanceof ZodError) {
+          throw new RequestError(
+            { code: 'jwt_customizer.general', status: 422 },
+            { message: formatZodError(error) }
+          );
         }
 
         throw error;
