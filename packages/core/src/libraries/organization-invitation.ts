@@ -66,6 +66,11 @@ export class OrganizationInvitationLibrary {
 
     return this.queries.pool.transaction(async (connection) => {
       const organizationQueries = new OrganizationQueries(connection);
+      // Check if any pending invitation has expired, if yes, update the invitation status to "Expired" first
+      // Note: Even if the status may appear to be "Expired", the actual data in DB may still be "Pending".
+      // Check `findEntities` in `OrganizationQueries` for more details.
+      await organizationQueries.invitations.updateExpiredEntities({ invitee, organizationId });
+      // Insert the new invitation
       const invitation = await organizationQueries.invitations.insert({
         id: generateStandardId(),
         inviterId,

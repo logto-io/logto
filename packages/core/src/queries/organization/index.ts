@@ -116,6 +116,25 @@ class OrganizationInvitationsQueries extends SchemaQueries<
     return this.pool.any(this.#findEntity({ ...options, invitationId: undefined }));
   }
 
+  async updateExpiredEntities({
+    organizationId,
+    invitee,
+  }: OrganizationInvitationSearchOptions): Promise<void> {
+    const { table, fields } = convertToIdentifiers(OrganizationInvitations);
+    await this.pool.query(sql`
+      update ${table}
+      set ${fields.status} = ${OrganizationInvitationStatus.Expired}
+      where ${fields.status} = ${OrganizationInvitationStatus.Pending}
+      and ${fields.expiresAt} < now()
+      ${conditionalSql(organizationId, (id) => {
+        return sql`and ${fields.organizationId} = ${id}`;
+      })}
+      ${conditionalSql(invitee, (email) => {
+        return sql`and ${fields.invitee} = ${email}`;
+      })}
+    `);
+  }
+
   #findEntity({
     invitationId,
     organizationId,
