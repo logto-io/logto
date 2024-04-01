@@ -182,7 +182,7 @@ function Invitations() {
                     iconSize="small"
                     title={<DynamicT forKey="general.more_options" />}
                   >
-                    {status !== OrganizationInvitationStatus.Accepted && canInviteMember && (
+                    {status === OrganizationInvitationStatus.Pending && canInviteMember && (
                       <ActionMenuItem
                         icon={<Invite />}
                         onClick={async () => {
