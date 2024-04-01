@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import { OrganizationInvitationStatus } from '@logto/schemas';
+import { OrganizationInvitationStatus, getTenantIdFromOrganizationId } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -21,7 +21,7 @@ function AcceptInvitation() {
   const redirectUri = useRedirectUri();
   const { invitationId = '' } = useParams();
   const cloudApi = useCloudApi();
-  const { navigateTenant } = useContext(TenantsContext);
+  const { navigateTenant, resetTenants } = useContext(TenantsContext);
 
   // The request is only made when the user has signed-in and the invitation ID is available.
   // The response data is returned only when the current user matches the invitee email. Otherwise, it returns 404.
@@ -43,7 +43,9 @@ function AcceptInvitation() {
         body: { status: OrganizationInvitationStatus.Accepted },
       });
 
-      navigateTenant(organizationId.slice(2));
+      const data = await cloudApi.get('/api/tenants');
+      resetTenants(data);
+      navigateTenant(getTenantIdFromOrganizationId(organizationId));
     })();
   }, [cloudApi, error, invitation, navigateTenant, t]);
 
