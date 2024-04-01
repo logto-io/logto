@@ -9,6 +9,7 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 
+import useJwtCustomizer from '../../CustomizeJwt/use-jwt-customizer';
 import { type Action, type JwtCustomizer, type JwtCustomizerForm } from '../type';
 import { formatFormDataToRequestData, formatResponseDataToFormData } from '../utils/format';
 import { getApiPath } from '../utils/path';
@@ -34,6 +35,7 @@ function MainContent<T extends LogtoJwtTokenPath>({
 }: Props<T>) {
   const api = useApi();
   const navigate = useNavigate();
+  const { mutate: mutateJwtCustomizers } = useJwtCustomizer();
 
   const methods = useForm<JwtCustomizerForm>({
     defaultValues: formatResponseDataToFormData(token, data),
@@ -66,6 +68,8 @@ function MainContent<T extends LogtoJwtTokenPath>({
        * is not expected.
        */
       if (action === 'create') {
+        // Refresh the JWT customizers list to reflect the latest changes.
+        await mutateJwtCustomizers();
         navigate(-1);
       }
     })

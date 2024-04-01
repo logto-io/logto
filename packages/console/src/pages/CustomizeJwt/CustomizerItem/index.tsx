@@ -1,7 +1,6 @@
 import { LogtoJwtTokenPath } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSWRConfig } from 'swr';
 
 import DeletIcon from '@/assets/icons/delete.svg';
 import EditIcon from '@/assets/icons/edit.svg';
@@ -10,6 +9,8 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getApiPath, getPagePath } from '@/pages/CustomizeJwt/utils/path';
+
+import useJwtCustomizer from '../use-jwt-customizer';
 
 import * as styles from './index.module.scss';
 
@@ -23,7 +24,7 @@ function CustomizerItem({ tokenType }: Props) {
   const editLink = getPagePath(tokenType, 'edit');
   const { navigate } = useTenantPathname();
   const { show } = useConfirmModal();
-  const { mutate } = useSWRConfig();
+  const { mutate } = useJwtCustomizer();
 
   const api = useApi();
 
@@ -36,7 +37,7 @@ function CustomizerItem({ tokenType }: Props) {
 
     if (confirm) {
       await api.delete(apiLink);
-      await mutate(apiLink, undefined);
+      await mutate();
     }
   }, [api, apiLink, mutate, show, t]);
 
