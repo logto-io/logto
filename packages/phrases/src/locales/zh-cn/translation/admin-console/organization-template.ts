@@ -21,6 +21,13 @@ const organization_template = {
     placeholder_description: '组织权限指的是在组织上下文中访问资源的授权。',
     delete_confirm:
       '如果删除此权限，包括此权限的所有组织角色都将失去此权限，拥有此权限的用户将失去由此权限授予的访问权限。',
+    create_title: '创建组织权限',
+    edit_title: '编辑组织权限',
+    permission_field_name: '权限名称',
+    description_field_name: '描述',
+    description_field_placeholder: '阅读预约历史',
+    create_permission: '创建权限',
+    created: '组织权限 {{name}} 已成功创建。',
   },
 };
 

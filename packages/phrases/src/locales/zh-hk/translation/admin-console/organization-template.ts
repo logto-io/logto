@@ -21,6 +21,13 @@ const organization_template = {
     placeholder_description: '組織權限指的是在組織上下文中訪問資源的授權。',
     delete_confirm:
       '如果刪除此權限，包括此權限的所有組織角色都將失去此權限，擁有此權限的用戶將失去由此權限授予的訪問權限。',
+    create_title: '創建組織權限',
+    edit_title: '編輯組織權限',
+    permission_field_name: '權限名稱',
+    description_field_name: '描述',
+    description_field_placeholder: '閱讀約會歷史',
+    create_permission: '創建權限',
+    created: '組織權限 {{name}} 已成功建立。',
   },
 };
 

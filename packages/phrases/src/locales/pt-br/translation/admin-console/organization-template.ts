@@ -23,6 +23,13 @@ const organization_template = {
       'Permissão da organização refere-se à autorização para acessar um recurso no contexto da organização.',
     delete_confirm:
       'Se esta permissão for deletada, todos os papéis da organização que incluírem esta permissão perderão a mesma, e usuários que tinham esta permissão perderão o acesso concedido por ela.',
+    create_title: 'Criar permissão de organização',
+    edit_title: 'Editar permissão de organização',
+    permission_field_name: 'Nome da permissão',
+    description_field_name: 'Descrição',
+    description_field_placeholder: 'Ler histórico de compromissos',
+    create_permission: 'Criar permissão',
+    created: 'A permissão de organização {{name}} foi criada com sucesso.',
   },
 };
 

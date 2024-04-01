@@ -23,6 +23,13 @@ const organization_template = {
       'Organization permission refers to the authorization to access a resource in the context of organization.',
     delete_confirm:
       'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
+    create_title: 'Create organization permission',
+    edit_title: 'Edit organization permission',
+    permission_field_name: 'Permission name',
+    description_field_name: 'Description',
+    description_field_placeholder: 'Read appointment history',
+    create_permission: 'Create permission',
+    created: 'The org permission {{name}} has been successfully created.',
   },
 };
 

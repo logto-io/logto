@@ -22,6 +22,13 @@ const organization_template = {
     placeholder_description: '조직 권한은 조직의 맥락에서 자원에 접근할 수 있는 권한을 의미합니다.',
     delete_confirm:
       '이 권한이 삭제되면, 이 권한을 포함하는 모든 조직 역할이 이 권한을 잃게 되며, 이 권한을 가진 사용자는 그것에 의해 부여된 접근을 잃게 됩니다.',
+    create_title: '조직 권한 생성',
+    edit_title: '조직 권한 편집',
+    permission_field_name: '권한 이름',
+    description_field_name: '설명',
+    description_field_placeholder: '약속 기록 읽기',
+    create_permission: '권한 생성',
+    created: '조직 권한 {{name}}이(가) 성공적으로 생성되었습니다.',
   },
 };
 

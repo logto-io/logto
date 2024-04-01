@@ -23,6 +23,13 @@ const organization_template = {
       'Il permesso di organizzazione si riferisce all’autorizzazione ad accedere a una risorsa nel contesto dell’organizzazione.',
     delete_confirm:
       'Se questo permesso viene eliminato, tutti i ruoli di organizzazione che includono questo permesso perderanno tale permesso, e gli utenti che avevano questo permesso perderanno l’accesso concesso da esso.',
+    create_title: 'Crea permesso di organizzazione',
+    edit_title: 'Modifica permesso di organizzazione',
+    permission_field_name: 'Nome del permesso',
+    description_field_name: 'Descrizione',
+    description_field_placeholder: 'Leggi la cronologia degli appuntamenti',
+    create_permission: 'Crea permesso',
+    created: 'Permesso creato con successo',
   },
 };
 

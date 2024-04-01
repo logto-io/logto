@@ -23,6 +23,13 @@ const organization_template = {
       'Organisationsberechtigung bezieht sich auf die Autorisierung, auf eine Ressource im Kontext der Organisation zuzugreifen.',
     delete_confirm:
       'Wenn diese Berechtigung gelöscht wird, verlieren alle Organisationsrollen, die diese Berechtigung beinhalten, diese Berechtigung und Benutzer, die diese Berechtigung hatten, verlieren den Zugang, der durch sie gewährt wurde.',
+    create_title: 'Erstellen von Organisationsberechtigungen',
+    edit_title: 'Bearbeiten von Organisationsberechtigungen',
+    permission_field_name: 'Berechtigungsname',
+    description_field_name: 'Beschreibung',
+    description_field_placeholder: 'Terminhistorie lesen',
+    create_permission: 'Berechtigung erstellen',
+    created: 'Die Organisationsberechtigung {{name}} wurde erfolgreich erstellt.',
   },
 };
 

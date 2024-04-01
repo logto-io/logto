@@ -23,6 +23,13 @@ const organization_template = {
       'La permission d’organisation se réfère à l’autorisation d’accéder à une ressource dans le contexte de l’organisation.',
     delete_confirm:
       'Si cette permission est supprimée, tous les rôles d’organisation incluant cette permission perdront cette permission, et les utilisateurs qui avaient cette permission perdront l’accès accordé par celle-ci.',
+    create_title: 'Créer une autorisation d’organisation',
+    edit_title: 'Modifier une autorisation d’organisation',
+    permission_field_name: 'Nom de la permission',
+    description_field_name: 'Description',
+    description_field_placeholder: "Lire l'historique des rendez-vous",
+    create_permission: 'Créer une permission',
+    created: "La permission d'organisation {{name}} a été créée avec succès.",
   },
 };
 

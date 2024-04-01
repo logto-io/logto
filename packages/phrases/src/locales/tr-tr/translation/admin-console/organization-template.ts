@@ -23,6 +23,13 @@ const organization_template = {
       'Organizasyon izni, organizasyon bağlamında bir kaynağa erişim yetkisi anlamına gelir.',
     delete_confirm:
       'Bu izin silinirse, bu izni içeren tüm organizasyon rolleri bu izni kaybeder ve bu izne sahip kullanıcılar, bu izin tarafından verilen erişimi kaybeder.',
+    create_title: 'Organizasyon izni oluştur',
+    edit_title: 'Organizasyon iznini düzenle',
+    permission_field_name: 'İzin adı',
+    description_field_name: 'Açıklama',
+    description_field_placeholder: 'Randevu geçmişini oku',
+    create_permission: 'İzin oluştur',
+    created: 'Kuruluş izni {{name}} başarıyla oluşturuldu.',
   },
 };
 
