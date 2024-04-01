@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+
+.content {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+
+  > * {
+    flex: 1;
+    margin-bottom: _.unit(6);
+
+    &:first-child {
+      margin-right: _.unit(3);
+    }
+  }
+}

@@ -11,14 +11,14 @@ import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import useApi from '@/hooks/use-api';
 
-import MonacoCodeEditor, { type ModelControl, type ModelSettings } from '../MonacoCodeEditor';
-import { type JwtClaimsFormType } from '../type';
+import MonacoCodeEditor, { type ModelControl, type ModelSettings } from '../../MonacoCodeEditor';
+import { type JwtCustomizerForm } from '../../type';
 import {
   accessTokenPayloadTestModel,
   clientCredentialsPayloadTestModel,
   userContextTestModel,
-} from '../utils/config';
-import { formatFormDataToTestRequestPayload } from '../utils/format';
+} from '../../utils/config';
+import { formatFormDataToTestRequestPayload } from '../../utils/format';
 
 import TestResult, { type TestResultData } from './TestResult';
 import * as styles from './index.module.scss';
@@ -45,7 +45,7 @@ function TestTab({ isActive }: Props) {
   const [activeModelName, setActiveModelName] = useState<string>();
   const api = useApi({ hideErrorToast: true });
 
-  const { watch, control, formState, getValues } = useFormContext<JwtClaimsFormType>();
+  const { watch, control, formState, getValues } = useFormContext<JwtCustomizerForm>();
   const tokenType = watch('tokenType');
 
   const editorModels = useMemo(
@@ -99,13 +99,13 @@ function TestTab({ isActive }: Props) {
   }, [api, getValues]);
 
   const getModelControllerProps = useCallback(
-    ({ value, onChange }: ControllerRenderProps<JwtClaimsFormType, 'testSample'>): ModelControl => {
+    ({ value, onChange }: ControllerRenderProps<JwtCustomizerForm, 'testSample'>): ModelControl => {
       return {
         value:
-          activeModelName === userContextTestModel.name ? value?.contextSample : value?.tokenSample,
+          activeModelName === userContextTestModel.name ? value.contextSample : value.tokenSample,
         onChange: (newValue: string | undefined) => {
           // Form value is a object we need to update the specific field
-          const updatedValue: JwtClaimsFormType['testSample'] = {
+          const updatedValue: JwtCustomizerForm['testSample'] = {
             ...value,
             ...conditional(
               activeModelName === userContextTestModel.name && {
@@ -133,11 +133,7 @@ function TestTab({ isActive }: Props) {
   );
 
   const validateSampleCode = useCallback(
-    (value: JwtClaimsFormType['testSample']) => {
-      if (!value) {
-        return true;
-      }
-
+    (value: JwtCustomizerForm['testSample']) => {
       for (const [_, sampleCode] of Object.entries(value)) {
         if (sampleCode) {
           try {

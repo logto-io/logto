@@ -15,7 +15,7 @@ const tabs = {
   tenant_settings: 'Настройки',
   mfa: 'Multi-factor auth',
   /** UNTRANSLATED */
-  jwt_customizer: 'JWT Claims',
+  customize_jwt: 'JWT Claims',
   signing_keys: 'Ключи подписи',
   organization_template: 'Шаблон организации',
 };

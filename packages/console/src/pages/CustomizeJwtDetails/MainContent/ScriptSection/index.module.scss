@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+
+.codePanel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .cardTitle {
+    font: var(--font-label-2);
+    margin-bottom: _.unit(3);
+  }
+
+  .flexGrow {
+    flex-grow: 1;
+  }
+}

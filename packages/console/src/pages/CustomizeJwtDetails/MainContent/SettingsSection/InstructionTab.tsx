@@ -4,18 +4,18 @@ import classNames from 'classnames';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { type JwtClaimsFormType } from '../type';
+import { type JwtCustomizerForm } from '../../type';
 import {
+  environmentVariablesCodeExample,
+  fetchExternalDataCodeExample,
   sampleCodeEditorOptions,
   typeDefinitionCodeEditorOptions,
-  fetchExternalDataCodeExample,
-  environmentVariablesCodeExample,
-} from '../utils/config';
+} from '../../utils/config';
 import {
   accessTokenPayloadTypeDefinition,
   clientCredentialsPayloadTypeDefinition,
   jwtCustomizerUserContextTypeDefinition,
-} from '../utils/type-definitions';
+} from '../../utils/type-definitions';
 
 import EnvironmentVariablesField from './EnvironmentVariablesField';
 import GuideCard, { CardType } from './GuideCard';
@@ -29,7 +29,7 @@ type Props = {
 function InstructionTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { watch } = useFormContext<JwtClaimsFormType>();
+  const { watch } = useFormContext<JwtCustomizerForm>();
   const tokenType = watch('tokenType');
 
   return (

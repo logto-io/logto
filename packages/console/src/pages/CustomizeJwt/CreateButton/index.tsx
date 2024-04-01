@@ -1,8 +1,8 @@
 import { type LogtoJwtTokenPath } from '@logto/schemas';
-import { useNavigate } from 'react-router-dom';
 
 import PlusIcon from '@/assets/icons/plus.svg';
 import Button from '@/ds-components/Button';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
 
 import * as styles from './index.module.scss';
@@ -13,7 +13,7 @@ type Props = {
 
 function CreateButton({ tokenType }: Props) {
   const link = getPagePath(tokenType, 'create');
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
 
   return (
     <Button

@@ -1,11 +1,11 @@
 import {
   JwtCustomizerTypeDefinitionKey,
   accessTokenPayloadTypeDefinition,
-  jwtCustomizerUserContextTypeDefinition,
   clientCredentialsPayloadTypeDefinition,
+  jwtCustomizerUserContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 
-import { type JwtClaimsFormType } from '../type';
+import { type JwtCustomizerForm } from '../type';
 
 export {
   JwtCustomizerTypeDefinitionKey,
@@ -24,7 +24,7 @@ export const buildClientCredentialsJwtCustomizerContextTsDefinition = () =>
   `declare ${clientCredentialsPayloadTypeDefinition}`;
 
 export const buildEnvironmentVariablesTypeDefinition = (
-  envVariables?: JwtClaimsFormType['environmentVariables']
+  envVariables?: JwtCustomizerForm['environmentVariables']
 ) => {
   const typeDefinition = envVariables
     ? `{

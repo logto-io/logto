@@ -15,7 +15,7 @@ const tabs = {
   tenant_settings: '租户设置',
   mfa: '多因素认证',
   /** UNTRANSLATED */
-  jwt_customizer: 'JWT Claims',
+  customize_jwt: 'JWT Claims',
   signing_keys: '签名密钥',
   organization_template: '组织模板',
 };

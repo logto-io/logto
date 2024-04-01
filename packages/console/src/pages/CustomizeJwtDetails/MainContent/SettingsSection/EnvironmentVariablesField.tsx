@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import FormField from '@/ds-components/FormField';
 import KeyValueInputField from '@/ds-components/KeyValueInputField';
 
-import { type JwtClaimsFormType } from '../type';
+import { type JwtCustomizerForm } from '../../type';
 
 const isValidKey = (key: string) => {
   return /^\w+$/.test(key);
@@ -26,10 +26,10 @@ function EnvironmentVariablesField({ className }: Props) {
       errors: { environmentVariables: envVariableErrors },
       submitCount,
     },
-  } = useFormContext<JwtClaimsFormType>();
+  } = useFormContext<JwtCustomizerForm>();
 
   // Read the form controller from the context @see {@link https://react-hook-form.com/docs/usefieldarray}
-  const { fields, remove, append } = useFieldArray<JwtClaimsFormType>({
+  const { fields, remove, append } = useFieldArray<JwtCustomizerForm>({
     name: 'environmentVariables',
   });
 

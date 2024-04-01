@@ -1,0 +1,16 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .header {
+    flex-shrink: 0;
+    margin-bottom: _.unit(4);
+  }
+
+  .hidden {
+    display: none;
+  }
+}
