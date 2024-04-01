@@ -27,7 +27,7 @@
   }
 
   &.large {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 
     @media screen and (max-width: dim.$modal-layout-grid-medium) {
       grid-template-columns: repeat(2, 1fr);
