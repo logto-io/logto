@@ -8,7 +8,7 @@ import { type EditorProps } from '@monaco-editor/react';
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg';
 import UserFileIcon from '@/assets/icons/user-file-icon.svg';
 
-import type { ModelSettings } from '../MonacoCodeEditor/type.js';
+import type { ModelSettings } from '../MainContent/MonacoCodeEditor/type.js';
 
 import {
   JwtCustomizerTypeDefinitionKey,
@@ -189,17 +189,17 @@ export const environmentVariablesCodeExample = `exports.getCustomJwtClaims = asy
  */
 const standardTokenPayloadData = {
   jti: 'f1d3d2d1-1f2d-3d4e-5d6f-7d8a9d0e1d2',
-  client_id: 'my_app',
-  scope: 'read write',
   aud: 'http://localhost:3000/api/test',
+  scope: 'read write',
+  clientId: 'my_app',
 };
 
 export const defaultAccessTokenPayload: AccessTokenPayload = {
   ...standardTokenPayloadData,
-  grantId: 'grant_123',
   accountId: 'uid_123',
-  kind: 'AccessToken',
+  grantId: 'grant_123',
   gty: 'authorization_code',
+  kind: 'AccessToken',
 };
 
 export const defaultClientCredentialsPayload: ClientCredentialsPayload = {
@@ -209,20 +209,20 @@ export const defaultClientCredentialsPayload: ClientCredentialsPayload = {
 
 const defaultUserContext: Partial<JwtCustomizerUserContext> = {
   id: '123',
+  name: 'Foo Bar',
+  roles: [],
+  avatar: 'https://example.com/avatar.png',
+  profile: {},
+  username: 'foo',
+  customData: {},
+  identities: {},
   primaryEmail: 'foo@logto.io',
   primaryPhone: '+1234567890',
-  username: 'foo',
-  name: 'Foo Bar',
-  avatar: 'https://example.com/avatar.png',
   applicationId: 'my-app',
-  profile: {},
-  identities: {},
-  customData: {},
-  ssoIdentities: [],
-  mfaVerificationFactors: [],
-  roles: [],
   organizations: [],
+  ssoIdentities: [],
   organizationRoles: [],
+  mfaVerificationFactors: [],
 };
 
 export const defaultUserTokenContextData = {
@@ -234,7 +234,7 @@ export const accessTokenPayloadTestModel: ModelSettings = {
   icon: <TokenFileIcon />,
   name: 'user-token-payload.json',
   title: 'Token',
-  defaultValue: JSON.stringify(defaultAccessTokenPayload, null, '\t'),
+  defaultValue: JSON.stringify(defaultAccessTokenPayload, null, 2),
 };
 
 export const clientCredentialsPayloadTestModel: ModelSettings = {
@@ -242,7 +242,7 @@ export const clientCredentialsPayloadTestModel: ModelSettings = {
   icon: <TokenFileIcon />,
   name: 'machine-to-machine-token-payload.json',
   title: 'Token',
-  defaultValue: JSON.stringify(defaultClientCredentialsPayload, null, '\t'),
+  defaultValue: JSON.stringify(defaultClientCredentialsPayload, null, 2),
 };
 
 export const userContextTestModel: ModelSettings = {
@@ -250,5 +250,5 @@ export const userContextTestModel: ModelSettings = {
   icon: <UserFileIcon />,
   name: 'user-token-context.json',
   title: 'User Context',
-  defaultValue: JSON.stringify(defaultUserTokenContextData, null, '\t'),
+  defaultValue: JSON.stringify(defaultUserTokenContextData, null, 2),
 };

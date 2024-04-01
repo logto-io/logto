@@ -12,10 +12,10 @@ import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import {
-  type SamlSsoConnectorWithProviderConfig,
-  type SamlConnectorConfig,
   samlConnectorConfigGuard,
   samlProviderConfigGuard,
+  type SamlConnectorConfig,
+  type SamlSsoConnectorWithProviderConfig,
 } from '@/pages/EnterpriseSsoDetails/types/saml';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -90,8 +90,6 @@ function SamlConnectorForm({ isDeleted, data, onUpdated }: Props) {
 
         reset(result.config);
       } catch (error: unknown) {
-        console.log(error);
-
         if (error instanceof HTTPError) {
           const errorBody = await error.response.clone().json<RequestErrorBody>();
 

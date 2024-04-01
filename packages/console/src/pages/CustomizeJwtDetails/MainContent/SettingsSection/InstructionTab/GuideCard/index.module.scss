@@ -1,0 +1,60 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  .headerRow {
+    display: flex;
+    flex-direction: row;
+    gap: _.unit(4);
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .cardHeader {
+    flex: 1;
+  }
+
+  .cardTitle {
+    font: var(--font-label-2);
+    color: var(--color-text);
+    margin-bottom: _.unit(1);
+  }
+
+  .cardSubtitle {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+  }
+
+  .cardContent {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+
+    // Collapsible content should be hidden by default, margin space can only be set at the child level
+    > *:first-child {
+      margin-top: _.unit(6);
+    }
+
+    > *:not(:last-child) {
+      margin-bottom: _.unit(4);
+    }
+  }
+
+  .expandButton {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+    color: var(--color-text-secondary);
+  }
+
+  &.expanded {
+    .expandButton {
+      transform: rotate(180deg);
+    }
+
+    .cardContent {
+      max-height: 1000;
+      overflow: visible;
+    }
+  }
+}

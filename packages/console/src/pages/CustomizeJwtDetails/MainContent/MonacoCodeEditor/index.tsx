@@ -1,17 +1,21 @@
-import { Editor, useMonaco, type BeforeMount, type OnMount } from '@monaco-editor/react';
+import { Theme } from '@logto/schemas';
+import { Editor, useMonaco, type OnMount } from '@monaco-editor/react';
 import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import CodeRestoreButton from './ActionButton/CodeRestoreButton.js';
-import { defaultOptions, logtoDarkTheme } from './config.js';
+import DashBoard, { type Props as DashboardProps } from './Dashboard';
+import { defaultOptions, logtoDarkTheme, logtoLightTheme } from './config.js';
 import * as styles from './index.module.scss';
 import type { IStandaloneCodeEditor, ModelSettings } from './type.js';
 import useEditorHeight from './use-editor-height.js';
 
+export type { Props as DashboardProps } from './Dashboard';
 export type { ModelControl, ModelSettings } from './type.js';
 
 type ActionButtonType = 'restore' | 'copy';
@@ -26,6 +30,8 @@ type Props = {
   environmentVariablesDefinition?: string;
   onChange?: (value: string | undefined) => void;
   onMountHandler?: (editor: IStandaloneCodeEditor) => void;
+  actionButtons?: ReactNode;
+  dashboard?: DashboardProps;
 };
 /**
  * Monaco code editor component.
@@ -38,6 +44,8 @@ type Props = {
  * @param {string} prop.value - The value of the code editor for the current active model.
  * @param {(value: string | undefined) => void} prop.onChange - The callback function to handle the value change of the code editor.
  * @param {string} [prop.environmentVariablesDefinition] - The environment variables type definition for the script section.
+ * @param {ReactNode} [actionButtons] - Additional action buttons shown on the header
+ * @param {DashboardProps} [dashboard] - The dashboard component shown at the bottom of the editor.
  *
  * @returns
  */
@@ -51,9 +59,12 @@ function MonacoCodeEditor({
   setActiveModel,
   onChange,
   onMountHandler,
+  actionButtons,
+  dashboard,
 }: Props) {
   const monaco = useMonaco();
   const editorRef = useRef<Nullable<IStandaloneCodeEditor>>(null);
+  const theme = useTheme();
 
   const activeModel = useMemo(
     () => activeModelName && models.find((model) => model.name === activeModelName),
@@ -63,8 +74,9 @@ function MonacoCodeEditor({
   const isMultiModals = useMemo(() => models.length > 1, [models]);
 
   // Get the container ref and the editor height
-  const { containerRef, headerRef, editorHeight } = useEditorHeight();
+  const { containerRef, editorHeight } = useEditorHeight();
 
+  // Handle editor extraLibs and language compile settings
   useEffect(() => {
     // Monaco will be ready after the editor is mounted, useEffect will be called after the monaco is ready
     if (!monaco || !activeModel) {
@@ -84,18 +96,27 @@ function MonacoCodeEditor({
         'environmentVariables.d.ts'
       );
     }
+
+    if (activeModel.language === 'typescript') {
+      // Set the typescript compiler options
+      monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+        allowNonTsExtensions: true,
+        strictNullChecks: true,
+      });
+    }
   }, [activeModel, monaco, environmentVariablesDefinition]);
 
-  const handleEditorWillMount = useCallback<BeforeMount>((monaco) => {
-    // Register the new logto theme
-    monaco.editor.defineTheme('logto-dark', logtoDarkTheme);
+  // Handle the editor theme settings
+  useEffect(() => {
+    // Monaco will be ready after the editor is mounted, useEffect will be called after the monaco is ready
+    if (!monaco) {
+      return;
+    }
 
-    // Set the typescript compiler options
-    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-      allowNonTsExtensions: true,
-      strictNullChecks: true,
-    });
-  }, []);
+    const editorTheme = theme === Theme.Light ? logtoLightTheme : logtoDarkTheme;
+
+    monaco.editor.defineTheme('logto-dark', editorTheme);
+  }, [monaco, theme]);
 
   const handleEditorDidMount = useCallback<OnMount>(
     (editor) => {
@@ -107,8 +128,8 @@ function MonacoCodeEditor({
   );
 
   return (
-    <div ref={containerRef} className={classNames(className, styles.codeEditor)}>
-      <header ref={headerRef}>
+    <div className={classNames(className, styles.codeEditor)}>
+      <header>
         <div className={styles.tabList}>
           {models.map(({ name, title, icon }) => (
             <div
@@ -138,7 +159,7 @@ function MonacoCodeEditor({
           {enabledActions.includes('restore') && (
             <CodeRestoreButton
               onClick={() => {
-                if (activeModel) {
+                if (activeModel && value !== activeModel.defaultValue) {
                   onChange?.(activeModel.defaultValue);
                 }
               }}
@@ -147,9 +168,13 @@ function MonacoCodeEditor({
           {enabledActions.includes('copy') && (
             <CopyToClipboard variant="icon" value={editorRef.current?.getValue() ?? ''} />
           )}
+          {actionButtons}
         </div>
       </header>
-      <div className={styles.editorContainer}>
+      <div
+        ref={containerRef}
+        className={classNames(styles.editorContainer, dashboard && styles.dashboardOpen)}
+      >
         {activeModel && (
           <Editor
             height={editorHeight}
@@ -162,12 +187,12 @@ function MonacoCodeEditor({
             }}
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- empty string is falsy
             value={value || activeModel.defaultValue}
-            beforeMount={handleEditorWillMount}
             onMount={handleEditorDidMount}
             onChange={onChange}
           />
         )}
       </div>
+      {dashboard && <DashBoard {...dashboard} />}
     </div>
   );
 }

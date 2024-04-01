@@ -1,9 +1,6 @@
 @use '@/scss/underscore' as _;
-@use '@/scss/code-editor' as codeEditor;
 
 .codeEditor {
-  @include codeEditor.color;
-  @include codeEditor.font;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -37,7 +34,7 @@
           &.active,
           &:hover {
             color: var(--color-code-white);
-            background-color: var(--color-code-tab-active-bg);
+            background-color: var(--color-code-dark-bg-focused);
             border-radius: 8px;
           }
         }
@@ -54,5 +51,10 @@
   .editorContainer {
     position: relative;
     flex-grow: 1;
+
+    &.dashboardOpen {
+      flex-grow: 0;
+      height: 50%;
+    }
   }
 }

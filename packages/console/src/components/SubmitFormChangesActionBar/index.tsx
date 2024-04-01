@@ -1,3 +1,4 @@
+import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 
 import Button from '@/ds-components/Button';
@@ -9,9 +10,16 @@ type Props = {
   isSubmitting: boolean;
   onSubmit: () => Promise<void>;
   onDiscard: () => void;
+  confirmText?: AdminConsoleKey;
 };
 
-function SubmitFormChangesActionBar({ isOpen, isSubmitting, onSubmit, onDiscard }: Props) {
+function SubmitFormChangesActionBar({
+  isOpen,
+  isSubmitting,
+  confirmText = 'general.save_changes',
+  onSubmit,
+  onDiscard,
+}: Props) {
   return (
     <div className={classNames(styles.container, isOpen && styles.active)}>
       <div className={styles.actionBar}>
@@ -27,7 +35,7 @@ function SubmitFormChangesActionBar({ isOpen, isSubmitting, onSubmit, onDiscard 
           isLoading={isSubmitting}
           type="primary"
           size="medium"
-          title="general.save_changes"
+          title={confirmText}
           onClick={async () => onSubmit()}
         />
       </div>

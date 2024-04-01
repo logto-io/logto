@@ -129,7 +129,7 @@ export const useSidebarMenuItems = (): {
         {
           Icon: JwtClaims,
           title: 'customize_jwt',
-          isHidden: !isDevFeaturesEnabled,
+          isHidden: !(isCloud && isDevFeaturesEnabled),
         },
         {
           Icon: Hook,
