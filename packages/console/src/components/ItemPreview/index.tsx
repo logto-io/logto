@@ -27,7 +27,7 @@ function ItemPreview({ title, subtitle, icon, to, size = 'default', suffix, toTa
         <div className={styles.meta}>
           {to && (
             <Link
-              className={styles.title}
+              className={classNames(styles.title, styles.withLink)}
               to={getTo(to)}
               target={toTarget}
               onClick={(event) => {

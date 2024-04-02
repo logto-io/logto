@@ -5,7 +5,7 @@
   flex-direction: column;
   height: 100%;
   min-height: 600px;
-  background: var(--color-surface-1);
+  background: var(--color-base);
   align-items: center;
   justify-content: center;
   overflow-y: auto;
@@ -17,7 +17,7 @@
     width: 540px;
     padding: _.unit(35) _.unit(17.5);
     gap: _.unit(6);
-    background: var(--color-bg-float);
+    background: var(--color-layer-1);
     border-radius: 16px;
     box-shadow: var(--shadow-1);
     text-align: center;

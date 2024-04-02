@@ -26,14 +26,14 @@ function TenantSettings() {
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Settings}`}>
           <DynamicT forKey="tenants.tabs.settings" />
         </TabNavItem>
-        {isDevFeaturesEnabled && (
-          <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Members}`}>
-            <DynamicT forKey="tenants.tabs.members" />
-          </TabNavItem>
-        )}
         {canManageTenant && (
           <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Domains}`}>
             <DynamicT forKey="tenants.tabs.domains" />
+          </TabNavItem>
+        )}
+        {isDevFeaturesEnabled && (
+          <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Members}`}>
+            <DynamicT forKey="tenants.tabs.members" />
           </TabNavItem>
         )}
         {!isDevTenant && canManageTenant && (

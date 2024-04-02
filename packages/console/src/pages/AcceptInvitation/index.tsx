@@ -47,10 +47,10 @@ function AcceptInvitation() {
       resetTenants(data);
       navigateTenant(getTenantIdFromOrganizationId(organizationId));
     })();
-  }, [cloudApi, error, invitation, navigateTenant, t]);
+  }, [cloudApi, error, invitation, navigateTenant, resetTenants, t]);
 
   // No invitation returned, indicating the current signed-in user is not the invitee.
-  if (error?.status === 404) {
+  if (error?.status === 403) {
     return (
       <SwitchAccount
         onClickSwitch={() => {
@@ -61,6 +61,10 @@ function AcceptInvitation() {
         }}
       />
     );
+  }
+
+  if (error?.status === 404) {
+    return <AppError errorMessage={t('invitation.invitation_not_found')} />;
   }
 
   if (invitation && invitation.status !== OrganizationInvitationStatus.Pending) {

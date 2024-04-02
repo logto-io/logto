@@ -7,7 +7,7 @@ const invitation = {
   /** UNTRANSLATED */
   create_new_tenant: 'Create a new tenant',
   /** UNTRANSLATED */
-  email_not_match_title: 'You are currently signed in as\n{{email}}.',
+  email_not_match_title: 'You are currently signed in as\n{{email}}',
   /** UNTRANSLATED */
   email_not_match_description:
     'You do not currently have access to this organization.\nPlease sign in with the correct account to accept the invitation and become a member of the organization.',
@@ -15,6 +15,8 @@ const invitation = {
   switch_account: 'Sign in to another account',
   /** UNTRANSLATED */
   invalid_invitation_status: 'Invalid invitation. Please contact the administrator and try again.',
+  /** UNTRANSLATED */
+  invitation_not_found: 'Invitation not found. Please contact the administrator.',
 };
 
 export default Object.freeze(invitation);

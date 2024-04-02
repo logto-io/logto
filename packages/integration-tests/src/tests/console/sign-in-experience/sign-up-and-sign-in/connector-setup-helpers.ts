@@ -3,7 +3,7 @@ import { type Page } from 'puppeteer';
 
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import { expectToClickDetailsPageOption, waitForToast } from '#src/ui-helpers/index.js';
-import { expectNavigation, appendPathname } from '#src/utils.js';
+import { expectNavigation, appendPathname, cls } from '#src/utils.js';
 
 import {
   expectToConfirmConnectorDeletion,
@@ -129,7 +129,7 @@ export const expectToDeletePasswordlessConnector = async (page: Page, { name }: 
     page.goto(appendPathname('/console/connectors/passwordless', logtoConsoleUrl).href)
   );
 
-  await expect(page).toClick('table tbody tr td div[class$=item] a[class$=title] span', {
+  await expect(page).toClick(`table tbody tr td div[class$=item] a${cls('title')} span`, {
     text: name,
   });
 
@@ -150,7 +150,7 @@ export const expectToDeleteSocialConnector = async (page: Page, { name }: TestCo
     page.goto(appendPathname('/console/connectors/social', logtoConsoleUrl).href)
   );
 
-  await expect(page).toClick('table tbody tr td div[class$=item] a[class$=title] span', {
+  await expect(page).toClick(`table tbody tr td div[class$=item] a${cls('title')} span`, {
     text: name,
   });
 

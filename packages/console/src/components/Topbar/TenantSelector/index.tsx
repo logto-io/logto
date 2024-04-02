@@ -54,7 +54,8 @@ export default function TenantSelector() {
         }}
       >
         <div className={styles.name}>{currentTenantInfo.name}</div>
-        <TenantEnvTag className={styles.tag} tag={currentTenantInfo.tag} />
+        <TenantEnvTag tag={currentTenantInfo.tag} />
+        {Boolean(pendingInvitations?.length) && <div className={styles.redDot} />}
         <KeyboardArrowDown className={styles.arrowIcon} />
       </div>
       <Dropdown

@@ -13,7 +13,7 @@ import {
   goToAdminConsole,
   waitForToast,
 } from '#src/ui-helpers/index.js';
-import { expectNavigation, appendPathname, dcls, waitFor } from '#src/utils.js';
+import { expectNavigation, appendPathname, dcls, waitFor, cls } from '#src/utils.js';
 
 import {
   type ApplicationMetadata,
@@ -85,7 +85,7 @@ describe('applications', () => {
      */
     await page.reload();
 
-    await expect(page).toMatchElement('table div[class$=item] a[class$=title]', {
+    await expect(page).toMatchElement(`table div[class$=item] a${cls('title')}`, {
       text: initialApp.name,
     });
   });
@@ -345,7 +345,7 @@ describe('applications', () => {
   });
 
   it('delete the initial application', async () => {
-    await expect(page).toClick('table tbody tr td div[class$=item] a[class$=title]', {
+    await expect(page).toClick(`table tbody tr td div[class$=item] a${cls('title')}`, {
       text: initialApp.name,
     });
 
