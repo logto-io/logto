@@ -17,13 +17,14 @@ import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl } from '@/utils/url';
 
 import * as styles from './index.module.scss';
 
 function OrganizationRoles() {
   const { getDocumentationUrl } = useDocumentationUrl();
-
+  const { navigate } = useTenantPathname();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -49,8 +50,8 @@ function OrganizationRoles() {
           title: <DynamicT forKey="organization_template.roles.role_column" />,
           dataIndex: 'name',
           colSpan: 4,
-          render: ({ name }) => {
-            return <ItemPreview title={name} icon={<ThemedIcon for={OrgRoleIcon} />} />;
+          render: ({ id, name }) => {
+            return <ItemPreview title={name} icon={<ThemedIcon for={OrgRoleIcon} />} to={id} />;
           },
         },
         {
@@ -72,6 +73,9 @@ function OrganizationRoles() {
           },
         },
       ]}
+      rowClickHandler={({ id }) => {
+        navigate(id);
+      }}
       filter={
         <div className={styles.filter}>
           <Button
