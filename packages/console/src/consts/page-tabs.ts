@@ -52,3 +52,8 @@ export enum OrganizationTemplateTabs {
   OrganizationRoles = 'organization-roles',
   OrganizationPermissions = 'organization-permissions',
 }
+
+export enum OrganizationRoleDetailsTabs {
+  Permissions = 'permissions',
+  General = 'general',
+}

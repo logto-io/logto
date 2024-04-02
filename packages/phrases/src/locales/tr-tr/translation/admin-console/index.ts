@@ -22,6 +22,7 @@ import logs from './logs.js';
 import menu from './menu.js';
 import mfa from './mfa.js';
 import organization_details from './organization-details.js';
+import organization_role_details from './organization-role-details.js';
 import organization_template from './organization-template.js';
 import organizations from './organizations.js';
 import permissions from './permissions.js';
@@ -95,6 +96,7 @@ const admin_console = {
   invitation,
   signing_keys,
   organization_template,
+  organization_role_details,
 };
 
 export default Object.freeze(admin_console);

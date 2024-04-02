@@ -35,6 +35,7 @@ import GetStarted from '@/pages/GetStarted';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import OrganizationDetails from '@/pages/OrganizationDetails';
+import OrganizationRoleDetails from '@/pages/OrganizationRoleDetails';
 import OrganizationTemplate from '@/pages/OrganizationTemplate';
 import OrganizationPermissions from '@/pages/OrganizationTemplate/OrganizationPermissions';
 import OrganizationRoles from '@/pages/OrganizationTemplate/OrganizationRoles';
@@ -187,20 +188,26 @@ function ConsoleContent() {
               </Route>
             </Route>
             {isDevFeaturesEnabled && (
-              <Route path="organization-template" element={<OrganizationTemplate />}>
+              <>
+                <Route path="organization-template" element={<OrganizationTemplate />}>
+                  <Route
+                    index
+                    element={<Navigate replace to={OrganizationTemplateTabs.OrganizationRoles} />}
+                  />
+                  <Route
+                    path={OrganizationTemplateTabs.OrganizationRoles}
+                    element={<OrganizationRoles />}
+                  />
+                  <Route
+                    path={OrganizationTemplateTabs.OrganizationPermissions}
+                    element={<OrganizationPermissions />}
+                  />
+                </Route>
                 <Route
-                  index
-                  element={<Navigate replace to={OrganizationTemplateTabs.OrganizationRoles} />}
+                  path={`organization-template/${OrganizationTemplateTabs.OrganizationRoles}/:id/*`}
+                  element={<OrganizationRoleDetails />}
                 />
-                <Route
-                  path={OrganizationTemplateTabs.OrganizationRoles}
-                  element={<OrganizationRoles />}
-                />
-                <Route
-                  path={OrganizationTemplateTabs.OrganizationPermissions}
-                  element={<OrganizationPermissions />}
-                />
-              </Route>
+              </>
             )}
             <Route path="organizations">
               <Route index element={<Organizations />} />
