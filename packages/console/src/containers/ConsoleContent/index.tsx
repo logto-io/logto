@@ -36,8 +36,8 @@ import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import OrganizationDetails from '@/pages/OrganizationDetails';
 import OrganizationTemplate from '@/pages/OrganizationTemplate';
-import OrgPermissions from '@/pages/OrganizationTemplate/OrgPermissions';
-import OrgRoles from '@/pages/OrganizationTemplate/OrgRoles';
+import OrganizationPermissions from '@/pages/OrganizationTemplate/OrganizationPermissions';
+import OrganizationRoles from '@/pages/OrganizationTemplate/OrganizationRoles';
 import Organizations from '@/pages/Organizations';
 import OrganizationGuide from '@/pages/Organizations/Guide';
 import Profile from '@/pages/Profile';
@@ -192,10 +192,10 @@ function ConsoleContent() {
                   index
                   element={<Navigate replace to={OrganizationTemplateTabs.OrgRoles} />}
                 />
-                <Route path={OrganizationTemplateTabs.OrgRoles} element={<OrgRoles />} />
+                <Route path={OrganizationTemplateTabs.OrgRoles} element={<OrganizationRoles />} />
                 <Route
                   path={OrganizationTemplateTabs.OrgPermissions}
-                  element={<OrgPermissions />}
+                  element={<OrganizationPermissions />}
                 />
               </Route>
             )}

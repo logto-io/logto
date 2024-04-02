@@ -5,7 +5,7 @@ const organization_template = {
   org_roles: {
     tab_name: 'Roles de org',
     search_placeholder: 'Buscar por nombre de rol',
-    create_org_roles: 'Crear rol de org',
+    create_title: 'Crear rol de org',
     org_role_column: 'Rol de org',
     permissions_column: 'Permisos',
     placeholder_title: 'Rol de organización',

@@ -5,7 +5,7 @@ const organization_template = {
   org_roles: {
     tab_name: '組織角色',
     search_placeholder: '按角色名稱搜索',
-    create_org_roles: '創建組織角色',
+    create_title: '創建組織角色',
     org_role_column: '組織角色',
     permissions_column: '權限',
     placeholder_title: '組織角色',

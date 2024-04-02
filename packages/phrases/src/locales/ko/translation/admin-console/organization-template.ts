@@ -5,7 +5,7 @@ const organization_template = {
   org_roles: {
     tab_name: '조직 역할',
     search_placeholder: '역할 이름으로 검색',
-    create_org_roles: '조직 역할 생성',
+    create_title: '조직 역할 생성',
     org_role_column: '조직 역할',
     permissions_column: '권한',
     placeholder_title: '조직 역할',

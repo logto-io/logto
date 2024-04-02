@@ -21,7 +21,7 @@ import { buildUrl } from '@/utils/url';
 
 import * as styles from './index.module.scss';
 
-function OrgRoles() {
+function OrganizationRoles() {
   const { getDocumentationUrl } = useDocumentationUrl();
 
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
@@ -42,7 +42,7 @@ function OrgRoles() {
 
   return (
     <Table
-      rowGroups={[{ key: 'orgRoles', data: orgRoles }]}
+      rowGroups={[{ key: 'organizationRoles', data: orgRoles }]}
       rowIndexKey="id"
       columns={[
         {
@@ -75,9 +75,8 @@ function OrgRoles() {
       filter={
         <div className={styles.filter}>
           <Button
-            title="organization_template.org_roles.create_org_roles"
+            title="organization_template.org_roles.create_title"
             type="primary"
-            size="large"
             icon={<Plus />}
             onClick={() => {
               // Todo @xiaoyijun implment create org role
@@ -97,7 +96,7 @@ function OrgRoles() {
           }}
           action={
             <Button
-              title="organization_template.org_roles.create_org_roles"
+              title="organization_template.org_roles.create_title"
               type="primary"
               size="large"
               icon={<Plus />}
@@ -123,4 +122,4 @@ function OrgRoles() {
   );
 }
 
-export default OrgRoles;
+export default OrganizationRoles;

@@ -25,7 +25,7 @@ import { buildUrl, formatSearchKeyword } from '@/utils/url';
 import OrgPermissionModal from './OrgPermissionModal';
 import * as styles from './index.module.scss';
 
-function OrgPermissions() {
+function OrganizationPermissions() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const [{ keyword }, updateSearchParameters] = useSearchParametersWatcher({
@@ -45,7 +45,7 @@ function OrgPermissions() {
   return (
     <>
       <Table
-        rowGroups={[{ key: 'orgPermissions', data }]}
+        rowGroups={[{ key: 'organizationPermissions', data }]}
         rowIndexKey="id"
         columns={[
           {
@@ -102,7 +102,6 @@ function OrgPermissions() {
               title="organization_template.org_permissions.create_org_permission"
               className={styles.createButton}
               type="primary"
-              size="large"
               icon={<Plus />}
               onClick={() => {
                 setPermissionModalData(null);
@@ -154,4 +153,4 @@ function OrgPermissions() {
   );
 }
 
-export default OrgPermissions;
+export default OrganizationPermissions;

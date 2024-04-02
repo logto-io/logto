@@ -5,7 +5,7 @@ const organization_template = {
   org_roles: {
     tab_name: 'Org rolleri',
     search_placeholder: 'Role adı ile ara',
-    create_org_roles: 'Org rolü oluştur',
+    create_title: 'Org rolü oluştur',
     org_role_column: 'Org rolü',
     permissions_column: 'İzinler',
     placeholder_title: 'Organizasyon rolü',
