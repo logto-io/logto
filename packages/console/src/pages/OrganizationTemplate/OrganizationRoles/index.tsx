@@ -21,7 +21,7 @@ import { buildUrl } from '@/utils/url';
 
 import * as styles from './index.module.scss';
 
-function OrgRoles() {
+function OrganizationRoles() {
   const { getDocumentationUrl } = useDocumentationUrl();
 
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
@@ -42,11 +42,11 @@ function OrgRoles() {
 
   return (
     <Table
-      rowGroups={[{ key: 'orgRoles', data: orgRoles }]}
+      rowGroups={[{ key: 'organizationRoles', data: orgRoles }]}
       rowIndexKey="id"
       columns={[
         {
-          title: <DynamicT forKey="organization_template.org_roles.org_role_column" />,
+          title: <DynamicT forKey="organization_template.roles.role_column" />,
           dataIndex: 'name',
           colSpan: 4,
           render: ({ name }) => {
@@ -54,7 +54,7 @@ function OrgRoles() {
           },
         },
         {
-          title: <DynamicT forKey="organization_template.org_roles.permissions_column" />,
+          title: <DynamicT forKey="organization_template.roles.permissions_column" />,
           dataIndex: 'scopes',
           colSpan: 12,
           render: ({ scopes }) => {
@@ -75,9 +75,8 @@ function OrgRoles() {
       filter={
         <div className={styles.filter}>
           <Button
-            title="organization_template.org_roles.create_org_roles"
+            title="organization_template.roles.create_title"
             type="primary"
-            size="large"
             icon={<Plus />}
             onClick={() => {
               // Todo @xiaoyijun implment create org role
@@ -89,15 +88,15 @@ function OrgRoles() {
         <TablePlaceholder
           image={<RolesEmpty />}
           imageDark={<RolesEmptyDark />}
-          title="organization_template.org_roles.placeholder_title"
-          description="organization_template.org_roles.placeholder_description"
+          title="organization_template.roles.placeholder_title"
+          description="organization_template.roles.placeholder_description"
           learnMoreLink={{
             href: getDocumentationUrl(organizationRoleLink),
             targetBlank: 'noopener',
           }}
           action={
             <Button
-              title="organization_template.org_roles.create_org_roles"
+              title="organization_template.roles.create_title"
               type="primary"
               size="large"
               icon={<Plus />}
@@ -123,4 +122,4 @@ function OrgRoles() {
   );
 }
 
-export default OrgRoles;
+export default OrganizationRoles;
