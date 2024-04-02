@@ -16,7 +16,7 @@ const tenant_members = {
   /** UNTRANSLATED */
   invitation_status: 'Invitation status',
   /** UNTRANSLATED */
-  invitation_sent: 'Invitation sent',
+  inviter: 'Inviter',
   /** UNTRANSLATED */
   expiration_date: 'Expiration date',
   invite_modal: {

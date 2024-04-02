@@ -7,7 +7,7 @@ const tenant_members = {
   admin: 'Admin',
   collaborator: 'Collaborator',
   invitation_status: 'Invitation status',
-  invitation_sent: 'Invitation sent',
+  inviter: 'Inviter',
   expiration_date: 'Expiration date',
   invite_modal: {
     title: 'Invite people to Silverhand',
