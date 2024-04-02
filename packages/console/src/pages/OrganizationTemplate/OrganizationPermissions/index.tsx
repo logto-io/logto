@@ -49,7 +49,7 @@ function OrganizationPermissions() {
         rowIndexKey="id"
         columns={[
           {
-            title: <DynamicT forKey="organization_template.org_permissions.permission_column" />,
+            title: <DynamicT forKey="organization_template.permissions.permission_column" />,
             dataIndex: 'name',
             colSpan: 7,
             render: ({ name }) => {
@@ -61,7 +61,7 @@ function OrganizationPermissions() {
             },
           },
           {
-            title: <DynamicT forKey="organization_template.org_permissions.description_column" />,
+            title: <DynamicT forKey="organization_template.permissions.description_column" />,
             dataIndex: 'scopes',
             colSpan: 8,
             render: ({ description }) => <Breakable>{description ?? '-'}</Breakable>,
@@ -72,8 +72,8 @@ function OrganizationPermissions() {
             colSpan: 1,
             render: (scope) => (
               <ActionsButton
-                fieldName="organization_template.org_permissions.permission_column"
-                deleteConfirmation="organization_template.org_permissions.delete_confirm"
+                fieldName="organization_template.permissions.permission_column"
+                deleteConfirmation="organization_template.permissions.delete_confirm"
                 onEdit={() => {
                   setPermissionModalData(scope);
                 }}
@@ -88,7 +88,7 @@ function OrganizationPermissions() {
         filter={
           <div className={styles.filter}>
             <Search
-              placeholder={t('organization_template.org_permissions.search_placeholder')}
+              placeholder={t('organization_template.permissions.search_placeholder')}
               defaultValue={keyword}
               isClearable={Boolean(keyword)}
               onSearch={(keyword) => {
@@ -99,7 +99,7 @@ function OrganizationPermissions() {
               }}
             />
             <Button
-              title="organization_template.org_permissions.create_org_permission"
+              title="organization_template.permissions.create_org_permission"
               className={styles.createButton}
               type="primary"
               icon={<Plus />}
@@ -116,15 +116,15 @@ function OrganizationPermissions() {
             <TablePlaceholder
               image={<PermissionsEmpty />}
               imageDark={<PermissionsEmptyDark />}
-              title="organization_template.org_permissions.placeholder_title"
-              description="organization_template.org_permissions.placeholder_description"
+              title="organization_template.permissions.placeholder_title"
+              description="organization_template.permissions.placeholder_description"
               learnMoreLink={{
                 href: getDocumentationUrl(organizationPermissionLink),
                 targetBlank: 'noopener',
               }}
               action={
                 <Button
-                  title="organization_template.org_permissions.create_org_permission"
+                  title="organization_template.permissions.create_org_permission"
                   type="primary"
                   size="large"
                   icon={<Plus />}

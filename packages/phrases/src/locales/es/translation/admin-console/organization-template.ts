@@ -2,17 +2,17 @@ const organization_template = {
   title: 'Plantilla de organización',
   subtitle:
     'En aplicaciones SaaS multiinquilino, es común que múltiples organizaciones compartan políticas de control de acceso idénticas, incluyendo permisos y roles. En Logto, este concepto se denomina "plantilla de organización". Usarla simplifica el proceso de construir y diseñar tu modelo de autorización.',
-  org_roles: {
+  roles: {
     tab_name: 'Roles de org',
     search_placeholder: 'Buscar por nombre de rol',
     create_title: 'Crear rol de org',
-    org_role_column: 'Rol de org',
+    role_column: 'Rol de org',
     permissions_column: 'Permisos',
     placeholder_title: 'Rol de organización',
     placeholder_description:
       'El rol de organización es un agrupamiento de permisos que se pueden asignar a los usuarios. Los permisos deben provenir de los permisos de organización predefinidos.',
   },
-  org_permissions: {
+  permissions: {
     tab_name: 'Permisos de org',
     search_placeholder: 'Buscar por nombre de permiso',
     create_org_permission: 'Crear permiso de org',

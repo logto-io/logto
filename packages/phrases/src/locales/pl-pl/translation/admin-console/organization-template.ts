@@ -2,17 +2,17 @@ const organization_template = {
   title: 'Szablon organizacji',
   subtitle:
     'W aplikacjach SaaS wieloklienckich jest powszechne, że wiele organizacji dzieli identyczne polityki kontroli dostępu, w tym uprawnienia i role. W Logto, ten koncept jest określany jako "szablon organizacji". Jego użycie usprawnia proces budowania i projektowania modelu autoryzacji.',
-  org_roles: {
+  roles: {
     tab_name: 'Role org',
     search_placeholder: 'Szukaj po nazwie roli',
     create_title: 'Utwórz rolę org',
-    org_role_column: 'Rola org',
+    role_column: 'Rola org',
     permissions_column: 'Uprawnienia',
     placeholder_title: 'Rola organizacyjna',
     placeholder_description:
       'Rola organizacyjna to grupowanie uprawnień, które można przypisać użytkownikom. Uprawnienia muszą pochodzić z wcześniej zdefiniowanych uprawnień organizacyjnych.',
   },
-  org_permissions: {
+  permissions: {
     tab_name: 'Uprawnienia org',
     search_placeholder: 'Szukaj po nazwie uprawnienia',
     create_org_permission: 'Utwórz uprawnienie org',

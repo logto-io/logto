@@ -51,7 +51,7 @@ function OrgPermissionModal({ data, onClose }: Props) {
             json,
           }));
       toast.success(
-        t(isCreateMode ? 'organization_template.org_permissions.created' : 'general.saved', {
+        t(isCreateMode ? 'organization_template.permissions.created' : 'general.saved', {
           name: json.name,
         })
       );
@@ -67,7 +67,7 @@ function OrgPermissionModal({ data, onClose }: Props) {
       onRequestClose={onClose}
     >
       <ModalLayout
-        title={`organization_template.org_permissions.${isCreateMode ? 'create' : 'edit'}_title`}
+        title={`organization_template.permissions.${isCreateMode ? 'create' : 'edit'}_title`}
         footer={
           <>
             {!isCreateMode && (
@@ -77,7 +77,7 @@ function OrgPermissionModal({ data, onClose }: Props) {
               type="primary"
               title={
                 isCreateMode
-                  ? 'organization_template.org_permissions.create_permission'
+                  ? 'organization_template.permissions.create_permission'
                   : 'general.save'
               }
               isLoading={isSubmitting}
@@ -87,7 +87,7 @@ function OrgPermissionModal({ data, onClose }: Props) {
         }
         onClose={onClose}
       >
-        <FormField isRequired title="organization_template.org_permissions.permission_field_name">
+        <FormField isRequired title="organization_template.permissions.permission_field_name">
           <TextInput
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus={isCreateMode}
@@ -97,11 +97,11 @@ function OrgPermissionModal({ data, onClose }: Props) {
             {...register('name', { required: true })}
           />
         </FormField>
-        <FormField title="organization_template.org_permissions.description_field_name">
+        <FormField title="organization_template.permissions.description_field_name">
           <TextInput
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus={!isCreateMode}
-            placeholder={t('organization_template.org_permissions.description_field_placeholder')}
+            placeholder={t('organization_template.permissions.description_field_placeholder')}
             error={Boolean(errors.description)}
             {...register('description')}
           />

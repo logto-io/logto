@@ -46,7 +46,7 @@ function OrganizationRoles() {
       rowIndexKey="id"
       columns={[
         {
-          title: <DynamicT forKey="organization_template.org_roles.org_role_column" />,
+          title: <DynamicT forKey="organization_template.roles.role_column" />,
           dataIndex: 'name',
           colSpan: 4,
           render: ({ name }) => {
@@ -54,7 +54,7 @@ function OrganizationRoles() {
           },
         },
         {
-          title: <DynamicT forKey="organization_template.org_roles.permissions_column" />,
+          title: <DynamicT forKey="organization_template.roles.permissions_column" />,
           dataIndex: 'scopes',
           colSpan: 12,
           render: ({ scopes }) => {
@@ -75,7 +75,7 @@ function OrganizationRoles() {
       filter={
         <div className={styles.filter}>
           <Button
-            title="organization_template.org_roles.create_title"
+            title="organization_template.roles.create_title"
             type="primary"
             icon={<Plus />}
             onClick={() => {
@@ -88,15 +88,15 @@ function OrganizationRoles() {
         <TablePlaceholder
           image={<RolesEmpty />}
           imageDark={<RolesEmptyDark />}
-          title="organization_template.org_roles.placeholder_title"
-          description="organization_template.org_roles.placeholder_description"
+          title="organization_template.roles.placeholder_title"
+          description="organization_template.roles.placeholder_description"
           learnMoreLink={{
             href: getDocumentationUrl(organizationRoleLink),
             targetBlank: 'noopener',
           }}
           action={
             <Button
-              title="organization_template.org_roles.create_title"
+              title="organization_template.roles.create_title"
               type="primary"
               size="large"
               icon={<Plus />}

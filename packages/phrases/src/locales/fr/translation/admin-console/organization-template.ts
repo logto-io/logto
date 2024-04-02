@@ -2,17 +2,17 @@ const organization_template = {
   title: 'Modèle d’organisation',
   subtitle:
     'Dans les applications SaaS multi-locataires, il est courant que plusieurs organisations partagent des politiques de contrôle d’accès identiques, incluant les permissions et les rôles. Chez Logto, ce concept est désigné par "modèle d’organisation". Son utilisation simplifie le processus de construction et de conception de votre modèle d’autorisation.',
-  org_roles: {
+  roles: {
     tab_name: 'Rôles org',
     search_placeholder: 'Rechercher par nom de rôle',
     create_title: 'Créer un rôle org',
-    org_role_column: 'Rôle org',
+    role_column: 'Rôle org',
     permissions_column: 'Permissions',
     placeholder_title: 'Rôle d’organisation',
     placeholder_description:
       'Un rôle d’organisation est un groupement de permissions qui peuvent être attribuées aux utilisateurs. Les permissions doivent provenir des permissions d’organisation prédéfinies.',
   },
-  org_permissions: {
+  permissions: {
     tab_name: 'Permissions org',
     search_placeholder: 'Rechercher par nom de permission',
     create_org_permission: 'Créer une permission org',
