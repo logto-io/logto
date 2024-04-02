@@ -14,6 +14,7 @@ import {
   generateScopeName,
   generateRoleName,
   dcls,
+  cls,
 } from '#src/utils.js';
 
 import {
@@ -183,7 +184,7 @@ describe('M2M RBAC', () => {
       await expect(page).toFill('div[class$=filter] input', roleName);
       await expect(page).toClick('button', { text: 'Search' });
 
-      await expect(page).toClick('table tbody tr td div[class$=meta]:has(a[class$=title])', {
+      await expect(page).toClick(`table tbody tr td div[class$=meta]:has(a${cls('title')})`, {
         text: roleName,
       });
     });
@@ -272,7 +273,7 @@ describe('M2M RBAC', () => {
       });
 
       await expect(page).toMatchElement(
-        'div[class$=applicationsTable] td div[class$=item] a[class$=title]',
+        [dcls('applicationsTable'), 'td', dcls('item'), `a${cls('title')}`].join(' '),
         {
           text: rbacTestAppname,
         }
@@ -302,7 +303,7 @@ describe('M2M RBAC', () => {
         page.goto(appendPathname('/console/applications', logtoConsoleUrl).href)
       );
 
-      await expect(page).toClick('table tbody tr td a[class$=title]', {
+      await expect(page).toClick(['table', 'tbody', 'tr', 'td', `a${cls('title')}`].join(' '), {
         text: rbacTestAppname,
       });
     });
@@ -341,7 +342,7 @@ describe('M2M RBAC', () => {
         }
       );
 
-      const roleRow = await expect(page).toMatchElement('table tbody tr:has(td a[class$=title])', {
+      const roleRow = await expect(page).toMatchElement(`table tbody tr:has(td a${cls('title')})`, {
         text: roleName,
       });
 

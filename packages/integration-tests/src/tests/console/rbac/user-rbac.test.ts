@@ -15,6 +15,7 @@ import {
   generateResourceIndicator,
   generateScopeName,
   generateRoleName,
+  cls,
 } from '#src/utils.js';
 
 import { expectToSelectPermissionAction } from './helper.js';
@@ -265,7 +266,7 @@ describe('User RBAC', () => {
     });
 
     await expect(page).toMatchElement(
-      'div[class$=usersTable] td div[class$=item] a[class$=title]',
+      `div[class$=usersTable] td div[class$=item] a${cls('title')}`,
       {
         text: rbacTestUsername,
       }
@@ -274,7 +275,7 @@ describe('User RBAC', () => {
 
   it('remove a role form a user on the user details page', async () => {
     // Navigate to user details page
-    await expect(page).toClick('table tbody tr td a[class$=title]', {
+    await expect(page).toClick(`table tbody tr td a${cls('title')}`, {
       text: rbacTestUsername,
     });
 
@@ -287,7 +288,7 @@ describe('User RBAC', () => {
       text: 'Roles',
     });
 
-    const roleRow = await expect(page).toMatchElement('table tbody tr:has(td a[class$=title])', {
+    const roleRow = await expect(page).toMatchElement(`table tbody tr:has(td a${cls('title')})`, {
       text: roleName,
     });
 
@@ -347,7 +348,7 @@ describe('User RBAC', () => {
       }
     );
 
-    await expect(page).toClick('table tbody tr td a[class$=title]', {
+    await expect(page).toClick(['table', 'tbody', 'tr', 'td', `a${cls('title')}`].join(' '), {
       text: roleName,
     });
 
@@ -380,7 +381,7 @@ describe('User RBAC', () => {
       }
     );
 
-    await expect(page).toClick('table tbody tr td a[class$=title]', {
+    await expect(page).toClick(['table', 'tbody', 'tr', 'td', `a${cls('title')}`].join(' '), {
       text: apiResourceName,
     });
 
