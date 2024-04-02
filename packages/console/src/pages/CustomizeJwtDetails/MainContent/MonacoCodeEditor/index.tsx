@@ -158,6 +158,7 @@ function MonacoCodeEditor({
         <div className={styles.actionButtons}>
           {enabledActions.includes('restore') && (
             <CodeRestoreButton
+              className={styles.iconButton}
               onClick={() => {
                 if (activeModel && value !== activeModel.defaultValue) {
                   onChange?.(activeModel.defaultValue);
@@ -166,7 +167,12 @@ function MonacoCodeEditor({
             />
           )}
           {enabledActions.includes('copy') && (
-            <CopyToClipboard variant="icon" value={editorRef.current?.getValue() ?? ''} />
+            <CopyToClipboard
+              isLeftMarginIgnored
+              variant="icon"
+              value={editorRef.current?.getValue() ?? ''}
+              className={styles.iconButton}
+            />
           )}
           {actionButtons}
         </div>

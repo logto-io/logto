@@ -43,8 +43,26 @@
 
     .actionButtons {
       display: flex;
-      gap: _.unit(2);
+      gap: _.unit(3);
       align-items: center;
+      background: none;
+
+      svg {
+        color: var(--color-code-grey);
+      }
+
+      .iconButton {
+        transition: background 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+          background: var(--color-overlay-dark-bg-hover);
+        }
+
+        &:active {
+          background: var(--color-overlay-dark-bg-pressed);
+        }
+      }
     }
   }
 
