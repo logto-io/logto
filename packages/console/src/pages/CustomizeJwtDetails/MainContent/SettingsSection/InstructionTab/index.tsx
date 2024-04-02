@@ -38,25 +38,6 @@ function InstructionTab({ isActive }: Props) {
 
   return (
     <div className={classNames(tabContentStyles.tabContent, isActive && tabContentStyles.active)}>
-      <div className={tabContentStyles.description}>{t('jwt_claims.jwt_claims_description')}</div>
-      {tokenType === LogtoJwtTokenPath.AccessToken && (
-        <GuideCard
-          name={CardType.UserData}
-          isExpanded={expendCard === CardType.UserData}
-          setExpanded={(expand) => {
-            setExpendCard(expand ? CardType.UserData : undefined);
-          }}
-        >
-          <Editor
-            language="typescript"
-            className={styles.sampleCode}
-            value={jwtCustomizerUserContextTypeDefinition}
-            height="700px"
-            theme="logto-dark"
-            options={typeDefinitionCodeEditorOptions}
-          />
-        </GuideCard>
-      )}
       <GuideCard
         name={CardType.TokenData}
         isExpanded={expendCard === CardType.TokenData}
@@ -77,6 +58,24 @@ function InstructionTab({ isActive }: Props) {
           options={typeDefinitionCodeEditorOptions}
         />
       </GuideCard>
+      {tokenType === LogtoJwtTokenPath.AccessToken && (
+        <GuideCard
+          name={CardType.UserData}
+          isExpanded={expendCard === CardType.UserData}
+          setExpanded={(expand) => {
+            setExpendCard(expand ? CardType.UserData : undefined);
+          }}
+        >
+          <Editor
+            language="typescript"
+            className={styles.sampleCode}
+            value={jwtCustomizerUserContextTypeDefinition}
+            height="700px"
+            theme="logto-dark"
+            options={typeDefinitionCodeEditorOptions}
+          />
+        </GuideCard>
+      )}
       <GuideCard
         name={CardType.FetchExternalData}
         isExpanded={expendCard === CardType.FetchExternalData}
@@ -114,6 +113,7 @@ function InstructionTab({ isActive }: Props) {
           options={sampleCodeEditorOptions}
         />
       </GuideCard>
+      <div className={tabContentStyles.description}>{t('jwt_claims.jwt_claims_description')}</div>
     </div>
   );
 }

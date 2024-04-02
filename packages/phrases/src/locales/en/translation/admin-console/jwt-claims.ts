@@ -11,11 +11,11 @@ const jwt_claims = {
   machine_to_machine_jwt: {
     card_title: 'For M2M',
     card_field: 'Machine-to-machine token',
-    card_description: 'Add extra data fro machine-to-machine communication.',
+    card_description: 'Add extra data during machine-to-machine token issuance.',
     for: 'for M2M',
   },
   code_editor_title: 'Customize the {{token}} claims',
-  custom_jwt_create_button: 'Create custom claims',
+  custom_jwt_create_button: 'Add custom claims',
   custom_jwt_item: 'Custom claims {{for}}',
   delete_modal_title: 'Delete custom claims',
   delete_modal_content: 'Are you sure you want to delete the custom claims?',
@@ -25,28 +25,24 @@ const jwt_claims = {
   restored: 'Restored',
   data_source_tab: 'Data source',
   test_tab: 'Test claim',
-  jwt_claims_description:
-    'Handler that will be called during the access token generation process to add custom claims to the token. The function should return an object with the custom claims.',
+  jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
   user_data: {
     title: 'User data',
-    subtitle:
-      'Input parameter `data.user`, providing essential user information linked to the present access token.',
+    subtitle: 'Use `data.user` input parameter to provide vital user info.',
   },
   token_data: {
     title: 'Token data',
-    subtitle:
-      'Input parameter `token`, providing the payload of the current access token for contextual reference.',
+    subtitle: 'Use `token` input parameter for current access token payload. ',
   },
   fetch_external_data: {
     title: 'Fetch external data',
-    subtitle: 'Incorporate data sources from your external APIs directly into your custom claims.',
+    subtitle: 'Incorporate data from your external APIs directly into claims.',
     description:
       'Use the `fetch` function to call your external APIs and include the data in your custom claims. Example: ',
   },
   environment_variables: {
     title: 'Set environment variables',
-    subtitle:
-      'Use environment variables to store sensitive information and access them in your custom claims handler.',
+    subtitle: 'Use environment variables to store sensitive information.',
     input_field_title: 'Add environment variables',
     sample_code: 'Accessing environment variables in your custom JWT claims handler. Example: ',
   },

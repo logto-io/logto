@@ -56,11 +56,13 @@ function MainContent<T extends LogtoJwtTokenPath>({
       const { tokenType } = data;
       const payload = formatFormDataToRequestData(data);
 
-      await api.put(getApiPath(tokenType), { json: payload });
+      const updatedJwtCustomizer = await api
+        .put(getApiPath(tokenType), { json: payload })
+        .json<JwtCustomizer<T>>();
 
-      const result = await mutate();
+      await mutate(updatedJwtCustomizer);
 
-      reset(formatResponseDataToFormData(tokenType, result));
+      reset(formatResponseDataToFormData(tokenType, updatedJwtCustomizer));
 
       /**
        * Should `reset` (to set `isDirty` to false) before navigating back to the custom JWT listing page.
