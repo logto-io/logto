@@ -42,7 +42,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
       emails: [],
-      role: TenantRole.Member,
+      role: TenantRole.Collaborator,
     },
   });
 
@@ -56,7 +56,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const roleOptions: Array<Option<TenantRole>> = useMemo(
     () => [
       { value: TenantRole.Admin, title: t('admin') },
-      { value: TenantRole.Member, title: t('member') },
+      { value: TenantRole.Collaborator, title: t('collaborator') },
     ],
     [t]
   );
@@ -77,14 +77,15 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
         return;
       }
 
-      await Promise.all(
-        emails.map(async (email) =>
-          cloudApi.post('/api/tenants/:tenantId/invitations', {
-            params: { tenantId: currentTenantId },
-            body: { invitee: email.value, roleName: role },
-          })
-        )
-      );
+      // TODO: @charles Uncomment later once the Cloud APIs are updated
+      // await Promise.all(
+      //   emails.map(async (email) =>
+      //     cloudApi.post('/api/tenants/:tenantId/invitations', {
+      //       params: { tenantId: currentTenantId },
+      //       body: { invitee: email.value, roleName: role },
+      //     })
+      //   )
+      // );
       toast.success(t('messages.invitation_sent'));
       onClose(true);
     } finally {

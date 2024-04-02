@@ -2,6 +2,8 @@ const tenant_members = {
   /** UNTRANSLATED */
   members: 'Members',
   /** UNTRANSLATED */
+  collaborators: 'Collaborators',
+  /** UNTRANSLATED */
   invitations: 'Invitations',
   /** UNTRANSLATED */
   invite_members: 'Invite members',
@@ -13,6 +15,8 @@ const tenant_members = {
   admin: 'Admin',
   /** UNTRANSLATED */
   member: 'Member',
+  /** UNTRANSLATED */
+  collaborator: 'Collaborator',
   /** UNTRANSLATED */
   invitation_status: 'Invitation status',
   /** UNTRANSLATED */
