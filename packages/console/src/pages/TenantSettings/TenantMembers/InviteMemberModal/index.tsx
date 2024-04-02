@@ -84,15 +84,14 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
         return;
       }
 
-      // TODO: @charles Uncomment later once the Cloud APIs are updated
-      // await Promise.all(
-      //   emails.map(async (email) =>
-      //     cloudApi.post('/api/tenants/:tenantId/invitations', {
-      //       params: { tenantId: currentTenantId },
-      //       body: { invitee: email.value, roleName: role },
-      //     })
-      //   )
-      // );
+      await Promise.all(
+        emails.map(async (email) =>
+          cloudApi.post('/api/tenants/:tenantId/invitations', {
+            params: { tenantId: currentTenantId },
+            body: { invitee: email.value, roleName: role },
+          })
+        )
+      );
       toast.success(t('messages.invitation_sent'));
       onClose(true);
     } finally {
