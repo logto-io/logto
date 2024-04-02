@@ -2,7 +2,7 @@ import { emailRegEx } from '@logto/core-kit';
 import { generateStandardShortId } from '@logto/shared/universal';
 import { conditional, type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Close from '@/assets/icons/close.svg';
@@ -23,6 +23,13 @@ type Props = {
   placeholder?: string;
 };
 
+/**
+ * The body-2 font declared in @logto/core-kit/scss/fonts. It is referenced here to calculate
+ * the width of the input text, which determines the minimum width of the input field.
+ */
+const fontBody2 =
+  '400 14px / 20px -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji';
+
 function InviteEmailsInput({
   className,
   values,
@@ -35,6 +42,18 @@ function InviteEmailsInput({
   const [currentValue, setCurrentValue] = useState('');
   const { setError, clearErrors } = useFormContext<InviteMemberForm>();
   const { parseEmailOptions } = useEmailInputUtils();
+  const [minInputWidth, setMinInputWidth] = useState<number>(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    // Render placeholder text in canvas to calculate its width in CSS pixels.
+    const ctx = canvasRef.current?.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+    ctx.font = fontBody2;
+    setMinInputWidth(ctx.measureText(currentValue).width);
+  }, [currentValue]);
 
   const onChange = (values: InviteeEmailItem[]) => {
     const { values: parsedValues, errorMessage } = parseEmailOptions(values);
@@ -67,12 +86,7 @@ function InviteEmailsInput({
   return (
     <>
       <div
-        className={classNames(
-          styles.input,
-          styles.multiple,
-          Boolean(error) && styles.error,
-          className
-        )}
+        className={classNames(styles.input, Boolean(error) && styles.error, className)}
         role="button"
         tabIndex={0}
         onKeyDown={onKeyDownHandler(() => {
@@ -82,75 +96,79 @@ function InviteEmailsInput({
           ref.current?.focus();
         }}
       >
-        {values.map((option) => (
-          <Tag
-            key={option.id}
-            variant="cell"
-            className={classNames(
-              styles.tag,
-              option.status && styles[option.status],
-              option.id === focusedValueId && styles.focused
-            )}
-            onClick={() => {
+        <div className={styles.wrapper}>
+          {values.map((option) => (
+            <Tag
+              key={option.id}
+              variant="cell"
+              className={classNames(
+                styles.tag,
+                option.status && styles[option.status],
+                option.id === focusedValueId && styles.focused
+              )}
+              onClick={() => {
+                ref.current?.focus();
+              }}
+            >
+              {option.value}
+              <IconButton
+                className={styles.delete}
+                size="small"
+                onClick={() => {
+                  handleDelete(option);
+                }}
+                onKeyDown={onKeyDownHandler(() => {
+                  handleDelete(option);
+                })}
+              >
+                <Close className={styles.close} />
+              </IconButton>
+            </Tag>
+          ))}
+          <input
+            ref={ref}
+            placeholder={conditional(values.length === 0 && placeholder)}
+            value={currentValue}
+            style={{ minWidth: `${minInputWidth}px` }}
+            onKeyDown={(event) => {
+              if (event.key === 'Backspace' && currentValue === '') {
+                if (focusedValueId) {
+                  onChange(values.filter(({ id }) => id !== focusedValueId));
+                  setFocusedValueId(null);
+                } else {
+                  setFocusedValueId(values.at(-1)?.id ?? null);
+                }
+                ref.current?.focus();
+              }
+              if (event.key === ' ' || event.code === 'Space' || event.key === 'Enter') {
+                // Focusing on input
+                if (currentValue !== '' && document.activeElement === ref.current) {
+                  handleAdd(currentValue);
+                }
+                // Do not react to "Enter"
+                event.preventDefault();
+              }
+            }}
+            onChange={({ currentTarget: { value } }) => {
+              setCurrentValue(value);
+              setFocusedValueId(null);
+            }}
+            onFocus={() => {
               ref.current?.focus();
             }}
-          >
-            {option.value}
-            <IconButton
-              className={styles.delete}
-              size="small"
-              onClick={() => {
-                handleDelete(option);
-              }}
-              onKeyDown={onKeyDownHandler(() => {
-                handleDelete(option);
-              })}
-            >
-              <Close className={styles.close} />
-            </IconButton>
-          </Tag>
-        ))}
-        <input
-          ref={ref}
-          placeholder={conditional(values.length === 0 && placeholder)}
-          value={currentValue}
-          onKeyDown={(event) => {
-            if (event.key === 'Backspace' && currentValue === '') {
-              if (focusedValueId) {
-                onChange(values.filter(({ id }) => id !== focusedValueId));
-                setFocusedValueId(null);
-              } else {
-                setFocusedValueId(values.at(-1)?.id ?? null);
-              }
-              ref.current?.focus();
-            }
-            if (event.key === ' ' || event.code === 'Space' || event.key === 'Enter') {
-              // Focusing on input
-              if (currentValue !== '' && document.activeElement === ref.current) {
+            onBlur={() => {
+              if (currentValue !== '') {
                 handleAdd(currentValue);
               }
-              // Do not react to "Enter"
-              event.preventDefault();
-            }
-          }}
-          onChange={({ currentTarget: { value } }) => {
-            setCurrentValue(value);
-            setFocusedValueId(null);
-          }}
-          onFocus={() => {
-            ref.current?.focus();
-          }}
-          onBlur={() => {
-            if (currentValue !== '') {
-              handleAdd(currentValue);
-            }
-            setFocusedValueId(null);
-          }}
-        />
+              setFocusedValueId(null);
+            }}
+          />
+        </div>
       </div>
       {Boolean(error) && typeof error === 'string' && (
         <div className={styles.errorMessage}>{error}</div>
       )}
+      <canvas ref={canvasRef} />
     </>
   );
 }
