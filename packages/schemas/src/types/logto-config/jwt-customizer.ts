@@ -35,7 +35,7 @@ export type JwtCustomizerUserContext = z.infer<typeof jwtCustomizerUserContextGu
 export const jwtCustomizerGuard = z
   .object({
     script: z.string(),
-    envVars: z.record(z.string()),
+    environmentVariables: z.record(z.string()),
     contextSample: jsonObjectGuard,
   })
   .partial();
@@ -59,7 +59,13 @@ export const clientCredentialsJwtCustomizerGuard = jwtCustomizerGuard
 
 export type ClientCredentialsJwtCustomizer = z.infer<typeof clientCredentialsJwtCustomizerGuard>;
 
+// TODO: Temporarily leave this and will remove it after the cloud repo is updated.
 export enum LogtoJwtTokenPath {
+  AccessToken = 'access-token',
+  ClientCredentials = 'client-credentials',
+}
+
+export enum LogtoJwtTokenKeyType {
   AccessToken = 'access-token',
   ClientCredentials = 'client-credentials',
 }
@@ -69,22 +75,22 @@ export enum LogtoJwtTokenPath {
  */
 export const jwtCustomizerTestRequestBodyGuard = z.discriminatedUnion('tokenType', [
   z.object({
-    tokenType: z.literal(LogtoJwtTokenPath.AccessToken),
+    tokenType: z.literal(LogtoJwtTokenKeyType.AccessToken),
     ...accessTokenJwtCustomizerGuard
       .required({
         script: true,
       })
-      .pick({ envVars: true, script: true }).shape,
+      .pick({ environmentVariables: true, script: true }).shape,
     token: accessTokenJwtCustomizerGuard.required().shape.tokenSample,
     context: accessTokenJwtCustomizerGuard.required().shape.contextSample,
   }),
   z.object({
-    tokenType: z.literal(LogtoJwtTokenPath.ClientCredentials),
+    tokenType: z.literal(LogtoJwtTokenKeyType.ClientCredentials),
     ...clientCredentialsJwtCustomizerGuard
       .required({
         script: true,
       })
-      .pick({ envVars: true, script: true }).shape,
+      .pick({ environmentVariables: true, script: true }).shape,
     token: clientCredentialsJwtCustomizerGuard.required().shape.tokenSample,
   }),
 ]);
@@ -97,7 +103,7 @@ export type JwtCustomizerTestRequestBody = z.infer<typeof jwtCustomizerTestReque
  * The response guard for the cloud API is `jsonObjectGuard` since it extends the `token` with extra claims.
  */
 const commonJwtCustomizerGuard = jwtCustomizerGuard
-  .pick({ script: true, envVars: true })
+  .pick({ script: true, environmentVariables: true })
   .required({ script: true })
   .extend({
     token: jsonObjectGuard,
@@ -105,11 +111,11 @@ const commonJwtCustomizerGuard = jwtCustomizerGuard
 
 export const customJwtFetcherGuard = z.discriminatedUnion('tokenType', [
   commonJwtCustomizerGuard.extend({
-    tokenType: z.literal(LogtoJwtTokenPath.AccessToken),
+    tokenType: z.literal(LogtoJwtTokenKeyType.AccessToken),
     context: jsonObjectGuard,
   }),
   commonJwtCustomizerGuard.extend({
-    tokenType: z.literal(LogtoJwtTokenPath.ClientCredentials),
+    tokenType: z.literal(LogtoJwtTokenKeyType.ClientCredentials),
   }),
 ]);
 

@@ -1,5 +1,5 @@
 /* Code Editor for the custom JWT claims script. */
-import { LogtoJwtTokenPath } from '@logto/schemas';
+import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -43,7 +43,7 @@ function ScriptSection() {
   // Get the active model based on the token type
   const activeModel = useMemo<ModelSettings>(
     () =>
-      tokenType === LogtoJwtTokenPath.AccessToken
+      tokenType === LogtoJwtTokenKeyType.AccessToken
         ? accessTokenJwtCustomizerModel
         : clientCredentialsModel,
     [tokenType]

@@ -1,4 +1,4 @@
-import { LogtoJwtTokenPath, type AccessTokenJwtCustomizer, type Json } from '@logto/schemas';
+import { LogtoJwtTokenKeyType, type AccessTokenJwtCustomizer, type Json } from '@logto/schemas';
 
 import type { JwtCustomizer, JwtCustomizerForm } from '../type';
 
@@ -11,7 +11,7 @@ import {
 } from './config';
 
 const formatEnvVariablesResponseToFormData = (
-  enVariables?: AccessTokenJwtCustomizer['envVars']
+  enVariables?: AccessTokenJwtCustomizer['environmentVariables']
 ) => {
   if (!enVariables) {
     return;
@@ -56,26 +56,26 @@ const formatSampleCodeStringToJson = (sampleCode?: string) => {
 };
 
 const defaultValues = Object.freeze({
-  [LogtoJwtTokenPath.AccessToken]: {
+  [LogtoJwtTokenKeyType.AccessToken]: {
     script: defaultAccessTokenJwtCustomizerCode,
     tokenSample: defaultAccessTokenPayload,
     contextSample: defaultUserTokenContextData,
   },
-  [LogtoJwtTokenPath.ClientCredentials]: {
+  [LogtoJwtTokenKeyType.ClientCredentials]: {
     script: defaultClientCredentialsJwtCustomizerCode,
     tokenSample: defaultClientCredentialsPayload,
     contextSample: undefined,
   },
 });
 
-export const formatResponseDataToFormData = <T extends LogtoJwtTokenPath>(
+export const formatResponseDataToFormData = <T extends LogtoJwtTokenKeyType>(
   tokenType: T,
   data?: JwtCustomizer<T>
 ): JwtCustomizerForm => {
   return {
     tokenType,
     script: data?.script ?? defaultValues[tokenType].script,
-    environmentVariables: formatEnvVariablesResponseToFormData(data?.envVars) ?? [
+    environmentVariables: formatEnvVariablesResponseToFormData(data?.environmentVariables) ?? [
       { key: '', value: '' },
     ],
     testSample: {
@@ -92,7 +92,7 @@ export const formatResponseDataToFormData = <T extends LogtoJwtTokenPath>(
 export const formatFormDataToRequestData = (data: JwtCustomizerForm) => {
   return {
     script: data.script,
-    envVars: formatEnvVariablesFormDataToRequest(data.environmentVariables),
+    environmentVariables: formatEnvVariablesFormDataToRequest(data.environmentVariables),
     tokenSample: formatSampleCodeStringToJson(data.testSample.tokenSample),
     contextSample: formatSampleCodeStringToJson(data.testSample.contextSample),
   };
@@ -107,7 +107,7 @@ export const formatFormDataToTestRequestPayload = ({
   return {
     tokenType,
     script,
-    envVars: formatEnvVariablesFormDataToRequest(environmentVariables),
+    environmentVariables: formatEnvVariablesFormDataToRequest(environmentVariables),
     token:
       formatSampleCodeStringToJson(testSample.tokenSample) ?? defaultValues[tokenType].tokenSample,
     context:

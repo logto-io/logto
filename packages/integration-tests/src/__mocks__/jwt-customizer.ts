@@ -1,6 +1,6 @@
 export const clientCredentialsJwtCustomizerPayload = {
   script: '',
-  envVars: {},
+  environmentVariables: {},
   contextSample: {},
 };
 

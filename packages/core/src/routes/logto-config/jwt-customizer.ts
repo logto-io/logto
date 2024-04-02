@@ -2,11 +2,13 @@ import {
   accessTokenJwtCustomizerGuard,
   clientCredentialsJwtCustomizerGuard,
   LogtoJwtTokenKey,
-  LogtoJwtTokenPath,
+  LogtoJwtTokenKeyType,
   jsonObjectGuard,
   adminTenantId,
   jwtCustomizerConfigsGuard,
   jwtCustomizerTestRequestBodyGuard,
+  type CustomJwtFetcher,
+  type LogtoJwtTokenPath,
 } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import { ZodError, z } from 'zod';
@@ -17,8 +19,8 @@ import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
-const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenPath, body: unknown) => {
-  if (tokenPath === LogtoJwtTokenPath.AccessToken) {
+const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenKeyType, body: unknown) => {
+  if (tokenPath === LogtoJwtTokenKeyType.AccessToken) {
     return {
       key: LogtoJwtTokenKey.AccessToken,
       body: parse('body', accessTokenJwtCustomizerGuard, body),
@@ -41,7 +43,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
     '/configs/jwt-customizer/:tokenTypePath',
     koaGuard({
       params: z.object({
-        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenKeyType),
       }),
       /**
        * Use `z.unknown()` to guard the request body as a JSON object, since the actual guard depends
@@ -87,7 +89,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
     // See comments in the `PUT /configs/jwt-customizer/:tokenTypePath` route, handle the request body manually.
     koaGuard({
       params: z.object({
-        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenKeyType),
       }),
       body: z.unknown(),
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
@@ -125,7 +127,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
     '/configs/jwt-customizer/:tokenTypePath',
     koaGuard({
       params: z.object({
-        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenKeyType),
       }),
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 404],
@@ -135,7 +137,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
         params: { tokenTypePath },
       } = ctx.guard;
       ctx.body = await getJwtCustomizer(
-        tokenTypePath === LogtoJwtTokenPath.AccessToken
+        tokenTypePath === LogtoJwtTokenKeyType.AccessToken
           ? LogtoJwtTokenKey.AccessToken
           : LogtoJwtTokenKey.ClientCredentials
       );
@@ -147,7 +149,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
     '/configs/jwt-customizer/:tokenTypePath',
     koaGuard({
       params: z.object({
-        tokenTypePath: z.nativeEnum(LogtoJwtTokenPath),
+        tokenTypePath: z.nativeEnum(LogtoJwtTokenKeyType),
       }),
       status: [204, 404],
     }),
@@ -157,7 +159,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       } = ctx.guard;
 
       await deleteJwtCustomizer(
-        tokenTypePath === LogtoJwtTokenPath.AccessToken
+        tokenTypePath === LogtoJwtTokenKeyType.AccessToken
           ? LogtoJwtTokenKey.AccessToken
           : LogtoJwtTokenKey.ClientCredentials
       );
@@ -189,7 +191,9 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
 
       try {
         ctx.body = await client.post(`/api/services/custom-jwt`, {
-          body,
+          // TODO: remove type casting once the cloud repo is updated.
+          // eslint-disable-next-line no-restricted-syntax
+          body: body as CustomJwtFetcher & { tokenType: LogtoJwtTokenPath },
         });
       } catch (error: unknown) {
         /**

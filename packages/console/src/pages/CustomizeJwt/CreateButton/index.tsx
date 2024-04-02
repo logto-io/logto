@@ -1,11 +1,11 @@
-import { type LogtoJwtTokenPath } from '@logto/schemas';
+import { type LogtoJwtTokenKeyType } from '@logto/schemas';
 
 import Button from '@/ds-components/Button';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
 
 type Props = {
-  tokenType: LogtoJwtTokenPath;
+  tokenType: LogtoJwtTokenKeyType;
 };
 
 function CreateButton({ tokenType }: Props) {

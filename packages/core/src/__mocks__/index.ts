@@ -218,7 +218,7 @@ export const mockJwtCustomizerConfigForAccessToken = {
   key: LogtoJwtTokenKey.AccessToken,
   value: {
     script: 'console.log("hello world");',
-    envVars: {
+    environmentVariables: {
       API_KEY: '<api-key>',
     },
     contextSample: {
@@ -234,7 +234,7 @@ export const mockJwtCustomizerConfigForClientCredentials = {
   key: LogtoJwtTokenKey.ClientCredentials,
   value: {
     script: 'console.log("hello world");',
-    envVars: {
+    environmentVariables: {
       API_KEY: '<api-key>',
     },
   },

@@ -6,11 +6,11 @@ import {
   clientCredentialsJwtCustomizerGuard,
 } from './jwt-customizer.js';
 
-const allFields = ['script', 'envVars', 'contextSample', 'tokenSample'] as const;
+const allFields = ['script', 'environmentVariables', 'contextSample', 'tokenSample'] as const;
 
 const testClientCredentialsTokenPayload = {
   script: '',
-  envVars: {},
+  environmentVariables: {},
   contextSample: {},
   tokenSample: {},
 };

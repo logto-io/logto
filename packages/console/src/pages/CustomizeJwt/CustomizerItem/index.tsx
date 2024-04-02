@@ -1,4 +1,4 @@
-import { LogtoJwtTokenPath } from '@logto/schemas';
+import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +15,7 @@ import useJwtCustomizer from '../use-jwt-customizer';
 import * as styles from './index.module.scss';
 
 type Props = {
-  tokenType: LogtoJwtTokenPath;
+  tokenType: LogtoJwtTokenKeyType;
 };
 
 function CustomizerItem({ tokenType }: Props) {
@@ -46,7 +46,7 @@ function CustomizerItem({ tokenType }: Props) {
       <div className={styles.title}>
         {t('jwt_claims.custom_jwt_item', {
           for:
-            tokenType === LogtoJwtTokenPath.AccessToken
+            tokenType === LogtoJwtTokenKeyType.AccessToken
               ? t('jwt_claims.user_jwt.for')
               : t('jwt_claims.machine_to_machine_jwt.for'),
         })}
