@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import Logo from '@/assets/images/logo.svg';
+import AppLoading from '@/components/AppLoading';
 import Button from '@/ds-components/Button';
 import useCurrentUser from '@/hooks/use-current-user';
 
@@ -12,8 +13,12 @@ type Props = {
 
 function SwitchAccount({ onClickSwitch }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { user } = useCurrentUser();
+  const { user, isLoading } = useCurrentUser();
   const { id, primaryEmail, username } = user ?? {};
+
+  if (isLoading) {
+    return <AppLoading />;
+  }
 
   return (
     <div className={styles.container}>

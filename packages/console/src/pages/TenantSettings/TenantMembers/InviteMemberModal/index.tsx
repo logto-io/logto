@@ -1,5 +1,5 @@
 import { ReservedPlanId, TenantRole } from '@logto/schemas';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -50,8 +50,15 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     control,
     handleSubmit,
     setError,
+    reset,
     formState: { errors },
   } = formMethods;
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [isOpen, reset]);
 
   const roleOptions: Array<Option<TenantRole>> = useMemo(
     () => [

@@ -31,9 +31,12 @@
       .title {
         display: block;
         font: var(--font-body-2);
-        color: var(--color-text-link);
         text-decoration: none;
         @include _.text-ellipsis;
+
+        &.withLink {
+          color: var(--color-text-link);
+        }
       }
 
       .subtitle {

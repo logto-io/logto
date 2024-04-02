@@ -2,11 +2,12 @@ import { OrganizationInvitationStatus, getTenantIdFromOrganizationId } from '@lo
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Icon from '@/assets/icons/organization-preview.svg';
+import OrganizationIcon from '@/assets/icons/organization-preview.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse, type InvitationListResponse } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
 import TenantEnvTag from '@/components/TenantEnvTag';
+import ThemedIcon from '@/components/ThemedIcon';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
@@ -32,7 +33,7 @@ function InvitationList({ invitations }: Props) {
           <div className={styles.description}>{t('invitation.find_tenants_description')}</div>
           {invitations.map(({ id, organizationId, tenantName, tenantTag }) => (
             <div key={id} className={styles.tenant}>
-              <Icon className={styles.icon} />
+              <ThemedIcon for={OrganizationIcon} size={40} />
               <span className={styles.name}>{tenantName}</span>
               <TenantEnvTag isAbbreviated className={styles.tag} tag={tenantTag} />
               <Spacer />
