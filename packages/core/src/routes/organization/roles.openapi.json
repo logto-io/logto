@@ -29,6 +29,12 @@
                   },
                   "description": {
                     "description": "The description of the organization role."
+                  },
+                  "organizationScopeIds": {
+                    "description": "An array of organization scope IDs to be assigned to the organization role."
+                  },
+                  "resourceScopeIds": {
+                    "description": "An array of resource scope IDs to be assigned to the organization role."
                   }
                 }
               }

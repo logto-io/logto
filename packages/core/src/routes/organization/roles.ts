@@ -2,6 +2,7 @@ import {
   type CreateOrganizationRole,
   OrganizationRoles,
   organizationRoleWithScopesGuard,
+  organizationRoleWithScopesGuardDeprecated,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
@@ -44,7 +45,10 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
     koaPagination(),
     koaGuard({
       query: z.object({ q: z.string().optional() }),
-      response: organizationRoleWithScopesGuard.array(),
+      // TODO @wangsijie - Remove this once the feature is ready
+      response: EnvSet.values.isDevFeaturesEnabled
+        ? organizationRoleWithScopesGuard.array()
+        : organizationRoleWithScopesGuardDeprecated.array(),
       status: [200],
     }),
     async (ctx, next) => {
@@ -63,7 +67,21 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
   /** Allows to carry an initial set of scopes for creating a new organization role. */
   type CreateOrganizationRolePayload = Omit<CreateOrganizationRole, 'id'> & {
     organizationScopeIds: string[];
+    resourceScopeIds: string[];
   };
+
+  // TODO @wangsijie - Remove this once the feature is ready
+  const originalCreateCard: z.ZodType<
+    Omit<CreateOrganizationRolePayload, 'resourceScopeIds'> & { resourceScopeIds?: string[] },
+    z.ZodTypeDef,
+    unknown
+  > = OrganizationRoles.createGuard
+    .omit({
+      id: true,
+    })
+    .extend({
+      organizationScopeIds: z.array(z.string()).default([]),
+    });
 
   const createGuard: z.ZodType<CreateOrganizationRolePayload, z.ZodTypeDef, unknown> =
     OrganizationRoles.createGuard
@@ -72,21 +90,31 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
       })
       .extend({
         organizationScopeIds: z.array(z.string()).default([]),
+        resourceScopeIds: z.array(z.string()).default([]),
       });
 
   router.post(
     '/',
     koaGuard({
-      body: createGuard,
+      body: EnvSet.values.isDevFeaturesEnabled ? createGuard : originalCreateCard,
       response: OrganizationRoles.guard,
       status: [201, 422],
     }),
     async (ctx, next) => {
-      const { organizationScopeIds: scopeIds, ...data } = ctx.guard.body;
+      const { organizationScopeIds, resourceScopeIds, ...data } = ctx.guard.body;
       const role = await roles.insert({ id: generateStandardId(), ...data });
 
-      if (scopeIds.length > 0) {
-        await rolesScopes.insert(...scopeIds.map<[string, string]>((id) => [role.id, id]));
+      if (organizationScopeIds.length > 0) {
+        await rolesScopes.insert(
+          ...organizationScopeIds.map<[string, string]>((id) => [role.id, id])
+        );
+      }
+
+      // TODO @wangsijie - Remove this once the feature is ready
+      if (EnvSet.values.isDevFeaturesEnabled && resourceScopeIds && resourceScopeIds.length > 0) {
+        await rolesResourceScopes.insert(
+          ...resourceScopeIds.map<[string, string]>((id) => [role.id, id])
+        );
       }
 
       ctx.body = role;

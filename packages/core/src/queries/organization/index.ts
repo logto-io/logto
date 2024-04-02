@@ -19,6 +19,7 @@ import {
   OrganizationInvitationStatus,
   OrganizationRoleResourceScopeRelations,
   Scopes,
+  Resources,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -62,25 +63,52 @@ class OrganizationRolesQueries extends SchemaQueries<
   ) {
     const { table, fields } = convertToIdentifiers(OrganizationRoles, true);
     const relations = convertToIdentifiers(OrganizationRoleScopeRelations, true);
+    const resourceScopeRelations = convertToIdentifiers(
+      OrganizationRoleResourceScopeRelations,
+      true
+    );
     const scopes = convertToIdentifiers(OrganizationScopes, true);
+    const resourceScopes = convertToIdentifiers(Scopes, true);
+    const resource = convertToIdentifiers(Resources, true);
 
     return sql<OrganizationRoleWithScopes>`
       select
         ${table}.*,
         coalesce(
-          json_agg(
-            json_build_object(
+          json_agg(distinct
+            jsonb_build_object(
               'id', ${scopes.fields.id},
-              'name', ${scopes.fields.name}
-            ) order by ${scopes.fields.name}
+              'name', ${scopes.fields.name},
+              'order', ${scopes.fields.id}
+            )
           ) filter (where ${scopes.fields.id} is not null),
           '[]'
-        ) as scopes -- left join could produce nulls as scopes
+        ) as scopes, -- left join could produce nulls as scopes
+        coalesce(
+          json_agg(distinct
+            jsonb_build_object(
+              'id', ${resourceScopes.fields.id},
+              'name', ${resourceScopes.fields.name},
+              'resource', json_build_object(
+                'id', ${resource.fields.id},
+                'name', ${resource.fields.name}
+              ),
+              'order', ${resourceScopes.fields.id}
+            )
+          ) filter (where ${resourceScopes.fields.id} is not null),
+          '[]'
+        ) as "resourceScopes" -- left join could produce nulls as resourceScopes
       from ${table}
       left join ${relations.table}
         on ${relations.fields.organizationRoleId} = ${fields.id}
       left join ${scopes.table}
         on ${relations.fields.organizationScopeId} = ${scopes.fields.id}
+      left join ${resourceScopeRelations.table}
+        on ${resourceScopeRelations.fields.organizationRoleId} = ${fields.id}
+      left join ${resourceScopes.table}
+        on ${resourceScopeRelations.fields.scopeId} = ${resourceScopes.fields.id}
+      left join ${resource.table}
+        on ${resourceScopes.fields.resourceId} = ${resource.fields.id}
       ${conditionalSql(roleId, (id) => {
         return sql`where ${fields.id} = ${id}`;
       })}
