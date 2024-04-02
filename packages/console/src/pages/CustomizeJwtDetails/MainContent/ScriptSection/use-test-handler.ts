@@ -10,6 +10,7 @@ import { formatFormDataToTestRequestPayload } from '@/pages/CustomizeJwtDetails/
 
 const testEndpointPath = 'api/configs/jwt-customizer/test';
 const jwtCustomizerGeneralErrorCode = 'jwt_customizer.general';
+const apiInvalidInputErrorCode = 'guard.invalid_input';
 
 export type TestResultData = {
   error?: string;
@@ -35,11 +36,29 @@ const useTestHandler = () => {
         if (error instanceof HTTPError) {
           const { response } = error;
           const metadata = await response.clone().json<RequestErrorBody>();
+
+          // Get error message from cloud connection client.
           if (metadata.code === jwtCustomizerGeneralErrorCode) {
             const result = z.object({ message: z.string() }).safeParse(metadata.data);
             if (result.success) {
               setTestResult({
                 error: result.data.message,
+              });
+              return;
+            }
+          }
+
+          /**
+           * Get error message when the API request violates the request guard.
+           * Find details on the implementation of:
+           * 1. `RequestError`
+           * 2. `koaGuard`
+           */
+          if (metadata.code === apiInvalidInputErrorCode) {
+            const result = z.string().safeParse(metadata.details);
+            if (result.success) {
+              setTestResult({
+                error: result.data,
               });
               return;
             }

@@ -1,11 +1,15 @@
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
-import { jsonObjectGuard } from '../../foundations/index.js';
-
-import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
+import {
+  type AccessTokenJwtCustomizer,
+  type ClientCredentialsJwtCustomizer,
+  accessTokenJwtCustomizerGuard,
+  clientCredentialsJwtCustomizerGuard,
+} from './jwt-customizer.js';
 
 export * from './oidc-provider.js';
+export * from './jwt-customizer.js';
 
 /**
  * Logto OIDC signing key types, used mainly in REST API routes.
@@ -55,28 +59,6 @@ export enum LogtoJwtTokenKey {
   AccessToken = 'jwt.accessToken',
   ClientCredentials = 'jwt.clientCredentials',
 }
-
-export const jwtCustomizerGuard = z
-  .object({
-    script: z.string(),
-    envVars: z.record(z.string()),
-    contextSample: jsonObjectGuard,
-  })
-  .partial();
-
-export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard.extend({
-  // Use partial token guard since users customization may not rely on all fields.
-  tokenSample: accessTokenPayloadGuard.partial().optional(),
-});
-
-export type AccessTokenJwtCustomizer = z.infer<typeof accessTokenJwtCustomizerGuard>;
-
-export const clientCredentialsJwtCustomizerGuard = jwtCustomizerGuard.extend({
-  // Use partial token guard since users customization may not rely on all fields.
-  tokenSample: clientCredentialsPayloadGuard.partial().optional(),
-});
-
-export type ClientCredentialsJwtCustomizer = z.infer<typeof clientCredentialsJwtCustomizerGuard>;
 
 export type JwtCustomizerType = {
   [LogtoJwtTokenKey.AccessToken]: AccessTokenJwtCustomizer;

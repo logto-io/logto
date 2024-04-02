@@ -1,4 +1,4 @@
-import { LogtoJwtTokenPath, type AccessTokenJwtCustomizer } from '@logto/schemas';
+import { LogtoJwtTokenPath, type AccessTokenJwtCustomizer, type Json } from '@logto/schemas';
 
 import type { JwtCustomizer, JwtCustomizerForm } from '../type';
 
@@ -36,7 +36,7 @@ const formatEnvVariablesFormDataToRequest = (
   return Object.fromEntries(entries.map(({ key, value }) => [key, value]));
 };
 
-const formatSampleCodeJsonToString = (sampleJson?: AccessTokenJwtCustomizer['contextSample']) => {
+const formatSampleCodeJsonToString = (sampleJson?: Json) => {
   if (!sampleJson) {
     return;
   }
@@ -106,15 +106,12 @@ export const formatFormDataToTestRequestPayload = ({
 }: JwtCustomizerForm) => {
   return {
     tokenType,
-    payload: {
-      script,
-      envVars: formatEnvVariablesFormDataToRequest(environmentVariables),
-      tokenSample:
-        formatSampleCodeStringToJson(testSample.tokenSample) ??
-        defaultValues[tokenType].tokenSample,
-      contextSample:
-        formatSampleCodeStringToJson(testSample.contextSample) ??
-        defaultValues[tokenType].contextSample,
-    },
+    script,
+    envVars: formatEnvVariablesFormDataToRequest(environmentVariables),
+    token:
+      formatSampleCodeStringToJson(testSample.tokenSample) ?? defaultValues[tokenType].tokenSample,
+    context:
+      formatSampleCodeStringToJson(testSample.contextSample) ??
+      defaultValues[tokenType].contextSample,
   };
 };

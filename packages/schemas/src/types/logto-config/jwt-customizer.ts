@@ -1,15 +1,11 @@
 import { z } from 'zod';
 
-import { Roles, UserSsoIdentities, Organizations } from '../db-entries/index.js';
-import { jsonObjectGuard, mfaFactorsGuard } from '../foundations/index.js';
+import { Roles, UserSsoIdentities, Organizations } from '../../db-entries/index.js';
+import { jsonObjectGuard, mfaFactorsGuard } from '../../foundations/index.js';
+import { scopeResponseGuard } from '../scope.js';
+import { userInfoGuard } from '../user.js';
 
-import {
-  jwtCustomizerGuard,
-  accessTokenJwtCustomizerGuard,
-  clientCredentialsJwtCustomizerGuard,
-} from './logto-config/index.js';
-import { scopeResponseGuard } from './scope.js';
-import { userInfoGuard } from './user.js';
+import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
 
 export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
   ssoIdentities: UserSsoIdentities.guard
@@ -36,6 +32,29 @@ export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
 
 export type JwtCustomizerUserContext = z.infer<typeof jwtCustomizerUserContextGuard>;
 
+export const jwtCustomizerGuard = z
+  .object({
+    script: z.string(),
+    envVars: z.record(z.string()),
+    contextSample: jsonObjectGuard,
+  })
+  .partial();
+
+export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard.extend({
+  // Use partial token guard since users customization may not rely on all fields.
+  tokenSample: accessTokenPayloadGuard.partial().optional(),
+  contextSample: z.object({ user: jwtCustomizerUserContextGuard.partial() }),
+});
+
+export type AccessTokenJwtCustomizer = z.infer<typeof accessTokenJwtCustomizerGuard>;
+
+export const clientCredentialsJwtCustomizerGuard = jwtCustomizerGuard.extend({
+  // Use partial token guard since users customization may not rely on all fields.
+  tokenSample: clientCredentialsPayloadGuard.partial().optional(),
+});
+
+export type ClientCredentialsJwtCustomizer = z.infer<typeof clientCredentialsJwtCustomizerGuard>;
+
 export enum LogtoJwtTokenPath {
   AccessToken = 'access-token',
   ClientCredentials = 'client-credentials',
@@ -47,18 +66,22 @@ export enum LogtoJwtTokenPath {
 export const jwtCustomizerTestRequestBodyGuard = z.discriminatedUnion('tokenType', [
   z.object({
     tokenType: z.literal(LogtoJwtTokenPath.AccessToken),
-    payload: accessTokenJwtCustomizerGuard.required({
-      script: true,
-      tokenSample: true,
-      contextSample: true,
-    }),
+    ...accessTokenJwtCustomizerGuard
+      .required({
+        script: true,
+      })
+      .pick({ envVars: true, script: true }).shape,
+    token: accessTokenJwtCustomizerGuard.required().shape.tokenSample,
+    context: accessTokenJwtCustomizerGuard.required().shape.contextSample,
   }),
   z.object({
     tokenType: z.literal(LogtoJwtTokenPath.ClientCredentials),
-    payload: clientCredentialsJwtCustomizerGuard.required({
-      script: true,
-      tokenSample: true,
-    }),
+    ...clientCredentialsJwtCustomizerGuard
+      .required({
+        script: true,
+      })
+      .pick({ envVars: true, script: true }).shape,
+    token: clientCredentialsJwtCustomizerGuard.required().shape.tokenSample,
   }),
 ]);
 
