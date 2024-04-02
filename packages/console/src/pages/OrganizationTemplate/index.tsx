@@ -41,10 +41,10 @@ function OrganizationTemplate() {
         />
       </div>
       <TabNav>
-        <TabNavItem href={`${basePathname}/${OrganizationTemplateTabs.OrgRoles}`}>
+        <TabNavItem href={`${basePathname}/${OrganizationTemplateTabs.OrganizationRoles}`}>
           <DynamicT forKey="organization_template.roles.tab_name" />
         </TabNavItem>
-        <TabNavItem href={`${basePathname}/${OrganizationTemplateTabs.OrgPermissions}`}>
+        <TabNavItem href={`${basePathname}/${OrganizationTemplateTabs.OrganizationPermissions}`}>
           <DynamicT forKey="organization_template.permissions.tab_name" />
         </TabNavItem>
       </TabNav>

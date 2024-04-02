@@ -190,11 +190,14 @@ function ConsoleContent() {
               <Route path="organization-template" element={<OrganizationTemplate />}>
                 <Route
                   index
-                  element={<Navigate replace to={OrganizationTemplateTabs.OrgRoles} />}
+                  element={<Navigate replace to={OrganizationTemplateTabs.OrganizationRoles} />}
                 />
-                <Route path={OrganizationTemplateTabs.OrgRoles} element={<OrganizationRoles />} />
                 <Route
-                  path={OrganizationTemplateTabs.OrgPermissions}
+                  path={OrganizationTemplateTabs.OrganizationRoles}
+                  element={<OrganizationRoles />}
+                />
+                <Route
+                  path={OrganizationTemplateTabs.OrganizationPermissions}
                   element={<OrganizationPermissions />}
                 />
               </Route>

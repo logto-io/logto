@@ -22,7 +22,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import OrgPermissionModal from './OrgPermissionModal';
+import OrganizationPermissionModal from './OrganizationPermissionModal';
 import * as styles from './index.module.scss';
 
 function OrganizationPermissions() {
@@ -141,7 +141,7 @@ function OrganizationPermissions() {
         onRetry={async () => mutate(undefined, true)}
       />
       {permissionModalData !== undefined && (
-        <OrgPermissionModal
+        <OrganizationPermissionModal
           data={permissionModalData}
           onClose={() => {
             setPermissionModalData(undefined);

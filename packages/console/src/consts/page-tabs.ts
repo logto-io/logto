@@ -49,6 +49,6 @@ export enum EnterpriseSsoDetailsTabs {
 }
 
 export enum OrganizationTemplateTabs {
-  OrgRoles = 'org-roles',
-  OrgPermissions = 'org-permissions',
+  OrganizationRoles = 'organization-roles',
+  OrganizationPermissions = 'organization-permissions',
 }
