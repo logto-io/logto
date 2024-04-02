@@ -164,6 +164,47 @@
           }
         }
       },
+      "patch": {
+        "summary": "Update JWT customizer",
+        "description": "Update the JWT customizer for the given token type.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tokenTypePath",
+            "description": "The token type to update a JWT customizer for."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "script": {
+                    "description": "The script of the JWT customizer."
+                  },
+                  "envVars": {
+                    "description": "The environment variables for the JWT customizer."
+                  },
+                  "contextSample": {
+                    "description": "The sample context for the JWT customizer script testing purpose."
+                  },
+                  "tokenSample": {
+                    "description": "The sample raw token payload for the JWT customizer script testing purpose."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated JWT customizer."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          }
+        }
+      },
       "get": {
         "summary": "Get JWT customizer",
         "description": "Get the JWT customizer for the given token type.",

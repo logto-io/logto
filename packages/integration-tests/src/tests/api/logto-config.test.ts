@@ -16,6 +16,7 @@ import {
   rotateOidcKeys,
   updateAdminConsoleConfig,
   upsertJwtCustomizer,
+  updateJwtCustomizer,
   getJwtCustomizer,
   getJwtCustomizers,
   deleteJwtCustomizer,
@@ -153,9 +154,16 @@ describe('admin console sign-in experience', () => {
       newAccessTokenJwtCustomizerPayload
     );
     expect(updatedAccessToken).toMatchObject(newAccessTokenJwtCustomizerPayload);
-    await expect(getJwtCustomizer('access-token')).resolves.toMatchObject(
-      newAccessTokenJwtCustomizerPayload
-    );
+    const overwritePayload = { script: 'abc' };
+    const updatedValue = await updateJwtCustomizer('access-token', overwritePayload);
+    expect(updatedValue).toMatchObject({
+      ...newAccessTokenJwtCustomizerPayload,
+      script: 'abc',
+    });
+    await expect(getJwtCustomizer('access-token')).resolves.toMatchObject({
+      ...newAccessTokenJwtCustomizerPayload,
+      script: 'abc',
+    });
     await expect(deleteJwtCustomizer('access-token')).resolves.not.toThrow();
     await expectRejects(getJwtCustomizer('access-token'), {
       code: 'entity.not_exists_with_id',
@@ -186,9 +194,16 @@ describe('admin console sign-in experience', () => {
       newClientCredentialsJwtCustomizerPayload
     );
     expect(updatedClientCredentials).toMatchObject(newClientCredentialsJwtCustomizerPayload);
-    await expect(getJwtCustomizer('client-credentials')).resolves.toMatchObject(
-      newClientCredentialsJwtCustomizerPayload
-    );
+    const overwritePayload = { script: 'abc' };
+    const updatedValue = await updateJwtCustomizer('client-credentials', overwritePayload);
+    expect(updatedValue).toMatchObject({
+      ...newClientCredentialsJwtCustomizerPayload,
+      script: 'abc',
+    });
+    await expect(getJwtCustomizer('client-credentials')).resolves.toMatchObject({
+      ...newClientCredentialsJwtCustomizerPayload,
+      script: 'abc',
+    });
     await expect(deleteJwtCustomizer('client-credentials')).resolves.not.toThrow();
     await expectRejects(getJwtCustomizer('client-credentials'), {
       code: 'entity.not_exists_with_id',

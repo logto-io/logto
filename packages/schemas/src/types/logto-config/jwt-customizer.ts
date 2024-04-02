@@ -40,18 +40,22 @@ export const jwtCustomizerGuard = z
   })
   .partial();
 
-export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard.extend({
-  // Use partial token guard since users customization may not rely on all fields.
-  tokenSample: accessTokenPayloadGuard.partial().optional(),
-  contextSample: z.object({ user: jwtCustomizerUserContextGuard.partial() }),
-});
+export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
+  .extend({
+    // Use partial token guard since users customization may not rely on all fields.
+    tokenSample: accessTokenPayloadGuard.partial().optional(),
+    contextSample: z.object({ user: jwtCustomizerUserContextGuard.partial() }).optional(),
+  })
+  .strict();
 
 export type AccessTokenJwtCustomizer = z.infer<typeof accessTokenJwtCustomizerGuard>;
 
-export const clientCredentialsJwtCustomizerGuard = jwtCustomizerGuard.extend({
-  // Use partial token guard since users customization may not rely on all fields.
-  tokenSample: clientCredentialsPayloadGuard.partial().optional(),
-});
+export const clientCredentialsJwtCustomizerGuard = jwtCustomizerGuard
+  .extend({
+    // Use partial token guard since users customization may not rely on all fields.
+    tokenSample: clientCredentialsPayloadGuard.partial().optional(),
+  })
+  .strict();
 
 export type ClientCredentialsJwtCustomizer = z.infer<typeof clientCredentialsJwtCustomizerGuard>;
 
