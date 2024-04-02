@@ -124,14 +124,14 @@ const tenantScopeDescriptions: Readonly<Record<TenantScope, string>> = Object.fr
 export enum TenantRole {
   /** Admin of the tenant, who has all permissions. */
   Admin = 'admin',
-  /** Member of the tenant, who has permissions to operate the tenant data, but not the tenant settings. */
-  Member = 'member',
+  /** Collaborator of the tenant, who has permissions to operate the tenant data, but not the tenant settings. */
+  Collaborator = 'collaborator',
 }
 
 const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.freeze({
   [TenantRole.Admin]: 'Admin of the tenant, who has all permissions.',
-  [TenantRole.Member]:
-    'Member of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
+  [TenantRole.Collaborator]:
+    'Collaborator of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
 });
 
 /**
@@ -139,14 +139,14 @@ const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.free
  *
  * @example
  * ```ts
- * const role = TenantRole.Member; // 'member'
+ * const role = TenantRole.Collaborator; // 'collaborator'
  * const roleData = getTenantRole(role);
  *
  * expect(roleData).toEqual({
  *   tenantId: 'admin',
- *   id: 'member',
- *   name: 'member',
- *   description: 'Member of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
+ *   id: 'collaborator',
+ *   name: 'collaborator',
+ *   description: 'Collaborator of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
  * });
  * ```
  *
@@ -167,7 +167,7 @@ export const getTenantRole = (role: TenantRole): Readonly<OrganizationRole> =>
 export const tenantRoleScopes: Readonly<Record<TenantRole, Readonly<TenantScope[]>>> =
   Object.freeze({
     [TenantRole.Admin]: allTenantScopes,
-    [TenantRole.Member]: [
+    [TenantRole.Collaborator]: [
       TenantScope.ReadData,
       TenantScope.WriteData,
       TenantScope.DeleteData,

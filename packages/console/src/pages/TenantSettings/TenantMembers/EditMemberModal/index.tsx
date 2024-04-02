@@ -24,13 +24,13 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [role, setRole] = useState(TenantRole.Member);
+  const [role, setRole] = useState(TenantRole.Collaborator);
   const cloudApi = useAuthedCloudApi();
 
   const roleOptions: Array<Option<TenantRole>> = useMemo(
     () => [
       { value: TenantRole.Admin, title: t('admin') },
-      { value: TenantRole.Member, title: t('member') },
+      { value: TenantRole.Collaborator, title: t('collaborator') },
     ],
     [t]
   );
@@ -38,10 +38,11 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
   const onSubmit = async () => {
     setIsLoading(true);
     try {
-      await cloudApi.put(`/api/tenants/:tenantId/members/:userId/roles`, {
-        params: { tenantId: currentTenantId, userId: user.id },
-        body: { roleName: role },
-      });
+      // TODO: @charles Uncomment later once the Cloud APIs are updated
+      // await cloudApi.put(`/api/tenants/:tenantId/members/:userId/roles`, {
+      //   params: { tenantId: currentTenantId, userId: user.id },
+      //   body: { roleName: role },
+      // });
       onClose();
     } finally {
       setIsLoading(false);

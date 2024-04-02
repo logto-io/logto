@@ -1,11 +1,13 @@
 const tenant_members = {
   members: 'Members',
+  collaborators: 'Collaborators',
   invitations: 'Invitations',
   invite_members: 'Invite members',
   user: 'User',
   roles: 'Roles',
   admin: 'Admin',
   member: 'Member',
+  collaborator: 'Collaborator',
   invitation_status: 'Invitation status',
   invitation_sent: 'Invitation sent',
   expiration_date: 'Expiration date',
