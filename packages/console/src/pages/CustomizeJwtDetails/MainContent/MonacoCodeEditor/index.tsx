@@ -168,7 +168,6 @@ function MonacoCodeEditor({
           )}
           {enabledActions.includes('copy') && (
             <CopyToClipboard
-              isLeftMarginIgnored
               variant="icon"
               value={editorRef.current?.getValue() ?? ''}
               className={styles.iconButton}

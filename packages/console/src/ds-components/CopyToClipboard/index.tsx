@@ -32,7 +32,6 @@ type Props = {
   size?: 'default' | 'small';
   isWordWrapAllowed?: boolean;
   isFullWidth?: boolean;
-  isLeftMarginIgnored?: boolean;
 };
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;
@@ -48,7 +47,6 @@ function CopyToClipboard(
     size = 'default',
     isWordWrapAllowed = false,
     isFullWidth = false,
-    isLeftMarginIgnored = false,
   }: Props,
   ref: ForwardedRef<HTMLDivElement>
 ) {
@@ -128,10 +126,7 @@ function CopyToClipboard(
         )}
         <Tooltip
           isSuccessful={copyState === 'copied'}
-          anchorClassName={classNames(
-            styles.copyToolTipAnchor,
-            isLeftMarginIgnored && styles.leftMarginIgnored
-          )}
+          anchorClassName={styles.copyToolTipAnchor}
           content={t(copyState)}
         >
           <IconButton

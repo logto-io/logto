@@ -62,6 +62,11 @@
         &:active {
           background: var(--color-overlay-dark-bg-pressed);
         }
+
+        // TODO (LOG-8602): Remove the default left margin of CopyToClipboard copyToolTipAnchor component.
+        div[class*='copyToolTipAnchor'] {
+          margin-left: 0;
+        }
       }
     }
   }
