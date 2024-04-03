@@ -90,6 +90,7 @@ function MainContent<T extends LogtoJwtTokenKeyType>({
         isOpen={isDirty || action === 'create'}
         isSubmitting={isSubmitting}
         confirmText={action === 'create' ? 'general.create' : 'general.save_changes'}
+        className={classNames(styles.submitActionBar, styles.overwrite)}
         onDiscard={
           // If the form is in create mode, navigate back to the previous page
           action === 'create'
