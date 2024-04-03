@@ -64,6 +64,18 @@ describe('organization role APIs', () => {
       expect(roles2[0]?.id).toBe(roles[10]?.id);
     });
 
+    it('should be able to get organization roles with search keyword', async () => {
+      const [name1, name2] = ['test' + randomId(), 'test' + randomId()];
+      await Promise.all([
+        roleApi.create({ name: name1, description: 'A test organization role.' }),
+        roleApi.create({ name: name2 }),
+      ]);
+      const roles = await roleApi.getList(new URLSearchParams({ q: name1 }));
+
+      expect(roles).toHaveLength(1);
+      expect(roles[0]).toHaveProperty('name', name1);
+    });
+
     it('should be able to create and get organization roles by id', async () => {
       const createdRole = await roleApi.create({ name: 'test' + randomId() });
       const { scopes, ...role } = await roleApi.get(createdRole.id);
