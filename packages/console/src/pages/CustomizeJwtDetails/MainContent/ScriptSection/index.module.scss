@@ -1,10 +1,12 @@
 @use '@/scss/underscore' as _;
 
-.scripeSection {
-  position: relative;
+.scriptSection {
+  position: sticky;
+  top: 0;
   min-width: 50%;
 
   .fixHeightWrapper {
+    margin-bottom: _.unit(3);
     position: absolute;
     inset: 0;
     display: flex;
@@ -12,7 +14,7 @@
   }
 
   .codeEditor {
-    min-height: 200px;
+    min-height: 400px;
     flex-grow: 1;
   }
 }

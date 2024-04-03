@@ -71,13 +71,23 @@
     }
   }
 
-  .editorContainer {
-    position: relative;
+  .body {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
 
-    &.dashboardOpen {
-      flex-grow: 0;
-      height: 50%;
+    .editorContainer {
+      position: relative;
+      flex-grow: 1;
+
+      &.dashboardOpen {
+        flex-grow: 0;
+        height: 50%;
+      }
+    }
+
+    .resultPanel {
+      border-radius: 0 0 8px 8px;
     }
   }
 }

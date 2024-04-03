@@ -11,6 +11,7 @@ type Props = {
   onSubmit: () => Promise<void>;
   onDiscard: () => void;
   confirmText?: AdminConsoleKey;
+  className?: string;
 };
 
 function SubmitFormChangesActionBar({
@@ -19,9 +20,10 @@ function SubmitFormChangesActionBar({
   confirmText = 'general.save_changes',
   onSubmit,
   onDiscard,
+  className,
 }: Props) {
   return (
-    <div className={classNames(styles.container, isOpen && styles.active)}>
+    <div className={classNames(styles.container, isOpen && styles.active, className)}>
       <div className={styles.actionBar}>
         <Button
           size="medium"

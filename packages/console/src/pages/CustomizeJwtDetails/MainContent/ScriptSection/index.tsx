@@ -74,7 +74,7 @@ function ScriptSection() {
   }, [setTestResult, t, testResult]);
 
   return (
-    <div className={styles.scripeSection}>
+    <div className={styles.scriptSection}>
       <div className={styles.fixHeightWrapper}>
         <Controller
           control={control}

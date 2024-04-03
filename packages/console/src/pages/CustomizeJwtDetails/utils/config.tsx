@@ -32,7 +32,7 @@ declare global {
 
   export interface Exports {
     /**
-     * This function is called to get custom claims for the JWT token.
+     * This function is called during the access token generation process to get custom claims for the JWT token.
      * 
      * @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token -The JWT token.
      * @param {Data} data - Logto internal data that can be used to pass additional information
@@ -56,7 +56,7 @@ declare global {
 
   export interface Exports {
     /**
-     * This function is called to get custom claims for the JWT token.
+     * This function is called during the access token generation process to get custom claims for the JWT token.
      * 
      * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
      * 
@@ -72,7 +72,8 @@ export { exports as default };
 `;
 
 export const defaultAccessTokenJwtCustomizerCode = `/**
-* This function is called to get custom claims for the JWT token.
+* This function is called during the access token generation process to get custom claims for the JWT token.
+* Limit custom claims to under 50KB.
 * 
 * @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token -The JWT token.
 * @param {Data} data - Logto internal data that can be used to pass additional information
@@ -87,7 +88,8 @@ exports.getCustomJwtClaims = async (token, data, envVariables) => {
 }`;
 
 export const defaultClientCredentialsJwtCustomizerCode = `/**
-* This function is called to get custom claims for the JWT token.
+* This function is called during the access token generation process to get custom claims for the JWT token.
+* Limit custom claims to under 50KB.
 *
 * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
 * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [envVariables] - The environment variables.
