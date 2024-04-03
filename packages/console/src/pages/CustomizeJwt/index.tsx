@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
-import { LogtoJwtTokenPath } from '@logto/schemas';
+import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
@@ -39,9 +39,9 @@ function CustomizeJwt() {
                   {t('jwt_claims.user_jwt.card_description')}
                 </div>
                 {accessTokenJwtCustomizer ? (
-                  <CustomizerItem tokenType={LogtoJwtTokenPath.AccessToken} />
+                  <CustomizerItem tokenType={LogtoJwtTokenKeyType.AccessToken} />
                 ) : (
-                  <CreateButton tokenType={LogtoJwtTokenPath.AccessToken} />
+                  <CreateButton tokenType={LogtoJwtTokenKeyType.AccessToken} />
                 )}
               </FormField>
             </FormCard>
@@ -51,9 +51,9 @@ function CustomizeJwt() {
                   {t('jwt_claims.machine_to_machine_jwt.card_description')}
                 </div>
                 {clientCredentialsJwtCustomizer ? (
-                  <CustomizerItem tokenType={LogtoJwtTokenPath.ClientCredentials} />
+                  <CustomizerItem tokenType={LogtoJwtTokenKeyType.ClientCredentials} />
                 ) : (
-                  <CreateButton tokenType={LogtoJwtTokenPath.ClientCredentials} />
+                  <CreateButton tokenType={LogtoJwtTokenKeyType.ClientCredentials} />
                 )}
               </FormField>
             </FormCard>

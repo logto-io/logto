@@ -1,8 +1,8 @@
-import { type LogtoJwtTokenPath } from '@logto/schemas';
+import { type LogtoJwtTokenKeyType } from '@logto/schemas';
 
 import { type Action } from './type';
 
-export const getApiPath = (tokenType?: LogtoJwtTokenPath) => {
+export const getApiPath = (tokenType?: LogtoJwtTokenKeyType) => {
   if (!tokenType) {
     return 'api/configs/jwt-customizer';
   }
@@ -10,7 +10,7 @@ export const getApiPath = (tokenType?: LogtoJwtTokenPath) => {
   return `api/configs/jwt-customizer/${tokenType}`;
 };
 
-export const getPagePath = (tokenType?: LogtoJwtTokenPath, action?: Action) => {
+export const getPagePath = (tokenType?: LogtoJwtTokenKeyType, action?: Action) => {
   if (!tokenType) {
     return '/customize-jwt';
   }

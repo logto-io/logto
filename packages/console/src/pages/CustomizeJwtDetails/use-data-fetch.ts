@@ -1,4 +1,4 @@
-import { type LogtoJwtTokenPath } from '@logto/schemas';
+import { type LogtoJwtTokenKeyType } from '@logto/schemas';
 import { type ResponseError } from '@withtyped/client';
 import useSWR from 'swr';
 
@@ -9,7 +9,7 @@ import { shouldRetryOnError } from '@/utils/request';
 import { type Action, type JwtCustomizer } from './type';
 import { getApiPath } from './utils/path';
 
-const useDataFetch = <T extends LogtoJwtTokenPath>(tokenType: T, action: Action) => {
+const useDataFetch = <T extends LogtoJwtTokenKeyType>(tokenType: T, action: Action) => {
   const apiPath = getApiPath(tokenType);
   const fetchApi = useApi({ hideErrorToast: true });
   const fetcher = useSwrFetcher<JwtCustomizer<T>>(fetchApi);

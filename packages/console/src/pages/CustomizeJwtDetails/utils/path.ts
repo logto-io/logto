@@ -1,4 +1,4 @@
-import { type LogtoJwtTokenPath } from '@logto/schemas';
+import { type LogtoJwtTokenKeyType } from '@logto/schemas';
 
-export const getApiPath = (tokenType: LogtoJwtTokenPath) =>
+export const getApiPath = (tokenType: LogtoJwtTokenKeyType) =>
   `api/configs/jwt-customizer/${tokenType}`;

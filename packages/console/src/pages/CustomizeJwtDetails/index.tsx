@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
-import { type LogtoJwtTokenPath } from '@logto/schemas';
+import { type LogtoJwtTokenKeyType } from '@logto/schemas';
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ import { pageParamsGuard, type Action } from './type';
 import useDataFetch from './use-data-fetch';
 
 type Props = {
-  tokenType: LogtoJwtTokenPath;
+  tokenType: LogtoJwtTokenKeyType;
   action: Action;
 };
 

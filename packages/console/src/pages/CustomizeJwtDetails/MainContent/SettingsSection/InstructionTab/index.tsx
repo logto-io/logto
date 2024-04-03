@@ -1,4 +1,4 @@
-import { LogtoJwtTokenPath } from '@logto/schemas';
+import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import { Editor } from '@monaco-editor/react';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -49,7 +49,7 @@ function InstructionTab({ isActive }: Props) {
           language="typescript"
           className={styles.sampleCode}
           value={
-            tokenType === LogtoJwtTokenPath.AccessToken
+            tokenType === LogtoJwtTokenKeyType.AccessToken
               ? accessTokenPayloadTypeDefinition
               : clientCredentialsPayloadTypeDefinition
           }
@@ -58,7 +58,7 @@ function InstructionTab({ isActive }: Props) {
           options={typeDefinitionCodeEditorOptions}
         />
       </GuideCard>
-      {tokenType === LogtoJwtTokenPath.AccessToken && (
+      {tokenType === LogtoJwtTokenKeyType.AccessToken && (
         <GuideCard
           name={CardType.UserData}
           isExpanded={expendCard === CardType.UserData}

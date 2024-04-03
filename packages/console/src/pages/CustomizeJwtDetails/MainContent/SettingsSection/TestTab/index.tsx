@@ -1,4 +1,4 @@
-import { LogtoJwtTokenPath } from '@logto/schemas';
+import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -35,7 +35,7 @@ function TestTab({ isActive }: Props) {
 
   const editorModels = useMemo(
     () =>
-      tokenType === LogtoJwtTokenPath.AccessToken
+      tokenType === LogtoJwtTokenKeyType.AccessToken
         ? accessTokenModelSettings
         : clientCredentialsModelSettings,
     [tokenType]

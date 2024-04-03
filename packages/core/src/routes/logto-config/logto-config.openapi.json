@@ -135,7 +135,7 @@
                   "script": {
                     "description": "The script of the JWT customizer."
                   },
-                  "envVars": {
+                  "environmentVariables": {
                     "description": "The environment variables for the JWT customizer."
                   },
                   "contextSample": {
@@ -182,7 +182,7 @@
                   "script": {
                     "description": "The script of the JWT customizer."
                   },
-                  "envVars": {
+                  "environmentVariables": {
                     "description": "The environment variables for the JWT customizer."
                   },
                   "contextSample": {
@@ -262,7 +262,7 @@
                       "script": {
                         "description": "The code snippet of the JWT customizer."
                       },
-                      "envVars": {
+                      "environmentVariables": {
                         "description": "The environment variables for the JWT customizer."
                       },
                       "contextSample": {

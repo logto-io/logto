@@ -1,9 +1,9 @@
 import type { AccessTokenJwtCustomizer, ClientCredentialsJwtCustomizer } from '@logto/schemas';
-import { LogtoJwtTokenPath } from '@logto/schemas';
+import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import { z } from 'zod';
 
 export type JwtCustomizerForm = {
-  tokenType: LogtoJwtTokenPath;
+  tokenType: LogtoJwtTokenKeyType;
   script: string;
   environmentVariables?: Array<{ key: string; value: string }>;
   testSample: {
@@ -14,11 +14,12 @@ export type JwtCustomizerForm = {
 
 export type Action = 'create' | 'edit';
 
-export type JwtCustomizer<T extends LogtoJwtTokenPath> = T extends LogtoJwtTokenPath.AccessToken
-  ? AccessTokenJwtCustomizer
-  : ClientCredentialsJwtCustomizer;
+export type JwtCustomizer<T extends LogtoJwtTokenKeyType> =
+  T extends LogtoJwtTokenKeyType.AccessToken
+    ? AccessTokenJwtCustomizer
+    : ClientCredentialsJwtCustomizer;
 
 export const pageParamsGuard = z.object({
-  tokenType: z.nativeEnum(LogtoJwtTokenPath),
+  tokenType: z.nativeEnum(LogtoJwtTokenKeyType),
   action: z.union([z.literal('create'), z.literal('edit')]),
 });

@@ -14,11 +14,11 @@ import {
   logtoCookieKey,
   type LogtoUiCookie,
   LogtoJwtTokenKey,
-  LogtoJwtTokenPath,
   ExtraParamsKey,
   type Json,
   jwtCustomizer as jwtCustomizerLog,
   LogResult,
+  LogtoJwtTokenPath,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
@@ -227,7 +227,7 @@ export default function initOidc(
          * want to insert an error log every time the OIDC provider issues a token when the JWT
          * customizer is not configured.
          */
-        const { script, envVars } =
+        const { script, environmentVariables } =
           (await trySafe(
             logtoConfigs.getJwtCustomizer(
               isTokenClientCredentials
@@ -253,7 +253,7 @@ export default function initOidc(
 
         const commonPayload = {
           script,
-          envVars,
+          environmentVariables,
           token: readOnlyToken,
         };
 
@@ -269,10 +269,12 @@ export default function initOidc(
           body: isTokenClientCredentials
             ? {
                 ...commonPayload,
+                // TODO: update once cloud repo is ready.
                 tokenType: LogtoJwtTokenPath.ClientCredentials,
               }
             : {
                 ...commonPayload,
+                // TODO: update once cloud repo is ready.
                 tokenType: LogtoJwtTokenPath.AccessToken,
                 // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
                 // eslint-disable-next-line no-restricted-syntax

@@ -1,4 +1,4 @@
-import { type LogtoJwtTokenPath } from '@logto/schemas';
+import { type LogtoJwtTokenKeyType } from '@logto/schemas';
 import classNames from 'classnames';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,7 @@ import ScriptSection from './ScriptSection';
 import SettingsSection from './SettingsSection';
 import * as styles from './index.module.scss';
 
-type Props<T extends LogtoJwtTokenPath> = {
+type Props<T extends LogtoJwtTokenKeyType> = {
   className?: string;
   token: T;
   data?: JwtCustomizer<T>;
@@ -26,7 +26,7 @@ type Props<T extends LogtoJwtTokenPath> = {
   action: Action;
 };
 
-function MainContent<T extends LogtoJwtTokenPath>({
+function MainContent<T extends LogtoJwtTokenKeyType>({
   className,
   token,
   data,

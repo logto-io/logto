@@ -1,4 +1,4 @@
-import { LogtoJwtTokenPath } from '@logto/schemas';
+import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import classNames from 'classnames';
 
 import Card from '@/ds-components/Card';
@@ -6,7 +6,7 @@ import Card from '@/ds-components/Card';
 import * as styles from './index.module.scss';
 
 type Props = {
-  tokenType: LogtoJwtTokenPath;
+  tokenType: LogtoJwtTokenKeyType;
 };
 
 function PageLoadingSkeleton({ tokenType }: Props) {
@@ -27,7 +27,7 @@ function PageLoadingSkeleton({ tokenType }: Props) {
           <div className={classNames(styles.textShimmer, styles.title)} />
           <div className={styles.textShimmer} />
         </Card>
-        {tokenType === LogtoJwtTokenPath.AccessToken && (
+        {tokenType === LogtoJwtTokenKeyType.AccessToken && (
           <Card className={styles.card}>
             <div className={styles.textShimmer} />
             <div className={styles.textShimmer} />
