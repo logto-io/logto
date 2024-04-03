@@ -26,7 +26,7 @@ type FormData = Pick<OrganizationScope, 'name' | 'description'>;
 const organizationScopesPath = 'api/organization-scopes';
 
 /** A modal that allows users to create or edit an organization permission. */
-function OrganizationPermissionModal({ data, onClose }: Props) {
+function ManageOrganizationPermissionModal({ data, onClose }: Props) {
   const isCreateMode = data === null;
 
   const { t } = useTranslation(undefined, {
@@ -111,4 +111,4 @@ function OrganizationPermissionModal({ data, onClose }: Props) {
   );
 }
 
-export default OrganizationPermissionModal;
+export default ManageOrganizationPermissionModal;

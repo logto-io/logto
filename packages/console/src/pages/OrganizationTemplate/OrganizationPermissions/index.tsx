@@ -10,6 +10,7 @@ import PermissionsEmpty from '@/assets/images/permissions-empty.svg';
 import ActionsButton from '@/components/ActionsButton';
 import Breakable from '@/components/Breakable';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import ManageOrganizationPermissionModal from '@/components/ManageOrganizationPermissionModal';
 import { organizationPermissionLink } from '@/consts';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -22,7 +23,6 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import OrganizationPermissionModal from './OrganizationPermissionModal';
 import * as styles from './index.module.scss';
 
 function OrganizationPermissions() {
@@ -141,7 +141,7 @@ function OrganizationPermissions() {
         onRetry={async () => mutate(undefined, true)}
       />
       {permissionModalData !== undefined && (
-        <OrganizationPermissionModal
+        <ManageOrganizationPermissionModal
           data={permissionModalData}
           onClose={() => {
             setPermissionModalData(undefined);

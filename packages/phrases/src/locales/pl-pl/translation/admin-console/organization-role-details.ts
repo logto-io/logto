@@ -15,6 +15,10 @@ const organization_role_details = {
       org: 'Uprawnienie organizacji',
     },
     assign_permissions: 'Przypisz uprawnienia',
+    remove_permission: 'Usuń uprawnienie',
+    remove_confirmation:
+      'Jeśli to uprawnienie zostanie usunięte, użytkownik z tą rolą organizacyjną utraci dostęp udzielony przez to uprawnienie.',
+    removed: 'Uprawnienie {{name}} zostało pomyślnie usunięte z tej roli organizacyjnej',
   },
   general: {
     tab: 'Ogólne',

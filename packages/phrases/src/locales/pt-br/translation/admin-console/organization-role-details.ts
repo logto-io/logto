@@ -15,6 +15,10 @@ const organization_role_details = {
       org: 'Permissão da org',
     },
     assign_permissions: 'Atribuir permissões',
+    remove_permission: 'Remover permissão',
+    remove_confirmation:
+      'Se esta permissão for removida, o usuário com essa função organizacional perderá o acesso concedido por esta permissão.',
+    removed: 'A permissão {{name}} foi removida com sucesso desta função organizacional',
   },
   general: {
     tab: 'Geral',

@@ -15,6 +15,10 @@ const organization_role_details = {
       org: "Autorisation d'organisation",
     },
     assign_permissions: 'Attribuer des autorisations',
+    remove_permission: 'Supprimer la permission',
+    remove_confirmation:
+      "Si cette permission est supprimée, l'utilisateur avec ce rôle d'organisation perdra l'accès accordé par cette permission.",
+    removed: "La permission {{name}} a été supprimée avec succès de ce rôle d'organisation",
   },
   general: {
     tab: 'Général',

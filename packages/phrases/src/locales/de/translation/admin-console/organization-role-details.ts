@@ -15,6 +15,10 @@ const organization_role_details = {
       org: 'Org-Berechtigung',
     },
     assign_permissions: 'Berechtigungen zuweisen',
+    remove_permission: 'Berechtigung entfernen',
+    remove_confirmation:
+      'Wenn diese Berechtigung entfernt wird, verliert der Benutzer mit dieser Organisationsrolle den Zugriff, der durch diese Berechtigung gewährt wurde.',
+    removed: 'Die Berechtigung {{name}} wurde erfolgreich aus dieser Organisationsrolle entfernt',
   },
   general: {
     tab: 'Allgemein',
