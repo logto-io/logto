@@ -26,14 +26,9 @@ type Props = {
 function InviteMemberModal({ isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const { currentPlan } = useContext(SubscriptionDataContext);
-  const { currentTenantId, isDevTenant } = useContext(TenantsContext);
-  const tenantMembersMaxLimit = useMemo(() => {
-    if (currentPlan.id === ReservedPlanId.Pro || isDevTenant) {
-      return 10;
-    }
-    // Free plan can only have 1 admin, no other members allowed.
-    return 1;
-  }, [currentPlan.id, isDevTenant]);
+  const { currentTenantId } = useContext(TenantsContext);
+  // TODO: @charles update with actual quota guard later
+  const tenantMembersMaxLimit = currentPlan.id === ReservedPlanId.Free ? 1 : 3;
 
   const [isLoading, setIsLoading] = useState(false);
   const cloudApi = useAuthedCloudApi();
@@ -71,17 +66,20 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const onSubmit = handleSubmit(async ({ emails, role }) => {
     setIsLoading(true);
     try {
-      // Count the current tenant members
-      const members = await cloudApi.get(`/api/tenants/:tenantId/members`, {
-        params: { tenantId: currentTenantId },
-      });
-      // Check if it will exceed the tenant member limit
-      if (emails.length + members.length > tenantMembersMaxLimit) {
-        setError('emails', {
-          type: 'custom',
-          message: t('errors.max_member_limit', { limit: tenantMembersMaxLimit }),
+      // Do not check seats for Pro plan for now
+      if (currentPlan.id === ReservedPlanId.Free || currentPlan.id === ReservedPlanId.Development) {
+        // Count the current tenant members
+        const members = await cloudApi.get(`/api/tenants/:tenantId/members`, {
+          params: { tenantId: currentTenantId },
         });
-        return;
+        // Check if it will exceed the tenant member limit
+        if (emails.length + members.length > tenantMembersMaxLimit) {
+          setError('emails', {
+            type: 'custom',
+            message: t('errors.max_member_limit', { limit: tenantMembersMaxLimit }),
+          });
+          return;
+        }
       }
 
       await Promise.all(
