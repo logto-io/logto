@@ -61,26 +61,17 @@ const description = {
   use: '使用',
   single_sign_on_email_form: '输入你的企业电子邮件地址',
   single_sign_on_connectors_list:
-    '你的企业已为电子邮件账户{{email}}启用了单点登录。你可以继续使用以下SSO提供商进行登录。',
+    '你的企业已为电子邮件账户 {{email}} 启用了单点登录。你可以继续使用以下SSO提供商进行登录。',
   single_sign_on_enabled: '该帐户已启用单点登录',
-  /** UNTRANSLATED */
-  authorize_title: 'Authorize {{name}}',
-  /** UNTRANSLATED */
-  request_permission: '{{name}} is requesting access to:',
-  /** UNTRANSLATED */
-  grant_organization_access: 'Grant the organization access:',
-  /** UNTRANSLATED */
-  user_scopes: 'Personal user data',
-  /** UNTRANSLATED */
-  organization_scopes: 'Organization access',
-  /** UNTRANSLATED */
-  authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
-  /** UNTRANSLATED */
-  not_you: 'Not you?',
-  /** UNTRANSLATED */
-  user_id: 'User ID: {{id}}',
-  /** UNTRANSLATED */
-  redirect_to: 'You will be redirected to {{name}}.',
+  authorize_title: '授权给 {{name}}',
+  request_permission: '{{name}} 需要权限：',
+  grant_organization_access: '授予组织访问权限：',
+  user_scopes: '用户个人信息',
+  organization_scopes: '组织权限',
+  authorize_agreement: `你将同意授权给 {{name}} <link></link>.`,
+  not_you: '不是你本人吗？',
+  user_id: '用户 ID: {{id}}',
+  redirect_to: '你将被重定向到 {{name}}。',
 };
 
 export default Object.freeze(description);
