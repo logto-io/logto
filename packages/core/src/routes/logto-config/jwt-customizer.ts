@@ -7,8 +7,6 @@ import {
   adminTenantId,
   jwtCustomizerConfigsGuard,
   jwtCustomizerTestRequestBodyGuard,
-  type CustomJwtFetcher,
-  type LogtoJwtTokenPath,
 } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import { ZodError, z } from 'zod';
@@ -191,9 +189,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
 
       try {
         ctx.body = await client.post(`/api/services/custom-jwt`, {
-          // TODO: remove type casting once the cloud repo is updated.
-          // eslint-disable-next-line no-restricted-syntax
-          body: body as CustomJwtFetcher & { tokenType: LogtoJwtTokenPath },
+          body,
         });
       } catch (error: unknown) {
         /**
