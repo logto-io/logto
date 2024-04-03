@@ -10,6 +10,13 @@ const organization_template = {
     permissions_column: '權限',
     placeholder_title: '組織角色',
     placeholder_description: '組織角色是一組可以分配給用戶的權限。權限必須來自預定義的組織權限。',
+    create_modal: {
+      title: '建立組織角色',
+      create: '建立角色',
+      name_field: '角色名稱',
+      description_field: '描述',
+      created: '成功建立組織角色 {{name}}。',
+    },
   },
   permissions: {
     tab_name: '組織權限',

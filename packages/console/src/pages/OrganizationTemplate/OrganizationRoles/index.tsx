@@ -1,4 +1,5 @@
 import { type OrganizationRoleWithScopes } from '@logto/schemas';
+import { useState } from 'react';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -20,6 +21,7 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl } from '@/utils/url';
 
+import CreateOrganizationRoleModal from './CreateOrganizationRoleModal';
 import * as styles from './index.module.scss';
 
 function OrganizationRoles() {
@@ -41,88 +43,103 @@ function OrganizationRoles() {
 
   const [orgRoles, totalCount] = data ?? [];
 
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   return (
-    <Table
-      rowGroups={[{ key: 'organizationRoles', data: orgRoles }]}
-      rowIndexKey="id"
-      columns={[
-        {
-          title: <DynamicT forKey="organization_template.roles.role_column" />,
-          dataIndex: 'name',
-          colSpan: 4,
-          render: ({ id, name }) => {
-            return <ItemPreview title={name} icon={<ThemedIcon for={OrgRoleIcon} />} to={id} />;
+    <>
+      <Table
+        rowGroups={[{ key: 'organizationRoles', data: orgRoles }]}
+        rowIndexKey="id"
+        columns={[
+          {
+            title: <DynamicT forKey="organization_template.roles.role_column" />,
+            dataIndex: 'name',
+            colSpan: 4,
+            render: ({ id, name }) => {
+              return <ItemPreview title={name} icon={<ThemedIcon for={OrgRoleIcon} />} to={id} />;
+            },
           },
-        },
-        {
-          title: <DynamicT forKey="organization_template.roles.permissions_column" />,
-          dataIndex: 'scopes',
-          colSpan: 12,
-          render: ({ scopes }) => {
-            return scopes.length === 0 ? (
-              '-'
-            ) : (
-              <div className={styles.permissions}>
-                {scopes.map(({ id, name }) => (
-                  <Tag key={id} variant="cell">
-                    <Breakable>{name}</Breakable>
-                  </Tag>
-                ))}
-              </div>
-            );
+          {
+            title: <DynamicT forKey="organization_template.roles.permissions_column" />,
+            dataIndex: 'scopes',
+            colSpan: 12,
+            render: ({ scopes }) => {
+              return scopes.length === 0 ? (
+                '-'
+              ) : (
+                <div className={styles.permissions}>
+                  {scopes.map(({ id, name }) => (
+                    <Tag key={id} variant="cell">
+                      <Breakable>{name}</Breakable>
+                    </Tag>
+                  ))}
+                </div>
+              );
+            },
           },
-        },
-      ]}
-      rowClickHandler={({ id }) => {
-        navigate(id);
-      }}
-      filter={
-        <div className={styles.filter}>
-          <Button
-            title="organization_template.roles.create_title"
-            type="primary"
-            icon={<Plus />}
-            onClick={() => {
-              // Todo @xiaoyijun implment create org role
-            }}
-          />
-        </div>
-      }
-      placeholder={
-        <TablePlaceholder
-          image={<RolesEmpty />}
-          imageDark={<RolesEmptyDark />}
-          title="organization_template.roles.placeholder_title"
-          description="organization_template.roles.placeholder_description"
-          learnMoreLink={{
-            href: getDocumentationUrl(organizationRoleLink),
-            targetBlank: 'noopener',
-          }}
-          action={
+        ]}
+        rowClickHandler={({ id }) => {
+          navigate(id);
+        }}
+        filter={
+          <div className={styles.filter}>
             <Button
               title="organization_template.roles.create_title"
               type="primary"
-              size="large"
               icon={<Plus />}
               onClick={() => {
-                // Todo @xiaoyijun implment create org role
+                setIsCreateModalOpen(true);
               }}
             />
-          }
+          </div>
+        }
+        placeholder={
+          <TablePlaceholder
+            image={<RolesEmpty />}
+            imageDark={<RolesEmptyDark />}
+            title="organization_template.roles.placeholder_title"
+            description="organization_template.roles.placeholder_description"
+            learnMoreLink={{
+              href: getDocumentationUrl(organizationRoleLink),
+              targetBlank: 'noopener',
+            }}
+            action={
+              <Button
+                title="organization_template.roles.create_title"
+                type="primary"
+                size="large"
+                icon={<Plus />}
+                onClick={() => {
+                  setIsCreateModalOpen(true);
+                }}
+              />
+            }
+          />
+        }
+        pagination={{
+          page,
+          totalCount,
+          pageSize: defaultPageSize,
+          onChange: (page) => {
+            updateSearchParameters({ page });
+          },
+        }}
+        isLoading={isLoading}
+        errorMessage={error?.body?.message ?? error?.message}
+        onRetry={async () => mutate(undefined, true)}
+      />
+      {isCreateModalOpen && (
+        <CreateOrganizationRoleModal
+          onClose={(createdRole) => {
+            setIsCreateModalOpen(false);
+            if (createdRole) {
+              void mutate();
+              navigate(createdRole.id);
+            }
+          }}
         />
-      }
-      pagination={{
-        page,
-        totalCount,
-        pageSize: defaultPageSize,
-        onChange: (page) => {
-          updateSearchParameters({ page });
-        },
-      }}
-      isLoading={isLoading}
-      errorMessage={error?.body?.message ?? error?.message}
-      onRetry={async () => mutate(undefined, true)}
-    />
+      )}
+    </>
   );
 }
 

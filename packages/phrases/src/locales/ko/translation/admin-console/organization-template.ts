@@ -11,6 +11,13 @@ const organization_template = {
     placeholder_title: '조직 역할',
     placeholder_description:
       '조직 역할은 사용자에게 할당될 수 있는 권한의 그룹입니다. 권한은 미리 정의된 조직 권한에서 와야 합니다.',
+    create_modal: {
+      title: '조직 역할 만들기',
+      create: '역할 만들기',
+      name_field: '역할 이름',
+      description_field: '설명',
+      created: '조직 역할 {{name}}이(가) 성공적으로 만들어졌습니다.',
+    },
   },
   permissions: {
     tab_name: '조직 권한',

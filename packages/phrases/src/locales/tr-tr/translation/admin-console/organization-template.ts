@@ -11,6 +11,13 @@ const organization_template = {
     placeholder_title: 'Organizasyon rolü',
     placeholder_description:
       'Organizasyon rolü, kullanıcılara atanabilecek izinlerin bir gruplamasıdır. İzinler, önceden belirlenmiş organizasyon izinlerinden gelmelidir.',
+    create_modal: {
+      title: 'Kuruluş rolü oluştur',
+      create: 'Rol oluştur',
+      name_field: 'Rol adı',
+      description_field: 'Açıklama',
+      created: 'Kuruluş rolü {{name}} başarıyla oluşturuldu.',
+    },
   },
   permissions: {
     tab_name: 'Org izinleri',

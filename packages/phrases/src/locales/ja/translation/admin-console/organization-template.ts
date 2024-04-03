@@ -11,6 +11,13 @@ const organization_template = {
     placeholder_title: '組織の役割',
     placeholder_description:
       '組織の役割は、ユーザーに割り当てることができる権限のグループです。権限は、事前に定義された組織の権限から来なければなりません。',
+    create_modal: {
+      title: '組織の役割を作成する',
+      create: '役割を作成する',
+      name_field: '役割名',
+      description_field: '説明',
+      created: '組織の役割{{name}}が正常に作成されました。',
+    },
   },
   permissions: {
     tab_name: '組織の権限',

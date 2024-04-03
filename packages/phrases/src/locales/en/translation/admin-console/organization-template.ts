@@ -11,6 +11,13 @@ const organization_template = {
     placeholder_title: 'Organization role',
     placeholder_description:
       'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+    create_modal: {
+      title: 'Create organization role',
+      create: 'Create role',
+      name_field: 'Role name',
+      description_field: 'Description',
+      created: 'Organization role {{name}} has been successfully created.',
+    },
   },
   permissions: {
     tab_name: 'Organization permissions',
