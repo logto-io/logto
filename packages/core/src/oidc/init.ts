@@ -18,7 +18,7 @@ import {
   type Json,
   jwtCustomizer as jwtCustomizerLog,
   LogResult,
-  LogtoJwtTokenPath,
+  LogtoJwtTokenKeyType,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
@@ -269,13 +269,11 @@ export default function initOidc(
           body: isTokenClientCredentials
             ? {
                 ...commonPayload,
-                // TODO: update once cloud repo is ready.
-                tokenType: LogtoJwtTokenPath.ClientCredentials,
+                tokenType: LogtoJwtTokenKeyType.ClientCredentials,
               }
             : {
                 ...commonPayload,
-                // TODO: update once cloud repo is ready.
-                tokenType: LogtoJwtTokenPath.AccessToken,
+                tokenType: LogtoJwtTokenKeyType.AccessToken,
                 // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
                 // eslint-disable-next-line no-restricted-syntax
                 context: { user: logtoUserInfo as Record<string, Json> },

@@ -59,12 +59,6 @@ export const clientCredentialsJwtCustomizerGuard = jwtCustomizerGuard
 
 export type ClientCredentialsJwtCustomizer = z.infer<typeof clientCredentialsJwtCustomizerGuard>;
 
-// TODO: Temporarily leave this and will remove it after the cloud repo is updated.
-export enum LogtoJwtTokenPath {
-  AccessToken = 'access-token',
-  ClientCredentials = 'client-credentials',
-}
-
 export enum LogtoJwtTokenKeyType {
   AccessToken = 'access-token',
   ClientCredentials = 'client-credentials',
