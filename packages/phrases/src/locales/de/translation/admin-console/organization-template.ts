@@ -11,6 +11,13 @@ const organization_template = {
     placeholder_title: 'Organisationsrolle',
     placeholder_description:
       'Eine Organisationsrolle ist eine Gruppierung von Berechtigungen, die Benutzern zugewiesen werden können. Die Berechtigungen müssen aus den vordefinierten Organisationsberechtigungen stammen.',
+    create_modal: {
+      title: 'Rolle der Organisation erstellen',
+      create: 'Rolle erstellen',
+      name_field: 'Rollenname',
+      description_field: 'Beschreibung',
+      created: 'Die Organisationsrolle {{name}} wurde erfolgreich erstellt.',
+    },
   },
   permissions: {
     tab_name: 'Org Berechtigungen',

@@ -11,6 +11,13 @@ const organization_template = {
     placeholder_title: 'Papel da organização',
     placeholder_description:
       'O papel da organização é um agrupamento de permissões que podem ser atribuídas a utilizadores. As permissões devem provir das permissões organizacionais predefinidas.',
+    create_modal: {
+      title: 'Criar função da organização',
+      create: 'Criar função',
+      name_field: 'Nome da função',
+      description_field: 'Descrição',
+      created: 'A função da organização {{name}} foi criada com sucesso.',
+    },
   },
   permissions: {
     tab_name: 'Permissões da org',

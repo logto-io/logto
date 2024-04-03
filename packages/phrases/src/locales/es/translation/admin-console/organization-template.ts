@@ -11,6 +11,13 @@ const organization_template = {
     placeholder_title: 'Rol de organización',
     placeholder_description:
       'El rol de organización es un agrupamiento de permisos que se pueden asignar a los usuarios. Los permisos deben provenir de los permisos de organización predefinidos.',
+    create_modal: {
+      title: 'Crear rol de organización',
+      create: 'Crear rol',
+      name_field: 'Nombre del rol',
+      description_field: 'Descripción',
+      created: 'El rol de organización {{name}} se ha creado correctamente.',
+    },
   },
   permissions: {
     tab_name: 'Permisos de org',

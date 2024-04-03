@@ -11,6 +11,13 @@ const organization_template = {
     placeholder_title: 'Rola organizacyjna',
     placeholder_description:
       'Rola organizacyjna to grupowanie uprawnień, które można przypisać użytkownikom. Uprawnienia muszą pochodzić z wcześniej zdefiniowanych uprawnień organizacyjnych.',
+    create_modal: {
+      title: 'Utwórz rolę organizacji',
+      create: 'Utwórz rolę',
+      name_field: 'Nazwa roli',
+      description_field: 'Opis',
+      created: 'Rola organizacji {{name}} została pomyślnie utworzona.',
+    },
   },
   permissions: {
     tab_name: 'Uprawnienia org',
