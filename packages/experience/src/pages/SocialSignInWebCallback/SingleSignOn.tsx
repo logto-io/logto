@@ -1,7 +1,6 @@
+import LoadingLayer from '@/components/LoadingLayer';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import { useSieMethods } from '@/hooks/use-sie';
-
-import SignIn from '../SignIn';
 
 import useSingleSignOnListener from './use-single-sign-on-listener';
 
@@ -20,7 +19,7 @@ const SingleSignOn = ({ connectorId }: Props) => {
 
   useSingleSignOnListener(connectorId);
 
-  return <SignIn />;
+  return <LoadingLayer />;
 };
 
 export default SingleSignOn;
