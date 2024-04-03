@@ -82,7 +82,7 @@ export const defaultAccessTokenJwtCustomizerCode = `/**
 * @returns The custom claims.
 */
 
-exports.getCustomJwtClaims = async (token, data) => {
+exports.getCustomJwtClaims = async (token, data, envVariables) => {
   return {};
 }`;
 
@@ -95,7 +95,7 @@ export const defaultClientCredentialsJwtCustomizerCode = `/**
 * @returns The custom claims.
 */
 
-exports.getCustomJwtClaims = async (token) => {
+exports.getCustomJwtClaims = async (token, envVariables) => {
   return {};
 }`;
 

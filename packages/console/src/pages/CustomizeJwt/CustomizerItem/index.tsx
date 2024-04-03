@@ -2,7 +2,7 @@ import { LogtoJwtTokenPath } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import DeletIcon from '@/assets/icons/delete.svg';
+import DeleteIcon from '@/assets/icons/delete.svg';
 import EditIcon from '@/assets/icons/edit.svg';
 import Button from '@/ds-components/Button';
 import useApi from '@/hooks/use-api';
@@ -53,8 +53,9 @@ function CustomizerItem({ tokenType }: Props) {
       </div>
       <div className={styles.actions}>
         <Button
-          icon={<EditIcon />}
+          icon={<EditIcon className={styles.icon} />}
           type="text"
+          size="small"
           title="general.edit"
           onClick={() => {
             navigate(editLink);
@@ -62,8 +63,9 @@ function CustomizerItem({ tokenType }: Props) {
         />
         <Button
           className={styles.danger}
-          icon={<DeletIcon />}
+          icon={<DeleteIcon className={styles.icon} />}
           type="text"
+          size="small"
           title="general.delete"
           onClick={onDelete}
         />

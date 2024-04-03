@@ -15,8 +15,13 @@
 
   .actions {
     display: flex;
-    gap: _.unit(2);
+    gap: _.unit(4);
     align-items: center;
+
+    .icon {
+      max-width: _.unit(4);
+      max-height: _.unit(4);
+    }
 
     .danger {
       color: var(--color-error);
