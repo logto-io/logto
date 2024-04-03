@@ -96,6 +96,18 @@ describe('admin console api resources', () => {
     expect(response instanceof HTTPError && response.response.status === 400).toBe(true);
   });
 
+  it('should throw when updating management api resource', async () => {
+    await expectRejects(
+      updateResource(defaultManagementApi.resource.id, {
+        name: 'new-name',
+      }),
+      {
+        code: 'resource.cannot_modify_management_api',
+        status: 400,
+      }
+    );
+  });
+
   it('should not update api resource indicator', async () => {
     const resource = await createResource();
     const newResourceName = `new_${resource.name}`;
