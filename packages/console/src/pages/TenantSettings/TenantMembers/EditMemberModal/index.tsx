@@ -38,11 +38,10 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
   const onSubmit = async () => {
     setIsLoading(true);
     try {
-      // TODO: @charles Uncomment later once the Cloud APIs are updated
-      // await cloudApi.put(`/api/tenants/:tenantId/members/:userId/roles`, {
-      //   params: { tenantId: currentTenantId, userId: user.id },
-      //   body: { roleName: role },
-      // });
+      await cloudApi.put(`/api/tenants/:tenantId/members/:userId/roles`, {
+        params: { tenantId: currentTenantId, userId: user.id },
+        body: { roleName: role },
+      });
       onClose();
     } finally {
       setIsLoading(false);

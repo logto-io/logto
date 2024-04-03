@@ -1,4 +1,4 @@
-import { OrganizationInvitationStatus } from '@logto/schemas';
+import { OrganizationInvitationStatus, TenantRole } from '@logto/schemas';
 import { condArray, conditional } from '@silverhand/essentials';
 import { format } from 'date-fns';
 import { useContext, useState } from 'react';
@@ -142,9 +142,12 @@ function Invitations() {
                 return '-';
               }
 
-              return organizationRoles.map(({ id, name }) => (
+              return organizationRoles.map(({ id }) => (
                 <Tag key={id} variant="cell">
-                  <RoleOption value={id} title={name} />
+                  <RoleOption
+                    value={id}
+                    title={t(id === TenantRole.Admin ? 'admin' : 'collaborator')}
+                  />
                 </Tag>
               ));
             },
