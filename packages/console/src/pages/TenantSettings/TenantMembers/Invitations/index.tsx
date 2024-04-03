@@ -15,6 +15,7 @@ import UsersEmptyDark from '@/assets/images/users-empty-dark.svg';
 import UsersEmpty from '@/assets/images/users-empty.svg';
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import type { InvitationResponse, TenantInvitationResponse } from '@/cloud/types/router';
+import Breakable from '@/components/Breakable';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
@@ -129,13 +130,13 @@ function Invitations() {
         columns={[
           {
             dataIndex: 'user',
-            colSpan: 4,
+            colSpan: 2,
             title: t('user'),
             render: ({ invitee }) => <span>{invitee}</span>,
           },
           {
             dataIndex: 'roles',
-            colSpan: 4,
+            colSpan: 2,
             title: t('roles'),
             render: ({ organizationRoles }) => {
               if (organizationRoles.length === 0) {
@@ -154,7 +155,7 @@ function Invitations() {
           },
           {
             dataIndex: 'status',
-            colSpan: 4,
+            colSpan: 2,
             title: t('invitation_status'),
             render: ({ status }) => (
               <Tag type="state" status={convertInvitationStatusToTagStatus(status)}>
@@ -163,14 +164,14 @@ function Invitations() {
             ),
           },
           {
-            dataIndex: 'sentAt',
-            colSpan: 4,
-            title: t('invitation_sent'),
-            render: ({ createdAt }) => <span>{format(createdAt, 'MMM do, yyyy')}</span>,
+            dataIndex: 'inviter',
+            colSpan: 3,
+            title: t('inviter'),
+            render: ({ inviterName }) => <Breakable>{inviterName ?? '-'}</Breakable>,
           },
           {
             dataIndex: 'expiresAt',
-            colSpan: 4,
+            colSpan: 2,
             title: t('expiration_date'),
             render: ({ expiresAt }) => <span>{format(expiresAt, 'MMM do, yyyy')}</span>,
           },
