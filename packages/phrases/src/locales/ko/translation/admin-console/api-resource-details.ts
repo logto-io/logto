@@ -1,7 +1,7 @@
 const api_resource_details = {
   page_title: 'API 리소스 세부 정보',
   back_to_api_resources: 'API 리소스로 돌아가기',
-  settings_tab: '설정',
+  general_tab: '일반',
   permissions_tab: '권한',
   settings: '설정',
   settings_description:

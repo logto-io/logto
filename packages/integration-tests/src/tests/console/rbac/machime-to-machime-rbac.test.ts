@@ -3,6 +3,7 @@ import {
   expectConfirmModalAndAct,
   expectModalWithTitle,
   expectToClickModalAction,
+  expectToClickNavTab,
   goToAdminConsole,
   waitForToast,
 } from '#src/ui-helpers/index.js';
@@ -91,9 +92,7 @@ describe('M2M RBAC', () => {
     });
 
     it('create permission for api resource', async () => {
-      await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-        text: 'Permissions',
-      });
+      await expectToClickNavTab(page, 'Permissions');
 
       await expect(page).toClick('div[class$=filter] button[class$=createButton] span', {
         text: 'Create permission',
@@ -190,9 +189,7 @@ describe('M2M RBAC', () => {
     });
 
     it('delete a permission from a role on the role details page', async () => {
-      await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-        text: 'Permissions',
-      });
+      await expectToClickNavTab(page, 'Permissions');
 
       await expectToSelectPermissionAction(page, {
         permissionName,
