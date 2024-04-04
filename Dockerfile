@@ -5,7 +5,8 @@ ENV CI=true
 
 # No need for Docker build
 ENV PUPPETEER_SKIP_DOWNLOAD=true
-
+ENV PORT=3301
+ENV ADMIN_PORT=3302
 ### Install toolchain ###
 RUN npm add --location=global pnpm@^8.0.0
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#node-gyp-alpine
@@ -39,8 +40,11 @@ RUN rm -rf .scripts .parcel-cache pnpm-*.yaml packages/cloud
 
 ###### [STAGE] Seal ######
 FROM node:20-alpine as app
+ENV PORT=3301
+ENV ADMIN_PORT=3302
 WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
-EXPOSE 3001
-ENTRYPOINT ["npm", "run"]
-CMD ["start"]
+EXPOSE 3301
+EXPOSE 3302
+
+ENTRYPOINT ["sh", "-c", "npm run cli db seed -- --swe && npm start"]

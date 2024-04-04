@@ -6,10 +6,15 @@ services:
       postgres:
         condition: service_healthy
     image: svhd/logto:${TAG-latest}
-    entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "npm run cli db seed -- --swe && npm start"
+      ]
     ports:
-      - 3001:3001
-      - 3002:3002
+      - 3301:3301
+      - 3302:3302
     environment:
       - TRUST_PROXY_HEADER=1
       - DB_URL=postgres://postgres:p0stgr3s@postgres:5432/logto
@@ -17,6 +22,8 @@ services:
       # Or, you can leverage it for local testing.
       - ENDPOINT
       - ADMIN_ENDPOINT
+      - PORT=3301
+      - ADMIN_PORT=3302
   postgres:
     image: postgres:14-alpine
     user: postgres
@@ -24,7 +31,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: p0stgr3s
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 5
+    ports:
+      - 5432:5432
