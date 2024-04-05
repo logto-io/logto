@@ -17,7 +17,7 @@ services:
       - 3302:3302
     environment:
       - TRUST_PROXY_HEADER=1
-      - DB_URL=postgres://postgres:p0stgr3s@postgres:5432/logto
+      - DB_URL=postgres://postgres:p0stgr3s@postgres:5433/logto
       # Mandatory for GitPod to map host env to the container, thus GitPod can dynamically configure the public URL of Logto;
       # Or, you can leverage it for local testing.
       - ENDPOINT
@@ -30,10 +30,11 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: p0stgr3s
+      PGPORT: 5433
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
-      - 5432:5432
+      - 5433:5433
