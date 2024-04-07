@@ -9,7 +9,9 @@ import { z } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
+import { organizationRoleSearchKeys } from '#src/queries/organization/index.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
+import { parseSearchOptions } from '#src/utils/search.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
@@ -40,12 +42,16 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
     '/',
     koaPagination(),
     koaGuard({
+      query: z.object({ q: z.string().optional() }),
       response: organizationRoleWithScopesGuard.array(),
       status: [200],
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
-      const [count, entities] = await roles.findAll(limit, offset);
+
+      const search = parseSearchOptions(organizationRoleSearchKeys, ctx.guard.query);
+
+      const [count, entities] = await roles.findAll(limit, offset, search);
 
       ctx.pagination.totalCount = count;
       ctx.body = entities;

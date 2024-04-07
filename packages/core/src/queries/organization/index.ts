@@ -27,6 +27,11 @@ import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 import { RoleUserRelationQueries, UserRelationQueries } from './relations.js';
 
+/**
+ * The schema field keys that can be used for searching roles.
+ */
+export const organizationRoleSearchKeys = Object.freeze(['id', 'name', 'description'] as const);
+
 class OrganizationRolesQueries extends SchemaQueries<
   OrganizationRoleKeys,
   CreateOrganizationRole,
