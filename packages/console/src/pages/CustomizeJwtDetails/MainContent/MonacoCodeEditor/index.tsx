@@ -176,30 +176,28 @@ function MonacoCodeEditor({
           {actionButtons}
         </div>
       </header>
-      <div className={styles.body}>
-        <div
-          ref={containerRef}
-          className={classNames(styles.editorContainer, dashboard && styles.dashboardOpen)}
-        >
-          {activeModel && (
-            <Editor
-              height={editorHeight}
-              language={activeModel.language}
-              path={activeModel.name}
-              theme="logto-dark"
-              options={{
-                ...defaultOptions,
-                ...activeModel.options,
-              }}
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- empty string is falsy
-              value={value || activeModel.defaultValue}
-              onMount={handleEditorDidMount}
-              onChange={onChange}
-            />
-          )}
-        </div>
-        {dashboard && <DashBoard {...dashboard} className={styles.resultPanel} />}
+      <div
+        ref={containerRef}
+        className={classNames(styles.editorContainer, dashboard && styles.dashboardOpen)}
+      >
+        {activeModel && (
+          <Editor
+            height={editorHeight}
+            language={activeModel.language}
+            path={activeModel.name}
+            theme="logto-dark"
+            options={{
+              ...defaultOptions,
+              ...activeModel.options,
+            }}
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- empty string is falsy
+            value={value || activeModel.defaultValue}
+            onMount={handleEditorDidMount}
+            onChange={onChange}
+          />
+        )}
       </div>
+      {dashboard && <DashBoard {...dashboard} className={styles.resultPanel} />}
     </div>
   );
 }
