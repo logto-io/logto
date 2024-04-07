@@ -53,7 +53,7 @@ function InstructionTab({ isActive }: Props) {
               ? accessTokenPayloadTypeDefinition
               : clientCredentialsPayloadTypeDefinition
           }
-          height="350px"
+          height="320px"
           theme="logto-dark"
           options={typeDefinitionCodeEditorOptions}
         />
@@ -70,7 +70,7 @@ function InstructionTab({ isActive }: Props) {
             language="typescript"
             className={styles.sampleCode}
             value={jwtCustomizerUserContextTypeDefinition}
-            height="700px"
+            height="400px"
             theme="logto-dark"
             options={typeDefinitionCodeEditorOptions}
           />
@@ -83,7 +83,9 @@ function InstructionTab({ isActive }: Props) {
           setExpendCard(expand ? CardType.FetchExternalData : undefined);
         }}
       >
-        <div className={styles.description}>{t('jwt_claims.fetch_external_data.description')}</div>
+        <div className={tabContentStyles.description}>
+          {t('jwt_claims.fetch_external_data.description')}
+        </div>
         <Editor
           language="typescript"
           className={styles.sampleCode}
@@ -101,7 +103,7 @@ function InstructionTab({ isActive }: Props) {
         }}
       >
         <EnvironmentVariablesField className={styles.envVariablesField} />
-        <div className={styles.description}>
+        <div className={tabContentStyles.description}>
           {t('jwt_claims.environment_variables.sample_code')}
         </div>
         <Editor
@@ -113,7 +115,9 @@ function InstructionTab({ isActive }: Props) {
           options={sampleCodeEditorOptions}
         />
       </GuideCard>
-      <div className={tabContentStyles.description}>{t('jwt_claims.jwt_claims_description')}</div>
+      <div className={classNames(tabContentStyles.description, styles.hint)}>
+        {t('jwt_claims.jwt_claims_description')}
+      </div>
     </div>
   );
 }
