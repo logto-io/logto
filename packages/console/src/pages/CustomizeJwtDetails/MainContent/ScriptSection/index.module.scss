@@ -1,8 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .scriptSection {
-  position: sticky;
-  top: 0;
+  position: relative;
   min-width: 50%;
 
   .fixHeightWrapper {
