@@ -15,6 +15,10 @@ const organization_role_details = {
       org: 'Org permission',
     },
     assign_permissions: 'Assign permissions',
+    remove_permission: 'Remove permission',
+    remove_confirmation:
+      'If this permission is removed, the user with this organization role will lose the access granted by this permission.',
+    removed: 'The permission {{name}} was successfully removed from this organization role',
   },
   general: {
     tab: 'General',

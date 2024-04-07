@@ -15,6 +15,10 @@ const organization_role_details = {
       org: 'Kuruluş izni',
     },
     assign_permissions: 'İzinleri atama',
+    remove_permission: 'İzni kaldır',
+    remove_confirmation:
+      'Bu izin kaldırılırsa, bu organizasyon rolüne sahip kullanıcı bu izin tarafından verilen erişimi kaybeder.',
+    removed: '{{name}} izni bu organizasyon rolünden başarıyla kaldırıldı',
   },
   general: {
     tab: 'Genel',

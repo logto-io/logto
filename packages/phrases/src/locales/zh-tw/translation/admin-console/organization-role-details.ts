@@ -15,6 +15,9 @@ const organization_role_details = {
       org: '組織權限',
     },
     assign_permissions: '分配權限',
+    remove_permission: '移除權限',
+    remove_confirmation: '如果移除此權限，擁有此組織角色的使用者將失去此權限所授予的存取權。',
+    removed: '權限 {{name}} 已成功從此組織角色中移除',
   },
   general: {
     tab: '一般',

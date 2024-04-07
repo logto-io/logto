@@ -15,6 +15,10 @@ const organization_role_details = {
       org: '조직 권한',
     },
     assign_permissions: '권한 할당',
+    remove_permission: '권한 삭제',
+    remove_confirmation:
+      '이 권한을 제거하면이 조직 역할을하는 사용자는이 권한으로 부여된 액세스를 잃게됩니다.',
+    removed: '권한 {{name}}이(가)이 조직 역할에서 성공적으로 제거되었습니다',
   },
   general: {
     tab: '일반',

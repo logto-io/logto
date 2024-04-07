@@ -15,6 +15,10 @@ const organization_role_details = {
       org: '組織許可',
     },
     assign_permissions: '許可を割り当てる',
+    remove_permission: '権限を削除',
+    remove_confirmation:
+      'この権限を削除すると、この組織の役割を持つユーザーはこの権限によって付与されたアクセスを失います。',
+    removed: 'この組織の役割から権限 {{name}} が正常に削除されました',
   },
   general: {
     tab: '一般',
