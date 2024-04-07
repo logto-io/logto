@@ -14,6 +14,15 @@ describe('organization role APIs', () => {
   describe('organization roles', () => {
     const roleApi = new OrganizationRoleApiTest();
     const scopeApi = new OrganizationScopeApiTest();
+    const resourceScopeApi = new ScopeApiTest();
+
+    beforeAll(async () => {
+      await resourceScopeApi.initResource();
+    });
+
+    afterAll(async () => {
+      await resourceScopeApi.cleanUp();
+    });
 
     afterEach(async () => {
       await Promise.all([roleApi.cleanUp(), scopeApi.cleanUp()]);
@@ -84,17 +93,23 @@ describe('organization role APIs', () => {
       expect(role).toStrictEqual(createdRole);
     });
 
-    it('should be able to create a new organization with initial scopes', async () => {
+    it('should be able to create a new organization with initial organization scopes and resource scopes', async () => {
       const [scope1, scope2] = await Promise.all([
         scopeApi.create({ name: 'test' + randomId() }),
         scopeApi.create({ name: 'test' + randomId() }),
+      ]);
+      const [resourceScope1, resourceScope2] = await Promise.all([
+        resourceScopeApi.create({ name: 'test' + randomId() }),
+        resourceScopeApi.create({ name: 'test' + randomId() }),
       ]);
       const createdRole = await roleApi.create({
         name: 'test' + randomId(),
         description: 'test description.',
         organizationScopeIds: [scope1.id, scope2.id],
+        resourceScopeIds: [resourceScope1.id, resourceScope2.id],
       });
       const scopes = await roleApi.getScopes(createdRole.id);
+      const resourceScopes = await roleApi.getResourceScopes(createdRole.id);
       const roles = await roleApi.getList();
       const roleWithScopes = roles.find((role) => role.id === createdRole.id);
 
@@ -103,6 +118,13 @@ describe('organization role APIs', () => {
           expect.objectContaining(pick(scope, 'id', 'name'))
         );
         expect(scopes).toContainEqual(expect.objectContaining(pick(scope, 'id', 'name')));
+      }
+
+      for (const scope of [resourceScope1, resourceScope2]) {
+        expect(roleWithScopes?.resourceScopes).toContainEqual(
+          expect.objectContaining(pick(scope, 'id', 'name'))
+        );
+        expect(resourceScopes).toContainEqual(expect.objectContaining(pick(scope, 'id', 'name')));
       }
     });
 

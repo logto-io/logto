@@ -12,6 +12,7 @@ export type CreateOrganizationRolePostData = {
   name: string;
   description?: string;
   organizationScopeIds?: string[];
+  resourceScopeIds?: string[];
 };
 
 export class OrganizationRoleApi extends ApiFactory<
