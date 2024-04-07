@@ -1,9 +1,8 @@
-import type { ScopeResponse } from '@logto/schemas';
+import { isManagementApi, type Resource, type ScopeResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
 import PermissionsTable from '@/components/PermissionsTable';
@@ -13,17 +12,17 @@ import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import type { ApiResourceDetailsOutletContext } from '../types';
-
 import CreatePermissionModal from './components/CreatePermissionModal';
 
 const pageSize = defaultPageSize;
 
-function ApiResourcePermissions() {
-  const {
-    resource: { id: resourceId },
-    isLogtoManagementApiResource,
-  } = useOutletContext<ApiResourceDetailsOutletContext>();
+type Props = {
+  resource: Resource;
+};
+
+function ApiResourcePermissions({ resource }: Props) {
+  const { id: resourceId, indicator } = resource;
+  const isLogtoManagementApiResource = isManagementApi(indicator);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 

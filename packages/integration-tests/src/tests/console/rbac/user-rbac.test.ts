@@ -4,6 +4,7 @@ import {
   expectModalWithTitle,
   expectToClickDetailsPageOption,
   expectToClickModalAction,
+  expectToClickNavTab,
   goToAdminConsole,
   waitForToast,
 } from '#src/ui-helpers/index.js';
@@ -80,7 +81,7 @@ describe('User RBAC', () => {
   });
 
   it('create api permissions', async () => {
-    await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
+    await expect(page).toClick('nav div[class$=item] div[class*=link] a', {
       text: 'Permissions',
     });
 
@@ -194,9 +195,7 @@ describe('User RBAC', () => {
   });
 
   it('delete a permission from a role on the role details page', async () => {
-    await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-      text: 'Permissions',
-    });
+    await expectToClickNavTab(page, 'Permissions');
 
     await expectToSelectPermissionAction(page, {
       permissionName,
@@ -390,9 +389,7 @@ describe('User RBAC', () => {
     });
 
     // Navigate to permissions tab
-    await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-      text: 'Permissions',
-    });
+    await expectToClickNavTab(page, 'Permissions');
 
     await expectToSelectPermissionAction(page, {
       permissionName,

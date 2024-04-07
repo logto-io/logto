@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Navigate, Route, Routes, useOutletContext } from 'react-router-dom';
 
 import {
-  ApiResourceDetailsTabs,
   ApplicationDetailsTabs,
   ConnectorsTabs,
   EnterpriseSsoDetailsTabs,
@@ -17,8 +16,6 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
-import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
-import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
 import ApiResources from '@/pages/ApiResources';
 import ApplicationDetails from '@/pages/ApplicationDetails';
 import Applications from '@/pages/Applications';
@@ -112,14 +109,7 @@ function ConsoleContent() {
               <Route index element={<ApiResources />} />
               <Route path="create" element={<ApiResources />} />
               <Route path=":id/guide/:guideId" element={<ApiResourceDetails />} />
-              <Route path=":id" element={<ApiResourceDetails />}>
-                <Route index element={<Navigate replace to={ApiResourceDetailsTabs.Settings} />} />
-                <Route path={ApiResourceDetailsTabs.Settings} element={<ApiResourceSettings />} />
-                <Route
-                  path={ApiResourceDetailsTabs.Permissions}
-                  element={<ApiResourcePermissions />}
-                />
-              </Route>
+              <Route path=":id/*" element={<ApiResourceDetails />} />
             </Route>
             <Route path="sign-in-experience">
               <Route index element={<Navigate replace to={SignInExperienceTab.Branding} />} />

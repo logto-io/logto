@@ -32,7 +32,7 @@ const pageSize = defaultPageSize;
 const apiResourcesPathname = '/api-resources';
 const createApiResourcePathname = `${apiResourcesPathname}/create`;
 const buildDetailsPathname = (id: string) =>
-  `${apiResourcesPathname}/${id}/${ApiResourceDetailsTabs.Settings}`;
+  `${apiResourcesPathname}/${id}/${ApiResourceDetailsTabs.Permissions}`;
 
 const icons = {
   [Theme.Light]: { ApiIcon: ApiResource, ManagementApiIcon: ManagementApiResource },

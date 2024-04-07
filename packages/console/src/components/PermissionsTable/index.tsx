@@ -126,7 +126,7 @@ function PermissionsTable({
     render: ({ resource }) => (
       <TextLink
         className={styles.link}
-        to={`/api-resources/${resource.id}/${ApiResourceDetailsTabs.Settings}`}
+        to={`/api-resources/${resource.id}/${ApiResourceDetailsTabs.General}`}
       >
         {resource.name}
       </TextLink>

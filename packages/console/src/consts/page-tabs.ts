@@ -7,8 +7,8 @@ export enum ApplicationDetailsTabs {
 }
 
 export enum ApiResourceDetailsTabs {
-  Settings = 'settings',
   Permissions = 'permissions',
+  General = 'general',
 }
 
 export enum ConnectorsTabs {

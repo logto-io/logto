@@ -1,7 +1,7 @@
 const api_resource_details = {
   page_title: 'API Kaynak detayları',
   back_to_api_resources: 'API Kaynaklarına geri dön',
-  settings_tab: 'Ayarlar',
+  general_tab: 'Genel',
   permissions_tab: 'İzinler',
   settings: 'Ayarlar',
   settings_description:

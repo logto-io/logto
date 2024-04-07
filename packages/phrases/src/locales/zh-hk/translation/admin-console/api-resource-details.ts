@@ -1,7 +1,7 @@
 const api_resource_details = {
   page_title: 'API 資源詳情',
   back_to_api_resources: '返回 API 資源',
-  settings_tab: '設置',
+  general_tab: '常規',
   permissions_tab: '權限',
   settings: '設置',
   settings_description:

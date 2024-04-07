@@ -1,7 +1,7 @@
 const api_resource_details = {
   page_title: 'API Ressourcendetails',
   back_to_api_resources: 'Zurück zu API Ressourcen',
-  settings_tab: 'Einstellungen',
+  general_tab: 'Allgemein',
   permissions_tab: 'Berechtigungen',
   settings: 'Einstellungen',
   settings_description:

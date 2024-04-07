@@ -1,7 +1,7 @@
 const api_resource_details = {
   page_title: 'APIリソースの詳細 ',
   back_to_api_resources: 'APIリソースに戻る',
-  settings_tab: '設定',
+  general_tab: '一般',
   permissions_tab: '権限',
   settings: '設定',
   settings_description:
