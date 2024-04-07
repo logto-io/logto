@@ -115,9 +115,7 @@ function InstructionTab({ isActive }: Props) {
           options={sampleCodeEditorOptions}
         />
       </GuideCard>
-      <div className={classNames(tabContentStyles.description, styles.hint)}>
-        {t('jwt_claims.jwt_claims_description')}
-      </div>
+      <div className={tabContentStyles.description}>{t('jwt_claims.jwt_claims_description')}</div>
     </div>
   );
 }
