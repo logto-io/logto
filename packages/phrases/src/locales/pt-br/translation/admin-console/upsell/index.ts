@@ -35,6 +35,8 @@ const upsell = {
     api_resource: 'Recurso de API',
     machine_to_machine: 'aplicação máquina a máquina',
     tokens: '{{limit}}M tokens',
+    /** UNTRANSLATED */
+    tenant_member: 'tenant member',
   },
   charge_notification_for_quota_limit:
     'Você ultrapassou o limite de sua cota de {{item}}. O Logto adicionará cobranças pelo uso além do limite da cota. A cobrança começará no dia em que o novo design de preços do complemento for lançado. <a>Saiba mais</a>',

@@ -5,6 +5,10 @@
   flex-direction: column;
   gap: _.unit(4);
 
+  .chargeNotification {
+    margin: _.unit(4) 0 0;
+  }
+
   .tabButtons {
     display: flex;
     align-items: center;

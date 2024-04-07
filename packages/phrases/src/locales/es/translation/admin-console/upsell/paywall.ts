@@ -58,6 +58,12 @@ const paywall = {
   /** UNTRANSLATED */
   sso_connectors:
     'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
+  /** UNTRANSLATED */
+  tenant_members:
+    'Unlock collaboration feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
+  /** UNTRANSLATED */
+  tenant_members_dev_plan:
+    "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
 };
 
 export default Object.freeze(paywall);

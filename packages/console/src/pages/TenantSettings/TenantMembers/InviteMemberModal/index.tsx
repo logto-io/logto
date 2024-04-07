@@ -1,4 +1,4 @@
-import { ReservedPlanId, TenantRole } from '@logto/schemas';
+import { TenantRole } from '@logto/schemas';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -6,9 +6,7 @@ import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import Select, { type Option } from '@/ds-components/Select';
@@ -18,6 +16,8 @@ import InviteEmailsInput from '../InviteEmailsInput';
 import useEmailInputUtils from '../InviteEmailsInput/hooks';
 import { type InviteMemberForm } from '../types';
 
+import Footer from './Footer';
+
 type Props = {
   isOpen: boolean;
   onClose: (isSuccessful?: boolean) => void;
@@ -25,10 +25,7 @@ type Props = {
 
 function InviteMemberModal({ isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
-  const { currentPlan } = useContext(SubscriptionDataContext);
   const { currentTenantId } = useContext(TenantsContext);
-  // TODO: @charles update with actual quota guard later
-  const tenantMembersMaxLimit = currentPlan.id === ReservedPlanId.Free ? 1 : 3;
 
   const [isLoading, setIsLoading] = useState(false);
   const cloudApi = useAuthedCloudApi();
@@ -44,8 +41,8 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const {
     control,
     handleSubmit,
-    setError,
     reset,
+    watch,
     formState: { errors },
   } = formMethods;
 
@@ -66,22 +63,6 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const onSubmit = handleSubmit(async ({ emails, role }) => {
     setIsLoading(true);
     try {
-      // Do not check seats for Pro plan for now
-      if (currentPlan.id === ReservedPlanId.Free || currentPlan.id === ReservedPlanId.Development) {
-        // Count the current tenant members
-        const members = await cloudApi.get(`/api/tenants/:tenantId/members`, {
-          params: { tenantId: currentTenantId },
-        });
-        // Check if it will exceed the tenant member limit
-        if (emails.length + members.length > tenantMembersMaxLimit) {
-          setError('emails', {
-            type: 'custom',
-            message: t('errors.max_member_limit', { limit: tenantMembersMaxLimit }),
-          });
-          return;
-        }
-      }
-
       await Promise.all(
         emails.map(async (email) =>
           cloudApi.post('/api/tenants/:tenantId/invitations', {
@@ -107,14 +88,14 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
       }}
     >
       <ModalLayout
+        size="large"
         title="tenant_members.invite_modal.title"
+        subtitle="tenant_members.invite_modal.subtitle"
         footer={
-          <Button
-            size="large"
-            type="primary"
-            title="tenant_members.invite_members"
+          <Footer
+            newInvitationCount={watch('emails').length}
             isLoading={isLoading}
-            onClick={onSubmit}
+            onSubmit={onSubmit}
           />
         }
         onClose={onClose}

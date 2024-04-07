@@ -105,6 +105,7 @@ export const adminConsoleDataGuard = z.object({
       token: z.boolean().optional(),
       apiResource: z.boolean().optional(),
       machineToMachineApp: z.boolean().optional(),
+      tenantMember: z.boolean().optional(),
     })
     .optional(),
 });

@@ -146,6 +146,13 @@ const quota_item = {
     unlimited: 'Enterprise SSO',
     not_eligible: 'Remove your Enterprise SSO',
   },
+  tenant_members_limit: {
+    name: 'Tenant members',
+    limited: '{{count, number}} tenant member',
+    limited_other: '{{count, number}} tenant members',
+    unlimited: 'Unlimited tenant members',
+    not_eligible: 'Remove your tenant members',
+  },
 };
 
 export default Object.freeze(quota_item);

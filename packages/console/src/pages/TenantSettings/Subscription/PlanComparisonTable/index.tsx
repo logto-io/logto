@@ -119,13 +119,15 @@ function PlanComparisonTable() {
     const orgPermissions = t('organizations.org_permissions');
     const jitProvisioning = t('organizations.just_in_time_provisioning');
 
-    // Audit logs
-    const auditLogRetention = t('audit_logs.retention');
+    // Developers and platform
+    const webhooks = t('developers_and_platform.hooks');
+    const auditLogRetention = t('developers_and_platform.audit_logs_retention');
     const freePlanLogRetention = t('days', { count: freePlanAuditLogsRetentionDays });
     const paidPlanLogRetention = t('days', { count: proPlanAuditLogsRetentionDays });
-
-    // Webhooks
-    const webhooks = t('hooks.hooks');
+    const jwtClaims = t('developers_and_platform.jwt_claims');
+    const tenantMembers = t('developers_and_platform.tenant_members');
+    const tenantMembersLimit = t('included', { value: 3 });
+    const tenantMembersPrice = t('per_member', { value: 8 });
 
     // Compliance and support
     const community = t('support.community');
@@ -228,14 +230,20 @@ function PlanComparisonTable() {
         ],
       },
       {
-        title: 'audit_logs.title',
+        title: 'developers_and_platform.title',
         rows: [
+          { name: webhooks, data: ['1', '10', contact] },
           { name: auditLogRetention, data: [freePlanLogRetention, paidPlanLogRetention, contact] },
+          { name: jwtClaims, data: ['✓', '✓', '✓'] },
+          {
+            name: tenantMembers,
+            data: [
+              '1',
+              `${tenantMembersLimit}|${paidAddOnFeatureTip}|${tenantMembersPrice}`,
+              contact,
+            ],
+          },
         ],
-      },
-      {
-        title: 'hooks.title',
-        rows: [{ name: webhooks, data: ['1', '10', contact] }],
       },
       {
         title: 'support.title',
@@ -275,8 +283,9 @@ function PlanComparisonTable() {
                   <td className={styles.quotaKeyColumn}>
                     <TableDataWrapper isLeftAligned value={name} />
                   </td>
-                  {data.map((value) => (
-                    <td key={value}>
+                  {data.map((value, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <td key={`${title}-${name}-${index}`}>
                       <TableDataWrapper value={value} />
                     </td>
                   ))}
