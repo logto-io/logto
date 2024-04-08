@@ -33,7 +33,8 @@ export const findResourceScopes = async (
   queries: Queries,
   libraries: Libraries,
   ctx: KoaContextWithOIDC,
-  indicator: string
+  indicator: string,
+  organizationId?: string
 ): Promise<ReadonlyArray<{ name: string; id: string }>> => {
   if (isReservedResource(indicator)) {
     switch (indicator) {
@@ -56,7 +57,7 @@ export const findResourceScopes = async (
   const userId = oidc.session?.accountId ?? oidc.entities.Account?.accountId;
 
   if (userId) {
-    return findUserScopesForResourceIndicator(userId, indicator);
+    return findUserScopesForResourceIndicator(userId, indicator, organizationId);
   }
 
   const clientId = oidc.entities.Client?.clientId;

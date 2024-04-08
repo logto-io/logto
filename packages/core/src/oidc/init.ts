@@ -13,26 +13,20 @@ import {
   inSeconds,
   logtoCookieKey,
   type LogtoUiCookie,
-  LogtoJwtTokenKey,
   ExtraParamsKey,
-  type Json,
-  jwtCustomizer as jwtCustomizerLog,
-  LogResult,
-  LogtoJwtTokenKeyType,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
 import koaBody from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
-import koaAuditLog, { LogEntry } from '#src/middleware/koa-audit-log.js';
+import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
@@ -44,6 +38,10 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import defaults from './defaults.js';
+import {
+  getExtraTokenClaimsForJwtCustomization,
+  getExtraTokenClaimsForOrganizationApiResource,
+} from './extra-token-claims.js';
 import { registerGrants } from './grants/index.js';
 import {
   findResource,
@@ -68,7 +66,6 @@ export default function initOidc(
     resources: { findDefaultResource },
     users: { findUserById },
     organizations,
-    logs: { insertLog },
   } = queries;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
   const logoutSuccessSource = readFileSync('static/html/post-logout/index.html', 'utf8');
@@ -145,8 +142,22 @@ export default function initOidc(
 
           const { accessTokenTtl: accessTokenTTL } = resourceServer;
 
-          const scopes = await findResourceScopes(queries, libraries, ctx, indicator);
-          const { client } = ctx.oidc;
+          const { client, params } = ctx.oidc;
+          /**
+           * In consent or code excange flow, the organization_id is undefined,
+           * and all the scopes inherited from the all organization roles will be granted.
+           * In the flow of granting token for organization with api resource,
+           * this value is set to the organization id,
+           * and will then narrow down the scopes to the specific organization.
+           */
+          const organizationId = params?.organization_id;
+          const scopes = await findResourceScopes(
+            queries,
+            libraries,
+            ctx,
+            indicator,
+            typeof organizationId === 'string' ? organizationId : undefined
+          );
 
           // Need to filter out the unsupported scopes for the third-party application.
           if (client && (await isThirdPartyApplication(queries, client.clientId))) {
@@ -210,98 +221,29 @@ export default function initOidc(
       },
     },
     extraParams: Object.values(ExtraParamsKey),
-    // eslint-disable-next-line complexity
-    extraTokenClaims: async (ctx, token) => {
-      const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
 
-      // No cloud connection for OSS version, skip.
-      if (!isDevFeaturesEnabled || !isCloud) {
+    extraTokenClaims: async (ctx, token) => {
+      const organizationApiResourceClaims = await getExtraTokenClaimsForOrganizationApiResource(
+        ctx,
+        token
+      );
+
+      const jwtCustomizedClaims = await getExtraTokenClaimsForJwtCustomization(ctx, token, {
+        envSet,
+        queries,
+        libraries,
+        logtoConfigs,
+        cloudConnection,
+      });
+
+      if (!organizationApiResourceClaims && !jwtCustomizedClaims) {
         return;
       }
 
-      const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
-
-      try {
-        /**
-         * It is by design to use `trySafe` here to catch the error but not log it since we do not
-         * want to insert an error log every time the OIDC provider issues a token when the JWT
-         * customizer is not configured.
-         */
-        const { script, environmentVariables } =
-          (await trySafe(
-            logtoConfigs.getJwtCustomizer(
-              isTokenClientCredentials
-                ? LogtoJwtTokenKey.ClientCredentials
-                : LogtoJwtTokenKey.AccessToken
-            )
-          )) ?? {};
-
-        if (!script) {
-          return;
-        }
-
-        const pickedFields = isTokenClientCredentials
-          ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
-          : ctx.oidc.provider.AccessToken.IN_PAYLOAD;
-        const readOnlyToken = Object.fromEntries(
-          pickedFields
-            .filter((field) => Reflect.get(token, field) !== undefined)
-            .map((field) => [field, Reflect.get(token, field)])
-        );
-
-        const client = await cloudConnection.getClient();
-
-        const commonPayload = {
-          script,
-          environmentVariables,
-          token: readOnlyToken,
-        };
-
-        // We pass context to the cloud API only when it is a user's access token.
-        const logtoUserInfo = conditional(
-          !isTokenClientCredentials &&
-            token.accountId &&
-            (await libraries.jwtCustomizers.getUserContext(token.accountId))
-        );
-
-        // `context` parameter is only eligible for user's access token for now.
-        return await client.post(`/api/services/custom-jwt`, {
-          body: isTokenClientCredentials
-            ? {
-                ...commonPayload,
-                tokenType: LogtoJwtTokenKeyType.ClientCredentials,
-              }
-            : {
-                ...commonPayload,
-                tokenType: LogtoJwtTokenKeyType.AccessToken,
-                // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
-                // eslint-disable-next-line no-restricted-syntax
-                context: { user: logtoUserInfo as Record<string, Json> },
-              },
-        });
-      } catch (error: unknown) {
-        const entry = new LogEntry(
-          `${jwtCustomizerLog.prefix}.${
-            isTokenClientCredentials
-              ? jwtCustomizerLog.Type.ClientCredentials
-              : jwtCustomizerLog.Type.AccessToken
-          }`
-        );
-        entry.append({
-          result: LogResult.Error,
-          error: { message: String(error) },
-        });
-        const { payload } = entry;
-        await insertLog({
-          id: generateStandardId(),
-          key: payload.key,
-          payload: {
-            ...payload,
-            tenantId: envSet.tenantId,
-            token,
-          },
-        });
-      }
+      return {
+        ...organizationApiResourceClaims,
+        ...jwtCustomizedClaims,
+      };
     },
     extraClientMetadata: {
       properties: Object.values(CustomClientMetadataKey),

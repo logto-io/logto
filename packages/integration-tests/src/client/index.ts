@@ -127,8 +127,8 @@ export default class MockClient {
     await this.logto.handleSignInCallback(signInCallbackUri);
   }
 
-  public async getAccessToken(resource?: string) {
-    return this.logto.getAccessToken(resource);
+  public async getAccessToken(resource?: string, organizationId?: string) {
+    return this.logto.getAccessToken(resource, organizationId);
   }
 
   public async getRefreshToken(): Promise<Nullable<string>> {
