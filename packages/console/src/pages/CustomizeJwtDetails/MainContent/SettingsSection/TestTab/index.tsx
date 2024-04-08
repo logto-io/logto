@@ -108,7 +108,7 @@ function TestTab({ isActive }: Props) {
           }}
           render={({ field }) => (
             <MonacoCodeEditor
-              className={tabContentStyles.flexGrow}
+              className={styles.codeEditor}
               enabledActions={['restore', 'copy']}
               models={editorModels}
               activeModelName={activeModelName}

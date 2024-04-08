@@ -1,9 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  position: relative;
 
   .header {
     flex-shrink: 0;

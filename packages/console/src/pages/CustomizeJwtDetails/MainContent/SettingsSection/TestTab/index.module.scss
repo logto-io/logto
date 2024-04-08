@@ -3,3 +3,8 @@
 .error {
   color: var(--color-error);
 }
+
+.codeEditor {
+  min-height: 400px;
+  flex-grow: 1;
+}

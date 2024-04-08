@@ -1,12 +1,10 @@
 @use '@/scss/underscore' as _;
 
 .scriptSection {
-  position: sticky;
-  top: 0;
+  position: relative;
   min-width: 50%;
 
   .fixHeightWrapper {
-    margin-bottom: _.unit(3);
     position: absolute;
     inset: 0;
     display: flex;
