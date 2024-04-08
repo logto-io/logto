@@ -7,11 +7,13 @@ import { type TenantInvitationResponse, type TenantMemberResponse } from '@/clou
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 
 const useTenantMembersUsage = () => {
   const { currentPlan } = useContext(SubscriptionDataContext);
   const { currentTenantId } = useContext(TenantsContext);
+  const { canInviteMember } = useCurrentTenantScopes();
 
   const cloudApi = useAuthedCloudApi();
 
@@ -21,7 +23,7 @@ const useTenantMembersUsage = () => {
       cloudApi.get('/api/tenants/:tenantId/members', { params: { tenantId: currentTenantId } })
   );
   const { data: invitations } = useSWR<TenantInvitationResponse[], RequestError>(
-    'api/tenants/:tenantId/invitations',
+    canInviteMember && 'api/tenants/:tenantId/invitations',
     async () =>
       cloudApi.get('/api/tenants/:tenantId/invitations', { params: { tenantId: currentTenantId } })
   );
