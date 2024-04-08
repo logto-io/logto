@@ -24,7 +24,7 @@ const jwt_claims = {
   restore: 'Restore defaults',
   restored: 'Restored',
   data_source_tab: 'Data source',
-  test_tab: 'Test claim',
+  test_tab: 'Test context',
   jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
   user_data: {
     title: 'User data',
@@ -49,8 +49,7 @@ const jwt_claims = {
   jwt_claims_hint:
     'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
   tester: {
-    title: 'Test',
-    subtitle: "Edit the context to adjust the token's request states and test your custom claims.",
+    subtitle: 'Adjust mock token and user data for testing.',
     run_button: 'Run test',
     result_title: 'Test result',
   },

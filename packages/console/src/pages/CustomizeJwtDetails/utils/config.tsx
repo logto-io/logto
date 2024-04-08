@@ -235,7 +235,7 @@ export const accessTokenPayloadTestModel: ModelSettings = {
   language: 'json',
   icon: <TokenFileIcon />,
   name: 'user-token-payload.json',
-  title: 'Token',
+  title: 'Token data',
   defaultValue: JSON.stringify(defaultAccessTokenPayload, null, 2),
 };
 
@@ -243,7 +243,7 @@ export const clientCredentialsPayloadTestModel: ModelSettings = {
   language: 'json',
   icon: <TokenFileIcon />,
   name: 'machine-to-machine-token-payload.json',
-  title: 'Token',
+  title: 'Token data',
   defaultValue: JSON.stringify(defaultClientCredentialsPayload, null, 2),
 };
 
@@ -251,6 +251,6 @@ export const userContextTestModel: ModelSettings = {
   language: 'json',
   icon: <UserFileIcon />,
   name: 'user-token-context.json',
-  title: 'User Context',
+  title: 'User data',
   defaultValue: JSON.stringify(defaultUserTokenContextData, null, 2),
 };
