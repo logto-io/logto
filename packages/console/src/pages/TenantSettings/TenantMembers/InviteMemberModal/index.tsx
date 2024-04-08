@@ -2,7 +2,7 @@ import { TenantRole } from '@logto/schemas';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -10,6 +10,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import Select, { type Option } from '@/ds-components/Select';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import InviteEmailsInput from '../InviteEmailsInput';
@@ -17,6 +18,7 @@ import useEmailInputUtils from '../InviteEmailsInput/hooks';
 import { type InviteMemberForm } from '../types';
 
 import Footer from './Footer';
+import './index.module.scss';
 
 type Props = {
   isOpen: boolean;
@@ -30,6 +32,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const cloudApi = useAuthedCloudApi();
   const { parseEmailOptions } = useEmailInputUtils();
+  const { show } = useConfirmModal();
 
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
@@ -61,6 +64,19 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   );
 
   const onSubmit = handleSubmit(async ({ emails, role }) => {
+    if (role === TenantRole.Admin) {
+      const [result] = await show({
+        ModalContent: () => (
+          <Trans components={{ ul: <ul />, li: <li /> }}>{t('assign_admin_confirm')}</Trans>
+        ),
+        confirmButtonText: 'general.confirm',
+      });
+
+      if (!result) {
+        return;
+      }
+    }
+
     setIsLoading(true);
     try {
       await Promise.all(

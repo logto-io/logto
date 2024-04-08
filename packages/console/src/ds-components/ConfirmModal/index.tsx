@@ -50,8 +50,8 @@ function ConfirmModal({
     <ReactModal
       shouldCloseOnEsc
       isOpen={isOpen}
-      className={modalStyles.content}
-      overlayClassName={modalStyles.overlay}
+      className={classNames(modalStyles.content)}
+      overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
       onRequestClose={onCancel}
     >
       <ModalLayout
