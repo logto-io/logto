@@ -35,6 +35,7 @@ const upsell = {
     api_resource: 'API resource',
     machine_to_machine: 'machine-to-machine application',
     tokens: '{{limit}}M tokens',
+    tenant_member: 'tenant member',
   },
   charge_notification_for_quota_limit:
     'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',

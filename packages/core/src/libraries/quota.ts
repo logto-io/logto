@@ -65,6 +65,7 @@ export const createQuotaLibrary = (
       ).length;
       return { count };
     },
+    tenantMembersLimit: notNumber, // Cloud Admin tenant feature, no limit for now
     customDomainEnabled: notNumber,
     mfaEnabled: notNumber,
     organizationsEnabled: notNumber,

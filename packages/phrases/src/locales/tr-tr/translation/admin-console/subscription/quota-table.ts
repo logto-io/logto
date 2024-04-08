@@ -46,14 +46,6 @@ const quota_table = {
     machine_to_machine_roles: 'Makine-makine rolleri',
     scopes_per_role: 'Rol başına izinler',
   },
-  audit_logs: {
-    title: 'Denetim Günlükleri',
-    retention: 'Saklama',
-  },
-  hooks: {
-    title: 'Web Kancaları',
-    hooks: 'Web Kancaları',
-  },
   organizations: {
     title: 'Organizasyon',
     organizations: 'Organizasyonlar',
@@ -72,6 +64,18 @@ const quota_table = {
     email_ticket_support: 'E-posta bileti desteği',
     soc2_report: 'SOC2 raporu',
     hipaa_or_baa_report: 'HIPAA/BAA raporu',
+  },
+  developers_and_platform: {
+    /** UNTRANSLATED */
+    title: 'Developers and platform',
+    /** UNTRANSLATED */
+    hooks: 'Webhooks',
+    /** UNTRANSLATED */
+    audit_logs_retention: 'Audit logs retention',
+    /** UNTRANSLATED */
+    jwt_claims: 'JWT claims',
+    /** UNTRANSLATED */
+    tenant_members: 'Tenant members',
   },
   unlimited: 'Sınırsız',
   contact: 'İletişim',
@@ -102,6 +106,8 @@ const quota_table = {
   per_month_each: 'Aylık ${{value, number}} / her biri',
   extra_mao_price: 'Sonra MAO başına ${{value, number}}',
   per_month: 'Aylık ${{value, number}}',
+  /** UNTRANSLATED */
+  per_member: 'Then ${{value, number}} per member',
 };
 
 export default Object.freeze(quota_table);

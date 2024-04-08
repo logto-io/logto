@@ -35,6 +35,8 @@ const upsell = {
     api_resource: 'API-ресурс',
     machine_to_machine: 'приложение "машина-машина"',
     tokens: '{{limit}}M токенов',
+    /** UNTRANSLATED */
+    tenant_member: 'tenant member',
   },
   charge_notification_for_quota_limit:
     'Вы превысили лимит вашей квоты по {{item}}. Logto начнет взимать плату за использование сверх вашей квоты. Начисление начнется в день выпуска нового дизайна цен на дополнение. <a>Узнать больше</a>',
