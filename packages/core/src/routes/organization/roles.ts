@@ -35,7 +35,7 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
 ) {
   const router = new SchemaRouter(OrganizationRoles, roles, {
     middlewares: [koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })],
-    disabled: { get: true, post: true },
+    disabled: { get: true, post: true, getById: EnvSet.values.isDevFeaturesEnabled },
     errorHandler,
     searchFields: ['name'],
   });
@@ -63,6 +63,21 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
       return next();
     }
   );
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.get(
+      '/:id',
+      koaGuard({
+        params: z.object({ id: z.string() }),
+        response: organizationRoleWithScopesGuard,
+        status: [200],
+      }),
+      async (ctx, next) => {
+        ctx.body = await roles.findById(ctx.guard.params.id);
+        return next();
+      }
+    );
+  }
 
   /** Allows to carry an initial set of scopes for creating a new organization role. */
   type CreateOrganizationRolePayload = Omit<CreateOrganizationRole, 'id'> & {

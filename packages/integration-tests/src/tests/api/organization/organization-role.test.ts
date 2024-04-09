@@ -40,6 +40,13 @@ describe('organization role APIs', () => {
       expect(isKeyInObject(body, 'code') && body.code).toBe('entity.unique_integrity_violation');
     });
 
+    it('should get organization role by id successfully', async () => {
+      const createdRole = await roleApi.create({ name: 'test' + randomId() });
+      const role = await roleApi.get(createdRole.id);
+
+      expect(role).toHaveProperty('name', createdRole.name);
+    });
+
     it('should get organization roles successfully', async () => {
       const [name1, name2] = ['test' + randomId(), 'test' + randomId()];
       await Promise.all([
@@ -86,11 +93,14 @@ describe('organization role APIs', () => {
       expect(roles[0]).toHaveProperty('name', name1);
     });
 
-    it('should be able to create and get organization roles by id', async () => {
+    it('should be able to create and get organization role by id', async () => {
       const createdRole = await roleApi.create({ name: 'test' + randomId() });
-      const { scopes, ...role } = await roleApi.get(createdRole.id);
+      const role = await roleApi.get(createdRole.id);
 
-      expect(role).toStrictEqual(createdRole);
+      expect(role).toMatchObject({
+        ...createdRole,
+        resourceScopes: [],
+      });
     });
 
     it('should be able to create a new organization with initial organization scopes and resource scopes', async () => {
