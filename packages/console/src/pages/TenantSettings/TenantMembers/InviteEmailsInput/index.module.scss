@@ -39,7 +39,7 @@
         background: var(--color-overlay-default-focused);
       }
 
-      &.info {
+      &.error {
         background: var(--color-error-container);
       }
     }
@@ -91,4 +91,5 @@ canvas {
   font: var(--font-body-2);
   color: var(--color-error);
   margin-top: _.unit(1);
+  white-space: pre-wrap;
 }

@@ -71,7 +71,7 @@ function InviteEmailsInput({
       {
         value,
         id: generateStandardShortId(),
-        ...conditional(!emailRegEx.test(value) && { status: 'info' }),
+        ...conditional(!emailRegEx.test(value) && { status: 'error' }),
       },
     ];
     onChange(newValues);
@@ -129,7 +129,7 @@ function InviteEmailsInput({
             ref={ref}
             placeholder={conditional(values.length === 0 && placeholder)}
             value={currentValue}
-            style={{ minWidth: `${minInputWidth}px` }}
+            style={{ minWidth: `${minInputWidth + 10}px` }}
             onKeyDown={(event) => {
               if (event.key === 'Backspace' && currentValue === '') {
                 if (focusedValueId) {

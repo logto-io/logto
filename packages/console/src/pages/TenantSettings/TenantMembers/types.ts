@@ -14,7 +14,7 @@ export type InviteeEmailItem = {
    * - undefined: valid email
    * - 'info': duplicated email or invalid email format.
    */
-  status?: Extract<TagProps['status'], 'info'>;
+  status?: Extract<TagProps['status'], 'error'>;
 };
 
 export type InviteMemberForm = {
