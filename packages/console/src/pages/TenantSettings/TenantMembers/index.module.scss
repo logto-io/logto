@@ -16,22 +16,24 @@
 
     .button {
       border-radius: 100px;
-      border-color: var(--color-specific-focused-inside);
-      background: none;
-      height: 32px;
+      border-color: var(--color-surface-5);
+      background: var(--color-layer-1);
+      height: 34px;
       padding: 0 _.unit(3);
+      transition: none;
 
       svg {
         color: var(--color-text-link);
       }
 
-      &:hover {
-        background: var(--color-overlay-primary-hover);
-      }
-
       &:active {
         background: var(--color-overlay-primary-pressed);
       }
+
+      &:not(:disabled):not(:active):hover {
+        background: var(--color-overlay-primary-hover);
+      }
+
 
       &.active {
         background: var(--color-specific-tag-upsell);
@@ -43,7 +45,7 @@
           color: var(--color-specific-button-icon);
         }
 
-        &:hover {
+        &:not(:disabled):not(:active):hover {
           background: var(--color-specific-tag-upsell);
         }
       }
