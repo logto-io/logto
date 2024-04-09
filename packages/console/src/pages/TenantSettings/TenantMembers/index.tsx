@@ -50,16 +50,16 @@ function TenantMembers() {
         className={styles.chargeNotification}
         checkedFlagKey="tenantMember"
       />
-      <div className={styles.tabButtons}>
-        <Button
-          className={classNames(styles.button, !isInvitationTab && styles.active)}
-          icon={<MembersIcon />}
-          title="tenant_members.members"
-          onClick={() => {
-            navigate('.');
-          }}
-        />
-        {canInviteMember && (
+      {canInviteMember && (
+        <div className={styles.tabButtons}>
+          <Button
+            className={classNames(styles.button, !isInvitationTab && styles.active)}
+            icon={<MembersIcon />}
+            title="tenant_members.members"
+            onClick={() => {
+              navigate('.');
+            }}
+          />
           <Button
             className={classNames(styles.button, isInvitationTab && styles.active)}
             icon={<InvitationIcon />}
@@ -68,9 +68,7 @@ function TenantMembers() {
               navigate('invitations');
             }}
           />
-        )}
-        <Spacer />
-        {canInviteMember && (
+          <Spacer />
           <Button
             type="primary"
             size="large"
@@ -80,8 +78,8 @@ function TenantMembers() {
               setShowInviteModal(true);
             }}
           />
-        )}
-      </div>
+        </div>
+      )}
       <Routes>
         <Route path="*" element={<NotFound />} />
         <Route index element={<Members />} />
