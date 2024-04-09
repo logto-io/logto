@@ -7,6 +7,7 @@ import PageMeta from '@/components/PageMeta';
 import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
@@ -22,6 +23,7 @@ function TenantDomainSettings() {
   const { data: customDomain, isLoading: isLoadingCustomDomain, mutate } = useCustomDomain(true);
   const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
+  const { canManageTenant } = useCurrentTenantScopes();
 
   if (isLoadingCustomDomain) {
     return <Skeleton />;
@@ -42,6 +44,7 @@ function TenantDomainSettings() {
           {customDomain ? (
             <CustomDomain
               hasExtraTipsOnDelete
+              isReadonly={!canManageTenant}
               customDomain={customDomain}
               onDeleteCustomDomain={async () => {
                 await api.delete(`api/domains/${customDomain.id}`);
@@ -50,6 +53,7 @@ function TenantDomainSettings() {
             />
           ) : (
             <AddDomainForm
+              isReadonly={!canManageTenant}
               onSubmitCustomDomain={async (json) => {
                 const createdDomain = await api.post('api/domains', { json }).json<Domain>();
                 mutate(createdDomain);

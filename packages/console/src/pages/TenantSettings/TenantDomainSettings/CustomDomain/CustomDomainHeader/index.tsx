@@ -18,6 +18,7 @@ type Props = {
   customDomain: CustomDomain;
   hasExtraTipsOnDelete?: boolean;
   hasOpenExternalLink?: boolean;
+  isReadonly?: boolean;
   onDeleteCustomDomain: () => Promise<void>;
 };
 
@@ -25,6 +26,7 @@ function CustomDomainHeader({
   customDomain: { domain, status },
   hasExtraTipsOnDelete,
   hasOpenExternalLink,
+  isReadonly,
   onDeleteCustomDomain,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -72,15 +74,17 @@ function CustomDomainHeader({
       <Spacer />
       <CopyToClipboard value={domain} variant="icon" />
       {hasOpenExternalLink && <OpenExternalLink link={`https://${domain}`} />}
-      <ActionMenu
-        icon={<More className={styles.icon} />}
-        iconSize="small"
-        title={<DynamicT forKey="general.more_options" />}
-      >
-        <ActionMenuItem icon={<Delete />} type="danger" onClick={handleDelete}>
-          <DynamicT forKey="general.delete" />
-        </ActionMenuItem>
-      </ActionMenu>
+      {!isReadonly && (
+        <ActionMenu
+          icon={<More className={styles.icon} />}
+          iconSize="small"
+          title={<DynamicT forKey="general.more_options" />}
+        >
+          <ActionMenuItem icon={<Delete />} type="danger" onClick={handleDelete}>
+            <DynamicT forKey="general.delete" />
+          </ActionMenuItem>
+        </ActionMenu>
+      )}
     </div>
   );
 }
