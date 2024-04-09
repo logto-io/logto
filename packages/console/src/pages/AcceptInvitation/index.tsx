@@ -12,6 +12,7 @@ import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { type RequestError } from '@/hooks/use-api';
 import useRedirectUri from '@/hooks/use-redirect-uri';
+import { saveRedirect } from '@/utils/storage';
 
 import SwitchAccount from './SwitchAccount';
 
@@ -54,6 +55,7 @@ function AcceptInvitation() {
     return (
       <SwitchAccount
         onClickSwitch={() => {
+          saveRedirect();
           void signIn({
             redirectUri: redirectUri.href,
             loginHint: `urn:logto:invitation:${invitationId}`,
