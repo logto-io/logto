@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { TenantSettingsTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
@@ -29,11 +28,9 @@ function TenantSettings() {
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Domains}`}>
           <DynamicT forKey="tenants.tabs.domains" />
         </TabNavItem>
-        {isDevFeaturesEnabled && (
-          <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Members}`}>
-            <DynamicT forKey="tenants.tabs.members" />
-          </TabNavItem>
-        )}
+        <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Members}`}>
+          <DynamicT forKey="tenants.tabs.members" />
+        </TabNavItem>
         {!isDevTenant && canManageTenant && (
           <>
             <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Subscription}`}>

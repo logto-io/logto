@@ -228,9 +228,7 @@ function ConsoleContent() {
                   }
                 />
                 <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
-                {isDevFeaturesEnabled && (
-                  <Route path={`${TenantSettingsTabs.Members}/*`} element={<TenantMembers />} />
-                )}
+                <Route path={`${TenantSettingsTabs.Members}/*`} element={<TenantMembers />} />
                 <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
                 {!isDevTenant && canManageTenant && (
                   <>

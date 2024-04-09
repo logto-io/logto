@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import AcceptInvitation from '@/pages/AcceptInvitation';
@@ -19,7 +19,7 @@ function AppRoutes() {
         <Route path={GlobalAnonymousRoute.Callback} element={<Callback />} />
         <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
         <Route element={<ProtectedRoutes />}>
-          {isDevFeaturesEnabled && isCloud && (
+          {isCloud && (
             <Route
               path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
               element={<AcceptInvitation />}
