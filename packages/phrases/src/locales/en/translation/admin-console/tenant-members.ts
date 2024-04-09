@@ -50,7 +50,10 @@ const tenant_members = {
   },
   errors: {
     email_required: 'Invitee email is required.',
-    user_exists: 'This user is already invited to this organization.',
+    email_exists: 'Email address already exists.',
+    member_exists: 'This user is already a member of this organization.',
+    pending_invitation_exists:
+      'Pending invitation exists. Delete related email or revoke the invitation.',
     invalid_email: 'Email address is invalid. Please make sure it is in the right format.',
     max_member_limit: 'You have reached the maximum number of members ({{limit}}) for this tenant.',
   },

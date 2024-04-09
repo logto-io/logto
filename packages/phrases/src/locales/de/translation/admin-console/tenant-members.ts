@@ -87,7 +87,12 @@ const tenant_members = {
     /** UNTRANSLATED */
     email_required: 'Invitee email is required.',
     /** UNTRANSLATED */
-    user_exists: 'This user is already invited to this organization.',
+    email_exists: 'Email address already exists.',
+    /** UNTRANSLATED */
+    member_exists: 'This user is already a member of this organization.',
+    /** UNTRANSLATED */
+    pending_invitation_exists:
+      'Pending invitation exists. Delete related email or revoke the invitation.',
     /** UNTRANSLATED */
     invalid_email: 'Email address is invalid. Please make sure it is in the right format.',
     /** UNTRANSLATED */
