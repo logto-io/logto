@@ -52,3 +52,13 @@
     }
   }
 }
+
+ul {
+  padding-inline-start: _.unit(6);
+
+  > li {
+    font: var(--font-body-2);
+    margin-block: _.unit(2);
+    padding-inline-start: _.unit(1);
+  }
+}

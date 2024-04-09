@@ -1,3 +1,4 @@
+import { TenantRole } from '@logto/schemas';
 import { condArray, conditional } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
+import useCurrentUser from '@/hooks/use-current-user';
 
 import EditMemberModal from '../EditMemberModal';
 
@@ -21,6 +23,7 @@ function Members() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const cloudApi = useAuthedCloudApi();
   const { currentTenantId } = useContext(TenantsContext);
+  const { user: currentUser } = useCurrentUser();
   const { canRemoveMember, canUpdateMemberRole } = useCurrentTenantScopes();
 
   const { data, error, isLoading, mutate } = useSWR<TenantMemberResponse[], RequestError>(
@@ -55,9 +58,12 @@ function Members() {
                 return '-';
               }
 
-              return organizationRoles.map(({ id, name }) => (
+              return organizationRoles.map(({ id }) => (
                 <Tag key={id} variant="cell">
-                  <RoleOption value={id} title={name} />
+                  <RoleOption
+                    value={id}
+                    title={t(id === TenantRole.Admin ? 'admin' : 'collaborator')}
+                  />
                 </Tag>
               ));
             },
@@ -85,6 +91,8 @@ function Members() {
                     )}
                     onDelete={conditional(
                       canRemoveMember &&
+                        // Cannot remove self from members list
+                        currentUser?.id !== user.id &&
                         (async () => {
                           await cloudApi.delete(`/api/tenants/:tenantId/members/:userId`, {
                             params: { tenantId: currentTenantId, userId: user.id },
