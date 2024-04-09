@@ -10,6 +10,7 @@ type Props = {
   customDomain: CustomDomainType;
   hasExtraTipsOnDelete?: boolean;
   hasOpenExternalLink?: boolean;
+  isReadonly?: boolean;
   onDeleteCustomDomain: () => Promise<void>;
 };
 
@@ -18,6 +19,7 @@ function CustomDomain({
   customDomain,
   hasExtraTipsOnDelete,
   hasOpenExternalLink,
+  isReadonly,
   onDeleteCustomDomain,
 }: Props) {
   return (
@@ -26,6 +28,7 @@ function CustomDomain({
         customDomain={customDomain}
         hasExtraTipsOnDelete={hasExtraTipsOnDelete}
         hasOpenExternalLink={hasOpenExternalLink}
+        isReadonly={isReadonly}
         onDeleteCustomDomain={onDeleteCustomDomain}
       />
       {customDomain.status !== DomainStatus.Active && (

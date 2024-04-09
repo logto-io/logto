@@ -231,9 +231,7 @@ function ConsoleContent() {
                 {isDevFeaturesEnabled && (
                   <Route path={`${TenantSettingsTabs.Members}/*`} element={<TenantMembers />} />
                 )}
-                {canManageTenant && (
-                  <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
-                )}
+                <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
                 {!isDevTenant && canManageTenant && (
                   <>
                     <Route path={TenantSettingsTabs.Subscription} element={<Subscription />} />

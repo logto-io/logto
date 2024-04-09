@@ -16,10 +16,11 @@ type FormData = {
 
 type Props = {
   className?: string;
+  isReadonly?: boolean;
   onSubmitCustomDomain: (data: FormData) => Promise<void>;
 };
 
-function AddDomainForm({ className, onSubmitCustomDomain }: Props) {
+function AddDomainForm({ className, isReadonly, onSubmitCustomDomain }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
@@ -46,6 +47,7 @@ function AddDomainForm({ className, onSubmitCustomDomain }: Props) {
         className={styles.textInput}
         placeholder={t('domain.custom.custom_domain_placeholder')}
         error={errors.domain?.message}
+        readOnly={isReadonly}
         onKeyDown={onKeyDownHandler({ Enter: onSubmit })}
         {...register('domain', {
           required: true,
@@ -60,7 +62,7 @@ function AddDomainForm({ className, onSubmitCustomDomain }: Props) {
         type="primary"
         title="domain.custom.add_domain"
         isLoading={isSubmitting}
-        disabled={domainInput.length === 0}
+        disabled={domainInput.length === 0 || isReadonly}
         onClick={onSubmit}
       />
     </div>
