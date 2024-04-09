@@ -19,6 +19,12 @@ const organization_role_details = {
     remove_confirmation:
       'Se esta permissão for removida, o utilizador com esta função organizacional perderá o acesso concedido por esta permissão.',
     removed: 'A permissão {{name}} foi removida com sucesso desta função organizacional',
+    assign_description:
+      'Atribuir permissões aos cargos dentro desta organização. Estas podem incluir permissões de organização e permissões de API.',
+    organization_permissions: 'Permissões de organização',
+    api_permissions: 'Permissões de API',
+    assign_organization_permissions: 'Atribuir permissões de organização',
+    assign_api_permissions: 'Atribuir permissões de API',
   },
   general: {
     tab: 'Geral',

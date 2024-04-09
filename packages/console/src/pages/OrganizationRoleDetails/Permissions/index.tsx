@@ -8,6 +8,7 @@ import ActionsButton from '@/components/ActionsButton';
 import Breakable from '@/components/Breakable';
 import EditScopeModal, { type EditScopeData } from '@/components/EditScopeModal';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import OrganizationRolePermissionsAssignmentModal from '@/components/OrganizationRolePermissionsAssignmentModal';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import Search from '@/ds-components/Search';
@@ -76,6 +77,8 @@ function Permissions({ organizationRoleId }: Props) {
     toast.success(t('permissions.updated'));
     mutate();
   };
+
+  const [isAssignScopesModalOpen, setIsAssignScopesModalOpen] = useState(false);
 
   return (
     <>
@@ -161,7 +164,7 @@ function Permissions({ organizationRoleId }: Props) {
               type="primary"
               icon={<Plus />}
               onClick={() => {
-                // Todo @xiaoyijun Assign permissions to org role
+                setIsAssignScopesModalOpen(true);
               }}
             />
           </div>
@@ -199,6 +202,13 @@ function Permissions({ organizationRoleId }: Props) {
           }}
         />
       )}
+      <OrganizationRolePermissionsAssignmentModal
+        organizationRoleId={organizationRoleId}
+        isOpen={isAssignScopesModalOpen}
+        onClose={() => {
+          setIsAssignScopesModalOpen(false);
+        }}
+      />
     </>
   );
 }

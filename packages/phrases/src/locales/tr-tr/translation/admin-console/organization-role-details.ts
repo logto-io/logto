@@ -19,6 +19,12 @@ const organization_role_details = {
     remove_confirmation:
       'Bu izin kaldırılırsa, bu organizasyon rolüne sahip kullanıcı bu izin tarafından verilen erişimi kaybeder.',
     removed: '{{name}} izni bu organizasyon rolünden başarıyla kaldırıldı',
+    assign_description:
+      'Bu organizasyon içindeki roller için izinleri atayın. Bunlar hem organizasyon izinlerini hem de API izinlerini içerebilir.',
+    organization_permissions: 'Organizasyon izinleri',
+    api_permissions: 'API izinleri',
+    assign_organization_permissions: 'Kuruluş izinleri ata',
+    assign_api_permissions: 'API izinleri ata',
   },
   general: {
     tab: 'Genel',

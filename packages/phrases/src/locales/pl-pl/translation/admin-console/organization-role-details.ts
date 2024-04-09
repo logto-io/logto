@@ -19,6 +19,12 @@ const organization_role_details = {
     remove_confirmation:
       'Jeśli to uprawnienie zostanie usunięte, użytkownik z tą rolą organizacyjną utraci dostęp udzielony przez to uprawnienie.',
     removed: 'Uprawnienie {{name}} zostało pomyślnie usunięte z tej roli organizacyjnej',
+    assign_description:
+      'Przypisz uprawnienia do ról w tej organizacji. Mogą one obejmować zarówno uprawnienia organizacyjne, jak i uprawnienia interfejsu API.',
+    organization_permissions: 'Uprawnienia organizacyjne',
+    api_permissions: 'Uprawnienia interfejsu API',
+    assign_organization_permissions: 'Przydziel uprawnienia organizacyjne',
+    assign_api_permissions: 'Przydziel uprawnienia API',
   },
   general: {
     tab: 'Ogólne',

@@ -19,6 +19,12 @@ const organization_role_details = {
     remove_confirmation:
       "Se questo permesso viene rimosso, l'utente con questo ruolo organizzativo perderà l'accesso concessogli da questo permesso.",
     removed: 'Il permesso {{name}} è stato rimosso con successo da questo ruolo organizzativo',
+    assign_description:
+      "Assegna le autorizzazioni ai ruoli all'interno di questa organizzazione. Queste possono includere sia autorizzazioni dell'organizzazione che autorizzazioni API.",
+    organization_permissions: "Autorizzazioni dell'organizzazione",
+    api_permissions: 'Autorizzazioni API',
+    assign_organization_permissions: 'Assegna permessi di organizzazione',
+    assign_api_permissions: 'Assegna permessi API',
   },
   general: {
     tab: 'Generale',

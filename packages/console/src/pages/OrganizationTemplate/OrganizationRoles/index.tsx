@@ -11,6 +11,7 @@ import RolesEmpty from '@/assets/images/roles-empty.svg';
 import Breakable from '@/components/Breakable';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import OrganizationRolePermissionsAssignmentModal from '@/components/OrganizationRolePermissionsAssignmentModal';
 import ThemedIcon from '@/components/ThemedIcon';
 import { defaultPageSize, organizationRoleLink } from '@/consts';
 import Button from '@/ds-components/Button';
@@ -51,6 +52,7 @@ function OrganizationRoles() {
   const [orgRoles, totalCount] = data ?? [];
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [createdRole, setCreatedRole] = useState<OrganizationRoleWithScopes>();
 
   return (
     <>
@@ -152,14 +154,24 @@ function OrganizationRoles() {
         errorMessage={error?.body?.message ?? error?.message}
         onRetry={async () => mutate(undefined, true)}
       />
-      {isCreateModalOpen && (
-        <CreateOrganizationRoleModal
-          onClose={(createdRole) => {
-            setIsCreateModalOpen(false);
-            if (createdRole) {
-              void mutate();
-              navigate(createdRole.id);
-            }
+      <CreateOrganizationRoleModal
+        isOpen={isCreateModalOpen}
+        onClose={(createdRole) => {
+          setIsCreateModalOpen(false);
+          if (createdRole) {
+            void mutate();
+            setCreatedRole({ ...createdRole, scopes: [], resourceScopes: [] });
+          }
+        }}
+      />
+      {createdRole && (
+        <OrganizationRolePermissionsAssignmentModal
+          isOpen
+          organizationRoleId={createdRole.id}
+          onClose={() => {
+            setCreatedRole(undefined);
+            navigate(createdRole.id);
+            void mutate();
           }}
         />
       )}
