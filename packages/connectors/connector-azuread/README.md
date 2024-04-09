@@ -21,8 +21,6 @@ The Microsoft Azure AD connector provides a succinct way for your application to
 
 ## Fill in the configuration in Logto
 
-## Config types
-
 | Name          | Type   |
 | ------------- | ------ |
 | clientId      | string |
@@ -34,7 +32,7 @@ The Microsoft Azure AD connector provides a succinct way for your application to
 
 You may find the **Application (client) ID** in the **Overview** section of your newly created application in the Azure Portal.
 
-### Client secret
+### Client Secret
 
 - In your newly created application, click the **Certificates & Secrets** to get a client secret, and click the **New client secret** from the top.
 - Enter a description and an expiration.
