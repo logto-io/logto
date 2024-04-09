@@ -1,7 +1,7 @@
 import { TenantRole } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared/universal';
 import { useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -11,6 +11,7 @@ import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import Select, { type Option } from '@/ds-components/Select';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 type Props = {
@@ -25,6 +26,7 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [role, setRole] = useState(TenantRole.Collaborator);
+  const { show } = useConfirmModal();
   const cloudApi = useAuthedCloudApi();
 
   const roleOptions: Array<Option<TenantRole>> = useMemo(
@@ -36,6 +38,19 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
   );
 
   const onSubmit = async () => {
+    if (role === TenantRole.Admin) {
+      const [result] = await show({
+        ModalContent: () => (
+          <Trans components={{ ul: <ul />, li: <li /> }}>{t('assign_admin_confirm')}</Trans>
+        ),
+        confirmButtonText: 'general.confirm',
+      });
+
+      if (!result) {
+        return;
+      }
+    }
+
     setIsLoading(true);
     try {
       await cloudApi.put(`/api/tenants/:tenantId/members/:userId/roles`, {

@@ -18,7 +18,6 @@ import useEmailInputUtils from '../InviteEmailsInput/hooks';
 import { type InviteMemberForm } from '../types';
 
 import Footer from './Footer';
-import './index.module.scss';
 
 type Props = {
   isOpen: boolean;
