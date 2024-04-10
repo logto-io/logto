@@ -173,8 +173,8 @@ importers:
         specifier: ^7.3.8
         version: 7.5.2
       tar:
-        specifier: ^6.1.11
-        version: 6.1.11
+        specifier: ^6.2.1
+        version: 6.2.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -204,8 +204,8 @@ importers:
         specifier: ^17.0.0
         version: 17.0.2
       '@types/tar':
-        specifier: ^6.1.2
-        version: 6.1.2
+        specifier: ^6.1.12
+        version: 6.1.12
       '@types/yargs':
         specifier: ^17.0.13
         version: 17.0.13
@@ -10372,11 +10372,11 @@ packages:
       '@types/superagent': 8.1.1
     dev: true
 
-  /@types/tar@6.1.2:
-    resolution: {integrity: sha512-bnX3RRm70/n1WMwmevdOAeDU4YP7f5JSubgnuU+yrO+xQQjwDboJj3u2NTJI5ngCQhXihqVVAH5h5J8YpdpEvg==}
+  /@types/tar@6.1.12:
+    resolution: {integrity: sha512-FwbJPi9YuovB6ilnHrz8Y4pb0Fh6N7guFkbnlCl39ua893Qi5gkXui7LSDpTQMJCmA4z5f6SeSrTPQEWLdtFVw==}
     dependencies:
-      '@types/node': 20.10.4
-      minipass: 3.3.5
+      '@types/node': 20.11.20
+      minipass: 4.2.8
     dev: true
 
   /@types/through@0.0.30:
@@ -17273,6 +17273,17 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       yallist: 4.0.0
+    dev: false
+
+  /minipass@4.2.8:
+    resolution: {integrity: sha512-fNzuVyifolSLFL4NzpF+wEF4qrgqaaKX0haXPQEdQ7NKAN+WecoKMHV09YcuL/DHxrUsYQOK3MiuDf7Ip2OXfQ==}
+    engines: {node: '>=8'}
+    dev: true
+
+  /minipass@5.0.0:
+    resolution: {integrity: sha512-3FnjYuehv9k6ovOEbyOswadCDPX1piCfhV8ncmYtHOjuPwylVWsghTLo7rabjC3Rx5xD4HDx8Wm1xnMF7S5qFQ==}
+    engines: {node: '>=8'}
+    dev: false
 
   /minizlib@2.1.2:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
@@ -20632,13 +20643,13 @@ packages:
       streamx: 2.15.1
     dev: true
 
-  /tar@6.1.11:
-    resolution: {integrity: sha512-an/KZQzQUkZCkuoAA64hM92X0Urb6VpRhAFllDzz44U2mcD5scmT3zBc4VgVpkugF580+DQn8eAFSyoQt0tznA==}
-    engines: {node: '>= 10'}
+  /tar@6.2.1:
+    resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
+    engines: {node: '>=10'}
     dependencies:
       chownr: 2.0.0
       fs-minipass: 2.1.0
-      minipass: 3.3.5
+      minipass: 5.0.0
       minizlib: 2.1.2
       mkdirp: 1.0.4
       yallist: 4.0.0
