@@ -1,10 +1,10 @@
 {
   "name": "@logto/connector-wecom",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Wecom connector implementation.",
   "author": "Dove<dove@feegr.cc> fork from Wechat Web connector",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^2.0.0"
+    "@logto/connector-kit": "workspace:^3.0.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
