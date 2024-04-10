@@ -40,17 +40,17 @@ function Permissions({ organizationRoleId }: Props) {
     keyword: '',
   });
 
-  const filterScopes = useCallback(
+  const filterScopesByKeyword = useCallback(
     (scopes: OrganizationRoleScope[]) => scopes.filter(({ name }) => name.includes(keyword)),
     [keyword]
   );
 
-  const filteredScopes = useMemo(
+  const scopesData = useMemo(
     () =>
       keyword
-        ? [...filterScopes(resourceScopes), ...filterScopes(organizationScopes)]
+        ? [...filterScopesByKeyword(resourceScopes), ...filterScopesByKeyword(organizationScopes)]
         : [...resourceScopes, ...organizationScopes],
-    [filterScopes, keyword, organizationScopes, resourceScopes]
+    [filterScopesByKeyword, keyword, organizationScopes, resourceScopes]
   );
 
   const [editingScope, setEditingScope] = useState<OrganizationScope>();
@@ -80,7 +80,7 @@ function Permissions({ organizationRoleId }: Props) {
   return (
     <>
       <Table
-        rowGroups={[{ key: 'organizationRolePermissions', data: filteredScopes }]}
+        rowGroups={[{ key: 'organizationRolePermissions', data: scopesData }]}
         rowIndexKey="id"
         columns={[
           {
