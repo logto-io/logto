@@ -1,8 +1,7 @@
-import { type OrganizationScope } from '@logto/schemas';
+import { type Scope, type OrganizationScope } from '@logto/schemas';
 import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
 import ActionsButton from '@/components/ActionsButton';
@@ -14,64 +13,84 @@ import DynamicT from '@/ds-components/DynamicT';
 import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
-import useApi, { type RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 
+import ResourceName from './ResourceName';
 import * as styles from './index.module.scss';
+import useOrganizationRoleScopes from './use-organization-role-scopes';
 
-const organizationRolesPath = 'api/organization-roles';
+type OrganizationRoleScope = OrganizationScope | Scope;
+
+const isResourceScope = (scope: OrganizationRoleScope): scope is Scope => 'resourceId' in scope;
 
 type Props = {
   organizationRoleId: string;
 };
 
 function Permissions({ organizationRoleId }: Props) {
+  const organizationRolePath = `api/organization-roles/${organizationRoleId}`;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
 
-  const { data, error, isLoading, mutate } = useSWR<OrganizationScope[], RequestError>(
-    `${organizationRolesPath}/${organizationRoleId}/scopes`
-  );
+  const { organizationScopes, resourceScopes, error, isLoading, mutate } =
+    useOrganizationRoleScopes(organizationRoleId);
 
   const [{ keyword }, updateSearchParameters] = useSearchParametersWatcher({
     keyword: '',
   });
 
-  const filteredData = useMemo(() => {
-    if (keyword) {
-      return data?.filter((roleScope) => roleScope.name.includes(keyword));
-    }
-    return data;
-  }, [data, keyword]);
+  const filterScopes = useCallback(
+    (scopes: OrganizationRoleScope[]) => scopes.filter(({ name }) => name.includes(keyword)),
+    [keyword]
+  );
 
-  const [editPermission, setEditPermission] = useState<OrganizationScope>();
+  const filteredScopes = useMemo(
+    () =>
+      keyword
+        ? [...filterScopes(resourceScopes), ...filterScopes(organizationScopes)]
+        : [...resourceScopes, ...organizationScopes],
+    [filterScopes, keyword, organizationScopes, resourceScopes]
+  );
 
-  const scopeRemoveHandler = useCallback(
-    (scopeToRemove: OrganizationScope) => async () => {
-      await api.put(`${organizationRolesPath}/${organizationRoleId}/scopes`, {
-        json: {
-          organizationScopeIds:
-            data?.filter((scope) => scope.id !== scopeToRemove.id).map(({ id }) => id) ?? [],
-        },
-      });
+  const [editOrganizationScope, setEditOrganizationScope] = useState<OrganizationScope>();
+
+  const removeScopeHandler = useCallback(
+    (scopeToRemove: OrganizationRoleScope) => async () => {
+      const deleteSubpath = isResourceScope(scopeToRemove) ? 'resource-scopes' : 'scopes';
+      await api.delete(`${organizationRolePath}/${deleteSubpath}/${scopeToRemove.id}`);
+
       toast.success(
         t('organization_role_details.permissions.removed', { name: scopeToRemove.name })
       );
-      void mutate();
+      mutate();
     },
-    [api, data, mutate, organizationRoleId, t]
+    [api, mutate, organizationRolePath, t]
+  );
+
+  const editScopeHandler = useCallback(
+    (scopeToEdit: OrganizationRoleScope) => async () => {
+      if (isResourceScope(scopeToEdit)) {
+        // Todo @xiaoyijun support resource scope editing
+
+        return;
+      }
+
+      setEditOrganizationScope(scopeToEdit);
+    },
+    []
   );
 
   return (
     <>
       <Table
-        rowGroups={[{ key: 'organizationRolePermissions', data: filteredData }]}
+        rowGroups={[{ key: 'organizationRolePermissions', data: filteredScopes }]}
         rowIndexKey="id"
         columns={[
           {
             title: <DynamicT forKey="organization_role_details.permissions.name_column" />,
             dataIndex: 'name',
-            colSpan: 7,
+            colSpan: 5,
             render: ({ name }) => {
               return (
                 <Tag variant="cell">
@@ -83,8 +102,27 @@ function Permissions({ organizationRoleId }: Props) {
           {
             title: <DynamicT forKey="organization_role_details.permissions.description_column" />,
             dataIndex: 'description',
-            colSpan: 8,
+            colSpan: 5,
             render: ({ description }) => <Breakable>{description ?? '-'}</Breakable>,
+          },
+          {
+            title: <DynamicT forKey="organization_role_details.permissions.type_column" />,
+            dataIndex: 'type',
+            colSpan: 5,
+            render: (scope) => {
+              return (
+                <Breakable>
+                  {isResourceScope(scope) ? (
+                    <>
+                      <DynamicT forKey="organization_role_details.permissions.type.api" />
+                      <ResourceName resourceId={scope.resourceId} />
+                    </>
+                  ) : (
+                    <DynamicT forKey="organization_role_details.permissions.type.org" />
+                  )}
+                </Breakable>
+              );
+            },
           },
           {
             title: null,
@@ -98,12 +136,8 @@ function Permissions({ organizationRoleId }: Props) {
                   delete: 'organization_role_details.permissions.remove_permission',
                   deleteConfirmation: 'general.remove',
                 }}
-                onEdit={() => {
-                  setEditPermission(scope);
-                }}
-                onDelete={async () => {
-                  await scopeRemoveHandler(scope)();
-                }}
+                onEdit={editScopeHandler(scope)}
+                onDelete={removeScopeHandler(scope)}
               />
             ),
           },
@@ -137,14 +171,14 @@ function Permissions({ organizationRoleId }: Props) {
         placeholder={<EmptyDataPlaceholder />}
         isLoading={isLoading}
         errorMessage={error?.body?.message ?? error?.message}
-        onRetry={async () => mutate(undefined, true)}
+        onRetry={mutate}
       />
-      {editPermission && (
+      {editOrganizationScope && (
         <ManageOrganizationPermissionModal
-          data={editPermission}
+          data={editOrganizationScope}
           onClose={() => {
-            setEditPermission(undefined);
-            void mutate();
+            setEditOrganizationScope(undefined);
+            mutate();
           }}
         />
       )}
