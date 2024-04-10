@@ -249,6 +249,7 @@ export default class ExpectExperience extends ExpectPage {
     socialPhone,
     clickButton = true,
     authUrl = mockSocialAuthPageUrl,
+    state: stateOverride,
   }: {
     socialUserId: string;
     socialEmail?: string;
@@ -257,6 +258,8 @@ export default class ExpectExperience extends ExpectPage {
     clickButton?: boolean;
     /** The URL to wait for the social auth page. */
     authUrl?: string;
+    /** The state parameter to override. */
+    state?: string;
   }) {
     const authPageRequestListener = this.page.waitForRequest((request) =>
       request.url().startsWith(authUrl)
@@ -270,7 +273,7 @@ export default class ExpectExperience extends ExpectPage {
 
     const { searchParams: authSearchParams } = new URL(result.url());
     const redirectUri = authSearchParams.get('redirect_uri') ?? '';
-    const state = authSearchParams.get('state') ?? '';
+    const state = stateOverride ?? authSearchParams.get('state') ?? '';
 
     // Mock social redirects
     const callbackUrl = new URL(redirectUri);

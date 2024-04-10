@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 
 import { ConnectorType } from '@logto/connector-kit';
 import { SignInIdentifier, SsoProviderName } from '@logto/schemas';
+import { appendPath } from '@silverhand/essentials';
 
 import { mockSocialConnectorTarget } from '#src/__mocks__/connectors-mock.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -9,6 +10,7 @@ import { createSsoConnector } from '#src/api/sso-connector.js';
 import { demoAppUrl, logtoUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
+import { dcls, dmodal } from '#src/utils.js';
 
 const randomString = () => crypto.randomBytes(8).toString('hex');
 
@@ -40,6 +42,8 @@ describe('direct sign-in', () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     context.ssoConnectorId = ssoConnector.id;
     await updateSignInExperience({
+      termsOfUseUrl: 'https://example.com/terms',
+      privacyPolicyUrl: 'https://example.com/privacy',
       signUp: { identifiers: [], password: true, verify: false },
       signIn: {
         methods: [
@@ -57,12 +61,26 @@ describe('direct sign-in', () => {
   });
 
   it('should be landed to the social identity provider directly', async () => {
+    const socialUserId = 'foo_' + randomString();
     const experience = new ExpectExperience(await browser.newPage());
     const url = new URL(demoAppUrl);
 
     url.searchParams.set('direct_sign_in', `social:${mockSocialConnectorTarget}`);
     await experience.page.goto(url.href);
-    await experience.toProcessSocialSignIn({ socialUserId: 'foo', clickButton: false });
+    await experience.toProcessSocialSignIn({
+      socialUserId,
+      clickButton: false,
+    });
+
+    // Redirected back to the social callback page
+    experience.toMatchUrl(new RegExp(appendPath(new URL(logtoUrl), 'callback/social/.*').href));
+
+    // Should have popped up the terms of use and privacy policy dialog
+    await experience.toMatchElement([dmodal(), dcls('content')].join(' '), {
+      text: /terms of use/i,
+    });
+    await experience.toClickButton(/agree/i);
+
     experience.toMatchUrl(demoAppUrl);
     await experience.toClick('div[role=button]', /sign out/i);
     await experience.page.close();
@@ -71,11 +89,12 @@ describe('direct sign-in', () => {
   it('should be landed to the sso identity provider directly', async () => {
     const experience = new ExpectExperience(await browser.newPage());
     const url = new URL(demoAppUrl);
+    const socialUserId = 'foo_' + randomString();
 
     url.searchParams.set('direct_sign_in', `sso:${context.ssoConnectorId!}`);
     await experience.page.goto(url.href);
     await experience.toProcessSocialSignIn({
-      socialUserId: 'foo',
+      socialUserId,
       clickButton: false,
       authUrl: ssoOidcIssuer + '/auth',
     });
@@ -84,7 +103,7 @@ describe('direct sign-in', () => {
     // with the code and user ID in the query string.
     const callbackUrl = new URL(experience.page.url());
     expect(callbackUrl.searchParams.get('code')).toBe('mock-code');
-    expect(callbackUrl.searchParams.get('userId')).toBe('foo');
+    expect(callbackUrl.searchParams.get('userId')).toBe(socialUserId);
     expect(new URL(callbackUrl.pathname, callbackUrl.origin).href).toBe(demoAppUrl.href);
 
     await experience.page.close();

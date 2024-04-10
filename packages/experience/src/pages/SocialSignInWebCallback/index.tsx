@@ -21,7 +21,7 @@ const SocialSignInWebCallback = () => {
   }
 
   // Connector not found, return sign in page
-  return <Navigate to={experience.routes.signIn} />;
+  return <Navigate to={'/' + experience.routes.signIn} />;
 };
 
 export default SocialSignInWebCallback;
