@@ -249,8 +249,8 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -331,8 +331,8 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -407,8 +407,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -480,8 +480,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -559,8 +559,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.1
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -638,8 +638,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -714,8 +714,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -787,8 +787,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -860,8 +860,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -933,8 +933,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1009,8 +1009,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1082,8 +1082,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1155,8 +1155,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1228,8 +1228,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1304,8 +1304,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1377,8 +1377,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1450,8 +1450,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1523,8 +1523,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1596,8 +1596,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1669,8 +1669,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1742,8 +1742,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1815,8 +1815,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1891,8 +1891,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1973,8 +1973,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2052,8 +2052,8 @@ importers:
         specifier: 2.8.10
         version: 2.8.10
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2125,8 +2125,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2198,8 +2198,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2274,8 +2274,8 @@ importers:
         specifier: ^6.9.9
         version: 6.9.9
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2350,8 +2350,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2423,8 +2423,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2496,8 +2496,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2569,8 +2569,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2642,8 +2642,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3195,8 +3195,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       snakecase-keys:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -12511,7 +12511,7 @@ packages:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /dot-prop@5.3.0:
@@ -16574,7 +16574,7 @@ packages:
   /lower-case@2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /lowercase-keys@1.0.1:
@@ -17404,7 +17404,7 @@ packages:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
     dependencies:
       lower-case: 2.0.2
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /no-case@4.0.0:
@@ -19890,7 +19890,7 @@ packages:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
     dev: false
 
   /snake-case@4.0.0:
@@ -19900,13 +19900,13 @@ packages:
       no-case: 4.0.0
     dev: false
 
-  /snakecase-keys@7.0.0:
-    resolution: {integrity: sha512-yFnXqBIFFpXlIWiGPvYhfelzQqRVchuM1XIQXVwIFrZuNWBPE6vBkuJitzbl6yMIjjpA40IYxqi88BE9RX2Yxw==}
+  /snakecase-keys@8.0.0:
+    resolution: {integrity: sha512-qS7XvESuFxskrmD8/O9tOMdLdV9YTuPfNLdRJIvNJKNEZtH9XVPwmZioROwl4TsVDbOFqlQ/o7pURuF8MnjYsg==}
     engines: {node: '>=18'}
     dependencies:
       map-obj: 4.3.0
       snake-case: 3.0.4
-      type-fest: 3.13.1
+      type-fest: 4.15.0
     dev: false
 
   /socks-proxy-agent@8.0.2:
@@ -20980,6 +20980,11 @@ packages:
   /type-fest@3.13.1:
     resolution: {integrity: sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==}
     engines: {node: '>=14.16'}
+    dev: false
+
+  /type-fest@4.15.0:
+    resolution: {integrity: sha512-tB9lu0pQpX5KJq54g+oHOLumOx+pMep4RaM6liXh2PKmVRFF+/vAtUP0ZaJ0kOySfVNjF6doBWPHhBhISKdlIA==}
+    engines: {node: '>=16'}
     dev: false
 
   /type-fest@4.2.0:
