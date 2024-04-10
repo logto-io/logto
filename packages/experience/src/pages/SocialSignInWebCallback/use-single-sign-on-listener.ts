@@ -1,7 +1,7 @@
-import { SignInMode } from '@logto/schemas';
+import { SignInMode, experience } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { singleSignOnAuthorization, singleSignOnRegistration } from '@/apis/single-sign-on';
 import useApi from '@/hooks/use-api';
@@ -16,11 +16,13 @@ const useSingleSignOnRegister = () => {
   const handleError = useErrorHandler();
   const request = useApi(singleSignOnRegistration);
   const { termsValidation } = useTerms();
+  const navigate = useNavigate();
 
   return useCallback(
     async (connectorId: string) => {
       // Agree to terms and conditions first before proceeding
       if (!(await termsValidation())) {
+        navigate('/' + experience.routes.signIn);
         return;
       }
 
@@ -36,7 +38,7 @@ const useSingleSignOnRegister = () => {
         window.location.replace(result.redirectTo);
       }
     },
-    [handleError, request, termsValidation]
+    [handleError, navigate, request, termsValidation]
   );
 };
 
@@ -59,6 +61,7 @@ const useSingleSignOnListener = (connectorId: string) => {
   const { signInMode } = useSieMethods();
 
   const handleError = useErrorHandler();
+  const navigate = useNavigate();
 
   const singleSignOnAuthorizationRequest = useApi(singleSignOnAuthorization);
   const registerSingleSignOnIdentity = useSingleSignOnRegister();
@@ -78,7 +81,7 @@ const useSingleSignOnListener = (connectorId: string) => {
             // Should not let user register new social account under sign-in only mode
             if (signInMode === SignInMode.SignIn) {
               setToast(error.message);
-
+              navigate('/' + experience.routes.signIn);
               return;
             }
 
@@ -94,6 +97,7 @@ const useSingleSignOnListener = (connectorId: string) => {
     },
     [
       handleError,
+      navigate,
       registerSingleSignOnIdentity,
       setToast,
       signInMode,
@@ -117,6 +121,7 @@ const useSingleSignOnListener = (connectorId: string) => {
     // Validate the state parameter
     if (!state || !stateValidation(state, connectorId)) {
       setToast(t('error.invalid_connector_auth'));
+      navigate('/' + experience.routes.signIn);
       return;
     }
 
@@ -124,6 +129,7 @@ const useSingleSignOnListener = (connectorId: string) => {
   }, [
     connectorId,
     isConsumed,
+    navigate,
     searchParameters,
     setSearchParameters,
     setToast,

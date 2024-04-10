@@ -53,7 +53,7 @@ export default class ExpectPage {
    * @param shouldNavigate Whether the click should trigger a navigation. Defaults to `true`.
    * @see {@link ExpectPage.toClick}
    */
-  async toClickButton(text: string, shouldNavigate = true) {
+  async toClickButton(text: string | RegExp, shouldNavigate = true) {
     return this.toClick('button', text, shouldNavigate);
   }
 
@@ -134,6 +134,16 @@ export default class ExpectPage {
    */
   async toMatchAlert(text?: string | RegExp): Promise<ElementHandle> {
     return expect(this.page).toMatchElement('*[role=alert]', { text });
+  }
+
+  /**
+   * Expect the page to match an element with the given selector and text.
+   *
+   * @alias `expect(this.page).toMatchElement()`
+   * @see {@link jest.Matchers.toMatchElement}
+   */
+  async toMatchElement(...args: Parameters<jest.Matchers<unknown>['toMatchElement']>) {
+    return expect(this.page).toMatchElement(...args);
   }
 
   /**

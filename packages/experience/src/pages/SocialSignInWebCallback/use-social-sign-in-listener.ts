@@ -1,5 +1,5 @@
 import type { RequestErrorBody } from '@logto/schemas';
-import { SignInMode } from '@logto/schemas';
+import { SignInMode, experience } from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -63,12 +63,13 @@ const useSocialSignInListener = (connectorId: string) => {
         // Should not let user register new social account under sign-in only mode
         if (signInMode === SignInMode.SignIn) {
           setToast(error.message);
-
+          navigate('/' + experience.routes.signIn);
           return;
         }
 
         // Agree to terms and conditions first before proceeding
         if (!(await termsValidation())) {
+          navigate('/' + experience.routes.signIn);
           return;
         }
 
@@ -76,7 +77,14 @@ const useSocialSignInListener = (connectorId: string) => {
       },
       ...preSignInErrorHandler,
     }),
-    [preSignInErrorHandler, signInMode, termsValidation, accountNotExistErrorHandler, setToast]
+    [
+      preSignInErrorHandler,
+      signInMode,
+      termsValidation,
+      accountNotExistErrorHandler,
+      setToast,
+      navigate,
+    ]
   );
 
   const signInWithSocialHandler = useCallback(
@@ -119,6 +127,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
     if (!state || !stateValidation(state, connectorId)) {
       setToast(t('error.invalid_connector_auth'));
+      navigate('/' + experience.routes.signIn);
       return;
     }
 
@@ -126,6 +135,7 @@ const useSocialSignInListener = (connectorId: string) => {
   }, [
     connectorId,
     isConsumed,
+    navigate,
     searchParameters,
     setSearchParameters,
     setToast,
