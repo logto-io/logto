@@ -44,7 +44,7 @@
     "@simplewebauthn/types": "^9.0.1",
     "@swc/core": "^1.3.52",
     "@swc/jest": "^0.2.26",
-    "@testing-library/react": "^14.0.0",
+    "@testing-library/react": "^15.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/color": "^3.0.3",
     "@types/jest": "^29.4.0",
