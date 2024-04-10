@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { Route, Routes, useSearchParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -28,11 +28,33 @@ jest.mock('@/apis/single-sign-on', () => ({
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useSearchParams: jest.fn(),
+  Navigate: jest.fn(() => null),
 }));
 
 const mockUseSearchParameters = useSearchParams as jest.Mock;
+const mockNavigate = Navigate as jest.Mock;
 
 describe('SocialCallbackPage with code', () => {
+  describe('fallback', () => {
+    it('should redirect to /sign-in if connectorId is not found', async () => {
+      mockUseSearchParameters.mockReturnValue([new URLSearchParams('code=foo'), jest.fn()]);
+
+      renderWithPageContext(
+        <SettingsProvider>
+          <Routes>
+            <Route path="/sign-in/social/:connectorId" element={<SocialCallback />} />
+          </Routes>
+        </SettingsProvider>,
+        { initialEntries: ['/sign-in/social/invalid'] }
+      );
+
+      await waitFor(() => {
+        expect(signInWithSocial).not.toBeCalled();
+        expect(mockNavigate.mock.calls[0][0].to).toBe('/sign-in');
+      });
+    });
+  });
+
   describe('signIn with social', () => {
     const connectorId = socialConnectors[0]!.id;
     const state = generateState();
