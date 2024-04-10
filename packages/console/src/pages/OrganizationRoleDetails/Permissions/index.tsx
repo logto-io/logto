@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import Plus from '@/assets/icons/plus.svg';
 import ActionsButton from '@/components/ActionsButton';
 import Breakable from '@/components/Breakable';
+import EditScopeModal, { type EditScopeData } from '@/components/EditScopeModal';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
-import ManageOrganizationPermissionModal from '@/components/ManageOrganizationPermissionModal';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import Search from '@/ds-components/Search';
@@ -53,7 +53,7 @@ function Permissions({ organizationRoleId }: Props) {
     [filterScopes, keyword, organizationScopes, resourceScopes]
   );
 
-  const [editOrganizationScope, setEditOrganizationScope] = useState<OrganizationScope>();
+  const [editingScope, setEditingScope] = useState<OrganizationScope>();
 
   const removeScopeHandler = useCallback(
     (scopeToRemove: OrganizationRoleScope) => async () => {
@@ -68,18 +68,14 @@ function Permissions({ organizationRoleId }: Props) {
     [api, mutate, organizationRolePath, t]
   );
 
-  const editScopeHandler = useCallback(
-    (scopeToEdit: OrganizationRoleScope) => async () => {
-      if (isResourceScope(scopeToEdit)) {
-        // Todo @xiaoyijun support resource scope editing
-
-        return;
-      }
-
-      setEditOrganizationScope(scopeToEdit);
-    },
-    []
-  );
+  const handleEdit = async (scope: OrganizationRoleScope, editedData: EditScopeData) => {
+    const patchApiEndpoint = isResourceScope(scope)
+      ? `api/resources/${scope.resourceId}/scopes/${scope.id}`
+      : `api/organization-scopes/${scope.id}`;
+    await api.patch(patchApiEndpoint, { json: editedData });
+    toast.success(t('permissions.updated'));
+    mutate();
+  };
 
   return (
     <>
@@ -136,7 +132,9 @@ function Permissions({ organizationRoleId }: Props) {
                   delete: 'organization_role_details.permissions.remove_permission',
                   deleteConfirmation: 'general.remove',
                 }}
-                onEdit={editScopeHandler(scope)}
+                onEdit={() => {
+                  setEditingScope(scope);
+                }}
                 onDelete={removeScopeHandler(scope)}
               />
             ),
@@ -173,12 +171,31 @@ function Permissions({ organizationRoleId }: Props) {
         errorMessage={error?.body?.message ?? error?.message}
         onRetry={mutate}
       />
-      {editOrganizationScope && (
-        <ManageOrganizationPermissionModal
-          data={editOrganizationScope}
+      {editingScope && (
+        <EditScopeModal
+          scopeName={editingScope.name}
+          data={editingScope}
+          text={
+            isResourceScope(editingScope)
+              ? {
+                  title: 'permissions.edit_title',
+                  nameField: 'api_resource_details.permission.name',
+                  descriptionField: 'api_resource_details.permission.description',
+                  descriptionPlaceholder: 'api_resource_details.permission.description_placeholder',
+                }
+              : {
+                  title: 'organization_template.permissions.edit_title',
+                  nameField: 'organization_template.permissions.permission_field_name',
+                  descriptionField: 'organization_template.permissions.description_field_name',
+                  descriptionPlaceholder:
+                    'organization_template.permissions.description_field_placeholder',
+                }
+          }
+          onSubmit={async (editedData) => {
+            await handleEdit(editingScope, editedData);
+          }}
           onClose={() => {
-            setEditOrganizationScope(undefined);
-            mutate();
+            setEditingScope(undefined);
           }}
         />
       )}

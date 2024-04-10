@@ -70,12 +70,14 @@ function OrganizationRoles() {
             title: <DynamicT forKey="organization_template.roles.permissions_column" />,
             dataIndex: 'scopes',
             colSpan: 12,
-            render: ({ scopes }) => {
-              return scopes.length === 0 ? (
+            render: ({ scopes, resourceScopes }) => {
+              const roleScopes = [...scopes, ...resourceScopes];
+
+              return roleScopes.length === 0 ? (
                 '-'
               ) : (
                 <div className={styles.permissions}>
-                  {scopes.map(({ id, name }) => (
+                  {roleScopes.map(({ id, name }) => (
                     <Tag key={id} variant="cell">
                       <Breakable>{name}</Breakable>
                     </Tag>
