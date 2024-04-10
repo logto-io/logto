@@ -1,5 +1,33 @@
 # Change Log
 
+## 1.6.0
+
+### Minor Changes
+
+- 7756f50f8: support direct sign-in for sso
+- 2cbc591ff: support direct sign-in
+
+  Instead of showing a screen for the user to choose between the sign-in methods, a specific sign-in method can be initiated directly by setting the `direct_sign_in` parameter in the OIDC authentication request.
+
+  This parameter follows the format of `direct_sign_in=<method>:<target>`, where:
+
+  - `<method>` is the sign-in method to trigger. Currently the only supported value is `social`.
+  - `<target>` is the target value for the sign-in method. If the method is `social`, the value is the social connector's `target`.
+
+  When a valid `direct_sign_in` parameter is set, the first screen will be skipped and the specified sign-in method will be triggered immediately upon entering the sign-in experience. If the parameter is invalid, the default behavior of showing the first screen will be used.
+
+### Patch Changes
+
+- 5a7204571: skip non-object messages in the native environment
+
+  In the `WKWebView` of new iOS versions, some script will constantly post messages to the
+  window object with increasing numbers as the message content ("1", "2", "3", ...).
+
+  Ideally, we should check the source of the message with Logto-specific identifier in the
+  `event.data`; however, this change will result a breaking change for the existing
+  native SDK implementations. Add the `isObject` check to prevent the crazy messages while
+  keeping the backward compatibility.
+
 ## 1.5.0
 
 ### Minor Changes

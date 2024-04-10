@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.10.0
+
+### Minor Changes
+
+- 5758f84f5: feat(console): support signing-key rotation
+- cc01acbd0: Create a new user through API with password digest and corresponding algorithm
+
+### Patch Changes
+
+- 746483c49: api resource indicator must be a valid absolute uri
+
+  An invalid indicator will make Console crash without this check.
+
+  Note: We don't mark it as a breaking change as the api behavior has not changed, only adding the check on Console.
+
 ## 1.9.0
 
 ### Minor Changes

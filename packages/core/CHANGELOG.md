@@ -1,5 +1,101 @@
 # Change Log
 
+## 1.15.0
+
+### Minor Changes
+
+- 172411946: Add avatar and customData fields to create user API (POST /api/users)
+- abffb9f95: full oidc standard claims support
+
+  We have added support for the remaining [OpenID Connect standard claims](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims). Now, these claims are accessible in both ID tokens and the response from the `/me` endpoint.
+
+  Additionally, we adhere to the standard scopes - claims mapping. This means that you can retrieve most of the profile claims using the `profile` scope, and the `address` claim can be obtained by using the `address` scope.
+
+  For all newly introduced claims, we store them in the `user.profile` field.
+
+  > ![Note]
+  > Unlike other database fields (e.g. `name`), the claims stored in the `profile` field will fall back to `undefined` rather than `null`. We refrain from using `?? null` here to reduce the size of ID tokens, since `undefined` fields will be stripped in tokens.
+
+- 2cbc591ff: support `first_screen` parameter in authentication request
+
+  Sign-in experience can be initiated with a specific screen by setting the `first_screen` parameter in the OIDC authentication request. This parameter is intended to replace the `interaction_mode` parameter, which is now deprecated.
+
+  The `first_screen` parameter can have the following values:
+
+  - `signIn`: The sign-in screen is displayed first.
+  - `register`: The registration screen is displayed first.
+
+  Here's a non-normative example of how to use the `first_screen` parameter:
+
+  ```
+  GET /authorize?
+    response_type=code
+    &client_id=your_client_id
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &scope=openid
+    &state=af0ifjsldkj
+    &nonce=n-0S6_WzA2Mj
+    &first_screen=signIn
+  ```
+
+  When `first_screen` is set, the legacy `interaction_mode` parameter is ignored.
+
+- 468558721: Get organization roles with search keyword.
+- cc01acbd0: Create a new user through API with password digest and corresponding algorithm
+- 2cbc591ff: support direct sign-in
+
+  Instead of showing a screen for the user to choose between the sign-in methods, a specific sign-in method can be initiated directly by setting the `direct_sign_in` parameter in the OIDC authentication request.
+
+  This parameter follows the format of `direct_sign_in=<method>:<target>`, where:
+
+  - `<method>` is the sign-in method to trigger. Currently the only supported value is `social`.
+  - `<target>` is the target value for the sign-in method. If the method is `social`, the value is the social connector's `target`.
+
+  When a valid `direct_sign_in` parameter is set, the first screen will be skipped and the specified sign-in method will be triggered immediately upon entering the sign-in experience. If the parameter is invalid, the default behavior of showing the first screen will be used.
+
+### Patch Changes
+
+- 7c22c50cb: Fix SSO connector new user authentication internal server error.
+
+  ## Description
+
+  Thanks to the [issue](https://github.com/logto-io/logto/issues/5502) report, we found that the SSO connector new user authentication was causing an internal server error. Should return an 422 status code instead of 500. Frontend sign-in page can not handle the 500 error and complete the new user registration process.
+
+  ### Root cause
+
+  When the SSO connector returns a new user that does not exist in the Logto database, the backend with throw a 422 error. Frontend relies the 422 error to redirect and complete the new user registration process.
+
+  However, the backend was throwing a 500 error instead. That is because we applied a strict API response status code guard at the koaGuard middleware level. The status code 422 was not listed. Therefore, the middleware threw a 500 error.
+
+  ### Solution
+
+  We added the 422 status code to the koaGuard middleware. Now, the backend will return a 422 status code when the SSO connector returns a new user that does not exist in the Logto database. The frontend sign-in page can handle the 422 error and complete the new user registration process.
+
+- Updated dependencies [5758f84f5]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [7756f50f8]
+- Updated dependencies [abffb9f95]
+- Updated dependencies [746483c49]
+- Updated dependencies [2cbc591ff]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [cc01acbd0]
+- Updated dependencies [2cbc591ff]
+- Updated dependencies [951865859]
+- Updated dependencies [5a7204571]
+- Updated dependencies [2cbc591ff]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [2c10c2423]
+  - @logto/console@1.13.0
+  - @logto/phrases@1.10.0
+  - @logto/connector-kit@3.0.0
+  - @logto/experience@1.6.0
+  - @logto/core-kit@2.4.0
+  - @logto/schemas@1.15.0
+  - @logto/phrases-experience@1.6.1
+  - @logto/demo-app@1.2.0
+  - @logto/cli@1.15.0
+  - @logto/shared@3.1.0
+
 ## 1.14.0
 
 ### Minor Changes

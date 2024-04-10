@@ -1,11 +1,11 @@
 {
   "name": "@logto/connector-azuread",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Microsoft Azure AD connector implementation.",
   "author": "Mobilist Inc. <info@mobilist.com.tr>",
   "dependencies": {
     "@azure/msal-node": "^2.0.0",
-    "@logto/connector-kit": "workspace:^2.1.0"
+    "@logto/connector-kit": "workspace:^3.0.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
