@@ -17,9 +17,9 @@ const SingleSignOn = ({ connectorId }: Props) => {
   */
   useNativeMessageListener(socialConnectors.length > 0);
 
-  useSingleSignOnListener(connectorId);
+  const { loading } = useSingleSignOnListener(connectorId);
 
-  return <LoadingLayer />;
+  return loading ? <LoadingLayer /> : null;
 };
 
 export default SingleSignOn;

@@ -10,9 +10,9 @@ type Props = {
 };
 
 const SocialSignIn = ({ connectorId }: Props) => {
-  useSocialSignInListener(connectorId);
+  const { loading } = useSocialSignInListener(connectorId);
 
-  return <LoadingLayer />;
+  return loading ? <LoadingLayer /> : null;
 };
 
 export default SocialSignIn;
