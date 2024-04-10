@@ -1,7 +1,7 @@
 import { useLogto } from '@logto/react';
 import { yes, conditional } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
-import { Outlet, useSearchParams } from 'react-router-dom';
+import { Outlet, useMatch, useSearchParams } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppLoading from '@/components/AppLoading';
@@ -35,14 +35,16 @@ export default function ProtectedRoutes() {
   const { isAuthenticated, isLoading, signIn } = useLogto();
   const { isInitComplete, resetTenants } = useContext(TenantsContext);
   const redirectUri = useRedirectUri();
+  const match = useMatch('/accept/:invitationId');
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       saveRedirect();
-      const isSignUpMode = yes(searchParameters.get(searchKeys.signUp));
+      const isInvitationLink = Boolean(match?.pathname.startsWith('/accept/'));
+      const isSignUpMode = yes(searchParameters.get(searchKeys.signUp)) || isInvitationLink;
       void signIn(redirectUri.href, conditional(isSignUpMode && 'signUp'));
     }
-  }, [redirectUri, isAuthenticated, isLoading, searchParameters, signIn]);
+  }, [redirectUri, isAuthenticated, isLoading, searchParameters, signIn, match?.pathname]);
 
   useEffect(() => {
     if (isAuthenticated && !isInitComplete) {
