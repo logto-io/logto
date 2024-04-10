@@ -160,6 +160,8 @@ export const setupUsernameAndEmailExperience = async (passwordPolicy?: PartialPa
   await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   await setEmailConnector();
   await updateSignInExperience({
+    termsOfUseUrl: '',
+    privacyPolicyUrl: '',
     signInMode: SignInMode.SignInAndRegister,
     signUp: {
       identifiers: [SignInIdentifier.Username],
