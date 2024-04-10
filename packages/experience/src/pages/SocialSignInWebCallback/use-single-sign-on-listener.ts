@@ -1,5 +1,5 @@
 import { SignInMode } from '@logto/schemas';
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 
@@ -52,6 +52,7 @@ const useSingleSignOnRegister = () => {
 const useSingleSignOnListener = (connectorId: string) => {
   const { t } = useTranslation();
 
+  const [loading, setLoading] = useState(true);
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
   const { setToast } = useToast();
@@ -71,6 +72,7 @@ const useSingleSignOnListener = (connectorId: string) => {
       });
 
       if (error) {
+        setLoading(false);
         await handleError(error, {
           'user.identity_not_exist': async (error) => {
             // Should not let user register new social account under sign-in only mode
@@ -128,6 +130,8 @@ const useSingleSignOnListener = (connectorId: string) => {
     singleSignOnHandler,
     t,
   ]);
+
+  return { loading };
 };
 
 export default useSingleSignOnListener;
