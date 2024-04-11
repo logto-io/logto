@@ -21,9 +21,9 @@ import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import ActionsButton from '../ActionsButton';
+import EditScopeModal, { type EditScopeData } from '../EditScopeModal';
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 
-import EditPermissionModal from './EditPermissionModal';
 import * as styles from './index.module.scss';
 
 type SearchProps = {
@@ -98,9 +98,9 @@ function PermissionsTable({
 
   const api = useApi();
 
-  const handleEdit = async (scope: ScopeResponse) => {
+  const handleEdit = async (scope: ScopeResponse, editedData: EditScopeData) => {
     const patchApiEndpoint = `api/resources/${scope.resourceId}/scopes/${scope.id}`;
-    await api.patch(patchApiEndpoint, { json: scope });
+    await api.patch(patchApiEndpoint, { json: editedData });
     toast.success(t('permissions.updated'));
     onPermissionUpdated();
   };
@@ -236,12 +236,21 @@ function PermissionsTable({
         onRetry={retryHandler}
       />
       {editingScope && (
-        <EditPermissionModal
+        <EditScopeModal
+          scopeName={editingScope.name}
           data={editingScope}
+          text={{
+            title: 'permissions.edit_title',
+            nameField: 'api_resource_details.permission.name',
+            descriptionField: 'api_resource_details.permission.description',
+            descriptionPlaceholder: 'api_resource_details.permission.description_placeholder',
+          }}
+          onSubmit={async (editedData) => {
+            await handleEdit(editingScope, editedData);
+          }}
           onClose={() => {
             setEditingScope(undefined);
           }}
-          onSubmit={handleEdit}
         />
       )}
     </>

@@ -1,4 +1,5 @@
-import { type ScopeResponse } from '@logto/schemas';
+import { type AdminConsoleKey } from '@logto/phrases';
+import { type Nullable } from '@silverhand/essentials';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -10,24 +11,43 @@ import TextInput from '@/ds-components/TextInput';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
-type Props = {
-  data: ScopeResponse;
-  onClose: () => void;
-  onSubmit: (scope: ScopeResponse) => Promise<void>;
+export type EditScopeData = {
+  /** Only `description` is editable for all kinds of scopes */
+  description: Nullable<string>;
 };
 
-function EditPermissionModal({ data, onClose, onSubmit }: Props) {
+type Props = {
+  /** The scope name displayed in the name input field */
+  scopeName: string;
+  /** The data to edit */
+  data: EditScopeData;
+  /** Determines the translation keys for texts in the editor modal */
+  text: {
+    /** The translation key of the modal title */
+    title: AdminConsoleKey;
+    /** The field name translation key for the name input */
+    nameField: AdminConsoleKey;
+    /** The field name translation key for the description input */
+    descriptionField: AdminConsoleKey;
+    /** The placeholder translation key for the description input */
+    descriptionPlaceholder: AdminConsoleKey;
+  };
+  onSubmit: (editedData: EditScopeData) => Promise<void>;
+  onClose: () => void;
+};
+
+function EditScopeModal({ scopeName, data, text, onClose, onSubmit }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
     handleSubmit,
     register,
     formState: { isSubmitting },
-  } = useForm<ScopeResponse>({ defaultValues: data });
+  } = useForm<EditScopeData>({ defaultValues: data });
 
   const onSubmitHandler = handleSubmit(
     trySubmitSafe(async (formData) => {
-      await onSubmit({ ...data, ...formData });
+      await onSubmit(formData);
       onClose();
     })
   );
@@ -43,7 +63,7 @@ function EditPermissionModal({ data, onClose, onSubmit }: Props) {
       }}
     >
       <ModalLayout
-        title="permissions.edit_title"
+        title={text.title}
         footer={
           <>
             <Button isLoading={isSubmitting} title="general.cancel" onClick={onClose} />
@@ -59,14 +79,14 @@ function EditPermissionModal({ data, onClose, onSubmit }: Props) {
         onClose={onClose}
       >
         <form>
-          <FormField title="api_resource_details.permission.name">
-            <TextInput readOnly value={data.name} />
+          <FormField title={text.nameField}>
+            <TextInput readOnly value={scopeName} />
           </FormField>
-          <FormField title="api_resource_details.permission.description">
+          <FormField title={text.descriptionField}>
             <TextInput
               // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus
-              placeholder={t('api_resource_details.permission.description_placeholder')}
+              placeholder={String(t(text.descriptionPlaceholder))}
               {...register('description')}
             />
           </FormField>
@@ -76,4 +96,4 @@ function EditPermissionModal({ data, onClose, onSubmit }: Props) {
   );
 }
 
-export default EditPermissionModal;
+export default EditScopeModal;
