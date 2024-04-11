@@ -9,7 +9,7 @@ import {
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -106,13 +106,15 @@ export const createHookLibrary = (queries: Queries) => {
         })
           .then(async (response) => {
             logEntry.append({
-              response: parseResponse(response),
+              response: await parseResponse(response),
             });
           })
           .catch(async (error) => {
             logEntry.append({
               result: LogResult.Error,
-              response: conditional(error instanceof HTTPError && parseResponse(error.response)),
+              response: conditional(
+                error instanceof HTTPError && (await parseResponse(error.response))
+              ),
               error: conditional(error instanceof Error && String(error)),
             });
           });
@@ -151,8 +153,8 @@ export const createHookLibrary = (queries: Queries) => {
             code: 'hook.endpoint_responded_with_error',
           },
           {
-            responseStatus: error.response.statusCode,
-            responseBody: String(error.response.rawBody),
+            responseStatus: error.response.status,
+            responseBody: await error.response.text(),
           } satisfies HookTestErrorResponseData
         );
       }

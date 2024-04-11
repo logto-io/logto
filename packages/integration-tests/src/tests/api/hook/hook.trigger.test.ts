@@ -95,7 +95,7 @@ describe('trigger hooks', () => {
     expect(
       logs.some(
         ({ payload: { result, error } }) =>
-          result === LogResult.Error && error === 'RequestError: Invalid URL'
+          result === LogResult.Error && error === 'TypeError: Failed to parse URL from not_work_url'
       )
     ).toBeTruthy();
 
@@ -137,7 +137,7 @@ describe('trigger hooks', () => {
 
     // Check hook trigger log
     for (const [hook, expectedResult, expectedError] of [
-      [hook1, LogResult.Error, 'RequestError: Invalid URL'],
+      [hook1, LogResult.Error, 'TypeError: Failed to parse URL from not_work_url'],
       [hook2, LogResult.Success, undefined],
       [hook3, LogResult.Success, undefined],
     ] satisfies Array<[Hook, LogResult, Optional<string>]>) {

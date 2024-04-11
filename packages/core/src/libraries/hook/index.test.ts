@@ -18,7 +18,9 @@ mockEsm('#src/utils/sign.js', () => ({
 }));
 
 const { sendWebhookRequest } = mockEsm('./utils.js', () => ({
-  sendWebhookRequest: jest.fn().mockResolvedValue({ statusCode: 200, body: '{"message":"ok"}' }),
+  sendWebhookRequest: jest
+    .fn()
+    .mockResolvedValue({ status: 200, text: async () => '{"message":"ok"}' }),
   generateHookTestPayload,
   parseResponse,
 }));
