@@ -8,7 +8,6 @@ import {
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -239,11 +238,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
   // MARK: Mount sub-routes
   organizationRoleRoutes(...args);
   organizationScopeRoutes(...args);
-
-  // FIXME: @gao-sun
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    organizationInvitationRoutes(...args);
-  }
+  organizationInvitationRoutes(...args);
 
   // Add routes to the router
   originalRouter.use(router.routes());
