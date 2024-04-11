@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Plus from '@/assets/icons/plus.svg';
 import PageMeta from '@/components/PageMeta';
 import { organizationsFeatureLink } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -51,7 +51,7 @@ function Organizations({ tab }: Props) {
   }, [navigate]);
 
   const handleCreate = useCallback(() => {
-    if (isInitialSetup) {
+    if (isInitialSetup && !isDevFeaturesEnabled) {
       navigate(guidePathname);
       return;
     }
@@ -91,7 +91,7 @@ function Organizations({ tab }: Props) {
           />
         )}
       </div>
-      {isInitialSetup && (
+      {isInitialSetup && !isDevFeaturesEnabled && (
         <Card className={styles.emptyCardContainer}>
           <EmptyDataPlaceholder
             buttonProps={{
@@ -104,7 +104,7 @@ function Organizations({ tab }: Props) {
           />
         </Card>
       )}
-      {!isInitialSetup && (
+      {!isInitialSetup && !isDevFeaturesEnabled && (
         <>
           <TabNav className={styles.tabs}>
             <TabNavItem href="/organizations" isActive={!tab}>
@@ -120,6 +120,21 @@ function Organizations({ tab }: Props) {
           {!tab && <OrganizationsTable isLoading={isLoadingConfigs} onCreate={handleCreate} />}
           {tab === 'template' && <Settings />}
         </>
+      )}
+      {isDevFeaturesEnabled && isOrganizationsDisabled && (
+        <Card className={styles.emptyCardContainer}>
+          <EmptyDataPlaceholder
+            buttonProps={{
+              title: 'upsell.upgrade_plan',
+              onClick: upgradePlan,
+              // Set to `undefined` to override the default icon
+              icon: undefined,
+            }}
+          />
+        </Card>
+      )}
+      {isDevFeaturesEnabled && !isOrganizationsDisabled && (
+        <OrganizationsTable isLoading={isLoadingConfigs} onCreate={handleCreate} />
       )}
     </div>
   );

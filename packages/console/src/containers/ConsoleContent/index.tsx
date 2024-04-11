@@ -202,10 +202,14 @@ function ConsoleContent() {
             <Route path="organizations">
               <Route index element={<Organizations />} />
               <Route path="create" element={<Organizations />} />
-              <Route path="template" element={<Organizations tab="template" />} />
+              {!isDevFeaturesEnabled && (
+                <Route path="template" element={<Organizations tab="template" />} />
+              )}
               <Route path=":id/*" element={<OrganizationDetails />} />
             </Route>
-            <Route path="organization-guide/*" element={<OrganizationGuide />} />
+            {!isDevFeaturesEnabled && (
+              <Route path="organization-guide/*" element={<OrganizationGuide />} />
+            )}
             <Route path="profile">
               <Route index element={<Profile />} />
               <Route path="verify-password" element={<VerifyPasswordModal />} />
