@@ -19,6 +19,12 @@ const organization_role_details = {
     remove_confirmation:
       'Wenn diese Berechtigung entfernt wird, verliert der Benutzer mit dieser Organisationsrolle den Zugriff, der durch diese Berechtigung gewährt wurde.',
     removed: 'Die Berechtigung {{name}} wurde erfolgreich aus dieser Organisationsrolle entfernt',
+    assign_description:
+      'Weisen Sie Berechtigungen den Rollen innerhalb dieser Organisation zu. Diese können sowohl Organisationsberechtigungen als auch API-Berechtigungen umfassen.',
+    organization_permissions: 'Organisationsberechtigungen',
+    api_permissions: 'API-Berechtigungen',
+    assign_organization_permissions: 'Organisationsberechtigungen zuweisen',
+    assign_api_permissions: 'API-Berechtigungen zuweisen',
   },
   general: {
     tab: 'Allgemein',

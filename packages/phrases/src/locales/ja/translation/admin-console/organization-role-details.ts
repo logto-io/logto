@@ -19,6 +19,12 @@ const organization_role_details = {
     remove_confirmation:
       'この権限を削除すると、この組織の役割を持つユーザーはこの権限によって付与されたアクセスを失います。',
     removed: 'この組織の役割から権限 {{name}} が正常に削除されました',
+    assign_description:
+      'この組織内のロールに権限を割り当てます。これには組織の権限とAPIの権限の両方が含まれる場合があります。',
+    organization_permissions: '組織の権限',
+    api_permissions: 'APIの権限',
+    assign_organization_permissions: '組織の権限を割り当てる',
+    assign_api_permissions: 'APIの権限を割り当てる',
   },
   general: {
     tab: '一般',

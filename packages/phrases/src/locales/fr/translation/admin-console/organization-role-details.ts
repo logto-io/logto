@@ -19,6 +19,12 @@ const organization_role_details = {
     remove_confirmation:
       "Si cette permission est supprimée, l'utilisateur avec ce rôle d'organisation perdra l'accès accordé par cette permission.",
     removed: "La permission {{name}} a été supprimée avec succès de ce rôle d'organisation",
+    assign_description:
+      "Attribuez des autorisations aux rôles au sein de cette organisation. Celles-ci peuvent inclure à la fois des autorisations d'organisation et des autorisations d'API.",
+    organization_permissions: "Autorisations de l'organisation",
+    api_permissions: "Autorisations de l'API",
+    assign_organization_permissions: 'Attribuer des permissions d’organisation',
+    assign_api_permissions: 'Attribuer des permissions d’API',
   },
   general: {
     tab: 'Général',

@@ -18,6 +18,11 @@ const organization_role_details = {
     remove_permission: '移除权限',
     remove_confirmation: '如果移除此权限，拥有此组织角色的用户将失去此权限授予的访问权限。',
     removed: '权限 {{name}} 已成功从此组织角色中移除',
+    assign_description: '为此组织中的角色分配权限。这些权限可以包括组织权限和 API 权限。',
+    organization_permissions: '组织权限',
+    api_permissions: 'API 权限',
+    assign_organization_permissions: '分配组织权限',
+    assign_api_permissions: '分配API权限',
   },
   general: {
     tab: '常规',
