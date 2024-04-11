@@ -1,0 +1,14 @@
+import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+
+const { jest } = import.meta;
+
+export const mockLogtoConfigsLibrary: LogtoConfigLibrary = {
+  getCloudConnectionData: jest.fn(),
+  getOidcConfigs: jest.fn(),
+  upsertJwtCustomizer: jest.fn(),
+  getJwtCustomizer: jest.fn(),
+  getJwtCustomizers: jest.fn(),
+  updateJwtCustomizer: jest.fn(),
+  deployJwtCustomizerScript: jest.fn(),
+  undeployJwtCustomizerScript: jest.fn(),
+};
