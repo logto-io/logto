@@ -152,6 +152,15 @@ describe('resource routes', () => {
     expect(response.status).toEqual(400);
   });
 
+  it('PATCH /resources/:id should throw when trying to modify management API', async () => {
+    const { findResourceById } = resources;
+    findResourceById.mockResolvedValueOnce({
+      ...mockResource,
+      indicator: getManagementApiResourceIndicator('mock'),
+    });
+    await expect(resourceRequest.patch('/resources/foo')).resolves.toHaveProperty('status', 400);
+  });
+
   it('DELETE /resources/:id', async () => {
     await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 204);
   });
