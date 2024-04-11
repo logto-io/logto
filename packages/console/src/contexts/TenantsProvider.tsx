@@ -29,6 +29,7 @@ export enum GlobalAnonymousRoute {
 export enum GlobalRoute {
   CheckoutSuccessCallback = '/checkout-success-callback',
   AcceptInvitation = '/accept',
+  Profile = '/profile',
 }
 
 const reservedRoutes: Readonly<string[]> = Object.freeze([

@@ -1,5 +1,5 @@
 import { ossConsolePath } from '@logto/schemas';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes, useRoutes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import { isCloud } from '@/consts/env';
@@ -10,6 +10,7 @@ import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import Toast from '@/ds-components/Toast';
+import { profile } from '@/hooks/use-console-routes/routes/profile';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
@@ -31,6 +32,8 @@ function Layout() {
 }
 
 export function ConsoleRoutes() {
+  const profileRoutes = useRoutes(profile);
+
   return (
     <Routes>
       {/**
@@ -44,6 +47,7 @@ export function ConsoleRoutes() {
         <Route path="welcome" element={<Welcome />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="handle-social" element={<HandleSocialCallback />} />
+          <Route path={dropLeadingSlash(GlobalRoute.Profile)}>{profileRoutes}</Route>
           <Route element={<TenantAccess />}>
             {isCloud && (
               <Route

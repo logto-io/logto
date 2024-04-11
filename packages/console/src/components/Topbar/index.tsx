@@ -14,17 +14,21 @@ import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
+  /* eslint-disable react/boolean-prop-naming */
+  readonly hideTenantSelector?: boolean;
+  readonly hideTitle?: boolean;
+  /* eslint-enable react/boolean-prop-naming */
 };
 
-function Topbar({ className }: Props) {
+function Topbar({ className, hideTenantSelector, hideTitle }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const LogtoLogo = isCloud ? CloudLogo : Logo;
 
   return (
     <div className={classNames(styles.topbar, className)}>
       <LogtoLogo className={styles.logo} />
-      {isCloud && <TenantSelector />}
-      {!isCloud && (
+      {isCloud && !hideTenantSelector && <TenantSelector />}
+      {!isCloud && !hideTitle && (
         <>
           <div className={styles.line} />
           <div className={styles.text}>{t('title')}</div>

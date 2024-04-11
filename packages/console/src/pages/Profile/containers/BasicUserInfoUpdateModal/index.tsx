@@ -130,7 +130,13 @@ function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose 
             name="avatar"
             control={control}
             render={({ field: { onChange, value, name } }) => (
-              <ImageUploaderField name={name} value={value} onChange={onChange} />
+              <ImageUploaderField
+                name={name}
+                value={value}
+                uploadUrl="me/user-assets"
+                apiInstance={api}
+                onChange={onChange}
+              />
             )}
           />
         ) : (
