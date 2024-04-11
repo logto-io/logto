@@ -13,6 +13,8 @@ const api_resources = {
   default_api_label:
     'Apenas uma API padrão pode ser definida por locatário. Quando uma API padrão é definida, o parâmetro de recurso pode ser omitido na solicitação de autenticação. As trocas de token subsequentes usarão essa API como audiência por padrão, resultando na emissão de JWTs. <a>Saiba mais</a>',
   api_resource_created: 'O recurso API {{name}} foi criado com sucesso',
+  /** UNTRANSLATED */
+  invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 
 export default Object.freeze(api_resources);

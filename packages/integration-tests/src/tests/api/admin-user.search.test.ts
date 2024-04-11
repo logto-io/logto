@@ -1,5 +1,3 @@
-import type { IncomingHttpHeaders } from 'node:http';
-
 import type { Role, User } from '@logto/schemas';
 
 import { assignRolesToUser, authedAdminApi, createUser, deleteUser } from '#src/api/index.js';
@@ -10,12 +8,12 @@ import { UserApiTest } from '#src/helpers/user.js';
 
 const getUsers = async <T>(
   init: string[][] | Record<string, string> | URLSearchParams
-): Promise<{ headers: IncomingHttpHeaders; json: T }> => {
-  const { headers, body } = await authedAdminApi.get('users', {
+): Promise<{ headers: Headers; json: T }> => {
+  const response = await authedAdminApi.get('users', {
     searchParams: new URLSearchParams(init),
   });
 
-  return { headers, json: JSON.parse(body) as T };
+  return { headers: response.headers, json: (await response.json()) as T };
 };
 
 describe('admin console user search params', () => {
@@ -52,7 +50,7 @@ describe('admin console user search params', () => {
         const primaryPhone =
           phonePrefix[index % phonePrefix.length]! + index.toString().padStart(5, '0');
 
-        return createUserByAdmin(prefix + username, undefined, primaryEmail, primaryPhone, name);
+        return createUserByAdmin({ username: prefix + username, primaryEmail, primaryPhone, name });
       })
     );
   });
@@ -64,21 +62,21 @@ describe('admin console user search params', () => {
   it('should return all users if nothing specified', async () => {
     const { headers } = await getUsers<User[]>([]);
 
-    expect(Number(headers['total-number'])).toBeGreaterThanOrEqual(10);
+    expect(Number(headers.get('total-number'))).toBeGreaterThanOrEqual(10);
   });
 
   describe('falling back to `like` mode and matches all available fields if only `search` is specified', () => {
     it('should search username', async () => {
       const { headers, json } = await getUsers<User[]>([['search', '%search_tom%']]);
 
-      expect(headers['total-number']).toEqual('5');
+      expect(headers.get('total-number')).toEqual('5');
       expect(json.length === 5 && json.every((user) => user.name === 'Tom Scott')).toBeTruthy();
     });
 
     it('should search primaryPhone', async () => {
       const { headers, json } = await getUsers<User[]>([['search', '%0000%']]);
 
-      expect(headers['total-number']).toEqual('10');
+      expect(headers.get('total-number')).toEqual('10');
       expect(
         json.length === 10 && json.every((user) => user.username?.startsWith('search_'))
       ).toBeTruthy();
@@ -92,7 +90,7 @@ describe('admin console user search params', () => {
       ['isCaseSensitive', 'true'],
     ]);
 
-    expect(headers['total-number']).toEqual('0');
+    expect(headers.get('total-number')).toEqual('0');
     expect(json.length === 0).toBeTruthy();
   });
 
@@ -102,7 +100,7 @@ describe('admin console user search params', () => {
       ['mode.name', 'exact'],
     ]);
 
-    expect(headers['total-number']).toEqual('2');
+    expect(headers.get('total-number')).toEqual('2');
     expect(json.length === 2 && json.every((user) => user.name === 'Jerry Swift')).toBeTruthy();
   });
 
@@ -117,7 +115,7 @@ describe('admin console user search params', () => {
       ['isCaseSensitive', 'true'],
     ]);
 
-    expect(headers['total-number']).toEqual('2');
+    expect(headers.get('total-number')).toEqual('2');
     expect(json.length === 2 && json.every((user) => user.name === 'Jerry Swift Jr')).toBeTruthy();
   });
 
@@ -130,7 +128,7 @@ describe('admin console user search params', () => {
       ['isCaseSensitive', 'true'],
     ]);
 
-    expect(headers['total-number']).toEqual('5');
+    expect(headers.get('total-number')).toEqual('5');
     expect(
       json.length === 5 && json.every((user) => user.username?.startsWith('search_'))
     ).toBeTruthy();
@@ -144,7 +142,7 @@ describe('admin console user search params', () => {
       ['mode.primaryEmail', 'exact'],
     ]);
 
-    expect(headers['total-number']).toEqual('3');
+    expect(headers.get('total-number')).toEqual('3');
     expect(
       json.length === 3 && json.every((user) => user.name?.startsWith('Jerry Swift Jr'))
     ).toBeTruthy();
@@ -161,7 +159,7 @@ describe('admin console user search params', () => {
       ['isCaseSensitive', 'true'],
     ]);
 
-    expect(headers['total-number']).toEqual('3');
+    expect(headers.get('total-number')).toEqual('3');
     expect(
       json.length === 3 && json.every((user) => user.username?.startsWith('search_'))
     ).toBeTruthy();
@@ -174,7 +172,7 @@ describe('admin console user search params', () => {
         ['search.primaryEmail', 'jerry_swift_jr_2@geek.best'],
         ['search.primaryEmail', 'jerry_swift_jr_jr@gmail.com'],
       ]),
-      { code: 'request.invalid_input', statusCode: 400, messageIncludes: '`exact`' }
+      { code: 'request.invalid_input', status: 400, messageIncludes: '`exact`' }
     );
   });
 
@@ -186,7 +184,7 @@ describe('admin console user search params', () => {
       ]),
       {
         code: 'request.invalid_input',
-        statusCode: 400,
+        status: 400,
         messageIncludes: 'cannot be empty',
       }
     );
@@ -200,7 +198,7 @@ describe('admin console user search params', () => {
       ]),
       {
         code: 'request.invalid_input',
-        statusCode: 400,
+        status: 400,
         messageIncludes: 'case-insensitive',
       }
     );
@@ -215,13 +213,13 @@ describe('admin console user search params', () => {
         ]),
         {
           code: 'request.invalid_input',
-          statusCode: 400,
+          status: 400,
           messageIncludes: 'is not valid',
         }
       ),
       expectRejects(getUsers<User[]>([['search.email', '%gmail%']]), {
         code: 'request.invalid_input',
-        statusCode: 400,
+        status: 400,
         messageIncludes: 'is not valid',
       }),
       expectRejects(
@@ -231,7 +229,7 @@ describe('admin console user search params', () => {
         ]),
         {
           code: 'request.invalid_input',
-          statusCode: 400,
+          status: 400,
           messageIncludes: 'is not valid',
         }
       ),
@@ -283,7 +281,7 @@ describe('admin console user search params - excludeRoleId', () => {
       ['excludeRoleId', roles[0]!.id],
     ]);
 
-    expect(headers['total-number']).toEqual('2');
+    expect(headers.get('total-number')).toEqual('2');
     expect(json).toHaveLength(2);
     expect(json).toContainEqual(expect.objectContaining({ id: users[1]!.id }));
     expect(json).toContainEqual(expect.objectContaining({ id: users[2]!.id }));
@@ -295,7 +293,7 @@ describe('admin console user search params - excludeRoleId', () => {
       ['excludeRoleId', roles[1]!.id],
     ]);
 
-    expect(headers['total-number']).toEqual('1');
+    expect(headers.get('total-number')).toEqual('1');
     expect(json).toHaveLength(1);
     expect(json).toContainEqual(expect.objectContaining({ id: users[2]!.id }));
   });
@@ -341,7 +339,7 @@ describe('admin console user search params - excludeOrganizationId', () => {
       ['excludeOrganizationId', organizationApi.organizations[0]!.id],
     ]);
 
-    expect(headers['total-number']).toEqual('1');
+    expect(headers.get('total-number')).toEqual('1');
     expect(json).toHaveLength(1);
     expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[2]!.id }));
   });
@@ -352,7 +350,7 @@ describe('admin console user search params - excludeOrganizationId', () => {
       ['excludeOrganizationId', organizationApi.organizations[1]!.id],
     ]);
 
-    expect(headers['total-number']).toEqual('1');
+    expect(headers.get('total-number')).toEqual('1');
     expect(json).toHaveLength(1);
     expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[0]!.id }));
   });
@@ -363,7 +361,7 @@ describe('admin console user search params - excludeOrganizationId', () => {
       ['excludeOrganizationId', organizationApi.organizations[2]!.id],
     ]);
 
-    expect(headers['total-number']).toEqual('2');
+    expect(headers.get('total-number')).toEqual('2');
     expect(json).toHaveLength(2);
     expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[0]!.id }));
     expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[1]!.id }));

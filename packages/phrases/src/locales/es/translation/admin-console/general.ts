@@ -25,6 +25,8 @@ const general = {
   customize: 'Personalizar',
   enable: 'Habilitar',
   reminder: 'Recordatorio',
+  /** UNTRANSLATED */
+  edit: 'Edit',
   delete: 'Eliminar',
   /** UNTRANSLATED */
   deleted: 'Deleted',
@@ -70,6 +72,8 @@ const general = {
   edit_field: 'Editar {{field}}',
   delete_field: 'Eliminar {{field}}',
   coming_soon: 'Próximamente',
+  /** UNTRANSLATED */
+  or: 'Or',
 };
 
 export default Object.freeze(general);

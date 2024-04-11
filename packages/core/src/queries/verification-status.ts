@@ -1,10 +1,10 @@
 import type { VerificationStatus } from '@logto/schemas';
 import { VerificationStatuses } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(VerificationStatuses);
 

@@ -7,6 +7,11 @@ const permissions = {
   placeholder_title: 'İzin',
   placeholder_description:
     'İzin, bir kaynağa erişmek için yetki verme durumunu ifade eder (biz buna API kaynağı diyoruz).',
+  edit: 'Düzenleme izni',
+  delete: 'Silme izni',
+  remove: 'Kaldırma izni',
+  updated: 'İzin güncellendi.',
+  edit_title: 'API iznini düzenle',
 };
 
 export default Object.freeze(permissions);

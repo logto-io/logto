@@ -2,6 +2,7 @@ import {
   type OrganizationScope,
   type OrganizationRole,
   type OrganizationRoleWithScopes,
+  type Scope,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -11,6 +12,7 @@ export type CreateOrganizationRolePostData = {
   name: string;
   description?: string;
   organizationScopeIds?: string[];
+  resourceScopeIds?: string[];
 };
 
 export class OrganizationRoleApi extends ApiFactory<
@@ -43,5 +45,19 @@ export class OrganizationRoleApi extends ApiFactory<
 
   async deleteScope(id: string, scopeId: string): Promise<void> {
     await authedAdminApi.delete(`${this.path}/${id}/scopes/${scopeId}`);
+  }
+
+  async addResourceScopes(id: string, scopeIds: string[]): Promise<void> {
+    await authedAdminApi.post(`${this.path}/${id}/resource-scopes`, { json: { scopeIds } });
+  }
+
+  async getResourceScopes(id: string, searchParams?: URLSearchParams): Promise<Scope[]> {
+    return authedAdminApi
+      .get(`${this.path}/${id}/resource-scopes`, { searchParams })
+      .json<Scope[]>();
+  }
+
+  async deleteResourceScope(id: string, scopeId: string): Promise<void> {
+    await authedAdminApi.delete(`${this.path}/${id}/resource-scopes/${scopeId}`);
   }
 }

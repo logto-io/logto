@@ -14,6 +14,10 @@ const tabs = {
   docs: '文檔',
   tenant_settings: '租戶設置',
   mfa: '多重認證',
+  /** UNTRANSLATED */
+  customize_jwt: 'JWT Claims',
+  signing_keys: '簽署密鑰',
+  organization_template: '組織模板',
 };
 
 export default Object.freeze(tabs);

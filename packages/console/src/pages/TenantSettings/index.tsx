@@ -6,11 +6,14 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import * as styles from './index.module.scss';
 
 function TenantSettings() {
   const { isDevTenant } = useContext(TenantsContext);
+  const { canManageTenant } = useCurrentTenantScopes();
+
   return (
     <div className={styles.container}>
       <CardTitle
@@ -25,7 +28,10 @@ function TenantSettings() {
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Domains}`}>
           <DynamicT forKey="tenants.tabs.domains" />
         </TabNavItem>
-        {!isDevTenant && (
+        <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Members}`}>
+          <DynamicT forKey="tenants.tabs.members" />
+        </TabNavItem>
+        {!isDevTenant && canManageTenant && (
           <>
             <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Subscription}`}>
               <DynamicT forKey="tenants.tabs.subscription" />

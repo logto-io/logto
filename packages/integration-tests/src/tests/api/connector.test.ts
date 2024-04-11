@@ -1,4 +1,4 @@
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import {
   mockEmailConnectorConfig,
@@ -160,7 +160,7 @@ test('create connector with non-exist connectorId', async () => {
   await cleanUpConnectorTable();
   await expectRejects(postConnector({ connectorId: 'non-exist-id' }), {
     code: 'connector.not_found_with_connector_id',
-    statusCode: 422,
+    status: 422,
   });
 });
 
@@ -170,7 +170,7 @@ test('create non standard social connector with target', async () => {
     postConnector({ connectorId: mockSocialConnectorId, metadata: { target: 'target' } }),
     {
       code: 'connector.cannot_overwrite_metadata_for_non_standard_connector',
-      statusCode: 400,
+      status: 400,
     }
   );
 });
@@ -180,7 +180,7 @@ test('create duplicated social connector', async () => {
   await postConnector({ connectorId: mockSocialConnectorId });
   await expectRejects(postConnector({ connectorId: mockSocialConnectorId }), {
     code: 'connector.multiple_instances_not_supported',
-    statusCode: 422,
+    status: 422,
   });
 });
 
@@ -189,7 +189,7 @@ test('override metadata for non-standard social connector', async () => {
   const { id } = await postConnector({ connectorId: mockSocialConnectorId });
   await expectRejects(updateConnectorConfig(id, {}, { target: 'target' }), {
     code: 'connector.cannot_overwrite_metadata_for_non_standard_connector',
-    statusCode: 400,
+    status: 400,
   });
 });
 

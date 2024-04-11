@@ -7,12 +7,12 @@ import {
   OrganizationScopes,
   Scopes,
 } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 export class ApplicationUserConsentOrganizationScopeQueries extends TwoRelationsQueries<
   typeof Applications,

@@ -3,6 +3,8 @@ const tenants = {
   description: 'Administre eficientemente la configuración del inquilino y personalice su dominio.',
   tabs: {
     settings: 'Configuraciones',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Dominios',
     subscription: 'Plan y facturación',
     billing_history: 'Historial de facturación',
@@ -35,6 +37,17 @@ const tenants = {
     tenant_deletion_description:
       'Eliminar el inquilino resultará en la eliminación permanente de todos los datos de usuario y configuraciones asociadas. Por favor, proceda con precaución.',
     tenant_deletion_button: 'Eliminar inquilino',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Crear inquilino',
@@ -74,6 +87,12 @@ const tenants = {
     cannot_delete_description:
       'Lo siento, no puedes eliminar este inquilino en este momento. Asegúrate de estar en el Plan Gratuito y haber pagado todas las facturas pendientes.',
   },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: 'Todavía no has creado un inquilino',
     description:
@@ -91,47 +110,6 @@ const tenants = {
       'Lamentamos informarle que su cuenta de inquilino ha sido suspendida temporalmente debido a un uso indebido, que incluye exceder los límites de MAU, pagos atrasados ​​u otras acciones no autorizadas.',
     description_2:
       'Si necesita aclaraciones adicionales, tiene alguna inquietud o desea restaurar la funcionalidad completa y desbloquear sus inquilinos, no dude en contactarnos de inmediato.',
-  },
-  signing_keys: {
-    title: 'CLAVES DE FIRMA',
-    description: 'Administre de forma segura las claves de firma en su inquilino.',
-    type: {
-      private_key: 'Claves privadas OIDC',
-      cookie_key: 'Claves de cookies OIDC',
-    },
-    private_keys_in_use: 'Claves privadas en uso',
-    cookie_keys_in_use: 'Claves de cookies en uso',
-    rotate_private_keys: 'Rotar claves privadas',
-    rotate_cookie_keys: 'Rotar claves de cookies',
-    rotate_private_keys_description:
-      'Esta acción creará una nueva clave de firma privada, rotará la clave actual y eliminará su clave anterior. Sus tokens JWT firmados con la clave actual seguirán siendo válidos hasta su eliminación o otra rotación.',
-    rotate_cookie_keys_description:
-      'Esta acción creará una nueva clave de cookie, rotará la clave actual y eliminará su clave anterior. Sus cookies con la clave actual seguirán siendo válidos hasta su eliminación o otra rotación.',
-    select_private_key_algorithm: 'Seleccione el algoritmo de firma de la nueva clave privada',
-    rotate_button: 'Rotar',
-    table_column: {
-      id: 'ID',
-      status: 'Estado',
-      algorithm: 'Algoritmo de clave de firma',
-    },
-    status: {
-      current: 'Actual',
-      previous: 'Anterior',
-    },
-    reminder: {
-      rotate_private_key:
-        '¿Estás seguro de que deseas rotar las <strong>claves privadas OIDC</strong>? Los nuevos tokens JWT emitidos serán firmados por la nueva clave. Los tokens JWT existentes seguirán siendo válidos hasta que los vuelvas a rotar.',
-      rotate_cookie_key:
-        '¿Estás seguro de que deseas rotar las <strong>claves de cookies OIDC</strong>? Las nuevas cookies generadas en sesiones de inicio de sesión serán firmadas por la nueva clave de cookie. Las cookies existentes seguirán siendo válidas hasta que las vuelvas a rotar.',
-      delete_private_key:
-        '¿Estás seguro de que deseas eliminar la <strong>clave privada OIDC</strong>? Los tokens JWT existentes firmados con esta clave de firma privada ya no serán válidos.',
-      delete_cookie_key:
-        '¿Estás seguro de que deseas eliminar la <strong>clave de cookies OIDC</strong>? Las sesiones de inicio de sesión antiguas con cookies firmadas con esta clave de cookie ya no serán válidas. Se requiere una reautenticación para estos usuarios.',
-    },
-    messages: {
-      rotate_key_success: 'Claves de firma rotadas con éxito.',
-      delete_key_success: 'Clave eliminada con éxito.',
-    },
   },
 };
 

@@ -6,18 +6,20 @@ import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { logtoUrl } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
+import { randomString } from '#src/utils.js';
 
 describe('Single Sign On Happy Path', () => {
   const connectorIdMap = new Map<string, SsoConnectorMetadata>();
 
   const state = 'foo_state';
   const redirectUri = 'http://foo.dev/callback';
+  const domain = `foo${randomString()}.com`;
 
   beforeAll(async () => {
     const { id, connectorName } = await createSsoConnector({
       providerName: SsoProviderName.OIDC,
-      connectorName: 'test-oidc',
-      domains: ['foo.com'],
+      connectorName: `test-oidc-${randomString()}`,
+      domains: [domain],
       config: {
         clientId: 'foo',
         clientSecret: 'bar',
@@ -60,7 +62,7 @@ describe('Single Sign On Happy Path', () => {
     const client = await initClient();
 
     const response = await client.send(getSsoConnectorsByEmail, {
-      email: 'bar@foo.com',
+      email: 'bar@' + domain,
     });
 
     expect(response.length).toBeGreaterThan(0);
@@ -88,7 +90,7 @@ describe('Single Sign On Happy Path', () => {
     });
 
     const response = await client.send(getSsoConnectorsByEmail, {
-      email: 'bar@foo.com',
+      email: 'bar@' + domain,
     });
 
     expect(response.length).toBe(0);

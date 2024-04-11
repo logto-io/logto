@@ -1,11 +1,16 @@
 import type { SchemaLike } from '@logto/schemas';
-import { convertToPrimitiveOrSql } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
+import {
+  createPool,
+  parseDsn,
+  sql,
+  stringifyDsn,
+  createInterceptorsPreset,
+} from '@silverhand/slonik';
 import decamelize from 'decamelize';
 import { DatabaseError } from 'pg-protocol';
-import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
-import { createInterceptors } from 'slonik-interceptor-preset';
 
+import { convertToPrimitiveOrSql } from './sql.js';
 import { ConfigKey, consoleLog, getCliConfigWithPrompt } from './utils.js';
 
 export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';
@@ -22,7 +27,7 @@ export const createPoolFromConfig = async () => {
   assert(parseDsn(databaseUrl).databaseName, new Error('Database name is required in URL'));
 
   return createPool(databaseUrl, {
-    interceptors: createInterceptors(),
+    interceptors: createInterceptorsPreset(),
   });
 };
 
@@ -49,7 +54,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
     // - It will throw error when creating database using '?'
     const databaseName = dsn.databaseName ?? '?';
     const maintenancePool = await createPool(stringifyDsn({ ...dsn, databaseName: 'postgres' }), {
-      interceptors: createInterceptors(),
+      interceptors: createInterceptorsPreset(),
     });
     await maintenancePool.query(sql`
       create database ${sql.identifier([databaseName])}

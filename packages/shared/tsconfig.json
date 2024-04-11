@@ -2,7 +2,7 @@
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "outDir": "lib",
-    "types": ["node", "jest"]
+    "types": ["node"]
   },
   "include": [
     "src"

@@ -90,6 +90,24 @@ export default class ExpectExperience extends ExpectPage {
     this.#ongoing = { type, initialUrl };
   }
 
+  async waitForUrl(url: URL, retry = 3) {
+    // eslint-disable-next-line @silverhand/fp/no-let
+    let retries = retry;
+
+    do {
+      if (this.page.url() === url.href) {
+        return;
+      }
+
+      // eslint-disable-next-line no-await-in-loop
+      await this.page.waitForNavigation({ waitUntil: 'networkidle0' });
+    } while (retries--); // eslint-disable-line @silverhand/fp/no-mutation
+  }
+
+  async waitForPathname(pathname: string, retry = 3) {
+    return this.waitForUrl(this.buildExperienceUrl(pathname), retry);
+  }
+
   /**
    * Ensure the experience is ongoing and the page is at the initial URL; then try to click the "sign out"
    * button (case-insensitive) and close the page.
@@ -97,16 +115,11 @@ export default class ExpectExperience extends ExpectPage {
    * It will clear the ongoing experience if the experience is ended successfully.
    */
   async verifyThenEnd(closePage = true) {
-    /**
-     * Wait for the network to be idle since we need to process the sign-in consent
-     * and handle sign-in success callback, this may take a long time.
-     */
-    await this.page.waitForNetworkIdle();
     if (this.#ongoing === undefined) {
       return this.throwNoOngoingExperienceError();
     }
 
-    this.toMatchUrl(this.#ongoing.initialUrl);
+    await this.waitForUrl(this.#ongoing.initialUrl);
     await this.toClick('div[role=button]', /sign out/i);
 
     this.#ongoing = undefined;
@@ -227,32 +240,40 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   /**
-   * Assert the page is at the sign-in page with the mock social sign-in method.
-   * Click the 'Mock Social' sign in method and visit the mocked 3rd-party social sign-in page and redirect
-   * back with the given user social data.
-   *
-   * @param socialUserData The given user social data.
+   * Optionally click the "Continue with [social name]" button on the page, then process the social
+   * sign-in flow with the given user social data.
    */
   async toProcessSocialSignIn({
     socialUserId,
     socialEmail,
     socialPhone,
+    clickButton = true,
+    authUrl = mockSocialAuthPageUrl,
+    state: stateOverride,
   }: {
     socialUserId: string;
     socialEmail?: string;
     socialPhone?: string;
+    /** Whether to click the "Continue with [social name]" button on the page. */
+    clickButton?: boolean;
+    /** The URL to wait for the social auth page. */
+    authUrl?: string;
+    /** The state parameter to override. */
+    state?: string;
   }) {
     const authPageRequestListener = this.page.waitForRequest((request) =>
-      request.url().startsWith(mockSocialAuthPageUrl)
+      request.url().startsWith(authUrl)
     );
 
-    await this.toClick('button', 'Continue with Mock Social');
+    if (clickButton) {
+      await this.toClick('button', 'Continue with Mock Social');
+    }
 
     const result = await authPageRequestListener;
 
     const { searchParams: authSearchParams } = new URL(result.url());
     const redirectUri = authSearchParams.get('redirect_uri') ?? '';
-    const state = authSearchParams.get('state') ?? '';
+    const state = stateOverride ?? authSearchParams.get('state') ?? '';
 
     // Mock social redirects
     const callbackUrl = new URL(redirectUri);

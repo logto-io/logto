@@ -1,6 +1,6 @@
 import { AppInsightsBoundary } from '@logto/app-insights/react';
 import { UserScope } from '@logto/core-kit';
-import { LogtoProvider, useLogto } from '@logto/react';
+import { LogtoProvider, Prompt, useLogto } from '@logto/react';
 import {
   adminConsoleApplicationId,
   defaultTenantId,
@@ -22,11 +22,12 @@ import CloudAppRoutes from '@/cloud/AppRoutes';
 import AppLoading from '@/components/AppLoading';
 import { isCloud } from '@/consts/env';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
+import { ConsoleRoutes } from '@/containers/ConsoleRoutes';
 import useTrackUserId from '@/hooks/use-track-user-id';
 import { OnboardingRoutes } from '@/onboarding';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
-import { ConsoleRoutes } from '@/pages/ConsoleRoutes';
 
+import { GlobalScripts } from './components/Conversion';
 import { adminTenantEndpoint, mainTitle } from './consts';
 import ErrorBoundary from './containers/ErrorBoundary';
 import LogtoErrorBoundary from './containers/LogtoErrorBoundary';
@@ -109,6 +110,7 @@ function Providers() {
         appId: adminConsoleApplicationId,
         resources,
         scopes,
+        prompt: [Prompt.Login, Prompt.Consent],
       }}
     >
       <AppThemeProvider>
@@ -153,5 +155,10 @@ function AppRoutes() {
     return <AppLoading />;
   }
 
-  return isAuthenticated && isOnboarding ? <OnboardingRoutes /> : <ConsoleRoutes />;
+  return (
+    <>
+      <GlobalScripts />
+      {isAuthenticated && isOnboarding ? <OnboardingRoutes /> : <ConsoleRoutes />}
+    </>
+  );
 }

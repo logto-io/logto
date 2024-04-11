@@ -1,4 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
+import { type Questionnaire, Project } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -17,8 +18,7 @@ import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
-import type { Questionnaire } from '../../types';
-import { OnboardingPage, Project } from '../../types';
+import { OnboardingPage } from '../../types';
 import { getOnboardingPage } from '../../utils';
 
 import * as styles from './index.module.scss';

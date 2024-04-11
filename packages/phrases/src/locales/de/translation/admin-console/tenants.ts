@@ -3,6 +3,8 @@ const tenants = {
   description: 'Effizientes Verwalten von Mandanteneinstellungen und Anpassen Ihrer Domain.',
   tabs: {
     settings: 'Einstellungen',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domänen',
     subscription: 'Plan und Abrechnung',
     billing_history: 'Abrechnungshistorie',
@@ -35,6 +37,17 @@ const tenants = {
     tenant_deletion_description:
       'Das Löschen des Mandanten führt zur dauerhaften Entfernung aller zugehörigen Benutzerdaten und Konfigurationen. Bitte gehen Sie vorsichtig vor.',
     tenant_deletion_button: 'Mieter löschen',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Mieter erstellen',
@@ -75,6 +88,12 @@ const tenants = {
     cannot_delete_description:
       'Entschuldigung, Sie können diesen Mandanten momentan nicht löschen. Stellen Sie sicher, dass Sie sich im kostenlosen Tarif befinden und alle ausstehenden Rechnungen bezahlt haben.',
   },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: 'Du hast noch keinen Mandanten erstellt',
     description:
@@ -92,48 +111,6 @@ const tenants = {
       'Es tut uns leid, Ihnen mitteilen zu müssen, dass Ihr Mieterkonto vorübergehend gesperrt wurde, da es unsachgemäß genutzt wurde. Dies umfasst die Überschreitung der MAU-Grenzen, überfällige Zahlungen oder andere unbefugte Aktionen.',
     description_2:
       'Wenn Sie weitere Informationen wünschen, Bedenken haben oder die volle Funktionalität wiederherstellen und Ihre Mieter entsperren möchten, zögern Sie nicht, uns umgehend zu kontaktieren.',
-  },
-  signing_keys: {
-    title: 'SIGNIERUNGSSCHLÜSSEL',
-    description: 'Sicherer Umgang mit Signierungsschlüsseln in Ihrem Mandanten.',
-    type: {
-      private_key: 'OIDC-Private Keys',
-      cookie_key: 'OIDC-Cookie-Keys',
-    },
-    private_keys_in_use: 'Verwendete private Schlüssel',
-    cookie_keys_in_use: 'Verwendete Cookie-Schlüssel',
-    rotate_private_keys: 'Private Schlüssel rotieren',
-    rotate_cookie_keys: 'Cookie-Schlüssel rotieren',
-    rotate_private_keys_description:
-      'Diese Aktion erstellt einen neuen privaten Signierungsschlüssel, rotiert den aktuellen Schlüssel und entfernt Ihren vorherigen Schlüssel. Ihre JWT-Token, die mit dem aktuellen Schlüssel signiert sind, bleiben gültig, bis sie gelöscht oder erneut rotiert werden.',
-    rotate_cookie_keys_description:
-      'Diese Aktion erstellt einen neuen Cookie-Schlüssel, rotiert den aktuellen Schlüssel und entfernt Ihren vorherigen Schlüssel. Ihre Cookies mit dem aktuellen Schlüssel bleiben gültig, bis sie gelöscht oder erneut rotiert werden.',
-    select_private_key_algorithm:
-      'Signierungsalgorithmus für den neuen privaten Schlüssel auswählen',
-    rotate_button: 'Rotieren',
-    table_column: {
-      id: 'ID',
-      status: 'Status',
-      algorithm: 'Signierungsschlüssel Algorithmus',
-    },
-    status: {
-      current: 'Aktuell',
-      previous: 'Vorherige',
-    },
-    reminder: {
-      rotate_private_key:
-        'Sind Sie sicher, dass Sie die <strong>OIDC-Private Keys</strong> rotieren möchten? Neue ausgestellte JWT-Token werden vom neuen Schlüssel signiert. Bestehende JWT-Token bleiben gültig, bis Sie sie erneut rotieren.',
-      rotate_cookie_key:
-        'Sind Sie sicher, dass Sie die <strong>OIDC-Cookie-Keys</strong> rotieren möchten? Neue Cookies, die in Anmelde-Sitzungen generiert werden, werden mit dem neuen Cookie-Schlüssel signiert. Bestehende Cookies bleiben gültig, bis Sie sie erneut rotieren.',
-      delete_private_key:
-        'Sind Sie sicher, dass Sie den <strong>OIDC-Privaten Schlüssel</strong> löschen möchten? Bestehende JWT-Token, die mit diesem privaten Signierungsschlüssel signiert wurden, sind nicht mehr gültig.',
-      delete_cookie_key:
-        'Sind Sie sicher, dass Sie den <strong>OIDC-Cookie-Schlüssel</strong> löschen möchten? Ältere Anmelde-Sitzungen mit Cookies, die mit diesem Cookie-Schlüssel signiert wurden, sind nicht mehr gültig. Eine erneute Authentifizierung ist für diese Benutzer erforderlich.',
-    },
-    messages: {
-      rotate_key_success: 'Signierungsschlüssel erfolgreich rotieren.',
-      delete_key_success: 'Schlüssel erfolgreich gelöscht.',
-    },
   },
 };
 

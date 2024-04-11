@@ -1,11 +1,9 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { type SsoProviderName, type SignInExperience } from '@logto/schemas';
+import { type SignInExperience, type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
-import useSWR, { useSWRConfig } from 'swr';
+import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
 import File from '@/assets/icons/file.svg';
@@ -19,79 +17,52 @@ import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
-import useApi from '@/hooks/use-api';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 
 import SsoConnectorLogo from '../EnterpriseSso/SsoConnectorLogo';
-import { type SsoConnectorWithProviderConfigWithGeneric } from '../EnterpriseSso/types';
 
 import Connection from './Connection';
 import Experience from './Experience';
 import SsoGuide from './SsoGuide';
+import { enterpriseSsoPathname } from './config';
 import * as styles from './index.module.scss';
+import useDeleteConnector from './use-delete-connector';
 
-const enterpriseSsoPathname = '/enterprise-sso';
 const getSsoConnectorDetailsPathname = (ssoConnectorId: string, tab: EnterpriseSsoDetailsTabs) =>
   `${enterpriseSsoPathname}/${ssoConnectorId}/${tab}`;
 
-function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
+function EnterpriseSsoConnectorDetails() {
   const { pathname } = useLocation();
   const { ssoConnectorId, tab } = useParams();
-  const { mutate: mutateGlobal } = useSWRConfig();
 
-  const [isDeleted, setIsDeleted] = useState(false);
+  const { isDeleted, isDeleting, onDeleteHandler } = useDeleteConnector(ssoConnectorId);
+
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
 
   const { isLoading: isUserAssetServiceLoading } = useUserAssetsService();
+
   const { data: signInExperience, isLoading: isSignInExperienceLoading } =
     useSWR<SignInExperience>('api/sign-in-exp');
 
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     data: ssoConnector,
     error: requestError,
     mutate,
     isLoading: isSsoConnectorLoading,
-  } = useSWR<SsoConnectorWithProviderConfigWithGeneric<T>, RequestError>(
+  } = useSWR<SsoConnectorWithProviderConfig, RequestError>(
     ssoConnectorId && `api/sso-connectors/${ssoConnectorId}`,
     { keepPreviousData: true }
   );
 
   const isLoading = isSsoConnectorLoading || isUserAssetServiceLoading || isSignInExperienceLoading;
 
-  const api = useApi();
-  const { navigate } = useTenantPathname();
-
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const isDarkModeEnabled = signInExperience?.color.isDarkModeEnabled ?? false;
 
   useEffect(() => {
     setIsDeleteAlertOpen(false);
   }, [pathname]);
-
-  const handleDelete = async () => {
-    if (!ssoConnectorId || isDeleting) {
-      return;
-    }
-    setIsDeleting(true);
-
-    try {
-      await api
-        .delete(`api/sso-connectors/${ssoConnectorId}`)
-        .json<SsoConnectorWithProviderConfigWithGeneric<T>>();
-
-      setIsDeleted(true);
-
-      toast.success(t('enterprise_sso_details.enterprise_sso_deleted'));
-      await mutateGlobal('api/sso-connectors');
-      navigate(enterpriseSsoPathname, { replace: true });
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   if (!ssoConnectorId) {
     return null;
@@ -194,7 +165,7 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
             onCancel={async () => {
               setIsDeleteAlertOpen(false);
             }}
-            onConfirm={handleDelete}
+            onConfirm={onDeleteHandler}
           >
             <DynamicT forKey="enterprise_sso_details.delete_confirm_modal_content" />
           </ConfirmModal>

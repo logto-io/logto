@@ -3,11 +3,11 @@ import path from 'node:path';
 import { fetchTokenByRefreshToken } from '@logto/js';
 import { InteractionEvent, type Resource, RoleType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
-import fetch from 'node-fetch';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
 
-import { createResource, putInteraction } from '#src/api/index.js';
-import { assignUsersToRole, createRole } from '#src/api/role.js';
-import { createScope } from '#src/api/scope.js';
+import { createResource, deleteResource, deleteUser, putInteraction } from '#src/api/index.js';
+import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
+import { createScope, deleteScope } from '#src/api/scope.js';
 import MockClient, { defaultConfig } from '#src/client/index.js';
 import { logtoUrl } from '#src/constants.js';
 import { processSession } from '#src/helpers/client.js';
@@ -25,23 +25,49 @@ describe('get access token', () => {
   };
   const testApiScopeNames = ['read', 'write', 'delete', 'update'];
 
+  /* eslint-disable @silverhand/fp/no-let */
+  let testApiResourceId: string;
+  let testApiScopeIds: string[];
+  let testApiUserRoleId: string;
+  let guestUserId: string;
+  /* eslint-enable @silverhand/fp/no-let */
+
+  /* eslint-disable @silverhand/fp/no-mutation */
   beforeAll(async () => {
-    await createUserByAdmin(guestUsername, password);
-    const user = await createUserByAdmin(username, password);
+    const guestUser = await createUserByAdmin({ username: guestUsername, password });
+    guestUserId = guestUser.id;
+    const user = await createUserByAdmin({ username, password });
     const testApiResource = await createResource(
       testApiResourceInfo.name,
       testApiResourceInfo.indicator
     );
+    testApiResourceId = testApiResource.id;
     const testApiScopes = await Promise.all(
       testApiScopeNames.map(async (name) => createScope(testApiResource.id, name))
     );
+    testApiScopeIds = testApiScopes.map(({ id }) => id);
     const testApiUserRole = await createRole({
       name: 'test-api-user-role',
       type: RoleType.User,
       scopeIds: testApiScopes.map(({ id }) => id),
     });
+    testApiUserRoleId = testApiUserRole.id;
     await assignUsersToRole([user.id], testApiUserRole.id);
     await enableAllPasswordSignInMethods();
+  });
+  /* eslint-enable @silverhand/fp/no-mutation */
+
+  afterAll(async () => {
+    if (testApiUserRoleId) {
+      await deleteRole(testApiUserRoleId);
+    }
+    if (testApiResourceId) {
+      await Promise.all(testApiScopeIds.map(async (id) => deleteScope(testApiResourceId, id)));
+      await deleteResource(testApiResourceId);
+    }
+    if (guestUserId) {
+      await deleteUser(guestUserId);
+    }
   });
 
   it('can sign in and getAccessToken with admin user', async () => {
@@ -82,6 +108,29 @@ describe('get access token', () => {
       'scope',
       testApiScopeNames.join(' ')
     );
+  });
+
+  it('sign in and verify jwt', async () => {
+    const client = new MockClient({
+      resources: [testApiResourceInfo.indicator],
+      scopes: testApiScopeNames,
+    });
+    await client.initSession();
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: { username: guestUsername, password },
+    });
+    const { redirectTo } = await client.submitInteraction();
+    await processSession(client, redirectTo);
+    const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
+    await expect(
+      jwtVerify(accessToken, createRemoteJWKSet(new URL('/oidc/jwks', logtoUrl)), {
+        issuer: new URL('/oidc', logtoUrl).href,
+        audience: testApiResourceInfo.indicator,
+        requiredClaims: ['scope', 'client_id'],
+        subject: guestUserId,
+      })
+    ).resolves.toBeTruthy();
   });
 
   it('can sign in and get multiple Access Tokens by the same Refresh Token within refreshTokenReuseInterval', async () => {

@@ -11,14 +11,14 @@ import {
   type FeaturedUser,
   type OrganizationScopeEntity,
 } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { type SearchOptions, buildSearchSql, expandFields } from '#src/database/utils.js';
 import RelationQueries, {
   type GetEntitiesOptions,
   TwoRelationsQueries,
 } from '#src/utils/RelationQueries.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 import { type userSearchKeys } from '../user.js';
 
@@ -26,6 +26,20 @@ import { type userSearchKeys } from '../user.js';
 export class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, typeof Users> {
   constructor(pool: CommonQueryMethods) {
     super(pool, OrganizationUserRelations.table, Organizations, Users);
+  }
+
+  async isMember(organizationId: string, email: string): Promise<boolean> {
+    const users = convertToIdentifiers(Users, true);
+    const relations = convertToIdentifiers(OrganizationUserRelations, true);
+
+    return this.pool.exists(sql`
+      select 1
+      from ${relations.table}
+      join ${users.table}
+        on ${relations.fields.userId} = ${users.fields.id}
+      where ${relations.fields.organizationId} = ${organizationId}
+      and ${users.fields.primaryEmail} = ${email}
+    `);
   }
 
   async getFeatured(

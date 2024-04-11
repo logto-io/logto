@@ -3,6 +3,8 @@ const tenants = {
   description: 'Skuteczne zarządzanie ustawieniami najemcy i dostosowywanie domeny.',
   tabs: {
     settings: 'Ustawienia',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domeny',
     subscription: 'Plan i rozliczenia',
     billing_history: 'Historia rozliczeń',
@@ -35,6 +37,17 @@ const tenants = {
     tenant_deletion_description:
       'Usunięcie najemcy spowoduje trwałe usunięcie wszystkich powiązanych danych użytkowników i konfiguracji. Proszę postępować ostrożnie.',
     tenant_deletion_button: 'Usuń najemcę',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Utwórz nowego najemcę',
@@ -75,6 +88,12 @@ const tenants = {
     cannot_delete_description:
       'Przepraszam, nie możesz teraz usunąć tego najemcy. Upewnij się, że korzystasz z planu darmowego i uregulowałeś wszystkie zaległe płatności.',
   },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: 'Nie utworzyłeś jeszcze najemcy',
     description:
@@ -92,48 +111,6 @@ const tenants = {
       'Z głębokim żalem informujemy, że twoje konto najemcy zostało tymczasowo zawieszone z powodu nieprawidłowego korzystania, w tym przekroczenia limitów MAU, opóźnionych płatności lub innych nieautoryzowanych działań.',
     description_2:
       'Jeśli potrzebujesz dalszych wyjaśnień, masz jakiekolwiek obawy lub chcesz przywrócić pełną funkcjonalność i odblokować swoje najemce, nie wahaj się skontaktować z nami natychmiast.',
-  },
-  signing_keys: {
-    title: 'ZARZĄDZANIE KLUCZAMI PODPISUJĄCYMI',
-    description: 'Bezpieczne zarządzanie kluczami podpisującymi w Twoim najemcy.',
-    type: {
-      private_key: 'Klucze prywatne OIDC',
-      cookie_key: 'Klucze ciasteczek OIDC',
-    },
-    private_keys_in_use: 'Używane klucze prywatne',
-    cookie_keys_in_use: 'Używane klucze ciasteczek',
-    rotate_private_keys: 'Obróć klucze prywatne',
-    rotate_cookie_keys: 'Obróć klucze ciasteczek',
-    rotate_private_keys_description:
-      'Ta akcja spowoduje utworzenie nowego klucza prywatnego do podpisywania, obrócenie bieżącego klucza i usunięcie poprzedniego klucza. Twoje tokeny JWT podpisane aktualnym kluczem pozostaną ważne do czasu usunięcia lub kolejnego obrotu.',
-    rotate_cookie_keys_description:
-      'Ta akcja spowoduje utworzenie nowego klucza ciasteczka, obrócenie bieżącego klucza i usunięcie poprzedniego klucza. Twoje ciasteczka z aktualnym kluczem pozostaną ważne do czasu usunięcia lub kolejnego obrotu.',
-    select_private_key_algorithm:
-      'Wybierz algorytm podpisywania klucza dla nowego klucza prywatnego',
-    rotate_button: 'Obróć',
-    table_column: {
-      id: 'ID',
-      status: 'Status',
-      algorithm: 'Algorytm podpisywania klucza',
-    },
-    status: {
-      current: 'Bieżący',
-      previous: 'Poprzedni',
-    },
-    reminder: {
-      rotate_private_key:
-        'Czy na pewno chcesz obrócić <strong>Klucze prywatne OIDC</strong>? Nowo wydane tokeny JWT będą podpisywane nowym kluczem. Istniejące tokeny JWT pozostają ważne do czasu ponownego obrotu.',
-      rotate_cookie_key:
-        'Czy na pewno chcesz obrócić <strong>Klucze ciasteczek OIDC</strong>? Nowo generowane ciasteczka w sesjach logowania będą podpisywane nowym kluczem ciasteczka. Istniejące ciasteczka pozostają ważne do czasu ponownego obrotu.',
-      delete_private_key:
-        'Czy na pewno chcesz usunąć <strong>Klucz prywatny OIDC</strong>? Istniejące tokeny JWT podpisane tym kluczem prywatnym przestaną być ważne.',
-      delete_cookie_key:
-        'Czy na pewno chcesz usunąć <strong>Klucz ciasteczka OIDC</strong>? Starsze sesje logowania z ciasteczkami podpisanymi tym kluczem ciasteczka przestaną być ważne. Wymagane będzie ponowne uwierzytelnienie tych użytkowników.',
-    },
-    messages: {
-      rotate_key_success: 'Klucze podpisu obrócone pomyślnie.',
-      delete_key_success: 'Klucz usunięty pomyślnie.',
-    },
   },
 };
 

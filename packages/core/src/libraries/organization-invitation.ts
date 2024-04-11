@@ -14,8 +14,6 @@ import type Queries from '#src/tenants/Queries.js';
 
 import { type ConnectorLibrary } from './connector.js';
 
-const invitationLinkPath = '/invitation';
-
 /**
  * The ending statuses of an organization invitation per RFC 0003. It means that the invitation
  * status cannot be changed anymore.
@@ -58,8 +56,21 @@ export class OrganizationInvitationLibrary {
   ) {
     const { inviterId, invitee, organizationId, expiresAt, organizationRoleIds } = data;
 
+    if (await this.queries.organizations.relations.users.isMember(organizationId, invitee)) {
+      throw new RequestError({
+        status: 422,
+        code: 'request.invalid_input',
+        details: 'The invitee is already a member of the organization.',
+      });
+    }
+
     return this.queries.pool.transaction(async (connection) => {
       const organizationQueries = new OrganizationQueries(connection);
+      // Check if any pending invitation has expired, if yes, update the invitation status to "Expired" first
+      // Note: Even if the status may appear to be "Expired", the actual data in DB may still be "Pending".
+      // Check `findEntities` in `OrganizationQueries` for more details.
+      await organizationQueries.invitations.updateExpiredEntities({ invitee, organizationId });
+      // Insert the new invitation
       const invitation = await organizationQueries.invitations.insert({
         id: generateStandardId(),
         inviterId,
@@ -186,7 +197,8 @@ export class OrganizationInvitationLibrary {
     });
   }
 
-  protected async sendEmail(to: string, payload: SendMessagePayload) {
+  /** Send an organization invitation email. */
+  async sendEmail(to: string, payload: SendMessagePayload) {
     const emailConnector = await this.connector.getMessageConnector(ConnectorType.Email);
     return emailConnector.sendMessage({
       to,

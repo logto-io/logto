@@ -4,10 +4,10 @@ import {
   Organizations,
   Users,
 } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import RelationQueries from '#src/utils/RelationQueries.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 class ApplicationUserConsentOrganizationsQuery extends RelationQueries<
   [typeof Applications, typeof Users, typeof Organizations]

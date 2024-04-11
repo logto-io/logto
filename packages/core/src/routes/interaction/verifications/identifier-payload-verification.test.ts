@@ -36,16 +36,15 @@ const { verifySocialIdentity } = mockEsm('../utils/social-verification.js', () =
   verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
 }));
 
-const { verifyUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
-  verifyUserPassword: jest.fn(),
-}));
-
 const identifierPayloadVerification = await pickDefault(
   import('./identifier-payload-verification.js')
 );
 
+const verifyUserPassword = jest.fn();
 const logContext = createMockLogContext();
-const tenant = new MockTenant();
+const tenant = new MockTenant(undefined, undefined, undefined, {
+  users: { verifyUserPassword },
+});
 
 describe('identifier verification', () => {
   const baseCtx = {

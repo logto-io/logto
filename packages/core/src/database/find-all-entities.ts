@@ -1,6 +1,7 @@
 import { type GeneratedSchema, type SchemaLike } from '@logto/schemas';
-import { conditionalSql, convertToIdentifiers, manyRows } from '@logto/shared';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
+
+import { conditionalSql, convertToIdentifiers, manyRows } from '#src/utils/sql.js';
 
 import { buildSearchSql, expandFields, type SearchOptions } from './utils.js';
 

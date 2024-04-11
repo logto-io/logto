@@ -1,4 +1,4 @@
-import { adminTenantId } from '@logto/schemas';
+import { adminTenantId, experience } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import Koa from 'koa';
 import compose from 'koa-compose';
@@ -25,7 +25,6 @@ import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import initOidc from '#src/oidc/init.js';
 import { mountCallbackRouter } from '#src/routes/callback.js';
-import { routes } from '#src/routes/consts.js';
 import initApis from '#src/routes/init.js';
 import initMeApis from '#src/routes-me/init.js';
 import BasicSentinel from '#src/sentinel/basic-sentinel.js';
@@ -36,10 +35,11 @@ import type TenantContext from './TenantContext.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
 export default class Tenant implements TenantContext {
-  static async create(id: string, redisCache: RedisCache): Promise<Tenant> {
+  static async create(id: string, redisCache: RedisCache, customDomain?: string): Promise<Tenant> {
     // Treat the default database URL as the management URL
     const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
-    await envSet.load();
+    // Custom endpoint is used for building OIDC issuer URL when the request is a custom domain
+    await envSet.load(customDomain);
 
     return new Tenant(envSet, id, new WellKnownCache(id, redisCache));
   }
@@ -86,7 +86,7 @@ export default class Tenant implements TenantContext {
     app.use(koaSecurityHeaders(mountedApps, id));
 
     // Mount OIDC
-    const provider = initOidc(envSet, queries, libraries);
+    const provider = initOidc(envSet, queries, libraries, logtoConfigs, cloudConnection);
     app.use(mount('/oidc', provider.app));
 
     const tenantContext: TenantContext = {
@@ -146,7 +146,7 @@ export default class Tenant implements TenantContext {
     app.use(
       compose([
         koaSpaSessionGuard(provider, queries),
-        mount(`${routes.consent}`, koaAutoConsent(provider, queries)),
+        mount(`/${experience.routes.consent}`, koaAutoConsent(provider, queries)),
         koaSpaProxy(mountedApps),
       ])
     );

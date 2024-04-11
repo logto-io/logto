@@ -12,7 +12,7 @@ import {
   getTenantOrganizationCreateData,
   Organizations,
 } from '@logto/schemas';
-import type { DatabaseTransactionConnection } from 'slonik';
+import type { DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { insertInto } from '../../../database.js';
 import { consoleLog } from '../../../utils.js';

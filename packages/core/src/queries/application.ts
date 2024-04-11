@@ -1,9 +1,7 @@
 import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType, Applications, SearchJointMode } from '@logto/schemas';
-import type { OmitAutoSetFields } from '@logto/shared';
-import { convertToIdentifiers, conditionalSql, conditionalArraySql } from '@logto/shared';
-import type { CommonQueryMethods, SqlSqlToken } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods, SqlSqlToken } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
@@ -12,6 +10,8 @@ import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 import type { Search } from '#src/utils/search.js';
+import { convertToIdentifiers, conditionalSql, conditionalArraySql } from '#src/utils/sql.js';
+import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
 import ApplicationUserConsentOrganizationsQuery from './application-user-consent-organizations.js';
 import {

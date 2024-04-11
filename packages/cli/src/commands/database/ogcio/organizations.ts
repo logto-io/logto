@@ -1,4 +1,4 @@
-import { type DatabaseTransactionConnection, sql } from 'slonik';
+import { type DatabaseTransactionConnection, sql } from '@silverhand/slonik';
 
 import { createItem } from './queries.js';
 

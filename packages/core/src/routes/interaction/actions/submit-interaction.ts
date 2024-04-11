@@ -1,6 +1,6 @@
 import { Component, CoreEvent, getEventName } from '@logto/app-insights/custom-event';
 import { appInsights } from '@logto/app-insights/node';
-import type { User } from '@logto/schemas';
+import type { User, UserOnboardingData } from '@logto/schemas';
 import {
   AdminTenantRole,
   SignInMode,
@@ -13,6 +13,8 @@ import {
   getTenantRole,
   TenantRole,
   defaultManagementApiAdminName,
+  OrganizationInvitationStatus,
+  userOnboardingDataKey,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
@@ -90,8 +92,11 @@ async function handleSubmitRegister(
   log?: LogEntry
 ) {
   const { provider, libraries, queries, cloudConnection, id: tenantId } = tenantContext;
-  const { hasActiveUsers } = queries.users;
-  const { updateDefaultSignInExperience } = queries.signInExperiences;
+  const {
+    users: { hasActiveUsers },
+    signInExperiences: { updateDefaultSignInExperience },
+    organizations,
+  } = queries;
 
   const {
     users: { generateUserId, insertUser },
@@ -105,9 +110,19 @@ async function handleSubmitRegister(
   const { client_id } = ctx.interactionDetails.params;
 
   const { isCloud } = EnvSet.values;
-  const isInAdminTenant = (await getTenantId(ctx.URL)) === adminTenantId;
+  const [currentTenantId] = await getTenantId(ctx.URL);
+  const isInAdminTenant = currentTenantId === adminTenantId;
   const isCreatingFirstAdminUser =
     isInAdminTenant && String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
+
+  // If it's Logto Cloud, Check if the new user has any pending invitations, if yes, skip onboarding flow.
+  const invitations =
+    isCloud && userProfile.primaryEmail
+      ? await organizations.invitations.findEntities({ invitee: userProfile.primaryEmail })
+      : [];
+  const hasPendingInvitations = invitations.some(
+    (invitation) => invitation.status === OrganizationInvitationStatus.Pending
+  );
 
   await insertUser(
     {
@@ -116,6 +131,16 @@ async function handleSubmitRegister(
       ...conditional(
         mfaVerifications.length > 0 && {
           mfaVerifications,
+        }
+      ),
+      ...conditional(
+        // Skip onboarding flow if the new user has pending Cloud invitations
+        hasPendingInvitations && {
+          customData: {
+            [userOnboardingDataKey]: {
+              isOnboardingDone: true,
+            } satisfies UserOnboardingData,
+          },
         }
       ),
       ...conditional(
@@ -141,8 +166,8 @@ async function handleSubmitRegister(
     // Create tenant organization and assign the admin user to it.
     // This is only for Cloud integration tests and data alignment, OSS still uses the legacy Management API user role.
     const organizationId = getTenantOrganizationId(defaultTenantId);
-    await queries.organizations.relations.users.insert([organizationId, id]);
-    await queries.organizations.relations.rolesUsers.insert([
+    await organizations.relations.users.insert([organizationId, id]);
+    await organizations.relations.rolesUsers.insert([
       organizationId,
       getTenantRole(TenantRole.Admin).id,
       id,

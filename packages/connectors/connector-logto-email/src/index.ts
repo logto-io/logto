@@ -38,7 +38,16 @@ const sendMessage =
     try {
       await client.post(`/api${emailEndpoint}`, {
         body: {
-          data: { to, type, payload: { ...payload, senderName, companyInformation, appLogo } },
+          data: {
+            to,
+            type,
+            payload: {
+              ...payload,
+              ...conditional(senderName && { senderName }),
+              ...conditional(companyInformation && { companyInformation }),
+              ...conditional(appLogo && { appLogo }),
+            },
+          },
         },
       });
     } catch (error: unknown) {

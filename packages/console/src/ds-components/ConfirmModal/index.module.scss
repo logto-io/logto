@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.overlay {
+  z-index: 1000;
+}
+
 .content {
   font: var(--font-body-2);
 

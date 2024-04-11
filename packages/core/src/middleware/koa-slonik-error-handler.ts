@@ -1,12 +1,12 @@
 import type { SchemaLike } from '@logto/schemas';
-import type { Middleware } from 'koa';
 import {
   SlonikError,
   NotFoundError,
   InvalidInputError,
   CheckIntegrityConstraintViolationError,
   UniqueIntegrityConstraintViolationError,
-} from 'slonik';
+} from '@silverhand/slonik';
+import type { Middleware } from 'koa';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError, InsertionError, UpdateError } from '#src/errors/SlonikError/index.js';

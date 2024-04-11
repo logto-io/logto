@@ -1,10 +1,10 @@
 import {
+  type RequestErrorBody,
   type SsoConnectorProvidersResponse,
   type SsoConnectorWithProviderConfig,
-  type RequestErrorBody,
 } from '@logto/schemas';
 import { HTTPError } from 'ky';
-import { useMemo, useState, useContext } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -21,8 +21,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
-import { type RequestError } from '@/hooks/use-api';
-import useApi from '@/hooks/use-api';
+import useApi, { type RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -150,12 +149,12 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
                   a: <ContactUsPhraseLink />,
                 }}
               >
-                {t('upsell.paywall.organizations')}
+                {t('upsell.paywall.sso_connectors')}
               </Trans>
             </QuotaGuardFooter>
           )
         }
-        size={radioGroupSize}
+        size="xlarge"
         onClose={onClose}
       >
         {isLoading && <Skeleton numberOfLoadingConnectors={2} />}

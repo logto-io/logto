@@ -3,6 +3,15 @@ import { cond } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import {
+  freePlanAuditLogsRetentionDays,
+  freePlanM2mLimit,
+  freePlanMauLimit,
+  freePlanPermissionsLimit,
+  freePlanRoleLimit,
+  proPlanAuditLogsRetentionDays,
+} from '@/consts/subscriptions';
+
 type ContentData = {
   title: string;
   isAvailable: boolean;
@@ -19,11 +28,11 @@ const useFeaturedPlanContent = (planId: string) => {
 
     return [
       {
-        title: t(`mau.${planPhraseKey}`, { ...cond(isFreePlan && { count: 50_000 }) }),
+        title: t(`mau.${planPhraseKey}`, { ...cond(isFreePlan && { count: freePlanMauLimit }) }),
         isAvailable: true,
       },
       {
-        title: t(`m2m.${planPhraseKey}`, { ...cond(isFreePlan && { count: 1 }) }),
+        title: t(`m2m.${planPhraseKey}`, { ...cond(isFreePlan && { count: freePlanM2mLimit }) }),
         isAvailable: true,
       },
       {
@@ -42,8 +51,8 @@ const useFeaturedPlanContent = (planId: string) => {
         title: t(`role_and_permissions.${planPhraseKey}`, {
           ...cond(
             isFreePlan && {
-              roleCount: 1,
-              permissionCount: 1,
+              roleCount: freePlanRoleLimit,
+              permissionCount: freePlanPermissionsLimit,
             }
           ),
         }),
@@ -54,7 +63,9 @@ const useFeaturedPlanContent = (planId: string) => {
         isAvailable: !isFreePlan,
       },
       {
-        title: t('audit_logs', { count: isFreePlan ? 3 : 14 }),
+        title: t('audit_logs', {
+          count: isFreePlan ? freePlanAuditLogsRetentionDays : proPlanAuditLogsRetentionDays,
+        }),
         isAvailable: true,
       },
     ];

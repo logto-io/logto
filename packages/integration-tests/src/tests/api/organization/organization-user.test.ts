@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
@@ -95,14 +95,14 @@ describe('organization user APIs', () => {
       const response = await organizationApi
         .addUsers(organization.id, [])
         .catch((error: unknown) => error);
-      expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+      expect(response instanceof HTTPError && response.response.status).toBe(400);
     });
 
     it('should fail when try to add user to an organization that does not exist', async () => {
       const response = await organizationApi.addUsers('0', ['0']).catch((error: unknown) => error);
       assert(response instanceof HTTPError);
-      expect(response.response.statusCode).toBe(422);
-      expect(JSON.parse(String(response.response.body))).toMatchObject(
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
         expect.objectContaining({ code: 'entity.relation_foreign_key_not_found' })
       );
     });
@@ -120,7 +120,7 @@ describe('organization user APIs', () => {
     it('should fail when try to delete user from an organization that does not exist', async () => {
       const response = await organizationApi.deleteUser('0', '0').catch((error: unknown) => error);
       assert(response instanceof HTTPError);
-      expect(response.response.statusCode).toBe(404);
+      expect(response.response.status).toBe(404);
     });
   });
 
@@ -146,8 +146,8 @@ describe('organization user APIs', () => {
         .catch((error: unknown) => error);
 
       assert(response instanceof HTTPError);
-      expect(response.response.statusCode).toBe(422);
-      expect(JSON.parse(String(response.response.body))).toMatchObject(
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
         expect.objectContaining({ code: 'organization.require_membership' })
       );
 
@@ -244,7 +244,7 @@ describe('organization user APIs', () => {
       const response = await organizationApi
         .getUserRoles(organization.id, user.id)
         .catch((error: unknown) => error);
-      expect(response instanceof HTTPError && response.response.statusCode).toBe(422); // Require membership
+      expect(response instanceof HTTPError && response.response.status).toBe(422); // Require membership
     });
   });
 });

@@ -1,9 +1,7 @@
 import type { Resource, CreateResource } from '@logto/schemas';
 import { Resources } from '@logto/schemas';
-import type { OmitAutoSetFields } from '@logto/shared';
-import { convertToIdentifiers } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
@@ -11,6 +9,8 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { getTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError, UpdateError } from '#src/errors/SlonikError/index.js';
+import type { OmitAutoSetFields } from '#src/utils/sql.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Resources);
 

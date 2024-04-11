@@ -1,3 +1,4 @@
+import { isObject } from '@silverhand/essentials';
 import { useEffect } from 'react';
 
 import { isNativeWebview } from '@/utils/native-sdk';
@@ -23,7 +24,14 @@ const useNativeMessageListener = (bypass = false) => {
     }
 
     const nativeMessageHandler = (event: MessageEvent) => {
-      if (event.origin === window.location.origin) {
+      // In the `WKWebView` of new iOS versions, some script will constantly post messages to the
+      // window object with increasing numbers as the message content ("1", "2", "3", ...).
+      //
+      // Ideally, we should check the source of the message with Logto-specific identifier in the
+      // `event.data`; however, this change will result a breaking change for the existing
+      // native SDK implementations. Add the `isObject` check to prevent the crazy messages while
+      // keeping the backward compatibility.
+      if (event.origin === window.location.origin && isObject(event.data)) {
         try {
           setToast(JSON.stringify(event.data));
         } catch {}

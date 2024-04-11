@@ -1,6 +1,6 @@
 {
   "name": "@logto/console",
-  "version": "1.12.1",
+  "version": "1.13.0",
   "description": "> TODO: description",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -11,11 +11,13 @@
     "dist"
   ],
   "scripts": {
+    "prepack": "pnpm generate",
+    "generate": "./generate.sh",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
     "dev": "cross-env PORT=5002 parcel src/index.html --public-url ${CONSOLE_PUBLIC_URL:-/console} --no-cache --hmr-port 6002",
     "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --public-url ${CONSOLE_PUBLIC_URL:-/console}",
+    "build": "pnpm generate && pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --public-url ${CONSOLE_PUBLIC_URL:-/console}",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\"",
@@ -26,16 +28,17 @@
     "@fontsource/roboto-mono": "^5.0.0",
     "@jest/types": "^29.5.0",
     "@logto/app-insights": "workspace:^1.4.0",
-    "@logto/cloud": "0.2.5-faca9a9",
-    "@logto/connector-kit": "workspace:^2.1.0",
-    "@logto/core-kit": "workspace:^2.3.0",
+    "@logto/cloud": "0.2.5-ab8a489",
+    "@logto/connector-kit": "workspace:^3.0.0",
+    "@logto/core-kit": "workspace:^2.4.0",
     "@logto/language-kit": "workspace:^1.1.0",
-    "@logto/phrases": "workspace:^1.9.0",
-    "@logto/phrases-experience": "workspace:^1.6.0",
-    "@logto/react": "^3.0.0",
-    "@logto/schemas": "workspace:^1.13.1",
+    "@logto/phrases": "workspace:^1.10.0",
+    "@logto/phrases-experience": "workspace:^1.6.1",
+    "@logto/react": "^3.0.5",
+    "@logto/schemas": "workspace:^1.15.0",
     "@logto/shared": "workspace:^3.1.0",
     "@mdx-js/react": "^1.6.22",
+    "@monaco-editor/react": "^4.6.0",
     "@parcel/compressor-brotli": "2.9.3",
     "@parcel/compressor-gzip": "2.9.3",
     "@parcel/core": "2.9.3",
@@ -60,7 +63,7 @@
     "@types/react-helmet": "^6.1.6",
     "@types/react-modal": "^3.13.1",
     "@types/react-syntax-highlighter": "^15.5.1",
-    "@withtyped/client": "^0.7.22",
+    "@withtyped/client": "^0.8.4",
     "buffer": "^5.7.1",
     "classnames": "^2.3.1",
     "clean-deep": "^3.4.0",
@@ -81,7 +84,7 @@
     "jest-transform-stub": "^2.0.0",
     "jest-transformer-svg": "^2.0.0",
     "just-kebab-case": "^4.2.0",
-    "ky": "^1.0.0",
+    "ky": "^1.2.3",
     "libphonenumber-js": "^1.10.51",
     "lint-staged": "^15.0.0",
     "nanoid": "^5.0.1",
@@ -120,7 +123,8 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.4.1",
     "typescript": "^5.3.3",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zod-to-ts": "^1.2.0"
   },
   "engines": {
     "node": "^20.9.0"
@@ -140,6 +144,12 @@
   },
   "eslintConfig": {
     "extends": "@silverhand/react",
+    "parserOptions": {
+      "project": [
+        "./tsconfig.json",
+        "./tsconfig.scripts.gen.json"
+      ]
+    },
     "rules": {
       "react/function-component-definition": [
         "error",

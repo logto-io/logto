@@ -1,5 +1,15 @@
-import type { CustomClientMetadata, OidcClientMetadata } from '@logto/schemas';
-import { ApplicationType, customClientMetadataGuard, GrantType } from '@logto/schemas';
+import path from 'node:path';
+
+import type { CustomClientMetadata, ExtraParamsObject, OidcClientMetadata } from '@logto/schemas';
+import {
+  ApplicationType,
+  customClientMetadataGuard,
+  GrantType,
+  ExtraParamsKey,
+  demoAppApplicationId,
+  FirstScreen,
+  experience,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
@@ -68,4 +78,28 @@ export const getUtcStartOfTheDay = (date: Date) => {
   return new Date(
     Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0)
   );
+};
+
+export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
+  const firstScreenKey =
+    params[ExtraParamsKey.FirstScreen] ??
+    params[ExtraParamsKey.InteractionMode] ??
+    FirstScreen.SignIn;
+  const firstScreen =
+    firstScreenKey === 'signUp' ? experience.routes.register : experience.routes[firstScreenKey];
+  const directSignIn = params[ExtraParamsKey.DirectSignIn];
+  const searchParams = new URLSearchParams();
+  const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
+
+  if (appId === demoAppApplicationId) {
+    searchParams.append('no_cache', '');
+  }
+
+  if (directSignIn) {
+    searchParams.append('fallback', firstScreen);
+    const [method, target] = directSignIn.split(':');
+    return path.join('direct', method ?? '', target ?? '') + getSearchParamString();
+  }
+
+  return firstScreen + getSearchParamString();
 };

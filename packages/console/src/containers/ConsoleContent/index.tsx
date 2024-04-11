@@ -2,21 +2,20 @@ import { useContext } from 'react';
 import { Navigate, Route, Routes, useOutletContext } from 'react-router-dom';
 
 import {
-  ApiResourceDetailsTabs,
-  ConnectorsTabs,
-  UserDetailsTabs,
-  RoleDetailsTabs,
-  WebhookDetailsTabs,
-  TenantSettingsTabs,
   ApplicationDetailsTabs,
+  ConnectorsTabs,
   EnterpriseSsoDetailsTabs,
+  OrganizationTemplateTabs,
+  RoleDetailsTabs,
+  TenantSettingsTabs,
+  UserDetailsTabs,
+  WebhookDetailsTabs,
 } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
-import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
-import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
 import ApiResources from '@/pages/ApiResources';
 import ApplicationDetails from '@/pages/ApplicationDetails';
 import Applications from '@/pages/Applications';
@@ -24,6 +23,8 @@ import AuditLogDetails from '@/pages/AuditLogDetails';
 import AuditLogs from '@/pages/AuditLogs';
 import ConnectorDetails from '@/pages/ConnectorDetails';
 import Connectors from '@/pages/Connectors';
+import CustomizeJwt from '@/pages/CustomizeJwt';
+import CustomizeJwtDetails from '@/pages/CustomizeJwtDetails';
 import Dashboard from '@/pages/Dashboard';
 import EnterpriseSsoConnectors from '@/pages/EnterpriseSso';
 import EnterpriseSsoConnectorDetails from '@/pages/EnterpriseSsoDetails';
@@ -31,6 +32,10 @@ import GetStarted from '@/pages/GetStarted';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import OrganizationDetails from '@/pages/OrganizationDetails';
+import OrganizationRoleDetails from '@/pages/OrganizationRoleDetails';
+import OrganizationTemplate from '@/pages/OrganizationTemplate';
+import OrganizationPermissions from '@/pages/OrganizationTemplate/OrganizationPermissions';
+import OrganizationRoles from '@/pages/OrganizationTemplate/OrganizationRoles';
 import Organizations from '@/pages/Organizations';
 import OrganizationGuide from '@/pages/Organizations/Guide';
 import Profile from '@/pages/Profile';
@@ -46,11 +51,13 @@ import RoleUsers from '@/pages/RoleDetails/RoleUsers';
 import Roles from '@/pages/Roles';
 import SignInExperience from '@/pages/SignInExperience';
 import { SignInExperienceTab } from '@/pages/SignInExperience/types';
+import SigningKeys from '@/pages/SigningKeys';
 import TenantSettings from '@/pages/TenantSettings';
 import BillingHistory from '@/pages/TenantSettings/BillingHistory';
 import Subscription from '@/pages/TenantSettings/Subscription';
 import TenantBasicSettings from '@/pages/TenantSettings/TenantBasicSettings';
 import TenantDomainSettings from '@/pages/TenantSettings/TenantDomainSettings';
+import TenantMembers from '@/pages/TenantSettings/TenantMembers';
 import UserDetails from '@/pages/UserDetails';
 import UserLogs from '@/pages/UserDetails/UserLogs';
 import UserOrganizations from '@/pages/UserDetails/UserOrganizations';
@@ -70,6 +77,7 @@ import * as styles from './index.module.scss';
 function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
   const { isDevTenant } = useContext(TenantsContext);
+  const { canManageTenant } = useCurrentTenantScopes();
 
   return (
     <div className={styles.content}>
@@ -101,14 +109,7 @@ function ConsoleContent() {
               <Route index element={<ApiResources />} />
               <Route path="create" element={<ApiResources />} />
               <Route path=":id/guide/:guideId" element={<ApiResourceDetails />} />
-              <Route path=":id" element={<ApiResourceDetails />}>
-                <Route index element={<Navigate replace to={ApiResourceDetailsTabs.Settings} />} />
-                <Route path={ApiResourceDetailsTabs.Settings} element={<ApiResourceSettings />} />
-                <Route
-                  path={ApiResourceDetailsTabs.Permissions}
-                  element={<ApiResourcePermissions />}
-                />
-              </Route>
+              <Route path=":id/*" element={<ApiResourceDetails />} />
             </Route>
             <Route path="sign-in-experience">
               <Route index element={<Navigate replace to={SignInExperienceTab.Branding} />} />
@@ -176,6 +177,28 @@ function ConsoleContent() {
                 <Route path={RoleDetailsTabs.M2mApps} element={<RoleApplications />} />
               </Route>
             </Route>
+            {isDevFeaturesEnabled && (
+              <>
+                <Route path="organization-template" element={<OrganizationTemplate />}>
+                  <Route
+                    index
+                    element={<Navigate replace to={OrganizationTemplateTabs.OrganizationRoles} />}
+                  />
+                  <Route
+                    path={OrganizationTemplateTabs.OrganizationRoles}
+                    element={<OrganizationRoles />}
+                  />
+                  <Route
+                    path={OrganizationTemplateTabs.OrganizationPermissions}
+                    element={<OrganizationPermissions />}
+                  />
+                </Route>
+                <Route
+                  path={`organization-template/${OrganizationTemplateTabs.OrganizationRoles}/:id/*`}
+                  element={<OrganizationRoleDetails />}
+                />
+              </>
+            )}
             <Route path="organizations">
               <Route index element={<Organizations />} />
               <Route path="create" element={<Organizations />} />
@@ -190,17 +213,35 @@ function ConsoleContent() {
               <Route path="link-email" element={<LinkEmailModal />} />
               <Route path="verification-code" element={<VerificationCodeModal />} />
             </Route>
+            <Route path="signing-keys" element={<SigningKeys />} />
             {isCloud && (
               <Route path="tenant-settings" element={<TenantSettings />}>
-                <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
+                <Route
+                  index
+                  element={
+                    <Navigate
+                      replace
+                      to={
+                        canManageTenant ? TenantSettingsTabs.Settings : TenantSettingsTabs.Members
+                      }
+                    />
+                  }
+                />
                 <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
+                <Route path={`${TenantSettingsTabs.Members}/*`} element={<TenantMembers />} />
                 <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
-                {!isDevTenant && (
+                {!isDevTenant && canManageTenant && (
                   <>
                     <Route path={TenantSettingsTabs.Subscription} element={<Subscription />} />
                     <Route path={TenantSettingsTabs.BillingHistory} element={<BillingHistory />} />
                   </>
                 )}
+              </Route>
+            )}
+            {isCloud && isDevFeaturesEnabled && (
+              <Route path="customize-jwt">
+                <Route index element={<CustomizeJwt />} />
+                <Route path=":tokenType/:action" element={<CustomizeJwtDetails />} />
               </Route>
             )}
           </Routes>

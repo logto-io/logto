@@ -6,16 +6,14 @@ import { TemplateType } from '@logto/connector-kit';
 import { emailEndpoint, usageEndpoint } from './constant.js';
 import createConnector from './index.js';
 
-const { jest } = import.meta;
-
 const endpoint = 'http://localhost:3003';
 
 const api = got.extend({ prefixUrl: endpoint });
 const dropLeadingSlash = (path: string) => path.replace(/^\//, '');
 const buildUrl = (path: string, endpoint: string) => new URL(`${endpoint}/api${path}`);
 
-const getConfig = jest.fn().mockResolvedValue({});
-const getCloudServiceClient = jest.fn().mockResolvedValue({
+const getConfig = vi.fn().mockResolvedValue({});
+const getCloudServiceClient = vi.fn().mockResolvedValue({
   post: async (path: string, payload: { body: unknown }) => {
     return api(dropLeadingSlash(path), {
       method: 'POST',

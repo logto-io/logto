@@ -1,0 +1,71 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 600px;
+  background: var(--color-base);
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 540px;
+    padding: _.unit(20) _.unit(17.5);
+    gap: _.unit(6);
+    background: var(--color-layer-1);
+    border-radius: 16px;
+    box-shadow: var(--shadow-1);
+    white-space: pre-wrap;
+
+    .title {
+      font: var(--font-headline-2);
+    }
+
+    .description {
+      font: var(--font-body-2);
+      color: var(--color-text-secondary);
+    }
+
+    .tenant {
+      display: flex;
+      align-items: center;
+      padding: _.unit(3) _.unit(4);
+      gap: _.unit(3);
+      border-radius: 12px;
+      border: 1px solid var(--color-divider);
+
+      .name {
+        @include _.multi-line-ellipsis(2);
+      }
+
+      .tag {
+        margin-left: _.unit(-2);
+      }
+    }
+
+    .separator {
+      display: flex;
+      align-items: center;
+      gap: _.unit(4);
+
+      span {
+        font: var(--font-body-2);
+        color: var(--color-text-secondary);
+      }
+
+      hr {
+        flex: 1;
+        border: none;
+        border-top: 1px solid var(--color-divider);
+      }
+    }
+
+    .createTenantButton {
+      width: 100%;
+    }
+  }
+}

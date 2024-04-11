@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
 
 import {
@@ -59,15 +60,25 @@ describe('replaceSendMessageHandlebars', () => {
     );
   });
 
-  it('should replace handlebars with empty string if payload does not contain the key', () => {
+  it('should not replace handlebars if payload does not contain the key', () => {
     const template = 'Your verification code is {{code}}';
     const payload = {};
-    expect(replaceSendMessageHandlebars(template, payload)).toEqual('Your verification code is ');
+    expect(replaceSendMessageHandlebars(template, payload)).toEqual(
+      'Your verification code is {{code}}'
+    );
   });
 
-  it('should ignore handlebars that are not in the predefined list for both template and payload', () => {
+  it('should replace all handlebars even they are not in the predefined list for payload', () => {
     const template = 'Your verification code is {{code}} and {{foo}}';
     const payload = { code: '123456', foo: 'bar' };
+    expect(replaceSendMessageHandlebars(template, payload)).toEqual(
+      'Your verification code is 123456 and bar'
+    );
+  });
+
+  it('should ignore handlebars that are not in the payload', () => {
+    const template = 'Your verification code is {{code}} and {{foo}}';
+    const payload = { code: '123456' };
     expect(replaceSendMessageHandlebars(template, payload)).toEqual(
       'Your verification code is 123456 and {{foo}}'
     );

@@ -15,11 +15,15 @@ import errors from './errors.js';
 import general from './general.js';
 import get_started from './get-started.js';
 import guide from './guide.js';
+import invitation from './invitation.js';
+import jwt_claims from './jwt-claims.js';
 import log_details from './log-details.js';
 import logs from './logs.js';
 import menu from './menu.js';
 import mfa from './mfa.js';
 import organization_details from './organization-details.js';
+import organization_role_details from './organization-role-details.js';
+import organization_template from './organization-template.js';
 import organizations from './organizations.js';
 import permissions from './permissions.js';
 import profile from './profile.js';
@@ -28,9 +32,11 @@ import role_details from './role-details.js';
 import roles from './roles.js';
 import session_expired from './session-expired.js';
 import sign_in_exp from './sign-in-exp/index.js';
+import signing_keys from './signing-keys.js';
 import subscription from './subscription/index.js';
 import tab_sections from './tab-sections.js';
 import tabs from './tabs.js';
+import tenant_members from './tenant-members.js';
 import tenants from './tenants.js';
 import topbar from './topbar.js';
 import upsell from './upsell/index.js';
@@ -77,6 +83,7 @@ const admin_console = {
   webhook_details,
   domain,
   tenants,
+  tenant_members,
   topbar,
   subscription,
   upsell,
@@ -85,6 +92,11 @@ const admin_console = {
   organizations,
   organization_details,
   protected_app,
+  jwt_claims,
+  invitation,
+  signing_keys,
+  organization_template,
+  organization_role_details,
 };
 
 export default Object.freeze(admin_console);

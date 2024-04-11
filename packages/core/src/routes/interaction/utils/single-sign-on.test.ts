@@ -6,7 +6,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { OidcSsoConnector } from '#src/sso/OidcSsoConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
-import { type SingleSignOnConnectorData } from '#src/sso/types/index.js';
+import { type SingleSignOnConnectorData } from '#src/sso/types/connector.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';

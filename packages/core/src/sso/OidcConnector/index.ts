@@ -1,7 +1,11 @@
 import { generateStandardId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
+import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
 
+import assertThat from '#src/utils/assert-that.js';
+
+import { SsoConnectorError, SsoConnectorErrorCodes } from '../types/error.js';
 import {
   type BaseOidcConfig,
   type BasicOidcConnectorConfig,
@@ -13,7 +17,7 @@ import {
   type CreateSingleSignOnSession,
 } from '../types/session.js';
 
-import { fetchOidcConfig, fetchToken, getIdTokenClaims } from './utils.js';
+import { fetchOidcConfig, fetchToken, getIdTokenClaims, getUserInfo } from './utils.js';
 
 /**
  * OIDC connector
@@ -91,8 +95,6 @@ class OidcConnector {
    * @param data unknown oidc authorization response
    * @param connectorSession The connector session data from the oidc provider session storage
    * @returns The user info from the OIDC provider
-   * @remark Forked from @logto/oidc-connector
-   *
    */
   async getUserInfo(
     connectorSession: SingleSignOnConnectorSession,
@@ -102,18 +104,29 @@ class OidcConnector {
     const { nonce, redirectUri } = connectorSession;
 
     // Fetch token from the OIDC provider using authorization code
-    const { idToken } = await fetchToken(oidcConfig, data, redirectUri);
+    const { idToken, accessToken } = await fetchToken(oidcConfig, data, redirectUri);
 
-    // Decode and verify the id token
-    const { sub, name, picture, email, email_verified, phone, phone_verified } =
-      await getIdTokenClaims(idToken, oidcConfig, nonce);
+    assertThat(
+      accessToken,
+      new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'The access token is missing from the response.',
+      })
+    );
+
+    // Verify the id token and get the user id
+    const { sub: id } = await getIdTokenClaims(idToken, oidcConfig, nonce);
+
+    // Fetch user info from the userinfo endpoint
+    const { sub, name, picture, email, email_verified, phone, phone_verified, ...rest } =
+      await getUserInfo(accessToken, oidcConfig.userinfoEndpoint);
 
     return {
-      id: sub,
+      id,
       ...conditional(name && { name }),
       ...conditional(picture && { avatar: picture }),
       ...conditional(email && email_verified && { email }),
       ...conditional(phone && phone_verified && { phone }),
+      ...camelcaseKeys(rest),
     };
   }
 }

@@ -3,6 +3,8 @@ const tenants = {
   description: 'Эффективное управление настройками арендатора и настройка вашего домена.',
   tabs: {
     settings: 'Настройки',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Домены',
     subscription: 'План и выставление счетов',
     billing_history: 'История выставления счетов',
@@ -34,6 +36,17 @@ const tenants = {
     tenant_deletion_description:
       'Удаление арендатора приведет к окончательному удалению всех связанных пользовательских данных и настроек. Пожалуйста, действуйте осторожно.',
     tenant_deletion_button: 'Удалить арендатора',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Создать арендатора',
@@ -74,6 +87,12 @@ const tenants = {
     cannot_delete_description:
       'Извините, вы не можете удалить этого арендатора прямо сейчас. Пожалуйста, убедитесь, что вы используете бесплатный план и оплатили все невыполненные счета.',
   },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: 'Вы еще не создали арендатора',
     description:
@@ -91,47 +110,6 @@ const tenants = {
       'Очень сожалеем, но ваша учетная запись арендатора временно заблокирована из-за неправильного использования, включая превышение MAU-лимитов, просроченные платежи или другие неавторизованные действия.',
     description_2:
       'Если вам нужна дополнительная информация или у вас возникли какие-либо вопросы или вы хотите восстановить полную функциональность и разблокировать своих арендаторов, не стесняйтесь немедленно связаться с нами.',
-  },
-  signing_keys: {
-    title: 'УПРАВЛЕНИЕ КЛЮЧАМИ ПОДПИСИ',
-    description: 'Безопасное управление ключами подписи в вашем арендаторе.',
-    type: {
-      private_key: 'OIDC закрытые ключи',
-      cookie_key: 'Ключи cookie OIDC',
-    },
-    private_keys_in_use: 'Используемые закрытые ключи',
-    cookie_keys_in_use: 'Используемые ключи cookie',
-    rotate_private_keys: 'Повернуть закрытые ключи',
-    rotate_cookie_keys: 'Повернуть ключи cookie',
-    rotate_private_keys_description:
-      'Это действие создаст новый закрытый ключ подписи, повернет текущий ключ и удалит предыдущий. Ваши JWT-токены, подписанные текущим ключом, останутся действительными до удаления или следующего раунда поворота.',
-    rotate_cookie_keys_description:
-      'Это действие создаст новый ключ cookie, повернет текущий ключ и удалит предыдущий. Ваши файлы cookie с текущим ключом останутся действительными до удаления или следующего раунда поворота.',
-    select_private_key_algorithm: 'Выберите алгоритм подписи ключа для нового закрытого ключа',
-    rotate_button: 'Повернуть',
-    table_column: {
-      id: 'ID',
-      status: 'Статус',
-      algorithm: 'Алгоритм подписи ключа',
-    },
-    status: {
-      current: 'Текущий',
-      previous: 'Предыдущий',
-    },
-    reminder: {
-      rotate_private_key:
-        'Вы уверены, что хотите повернуть <strong>OIDC закрытые ключи</strong>? Новые выданные JWT-токены будут подписаны новым ключом. Существующие JWT-токены останутся действительными до следующего поворота.',
-      rotate_cookie_key:
-        'Вы уверены, что хотите повернуть <strong>Ключи cookie OIDC</strong>? Новые файлы cookie, созданные в сеансах входа в систему, будут подписаны новым ключом cookie. Существующие файлы cookie останутся действительными до следующего поворота.',
-      delete_private_key:
-        'Вы уверены, что хотите удалить <strong>OIDC закрытый ключ</strong>? Существующие JWT-токены, подписанные этим закрытым ключом, больше не будут действительными.',
-      delete_cookie_key:
-        'Вы уверены, что хотите удалить <strong>Ключ cookie OIDC</strong>? Более старые сеансы входа в систему с файлами cookie, подписанными этим ключом cookie, больше не будут действительными. Для этих пользователей требуется повторная авторизация.',
-    },
-    messages: {
-      rotate_key_success: 'Ключи подписи успешно повернуты.',
-      delete_key_success: 'Ключ успешно удален.',
-    },
   },
 };
 

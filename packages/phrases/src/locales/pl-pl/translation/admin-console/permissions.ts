@@ -7,6 +7,11 @@ const permissions = {
   placeholder_title: 'Uprawnienie',
   placeholder_description:
     'Uprawnienie odnosi się do autoryzacji dostępu do zasobu (nazywamy go zasobem API).',
+  edit: 'Uprawnienia do edycji',
+  delete: 'Uprawnienia do usunięcia',
+  remove: 'Uprawnienia do usunięcia',
+  updated: 'Uprawnienia zaktualizowane.',
+  edit_title: 'Edytuj uprawnienia API',
 };
 
 export default Object.freeze(permissions);

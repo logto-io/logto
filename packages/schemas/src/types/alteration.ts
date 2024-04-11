@@ -1,4 +1,4 @@
-import type { DatabaseTransactionConnection } from 'slonik';
+import type { DatabaseTransactionConnection } from '@silverhand/slonik';
 
 export type AlterationScript = {
   up: (connection: DatabaseTransactionConnection) => Promise<void>;

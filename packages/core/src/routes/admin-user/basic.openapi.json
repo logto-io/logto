@@ -108,6 +108,30 @@
         "description": "Update custom data for the given user ID. This method performs a partial update of the custom data object."
       }
     },
+    "/api/users/{userId}/profile": {
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "profile": {
+                    "description": "Partial profile object to update for the given user ID."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated profile in JSON for the given user ID."
+          }
+        },
+        "summary": "Update user profile",
+        "description": "Update profile for the given user ID. This method performs a partial update of the profile object."
+      }
+    },
     "/api/users": {
       "post": {
         "requestBody": {
@@ -124,6 +148,15 @@
                   },
                   "username": {
                     "description": "Username for the user. It should be unique across all users."
+                  },
+                  "password": {
+                    "description": "Plain text password for the user."
+                  },
+                  "passwordDigest": {
+                    "description": "In case you already have the password digests and not the passwords, you can use them for the newly created user via this property. The value should be generated with one of the supported algorithms. The algorithm can be specified using the `passwordAlgorithm` property."
+                  },
+                  "passwordAlgorithm": {
+                    "description": "The hash algorithm used for the password. It should be one of the supported algorithms: argon2, md5, sha1, sha256. Should the encryption algorithm differ from argon2, it will automatically be upgraded to argon2 upon the user's next sign-in."
                   }
                 }
               }

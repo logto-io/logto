@@ -14,6 +14,7 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  jsonGuard,
 } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
@@ -137,6 +138,7 @@ const getUserInfo =
         avatar: conditional(picture),
         email: conditional(email_verified && email),
         phone: conditional(phone_verified && phone),
+        rawData: jsonGuard.parse(payload),
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {

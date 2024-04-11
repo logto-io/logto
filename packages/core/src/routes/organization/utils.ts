@@ -1,7 +1,7 @@
 import {
   ForeignKeyIntegrityConstraintViolationError,
   UniqueIntegrityConstraintViolationError,
-} from 'slonik';
+} from '@silverhand/slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 

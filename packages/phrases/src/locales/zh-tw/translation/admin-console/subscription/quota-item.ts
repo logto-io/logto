@@ -151,6 +151,18 @@ const quota_item = {
     unlimited: '企業單一登錄',
     not_eligible: '移除你的 企業單一登錄',
   },
+  tenant_members_limit: {
+    /** UNTRANSLATED */
+    name: 'Tenant members',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} tenant member',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} tenant members',
+    /** UNTRANSLATED */
+    unlimited: 'Unlimited tenant members',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your tenant members',
+  },
 };
 
 export default Object.freeze(quota_item);

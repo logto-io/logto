@@ -6,13 +6,11 @@ import { accessTokenEndpoint, codeEndpoint, userInfoEndpoint } from './constant.
 import createConnector, { buildAuthorizationUri, getAccessToken } from './index.js';
 import { mockedFeishuConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedFeishuConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedFeishuConfig);
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should build authorization uri', function () {
@@ -33,7 +31,7 @@ describe('getAuthorizationUri', () => {
         jti: 'some_jti',
         headers: {},
       },
-      jest.fn()
+      vi.fn()
     );
     expect(authorizationUri).toEqual(
       `${codeEndpoint}?client_id=1112233&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&response_type=code&state=some_state`
@@ -44,7 +42,7 @@ describe('getAuthorizationUri', () => {
 describe('getAccessToken', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const accessTokenUrl = new URL(accessTokenEndpoint);
@@ -73,7 +71,7 @@ describe('getAccessToken', () => {
 
     await expect(
       getAccessToken('code', '123', '123', 'http://localhost:3000')
-    ).rejects.toMatchError(
+    ).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'access_token is empty')
     );
   });
@@ -86,7 +84,7 @@ describe('getAccessToken', () => {
 
     await expect(
       getAccessToken('code', '123', '123', 'http://localhost:3000')
-    ).rejects.toMatchError(
+    ).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'invalid code')
     );
   });
@@ -95,7 +93,7 @@ describe('getAccessToken', () => {
 describe('getUserInfo', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   beforeEach(() => {
@@ -112,7 +110,7 @@ describe('getUserInfo', () => {
   const accessTokenUrl = new URL(accessTokenEndpoint);
 
   it('should get userInfo with accessToken', async () => {
-    nock(userInfoUrl.origin).get(userInfoUrl.pathname).query(true).once().reply(200, {
+    const jsonResponse = Object.freeze({
       sub: 'ou_caecc734c2e3328a62489fe0648c4b98779515d3',
       name: '李雷',
       picture: 'https://www.feishu.cn/avatar',
@@ -129,23 +127,25 @@ describe('getUserInfo', () => {
       employee_no: '111222333',
       mobile: '+86130xxxx0000',
     });
+    nock(userInfoUrl.origin).get(userInfoUrl.pathname).query(true).once().reply(200, jsonResponse);
 
     const connector = await createConnector({ getConfig });
-    const { id, name, avatar } = await connector.getUserInfo(
+    const { id, name, avatar, rawData } = await connector.getUserInfo(
       {
         code: 'code',
         redirectUri: 'http://localhost:3000',
       },
-      jest.fn()
+      vi.fn()
     );
     expect(id).toEqual('ou_caecc734c2e3328a62489fe0648c4b98779515d3');
     expect(name).toEqual('李雷');
     expect(avatar).toEqual('www.feishu.cn/avatar/icon');
+    expect(rawData).toEqual(jsonResponse);
   });
 
   it('throw General error if code not provided in input', async () => {
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({}, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({}, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse, '{}')
     );
   });
@@ -157,8 +157,8 @@ describe('getUserInfo', () => {
     });
     const connector = await createConnector({ getConfig });
     await expect(
-      connector.getUserInfo({ code: 'error_code', redirectUri: 'http://localhost:3000' }, jest.fn())
-    ).rejects.toMatchError(
+      connector.getUserInfo({ code: 'error_code', redirectUri: 'http://localhost:3000' }, vi.fn())
+    ).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'invalid access token')
     );
   });
@@ -169,8 +169,8 @@ describe('getUserInfo', () => {
     });
     const connector = await createConnector({ getConfig });
     await expect(
-      connector.getUserInfo({ code: 'code', redirectUri: 'http://localhost:3000' }, jest.fn())
-    ).rejects.toMatchError(
+      connector.getUserInfo({ code: 'code', redirectUri: 'http://localhost:3000' }, vi.fn())
+    ).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse, 'invalid user response')
     );
   });
@@ -179,7 +179,7 @@ describe('getUserInfo', () => {
     nock(userInfoUrl.origin).get(userInfoUrl.pathname).query(true).reply(500);
     const connector = await createConnector({ getConfig });
     await expect(
-      connector.getUserInfo({ code: 'code', redirectUri: 'http://localhost:3000' }, jest.fn())
+      connector.getUserInfo({ code: 'code', redirectUri: 'http://localhost:3000' }, vi.fn())
     ).rejects.toThrow();
   });
 });

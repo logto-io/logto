@@ -1,30 +1,28 @@
-import type { Scope, ScopeResponse } from '@logto/schemas';
+import { isManagementApi, type Resource, type ScopeResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
 import PermissionsTable from '@/components/PermissionsTable';
 import { defaultPageSize } from '@/consts';
-import ConfirmModal from '@/ds-components/ConfirmModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import type { ApiResourceDetailsOutletContext } from '../types';
-
 import CreatePermissionModal from './components/CreatePermissionModal';
 
 const pageSize = defaultPageSize;
 
-function ApiResourcePermissions() {
-  const {
-    resource: { id: resourceId },
-    isLogtoManagementApiResource,
-  } = useOutletContext<ApiResourceDetailsOutletContext>();
+type Props = {
+  resource: Resource;
+};
+
+function ApiResourcePermissions({ resource }: Props) {
+  const { id: resourceId, indicator } = resource;
+  const isLogtoManagementApiResource = isManagementApi(indicator);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -48,23 +46,11 @@ function ApiResourcePermissions() {
   const api = useApi();
 
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
-  const [scopeToBeDeleted, setScopeToBeDeleted] = useState<Scope>();
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = async () => {
-    if (!scopeToBeDeleted || isDeleting) {
-      return;
-    }
-    setIsDeleting(true);
-
-    try {
-      await api.delete(`api/resources/${resourceId}/scopes/${scopeToBeDeleted.id}`);
-      toast.success(t('api_resource_details.permission.deleted', { name: scopeToBeDeleted.name }));
-      await mutate();
-      setScopeToBeDeleted(undefined);
-    } finally {
-      setIsDeleting(false);
-    }
+  const handleDelete = async (scopeToBeDeleted: ScopeResponse) => {
+    await api.delete(`api/resources/${resourceId}/scopes/${scopeToBeDeleted.id}`);
+    toast.success(t('api_resource_details.permission.deleted', { name: scopeToBeDeleted.name }));
+    await mutate();
   };
 
   return (
@@ -78,7 +64,12 @@ function ApiResourcePermissions() {
         createHandler={() => {
           setIsCreateFormOpen(true);
         }}
-        deleteHandler={setScopeToBeDeleted}
+        deletionText={{
+          actionButton: 'permissions.delete',
+          confirmation: 'api_resource_details.permission.delete_description',
+          confirmButton: 'general.delete',
+        }}
+        deleteHandler={handleDelete}
         errorMessage={error?.body?.message ?? error?.message}
         retryHandler={async () => mutate(undefined, true)}
         pagination={{
@@ -104,6 +95,7 @@ function ApiResourcePermissions() {
             });
           },
         }}
+        onPermissionUpdated={mutate}
       />
       {isCreateFormOpen && totalCount !== undefined && (
         <CreatePermissionModal
@@ -119,19 +111,6 @@ function ApiResourcePermissions() {
             setIsCreateFormOpen(false);
           }}
         />
-      )}
-      {scopeToBeDeleted && (
-        <ConfirmModal
-          isOpen
-          isLoading={isDeleting}
-          confirmButtonText="general.delete"
-          onCancel={() => {
-            setScopeToBeDeleted(undefined);
-          }}
-          onConfirm={handleDelete}
-        >
-          {t('api_resource_details.permission.delete_description')}
-        </ConfirmModal>
       )}
     </>
   );

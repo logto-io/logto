@@ -40,7 +40,7 @@ describe('Register with identifiers sad path', () => {
       }),
       {
         code: 'auth.forbidden',
-        statusCode: 403,
+        status: 403,
       }
     );
 
@@ -67,7 +67,7 @@ describe('Register with identifiers sad path', () => {
         }),
         {
           code: 'user.sign_in_method_not_enabled',
-          statusCode: 422,
+          status: 422,
         }
       );
     });
@@ -94,7 +94,7 @@ describe('Register with identifiers sad path', () => {
         }),
         {
           code: 'user.sign_in_method_not_enabled',
-          statusCode: 422,
+          status: 422,
         }
       );
 
@@ -125,7 +125,7 @@ describe('Register with identifiers sad path', () => {
         }),
         {
           code: 'user.sign_in_method_not_enabled',
-          statusCode: 422,
+          status: 422,
         }
       );
 

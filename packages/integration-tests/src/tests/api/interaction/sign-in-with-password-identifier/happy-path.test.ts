@@ -1,4 +1,9 @@
-import { InteractionEvent, ConnectorType, SignInIdentifier } from '@logto/schemas';
+import {
+  InteractionEvent,
+  ConnectorType,
+  SignInIdentifier,
+  UsersPasswordEncryptionMethod,
+} from '@logto/schemas';
 
 import {
   putInteraction,
@@ -13,12 +18,13 @@ import {
   setSmsConnector,
   setEmailConnector,
 } from '#src/helpers/connector.js';
-import { readConnectorMessage, expectRejects } from '#src/helpers/index.js';
+import { readConnectorMessage, expectRejects, createUserByAdmin } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
+import { generateUsername } from '#src/utils.js';
 
 describe('Sign-in flow using password identifiers', () => {
   beforeAll(async () => {
@@ -48,6 +54,47 @@ describe('Sign-in flow using password identifiers', () => {
 
     await processSession(client, redirectTo);
     await logoutClient(client);
+
+    await deleteUser(user.id);
+  });
+
+  it('sign-in with username and password twice to test algorithm transition', async () => {
+    const username = generateUsername();
+    const password = 'password';
+    const user = await createUserByAdmin({
+      username,
+      passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
+      passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+    });
+    const client = await initClient();
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        username,
+        password,
+      },
+    });
+
+    const { redirectTo } = await client.submitInteraction();
+
+    await processSession(client, redirectTo);
+    await logoutClient(client);
+
+    const client2 = await initClient();
+
+    await client2.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        username,
+        password,
+      },
+    });
+
+    const { redirectTo: redirectTo2 } = await client2.submitInteraction();
+
+    await processSession(client2, redirectTo2);
+    await logoutClient(client2);
 
     await deleteUser(user.id);
   });
@@ -114,7 +161,7 @@ describe('Sign-in flow using password identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(sendVerificationCode, {
@@ -176,7 +223,7 @@ describe('Sign-in flow using password identifiers', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(sendVerificationCode, {

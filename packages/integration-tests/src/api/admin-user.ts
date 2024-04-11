@@ -6,6 +6,7 @@ import type {
   Role,
   User,
   UserSsoIdentity,
+  UsersPasswordEncryptionMethod,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -17,6 +18,8 @@ export type CreateUserPayload = Partial<{
   username: string;
   password: string;
   name: string;
+  passwordDigest: string;
+  passwordAlgorithm: UsersPasswordEncryptionMethod;
 }>;
 
 export const createUser = async (payload: CreateUserPayload = {}) =>
@@ -44,6 +47,13 @@ export const updateUser = async (userId: string, payload: Partial<User>) =>
       json: payload,
     })
     .json<User>();
+
+export const updateUserProfile = async (userId: string, profile: Partial<User['profile']>) =>
+  authedAdminApi
+    .patch(`users/${userId}/profile`, {
+      json: { profile },
+    })
+    .json<User['profile']>();
 
 export const suspendUser = async (userId: string, isSuspended: boolean) =>
   authedAdminApi.patch(`users/${userId}/is-suspended`, { json: { isSuspended } }).json<User>();

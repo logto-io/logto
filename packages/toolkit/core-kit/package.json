@@ -1,6 +1,6 @@
 {
   "name": "@logto/core-kit",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/toolkit#readme",
   "repository": {
@@ -29,15 +29,13 @@
     "precommit": "lint-staged",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
-    "build:test": "pnpm build -p tsconfig.test.json --sourcemap",
+    "build:test": "pnpm build",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
     "stylelint": "stylelint \"scss/**/*.scss\"",
-    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm test:only",
-    "test:coverage": "pnpm test:only --silent --coverage"
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {
     "node": "^20.9.0"
@@ -45,29 +43,27 @@
   "dependencies": {
     "@logto/language-kit": "workspace:^1.1.0",
     "@logto/shared": "workspace:^3.1.0",
+    "@silverhand/essentials": "^2.9.0",
     "color": "^4.2.3"
   },
   "optionalDependencies": {
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@jest/types": "^29.0.3",
     "@silverhand/eslint-config": "5.0.0",
-    "@silverhand/essentials": "^2.9.0",
     "@silverhand/ts-config": "5.0.0",
     "@silverhand/ts-config-react": "5.0.0",
     "@types/color": "^3.0.3",
-    "@types/jest": "^29.4.0",
     "@types/node": "^20.9.5",
     "@types/react": "^18.0.31",
+    "@vitest/coverage-v8": "^1.4.0",
     "eslint": "^8.44.0",
-    "jest": "^29.7.0",
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.0",
     "stylelint": "^15.0.0",
-    "tslib": "^2.4.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.4.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"

@@ -46,14 +46,6 @@ const quota_table = {
     machine_to_machine_roles: 'マシン対マシンロール',
     scopes_per_role: 'ロールごとの権限',
   },
-  audit_logs: {
-    title: '監査ログ',
-    retention: '保持期間',
-  },
-  hooks: {
-    title: 'ウェブフック',
-    hooks: 'ウェブフック',
-  },
   organizations: {
     title: '組織',
     organizations: '組織',
@@ -72,6 +64,18 @@ const quota_table = {
     email_ticket_support: 'Emailチケットサポート',
     soc2_report: 'SOC2レポート',
     hipaa_or_baa_report: 'HIPAA/BAAレポート',
+  },
+  developers_and_platform: {
+    /** UNTRANSLATED */
+    title: 'Developers and platform',
+    /** UNTRANSLATED */
+    hooks: 'Webhooks',
+    /** UNTRANSLATED */
+    audit_logs_retention: 'Audit logs retention',
+    /** UNTRANSLATED */
+    jwt_claims: 'JWT claims',
+    /** UNTRANSLATED */
+    tenant_members: 'Tenant members',
   },
   unlimited: '無制限',
   contact: 'お問い合わせ',
@@ -102,6 +106,8 @@ const quota_table = {
   per_month_each: '各${{value, number}} / 月ごと',
   extra_mao_price: 'その後、MAOごとに${{value, number}}',
   per_month: '${{value, number}} / 月ごと',
+  /** UNTRANSLATED */
+  per_member: 'Then ${{value, number}} per member',
 };
 
 export default Object.freeze(quota_table);

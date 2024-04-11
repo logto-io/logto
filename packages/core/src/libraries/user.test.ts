@@ -1,11 +1,38 @@
 import { MfaFactor, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { createMockUtils } from '@logto/shared/esm';
 
 import { mockResource, mockAdminUserRole, mockScope } from '#src/__mocks__/index.js';
 import { mockUser } from '#src/__mocks__/user.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
+mockEsm('hash-wasm', () => ({
+  argon2Verify: jest.fn(async ({ password }: { password: string }) => {
+    return password === 'password';
+  }),
+  bcryptVerify: jest.fn(async ({ password }: { password: string }) => {
+    return password === 'password';
+  }),
+  md5: jest.fn(async (password) => {
+    return password === 'password' ? '5f4dcc3b5aa765d61d8327deb882cf99' : 'wrong';
+  }),
+  sha1: jest.fn(async (password) => {
+    return password === 'password' ? '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8' : 'wrong';
+  }),
+  sha256: jest.fn(async (password) => {
+    return password === 'password'
+      ? '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+      : 'wrong';
+  }),
+}));
+
+mockEsm('#src/utils/password.js', () => ({
+  encryptPassword: jest.fn().mockResolvedValue('argon2:xxx'),
+}));
+
+const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { encryptUserPassword, createUserLibrary } = await import('./user.js');
 
 const hasUserWithId = jest.fn();
@@ -65,6 +92,106 @@ describe('encryptUserPassword()', () => {
     const { passwordEncryptionMethod, passwordEncrypted } = await encryptUserPassword('password');
     expect(passwordEncryptionMethod).toEqual(UsersPasswordEncryptionMethod.Argon2i);
     expect(passwordEncrypted).toContain('argon2');
+  });
+});
+
+describe('verifyUserPassword()', () => {
+  const { verifyUserPassword } = createUserLibrary(queries);
+
+  describe('Argon2', () => {
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(mockUser, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(mockUser, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('MD5', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '5f4dcc3b5aa765d61d8327deb882cf99',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.MD5,
+    };
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('SHA1', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.SHA1,
+    };
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('SHA256', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.SHA256,
+    };
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('Bcrypt', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '$2a$12$WQMqTfbtcZFBC1C1u8wpie6lXOSciUr5kk/8yEydoIMKltb9UKJ.6',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Bcrypt,
+    };
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('Migrate other algorithms to Argon2', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '5f4dcc3b5aa765d61d8327deb882cf99',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.MD5,
+    };
+    it('migrates password to Argon2', async () => {
+      await verifyUserPassword(user, 'password');
+      expect(updateUserById).toHaveBeenCalledWith(user.id, {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        passwordEncrypted: expect.stringContaining('argon2'),
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      });
+    });
   });
 });
 

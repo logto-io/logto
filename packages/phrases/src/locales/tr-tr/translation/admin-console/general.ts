@@ -25,6 +25,8 @@ const general = {
   customize: 'Özelleştir',
   enable: 'Etkinleştir',
   reminder: 'Hatırlatıcı',
+  /** UNTRANSLATED */
+  edit: 'Edit',
   delete: 'Sil',
   /** UNTRANSLATED */
   deleted: 'Deleted',
@@ -70,6 +72,8 @@ const general = {
   edit_field: '{{field}} Düzenle',
   delete_field: '{{field}} Sil',
   coming_soon: 'Yakında',
+  /** UNTRANSLATED */
+  or: 'Or',
 };
 
 export default Object.freeze(general);

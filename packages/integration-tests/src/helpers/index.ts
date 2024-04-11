@@ -2,24 +2,35 @@ import fs from 'node:fs/promises';
 import { createServer, type RequestListener } from 'node:http';
 
 import { mockConnectorFilePaths, type SendMessagePayload } from '@logto/connector-kit';
-import { RequestError } from 'got';
+import {
+  type UserProfile,
+  type JsonObject,
+  type UsersPasswordEncryptionMethod,
+} from '@logto/schemas';
+import { HTTPError } from 'ky';
 
 import { createUser } from '#src/api/index.js';
 import { generateUsername } from '#src/utils.js';
 
 export const createUserByAdmin = async (
-  username?: string,
-  password?: string,
-  primaryEmail?: string,
-  primaryPhone?: string,
-  name?: string
+  payload: {
+    username?: string;
+    password?: string;
+    primaryEmail?: string;
+    primaryPhone?: string;
+    name?: string;
+    passwordDigest?: string;
+    passwordAlgorithm?: UsersPasswordEncryptionMethod;
+    customData?: JsonObject;
+    profile?: UserProfile;
+  } = {}
 ) => {
+  const { username, name, ...rest } = payload;
+
   return createUser({
+    ...rest,
     username: username ?? generateUsername(),
-    password,
     name: name ?? username ?? 'John',
-    primaryEmail,
-    primaryPhone,
   });
 };
 
@@ -66,7 +77,7 @@ export const removeConnectorMessage = async (
 
 type ExpectedErrorInfo = {
   code: string;
-  statusCode: number;
+  status: number;
   messageIncludes?: string;
 };
 
@@ -83,16 +94,16 @@ export const expectRejects = async <T = void>(
   fail();
 };
 
-export const expectRequestError = <T = void>(error: unknown, expected: ExpectedErrorInfo) => {
-  const { code, statusCode, messageIncludes } = expected;
+const expectRequestError = async <T = void>(error: unknown, expected: ExpectedErrorInfo) => {
+  const { code, status, messageIncludes } = expected;
 
-  if (!(error instanceof RequestError)) {
+  if (!(error instanceof HTTPError)) {
     fail('Error should be an instance of RequestError');
   }
 
   // JSON.parse returns `any`. Directly use `as` since we've already know the response body structure.
   // eslint-disable-next-line no-restricted-syntax
-  const body = JSON.parse(String(error.response?.body)) as {
+  const body = (await error.response.json()) as {
     code: string;
     message: string;
     data: T;
@@ -100,7 +111,7 @@ export const expectRequestError = <T = void>(error: unknown, expected: ExpectedE
 
   expect(body.code).toEqual(code);
 
-  expect(error.response?.statusCode).toEqual(statusCode);
+  expect(error.response.status).toEqual(status);
 
   if (messageIncludes) {
     expect(body.message.includes(messageIncludes)).toBeTruthy();

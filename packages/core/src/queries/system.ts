@@ -1,7 +1,8 @@
 import { type SystemKey, Systems } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
+
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Systems);
 

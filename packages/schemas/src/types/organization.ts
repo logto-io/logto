@@ -8,6 +8,7 @@ import {
   type OrganizationInvitation,
   OrganizationInvitations,
 } from '../db-entries/index.js';
+import { type ToZodObject } from '../utils/zod.js';
 
 import { type UserInfo, type FeaturedUser, userInfoGuard } from './user.js';
 
@@ -19,16 +20,51 @@ export type OrganizationScopeEntity = {
   name: string;
 };
 
-export type OrganizationRoleWithScopes = OrganizationRole & {
-  scopes: OrganizationScopeEntity[];
+/**
+ * The simplified resource scope entity that is returned for some endpoints.
+ */
+export type ResourceScopeEntity = {
+  id: string;
+  name: string;
+  resource: {
+    id: string;
+    name: string;
+  };
 };
 
-export const organizationRoleWithScopesGuard: z.ZodType<OrganizationRoleWithScopes> =
+export type OrganizationRoleWithScopes = OrganizationRole & {
+  scopes: OrganizationScopeEntity[];
+  resourceScopes: ResourceScopeEntity[];
+};
+
+// TODO @wangsijie - Remove this once the feature is ready
+export const organizationRoleWithScopesGuardDeprecated: ToZodObject<
+  Omit<OrganizationRoleWithScopes, 'resourceScopes'>
+> = OrganizationRoles.guard.extend({
+  scopes: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+    })
+    .array(),
+});
+
+export const organizationRoleWithScopesGuard: ToZodObject<OrganizationRoleWithScopes> =
   OrganizationRoles.guard.extend({
     scopes: z
       .object({
         id: z.string(),
         name: z.string(),
+      })
+      .array(),
+    resourceScopes: z
+      .object({
+        id: z.string(),
+        name: z.string(),
+        resource: z.object({
+          id: z.string(),
+          name: z.string(),
+        }),
       })
       .array(),
   });
@@ -42,7 +78,7 @@ export type OrganizationRoleEntity = {
   name: string;
 };
 
-const organizationRoleEntityGuard: z.ZodType<OrganizationRoleEntity> = z.object({
+const organizationRoleEntityGuard: ToZodObject<OrganizationRoleEntity> = z.object({
   id: z.string(),
   name: z.string(),
 });
@@ -56,7 +92,7 @@ export type OrganizationWithRoles = Organization & {
   organizationRoles: OrganizationRoleEntity[];
 };
 
-export const organizationWithOrganizationRolesGuard: z.ZodType<OrganizationWithRoles> =
+export const organizationWithOrganizationRolesGuard: ToZodObject<OrganizationWithRoles> =
   Organizations.guard.extend({
     organizationRoles: organizationRoleEntityGuard.array(),
   });
@@ -70,7 +106,7 @@ export type UserWithOrganizationRoles = UserInfo & {
   organizationRoles: OrganizationRoleEntity[];
 };
 
-export const userWithOrganizationRolesGuard: z.ZodType<UserWithOrganizationRoles> =
+export const userWithOrganizationRolesGuard: ToZodObject<UserWithOrganizationRoles> =
   userInfoGuard.extend({
     organizationRoles: organizationRoleEntityGuard.array(),
   });
@@ -93,7 +129,7 @@ export type OrganizationInvitationEntity = OrganizationInvitation & {
   organizationRoles: OrganizationRoleEntity[];
 };
 
-export const organizationInvitationEntityGuard: z.ZodType<OrganizationInvitationEntity> =
+export const organizationInvitationEntityGuard: ToZodObject<OrganizationInvitationEntity> =
   OrganizationInvitations.guard.extend({
     organizationRoles: organizationRoleEntityGuard.array(),
   });

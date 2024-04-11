@@ -1,8 +1,6 @@
-const { jest } = import.meta;
+const request = vi.fn();
 
-const request = jest.fn();
-
-jest.unstable_mockModule('./utils.js', () => ({
+vi.mock('./utils.js', () => ({
   request,
 }));
 

@@ -3,6 +3,7 @@ const tenants = {
   description: 'Efficiently manage tenant settings and customize your domain.',
   tabs: {
     settings: 'Settings',
+    members: 'Members',
     domains: 'Domains',
     subscription: 'Plan and billing',
     billing_history: 'Billing history',
@@ -33,6 +34,13 @@ const tenants = {
     tenant_deletion_description:
       'Deleting the tenant will result in the permanent removal of all associated user data and configuration. Please proceed with caution.',
     tenant_deletion_button: 'Delete tenant',
+  },
+  leave_tenant_card: {
+    title: 'LEAVE',
+    leave_tenant: 'Leave tenant',
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Create tenant',
@@ -70,6 +78,10 @@ const tenants = {
     cannot_delete_description:
       "Sorry, you can't delete this tenant right now. Please make sure you're on the Free Plan and have paid all outstanding billings.",
   },
+  leave_tenant_modal: {
+    description: 'Are you sure you want to leave this tenant?',
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: "You haven't created a tenant yet",
     description:
@@ -87,47 +99,6 @@ const tenants = {
       'We deeply regret to inform you that your tenant account has been temporarily suspended due to improper use, including exceeding MAU limits, overdue payments, or other unauthorized actions.',
     description_2:
       'If you require further clarification, have any concerns, or wish to restore full functionality and unblock your tenants, please do not hesitate to contact us immediately.',
-  },
-  signing_keys: {
-    title: 'SIGNING KEYS',
-    description: 'Securely manage signing keys in your tenant.',
-    type: {
-      private_key: 'OIDC private keys',
-      cookie_key: 'OIDC cookie keys',
-    },
-    private_keys_in_use: 'Private keys in use',
-    cookie_keys_in_use: 'Cookie keys in use',
-    rotate_private_keys: 'Rotate private keys',
-    rotate_cookie_keys: 'Rotate cookie keys',
-    rotate_private_keys_description:
-      'This action will create a new private signing key, rotate the current key, and remove your previous key. Your JWT tokens signed with the current key will remain valid until deletion or another round of rotation.',
-    rotate_cookie_keys_description:
-      'This action will create a new cookie key, rotate the current key, and remove your previous key. Your cookies with the current key will remain valid until deletion or another round of rotation.',
-    select_private_key_algorithm: 'Select signing key algorithm for the new private key',
-    rotate_button: 'Rotate',
-    table_column: {
-      id: 'ID',
-      status: 'Status',
-      algorithm: 'Signing key algorithm',
-    },
-    status: {
-      current: 'Current',
-      previous: 'Previous',
-    },
-    reminder: {
-      rotate_private_key:
-        'Are you sure you want to rotate the <strong>OIDC private keys</strong>? New issued JWT tokens will be signed by the new key. Existing JWT tokens stay valid until you rotate again.',
-      rotate_cookie_key:
-        'Are you sure you want to rotate the <strong>OIDC cookie keys</strong>? New cookies generated in sign-in sessions will be signed by the new cookie key. Existing cookies stay valid until you rotate again.',
-      delete_private_key:
-        'Are you sure you want to delete the <strong>OIDC private key</strong>? Existing JWT tokens signed with this private signing key will no longer be valid.',
-      delete_cookie_key:
-        'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
-    },
-    messages: {
-      rotate_key_success: 'Signing keys rotated successfully.',
-      delete_key_success: 'Key deleted successfully.',
-    },
   },
 };
 

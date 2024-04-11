@@ -20,6 +20,12 @@ export enum SsoProviderName {
   AZURE_AD = 'AzureAD',
   GOOGLE_WORKSPACE = 'GoogleWorkspace',
   OKTA = 'Okta',
+  AZURE_AD_OIDC = 'AzureAdOidc',
+}
+
+export enum SsoProviderType {
+  OIDC = 'oidc',
+  SAML = 'saml',
 }
 
 export const singleSignOnDomainBlackList = Object.freeze([
@@ -50,6 +56,7 @@ export type SupportedSsoConnector = Omit<SsoConnector, 'providerName'> & {
 
 const ssoConnectorProviderDetailGuard = z.object({
   providerName: z.nativeEnum(SsoProviderName),
+  providerType: z.nativeEnum(SsoProviderType),
   logo: z.string(),
   logoDark: z.string(),
   description: z.string(),
@@ -64,13 +71,18 @@ export type SsoConnectorProvidersResponse = z.infer<typeof ssoConnectorProviders
 
 // API response guard for all the SSO connectors CRUD APIs
 export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard
-  .omit({ providerName: true })
+  // Must be a supported SSO provider name. Overwrite the providerName string type to enum.
+  .extend({ providerName: z.nativeEnum(SsoProviderName) })
   .merge(
+    // Static provider details
     z.object({
-      name: z.string(), // For display purpose, generate from i18n key name defined by SSO factory.
-      providerName: z.nativeEnum(SsoProviderName),
+      name: z.string(),
+      providerType: z.nativeEnum(SsoProviderType),
       providerLogo: z.string(),
       providerLogoDark: z.string(),
+      // SSO connection config parsed from the provider.
+      // - OIDC: connection config fetched from the OIDC provider.
+      // - SAML: connection config fetched from the metadata url or metadata file.
       providerConfig: z.record(z.unknown()).optional(),
     })
   );

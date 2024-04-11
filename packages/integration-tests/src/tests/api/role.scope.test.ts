@@ -1,5 +1,5 @@
 import { defaultManagementApi } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { createResource } from '#src/api/index.js';
 import {
@@ -24,7 +24,7 @@ describe('roles scopes', () => {
 
   it('should return 404 if role not found', async () => {
     const response = await getRoleScopes('not-found').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should return empty if role has no scopes', async () => {
@@ -46,13 +46,13 @@ describe('roles scopes', () => {
   it('should fail when try to assign empty scopes', async () => {
     const role = await createRole({});
     const response = await assignScopesToRole([], role.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+    expect(response instanceof HTTPError && response.response.status).toBe(400);
   });
 
   it('should fail with invalid scope input', async () => {
     const role = await createRole({});
     const response = await assignScopesToRole([''], role.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+    expect(response instanceof HTTPError && response.response.status).toBe(400);
   });
 
   it('should fail if role not found', async () => {
@@ -61,7 +61,7 @@ describe('roles scopes', () => {
     const response = await assignScopesToRole([scope.id], 'not-found').catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail if scope not found', async () => {
@@ -69,7 +69,7 @@ describe('roles scopes', () => {
     const response = await assignScopesToRole(['not-found'], role.id).catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail if scope already assigned to role', async () => {
@@ -81,7 +81,7 @@ describe('roles scopes', () => {
     const response = await assignScopesToRole([scope1.id, scope2.id], role.id).catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(422);
+    expect(response instanceof HTTPError && response.response.status).toBe(422);
   });
 
   it('should fail if try to assign management API scope(s) to user role', async () => {
@@ -91,7 +91,7 @@ describe('roles scopes', () => {
       [defaultManagementApi.scopes[0]!.id],
       userRole.id
     ).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+    expect(response instanceof HTTPError && response.response.status).toBe(400);
   });
 
   it('should remove scope from role successfully', async () => {
@@ -113,7 +113,7 @@ describe('roles scopes', () => {
     const resource = await createResource();
     const scope = await createScope(resource.id);
     const response = await deleteScopeFromRole(scope.id, role.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail when try to remove scope from role that is not found', async () => {
@@ -122,7 +122,7 @@ describe('roles scopes', () => {
     const response = await deleteScopeFromRole(scope.id, 'not-found').catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail when try to assign a scope to an internal role', async () => {
@@ -132,6 +132,6 @@ describe('roles scopes', () => {
       (error: unknown) => error
     );
 
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(403);
+    expect(response instanceof HTTPError && response.response.status).toBe(403);
   });
 });

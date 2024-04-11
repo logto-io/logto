@@ -25,6 +25,8 @@ const general = {
   customize: '自定义',
   enable: '启用',
   reminder: '提示',
+  /** UNTRANSLATED */
+  edit: 'Edit',
   delete: '删除',
   /** UNTRANSLATED */
   deleted: 'Deleted',
@@ -69,6 +71,8 @@ const general = {
   edit_field: '编辑{{field}}',
   delete_field: '删除{{field}}',
   coming_soon: '即将上线',
+  /** UNTRANSLATED */
+  or: 'Or',
 };
 
 export default Object.freeze(general);

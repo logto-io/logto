@@ -17,12 +17,15 @@ export enum CloudScope {
   ManageTenantSelf = 'manage:tenant:self',
   SendSms = 'send:sms',
   SendEmail = 'send:email',
+  /**
+   * The user can access external (independent from Logto instance) resource to run JWT payload customizer
+   * scripts and fetch the parsed token payload.
+   */
+  FetchCustomJwt = 'fetch:custom:jwt',
   /** The user can see and manage affiliates, including create, update, and delete. */
   ManageAffiliate = 'manage:affiliate',
   /** The user can create new affiliates and logs. */
   CreateAffiliate = 'create:affiliate',
-  /** The user can prune logs which are expired. */
-  PruneLogs = 'prune:logs',
 }
 
 export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> => {
@@ -62,6 +65,10 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
     buildScope(
       CloudScope.SendSms,
       'Allow sending SMS. This scope is only available to M2M application.'
+    ),
+    buildScope(
+      CloudScope.FetchCustomJwt,
+      'Allow accessing external resource to execute JWT payload customizer script and fetch the parsed token payload.'
     ),
     buildScope(CloudScope.CreateAffiliate, 'Allow creating new affiliates and logs.'),
     buildScope(

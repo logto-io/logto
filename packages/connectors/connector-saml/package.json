@@ -1,10 +1,10 @@
 {
   "name": "@logto/connector-saml",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "SAML standard connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^2.1.0",
+    "@logto/connector-kit": "workspace:^3.0.0",
     "fast-xml-parser": "^4.2.5",
     "samlify": "2.8.10"
   },
@@ -26,9 +26,8 @@
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm test:only --silent --coverage",
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },
   "engines": {

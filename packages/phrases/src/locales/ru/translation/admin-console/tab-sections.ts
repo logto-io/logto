@@ -1,11 +1,10 @@
 const tab_sections = {
   overview: 'Обзор',
-  resources: 'Ресурсы',
+  authentication: 'Аутентификация',
+  authorization: 'Авторизация',
   users: 'Пользователи',
-  access_control: 'Управление доступом',
-  help_and_support: 'Помощь и поддержка',
+  developer: 'Разработчик',
   tenant: 'Арендатор',
-  automation: 'Автоматизация',
 };
 
 export default Object.freeze(tab_sections);

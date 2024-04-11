@@ -21,6 +21,7 @@ import { readConnectorMessage, expectRejects } from '#src/helpers/index.js';
 import {
   enableAllVerificationCodeSignInMethods,
   enableAllPasswordSignInMethods,
+  resetPasswordPolicy,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, generateNewUser } from '#src/helpers/user.js';
 
@@ -31,6 +32,8 @@ describe('register with username and password', () => {
       password: true,
       verify: false,
     });
+    // Run it sequentially to avoid race condition
+    await resetPasswordPolicy();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const client = await initClient();
@@ -56,7 +59,10 @@ describe('register with passwordless identifier', () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     await setSmsConnector();
+    // Run it sequentially to avoid race condition
+    await resetPasswordPolicy();
   });
+
   afterAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
@@ -140,7 +146,7 @@ describe('register with passwordless identifier', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(patchInteractionProfile, {
@@ -245,7 +251,7 @@ describe('register with passwordless identifier', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.missing_profile',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(patchInteractionProfile, {
@@ -316,7 +322,7 @@ describe('register with passwordless identifier', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.email_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(deleteInteractionProfile);
@@ -371,7 +377,7 @@ describe('register with passwordless identifier', () => {
 
     await expectRejects(client.submitInteraction(), {
       code: 'user.phone_already_in_use',
-      statusCode: 422,
+      status: 422,
     });
 
     await client.successSend(deleteInteractionProfile);

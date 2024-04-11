@@ -3,6 +3,8 @@ const tenants = {
   description: 'Gérez efficacement les paramètres du locataire et personnalisez votre domaine.',
   tabs: {
     settings: 'Paramètres',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Domaines',
     subscription: 'Plan et facturation',
     billing_history: 'Historique de facturation',
@@ -35,6 +37,17 @@ const tenants = {
     tenant_deletion_description:
       'La suppression du locataire entraînera la suppression permanente de toutes les données utilisateur et configurations associées. Veuillez procéder avec prudence.',
     tenant_deletion_button: 'Supprimer le locataire',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Créer un locataire',
@@ -75,6 +88,12 @@ const tenants = {
     cannot_delete_description:
       "Désolé, vous ne pouvez pas supprimer ce locataire pour le moment. Assurez-vous d'être sur le Plan Gratuit et d'avoir payé toutes les factures en cours.",
   },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: "Vous n'avez pas encore créé de locataire",
     description:
@@ -92,48 +111,6 @@ const tenants = {
       "Nous regrettons profondément de vous informer que votre compte de locataire a été temporairement suspendu en raison d'une utilisation abusive, y compris le dépassement des limites MAU, des paiements en retard ou d'autres actions non autorisées.",
     description_2:
       "Si vous avez besoin de clarifications supplémentaires, si vous avez des préoccupations ou si vous souhaitez restaurer la fonctionnalité complète et débloquer vos locataires, n'hésitez pas à nous contacter immédiatement.",
-  },
-  signing_keys: {
-    title: 'CLÉS DE SIGNATURE',
-    description: 'Gérez en toute sécurité les clés de signature dans votre locataire.',
-    type: {
-      private_key: 'Clés privées OIDC',
-      cookie_key: 'Clés de cookies OIDC',
-    },
-    private_keys_in_use: "Clés privées en cours d'utilisation",
-    cookie_keys_in_use: "Clés de cookies en cours d'utilisation",
-    rotate_private_keys: 'Faire tourner les clés privées',
-    rotate_cookie_keys: 'Faire tourner les clés de cookies',
-    rotate_private_keys_description:
-      "Cette action créera une nouvelle clé de signature privée, fera tourner la clé actuelle et supprimera votre clé précédente. Vos jetons JWT signés avec la clé actuelle resteront valides jusqu'à leur suppression ou une nouvelle rotation.",
-    rotate_cookie_keys_description:
-      "Cette action créera une nouvelle clé de cookie, fera tourner la clé actuelle et supprimera votre clé précédente. Vos cookies avec la clé actuelle resteront valides jusqu'à leur suppression ou une nouvelle rotation.",
-    select_private_key_algorithm:
-      "Sélectionnez l'algorithme de clé de signature pour la nouvelle clé privée",
-    rotate_button: 'Faire tourner',
-    table_column: {
-      id: 'ID',
-      status: 'Statut',
-      algorithm: 'Algorithme de clé de signature',
-    },
-    status: {
-      current: 'Actuel',
-      previous: 'Précédent',
-    },
-    reminder: {
-      rotate_private_key:
-        "Êtes-vous sûr de vouloir faire tourner les <strong>clés privées OIDC</strong>? Les nouveaux jetons JWT émis seront signés par la nouvelle clé. Les jetons JWT existants resteront valides jusqu'à votre prochaine rotation.",
-      rotate_cookie_key:
-        "Êtes-vous sûr de vouloir faire tourner les <strong>clés de cookies OIDC</strong>? Les nouveaux cookies générés dans les sessions de connexion seront signés par la nouvelle clé de cookie. Les cookies existants resteront valides jusqu'à votre prochaine rotation.",
-      delete_private_key:
-        'Êtes-vous sûr de vouloir supprimer la <strong>clé privée OIDC</strong>? Les jetons JWT existants signés avec cette clé de signature privée ne seront plus valides.',
-      delete_cookie_key:
-        'Êtes-vous sûr de vouloir supprimer la <strong>clé de cookie OIDC</strong>? Les anciennes sessions de connexion avec des cookies signés avec cette clé de cookie ne seront plus valides. Une ré-authentification est requise pour ces utilisateurs.',
-    },
-    messages: {
-      rotate_key_success: 'Rotation des clés de signature effectuée avec succès.',
-      delete_key_success: 'Clé supprimée avec succès.',
-    },
   },
 };
 

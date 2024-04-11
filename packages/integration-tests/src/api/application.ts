@@ -99,10 +99,13 @@ export const generateM2mLog = async (applicationId: string) => {
 
   // This is a token request with insufficient parameters and should fail. We make the request to generate a log for the current machine to machine app.
   return oidcApi.post('token', {
-    form: {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
       client_id: id,
       client_secret: secret,
       grant_type: 'client_credentials',
-    },
+    }),
   });
 };

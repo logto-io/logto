@@ -1,5 +1,4 @@
-import { sql } from 'slonik';
-import { raw } from 'slonik-sql-tag-raw';
+import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 
@@ -121,7 +120,7 @@ const alteration: AlterationScript = {
                   on ${getId(table)} (
                     ${tenantId},
                     ${sql.join(
-                      columns.map((column) => raw(column)),
+                      columns.map((column) => sql.raw(column)),
                       sql`, `
                     )}
                   );
@@ -147,7 +146,7 @@ const alteration: AlterationScript = {
             add constraint ${indexName} unique (
               ${tenantId},
               ${sql.join(
-                columns.map((column) => raw(column)),
+                columns.map((column) => sql.raw(column)),
                 sql`, `
               )}
             );
@@ -171,7 +170,7 @@ const alteration: AlterationScript = {
             create unique index ${indexName}
               on ${getId(table)} (
                 ${sql.join(
-                  columns.map((column) => raw(column)),
+                  columns.map((column) => sql.raw(column)),
                   sql`, `
                 )}
               )
@@ -180,7 +179,7 @@ const alteration: AlterationScript = {
             alter table ${getId(table)}
               add constraint ${indexName} unique (
                 ${sql.join(
-                  columns.map((column) => raw(column)),
+                  columns.map((column) => sql.raw(column)),
                   sql`, `
                 )}
               );
@@ -203,7 +202,7 @@ const alteration: AlterationScript = {
               create index ${indexName} 
                 on ${getId(table)} (
                   ${sql.join(
-                    columns.map((column) => raw(column)),
+                    columns.map((column) => sql.raw(column)),
                     sql`, `
                   )}
                 );

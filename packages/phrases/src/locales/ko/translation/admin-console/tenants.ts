@@ -3,6 +3,8 @@ const tenants = {
   description: '테넌트 설정을 효율적으로 관리하고 도메인을 사용자 정의합니다.',
   tabs: {
     settings: '설정',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: '도메인',
     subscription: '구독 및 청구',
     billing_history: '청구 내역',
@@ -33,6 +35,17 @@ const tenants = {
     tenant_deletion_description:
       '테넌트를 삭제하면 관련된 모든 사용자 데이터와 설정이 영구적으로 삭제됩니다. 신중하게 진행해주십시오.',
     tenant_deletion_button: '테넌트 삭제',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: '테넌트 만들기',
@@ -70,6 +83,12 @@ const tenants = {
     cannot_delete_description:
       '죄송합니다. 현재이 테넌트를 삭제할 수 없습니다. 무료 플랜에 있고 미결제 청구서가 없는지 확인하십시오.',
   },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: '아직 테넌트를 만들지 않았습니다.',
     description:
@@ -87,47 +106,6 @@ const tenants = {
       '매우 유감스럽게도 테넌트 계정이 일시적으로 정지되었으며, MAU 한도 초과, 연체된 결제 또는 다른 무단 조치 등 부적절한 사용으로 인한 것입니다.',
     description_2:
       '자세한 설명이 필요한 경우, 우려 사항이 있거나 기능을 완전히 복원하고 테넌트를 차단 해제하려면 바로 연락 주시기 바랍니다.',
-  },
-  signing_keys: {
-    title: '서명 키',
-    description: '테넌트 내의 서명 키를 안전하게 관리합니다.',
-    type: {
-      private_key: 'OIDC 개인 키',
-      cookie_key: 'OIDC 쿠키 키',
-    },
-    private_keys_in_use: '사용 중인 개인 키',
-    cookie_keys_in_use: '사용 중인 쿠키 키',
-    rotate_private_keys: '개인 키 회전',
-    rotate_cookie_keys: '쿠키 키 회전',
-    rotate_private_keys_description:
-      '이 작업은 새로운 개인 서명 키를 생성하고 현재 키를 회전시키고 이전 키를 삭제합니다. 현재 키로 서명 된 JWT 토큰은 삭제하거나 다른 회전할 때까지 유효합니다.',
-    rotate_cookie_keys_description:
-      '이 작업은 새 쿠키 키를 생성하고 현재 키를 회전하며 이전 키를 삭제합니다. 현재 키로 서명 된 쿠키는 삭제하거나 다른 회전할 때까지 유효합니다.',
-    select_private_key_algorithm: '새 개인 키의 서명 키 알고리즘 선택',
-    rotate_button: '회전',
-    table_column: {
-      id: 'ID',
-      status: '상태',
-      algorithm: '서명 키 알고리즘',
-    },
-    status: {
-      current: '현재',
-      previous: '이전',
-    },
-    reminder: {
-      rotate_private_key:
-        '정말 <strong>OIDC 개인 키</strong>를 회전하시겠습니까? 새로 발급 된 JWT 토큰은 새 키로 서명됩니다. 기존 JWT 토큰은 회전할 때까지 유효합니다.',
-      rotate_cookie_key:
-        '정말 <strong>OIDC 쿠키 키</strong>를 회전하시겠습니까? 로그인 세션에서 생성 된 새로운 쿠키는 새 쿠키 키로 서명됩니다. 기존 쿠키는 회전할 때까지 유효합니다.',
-      delete_private_key:
-        '정말 <strong>OIDC 개인 키</strong>를 삭제하시겠습니까? 이전에 개인 서명 키로 서명 된 기존 JWT 토큰은 더 이상 유효하지 않게 됩니다.',
-      delete_cookie_key:
-        '정말 <strong>OIDC 쿠키 키</strong>를 삭제하시겠습니까? 이전에 이 쿠키 키로 서명 된 로그인 세션은 더 이상 유효하지 않게 될 것입니다. 이 사용자들에게는 다시 인증이 필요합니다.',
-    },
-    messages: {
-      rotate_key_success: '서명 키가 성공적으로 회전되었습니다.',
-      delete_key_success: '키가 성공적으로 삭제되었습니다.',
-    },
   },
 };
 

@@ -1,10 +1,9 @@
 import type { User, CreateUser, Scope, BindMfa, MfaVerification } from '@logto/schemas';
 import { MfaFactor, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
-import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
-import { argon2Verify } from 'hash-wasm';
+import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
 import pRetry from 'p-retry';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
@@ -14,6 +13,7 @@ import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { encryptPassword } from '#src/utils/password.js';
+import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
 export const encryptUserPassword = async (
   password: string
@@ -22,29 +22,9 @@ export const encryptUserPassword = async (
   passwordEncryptionMethod: UsersPasswordEncryptionMethod;
 }> => {
   const passwordEncryptionMethod = UsersPasswordEncryptionMethod.Argon2i;
-  const passwordEncrypted = await encryptPassword(
-    password,
-
-    passwordEncryptionMethod
-  );
+  const passwordEncrypted = await encryptPassword(password, passwordEncryptionMethod);
 
   return { passwordEncrypted, passwordEncryptionMethod };
-};
-
-export const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
-  assertThat(user, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
-  const { passwordEncrypted, passwordEncryptionMethod } = user;
-
-  assertThat(
-    passwordEncrypted && passwordEncryptionMethod,
-    new RequestError({ code: 'session.invalid_credentials', status: 422 })
-  );
-
-  const result = await argon2Verify({ password, hash: passwordEncrypted });
-
-  assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
-
-  return user;
 };
 
 /**
@@ -217,6 +197,68 @@ export const createUserLibrary = (queries: Queries) => {
     });
   };
 
+  const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
+    assertThat(user, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+    const { passwordEncrypted, passwordEncryptionMethod, id } = user;
+
+    assertThat(
+      passwordEncrypted && passwordEncryptionMethod,
+      new RequestError({ code: 'session.invalid_credentials', status: 422 })
+    );
+
+    switch (passwordEncryptionMethod) {
+      case UsersPasswordEncryptionMethod.Argon2i: {
+        const result = await argon2Verify({ password, hash: passwordEncrypted });
+        assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+        break;
+      }
+      case UsersPasswordEncryptionMethod.MD5: {
+        const expectedEncrypted = await md5(password);
+        assertThat(
+          expectedEncrypted === passwordEncrypted,
+          new RequestError({ code: 'session.invalid_credentials', status: 422 })
+        );
+        break;
+      }
+      case UsersPasswordEncryptionMethod.SHA1: {
+        const expectedEncrypted = await sha1(password);
+        assertThat(
+          expectedEncrypted === passwordEncrypted,
+          new RequestError({ code: 'session.invalid_credentials', status: 422 })
+        );
+        break;
+      }
+      case UsersPasswordEncryptionMethod.SHA256: {
+        const expectedEncrypted = await sha256(password);
+        assertThat(
+          expectedEncrypted === passwordEncrypted,
+          new RequestError({ code: 'session.invalid_credentials', status: 422 })
+        );
+        break;
+      }
+      case UsersPasswordEncryptionMethod.Bcrypt: {
+        const result = await bcryptVerify({ password, hash: passwordEncrypted });
+        assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+        break;
+      }
+      default: {
+        throw new RequestError({ code: 'session.invalid_credentials', status: 422 });
+      }
+    }
+
+    // Migrate password to default algorithm: argon2i
+    if (passwordEncryptionMethod !== UsersPasswordEncryptionMethod.Argon2i) {
+      const { passwordEncrypted: newEncrypted, passwordEncryptionMethod: newMethod } =
+        await encryptUserPassword(password);
+      return updateUserById(id, {
+        passwordEncrypted: newEncrypted,
+        passwordEncryptionMethod: newMethod,
+      });
+    }
+
+    return user;
+  };
+
   return {
     generateUserId,
     insertUser,
@@ -225,5 +267,6 @@ export const createUserLibrary = (queries: Queries) => {
     findUserScopesForResourceIndicator,
     findUserRoles,
     addUserMfaVerification,
+    verifyUserPassword,
   };
 };

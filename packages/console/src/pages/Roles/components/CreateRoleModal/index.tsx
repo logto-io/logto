@@ -32,6 +32,20 @@ function CreateRoleModal({ onClose }: Props) {
     onClose();
   };
 
+  // Show assign role modal after role is created
+  if (createdRole) {
+    return (
+      <AssignRoleModal
+        isRemindSkip
+        roleId={createdRole.id}
+        roleType={createdRole.type}
+        onClose={() => {
+          navigate(`/roles/${createdRole.id}`, { replace: true });
+        }}
+      />
+    );
+  }
+
   return (
     <ReactModal
       isOpen
@@ -40,18 +54,7 @@ function CreateRoleModal({ onClose }: Props) {
       overlayClassName={modalStyles.overlay}
       onRequestClose={onClose}
     >
-      {createdRole ? (
-        <AssignRoleModal
-          isRemindSkip
-          roleId={createdRole.id}
-          roleType={createdRole.type}
-          onClose={() => {
-            navigate(`/roles/${createdRole.id}`, { replace: true });
-          }}
-        />
-      ) : (
-        <CreateRoleForm onClose={onCreateFormClose} />
-      )}
+      <CreateRoleForm onClose={onCreateFormClose} />
     </ReactModal>
   );
 }

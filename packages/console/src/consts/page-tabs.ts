@@ -7,8 +7,8 @@ export enum ApplicationDetailsTabs {
 }
 
 export enum ApiResourceDetailsTabs {
-  Settings = 'settings',
   Permissions = 'permissions',
+  General = 'general',
 }
 
 export enum ConnectorsTabs {
@@ -37,6 +37,7 @@ export enum RoleDetailsTabs {
 
 export enum TenantSettingsTabs {
   Settings = 'settings',
+  Members = 'members',
   Domains = 'domains',
   Subscription = 'subscription',
   BillingHistory = 'billing-history',
@@ -45,4 +46,14 @@ export enum TenantSettingsTabs {
 export enum EnterpriseSsoDetailsTabs {
   Connection = 'connection',
   Experience = 'experience',
+}
+
+export enum OrganizationTemplateTabs {
+  OrganizationRoles = 'organization-roles',
+  OrganizationPermissions = 'organization-permissions',
+}
+
+export enum OrganizationRoleDetailsTabs {
+  Permissions = 'permissions',
+  General = 'general',
 }

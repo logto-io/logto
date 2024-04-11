@@ -1,11 +1,11 @@
 import assert from 'node:assert';
 
 import { defaultManagementApi } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { createResource } from '#src/api/index.js';
 import { createScope, deleteScope, getScopes, updateScope } from '#src/api/scope.js';
-import { generateScopeName } from '#src/utils.js';
+import { generateName, generateScopeName } from '#src/utils.js';
 
 describe('scopes', () => {
   it('should get management api resource scopes successfully', async () => {
@@ -32,28 +32,28 @@ describe('scopes', () => {
     const response = await createScope(resource.id, createdScope.name).catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode === 422).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 422).toBe(true);
   });
 
   it('should return 404 when create scope with invalid resource id', async () => {
     const response = await createScope('invalid_resource_id', 'invalid_scope_name').catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   it('should return 400 if scope name is empty', async () => {
     const resource = await createResource();
 
     const response = await createScope(resource.id, '').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 400).toBe(true);
   });
 
   it('should return 400 if scope name has empty space', async () => {
     const resource = await createResource();
 
     const response = await createScope(resource.id, 'scope id').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 400).toBe(true);
   });
 
   it('should update scope successfully', async () => {
@@ -63,7 +63,7 @@ describe('scopes', () => {
     expect(scope).toBeTruthy();
 
     const newScopeName = `new_${scope.name}`;
-    const newScopeDescription = `new_${scope.description}`;
+    const newScopeDescription = scope.description ? `new_${scope.description}` : generateName();
 
     const updatesScope = await updateScope(resource.id, scope.id, {
       name: newScopeName,
@@ -82,7 +82,7 @@ describe('scopes', () => {
     const response = await updateScope(resource.id, createdScope2.id, {
       name: createdScope.name,
     }).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 422).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 422).toBe(true);
   });
 
   it('should return 400 if update scope name that has empty space', async () => {
@@ -93,7 +93,7 @@ describe('scopes', () => {
     }).catch((error: unknown) => error);
 
     assert(response instanceof HTTPError);
-    expect(response.response.statusCode).toBe(400);
+    expect(response.response.status).toBe(400);
   });
 
   it('should return 404 when update scope with invalid resource id', async () => {
@@ -101,7 +101,7 @@ describe('scopes', () => {
       name: 'scope',
     }).catch((error: unknown) => error);
 
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   it('should return 404 when update scope with invalid scope id', async () => {
@@ -111,7 +111,7 @@ describe('scopes', () => {
       name: 'scope',
     }).catch((error: unknown) => error);
 
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   it('should delete scope successfully', async () => {

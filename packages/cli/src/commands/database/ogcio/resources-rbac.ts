@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @silverhand/fp/no-mutating-methods */
 /* eslint-disable @silverhand/fp/no-mutation */
-import { sql, type DatabaseTransactionConnection } from 'slonik';
+import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { createItem } from './queries.js';
 

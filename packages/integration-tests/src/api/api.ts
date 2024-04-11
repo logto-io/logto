@@ -1,9 +1,10 @@
-import { got } from 'got';
+import { appendPath } from '@silverhand/essentials';
+import ky from 'ky';
 
 import { logtoConsoleUrl, logtoUrl, logtoCloudUrl } from '#src/constants.js';
 
-const api = got.extend({
-  prefixUrl: new URL('/api', logtoUrl),
+const api = ky.extend({
+  prefixUrl: appendPath(new URL(logtoUrl), 'api'),
 });
 
 export default api;
@@ -15,8 +16,8 @@ export const authedAdminApi = api.extend({
   },
 });
 
-export const adminTenantApi = got.extend({
-  prefixUrl: new URL('/api', logtoConsoleUrl),
+export const adminTenantApi = ky.extend({
+  prefixUrl: appendPath(new URL(logtoConsoleUrl), 'api'),
 });
 
 export const authedAdminTenantApi = adminTenantApi.extend({
@@ -25,10 +26,10 @@ export const authedAdminTenantApi = adminTenantApi.extend({
   },
 });
 
-export const cloudApi = got.extend({
-  prefixUrl: new URL('/api', logtoCloudUrl),
+export const cloudApi = ky.extend({
+  prefixUrl: appendPath(new URL(logtoCloudUrl), 'api'),
 });
 
-export const oidcApi = got.extend({
-  prefixUrl: new URL('/oidc', logtoUrl),
+export const oidcApi = ky.extend({
+  prefixUrl: appendPath(new URL(logtoUrl), 'oidc'),
 });

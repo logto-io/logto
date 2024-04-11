@@ -3,6 +3,8 @@ const tenants = {
   description: 'Kiracı ayarlarını verimli bir şekilde yönetin ve alan adınızı özelleştirin.',
   tabs: {
     settings: 'Ayarlar',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'Alan adları',
     subscription: 'Plan ve faturalandırma',
     billing_history: 'Fatura geçmişi',
@@ -34,6 +36,17 @@ const tenants = {
     tenant_deletion_description:
       'Kiracının silinmesi, tüm ilişkili kullanıcı verilerinin ve yapılandırmalarının kalıcı olarak silinmesine neden olur. Lütfen dikkatli bir şekilde devam edin.',
     tenant_deletion_button: 'Kiracıyı Sil',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'Kiracı Oluştur',
@@ -73,6 +86,12 @@ const tenants = {
     cannot_delete_description:
       'Üzgünüm, bu kiracıyı şu anda silemezsiniz. Ücretsiz Plan üzerinde olduğunuzdan ve tüm ödenmemiş faturaları ödediğinizden emin olun.',
   },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: 'Henüz bir kiracı oluşturmadınız',
     description:
@@ -90,47 +109,6 @@ const tenants = {
       'Üzülerek bildirmekten üzüntü duyoyruz, kiracı hesabınız şu anda geçici olarak askıya alınmıştır. Bunun nedeni, MAU sınırlarını aşmak, gecikmiş ödemeler veya diğer izinsiz işlemler gibi yanlış kullanımdır.',
     description_2:
       'Daha fazla açıklama, endişeleriniz veya işlevselliği tamamen geri yüklemek ve kiracılarınızı engellemek isterseniz, lütfen derhal bizimle iletişime geçmekten çekinmeyin.',
-  },
-  signing_keys: {
-    title: 'İMZALAMA ANAHTARLARI',
-    description: 'Kiracınızda imzalama anahtarlarını güvenli bir şekilde yönetin.',
-    type: {
-      private_key: 'OIDC özel anahtarları',
-      cookie_key: 'OIDC çerez anahtarları',
-    },
-    private_keys_in_use: 'Kullanılan özel anahtarlar',
-    cookie_keys_in_use: 'Kullanılan çerez anahtarları',
-    rotate_private_keys: 'Özel anahtarları döndür',
-    rotate_cookie_keys: 'Çerez anahtarlarını döndür',
-    rotate_private_keys_description:
-      'Bu işlem yeni bir özel imzalama anahtarı oluşturacak, mevcut anahtarı döndürecek ve önceki anahtarınızı kaldıracak. Güncel anahtar ile imzalanmış JWT jetonlarınız silinene veya başka bir döndürme turuna kadar geçerli kalacaktır.',
-    rotate_cookie_keys_description:
-      'Bu işlem yeni bir çerez anahtarı oluşturacak, mevcut anahtarı döndürecek ve önceki anahtarınızı kaldıracak. Güncel anahtar ile imzalanmış çerezleriniz silinene veya başka bir döndürme turuna kadar geçerli kalacaktır.',
-    select_private_key_algorithm: 'Yeni özel anahtar için imzalama anahtar algoritmasını seçin',
-    rotate_button: 'Döndür',
-    table_column: {
-      id: 'Kimlik',
-      status: 'Durum',
-      algorithm: 'İmzalama anahtar algoritması',
-    },
-    status: {
-      current: 'Geçerli',
-      previous: 'Önceki',
-    },
-    reminder: {
-      rotate_private_key:
-        '<strong>OIDC özel anahtarlarını</strong> döndürmek istediğinizden emin misiniz? Yeni verilen JWT jetonları yeni anahtarla imzalanacaktır. Var olan JWT jetonları, tekrar döndürünceye kadar geçerli kalacaktır.',
-      rotate_cookie_key:
-        '<strong>OIDC çerez anahtarlarını</strong> döndürmek istediğinizden emin misiniz? Oturum açma oturumlarında yeni oluşturulan çerezler yeni çerez anahtarıyla imzalanacaktır. Var olan çerezler, tekrar döndürünceye kadar geçerli kalacaktır.',
-      delete_private_key:
-        '<strong>OIDC özel anahtarını</strong> silmek istediğinizden emin misiniz? Bu özel imzalama anahtarı ile imzalanan mevcut JWT jetonları artık geçerli olmayacaktır.',
-      delete_cookie_key:
-        '<strong>OIDC çerez anahtarını</strong> silmek istediğinizden emin misiniz? Bu çerez anahtarı ile imzalanan eski oturum açma oturumları artık geçerli olmayacaktır. Bu kullanıcılar için yeniden kimlik doğrulaması gereklidir.',
-    },
-    messages: {
-      rotate_key_success: 'İmzalama anahtarları başarıyla döndü',
-      delete_key_success: 'Anahtar başarıyla silindi',
-    },
   },
 };
 

@@ -2,7 +2,7 @@ import assert from 'node:assert';
 
 import { generateStandardId } from '@logto/shared';
 import { isKeyInObject } from '@silverhand/essentials';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { OrganizationScopeApiTest } from '#src/helpers/organization.js';
 
@@ -22,9 +22,8 @@ describe('organization scope APIs', () => {
 
     assert(response instanceof HTTPError);
 
-    const { statusCode, body: raw } = response.response;
-    const body: unknown = JSON.parse(String(raw));
-    expect(statusCode).toBe(422);
+    const body: unknown = await response.response.json();
+    expect(response.response.status).toBe(422);
     expect(isKeyInObject(body, 'code') && body.code).toBe('entity.unique_integrity_violation');
   });
 
@@ -70,7 +69,7 @@ describe('organization scope APIs', () => {
   it('should fail when try to get an organization scope that does not exist', async () => {
     const response = await scopeApi.get('0').catch((error: unknown) => error);
 
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should be able to update organization scope', async () => {
@@ -99,8 +98,8 @@ describe('organization scope APIs', () => {
       .catch((error: unknown) => error);
 
     assert(response instanceof HTTPError);
-    expect(response.response.statusCode).toBe(422);
-    expect(JSON.parse(String(response.response.body))).toMatchObject(
+    expect(response.response.status).toBe(422);
+    expect(await response.response.json()).toMatchObject(
       expect.objectContaining({
         code: 'entity.unique_integrity_violation',
       })
@@ -111,11 +110,11 @@ describe('organization scope APIs', () => {
     const createdScope = await scopeApi.create({ name: 'test' + randomId() });
     await scopeApi.delete(createdScope.id);
     const response = await scopeApi.get(createdScope.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail when try to delete an organization scope that does not exist', async () => {
     const response = await scopeApi.delete('0').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 });

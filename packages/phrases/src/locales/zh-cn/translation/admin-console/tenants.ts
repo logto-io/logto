@@ -3,6 +3,8 @@ const tenants = {
   description: '高效管理租户设置并自定义您的域名。',
   tabs: {
     settings: '设置',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: '域名管理',
     subscription: '套餐与计费',
     billing_history: '历史账单',
@@ -31,6 +33,17 @@ const tenants = {
     tenant_deletion: '删除租户',
     tenant_deletion_description: '删除租户将导致永久删除所有相关的用户数据和配置。请谨慎操作。',
     tenant_deletion_button: '删除租户',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: '创建租户',
@@ -65,6 +78,12 @@ const tenants = {
     cannot_delete_description:
       '抱歉，您现在无法删除此租户。请确保您处于免费计划并已支付所有未结账单。',
   },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: '您还没有创建租户',
     description:
@@ -82,47 +101,6 @@ const tenants = {
       '我们非常遗憾地通知您，由于不当使用，包括超出MAU限制、逾期付款或其他未经授权的操作，您的租户帐户已被临时停用。',
     description_2:
       '如果您需要进一步澄清、有任何疑虑或希望恢复全部功能并解锁您的租户，请立即联系我们。',
-  },
-  signing_keys: {
-    title: '签名密钥',
-    description: '在您的租户中安全管理签名密钥。',
-    type: {
-      private_key: 'OIDC私钥',
-      cookie_key: 'OIDC Cookie密钥',
-    },
-    private_keys_in_use: '正在使用的私钥',
-    cookie_keys_in_use: '正在使用的 Cookie 密钥',
-    rotate_private_keys: '旋转私钥',
-    rotate_cookie_keys: '旋转 Cookie 密钥',
-    rotate_private_keys_description:
-      '此操作将创建一个新的私钥，旋转当前密钥，并删除之前的密钥。使用当前密钥签名的JWT令牌将在删除或另一轮旋转之前保持有效。',
-    rotate_cookie_keys_description:
-      '此操作将创建一个新的Cookie密钥，旋转当前密钥，并删除之前的密钥。使用当前密钥签名的Cookie将在删除或另一轮旋转之前保持有效。',
-    select_private_key_algorithm: '为新的私钥选择签名密钥算法',
-    rotate_button: '旋转',
-    table_column: {
-      id: 'ID',
-      status: '状态',
-      algorithm: '签名密钥算法',
-    },
-    status: {
-      current: '当前',
-      previous: '之前',
-    },
-    reminder: {
-      rotate_private_key:
-        '您确定要旋转<strong>OIDC私钥</strong>吗？新发布的JWT令牌将由新密钥签名。使用当前密钥签名的现有JWT令牌将在您再次旋转之前保持有效。',
-      rotate_cookie_key:
-        '您确定要旋转<strong>OIDC Cookie密钥</strong>吗？登录会话生成的新Cookie将由新Cookie密钥签名。使用当前密钥签名的现有Cookie将在您再次旋转之前保持有效。',
-      delete_private_key:
-        '您确定要删除<strong>OIDC私钥</strong>吗？使用此私有签名密钥签名的现有JWT令牌将不再有效。',
-      delete_cookie_key:
-        '您确定要删除<strong>OIDC Cookie密钥</strong>吗？用此Cookie密钥签名的旧登录会话将不再有效。这些用户需要重新验证。',
-    },
-    messages: {
-      rotate_key_success: '签名密钥旋转成功。',
-      delete_key_success: '密钥已成功删除。',
-    },
   },
 };
 

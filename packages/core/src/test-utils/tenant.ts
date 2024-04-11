@@ -1,6 +1,6 @@
 import { type Sentinel } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
-import { createMockPool, createMockQueryResult } from 'slonik';
+import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
 import { WellKnownCache } from '#src/caches/well-known.js';
 import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';

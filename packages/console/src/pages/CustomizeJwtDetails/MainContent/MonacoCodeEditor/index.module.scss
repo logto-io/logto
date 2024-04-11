@@ -1,0 +1,87 @@
+@use '@/scss/underscore' as _;
+
+.codeEditor {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: var(--color-code-bg);
+
+
+  header {
+    padding: _.unit(4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .tabList {
+      display: flex;
+      gap: _.unit(2);
+
+      .tab {
+        font: var(--font-label-2);
+        font-family: 'Roboto Mono', monospace;
+        padding: _.unit(1.5) _.unit(3);
+        color: var(--color-code-white);
+        display: flex;
+        align-items: center;
+        gap: _.unit(1);
+
+        &.tabButton {
+          color: var(--color-code-grey);
+          cursor: pointer;
+
+          &.active,
+          &:hover {
+            color: var(--color-code-white);
+            background-color: var(--color-code-dark-bg-focused);
+            border-radius: 8px;
+          }
+        }
+      }
+    }
+
+    .actionButtons {
+      display: flex;
+      gap: _.unit(3);
+      align-items: center;
+      background: none;
+
+      svg {
+        color: var(--color-code-grey);
+      }
+
+      .iconButton {
+        transition: background 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+          background: var(--color-overlay-dark-bg-hover);
+        }
+
+        &:active {
+          background: var(--color-overlay-dark-bg-pressed);
+        }
+
+        // TODO (LOG-8602): Remove the default left margin of CopyToClipboard copyToolTipAnchor component.
+        div[class*='copyToolTipAnchor'] {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .editorContainer {
+    position: relative;
+    flex-grow: 1;
+
+    &.dashboardOpen {
+      flex-grow: 0;
+      height: calc(50% - 64px); // 64px = header height
+    }
+  }
+
+  .resultPanel {
+    border-radius: 0 0 8px 8px;
+  }
+}

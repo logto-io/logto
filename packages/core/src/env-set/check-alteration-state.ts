@@ -1,6 +1,6 @@
 import { getAvailableAlterations } from '@logto/cli/lib/commands/database/alteration/index.js';
+import type { DatabasePool } from '@silverhand/slonik';
 import chalk from 'chalk';
-import type { DatabasePool } from 'slonik';
 
 import { consoleLog } from '#src/utils/console.js';
 

@@ -1,5 +1,5 @@
 import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
-import { RoleType } from '@logto/schemas';
+import { RoleType, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
@@ -69,17 +69,14 @@ const { revokeInstanceByUserId } = mockedQueries.oidcModelInstances;
 const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
   mockedQueries.users;
 
-const { encryptUserPassword, verifyUserPassword } = await mockEsmWithActual(
-  '#src/libraries/user.js',
-  () => ({
-    encryptUserPassword: jest.fn(() => ({
-      passwordEncrypted: 'password',
-      passwordEncryptionMethod: 'Argon2i',
-    })),
-    verifyUserPassword: jest.fn(),
-  })
-);
+const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
+  encryptUserPassword: jest.fn(() => ({
+    passwordEncrypted: 'password',
+    passwordEncryptionMethod: 'Argon2i',
+  })),
+}));
 
+const verifyUserPassword = jest.fn();
 const usersLibraries = {
   generateUserId: jest.fn(async () => 'fooId'),
   insertUser: jest.fn(
@@ -88,6 +85,7 @@ const usersLibraries = {
       ...removeUndefinedKeys(user), // No undefined values will be returned from database
     })
   ),
+  verifyUserPassword,
 } satisfies Partial<Libraries['users']>;
 
 const adminUserRoutes = await pickDefault(import('./basics.js'));
@@ -133,6 +131,20 @@ describe('adminUserRoutes', () => {
     // Invalid input format
     await expect(
       userRequest.post('/users').send({ username, password: 'abc', name })
+    ).resolves.toHaveProperty('status', 200);
+  });
+
+  it('POST /users with password digest', async () => {
+    const username = 'MJAtLogto';
+    const name = 'Michael';
+
+    await expect(
+      userRequest.post('/users').send({
+        username,
+        name,
+        passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
+        passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+      })
     ).resolves.toHaveProperty('status', 200);
   });
 

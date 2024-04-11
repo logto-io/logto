@@ -65,10 +65,12 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
           userId: 'fake-google-user-id',
         },
       },
+      profile: {},
       applicationId: 'fake-application-id',
       isSuspended: false,
       lastSignInAt: now.getTime(),
       createdAt: now.getTime(),
+      updatedAt: now.getTime(),
     },
     application: {
       id: 'fake-spa-application-id',

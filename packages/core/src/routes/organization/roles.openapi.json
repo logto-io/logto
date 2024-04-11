@@ -29,6 +29,12 @@
                   },
                   "description": {
                     "description": "The description of the organization role."
+                  },
+                  "organizationScopeIds": {
+                    "description": "An array of organization scope IDs to be assigned to the organization role."
+                  },
+                  "resourceScopeIds": {
+                    "description": "An array of resource scope IDs to be assigned to the organization role."
                   }
                 }
               }
@@ -161,6 +167,78 @@
         "responses": {
           "204": {
             "description": "Organization scope assignment was removed successfully."
+          }
+        }
+      }
+    },
+    "/api/organization-roles/{id}/resource-scopes": {
+      "get": {
+        "summary": "Get organization role resource scopes",
+        "description": "Get all resource scopes that are assigned to the specified organization role.",
+        "responses": {
+          "200": {
+            "description": "A list of resource scopes."
+          }
+        }
+      },
+      "post": {
+        "summary": "Assign resource scopes to organization role",
+        "description": "Assign resource scopes to the specified organization role",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "scopeIds": {
+                    "description": "An array of resource scope IDs to be assigned. Existed scope IDs assignments will be ignored."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource scopes were assigned successfully."
+          },
+          "422": {
+            "description": "At least one of the IDs provided is invalid. For example, the resource scope ID does not exist;"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace resource scopes for organization role",
+        "description": "Replace all resource scopes that are assigned to the specified organization role with the given resource scopes. This effectively removes all existing organization scope assignments and replaces them with the new ones.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "scopeIds": {
+                    "description": "An array of resource scope IDs to replace existing scopes."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Resource scopes were replaced successfully."
+          },
+          "422": {
+            "description": "At least one of the IDs provided is invalid. For example, the resource scope ID does not exist."
+          }
+        }
+      }
+    },
+    "/api/organization-roles/{id}/resource-scopes/{scopeId}": {
+      "delete": {
+        "summary": "Remove resource scope",
+        "description": "Remove a resource scope assignment from the specified organization role.",
+        "responses": {
+          "204": {
+            "description": "Resource scope assignment was removed successfully."
           }
         }
       }

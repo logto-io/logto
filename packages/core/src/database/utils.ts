@@ -1,6 +1,8 @@
 import { type GeneratedSchema } from '@logto/schemas';
-import { type SchemaLike, conditionalSql, convertToIdentifiers, type Table } from '@logto/shared';
-import { type SqlSqlToken, sql } from 'slonik';
+import { type SchemaLike, type Table } from '@logto/shared';
+import { type SqlSqlToken, sql } from '@silverhand/slonik';
+
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 /**
  * Options for searching for a string within a set of fields (case-insensitive).

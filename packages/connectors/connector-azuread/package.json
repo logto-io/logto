@@ -1,11 +1,11 @@
 {
   "name": "@logto/connector-azuread",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Microsoft Azure AD connector implementation.",
   "author": "Mobilist Inc. <info@mobilist.com.tr>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^2.1.0",
-    "@azure/msal-node": "^2.0.0"
+    "@azure/msal-node": "^2.0.0",
+    "@logto/connector-kit": "workspace:^3.0.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
@@ -25,9 +25,8 @@
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm test:only --silent --coverage",
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },
   "engines": {
@@ -48,5 +47,9 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.4.0",
+    "vitest": "^1.4.0"
   }
 }

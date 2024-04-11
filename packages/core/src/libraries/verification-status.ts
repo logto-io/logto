@@ -1,9 +1,10 @@
 import { generateStandardId } from '@logto/shared';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { verificationTimeout } from '#src/routes/consts.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+
+const verificationTimeout = 10 * 60 * 1000; // 10 mins
 
 export const createVerificationStatusLibrary = (queries: Queries) => {
   const {

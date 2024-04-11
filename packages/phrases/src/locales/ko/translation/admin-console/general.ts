@@ -25,6 +25,8 @@ const general = {
   customize: '사용자화',
   enable: '활성화',
   reminder: '리마인더',
+  /** UNTRANSLATED */
+  edit: 'Edit',
   delete: '삭제',
   /** UNTRANSLATED */
   deleted: 'Deleted',
@@ -69,6 +71,8 @@ const general = {
   edit_field: '{{field}} 편집',
   delete_field: '{{field}} 삭제',
   coming_soon: '곧 출시 예정',
+  /** UNTRANSLATED */
+  or: 'Or',
 };
 
 export default Object.freeze(general);

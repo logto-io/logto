@@ -5,7 +5,7 @@ import { conditional, pick } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { ZodError } from 'zod';
 
-const formatZodError = ({ issues }: ZodError): string[] =>
+export const formatZodError = ({ issues }: ZodError): string[] =>
   issues.map((issue) => {
     const base = `Error in key path "${issue.path.map(String).join('.')}": (${issue.code}) `;
 

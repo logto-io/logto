@@ -1,5 +1,24 @@
 # @logto/connector-azuread
 
+## 1.2.0
+
+### Minor Changes
+
+- 57d97a4df: return and store social connector raw data
+
+### Patch Changes
+
+- 5cde35ec1: Update the Microsoft social connector integration guide.
+
+  - Reorganize the content to make it more readable.
+  - Exclusively explained the different access types and their corresponding tenant IDs in the Azure Portal.
+
+- Updated dependencies [57d97a4df]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [57d97a4df]
+- Updated dependencies [2c10c2423]
+  - @logto/connector-kit@3.0.0
+
 ## 1.1.0
 
 ### Minor Changes

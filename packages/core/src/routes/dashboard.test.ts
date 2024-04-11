@@ -41,13 +41,13 @@ const users = {
 };
 const { countUsers, getDailyNewUserCountsByTimeInterval } = users;
 
-const logs = {
+const dailyActiveUsers = {
   getDailyActiveUserCountsByTimeInterval: jest.fn().mockResolvedValue(mockDailyActiveUserCounts),
   countActiveUsersByTimeInterval: jest.fn().mockResolvedValue({ count: mockActiveUserCount }),
 };
-const { getDailyActiveUserCountsByTimeInterval, countActiveUsersByTimeInterval } = logs;
+const { getDailyActiveUserCountsByTimeInterval, countActiveUsersByTimeInterval } = dailyActiveUsers;
 
-const tenantContext = new MockTenant(undefined, { logs, users });
+const tenantContext = new MockTenant(undefined, { dailyActiveUsers, users });
 const dashboardRoutes = await pickDefault(import('./dashboard.js'));
 
 describe('dashboardRoutes', () => {

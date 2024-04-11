@@ -9,7 +9,7 @@ import {
   type QueryResult,
   sql,
   type ValueExpression,
-} from 'slonik';
+} from '@silverhand/slonik';
 
 import { insertInto } from '../../../database.js';
 import { consoleLog } from '../../../utils.js';

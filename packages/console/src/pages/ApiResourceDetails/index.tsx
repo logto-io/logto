@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { Outlet, useLocation, useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
@@ -28,11 +28,12 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
+import ApiResourcePermissions from './ApiResourcePermissions';
+import ApiResourceSettings from './ApiResourceSettings';
 import GuideDrawer from './components/GuideDrawer';
 import GuideModal from './components/GuideModal';
 import ManagementApiNotice from './components/ManagementApiNotice';
 import * as styles from './index.module.scss';
-import { type ApiResourceDetailsOutletContext } from './types';
 
 const icons = {
   [Theme.Light]: { ApiIcon: ApiResource, ManagementApiIcon: ManagementApiResource },
@@ -170,25 +171,32 @@ function ApiResourceDetails() {
             </DeleteConfirmModal>
           )}
           <TabNav>
-            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceDetailsTabs.Settings}`}>
-              {t('api_resource_details.settings_tab')}
-            </TabNavItem>
             <TabNavItem href={`/api-resources/${data.id}/${ApiResourceDetailsTabs.Permissions}`}>
               {t('api_resource_details.permissions_tab')}
             </TabNavItem>
+            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceDetailsTabs.General}`}>
+              {t('api_resource_details.general_tab')}
+            </TabNavItem>
           </TabNav>
-          <Outlet
-            context={
-              {
-                resource: data,
-                isDeleting,
-                isLogtoManagementApiResource,
-                onResourceUpdated: (resource: Resource) => {
-                  void mutate(resource);
-                },
-              } satisfies ApiResourceDetailsOutletContext
-            }
-          />
+          <Routes>
+            <Route index element={<Navigate replace to={ApiResourceDetailsTabs.Permissions} />} />
+            <Route
+              path={ApiResourceDetailsTabs.Permissions}
+              element={<ApiResourcePermissions resource={data} />}
+            />
+            <Route
+              path={ApiResourceDetailsTabs.General}
+              element={
+                <ApiResourceSettings
+                  resource={data}
+                  isDeleting={isDeleting}
+                  onResourceUpdated={(updatedData: Resource) => {
+                    void mutate(updatedData);
+                  }}
+                />
+              }
+            />
+          </Routes>
         </>
       )}
     </DetailsPage>

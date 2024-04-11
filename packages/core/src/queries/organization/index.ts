@@ -17,15 +17,23 @@ import {
   type OrganizationInvitationEntity,
   OrganizationInvitationRoleRelations,
   OrganizationInvitationStatus,
+  OrganizationRoleResourceScopeRelations,
+  Scopes,
+  Resources,
 } from '@logto/schemas';
-import { conditionalSql, convertToIdentifiers } from '@logto/shared';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { type SearchOptions, buildSearchSql } from '#src/database/utils.js';
 import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 import { RoleUserRelationQueries, UserRelationQueries } from './relations.js';
+
+/**
+ * The schema field keys that can be used for searching roles.
+ */
+export const organizationRoleSearchKeys = Object.freeze(['id', 'name', 'description'] as const);
 
 class OrganizationRolesQueries extends SchemaQueries<
   OrganizationRoleKeys,
@@ -55,25 +63,52 @@ class OrganizationRolesQueries extends SchemaQueries<
   ) {
     const { table, fields } = convertToIdentifiers(OrganizationRoles, true);
     const relations = convertToIdentifiers(OrganizationRoleScopeRelations, true);
+    const resourceScopeRelations = convertToIdentifiers(
+      OrganizationRoleResourceScopeRelations,
+      true
+    );
     const scopes = convertToIdentifiers(OrganizationScopes, true);
+    const resourceScopes = convertToIdentifiers(Scopes, true);
+    const resource = convertToIdentifiers(Resources, true);
 
     return sql<OrganizationRoleWithScopes>`
       select
         ${table}.*,
         coalesce(
-          json_agg(
-            json_build_object(
+          json_agg(distinct
+            jsonb_build_object(
               'id', ${scopes.fields.id},
-              'name', ${scopes.fields.name}
-            ) order by ${scopes.fields.name}
+              'name', ${scopes.fields.name},
+              'order', ${scopes.fields.id}
+            )
           ) filter (where ${scopes.fields.id} is not null),
           '[]'
-        ) as scopes -- left join could produce nulls as scopes
+        ) as scopes, -- left join could produce nulls as scopes
+        coalesce(
+          json_agg(distinct
+            jsonb_build_object(
+              'id', ${resourceScopes.fields.id},
+              'name', ${resourceScopes.fields.name},
+              'resource', json_build_object(
+                'id', ${resource.fields.id},
+                'name', ${resource.fields.name}
+              ),
+              'order', ${resourceScopes.fields.id}
+            )
+          ) filter (where ${resourceScopes.fields.id} is not null),
+          '[]'
+        ) as "resourceScopes" -- left join could produce nulls as resourceScopes
       from ${table}
       left join ${relations.table}
         on ${relations.fields.organizationRoleId} = ${fields.id}
       left join ${scopes.table}
         on ${relations.fields.organizationScopeId} = ${scopes.fields.id}
+      left join ${resourceScopeRelations.table}
+        on ${resourceScopeRelations.fields.organizationRoleId} = ${fields.id}
+      left join ${resourceScopes.table}
+        on ${resourceScopeRelations.fields.scopeId} = ${resourceScopes.fields.id}
+      left join ${resource.table}
+        on ${resourceScopes.fields.resourceId} = ${resource.fields.id}
       ${conditionalSql(roleId, (id) => {
         return sql`where ${fields.id} = ${id}`;
       })}
@@ -88,32 +123,59 @@ class OrganizationRolesQueries extends SchemaQueries<
   }
 }
 
+type OrganizationInvitationSearchOptions = {
+  invitationId?: string;
+  organizationId?: string;
+  inviterId?: string;
+  invitee?: string;
+};
+
 class OrganizationInvitationsQueries extends SchemaQueries<
   OrganizationInvitationKeys,
   CreateOrganizationInvitation,
   OrganizationInvitation
 > {
-  override async findById(id: string): Promise<Readonly<OrganizationInvitationEntity>> {
-    return this.pool.one(this.#findEntity(id));
+  override async findById(invitationId: string): Promise<Readonly<OrganizationInvitationEntity>> {
+    return this.pool.one(this.#findEntity({ invitationId }));
   }
 
-  override async findAll(
-    limit: number,
-    offset: number,
-    search?: SearchOptions<OrganizationInvitationKeys>
-  ): Promise<[totalNumber: number, rows: Readonly<OrganizationInvitationEntity[]>]> {
-    return Promise.all([
-      this.findTotalNumber(search),
-      this.pool.any(this.#findEntity(undefined, limit, offset, search)),
-    ]);
+  /** @deprecated Use `findEntities` instead. */
+  override async findAll(): Promise<never> {
+    throw new Error('Use `findEntities` instead.');
   }
 
-  #findEntity(
-    invitationId?: string,
-    limit = 1,
-    offset = 0,
-    search?: SearchOptions<OrganizationInvitationKeys>
-  ) {
+  // We don't override `.findAll()` since the function signature is different from the base class.
+  async findEntities(
+    options: Omit<OrganizationInvitationSearchOptions, 'invitationId'>
+  ): Promise<Readonly<OrganizationInvitationEntity[]>> {
+    return this.pool.any(this.#findEntity({ ...options, invitationId: undefined }));
+  }
+
+  async updateExpiredEntities({
+    organizationId,
+    invitee,
+  }: OrganizationInvitationSearchOptions): Promise<void> {
+    const { table, fields } = convertToIdentifiers(OrganizationInvitations);
+    await this.pool.query(sql`
+      update ${table}
+      set ${fields.status} = ${OrganizationInvitationStatus.Expired}
+      where ${fields.status} = ${OrganizationInvitationStatus.Pending}
+      and ${fields.expiresAt} < now()
+      ${conditionalSql(organizationId, (id) => {
+        return sql`and ${fields.organizationId} = ${id}`;
+      })}
+      ${conditionalSql(invitee, (email) => {
+        return sql`and ${fields.invitee} = ${email}`;
+      })}
+    `);
+  }
+
+  #findEntity({
+    invitationId,
+    organizationId,
+    inviterId,
+    invitee,
+  }: OrganizationInvitationSearchOptions) {
     const { table, fields } = convertToIdentifiers(OrganizationInvitations, true);
     const roleRelations = convertToIdentifiers(OrganizationInvitationRoleRelations, true);
     const roles = convertToIdentifiers(OrganizationRoles, true);
@@ -147,16 +209,23 @@ class OrganizationInvitationsQueries extends SchemaQueries<
         on ${roleRelations.fields.organizationInvitationId} = ${fields.id}
       left join ${roles.table}
         on ${roles.fields.id} = ${roleRelations.fields.organizationRoleId}
+      where true
       ${conditionalSql(invitationId, (id) => {
-        return sql`where ${fields.id} = ${id}`;
+        return sql`and ${fields.id} = ${id}`;
       })}
-      ${buildSearchSql(OrganizationInvitations, search)}
+      ${conditionalSql(organizationId, (id) => {
+        return sql`and ${fields.organizationId} = ${id}`;
+      })}
+      ${conditionalSql(inviterId, (id) => {
+        return sql`and ${fields.inviterId} = ${id}`;
+      })}
+      ${conditionalSql(invitee, (email) => {
+        return sql`and ${fields.invitee} = ${email}`;
+      })}
       group by ${fields.id}
       ${conditionalSql(this.orderBy, ({ field, order }) => {
         return sql`order by ${fields[field]} ${order === 'desc' ? sql`desc` : sql`asc`}`;
       })}
-      limit ${limit}
-      offset ${offset}
     `;
   }
 }
@@ -198,6 +267,13 @@ export default class OrganizationQueries extends SchemaQueries<
       OrganizationRoleScopeRelations.table,
       OrganizationRoles,
       OrganizationScopes
+    ),
+    /** Queries for organization role - organization resource scope relations. */
+    rolesResourceScopes: new TwoRelationsQueries(
+      this.pool,
+      OrganizationRoleResourceScopeRelations.table,
+      OrganizationRoles,
+      Scopes
     ),
     /** Queries for organization - user relations. */
     users: new UserRelationQueries(this.pool),

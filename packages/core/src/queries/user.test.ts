@@ -1,11 +1,11 @@
 import { Users } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 import Sinon from 'sinon';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockUser } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
@@ -49,6 +49,7 @@ describe('user query', () => {
   const { table, fields } = convertToIdentifiers(Users);
   const databaseValue = {
     ...mockUser,
+    profile: JSON.stringify({}),
     identities: JSON.stringify(mockUser.identities),
     customData: JSON.stringify(mockUser.customData),
     logtoConfig: JSON.stringify(mockUser.logtoConfig),
@@ -321,6 +322,7 @@ describe('user query', () => {
     const { connector1, ...restIdentities } = mockUser.identities;
     const finalDbvalue = {
       ...mockUser,
+      profile: JSON.stringify({}),
       identities: JSON.stringify(restIdentities),
       customData: JSON.stringify(mockUser.customData),
       logtoConfig: JSON.stringify(mockUser.logtoConfig),

@@ -1,9 +1,13 @@
 import { Roles } from '@logto/schemas';
-import { convertToIdentifiers, convertToPrimitiveOrSql, excludeAutoSetFields } from '@logto/shared';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
+import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
 import { mockAdminUserRole } from '#src/__mocks__/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import {
+  convertToIdentifiers,
+  convertToPrimitiveOrSql,
+  excludeAutoSetFields,
+} from '#src/utils/sql.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 

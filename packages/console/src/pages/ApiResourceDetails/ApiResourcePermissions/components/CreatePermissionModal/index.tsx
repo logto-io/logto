@@ -1,5 +1,5 @@
 import { noSpaceRegEx } from '@logto/core-kit';
-import type { Scope } from '@logto/schemas';
+import type { Scope, CreateScope } from '@logto/schemas';
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ type Props = {
   onClose: (scope?: Scope) => void;
 };
 
-type CreatePermissionFormData = Pick<Scope, 'name' | 'description'>;
+type CreatePermissionFormData = Pick<CreateScope, 'name' | 'description'>;
 
 function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Props) {
   const { currentPlan } = useContext(SubscriptionDataContext);
@@ -118,10 +118,10 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
               error={errors.name?.message}
             />
           </FormField>
-          <FormField isRequired title="api_resource_details.permission.description">
+          <FormField title="api_resource_details.permission.description">
             <TextInput
               placeholder={t('api_resource_details.permission.description_placeholder')}
-              {...register('description', { required: true })}
+              {...register('description')}
               error={Boolean(errors.description)}
             />
           </FormField>

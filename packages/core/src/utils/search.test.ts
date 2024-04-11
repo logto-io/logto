@@ -1,6 +1,6 @@
 import { SearchJointMode, SearchMatchMode } from '@logto/schemas';
-import type { ListSqlToken, TaggedTemplateLiteralInvocation } from 'slonik';
-import { sql } from 'slonik';
+import type { ListSqlToken, TaggedTemplateLiteralInvocation } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 // Will add `params` to the exception list
 

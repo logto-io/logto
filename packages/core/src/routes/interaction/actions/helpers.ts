@@ -1,7 +1,6 @@
 import { defaults, parseAffiliateData } from '@logto/affiliate';
 import { consoleLog } from '@logto/cli/lib/utils.js';
 import { type CreateUser, type User, adminTenantId } from '@logto/schemas';
-import { type OmitAutoSetFields } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type IRouterContext } from 'koa-router';
 
@@ -11,6 +10,7 @@ import { type ConnectorLibrary } from '#src/libraries/connector.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import { type OmitAutoSetFields } from '#src/utils/sql.js';
 
 import {
   type Identifier,

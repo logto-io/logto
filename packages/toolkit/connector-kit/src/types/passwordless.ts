@@ -32,6 +32,7 @@ export enum TemplateType {
 
 export const templateTypeGuard = z.nativeEnum(TemplateType);
 
+/** The payload for sending email or sms. */
 export type SendMessagePayload = {
   /**
    * The dynamic verification code to send. It will replace the `{{code}}` handlebars in the
@@ -44,16 +45,15 @@ export type SendMessagePayload = {
    * @example 'https://example.com'
    */
   link?: string;
-};
+} & Record<string, string>;
 
-export const sendMessagePayloadKeys = ['code', 'link'] as const satisfies Array<
-  keyof SendMessagePayload
->;
-
-export const sendMessagePayloadGuard = z.object({
-  code: z.string().optional(),
-  link: z.string().optional(),
-}) satisfies z.ZodType<SendMessagePayload>;
+/** The guard for {@link SendMessagePayload}. */
+export const sendMessagePayloadGuard = z
+  .object({
+    code: z.string().optional(),
+    link: z.string().optional(),
+  })
+  .and(z.record(z.string())) satisfies z.ZodType<SendMessagePayload>;
 
 export const urlRegEx =
   /(https?:\/\/)?(?:www\.)?[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b[\w#%&()+./:=?@~-]*/;

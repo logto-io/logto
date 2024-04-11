@@ -1,10 +1,11 @@
 import type { LogtoConfig, LogtoConfigKey, logtoConfigGuards } from '@logto/schemas';
 import { LogtoConfigs } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 import type { z } from 'zod';
+
+import { convertToIdentifiers } from '../sql.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 

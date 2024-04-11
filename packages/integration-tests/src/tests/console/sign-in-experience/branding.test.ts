@@ -1,6 +1,6 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import { goToAdminConsole } from '#src/ui-helpers/index.js';
-import { expectNavigation, appendPathname } from '#src/utils.js';
+import { expectNavigation, appendPathname, waitFor } from '#src/utils.js';
 
 import { waitForFormCard, expectToSelectColor, expectToSaveSignInExperience } from './helpers.js';
 
@@ -64,7 +64,7 @@ describe('sign-in experience: branding', () => {
     await expect(page).toClick('div[class$=darkModeTip] button span', { text: 'Recalculate' });
 
     // Wait for the recalculate to finish
-    await page.waitForTimeout(500);
+    await waitFor(500);
 
     // Fill in the custom CSS
     await expect(page).toFill('div[class$=editor] textarea', 'body { background-color: #5B4D8E; }');
@@ -83,7 +83,7 @@ describe('sign-in experience: branding', () => {
     await expect(page).toClick('div[class$=darkModeTip] button span', { text: 'Recalculate' });
 
     // Wait for the recalculate to finish
-    await page.waitForTimeout(500);
+    await waitFor(500);
 
     // Fill in the custom CSS
     await expect(page).toFill('div[class$=editor] textarea', '');

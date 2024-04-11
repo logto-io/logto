@@ -6,14 +6,12 @@ import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './
 import createConnector, { getAccessToken } from './index.js';
 import { clientId, clientSecret, code, dummyRedirectUri, fields, mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('Facebook connector', () => {
   describe('getAuthorizationUri', () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get a valid authorizationUri with redirectUri and state', async () => {
@@ -29,7 +27,7 @@ describe('Facebook connector', () => {
           jti: 'some_jti',
           headers: {},
         },
-        jest.fn()
+        vi.fn()
       );
 
       const encodedRedirectUri = encodeURIComponent(redirectUri);
@@ -42,7 +40,7 @@ describe('Facebook connector', () => {
   describe('getAccessToken', () => {
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get an accessToken by exchanging with code', async () => {
@@ -86,7 +84,7 @@ describe('Facebook connector', () => {
 
       await expect(
         getAccessToken(mockedConfig, { code, redirectUri: dummyRedirectUri })
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
     });
   });
 
@@ -110,7 +108,7 @@ describe('Facebook connector', () => {
 
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get valid SocialUserInfo', async () => {
@@ -130,13 +128,19 @@ describe('Facebook connector', () => {
           code,
           redirectUri: dummyRedirectUri,
         },
-        jest.fn()
+        vi.fn()
       );
-      expect(socialUserInfo).toMatchObject({
+      expect(socialUserInfo).toStrictEqual({
         id: '1234567890',
         avatar,
         name: 'monalisa octocat',
         email: 'octocat@facebook.com',
+        rawData: {
+          id: '1234567890',
+          name: 'monalisa octocat',
+          email: 'octocat@facebook.com',
+          picture: { data: { url: avatar } },
+        },
       });
     });
 
@@ -144,8 +148,8 @@ describe('Facebook connector', () => {
       nock(userInfoEndpoint).get('').query({ fields }).reply(400);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code, redirectUri: dummyRedirectUri }, jest.fn())
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+        connector.getUserInfo({ code, redirectUri: dummyRedirectUri }, vi.fn())
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
     it('throws AuthorizationFailed error if error is access_denied', async () => {
@@ -168,9 +172,9 @@ describe('Facebook connector', () => {
             error_description: 'Permissions error.',
             error_reason: 'user_denied',
           },
-          jest.fn()
+          vi.fn()
         )
-      ).rejects.toMatchError(
+      ).rejects.toStrictEqual(
         new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, 'Permissions error.')
       );
     });
@@ -195,9 +199,9 @@ describe('Facebook connector', () => {
             error_description: 'General error encountered.',
             error_reason: 'user_denied',
           },
-          jest.fn()
+          vi.fn()
         )
-      ).rejects.toMatchError(
+      ).rejects.toStrictEqual(
         new ConnectorError(ConnectorErrorCodes.General, {
           error: 'general_error',
           error_code: 200,
@@ -211,7 +215,7 @@ describe('Facebook connector', () => {
       nock(userInfoEndpoint).get('').reply(500);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code, redirectUri: dummyRedirectUri }, jest.fn())
+        connector.getUserInfo({ code, redirectUri: dummyRedirectUri }, vi.fn())
       ).rejects.toThrow();
     });
   });

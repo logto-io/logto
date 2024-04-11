@@ -29,11 +29,27 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
   const router = new SchemaRouter(OrganizationInvitations, invitations, {
     errorHandler,
     disabled: {
+      get: true,
       post: true,
       patchById: true,
     },
     entityGuard: organizationInvitationEntityGuard,
   });
+
+  router.get(
+    '/',
+    koaGuard({
+      query: z
+        .object({ organizationId: z.string(), inviterId: z.string(), invitee: z.string() })
+        .partial(),
+      response: organizationInvitationEntityGuard.array(),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      ctx.body = await invitations.findEntities(ctx.guard.query);
+      return next();
+    }
+  );
 
   router.post(
     '/',
@@ -51,7 +67,7 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
           messagePayload: sendMessagePayloadGuard.or(z.literal(false)).default(false),
         }),
       response: organizationInvitationEntityGuard,
-      status: [201, 400, 501],
+      status: [201, 400, 422, 501],
     }),
     async (ctx, next) => {
       const {
@@ -68,6 +84,26 @@ export default function organizationInvitationRoutes<T extends AuthedRouter>(
 
       ctx.body = await organizationInvitations.insert(body, messagePayload);
       ctx.status = 201;
+      return next();
+    }
+  );
+
+  router.post(
+    '/:id/message',
+    koaGuard({
+      params: z.object({ id: z.string() }),
+      body: sendMessagePayloadGuard,
+      status: [204],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body,
+      } = ctx.guard;
+      const { invitee } = await invitations.findById(id);
+
+      await organizationInvitations.sendEmail(invitee, body);
+      ctx.status = 204;
       return next();
     }
   );

@@ -3,6 +3,8 @@ const tenants = {
   description: 'テナントの設定を効率的に管理し、ドメインをカスタマイズします。',
   tabs: {
     settings: '設定',
+    /** UNTRANSLATED */
+    members: 'Members',
     domains: 'ドメイン',
     subscription: 'プランと請求',
     billing_history: '請求履歴',
@@ -33,6 +35,17 @@ const tenants = {
     tenant_deletion_description:
       'テナントの削除は、関連するすべてのユーザーデータと設定の永久的な削除につながります。十分に注意して操作してください。',
     tenant_deletion_button: 'テナントを削除する',
+  },
+  leave_tenant_card: {
+    /** UNTRANSLATED */
+    title: 'LEAVE',
+    /** UNTRANSLATED */
+    leave_tenant: 'Leave tenant',
+    /** UNTRANSLATED */
+    leave_tenant_description:
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
+    /** UNTRANSLATED */
+    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
   },
   create_modal: {
     title: 'テナントを作成する',
@@ -71,6 +84,12 @@ const tenants = {
     cannot_delete_description:
       '申し訳ありませんが、現時点ではこのテナントを削除できません。無料プランに登録しており、未払いの請求がないことを確認してください。',
   },
+  leave_tenant_modal: {
+    /** UNTRANSLATED */
+    description: 'Are you sure you want to leave this tenant?',
+    /** UNTRANSLATED */
+    leave_button: 'Leave',
+  },
   tenant_landing_page: {
     title: 'まだテナントを作成していません',
     description:
@@ -88,47 +107,6 @@ const tenants = {
       '誠に申し訳ありませんが、ご利用のテナントアカウントが一時的に停止されました。MAU制限を超えた、支払いの遅延、その他の不正な操作などが原因です。',
     description_2:
       '詳細な説明や懸念事項がある場合、または機能を完全に復元しテナントをアンブロックする場合は、直ちにお問い合わせください。',
-  },
-  signing_keys: {
-    title: 'SIGNING KEYS',
-    description: 'テナント内で署名キーを安全に管理します。',
-    type: {
-      private_key: 'OIDCプライベートキー',
-      cookie_key: 'OIDC Cookieキー',
-    },
-    private_keys_in_use: '使用中のプライベートキー',
-    cookie_keys_in_use: '使用中のCookieキー',
-    rotate_private_keys: 'プライベートキーを回転させる',
-    rotate_cookie_keys: 'Cookieキーを回転させる',
-    rotate_private_keys_description:
-      'このアクションは新しいプライベート署名キーを作成し、現在のキーを回転させ、前のキーを削除します。現在のキーで署名されたJWTトークンは、削除または別の回転まで有効です。',
-    rotate_cookie_keys_description:
-      'このアクションは新しいCookieキーを作成し、現在のキーを回転させ、前のキーを削除します。現在のキーで生成されたCookieは、削除または別の回転まで有効です。',
-    select_private_key_algorithm: '新しいプライベートキーの署名キーアルゴリズムを選択',
-    rotate_button: '回転',
-    table_column: {
-      id: 'ID',
-      status: 'ステータス',
-      algorithm: '署名キーアルゴリズム',
-    },
-    status: {
-      current: '現在の',
-      previous: '以前の',
-    },
-    reminder: {
-      rotate_private_key:
-        'OIDCプライベートキー</strong>を回転させますか？新しい発行されたJWTトークンは新しいキーで署名されます。既存のJWTトークンは、再度回転するまで有効です。',
-      rotate_cookie_key:
-        'OIDC Cookieキー</strong>を回転させますか？新しいCookieで署名されたサインインセッションのCookieが新しいCookieキーで生成されます。既存のCookieは、再度回転するまで有効です。',
-      delete_private_key:
-        'OIDCプライベートキー</strong>を削除しますか？このプライベート署名キーで署名された既存のJWTトークンはもはや有効ではありません。',
-      delete_cookie_key:
-        'OIDC Cookieキー</strong>を削除しますか？このCookieキーで署名された古いサインインセッションのCookieはもはや有効ではありません。これらのユーザーには再認証が必要です。',
-    },
-    messages: {
-      rotate_key_success: '署名キーが正常に回転されました。',
-      delete_key_success: 'キーが正常に削除されました。',
-    },
   },
 };
 

@@ -17,6 +17,15 @@ import { adminTenantId } from '../seeds/tenant.js';
 /** Given a tenant ID, return the corresponding organization ID in the admin tenant. */
 export const getTenantOrganizationId = (tenantId: string) => `t-${tenantId}`;
 
+/** Given an admin tenant organization ID, check the format and return the corresponding user tenant ID. */
+export const getTenantIdFromOrganizationId = (organizationId: string) => {
+  if (!organizationId.startsWith('t-')) {
+    throw new Error(`Invalid admin tenant organization ID: ${organizationId}`);
+  }
+
+  return organizationId.slice(2);
+};
+
 /**
  * Given a tenant ID, return the organization create data for the admin tenant. It follows a
  * convention to generate the organization ID and name which can be used across the system.
@@ -55,6 +64,8 @@ export enum TenantScope {
   WriteData = 'write:data',
   /** Delete data of the tenant. */
   DeleteData = 'delete:data',
+  /** Read members of the tenant. */
+  ReadMember = 'read:member',
   /** Invite members to the tenant. */
   InviteMember = 'invite:member',
   /** Remove members from the tenant. */
@@ -97,6 +108,7 @@ const tenantScopeDescriptions: Readonly<Record<TenantScope, string>> = Object.fr
   [TenantScope.ReadData]: 'Read the tenant data.',
   [TenantScope.WriteData]: 'Write the tenant data, including creating and updating the tenant.',
   [TenantScope.DeleteData]: 'Delete data of the tenant.',
+  [TenantScope.ReadMember]: 'Read members of the tenant.',
   [TenantScope.InviteMember]: 'Invite members to the tenant.',
   [TenantScope.RemoveMember]: 'Remove members from the tenant.',
   [TenantScope.UpdateMemberRole]: 'Update the role of a member in the tenant.',
@@ -112,14 +124,14 @@ const tenantScopeDescriptions: Readonly<Record<TenantScope, string>> = Object.fr
 export enum TenantRole {
   /** Admin of the tenant, who has all permissions. */
   Admin = 'admin',
-  /** Member of the tenant, who has permissions to operate the tenant data, but not the tenant settings. */
-  Member = 'member',
+  /** Collaborator of the tenant, who has permissions to operate the tenant data, but not the tenant settings. */
+  Collaborator = 'collaborator',
 }
 
 const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.freeze({
   [TenantRole.Admin]: 'Admin of the tenant, who has all permissions.',
-  [TenantRole.Member]:
-    'Member of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
+  [TenantRole.Collaborator]:
+    'Collaborator of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
 });
 
 /**
@@ -127,14 +139,14 @@ const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.free
  *
  * @example
  * ```ts
- * const role = TenantRole.Member; // 'member'
+ * const role = TenantRole.Collaborator; // 'collaborator'
  * const roleData = getTenantRole(role);
  *
  * expect(roleData).toEqual({
  *   tenantId: 'admin',
- *   id: 'member',
- *   name: 'member',
- *   description: 'Member of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
+ *   id: 'collaborator',
+ *   name: 'collaborator',
+ *   description: 'Collaborator of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
  * });
  * ```
  *
@@ -155,10 +167,10 @@ export const getTenantRole = (role: TenantRole): Readonly<OrganizationRole> =>
 export const tenantRoleScopes: Readonly<Record<TenantRole, Readonly<TenantScope[]>>> =
   Object.freeze({
     [TenantRole.Admin]: allTenantScopes,
-    [TenantRole.Member]: [
+    [TenantRole.Collaborator]: [
       TenantScope.ReadData,
       TenantScope.WriteData,
       TenantScope.DeleteData,
-      TenantScope.InviteMember,
+      TenantScope.ReadMember,
     ],
   });

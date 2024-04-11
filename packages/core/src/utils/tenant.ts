@@ -1,7 +1,7 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import { type UrlSet } from '@logto/shared';
 import { conditionalString, trySafe } from '@silverhand/essentials';
-import { type CommonQueryMethods } from 'slonik';
+import { type CommonQueryMethods } from '@silverhand/slonik';
 
 import { redisCache } from '#src/caches/index.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
@@ -53,6 +53,9 @@ export const clearCustomDomainCache = async (url: URL | string) => {
   await trySafe(async () => redisCache.delete(getDomainCacheKey(url)));
 };
 
+/**
+ * Get tenant ID from the custom domain URL.
+ */
 const getTenantIdFromCustomDomain = async (
   url: URL,
   pool: CommonQueryMethods
@@ -74,7 +77,15 @@ const getTenantIdFromCustomDomain = async (
   return domain?.tenantId;
 };
 
-export const getTenantId = async (url: URL) => {
+/**
+ * Get tenant ID from the current request's URL.
+ *
+ * @param url The current request's URL
+ * @returns The tenant ID and whether the URL is a custom domain
+ */
+export const getTenantId = async (
+  url: URL
+): Promise<[tenantId: string | undefined, isCustomDomain: boolean]> => {
   const {
     values: {
       isMultiTenancy,
@@ -90,28 +101,28 @@ export const getTenantId = async (url: URL) => {
   const pool = await sharedPool;
 
   if (adminUrlSet.deduplicated().some((endpoint) => isEndpointOf(url, endpoint))) {
-    return adminTenantId;
+    return [adminTenantId, false];
   }
 
   if ((!isProduction || isIntegrationTest) && developmentTenantId) {
     consoleLog.warn(`Found dev tenant ID ${developmentTenantId}.`);
 
-    return developmentTenantId;
+    return [developmentTenantId, false];
   }
 
   if (!isMultiTenancy) {
-    return defaultTenantId;
+    return [defaultTenantId, false];
   }
 
   if (isPathBasedMultiTenancy) {
-    return matchPathBasedTenantId(urlSet, url);
+    return [matchPathBasedTenantId(urlSet, url), false];
   }
 
   const customDomainTenantId = await getTenantIdFromCustomDomain(url, pool);
 
   if (customDomainTenantId) {
-    return customDomainTenantId;
+    return [customDomainTenantId, true];
   }
 
-  return matchDomainBasedTenantId(urlSet.endpoint, url);
+  return [matchDomainBasedTenantId(urlSet.endpoint, url), false];
 };

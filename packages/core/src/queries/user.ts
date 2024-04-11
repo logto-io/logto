@@ -1,16 +1,16 @@
 import type { User, CreateUser } from '@logto/schemas';
 import { Users } from '@logto/schemas';
-import type { OmitAutoSetFields } from '@logto/shared';
-import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { conditionalArray, pick } from '@silverhand/essentials';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
+import type { OmitAutoSetFields } from '#src/utils/sql.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 

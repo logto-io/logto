@@ -1,3 +1,4 @@
+import { isValidUrl } from '@logto/core-kit';
 import { type Resource } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -29,7 +30,7 @@ function CreateForm({ onClose }: Props) {
   const {
     handleSubmit,
     register,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<FormData>();
 
   const api = useApi();
@@ -91,8 +92,13 @@ function CreateForm({ onClose }: Props) {
             )}
           >
             <TextInput
-              {...register('indicator', { required: true })}
+              {...register('indicator', {
+                required: true,
+                validate: (value) =>
+                  isValidUrl(value) || t('api_resources.invalid_resource_indicator_format'),
+              })}
               placeholder={t('api_resources.api_identifier_placeholder')}
+              error={errors.indicator?.message}
             />
           </FormField>
         </form>

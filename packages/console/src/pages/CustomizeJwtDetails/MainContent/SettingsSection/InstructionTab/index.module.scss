@@ -1,0 +1,25 @@
+@use '@/scss/underscore' as _;
+
+
+.sampleCode {
+  :global {
+    /* stylelint-disable-next-line selector-class-pattern */
+    .monaco-editor {
+      border-radius: 8px;
+
+      /* stylelint-disable-next-line selector-class-pattern */
+      .overflow-guard {
+        border-radius: 8px;
+      }
+
+      /* stylelint-disable-next-line selector-class-pattern */
+      .lines-content {
+        padding: 0 16px;
+      }
+    }
+  }
+}
+
+.envVariablesField {
+  margin-bottom: _.unit(4);
+}

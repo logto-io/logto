@@ -13,6 +13,8 @@ const api_resources = {
   default_api_label:
     'Pro Mandant kann nur eine Standard-API festgelegt werden. Wenn eine Standard-API festgelegt ist, kann der Ressourcenparameter in der Authentifizierungsanfrage weggelassen werden. Folgende Token-Austauschvorgänge verwenden standardmäßig die API als Publikum, was zur Ausgabe von JWTs führt. <a>Erfahren Sie mehr</a>',
   api_resource_created: 'Die API-Ressource {{name}} wurde erfolgreich erstellt',
+  /** UNTRANSLATED */
+  invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 
 export default Object.freeze(api_resources);

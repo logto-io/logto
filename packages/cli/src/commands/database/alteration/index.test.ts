@@ -1,14 +1,11 @@
-import { createMockUtils } from '@logto/shared/esm';
+import { createMockPool } from '@silverhand/slonik';
 import Sinon from 'sinon';
-import { createMockPool } from 'slonik';
+import { vi, expect, afterAll, describe, it } from 'vitest';
 
 import { chooseAlterationsByVersion } from './version.js';
 
-const { jest } = import.meta;
-const { mockEsmWithActual } = createMockUtils(jest);
-
 const pool = createMockPool({
-  query: jest.fn(),
+  query: vi.fn(),
 });
 
 const files = Object.freeze([
@@ -17,16 +14,19 @@ const files = Object.freeze([
   { filename: '1.0.0-1663923772-c.js', path: '/alterations-js/1.0.0-1663923772-c.js' },
 ]);
 
-await mockEsmWithActual('./utils.js', () => ({
+vi.mock('./utils.js', async (importOriginal) => ({
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  ...(await importOriginal<object>()),
   getAlterationFiles: async () => files,
 }));
 
-const { getCurrentDatabaseAlterationTimestamp } = await mockEsmWithActual(
-  '../../../queries/system.js',
-  () => ({
-    getCurrentDatabaseAlterationTimestamp: jest.fn(),
-  })
-);
+const getCurrentDatabaseAlterationTimestamp = vi.fn();
+
+vi.doMock('../../../queries/system.js', async (importOriginal) => ({
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  ...(await importOriginal<object>()),
+  getCurrentDatabaseAlterationTimestamp,
+}));
 
 const { getAvailableAlterations } = await import('./index.js');
 

@@ -3,6 +3,14 @@ import { type TFuncKey } from 'i18next';
 import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import {
+  freePlanAuditLogsRetentionDays,
+  freePlanM2mLimit,
+  freePlanMauLimit,
+  freePlanPermissionsLimit,
+  freePlanRoleLimit,
+  proPlanAuditLogsRetentionDays,
+} from '@/consts/subscriptions';
 import DynamicT from '@/ds-components/DynamicT';
 
 import TableDataWrapper from './TableDataWrapper';
@@ -111,13 +119,15 @@ function PlanComparisonTable() {
     const orgPermissions = t('organizations.org_permissions');
     const jitProvisioning = t('organizations.just_in_time_provisioning');
 
-    // Audit logs
-    const auditLogRetention = t('audit_logs.retention');
-    const freePlanLogRetention = t('days', { count: 3 });
-    const paidPlanLogRetention = t('days', { count: 14 });
-
-    // Webhooks
-    const webhooks = t('hooks.hooks');
+    // Developers and platform
+    const webhooks = t('developers_and_platform.hooks');
+    const auditLogRetention = t('developers_and_platform.audit_logs_retention');
+    const freePlanLogRetention = t('days', { count: freePlanAuditLogsRetentionDays });
+    const paidPlanLogRetention = t('days', { count: proPlanAuditLogsRetentionDays });
+    const jwtClaims = t('developers_and_platform.jwt_claims');
+    const tenantMembers = t('developers_and_platform.tenant_members');
+    const tenantMembersLimit = t('included', { value: 3 });
+    const tenantMembersPrice = t('per_member', { value: 8 });
 
     // Compliance and support
     const community = t('support.community');
@@ -130,7 +140,10 @@ function PlanComparisonTable() {
         title: 'quota.title',
         rows: [
           { name: basePrice, data: ['0', proPlanBasePrice, contact] },
-          { name: `${mauLimit}|${mauLimitTip}`, data: ['50,000', unlimited, contact] },
+          {
+            name: `${mauLimit}|${mauLimitTip}`,
+            data: [freePlanMauLimit.toLocaleString(), unlimited, contact],
+          },
           {
             name: `${includedTokens}|${includedTokensTip}`,
             data: ['500,000', `${proPlanIncludedTokens}|${proPlanIncludedTokensTip}`, contact],
@@ -144,7 +157,7 @@ function PlanComparisonTable() {
           {
             name: m2mApps,
             data: [
-              '1',
+              `${freePlanM2mLimit}`,
               `${proPlanM2mAppLimit}|${paidQuotaLimitTip}|${proPlanM2mAppPrice}`,
               contact,
             ],
@@ -197,9 +210,9 @@ function PlanComparisonTable() {
         title: 'user_management.title',
         rows: [
           { name: userManagement, data: ['✓', '✓', '✓'] },
-          { name: userRoles, data: ['1', unlimited, contact] },
+          { name: userRoles, data: [`${freePlanRoleLimit}`, unlimited, contact] },
           { name: m2mRoles, data: ['1', unlimited, contact] },
-          { name: permissionsPerRole, data: ['1', unlimited, contact] },
+          { name: permissionsPerRole, data: [`${freePlanPermissionsLimit}`, unlimited, contact] },
         ],
       },
       {
@@ -217,14 +230,20 @@ function PlanComparisonTable() {
         ],
       },
       {
-        title: 'audit_logs.title',
+        title: 'developers_and_platform.title',
         rows: [
+          { name: webhooks, data: ['1', '10', contact] },
           { name: auditLogRetention, data: [freePlanLogRetention, paidPlanLogRetention, contact] },
+          { name: jwtClaims, data: ['-', comingSoon, comingSoon] },
+          {
+            name: tenantMembers,
+            data: [
+              '1',
+              `${tenantMembersLimit}|${paidAddOnFeatureTip}|${tenantMembersPrice}`,
+              contact,
+            ],
+          },
         ],
-      },
-      {
-        title: 'hooks.title',
-        rows: [{ name: webhooks, data: ['1', '10', contact] }],
       },
       {
         title: 'support.title',
@@ -264,8 +283,9 @@ function PlanComparisonTable() {
                   <td className={styles.quotaKeyColumn}>
                     <TableDataWrapper isLeftAligned value={name} />
                   </td>
-                  {data.map((value) => (
-                    <td key={value}>
+                  {data.map((value, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <td key={`${title}-${name}-${index}`}>
                       <TableDataWrapper value={value} />
                     </td>
                   ))}

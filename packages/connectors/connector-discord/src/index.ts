@@ -102,8 +102,8 @@ const getUserInfo =
         },
         timeout: { request: defaultTimeout },
       });
-
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
+      const rawData = parseJson(httpResponse.body);
+      const result = userInfoResponseGuard.safeParse(rawData);
 
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
@@ -124,7 +124,7 @@ const getUserInfo =
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, userInfoResult.error);
       }
 
-      return userInfoResult.data;
+      return { ...userInfoResult.data, rawData };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const { statusCode, body: rawBody } = error.response;

@@ -2,22 +2,20 @@ import nock from 'nock';
 
 import { mockConfig } from './mock.js';
 
-const { jest } = import.meta;
+const getConfig = vi.fn().mockResolvedValue(mockConfig);
 
-const getConfig = jest.fn().mockResolvedValue(mockConfig);
+const jwtVerify = vi.fn();
 
-const jwtVerify = jest.fn();
-
-jest.unstable_mockModule('jose', () => ({
+vi.mock('jose', () => ({
   jwtVerify,
-  createRemoteJWKSet: jest.fn(),
+  createRemoteJWKSet: vi.fn(),
 }));
 
 const { default: createConnector } = await import('./index.js');
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
@@ -31,7 +29,7 @@ describe('getAuthorizationUri', () => {
         jti: 'some_jti',
         headers: {},
       },
-      jest.fn()
+      vi.fn()
     );
 
     const { origin, pathname, searchParams } = new URL(authorizationUri);
@@ -48,7 +46,7 @@ describe('getAuthorizationUri', () => {
 describe('getUserInfo', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get valid userInfo', async () => {
@@ -65,10 +63,10 @@ describe('getUserInfo', () => {
     const connector = await createConnector({ getConfig });
     const userInfo = await connector.getUserInfo(
       { code: 'code' },
-      jest.fn().mockImplementationOnce(() => {
+      vi.fn().mockImplementationOnce(() => {
         return { nonce: 'nonce', redirectUri: 'http://localhost:3001/callback' };
       })
     );
-    expect(userInfo).toEqual({ id: userId });
+    expect(userInfo).toMatchObject({ id: userId, rawData: { sub: userId, nonce: 'nonce' } });
   });
 });

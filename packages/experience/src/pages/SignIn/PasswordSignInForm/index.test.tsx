@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, experience } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
@@ -9,7 +9,6 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import { signInWithPasswordIdentifier } from '@/apis/interaction';
-import { singleSignOnPath } from '@/constants/env';
 import type { SignInExperienceResponse } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -260,7 +259,7 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(mockedNavigate).toBeCalledWith(`/${singleSignOnPath}/connectors`);
+      expect(mockedNavigate).toBeCalledWith(`/${experience.routes.sso}/connectors`);
     });
   });
 

@@ -28,14 +28,14 @@ import {
 } from '@logto/schemas';
 import { getTenantRole } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
-import { convertToIdentifiers, generateStandardId } from '@logto/shared';
-import type { DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
-import { raw } from 'slonik-sql-tag-raw';
+import { generateStandardId } from '@logto/shared';
+import type { DatabaseTransactionConnection } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { insertInto } from '../../../database.js';
 import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
+import { convertToIdentifiers } from '../../../sql.js';
 import { consoleLog, getPathInModule } from '../../../utils.js';
 
 import { appendAdminConsoleRedirectUris, seedTenantCloudServiceApplication } from './cloud.js';
@@ -104,7 +104,7 @@ export const createTables = async (
 
     if (query) {
       await connection.query(
-        sql`${raw(
+        sql`${sql.raw(
           /* eslint-disable no-template-curly-in-string */
           query
             .replaceAll('${name}', parameters.name ?? '')
@@ -128,7 +128,7 @@ export const createTables = async (
 
   /* eslint-disable no-await-in-loop */
   for (const [file, query] of sorted) {
-    await connection.query(sql`${raw(query)}`);
+    await connection.query(sql`${sql.raw(query)}`);
 
     if (!query.includes('/* no_after_each */')) {
       await runLifecycleQuery('after_each', { name: file.split('.')[0], database });
@@ -168,7 +168,12 @@ export const seedTables = async (
     adminTenantId,
     applicationRole.id,
     ...cloudAdditionalScopes
-      .filter(({ name }) => name === CloudScope.SendSms || name === CloudScope.SendEmail)
+      .filter(
+        ({ name }) =>
+          name === CloudScope.SendSms ||
+          name === CloudScope.SendEmail ||
+          name === CloudScope.FetchCustomJwt
+      )
       .map(({ id }) => id)
   );
 
@@ -186,10 +191,17 @@ export const seedTables = async (
     ),
     connection.query(insertInto(createAdminTenantSignInExperience(), SignInExperiences.table)),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
-    updateDatabaseTimestamp(connection, latestTimestamp),
+  ]);
+
+  // The below seed data is for the Logto Cloud only. We put it here for the sack of simplicity.
+  // The data is not harmful for OSS, since they are all admin tenant data. OSS will not use them
+  // and they cannot be seen by the Console.
+  await Promise.all([
     seedTenantOrganizations(connection),
     seedManagementApiProxyApplications(connection),
   ]);
+
+  await updateDatabaseTimestamp(connection, latestTimestamp);
 
   consoleLog.succeed('Seed data');
 };

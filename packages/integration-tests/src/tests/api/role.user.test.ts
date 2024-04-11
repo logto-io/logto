@@ -1,5 +1,5 @@
 import { RoleType } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import { createUser } from '#src/api/index.js';
 import {
@@ -28,7 +28,7 @@ describe('roles users', () => {
 
   it('should return 404 if role not found', async () => {
     const response = await getRoleUsers('not-found').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should assign users to role successfully', async () => {
@@ -66,7 +66,7 @@ describe('roles users', () => {
     const user = await createUser(generateNewUserProfile({}));
     await expectRejects(assignUsersToRole([user.id], m2mRole.id), {
       code: 'entity.db_constraint_violated',
-      statusCode: 422,
+      status: 422,
     });
     const users = await getRoleUsers(m2mRole.id);
 
@@ -76,13 +76,13 @@ describe('roles users', () => {
   it('should fail when try to assign empty users', async () => {
     const role = await createRole({});
     const response = await assignUsersToRole([], role.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+    expect(response instanceof HTTPError && response.response.status).toBe(400);
   });
 
   it('should fail with invalid user input', async () => {
     const role = await createRole({});
     const response = await assignUsersToRole([''], role.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+    expect(response instanceof HTTPError && response.response.status).toBe(400);
   });
 
   it('should fail if role not found', async () => {
@@ -90,7 +90,7 @@ describe('roles users', () => {
     const response = await assignUsersToRole([user.id], 'not-found').catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail if user not found', async () => {
@@ -98,7 +98,7 @@ describe('roles users', () => {
     const response = await assignUsersToRole(['not-found'], role.id).catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should remove user from role successfully', async () => {
@@ -119,7 +119,7 @@ describe('roles users', () => {
     const response = await deleteUserFromRole(user.id, 'not-found').catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
   it('should fail if user not found when trying to remove user from role', async () => {
@@ -127,6 +127,6 @@ describe('roles users', () => {
     const response = await deleteUserFromRole('not-found', role.id).catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+    expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 });

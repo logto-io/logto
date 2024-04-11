@@ -14,7 +14,7 @@ export const createOpenaiApi = () => {
   const proxy = getProxy();
 
   return got.extend({
-    prefixUrl: 'https://api.openai.com/v1',
+    prefixUrl: process.env.OPENAI_API_PROXY_ENDPOINT ?? 'https://api.openai.com/v1',
     headers: {
       Authorization: `Bearer ${process.env.OPENAI_API_KEY ?? ''}`,
     },
@@ -50,7 +50,8 @@ export const translate = async ({
     api
       .post('chat/completions', {
         json: {
-          model: 'gpt-3.5-turbo-1106',
+          // The full list of OPENAI model can be found at https://platform.openai.com/docs/models.
+          model: process.env.OPENAI_MODEL_NAME ?? 'gpt-3.5-turbo-0125',
           messages: getTranslationPromptMessages({
             sourceFileContent,
             targetLanguage,

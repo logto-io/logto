@@ -1,0 +1,47 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+
+  > * {
+    flex: 1;
+    margin-bottom: _.unit(6);
+
+    &:first-child {
+      margin-right: _.unit(3);
+    }
+  }
+}
+
+.blockShimmer {
+  @include _.shimmering-animation;
+  border-radius: 8px;
+  flex: 1;
+}
+
+.card:not(:last-child) {
+  margin-bottom: _.unit(4);
+}
+
+
+.textShimmer {
+  @include _.shimmering-animation;
+  width: 100%;
+  height: _.unit(6);
+  border-radius: 8px;
+
+  &:not(:last-child) {
+    margin-bottom: _.unit(4);
+  }
+
+  &.title {
+    width: _.unit(30);
+  }
+
+  &.large {
+    height: _.unit(8);
+  }
+}
+

@@ -30,7 +30,7 @@ describe('Interaction details guard checking', () => {
       }),
       {
         code: 'session.not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -38,7 +38,7 @@ describe('Interaction details guard checking', () => {
   it('DELETE /interaction', async () => {
     await expectRejects(client.send(deleteInteraction), {
       code: 'session.not_found',
-      statusCode: 400,
+      status: 400,
     });
   });
 
@@ -49,7 +49,7 @@ describe('Interaction details guard checking', () => {
       }),
       {
         code: 'session.not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -62,7 +62,7 @@ describe('Interaction details guard checking', () => {
       }),
       {
         code: 'session.not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -75,7 +75,7 @@ describe('Interaction details guard checking', () => {
       }),
       {
         code: 'session.not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -88,7 +88,7 @@ describe('Interaction details guard checking', () => {
       }),
       {
         code: 'session.not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -96,14 +96,14 @@ describe('Interaction details guard checking', () => {
   it('DELETE /interaction/profile', async () => {
     await expectRejects(client.send(deleteInteractionProfile), {
       code: 'session.not_found',
-      statusCode: 400,
+      status: 400,
     });
   });
 
   it('POST /interaction/submit', async () => {
     await expectRejects(client.submitInteraction(), {
       code: 'session.not_found',
-      statusCode: 400,
+      status: 400,
     });
   });
 
@@ -116,7 +116,7 @@ describe('Interaction details guard checking', () => {
       }),
       {
         code: 'session.not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });
@@ -128,7 +128,7 @@ describe('Interaction details guard checking', () => {
       }),
       {
         code: 'session.not_found',
-        statusCode: 400,
+        status: 400,
       }
     );
   });

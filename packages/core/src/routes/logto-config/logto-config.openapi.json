@@ -1,0 +1,298 @@
+{
+  "tags": [
+    {
+      "name": "Configs",
+      "description": "Endpoints for managing Logto global configurations for the tenant, such as admin console config and OIDC signing keys.\n\nSee [🔑 Signing keys](https://docs.logto.io/docs/recipes/signing-keys-rotation/) to learn more about signing keys and key rotation."
+    }
+  ],
+  "paths": {
+    "/api/configs/admin-console": {
+      "get": {
+        "summary": "Get admin console config",
+        "description": "Get the global configuration object for Logto Console.",
+        "responses": {
+          "200": {
+            "description": "The configuration object."
+          },
+          "404": {
+            "description": "Configuration not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update admin console config",
+        "description": "Update the global configuration object for Logto Console. This method performs a partial update.",
+        "responses": {
+          "200": {
+            "description": "The updated configuration object."
+          },
+          "404": {
+            "description": "Configuration not found."
+          }
+        }
+      }
+    },
+    "/api/configs/oidc/{keyType}": {
+      "get": {
+        "summary": "Get OIDC keys",
+        "description": "Get OIDC signing keys by key type. The actual key will be redacted from the result.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "keyType",
+            "description": "Private keys are used to sign OIDC JWTs. Cookie keys are used to sign OIDC cookies. For clients, they do not need to know private keys to verify OIDC JWTs; they can use public keys from the JWKS endpoint instead."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of OIDC signing keys for the given key type."
+          }
+        }
+      }
+    },
+    "/api/configs/oidc/{keyType}/{keyId}": {
+      "delete": {
+        "summary": "Delete OIDC key",
+        "description": "Delete an OIDC signing key by key type and key ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "keyType",
+            "description": "Private keys are used to sign OIDC JWTs. Cookie keys are used to sign OIDC cookies. For clients, they do not need to know private keys to verify OIDC JWTs; they can use public keys from the JWKS endpoint instead."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The key was deleted successfully."
+          },
+          "404": {
+            "description": "The key was not found."
+          },
+          "422": {
+            "description": "At least one key must be kept."
+          }
+        }
+      }
+    },
+    "/api/configs/oidc/{keyType}/rotate": {
+      "post": {
+        "summary": "Rotate OIDC keys",
+        "description": "A new key will be generated and prepend to the list of keys.\n\nOnly two recent keys will be kept. The oldest key will be automatically removed if there are more than two keys.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "keyType",
+            "description": "Private keys are used to sign OIDC JWTs. Cookie keys are used to sign OIDC cookies. For clients, they do not need to know private keys to verify OIDC JWTs; they can use public keys from the JWKS endpoint instead."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "signingKeyAlgorithm": {
+                    "description": "The signing key algorithm the new generated private key is using.\n\nOnly applicable when `keyType` is `private-keys`."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "An array of OIDC signing keys after rotation."
+          }
+        }
+      }
+    },
+    "/api/configs/jwt-customizer": {
+      "get": {
+        "summary": "Get all JWT customizers",
+        "description": "Get all JWT customizers for the tenant.",
+        "responses": {
+          "200": {
+            "description": "The JWT customizers."
+          }
+        }
+      }
+    },
+    "/api/configs/jwt-customizer/{tokenTypePath}": {
+      "put": {
+        "summary": "Create or update JWT customizer",
+        "description": "Create or update a JWT customizer for the given token type.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tokenTypePath",
+            "description": "The token type to create a JWT customizer for."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "script": {
+                    "description": "The script of the JWT customizer."
+                  },
+                  "environmentVariables": {
+                    "description": "The environment variables for the JWT customizer."
+                  },
+                  "contextSample": {
+                    "description": "The sample context for the JWT customizer script testing purpose."
+                  },
+                  "tokenSample": {
+                    "description": "The sample raw token payload for the JWT customizer script testing purpose."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated JWT customizer."
+          },
+          "201": {
+            "description": "The created JWT customizer."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "403": {
+            "description": "Permission denied."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update JWT customizer",
+        "description": "Update the JWT customizer for the given token type.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tokenTypePath",
+            "description": "The token type to update a JWT customizer for."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "script": {
+                    "description": "The script of the JWT customizer."
+                  },
+                  "environmentVariables": {
+                    "description": "The environment variables for the JWT customizer."
+                  },
+                  "contextSample": {
+                    "description": "The sample context for the JWT customizer script testing purpose."
+                  },
+                  "tokenSample": {
+                    "description": "The sample raw token payload for the JWT customizer script testing purpose."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated JWT customizer."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          }
+        }
+      },
+      "get": {
+        "summary": "Get JWT customizer",
+        "description": "Get the JWT customizer for the given token type.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tokenTypePath",
+            "description": "The token type to get the JWT customizer for."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The JWT customizer."
+          },
+          "404": {
+            "description": "The JWT customizer does not exist."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete JWT customizer",
+        "description": "Delete the JWT customizer for the given token type.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tokenTypePath",
+            "description": "The token type path to delete the JWT customizer for."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The JWT customizer was deleted successfully."
+          },
+          "404": {
+            "description": "The JWT customizer does not exist."
+          }
+        }
+      }
+    },
+    "/api/configs/jwt-customizer/test": {
+      "post": {
+        "tags": ["Cloud only"],
+        "summary": "Test JWT customizer",
+        "description": "Test the JWT customizer script with the given sample context and sample token payload.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "tokenType": {
+                    "description": "The token type to test the JWT customizer for."
+                  },
+                  "payload": {
+                    "properties": {
+                      "script": {
+                        "description": "The code snippet of the JWT customizer."
+                      },
+                      "environmentVariables": {
+                        "description": "The environment variables for the JWT customizer."
+                      },
+                      "contextSample": {
+                        "description": "The sample context for the JWT customizer script testing purpose."
+                      },
+                      "tokenSample": {
+                        "description": "The sample token payload for the JWT customizer script testing purpose."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The result of the JWT customizer script testing."
+          },
+          "400": {
+            "description": "Zod errors in cloud service (data type does not match expectation, can be either request body or response body)."
+          },
+          "403": {
+            "description": "Cloud connection does not have enough permission to perform the action."
+          },
+          "422": {
+            "description": "Syntax errors in cloud service."
+          }
+        }
+      }
+    }
+  }
+}

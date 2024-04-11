@@ -1,4 +1,4 @@
-import { type CommonQueryMethods, sql } from 'slonik';
+import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 

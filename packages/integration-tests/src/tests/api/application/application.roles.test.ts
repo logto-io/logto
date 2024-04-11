@@ -1,6 +1,6 @@
 import { ApplicationType, RoleType } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import {
   createApplication,
@@ -27,7 +27,7 @@ describe('admin console application management (roles)', () => {
     const application = await createApplication(generateStandardId(), applicationType);
 
     const response = await getApplicationRoles(application.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 422).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 422).toBe(true);
   });
 
   it('should assign roles to app and get list successfully', async () => {
@@ -59,7 +59,7 @@ describe('admin console application management (roles)', () => {
     await assignRolesToApplication(application.id, [role.id]);
     await expectRejects(assignRolesToApplication(application.id, [role.id]), {
       code: 'application.role_exists',
-      statusCode: 422,
+      status: 422,
     });
   });
 
@@ -70,7 +70,7 @@ describe('admin console application management (roles)', () => {
 
     await expectRejects(assignRolesToApplication(application.id, [role.id]), {
       code: 'application.invalid_type',
-      statusCode: 422,
+      status: 422,
     });
   });
 
@@ -114,7 +114,7 @@ describe('admin console application management (roles)', () => {
     const response = await deleteRoleFromApplication(application.id, role.id).catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   // This case tests GET operation on applications and filter by `types` parameter and `search` parameter.

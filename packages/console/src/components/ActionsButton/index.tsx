@@ -13,8 +13,10 @@ import useActionTranslation from '@/hooks/use-action-translation';
 import * as styles from './index.module.scss';
 
 type Props = {
-  /** A function that will be called when the user confirms the deletion. */
-  onDelete: () => void | Promise<void>;
+  /** A function that will be called when the user confirms the deletion. If not provided,
+   * the delete button will not be displayed.
+   */
+  onDelete?: () => void | Promise<void>;
   /**
    * A function that will be called when the user clicks the edit button. If not provided,
    * the edit button will not be displayed.
@@ -48,6 +50,10 @@ function ActionsButton({ onDelete, onEdit, deleteConfirmation, fieldName, textOv
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = useCallback(async () => {
+    if (!onDelete) {
+      return;
+    }
+
     setIsDeleting(true);
     try {
       await onDelete();
@@ -69,31 +75,35 @@ function ActionsButton({ onDelete, onEdit, deleteConfirmation, fieldName, textOv
             )}
           </ActionMenuItem>
         )}
-        <ActionMenuItem
-          icon={<Delete />}
-          type="danger"
-          onClick={() => {
-            setIsModalOpen(true);
-          }}
-        >
-          {textOverrides?.delete ? (
-            <DynamicT forKey={textOverrides.delete} />
-          ) : (
-            tAction('delete', fieldName)
-          )}
-        </ActionMenuItem>
+        {onDelete && (
+          <ActionMenuItem
+            icon={<Delete />}
+            type="danger"
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            {textOverrides?.delete ? (
+              <DynamicT forKey={textOverrides.delete} />
+            ) : (
+              tAction('delete', fieldName)
+            )}
+          </ActionMenuItem>
+        )}
       </ActionMenu>
-      <ConfirmModal
-        isOpen={isModalOpen}
-        confirmButtonText={textOverrides?.deleteConfirmation ?? 'general.delete'}
-        isLoading={isDeleting}
-        onCancel={() => {
-          setIsModalOpen(false);
-        }}
-        onConfirm={handleDelete}
-      >
-        <DynamicT forKey={deleteConfirmation} />
-      </ConfirmModal>
+      {onDelete && (
+        <ConfirmModal
+          isOpen={isModalOpen}
+          confirmButtonText={textOverrides?.deleteConfirmation ?? 'general.delete'}
+          isLoading={isDeleting}
+          onCancel={() => {
+            setIsModalOpen(false);
+          }}
+          onConfirm={handleDelete}
+        >
+          <DynamicT forKey={deleteConfirmation} />
+        </ConfirmModal>
+      )}
     </>
   );
 }

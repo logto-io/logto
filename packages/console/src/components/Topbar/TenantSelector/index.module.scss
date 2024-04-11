@@ -19,6 +19,7 @@ $dropdown-item-height: 40px;
   position: relative;
   border: none;
   background-color: transparent;
+  gap: _.unit(2);
 
   &:hover {
     cursor: pointer;
@@ -31,12 +32,14 @@ $dropdown-item-height: 40px;
 
   .name {
     font: var(--font-title-2);
-    margin-right: _.unit(1.5);
     @include _.text-ellipsis;
   }
 
-  .tag {
-    margin-right: _.unit(2);
+  .redDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--color-on-error-container);
   }
 
   .arrowIcon {

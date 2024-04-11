@@ -1,17 +1,17 @@
 import type { GeneratedSchema, SchemaLike } from '@logto/schemas';
-import type { OmitAutoSetFields } from '@logto/shared';
+import { has } from '@silverhand/essentials';
+import type { CommonQueryMethods, IdentifierSqlToken } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
+
+import { InsertionError } from '#src/errors/SlonikError/index.js';
+import assertThat from '#src/utils/assert-that.js';
 import {
+  type OmitAutoSetFields,
   convertToIdentifiers,
   excludeAutoSetFields,
   convertToPrimitiveOrSql,
   conditionalSql,
-} from '@logto/shared';
-import { has } from '@silverhand/essentials';
-import type { CommonQueryMethods, IdentifierSqlToken } from 'slonik';
-import { sql } from 'slonik';
-
-import { InsertionError } from '#src/errors/SlonikError/index.js';
-import assertThat from '#src/utils/assert-that.js';
+} from '#src/utils/sql.js';
 
 const setExcluded = (...fields: IdentifierSqlToken[]) =>
   sql.join(

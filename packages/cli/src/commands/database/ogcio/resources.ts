@@ -1,6 +1,6 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
 
-import { sql, type DatabaseTransactionConnection } from 'slonik';
+import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { createItem } from './queries.js';
 

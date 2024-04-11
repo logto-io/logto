@@ -8,6 +8,8 @@ import Box from '@/assets/icons/box.svg';
 import Connection from '@/assets/icons/connection.svg';
 import Gear from '@/assets/icons/gear.svg';
 import Hook from '@/assets/icons/hook.svg';
+import JwtClaims from '@/assets/icons/jwt-claims.svg';
+import Key from '@/assets/icons/key.svg';
 import List from '@/assets/icons/list.svg';
 import Organization from '@/assets/icons/organization.svg';
 import UserProfile from '@/assets/icons/profile.svg';
@@ -16,7 +18,7 @@ import Role from '@/assets/icons/role.svg';
 import SecurityLock from '@/assets/icons/security-lock.svg';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg';
 import Web from '@/assets/icons/web.svg';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 
 type SidebarItem = {
   Icon: FC;
@@ -61,16 +63,13 @@ export const useSidebarMenuItems = (): {
       ],
     },
     {
-      title: 'resources',
+      title: 'authentication',
       items: [
         {
           Icon: Box,
           title: 'applications',
         },
-        {
-          Icon: ResourceIcon,
-          title: 'api_resources',
-        },
+
         {
           Icon: Web,
           title: 'sign_in_experience',
@@ -90,6 +89,24 @@ export const useSidebarMenuItems = (): {
       ],
     },
     {
+      title: 'authorization',
+      items: [
+        {
+          Icon: ResourceIcon,
+          title: 'api_resources',
+        },
+        {
+          Icon: Role,
+          title: 'roles',
+        },
+        {
+          Icon: Role,
+          title: 'organization_template',
+          isHidden: !isDevFeaturesEnabled,
+        },
+      ],
+    },
+    {
       title: 'users',
       items: [
         {
@@ -100,22 +117,27 @@ export const useSidebarMenuItems = (): {
           Icon: UserProfile,
           title: 'users',
         },
-        {
-          Icon: List,
-          title: 'audit_logs',
-        },
-        {
-          Icon: Role,
-          title: 'roles',
-        },
       ],
     },
     {
-      title: 'automation',
+      title: 'developer',
       items: [
+        {
+          Icon: Key,
+          title: 'signing_keys',
+        },
+        {
+          Icon: JwtClaims,
+          title: 'customize_jwt',
+          isHidden: !(isCloud && isDevFeaturesEnabled),
+        },
         {
           Icon: Hook,
           title: 'webhooks',
+        },
+        {
+          Icon: List,
+          title: 'audit_logs',
         },
       ],
     },

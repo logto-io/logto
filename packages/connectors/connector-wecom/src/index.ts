@@ -106,8 +106,8 @@ const getUserInfo =
         searchParams: { access_token: accessToken, code },
         timeout: { request: defaultTimeout },
       });
-
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
+      const rawData = parseJson(httpResponse.body);
+      const result = userInfoResponseGuard.safeParse(rawData);
 
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
@@ -118,15 +118,18 @@ const getUserInfo =
       errorResponseHandler(result.data);
       //
       const { userid, openid } = result.data;
+      const id = userid ?? openid;
 
-      if (userid) {
-        return { id: userid, avatar: '', name: userid };
+      if (!id) {
+        throw new Error('Both userid and openid are undefined or null.');
       }
-      if (openid) {
-        return { id: openid, avatar: '', name: openid };
-      }
-      throw new Error('Both userid and openid are undefined or null.');
-      // Both userid and openid are null
+
+      return {
+        id,
+        avatar: '',
+        name: id,
+        rawData,
+      };
     } catch (error: unknown) {
       return getUserInfoErrorHandler(error);
     }

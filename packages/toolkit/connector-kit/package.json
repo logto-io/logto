@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-kit",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/toolkit#readme",
   "repository": {
@@ -30,32 +30,28 @@
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
-    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm test:only",
-    "test:coverage": "pnpm test:only --silent --coverage"
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage"
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^1.1.0",
     "@silverhand/essentials": "^2.9.0",
-    "@withtyped/client": "^0.7.22",
-    "@withtyped/server": "^0.12.9"
+    "@withtyped/client": "^0.8.4",
+    "@withtyped/server": "^0.13.3"
   },
   "optionalDependencies": {
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@jest/types": "^29.0.3",
     "@silverhand/eslint-config": "5.0.0",
     "@silverhand/ts-config": "5.0.0",
-    "@types/jest": "^29.4.0",
     "@types/node": "^20.9.5",
+    "@vitest/coverage-v8": "^1.4.0",
     "eslint": "^8.44.0",
-    "jest": "^29.7.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
-    "tslib": "^2.4.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.4.0"
   },
   "engines": {
     "node": "^20.9.0"

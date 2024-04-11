@@ -101,8 +101,8 @@ const getUserInfo =
         },
         timeout: { request: defaultTimeout },
       });
-
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
+      const rawData = parseJson(httpResponse.body);
+      const result = userInfoResponseGuard.safeParse(rawData);
 
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
@@ -115,6 +115,7 @@ const getUserInfo =
         avatar,
         email: conditional(email_verified && email),
         name,
+        rawData,
       };
     } catch (error: unknown) {
       return getUserInfoErrorHandler(error);

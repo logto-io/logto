@@ -13,6 +13,8 @@ const api_resources = {
   default_api_label:
     'В каждом арендаторе может быть только один API по умолчанию. Когда устанавливается API по умолчанию, можно опустить параметр <a>resource</a> в запросе на аутентификацию. Последующие запросы на обмен токенами будут использовать указанное API в качестве аудитории по умолчанию, что приведет к выдаче JWT. <a>Узнать больше</a>',
   api_resource_created: 'Ресурс API {{name}} был успешно создан',
+  /** UNTRANSLATED */
+  invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 
 export default Object.freeze(api_resources);

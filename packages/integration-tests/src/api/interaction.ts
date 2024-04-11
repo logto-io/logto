@@ -5,8 +5,9 @@ import type {
   RequestVerificationCodePayload,
   BindMfaPayload,
   VerifyMfaPayload,
+  ConsentInfoResponse,
 } from '@logto/schemas';
-import type { Got } from 'got';
+import { type KyInstance } from 'ky';
 
 import api from './api.js';
 
@@ -25,7 +26,6 @@ export const putInteraction = async (cookie: string, payload: InteractionPayload
     .put('interaction', {
       headers: { cookie },
       json: payload,
-      followRedirect: false,
     })
     .json();
 
@@ -33,21 +33,17 @@ export const deleteInteraction = async (cookie: string) =>
   api
     .delete('interaction', {
       headers: { cookie },
-      followRedirect: false,
     })
     .json();
 
 export const putInteractionEvent = async (cookie: string, payload: { event: InteractionEvent }) =>
-  api
-    .put('interaction/event', { headers: { cookie }, json: payload, followRedirect: false })
-    .json();
+  api.put('interaction/event', { headers: { cookie }, json: payload, redirect: 'manual' }).json();
 
 export const patchInteractionIdentifiers = async (cookie: string, payload: IdentifierPayload) =>
   api
     .patch('interaction/identifiers', {
       headers: { cookie },
       json: payload,
-      followRedirect: false,
     })
     .json();
 
@@ -56,7 +52,6 @@ export const patchInteractionProfile = async (cookie: string, payload: Profile) 
     .patch('interaction/profile', {
       headers: { cookie },
       json: payload,
-      followRedirect: false,
     })
     .json();
 
@@ -65,7 +60,6 @@ export const putInteractionProfile = async (cookie: string, payload: Profile) =>
     .put('interaction/profile', {
       headers: { cookie },
       json: payload,
-      followRedirect: false,
     })
     .json();
 
@@ -74,7 +68,6 @@ export const postInteractionBindMfa = async (cookie: string, payload: BindMfaPay
     .post('interaction/bind-mfa', {
       headers: { cookie },
       json: payload,
-      followRedirect: false,
     })
     .json();
 
@@ -83,7 +76,6 @@ export const putInteractionMfa = async (cookie: string, payload: VerifyMfaPayloa
     .put('interaction/mfa', {
       headers: { cookie },
       json: payload,
-      followRedirect: false,
     })
     .json();
 
@@ -91,13 +83,12 @@ export const deleteInteractionProfile = async (cookie: string) =>
   api
     .delete('interaction/profile', {
       headers: { cookie },
-      followRedirect: false,
     })
     .json();
 
-export const submitInteraction = async (api: Got, cookie: string) =>
+export const submitInteraction = async (api: KyInstance, cookie: string) =>
   api
-    .post('interaction/submit', { headers: { cookie }, followRedirect: false })
+    .post('interaction/submit', { headers: { cookie }, redirect: 'manual' })
     .json<RedirectResponse>();
 
 export const sendVerificationCode = async (
@@ -107,7 +98,6 @@ export const sendVerificationCode = async (
   api.post('interaction/verification/verification-code', {
     headers: { cookie },
     json: payload,
-    followRedirect: false,
   });
 
 export type SocialAuthorizationUriPayload = {
@@ -123,7 +113,6 @@ export const createSocialAuthorizationUri = async (
   api.post('interaction/verification/social-authorization-uri', {
     headers: { cookie },
     json: payload,
-    followRedirect: false,
   });
 
 export const initTotp = async (cookie: string) =>
@@ -131,7 +120,8 @@ export const initTotp = async (cookie: string) =>
     .post('interaction/verification/totp', {
       headers: { cookie },
       json: {},
-      followRedirect: false,
+      redirect: 'manual',
+      throwHttpErrors: false,
     })
     .json<{ secret: string }>();
 
@@ -141,18 +131,25 @@ export const skipMfaBinding = async (cookie: string) =>
     json: {
       mfaSkipped: true,
     },
-    followRedirect: false,
   });
 
-export const consent = async (api: Got, cookie: string) =>
+export const consent = async (api: KyInstance, cookie: string) =>
   api
     .post('interaction/consent', {
       headers: {
         cookie,
       },
-      followRedirect: false,
+      redirect: 'manual',
+      throwHttpErrors: false,
     })
     .json<RedirectResponse>();
+
+export const getConsentInfo = async (cookie: string) =>
+  api
+    .get('interaction/consent', {
+      headers: { cookie },
+    })
+    .json<ConsentInfoResponse>();
 
 export const createSingleSignOnAuthorizationUri = async (
   cookie: string,
@@ -161,5 +158,4 @@ export const createSingleSignOnAuthorizationUri = async (
   api.post('interaction/verification/sso-authorization-uri', {
     headers: { cookie },
     json: payload,
-    followRedirect: false,
   });

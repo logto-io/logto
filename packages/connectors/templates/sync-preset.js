@@ -15,6 +15,11 @@ const templateJson = Object.fromEntries(
 );
 const templateKeys = Object.keys(templateJson);
 
+/**
+ * An object that contains exceptions for scripts that are allowed to be different from the template.
+ */
+const scriptExceptions = {};
+
 const sync = async () => {
   const packagesDirectory = './';
   const packages = await fs.readdir(packagesDirectory);
@@ -42,9 +47,23 @@ const sync = async () => {
           );
         }
 
+        const scriptOverrides = scriptExceptions[packageName]
+          ? Object.fromEntries(
+              scriptExceptions[packageName].map((key) => [key, current.scripts[key]])
+            )
+          : {};
+
         await fs.writeFile(
           packageJsonPath,
-          JSON.stringify({ ...current, ...templateJson }, undefined, 2) + '\n'
+          JSON.stringify(
+            {
+              ...current,
+              ...templateJson,
+              scripts: { ...templateJson.scripts, ...scriptOverrides },
+            },
+            undefined,
+            2
+          ) + '\n'
         );
 
         // Copy preset

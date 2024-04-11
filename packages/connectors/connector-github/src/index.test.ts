@@ -7,13 +7,11 @@ import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './
 import createConnector, { getAccessToken } from './index.js';
 import { mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
@@ -27,7 +25,7 @@ describe('getAuthorizationUri', () => {
         jti: 'some_jti',
         headers: {},
       },
-      jest.fn()
+      vi.fn()
     );
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=read%3Auser`
@@ -38,7 +36,7 @@ describe('getAuthorizationUri', () => {
 describe('getAccessToken', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get an accessToken by exchanging with code', async () => {
@@ -60,7 +58,7 @@ describe('getAccessToken', () => {
     nock(accessTokenEndpoint)
       .post('')
       .reply(200, qs.stringify({ access_token: '', scope: 'scope', token_type: 'token_type' }));
-    await expect(getAccessToken(mockedConfig, { code: 'code' })).rejects.toMatchError(
+    await expect(getAccessToken(mockedConfig, { code: 'code' })).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
   });
@@ -82,7 +80,7 @@ describe('getUserInfo', () => {
 
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get valid SocialUserInfo', async () => {
@@ -91,14 +89,22 @@ describe('getUserInfo', () => {
       avatar_url: 'https://github.com/images/error/octocat_happy.gif',
       name: 'monalisa octocat',
       email: 'octocat@github.com',
+      foo: 'bar',
     });
     const connector = await createConnector({ getConfig });
-    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, jest.fn());
-    expect(socialUserInfo).toMatchObject({
+    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, vi.fn());
+    expect(socialUserInfo).toStrictEqual({
       id: '1',
       avatar: 'https://github.com/images/error/octocat_happy.gif',
       name: 'monalisa octocat',
       email: 'octocat@github.com',
+      rawData: {
+        id: 1,
+        avatar_url: 'https://github.com/images/error/octocat_happy.gif',
+        name: 'monalisa octocat',
+        email: 'octocat@github.com',
+        foo: 'bar',
+      },
     });
   });
 
@@ -110,16 +116,22 @@ describe('getUserInfo', () => {
       email: null,
     });
     const connector = await createConnector({ getConfig });
-    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, jest.fn());
+    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, vi.fn());
     expect(socialUserInfo).toMatchObject({
       id: '1',
+      rawData: {
+        id: 1,
+        avatar_url: null,
+        name: null,
+        email: null,
+      },
     });
   });
 
   it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
     nock(userInfoEndpoint).get('').reply(401);
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ code: 'code' }, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
   });
@@ -140,9 +152,9 @@ describe('getUserInfo', () => {
           error_uri:
             'https://docs.github.com/apps/troubleshooting-authorization-request-errors#access-denied',
         },
-        jest.fn()
+        vi.fn()
       )
-    ).rejects.toMatchError(
+    ).rejects.toStrictEqual(
       new ConnectorError(
         ConnectorErrorCodes.AuthorizationFailed,
         'The user has denied your application access.'
@@ -164,9 +176,9 @@ describe('getUserInfo', () => {
           error: 'general_error',
           error_description: 'General error encountered.',
         },
-        jest.fn()
+        vi.fn()
       )
-    ).rejects.toMatchError(
+    ).rejects.toStrictEqual(
       new ConnectorError(
         ConnectorErrorCodes.General,
         '{"error":"general_error","error_description":"General error encountered."}'
@@ -177,6 +189,6 @@ describe('getUserInfo', () => {
   it('throws unrecognized error', async () => {
     nock(userInfoEndpoint).get('').reply(500);
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ code: 'code' }, jest.fn())).rejects.toThrow();
+    await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toThrow();
   });
 });

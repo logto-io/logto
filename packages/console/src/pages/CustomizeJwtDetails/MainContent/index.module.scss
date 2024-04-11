@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+
+.content {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  margin-bottom: _.unit(3);
+
+  > * {
+    &:first-child {
+      margin-right: _.unit(3);
+      flex: 9;
+    }
+
+    &:last-child {
+      flex: 7;
+    }
+  }
+}
+
+.submitActionBar {
+  &.overwrite {
+    margin-top: 0;
+  }
+}

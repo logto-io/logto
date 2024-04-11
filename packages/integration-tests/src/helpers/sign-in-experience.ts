@@ -63,6 +63,15 @@ export const enableAllPasswordSignInMethods = async (
     mfa: { factors: [], policy: MfaPolicy.UserControlled },
   });
 
+export const resetPasswordPolicy = async () =>
+  updateSignInExperience({
+    passwordPolicy: {
+      length: { min: 8, max: 256 },
+      characterTypes: { min: 1 },
+      rejects: { pwned: true, repetitionAndSequence: true, userInfo: true },
+    },
+  });
+
 export const enableAllVerificationCodeSignInMethods = async (
   signUp: SignInExperience['signUp'] = defaultSignUpMethod
 ) =>

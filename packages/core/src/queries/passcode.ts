@@ -1,12 +1,12 @@
 import type { TemplateType } from '@logto/connector-kit';
 import type { Passcode, RequestVerificationCodePayload } from '@logto/schemas';
 import { Passcodes } from '@logto/schemas';
-import { conditionalSql, convertToIdentifiers } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Passcodes);
 

@@ -162,7 +162,17 @@
   --color-specific-icon-bg: #f3effa;
   --color-specific-toggle-off-enable: var(--color-neutral-90);
   --color-specific-unselected-disabled: var(--color-hover); // 8% Neutral-10
+  --color-specific-selected-disabled: var(--color-primary-80);
+  --color-specific-focused-inside: var(--color-primary-30);
+  --color-specific-focused-outside: var(--color-primary-40);
+  --color-specific-button-icon: rgba(255, 255, 255, 70%); // 70% static white
+  --color-overlay-primary-hover: rgba(93, 52, 242, 8%); // 8% Primary-40
+  --color-overlay-primary-pressed: rgba(93, 52, 242, 12%); // 12% Primary-40
   --color-function-n-overlay-primary-focused: rgba(93, 52, 242, 16%); // 16% Primary-40
+  --color-overlay-danger-hover: rgba(186, 27, 27, 8%); // 8% Error-40
+  --color-overlay-dark-bg-hover: rgba(255, 255, 255, 12%); // 12% static white
+  --color-overlay-dark-bg-pressed: rgba(255, 255, 255, 18%); // 18% static white
+  --color-overlay-dark-bg-focused: rgba(255, 255, 255, 24%); // 24% static white
 
   // Shadows
   --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
@@ -201,6 +211,15 @@
   --color-bg-state-unselected: var(--color-neutral-90);
   --color-bg-state-disabled: rgba(25, 28, 29, 8%); // 8% --color-neutral-10
   --color-bg-info-tag: rgba(229, 225, 236, 80%); // 80% --color-neutral-variant-90
+
+  // code editor
+  --color-code-bg: #181133;
+  --color-code-bg-float: #30314e;
+  --color-code-white: #f7f8f8;
+  --color-code-grey: #adaab4;
+  --color-code-dark-bg-focused: rgba(255, 255, 255, 24%);
+  --color-code-dark-bg-hover: rgba(255, 255, 255, 12%);
+  --color-code-dark-bg-pressed: rgba(255, 255, 255, 18%);
 }
 
 @mixin dark {
@@ -367,7 +386,17 @@
   --color-specific-icon-bg: rgba(247, 248, 248, 12%);
   --color-specific-toggle-off-enable: var(--color-neutral-90);
   --color-specific-unselected-disabled: var(--color-hover); // 8% Neutral-10
+  --color-specific-selected-disabled: var(--color-primary-80);
+  --color-specific-focused-inside: var(--color-primary-40);
+  --color-specific-focused-outside: rgba(#cabeff, 32%); // 32% Primary-40
+  --color-specific-button-icon: rgba(255, 255, 255, 60%); // 60% static white
+  --color-overlay-primary-hover: rgba(202, 190, 255, 8%); // 8% Primary-40
+  --color-overlay-primary-pressed: rgba(202, 190, 255, 12%); // 12% Primary-40
   --color-function-n-overlay-primary-focused: rgba(202, 190, 255, 16%); // 16% Primary-40
+  --color-overlay-danger-hover: rgba(186, 27, 27, 8%); // 8% Error-40
+  --color-overlay-dark-bg-hover: rgba(255, 255, 255, 12%); // 12% static white
+  --color-overlay-dark-bg-pressed: rgba(255, 255, 255, 18%); // 18% static white
+  --color-overlay-dark-bg-focused: rgba(255, 255, 255, 24%); // 24% static white
 
   // Shadows
   --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
@@ -409,4 +438,11 @@
   --color-bg-state-unselected: var(--color-neutral-90);
   --color-bg-state-disabled: rgba(247, 248, 248, 8%); // 8% --color-neutral-10
   --color-bg-info-tag: var(--color-neutral-variant-90);
+
+  // code editor
+  --color-code-bg: #090613;
+  --color-code-bg-float: #232439;
+  --color-code-white: #f7f8f8;
+  --color-code-grey: #adaab4;
+  --color-code-dark-bg-focused: rgba(255, 255, 255, 24%);
 }

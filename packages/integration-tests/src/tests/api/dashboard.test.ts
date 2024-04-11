@@ -19,15 +19,15 @@ describe('admin console dashboard', () => {
   it('non authorized request should return 401', async () => {
     await expectRejects(api.get('dashboard/users/total'), {
       code: 'auth.authorization_header_missing',
-      statusCode: 401,
+      status: 401,
     });
     await expectRejects(api.get('dashboard/users/new'), {
       code: 'auth.authorization_header_missing',
-      statusCode: 401,
+      status: 401,
     });
     await expectRejects(api.get('dashboard/users/active'), {
       code: 'auth.authorization_header_missing',
-      statusCode: 401,
+      status: 401,
     });
   });
 
@@ -36,7 +36,7 @@ describe('admin console dashboard', () => {
 
     const password = generatePassword();
     const username = generateUsername();
-    await createUserByAdmin(username, password);
+    await createUserByAdmin({ username, password });
 
     const { totalUserCount } = await getTotalUsersCount();
 
@@ -63,7 +63,7 @@ describe('admin console dashboard', () => {
 
     const password = generatePassword();
     const username = generateUsername();
-    await createUserByAdmin(username, password);
+    await createUserByAdmin({ username, password });
 
     await signInWithPassword({ username, password });
 

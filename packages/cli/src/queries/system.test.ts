@@ -1,16 +1,15 @@
 import { AlterationStateKey, Systems } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 import { DatabaseError } from 'pg-protocol';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
+import { describe, it, expect, vi, type MockedFunction, afterAll, beforeAll } from 'vitest';
 
+import { convertToIdentifiers } from '../sql.js';
 import type { QueryType } from '../test-utils.js';
 import { expectSqlAssert } from '../test-utils.js';
 
 import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './system.js';
 
-const { jest } = import.meta;
-
-const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
+const mockQuery: MockedFunction<QueryType> = vi.fn();
 
 const pool = createMockPool({
   query: async (sql, values) => {
@@ -94,12 +93,12 @@ describe('updateDatabaseTimestamp()', () => {
   const updatedAt = '2022-09-21T06:32:46.583Z';
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date(updatedAt));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(updatedAt));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('sends upsert sql with timestamp and updatedAt', async () => {

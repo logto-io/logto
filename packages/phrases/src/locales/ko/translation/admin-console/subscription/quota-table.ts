@@ -46,14 +46,6 @@ const quota_table = {
     machine_to_machine_roles: '머신 투 머신 역할',
     scopes_per_role: '역할 당 권한',
   },
-  audit_logs: {
-    title: '감사 로그',
-    retention: '보존 기간',
-  },
-  hooks: {
-    title: 'Webhooks',
-    hooks: 'Webhooks',
-  },
   organizations: {
     title: '조직',
     organizations: '조직',
@@ -72,6 +64,18 @@ const quota_table = {
     email_ticket_support: '이메일 티켓 지원',
     soc2_report: 'SOC2 보고서',
     hipaa_or_baa_report: 'HIPAA/BAA 보고서',
+  },
+  developers_and_platform: {
+    /** UNTRANSLATED */
+    title: 'Developers and platform',
+    /** UNTRANSLATED */
+    hooks: 'Webhooks',
+    /** UNTRANSLATED */
+    audit_logs_retention: 'Audit logs retention',
+    /** UNTRANSLATED */
+    jwt_claims: 'JWT claims',
+    /** UNTRANSLATED */
+    tenant_members: 'Tenant members',
   },
   unlimited: '무제한',
   contact: '문의',
@@ -101,6 +105,8 @@ const quota_table = {
   per_month_each: '월당 ${{value, number}} / 각각',
   extra_mao_price: '이후 MAO당 ${{value, number}}',
   per_month: '월당 ${{value, number}}',
+  /** UNTRANSLATED */
+  per_member: 'Then ${{value, number}} per member',
 };
 
 export default Object.freeze(quota_table);

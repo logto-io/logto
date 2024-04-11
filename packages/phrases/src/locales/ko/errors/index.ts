@@ -5,6 +5,7 @@ import domain from './domain.js';
 import entity from './entity.js';
 import guard from './guard.js';
 import hook from './hook.js';
+import jwt_customizer from './jwt-customizer.js';
 import localization from './localization.js';
 import log from './log.js';
 import oidc from './oidc.js';
@@ -34,6 +35,7 @@ const errors = {
   connector,
   verification_code,
   sign_in_experiences,
+  jwt_customizer,
   localization,
   swagger,
   entity,

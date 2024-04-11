@@ -6,14 +6,12 @@ import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './
 import createConnector, { getAccessToken } from './index.js';
 import { mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('kakao connector', () => {
   describe('getAuthorizationUri', () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get a valid authorizationUri with redirectUri and state', async () => {
@@ -27,7 +25,7 @@ describe('kakao connector', () => {
           jti: 'some_jti',
           headers: {},
         },
-        jest.fn()
+        vi.fn()
       );
       expect(authorizationUri).toEqual(
         `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&state=some_state`
@@ -38,7 +36,7 @@ describe('kakao connector', () => {
   describe('getAccessToken', () => {
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get an accessToken by exchanging with code', async () => {
@@ -60,7 +58,7 @@ describe('kakao connector', () => {
         .reply(200, { access_token: '', scope: 'scope', token_type: 'token_type' });
       await expect(
         getAccessToken(mockedConfig, { code: 'code', redirectUri: 'dummyRedirectUri' })
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
     });
   });
 
@@ -75,37 +73,37 @@ describe('kakao connector', () => {
 
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get valid SocialUserInfo', async () => {
-      nock(userInfoEndpoint)
-        .post('')
-        .reply(200, {
-          id: 1_234_567_890,
-          kakao_account: {
-            is_email_valid: true,
-            email: 'ruddbs5302@gmail.com',
-            profile: {
-              nickname: 'pemassi',
-              profile_image_url: 'https://github.com/images/error/octocat_happy.gif',
-              is_default_image: false,
-            },
+      const jsonResponse = Object.freeze({
+        id: 1_234_567_890,
+        kakao_account: {
+          is_email_valid: true,
+          email: 'ruddbs5302@gmail.com',
+          profile: {
+            nickname: 'pemassi',
+            profile_image_url: 'https://github.com/images/error/octocat_happy.gif',
+            is_default_image: false,
           },
-        });
+        },
+      });
+      nock(userInfoEndpoint).post('').reply(200, jsonResponse);
       const connector = await createConnector({ getConfig });
       const socialUserInfo = await connector.getUserInfo(
         {
           code: 'code',
           redirectUri: 'redirectUri',
         },
-        jest.fn()
+        vi.fn()
       );
-      expect(socialUserInfo).toMatchObject({
+      expect(socialUserInfo).toStrictEqual({
         id: '1234567890',
         avatar: 'https://github.com/images/error/octocat_happy.gif',
         name: 'pemassi',
         email: 'ruddbs5302@gmail.com',
+        rawData: jsonResponse,
       });
     });
 
@@ -113,8 +111,8 @@ describe('kakao connector', () => {
       nock(userInfoEndpoint).post('').reply(401);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code: 'code', redirectUri: '' }, jest.fn())
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+        connector.getUserInfo({ code: 'code', redirectUri: '' }, vi.fn())
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
     it('throws General error', async () => {
@@ -135,9 +133,9 @@ describe('kakao connector', () => {
             error: 'general_error',
             error_description: 'General error encountered.',
           },
-          jest.fn()
+          vi.fn()
         )
-      ).rejects.toMatchError(
+      ).rejects.toStrictEqual(
         new ConnectorError(
           ConnectorErrorCodes.General,
           '{"error":"general_error","error_description":"General error encountered."}'
@@ -149,7 +147,7 @@ describe('kakao connector', () => {
       nock(userInfoEndpoint).post('').reply(500);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code: 'code', redirectUri: '' }, jest.fn())
+        connector.getUserInfo({ code: 'code', redirectUri: '' }, vi.fn())
       ).rejects.toThrow();
     });
   });

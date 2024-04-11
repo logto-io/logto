@@ -12,12 +12,13 @@ import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar'
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { trySubmitSafe } from '@/utils/form';
 
 import DeleteCard from './DeleteCard';
 import DeleteModal from './DeleteModal';
+import LeaveCard from './LeaveCard';
 import ProfileForm from './ProfileForm';
-import SigningKeys from './SigningKeys';
 import * as styles from './index.module.scss';
 import { type TenantSettingsForm } from './types.js';
 
@@ -29,6 +30,7 @@ const tenantProfileToForm = (tenant?: TenantResponse): TenantSettingsForm => {
 
 function TenantBasicSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { canManageTenant } = useCurrentTenantScopes();
   const api = useCloudApi();
   const {
     currentTenant,
@@ -121,27 +123,35 @@ function TenantBasicSettings() {
         <FormProvider {...methods}>
           <div className={styles.fields}>
             <ProfileForm currentTenantId={currentTenantId} />
-            <SigningKeys />
-            <DeleteCard currentTenantId={currentTenantId} onClick={onClickDeletionButton} />
+            <LeaveCard />
+            {canManageTenant && (
+              <DeleteCard currentTenantId={currentTenantId} onClick={onClickDeletionButton} />
+            )}
           </div>
         </FormProvider>
-        <SubmitFormChangesActionBar
-          isOpen={isDirty}
-          isSubmitting={isSubmitting}
-          onDiscard={reset}
-          onSubmit={onSubmit}
-        />
+        {canManageTenant && (
+          <SubmitFormChangesActionBar
+            isOpen={isDirty}
+            isSubmitting={isSubmitting}
+            onDiscard={reset}
+            onSubmit={onSubmit}
+          />
+        )}
       </form>
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
-      <DeleteModal
-        isOpen={isDeletionModalOpen}
-        isLoading={isDeleting}
-        tenant={watch('profile')}
-        onClose={() => {
-          setIsDeletionModalOpen(false);
-        }}
-        onDelete={onDelete}
-      />
+      {canManageTenant && (
+        <>
+          <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+          <DeleteModal
+            isOpen={isDeletionModalOpen}
+            isLoading={isDeleting}
+            tenant={watch('profile')}
+            onClose={() => {
+              setIsDeletionModalOpen(false);
+            }}
+            onDelete={onDelete}
+          />
+        </>
+      )}
     </>
   );
 }

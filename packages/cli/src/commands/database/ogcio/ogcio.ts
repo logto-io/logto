@@ -3,7 +3,7 @@
 /* eslint-disable @silverhand/fp/no-let */
 
 import { defaultTenantId } from '@logto/schemas';
-import type { CommonQueryMethods, DatabaseTransactionConnection } from 'slonik';
+import type { CommonQueryMethods, DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { seedApplications } from './applications.js';
 import { type OgcioParams } from './index.js';

@@ -6,14 +6,12 @@ import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './
 import createConnector, { getAccessToken } from './index.js';
 import { mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('naver connector', () => {
   describe('getAuthorizationUri', () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get a valid authorizationUri with redirectUri and state', async () => {
@@ -27,7 +25,7 @@ describe('naver connector', () => {
           jti: 'some_jti',
           headers: {},
         },
-        jest.fn()
+        vi.fn()
       );
       expect(authorizationUri).toEqual(
         `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&state=some_state`
@@ -38,7 +36,7 @@ describe('naver connector', () => {
   describe('getAccessToken', () => {
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get an accessToken by exchanging with code', async () => {
@@ -60,7 +58,7 @@ describe('naver connector', () => {
         .reply(200, { access_token: '', scope: 'scope', token_type: 'token_type' });
       await expect(
         getAccessToken(mockedConfig, { code: 'code', redirectUri: 'dummyRedirectUri' })
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
     });
   });
 
@@ -75,39 +73,39 @@ describe('naver connector', () => {
 
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get valid SocialUserInfo', async () => {
-      nock(userInfoEndpoint)
-        .post('')
-        .reply(200, {
-          resultcode: '00',
-          message: 'success',
-          response: {
-            email: 'openapi@naver.com',
-            nickname: 'OpenAPI',
-            profile_image: 'https://ssl.pstatic.net/static/pwe/address/nodata_33x33.gif',
-            age: '40-49',
-            gender: 'F',
-            id: '32742776',
-            name: '오픈 API',
-            birthday: '10-01',
-          },
-        });
+      const jsonResponse = Object.freeze({
+        resultcode: '00',
+        message: 'success',
+        response: {
+          email: 'openapi@naver.com',
+          nickname: 'OpenAPI',
+          profile_image: 'https://ssl.pstatic.net/static/pwe/address/nodata_33x33.gif',
+          age: '40-49',
+          gender: 'F',
+          id: '32742776',
+          name: '오픈 API',
+          birthday: '10-01',
+        },
+      });
+      nock(userInfoEndpoint).post('').reply(200, jsonResponse);
       const connector = await createConnector({ getConfig });
       const socialUserInfo = await connector.getUserInfo(
         {
           code: 'code',
           redirectUri: 'redirectUri',
         },
-        jest.fn()
+        vi.fn()
       );
       expect(socialUserInfo).toMatchObject({
         id: '32742776',
         avatar: 'https://ssl.pstatic.net/static/pwe/address/nodata_33x33.gif',
         name: 'OpenAPI',
         email: 'openapi@naver.com',
+        rawData: jsonResponse,
       });
     });
 
@@ -115,8 +113,8 @@ describe('naver connector', () => {
       nock(userInfoEndpoint).post('').reply(401);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code: 'code', redirectUri: '' }, jest.fn())
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+        connector.getUserInfo({ code: 'code', redirectUri: '' }, vi.fn())
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
     it('throws General error', async () => {
@@ -137,9 +135,9 @@ describe('naver connector', () => {
             error: 'general_error',
             error_description: 'General error encountered.',
           },
-          jest.fn()
+          vi.fn()
         )
-      ).rejects.toMatchError(
+      ).rejects.toStrictEqual(
         new ConnectorError(
           ConnectorErrorCodes.General,
           '{"error":"general_error","error_description":"General error encountered."}'
@@ -151,7 +149,7 @@ describe('naver connector', () => {
       nock(userInfoEndpoint).post('').reply(500);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code: 'code', redirectUri: '' }, jest.fn())
+        connector.getUserInfo({ code: 'code', redirectUri: '' }, vi.fn())
       ).rejects.toThrow();
     });
   });

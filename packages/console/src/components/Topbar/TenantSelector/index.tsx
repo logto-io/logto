@@ -1,3 +1,4 @@
+import { OrganizationInvitationStatus } from '@logto/schemas';
 import { useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,9 +12,11 @@ import Divider from '@/ds-components/Divider';
 import Dropdown from '@/ds-components/Dropdown';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
+import useUserInvitations from '@/hooks/use-user-invitations';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import TenantDropdownItem from './TenantDropdownItem';
+import TenantInvitationDropdownItem from './TenantInvitationDropdownItem';
 import * as styles from './index.module.scss';
 
 export default function TenantSelector() {
@@ -25,6 +28,7 @@ export default function TenantSelector() {
     currentTenantId,
     navigateTenant,
   } = useContext(TenantsContext);
+  const { data: pendingInvitations } = useUserInvitations(OrganizationInvitationStatus.Pending);
 
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -50,7 +54,8 @@ export default function TenantSelector() {
         }}
       >
         <div className={styles.name}>{currentTenantInfo.name}</div>
-        <TenantEnvTag className={styles.tag} tag={currentTenantInfo.tag} />
+        <TenantEnvTag tag={currentTenantInfo.tag} />
+        {Boolean(pendingInvitations?.length) && <div className={styles.redDot} />}
         <KeyboardArrowDown className={styles.arrowIcon} />
       </div>
       <Dropdown
@@ -75,6 +80,9 @@ export default function TenantSelector() {
                 setShowDropdown(false);
               }}
             />
+          ))}
+          {pendingInvitations?.map((invitation) => (
+            <TenantInvitationDropdownItem key={invitation.id} data={invitation} />
           ))}
         </OverlayScrollbar>
         <Divider />

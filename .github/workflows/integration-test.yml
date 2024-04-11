@@ -18,7 +18,7 @@ jobs:
       INTEGRATION_TEST: true
 
     steps:
-      - uses: logto-io/actions-package-logto-artifact@v1.1.0
+      - uses: logto-io/actions-package-logto-artifact@v2
         with:
           artifact-name: integration-test-${{ github.sha }}
 
@@ -34,7 +34,7 @@ jobs:
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
-      - uses: logto-io/actions-run-logto-integration-tests@v1.1.0
+      - uses: logto-io/actions-run-logto-integration-tests@v2
         with:
           logto_artifact: integration-test-${{ github.sha }}
           test_target: ${{ matrix.target }}

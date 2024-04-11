@@ -1,0 +1,39 @@
+@use '@/scss/underscore' as _;
+
+.dashboard {
+  background-color: var(--color-code-bg-float);
+  border-top: 1px solid var(--color-code-dark-bg-focused);
+  font-family: 'Roboto Mono', monospace;
+  overflow: auto;
+  flex: 1;
+
+  .dashboardHeader {
+    padding: _.unit(3) _.unit(4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font: var(--font-label-2);
+    font-family: 'Roboto Mono', monospace;
+    color: var(--color-code-white);
+  }
+
+  .dashboardContent {
+    padding: _.unit(2) _.unit(4);
+    font: var(--font-body-2);
+    overflow: auto;
+    color: var(--color-code-white);
+
+    pre {
+      white-space: pre-wrap;
+
+      &.error {
+        color: var(--color-error);
+      }
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+}
+

@@ -57,6 +57,10 @@ const cloudConnection = createCloudConnectionLibrary({
     resource: 'resource',
   }),
   getOidcConfigs: jest.fn(),
+  upsertJwtCustomizer: jest.fn(),
+  getJwtCustomizer: jest.fn(),
+  getJwtCustomizers: jest.fn(),
+  updateJwtCustomizer: jest.fn(),
 });
 
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');

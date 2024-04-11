@@ -1,6 +1,11 @@
 import { assert } from '@silverhand/essentials';
-import { createMockPool, createMockQueryResult, createPool, parseDsn } from 'slonik';
-import { createInterceptors } from 'slonik-interceptor-preset';
+import {
+  createMockPool,
+  createMockQueryResult,
+  createPool,
+  parseDsn,
+  createInterceptorsPreset,
+} from '@silverhand/slonik';
 
 const createPoolByEnv = async (
   databaseDsn: string,
@@ -12,11 +17,12 @@ const createPoolByEnv = async (
     return createMockPool({ query: async () => createMockQueryResult([]) });
   }
 
-  const interceptors = [...createInterceptors()];
-
   assert(parseDsn(databaseDsn).databaseName, new Error('Database name is required'));
 
-  return createPool(databaseDsn, { interceptors, maximumPoolSize: poolSize });
+  return createPool(databaseDsn, {
+    interceptors: createInterceptorsPreset(),
+    maximumPoolSize: poolSize,
+  });
 };
 
 export default createPoolByEnv;

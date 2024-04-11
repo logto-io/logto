@@ -1,6 +1,8 @@
 import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
-import type { OmitAutoSetFields, UpdateWhereData } from '@logto/shared';
-import { SlonikError } from 'slonik';
+import type { UpdateWhereData } from '@logto/shared';
+import { SlonikError } from '@silverhand/slonik';
+
+import { type OmitAutoSetFields } from '#src/utils/sql.js';
 
 export class DeletionError extends SlonikError {
   public constructor(

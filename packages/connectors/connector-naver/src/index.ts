@@ -99,8 +99,8 @@ const getUserInfo =
         },
         timeout: { request: defaultTimeout },
       });
-
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
+      const rawData = parseJson(httpResponse.body);
+      const result = userInfoResponseGuard.safeParse(rawData);
 
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
@@ -114,6 +114,7 @@ const getUserInfo =
         avatar: conditional(profile_image),
         email: conditional(email),
         name: conditional(nickname),
+        rawData,
       };
     } catch (error: unknown) {
       return getUserInfoErrorHandler(error);

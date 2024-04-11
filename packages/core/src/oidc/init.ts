@@ -1,5 +1,5 @@
+/* eslint-disable max-lines */
 /* istanbul ignore file */
-
 import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
 
@@ -8,25 +8,38 @@ import type { I18nKey } from '@logto/phrases';
 import {
   customClientMetadataDefault,
   CustomClientMetadataKey,
-  demoAppApplicationId,
+  experience,
+  extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
   type LogtoUiCookie,
+  LogtoJwtTokenKey,
+  ExtraParamsKey,
+  type Json,
+  jwtCustomizer as jwtCustomizerLog,
+  LogResult,
+  LogtoJwtTokenKeyType,
 } from '@logto/schemas';
-import { conditional, tryThat } from '@silverhand/essentials';
+import { generateStandardId } from '@logto/shared';
+import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
 import koaBody from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
-import koaAuditLog from '#src/middleware/koa-audit-log.js';
+import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
+import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import koaAuditLog, { LogEntry } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import postgresAdapter from '#src/oidc/adapter.js';
-import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
-import { routes } from '#src/routes/consts.js';
+import {
+  buildLoginPromptUrl,
+  isOriginAllowed,
+  validateCustomClientMetadata,
+} from '#src/oidc/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -40,16 +53,22 @@ import {
   filterResourceScopesForTheThirdPartyApplication,
 } from './resource.js';
 import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
-import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
-export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Libraries): Provider {
+export default function initOidc(
+  envSet: EnvSet,
+  queries: Queries,
+  libraries: Libraries,
+  logtoConfigs: LogtoConfigLibrary,
+  cloudConnection: CloudConnectionLibrary
+): Provider {
   const {
     resources: { findDefaultResource },
     users: { findUserById },
     organizations,
+    logs: { insertLog },
   } = queries;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
   const logoutSuccessSource = readFileSync('static/html/post-logout/index.html', 'utf8');
@@ -165,8 +184,6 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
     },
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
-        const isDemoApp = appId === demoAppApplicationId;
-
         ctx.cookies.set(
           logtoCookieKey,
           JSON.stringify({
@@ -175,20 +192,15 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
           { sameSite: 'lax', overwrite: true, httpOnly: false }
         );
 
-        const appendParameters = (path: string) => {
-          return isDemoApp ? path + `?no_cache` : path;
-        };
+        const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
 
         switch (prompt.name) {
           case 'login': {
-            const isSignUp =
-              ctx.oidc.params?.[OIDCExtraParametersKey.InteractionMode] === InteractionMode.signUp;
-
-            return appendParameters(isSignUp ? routes.signUp : routes.signIn);
+            return '/' + buildLoginPromptUrl(params, appId);
           }
 
           case 'consent': {
-            return routes.consent;
+            return '/' + experience.routes.consent;
           }
 
           default: {
@@ -197,7 +209,100 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
         }
       },
     },
-    extraParams: [OIDCExtraParametersKey.InteractionMode],
+    extraParams: Object.values(ExtraParamsKey),
+    // eslint-disable-next-line complexity
+    extraTokenClaims: async (ctx, token) => {
+      const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
+
+      // No cloud connection for OSS version, skip.
+      if (!isDevFeaturesEnabled || !isCloud) {
+        return;
+      }
+
+      const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
+
+      try {
+        /**
+         * It is by design to use `trySafe` here to catch the error but not log it since we do not
+         * want to insert an error log every time the OIDC provider issues a token when the JWT
+         * customizer is not configured.
+         */
+        const { script, environmentVariables } =
+          (await trySafe(
+            logtoConfigs.getJwtCustomizer(
+              isTokenClientCredentials
+                ? LogtoJwtTokenKey.ClientCredentials
+                : LogtoJwtTokenKey.AccessToken
+            )
+          )) ?? {};
+
+        if (!script) {
+          return;
+        }
+
+        const pickedFields = isTokenClientCredentials
+          ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
+          : ctx.oidc.provider.AccessToken.IN_PAYLOAD;
+        const readOnlyToken = Object.fromEntries(
+          pickedFields
+            .filter((field) => Reflect.get(token, field) !== undefined)
+            .map((field) => [field, Reflect.get(token, field)])
+        );
+
+        const client = await cloudConnection.getClient();
+
+        const commonPayload = {
+          script,
+          environmentVariables,
+          token: readOnlyToken,
+        };
+
+        // We pass context to the cloud API only when it is a user's access token.
+        const logtoUserInfo = conditional(
+          !isTokenClientCredentials &&
+            token.accountId &&
+            (await libraries.jwtCustomizers.getUserContext(token.accountId))
+        );
+
+        // `context` parameter is only eligible for user's access token for now.
+        return await client.post(`/api/services/custom-jwt`, {
+          body: isTokenClientCredentials
+            ? {
+                ...commonPayload,
+                tokenType: LogtoJwtTokenKeyType.ClientCredentials,
+              }
+            : {
+                ...commonPayload,
+                tokenType: LogtoJwtTokenKeyType.AccessToken,
+                // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
+                // eslint-disable-next-line no-restricted-syntax
+                context: { user: logtoUserInfo as Record<string, Json> },
+              },
+        });
+      } catch (error: unknown) {
+        const entry = new LogEntry(
+          `${jwtCustomizerLog.prefix}.${
+            isTokenClientCredentials
+              ? jwtCustomizerLog.Type.ClientCredentials
+              : jwtCustomizerLog.Type.AccessToken
+          }`
+        );
+        entry.append({
+          result: LogResult.Error,
+          error: { message: String(error) },
+        });
+        const { payload } = entry;
+        await insertLog({
+          id: generateStandardId(),
+          key: payload.key,
+          payload: {
+            ...payload,
+            tenantId: envSet.tenantId,
+            token,
+          },
+        });
+      }
+    },
     extraClientMetadata: {
       properties: Object.values(CustomClientMetadataKey),
       validator: (_, key, value) => {
@@ -351,3 +456,4 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
 
   return oidc;
 }
+/* eslint-enable max-lines */

@@ -6,14 +6,12 @@ import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './
 import createConnector, { getAccessToken } from './index.js';
 import { mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('Discord connector', () => {
   describe('getAuthorizationUri', () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get a valid authorizationUri with redirectUri and state', async () => {
@@ -27,7 +25,7 @@ describe('Discord connector', () => {
           jti: 'some_jti',
           headers: {},
         },
-        jest.fn()
+        vi.fn()
       );
       expect(authorizationUri).toEqual(
         `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&scope=identify+email&state=some_state`
@@ -38,7 +36,7 @@ describe('Discord connector', () => {
   describe('getAccessToken', () => {
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get an accessToken by exchanging with code', async () => {
@@ -66,7 +64,7 @@ describe('Discord connector', () => {
 
       await expect(
         getAccessToken(mockedConfig, { code: 'code', redirectUri: 'dummyRedirectUri' })
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
     });
   });
 
@@ -82,7 +80,7 @@ describe('Discord connector', () => {
 
     afterEach(() => {
       nock.cleanAll();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should get valid SocialUserInfo', async () => {
@@ -99,13 +97,20 @@ describe('Discord connector', () => {
           code: 'code',
           redirectUri: 'dummyRedirectUri',
         },
-        jest.fn()
+        vi.fn()
       );
-      expect(socialUserInfo).toMatchObject({
+      expect(socialUserInfo).toStrictEqual({
         id: '1234567890',
         name: 'Whumpus',
         avatar: 'https://cdn.discordapp.com/avatars/1234567890/avatar_id',
         email: 'whumpus@discord.com',
+        rawData: {
+          id: '1234567890',
+          username: 'Whumpus',
+          avatar: 'avatar_id',
+          email: 'whumpus@discord.com',
+          verified: true,
+        },
       });
     });
 
@@ -113,15 +118,15 @@ describe('Discord connector', () => {
       nock(userInfoEndpoint).get('').reply(401);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code: 'code', redirectUri: 'dummyRedirectUri' }, jest.fn())
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+        connector.getUserInfo({ code: 'code', redirectUri: 'dummyRedirectUri' }, vi.fn())
+      ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).get('').reply(500);
       const connector = await createConnector({ getConfig });
       await expect(
-        connector.getUserInfo({ code: 'code', redirectUri: 'dummyRedirectUri' }, jest.fn())
+        connector.getUserInfo({ code: 'code', redirectUri: 'dummyRedirectUri' }, vi.fn())
       ).rejects.toThrow();
     });
   });

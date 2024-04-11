@@ -3,8 +3,8 @@ import { promisify } from 'node:util';
 
 import { generateStandardId } from '@logto/shared/universal';
 import inquirer from 'inquirer';
-import type { CommonQueryMethods, SerializableValue } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods, SerializableValue } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 

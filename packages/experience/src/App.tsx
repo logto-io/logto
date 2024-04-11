@@ -1,5 +1,5 @@
 import { AppInsightsBoundary } from '@logto/app-insights/react';
-import { MfaFactor } from '@logto/schemas';
+import { MfaFactor, experience } from '@logto/schemas';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';
@@ -8,10 +8,10 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import SingleSignOnContextProvider from './Providers/SingleSignOnContextProvider';
-import { singleSignOnPath } from './constants/env';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
+import DirectSignIn from './pages/DirectSignIn';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import MfaBinding from './pages/MfaBinding';
@@ -31,7 +31,7 @@ import SingleSignOnConnectors from './pages/SingleSignOnConnectors';
 import SingleSignOnEmail from './pages/SingleSignOnEmail';
 import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
-import SocialSignIn from './pages/SocialSignInCallback';
+import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
 import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
 import { UserMfaFlow } from './types';
@@ -50,23 +50,29 @@ const App = () => {
             <AppBoundary>
               <AppInsightsBoundary cloudRole="ui">
                 <Routes>
-                  <Route element={<AppLayout />}>
-                    <Route
-                      path="unknown-session"
-                      element={<ErrorPage message="error.invalid_session" />}
-                    />
+                  <Route element={<LoadingLayerProvider />}>
                     <Route path="springboard" element={<Springboard />} />
+                    <Route path="callback/:connectorId" element={<Callback />} />
+                    <Route
+                      path="callback/social/:connectorId"
+                      element={<SocialSignInWebCallback />}
+                    />
+                    <Route path="direct/:method/:target?" element={<DirectSignIn />} />
 
-                    <Route element={<LoadingLayerProvider />}>
+                    <Route element={<AppLayout />}>
+                      <Route
+                        path="unknown-session"
+                        element={<ErrorPage message="error.invalid_session" />}
+                      />
+
                       {/* Sign-in */}
-                      <Route path="sign-in">
+                      <Route path={experience.routes.signIn}>
                         <Route index element={<SignIn />} />
                         <Route path="password" element={<SignInPassword />} />
-                        <Route path="social/:connectorId" element={<SocialSignIn />} />
                       </Route>
 
                       {/* Register */}
-                      <Route path="register">
+                      <Route path={experience.routes.register}>
                         <Route index element={<Register />} />
                         <Route path="password" element={<RegisterPassword />} />
                       </Route>
@@ -106,19 +112,18 @@ const App = () => {
                         <Route path="link/:connectorId" element={<SocialLinkAccount />} />
                         <Route path="landing/:connectorId" element={<SocialLanding />} />
                       </Route>
-                      <Route path="callback/:connectorId" element={<Callback />} />
+
+                      {/* Single sign-on */}
+                      <Route path={experience.routes.sso} element={<LoadingLayerProvider />}>
+                        <Route path="email" element={<SingleSignOnEmail />} />
+                        <Route path="connectors" element={<SingleSignOnConnectors />} />
+                      </Route>
+
+                      {/* Consent */}
+                      <Route path="consent" element={<Consent />} />
+
+                      <Route path="*" element={<ErrorPage />} />
                     </Route>
-
-                    {/* Single sign-on */}
-                    <Route path={singleSignOnPath} element={<LoadingLayerProvider />}>
-                      <Route path="email" element={<SingleSignOnEmail />} />
-                      <Route path="connectors" element={<SingleSignOnConnectors />} />
-                    </Route>
-
-                    {/* Consent */}
-                    <Route path="consent" element={<Consent />} />
-
-                    <Route path="*" element={<ErrorPage />} />
                   </Route>
                 </Routes>
               </AppInsightsBoundary>

@@ -1,5 +1,5 @@
 import { defaultManagementApi } from '@logto/schemas';
-import { HTTPError } from 'got';
+import { HTTPError } from 'ky';
 
 import {
   createResource,
@@ -21,7 +21,7 @@ describe('admin console api resources', () => {
 
   it('should return 404 if resource not found', async () => {
     const response = await getResource('not_found').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   it('should create api resource successfully', async () => {
@@ -49,7 +49,7 @@ describe('admin console api resources', () => {
     const resourceName2 = generateResourceName();
     await expectRejects(createResource(resourceName2, resourceIndicator), {
       code: 'resource.resource_identifier_in_use',
-      statusCode: 422,
+      status: 422,
     });
   });
 
@@ -93,7 +93,7 @@ describe('admin console api resources', () => {
       name: 123,
     }).catch((error: unknown) => error);
 
-    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 400).toBe(true);
   });
 
   it('should not update api resource indicator', async () => {
@@ -119,19 +119,19 @@ describe('admin console api resources', () => {
     await deleteResource(createdResource.id);
 
     const response = await getResource(createdResource.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   it('should throw when deleting management api resource', async () => {
     const response = await deleteResource(defaultManagementApi.resource.id).catch(
       (error: unknown) => error
     );
-    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 400).toBe(true);
   });
 
   it('should throw 404 when delete api resource not found', async () => {
     const response = await deleteResource('dummy_id').catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
   it('be able to set only one default api resource', async () => {

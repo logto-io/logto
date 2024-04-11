@@ -4,10 +4,10 @@ import {
   type SsoConnectorKeys,
   SsoConnectors,
 } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
-import { sql, type CommonQueryMethods } from 'slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import SchemaQueries from '#src/utils/SchemaQueries.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 export default class SsoConnectorQueries extends SchemaQueries<
   SsoConnectorKeys,

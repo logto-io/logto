@@ -5,8 +5,10 @@ import initOidc from './init.js';
 
 describe('oidc provider init', () => {
   it('init should not throw', async () => {
-    const { queries, libraries } = new MockTenant();
+    const { queries, libraries, logtoConfigs, cloudConnection } = new MockTenant();
 
-    expect(() => initOidc(mockEnvSet, queries, libraries)).not.toThrow();
+    expect(() =>
+      initOidc(mockEnvSet, queries, libraries, logtoConfigs, cloudConnection)
+    ).not.toThrow();
   });
 });

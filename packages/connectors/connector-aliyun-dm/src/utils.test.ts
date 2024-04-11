@@ -1,10 +1,8 @@
 import { mockedParameters } from './mock.js';
 
-const { jest } = import.meta;
+const post = vi.fn();
 
-const post = jest.fn();
-
-jest.unstable_mockModule('got', () => ({
+vi.mock('got', () => ({
   got: { post },
 }));
 

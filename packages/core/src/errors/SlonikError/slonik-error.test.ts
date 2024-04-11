@@ -1,4 +1,4 @@
-import { SlonikError } from 'slonik';
+import { SlonikError } from '@silverhand/slonik';
 
 import { DeletionError } from './index.js';
 

@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.permissions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -6,13 +6,11 @@ import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './
 import createConnector, { getAccessToken } from './index.js';
 import { mockedConfig } from './mock.js';
 
-const { jest } = import.meta;
-
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should get a valid uri', async () => {
@@ -26,7 +24,7 @@ describe('getAuthorizationUri', () => {
         jti: 'dummy-jti',
         headers: {},
       },
-      jest.fn()
+      vi.fn()
     );
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?app_id=%3Capp-id%3E&state=dummy-state`
@@ -37,7 +35,7 @@ describe('getAuthorizationUri', () => {
 describe('getAccessToken', () => {
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const accessTokenEndpointUrl = new URL(accessTokenEndpoint);
@@ -66,7 +64,7 @@ describe('getAccessToken', () => {
       .get(accessTokenEndpointUrl.pathname)
       .query(parameters)
       .reply(200, { errcode: 40_029, errmsg: 'invalid code' });
-    await expect(getAccessToken('code', mockedConfig)).rejects.toMatchError(
+    await expect(getAccessToken('code', mockedConfig)).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'invalid code')
     );
   });
@@ -76,7 +74,7 @@ describe('getAccessToken', () => {
       .get(accessTokenEndpointUrl.pathname)
       .query(true)
       .reply(200, { errcode: 40_163, errmsg: 'code been used' });
-    await expect(getAccessToken('code', mockedConfig)).rejects.toMatchError(
+    await expect(getAccessToken('code', mockedConfig)).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'code been used')
     );
   });
@@ -86,7 +84,7 @@ describe('getAccessToken', () => {
       .get(accessTokenEndpointUrl.pathname)
       .query(true)
       .reply(200, { errcode: -1, errmsg: 'system error' });
-    await expect(getAccessToken('wrong_code', mockedConfig)).rejects.toMatchError(
+    await expect(getAccessToken('wrong_code', mockedConfig)).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.General, {
         errorDescription: 'system error',
         errcode: -1,
@@ -132,30 +130,35 @@ describe('getUserInfo', () => {
 
   afterEach(() => {
     nock.cleanAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const userInfoEndpointUrl = new URL(userInfoEndpoint);
   const parameters = new URLSearchParams({ access_token: 'access_token', openid: 'openid' });
 
   it('should get valid SocialUserInfo', async () => {
-    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(0, {
+    const jsonResponse = Object.freeze({
       unionid: 'this_is_an_arbitrary_wechat_union_id',
       headimgurl: 'https://github.com/images/error/octocat_happy.gif',
       nickname: 'wechat bot',
     });
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(parameters)
+      .reply(0, jsonResponse);
     const connector = await createConnector({ getConfig });
-    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, jest.fn());
+    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, vi.fn());
     expect(socialUserInfo).toMatchObject({
       id: 'this_is_an_arbitrary_wechat_union_id',
       avatar: 'https://github.com/images/error/octocat_happy.gif',
       name: 'wechat bot',
+      rawData: jsonResponse,
     });
   });
 
   it('throws General error if code not provided in input', async () => {
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({}, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({}, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.General, '{}')
     );
   });
@@ -170,7 +173,7 @@ describe('getUserInfo', () => {
         errmsg: 'missing openid',
       });
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ code: 'code' }, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.General, {
         errorDescription: 'missing openid',
         errcode: 41_009,
@@ -184,7 +187,7 @@ describe('getUserInfo', () => {
       .query(parameters)
       .reply(200, { errcode: 40_001, errmsg: 'invalid credential' });
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ code: 'code' }, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'invalid credential')
     );
   });
@@ -192,7 +195,7 @@ describe('getUserInfo', () => {
   it('throws unrecognized error', async () => {
     nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(500);
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ code: 'code' }, jest.fn())).rejects.toThrow();
+    await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toThrow();
   });
 
   it('throws Error if request failed and errcode is not 40001', async () => {
@@ -201,7 +204,7 @@ describe('getUserInfo', () => {
       .query(parameters)
       .reply(200, { errcode: 40_003, errmsg: 'invalid openid' });
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ code: 'code' }, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.General, {
         errorDescription: 'invalid openid',
         errcode: 40_003,
@@ -212,7 +215,7 @@ describe('getUserInfo', () => {
   it('throws SocialAccessTokenInvalid error if response code is 401', async () => {
     nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(401);
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ code: 'code' }, jest.fn())).rejects.toMatchError(
+    await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
   });

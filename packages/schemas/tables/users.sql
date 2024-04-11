@@ -1,6 +1,6 @@
 /* init_order = 1 */
 
-create type users_password_encryption_method as enum ('Argon2i');
+create type users_password_encryption_method as enum ('Argon2i', 'SHA1', 'SHA256', 'MD5', 'Bcrypt');
 
 create table users (
   tenant_id varchar(21) not null
@@ -12,7 +12,10 @@ create table users (
   password_encrypted varchar(128),
   password_encryption_method users_password_encryption_method,
   name varchar(128),
+  /** The URL that points to the user's profile picture. Mapped to OpenID Connect's `picture` claim. */ 
   avatar varchar(2048),
+  /** Additional OpenID Connect standard claims that are not included in user's properties. */
+  profile jsonb /* @use UserProfile */ not null default '{}'::jsonb,
   application_id varchar(21),
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
@@ -21,6 +24,7 @@ create table users (
   is_suspended boolean not null default false,
   last_sign_in_at timestamptz,
   created_at timestamptz not null default (now()),
+  updated_at timestamptz not null default (now()),
   primary key (id),
   constraint users__username
     unique (tenant_id, username),
@@ -35,3 +39,8 @@ create index users__id
 
 create index users__name
   on users (tenant_id, name);
+
+create trigger set_updated_at
+  before update on users
+  for each row
+  execute procedure set_updated_at();

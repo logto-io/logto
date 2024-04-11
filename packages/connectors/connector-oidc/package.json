@@ -1,9 +1,9 @@
 {
   "name": "@logto/connector-oidc",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "OIDC standard connector implementation.",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^2.1.0",
+    "@logto/connector-kit": "workspace:^3.0.0",
     "@logto/shared": "workspace:^3.1.0",
     "jose": "^5.0.0",
     "nanoid": "^5.0.1"
@@ -26,9 +26,8 @@
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm test:only --silent --coverage",
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },
   "engines": {

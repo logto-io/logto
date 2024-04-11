@@ -1,10 +1,10 @@
 {
   "name": "@logto/connector-kakao",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Kakao connector implementation.",
   "author": "Kyungyoon Kim. <ruddbs5302@gmail.com>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^2.1.0"
+    "@logto/connector-kit": "workspace:^3.0.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
@@ -24,9 +24,8 @@
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm test:only --silent --coverage",
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },
   "engines": {

@@ -13,6 +13,7 @@ import {
   ConnectorErrorCodes,
   ConnectorPlatform,
   ConnectorType,
+  jsonGuard,
   validateConfig,
 } from '@logto/connector-kit';
 
@@ -153,6 +154,7 @@ export function getUserInfo(getConfig: GetConnectorConfig): GetUserInfo {
         email: conditional(email),
         userId: conditional(user_id),
         phone: conditional(mobile),
+        rawData: jsonGuard.parse(response.body),
       };
     } catch (error: unknown) {
       if (error instanceof ConnectorError) {

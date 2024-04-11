@@ -1,10 +1,16 @@
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
-import { jsonObjectGuard, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
+import {
+  UsersPasswordEncryptionMethod,
+  jsonObjectGuard,
+  userInfoSelectFields,
+  userProfileGuard,
+  userProfileResponseGuard,
+} from '@logto/schemas';
 import { conditional, pick, yes } from '@silverhand/essentials';
-import { boolean, literal, object, string } from 'zod';
+import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js';
+import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -25,7 +31,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
     userSsoIdentities,
   } = queries;
   const {
-    users: { checkIdentifierCollision, generateUserId, insertUser },
+    users: { checkIdentifierCollision, generateUserId, insertUser, verifyUserPassword },
   } = libraries;
 
   router.get(
@@ -103,6 +109,32 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
     }
   );
 
+  router.patch(
+    '/users/:userId/profile',
+    koaGuard({
+      params: object({ userId: string() }),
+      body: object({ profile: userProfileGuard }),
+      response: userProfileGuard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { profile },
+      } = ctx.guard;
+
+      await findUserById(userId);
+
+      const user = await updateUserById(userId, {
+        profile,
+      });
+
+      ctx.body = user.profile;
+
+      return next();
+    }
+  );
+
   router.post(
     '/users',
     koaGuard({
@@ -111,13 +143,32 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         primaryEmail: string().regex(emailRegEx),
         username: string().regex(usernameRegEx),
         password: string().min(1),
+        passwordDigest: string(),
+        passwordAlgorithm: nativeEnum(UsersPasswordEncryptionMethod),
         name: string(),
+        avatar: string().url().or(literal('')).nullable(),
+        customData: jsonObjectGuard,
+        profile: userProfileGuard,
       }).partial(),
       response: userProfileResponseGuard,
       status: [200, 404, 422],
     }),
     async (ctx, next) => {
-      const { primaryEmail, primaryPhone, username, password, name } = ctx.guard.body;
+      const {
+        primaryEmail,
+        primaryPhone,
+        username,
+        password,
+        name,
+        passwordDigest,
+        passwordAlgorithm,
+        avatar,
+        customData,
+        profile,
+      } = ctx.guard.body;
+
+      assertThat(!(password && passwordDigest), new RequestError('user.password_and_digest'));
+      assertThat(!passwordDigest || passwordAlgorithm, 'user.password_algorithm_required');
 
       assertThat(
         !username || !(await hasUser(username)),
@@ -147,7 +198,16 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
           primaryPhone,
           username,
           name,
+          avatar,
+          ...conditional(customData && { customData }),
           ...conditional(password && (await encryptUserPassword(password))),
+          ...conditional(
+            passwordDigest && {
+              passwordEncrypted: passwordDigest,
+              passwordEncryptionMethod: passwordAlgorithm,
+            }
+          ),
+          ...conditional(profile && { profile }),
         },
         []
       );
@@ -169,6 +229,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         name: string().or(literal('')).nullable(),
         avatar: string().url().or(literal('')).nullable(),
         customData: jsonObjectGuard,
+        profile: userProfileGuard,
       }).partial(),
       response: userProfileResponseGuard,
       status: [200, 404, 422],
@@ -287,6 +348,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
 
       return next();
     }
+    // eslint-disable-next-line max-lines
   );
 
   router.delete(

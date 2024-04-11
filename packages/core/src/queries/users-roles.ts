@@ -1,10 +1,10 @@
 import type { CreateUsersRole, UsersRole } from '@logto/schemas';
 import { UsersRoles } from '@logto/schemas';
-import { conditionalSql, convertToIdentifiers } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(UsersRoles);
 

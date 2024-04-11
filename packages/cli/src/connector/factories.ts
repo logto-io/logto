@@ -8,8 +8,9 @@ import { loadConnector } from './loader.js';
 import type { ConnectorFactory, ConnectorPackage } from './types.js';
 import { parseMetadata, validateConnectorModule } from './utils.js';
 
-// eslint-disable-next-line @silverhand/fp/no-let, @typescript-eslint/no-explicit-any
-let cachedConnectorFactories: Array<ConnectorFactory<Router<any, BaseRoutes, string>>> | undefined;
+// eslint-disable-next-line @silverhand/fp/no-let
+let cachedConnectorFactories: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+Array<ConnectorFactory<Router<any, any, BaseRoutes, string>>> | undefined;
 
 export const loadConnectorFactories = async (
   connectorPackages: ConnectorPackage[],
@@ -49,8 +50,10 @@ export const loadConnectorFactories = async (
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
   cachedConnectorFactories = connectorFactories.filter(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (connectorFactory): connectorFactory is ConnectorFactory<Router<any, BaseRoutes, string>> =>
+    (
+      connectorFactory
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): connectorFactory is ConnectorFactory<Router<any, any, BaseRoutes, string>> =>
       connectorFactory !== undefined
   );
 

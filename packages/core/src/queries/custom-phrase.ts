@@ -1,12 +1,13 @@
 import type { CustomPhrase, Translation } from '@logto/schemas';
 import { CustomPhrases } from '@logto/schemas';
-import { convertToIdentifiers, generateStandardId, manyRows } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import { generateStandardId } from '@logto/shared';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { convertToIdentifiers, manyRows } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(CustomPhrases);
 

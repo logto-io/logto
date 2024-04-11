@@ -1,4 +1,11 @@
-import { ApplicationType, CustomClientMetadataKey, GrantType } from '@logto/schemas';
+import {
+  ApplicationType,
+  CustomClientMetadataKey,
+  FirstScreen,
+  GrantType,
+  InteractionMode,
+  demoAppApplicationId,
+} from '@logto/schemas';
 
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 
@@ -7,6 +14,7 @@ import {
   buildOidcClientMetadata,
   getConstantClientMetadata,
   validateCustomClientMetadata,
+  buildLoginPromptUrl,
 } from './utils.js';
 
 describe('getConstantClientMetadata()', () => {
@@ -119,5 +127,51 @@ describe('isOriginAllowed', () => {
         ['https://logto.dev/callback']
       )
     ).toBeTruthy();
+  });
+});
+
+describe('buildLoginPromptUrl', () => {
+  it('should return the correct url for empty parameters', () => {
+    expect(buildLoginPromptUrl({})).toBe('sign-in');
+    expect(buildLoginPromptUrl({}, 'foo')).toBe('sign-in');
+    expect(buildLoginPromptUrl({}, demoAppApplicationId)).toBe('sign-in?no_cache=');
+  });
+
+  it('should return the correct url for firstScreen', () => {
+    expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register })).toBe('register');
+    expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register }, 'foo')).toBe('register');
+    expect(buildLoginPromptUrl({ first_screen: FirstScreen.SignIn }, demoAppApplicationId)).toBe(
+      'sign-in?no_cache='
+    );
+    // Legacy interactionMode support
+    expect(buildLoginPromptUrl({ interaction_mode: InteractionMode.SignUp })).toBe('register');
+  });
+
+  it('should return the correct url for directSignIn', () => {
+    expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' })).toBe(
+      'direct/method/target?fallback=sign-in'
+    );
+    expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' }, 'foo')).toBe(
+      'direct/method/target?fallback=sign-in'
+    );
+    expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' }, demoAppApplicationId)).toBe(
+      'direct/method/target?no_cache=&fallback=sign-in'
+    );
+    expect(buildLoginPromptUrl({ direct_sign_in: 'method' })).toBe(
+      'direct/method?fallback=sign-in'
+    );
+    expect(buildLoginPromptUrl({ direct_sign_in: '' })).toBe('sign-in');
+  });
+
+  it('should return the correct url for mixed parameters', () => {
+    expect(
+      buildLoginPromptUrl({ first_screen: FirstScreen.Register, direct_sign_in: 'method:target' })
+    ).toBe('direct/method/target?fallback=register');
+    expect(
+      buildLoginPromptUrl(
+        { first_screen: FirstScreen.Register, direct_sign_in: 'method:target' },
+        demoAppApplicationId
+      )
+    ).toBe('direct/method/target?no_cache=&fallback=register');
   });
 });

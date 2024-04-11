@@ -12,6 +12,7 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  jsonGuard,
 } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
@@ -112,6 +113,7 @@ const getUserInfo =
           user?.email ??
           (payload.email && payload.email_verified === true ? String(payload.email) : undefined),
         name: [user?.name?.firstName, user?.name?.lastName].filter(Boolean).join(' ') || undefined,
+        rawData: jsonGuard.parse(data),
       };
     } catch {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);

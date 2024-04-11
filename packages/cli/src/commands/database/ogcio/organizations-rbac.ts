@@ -3,7 +3,7 @@
 /* eslint-disable @silverhand/fp/no-mutating-methods */
 /* eslint-disable @silverhand/fp/no-mutation */
 import { OrganizationScopes, OrganizationRoles } from '@logto/schemas';
-import { sql, type DatabaseTransactionConnection } from 'slonik';
+import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { createItem, createItemWithoutId } from './queries.js';
 

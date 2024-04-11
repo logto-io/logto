@@ -1,11 +1,11 @@
 import type { ApplicationsRole, CreateApplicationsRole, Role } from '@logto/schemas';
 import { Roles, ApplicationsRoles, RolesScopes } from '@logto/schemas';
-import { convertToIdentifiers, conditionalSql } from '@logto/shared';
 import { type Nullable } from '@silverhand/essentials';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { convertToIdentifiers, conditionalSql } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(ApplicationsRoles, true);
 const { fields: insertFields } = convertToIdentifiers(ApplicationsRoles);

@@ -1,14 +1,14 @@
 import type { SchemaLike, GeneratedSchema, SchemaValue } from '@logto/schemas';
-import { convertToIdentifiers, convertToPrimitiveOrSql, conditionalSql } from '@logto/shared';
 import type { UpdateWhereData } from '@logto/shared';
 import type { Truthy } from '@silverhand/essentials';
 import { notFalsy } from '@silverhand/essentials';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { UpdateError } from '#src/errors/SlonikError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isKeyOf } from '#src/utils/schema.js';
+import { convertToIdentifiers, convertToPrimitiveOrSql, conditionalSql } from '#src/utils/sql.js';
 
 type BuildUpdateWhere = {
   <

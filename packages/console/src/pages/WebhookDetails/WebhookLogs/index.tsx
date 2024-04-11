@@ -21,7 +21,7 @@ import { type WebhookDetailsOutletContext } from '../types';
 
 import * as styles from './index.module.scss';
 
-const hooLogEventOptions = Object.values(HookEvent).map((event) => ({
+const hookLogEventOptions = Object.values(HookEvent).map((event) => ({
   title: <DynamicT forKey={hookEventLabel[event]} />,
   value: hookEventLogKey[event],
 }));
@@ -64,7 +64,7 @@ function WebhookLogs() {
           <div className={styles.eventSelector}>
             <EventSelector
               value={event}
-              options={hooLogEventOptions}
+              options={hookLogEventOptions}
               onChange={(event) => {
                 updateSearchParameters({ event, page: undefined });
               }}

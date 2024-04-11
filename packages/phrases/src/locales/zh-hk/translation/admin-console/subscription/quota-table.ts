@@ -46,14 +46,6 @@ const quota_table = {
     machine_to_machine_roles: '機器對機器角色',
     scopes_per_role: '每角色權限',
   },
-  audit_logs: {
-    title: '審核日誌',
-    retention: '保留期限',
-  },
-  hooks: {
-    title: 'Webhooks',
-    hooks: 'Webhooks',
-  },
   organizations: {
     title: '組織',
     organizations: '組織',
@@ -72,6 +64,18 @@ const quota_table = {
     email_ticket_support: 'Email ticket support',
     soc2_report: 'SOC2報告',
     hipaa_or_baa_report: 'HIPAA/BAA報告',
+  },
+  developers_and_platform: {
+    /** UNTRANSLATED */
+    title: 'Developers and platform',
+    /** UNTRANSLATED */
+    hooks: 'Webhooks',
+    /** UNTRANSLATED */
+    audit_logs_retention: 'Audit logs retention',
+    /** UNTRANSLATED */
+    jwt_claims: 'JWT claims',
+    /** UNTRANSLATED */
+    tenant_members: 'Tenant members',
   },
   unlimited: '無限制',
   contact: '聯絡',
@@ -99,6 +103,8 @@ const quota_table = {
   per_month_each: '每月 ${{value, number}} / 每個',
   extra_mao_price: '然後每 MAO ${{value, number}}',
   per_month: '每月 ${{value, number}}',
+  /** UNTRANSLATED */
+  per_member: 'Then ${{value, number}} per member',
 };
 
 export default Object.freeze(quota_table);

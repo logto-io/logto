@@ -2,14 +2,24 @@ import {
   SupportedSigningKeyAlgorithm,
   type AdminConsoleData,
   LogtoOidcConfigKeyType,
+  LogtoJwtTokenKey,
 } from '@logto/schemas';
 
+import {
+  accessTokenJwtCustomizerPayload,
+  clientCredentialsJwtCustomizerPayload,
+} from '#src/__mocks__/jwt-customizer.js';
 import {
   deleteOidcKey,
   getAdminConsoleConfig,
   getOidcKeys,
   rotateOidcKeys,
   updateAdminConsoleConfig,
+  upsertJwtCustomizer,
+  updateJwtCustomizer,
+  getJwtCustomizer,
+  getJwtCustomizers,
+  deleteJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -58,14 +68,14 @@ describe('admin console sign-in experience', () => {
     expect(privateKeys).toHaveLength(1);
     await expectRejects(deleteOidcKey(LogtoOidcConfigKeyType.PrivateKeys, privateKeys[0]!.id), {
       code: 'oidc.key_required',
-      statusCode: 422,
+      status: 422,
     });
 
     const cookieKeys = await getOidcKeys(LogtoOidcConfigKeyType.CookieKeys);
     expect(cookieKeys).toHaveLength(1);
     await expectRejects(deleteOidcKey(LogtoOidcConfigKeyType.CookieKeys, cookieKeys[0]!.id), {
       code: 'oidc.key_required',
-      statusCode: 422,
+      status: 422,
     });
   });
 
@@ -122,5 +132,113 @@ describe('admin console sign-in experience', () => {
       { id: expect.any(String), signingKeyAlgorithm: 'EC', createdAt: expect.any(Number) },
     ]);
     expect(privateKeys2[1]?.id).toBe(privateKeys[0]?.id);
+  });
+
+  it('should successfully PUT/GET/DELETE a JWT customizer (access token)', async () => {
+    await expectRejects(getJwtCustomizer('access-token'), {
+      code: 'entity.not_exists_with_id',
+      status: 404,
+    });
+    await expectRejects(deleteJwtCustomizer('access-token'), {
+      code: 'entity.not_found',
+      status: 404,
+    });
+    const accessToken = await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
+    expect(accessToken).toMatchObject(accessTokenJwtCustomizerPayload);
+    const newAccessTokenJwtCustomizerPayload = {
+      ...accessTokenJwtCustomizerPayload,
+      script: 'new script',
+    };
+    const updatedAccessToken = await upsertJwtCustomizer(
+      'access-token',
+      newAccessTokenJwtCustomizerPayload
+    );
+    expect(updatedAccessToken).toMatchObject(newAccessTokenJwtCustomizerPayload);
+    const overwritePayload = { script: 'abc' };
+    const updatedValue = await updateJwtCustomizer('access-token', overwritePayload);
+    expect(updatedValue).toMatchObject({
+      ...newAccessTokenJwtCustomizerPayload,
+      script: 'abc',
+    });
+    await expect(getJwtCustomizer('access-token')).resolves.toMatchObject({
+      ...newAccessTokenJwtCustomizerPayload,
+      script: 'abc',
+    });
+    await expect(deleteJwtCustomizer('access-token')).resolves.not.toThrow();
+    await expectRejects(getJwtCustomizer('access-token'), {
+      code: 'entity.not_exists_with_id',
+      status: 404,
+    });
+  });
+
+  it('should successfully PUT/GET/DELETE a JWT customizer (client credentials)', async () => {
+    await expectRejects(getJwtCustomizer('client-credentials'), {
+      code: 'entity.not_exists_with_id',
+      status: 404,
+    });
+    await expectRejects(deleteJwtCustomizer('client-credentials'), {
+      code: 'entity.not_found',
+      status: 404,
+    });
+    const clientCredentials = await upsertJwtCustomizer(
+      'client-credentials',
+      clientCredentialsJwtCustomizerPayload
+    );
+    expect(clientCredentials).toMatchObject(clientCredentialsJwtCustomizerPayload);
+    const newClientCredentialsJwtCustomizerPayload = {
+      ...clientCredentialsJwtCustomizerPayload,
+      script: 'new script client credentials',
+    };
+    const updatedClientCredentials = await upsertJwtCustomizer(
+      'client-credentials',
+      newClientCredentialsJwtCustomizerPayload
+    );
+    expect(updatedClientCredentials).toMatchObject(newClientCredentialsJwtCustomizerPayload);
+    const overwritePayload = { script: 'abc' };
+    const updatedValue = await updateJwtCustomizer('client-credentials', overwritePayload);
+    expect(updatedValue).toMatchObject({
+      ...newClientCredentialsJwtCustomizerPayload,
+      script: 'abc',
+    });
+    await expect(getJwtCustomizer('client-credentials')).resolves.toMatchObject({
+      ...newClientCredentialsJwtCustomizerPayload,
+      script: 'abc',
+    });
+    await expect(deleteJwtCustomizer('client-credentials')).resolves.not.toThrow();
+    await expectRejects(getJwtCustomizer('client-credentials'), {
+      code: 'entity.not_exists_with_id',
+      status: 404,
+    });
+  });
+
+  it('should successfully GET all JWT customizers', async () => {
+    await expect(getJwtCustomizers()).resolves.toEqual([]);
+    await upsertJwtCustomizer('access-token', accessTokenJwtCustomizerPayload);
+    await expect(getJwtCustomizers()).resolves.toEqual([
+      {
+        key: LogtoJwtTokenKey.AccessToken,
+        value: accessTokenJwtCustomizerPayload,
+      },
+    ]);
+    await upsertJwtCustomizer('client-credentials', clientCredentialsJwtCustomizerPayload);
+    const jwtCustomizers = await getJwtCustomizers();
+    expect(jwtCustomizers).toHaveLength(2);
+    expect(jwtCustomizers).toContainEqual({
+      key: LogtoJwtTokenKey.AccessToken,
+      value: accessTokenJwtCustomizerPayload,
+    });
+    expect(jwtCustomizers).toContainEqual({
+      key: LogtoJwtTokenKey.ClientCredentials,
+      value: clientCredentialsJwtCustomizerPayload,
+    });
+    await deleteJwtCustomizer('access-token');
+    await expect(getJwtCustomizers()).resolves.toEqual([
+      {
+        key: LogtoJwtTokenKey.ClientCredentials,
+        value: clientCredentialsJwtCustomizerPayload,
+      },
+    ]);
+    await deleteJwtCustomizer('client-credentials');
+    await expect(getJwtCustomizers()).resolves.toEqual([]);
   });
 });

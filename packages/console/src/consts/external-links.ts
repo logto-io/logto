@@ -23,3 +23,10 @@ export const logtoThirdPartyGuideLink = '/docs/recipes/logto-as-idp/';
 export const logtoThirdPartyAppPermissionsLink =
   '/docs/recipes/logto-as-idp/permissions-management/';
 export const logtoThirdPartyAppBrandingLink = '/docs/recipes/logto-as-idp/branding-customization/';
+export const signingKeysLink = '/docs/recipes/openid-connect/signing-keys-rotation/';
+export const organizationTemplateLink =
+  '/docs/recipes/organizations/understand-how-it-works/#organization-template';
+export const organizationRoleLink =
+  '/docs/recipes/organizations/understand-how-it-works/#organization-role';
+export const organizationPermissionLink =
+  '/docs/recipes/organizations/understand-how-it-works/#organization-permission';

@@ -8,12 +8,13 @@ import {
   SentinelActionResult,
   SentinelActivityAction,
 } from '@logto/schemas';
-import { convertToIdentifiers, generateStandardId } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import { type Nullable } from '@silverhand/essentials';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 import { addMinutes } from 'date-fns';
-import { sql, type CommonQueryMethods } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { fields, table } = convertToIdentifiers(SentinelActivities);
 

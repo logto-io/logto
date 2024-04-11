@@ -4,7 +4,7 @@
 /* eslint-disable @silverhand/fp/no-mutation */
 import { ApplicationType } from '@logto/schemas';
 import { generateStandardSecret } from '@logto/shared';
-import { sql, type DatabaseTransactionConnection } from 'slonik';
+import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { type OgcioParams } from './index.js';
 import { createItem } from './queries.js';

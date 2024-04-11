@@ -1,7 +1,7 @@
 import { GlobalValues } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath } from '@silverhand/essentials';
-import type { DatabasePool } from 'slonik';
+import type { DatabasePool } from '@silverhand/slonik';
 
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
@@ -63,7 +63,7 @@ export class EnvSet {
     return this.#oidc;
   }
 
-  async load() {
+  async load(customDomain?: string) {
     const pool = await createPoolByEnv(
       this.databaseUrl,
       EnvSet.values.isUnitTest,
@@ -77,7 +77,9 @@ export class EnvSet {
     });
 
     const oidcConfigs = await getOidcConfigs();
-    const endpoint = getTenantEndpoint(this.tenantId, EnvSet.values);
+    const endpoint = customDomain
+      ? new URL(customDomain)
+      : getTenantEndpoint(this.tenantId, EnvSet.values);
     this.#oidc = await loadOidcValues(appendPath(endpoint, '/oidc').href, oidcConfigs);
   }
 

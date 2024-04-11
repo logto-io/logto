@@ -1,14 +1,14 @@
 import type { Connector } from '@logto/schemas';
 import { Connectors } from '@logto/schemas';
-import { manyRows, convertToIdentifiers } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import type { CommonQueryMethods } from '@silverhand/slonik';
+import { sql } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { type ConnectorWellKnown } from '#src/utils/connectors/types.js';
+import { convertToIdentifiers, manyRows } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Connectors);
 

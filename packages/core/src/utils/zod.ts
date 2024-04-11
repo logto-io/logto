@@ -21,6 +21,7 @@ import {
   ZodUnion,
   ZodUnknown,
   ZodDefault,
+  ZodIntersection,
 } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -276,6 +277,12 @@ export const zodTypeToSwagger = (
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       default: config._def.defaultValue(),
       ...zodTypeToSwagger(config._def.innerType),
+    };
+  }
+
+  if (config instanceof ZodIntersection) {
+    return {
+      allOf: [zodTypeToSwagger(config._def.left), zodTypeToSwagger(config._def.right)],
     };
   }
 

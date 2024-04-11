@@ -11,7 +11,13 @@ import type {
   Scope,
   UsersRole,
 } from '@logto/schemas';
-import { RoleType, ApplicationType, LogtoOidcConfigKey, DomainStatus } from '@logto/schemas';
+import {
+  RoleType,
+  ApplicationType,
+  LogtoOidcConfigKey,
+  DomainStatus,
+  LogtoJwtTokenKey,
+} from '@logto/schemas';
 
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import { mockId } from '#src/test-utils/nanoid.js';
@@ -159,7 +165,7 @@ export const mockCookieKeys: OidcConfigKey[] = [
   { id: 'cookie', value: 'bar', createdAt: 987_654_321 },
 ];
 
-export const mockLogtoConfigs: LogtoConfig[] = [
+const mockLogtoConfigs: LogtoConfig[] = [
   {
     tenantId: 'fake_tenant',
     key: LogtoOidcConfigKey.PrivateKeys,
@@ -171,6 +177,14 @@ export const mockLogtoConfigs: LogtoConfig[] = [
     value: mockCookieKeys,
   },
 ];
+
+export const mockLogtoConfigRows = {
+  rows: mockLogtoConfigs,
+  rowCount: mockLogtoConfigs.length,
+  command: 'SELECT' as const,
+  fields: [],
+  notices: [],
+};
 
 export const mockPasscode: Passcode = {
   tenantId: 'fake_tenant',
@@ -197,4 +211,31 @@ export const mockApplicationRole: ApplicationsRole = {
   id: 'application_role_id',
   applicationId: 'application_id',
   roleId: 'role_id',
+};
+
+export const mockJwtCustomizerConfigForAccessToken = {
+  tenantId: 'fake_tenant',
+  key: LogtoJwtTokenKey.AccessToken,
+  value: {
+    script: 'console.log("hello world");',
+    environmentVariables: {
+      API_KEY: '<api-key>',
+    },
+    contextSample: {
+      user: {
+        username: 'user',
+      },
+    },
+  },
+};
+
+export const mockJwtCustomizerConfigForClientCredentials = {
+  tenantId: 'fake_tenant',
+  key: LogtoJwtTokenKey.ClientCredentials,
+  value: {
+    script: 'console.log("hello world");',
+    environmentVariables: {
+      API_KEY: '<api-key>',
+    },
+  },
 };
