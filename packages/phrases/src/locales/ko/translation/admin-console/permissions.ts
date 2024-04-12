@@ -9,7 +9,6 @@ const permissions = {
   edit: '편집 권한',
   delete: '삭제 권한',
   remove: '제거 권한',
-  updated: '권한이 업데이트되었습니다.',
   edit_title: 'API 권한 편집',
 };
 

@@ -101,7 +101,7 @@ function PermissionsTable({
   const handleEdit = async (scope: ScopeResponse, editedData: EditScopeData) => {
     const patchApiEndpoint = `api/resources/${scope.resourceId}/scopes/${scope.id}`;
     await api.patch(patchApiEndpoint, { json: editedData });
-    toast.success(t('permissions.updated'));
+    toast.success(t('general.saved'));
     onPermissionUpdated();
   };
 
