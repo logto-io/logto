@@ -1,7 +1,7 @@
 const organization_template = {
   title: 'Modello di organizzazione',
   subtitle:
-    'Nelle applicazioni SaaS multi-tenant, è comune che più organizzazioni condividano politiche di controllo dell’accesso identiche, incluse autorizzazioni e ruoli. In Logto, questo concetto è denominato "modello di organizzazione". Utilizzarlo semplifica il processo di costruzione e progettazione del tuo modello di autorizzazione.',
+    "Nelle applicazioni SaaS multi-tenant, un modello organizzativo definisce politiche di controllo dell'accesso condivise (permessi e ruoli) per molteplici organizzazioni.",
   roles: {
     tab_name: 'Ruoli org',
     search_placeholder: 'Cerca per nome del ruolo',

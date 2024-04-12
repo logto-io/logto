@@ -1,7 +1,7 @@
 const organization_template = {
   title: 'Organizasyon şablonu',
   subtitle:
-    'Çok kiracılı SaaS uygulamalarında, birden fazla organizasyonun aynı erişim kontrol politikalarını, izinleri ve rolleri dahil olmak üzere paylaşması yaygındır. Logto\'da bu kavram "organizasyon şablonu" olarak adlandırılır. Bunu kullanmak, yetkilendirme modelinizi oluşturma ve tasarlama sürecini basitleştirir.',
+    'Çok kiracılı SaaS uygulamalarında, bir organizasyon şablonu birden fazla organizasyon için paylaşılan erişim kontrol politikalarını (izinler ve roller) tanımlar.',
   roles: {
     tab_name: 'Org rolleri',
     search_placeholder: 'Role adı ile ara',

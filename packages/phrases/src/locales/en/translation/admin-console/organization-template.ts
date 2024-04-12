@@ -1,7 +1,7 @@
 const organization_template = {
   title: 'Organization template',
   subtitle:
-    'In multi-tenant SaaS applications, it\'s common for multiple organizations to share identical access control policies, including permissions and roles. In Logto, this concept is termed "organization template." Using it streamlines the process of constructing and designing your authorization model.',
+    'In multi-tenant SaaS applications, an organization template defines shared access control policies (permissions and roles) for multiple organizations.',
   roles: {
     tab_name: 'Organization roles',
     search_placeholder: 'Search by role name',
