@@ -59,6 +59,11 @@ const organizations = {
           'El rol de la organización es un agrupamiento de permisos de organización que se pueden asignar a los miembros.',
       },
       section_3: {
+        title: '¿Puedo asignar permisos de API a roles de organización?',
+        description:
+          'Sí, puedes asignar permisos de API a roles de organización. Logto ofrece la flexibilidad para gestionar los roles de tu organización de manera efectiva, permitiéndote incluir tanto permisos de organización como permisos de API dentro de esos roles.',
+      },
+      section_4: {
         title: 'Interactúe con la ilustración para ver cómo se conecta todo',
         description:
           'Tomemos un ejemplo. John y Sarah están en diferentes organizaciones con diferentes roles en el contexto de diferentes organizaciones. Desplácese sobre los diferentes módulos y vea qué sucede.',

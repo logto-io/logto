@@ -56,6 +56,11 @@ const organizations = {
         role_description: '組織角色是可以分配給成員的組織權限的分組。',
       },
       section_3: {
+        title: '我可以將API權限分配給組織角色嗎？',
+        description:
+          '是的，您可以將API權限分配給組織角色。Logto提供靈活性，有效管理您組織的角色，允許您在這些角色中包括組織權限和API權限。',
+      },
+      section_4: {
         title: '交互示意圖，看看它們之間的關係',
         description:
           '讓我們舉個例子。John、Sarah 屬於不同的組織，在不同組織的上下文中具有不同的角色。懸停在不同的模塊上，看看會發生什麼。',

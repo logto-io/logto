@@ -59,6 +59,11 @@ const organizations = {
           'O papel da organização é um agrupamento de permissões da organização que podem ser atribuídas aos membros.',
       },
       section_3: {
+        title: 'Posso atribuir permissões de API a funções de organização?',
+        description:
+          'Sim, você pode atribuir permissões de API a funções de organização. A Logto oferece flexibilidade para gerenciar as funções da sua organização de forma eficaz, permitindo que você inclua tanto as permissões da organização quanto as permissões de API nessas funções.',
+      },
+      section_4: {
         title: 'Interaja com a ilustração para ver como tudo se conecta',
         description:
           'Vamos dar um exemplo. John, Sarah estão em diferentes organizações com diferentes papéis no contexto de organizações diferentes. Passe o mouse sobre os diferentes módulos e veja o que acontece.',

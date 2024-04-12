@@ -58,6 +58,11 @@ const organizations = {
           'Eine Organisationsrolle ist eine Gruppierung von Organisationsberechtigungen, die Benutzern zugewiesen werden können.',
       },
       section_3: {
+        title: 'Kann ich API-Berechtigungen zu Organisationsrollen zuweisen?',
+        description:
+          'Ja, Sie können API-Berechtigungen zu Organisationsrollen zuweisen. Logto bietet die Flexibilität, die Rollen Ihrer Organisation effektiv zu verwalten, und ermöglicht es Ihnen, sowohl Organisationsberechtigungen als auch API-Berechtigungen in diese Rollen einzuschließen.',
+      },
+      section_4: {
         title: 'Interagieren Sie mit der Abbildung, um zu sehen, wie alles zusammenhängt',
         description:
           'Nehmen wir ein Beispiel. John, Sarah sind in verschiedenen Organisationen mit unterschiedlichen Rollen im Kontext verschiedener Organisationen. Fahren Sie mit der Maus über die verschiedenen Module und sehen Sie, was passiert.',

@@ -59,6 +59,11 @@ const organizations = {
           'Rola organizacji to grupowanie uprawnień organizacji, które można przypisać członkom.',
       },
       section_3: {
+        title: 'Czy mogę przypisać uprawnienia API do ról organizacyjnych?',
+        description:
+          'Tak, możesz przypisać uprawnienia API do ról organizacyjnych. Logto oferuje elastyczność w skutecznym zarządzaniu rolami w organizacji, pozwalając na włączenie zarówno uprawnień organizacyjnych, jak i uprawnień API do tych ról.',
+      },
+      section_4: {
         title: 'Zaangażuj się w ilustrację, aby zobaczyć jak to wszystko się łączy',
         description:
           'Przyjmijmy przykład. John, Sarah należą do różnych organizacji z różnymi rolami w kontekście różnych organizacji. Najedź kursorem na różne moduły i zobacz co się stanie.',
