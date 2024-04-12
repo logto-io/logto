@@ -200,7 +200,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
     }
   );
 
-  if (!EnvSet.values.isCloud) {
+  if (!EnvSet.values.isCloud && !EnvSet.values.isUnitTest) {
     return;
   }
 
@@ -218,6 +218,16 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
+
+      // Deploy the test script
+      await deployJwtCustomizerScript(cloudConnection, {
+        key:
+          body.tokenType === LogtoJwtTokenKeyType.AccessToken
+            ? LogtoJwtTokenKey.AccessToken
+            : LogtoJwtTokenKey.ClientCredentials,
+        value: body,
+        isTest: true,
+      });
 
       const client = await cloudConnection.getClient();
 
