@@ -207,11 +207,6 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
   router.post(
     '/configs/jwt-customizer/test',
     koaGuard({
-      /**
-       * Early throws when:
-       * 1. no `script` provided.
-       * 2. no `tokenSample` provided.
-       */
       body: jwtCustomizerTestRequestBodyGuard,
       response: jsonObjectGuard,
       status: [200, 400, 403, 422],
