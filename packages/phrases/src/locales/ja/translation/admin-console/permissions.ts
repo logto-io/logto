@@ -10,7 +10,6 @@ const permissions = {
   edit: '編集権限',
   delete: '削除権限',
   remove: '除去権限',
-  updated: '許可が更新されました。',
   edit_title: 'APIの権限を編集',
 };
 

@@ -10,7 +10,6 @@ const permissions = {
   edit: 'Permission de modifier',
   delete: 'Permission de supprimer',
   remove: 'Permission de retirer',
-  updated: 'Permission mise à jour.',
   edit_title: 'Modifier l’autorisation de l’API',
 };
 

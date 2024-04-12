@@ -1,6 +1,6 @@
 const organization_role_details = {
   page_title: 'Kuruluş rolü ayrıntıları',
-  back_to_org_roles: 'Kuruluş rollerine geri dön',
+  back_to_org_roles: 'Organizasyon rollerine geri dön',
   org_role: 'Kuruluş rolü',
   delete_confirm:
     'Bunu yapmak, etkilenen kullanıcılardan bu role ilişkilendirilen izinleri kaldıracak ve organizasyon rolleri, organizasyon üyeleri ve organizasyon izinleri arasındaki ilişkileri silecektir.',

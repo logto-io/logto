@@ -113,7 +113,7 @@ describe('User RBAC', () => {
     const newDescription = `New: ${permissionDescription}`;
     await expect(page).toFillForm('.ReactModalPortal form', { description: newDescription });
     await expect(page).toClick('.ReactModalPortal button[type=submit]');
-    await waitForToast(page, { text: 'Permission updated.', type: 'success' });
+    await waitForToast(page, { text: 'Saved', type: 'success' });
     await expect(page).toMatchElement('table tbody tr td div', {
       text: newDescription,
     });

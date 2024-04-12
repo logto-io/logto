@@ -10,7 +10,6 @@ const permissions = {
   edit: 'Düzenleme izni',
   delete: 'Silme izni',
   remove: 'Kaldırma izni',
-  updated: 'İzin güncellendi.',
   edit_title: 'API iznini düzenle',
 };
 

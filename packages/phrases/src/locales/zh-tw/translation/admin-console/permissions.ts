@@ -9,7 +9,6 @@ const permissions = {
   edit: '編輯權限',
   delete: '刪除權限',
   remove: '移除權限',
-  updated: '權限已更新。',
   edit_title: '編輯 API 權限',
 };
 

@@ -1,6 +1,6 @@
 const organization_role_details = {
   page_title: 'Organisationsrollendetails',
-  back_to_org_roles: 'Zurück zu den Org-Rollen',
+  back_to_org_roles: 'Zurück zu den Organisationsrollen',
   org_role: 'Org-Rolle',
   delete_confirm:
     'Dadurch werden die mit dieser Rolle verbundenen Berechtigungen von den betroffenen Benutzern entfernt und die Beziehungen zwischen Organisationsrollen, Mitgliedern in der Organisation und Organisationsberechtigungen gelöscht.',

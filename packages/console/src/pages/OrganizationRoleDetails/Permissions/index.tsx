@@ -74,7 +74,7 @@ function Permissions({ organizationRoleId }: Props) {
       ? `api/resources/${scope.resourceId}/scopes/${scope.id}`
       : `api/organization-scopes/${scope.id}`;
     await api.patch(patchApiEndpoint, { json: editedData });
-    toast.success(t('permissions.updated'));
+    toast.success(t('general.saved'));
     mutate();
   };
 
