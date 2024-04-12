@@ -36,7 +36,7 @@ type ScopesLists = {
 
 const fillScopes = () => {
   const resources = ['payments', 'messages', 'events'];
-  const actions = ['read', 'write', 'create', 'delete'];
+  const actions = ['read', 'update', 'create', 'delete'];
   const scopesList: SeedingScope[] = [];
   const scopesByResource: Record<string, SeedingScope[]> = {};
   const scopesByAction: Record<string, SeedingScope[]> = {};
@@ -120,7 +120,8 @@ const fillRoles = (scopesLists: ScopesLists) => {
     id: undefined,
   };
   // Don't ask me why, linter don't like spread operator, so I add to write multiple lines
-  manager.scopes = manager.scopes.concat(scopesLists.scopesByAction.write!);
+  manager.scopes = manager.scopes.concat(scopesLists.scopesByAction.update!);
+  manager.scopes = manager.scopes.concat(scopesLists.scopesByAction.create!);
   manager.scopes = manager.scopes.concat(scopesLists.scopesByAction.delete!);
   const admin: SeedingRole = {
     name: 'OGCIO Admin',
@@ -128,7 +129,8 @@ const fillRoles = (scopesLists: ScopesLists) => {
     description: 'Read write delete and admin permissions',
     id: undefined,
   };
-  admin.scopes = admin.scopes.concat(scopesLists.scopesByAction.write!);
+  admin.scopes = admin.scopes.concat(scopesLists.scopesByAction.update!);
+  admin.scopes = admin.scopes.concat(scopesLists.scopesByAction.create!);
   admin.scopes = admin.scopes.concat(scopesLists.scopesByAction.delete!);
   admin.scopes = admin.scopes.concat(scopesLists.scopesByAction.read!);
 
