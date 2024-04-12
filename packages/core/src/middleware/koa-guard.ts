@@ -8,7 +8,6 @@ import type { ZodType, ZodTypeDef } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ResponseBodyError, StatusCodeError } from '#src/errors/ServerError/index.js';
-import assertThat from '#src/utils/assert-that.js';
 import { consoleLog } from '#src/utils/console.js';
 
 /** Configure what and how to guard. */
@@ -174,6 +173,9 @@ export default function koaGuard<
      * Assert the status code matches the value(s) in the config. If the config does not
      * specify a status code, it will not assert anything.
      *
+     * In production, it will log a warning if the status code does not match the value(s) in the
+     * config for better user experience.
+     *
      * @param value The status code to assert.
      * @throws {StatusCodeError} If the status code does not match the value(s) in the config.
      */
@@ -182,10 +184,16 @@ export default function koaGuard<
         return;
       }
 
-      assertThat(
-        Array.isArray(status) ? status.includes(value) : status === value,
-        new StatusCodeError(status, value)
-      );
+      if (Array.isArray(status) ? status.includes(value) : status === value) {
+        return;
+      }
+
+      if (EnvSet.values.isProduction) {
+        consoleLog.warn('Unexpected status code:', value, 'expected:', status);
+        return;
+      }
+
+      throw new StatusCodeError(status, value);
     };
 
     try {
@@ -215,10 +223,7 @@ export default function koaGuard<
         // the properties that are not defined in the schema.
         ctx.body = result.data;
       } else {
-        if (!EnvSet.values.isProduction) {
-          consoleLog.error('Invalid response:', result.error);
-        }
-
+        consoleLog.error('Invalid response:', result.error);
         throw new ResponseBodyError(result.error);
       }
     }

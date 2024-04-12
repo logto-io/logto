@@ -1,6 +1,7 @@
 import { createMockUtils } from '@logto/shared/esm';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import ServerError from '#src/errors/ServerError/index.js';
 import { emptyMiddleware, createContextWithRouteParameters } from '#src/utils/test-utils.js';
@@ -133,6 +134,26 @@ describe('koaGuardMiddleware', () => {
       await expect(koaGuard({ status: 200 })(ctx, next)).rejects.toThrow(ServerError);
       // @ts-expect-error
       await expect(koaGuard({ status: [200, 204] })(ctx, next)).rejects.toThrow(ServerError);
+    });
+
+    it('should not throw when status is invalid in production', async () => {
+      const ctx = {
+        ...baseCtx,
+        params: {},
+        body: {},
+        guard: {},
+        response: { status: 301 },
+      };
+      const { isProduction } = EnvSet.values;
+
+      // eslint-disable-next-line @silverhand/fp/no-mutating-assign
+      Object.assign(EnvSet.values, { isProduction: true });
+      // @ts-expect-error
+      await expect(koaGuard({ status: 200 })(ctx, next)).resolves.toBeUndefined();
+      // @ts-expect-error
+      await expect(koaGuard({ status: [200, 204] })(ctx, next)).resolves.toBeUndefined();
+      // eslint-disable-next-line @silverhand/fp/no-mutating-assign
+      Object.assign(EnvSet.values, { isProduction });
     });
 
     it('should throw when inner middleware throws invalid status', async () => {
