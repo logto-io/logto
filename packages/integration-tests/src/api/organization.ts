@@ -67,4 +67,8 @@ export class OrganizationApi extends ApiFactory<
   async getUserOrganizations(userId: string): Promise<OrganizationWithRoles[]> {
     return authedAdminApi.get(`users/${userId}/organizations`).json<OrganizationWithRoles[]>();
   }
+
+  async getUserOrganizationScopes(id: string, userId: string): Promise<string[]> {
+    return authedAdminApi.get(`${this.path}/${id}/users/${userId}/scopes`).json<string[]>();
+  }
 }

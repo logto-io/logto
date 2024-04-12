@@ -235,6 +235,22 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     }
   );
 
+  router.get(
+    '/:id/users/:userId/scopes',
+    koaGuard({
+      params: z.object(params),
+      response: z.string().array(),
+      status: [200, 422],
+    }),
+    async (ctx, next) => {
+      const { id, userId } = ctx.guard.params;
+      const scopes = await organizations.relations.rolesUsers.getUserScopes(id, userId);
+
+      ctx.body = scopes.map(({ name }) => name);
+      return next();
+    }
+  );
+
   // MARK: Mount sub-routes
   organizationRoleRoutes(...args);
   organizationScopeRoutes(...args);
