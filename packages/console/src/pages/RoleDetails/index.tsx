@@ -118,9 +118,6 @@ function RoleDetails() {
             {t('role_details.delete_description')}
           </ConfirmModal>
           <TabNav>
-            <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.Settings}`}>
-              {t('role_details.settings_tab')}
-            </TabNavItem>
             <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.Permissions}`}>
               {t('role_details.permissions_tab')}
             </TabNavItem>
@@ -132,6 +129,9 @@ function RoleDetails() {
               {t(
                 data.type === RoleType.User ? 'role_details.users_tab' : 'role_details.m2m_apps_tab'
               )}
+            </TabNavItem>
+            <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.General}`}>
+              {t('role_details.general_tab')}
             </TabNavItem>
           </TabNav>
           <Outlet

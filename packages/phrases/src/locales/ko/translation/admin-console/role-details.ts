@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     '이렇게 하면 영향을 받는 사용자에게서 이 역할과 관련된 권한이 제거되고 역할, 사용자 및 권한 간의 매핑이 삭제될 걈에요.',
   role_deleted: '{{name}}이 성공적으로 삭제되었어요.',
-  settings_tab: '설정',
+  general_tab: '일반',
   users_tab: '사용자',
   m2m_apps_tab: '기계 대 기계 앱',
   permissions_tab: '권한',

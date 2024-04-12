@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     '這樣做將從受影響的用戶中刪除與該角色關聯的權限，並刪除角色、用戶和權限之間的映射關聯。',
   role_deleted: '{{name}} 已成功刪除。',
-  settings_tab: '設置',
+  general_tab: '常規',
   users_tab: '用戶',
   m2m_apps_tab: '機器對機器應用',
   permissions_tab: '權限',
