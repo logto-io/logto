@@ -1,6 +1,8 @@
 import { type Organization } from '@logto/schemas';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+// FIXME: @gao
+// eslint-disable-next-line no-restricted-imports
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
