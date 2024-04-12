@@ -1,6 +1,7 @@
-import { type UserWithOrganizationRoles, type Organization } from '@logto/schemas';
+import { type UserWithOrganizationRoles } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -19,17 +20,16 @@ import useActionTranslation from '@/hooks/use-action-translation';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { buildUrl } from '@/utils/url';
 
+import { type OrganizationDetailsOutletContext } from '../types';
+
 import AddMembersToOrganization from './AddMembersToOrganization';
 import EditOrganizationRolesModal from './EditOrganizationRolesModal';
 import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 
-type Props = {
-  organization: Organization;
-};
-
-function Members({ organization }: Props) {
+function Members() {
+  const { data: organization } = useOutletContext<OrganizationDetailsOutletContext>();
   const api = useApi();
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
