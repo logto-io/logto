@@ -8,6 +8,7 @@ import {
   jwtCustomizerConfigGuard,
   logtoOidcConfigGuard,
 } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { ZodError, z } from 'zod';
 
@@ -173,6 +174,36 @@ export const createLogtoConfigLibrary = ({
     });
   };
 
+  const undeployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(
+    cloudConnection: CloudConnectionLibrary,
+    key: T
+  ) => {
+    const [client, jwtCustomizers] = await Promise.all([
+      cloudConnection.getClient(),
+      getJwtCustomizers(),
+    ]);
+
+    assert(jwtCustomizers[key], new RequestError({ code: 'entity.not_exists', key }));
+
+    // Undeploy the worker directly if the only JWT customizer is being deleted.
+    if (Object.entries(jwtCustomizers).length === 1) {
+      await client.delete(`/api/services/custom-jwt/worker`);
+      return;
+    }
+
+    // Remove the JWT customizer script from the existing JWT customizer scripts and redeploy.
+    const customizerScriptsFromDatabase = getJwtCustomizerScripts(jwtCustomizers);
+
+    await client.put(`/api/services/custom-jwt/worker`, {
+      body: {
+        production: {
+          ...customizerScriptsFromDatabase,
+          [key]: undefined,
+        },
+      },
+    });
+  };
+
   return {
     getOidcConfigs,
     getCloudConnectionData,
@@ -181,5 +212,6 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizers,
     updateJwtCustomizer,
     deployJwtCustomizerScript,
+    undeployJwtCustomizerScript,
   };
 };

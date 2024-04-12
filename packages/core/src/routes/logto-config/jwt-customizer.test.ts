@@ -24,6 +24,7 @@ const logtoConfigLibraries = {
   getJwtCustomizers: jest.fn(),
   updateJwtCustomizer: jest.fn(),
   deployJwtCustomizerScript: jest.fn(),
+  undeployJwtCustomizerScript: jest.fn(),
 };
 
 const settingRoutes = await pickDefault(import('./index.js'));
@@ -126,6 +127,10 @@ describe('configs JWT customizer routes', () => {
 
   it('DELETE /configs/jwt-customizer/:tokenType should delete the record', async () => {
     const response = await routeRequester.delete('/configs/jwt-customizer/client-credentials');
+    expect(logtoConfigLibraries.undeployJwtCustomizerScript).toHaveBeenCalledWith(
+      tenantContext.cloudConnection,
+      LogtoJwtTokenKey.ClientCredentials
+    );
     expect(logtoConfigQueries.deleteJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.ClientCredentials
     );

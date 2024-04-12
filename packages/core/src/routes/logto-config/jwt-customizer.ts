@@ -40,6 +40,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
     getJwtCustomizers,
     updateJwtCustomizer,
     deployJwtCustomizerScript,
+    undeployJwtCustomizerScript,
   } = logtoConfigs;
 
   router.put(
@@ -177,15 +178,23 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       status: [204, 404],
     }),
     async (ctx, next) => {
+      const { isIntegrationTest } = EnvSet.values;
+
       const {
         params: { tokenTypePath },
       } = ctx.guard;
 
-      await deleteJwtCustomizer(
+      const tokenKey =
         tokenTypePath === LogtoJwtTokenKeyType.AccessToken
           ? LogtoJwtTokenKey.AccessToken
-          : LogtoJwtTokenKey.ClientCredentials
-      );
+          : LogtoJwtTokenKey.ClientCredentials;
+
+      // Undeploy the script first to avoid the case where the JWT customizer was deleted from DB but worker script not updated successfully.
+      if (!isIntegrationTest) {
+        await undeployJwtCustomizerScript(cloudConnection, tokenKey);
+      }
+
+      await deleteJwtCustomizer(tokenKey);
       ctx.status = 204;
       return next();
     }
