@@ -3,10 +3,10 @@ import { builtInLanguages } from '@logto/phrases-experience';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 
 import {
-  socialTarget01,
-  socialTarget02,
   mockSignInExperience,
   mockSocialConnectors,
+  socialTarget01,
+  socialTarget02,
   wellConfiguredSsoConnector,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -61,6 +61,7 @@ const cloudConnection = createCloudConnectionLibrary({
   getJwtCustomizer: jest.fn(),
   getJwtCustomizers: jest.fn(),
   updateJwtCustomizer: jest.fn(),
+  deployJwtCustomizerScript: jest.fn(),
 });
 
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');

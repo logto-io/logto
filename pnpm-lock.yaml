@@ -3205,8 +3205,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-ab8a489
-        version: 0.2.5-ab8a489(zod@3.22.4)
+        specifier: 0.2.5-749cae5
+        version: 0.2.5-749cae5(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -7645,6 +7645,16 @@ packages:
       '@silverhand/essentials': 2.9.0
       camelcase-keys: 7.0.2
       jose: 5.2.2
+    dev: true
+
+  /@logto/cloud@0.2.5-749cae5(zod@3.22.4):
+    resolution: {integrity: sha512-QzebHRSBShQwOsKAvYlVd7QF43RlrHOt/nmwrlRNW4F9U0DUEFaeLZujYS56oxjQ49GRdsOPKSQCE97wRB7NNQ==}
+    engines: {node: ^20.9.0}
+    dependencies:
+      '@silverhand/essentials': 2.9.0
+      '@withtyped/server': 0.13.3(zod@3.22.4)
+    transitivePeerDependencies:
+      - zod
     dev: true
 
   /@logto/cloud@0.2.5-ab8a489(zod@3.22.4):

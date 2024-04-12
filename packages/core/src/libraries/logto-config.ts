@@ -1,19 +1,22 @@
+import type { CloudConnectionData, JwtCustomizerType, LogtoOidcConfigType } from '@logto/schemas';
 import {
-  cloudApiIndicator,
-  cloudConnectionDataGuard,
-  logtoOidcConfigGuard,
-  LogtoOidcConfigKey,
-  jwtCustomizerConfigGuard,
   LogtoConfigs,
   LogtoJwtTokenKey,
+  LogtoOidcConfigKey,
+  cloudApiIndicator,
+  cloudConnectionDataGuard,
+  jwtCustomizerConfigGuard,
+  logtoOidcConfigGuard,
 } from '@logto/schemas';
-import type { LogtoOidcConfigType, CloudConnectionData, JwtCustomizerType } from '@logto/schemas';
 import chalk from 'chalk';
-import { z, ZodError } from 'zod';
+import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
+import { getJwtCustomizerScripts } from '#src/utils/custom-jwt.js';
+
+import { type CloudConnectionLibrary } from './cloud-connection.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
 
@@ -129,6 +132,47 @@ export const createLogtoConfigLibrary = ({
     return updatedRow.value;
   };
 
+  /**
+   * This method is used to deploy the give JWT customizer scripts to the cloud worker service.
+   *
+   * @remarks Since cloud worker service deploy all the JWT customizer scripts at once,
+   * and the latest JWT customizer updates needs to be deployed ahead before saving it to the database,
+   * we need to merge the input payload with the existing JWT customizer scripts.
+   *
+   * @params payload - The latest JWT customizer payload needs to be deployed.
+   * @params payload.key - The tokenType of the JWT customizer.
+   * @params payload.value - JWT customizer value
+   * @params payload.isTest - Whether the JWT customizer is for test environment.
+   */
+  const deployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(
+    cloudConnection: CloudConnectionLibrary,
+    payload: {
+      key: T;
+      value: JwtCustomizerType[T];
+      isTest?: boolean;
+    }
+  ) => {
+    const [client, jwtCustomizers] = await Promise.all([
+      cloudConnection.getClient(),
+      getJwtCustomizers(),
+    ]);
+
+    const customizerScriptsFromDatabase = getJwtCustomizerScripts(jwtCustomizers);
+
+    const newCustomizerScripts: { [key in LogtoJwtTokenKey]?: string } = {
+      [payload.key]: payload.value.script,
+    };
+
+    await client.put(`/api/services/custom-jwt/worker`, {
+      body: {
+        production: payload.isTest
+          ? customizerScriptsFromDatabase
+          : { ...customizerScriptsFromDatabase, ...newCustomizerScripts },
+        test: payload.isTest ? newCustomizerScripts : undefined,
+      },
+    });
+  };
+
   return {
     getOidcConfigs,
     getCloudConnectionData,
@@ -136,5 +180,6 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizer,
     getJwtCustomizers,
     updateJwtCustomizer,
+    deployJwtCustomizerScript,
   };
 };

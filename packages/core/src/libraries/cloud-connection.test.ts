@@ -38,6 +38,7 @@ const logtoConfigs: LogtoConfigLibrary = {
   getJwtCustomizer: jest.fn(),
   getJwtCustomizers: jest.fn(),
   updateJwtCustomizer: jest.fn(),
+  deployJwtCustomizerScript: jest.fn(),
 };
 
 describe('getAccessToken()', () => {

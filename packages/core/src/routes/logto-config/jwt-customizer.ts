@@ -1,10 +1,10 @@
 import {
-  accessTokenJwtCustomizerGuard,
-  clientCredentialsJwtCustomizerGuard,
   LogtoJwtTokenKey,
   LogtoJwtTokenKeyType,
-  jsonObjectGuard,
+  accessTokenJwtCustomizerGuard,
   adminTenantId,
+  clientCredentialsJwtCustomizerGuard,
+  jsonObjectGuard,
   jwtCustomizerConfigsGuard,
   jwtCustomizerTestRequestBodyGuard,
 } from '@logto/schemas';
@@ -34,8 +34,13 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
   ...[router, { id: tenantId, queries, logtoConfigs, cloudConnection }]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteJwtCustomizer } = queries.logtoConfigs;
-  const { upsertJwtCustomizer, getJwtCustomizer, getJwtCustomizers, updateJwtCustomizer } =
-    logtoConfigs;
+  const {
+    upsertJwtCustomizer,
+    getJwtCustomizer,
+    getJwtCustomizers,
+    updateJwtCustomizer,
+    deployJwtCustomizerScript,
+  } = logtoConfigs;
 
   router.put(
     '/configs/jwt-customizer/:tokenTypePath',
@@ -67,7 +72,16 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
         params: { tokenTypePath },
         body: rawBody,
       } = ctx.guard;
+
       const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
+
+      // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
+      if (!isIntegrationTest) {
+        await deployJwtCustomizerScript(cloudConnection, {
+          key,
+          value: body,
+        });
+      }
 
       const { rows } = await getRowsByKeys([key]);
 
@@ -76,6 +90,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       if (rows.length === 0) {
         ctx.status = 201;
       }
+
       ctx.body = jwtCustomizer.value;
 
       return next();
@@ -94,11 +109,21 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       status: [200, 400, 404],
     }),
     async (ctx, next) => {
+      const { isIntegrationTest } = EnvSet.values;
+
       const {
         params: { tokenTypePath },
         body: rawBody,
       } = ctx.guard;
       const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
+
+      // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
+      if (!isIntegrationTest) {
+        await deployJwtCustomizerScript(cloudConnection, {
+          key,
+          value: body,
+        });
+      }
 
       ctx.body = await updateJwtCustomizer(key, body);
 

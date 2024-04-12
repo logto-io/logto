@@ -4,9 +4,9 @@ import { pick } from '@silverhand/essentials';
 import Sinon from 'sinon';
 
 import {
-  mockLogtoConfigRows,
   mockJwtCustomizerConfigForAccessToken,
   mockJwtCustomizerConfigForClientCredentials,
+  mockLogtoConfigRows,
 } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -23,6 +23,7 @@ const logtoConfigLibraries = {
   getJwtCustomizer: jest.fn(),
   getJwtCustomizers: jest.fn(),
   updateJwtCustomizer: jest.fn(),
+  deployJwtCustomizerScript: jest.fn(),
 };
 
 const settingRoutes = await pickDefault(import('./index.js'));
@@ -52,6 +53,9 @@ describe('configs JWT customizer routes', () => {
     const response = await routeRequester
       .put(`/configs/jwt-customizer/access-token`)
       .send(mockJwtCustomizerConfigForAccessToken.value);
+
+    expect(logtoConfigLibraries.upsertJwtCustomizer).toHaveBeenCalled();
+
     expect(logtoConfigLibraries.upsertJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.AccessToken,
       mockJwtCustomizerConfigForAccessToken.value
@@ -87,6 +91,9 @@ describe('configs JWT customizer routes', () => {
     const response = await routeRequester
       .patch('/configs/jwt-customizer/access-token')
       .send(mockJwtCustomizerConfigForAccessToken.value);
+
+    expect(logtoConfigLibraries.deployJwtCustomizerScript).toHaveBeenCalled();
+
     expect(logtoConfigLibraries.updateJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.AccessToken,
       mockJwtCustomizerConfigForAccessToken.value
