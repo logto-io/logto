@@ -11,6 +11,7 @@ import Hook from '@/assets/icons/hook.svg';
 import JwtClaims from '@/assets/icons/jwt-claims.svg';
 import Key from '@/assets/icons/key.svg';
 import List from '@/assets/icons/list.svg';
+import OrganizationTemplate from '@/assets/icons/organization-template-feature.svg';
 import Organization from '@/assets/icons/organization.svg';
 import UserProfile from '@/assets/icons/profile.svg';
 import ResourceIcon from '@/assets/icons/resource.svg';
@@ -100,7 +101,7 @@ export const useSidebarMenuItems = (): {
           title: 'roles',
         },
         {
-          Icon: Role,
+          Icon: OrganizationTemplate,
           title: 'organization_template',
           isHidden: !isDevFeaturesEnabled,
         },
