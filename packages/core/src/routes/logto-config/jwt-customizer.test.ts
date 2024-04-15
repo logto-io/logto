@@ -155,11 +155,10 @@ describe('configs JWT customizer routes', () => {
     jest.spyOn(mockCloudClient, 'post').mockResolvedValue(cloudConnectionResponse);
 
     const payload: JwtCustomizerTestRequestBody = {
-      tokenType: LogtoJwtTokenKeyType.AccessToken,
+      tokenType: LogtoJwtTokenKeyType.ClientCredentials,
+      script: mockJwtCustomizerConfigForClientCredentials.value.script,
+      environmentVariables: mockJwtCustomizerConfigForClientCredentials.value.environmentVariables,
       token: {},
-      script: mockJwtCustomizerConfigForAccessToken.value.script,
-      environmentVariables: mockJwtCustomizerConfigForAccessToken.value.environmentVariables,
-      context: mockJwtCustomizerConfigForAccessToken.value.contextSample,
     };
 
     const response = await routeRequester.post('/configs/jwt-customizer/test').send(payload);
@@ -167,7 +166,7 @@ describe('configs JWT customizer routes', () => {
     expect(mockLogtoConfigsLibrary.deployJwtCustomizerScript).toHaveBeenCalledWith(
       tenantContext.cloudConnection,
       {
-        key: LogtoJwtTokenKey.AccessToken,
+        key: LogtoJwtTokenKey.ClientCredentials,
         value: payload,
         isTest: true,
       }

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Roles, UserSsoIdentities, Organizations } from '../../db-entries/index.js';
+import { Organizations, Roles, UserSsoIdentities } from '../../db-entries/index.js';
 import { jsonObjectGuard, mfaFactorsGuard } from '../../foundations/index.js';
 import { scopeResponseGuard } from '../scope.js';
 import { userInfoGuard } from '../user.js';
@@ -32,13 +32,11 @@ export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
 
 export type JwtCustomizerUserContext = z.infer<typeof jwtCustomizerUserContextGuard>;
 
-export const jwtCustomizerGuard = z
-  .object({
-    script: z.string(),
-    environmentVariables: z.record(z.string()),
-    contextSample: jsonObjectGuard,
-  })
-  .partial();
+export const jwtCustomizerGuard = z.object({
+  script: z.string(),
+  environmentVariables: z.record(z.string()).optional(),
+  contextSample: jsonObjectGuard.optional(),
+});
 
 export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
   .extend({
@@ -66,25 +64,21 @@ export enum LogtoJwtTokenKeyType {
 
 /**
  * This guard is for the core JWT customizer testing API request body guard.
+ * Unlike the DB guard
+ *
+ * - rename the `tokenSample` to `token` and is required for testing.
+ * - rename the `contextSample` to `context` and is required for AccessToken testing.
  */
 export const jwtCustomizerTestRequestBodyGuard = z.discriminatedUnion('tokenType', [
   z.object({
     tokenType: z.literal(LogtoJwtTokenKeyType.AccessToken),
-    ...accessTokenJwtCustomizerGuard
-      .required({
-        script: true,
-      })
-      .pick({ environmentVariables: true, script: true }).shape,
+    ...accessTokenJwtCustomizerGuard.pick({ environmentVariables: true, script: true }).shape,
     token: accessTokenJwtCustomizerGuard.required().shape.tokenSample,
     context: accessTokenJwtCustomizerGuard.required().shape.contextSample,
   }),
   z.object({
     tokenType: z.literal(LogtoJwtTokenKeyType.ClientCredentials),
-    ...clientCredentialsJwtCustomizerGuard
-      .required({
-        script: true,
-      })
-      .pick({ environmentVariables: true, script: true }).shape,
+    ...clientCredentialsJwtCustomizerGuard.pick({ environmentVariables: true, script: true }).shape,
     token: clientCredentialsJwtCustomizerGuard.required().shape.tokenSample,
   }),
 ]);
