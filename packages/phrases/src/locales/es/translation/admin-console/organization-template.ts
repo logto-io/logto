@@ -1,7 +1,7 @@
 const organization_template = {
   title: 'Plantilla de organización',
   subtitle:
-    'En aplicaciones SaaS multiinquilino, es común que múltiples organizaciones compartan políticas de control de acceso idénticas, incluyendo permisos y roles. En Logto, este concepto se denomina "plantilla de organización". Usarla simplifica el proceso de construir y diseñar tu modelo de autorización.',
+    'En aplicaciones SaaS multiinquilino, una plantilla de organización define políticas de control de acceso compartido (permisos y roles) para múltiples organizaciones.',
   roles: {
     tab_name: 'Roles de org',
     search_placeholder: 'Buscar por nombre de rol',

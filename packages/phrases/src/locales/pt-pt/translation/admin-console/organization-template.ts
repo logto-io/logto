@@ -1,7 +1,7 @@
 const organization_template = {
   title: 'Modelo de organização',
   subtitle:
-    'Em aplicações SaaS multi-inquilino, é comum várias organizações partilharem políticas de controlo de acesso idênticas, incluindo permissões e papéis. No Logto, este conceito é denominado "modelo de organização". A sua utilização simplifica o processo de construção e desenho do seu modelo de autorização.',
+    'Em aplicações SaaS multi-inquilino, um modelo organizacional define políticas de controlo de acesso partilhado (permissões e papéis) para várias organizações.',
   roles: {
     tab_name: 'Papéis da org',
     search_placeholder: 'Procurar por nome do papel',
