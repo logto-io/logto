@@ -23,7 +23,11 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as styles from './index.module.scss';
 import { type OrganizationRoleDetailsOutletContext } from './types';
 
-const orgRolesPath = `/organization-template/${OrganizationTemplateTabs.OrganizationRoles}`;
+// Console path for organization roles
+const organizationRolesPath = `/organization-template/${OrganizationTemplateTabs.OrganizationRoles}`;
+
+// API endpoint for organization roles
+const organizationRolesEndpoint = 'api/organization-roles';
 
 function OrganizationRoleDetails() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -34,7 +38,7 @@ function OrganizationRoleDetails() {
   const isPageHasTable = pathname.endsWith(OrganizationRoleDetailsTabs.Permissions);
 
   const { data, error, mutate, isLoading } = useSWR<OrganizationRole, RequestError>(
-    id && `api/organization-roles/${id}`
+    id && `${organizationRolesEndpoint}/${id}`
   );
   const api = useApi();
   const { mutate: mutateGlobal } = useSWRConfig();
@@ -54,10 +58,10 @@ function OrganizationRoleDetails() {
     setIsDeleting(true);
 
     try {
-      await api.delete(`api/organization-roles/${data.id}`);
+      await api.delete(`${organizationRolesEndpoint}/${data.id}`);
       toast.success(t('organization_role_details.deleted', { name: data.name }));
-      await mutateGlobal('api/roles');
-      navigate(orgRolesPath, { replace: true });
+      await mutateGlobal(organizationRolesEndpoint);
+      navigate(organizationRolesPath, { replace: true });
     } finally {
       setIsDeleting(false);
     }
@@ -65,7 +69,7 @@ function OrganizationRoleDetails() {
 
   return (
     <DetailsPage
-      backLink={orgRolesPath}
+      backLink={organizationRolesPath}
       backLinkTitle="organization_role_details.back_to_org_roles"
       isLoading={isLoading}
       error={error}
@@ -104,11 +108,13 @@ function OrganizationRoleDetails() {
           </ConfirmModal>
           <TabNav>
             <TabNavItem
-              href={`${orgRolesPath}/${data.id}/${OrganizationRoleDetailsTabs.Permissions}`}
+              href={`${organizationRolesPath}/${data.id}/${OrganizationRoleDetailsTabs.Permissions}`}
             >
               <DynamicT forKey="organization_role_details.permissions.tab" />
             </TabNavItem>
-            <TabNavItem href={`${orgRolesPath}/${data.id}/${OrganizationRoleDetailsTabs.General}`}>
+            <TabNavItem
+              href={`${organizationRolesPath}/${data.id}/${OrganizationRoleDetailsTabs.General}`}
+            >
               <DynamicT forKey="organization_role_details.general.tab" />
             </TabNavItem>
           </TabNav>
