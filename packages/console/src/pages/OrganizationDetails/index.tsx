@@ -1,9 +1,7 @@
 import { type Organization } from '@logto/schemas';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-// FIXME: @gao
-// eslint-disable-next-line no-restricted-imports
-import { Navigate, Route, Routes, useParams } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -23,15 +21,10 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import Introduction from '../Organizations/Guide/Introduction';
 
-import Members from './Members';
-import Settings from './Settings';
 import * as styles from './index.module.scss';
+import { OrganizationDetailsTabs, type OrganizationDetailsOutletContext } from './types';
 
 const pathname = '/organizations';
-const tabs = Object.freeze({
-  settings: 'settings',
-  members: 'members',
-});
 
 function OrganizationDetails() {
   const { id } = useParams();
@@ -111,27 +104,22 @@ function OrganizationDetails() {
             {t('organization_details.delete_confirmation')}
           </DeleteConfirmModal>
           <TabNav>
-            <TabNavItem href={`${pathname}/${data.id}/${tabs.settings}`}>
+            <TabNavItem href={`${pathname}/${data.id}/${OrganizationDetailsTabs.Settings}`}>
               {t('general.settings_nav')}
             </TabNavItem>
-            <TabNavItem href={`${pathname}/${data.id}/${tabs.members}`}>
+            <TabNavItem href={`${pathname}/${data.id}/${OrganizationDetailsTabs.Members}`}>
               {t('organizations.members')}
             </TabNavItem>
           </TabNav>
-          <Routes>
-            <Route index element={<Navigate replace to={tabs.settings} />} />
-            <Route
-              path={tabs.settings}
-              element={
-                <Settings
-                  isDeleting={isDeleting}
-                  data={data}
-                  onUpdated={async (data) => mutate(data)}
-                />
-              }
-            />
-            <Route path={tabs.members} element={<Members organization={data} />} />
-          </Routes>
+          <Outlet
+            context={
+              {
+                data,
+                isDeleting,
+                onUpdated: async (data) => mutate(data),
+              } satisfies OrganizationDetailsOutletContext
+            }
+          />
         </>
       )}
     </DetailsPage>

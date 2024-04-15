@@ -2,6 +2,7 @@ import { type Organization } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
@@ -11,17 +12,10 @@ import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 
-type Props = {
-  /**
-   * Whether the organization is being deleted, this is used to disable the unsaved
-   * changes alert modal.
-   */
-  isDeleting: boolean;
-  data: Organization;
-  onUpdated: (data: Organization) => void;
-};
+import { type OrganizationDetailsOutletContext } from '../types';
 
-function Settings({ isDeleting, data, onUpdated }: Props) {
+function Settings() {
+  const { isDeleting, data, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,

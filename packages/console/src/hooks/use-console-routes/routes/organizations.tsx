@@ -1,8 +1,11 @@
 import { condArray } from '@silverhand/essentials';
-import { type RouteObject } from 'react-router-dom';
+import { Navigate, type RouteObject } from 'react-router-dom';
 
 import { isDevFeaturesEnabled } from '@/consts/env';
 import OrganizationDetails from '@/pages/OrganizationDetails';
+import Members from '@/pages/OrganizationDetails/Members';
+import Settings from '@/pages/OrganizationDetails/Settings';
+import { OrganizationDetailsTabs } from '@/pages/OrganizationDetails/types';
 import Organizations from '@/pages/Organizations';
 
 export const organizations: RouteObject = {
@@ -14,6 +17,14 @@ export const organizations: RouteObject = {
       path: 'template',
       element: <Organizations tab="template" />,
     },
-    { path: ':id/*', element: <OrganizationDetails /> }
+    {
+      path: ':id/*',
+      element: <OrganizationDetails />,
+      children: [
+        { index: true, element: <Navigate replace to={OrganizationDetailsTabs.Settings} /> },
+        { path: OrganizationDetailsTabs.Settings, element: <Settings /> },
+        { path: OrganizationDetailsTabs.Members, element: <Members /> },
+      ],
+    }
   ),
 };
