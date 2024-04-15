@@ -1,7 +1,8 @@
-import { isManagementApi, type Resource } from '@logto/schemas';
+import { type Resource } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
@@ -14,14 +15,11 @@ import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
 
-type Props = {
-  resource: Resource;
-  isDeleting: boolean;
-  onResourceUpdated: (updatedData: Resource) => void;
-};
+import { type ApiResourceDetailsOutletContext } from '../types';
 
-function ApiResourceSettings({ resource, isDeleting, onResourceUpdated }: Props) {
-  const isLogtoManagementApiResource = isManagementApi(resource.indicator);
+function ApiResourceSettings() {
+  const { resource, isDeleting, isLogtoManagementApiResource, onResourceUpdated } =
+    useOutletContext<ApiResourceDetailsOutletContext>();
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();

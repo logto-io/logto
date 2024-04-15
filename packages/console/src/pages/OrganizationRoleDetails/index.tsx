@@ -1,12 +1,10 @@
 import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { type OrganizationRole } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-// FIXME: @yijun
-// eslint-disable-next-line no-restricted-imports
-import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -22,9 +20,8 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import Permissions from './Permissions';
-import Settings from './Settings';
 import * as styles from './index.module.scss';
+import { type OrganizationRoleDetailsOutletContext } from './types';
 
 const orgRolesPath = `/organization-template/${OrganizationTemplateTabs.OrganizationRoles}`;
 
@@ -43,6 +40,11 @@ function OrganizationRoleDetails() {
   const { mutate: mutateGlobal } = useSWRConfig();
   const [isDeletionAlertOpen, setIsDeletionAlertOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Close deletion alert when navigating to another page
+  useEffect(() => {
+    setIsDeletionAlertOpen(false);
+  }, [pathname]);
 
   const handleDelete = async () => {
     if (!data) {
@@ -110,20 +112,15 @@ function OrganizationRoleDetails() {
               <DynamicT forKey="organization_role_details.general.tab" />
             </TabNavItem>
           </TabNav>
-          <Routes>
-            <Route
-              index
-              element={<Navigate replace to={OrganizationRoleDetailsTabs.Permissions} />}
-            />
-            <Route
-              path={OrganizationRoleDetailsTabs.Permissions}
-              element={<Permissions organizationRoleId={data.id} />}
-            />
-            <Route
-              path={OrganizationRoleDetailsTabs.General}
-              element={<Settings data={data} onUpdate={mutate} />}
-            />
-          </Routes>
+          <Outlet
+            context={
+              {
+                organizationRole: data,
+                isDeleting,
+                onOrganizationRoleUpdated: mutate,
+              } satisfies OrganizationRoleDetailsOutletContext
+            }
+          />
         </>
       )}
     </DetailsPage>

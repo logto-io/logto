@@ -2,6 +2,7 @@ import { type Scope, type OrganizationScope } from '@logto/schemas';
 import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import Plus from '@/assets/icons/plus.svg';
 import ActionsButton from '@/components/ActionsButton';
@@ -17,6 +18,8 @@ import Tag from '@/ds-components/Tag';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 
+import { type OrganizationRoleDetailsOutletContext } from '../types';
+
 import ResourceName from './ResourceName';
 import * as styles from './index.module.scss';
 import useOrganizationRoleScopes from './use-organization-role-scopes';
@@ -25,11 +28,11 @@ type OrganizationRoleScope = OrganizationScope | Scope;
 
 const isResourceScope = (scope: OrganizationRoleScope): scope is Scope => 'resourceId' in scope;
 
-type Props = {
-  organizationRoleId: string;
-};
+function Permissions() {
+  const {
+    organizationRole: { id: organizationRoleId },
+  } = useOutletContext<OrganizationRoleDetailsOutletContext>();
 
-function Permissions({ organizationRoleId }: Props) {
   const organizationRolePath = `api/organization-roles/${organizationRoleId}`;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();

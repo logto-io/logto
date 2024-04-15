@@ -2,6 +2,7 @@ import { type OrganizationRole } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
@@ -13,12 +14,12 @@ import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
 
-type Props = {
-  data: OrganizationRole;
-  onUpdate: (updatedData: OrganizationRole) => void;
-};
+import { type OrganizationRoleDetailsOutletContext } from '../types';
 
-function Settings({ data, onUpdate }: Props) {
+function Settings() {
+  const { organizationRole, isDeleting, onOrganizationRoleUpdated } =
+    useOutletContext<OrganizationRoleDetailsOutletContext>();
+
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const {
@@ -26,17 +27,17 @@ function Settings({ data, onUpdate }: Props) {
     handleSubmit,
     reset,
     formState: { errors, isDirty, isSubmitting },
-  } = useForm<OrganizationRole>({ defaultValues: data });
+  } = useForm<OrganizationRole>({ defaultValues: organizationRole });
 
   const api = useApi();
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
       const updatedData = await api
-        .patch(`api/organization-roles/${data.id}`, { json: formData })
+        .patch(`api/organization-roles/${organizationRole.id}`, { json: formData })
         .json<OrganizationRole>();
       reset(updatedData);
-      onUpdate(updatedData);
+      onOrganizationRoleUpdated(updatedData);
       toast.success(t('general.saved'));
     })
   );
@@ -70,7 +71,9 @@ function Settings({ data, onUpdate }: Props) {
           />
         </FormField>
       </FormCard>
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+      <UnsavedChangesAlertModal
+        hasUnsavedChanges={!isDeleting && isDirty} // Should not block navigation back to list page when deleting
+      />
     </DetailsForm>
   );
 }
