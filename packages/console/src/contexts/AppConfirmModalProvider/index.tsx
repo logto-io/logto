@@ -1,9 +1,9 @@
 import type { Nullable } from '@silverhand/essentials';
 import { noop } from '@silverhand/essentials';
-import { useState, useRef, useMemo, createContext, useCallback, useEffect } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import ConfirmModal from '@/ds-components/ConfirmModal';
 import type { ConfirmModalProps } from '@/ds-components/ConfirmModal';
+import ConfirmModal from '@/ds-components/ConfirmModal';
 
 type ModalContentRenderProps = {
   confirm: (data?: unknown) => void;
@@ -108,13 +108,7 @@ function AppConfirmModalProvider({ children }: Props) {
       {children}
       <ConfirmModal
         {...restProps}
-        onConfirm={
-          type === 'confirm'
-            ? () => {
-                handleConfirm();
-              }
-            : undefined
-        }
+        onConfirm={type === 'confirm' ? handleConfirm : undefined}
         onCancel={() => {
           handleCancel();
         }}
