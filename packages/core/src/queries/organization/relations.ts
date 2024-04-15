@@ -9,7 +9,7 @@ import {
   type OrganizationWithRoles,
   type UserWithOrganizationRoles,
   type FeaturedUser,
-  type OrganizationScopeEntity,
+  type OrganizationScope,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -178,14 +178,14 @@ export class RoleUserRelationQueries extends RelationQueries<
   async getUserScopes(
     organizationId: string,
     userId: string
-  ): Promise<readonly OrganizationScopeEntity[]> {
+  ): Promise<readonly OrganizationScope[]> {
     const { fields } = convertToIdentifiers(OrganizationRoleUserRelations, true);
     const roleScopeRelations = convertToIdentifiers(OrganizationRoleScopeRelations, true);
     const scopes = convertToIdentifiers(OrganizationScopes, true);
 
-    return this.pool.any<OrganizationScopeEntity>(sql`
+    return this.pool.any<OrganizationScope>(sql`
       select distinct on (${scopes.fields.id})
-        ${scopes.fields.id}, ${scopes.fields.name}
+        ${sql.join(Object.values(scopes.fields), sql`, `)}
       from ${this.table}
       join ${roleScopeRelations.table}
         on ${roleScopeRelations.fields.organizationRoleId} = ${fields.organizationRoleId}

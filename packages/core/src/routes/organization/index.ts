@@ -4,6 +4,7 @@ import {
   Organizations,
   featuredUserGuard,
   userWithOrganizationRolesGuard,
+  OrganizationScopes,
 } from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -231,6 +232,23 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
       });
 
       ctx.status = 204;
+      return next();
+    }
+  );
+
+  router.get(
+    '/:id/users/:userId/scopes',
+    koaGuard({
+      params: z.object(params),
+      response: z.array(OrganizationScopes.guard),
+      status: [200, 422],
+    }),
+    async (ctx, next) => {
+      const { id, userId } = ctx.guard.params;
+
+      const scopes = await organizations.relations.rolesUsers.getUserScopes(id, userId);
+
+      ctx.body = scopes;
       return next();
     }
   );
