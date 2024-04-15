@@ -1,11 +1,12 @@
 import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { type OrganizationRole } from '@logto/schemas';
+import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 // FIXME: @yijun
 // eslint-disable-next-line no-restricted-imports
-import { Navigate, Route, Routes, useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -23,6 +24,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import Permissions from './Permissions';
 import Settings from './Settings';
+import * as styles from './index.module.scss';
 
 const orgRolesPath = `/organization-template/${OrganizationTemplateTabs.OrganizationRoles}`;
 
@@ -31,6 +33,8 @@ function OrganizationRoleDetails() {
 
   const { id } = useParams();
   const { navigate } = useTenantPathname();
+  const { pathname } = useLocation();
+  const isPageHasTable = pathname.endsWith(OrganizationRoleDetailsTabs.Permissions);
 
   const { data, error, mutate, isLoading } = useSWR<OrganizationRole, RequestError>(
     id && `api/organization-roles/${id}`
@@ -63,6 +67,7 @@ function OrganizationRoleDetails() {
       backLinkTitle="organization_role_details.back_to_org_roles"
       isLoading={isLoading}
       error={error}
+      className={classNames(isPageHasTable && styles.withTable)}
       onRetry={mutate}
     >
       <PageMeta titleKey="organization_role_details.page_title" />
