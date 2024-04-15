@@ -33,7 +33,7 @@ export const getIdByQueryResult = <T extends { id: string }>(
   result: QueryResult<T>
 ): string | undefined => getColumnValueByQueryResult(result, 'id');
 
-const getInsertedColumnValue = async (params: {
+export const getInsertedColumnValue = async (params: {
   transaction: DatabaseTransactionConnection;
   tenantId: string | undefined;
   whereClauses: ValueExpression[];
@@ -145,4 +145,16 @@ export const createItemWithoutId = async <
   }
 
   throw new Error(`${prefixConsoleEntry}. Failure inserting it!`);
+};
+
+export const updateQuery = (
+  toSetValues: ValueExpression[],
+  whereClauses: ValueExpression[],
+  table: string
+) => {
+  return sql`
+    update ${sql.identifier([table])}
+    set ${sql.join(toSetValues, sql`, `)}
+    where ${sql.join(whereClauses, sql` AND `)}
+  `;
 };
