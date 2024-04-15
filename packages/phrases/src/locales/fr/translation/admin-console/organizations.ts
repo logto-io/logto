@@ -59,6 +59,11 @@ const organizations = {
           "Le rôle d'organisation est un regroupement de permissions d'organisation pouvant être attribuées aux membres.",
       },
       section_3: {
+        title: "Puis-je attribuer des permissions API aux rôles de l'organisation?",
+        description:
+          "Oui, vous pouvez attribuer des permissions API aux rôles de l'organisation. Logto offre la flexibilité de gérer efficacement les rôles de votre organisation, vous permettant d'inclure à la fois les permissions d'organisation et les permissions API au sein de ces rôles.",
+      },
+      section_4: {
         title: "Interagissez avec l'illustration pour voir comment tout est connecté",
         description:
           'Prenons un exemple : John, Sarah appartiennent à différentes organisations avec des rôles différents dans le contexte de différentes organisations. Passez la souris sur les différents modules et voyez ce qui se passe.',

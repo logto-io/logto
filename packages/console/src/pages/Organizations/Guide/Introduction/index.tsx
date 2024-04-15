@@ -107,6 +107,12 @@ function Introduction({ isReadonly }: Props) {
                 <div className={styles.description}>
                   {t('guide.introduction.section_3.description')}
                 </div>
+              </FlexBox>
+              <FlexBox type="column">
+                <div className={styles.sectionTitle}>{t('guide.introduction.section_4.title')}</div>
+                <div className={styles.description}>
+                  {t('guide.introduction.section_4.description')}
+                </div>
                 <InteractiveDiagram />
               </FlexBox>
             </FlexBox>

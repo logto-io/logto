@@ -58,6 +58,11 @@ const organizations = {
           'Kuruluş rolü, kullanıcılara atanabilen kuruluş izinlerinin bir gruplamasıdır.',
       },
       section_3: {
+        title: 'API izinlerini organizasyon rollerine atayabilir miyim?',
+        description:
+          'Evet, API izinlerini organizasyon rollerine atayabilirsiniz. Logto, organizasyonunuzun rollerini etkili bir şekilde yönetme esnekliği sunar, bu roller içinde hem organizasyon izinlerini hem de API izinlerini içerecek şekilde izin verir.',
+      },
+      section_4: {
         title: 'Her şeyin nasıl bağlandığını görmek için illüstrasyonla etkileşim',
         description:
           'Örnek alalım. John, Sarah farklı kuruluşlara farklı rollerle farklı kuruluş bağlamlarında bulunmaktadır. Farklı modüllerin üzerine gelerek neler olduğunu görebilirsiniz.',

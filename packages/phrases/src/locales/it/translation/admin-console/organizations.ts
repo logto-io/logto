@@ -59,6 +59,11 @@ const organizations = {
           'Il ruolo organizzativo è un raggruppamento di permessi organizzativi che possono essere assegnati ai membri.',
       },
       section_3: {
+        title: "Posso assegnare permessi API ai ruoli dell'organizzazione?",
+        description:
+          "Sì, puoi assegnare permessi API ai ruoli dell'organizzazione. Logto offre la flessibilità di gestire efficacemente i ruoli della tua organizzazione, permettendoti di includere sia permessi organizzativi che permessi API in tali ruoli.",
+      },
+      section_4: {
         title: "Interagisci con l'illustrazione per vedere come tutto si collega",
         description:
           'Prendiamo un esempio. John, Sarah sono in diverse organizzazioni con ruoli diversi nel contesto di organizzazioni diverse. Passa il mouse sui diversi moduli e guarda cosa succede.',

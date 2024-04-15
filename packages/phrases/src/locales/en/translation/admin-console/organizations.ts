@@ -56,6 +56,11 @@ const organizations = {
           'Organization role is a grouping of organization permissions that can be assigned to members.',
       },
       section_3: {
+        title: 'Can I assign API permissions to organization roles?',
+        description:
+          "Yes, you can assign API permissions to organization roles. Logto offers the flexibility to manage your organization's roles effectively, allowing you to include both organization permissions and API permissions within those roles.",
+      },
+      section_4: {
         title: 'Interact with the illustration to see how everything connects',
         description:
           "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
