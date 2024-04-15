@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import { useCallback, useContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import Research from '@/assets/icons/research.svg';
 import OrganizationEmptyDark from '@/assets/images/organization-empty-dark.svg';
 import OrganizationEmpty from '@/assets/images/organization-empty.svg';
 import Drawer from '@/components/Drawer';
@@ -57,9 +56,9 @@ function OrganizationTemplate() {
           paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
         />
         <Button
-          icon={<Research />}
           title="application_details.check_guide"
           type="outline"
+          size="large"
           onClick={() => {
             setIsGuideDrawerOpen(true);
           }}
