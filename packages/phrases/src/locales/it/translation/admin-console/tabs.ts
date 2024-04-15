@@ -15,7 +15,7 @@ const tabs = {
   tenant_settings: 'Impostazioni',
   mfa: 'Autenticazione multi-fattore',
   /** UNTRANSLATED */
-  customize_jwt: 'JWT Claims',
+  customize_jwt: 'Custom JWT',
   signing_keys: 'Chiavi di firma',
   organization_template: 'Modello di organizzazione',
 };

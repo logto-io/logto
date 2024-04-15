@@ -15,7 +15,7 @@ const tabs = {
   tenant_settings: '租戶設置',
   mfa: '多重認證',
   /** UNTRANSLATED */
-  customize_jwt: 'JWT Claims',
+  customize_jwt: 'Custom JWT',
   signing_keys: '簽署密鑰',
   organization_template: '組織模板',
 };

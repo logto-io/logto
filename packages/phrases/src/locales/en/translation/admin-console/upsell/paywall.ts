@@ -60,6 +60,11 @@ const paywall = {
     'Unlock collaboration feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
   tenant_members_dev_plan:
     "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
+  custom_jwt: {
+    title: 'Add custom claims',
+    description:
+      "Upgrade to a paid plan for custom JWT functionality and premium benefits. Don't hesitate to <a>contact us</a> if you have any questions.",
+  },
 };
 
 export default Object.freeze(paywall);

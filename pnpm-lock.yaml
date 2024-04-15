@@ -2715,8 +2715,8 @@ importers:
         specifier: workspace:^1.4.0
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-ab8a489
-        version: 0.2.5-ab8a489(zod@3.22.4)
+        specifier: 0.2.5-94f7bcc
+        version: 0.2.5-94f7bcc(zod@3.22.4)
       '@logto/connector-kit':
         specifier: workspace:^3.0.0
         version: link:../toolkit/connector-kit
