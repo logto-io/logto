@@ -14,6 +14,7 @@ import { ZodError, z } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError, { formatZodError } from '#src/errors/RequestError/index.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
@@ -31,7 +32,10 @@ const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenKeyType, body: unknown) =
 };
 
 export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
-  ...[router, { id: tenantId, queries, logtoConfigs, cloudConnection }]: RouterInitArgs<T>
+  ...[
+    router,
+    { id: tenantId, queries, logtoConfigs, cloudConnection, libraries },
+  ]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteJwtCustomizer } = queries.logtoConfigs;
   const {
@@ -60,6 +64,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 201, 400, 403],
     }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { isCloud, isIntegrationTest } = EnvSet.values;
       if (tenantId === adminTenantId && isCloud && !isIntegrationTest) {
@@ -109,6 +114,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 400, 404],
     }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { isIntegrationTest } = EnvSet.values;
 
@@ -211,6 +217,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       response: jsonObjectGuard,
       status: [200, 400, 403, 422],
     }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { body } = ctx.guard;
 
