@@ -6,6 +6,8 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
+// FIXME: @yijun
+// eslint-disable-next-line no-restricted-imports
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 

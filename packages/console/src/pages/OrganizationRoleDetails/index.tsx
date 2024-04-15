@@ -3,6 +3,8 @@ import { type OrganizationRole } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+// FIXME: @yijun
+// eslint-disable-next-line no-restricted-imports
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 

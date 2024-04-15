@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 import Modal from 'react-modal';
+// FIXME: @charles
+// eslint-disable-next-line no-restricted-imports
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import DsModalHeader from '@/ds-components/ModalHeader';
