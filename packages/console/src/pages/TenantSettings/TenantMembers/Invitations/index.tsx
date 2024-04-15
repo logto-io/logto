@@ -53,7 +53,9 @@ function Invitations() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const cloudApi = useAuthedCloudApi();
   const { currentTenantId } = useContext(TenantsContext);
-  const { canInviteMember, canRemoveMember } = useCurrentTenantScopes();
+  const {
+    access: { canInviteMember, canRemoveMember },
+  } = useCurrentTenantScopes();
 
   const { data, error, isLoading, mutate } = useSWR<TenantInvitationResponse[], RequestError>(
     'api/tenants/:tenantId/invitations',

@@ -13,7 +13,9 @@ import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 const useTenantMembersUsage = () => {
   const { currentPlan } = useContext(SubscriptionDataContext);
   const { currentTenantId } = useContext(TenantsContext);
-  const { canInviteMember } = useCurrentTenantScopes();
+  const {
+    access: { canInviteMember },
+  } = useCurrentTenantScopes();
 
   const cloudApi = useAuthedCloudApi();
 

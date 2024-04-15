@@ -14,7 +14,9 @@ import TenantMembers from '@/pages/TenantSettings/TenantMembers';
 
 export const useTenantSettings = () => {
   const { isDevTenant } = useContext(TenantsContext);
-  const { canManageTenant } = useCurrentTenantScopes();
+  const {
+    access: { canManageTenant },
+  } = useCurrentTenantScopes();
 
   const tenantSettings: RouteObject = useMemo(
     () => ({

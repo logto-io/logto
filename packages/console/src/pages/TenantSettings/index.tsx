@@ -12,7 +12,9 @@ import * as styles from './index.module.scss';
 
 function TenantSettings() {
   const { isDevTenant } = useContext(TenantsContext);
-  const { canManageTenant } = useCurrentTenantScopes();
+  const {
+    access: { canManageTenant },
+  } = useCurrentTenantScopes();
 
   return (
     <div className={styles.container}>

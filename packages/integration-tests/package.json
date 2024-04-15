@@ -27,7 +27,7 @@
     "@logto/connector-kit": "workspace:^3.0.0",
     "@logto/core-kit": "workspace:^",
     "@logto/js": "^4.1.1",
-    "@logto/node": "^2.4.4",
+    "@logto/node": "^2.4.7",
     "@logto/schemas": "workspace:^1.15.0",
     "@logto/shared": "workspace:^3.1.0",
     "@silverhand/eslint-config": "5.0.0",

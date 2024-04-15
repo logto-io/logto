@@ -6,11 +6,14 @@ import { useConsoleRoutes } from '@/hooks/use-console-routes';
 import type { AppContentOutletContext } from '../AppContent/types';
 
 import Sidebar from './Sidebar';
+import useTenantScopeListener from './hooks';
 import * as styles from './index.module.scss';
 
 function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
   const routes = useConsoleRoutes();
+  // Use this hook here to make sure console listens to user tenant scope changes.
+  useTenantScopeListener();
 
   return (
     <div className={styles.content}>

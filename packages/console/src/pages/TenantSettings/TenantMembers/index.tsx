@@ -30,7 +30,9 @@ function TenantMembers() {
   const { hasTenantMembersSurpassedLimit } = useTenantMembersUsage();
   const { navigate, match } = useTenantPathname();
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const { canInviteMember } = useCurrentTenantScopes();
+  const {
+    access: { canInviteMember },
+  } = useCurrentTenantScopes();
 
   const isInvitationTab = match(
     `/tenant-settings/${TenantSettingsTabs.Members}/${invitationsRoute}`
