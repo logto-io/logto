@@ -150,6 +150,14 @@
       },
       {
         "files": [
+          "*.openapi.json"
+        ],
+        "rules": {
+          "max-lines": "off"
+        }
+      },
+      {
+        "files": [
           "src/include.d/oidc-provider/**/*"
         ],
         "rules": {
