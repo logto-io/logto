@@ -165,16 +165,35 @@ export const protectedAppConfigProviderDataGuard = z.object({
 
 export type ProtectedAppConfigProviderData = z.infer<typeof protectedAppConfigProviderDataGuard>;
 
+/**
+ * Cloudflare workers config for custom JWT.
+ * Ref: https://developers.cloudflare.com/api/
+ */
+export const customJwtWorkerConfigGuard = z.object({
+  /** Cloudflare API Key (api_key). */
+  apiKey: z.string(),
+  /** Cloudflare API Key (api_email). */
+  apiEmail: z.string(),
+  /** Cloudflare account ID. */
+  accountId: z.string(),
+  /** Default Cloudflare subdomain for the account. */
+  subdomain: z.string(),
+});
+
+export type CustomJwtWorkerConfig = z.infer<typeof customJwtWorkerConfigGuard>;
+
 export enum CloudflareKey {
   HostnameProvider = 'cloudflareHostnameProvider',
   ProtectedAppConfigProvider = 'cloudflareProtectedAppConfigProvider',
   ProtectedAppHostnameProvider = 'cloudflareProtectedAppHostnameProvider',
+  CustomJwtWorkerConfig = 'cloudflareCustomJwtWorkerConfig',
 }
 
 export type CloudflareType = {
   [CloudflareKey.HostnameProvider]: HostnameProviderData;
   [CloudflareKey.ProtectedAppConfigProvider]: ProtectedAppConfigProviderData;
   [CloudflareKey.ProtectedAppHostnameProvider]: HostnameProviderData;
+  [CloudflareKey.CustomJwtWorkerConfig]: CustomJwtWorkerConfig;
 };
 
 export const cloudflareGuard: Readonly<{
@@ -183,6 +202,7 @@ export const cloudflareGuard: Readonly<{
   [CloudflareKey.HostnameProvider]: hostnameProviderDataGuard,
   [CloudflareKey.ProtectedAppConfigProvider]: protectedAppConfigProviderDataGuard,
   [CloudflareKey.ProtectedAppHostnameProvider]: hostnameProviderDataGuard,
+  [CloudflareKey.CustomJwtWorkerConfig]: customJwtWorkerConfigGuard,
 });
 
 // Summary
