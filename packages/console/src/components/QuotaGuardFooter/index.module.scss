@@ -7,6 +7,7 @@
   padding: _.unit(6);
   background-color: var(--color-info-container);
   margin: 0 _.unit(-6) _.unit(-6);
+  flex: 1; // Should display in full width
 
   .description {
     flex: 1;
