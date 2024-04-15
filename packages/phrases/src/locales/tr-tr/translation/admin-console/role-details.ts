@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     'Bunu yapmak, rolle ilişkili izinleri etkilenen kullanıcılardan kaldırır ve roller, kullanıcılar ve izinler arasındaki eşleştirmeyi siler.',
   role_deleted: '{{name}} başarıyla silindi.',
-  settings_tab: 'Ayarlar',
+  general_tab: 'Genel',
   users_tab: 'Kullanıcılar',
   m2m_apps_tab: 'Makine-makine uygulamaları',
   permissions_tab: 'İzinler',

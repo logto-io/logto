@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     'Usunięcie tej roli usunie uprawnienia z nią związane od użytkowników i usunie odwzorowanie między rolami, użytkownikami i uprawnieniami.',
   role_deleted: '{{name}} został pomyślnie usunięty.',
-  settings_tab: 'Ustawienia',
+  general_tab: 'Ogólne',
   users_tab: 'Użytkownicy',
   m2m_apps_tab: 'Maszyny do maszyn',
   permissions_tab: 'Uprawnienia',

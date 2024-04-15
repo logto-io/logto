@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     'これを行うと、このロールに関連付けられた許可が影響を受けるユーザーから削除され、ロール、ユーザー、および許可のマッピングが削除されます。',
   role_deleted: '{{name}} は正常に削除されました。',
-  settings_tab: '設定',
+  general_tab: '一般',
   users_tab: 'ユーザー',
   m2m_apps_tab: '機械対機械のアプリ',
   permissions_tab: '許可',

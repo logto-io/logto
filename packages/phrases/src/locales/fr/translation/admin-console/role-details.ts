@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     'Cela supprimera les autorisations associées à ce rôle des utilisateurs concernés et supprimera la correspondance entre les rôles, les utilisateurs et les autorisations.',
   role_deleted: '{{name}} a été supprimé avec succès.',
-  settings_tab: 'Paramètres',
+  general_tab: 'Général',
   users_tab: 'Utilisateurs',
   m2m_apps_tab: 'Applications machine-à-machine',
   permissions_tab: 'Autorisations',

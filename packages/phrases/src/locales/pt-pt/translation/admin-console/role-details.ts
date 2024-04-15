@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     'Ao fazê-lo, serão removidas as permissões associadas a esta função dos utilizadores afetados e eliminado o mapeamento entre funções, utilizadores e permissões.',
   role_deleted: '{{name}} foi eliminada com sucesso.',
-  settings_tab: 'Definições',
+  general_tab: 'Geral',
   users_tab: 'Utilizadores',
   m2m_apps_tab: 'Aplicações de máquina para máquina',
   permissions_tab: 'Permissões',
