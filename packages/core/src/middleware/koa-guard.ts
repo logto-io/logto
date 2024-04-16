@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import type { Optional } from '@silverhand/essentials';
 import { has } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
@@ -190,6 +191,7 @@ export default function koaGuard<
 
       if (EnvSet.values.isProduction) {
         consoleLog.warn('Unexpected status code:', value, 'expected:', status);
+        void appInsights.trackException(new StatusCodeError(status, value));
         return;
       }
 
