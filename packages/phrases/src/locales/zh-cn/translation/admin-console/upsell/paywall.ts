@@ -63,6 +63,13 @@ const paywall = {
   /** UNTRANSLATED */
   tenant_members_dev_plan:
     "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
+  custom_jwt: {
+    /** UNTRANSLATED */
+    title: 'Add custom claims',
+    /** UNTRANSLATED */
+    description:
+      "Upgrade to a paid plan for custom JWT functionality and premium benefits. Don't hesitate to <a>contact us</a> if you have any questions.",
+  },
 };
 
 export default Object.freeze(paywall);

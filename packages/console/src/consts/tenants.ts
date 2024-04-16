@@ -1,4 +1,4 @@
-import { TenantTag, ReservedPlanId, defaultManagementApi } from '@logto/schemas';
+import { ReservedPlanId, TenantTag, defaultManagementApi } from '@logto/schemas';
 import dayjs from 'dayjs';
 
 import { type TenantResponse } from '@/cloud/types/router';
@@ -67,6 +67,7 @@ export const defaultSubscriptionPlan: SubscriptionPlan = {
     ticketSupportResponseTime: 48,
     thirdPartyApplicationsLimit: null,
     tenantMembersLimit: null,
+    customJwtEnabled: true,
   },
 };
 

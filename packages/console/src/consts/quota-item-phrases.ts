@@ -27,6 +27,7 @@ export const quotaItemPhrasesMap: Record<
   organizationsEnabled: 'organizations_enabled.name',
   ssoEnabled: 'sso_enabled.name',
   tenantMembersLimit: 'tenant_members_limit.name',
+  customJwtEnabled: 'custom_jwt_enabled.name',
 };
 
 export const quotaItemUnlimitedPhrasesMap: Record<
@@ -54,6 +55,7 @@ export const quotaItemUnlimitedPhrasesMap: Record<
   organizationsEnabled: 'organizations_enabled.unlimited',
   ssoEnabled: 'sso_enabled.unlimited',
   tenantMembersLimit: 'tenant_members_limit.unlimited',
+  customJwtEnabled: 'custom_jwt_enabled.unlimited',
 };
 
 export const quotaItemLimitedPhrasesMap: Record<
@@ -81,6 +83,7 @@ export const quotaItemLimitedPhrasesMap: Record<
   organizationsEnabled: 'organizations_enabled.limited',
   ssoEnabled: 'sso_enabled.limited',
   tenantMembersLimit: 'tenant_members_limit.limited',
+  customJwtEnabled: 'custom_jwt_enabled.limited',
 };
 
 export const quotaItemNotEligiblePhrasesMap: Record<
@@ -108,4 +111,5 @@ export const quotaItemNotEligiblePhrasesMap: Record<
   organizationsEnabled: 'organizations_enabled.not_eligible',
   ssoEnabled: 'sso_enabled.not_eligible',
   tenantMembersLimit: 'tenant_members_limit.not_eligible',
+  customJwtEnabled: 'custom_jwt_enabled.not_eligible',
 };

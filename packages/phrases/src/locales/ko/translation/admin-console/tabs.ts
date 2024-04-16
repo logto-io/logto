@@ -15,7 +15,7 @@ const tabs = {
   tenant_settings: '테넌트 설정',
   mfa: '다중 요소 인증',
   /** UNTRANSLATED */
-  customize_jwt: 'JWT Claims',
+  customize_jwt: 'Custom JWT',
   signing_keys: '서명 키',
   organization_template: '조직 템플릿',
 };

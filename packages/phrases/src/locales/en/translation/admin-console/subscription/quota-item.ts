@@ -153,6 +153,12 @@ const quota_item = {
     unlimited: 'Unlimited tenant members',
     not_eligible: 'Remove your tenant members',
   },
+  custom_jwt_enabled: {
+    name: 'Custom JWT',
+    limited: 'Custom JWT',
+    unlimited: 'Custom JWT',
+    not_eligible: 'Remove your JWT claims customizer',
+  },
 };
 
 export default Object.freeze(quota_item);

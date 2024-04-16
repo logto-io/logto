@@ -1,5 +1,5 @@
 import { ConnectorType, DemoConnector } from '@logto/connector-kit';
-import { RoleType, ReservedPlanId } from '@logto/schemas';
+import { ReservedPlanId, RoleType } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -72,6 +72,7 @@ export const createQuotaLibrary = (
     ssoEnabled: notNumber,
     omniSignInEnabled: notNumber, // No limit for now
     builtInEmailConnectorEnabled: notNumber, // No limit for now
+    customJwtEnabled: notNumber, // No limit for now
   };
 
   const getTenantUsage = async (key: keyof FeatureQuota, queryKey?: string): Promise<number> => {
