@@ -169,8 +169,8 @@ export const createUserLibrary = (queries: Queries) => {
   };
 
   /**
-   * Find user scopes for a resource indicator, from roles and organization roles
-   * set organizationId to narrow down the search to the specific organization, otherwise it will search all organizations
+   * Find user scopes for a resource indicator, from roles and organization roles.
+   * Set `organizationId` to narrow down the search to the specific organization, otherwise it will search all organizations.
    */
   const findUserScopesForResourceIndicator = async (
     userId: string,

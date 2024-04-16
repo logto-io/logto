@@ -202,7 +202,7 @@ export class RoleUserRelationQueries extends RelationQueries<
 
   /**
    * Get the available resource scopes of a user in all organizations.
-   * if organizationId is provided, it will only search in that organization
+   * If `organizationId` is provided, it will only search in that organization.
    */
   async getUserResourceScopes(
     userId: string,
