@@ -70,45 +70,48 @@ export const createItem = async <
   tenantId?: string;
   toInsert: T;
   toLogFieldName: string;
-  itemTypeName: string;
   whereClauses: ValueExpression[];
   tableName: string;
 }): Promise<Omit<T, 'id'> & { id: string }> => {
-  const prefixConsoleEntry = `Creating ${params.itemTypeName}. TenantId: ${
+  const prefixConsoleEntry = `Table ${params.tableName}. TenantId: ${
     params.tenantId ?? 'NOT SET'
-  }. Name: ${params.toInsert[params.toLogFieldName]!.toString()}`;
-  consoleLog.info(prefixConsoleEntry);
-  const scopeIdBefore = await getInsertedId(
-    params.transaction,
-    params.tenantId,
-    params.whereClauses,
-    params.tableName
-  );
-  if (scopeIdBefore !== undefined) {
-    consoleLog.info(`${prefixConsoleEntry}. Already exists.`);
-    params.toInsert.id = scopeIdBefore;
-    return { ...params.toInsert, id: scopeIdBefore };
+  }. ${params.toLogFieldName}: ${params.toInsert[params.toLogFieldName]!.toString()}`;
+  try {
+    const scopeIdBefore = await getInsertedId(
+      params.transaction,
+      params.tenantId,
+      params.whereClauses,
+      params.tableName
+    );
+    if (scopeIdBefore !== undefined) {
+      consoleLog.info(`${prefixConsoleEntry}. Already exists.`);
+      params.toInsert.id = scopeIdBefore;
+      return { ...params.toInsert, id: scopeIdBefore };
+    }
+
+    const toInsertData = {
+      ...params.toInsert,
+      id: generateStandardId(),
+      tenant_id: params.tenantId,
+    };
+
+    await params.transaction.query(insertInto(toInsertData, params.tableName));
+    params.toInsert.id = await getInsertedId(
+      params.transaction,
+      params.tenantId,
+      params.whereClauses,
+      params.tableName
+    );
+    if (params.toInsert.id !== undefined) {
+      consoleLog.info(`${prefixConsoleEntry}. Created, Id ${params.toInsert.id}`);
+      return { ...params.toInsert, id: params.toInsert.id };
+    }
+
+    throw new Error(`${prefixConsoleEntry}. Failure inserting it!`);
+  } catch (error) {
+    consoleLog.error(prefixConsoleEntry);
+    throw error;
   }
-
-  const toInsertData = {
-    ...params.toInsert,
-    id: generateStandardId(),
-    tenant_id: params.tenantId,
-  };
-
-  await params.transaction.query(insertInto(toInsertData, params.tableName));
-  params.toInsert.id = await getInsertedId(
-    params.transaction,
-    params.tenantId,
-    params.whereClauses,
-    params.tableName
-  );
-  if (params.toInsert.id !== undefined) {
-    consoleLog.info(`${prefixConsoleEntry}. Created, Id ${params.toInsert.id}`);
-    return { ...params.toInsert, id: params.toInsert.id };
-  }
-
-  throw new Error(`${prefixConsoleEntry}. Failure inserting it!`);
 };
 
 export const createItemWithoutId = async <
@@ -118,14 +121,13 @@ export const createItemWithoutId = async <
   tenantId: string | undefined;
   toInsert: T;
   toLogFieldName: string;
-  itemTypeName: string;
   whereClauses: ValueExpression[];
   tableName: string;
   columnToGet: string;
 }): Promise<T> => {
-  const prefixConsoleEntry = `Creating ${params.itemTypeName}. TenantId: ${
-    params.tenantId ?? 'NOT SET'
-  }. Name: ${params.toInsert[params.toLogFieldName]!.toString()}`;
+  const prefixConsoleEntry = `${params.tableName}. TenantId: ${params.tenantId ?? 'NOT SET'}. ${
+    params.toLogFieldName
+  }: ${params.toInsert[params.toLogFieldName]!.toString()}`;
   consoleLog.info(prefixConsoleEntry);
   const scopeIdBefore = await getInsertedColumnValue(params);
   if (scopeIdBefore !== undefined) {

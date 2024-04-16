@@ -1,163 +1,49 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @silverhand/fp/no-mutating-methods */
-/* eslint-disable @silverhand/fp/no-mutation */
-import { OrganizationScopes, OrganizationRoles } from '@logto/schemas';
+
+import { OrganizationRoleScopeRelations } from '@logto/schemas';
 import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
-import { createItem, createItemWithoutId } from './queries.js';
-
-const createOrganizationScope = async (
-  transaction: DatabaseTransactionConnection,
-  tenantId: string,
-  scopeToSeed: SeedingScope
-) =>
-  createItem({
-    transaction,
-    tenantId,
-    toInsert: scopeToSeed,
-    toLogFieldName: 'name',
-    itemTypeName: 'Organization Scope',
-    whereClauses: [sql`name = ${scopeToSeed.name}`],
-    tableName: OrganizationScopes.table,
-  });
-
-type SeedingScope = {
-  name: string;
-  id: string | undefined;
-  description: string;
-};
-
-type ScopesLists = {
-  scopesList: SeedingScope[];
-  scopesByResource: Record<string, SeedingScope[]>;
-  scopesByAction: Record<string, SeedingScope[]>;
-};
-
-const fillScopes = () => {
-  const resources = ['payments', 'messages', 'events'];
-  const actions = ['read', 'update', 'create', 'delete'];
-  const scopesList: SeedingScope[] = [];
-  const scopesByResource: Record<string, SeedingScope[]> = {};
-  const scopesByAction: Record<string, SeedingScope[]> = {};
-
-  for (const resource of resources) {
-    scopesByResource[resource] = [];
-    for (const action of actions) {
-      const scope: SeedingScope = {
-        name: `${resource}:${action}`,
-        description: `${action} ${resource}`,
-        id: undefined,
-      };
-      scopesList.push(scope);
-      if (scopesByResource[resource] === undefined) {
-        scopesByResource[resource] = [scope];
-      }
-      scopesByResource[resource]!.push(scope);
-      if (scopesByAction[action] === undefined) {
-        scopesByAction[action] = [];
-      }
-      scopesByAction[action]!.push(scope);
-    }
-  }
-  const superScope: SeedingScope = {
-    name: 'ogcio:admin',
-    description: 'OGCIO Admin',
-    id: undefined,
-  };
-
-  scopesList.push(superScope);
-  scopesByResource.ogcio = [superScope];
-  scopesByAction.admin = [superScope];
-
-  return {
-    scopesList,
-    scopesByResource,
-    scopesByAction,
-  };
-};
-
-const setScopeId = async (
-  element: SeedingScope,
-  transaction: DatabaseTransactionConnection,
-  tenantId: string
-) => {
-  element = await createOrganizationScope(transaction, tenantId, element);
-};
-
-const createScopes = async (
-  transaction: DatabaseTransactionConnection,
-  tenantId: string
-): Promise<ScopesLists> => {
-  const scopesToCreate = fillScopes();
-  const queries: Array<Promise<void>> = [];
-  for (const element of scopesToCreate.scopesList) {
-    queries.push(setScopeId(element, transaction, tenantId));
-  }
-
-  await Promise.all(queries);
-
-  return scopesToCreate;
-};
-
-type SeedingRole = {
-  name: string;
-  scopes: SeedingScope[];
-  description: string;
-  id: string | undefined;
-};
-const fillRoles = (scopesLists: ScopesLists) => {
-  const employee: SeedingRole = {
-    name: 'OGCIO Employee',
-    scopes: scopesLists.scopesByAction.read!,
-    description: 'Only read permissions',
-    id: undefined,
-  };
-  const manager: SeedingRole = {
-    name: 'OGCIO Manager',
-    scopes: scopesLists.scopesByAction.read!,
-    description: 'Read write delete permissions',
-    id: undefined,
-  };
-  // Don't ask me why, linter don't like spread operator, so I add to write multiple lines
-  manager.scopes = manager.scopes.concat(scopesLists.scopesByAction.update!);
-  manager.scopes = manager.scopes.concat(scopesLists.scopesByAction.create!);
-  manager.scopes = manager.scopes.concat(scopesLists.scopesByAction.delete!);
-  const admin: SeedingRole = {
-    name: 'OGCIO Admin',
-    scopes: scopesLists.scopesByAction.admin!,
-    description: 'Read write delete and admin permissions',
-    id: undefined,
-  };
-  admin.scopes = admin.scopes.concat(scopesLists.scopesByAction.update!);
-  admin.scopes = admin.scopes.concat(scopesLists.scopesByAction.create!);
-  admin.scopes = admin.scopes.concat(scopesLists.scopesByAction.delete!);
-  admin.scopes = admin.scopes.concat(scopesLists.scopesByAction.read!);
-
-  return [admin, manager, employee];
-};
-
-const createRole = async (
-  transaction: DatabaseTransactionConnection,
-  tenantId: string,
-  roleToSeed: SeedingRole
-) => {
-  const created = await createItem({
-    transaction,
-    tableName: OrganizationRoles.table,
-    tenantId,
-    toLogFieldName: 'name',
-    whereClauses: [sql`name = ${roleToSeed.name}`],
-    toInsert: { name: roleToSeed.name, description: roleToSeed.description },
-    itemTypeName: 'Organization Role',
-  });
-
-  roleToSeed.id = created.id;
-
-  return roleToSeed;
-};
+import {
+  type OrganizationSeedingRole,
+  type OrganizationScopesLists,
+  createScopes,
+  fillScopesGroup,
+  getScopesPerRole,
+  createRoles,
+} from './common-rbac.js';
+import { type OrganizationPermissionSeeder, type OrganizationRoleSeeder } from './ogcio-seeder.js';
+import { createItemWithoutId } from './queries.js';
 
 type SeedingRelation = { organization_role_id: string; organization_scope_id: string };
+
+const fillScopes = (scopesToSeed: OrganizationPermissionSeeder[]): OrganizationScopesLists => {
+  const fullLists: OrganizationScopesLists = {
+    scopesList: [],
+    scopesByEntity: {},
+    scopesByAction: {},
+    scopesByFullName: {},
+  };
+
+  for (const singleSeeder of scopesToSeed) {
+    fillScopesGroup(singleSeeder, fullLists);
+  }
+
+  return fullLists;
+};
+
+const fillRole = (
+  roleToSeed: OrganizationRoleSeeder,
+  scopesLists: OrganizationScopesLists
+): OrganizationSeedingRole => ({
+  name: roleToSeed.name,
+  description: roleToSeed.description,
+  scopes: getScopesPerRole(roleToSeed, scopesLists),
+});
+
+const fillRoles = (rolesToSeed: OrganizationRoleSeeder[], scopesLists: OrganizationScopesLists) =>
+  rolesToSeed.map((role) => fillRole(role, scopesLists));
 
 const createRoleScopeRelation = async (
   transaction: DatabaseTransactionConnection,
@@ -166,7 +52,7 @@ const createRoleScopeRelation = async (
 ) =>
   createItemWithoutId({
     transaction,
-    tableName: 'organization_role_scope_relations',
+    tableName: OrganizationRoleScopeRelations.table,
     tenantId,
     toLogFieldName: 'organization_role_id',
     whereClauses: [
@@ -174,14 +60,13 @@ const createRoleScopeRelation = async (
       sql`organization_scope_id = ${relation.organization_scope_id}`,
     ],
     toInsert: relation,
-    itemTypeName: 'Organization Scope-Role relation',
     columnToGet: 'organization_role_id',
   });
 
 const createRelations = async (
   transaction: DatabaseTransactionConnection,
   tenantId: string,
-  roles: Record<string, SeedingRole>
+  roles: Record<string, OrganizationSeedingRole>
 ) => {
   const queries: Array<Promise<SeedingRelation>> = [];
   for (const role of Object.values(roles)) {
@@ -197,43 +82,32 @@ const createRelations = async (
   return Promise.all(queries);
 };
 
-const addRole = async (
-  transaction: DatabaseTransactionConnection,
-  tenantId: string,
-  role: SeedingRole,
-  toFill: Record<string, SeedingRole>
-) => {
-  toFill[role.name] = await createRole(transaction, tenantId, role);
-};
-
-const createRoles = async (
-  transaction: DatabaseTransactionConnection,
-  tenantId: string,
-  scopesLists: ScopesLists
-): Promise<Record<string, SeedingRole>> => {
-  const rolesToCreate = fillRoles(scopesLists);
-  const queries: Array<Promise<void>> = [];
-  const outputList: Record<string, SeedingRole> = {};
-  for (const role of rolesToCreate) {
-    queries.push(addRole(transaction, tenantId, role, outputList));
-  }
-
-  await Promise.all(queries);
-
-  return outputList;
-};
-
-export const seedOrganizationRbacData = async (
-  transaction: DatabaseTransactionConnection,
-  tenantId: string
-): Promise<{
-  scopes: ScopesLists;
-  roles: Record<string, SeedingRole>;
+export const seedOrganizationRbacData = async (params: {
+  transaction: DatabaseTransactionConnection;
+  tenantId: string;
+  toSeed: {
+    organization_permissions: OrganizationPermissionSeeder[];
+    organization_roles: OrganizationRoleSeeder[];
+  };
+}): Promise<{
+  scopes: OrganizationScopesLists;
+  roles: Record<string, OrganizationSeedingRole>;
   relations: SeedingRelation[];
 }> => {
-  const createdScopes = await createScopes(transaction, tenantId);
-  const createdRoles = await createRoles(transaction, tenantId, createdScopes);
-  const relations = await createRelations(transaction, tenantId, createdRoles);
+  const createdScopes = await createScopes({
+    transaction: params.transaction,
+    tenantId: params.tenantId,
+    scopesToSeed: params.toSeed.organization_permissions,
+    fillScopesMethod: fillScopes,
+  });
+  const createdRoles = await createRoles({
+    transaction: params.transaction,
+    tenantId: params.tenantId,
+    scopesLists: createdScopes,
+    rolesToSeed: params.toSeed.organization_roles,
+    fillRolesMethod: fillRoles,
+  });
+  const relations = await createRelations(params.transaction, params.tenantId, createdRoles);
 
   return { scopes: createdScopes, roles: createdRoles, relations };
 };

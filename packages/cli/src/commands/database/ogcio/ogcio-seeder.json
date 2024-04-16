@@ -1,0 +1,334 @@
+{
+    "default": {
+        "organizations": [
+            {
+                "name": "OGCIO Seeded Org",
+                "description": "Organization created through seeder"
+            }
+        ],
+        "organization_permissions": [
+            {
+                "actions": [
+                    "read",
+                    "create",
+                    "update",
+                    "delete"
+                ],
+                "entities": [
+                    "payments",
+                    "payment-requests",
+                    "events",
+                    "messages"
+                ]
+            },
+            {
+                "actions": [
+                    "admin"
+                ],
+                "entities": [
+                    "ogcio"
+                ]
+            }
+        ],
+        "organization_roles": [
+            {
+                "name": "OGCIO Employee",
+                "description": "Employee with only read permissions",
+                "actions": [
+                    "read"
+                ]
+            },
+            {
+                "name": "OGCIO Manager",
+                "description": "Employee that can also write",
+                "actions": [
+                    "read",
+                    "create",
+                    "update",
+                    "delete"
+                ]
+            },
+            {
+                "name": "OGCIO Admin",
+                "description": "Admin power",
+                "actions": [
+                    "read",
+                    "create",
+                    "update",
+                    "delete"
+                ],
+                "entities": [
+                    "payments",
+                    "payment-requests",
+                    "events",
+                    "messages"
+                ],
+                "specific_permissions": [
+                    "ogcio:admin"
+                ]
+            }
+        ],
+        "applications": [
+            {
+                "name": "Life Events Payments App",
+                "description": "Payments App of Life Events",
+                "type": "Traditional",
+                "redirect_uri": "http://localhost:3001/callback",
+                "logout_redirect_uri": "http://localhost:3001"
+            },
+            {
+                "name": "Life Events Messaging App",
+                "description": "Messaging App of Life Events",
+                "type": "Traditional",
+                "redirect_uri": "http://localhost:3002/callback",
+                "logout_redirect_uri": "http://localhost:3002"
+            },
+            {
+                "name": "Life Events User Profile App",
+                "description": "User Profile App of Life Events",
+                "type": "Traditional",
+                "redirect_uri": "http://localhost:3003/callback",
+                "logout_redirect_uri": "http://localhost:3003"
+            }
+        ],
+        "resources": [
+            {
+                "id": "mock-api",
+                "name": "Life Events Mock API",
+                "indicator": "http://localhost:8000"
+            },
+            {
+                "id": "payments-api",
+                "name": "Life Events Payments API",
+                "indicator": "http://localhost:8001"
+            },
+            {
+                "id": "messaging-api",
+                "name": "Messaging API",
+                "indicator": "http://localhost:8002"
+            },
+            {
+                "id": "user-profile-api",
+                "name": "User Profile API",
+                "indicator": "http://localhost:8003"
+            }
+        ],
+        "resource_permissions": [
+            {
+                "for_resource_ids": [
+                    "payments-api"
+                ],
+                "actions": [
+                    "read",
+                    "create",
+                    "update",
+                    "delete",
+                    "admin"
+                ],
+                "entities": [
+                    "payments",
+                    "payment-requests"
+                ]
+            },
+            {
+                "for_resource_ids": [
+                    "messaging-api"
+                ],
+                "actions": [
+                    "read",
+                    "create",
+                    "update",
+                    "delete",
+                    "admin"
+                ],
+                "entities": [
+                    "messages"
+                ]
+            },
+            {
+                "for_resource_ids": [
+                    "user-profile-api"
+                ],
+                "actions": [
+                    "read",
+                    "create",
+                    "update",
+                    "delete",
+                    "admin"
+                ],
+                "entities": [
+                    "user-data"
+                ]
+            }
+        ],
+        "resource_roles": [
+            {
+                "name": "Payments Employee",
+                "description": "Read only stuffs",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "payments-api"
+                        ],
+                        "actions": [
+                            "read"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Payments Manager",
+                "description": "Employee that can also write",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "payments-api"
+                        ],
+                        "actions": [
+                            "read",
+                            "create",
+                            "update",
+                            "delete"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Payments Admin",
+                "description": "Admin power",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "payments-api"
+                        ],
+                        "actions": [
+                            "read",
+                            "create",
+                            "update",
+                            "delete",
+                            "admin"
+                        ],
+                        "entities": [
+                            "payments",
+                            "payment-requests"
+                        ],
+                        "specific_permissions": [
+                            "payments:admin",
+                            "payment-requests:admin"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Messaging Employee",
+                "description": "Read only stuffs",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "messaging-api"
+                        ],
+                        "actions": [
+                            "read"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Messaging Manager",
+                "description": "Employee that can also write",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "messaging-api"
+                        ],
+                        "actions": [
+                            "read",
+                            "create",
+                            "update",
+                            "delete"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Messaging Admin",
+                "description": "Admin power",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "messaging-api"
+                        ],
+                        "actions": [
+                            "read",
+                            "create",
+                            "update",
+                            "delete",
+                            "admin"
+                        ],
+                        "entities": [
+                            "messages"
+                        ],
+                        "specific_permissions": [
+                            "messages:admin"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "User-Profile Employee",
+                "description": "Read only stuffs",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "user-profile-api"
+                        ],
+                        "actions": [
+                            "read"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "User-Profile Manager",
+                "description": "Employee that can also write",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "user-profile-api"
+                        ],
+                        "actions": [
+                            "read",
+                            "create",
+                            "update",
+                            "delete"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "User-Profile Admin",
+                "description": "Admin power",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "user-profile-api"
+                        ],
+                        "actions": [
+                            "read",
+                            "create",
+                            "update",
+                            "delete",
+                            "admin"
+                        ],
+                        "entities": [
+                            "user-data"
+                        ],
+                        "specific_permissions": [
+                            "user-data:admin"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
