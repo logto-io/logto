@@ -16,7 +16,9 @@ type Props = {
 };
 
 function ProfileForm({ currentTenantId }: Props) {
-  const { canManageTenant } = useCurrentTenantScopes();
+  const {
+    access: { canManageTenant },
+  } = useCurrentTenantScopes();
   const {
     register,
     formState: { errors },

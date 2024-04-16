@@ -1235,8 +1235,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-ab8a489
-        version: 0.2.5-ab8a489(zod@3.22.4)
+        specifier: 0.2.5-821690c
+        version: 0.2.5-821690c(zod@3.22.4)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.12.0)
@@ -2715,8 +2715,8 @@ importers:
         specifier: workspace:^1.4.0
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-94f7bcc
-        version: 0.2.5-94f7bcc(zod@3.22.4)
+        specifier: 0.2.5-821690c
+        version: 0.2.5-821690c(zod@3.22.4)
       '@logto/connector-kit':
         specifier: workspace:^3.0.0
         version: link:../toolkit/connector-kit
@@ -2733,8 +2733,8 @@ importers:
         specifier: workspace:^1.6.1
         version: link:../phrases-experience
       '@logto/react':
-        specifier: ^3.0.5
-        version: 3.0.5(react@18.2.0)
+        specifier: ^3.0.8
+        version: 3.0.8(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.15.0
         version: link:../schemas
@@ -3205,8 +3205,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-94f7bcc
-        version: 0.2.5-94f7bcc(zod@3.22.4)
+        specifier: 0.2.5-821690c
+        version: 0.2.5-821690c(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 5.0.0
         version: 5.0.0(eslint@8.44.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -3319,8 +3319,8 @@ importers:
         specifier: workspace:^1.10.0
         version: link:../phrases
       '@logto/react':
-        specifier: ^3.0.5
-        version: 3.0.5(react@18.2.0)
+        specifier: ^3.0.8
+        version: 3.0.8(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.15.0
         version: link:../schemas
@@ -3638,8 +3638,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1
       '@logto/node':
-        specifier: ^2.4.4
-        version: 2.4.4
+        specifier: ^2.4.7
+        version: 2.4.7
       '@logto/schemas':
         specifier: workspace:^1.15.0
         version: link:../schemas
@@ -7630,16 +7630,16 @@ packages:
       tiny-cookie: 2.4.1
     dev: false
 
-  /@logto/browser@2.2.7:
-    resolution: {integrity: sha512-+tB4QWB4/JSO5pXItX491mRR4Id5dsYlEJchI0gPC8JNX7cl4968/oDXhqQ42XWqFnqX3W5Wx7RgKeV6JtTMhg==}
+  /@logto/browser@2.2.10:
+    resolution: {integrity: sha512-y6NauaxctqpfApccP6uFVmpg/vG1OhsDVLD4Pdpzbmj3whl63Nb17yxSTQHt4eYNKmSZJ2SzudAnMnVEYD91iQ==}
     dependencies:
-      '@logto/client': 2.6.3
+      '@logto/client': 2.6.6
       '@silverhand/essentials': 2.9.0
       js-base64: 3.7.5
     dev: true
 
-  /@logto/client@2.6.3:
-    resolution: {integrity: sha512-uZphb17TZD2rXTiYfhPaIpiavMbUec+WwznIWIm2wJ9x4th8UO05egw9eTPiSaoEOZSuoPs6oWBROP1SQ00iBg==}
+  /@logto/client@2.6.6:
+    resolution: {integrity: sha512-QT7jMnzEIWHBNrf9/M8p1OErRBbbNZjoekXGji5aZCyUh975hh8+GEBL21HV71FT3H/5Cq4Gf1GzUbAIW3izMA==}
     dependencies:
       '@logto/js': 4.1.1
       '@silverhand/essentials': 2.9.0
@@ -7647,18 +7647,8 @@ packages:
       jose: 5.2.2
     dev: true
 
-  /@logto/cloud@0.2.5-94f7bcc(zod@3.22.4):
-    resolution: {integrity: sha512-1nY3o1/gXgEIqgvjel2no0X3rR+BGnfozB7Vev+FY2qTkDyQIWRtHAnx+kkv4iEIIFcZW86LRNlvfjDUqR2yIg==}
-    engines: {node: ^20.9.0}
-    dependencies:
-      '@silverhand/essentials': 2.9.0
-      '@withtyped/server': 0.13.3(zod@3.22.4)
-    transitivePeerDependencies:
-      - zod
-    dev: true
-
-  /@logto/cloud@0.2.5-ab8a489(zod@3.22.4):
-    resolution: {integrity: sha512-nUD1n2CDe/nu6x4cOhXfJ5VyKKDqkKv+a/u9zSfbIMxIF0nShybd2LiCYJDO0SPuMqLnmlYFg+79KrdPCNvjIQ==}
+  /@logto/cloud@0.2.5-821690c(zod@3.22.4):
+    resolution: {integrity: sha512-eVTlJxknWbvmaeaitKzPPMTx6C4GK4TLTb97hFr91E2u6SwKP+csE3oMBgL7ZdoDLOGG+nY+j08JpVMQ8QdOWw==}
     engines: {node: ^20.9.0}
     dependencies:
       '@silverhand/essentials': 2.9.0
@@ -7674,20 +7664,20 @@ packages:
       camelcase-keys: 7.0.2
     dev: true
 
-  /@logto/node@2.4.4:
-    resolution: {integrity: sha512-3qkhXQKGZX5cVBfWT6n2l0kN9ln3fPShXngHaY5LTBBRd0b2e20h1XIrXCdoGoMmdSp1zntEo2PMv0+fBodzcw==}
+  /@logto/node@2.4.7:
+    resolution: {integrity: sha512-AlANeqY1NIt93EBcRzrTmyAVHXOHpszTJK+qe1ok50rmZlTmX2p7yQvrg0/Ehwf/+4Rla5vooAR+HIFMaOmPpQ==}
     dependencies:
-      '@logto/client': 2.6.3
+      '@logto/client': 2.6.6
       '@silverhand/essentials': 2.9.0
       js-base64: 3.7.5
     dev: true
 
-  /@logto/react@3.0.5(react@18.2.0):
-    resolution: {integrity: sha512-oCwKBGRf79QRo/MixPi8C8myZwHOx7eMon3/05nho0iiwBPllI2zSUJ7jUOnlFFnKTOLYV03l8pEMFnF+ODKyw==}
+  /@logto/react@3.0.8(react@18.2.0):
+    resolution: {integrity: sha512-p3pV4rX4g8ZwHQ159mxI+pP3Bwome47dNEmP1hI8/10WqdIPXGYTnfYn5c2l4Y2DyslYyK3ur2Sy4i4K6ept9A==}
     peerDependencies:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
-      '@logto/browser': 2.2.7
+      '@logto/browser': 2.2.10
       '@silverhand/essentials': 2.9.0
       react: 18.2.0
     dev: true

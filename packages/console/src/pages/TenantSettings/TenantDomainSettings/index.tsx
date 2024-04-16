@@ -23,7 +23,9 @@ function TenantDomainSettings() {
   const { data: customDomain, isLoading: isLoadingCustomDomain, mutate } = useCustomDomain(true);
   const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
-  const { canManageTenant } = useCurrentTenantScopes();
+  const {
+    access: { canManageTenant },
+  } = useCurrentTenantScopes();
 
   if (isLoadingCustomDomain) {
     return <Skeleton />;

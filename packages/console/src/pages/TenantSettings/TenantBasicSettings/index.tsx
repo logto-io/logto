@@ -30,7 +30,9 @@ const tenantProfileToForm = (tenant?: TenantResponse): TenantSettingsForm => {
 
 function TenantBasicSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { canManageTenant } = useCurrentTenantScopes();
+  const {
+    access: { canManageTenant },
+  } = useCurrentTenantScopes();
   const api = useCloudApi();
   const {
     currentTenant,
