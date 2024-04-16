@@ -53,7 +53,8 @@ function InstructionTab({ isActive }: Props) {
               ? accessTokenPayloadTypeDefinition
               : clientCredentialsPayloadTypeDefinition
           }
-          height="320px"
+          // ClientCredentials token payload has only a few fields, so it doesn't need to be as tall as the AccessToken payload.
+          height={tokenType === LogtoJwtTokenKeyType.AccessToken ? '320px' : '200px'}
           theme="logto-dark"
           options={typeDefinitionCodeEditorOptions}
         />
