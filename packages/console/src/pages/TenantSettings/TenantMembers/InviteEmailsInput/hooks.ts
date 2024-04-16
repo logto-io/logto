@@ -24,7 +24,7 @@ const useEmailInputUtils = () => {
   );
 
   const { data: existingInvitations = [] } = useSWR<TenantInvitationResponse[], RequestError>(
-    'api/tenants/:tenantId/invitations',
+    `api/tenants/${currentTenantId}/invitations`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/invitations', { params: { tenantId: currentTenantId } })
   );

@@ -18,12 +18,12 @@ const useTenantMembersUsage = () => {
   const cloudApi = useAuthedCloudApi();
 
   const { data: members } = useSWR<TenantMemberResponse[], RequestError>(
-    `api/tenants/:tenantId/members`,
+    `api/tenants/${currentTenantId}/members`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/members', { params: { tenantId: currentTenantId } })
   );
   const { data: invitations } = useSWR<TenantInvitationResponse[], RequestError>(
-    canInviteMember && 'api/tenants/:tenantId/invitations',
+    canInviteMember && `api/tenants/${currentTenantId}/invitations`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/invitations', { params: { tenantId: currentTenantId } })
   );

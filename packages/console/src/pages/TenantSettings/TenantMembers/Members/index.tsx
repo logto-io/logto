@@ -27,7 +27,7 @@ function Members() {
   const { canRemoveMember, canUpdateMemberRole } = useCurrentTenantScopes();
 
   const { data, error, isLoading, mutate } = useSWR<TenantMemberResponse[], RequestError>(
-    `api/tenants/:tenantId/members`,
+    `api/tenants/${currentTenantId}/members`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/members', { params: { tenantId: currentTenantId } })
   );
