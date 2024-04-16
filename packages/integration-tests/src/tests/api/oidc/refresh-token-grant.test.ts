@@ -40,7 +40,7 @@ const grantErrorContaining = (code: string, description: string, status = 400) =
 const accessDeniedError = grantErrorContaining(
   'oidc.access_denied',
   'user is not a member of the organization',
-  400
+  403
 );
 
 const issuer = defaultConfig.endpoint + '/oidc';
