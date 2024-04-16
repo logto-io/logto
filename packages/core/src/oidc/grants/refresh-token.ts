@@ -33,7 +33,7 @@ import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
 import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -144,7 +144,7 @@ export const buildHandler: (
       throw new InsufficientScope('refresh token missing required scope', UserScope.Organizations);
     }
     // Does not allow requesting resource token when requesting organization token (yet).
-    if (params.resource) {
+    if (!EnvSet.values.isDevFeaturesEnabled && params.resource) {
       throw new InvalidRequest('resource is not allowed when requesting organization token');
     }
   }
@@ -313,8 +313,11 @@ export const buildHandler: (
   /** The scopes requested by the client. If not provided, use the scopes from the refresh token. */
   const scope = params.scope ? requestParamScopes : refreshToken.scopes;
 
-  /* === RFC 0001 === */
-  if (organizationId) {
+  // Note, issue organization token only if `params.resource` is not present.
+  // If resource is set, will issue normal access token with extra claim "organization_id",
+  // the logic is handled in `getResourceServerInfo` and `extraTokenClaims`, see the init file of oidc-provider.
+  if (organizationId && !params.resource) {
+    /* === RFC 0001 === */
     const audience = buildOrganizationUrn(organizationId);
     /** All available scopes for the user in the organization. */
     const availableScopes = await queries.organizations.relations.rolesUsers

@@ -238,21 +238,6 @@ describe('organization token grant', () => {
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidScope);
   });
 
-  it('should throw when both `resource` and `organization_id` are present in request', async () => {
-    const ctx = createOidcContext({
-      ...validOidcContext,
-      params: {
-        ...validOidcContext.params,
-        resource: 'some_resource',
-      },
-    });
-    stubRefreshToken(ctx);
-    stubGrant(ctx);
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
-      new errors.InvalidRequest('resource is not allowed when requesting organization token')
-    );
-  });
-
   it('should throw when account cannot be found or account id mismatch', async () => {
     const ctx = createOidcContext(validOidcContext);
     stubRefreshToken(ctx);
