@@ -275,7 +275,12 @@ describe('organization user APIs', () => {
       // Assign role1 to user
       await organizationApi.addUserRoles(organization.id, user.id, [role1.id]);
       const scopes = await organizationApi.getUserOrganizationScopes(organization.id, user.id);
-      expect(scopes.map(({ name }) => name)).toMatchObject([scope1.name, scope2.name]);
+      expect(
+        scopes
+          .map(({ name }) => name)
+          .slice()
+          .sort()
+      ).toEqual([scope1.name, scope2.name].slice().sort());
 
       // Remove role1 and assign role2 to user
       await organizationApi.deleteUserRole(organization.id, user.id, role1.id);
