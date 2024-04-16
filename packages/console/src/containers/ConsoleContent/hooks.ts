@@ -10,6 +10,7 @@ import { saveRedirect } from '@/utils/storage';
 /**
  * Listens to the tenant scope changes for the current signed-in user. This hook will fetch the tenant scopes
  * for the user, and compare it with the "scope" token claim in access token. After comparing the scopes:
+ *
  * - If the user has been granted new scopes, it will re-consent to obtain the additional scopes.
  * - If the user has been revoked scopes, it will clear the cached access token and renew one with shrunk scopes.
  *
