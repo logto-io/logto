@@ -17,9 +17,9 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
 /**
- * For organization API resource feature,
- * add extra token claim `organization_id` to the access token.
- * notice that this is avaiable only when `resource` and `organization_id` are both present.
+ * For organization API resource feature, add extra token claim `organization_id` to the
+ * access token.
+ * Note that this is available only when `resource` and `organization_id` are both present.
  */
 export const getExtraTokenClaimsForOrganizationApiResource = async (
   ctx: KoaContextWithOIDC,
