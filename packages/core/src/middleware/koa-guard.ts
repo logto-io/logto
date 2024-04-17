@@ -2,7 +2,7 @@ import { appInsights } from '@logto/app-insights/node';
 import type { Optional } from '@silverhand/essentials';
 import { has } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
-import koaBody from 'koa-body';
+import { koaBody } from 'koa-body';
 import type { IMiddleware, IRouterParamContext } from 'koa-router';
 import type { ZodType, ZodTypeDef } from 'zod';
 

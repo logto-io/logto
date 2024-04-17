@@ -7,9 +7,9 @@ import ServerError from '#src/errors/ServerError/index.js';
 import { emptyMiddleware, createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsmDefault } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
-mockEsmDefault('koa-body', () => emptyMiddleware);
+mockEsm('koa-body', () => ({ koaBody: emptyMiddleware }));
 const { default: koaGuard, isGuardMiddleware } = await import('./koa-guard.js');
 
 describe('koaGuardMiddleware', () => {

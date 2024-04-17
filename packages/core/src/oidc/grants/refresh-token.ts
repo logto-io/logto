@@ -19,6 +19,8 @@
  * The commit hash of the original file is `cf2069cbb31a6a855876e95157372d25dde2511c`.
  */
 
+import { type X509Certificate } from 'node:crypto';
+
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
 import { type Optional, isKeyInObject, cond } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
@@ -117,7 +119,7 @@ export const buildHandler: (
     throw new InvalidGrant('refresh token is expired');
   }
 
-  let cert: Optional<string>;
+  let cert: Optional<string | X509Certificate>;
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the original code uses `||`
   if (client.tlsClientCertificateBoundAccessTokens || refreshToken['x5t#S256']) {
     cert = getCertificate(ctx);
