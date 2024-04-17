@@ -13,6 +13,7 @@ import {
   type RedditReportType,
   reportToGoogle,
   reportToReddit,
+  plausibleDataDomain,
 } from './utils';
 
 type ScriptProps = {
@@ -61,6 +62,20 @@ function RedditScripts({ userEmailHash }: ScriptProps) {
   );
 }
 
+function PlausibleScripts() {
+  return (
+    <Helmet>
+      <script
+        async
+        defer
+        data-domain={plausibleDataDomain}
+        src="https://plausible.io/js/plausible.manual.js"
+      />
+      <script>{`window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`}</script>
+    </Helmet>
+  );
+}
+
 /**
  * Renders global scripts for conversion tracking.
  */
@@ -88,6 +103,7 @@ export function GlobalScripts() {
 
   return (
     <>
+      <PlausibleScripts />
       <GoogleScripts userEmailHash={userEmailHash} />
       <RedditScripts userEmailHash={userEmailHash} />
     </>
