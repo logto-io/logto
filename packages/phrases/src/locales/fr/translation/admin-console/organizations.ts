@@ -55,8 +55,10 @@ const organizations = {
           "Dans les applications multi-locataires SaaS, plusieurs organisations partagent souvent le même modèle de contrôle d'accès, comprenant des autorisations et des rôles. Chez Logto, nous l'appelons \"modèle d'organisation\".",
         permission_description:
           "L'autorisation d'organisation se réfère à l'autorisation d'accéder à une ressource dans le contexte de l'organisation.",
-        role_description:
+        role_description_deprecated:
           "Le rôle d'organisation est un regroupement de permissions d'organisation pouvant être attribuées aux membres.",
+        role_description:
+          "Le rôle de l'organisation est un regroupement de permissions d'organisation ou de permissions API qui peuvent être attribuées aux membres.",
       },
       section_3: {
         title: "Puis-je attribuer des permissions API aux rôles de l'organisation?",

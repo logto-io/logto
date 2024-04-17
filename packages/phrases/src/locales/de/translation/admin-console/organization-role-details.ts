@@ -4,7 +4,7 @@ const organization_role_details = {
   org_role: 'Org-Rolle',
   delete_confirm:
     'Dadurch werden die mit dieser Rolle verbundenen Berechtigungen von den betroffenen Benutzern entfernt und die Beziehungen zwischen Organisationsrollen, Mitgliedern in der Organisation und Organisationsberechtigungen gelöscht.',
-  deleted: 'Organisationsrolle {{name}} wurde erfolgreich gelöscht.',
+  deleted: 'Die Organisationsrolle {{name}} wurde erfolgreich gelöscht.',
   permissions: {
     tab: 'Berechtigungen',
     name_column: 'Berechtigung',
@@ -12,7 +12,7 @@ const organization_role_details = {
     type_column: 'Berechtigungstyp',
     type: {
       api: 'API-Berechtigung',
-      org: 'Org-Berechtigung',
+      org: 'Organisationsberechtigung',
     },
     assign_permissions: 'Berechtigungen zuweisen',
     remove_permission: 'Berechtigung entfernen',
@@ -30,7 +30,7 @@ const organization_role_details = {
     tab: 'Allgemein',
     settings: 'Einstellungen',
     description:
-      'Die Organisationsrolle ist eine Gruppierung von Berechtigungen, die Benutzern zugewiesen werden können. Die Berechtigungen müssen aus den vordefinierten Organisationsberechtigungen stammen.',
+      'Die Organisationsrolle ist eine Gruppierung von Berechtigungen, die Benutzern zugewiesen werden können. Die Berechtigungen können aus den vordefinierten Organisationsberechtigungen und API-Berechtigungen stammen.',
     name_field: 'Name',
     description_field: 'Beschreibung',
     description_field_placeholder: 'Benutzer mit nur Leseberechtigungen',

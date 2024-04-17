@@ -12,7 +12,7 @@ const organization_role_details = {
     type_column: 'Typ uprawnienia',
     type: {
       api: 'Uprawnienie API',
-      org: 'Uprawnienie organizacji',
+      org: 'Uprawnienia organizacyjne',
     },
     assign_permissions: 'Przypisz uprawnienia',
     remove_permission: 'Usuń uprawnienie',
@@ -30,7 +30,7 @@ const organization_role_details = {
     tab: 'Ogólne',
     settings: 'Ustawienia',
     description:
-      'Rola organizacji to grupowanie uprawnień, które można przypisać użytkownikom. Uprawnienia muszą pochodzić z predefiniowanych uprawnień organizacji.',
+      'Rola organizacyjna to grupowanie uprawnień, które mogą być przypisane użytkownikom. Uprawnienia mogą pochodzić z predefiniowanych uprawnień organizacyjnych i uprawnień API.',
     name_field: 'Nazwa',
     description_field: 'Opis',
     description_field_placeholder: 'Użytkownicy z uprawnieniami tylko do odczytu',

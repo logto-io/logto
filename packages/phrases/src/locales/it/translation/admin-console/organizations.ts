@@ -55,8 +55,10 @@ const organizations = {
           'Nelle applicazioni SaaS multi-inquilino, spesso più organizzazioni condividono lo stesso modello di controllo degli accessi, che include permessi e ruoli. In Logto, lo chiamiamo "modello organizzativo".',
         permission_description:
           "Il permesso organizzativo si riferisce all'autorizzazione per accedere a una risorsa nel contesto dell'organizzazione.",
-        role_description:
+        role_description_deprecated:
           'Il ruolo organizzativo è un raggruppamento di permessi organizzativi che possono essere assegnati ai membri.',
+        role_description:
+          "Il ruolo dell'organizzazione è un raggruppamento di permessi dell'organizzazione o permessi API che possono essere assegnati ai membri.",
       },
       section_3: {
         title: "Posso assegnare permessi API ai ruoli dell'organizzazione?",

@@ -53,7 +53,8 @@ const organizations = {
         description:
           '在多租戶 SaaS 應用程式中，多個組織通常共用相同的存取控制模板，其中包括權限和角色。 在 Logto 中，我們稱之為「組繹模板」。',
         permission_description: '組繹權限是指在組繹上下文中訪問資源的授權。',
-        role_description: '組繹角色是一組組繹權限，可以分配給成員。',
+        role_description_deprecated: '組繹角色是一組組繹權限，可以分配給成員。',
+        role_description: '組織角色是可以分配給成員的組織權限或API權限的分組。',
       },
       section_3: {
         title: '我可以將API權限指派給組織角色嗎？',

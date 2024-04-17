@@ -55,8 +55,10 @@ const organizations = {
           'Em aplicativos SaaS multi-inquilino, várias organizações frequentemente compartilham o mesmo modelo de controle de acesso, que inclui permissões e papéis. No Logto, chamamos isso de "modelo de organização".',
         permission_description:
           'A permissão da organização refere-se à autorização para acessar um recurso no contexto da organização.',
-        role_description:
+        role_description_deprecated:
           'O papel da organização é um agrupamento de permissões da organização que podem ser atribuídas aos membros.',
+        role_description:
+          'A função da organização é um agrupamento de permissões da organização ou permissões de API que podem ser atribuídas aos membros.',
       },
       section_3: {
         title: 'Posso atribuir permissões de API a funções de organização?',

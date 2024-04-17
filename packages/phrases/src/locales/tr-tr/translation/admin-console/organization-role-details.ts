@@ -12,7 +12,7 @@ const organization_role_details = {
     type_column: 'İzin türü',
     type: {
       api: 'API izni',
-      org: 'Kuruluş izni',
+      org: 'Organizasyon izni',
     },
     assign_permissions: 'İzinleri atama',
     remove_permission: 'İzni kaldır',
@@ -30,7 +30,7 @@ const organization_role_details = {
     tab: 'Genel',
     settings: 'Ayarlar',
     description:
-      'Kuruluş rolü, kullanıcılara atanabilecek izinlerin bir gruplamasıdır. İzinler, önceden tanımlanmış kuruluş izinlerinden gelmelidir.',
+      'Organizasyon rolü, kullanıcılara atanabilecek izinlerin bir gruplandırılmasıdır. İzinler, önceden tanımlanmış organizasyon izinlerinden ve API izinlerinden gelebilir.',
     name_field: 'Adı',
     description_field: 'Açıklama',
     description_field_placeholder: 'Yalnızca görüntüleme izinlerine sahip kullanıcılar',

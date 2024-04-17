@@ -54,8 +54,10 @@ const organizations = {
           'In Multi-Tenant-SaaS-Anwendungen teilen häufig mehrere Organisationen dieselbe Zugriffskontrollvorlage, zu der Berechtigungen und Rollen gehören. In Logto nennen wir es "Organisationsvorlage".',
         permission_description:
           'Die Organisationsberechtigung bezieht sich auf die Autorisierung zum Zugriff auf eine Ressource im Kontext der Organisation.',
-        role_description:
+        role_description_deprecated:
           'Eine Organisationsrolle ist eine Gruppierung von Organisationsberechtigungen, die Benutzern zugewiesen werden können.',
+        role_description:
+          'Die Organisationsrolle ist eine Gruppierung von Organisationsberechtigungen oder API-Berechtigungen, die Mitgliedern zugewiesen werden können.',
       },
       section_3: {
         title: 'Kann ich API-Berechtigungen zu Organisationsrollen zuweisen?',

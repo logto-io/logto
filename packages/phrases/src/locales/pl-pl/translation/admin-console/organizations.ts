@@ -55,8 +55,10 @@ const organizations = {
           'W wielomandantowych aplikacjach typu SaaS, wiele organizacji często dzieli ten sam szablon kontroli dostępu, który obejmuje uprawnienia i role. W Logto nazywamy to "szablonem organizacji".',
         permission_description:
           'Uprawnienie organizacji odnosi się do autoryzacji dostępu do zasobu w kontekście organizacji.',
-        role_description:
+        role_description_deprecated:
           'Rola organizacji to grupowanie uprawnień organizacji, które można przypisać członkom.',
+        role_description:
+          'Rola organizacyjna to grupowanie uprawnień organizacyjnych lub uprawnień API, które mogą być przypisane do członków.',
       },
       section_3: {
         title: 'Czy mogę przypisać uprawnienia API do ról organizacyjnych?',

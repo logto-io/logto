@@ -12,7 +12,7 @@ const organization_role_details = {
     type_column: 'Tipo de permissão',
     type: {
       api: 'Permissão da API',
-      org: 'Permissão da org',
+      org: 'Permissão da organização',
     },
     assign_permissions: 'Atribuir permissões',
     remove_permission: 'Remover permissão',
@@ -30,7 +30,7 @@ const organization_role_details = {
     tab: 'Geral',
     settings: 'Configurações',
     description:
-      'A função da organização é um agrupamento de permissões que podem ser atribuídas aos usuários. As permissões devem vir das permissões predefinidas da organização.',
+      'Função de organização é um agrupamento de permissões que podem ser atribuídas aos usuários. As permissões podem vir das permissões de organização pré-definidas e permissões de API.',
     name_field: 'Nome',
     description_field: 'Descrição',
     description_field_placeholder: 'Usuários com permissões somente de visualização',

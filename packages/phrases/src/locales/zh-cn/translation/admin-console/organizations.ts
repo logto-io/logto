@@ -53,7 +53,8 @@ const organizations = {
         description:
           '在多租户SaaS应用程序中，多个组织通常共享相同的访问控制模板，其中包括权限和角色。在Logto中，我们称之为“组织模板”。',
         permission_description: '组织权限是指在组织上下文中访问资源的授权。',
-        role_description: '组织角色是可以分配给成员的组织权限组。',
+        role_description_deprecated: '组织角色是可以分配给成员的组织权限组。',
+        role_description: '组织角色是可以分配给成员的组织权限或API权限的分组。',
       },
       section_3: {
         title: '我可以将API权限分配给组织角色吗？',

@@ -53,7 +53,10 @@ const organizations = {
         description:
           '멀티 테넌트 SaaS 애플리케이션에서는 여러 조직이 종종 권한 및 역할을 포함한 동일한 액세스 제어 템플릿을 공유합니다. 로그토에서는 이를 "조직 템플릿"이라고 합니다.',
         permission_description: '조직 권한은 조직의 컨텍스트에서 리소스에 대한 권한을 나타냅니다.',
-        role_description: '조직 역할은 구성원에게 할당할 수 있는 조직 권한의 그룹화입니다.',
+        role_description_deprecated:
+          '조직 역할은 구성원에게 할당할 수 있는 조직 권한의 그룹화입니다.',
+        role_description:
+          '조직 역할은 구성원에게 할당할 수 있는 조직 권한 또는 API 권한의 그룹입니다.',
       },
       section_3: {
         title: '조직 역할에 API 권한을 할당할 수 있나요?',

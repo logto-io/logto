@@ -30,7 +30,7 @@ const organization_role_details = {
     tab: '일반',
     settings: '설정',
     description:
-      '조직 역할은 사용자에게 할당할 수있는 권한의 그룹입니다. 권한은 사전 정의 된 조직 권한에서 가져와야합니다.',
+      '조직 역할은 사용자에게 할당할 수 있는 권한의 그룹입니다. 권한은 사전에 정의된 조직 권한과 API 권한에서 올 수 있습니다.',
     name_field: '이름',
     description_field: '설명',
     description_field_placeholder: '읽기 전용 권한을 가진 사용자',
