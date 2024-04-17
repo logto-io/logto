@@ -10,7 +10,7 @@ services:
       [
         "sh",
         "-c",
-        "npm run cli db seed -- --swe && npm run cli db ogcio -- --seeder-filepath=\"/etc/logto/packages/cli/src/commands/database/ogcio/ogcio-seeder.json\" && npm start"
+        "npm run cli db alteration deploy latest && npm run cli db seed -- --swe && npm run cli db ogcio -- --seeder-filepath=\"/etc/logto/packages/cli/src/commands/database/ogcio/ogcio-seeder.json\" && npm start"
       ]
     ports:
       - 3301:3301

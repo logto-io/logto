@@ -104,12 +104,12 @@
             },
             {
                 "id": "messaging-api",
-                "name": "Messaging API",
+                "name": "Life Events Messaging API",
                 "indicator": "http://localhost:8002"
             },
             {
                 "id": "user-profile-api",
-                "name": "User Profile API",
+                "name": "Life Events User Profile API",
                 "indicator": "http://localhost:8003"
             }
         ],
