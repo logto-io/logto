@@ -1,6 +1,6 @@
 import { condArray } from '@silverhand/essentials';
 import { useMemo } from 'react';
-import { type RouteObject, useRoutes } from 'react-router-dom';
+import { type RouteObject } from 'react-router-dom';
 
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import Dashboard from '@/pages/Dashboard';
@@ -54,7 +54,6 @@ export const useConsoleRoutes = () => {
       ),
     [tenantSettings]
   );
-  const routes = useRoutes(routeObjects);
 
-  return routes;
+  return routeObjects;
 };

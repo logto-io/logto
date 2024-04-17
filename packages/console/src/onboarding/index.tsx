@@ -15,13 +15,10 @@ import Toast from '@/ds-components/Toast';
 import useCurrentUser from '@/hooks/use-current-user';
 import useSwrOptions from '@/hooks/use-swr-options';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import NotFound from '@/pages/NotFound';
 
 import AppContent from './containers/AppContent';
 import useUserOnboardingData from './hooks/use-user-onboarding-data';
 import * as styles from './index.module.scss';
-import SignInExperience from './pages/SignInExperience';
-import Welcome from './pages/Welcome';
 import { OnboardingPage, OnboardingRoute } from './types';
 import { getOnboardingPage } from './utils';
 
@@ -88,12 +85,7 @@ export function OnboardingRoutes() {
         <Route element={<TenantAccess />}>
           <Route element={<Layout />}>
             <Route index element={<Navigate replace to={OnboardingRoute.Onboarding} />} />
-            <Route path={OnboardingRoute.Onboarding} element={<AppContent />}>
-              <Route index element={<Navigate replace to={OnboardingPage.Welcome} />} />
-              <Route path={OnboardingPage.Welcome} element={<Welcome />} />
-              <Route path={OnboardingPage.SignInExperience} element={<SignInExperience />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<AppContent />} />
           </Route>
         </Route>
       </Route>
