@@ -4,7 +4,7 @@ const organization_role_details = {
   org_role: 'Rol de la organización',
   delete_confirm:
     'Al hacerlo, se eliminarán los permisos asociados con este rol de los usuarios afectados y se borrarán las relaciones entre roles de organización, miembros en la organización y permisos de organización.',
-  deleted: 'El rol de la organización {{name}} se eliminó correctamente.',
+  deleted: 'El rol de organización {{name}} se eliminó con éxito.',
   permissions: {
     tab: 'Permisos',
     name_column: 'Permiso',
@@ -30,7 +30,7 @@ const organization_role_details = {
     tab: 'General',
     settings: 'Configuración',
     description:
-      'El rol de la organización es un grupo de permisos que se pueden asignar a los usuarios. Los permisos deben provenir de los permisos de organización predefinidos.',
+      'El rol de organización es un agrupamiento de permisos que se pueden asignar a los usuarios. Los permisos pueden provenir de los permisos de organización predefinidos y permisos de API.',
     name_field: 'Nombre',
     description_field: 'Descripción',
     description_field_placeholder: 'Usuarios con permisos de solo lectura',

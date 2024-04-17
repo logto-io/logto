@@ -55,8 +55,10 @@ const organizations = {
           'En aplicaciones SaaS multiinquilino, varias organizaciones a menudo comparten la misma plantilla de control de acceso, que incluye permisos y roles. En Logto, lo llamamos "plantilla de organización".',
         permission_description:
           'El permiso de la organización se refiere a la autorización para acceder a un recurso en el contexto de la organización.',
-        role_description:
+        role_description_deprecated:
           'El rol de la organización es un agrupamiento de permisos de organización que se pueden asignar a los miembros.',
+        role_description:
+          'El rol de la organización es un agrupamiento de permisos de la organización o permisos de API que se pueden asignar a los miembros.',
       },
       section_3: {
         title: '¿Puedo asignar permisos de API a roles de organización?',

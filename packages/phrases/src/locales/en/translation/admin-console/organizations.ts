@@ -52,8 +52,10 @@ const organizations = {
           'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
         permission_description:
           'Organization permission refers to the authorization to access a resource in the context of organization.',
-        role_description:
+        role_description_deprecated:
           'Organization role is a grouping of organization permissions that can be assigned to members.',
+        role_description:
+          'Organization role is a grouping of organization permissions or API permissions that can be assigned to members.',
       },
       section_3: {
         title: 'Can I assign API permissions to organization roles?',

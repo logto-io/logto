@@ -54,8 +54,10 @@ const organizations = {
           'Çok kiracılı SaaS uygulamalarında, birden çok kuruluş genellikle aynı erişim kontrol şablonunu paylaşır; bu şablon izinleri ve rolleri içerir. Logto\'da buna "kuruluş şablonu" diyoruz.',
         permission_description:
           'Kuruluş izni, kuruluş bağlamında bir kaynağa erişim izni anlamına gelir.',
-        role_description:
+        role_description_deprecated:
           'Kuruluş rolü, kullanıcılara atanabilen kuruluş izinlerinin bir gruplamasıdır.',
+        role_description:
+          'Kuruluş rolü, üyelere atanabilecek kuruluş izinlerinin veya API izinlerinin bir gruplamasıdır.',
       },
       section_3: {
         title: 'API izinlerini organizasyon rollerine atayabilir miyim?',

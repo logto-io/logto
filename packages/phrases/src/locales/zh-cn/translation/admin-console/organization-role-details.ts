@@ -27,7 +27,7 @@ const organization_role_details = {
   general: {
     tab: '常规',
     settings: '设置',
-    description: '组织角色是可以分配给用户的权限组。这些权限必须来自预定义的组织权限。',
+    description: '组织角色是可以分配给用户的权限的分组。权限可以来自预定义的组织权限和API权限。',
     name_field: '名称',
     description_field: '描述',
     description_field_placeholder: '仅具有查看权限的用户',

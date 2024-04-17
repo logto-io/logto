@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import OrganizationFeatureDark from '@/assets/icons/organization-feature-dark.svg';
 import OrganizationFeature from '@/assets/icons/organization-feature.svg';
 import ActionBar from '@/components/ActionBar';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -86,7 +87,11 @@ function Introduction({ isReadonly }: Props) {
                 </Section>
                 <Section
                   title={t('guide.organization_roles')}
-                  description={t('guide.introduction.section_2.role_description')}
+                  description={t(
+                    `guide.introduction.section_2.${
+                      isDevFeaturesEnabled ? 'role_description' : 'role_description_deprecated'
+                    }`
+                  )}
                 >
                   <FlexBox isEquallyDivided gap={20}>
                     <Role
@@ -102,12 +107,16 @@ function Introduction({ isReadonly }: Props) {
                   </FlexBox>
                 </Section>
               </FlexBox>
-              <FlexBox type="column">
-                <div className={styles.sectionTitle}>{t('guide.introduction.section_3.title')}</div>
-                <div className={styles.description}>
-                  {t('guide.introduction.section_3.description')}
-                </div>
-              </FlexBox>
+              {isDevFeaturesEnabled && (
+                <FlexBox type="column">
+                  <div className={styles.sectionTitle}>
+                    {t('guide.introduction.section_3.title')}
+                  </div>
+                  <div className={styles.description}>
+                    {t('guide.introduction.section_3.description')}
+                  </div>
+                </FlexBox>
+              )}
               <FlexBox type="column">
                 <div className={styles.sectionTitle}>{t('guide.introduction.section_4.title')}</div>
                 <div className={styles.description}>
