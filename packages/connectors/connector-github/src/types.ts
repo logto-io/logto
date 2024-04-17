@@ -8,6 +8,17 @@ export const githubConfigGuard = z.object({
 
 export type GithubConfig = z.infer<typeof githubConfigGuard>;
 
+/**
+ * This guard is used to validate the response from the GitHub API when requesting the user's email addresses.
+ * Ref: https://docs.github.com/en/rest/users/emails?apiVersion=2022-11-28#list-email-addresses-for-the-authenticated-user
+ */
+export const emailAddressGuard = z.object({
+  email: z.string(),
+  primary: z.boolean(),
+  verified: z.boolean(),
+  visibility: z.string().nullable(),
+});
+
 export const accessTokenResponseGuard = z.object({
   access_token: z.string(),
   scope: z.string(),

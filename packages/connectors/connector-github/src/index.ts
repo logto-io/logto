@@ -1,6 +1,12 @@
 import { assert, conditional } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  validateConfig,
+  ConnectorType,
+  jsonGuard,
+} from '@logto/connector-kit';
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -8,20 +14,14 @@ import type {
   CreateConnector,
   GetConnectorConfig,
 } from '@logto/connector-kit';
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  validateConfig,
-  ConnectorType,
-  parseJson,
-} from '@logto/connector-kit';
-import qs from 'query-string';
+import ky, { HTTPError } from 'ky';
 
 import {
   authorizationEndpoint,
   accessTokenEndpoint,
   scope as defaultScope,
   userInfoEndpoint,
+  userEmailsEndpoint,
   defaultMetadata,
   defaultTimeout,
 } from './constant.js';
@@ -29,6 +29,7 @@ import type { GithubConfig } from './types.js';
 import {
   authorizationCallbackErrorGuard,
   githubConfigGuard,
+  emailAddressGuard,
   accessTokenResponseGuard,
   userInfoResponseGuard,
   authResponseGuard,
@@ -79,17 +80,18 @@ export const getAccessToken = async (config: GithubConfig, codeObject: { code: s
   const { code } = codeObject;
   const { clientId: client_id, clientSecret: client_secret } = config;
 
-  const httpResponse = await got.post({
-    url: accessTokenEndpoint,
-    json: {
-      client_id,
-      client_secret,
-      code,
-    },
-    timeout: { request: defaultTimeout },
-  });
+  const httpResponse = await ky
+    .post(accessTokenEndpoint, {
+      body: new URLSearchParams({
+        client_id,
+        client_secret,
+        code,
+      }),
+      timeout: defaultTimeout,
+    })
+    .json();
 
-  const result = accessTokenResponseGuard.safeParse(qs.parse(httpResponse.body));
+  const result = accessTokenResponseGuard.safeParse(httpResponse);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
@@ -110,34 +112,54 @@ const getUserInfo =
     validateConfig(config, githubConfigGuard);
     const { accessToken } = await getAccessToken(config, { code });
 
-    try {
-      const httpResponse = await got.get(userInfoEndpoint, {
-        headers: {
-          authorization: `token ${accessToken}`,
-        },
-        timeout: { request: defaultTimeout },
-      });
-      const rawData = parseJson(httpResponse.body);
-      const result = userInfoResponseGuard.safeParse(rawData);
+    const authedApi = ky.create({
+      timeout: defaultTimeout,
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set('Authorization', `Bearer ${accessToken}`);
+          },
+        ],
+      },
+    });
 
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+    try {
+      const [userInfo, userEmails] = await Promise.all([
+        authedApi.get(userInfoEndpoint).json(),
+        authedApi.get(userEmailsEndpoint).json(),
+      ]);
+
+      const userInfoResult = userInfoResponseGuard.safeParse(userInfo);
+      const userEmailsResult = emailAddressGuard.array().safeParse(userEmails);
+
+      if (!userInfoResult.success) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, userInfoResult.error);
       }
 
-      const { id, avatar_url: avatar, email, name } = result.data;
+      if (!userEmailsResult.success) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, userEmailsResult.error);
+      }
+
+      const { id, avatar_url: avatar, email: publicEmail, name } = userInfoResult.data;
 
       return {
         id: String(id),
         avatar: conditional(avatar),
-        email: conditional(email),
+        email: conditional(
+          publicEmail ??
+            userEmailsResult.data.find(({ verified, primary }) => verified && primary)?.email
+        ),
         name: conditional(name),
-        rawData,
+        rawData: jsonGuard.parse({
+          userInfo,
+          userEmails,
+        }),
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        const { statusCode, body: rawBody } = error.response;
+        const { status, body: rawBody } = error.response;
 
-        if (statusCode === 401) {
+        if (status === 401) {
           throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
         }
 
