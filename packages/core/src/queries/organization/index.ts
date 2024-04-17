@@ -165,7 +165,7 @@ class OrganizationInvitationsQueries extends SchemaQueries<
         return sql`and ${fields.organizationId} = ${id}`;
       })}
       ${conditionalSql(invitee, (email) => {
-        return sql`and ${fields.invitee} = ${email}`;
+        return sql`and lower(${fields.invitee}) = lower(${email})`;
       })}
     `);
   }
@@ -220,7 +220,7 @@ class OrganizationInvitationsQueries extends SchemaQueries<
         return sql`and ${fields.inviterId} = ${id}`;
       })}
       ${conditionalSql(invitee, (email) => {
-        return sql`and ${fields.invitee} = ${email}`;
+        return sql`and lower(${fields.invitee}) = lower(${email})`;
       })}
       group by ${fields.id}
       ${conditionalSql(this.orderBy, ({ field, order }) => {
