@@ -151,7 +151,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         profile: userProfileGuard,
       }).partial(),
       response: userProfileResponseGuard,
-      status: [200, 404, 422],
+      status: [200, 400, 404, 422],
     }),
     async (ctx, next) => {
       const {
