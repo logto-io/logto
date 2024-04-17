@@ -229,7 +229,9 @@ export const buildHandler: (
   if (organizationId) {
     // Check membership
     if (!(await queries.organizations.relations.users.exists(organizationId, account.accountId))) {
-      throw new AccessDenied('user is not a member of the organization');
+      const error = new AccessDenied('user is not a member of the organization');
+      error.statusCode = 403;
+      throw error;
     }
 
     // Check if the organization is granted (third-party application only) by the user
@@ -242,7 +244,9 @@ export const buildHandler: (
         organizationId
       ))
     ) {
-      throw new AccessDenied('organization access is not granted to the application');
+      const error = new AccessDenied('organization access is not granted to the application');
+      error.statusCode = 403;
+      throw error;
     }
   }
   /* === End RFC 0001 === */
