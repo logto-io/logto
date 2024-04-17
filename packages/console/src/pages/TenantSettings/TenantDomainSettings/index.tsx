@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { type Domain, DomainStatus } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -92,4 +91,4 @@ function TenantDomainSettings() {
   );
 }
 
-export default withAppInsights(TenantDomainSettings);
+export default TenantDomainSettings;

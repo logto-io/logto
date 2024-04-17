@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { RoleType, type RoleResponse } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -211,4 +210,4 @@ function Roles() {
   );
 }
 
-export default withAppInsights(Roles);
+export default Roles;

@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
@@ -64,4 +63,4 @@ function CustomizeJwt() {
   );
 }
 
-export default withAppInsights(CustomizeJwt);
+export default CustomizeJwt;

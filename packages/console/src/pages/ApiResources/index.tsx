@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import type { Resource } from '@logto/schemas';
 import { Theme, isManagementApi } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
@@ -146,4 +145,4 @@ function ApiResources() {
   );
 }
 
-export default withAppInsights(ApiResources);
+export default ApiResources;

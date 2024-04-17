@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { type Questionnaire, Project } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useEffect } from 'react';
@@ -130,4 +129,4 @@ function Welcome() {
   );
 }
 
-export default withAppInsights(Welcome);
+export default Welcome;

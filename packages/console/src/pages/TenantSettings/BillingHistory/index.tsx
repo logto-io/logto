@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { conditional } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { useCallback, useContext, useMemo } from 'react';
@@ -92,4 +91,4 @@ function BillingHistory() {
   );
 }
 
-export default withAppInsights(BillingHistory);
+export default BillingHistory;

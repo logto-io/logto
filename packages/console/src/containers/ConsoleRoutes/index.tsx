@@ -1,5 +1,3 @@
-import { Component, GeneralEvent } from '@logto/app-insights/custom-event';
-import { TrackOnce } from '@logto/app-insights/react';
 import { ossConsolePath } from '@logto/schemas';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -25,7 +23,6 @@ function Layout() {
   return (
     <SWRConfig value={swrOptions}>
       <AppBoundary>
-        <TrackOnce component={Component.Console} event={GeneralEvent.Visit} />
         <Toast />
         <Outlet />
       </AppBoundary>

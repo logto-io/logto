@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { type HookEvent, type Hook, Theme, type HookResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { toast } from 'react-hot-toast';
@@ -181,4 +180,4 @@ function Webhooks() {
   );
 }
 
-export default withAppInsights(Webhooks);
+export default Webhooks;

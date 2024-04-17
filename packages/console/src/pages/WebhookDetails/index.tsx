@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { type HookResponse, type Hook } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
@@ -176,4 +175,4 @@ function WebhookDetails() {
   );
 }
 
-export default withAppInsights(WebhookDetails);
+export default WebhookDetails;

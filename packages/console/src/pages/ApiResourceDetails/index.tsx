@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import type { Resource } from '@logto/schemas';
 import { isManagementApi, Theme } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
@@ -193,4 +192,4 @@ function ApiResourceDetails() {
   );
 }
 
-export default withAppInsights(ApiResourceDetails);
+export default ApiResourceDetails;

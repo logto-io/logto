@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import type { Application, User, Log, Hook } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -161,4 +160,4 @@ function AuditLogDetails() {
   );
 }
 
-export default withAppInsights(AuditLogDetails);
+export default AuditLogDetails;

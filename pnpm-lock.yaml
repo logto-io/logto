@@ -2711,9 +2711,6 @@ importers:
       '@jest/types':
         specifier: ^29.5.0
         version: 29.5.0
-      '@logto/app-insights':
-        specifier: workspace:^1.4.0
-        version: link:../app-insights
       '@logto/cloud':
         specifier: 0.2.5-821690c
         version: 0.2.5-821690c(zod@3.22.4)
@@ -10589,7 +10586,7 @@ packages:
       strip-literal: 2.0.0
       test-exclude: 6.0.0
       v8-to-istanbul: 9.2.0
-      vitest: 1.4.0(@types/node@20.11.20)
+      vitest: 1.4.0(@types/node@20.10.4)
     transitivePeerDependencies:
       - supports-color
     dev: true

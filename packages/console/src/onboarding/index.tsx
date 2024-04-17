@@ -1,5 +1,3 @@
-import { Component, ConsoleEvent } from '@logto/app-insights/custom-event';
-import { TrackOnce } from '@logto/app-insights/react';
 import { Theme } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { Route, Navigate, Outlet, Routes } from 'react-router-dom';
@@ -64,17 +62,14 @@ function Layout() {
   }
 
   return (
-    <>
-      <TrackOnce component={Component.Console} event={ConsoleEvent.Onboard} />
-      <div className={styles.app}>
-        <SWRConfig value={swrOptions}>
-          <AppBoundary>
-            <Toast />
-            <Outlet />
-          </AppBoundary>
-        </SWRConfig>
-      </div>
-    </>
+    <div className={styles.app}>
+      <SWRConfig value={swrOptions}>
+        <AppBoundary>
+          <Toast />
+          <Outlet />
+        </AppBoundary>
+      </SWRConfig>
+    </div>
   );
 }
 

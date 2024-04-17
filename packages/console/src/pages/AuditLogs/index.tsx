@@ -1,5 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
-
 import AuditLogTable from '@/components/AuditLogTable';
 import PageMeta from '@/components/PageMeta';
 import CardTitle from '@/ds-components/CardTitle';
@@ -17,4 +15,4 @@ function AuditLogs() {
   );
 }
 
-export default withAppInsights(AuditLogs);
+export default AuditLogs;
