@@ -108,7 +108,7 @@ export class AppInsightsReact {
         // @see https://github.com/microsoft/ApplicationInsights-JS#example-setting-cloud-role-name
         // @see https://github.com/microsoft/ApplicationInsights-node.js/blob/a573e40fc66981c6a3106bdc5b783d1d94f64231/Schema/PublicSchema/ContextTagKeys.bond#L83
         /* eslint-disable @silverhand/fp/no-mutation */
-        item.tags = [...(item.tags ?? []), { 'ai.cloud.role': cloudRole }];
+        item.tags = { ...item.tags, 'ai.cloud.role': cloudRole };
         /* eslint-enable @silverhand/fp/no-mutation */
       });
 
