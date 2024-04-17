@@ -237,5 +237,22 @@ describe('koaGuardMiddleware', () => {
       expect(ctx.guard.query).toHaveProperty('foo', '2');
       expect(ctx.guard.params).toHaveProperty('foo', '1');
     });
+
+    it('should fallback to empty object when no body is provided', async () => {
+      const ctx = {
+        ...baseCtx,
+        request: {
+          ...baseCtx.request,
+          body: undefined,
+        },
+        guard: {
+          ...defaultGuard,
+          body: { foo: '1' },
+        },
+      };
+
+      await koaGuard({ body: z.object({ foo: z.string().optional() }) })(ctx, next);
+      expect(ctx.guard.body).toEqual({});
+    });
   });
 });

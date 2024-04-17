@@ -155,7 +155,7 @@ export default function koaGuard<
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
     ctx.guard = {
       query: tryParse('query', query, ctx.request.query),
-      body: tryParse('body', body, ctx.request.body),
+      body: tryParse('body', body, ctx.request.body ?? {}), // Fallback to empty object since it's the original behavior of koa-body@5
       params: tryParse('params', params, ctx.params),
       files: tryParse('files', files, ctx.request.files),
     } as GuardedRequest<GuardQueryT, GuardBodyT, GuardParametersT, GuardFilesT>; // Have to do this since it's too complicated for TS
