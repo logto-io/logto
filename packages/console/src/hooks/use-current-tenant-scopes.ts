@@ -3,13 +3,14 @@ import { useContext, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import { type RequestError } from './use-api';
 import useCurrentUser from './use-current-user';
 
 const useCurrentTenantScopes = () => {
-  const { currentTenantId, isInitComplete } = useContext(TenantsContext);
+  const { currentTenantId } = useContext(TenantsContext);
   const cloudApi = useAuthedCloudApi();
   const { user } = useCurrentUser();
   const userId = user?.id ?? '';
@@ -19,7 +20,7 @@ const useCurrentTenantScopes = () => {
     isLoading,
     mutate,
   } = useSWR<string[], RequestError>(
-    userId && isInitComplete && `api/tenants/${currentTenantId}/members/${userId}/scopes`,
+    isCloud && userId && `api/tenants/${currentTenantId}/members/${userId}/scopes`,
     async () => {
       const scopes = await cloudApi.get('/api/tenants/:tenantId/members/:userId/scopes', {
         params: { tenantId: currentTenantId, userId },
