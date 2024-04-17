@@ -24,6 +24,7 @@ import webDotnetCoreMvc from './web-dotnet-core-mvc/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
 import webGptPlugin from './web-gpt-plugin/index';
+import webJavaSpringBoot from './web-java-spring-boot/index';
 import webNext from './web-next/index';
 import webNextAppRouter from './web-next-app-router/index';
 import webNextServerActions from './web-next-server-actions/index';
@@ -104,6 +105,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-go/logo.svg')),
     Component: lazy(async () => import('./web-go/README.mdx')),
     metadata: webGo,
+  },
+  {
+    order: 1.4,
+    id: 'web-java-spring-boot',
+    Logo: lazy(async () => import('./web-java-spring-boot/logo.svg')),
+    Component: lazy(async () => import('./web-java-spring-boot/README.mdx')),
+    metadata: webJavaSpringBoot,
   },
   {
     order: 1.5,
