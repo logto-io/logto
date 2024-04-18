@@ -52,7 +52,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@logto/cloud": "0.2.5-821690c",
+    "@logto/cloud": "0.2.5-e5d8200",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",

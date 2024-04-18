@@ -174,6 +174,9 @@ describe('configs JWT customizer routes', () => {
 
     expect(mockCloudClient.post).toHaveBeenCalledWith('/api/services/custom-jwt', {
       body: payload,
+      search: {
+        isTest: 'true',
+      },
     });
 
     expect(response.status).toEqual(200);

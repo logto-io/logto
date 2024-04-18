@@ -27,7 +27,7 @@
   "devDependencies": {
     "@fontsource/roboto-mono": "^5.0.0",
     "@jest/types": "^29.5.0",
-    "@logto/cloud": "0.2.5-821690c",
+    "@logto/cloud": "0.2.5-e5d8200",
     "@logto/connector-kit": "workspace:^3.0.0",
     "@logto/core-kit": "workspace:^2.4.0",
     "@logto/language-kit": "workspace:^1.1.0",

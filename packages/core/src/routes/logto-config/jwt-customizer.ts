@@ -236,6 +236,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       try {
         ctx.body = await client.post(`/api/services/custom-jwt`, {
           body,
+          search: { isTest: 'true' },
         });
       } catch (error: unknown) {
         /**
