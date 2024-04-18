@@ -17,7 +17,7 @@ import {
 } from '@logto/schemas';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
-import koaBody from 'koa-body';
+import { koaBody } from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 

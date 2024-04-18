@@ -1,6 +1,6 @@
 import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
-import type { InteractionResults } from 'oidc-provider';
+import type { InteractionResults, PromptDetail } from 'oidc-provider';
 import type Provider from 'oidc-provider';
 import { z } from 'zod';
 
@@ -64,7 +64,7 @@ const missingScopesGuard = z.object({
   missingResourceScopes: z.object({}).catchall(z.string().array()).optional(),
 });
 
-export const getMissingScopes = (prompt: Provider.PromptDetail) => {
+export const getMissingScopes = (prompt: PromptDetail) => {
   return missingScopesGuard.parse(prompt.details);
 };
 

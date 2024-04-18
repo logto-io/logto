@@ -1,8 +1,7 @@
 import { ReservedResource } from '@logto/core-kit';
 import { type Resource } from '@logto/schemas';
 import { trySafe, type Nullable } from '@silverhand/essentials';
-import { type KoaContextWithOIDC } from 'oidc-provider';
-import type Provider from 'oidc-provider';
+import { type ResourceServer, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -14,7 +13,7 @@ const isReservedResource = (indicator: string): indicator is ReservedResource =>
 
 export const getSharedResourceServerData = (
   envSet: EnvSet
-): Pick<Provider.ResourceServer, 'accessTokenFormat' | 'jwt'> => ({
+): Pick<ResourceServer, 'accessTokenFormat' | 'jwt'> => ({
   accessTokenFormat: 'jwt',
   jwt: {
     sign: { alg: envSet.oidc.jwkSigningAlg },
