@@ -147,14 +147,14 @@ export const createLogtoConfigLibrary = ({
    * @params payload - The latest JWT customizer payload needs to be deployed.
    * @params payload.key - The tokenType of the JWT customizer.
    * @params payload.value - JWT customizer value
-   * @params payload.isTest - Whether the JWT customizer is for test environment.
+   * @params payload.useCase - The use case of JWT customizer script, can be either `test` or `production`.
    */
   const deployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(
     cloudConnection: CloudConnectionLibrary,
     payload: {
       key: T;
       value: JwtCustomizerType[T];
-      isTest?: boolean;
+      useCase: 'test' | 'production';
     }
   ) => {
     const [client, jwtCustomizers] = await Promise.all([
@@ -166,16 +166,18 @@ export const createLogtoConfigLibrary = ({
 
     const newCustomizerScripts: CustomJwtDeployRequestBody = {
       /**
-       * Only add `/test` endpoint for Cloudflare workers when testing.
-       * O/w overwrite the existing JWT customizer script.
+       * There are at most 4 custom JWT scripts in the `CustomJwtDeployRequestBody`-typed object,
+       * and can be indexed by `data[CustomJwtType][UseCase]`.
+       *
+       * Per our design, each script will be deployed as a API endpoint in the Cloudflare
+       * worker service. A production script will be deployed to `/api/custom-jwt`
+       * endpoint and a test script will be deployed to `/api/custom-jwt/test` endpoint.
+       *
+       * If the current use case is `test`, then the script should be deployed to a `/test` endpoint;
+       * otherwise, the script should be deployed to the `/api/custom-jwt` endpoint and overwrite
+       * previous handler of the API endpoint.
        */
-      [payload.key]: payload.isTest
-        ? {
-            test: payload.value.script,
-          }
-        : {
-            production: payload.value.script,
-          },
+      [payload.key]: { [payload.useCase]: payload.value.script },
     };
 
     await client.put(`/api/services/custom-jwt/worker`, {

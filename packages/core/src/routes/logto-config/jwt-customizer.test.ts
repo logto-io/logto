@@ -60,6 +60,7 @@ describe('configs JWT customizer routes', () => {
       {
         key: LogtoJwtTokenKey.AccessToken,
         value: mockJwtCustomizerConfigForAccessToken.value,
+        useCase: 'production',
       }
     );
 
@@ -104,6 +105,7 @@ describe('configs JWT customizer routes', () => {
       {
         key: LogtoJwtTokenKey.AccessToken,
         value: mockJwtCustomizerConfigForAccessToken.value,
+        useCase: 'production',
       }
     );
 
@@ -168,7 +170,7 @@ describe('configs JWT customizer routes', () => {
       {
         key: LogtoJwtTokenKey.ClientCredentials,
         value: payload,
-        isTest: true,
+        useCase: 'test',
       }
     );
 
