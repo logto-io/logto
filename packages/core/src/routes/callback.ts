@@ -6,6 +6,7 @@
 import type Koa from 'koa';
 import { koaBody } from 'koa-body';
 import Router from 'koa-router';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -32,10 +33,12 @@ function isStringRecord(object: unknown): object is Record<string, string> {
 
 function callbackRoutes<T extends Router>(router: T) {
   router.post('/callback/:connectorId', koaBody(), async (ctx) => {
-    assertThat(isStringRecord(ctx.request.body), new RequestError('oidc.invalid_request'));
+    const parsed = z.record(z.string()).safeParse(ctx.request.body);
+
+    assertThat(parsed.success, new RequestError('oidc.invalid_request'));
 
     ctx.status = 303;
-    ctx.set('Location', ctx.request.path + '?' + new URLSearchParams(ctx.request.body).toString());
+    ctx.set('Location', ctx.request.path + '?' + new URLSearchParams(parsed.data).toString());
   });
 }
 
