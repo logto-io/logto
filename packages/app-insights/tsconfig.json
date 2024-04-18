@@ -1,5 +1,5 @@
 {
-  "extends": "@silverhand/ts-config-react/tsconfig.base",
+  "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "outDir": "lib",
     "types": ["node"],

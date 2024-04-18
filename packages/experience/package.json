@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "@jest/types": "^29.5.0",
-    "@logto/app-insights": "workspace:^1.4.0",
     "@logto/connector-kit": "workspace:^3.0.0",
     "@logto/core-kit": "workspace:^2.4.0",
     "@logto/language-kit": "workspace:^1.1.0",
