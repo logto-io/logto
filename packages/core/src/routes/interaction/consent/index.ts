@@ -13,7 +13,6 @@ import { type IRouterParamContext } from 'koa-router';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { consent, getMissingScopes } from '#src/libraries/session.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -90,12 +89,13 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       // Find the organizations granted by the user
       // The user may send consent request multiple times, so we need to find the organizations again
-      const [, organizations] = EnvSet.values.isDevFeaturesEnabled
-        ? await queries.applications.userConsentOrganizations.getEntities(Organizations, {
-            applicationId,
-            userId,
-          })
-        : [0, []];
+      const [, organizations] = await queries.applications.userConsentOrganizations.getEntities(
+        Organizations,
+        {
+          applicationId,
+          userId,
+        }
+      );
 
       // The missingResourceScopes from the prompt details are from `getResourceServerInfo`,
       // which contains resource scopes and organization resource scopes.
@@ -111,10 +111,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const organizationsWithMissingResourceScopes = await Promise.all(
         organizations.map(async ({ name, id }) => {
-          if (!EnvSet.values.isDevFeaturesEnabled) {
-            return { name, id };
-          }
-
           const missingResourceScopes = await filterAndParseMissingResourceScopes({
             resourceScopes: allMissingResourceScopes,
             queries,
@@ -136,10 +132,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
       const resourceScopesToGrant: Record<string, string[]> = Object.fromEntries(
         organizationsWithMissingResourceScopes.reduce<Array<[string, string[]]>>(
           (entries, { missingResourceScopes }) => {
-            if (!missingResourceScopes) {
-              return entries;
-            }
-
             const organizationEntries: Array<[string, string[]]> = missingResourceScopes.map(
               ({ resource, scopes }) => [resource.indicator, scopes.map(({ name }) => name)]
             );
@@ -261,10 +253,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const organizationsWithMissingResourceScopes = await Promise.all(
         organizations.map(async ({ name, id }) => {
-          if (!EnvSet.values.isDevFeaturesEnabled) {
-            return { name, id };
-          }
-
           const missingResourceScopes = await filterAndParseMissingResourceScopes({
             resourceScopes: allMissingResourceScopes,
             queries,

@@ -3,7 +3,7 @@ import { type Resource } from '@logto/schemas';
 import { trySafe, type Nullable } from '@silverhand/essentials';
 import { type ResourceServer } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -164,10 +164,8 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
   const userConsentResource = userConsentResources.find(
     ({ resource }) => resource.indicator === indicator
   );
-  const userConsentOrganizationResources = EnvSet.values.isDevFeaturesEnabled
-    ? includeOrganizationResourceScopes
-      ? await getApplicationUserConsentOrganizationResourceScopes(applicationId)
-      : []
+  const userConsentOrganizationResources = includeOrganizationResourceScopes
+    ? await getApplicationUserConsentOrganizationResourceScopes(applicationId)
     : [];
   const userConsentOrganizationResource = userConsentOrganizationResources.find(
     ({ resource }) => resource.indicator === indicator

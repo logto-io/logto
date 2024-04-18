@@ -5,7 +5,6 @@ import {
 } from '@logto/schemas';
 import { object, string, nativeEnum } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -53,15 +52,11 @@ export default function applicationUserConsentScopeRoutes<T extends ManagementAp
         body,
       } = ctx.guard;
 
-      // TODO @wangsijie: Remove this when feature is enabled in production
-      const { organizationResourceScopes, ...rest } = body;
-      const theBody = EnvSet.values.isDevFeaturesEnabled ? body : rest;
-
       await validateThirdPartyApplicationById(applicationId);
 
-      await validateApplicationUserConsentScopes(theBody, tenantId);
+      await validateApplicationUserConsentScopes(body, tenantId);
 
-      await assignApplicationUserConsentScopes(applicationId, theBody);
+      await assignApplicationUserConsentScopes(applicationId, body);
 
       ctx.status = 201;
 
@@ -75,9 +70,7 @@ export default function applicationUserConsentScopeRoutes<T extends ManagementAp
       params: object({
         applicationId: string(),
       }),
-      response: EnvSet.values.isDevFeaturesEnabled
-        ? applicationUserConsentScopesResponseGuard
-        : applicationUserConsentScopesResponseGuard.omit({ organizationResourceScopes: true }),
+      response: applicationUserConsentScopesResponseGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -94,18 +87,12 @@ export default function applicationUserConsentScopeRoutes<T extends ManagementAp
           getApplicationUserConsentScopes(applicationId),
         ]);
 
-      ctx.body = EnvSet.values.isDevFeaturesEnabled
-        ? {
-            organizationScopes,
-            resourceScopes,
-            organizationResourceScopes,
-            userScopes,
-          }
-        : {
-            organizationScopes,
-            resourceScopes,
-            userScopes,
-          };
+      ctx.body = {
+        organizationScopes,
+        resourceScopes,
+        organizationResourceScopes,
+        userScopes,
+      };
 
       return next();
     }

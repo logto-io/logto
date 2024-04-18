@@ -2,7 +2,6 @@ import { ReservedResource } from '@logto/core-kit';
 import { type MissingResourceScopes, type Scope, missingResourceScopesGuard } from '@logto/schemas';
 import { errors } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
 import {
   filterResourceScopesForTheThirdPartyApplication,
   findResourceScopes,
@@ -108,10 +107,6 @@ export const filterAndParseMissingResourceScopes = async ({
     await Promise.all(
       Object.entries(resourceScopes).map(
         async ([resourceIndicator, missingScopes]): Promise<[string, string[]]> => {
-          if (!EnvSet.values.isDevFeaturesEnabled) {
-            return [resourceIndicator, missingScopes];
-          }
-
           // Fetch the list of scopes, `findFromOrganizations` is set to false,
           // so it will only search the user resource scopes.
           const scopes = await findResourceScopes({

@@ -37,18 +37,6 @@ export type OrganizationRoleWithScopes = OrganizationRole & {
   resourceScopes: ResourceScopeEntity[];
 };
 
-// TODO @wangsijie - Remove this once the feature is ready
-export const organizationRoleWithScopesGuardDeprecated: ToZodObject<
-  Omit<OrganizationRoleWithScopes, 'resourceScopes'>
-> = OrganizationRoles.guard.extend({
-  scopes: z
-    .object({
-      id: z.string(),
-      name: z.string(),
-    })
-    .array(),
-});
-
 export const organizationRoleWithScopesGuard: ToZodObject<OrganizationRoleWithScopes> =
   OrganizationRoles.guard.extend({
     scopes: z

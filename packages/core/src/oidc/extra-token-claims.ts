@@ -27,12 +27,6 @@ export const getExtraTokenClaimsForOrganizationApiResource = async (
   ctx: KoaContextWithOIDC,
   token: unknown
 ): Promise<UnknownObject | undefined> => {
-  const { isDevFeaturesEnabled } = EnvSet.values;
-
-  if (!isDevFeaturesEnabled) {
-    return;
-  }
-
   const organizationId = ctx.oidc.params?.organization_id;
   const resource = ctx.oidc.params?.resource;
 
