@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { useContext } from 'react';
 
 import PageMeta from '@/components/PageMeta';
@@ -61,4 +60,4 @@ function Subscription() {
   );
 }
 
-export default withAppInsights(Subscription);
+export default Subscription;

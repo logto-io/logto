@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { ServiceConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse } from '@logto/schemas';
@@ -243,4 +242,4 @@ function Connectors() {
   );
 }
 
-export default withAppInsights(Connectors);
+export default Connectors;

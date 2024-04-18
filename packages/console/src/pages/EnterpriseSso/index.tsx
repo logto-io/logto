@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { type SsoConnectorWithProviderConfig, ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
@@ -32,7 +31,7 @@ const enterpriseSsoPathname = '/enterprise-sso';
 const createEnterpriseSsoPathname = `${enterpriseSsoPathname}/create`;
 const buildDetailsPathname = (id: string) => `${enterpriseSsoPathname}/${id}`;
 
-function EnterpriseSsoConnectors() {
+function EnterpriseSso() {
   const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -176,4 +175,4 @@ function EnterpriseSsoConnectors() {
   );
 }
 
-export default withAppInsights(EnterpriseSsoConnectors);
+export default EnterpriseSso;

@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { format } from 'date-fns';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
@@ -153,4 +152,4 @@ function Dashboard() {
   );
 }
 
-export default withAppInsights(Dashboard);
+export default Dashboard;

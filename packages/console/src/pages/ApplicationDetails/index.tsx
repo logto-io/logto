@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { type ApplicationResponse, type SnakeCaseOidcConfig } from '@logto/schemas';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -65,4 +64,4 @@ function ApplicationDetails() {
   );
 }
 
-export default withAppInsights(ApplicationDetails);
+export default ApplicationDetails;

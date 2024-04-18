@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { LogtoOidcConfigKeyType } from '@logto/schemas';
 
 import PageMeta from '@/components/PageMeta';
@@ -27,4 +26,4 @@ function SigningKeys() {
   );
 }
 
-export default withAppInsights(SigningKeys);
+export default SigningKeys;

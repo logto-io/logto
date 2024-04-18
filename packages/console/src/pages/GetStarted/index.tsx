@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { Theme, type Application, type Resource } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useRef, useState } from 'react';
@@ -208,4 +207,4 @@ function GetStarted() {
   );
 }
 
-export default withAppInsights(GetStarted);
+export default GetStarted;

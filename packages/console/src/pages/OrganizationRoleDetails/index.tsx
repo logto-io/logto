@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { type OrganizationRole } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
@@ -133,4 +132,4 @@ function OrganizationRoleDetails() {
   );
 }
 
-export default withAppInsights(OrganizationRoleDetails);
+export default OrganizationRoleDetails;

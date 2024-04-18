@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { ConnectorType, ServiceConnector } from '@logto/connector-kit';
 import { SignInIdentifier } from '@logto/schemas';
 import type { SignInExperience as SignInExperienceType, ConnectorResponse } from '@logto/schemas';
@@ -250,4 +249,4 @@ function SignInExperience() {
   );
 }
 
-export default withAppInsights(SignInExperience);
+export default SignInExperience;

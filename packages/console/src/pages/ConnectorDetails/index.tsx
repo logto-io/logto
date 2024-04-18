@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { ServiceConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
@@ -232,4 +231,4 @@ function ConnectorDetails() {
   );
 }
 
-export default withAppInsights(ConnectorDetails);
+export default ConnectorDetails;

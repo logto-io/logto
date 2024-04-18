@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import type { ReactNode } from 'react';
 import useSWR from 'swr';
@@ -101,4 +100,4 @@ function SignInExperience() {
   );
 }
 
-export default withAppInsights(SignInExperience);
+export default SignInExperience;

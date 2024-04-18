@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { ReservedPlanId } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
@@ -111,4 +110,4 @@ function OrganizationTemplate() {
   );
 }
 
-export default withAppInsights(OrganizationTemplate);
+export default OrganizationTemplate;

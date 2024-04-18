@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { joinPath } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
@@ -185,4 +184,4 @@ function Applications({ tab }: Props) {
   );
 }
 
-export default withAppInsights(Applications);
+export default Applications;

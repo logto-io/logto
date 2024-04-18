@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { type SignInExperience } from '@logto/schemas';
 import useSWR from 'swr';
 
@@ -44,4 +43,4 @@ function Mfa() {
   );
 }
 
-export default withAppInsights(Mfa);
+export default Mfa;

@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import type { Role } from '@logto/schemas';
 import { Theme, RoleType } from '@logto/schemas';
 import classNames from 'classnames';
@@ -151,4 +150,4 @@ function RoleDetails() {
   );
 }
 
-export default withAppInsights(RoleDetails);
+export default RoleDetails;
