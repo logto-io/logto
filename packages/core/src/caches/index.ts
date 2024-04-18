@@ -135,12 +135,12 @@ export class RedisClusterCache extends RedisCacheBase {
   }
 }
 
-const redisCacheFactory = (): RedisCacheBase => {
+export const redisCacheFactory = (): RedisCacheBase => {
   const { redisUrl } = EnvSet.values;
 
   if (redisUrl) {
-    const url = new URL(redisUrl);
-    if (yes(url.searchParams.get('redis_cluster'))) {
+    const url = trySafe(() => new URL(redisUrl));
+    if (url && yes(url.searchParams.get('cluster'))) {
       return new RedisClusterCache(url);
     }
   }
