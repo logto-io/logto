@@ -12,13 +12,13 @@ export default class ExpectOrganizations extends ExpectConsole {
    */
   async toCreateOrganization(name: string) {
     await this.gotoPage('/organizations', 'Organizations');
-    await this.toClickButton('Create organization');
+    await this.toClickButton('Create organization', false);
 
     await this.toExpectModal('Create organization');
     await this.toFillForm({
       name,
     });
-    await this.toClick(['.ReactModalPortal', `button${cls('primary')}`].join(' '), 'Create', false);
+    await this.toClick(['.ReactModalPortal', `button${cls('primary')}`].join(' '), 'Create');
     this.toMatchUrl(/\/organizations\/.+$/);
   }
 

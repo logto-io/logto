@@ -3,12 +3,12 @@ import { cls, dcls, generateTestName } from '#src/utils.js';
 
 const expectOrg = new ExpectOrganizations(await browser.newPage());
 
-// Temporarily skipping organization tests, will add them back later with the "guide" feature
-describe.skip('organizations: create, edit, and delete organization', () => {
+// Start the test by signing in or starting the console
+await expectOrg.start();
+
+describe('organizations: create, edit, and delete organization', () => {
   it('navigates to organizations page', async () => {
-    await expectOrg.start();
     await expectOrg.gotoPage('/organizations', 'Organizations');
-    await expectOrg.toExpectTabs('Organizations', 'Settings');
   });
 
   it('should be able to see the table', async () => {
@@ -40,18 +40,17 @@ describe.skip('organizations: create, edit, and delete organization', () => {
       undefined,
       false
     );
-    await expectOrg.toClick(`${dcls('danger')}[role=menuitem]`, 'Delete organization', false);
+    await expectOrg.toClick(`${dcls('danger')}[role=menuitem]`, 'Delete', false);
     await expectOrg.toExpectModal('Reminder');
     await expectOrg.toClick(['.ReactModalPortal', `button${cls('danger')}`].join(' '), 'Delete');
     expectOrg.toMatchUrl(/\/organizations$/);
   });
 });
 
-describe.skip('organizations: search organization', () => {
+describe('organizations: search organization', () => {
   const [testName1, testName2] = [generateTestName(), generateTestName()];
 
   it('creates two organizations', async () => {
-    await expectOrg.start();
     await expectOrg.toCreateOrganization(testName1);
     await expectOrg.toCreateOrganization(testName2);
     await expectOrg.gotoPage('/organizations', 'Organizations');

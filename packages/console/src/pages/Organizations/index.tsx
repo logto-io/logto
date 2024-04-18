@@ -81,7 +81,7 @@ function Organizations({ tab }: Props) {
             targetBlank: 'noopener',
           }}
         />
-        {!isInitialSetup && (
+        {(!isInitialSetup || isDevFeaturesEnabled) && (
           <Button
             icon={<Plus />}
             type="primary"
