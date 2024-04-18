@@ -252,9 +252,6 @@ export const createUserLibrary = (queries: Queries) => {
         assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
         break;
       }
-      default: {
-        throw new RequestError({ code: 'session.invalid_credentials', status: 422 });
-      }
     }
 
     // Migrate password to default algorithm: argon2i

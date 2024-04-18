@@ -336,7 +336,7 @@ export default function initOidc(
 
       // Directly return false only when `rotateRefreshToken` has been explicitly set to `false`.
       if (
-        !(client?.metadata()?.rotateRefreshToken ?? customClientMetadataDefault.rotateRefreshToken)
+        !(client?.metadata().rotateRefreshToken ?? customClientMetadataDefault.rotateRefreshToken)
       ) {
         return false;
       }

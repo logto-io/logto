@@ -34,9 +34,6 @@ const fetchUserInfo = async (
         case 'accountId': {
           return tenant.queries.users.findUserById(identifier.value);
         }
-        default: {
-          return null;
-        }
       }
     }) ?? []
   );

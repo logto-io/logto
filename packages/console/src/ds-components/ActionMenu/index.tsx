@@ -71,7 +71,6 @@ function ActionMenu(props: Props) {
             setIsOpen(true);
           }}
         >
-          {}
           {props.icon}
         </IconButton>
       )}
