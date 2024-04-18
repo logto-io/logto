@@ -7,8 +7,8 @@ import FallbackImageLight from '@/assets/images/broken-image-light.svg';
 import useTheme from '@/hooks/use-theme';
 
 type Props = {
-  containerClassName?: string;
-  fallbackElement?: ReactElement;
+  readonly containerClassName?: string;
+  readonly fallbackElement?: ReactElement;
 } & ImgHTMLAttributes<HTMLImageElement>;
 
 function ImageWithErrorFallback({

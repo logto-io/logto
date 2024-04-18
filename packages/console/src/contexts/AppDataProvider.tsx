@@ -8,7 +8,7 @@ import { adminTenantEndpoint } from '@/consts';
 import { TenantsContext } from './TenantsProvider';
 
 type Props = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 type AppData = {

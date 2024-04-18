@@ -38,7 +38,7 @@ import SessionForm from './components/SessionForm';
 import * as styles from './index.module.scss';
 
 type Props = {
-  data: Application;
+  readonly data: Application;
 };
 
 const routes = Object.freeze(['/register', '/sign-in', '/sign-in-callback', '/sign-out']);

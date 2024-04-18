@@ -6,7 +6,7 @@ import LanguagesForm from './LanguagesForm';
 import TermsForm from './TermsForm';
 
 type Props = {
-  isActive: boolean;
+  readonly isActive: boolean;
 };
 
 function Content({ isActive }: Props) {

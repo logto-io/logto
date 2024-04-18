@@ -20,8 +20,8 @@ import GithubRawImage from './components/GithubRawImage';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  children: string;
+  readonly className?: string;
+  readonly children: string;
 };
 
 function Markdown({ className, children }: Props) {

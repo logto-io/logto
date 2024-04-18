@@ -31,7 +31,7 @@ const icons = {
 
 type Props = {
   /* True if the guide is in the "Check guide" drawer of organization details page */
-  isReadonly?: boolean;
+  readonly isReadonly?: boolean;
 };
 
 function Introduction({ isReadonly }: Props) {

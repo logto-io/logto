@@ -19,10 +19,10 @@ import { uriValidator } from '@/utils/validator';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isAllowEditTarget?: boolean;
-  isDarkDefaultVisible?: boolean;
-  isStandard?: boolean;
-  conflictConnectorName?: Record<string, string>;
+  readonly isAllowEditTarget?: boolean;
+  readonly isDarkDefaultVisible?: boolean;
+  readonly isStandard?: boolean;
+  readonly conflictConnectorName?: Record<string, string>;
 };
 
 function BasicForm({

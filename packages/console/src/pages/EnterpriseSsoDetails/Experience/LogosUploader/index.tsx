@@ -13,7 +13,7 @@ import * as styles from './index.module.scss';
 const allowedMimeTypes: AllowedUploadMimeType[] = ['image/png', 'image/jpeg', 'image/svg+xml']; // Only allow `svg`, `png`, `jpg` and `jpeg` files.
 
 type Props = {
-  isDarkModeEnabled: boolean;
+  readonly isDarkModeEnabled: boolean;
 };
 
 function LogosUploader({ isDarkModeEnabled }: Props) {

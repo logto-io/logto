@@ -5,8 +5,8 @@ import SignUpAndSignInDiffSection from './SignUpAndSignInDiffSection';
 import * as styles from './index.module.scss';
 
 type Props = {
-  before: SignInExperience;
-  after: SignInExperience;
+  readonly before: SignInExperience;
+  readonly after: SignInExperience;
 };
 
 function SignUpAndSignInChangePreview({ before, after }: Props) {

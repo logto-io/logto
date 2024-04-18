@@ -13,8 +13,8 @@ import { shouldRetryOnError } from '@/utils/request';
 import * as styles from './index.module.scss';
 
 type Props = {
-  applicationId: string;
-  isLink?: boolean;
+  readonly applicationId: string;
+  readonly isLink?: boolean;
 };
 
 function ApplicationName({ applicationId, isLink = false }: Props) {

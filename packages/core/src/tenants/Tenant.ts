@@ -49,7 +49,7 @@ export default class Tenant implements TenantContext {
 
   private readonly app: Koa;
 
-  #createdAt = Date.now();
+  readonly #createdAt = Date.now();
   #requestCount = 0;
   #onRequestEmpty?: () => Promise<void>;
 

@@ -7,8 +7,8 @@ import UserAvatar from '@/assets/icons/default-user-avatar.svg';
 import * as styles from './index.module.scss';
 
 type Props = {
-  user: ConsentInfoResponse['user'];
-  className?: string;
+  readonly user: ConsentInfoResponse['user'];
+  readonly className?: string;
 };
 
 const UserProfile = ({

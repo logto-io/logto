@@ -9,10 +9,10 @@ import * as styles from './index.module.scss';
 
 /* eslint-disable react/require-default-props */
 type Props = {
-  className?: string;
-  message: ReactNode;
-  onClose: () => void;
-  style?: CSSProperties;
+  readonly className?: string;
+  readonly message: ReactNode;
+  readonly onClose: () => void;
+  readonly style?: CSSProperties;
 };
 /* eslint-enable react/require-default-props */
 

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useSieMethods } from '@/hooks/use-sie';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 const CustomContent = ({ className }: Props) => {

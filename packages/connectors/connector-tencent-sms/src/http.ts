@@ -8,8 +8,8 @@ import type { TencentErrorResponse, TencentSuccessResponse } from './schema.js';
 const endpoint = 'sms.tencentcloudapi.com';
 
 function sha256Hmac(message: string, secret: string): string;
+// eslint-disable-next-line @typescript-eslint/ban-types
 function sha256Hmac(message: string, secret: string, encoding: BinaryToTextEncoding): Buffer;
-
 function sha256Hmac(message: string, secret: string, encoding?: BinaryToTextEncoding) {
   const hmac = crypto.createHmac('sha256', secret);
 

@@ -10,10 +10,10 @@ import * as styles from './index.module.scss';
 export { type Organization } from './OrganizationItem';
 
 type Props = {
-  organizations: Organization[];
-  selectedOrganization: Organization | undefined;
-  onSelect: (organization: Organization) => void;
-  className?: string;
+  readonly organizations: Organization[];
+  readonly selectedOrganization: Organization | undefined;
+  readonly onSelect: (organization: Organization) => void;
+  readonly className?: string;
 };
 const OrganizationSelector = ({
   organizations,

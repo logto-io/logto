@@ -9,8 +9,8 @@ import type { PageContextType } from './PageContext';
 import MainContext from './PageContext';
 
 type Props = {
-  children: React.ReactNode;
-  preset?: Partial<
+  readonly children: React.ReactNode;
+  readonly preset?: Partial<
     Pick<
       PageContextType,
       | 'theme'

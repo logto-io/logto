@@ -9,9 +9,9 @@ import * as styles from './index.module.scss';
  * The section component with a gray background
  */
 type Props = {
-  className?: string;
-  title: string;
-  description?: string;
+  readonly className?: string;
+  readonly title: string;
+  readonly description?: string;
 };
 
 function Section({ className, title, description, children }: PropsWithChildren<Props>) {

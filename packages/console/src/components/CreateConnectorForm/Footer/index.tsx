@@ -16,11 +16,11 @@ import { type ConnectorGroup } from '@/types/connector';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type Props = {
-  isCreatingSocialConnector: boolean;
-  existingConnectors: ConnectorResponse[];
-  selectedConnectorGroup?: ConnectorGroup<ConnectorFactoryResponse>;
-  isCreateButtonDisabled: boolean;
-  onClickCreateButton: () => void;
+  readonly isCreatingSocialConnector: boolean;
+  readonly existingConnectors: ConnectorResponse[];
+  readonly selectedConnectorGroup?: ConnectorGroup<ConnectorFactoryResponse>;
+  readonly isCreateButtonDisabled: boolean;
+  readonly onClickCreateButton: () => void;
 };
 
 function Footer({

@@ -28,8 +28,8 @@ const pathname = '/organizations';
 const apiPathname = 'api/organizations';
 
 type Props = {
-  isLoading: boolean;
-  onCreate: () => void;
+  readonly isLoading: boolean;
+  readonly onCreate: () => void;
 };
 
 function OrganizationsTable({ isLoading, onCreate }: Props) {

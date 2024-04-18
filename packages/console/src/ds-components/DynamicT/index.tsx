@@ -2,8 +2,8 @@ import { type TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
-  forKey: TFuncKey<'translation', 'admin_console'>;
-  interpolation?: Record<string, unknown>;
+  readonly forKey: TFuncKey<'translation', 'admin_console'>;
+  readonly interpolation?: Record<string, unknown>;
 };
 
 /**

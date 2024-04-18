@@ -6,9 +6,9 @@ import useConnectors from '@/hooks/use-connectors';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  connectorId: string;
-  isLoading?: boolean;
+  readonly className?: string;
+  readonly connectorId: string;
+  readonly isLoading?: boolean;
 };
 
 const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => {

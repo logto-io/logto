@@ -3,8 +3,8 @@ type UploadFileOptions = {
   publicUrl?: string;
 };
 
-export type UploadFile = (
-  data: Buffer,
+export type UploadFile<T extends Uint8Array = Uint8Array> = (
+  data: T,
   objectKey: string,
   options?: UploadFileOptions
 ) => Promise<{ url: string }>;

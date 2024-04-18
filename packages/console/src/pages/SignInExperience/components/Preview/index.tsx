@@ -16,10 +16,10 @@ import useUiLanguages from '@/hooks/use-ui-languages';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isLivePreviewDisabled?: boolean;
-  isLivePreviewEntryInvisible?: boolean;
-  signInExperience?: SignInExperience;
-  className?: string;
+  readonly isLivePreviewDisabled?: boolean;
+  readonly isLivePreviewEntryInvisible?: boolean;
+  readonly signInExperience?: SignInExperience;
+  readonly className?: string;
 };
 
 function Preview({

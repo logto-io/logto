@@ -15,18 +15,18 @@ import TextLink from '../TextLink';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  size?: 'small' | 'medium' | 'large';
-  learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'>;
-  isWordWrapEnabled?: boolean;
-  className?: string;
+  readonly title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly size?: 'small' | 'medium' | 'large';
+  readonly learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'>;
+  readonly isWordWrapEnabled?: boolean;
+  readonly className?: string;
   /**
    * If a paywall tag should be shown next to the title. The value is the plan type.
    *
    * If not provided, no paywall tag will be shown.
    */
-  paywall?: Exclude<ReservedPlanId, ReservedPlanId.Free | ReservedPlanId.Development>;
+  readonly paywall?: Exclude<ReservedPlanId, ReservedPlanId.Free | ReservedPlanId.Development>;
 };
 
 /**

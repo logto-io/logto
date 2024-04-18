@@ -16,12 +16,12 @@ type RadioElement =
   | Falsy;
 
 type Props = {
-  name: string;
-  children: RadioElement | RadioElement[];
-  value?: string;
-  type?: 'card' | 'plain' | 'compact' | 'small';
-  className?: string;
-  onChange?: (value: string) => void;
+  readonly name: string;
+  readonly children: RadioElement | RadioElement[];
+  readonly value?: string;
+  readonly type?: 'card' | 'plain' | 'compact' | 'small';
+  readonly className?: string;
+  readonly onChange?: (value: string) => void;
 };
 
 function RadioGroup(

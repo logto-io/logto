@@ -12,7 +12,7 @@ const registeredPlanDescriptionPhrasesMap: Record<
   [ReservedPlanId.Pro]: 'pro_plan_description',
 };
 
-type Props = { planId: string };
+type Props = { readonly planId: string };
 
 function PlanDescription({ planId }: Props) {
   const description = registeredPlanDescriptionPhrasesMap[planId];

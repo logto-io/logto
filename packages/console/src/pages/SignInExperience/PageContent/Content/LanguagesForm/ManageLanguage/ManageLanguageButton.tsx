@@ -5,7 +5,7 @@ import Button from '@/ds-components/Button';
 import LanguageEditor from './LanguageEditor';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 function ManageLanguageButton({ className }: Props) {

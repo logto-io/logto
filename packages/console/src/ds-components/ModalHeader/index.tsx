@@ -10,10 +10,10 @@ import Spacer from '../Spacer';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: AdminConsoleKey;
-  subtitle: AdminConsoleKey;
-  actionButton?: ReactNode;
-  onClose: () => void;
+  readonly title: AdminConsoleKey;
+  readonly subtitle: AdminConsoleKey;
+  readonly actionButton?: ReactNode;
+  readonly onClose: () => void;
 };
 
 function ModalHeader({ title, subtitle, actionButton, onClose }: Props) {

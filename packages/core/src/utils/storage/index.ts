@@ -5,7 +5,8 @@ import { buildGoogleStorage } from './google-storage.js';
 import { buildS3Storage } from './s3-storage.js';
 import type { UploadFile } from './types.js';
 
-export const buildUploadFile = (config: StorageProviderData): UploadFile => {
+// eslint-disable-next-line @typescript-eslint/ban-types -- Google doesn't allow us to use Uint8Array
+export const buildUploadFile = (config: StorageProviderData): UploadFile | UploadFile<Buffer> => {
   if (config.provider === 'AzureStorage') {
     const storage = buildAzureStorage(config.connectionString, config.container);
 

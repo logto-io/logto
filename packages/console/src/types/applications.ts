@@ -2,7 +2,7 @@ import { ApplicationType } from '@logto/schemas';
 
 import { type Guide } from '@/assets/docs/guides/types';
 
-export const thirdPartyAppCategory = 'ThirdParty' as const;
+export const thirdPartyAppCategory = 'ThirdParty';
 
 export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.Native]: 'applications.type.native',

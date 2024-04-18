@@ -8,8 +8,8 @@ import FormField from '@/ds-components/FormField';
 import * as styles from './index.module.scss';
 
 type Props = {
-  currentTenantId: string;
-  onClick: () => void;
+  readonly currentTenantId: string;
+  readonly onClick: () => void;
 };
 
 function DeleteCard({ currentTenantId, onClick }: Props) {

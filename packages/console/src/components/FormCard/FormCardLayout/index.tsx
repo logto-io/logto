@@ -5,8 +5,8 @@ import Card from '@/ds-components/Card';
 import * as styles from './index.module.scss';
 
 type Props = {
-  introduction: ReactNode;
-  children: ReactNode;
+  readonly introduction: ReactNode;
+  readonly children: ReactNode;
 };
 
 function FormCardLayout({ introduction, children }: Props) {

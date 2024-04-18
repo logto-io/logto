@@ -27,9 +27,9 @@ const permissionTabs = {
 };
 
 type Props = {
-  organizationRoleId: string;
-  isOpen: boolean;
-  onClose: () => void;
+  readonly organizationRoleId: string;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 function OrganizationRolePermissionsAssignmentModal({

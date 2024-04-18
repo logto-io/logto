@@ -16,7 +16,7 @@ import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as styles from './index.module.scss';
 
 type Props = {
-  invitations: InvitationListResponse;
+  readonly invitations: InvitationListResponse;
 };
 
 function InvitationList({ invitations }: Props) {

@@ -20,10 +20,10 @@ const appendUnique = <T extends DataEntry>(list: T[], items: T | T[]) => {
 };
 
 type Props<TEntry extends DataEntry> = {
-  selectedData: Array<SelectedDataEntry<TEntry>>;
-  setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
-  availableDataList?: TEntry[];
-  availableDataGroups?: Array<DataGroup<TEntry>>;
+  readonly selectedData: Array<SelectedDataEntry<TEntry>>;
+  readonly setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
+  readonly availableDataList?: TEntry[];
+  readonly availableDataGroups?: Array<DataGroup<TEntry>>;
 };
 
 function SourcePanel<TEntry extends DataEntry>({

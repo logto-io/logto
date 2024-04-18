@@ -11,16 +11,16 @@ import TextLink from '@/ds-components/TextLink';
 import useConfigs from '@/hooks/use-configs';
 
 type Props = {
-  hasSurpassedLimit: boolean;
-  quotaItemPhraseKey: TFuncKey<'translation', 'admin_console.upsell.add_on_quota_item'>;
-  quotaLimit?: number;
-  className?: string;
+  readonly hasSurpassedLimit: boolean;
+  readonly quotaItemPhraseKey: TFuncKey<'translation', 'admin_console.upsell.add_on_quota_item'>;
+  readonly quotaLimit?: number;
+  readonly className?: string;
   /**
    * The key of the flag in `checkedChargeNotification` config from the AdminConsoleData.
    * Used to determine whether the notification has been checked.
    * @see{@link AdminConsoleData}
    */
-  checkedFlagKey: keyof Truthy<AdminConsoleData['checkedChargeNotification']>;
+  readonly checkedFlagKey: keyof Truthy<AdminConsoleData['checkedChargeNotification']>;
 };
 
 /**

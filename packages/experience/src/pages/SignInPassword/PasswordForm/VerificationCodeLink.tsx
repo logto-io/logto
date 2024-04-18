@@ -8,9 +8,9 @@ import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 
 type Props = {
-  className?: string;
-  identifier: VerificationCodeIdentifier;
-  value: string;
+  readonly className?: string;
+  readonly identifier: VerificationCodeIdentifier;
+  readonly value: string;
 };
 
 const VerificationCodeLink = ({ className, identifier, value }: Props) => {

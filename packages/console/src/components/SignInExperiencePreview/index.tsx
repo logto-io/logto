@@ -19,10 +19,10 @@ import { PreviewPlatform } from './types';
 export { default as ToggleUiThemeButton } from './components/ToggleUiThemeButton';
 
 type Props = {
-  platform: PreviewPlatform;
-  mode: Theme;
-  language?: LanguageTag;
-  signInExperience?: SignInExperience;
+  readonly platform: PreviewPlatform;
+  readonly mode: Theme;
+  readonly language?: LanguageTag;
+  readonly signInExperience?: SignInExperience;
 };
 
 function SignInExperiencePreview({ platform, mode, language = 'en', signInExperience }: Props) {

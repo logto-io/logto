@@ -20,14 +20,14 @@ type Props<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
-  title: CardTitleProps;
-  pageMeta?: PageMetaProps;
-  createButton?: CreateButtonProps;
-  subHeader?: ReactNode;
-  table: TableProps<TFieldValues, TName>;
+  readonly title: CardTitleProps;
+  readonly pageMeta?: PageMetaProps;
+  readonly createButton?: CreateButtonProps;
+  readonly subHeader?: ReactNode;
+  readonly table: TableProps<TFieldValues, TName>;
   /** @deprecated Need refactor. */
-  widgets?: ReactNode;
-  className?: string;
+  readonly widgets?: ReactNode;
+  readonly className?: string;
 };
 
 function ListPage<

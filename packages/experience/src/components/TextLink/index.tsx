@@ -14,11 +14,11 @@ import DynamicT from '../DynamicT';
 import * as styles from './index.module.scss';
 
 export type Props = AnchorHTMLAttributes<HTMLAnchorElement> & {
-  className?: string;
-  children?: ReactNode;
-  text?: TFuncKey;
-  icon?: ReactNode;
-  type?: 'primary' | 'secondary';
+  readonly className?: string;
+  readonly children?: ReactNode;
+  readonly text?: TFuncKey;
+  readonly icon?: ReactNode;
+  readonly type?: 'primary' | 'secondary';
 } & Partial<LinkProps>;
 
 const TextLink = ({ className, children, text, icon, type = 'primary', to, ...rest }: Props) => {

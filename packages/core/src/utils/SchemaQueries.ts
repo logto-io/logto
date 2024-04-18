@@ -25,27 +25,27 @@ export default class SchemaQueries<
   CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
   Schema extends SchemaLike<Key> & { id: string },
 > {
-  #findTotalNumber: <SearchKey extends Key>(
+  readonly #findTotalNumber: <SearchKey extends Key>(
     search?: SearchOptions<SearchKey>
   ) => Promise<{ count: number }>;
 
-  #findAll: <SearchKey extends Key>(
+  readonly #findAll: <SearchKey extends Key>(
     limit?: number,
     offset?: number,
     search?: SearchOptions<SearchKey>
   ) => Promise<readonly Schema[]>;
 
-  #findById: (id: string) => Promise<Readonly<Schema>>;
+  readonly #findById: (id: string) => Promise<Readonly<Schema>>;
 
-  #findByIds: (ids: string[]) => Promise<readonly Schema[]>;
+  readonly #findByIds: (ids: string[]) => Promise<readonly Schema[]>;
 
-  #insert: (data: OmitAutoSetFields<CreateSchema>) => Promise<Readonly<Schema>>;
+  readonly #insert: (data: OmitAutoSetFields<CreateSchema>) => Promise<Readonly<Schema>>;
 
-  #updateById: <SetKey extends Key | 'id', WhereKey extends Key | 'id'>(
+  readonly #updateById: <SetKey extends Key | 'id', WhereKey extends Key | 'id'>(
     data: UpdateWhereData<SetKey, WhereKey>
   ) => Promise<Schema>;
 
-  #deleteById: (id: string) => Promise<void>;
+  readonly #deleteById: (id: string) => Promise<void>;
 
   constructor(
     public readonly pool: CommonQueryMethods,

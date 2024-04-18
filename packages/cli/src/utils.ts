@@ -68,7 +68,7 @@ export const downloadFile = async (url: string, destination: string) => {
 
     file.on('error', (error) => {
       spinner.fail();
-      reject(error.message);
+      reject(new Error(error.message));
     });
 
     file.on('finish', () => {

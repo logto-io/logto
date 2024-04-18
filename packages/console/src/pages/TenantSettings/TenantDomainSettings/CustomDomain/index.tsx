@@ -6,12 +6,12 @@ import CustomDomainHeader from './CustomDomainHeader';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  customDomain: CustomDomainType;
-  hasExtraTipsOnDelete?: boolean;
-  hasOpenExternalLink?: boolean;
-  isReadonly?: boolean;
-  onDeleteCustomDomain: () => Promise<void>;
+  readonly className?: string;
+  readonly customDomain: CustomDomainType;
+  readonly hasExtraTipsOnDelete?: boolean;
+  readonly hasOpenExternalLink?: boolean;
+  readonly isReadonly?: boolean;
+  readonly onDeleteCustomDomain: () => Promise<void>;
 };
 
 function CustomDomain({

@@ -30,8 +30,8 @@ import * as styles from './index.module.scss';
 import { categorizeSsoConnectorProviders } from './utils';
 
 type Props = {
-  isOpen: boolean;
-  onClose: (ssoConnector?: SsoConnectorWithProviderConfig) => void;
+  readonly isOpen: boolean;
+  readonly onClose: (ssoConnector?: SsoConnectorWithProviderConfig) => void;
 };
 
 type FormType = {

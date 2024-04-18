@@ -52,11 +52,11 @@ describe('ForgotPasswordForm', () => {
         assert(identifierInput, new Error('identifier input should not be null'));
         expect(queryByText('action.continue')).not.toBeNull();
 
-        if (identifier === 'email') {
+        if (identifier === SignInIdentifier.Email) {
           expect(identifierInput.getAttribute('value')).toBe(value);
         }
 
-        if (identifier === 'phone') {
+        if (identifier === SignInIdentifier.Phone) {
           expect(identifierInput.getAttribute('value')).toBe(phone);
         }
       });

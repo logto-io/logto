@@ -19,9 +19,9 @@ import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type Props = {
-  resourceId: string;
-  totalResourceCount: number;
-  onClose: (scope?: Scope) => void;
+  readonly resourceId: string;
+  readonly totalResourceCount: number;
+  readonly onClose: (scope?: Scope) => void;
 };
 
 type CreatePermissionFormData = Pick<CreateScope, 'name' | 'description'>;

@@ -24,9 +24,9 @@ import { uriValidator } from '@/utils/validator';
 import * as styles from './index.module.scss';
 
 type Props = {
-  name: 'redirectUris' | 'postLogoutRedirectUris';
+  readonly name: 'redirectUris' | 'postLogoutRedirectUris';
   /** The default value of the input field when there's no data. */
-  defaultValue?: string;
+  readonly defaultValue?: string;
 };
 
 function UriInputField({ name, defaultValue }: Props) {

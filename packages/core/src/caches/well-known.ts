@@ -56,9 +56,6 @@ function getValueGuard(type: WellKnownCacheType): ZodType<WellKnownMap[typeof ty
     case 'tenant-cache-expires-at': {
       return z.number();
     }
-    default: {
-      throw new Error(`No proper value guard found for cache key "${String(type)}".`);
-    }
   }
 }
 

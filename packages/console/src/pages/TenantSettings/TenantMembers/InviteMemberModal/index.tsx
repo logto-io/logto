@@ -20,8 +20,8 @@ import { type InviteMemberForm } from '../types';
 import Footer from './Footer';
 
 type Props = {
-  isOpen: boolean;
-  onClose: (isSuccessful?: boolean) => void;
+  readonly isOpen: boolean;
+  readonly onClose: (isSuccessful?: boolean) => void;
 };
 
 function InviteMemberModal({ isOpen, onClose }: Props) {

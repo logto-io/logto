@@ -24,9 +24,9 @@ import { trySubmitSafe } from '@/utils/form';
 import EmailServiceConnectorForm from './EmailServiceConnectorForm';
 
 type Props = {
-  isDeleted: boolean;
-  connectorData: ConnectorResponse;
-  onConnectorUpdated: (connector?: ConnectorResponse) => void;
+  readonly isDeleted: boolean;
+  readonly connectorData: ConnectorResponse;
+  readonly onConnectorUpdated: (connector?: ConnectorResponse) => void;
 };
 
 function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Props) {

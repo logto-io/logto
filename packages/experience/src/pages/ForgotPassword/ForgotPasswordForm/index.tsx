@@ -14,12 +14,12 @@ import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/uti
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
-  autoFocus?: boolean;
-  defaultValue?: string;
-  defaultType: VerificationCodeIdentifier;
-  enabledTypes: VerificationCodeIdentifier[];
+  readonly autoFocus?: boolean;
+  readonly defaultValue?: string;
+  readonly defaultType: VerificationCodeIdentifier;
+  readonly enabledTypes: VerificationCodeIdentifier[];
 };
 
 type FormState = {

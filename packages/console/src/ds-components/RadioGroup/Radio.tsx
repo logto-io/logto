@@ -20,20 +20,20 @@ function Check() {
 }
 
 export type Props = {
-  className?: string;
-  value: string;
-  title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  name?: string;
-  children?: ReactNode;
-  isChecked?: boolean;
-  onClick?: () => void;
-  tabIndex?: number;
-  type?: 'card' | 'plain' | 'compact' | 'small';
-  isDisabled?: boolean;
-  disabledLabel?: AdminConsoleKey;
-  icon?: ReactNode;
-  trailingIcon?: ReactNode;
-  hasCheckIconForCard?: boolean;
+  readonly className?: string;
+  readonly value: string;
+  readonly title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly name?: string;
+  readonly children?: ReactNode;
+  readonly isChecked?: boolean;
+  readonly onClick?: () => void;
+  readonly tabIndex?: number;
+  readonly type?: 'card' | 'plain' | 'compact' | 'small';
+  readonly isDisabled?: boolean;
+  readonly disabledLabel?: AdminConsoleKey;
+  readonly icon?: ReactNode;
+  readonly trailingIcon?: ReactNode;
+  readonly hasCheckIconForCard?: boolean;
 };
 
 function Radio({

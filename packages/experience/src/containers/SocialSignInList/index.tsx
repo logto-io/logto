@@ -9,8 +9,8 @@ import * as styles from './index.module.scss';
 import useSocial from './use-social';
 
 type Props = {
-  className?: string;
-  socialConnectors?: ConnectorMetadata[];
+  readonly className?: string;
+  readonly socialConnectors?: ConnectorMetadata[];
 };
 
 const SocialSignInList = ({ className, socialConnectors = [] }: Props) => {

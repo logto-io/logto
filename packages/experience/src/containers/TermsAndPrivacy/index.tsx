@@ -10,7 +10,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 const TermsAndPrivacy = ({ className }: Props) => {

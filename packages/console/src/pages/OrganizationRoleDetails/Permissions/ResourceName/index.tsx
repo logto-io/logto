@@ -6,7 +6,7 @@ import ResourceIcon from '@/assets/icons/resource.svg';
 import * as styles from './index.module.scss';
 
 type Props = {
-  resourceId: string;
+  readonly resourceId: string;
 };
 
 function ResourceName({ resourceId }: Props) {

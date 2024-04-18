@@ -2,7 +2,7 @@ import { useState, useMemo, type ReactNode } from 'react';
 
 import SingleSignOnFormModeContext from './SingleSignOnFormModeContext';
 
-const SingleSignOnFormModeContextProvider = ({ children }: { children: ReactNode }) => {
+const SingleSignOnFormModeContextProvider = ({ children }: { readonly children: ReactNode }) => {
   const [showSingleSignOnForm, setShowSingleSignOnForm] = useState<boolean>(false);
 
   const contextValue = useMemo(

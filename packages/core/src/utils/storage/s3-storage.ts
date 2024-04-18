@@ -41,11 +41,7 @@ export const buildS3Storage = ({
     },
   });
 
-  const uploadFile: UploadFile = async (
-    data: Buffer,
-    objectKey: string,
-    { contentType, publicUrl } = {}
-  ) => {
+  const uploadFile: UploadFile = async (data, objectKey, { contentType, publicUrl } = {}) => {
     const command = new PutObjectCommand({
       Bucket: bucket,
       Key: objectKey,

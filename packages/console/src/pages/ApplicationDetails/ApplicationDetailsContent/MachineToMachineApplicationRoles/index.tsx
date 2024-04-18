@@ -31,7 +31,7 @@ import * as styles from './index.module.scss';
 const pageSize = defaultPageSize;
 
 type Props = {
-  application: Application;
+  readonly application: Application;
 };
 
 function MachineToMachineApplicationRoles({ application }: Props) {

@@ -15,16 +15,16 @@ import type { Props as ToggleTipProps } from '../Tip/ToggleTip';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  description?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  descriptionPosition?: 'top' | 'bottom';
-  children: ReactNode;
-  isRequired?: boolean;
-  isMultiple?: boolean;
-  className?: string;
-  headlineSpacing?: 'default' | 'large';
-  headlineClassName?: string;
-  tip?: ToggleTipProps['content'];
+  readonly title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly description?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly descriptionPosition?: 'top' | 'bottom';
+  readonly children: ReactNode;
+  readonly isRequired?: boolean;
+  readonly isMultiple?: boolean;
+  readonly className?: string;
+  readonly headlineSpacing?: 'default' | 'large';
+  readonly headlineClassName?: string;
+  readonly tip?: ToggleTipProps['content'];
 };
 
 function FormField({

@@ -6,8 +6,8 @@ export const SsoConnectorContext = createContext<{
 }>({});
 
 type Props = {
-  children: ReactNode;
-  ssoConnector: SsoConnectorWithProviderConfig;
+  readonly children: ReactNode;
+  readonly ssoConnector: SsoConnectorWithProviderConfig;
 };
 
 function SsoConnectorContextProvider({ children, ssoConnector }: Props) {

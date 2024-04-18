@@ -17,7 +17,7 @@ import {
 } from './utils';
 
 type ScriptProps = {
-  userEmailHash?: string;
+  readonly userEmailHash?: string;
 };
 
 function GoogleScripts({ userEmailHash }: ScriptProps) {

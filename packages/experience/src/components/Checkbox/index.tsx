@@ -7,7 +7,7 @@ import CheckBox from '@/assets/icons/checkbox-icon.svg';
 import * as styles from './index.module.scss';
 
 type Props = {
-  size?: 'small' | 'default';
+  readonly size?: 'small' | 'default';
 } & Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'>;
 
 const Checkbox = ({ disabled, size = 'default', ...rest }: Props, ref: Ref<HTMLInputElement>) => {

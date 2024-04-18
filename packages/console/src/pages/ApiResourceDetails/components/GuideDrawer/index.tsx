@@ -15,8 +15,8 @@ import ApiGuide from '../ApiGuide';
 import * as styles from './index.module.scss';
 
 type Props = {
-  apiResource: Resource;
-  onClose: () => void;
+  readonly apiResource: Resource;
+  readonly onClose: () => void;
 };
 
 function GuideDrawer({ apiResource, onClose }: Props) {

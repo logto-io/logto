@@ -13,7 +13,7 @@ import {
 import * as styles from './index.module.scss';
 
 type Props = {
-  samlProviderConfig?: SamlProviderConfig;
+  readonly samlProviderConfig?: SamlProviderConfig;
 };
 
 const primaryKey = 'attributeMapping';

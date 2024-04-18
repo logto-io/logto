@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isActive?: boolean;
+  readonly isActive?: boolean;
 };
 
 function Sarah({ isActive }: Props) {

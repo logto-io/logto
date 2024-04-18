@@ -11,14 +11,14 @@ import * as styles from './index.module.scss';
 import { lineNumberContainerStyle, lineNumberStyle, customStyle } from './utils';
 
 type Props = {
-  className?: string;
-  language?: string;
-  isReadonly?: boolean;
-  value?: string;
-  onChange?: (value: string) => void;
-  tabSize?: number;
-  error?: string | boolean;
-  placeholder?: string;
+  readonly className?: string;
+  readonly language?: string;
+  readonly isReadonly?: boolean;
+  readonly value?: string;
+  readonly onChange?: (value: string) => void;
+  readonly tabSize?: number;
+  readonly error?: string | boolean;
+  readonly placeholder?: string;
 };
 
 function CodeEditor({

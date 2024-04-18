@@ -41,10 +41,6 @@ export const findResourceScopes = async (
         const [, rows] = await queries.organizations.scopes.findAll();
         return rows;
       }
-
-      default: {
-        return [];
-      }
     }
   }
 
@@ -136,7 +132,9 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
           )
         );
       }
+      // FIXME: @simeng double check if it's necessary
       // Return all the scopes for the reserved resources
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       default: {
         return scopes;
       }

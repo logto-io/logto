@@ -7,7 +7,7 @@ import { connectorTitlePlaceHolder } from '@/consts/connectors';
 import type { ConnectorGroup } from '@/types/connector';
 
 type Props = {
-  connectorGroup: ConnectorGroup;
+  readonly connectorGroup: ConnectorGroup;
 };
 
 function ConnectorTypeColumn({ connectorGroup: { type, connectors } }: Props) {

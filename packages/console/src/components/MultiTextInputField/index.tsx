@@ -9,7 +9,7 @@ import * as styles from './index.module.scss';
 
 type Props = MultiTextInputProps &
   Pick<FormFieldProps, 'isRequired' | 'tip'> & {
-    formFieldClassName?: FormFieldProps['className'];
+    readonly formFieldClassName?: FormFieldProps['className'];
   };
 
 function MultiTextInputField({

@@ -8,9 +8,9 @@ import useTheme from '@/hooks/use-theme';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  data: Pick<ConnectorResponse, 'logo' | 'logoDark'>;
-  size?: 'small' | 'medium' | 'large';
+  readonly className?: string;
+  readonly data: Pick<ConnectorResponse, 'logo' | 'logoDark'>;
+  readonly size?: 'small' | 'medium' | 'large';
 };
 
 function ConnectorLogo({ className, data, size = 'medium' }: Props) {

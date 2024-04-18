@@ -19,7 +19,7 @@ import ManageLanguageButton from './ManageLanguage/ManageLanguageButton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isManageLanguageVisible?: boolean;
+  readonly isManageLanguageVisible?: boolean;
 };
 
 function LanguagesForm({ isManageLanguageVisible = false }: Props) {

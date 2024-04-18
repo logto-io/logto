@@ -18,15 +18,15 @@ import { getInputHtmlProps } from './utils';
 export type { IdentifierInputType, IdentifierInputValue } from './use-smart-input-field';
 
 type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix' | 'value'> & {
-  className?: string;
-  errorMessage?: string;
-  isDanger?: boolean;
+  readonly className?: string;
+  readonly errorMessage?: string;
+  readonly isDanger?: boolean;
 
-  enabledTypes?: IdentifierInputType[];
-  defaultType?: IdentifierInputType;
+  readonly enabledTypes?: IdentifierInputType[];
+  readonly defaultType?: IdentifierInputType;
 
-  defaultValue?: string;
-  onChange?: (data: IdentifierInputValue) => void;
+  readonly defaultValue?: string;
+  readonly onChange?: (data: IdentifierInputValue) => void;
 };
 
 const AnimatedInputField = animated(InputField);

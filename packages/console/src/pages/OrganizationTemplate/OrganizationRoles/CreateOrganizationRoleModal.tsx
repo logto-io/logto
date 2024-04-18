@@ -16,8 +16,8 @@ import { trySubmitSafe } from '@/utils/form';
 type FormData = Pick<OrganizationRole, 'name' | 'description'>;
 
 type Props = {
-  isOpen: boolean;
-  onClose: (createdOrganizationRole?: OrganizationRole) => void;
+  readonly isOpen: boolean;
+  readonly onClose: (createdOrganizationRole?: OrganizationRole) => void;
 };
 
 function CreateOrganizationRoleModal({ isOpen, onClose }: Props) {

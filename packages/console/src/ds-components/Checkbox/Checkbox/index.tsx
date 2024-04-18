@@ -9,14 +9,14 @@ import * as styles from './index.module.scss';
 
 type Props = {
   /* eslint-disable react/boolean-prop-naming */
-  checked: boolean;
-  disabled?: boolean;
-  indeterminate?: boolean;
+  readonly checked: boolean;
+  readonly disabled?: boolean;
+  readonly indeterminate?: boolean;
   /* eslint-enable react/boolean-prop-naming */
-  onChange: (value: boolean) => void;
-  label?: ReactNode;
-  className?: string;
-  tooltip?: ReactNode;
+  readonly onChange: (value: boolean) => void;
+  readonly label?: ReactNode;
+  readonly className?: string;
+  readonly tooltip?: ReactNode;
 };
 
 function Checkbox({

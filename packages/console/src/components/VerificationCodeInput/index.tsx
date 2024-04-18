@@ -6,12 +6,12 @@ import * as styles from './index.module.scss';
 export const defaultLength = 6;
 
 type Props = {
-  name: string;
-  className?: string;
-  length?: number;
-  value: string[];
-  error?: string;
-  onChange: (value: string[]) => void;
+  readonly name: string;
+  readonly className?: string;
+  readonly length?: number;
+  readonly value: string[];
+  readonly error?: string;
+  readonly onChange: (value: string[]) => void;
 };
 
 const isNumeric = (char: string) => /^\d+$/.test(char);

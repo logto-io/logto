@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Tag from '@/ds-components/Tag';
 
 type Props = {
-  type: ConnectorType;
+  readonly type: ConnectorType;
 };
 
 function ConnectorTypeName({ type }: Props) {

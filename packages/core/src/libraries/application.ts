@@ -202,10 +202,6 @@ export const createApplicationLibrary = (queries: Queries) => {
         await userConsentUserScopes.deleteByApplicationIdAndScopeId(applicationId, scopeId);
         break;
       }
-      default: {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- just in case
-        throw new Error(`Unexpected application user consent scope type: ${type}`);
-      }
     }
   };
 

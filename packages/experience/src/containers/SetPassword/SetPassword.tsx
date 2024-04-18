@@ -13,12 +13,12 @@ import TogglePassword from './TogglePassword';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
-  autoFocus?: boolean;
-  onSubmit: (password: string) => void;
-  errorMessage?: string;
-  clearErrorMessage?: () => void;
+  readonly autoFocus?: boolean;
+  readonly onSubmit: (password: string) => void;
+  readonly errorMessage?: string;
+  readonly clearErrorMessage?: () => void;
 };
 
 type FieldState = {

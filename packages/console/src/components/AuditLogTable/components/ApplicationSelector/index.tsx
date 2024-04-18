@@ -10,8 +10,8 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Select from '@/ds-components/Select';
 
 type Props = {
-  value?: string;
-  onChange: (value?: string) => void;
+  readonly value?: string;
+  readonly onChange: (value?: string) => void;
 };
 
 function ApplicationSelector({ value, onChange }: Props) {

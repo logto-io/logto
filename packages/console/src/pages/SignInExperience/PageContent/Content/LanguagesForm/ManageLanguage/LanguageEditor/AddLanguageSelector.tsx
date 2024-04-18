@@ -15,8 +15,8 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as style from './AddLanguageSelector.module.scss';
 
 type Props = {
-  options: LanguageTag[];
-  onSelect: (languageTag: LanguageTag) => void;
+  readonly options: LanguageTag[];
+  readonly onSelect: (languageTag: LanguageTag) => void;
 };
 
 function AddLanguageSelector({ options, onSelect }: Props) {

@@ -14,12 +14,12 @@ import { Ring } from '../../Spinner';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  maxSize: number; // In bytes
-  allowedMimeTypes: AllowedUploadMimeType[];
-  actionDescription?: string;
-  onCompleted: (fileUrl: string) => void;
-  onUploadErrorChange: (errorMessage?: string) => void;
-  className?: string;
+  readonly maxSize: number; // In bytes
+  readonly allowedMimeTypes: AllowedUploadMimeType[];
+  readonly actionDescription?: string;
+  readonly onCompleted: (fileUrl: string) => void;
+  readonly onUploadErrorChange: (errorMessage?: string) => void;
+  readonly className?: string;
 };
 
 function FileUploader({

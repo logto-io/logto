@@ -28,11 +28,11 @@ type SearchProps = {
 };
 
 export type Props<T> = {
-  searchProps: SearchProps;
-  onChange: (value: T[]) => void;
-  selectedEntities: T[];
-  emptyPlaceholder: AdminConsoleKey;
-  renderEntity: (entity: T) => ReactNode;
+  readonly searchProps: SearchProps;
+  readonly onChange: (value: T[]) => void;
+  readonly selectedEntities: T[];
+  readonly emptyPlaceholder: AdminConsoleKey;
+  readonly renderEntity: (entity: T) => ReactNode;
 };
 
 const pageSize = defaultPageSize;

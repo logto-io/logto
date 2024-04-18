@@ -7,8 +7,8 @@ import useApi from '@/hooks/use-api';
 import { generateRandomPassword } from '@/utils/password';
 
 type Props = {
-  userId: string;
-  onClose?: (password?: string) => void;
+  readonly userId: string;
+  readonly onClose?: (password?: string) => void;
 };
 
 function ResetPasswordForm({ onClose, userId }: Props) {

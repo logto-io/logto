@@ -6,8 +6,8 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isChecked?: boolean;
-  onChange: (checked: boolean) => void;
+  readonly isChecked?: boolean;
+  readonly onChange: (checked: boolean) => void;
 };
 
 const TogglePassword = ({ isChecked, onChange }: Props) => {

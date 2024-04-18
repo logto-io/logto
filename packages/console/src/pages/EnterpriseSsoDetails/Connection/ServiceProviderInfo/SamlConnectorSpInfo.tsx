@@ -9,7 +9,7 @@ import { type SamlProviderConfig } from '../../types/saml';
 import * as styles from './index.module.scss';
 
 type Props = {
-  samlProviderConfig?: SamlProviderConfig;
+  readonly samlProviderConfig?: SamlProviderConfig;
 };
 
 function SamlConnectorSpInfo({ samlProviderConfig }: Props) {

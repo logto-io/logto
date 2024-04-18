@@ -19,7 +19,7 @@ import * as styles from './index.module.scss';
 import useWebhookTestResult from './use-webhook-test-result';
 
 type Props = {
-  hookId: string;
+  readonly hookId: string;
 };
 
 function TestWebhook({ hookId }: Props) {

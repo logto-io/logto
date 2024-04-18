@@ -6,7 +6,7 @@ import TextLink from '@/ds-components/TextLink';
 import Step, { type Props as StepProps } from '../Step';
 
 type Props = Omit<StepProps, 'children'> & {
-  fullGuide: GuideMetadata['fullGuide'];
+  readonly fullGuide: GuideMetadata['fullGuide'];
 };
 
 function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {

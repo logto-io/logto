@@ -9,8 +9,8 @@ import type { ConnectorGroup } from '@/types/connector';
 import * as styles from './index.module.scss';
 
 type Props = {
-  data: ConnectorGroup;
-  onDelete: (connectorTarget: string) => void;
+  readonly data: ConnectorGroup;
+  readonly onDelete: (connectorTarget: string) => void;
 };
 
 function SelectedConnectorItem({

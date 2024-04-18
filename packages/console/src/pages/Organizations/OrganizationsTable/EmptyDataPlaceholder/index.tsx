@@ -12,7 +12,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   /** Override the default button properties in the placeholder */
-  buttonProps?: ButtonProps;
+  readonly buttonProps?: ButtonProps;
 };
 
 function EmptyDataPlaceholder({ buttonProps }: Props) {

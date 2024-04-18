@@ -13,9 +13,9 @@ import { signInIdentifierPhrase } from '../../../constants';
 import * as styles from './index.module.scss';
 
 type Props = {
-  options: SignInIdentifier[];
-  onSelected: (signInIdentifier: SignInIdentifier) => void;
-  hasSelectedIdentifiers: boolean;
+  readonly options: SignInIdentifier[];
+  readonly onSelected: (signInIdentifier: SignInIdentifier) => void;
+  readonly hasSelectedIdentifiers: boolean;
 };
 
 function AddButton({ options, onSelected, hasSelectedIdentifiers }: Props) {

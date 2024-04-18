@@ -16,9 +16,9 @@ import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 type Props = {
-  user: TenantMemberResponse;
-  isOpen: boolean;
-  onClose: () => void;
+  readonly user: TenantMemberResponse;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 function EditMemberModal({ user, isOpen, onClose }: Props) {

@@ -6,7 +6,7 @@ import BrandingForm from './BrandingForm';
 import CustomCssForm from './CustomCssForm';
 
 type Props = {
-  isActive: boolean;
+  readonly isActive: boolean;
 };
 
 function Branding({ isActive }: Props) {

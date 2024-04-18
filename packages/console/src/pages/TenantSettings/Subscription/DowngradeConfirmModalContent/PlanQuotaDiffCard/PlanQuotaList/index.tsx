@@ -6,9 +6,9 @@ import DiffQuotaItem from './DiffQuotaItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  entries: SubscriptionPlanQuotaEntries;
-  isDowngradeTargetPlan: boolean;
-  className?: string;
+  readonly entries: SubscriptionPlanQuotaEntries;
+  readonly isDowngradeTargetPlan: boolean;
+  readonly className?: string;
 };
 
 function PlanQuotaList({ entries, isDowngradeTargetPlan, className }: Props) {

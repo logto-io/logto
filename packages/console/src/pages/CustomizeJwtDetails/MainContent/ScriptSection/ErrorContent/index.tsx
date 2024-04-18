@@ -3,7 +3,7 @@ import { type TestResultData } from '@/pages/CustomizeJwtDetails/MainContent/Scr
 import * as styles from './index.module.scss';
 
 type Props = {
-  testResult: TestResultData;
+  readonly testResult: TestResultData;
 };
 
 function ErrorContent({ testResult }: Props) {

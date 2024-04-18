@@ -23,8 +23,8 @@ import useCustomDomain from '@/hooks/use-custom-domain';
 import * as styles from './index.module.scss';
 
 type Props = {
-  app: Application;
-  oidcConfig: SnakeCaseOidcConfig;
+  readonly app: Application;
+  readonly oidcConfig: SnakeCaseOidcConfig;
 };
 
 function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidcConfig }: Props) {

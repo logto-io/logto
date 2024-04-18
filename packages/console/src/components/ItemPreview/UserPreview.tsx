@@ -12,7 +12,7 @@ type Props = {
   /**
    * A subset of User schema type that is used in the preview component.
    */
-  user: {
+  readonly user: {
     id: UserInfo['id'];
     avatar?: UserInfo['avatar'];
     name?: UserInfo['name'];
@@ -24,7 +24,7 @@ type Props = {
   /**
    * Whether to provide a link to user details page. Explicitly set to `false` to hide it.
    */
-  hasUserDetailsLink?: false;
+  readonly hasUserDetailsLink?: false;
 };
 
 /** A component that renders a preview of a user. It's useful for displaying a user in a list. */

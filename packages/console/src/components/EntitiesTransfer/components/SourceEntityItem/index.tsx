@@ -7,10 +7,10 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './index.module.scss';
 
 type Props<T> = {
-  entity: T;
-  isSelected: boolean;
-  onSelect: () => void;
-  render: (entity: T) => ReactNode;
+  readonly entity: T;
+  readonly isSelected: boolean;
+  readonly onSelect: () => void;
+  readonly render: (entity: T) => ReactNode;
 };
 
 function SourceEntityItem<T extends Identifiable>({

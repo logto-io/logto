@@ -19,18 +19,18 @@ import IconButton from '@/ds-components/IconButton';
 import * as styles from './index.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
-  error?: string | boolean | ReactElement;
-  icon?: ReactElement;
+  readonly error?: string | boolean | ReactElement;
+  readonly icon?: ReactElement;
   /**
    * An element to be rendered on the right side of the input.
    * By default, the suffix is only visible when the input is focused.
    */
-  suffix?: ReactElement<Record<string, unknown>>;
+  readonly suffix?: ReactElement<Record<string, unknown>>;
   /** Whether to always show the suffix. */
   // eslint-disable-next-line react/boolean-prop-naming
-  alwaysShowSuffix?: boolean;
-  isConfidential?: boolean;
-  inputContainerClassName?: string;
+  readonly alwaysShowSuffix?: boolean;
+  readonly isConfidential?: boolean;
+  readonly inputContainerClassName?: string;
 };
 
 function TextInput(

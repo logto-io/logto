@@ -24,7 +24,7 @@ import * as styles from './index.module.scss';
 import useScopesTable from './use-scopes-table';
 
 type Props = {
-  application: Application;
+  readonly application: Application;
 };
 
 function Permissions({ application }: Props) {

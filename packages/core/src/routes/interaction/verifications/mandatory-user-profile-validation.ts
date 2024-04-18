@@ -222,8 +222,7 @@ export default async function validateMandatoryUserProfile(
   const user =
     event === InteractionEvent.Register
       ? null
-      : // eslint-disable-next-line unicorn/consistent-destructuring -- have to infer the accountId existence by event !== register
-        await userQueries.findUserById(interaction.accountId);
+      : await userQueries.findUserById(interaction.accountId);
 
   const missingProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 

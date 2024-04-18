@@ -28,8 +28,8 @@ import type { SignInExperienceForm } from '../types';
 import * as styles from './GuideModal.module.scss';
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 function GuideModal({ isOpen, onClose }: Props) {

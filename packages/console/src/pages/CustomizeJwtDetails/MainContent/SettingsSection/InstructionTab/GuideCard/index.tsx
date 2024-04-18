@@ -15,10 +15,10 @@ export enum CardType {
 }
 
 type GuardCardProps = {
-  name: CardType;
-  children?: React.ReactNode;
-  isExpanded: boolean;
-  setExpanded: (expanded: boolean) => void;
+  readonly name: CardType;
+  readonly children?: React.ReactNode;
+  readonly isExpanded: boolean;
+  readonly setExpanded: (expanded: boolean) => void;
 };
 
 function GuideCard({ name, children, isExpanded, setExpanded }: GuardCardProps) {

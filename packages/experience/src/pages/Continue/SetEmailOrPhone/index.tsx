@@ -14,8 +14,8 @@ import SocialIdentityNotification from './SocialIdentityNotification';
 export type VerificationCodeProfileType = Exclude<MissingProfile, 'username' | 'password'>;
 
 type Props = {
-  missingProfile: VerificationCodeProfileType;
-  notification?: TFuncKey;
+  readonly missingProfile: VerificationCodeProfileType;
+  readonly notification?: TFuncKey;
 };
 
 export const pageContent: Record<

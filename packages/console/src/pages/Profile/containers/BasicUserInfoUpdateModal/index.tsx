@@ -20,10 +20,10 @@ import { handleError } from '../../utils';
 export type BasicUserField = 'avatar' | 'username' | 'name';
 
 type Props = {
-  field?: BasicUserField;
-  value: string;
-  isOpen: boolean;
-  onClose: () => void;
+  readonly field?: BasicUserField;
+  readonly value: string;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 type FormFields = {

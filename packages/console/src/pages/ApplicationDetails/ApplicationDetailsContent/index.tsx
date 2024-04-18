@@ -38,9 +38,9 @@ import * as styles from './index.module.scss';
 import { type ApplicationForm, applicationFormDataParser } from './utils';
 
 type Props = {
-  data: ApplicationResponse;
-  oidcConfig: SnakeCaseOidcConfig;
-  onApplicationUpdated: () => void;
+  readonly data: ApplicationResponse;
+  readonly oidcConfig: SnakeCaseOidcConfig;
+  readonly onApplicationUpdated: () => void;
 };
 
 function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: Props) {

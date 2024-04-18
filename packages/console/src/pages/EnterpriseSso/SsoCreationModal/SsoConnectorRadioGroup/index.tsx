@@ -8,12 +8,12 @@ import SsoConnectorRadio from './SsoConnectorRadio';
 import * as styles from './index.module.scss';
 
 type Props = {
-  name: string;
-  value?: string;
-  className?: string;
-  size: ConnectorRadioGroupSize;
-  connectors: SsoConnectorProviderDetail[];
-  onChange: (providerName: string) => void;
+  readonly name: string;
+  readonly value?: string;
+  readonly className?: string;
+  readonly size: ConnectorRadioGroupSize;
+  readonly connectors: SsoConnectorProviderDetail[];
+  readonly onChange: (providerName: string) => void;
 };
 
 function SsoConnectorRadioGroup({ name, value, className, size, connectors, onChange }: Props) {

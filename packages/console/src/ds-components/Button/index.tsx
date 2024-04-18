@@ -120,10 +120,10 @@ type LinkProps = Omit<HTMLProps<HTMLAnchorElement>, 'type' | 'size' | 'title' | 
    *
    * Typically, when navigating to Logto's website (official site, blog, documentation, etc.), use 'noopener'.
    */
-  targetBlank?: boolean | 'noopener';
-  type?: ButtonType;
-  size?: 'small' | 'medium' | 'large';
-  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly targetBlank?: boolean | 'noopener';
+  readonly type?: ButtonType;
+  readonly size?: 'small' | 'medium' | 'large';
+  readonly title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
 };
 
 export function LinkButton({

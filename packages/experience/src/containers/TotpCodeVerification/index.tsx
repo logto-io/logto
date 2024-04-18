@@ -9,7 +9,7 @@ import useTotpCodeVerification from './use-totp-code-verification';
 const totpCodeLength = 6;
 
 type Props = {
-  flow: UserMfaFlow;
+  readonly flow: UserMfaFlow;
 };
 
 const TotpCodeVerification = ({ flow }: Props) => {

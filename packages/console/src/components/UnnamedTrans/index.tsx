@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 
 type Props = {
-  resource: Record<string, string>;
-  className?: string;
+  readonly resource: Record<string, string>;
+  readonly className?: string;
 };
 
 function UnnamedTrans({ resource, className }: Props) {

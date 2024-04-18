@@ -14,8 +14,8 @@ import useSubscribe from '@/hooks/use-subscribe';
 import * as styles from './index.module.scss';
 
 type Props = {
-  cost: number;
-  isManagePaymentVisible?: boolean;
+  readonly cost: number;
+  readonly isManagePaymentVisible?: boolean;
 };
 
 function BillInfo({ cost, isManagePaymentVisible }: Props) {

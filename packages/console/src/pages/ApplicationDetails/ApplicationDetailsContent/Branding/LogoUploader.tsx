@@ -10,7 +10,7 @@ import useImageMimeTypes from '@/hooks/use-image-mime-types';
 import * as styles from './LogoUploader.module.scss';
 
 type Props = {
-  isDarkModeEnabled?: boolean;
+  readonly isDarkModeEnabled?: boolean;
 };
 
 function LogoUploader({ isDarkModeEnabled }: Props) {

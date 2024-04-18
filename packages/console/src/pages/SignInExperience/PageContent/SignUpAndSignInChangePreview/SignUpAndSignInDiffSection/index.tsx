@@ -5,9 +5,9 @@ import SignUpDiffSection from './SignUpDiffSection';
 import SocialTargetsDiffSection from './SocialTargetsDiffSection';
 
 type Props = {
-  before: SignInExperience;
-  after: SignInExperience;
-  isAfter?: boolean;
+  readonly before: SignInExperience;
+  readonly after: SignInExperience;
+  readonly isAfter?: boolean;
 };
 
 function SignUpAndSignInDiffSection({ before, after, isAfter = false }: Props) {

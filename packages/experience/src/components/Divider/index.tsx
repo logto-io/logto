@@ -6,8 +6,8 @@ import DynamicT from '../DynamicT';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  label?: TFuncKey;
+  readonly className?: string;
+  readonly label?: TFuncKey;
 };
 
 const Divider = ({ className, label }: Props) => {

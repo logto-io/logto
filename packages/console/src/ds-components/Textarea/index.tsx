@@ -5,8 +5,8 @@ import { forwardRef } from 'react';
 import * as styles from './index.module.scss';
 
 type Props = HTMLProps<HTMLTextAreaElement> & {
-  className?: string;
-  error?: string | boolean;
+  readonly className?: string;
+  readonly error?: string | boolean;
 };
 
 function Textarea(

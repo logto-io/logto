@@ -15,7 +15,7 @@ import useJwtCustomizer from '../use-jwt-customizer';
 import * as styles from './index.module.scss';
 
 type Props = {
-  tokenType: LogtoJwtTokenKeyType;
+  readonly tokenType: LogtoJwtTokenKeyType;
 };
 
 function CustomizerItem({ tokenType }: Props) {

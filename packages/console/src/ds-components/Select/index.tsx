@@ -21,16 +21,16 @@ export type Option<T> = {
 };
 
 type Props<T> = {
-  className?: string;
-  value?: T;
-  options: Array<Option<T>>;
-  onChange?: (value?: T) => void;
-  isReadOnly?: boolean;
-  error?: string | boolean;
-  placeholder?: ReactNode;
-  isClearable?: boolean;
-  size?: 'small' | 'medium' | 'large';
-  isSearchEnabled?: boolean;
+  readonly className?: string;
+  readonly value?: T;
+  readonly options: Array<Option<T>>;
+  readonly onChange?: (value?: T) => void;
+  readonly isReadOnly?: boolean;
+  readonly error?: string | boolean;
+  readonly placeholder?: ReactNode;
+  readonly isClearable?: boolean;
+  readonly size?: 'small' | 'medium' | 'large';
+  readonly isSearchEnabled?: boolean;
 };
 
 function Select<T extends string>({

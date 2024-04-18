@@ -40,10 +40,10 @@ type DataType = Pick<
 >;
 
 type Props = {
-  isDeleted: boolean;
-  data: DataType;
-  onUpdated: (data: DataType) => void;
-  isDarkModeEnabled: boolean;
+  readonly isDeleted: boolean;
+  readonly data: DataType;
+  readonly onUpdated: (data: DataType) => void;
+  readonly isDarkModeEnabled: boolean;
 };
 
 export type FormType = Pick<SsoConnector, 'branding' | 'connectorName'> &

@@ -23,7 +23,7 @@ import useApi, { type RequestError } from '@/hooks/use-api';
 import * as styles from './index.module.scss';
 
 type Props = {
-  keyType: LogtoOidcConfigKeyType;
+  readonly keyType: LogtoOidcConfigKeyType;
 };
 
 function SigningKeyFormCard({ keyType }: Props) {

@@ -8,7 +8,7 @@ import TargetEntitiesBox from './components/TargetEntitiesBox';
 import * as styles from './index.module.scss';
 
 type Props<T extends Identifiable> = SourceProps<T> & {
-  errorMessage?: string;
+  readonly errorMessage?: string;
 };
 
 function EntitiesTransfer<T extends Identifiable>({ errorMessage, ...props }: Props<T>) {

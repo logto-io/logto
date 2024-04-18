@@ -8,12 +8,12 @@ import UserAvatar from '../UserAvatar';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  user?: Partial<
+  readonly className?: string;
+  readonly user?: Partial<
     Pick<User, 'name' | 'username' | 'avatar' | 'primaryEmail'> &
       Pick<IdTokenClaims, 'picture' | 'email'>
   >;
-  avatarSize?: 'medium' | 'large';
+  readonly avatarSize?: 'medium' | 'large';
 };
 
 function UserInfoCard({ className, user, avatarSize = 'medium' }: Props) {

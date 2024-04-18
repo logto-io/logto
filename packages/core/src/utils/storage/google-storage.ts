@@ -8,9 +8,10 @@ export const buildGoogleStorage = (projectId: string, keyFilename: string, bucke
   const storage = new Storage({ projectId, keyFilename });
   const bucket = storage.bucket(bucketName);
 
-  const uploadFile: UploadFile = async (
-    data: Buffer,
-    objectKey: string,
+  // eslint-disable-next-line @typescript-eslint/ban-types -- Google doesn't allow us to use Uint8Array
+  const uploadFile: UploadFile<Buffer> = async (
+    data,
+    objectKey,
     { contentType, publicUrl } = {}
   ) => {
     const file = bucket.file(objectKey);

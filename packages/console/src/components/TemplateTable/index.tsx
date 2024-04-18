@@ -16,19 +16,19 @@ type Props<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValue
   /**
    * The optional table name. The value must be a valid phrase singular key with plural support.
    */
-  name?: AdminConsoleKey;
-  className?: string;
-  rowIndexKey: TName;
-  rowGroups: Array<RowGroup<TFieldValues>>;
-  columns: Array<Column<TFieldValues>>;
-  pagination?: {
+  readonly name?: AdminConsoleKey;
+  readonly className?: string;
+  readonly rowIndexKey: TName;
+  readonly rowGroups: Array<RowGroup<TFieldValues>>;
+  readonly columns: Array<Column<TFieldValues>>;
+  readonly pagination?: {
     page: number;
     totalCount: number;
     onChange: (page: number) => void;
   };
-  isLoading?: boolean;
-  onAdd?: () => void;
-  errorMessage?: string;
+  readonly isLoading?: boolean;
+  readonly onAdd?: () => void;
+  readonly errorMessage?: string;
 };
 
 export const pageSize = 10;

@@ -7,7 +7,7 @@ import useTheme from '@/hooks/use-theme';
 import * as styles from './index.module.scss';
 
 type Props = {
-  data: SsoConnectorProviderDetail;
+  readonly data: SsoConnectorProviderDetail;
 };
 
 function SsoConnectorRadio({ data: { logo, logoDark, description, name } }: Props) {

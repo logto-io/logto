@@ -13,9 +13,9 @@ import PageMeta from '@/components/PageMeta';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title?: TFuncKey;
-  message?: TFuncKey;
-  rawMessage?: string;
+  readonly title?: TFuncKey;
+  readonly message?: TFuncKey;
+  readonly rawMessage?: string;
 };
 
 const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Props) => {

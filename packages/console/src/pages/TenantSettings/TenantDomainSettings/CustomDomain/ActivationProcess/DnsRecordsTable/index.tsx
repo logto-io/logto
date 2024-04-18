@@ -8,7 +8,7 @@ import Table from '@/ds-components/Table';
 import * as styles from './index.module.scss';
 
 type Props = {
-  records: DomainDnsRecords;
+  readonly records: DomainDnsRecords;
 };
 
 function DnsRecordsTable({ records }: Props) {

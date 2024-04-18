@@ -9,9 +9,9 @@ import QuotaItemPhrase from './QuotaItemPhrase';
 import * as styles from './index.module.scss';
 
 type Props = {
-  quotaKey: keyof SubscriptionPlanQuota;
-  quotaValue: SubscriptionPlanQuota[keyof SubscriptionPlanQuota];
-  hasStatusIcon?: boolean;
+  readonly quotaKey: keyof SubscriptionPlanQuota;
+  readonly quotaValue: SubscriptionPlanQuota[keyof SubscriptionPlanQuota];
+  readonly hasStatusIcon?: boolean;
 };
 
 function DiffQuotaItem({ quotaKey, quotaValue, hasStatusIcon }: Props) {

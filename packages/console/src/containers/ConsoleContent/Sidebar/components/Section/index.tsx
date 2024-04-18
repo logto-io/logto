@@ -3,8 +3,8 @@ import type { ReactNode } from 'react';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: string;
-  children: ReactNode;
+  readonly title: string;
+  readonly children: ReactNode;
 };
 
 function Section({ children, title }: Props) {

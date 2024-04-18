@@ -17,12 +17,12 @@ import * as styles from '../index.module.scss';
 import VerificationCodeLink from './VerificationCodeLink';
 
 type Props = {
-  className?: string;
-  identifier: SignInIdentifier;
-  value: string;
-  isVerificationCodeEnabled?: boolean;
+  readonly className?: string;
+  readonly identifier: SignInIdentifier;
+  readonly value: string;
+  readonly isVerificationCodeEnabled?: boolean;
   // eslint-disable-next-line react/boolean-prop-naming
-  autoFocus?: boolean;
+  readonly autoFocus?: boolean;
 };
 
 type FormState = {

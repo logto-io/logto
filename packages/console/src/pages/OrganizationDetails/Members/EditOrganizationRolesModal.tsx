@@ -13,10 +13,10 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import { decapitalize } from '@/utils/string';
 
 type Props = {
-  organizationId: string;
-  user: UserWithOrganizationRoles;
-  isOpen: boolean;
-  onClose: () => void;
+  readonly organizationId: string;
+  readonly user: UserWithOrganizationRoles;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 function EditOrganizationRolesModal({ organizationId, user, isOpen, onClose }: Props) {

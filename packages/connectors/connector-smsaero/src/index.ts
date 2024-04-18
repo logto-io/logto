@@ -27,7 +27,6 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
     validateConfig(config, smsAeroConfigGuard);
 
     const { email, apiKey, senderName, templates } = config;
-
     const template = templates.find((template) => template.usageType === type);
 
     assert(

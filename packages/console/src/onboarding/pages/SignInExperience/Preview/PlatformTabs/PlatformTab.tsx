@@ -9,11 +9,11 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './PlatformTab.module.scss';
 
 type Props = {
-  isSelected: boolean;
-  icon: ReactNode;
-  title: AdminConsoleKey;
-  tab: PreviewPlatform;
-  onClick: (tab: PreviewPlatform) => void;
+  readonly isSelected: boolean;
+  readonly icon: ReactNode;
+  readonly title: AdminConsoleKey;
+  readonly tab: PreviewPlatform;
+  readonly onClick: (tab: PreviewPlatform) => void;
 };
 
 function PlatformTab({ isSelected, icon, title, tab, onClick }: Props) {

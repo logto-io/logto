@@ -6,7 +6,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import useSubscribe from '@/hooks/use-subscribe';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 function PaymentOverdueNotification({ className }: Props) {

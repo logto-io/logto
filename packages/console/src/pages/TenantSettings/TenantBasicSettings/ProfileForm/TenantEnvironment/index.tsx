@@ -9,7 +9,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import * as styles from './index.module.scss';
 
 type Props = {
-  tag: TenantTag;
+  readonly tag: TenantTag;
 };
 
 function TenantEnvironment({ tag }: Props) {

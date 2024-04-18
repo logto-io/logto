@@ -1,7 +1,7 @@
 import { customAlphabet } from 'nanoid';
 
 const backupCodeCount = 10;
-const alphabet = '0123456789abcdef' as const;
+const alphabet = '0123456789abcdef';
 
 /**
  * Generates a group of random backup codes.

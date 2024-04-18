@@ -19,11 +19,11 @@ import SettingsSection from './SettingsSection';
 import * as styles from './index.module.scss';
 
 type Props<T extends LogtoJwtTokenKeyType> = {
-  className?: string;
-  token: T;
-  data?: JwtCustomizer<T>;
-  mutate: KeyedMutator<JwtCustomizer<T>>;
-  action: Action;
+  readonly className?: string;
+  readonly token: T;
+  readonly data?: JwtCustomizer<T>;
+  readonly mutate: KeyedMutator<JwtCustomizer<T>>;
+  readonly action: Action;
 };
 
 function MainContent<T extends LogtoJwtTokenKeyType>({

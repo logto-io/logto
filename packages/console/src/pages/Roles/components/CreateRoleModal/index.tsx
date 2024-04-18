@@ -12,7 +12,7 @@ import type { Props as CreateRoleFormProps } from '../CreateRoleForm';
 import CreateRoleForm from '../CreateRoleForm';
 
 type Props = {
-  onClose: () => void;
+  readonly onClose: () => void;
 };
 
 function CreateRoleModal({ onClose }: Props) {

@@ -27,9 +27,9 @@ const auditLogEventOptions = Object.entries(auditLogEventTitle).map(([value, tit
 }));
 
 type Props = {
-  applicationId?: string;
-  userId?: string;
-  className?: string;
+  readonly applicationId?: string;
+  readonly userId?: string;
+  readonly className?: string;
 };
 
 function AuditLogTable({ applicationId, userId, className }: Props) {

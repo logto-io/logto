@@ -11,7 +11,7 @@ import useTheme from '@/hooks/use-theme';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 function NotFound({ className }: Props) {

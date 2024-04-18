@@ -8,8 +8,8 @@ import TableDataContent from './TableDataContent';
 import * as styles from './index.module.scss';
 
 type Props = {
-  value: string;
-  isLeftAligned?: boolean;
+  readonly value: string;
+  readonly isLeftAligned?: boolean;
 };
 
 function TableDataWrapper({ value, isLeftAligned = false }: Props) {

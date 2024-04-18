@@ -7,10 +7,10 @@ import DynamicT from '@/ds-components/DynamicT';
 import * as styles from './index.module.scss';
 
 type Props = {
-  tag: TenantTag;
-  className?: string;
-  isAbbreviated?: boolean;
-  size?: 'default' | 'large';
+  readonly tag: TenantTag;
+  readonly className?: string;
+  readonly isAbbreviated?: boolean;
+  readonly size?: 'default' | 'large';
 };
 
 type TenantTagMap = {

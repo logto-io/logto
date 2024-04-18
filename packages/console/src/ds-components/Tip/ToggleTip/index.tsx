@@ -20,12 +20,12 @@ import {
 import * as styles from './index.module.scss';
 
 export type Props = {
-  children: ReactNode;
-  className?: string;
-  anchorClassName?: string;
-  placement?: TipBubblePlacement;
-  horizontalAlign?: HorizontalAlignment;
-  content?: ((closeTip: () => void) => ReactNode) | ReactNode;
+  readonly children: ReactNode;
+  readonly className?: string;
+  readonly anchorClassName?: string;
+  readonly placement?: TipBubblePlacement;
+  readonly horizontalAlign?: HorizontalAlignment;
+  readonly content?: ((closeTip: () => void) => ReactNode) | ReactNode;
 };
 
 function ToggleTip({

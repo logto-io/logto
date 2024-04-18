@@ -13,11 +13,11 @@ import useResendVerificationCode from './use-resend-verification-code';
 import { getCodeVerificationHookByFlow } from './utils';
 
 type Props = {
-  flow: UserFlow;
-  identifier: SignInIdentifier.Email | SignInIdentifier.Phone;
-  target: string;
-  hasPasswordButton?: boolean;
-  className?: string;
+  readonly flow: UserFlow;
+  readonly identifier: SignInIdentifier.Email | SignInIdentifier.Phone;
+  readonly target: string;
+  readonly hasPasswordButton?: boolean;
+  readonly className?: string;
 };
 
 const VerificationCode = ({ flow, identifier, className, hasPasswordButton, target }: Props) => {

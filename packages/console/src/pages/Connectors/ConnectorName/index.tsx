@@ -20,8 +20,8 @@ import DemoTag from './DemoTag';
 import * as styles from './index.module.scss';
 
 type Props = {
-  connectorGroup: ConnectorGroup;
-  isDemo?: boolean;
+  readonly connectorGroup: ConnectorGroup;
+  readonly isDemo?: boolean;
 };
 
 function ConnectorName({ connectorGroup, isDemo = false }: Props) {

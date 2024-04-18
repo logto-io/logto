@@ -55,7 +55,6 @@ function ActionMenu(props: Props) {
     <div>
       {hasButtonProps && (
         <Button
-          // eslint-disable-next-line unicorn/consistent-destructuring -- cannot deconstruct before checking
           {...props.buttonProps}
           ref={anchorReference}
           className={styles.actionMenuButton}
@@ -67,13 +66,11 @@ function ActionMenu(props: Props) {
       {!hasButtonProps && (
         <IconButton
           ref={anchorReference}
-          // eslint-disable-next-line unicorn/consistent-destructuring -- cannot deconstruct before checking
           size={props.iconSize}
           onClick={() => {
             setIsOpen(true);
           }}
         >
-          {/* eslint-disable-next-line unicorn/consistent-destructuring -- cannot deconstruct before checking */}
           {props.icon}
         </IconButton>
       )}

@@ -8,7 +8,7 @@ import useCustomDomain from '@/hooks/use-custom-domain';
 import * as styles from './index.module.scss';
 
 type Props = {
-  ssoConnectorId: string;
+  readonly ssoConnectorId: string;
 };
 
 function OidcConnectorSpInfo({ ssoConnectorId }: Props) {

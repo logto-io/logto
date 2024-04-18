@@ -8,9 +8,9 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as style from './LanguageItem.module.scss';
 
 type Props = {
-  languageTag: LanguageTag;
-  isSelected: boolean;
-  onClick: () => void;
+  readonly languageTag: LanguageTag;
+  readonly isSelected: boolean;
+  readonly onClick: () => void;
 };
 
 function LanguageItem({ languageTag, isSelected, onClick }: Props) {

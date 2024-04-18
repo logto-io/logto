@@ -11,7 +11,7 @@ import GuideModal from './GuideModal';
 import * as styles from './index.module.scss';
 
 type Props = {
-  mutate: () => void;
+  readonly mutate: () => void;
 };
 
 function Welcome({ mutate }: Props) {

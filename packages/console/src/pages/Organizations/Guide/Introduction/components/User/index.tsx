@@ -6,15 +6,15 @@ import Tooltip from '@/ds-components/Tip/Tooltip';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  name: string;
-  hasIcon?: boolean;
-  variant?: 'blue' | 'pink';
-  size?: 'default' | 'small';
-  tooltip?: string;
-  isActive?: boolean;
-  onMouseOver?: () => void;
-  onMouseOut?: () => void;
+  readonly className?: string;
+  readonly name: string;
+  readonly hasIcon?: boolean;
+  readonly variant?: 'blue' | 'pink';
+  readonly size?: 'default' | 'small';
+  readonly tooltip?: string;
+  readonly isActive?: boolean;
+  readonly onMouseOver?: () => void;
+  readonly onMouseOut?: () => void;
 };
 
 function User({

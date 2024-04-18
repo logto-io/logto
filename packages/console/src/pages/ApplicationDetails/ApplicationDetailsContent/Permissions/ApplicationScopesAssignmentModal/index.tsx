@@ -18,9 +18,9 @@ const modalText = Object.freeze({
 }) satisfies Record<string, AdminConsoleKey>;
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  applicationId: string;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly applicationId: string;
 };
 
 function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId }: Props) {

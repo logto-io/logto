@@ -19,11 +19,11 @@ import ConfigFormFields from './ConfigFormFields';
 import * as styles from './index.module.scss';
 
 type Props = {
-  formItems?: ConnectorConfigFormItem[];
-  className?: string;
-  connectorId: string;
-  connectorFactoryId?: string;
-  connectorType?: ConnectorType;
+  readonly formItems?: ConnectorConfigFormItem[];
+  readonly className?: string;
+  readonly connectorId: string;
+  readonly connectorFactoryId?: string;
+  readonly connectorType?: ConnectorType;
 };
 
 function ConfigForm({

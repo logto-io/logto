@@ -5,7 +5,7 @@ import Tag from '@/ds-components/Tag';
 import { Tooltip } from '@/ds-components/Tip';
 
 type Props = {
-  connectorType: ConnectorType;
+  readonly connectorType: ConnectorType;
 };
 
 function DemoTag({ connectorType }: Props) {

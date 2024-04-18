@@ -6,12 +6,12 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './DropdownItem.module.scss';
 
 export type Props = {
-  onClick?: (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
-  className?: string;
-  children: ReactNode;
-  icon?: ReactNode;
-  iconClassName?: string;
-  type?: 'default' | 'danger';
+  readonly onClick?: (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
+  readonly className?: string;
+  readonly children: ReactNode;
+  readonly icon?: ReactNode;
+  readonly iconClassName?: string;
+  readonly type?: 'default' | 'danger';
 };
 
 function DropdownItem({

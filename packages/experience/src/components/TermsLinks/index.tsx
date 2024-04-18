@@ -6,9 +6,9 @@ import * as styles from './index.module.scss';
 
 type Props = {
   // eslint-disable-next-line react/boolean-prop-naming
-  inline?: boolean;
-  termsOfUseUrl?: string;
-  privacyPolicyUrl?: string;
+  readonly inline?: boolean;
+  readonly termsOfUseUrl?: string;
+  readonly privacyPolicyUrl?: string;
 };
 
 const TermsLinks = ({ inline, termsOfUseUrl, privacyPolicyUrl }: Props) => {

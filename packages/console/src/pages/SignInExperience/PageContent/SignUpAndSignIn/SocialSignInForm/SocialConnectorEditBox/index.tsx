@@ -13,8 +13,8 @@ import SelectedConnectorItem from './SelectedConnectorItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  value: string[];
-  onChange: (value: string[]) => void;
+  readonly value: string[];
+  readonly onChange: (value: string[]) => void;
 };
 
 function SocialConnectorEditBox({ value, onChange }: Props) {

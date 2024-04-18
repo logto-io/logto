@@ -4,15 +4,15 @@ import { type CSSProperties, type PropsWithChildren } from 'react';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  type?: 'row' | 'column';
+  readonly className?: string;
+  readonly type?: 'row' | 'column';
   /* Flex item gap in pixel value. Defaults to 12px. */
-  gap?: number;
-  style?: CSSProperties;
+  readonly gap?: number;
+  readonly style?: CSSProperties;
   /* If the children items should equally divide the container space. Defaults to `false` */
-  isEquallyDivided?: boolean;
-  onMouseOver?: () => void;
-  onMouseOut?: () => void;
+  readonly isEquallyDivided?: boolean;
+  readonly onMouseOver?: () => void;
+  readonly onMouseOut?: () => void;
 };
 
 function FlexBox({

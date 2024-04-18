@@ -6,9 +6,9 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import CreateForm from './CreateForm';
 
 type Props = {
-  isOpen: boolean;
-  totalWebhookCount: number;
-  onClose: (createdHook?: Hook) => void;
+  readonly isOpen: boolean;
+  readonly totalWebhookCount: number;
+  readonly onClose: (createdHook?: Hook) => void;
 };
 
 function CreateFormModal({ isOpen, totalWebhookCount, onClose }: Props) {
