@@ -7,7 +7,7 @@ import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 import type Provider from 'oidc-provider';
 
-import { type RedisCache } from '#src/caches/index.js';
+import { type CacheStore } from '#src/caches/types.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
 import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
@@ -35,7 +35,7 @@ import type TenantContext from './TenantContext.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
 export default class Tenant implements TenantContext {
-  static async create(id: string, redisCache: RedisCache, customDomain?: string): Promise<Tenant> {
+  static async create(id: string, redisCache: CacheStore, customDomain?: string): Promise<Tenant> {
     // Treat the default database URL as the management URL
     const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
     // Custom endpoint is used for building OIDC issuer URL when the request is a custom domain
