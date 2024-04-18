@@ -277,7 +277,7 @@ describe('organization role APIs', () => {
     });
 
     it('should fail when try to remove non-existent scopes from a role', async () => {
-      const [role] = await Promise.all([roleApi.create({ name: 'test' + randomId() })]);
+      const role = await roleApi.create({ name: 'test' + randomId() });
 
       const response = await roleApi.deleteScope(role.id, '0').catch((error: unknown) => error);
 
@@ -386,7 +386,7 @@ describe('organization role APIs', () => {
     });
 
     it('should fail when try to remove non-existent scopes from a role', async () => {
-      const [role] = await Promise.all([roleApi.create({ name: 'test' + randomId() })]);
+      const role = await roleApi.create({ name: 'test' + randomId() });
 
       const response = await roleApi
         .deleteResourceScope(role.id, '0')

@@ -5,9 +5,9 @@ import { unstable_useBlocker as useBlocker, useLocation } from 'react-router-dom
 import ConfirmModal from '@/ds-components/ConfirmModal';
 
 type Props = {
-  hasUnsavedChanges: boolean;
-  parentPath?: string;
-  onConfirm?: () => void;
+  readonly hasUnsavedChanges: boolean;
+  readonly parentPath?: string;
+  readonly onConfirm?: () => void;
 };
 
 function UnsavedChangesAlertModal({ hasUnsavedChanges, parentPath, onConfirm }: Props) {

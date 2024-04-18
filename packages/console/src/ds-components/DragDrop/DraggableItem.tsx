@@ -7,12 +7,12 @@ import { useDrag, useDrop } from 'react-dnd';
 import { DragDropContext } from './DragDropProvider';
 
 type Props = {
-  id: string;
-  sortIndex: number;
-  moveItem: (dragIndex: number, hoverIndex: number) => void;
-  children: ReactNode;
-  dragType?: string;
-  className?: string;
+  readonly id: string;
+  readonly sortIndex: number;
+  readonly moveItem: (dragIndex: number, hoverIndex: number) => void;
+  readonly children: ReactNode;
+  readonly dragType?: string;
+  readonly className?: string;
 };
 
 type DragItemProps = {

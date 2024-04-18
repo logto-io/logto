@@ -22,10 +22,10 @@ import SourceRoleItem from '../SourceRoleItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  entityId: string;
-  type: RoleType;
-  selectedRoles: RoleResponse[];
-  onChange: (value: RoleResponse[]) => void;
+  readonly entityId: string;
+  readonly type: RoleType;
+  readonly selectedRoles: RoleResponse[];
+  readonly onChange: (value: RoleResponse[]) => void;
 };
 
 const pageSize = defaultPageSize;

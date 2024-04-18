@@ -14,9 +14,9 @@ import useApi from '@/hooks/use-api';
 import * as styles from './index.module.scss';
 
 type Props = {
-  hookId: string;
-  signingKey: string;
-  onSigningKeyUpdated: (signingKey: string) => void;
+  readonly hookId: string;
+  readonly signingKey: string;
+  readonly onSigningKeyUpdated: (signingKey: string) => void;
 };
 
 function SigningKeyField({ hookId, signingKey, onSigningKeyUpdated }: Props) {

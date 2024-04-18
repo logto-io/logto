@@ -20,9 +20,9 @@ import { trySubmitSafe } from '@/utils/form';
 export const organizationRolePath = 'api/organization-roles';
 
 type Props = {
-  isOpen: boolean;
-  editData: Nullable<OrganizationRoleWithScopes>;
-  onClose: () => void;
+  readonly isOpen: boolean;
+  readonly editData: Nullable<OrganizationRoleWithScopes>;
+  readonly onClose: () => void;
 };
 
 /** A modal that allows users to create or edit an organization role. */

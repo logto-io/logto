@@ -7,9 +7,9 @@ import OidcConnectorForm from './OidcConnectorForm';
 import SamlConnectorForm from './SamlConnectorForm';
 
 type Props = {
-  isDeleted: boolean;
-  data: SsoConnectorWithProviderConfig;
-  onUpdated: (data: SsoConnectorWithProviderConfig) => void;
+  readonly isDeleted: boolean;
+  readonly data: SsoConnectorWithProviderConfig;
+  readonly onUpdated: (data: SsoConnectorWithProviderConfig) => void;
 };
 
 function isSamlProviderData(

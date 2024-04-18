@@ -10,9 +10,9 @@ import useTheme from '@/hooks/use-theme';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title?: ReactNode;
-  size?: 'large' | 'medium' | 'small';
-  className?: string;
+  readonly title?: ReactNode;
+  readonly size?: 'large' | 'medium' | 'small';
+  readonly className?: string;
 };
 
 function EmptyDataPlaceholder({ title, size = 'medium', className }: Props) {

@@ -14,9 +14,9 @@ import ParsedConfigPreview from './ParsedConfigPreview';
 import * as styles from './index.module.scss';
 
 type Props = {
-  providerConfig?: OidcProviderConfig;
-  config?: OidcConnectorConfig;
-  providerName: SsoProviderName;
+  readonly providerConfig?: OidcProviderConfig;
+  readonly config?: OidcConnectorConfig;
+  readonly providerName: SsoProviderName;
 };
 
 // Do not show inline notification and parsed config preview if it is on guide page.

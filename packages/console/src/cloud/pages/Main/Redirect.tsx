@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
-function Redirect({ toTenantId }: { toTenantId: string }) {
+function Redirect({ toTenantId }: { readonly toTenantId: string }) {
   const { navigateTenant } = useContext(TenantsContext);
 
   useEffect(() => {

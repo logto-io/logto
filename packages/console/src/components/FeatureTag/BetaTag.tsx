@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 function BetaTag({ className }: Props) {

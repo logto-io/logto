@@ -10,8 +10,8 @@ import type { Props as ImageUploaderProps } from '../ImageUploader';
 import * as styles from './index.module.scss';
 
 type Props = Pick<ImageUploaderProps, 'name' | 'value' | 'actionDescription'> & {
-  onChange: (value: string) => void;
-  allowedMimeTypes?: UserAssetsServiceStatus['allowUploadMimeTypes'];
+  readonly onChange: (value: string) => void;
+  readonly allowedMimeTypes?: UserAssetsServiceStatus['allowUploadMimeTypes'];
 };
 
 function ImageUploaderField({ onChange, allowedMimeTypes: mimeTypes, ...rest }: Props) {

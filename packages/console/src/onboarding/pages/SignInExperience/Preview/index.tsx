@@ -10,8 +10,8 @@ import PlatformTabs from './PlatformTabs';
 import * as styles from './index.module.scss';
 
 type Props = {
-  signInExperience?: SignInExperience;
-  className?: string;
+  readonly signInExperience?: SignInExperience;
+  readonly className?: string;
 };
 
 function Preview({ signInExperience, className }: Props) {

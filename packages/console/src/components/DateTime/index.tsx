@@ -2,7 +2,7 @@ import type { Nullable } from '@silverhand/essentials';
 import { isValid } from 'date-fns';
 
 type Props = {
-  children: Nullable<string | number>;
+  readonly children: Nullable<string | number>;
 };
 
 function DateTime({ children }: Props) {

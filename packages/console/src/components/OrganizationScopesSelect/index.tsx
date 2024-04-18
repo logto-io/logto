@@ -6,10 +6,10 @@ import useSearchValues from '@/hooks/use-search-values';
 import Breakable from '../Breakable';
 
 type Props = {
-  value: Array<Option<string>>;
-  onChange: (value: Array<Option<string>>) => void;
-  keyword: string;
-  setKeyword: (keyword: string) => void;
+  readonly value: Array<Option<string>>;
+  readonly onChange: (value: Array<Option<string>>) => void;
+  readonly keyword: string;
+  readonly setKeyword: (keyword: string) => void;
 };
 
 function OrganizationScopesSelect({ value, onChange, keyword, setKeyword }: Props) {

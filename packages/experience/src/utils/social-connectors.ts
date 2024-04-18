@@ -81,11 +81,11 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) =
     for (const connector of socialConnectors) {
       const { platform, target } = connector;
 
-      if (platform === 'Native') {
+      if (platform === ConnectorPlatform.Native) {
         continue;
       }
 
-      if (platform === 'Web' || !connectorMap.get(target)) {
+      if (platform === ConnectorPlatform.Web || !connectorMap.get(target)) {
         connectorMap.set(target, connector);
         continue;
       }
@@ -110,7 +110,7 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) =
   for (const connector of socialConnectors) {
     const { platform, target } = connector;
 
-    if (platform === 'Web') {
+    if (platform === ConnectorPlatform.Web) {
       continue;
     }
 
@@ -120,7 +120,10 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) =
     }
 
     // Native supported nativeTargets flag is required
-    if (platform === 'Native' && supportedConnector.nativeTargets.includes(target)) {
+    if (
+      platform === ConnectorPlatform.Native &&
+      supportedConnector.nativeTargets.includes(target)
+    ) {
       connectorMap.set(target, connector);
       continue;
     }
@@ -131,7 +134,7 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) =
      *  Only if there is no native platform connector provided with the same target.
      **/
     if (
-      platform === 'Universal' &&
+      platform === ConnectorPlatform.Universal &&
       supportedConnector.universal &&
       callbackLink &&
       !connectorMap.get(target)
@@ -168,11 +171,11 @@ export const filterPreviewSocialConnectors = (
     for (const connector of socialConnectors) {
       const { platform, target } = connector;
 
-      if (platform === 'Native') {
+      if (platform === ConnectorPlatform.Native) {
         continue;
       }
 
-      if (platform === 'Web' || !connectorMap.get(target)) {
+      if (platform === ConnectorPlatform.Web || !connectorMap.get(target)) {
         connectorMap.set(target, connector);
         continue;
       }
@@ -191,11 +194,11 @@ export const filterPreviewSocialConnectors = (
   for (const connector of socialConnectors) {
     const { platform, target } = connector;
 
-    if (platform === 'Web') {
+    if (platform === ConnectorPlatform.Web) {
       continue;
     }
 
-    if (platform === 'Native' || !connectorMap.get(target)) {
+    if (platform === ConnectorPlatform.Native || !connectorMap.get(target)) {
       connectorMap.set(target, connector);
       continue;
     }

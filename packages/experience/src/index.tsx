@@ -1,4 +1,4 @@
-/* eslint-disable-next-line import/no-unassigned-import */
+/* eslint-disable-next-line import/no-unassigned-import, unicorn/no-unnecessary-polyfills -- polyfill by design */
 import 'core-js/actual';
 import { createRoot } from 'react-dom/client';
 import ReactModal from 'react-modal';

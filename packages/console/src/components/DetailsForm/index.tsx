@@ -6,12 +6,12 @@ import SubmitFormChangesActionBar from '../SubmitFormChangesActionBar';
 import * as styles from './index.module.scss';
 
 type Props = {
-  autoComplete?: string;
-  isDirty: boolean;
-  isSubmitting: boolean;
-  onSubmit: () => Promise<void>;
-  onDiscard: () => void;
-  children: ReactNode;
+  readonly autoComplete?: string;
+  readonly isDirty: boolean;
+  readonly isSubmitting: boolean;
+  readonly onSubmit: () => Promise<void>;
+  readonly onDiscard: () => void;
+  readonly children: ReactNode;
 };
 
 function DetailsForm({

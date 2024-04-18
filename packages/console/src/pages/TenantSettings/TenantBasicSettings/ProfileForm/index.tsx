@@ -12,7 +12,7 @@ import TenantEnvironment from './TenantEnvironment/index.js';
 import TenantRegion from './TenantRegion/index.js';
 
 type Props = {
-  currentTenantId: string;
+  readonly currentTenantId: string;
 };
 
 function ProfileForm({ currentTenantId }: Props) {

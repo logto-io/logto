@@ -71,7 +71,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "6.0.0",
+    "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/inquirer": "^9.0.0",
     "@types/node": "^20.9.5",

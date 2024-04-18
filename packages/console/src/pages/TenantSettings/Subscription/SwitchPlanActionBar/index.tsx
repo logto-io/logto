@@ -21,9 +21,9 @@ import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
 import * as styles from './index.module.scss';
 
 type Props = {
-  currentSubscriptionPlanId: string;
-  subscriptionPlans: SubscriptionPlan[];
-  onSubscriptionUpdated: () => Promise<void>;
+  readonly currentSubscriptionPlanId: string;
+  readonly subscriptionPlans: SubscriptionPlan[];
+  readonly onSubscriptionUpdated: () => Promise<void>;
 };
 
 function SwitchPlanActionBar({

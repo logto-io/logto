@@ -29,8 +29,8 @@ type CreatedUserInfo = {
 };
 
 type Props = {
-  onClose: () => void;
-  onCreate: () => void;
+  readonly onClose: () => void;
+  readonly onCreate: () => void;
 };
 
 function CreateForm({ onClose, onCreate }: Props) {

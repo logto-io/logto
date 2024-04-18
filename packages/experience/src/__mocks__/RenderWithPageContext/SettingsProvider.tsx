@@ -7,8 +7,8 @@ import type { SignInExperienceResponse } from '@/types';
 import { mockSignInExperienceSettings } from '../logto';
 
 type Props = {
-  settings?: SignInExperienceResponse;
-  children: ReactElement;
+  readonly settings?: SignInExperienceResponse;
+  readonly children: ReactElement;
 };
 
 const SettingsProvider = ({ settings = mockSignInExperienceSettings, children }: Props) => {

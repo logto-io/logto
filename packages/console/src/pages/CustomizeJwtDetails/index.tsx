@@ -13,8 +13,8 @@ import { pageParamsGuard, type Action } from './type';
 import useDataFetch from './use-data-fetch';
 
 type Props = {
-  tokenType: LogtoJwtTokenKeyType;
-  action: Action;
+  readonly tokenType: LogtoJwtTokenKeyType;
+  readonly action: Action;
 };
 
 function Content({ tokenType, action }: Props) {

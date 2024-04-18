@@ -83,10 +83,6 @@ const selectVerticalAlignment = ({
 
       return verticalAlign;
     }
-
-    default: {
-      return verticalAlign;
-    }
   }
 };
 
@@ -157,10 +153,6 @@ const selectHorizontalAlignment = ({
         return 'center';
       }
 
-      return horizontalAlign;
-    }
-
-    default: {
       return horizontalAlign;
     }
   }

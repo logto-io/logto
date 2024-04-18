@@ -8,7 +8,7 @@ import { type ConnectorGroup } from '@/types/connector';
 import * as styles from './index.module.scss';
 
 type Props = {
-  data: ConnectorGroup<ConnectorFactoryResponse>;
+  readonly data: ConnectorGroup<ConnectorFactoryResponse>;
 };
 
 function ConnectorRadio({ data: { name, logo, logoDark, description } }: Props) {

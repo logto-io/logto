@@ -10,9 +10,9 @@ import {
 import useTheme from '@/hooks/use-theme';
 
 type Props = {
-  type: ApplicationType;
-  className?: string;
-  isThirdParty?: boolean;
+  readonly type: ApplicationType;
+  readonly className?: string;
+  readonly isThirdParty?: boolean;
 };
 
 const getIcon = (type: ApplicationType, isLightMode: boolean, isThirdParty?: boolean) => {

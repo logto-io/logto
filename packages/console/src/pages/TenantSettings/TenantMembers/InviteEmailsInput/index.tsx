@@ -16,11 +16,11 @@ import useEmailInputUtils from './hooks';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  values: InviteeEmailItem[];
-  onChange: (values: InviteeEmailItem[]) => void;
-  error?: string | boolean;
-  placeholder?: string;
+  readonly className?: string;
+  readonly values: InviteeEmailItem[];
+  readonly onChange: (values: InviteeEmailItem[]) => void;
+  readonly error?: string | boolean;
+  readonly placeholder?: string;
 };
 
 /**

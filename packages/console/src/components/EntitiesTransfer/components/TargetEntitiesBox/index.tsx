@@ -8,9 +8,9 @@ import TargetEntityItem from '../TargetEntityItem';
 import * as styles from './index.module.scss';
 
 type Props<T> = {
-  renderEntity: (entity: T) => React.ReactNode;
-  selectedEntities: T[];
-  onChange: (value: T[]) => void;
+  readonly renderEntity: (entity: T) => React.ReactNode;
+  readonly selectedEntities: T[];
+  readonly onChange: (value: T[]) => void;
 };
 
 function TargetEntitiesBox<T extends Identifiable>({

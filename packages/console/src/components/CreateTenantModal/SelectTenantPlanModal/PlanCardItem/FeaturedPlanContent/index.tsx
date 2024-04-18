@@ -7,7 +7,7 @@ import * as styles from './index.module.scss';
 import useFeaturedPlanContent from './use-featured-plan-content';
 
 type Props = {
-  planId: string;
+  readonly planId: string;
 };
 
 function FeaturedPlanContent({ planId }: Props) {

@@ -11,8 +11,8 @@ import { type SubscriptionPlanQuota } from '@/types/subscriptions';
 const quotaItemPhraseKeyPrefix = 'subscription.quota_item';
 
 type Props = {
-  quotaKey: keyof SubscriptionPlanQuota;
-  quotaValue: SubscriptionPlanQuota[keyof SubscriptionPlanQuota];
+  readonly quotaKey: keyof SubscriptionPlanQuota;
+  readonly quotaValue: SubscriptionPlanQuota[keyof SubscriptionPlanQuota];
 };
 
 function QuotaItemPhrase({ quotaKey, quotaValue }: Props) {

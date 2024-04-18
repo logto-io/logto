@@ -29,7 +29,7 @@ const radioOptions: RadioOption[] = [
 ];
 
 export type Props = {
-  onClose: (createdRole?: Role) => void;
+  readonly onClose: (createdRole?: Role) => void;
 };
 
 type CreateRoleFormData = Pick<Role, 'name' | 'description' | 'type'> & {

@@ -12,8 +12,8 @@ import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 
 type Props = {
-  user: UserProfileResponse;
-  onUpdate?: () => void;
+  readonly user: UserProfileResponse;
+  readonly onUpdate?: () => void;
 };
 
 function BasicUserInfoSection({ user, onUpdate }: Props) {

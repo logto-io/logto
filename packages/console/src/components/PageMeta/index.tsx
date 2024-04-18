@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
 export type Props = {
-  titleKey: AdminConsoleKey | AdminConsoleKey[];
+  readonly titleKey: AdminConsoleKey | AdminConsoleKey[];
 };
 
 function PageMeta({ titleKey }: Props) {

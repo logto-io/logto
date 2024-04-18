@@ -9,9 +9,9 @@ import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
 
 type Props = {
-  before: string[];
-  after: string[];
-  isAfter?: boolean;
+  readonly before: string[];
+  readonly after: string[];
+  readonly isAfter?: boolean;
 };
 
 function SocialTargetsDiffSection({ before, after, isAfter = false }: Props) {

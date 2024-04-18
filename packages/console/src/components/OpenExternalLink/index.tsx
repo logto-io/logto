@@ -5,7 +5,7 @@ import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';
 
 type Props = {
-  link: string;
+  readonly link: string;
 };
 
 function OpenExternalLink({ link }: Props) {

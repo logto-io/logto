@@ -4,11 +4,11 @@ import { type PropsWithChildren } from 'react';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
   /* The title of the panel, displayed in header */
-  label: string;
-  variant?: 'blue' | 'purple';
-  size?: 'medium' | 'small';
+  readonly label: string;
+  readonly variant?: 'blue' | 'purple';
+  readonly size?: 'medium' | 'small';
 };
 
 function Panel({ className, label, variant, size = 'medium', children }: PropsWithChildren<Props>) {

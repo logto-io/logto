@@ -26,14 +26,14 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  buttonAlignment?: 'left' | 'right';
-  buttonText?: ButtonProps['title'];
-  buttonSize?: ButtonProps['size'];
+  readonly className?: string;
+  readonly buttonAlignment?: 'left' | 'right';
+  readonly buttonText?: ButtonProps['title'];
+  readonly buttonSize?: ButtonProps['size'];
   /** Detailed instructions are displayed when creating from get-started page */
-  hasDetailedInstructions?: boolean;
-  hasRequiredLabel?: boolean;
-  onCreateSuccess?: (createdApp: Application) => void;
+  readonly hasDetailedInstructions?: boolean;
+  readonly hasRequiredLabel?: boolean;
+  readonly onCreateSuccess?: (createdApp: Application) => void;
 };
 
 function ProtectedAppForm({

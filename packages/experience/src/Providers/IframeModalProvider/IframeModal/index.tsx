@@ -10,10 +10,10 @@ import NavBar from '@/components/NavBar';
 import * as styles from './index.module.scss';
 
 type ModalProps = {
-  className?: string;
-  title?: string;
-  href?: string;
-  onClose: () => void;
+  readonly className?: string;
+  readonly title?: string;
+  readonly href?: string;
+  readonly onClose: () => void;
 };
 
 const IframeModal = ({ className, title = '', href = '', onClose }: ModalProps) => {

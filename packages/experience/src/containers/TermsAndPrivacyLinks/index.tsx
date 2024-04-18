@@ -2,7 +2,7 @@ import TermsLinks from '@/components/TermsLinks';
 import useTerms from '@/hooks/use-terms';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 const TermsAndPrivacyLinks = ({ className }: Props) => {

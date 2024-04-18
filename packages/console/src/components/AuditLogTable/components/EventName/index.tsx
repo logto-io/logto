@@ -9,9 +9,9 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as styles from './index.module.scss';
 
 type Props = {
-  eventKey: string;
-  isSuccess: boolean;
-  to?: string;
+  readonly eventKey: string;
+  readonly isSuccess: boolean;
+  readonly to?: string;
 };
 
 function EventName({ eventKey, isSuccess, to }: Props) {

@@ -9,11 +9,11 @@ import Spacer from '@/ds-components/Spacer';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title?: AdminConsoleKey;
-  subtitle?: AdminConsoleKey;
-  isOpen: boolean;
-  children: React.ReactNode;
-  onClose?: () => void;
+  readonly title?: AdminConsoleKey;
+  readonly subtitle?: AdminConsoleKey;
+  readonly isOpen: boolean;
+  readonly children: React.ReactNode;
+  readonly onClose?: () => void;
 };
 
 function Drawer({ title, subtitle, isOpen, children, onClose }: Props) {

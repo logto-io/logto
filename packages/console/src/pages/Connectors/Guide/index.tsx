@@ -38,8 +38,8 @@ import * as styles from './index.module.scss';
 const targetErrorCode = 'connector.multiple_target_with_same_platform';
 
 type Props = {
-  connector?: ConnectorFactoryResponse;
-  onClose: (id?: string) => void;
+  readonly connector?: ConnectorFactoryResponse;
+  readonly onClose: (id?: string) => void;
 };
 
 function Guide({ connector, onClose }: Props) {

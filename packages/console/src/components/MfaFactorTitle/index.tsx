@@ -19,7 +19,7 @@ const factorIcon: Record<MfaFactor, SvgComponent> = {
 };
 
 type Props = MfaFactorNameProps & {
-  tooltip?: ReactNode;
+  readonly tooltip?: ReactNode;
 };
 
 function MfaFactorTitle({ type, tooltip }: Props) {

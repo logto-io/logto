@@ -14,7 +14,7 @@ const logtoUrl = `https://logto.io/?${new URLSearchParams({
 }).toString()}`;
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 const LogtoSignature = ({ className }: Props) => {

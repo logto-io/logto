@@ -11,11 +11,11 @@ import CountryCodeDropdown from './CountryCodeDropdown';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  value?: string;
-  inputRef?: Nullable<HTMLInputElement>;
-  isVisible?: boolean;
-  onChange?: (value: string) => void;
+  readonly className?: string;
+  readonly value?: string;
+  readonly inputRef?: Nullable<HTMLInputElement>;
+  readonly isVisible?: boolean;
+  readonly onChange?: (value: string) => void;
 };
 
 const CountryCodeSelector = (

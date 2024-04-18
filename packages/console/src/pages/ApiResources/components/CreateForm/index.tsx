@@ -21,7 +21,7 @@ type FormData = {
 };
 
 type Props = {
-  onClose?: (createdApiResource?: Resource) => void;
+  readonly onClose?: (createdApiResource?: Resource) => void;
 };
 
 function CreateForm({ onClose }: Props) {

@@ -4,9 +4,9 @@ import Tag from '@/ds-components/Tag';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
 type Props = {
-  tenantData: TenantResponse;
-  tenantPlan: SubscriptionPlan;
-  className?: string;
+  readonly tenantData: TenantResponse;
+  readonly tenantPlan: SubscriptionPlan;
+  readonly className?: string;
 };
 
 function TenantStatusTag({ tenantData, tenantPlan, className }: Props) {

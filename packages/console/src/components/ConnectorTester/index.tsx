@@ -18,11 +18,11 @@ import { trySubmitSafe } from '@/utils/form';
 import * as styles from './index.module.scss';
 
 type Props = {
-  connectorFactoryId: string;
-  connectorType: Exclude<ConnectorType, ConnectorType.Social>;
-  className?: string;
-  parse: () => unknown;
-  updateUsage?: () => void;
+  readonly connectorFactoryId: string;
+  readonly connectorType: Exclude<ConnectorType, ConnectorType.Social>;
+  readonly className?: string;
+  readonly parse: () => unknown;
+  readonly updateUsage?: () => void;
 };
 
 type FormData = {

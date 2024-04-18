@@ -8,14 +8,14 @@ import Permission from '../Permission';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  label: string;
-  permissions?: string[];
-  tooltip?: string;
-  size?: 'default' | 'small';
-  isActive?: boolean;
-  onMouseOver?: () => void;
-  onMouseOut?: () => void;
+  readonly className?: string;
+  readonly label: string;
+  readonly permissions?: string[];
+  readonly tooltip?: string;
+  readonly size?: 'default' | 'small';
+  readonly isActive?: boolean;
+  readonly onMouseOver?: () => void;
+  readonly onMouseOut?: () => void;
 };
 
 function Role({

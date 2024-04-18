@@ -9,7 +9,7 @@ import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 
 type Props = {
-  data: Application;
+  readonly data: Application;
 };
 
 function RefreshTokenSettings({ data: { type } }: Props) {

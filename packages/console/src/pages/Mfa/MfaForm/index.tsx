@@ -27,8 +27,8 @@ import * as styles from './index.module.scss';
 import { convertMfaFormToConfig, convertMfaConfigToForm, validateBackupCodeFactor } from './utils';
 
 type Props = {
-  data: MfaConfig;
-  onMfaUpdated: (updatedData: MfaConfig) => void;
+  readonly data: MfaConfig;
+  readonly onMfaUpdated: (updatedData: MfaConfig) => void;
 };
 
 function MfaForm({ data, onMfaUpdated }: Props) {

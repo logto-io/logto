@@ -9,9 +9,12 @@ import * as styles from './index.module.scss';
 import { pickLogoForCurrentThemeHelper } from './utils';
 
 type Props = {
-  className?: string;
-  containerClassName?: string;
-  data: Pick<SsoConnectorWithProviderConfig, 'providerLogo' | 'providerLogoDark' | 'branding'>;
+  readonly className?: string;
+  readonly containerClassName?: string;
+  readonly data: Pick<
+    SsoConnectorWithProviderConfig,
+    'providerLogo' | 'providerLogoDark' | 'branding'
+  >;
 };
 
 /**

@@ -11,12 +11,12 @@ import IconButton from '../IconButton';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  children: ReactNode;
-  footer?: ReactNode;
-  onClose?: () => void;
-  className?: string;
-  size?: 'medium' | 'large' | 'xlarge';
-  headerIcon?: ReactElement;
+  readonly children: ReactNode;
+  readonly footer?: ReactNode;
+  readonly onClose?: () => void;
+  readonly className?: string;
+  readonly size?: 'medium' | 'large' | 'xlarge';
+  readonly headerIcon?: ReactElement;
 } & Pick<CardTitleProps, 'learnMoreLink' | 'title' | 'subtitle' | 'isWordWrapEnabled'>;
 
 function ModalLayout({

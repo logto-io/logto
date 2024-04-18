@@ -14,20 +14,20 @@ import type { Props as ModalLayoutProps } from '../ModalLayout';
 import * as styles from './index.module.scss';
 
 export type ConfirmModalProps = {
-  children: ReactNode;
-  className?: string;
-  title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  confirmButtonType?: ButtonType;
-  confirmButtonText?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  cancelButtonText?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  isOpen: boolean;
-  isConfirmButtonDisabled?: boolean;
-  isLoading?: boolean;
-  isCancelButtonVisible?: boolean;
-  size?: ModalLayoutProps['size'];
-  onCancel?: () => void;
-  onConfirm?: () => void;
+  readonly children: ReactNode;
+  readonly className?: string;
+  readonly title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly confirmButtonType?: ButtonType;
+  readonly confirmButtonText?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly cancelButtonText?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly isOpen: boolean;
+  readonly isConfirmButtonDisabled?: boolean;
+  readonly isLoading?: boolean;
+  readonly isCancelButtonVisible?: boolean;
+  readonly size?: ModalLayoutProps['size'];
+  readonly onCancel?: () => void;
+  readonly onConfirm?: () => void;
 };
 
 function ConfirmModal({

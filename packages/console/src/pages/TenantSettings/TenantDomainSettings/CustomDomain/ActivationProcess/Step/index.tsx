@@ -13,11 +13,11 @@ import ToggleTip from '@/ds-components/Tip/ToggleTip';
 import * as styles from './index.module.scss';
 
 type Props = {
-  step: number;
-  title: AdminConsoleKey;
-  tip?: AdminConsoleKey;
-  domainStatus: DomainStatus;
-  children?: ReactNode;
+  readonly step: number;
+  readonly title: AdminConsoleKey;
+  readonly tip?: AdminConsoleKey;
+  readonly domainStatus: DomainStatus;
+  readonly children?: ReactNode;
 };
 
 const domainStatusToStep: Record<DomainStatus, number> = {

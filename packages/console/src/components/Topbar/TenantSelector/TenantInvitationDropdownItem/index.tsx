@@ -13,7 +13,7 @@ import Button from '@/ds-components/Button';
 import * as styles from './index.module.scss';
 
 type Props = {
-  data: {
+  readonly data: {
     id: string;
     organizationId: string;
     tenantName: string;

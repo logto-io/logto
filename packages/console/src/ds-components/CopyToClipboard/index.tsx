@@ -23,15 +23,15 @@ import { Tooltip } from '../Tip';
 import * as styles from './index.module.scss';
 
 type Props = {
-  value: string;
-  className?: string;
-  style?: CSSProperties;
-  valueStyle?: CSSProperties;
-  variant?: 'text' | 'contained' | 'border' | 'icon';
-  hasVisibilityToggle?: boolean;
-  size?: 'default' | 'small';
-  isWordWrapAllowed?: boolean;
-  isFullWidth?: boolean;
+  readonly value: string;
+  readonly className?: string;
+  readonly style?: CSSProperties;
+  readonly valueStyle?: CSSProperties;
+  readonly variant?: 'text' | 'contained' | 'border' | 'icon';
+  readonly hasVisibilityToggle?: boolean;
+  readonly size?: 'default' | 'small';
+  readonly isWordWrapAllowed?: boolean;
+  readonly isFullWidth?: boolean;
 };
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;

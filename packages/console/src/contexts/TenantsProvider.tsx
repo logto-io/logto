@@ -78,7 +78,7 @@ export const TenantsContext = createContext<Tenants>({
 });
 
 type Props = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 /**

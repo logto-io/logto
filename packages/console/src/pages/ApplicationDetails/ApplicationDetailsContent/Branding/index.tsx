@@ -23,8 +23,8 @@ import useSignInExperienceSWR from './use-sign-in-experience-swr';
 import { formatFormToSubmitData, formatResponseDataToForm } from './utils';
 
 type Props = {
-  application: Application;
-  isActive: boolean; // Support for conditional render UnsavedChangesAlertModal component
+  readonly application: Application;
+  readonly isActive: boolean; // Support for conditional render UnsavedChangesAlertModal component
 };
 
 function Branding({ application, isActive }: Props) {

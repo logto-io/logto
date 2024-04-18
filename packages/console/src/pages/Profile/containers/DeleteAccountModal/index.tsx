@@ -10,8 +10,8 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 const mailToLink = `${contactEmailLink}?subject=Account%20Deletion%20Request`;

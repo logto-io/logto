@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid';
 
-const lowercaseAlphabet = '0123456789abcdefghijklmnopqrstuvwxyz' as const;
+const lowercaseAlphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
 const alphabet = `${lowercaseAlphabet}ABCDEFGHIJKLMNOPQRSTUVWXYZ` as const;
 
 type BuildIdGenerator = {

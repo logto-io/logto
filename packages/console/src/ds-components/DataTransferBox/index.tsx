@@ -23,13 +23,13 @@ import { type DataEntry, type DataGroup, type SelectedDataEntry } from './type';
  */
 
 export type Props<TEntry extends DataEntry> = {
-  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  selectedData: Array<SelectedDataEntry<TEntry>>;
-  setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
-  availableDataList?: TEntry[];
-  availableDataGroups?: Array<DataGroup<TEntry>>;
-  className?: string;
-  containerClassName?: string;
+  readonly title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly selectedData: Array<SelectedDataEntry<TEntry>>;
+  readonly setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
+  readonly availableDataList?: TEntry[];
+  readonly availableDataGroups?: Array<DataGroup<TEntry>>;
+  readonly className?: string;
+  readonly containerClassName?: string;
 };
 
 function DataTransferBox<TEntry extends DataEntry = DataEntry>({

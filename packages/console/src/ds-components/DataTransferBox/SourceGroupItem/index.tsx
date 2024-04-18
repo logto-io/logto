@@ -14,10 +14,10 @@ import { type DataEntry, type DataGroup, type SelectedDataEntry } from '../type'
 import * as styles from './index.module.scss';
 
 type Props<TEntry extends DataEntry> = {
-  dataGroup: DataGroup<TEntry>;
-  selectedGroupDataList: Array<SelectedDataEntry<TEntry>>;
-  onSelectDataGroup: (group: DataGroup<TEntry>) => void;
-  onSelectData: (data: TEntry) => void;
+  readonly dataGroup: DataGroup<TEntry>;
+  readonly selectedGroupDataList: Array<SelectedDataEntry<TEntry>>;
+  readonly onSelectDataGroup: (group: DataGroup<TEntry>) => void;
+  readonly onSelectData: (data: TEntry) => void;
 };
 
 /**

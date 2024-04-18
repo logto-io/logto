@@ -9,9 +9,9 @@ import ApiGuide from '../ApiGuide';
 import * as styles from './index.module.scss';
 
 type Props = {
-  guideId: string;
-  apiResource?: Resource;
-  onClose: () => void;
+  readonly guideId: string;
+  readonly apiResource?: Resource;
+  readonly onClose: () => void;
 };
 
 function GuideModal({ guideId, apiResource, onClose }: Props) {

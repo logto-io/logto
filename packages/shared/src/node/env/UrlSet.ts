@@ -28,7 +28,7 @@ export default class UrlSet {
   constructor(
     public readonly isHttpsEnabled: boolean,
     protected readonly defaultPort: number,
-    protected readonly envPrefix: string = ''
+    protected readonly envPrefix = ''
   ) {}
 
   public deduplicated(): URL[] {

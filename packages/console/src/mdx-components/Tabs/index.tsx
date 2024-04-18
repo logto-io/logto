@@ -13,8 +13,8 @@ import type { Props as TabItemProps } from '../TabItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  children: ReactElement<TabItemProps>;
+  readonly className?: string;
+  readonly children: ReactElement<TabItemProps>;
 };
 
 // A very rough duck type, but good enough to guard against mistakes while

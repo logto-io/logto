@@ -4,7 +4,7 @@ import { contactEmailLink } from '@/consts';
 import TextLink from '@/ds-components/TextLink';
 
 type Props = {
-  children?: ReactNode;
+  readonly children?: ReactNode;
 };
 
 function ContactUsPhraseLink({ children }: Props) {

@@ -17,7 +17,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@shopify/jest-koa-mocks": "^5.0.0",
-    "@silverhand/eslint-config": "6.0.0",
+    "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.11.20",
     "@types/supertest": "^6.0.2",

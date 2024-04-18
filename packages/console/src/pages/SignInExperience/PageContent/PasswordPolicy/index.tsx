@@ -21,10 +21,10 @@ import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper
 import * as styles from './index.module.scss';
 
 type PasswordOptionProps = {
-  name: FieldPath<SignInExperienceForm>;
-  title: string;
-  description: string;
-  children?: ReactNode;
+  readonly name: FieldPath<SignInExperienceForm>;
+  readonly title: string;
+  readonly description: string;
+  readonly children?: ReactNode;
 };
 
 /** A display component for password policy options with a title and description. */
@@ -54,7 +54,7 @@ function PasswordOption({ name, title, description, children }: PasswordOptionPr
 }
 
 type Props = {
-  isActive: boolean;
+  readonly isActive: boolean;
 };
 
 function PasswordPolicy({ isActive }: Props) {

@@ -8,10 +8,10 @@ import TargetRolesBox from './components/TargetRolesBox';
 import * as styles from './index.module.scss';
 
 type Props = {
-  entityId: string;
-  type: RoleType;
-  value: RoleResponse[];
-  onChange: (value: RoleResponse[]) => void;
+  readonly entityId: string;
+  readonly type: RoleType;
+  readonly value: RoleResponse[];
+  readonly onChange: (value: RoleResponse[]) => void;
 };
 
 function RolesTransfer({ entityId, type, value, onChange }: Props) {

@@ -6,7 +6,7 @@ import Success from '@/assets/icons/success.svg';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isSuccess: boolean;
+  readonly isSuccess: boolean;
 };
 
 function EventIcon({ isSuccess }: Props) {

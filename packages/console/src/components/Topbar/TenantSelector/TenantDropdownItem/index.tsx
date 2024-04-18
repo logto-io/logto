@@ -14,9 +14,9 @@ import TenantStatusTag from './TenantStatusTag';
 import * as styles from './index.module.scss';
 
 type Props = {
-  tenantData: TenantResponse;
-  isSelected: boolean;
-  onClick: () => void;
+  readonly tenantData: TenantResponse;
+  readonly isSelected: boolean;
+  readonly onClick: () => void;
 };
 
 function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {

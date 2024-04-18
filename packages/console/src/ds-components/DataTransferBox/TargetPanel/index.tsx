@@ -9,8 +9,8 @@ import { type DataEntry, type SelectedDataEntry } from '../type';
 import * as styles from './index.module.scss';
 
 type Props<TEntry extends DataEntry> = {
-  selectedData: Array<SelectedDataEntry<TEntry>>;
-  setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
+  readonly selectedData: Array<SelectedDataEntry<TEntry>>;
+  readonly setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
 };
 
 function TargetPanel<TEntry extends DataEntry>({ selectedData, setSelectedData }: Props<TEntry>) {

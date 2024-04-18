@@ -18,11 +18,11 @@ export type EditScopeData = {
 
 type Props = {
   /** The scope name displayed in the name input field */
-  scopeName: string;
+  readonly scopeName: string;
   /** The data to edit */
-  data: EditScopeData;
+  readonly data: EditScopeData;
   /** Determines the translation keys for texts in the editor modal */
-  text: {
+  readonly text: {
     /** The translation key of the modal title */
     title: AdminConsoleKey;
     /** The field name translation key for the name input */
@@ -32,8 +32,8 @@ type Props = {
     /** The placeholder translation key for the description input */
     descriptionPlaceholder: AdminConsoleKey;
   };
-  onSubmit: (editedData: EditScopeData) => Promise<void>;
-  onClose: () => void;
+  readonly onSubmit: (editedData: EditScopeData) => Promise<void>;
+  readonly onClose: () => void;
 };
 
 function EditScopeModal({ scopeName, data, text, onClose, onSubmit }: Props) {

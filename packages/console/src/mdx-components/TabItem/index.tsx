@@ -8,10 +8,10 @@
 import type { ReactNode } from 'react';
 
 export type Props = {
-  children: ReactNode;
-  className?: string;
-  value: string;
-  label?: string;
+  readonly children: ReactNode;
+  readonly className?: string;
+  readonly value: string;
+  readonly label?: string;
 };
 
 function TabItem({ children, ...rest }: Props): JSX.Element {

@@ -42,7 +42,7 @@ const buildTabPathWithPagePagination = (page: number, tab?: keyof typeof tabs) =
 };
 
 type Props = {
-  tab?: keyof typeof tabs;
+  readonly tab?: keyof typeof tabs;
 };
 
 function Applications({ tab }: Props) {

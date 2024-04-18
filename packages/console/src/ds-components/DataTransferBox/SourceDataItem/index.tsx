@@ -6,9 +6,9 @@ import type { DataEntry } from '../type';
 import * as styles from './index.module.scss';
 
 type Props<TEntry extends DataEntry> = {
-  data: TEntry;
-  isSelected: boolean;
-  onSelect: (data: TEntry) => void;
+  readonly data: TEntry;
+  readonly isSelected: boolean;
+  readonly onSelect: (data: TEntry) => void;
 };
 
 function SourceDataItem<TEntry extends DataEntry>({ data, isSelected, onSelect }: Props<TEntry>) {

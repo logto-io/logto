@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  name: string;
+  readonly className?: string;
+  readonly name: string;
   /* If the text in this component is displayed in monospace font. Defaults to `true` */
-  isMonospace?: boolean;
+  readonly isMonospace?: boolean;
 };
 
 function Permission({ className, name, isMonospace = true }: Props) {

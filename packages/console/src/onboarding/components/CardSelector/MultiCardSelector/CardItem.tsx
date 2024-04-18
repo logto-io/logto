@@ -10,10 +10,10 @@ import type { MultiCardSelectorOption } from '../types';
 import * as styles from './CardItem.module.scss';
 
 type Props = {
-  option: MultiCardSelectorOption;
-  isSelected: boolean;
-  onClick: (value: string) => void;
-  className?: string;
+  readonly option: MultiCardSelectorOption;
+  readonly isSelected: boolean;
+  readonly onClick: (value: string) => void;
+  readonly className?: string;
 };
 
 function CardItem({

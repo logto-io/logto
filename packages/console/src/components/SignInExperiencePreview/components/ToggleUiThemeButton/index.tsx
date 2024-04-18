@@ -9,11 +9,11 @@ import type { Props as ButtonProps } from '@/ds-components/Button';
 import * as styles from './index.module.scss';
 
 type Props = {
-  value: Theme;
-  onToggle: (value: Theme) => void;
-  className?: string;
-  iconClassName?: string;
-  size?: ButtonProps['size'];
+  readonly value: Theme;
+  readonly onToggle: (value: Theme) => void;
+  readonly className?: string;
+  readonly iconClassName?: string;
+  readonly size?: ButtonProps['size'];
 };
 
 function ToggleUiThemeButton({

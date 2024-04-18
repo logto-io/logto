@@ -16,9 +16,9 @@ const isUserScope = (scope: string): scope is UserScope =>
   Object.values<string>(UserScope).includes(scope);
 
 type ScopeGroupProps = {
-  groupName: string;
-  isAutoExpand?: boolean;
-  scopes: Array<{
+  readonly groupName: string;
+  readonly isAutoExpand?: boolean;
+  readonly scopes: Array<{
     id: string;
     name: string;
     description?: Nullable<string>; // Organization scope description cloud be `null`
@@ -59,12 +59,12 @@ const ScopeGroup = ({ groupName, scopes, isAutoExpand = false }: ScopeGroupProps
 };
 
 type Props = {
-  userScopes: ConsentInfoResponse['missingOIDCScope'];
-  resourceScopes: ConsentInfoResponse['missingResourceScopes'];
-  appName: string;
-  className?: string;
-  termsUrl?: string;
-  privacyUrl?: string;
+  readonly userScopes: ConsentInfoResponse['missingOIDCScope'];
+  readonly resourceScopes: ConsentInfoResponse['missingResourceScopes'];
+  readonly appName: string;
+  readonly className?: string;
+  readonly termsUrl?: string;
+  readonly privacyUrl?: string;
 };
 
 const ScopesListCard = ({

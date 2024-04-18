@@ -7,9 +7,9 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './index.module.scss';
 
 type Props = {
-  role: RoleResponse;
-  isSelected: boolean;
-  onSelect: () => void;
+  readonly role: RoleResponse;
+  readonly isSelected: boolean;
+  readonly onSelect: () => void;
 };
 
 function SourceRoleItem({ role, isSelected, onSelect }: Props) {

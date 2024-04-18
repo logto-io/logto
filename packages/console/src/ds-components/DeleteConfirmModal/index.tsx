@@ -6,16 +6,16 @@ import ConfirmModal from '@/ds-components/ConfirmModal';
 import TextInput from '@/ds-components/TextInput';
 
 type Props = {
-  isOpen: boolean;
-  isLoading?: boolean;
-  children: ReactNode;
-  expectedInput?: string;
-  inputPlaceholder?: string;
-  className?: string;
-  onCancel: () => void;
-  onConfirm: () => void;
-  title?: AdminConsoleKey;
-  confirmButtonText?: AdminConsoleKey;
+  readonly isOpen: boolean;
+  readonly isLoading?: boolean;
+  readonly children: ReactNode;
+  readonly expectedInput?: string;
+  readonly inputPlaceholder?: string;
+  readonly className?: string;
+  readonly onCancel: () => void;
+  readonly onConfirm: () => void;
+  readonly title?: AdminConsoleKey;
+  readonly confirmButtonText?: AdminConsoleKey;
 };
 
 function DeleteConfirmModal({

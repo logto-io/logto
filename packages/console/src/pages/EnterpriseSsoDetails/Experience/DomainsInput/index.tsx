@@ -20,11 +20,11 @@ export type DomainsFormType = {
 };
 
 type Props = {
-  className?: string;
-  values: Option[];
-  onChange: (values: Option[]) => void;
-  error?: string | boolean;
-  placeholder?: AdminConsoleKey;
+  readonly className?: string;
+  readonly values: Option[];
+  readonly onChange: (values: Option[]) => void;
+  readonly error?: string | boolean;
+  readonly placeholder?: AdminConsoleKey;
 };
 
 function DomainsInput({ className, values, onChange: rawOnChange, error, placeholder }: Props) {

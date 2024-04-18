@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import * as styles from './index.module.scss';
 
 type Props = {
-  currentStep: number;
-  totalSteps: number;
+  readonly currentStep: number;
+  readonly totalSteps: number;
 };
 
 function ProgressBar({ currentStep, totalSteps }: Props) {

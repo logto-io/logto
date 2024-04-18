@@ -7,10 +7,10 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  index?: number;
-  title: string;
-  subtitle?: string;
-  children: ReactNode;
+  readonly index?: number;
+  readonly title: string;
+  readonly subtitle?: string;
+  readonly children: ReactNode;
 };
 
 function Step({ title, subtitle, index, children }: Props, ref?: Ref<HTMLDivElement>) {

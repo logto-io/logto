@@ -5,8 +5,8 @@ import * as styles from './index.module.scss';
 export { default as TabNavItem } from './TabNavItem';
 
 type Props = {
-  className?: string;
-  children: React.ReactNode;
+  readonly className?: string;
+  readonly children: React.ReactNode;
 };
 
 function TabNav({ className, children }: Props) {

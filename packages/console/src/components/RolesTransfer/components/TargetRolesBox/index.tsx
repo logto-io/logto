@@ -8,8 +8,8 @@ import TargetRoleItem from '../TargetRoleItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  selectedRoles: RoleResponse[];
-  onChange: (value: RoleResponse[]) => void;
+  readonly selectedRoles: RoleResponse[];
+  readonly onChange: (value: RoleResponse[]) => void;
 };
 
 function TargetRolesBox({ selectedRoles, onChange }: Props) {

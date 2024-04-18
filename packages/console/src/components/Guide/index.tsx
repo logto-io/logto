@@ -31,11 +31,11 @@ export type GuideContextType = {
 };
 
 type Props = {
-  className?: string;
-  guideId: string;
-  isEmpty?: boolean;
-  isLoading?: boolean;
-  onClose: () => void;
+  readonly className?: string;
+  readonly guideId: string;
+  readonly isEmpty?: boolean;
+  readonly isLoading?: boolean;
+  readonly onClose: () => void;
 };
 
 export const GuideContext = createContext<GuideContextType>({

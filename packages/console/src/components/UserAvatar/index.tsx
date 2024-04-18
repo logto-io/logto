@@ -13,13 +13,13 @@ import * as styles from './index.module.scss';
 type UserInfo = Pick<User, 'name' | 'username' | 'avatar' | 'primaryEmail' | 'primaryPhone'>;
 
 type Props = {
-  className?: string;
-  size?: 'micro' | 'small' | 'medium' | 'large' | 'xlarge';
-  user?: Partial<UserInfo>;
-  hasTooltip?: boolean;
+  readonly className?: string;
+  readonly size?: 'micro' | 'small' | 'medium' | 'large' | 'xlarge';
+  readonly user?: Partial<UserInfo>;
+  readonly hasTooltip?: boolean;
 };
 
-function UserInfoTipContent({ user }: { user: Partial<UserInfo> }) {
+function UserInfoTipContent({ user }: { readonly user: Partial<UserInfo> }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { name, primaryEmail, primaryPhone, username } = user;
   const itemsToDisplay = [

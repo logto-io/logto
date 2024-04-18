@@ -17,13 +17,13 @@ import * as styles from './index.module.scss';
 import type { MultiTextInputError } from './types';
 
 export type Props = {
-  title: AdminConsoleKey;
-  value?: string[];
-  onChange: (value: string[]) => void;
-  onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
-  error?: MultiTextInputError;
-  placeholder?: string;
-  className?: string;
+  readonly title: AdminConsoleKey;
+  readonly value?: string[];
+  readonly onChange: (value: string[]) => void;
+  readonly onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
+  readonly error?: MultiTextInputError;
+  readonly placeholder?: string;
+  readonly className?: string;
 };
 
 function MultiTextInput({

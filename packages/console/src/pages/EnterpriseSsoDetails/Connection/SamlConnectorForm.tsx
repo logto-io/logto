@@ -27,9 +27,9 @@ import SamlConnectorSpInfo from './ServiceProviderInfo/SamlConnectorSpInfo';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isDeleted: boolean;
-  data: SamlSsoConnectorWithProviderConfig;
-  onUpdated: (data: SamlSsoConnectorWithProviderConfig) => void;
+  readonly isDeleted: boolean;
+  readonly data: SamlSsoConnectorWithProviderConfig;
+  readonly onUpdated: (data: SamlSsoConnectorWithProviderConfig) => void;
 };
 
 const manualHandleErrorCodes: LogtoErrorCode[] = [invalidConfigErrorCode, invalidMetadataErrorCode];

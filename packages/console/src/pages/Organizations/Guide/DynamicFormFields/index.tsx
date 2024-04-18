@@ -11,13 +11,13 @@ import IconButton from '@/ds-components/IconButton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  title?: AdminConsoleKey;
-  fields: Array<Record<'id', string>>;
-  isLoading?: boolean;
-  onAdd: () => void;
-  onRemove: (index: number) => void;
-  render: (index: number) => ReactNode;
+  readonly className?: string;
+  readonly title?: AdminConsoleKey;
+  readonly fields: Array<Record<'id', string>>;
+  readonly isLoading?: boolean;
+  readonly onAdd: () => void;
+  readonly onRemove: (index: number) => void;
+  readonly render: (index: number) => ReactNode;
 };
 
 function Skeleton() {

@@ -5,9 +5,9 @@ import TextLink from '@/components/TextLink';
 import { UserFlow } from '@/types';
 
 type Props = {
-  className?: string;
-  method: SignInIdentifier.Email | SignInIdentifier.Phone;
-  target: string;
+  readonly className?: string;
+  readonly method: SignInIdentifier.Email | SignInIdentifier.Phone;
+  readonly target: string;
 };
 
 const PasswordSignInLink = ({ className, method, target }: Props) => {

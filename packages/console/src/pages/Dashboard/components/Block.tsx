@@ -15,11 +15,11 @@ import { formatNumberWithComma } from '@/utils/number';
 import * as styles from './Block.module.scss';
 
 type Props = {
-  count: number;
-  delta?: number;
-  title: AdminConsoleKey;
-  tip?: ToggleTipProps['content'];
-  variant?: 'bordered' | 'default' | 'plain';
+  readonly count: number;
+  readonly delta?: number;
+  readonly title: AdminConsoleKey;
+  readonly tip?: ToggleTipProps['content'];
+  readonly variant?: 'bordered' | 'default' | 'plain';
 };
 
 function Block({ variant = 'default', count, delta, title, tip }: Props) {

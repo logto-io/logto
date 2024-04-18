@@ -16,10 +16,10 @@ const isUserEntity = (entity: User | Application): entity is User =>
   'customData' in entity || 'identities' in entity;
 
 type Props = {
-  roleId: string;
-  roleType: RoleType;
-  isRemindSkip?: boolean;
-  onClose: (success?: boolean) => void;
+  readonly roleId: string;
+  readonly roleType: RoleType;
+  readonly isRemindSkip?: boolean;
+  readonly onClose: (success?: boolean) => void;
 };
 
 function AssignRoleModal<T extends Application | User>({

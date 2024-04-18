@@ -12,8 +12,8 @@ import NotFound from '@/pages/NotFound';
 import * as styles from './index.module.scss';
 
 type Props = {
-  ssoConnector?: SsoConnectorWithProviderConfig;
-  className?: string;
+  readonly ssoConnector?: SsoConnectorWithProviderConfig;
+  readonly className?: string;
 };
 
 function SsoGuide({ ssoConnector, className }: Props) {

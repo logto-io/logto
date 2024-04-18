@@ -14,10 +14,10 @@ type Props = {
    * plan has NO access to the feature (paywall), but it will always be visible for dev
    * tenants.
    */
-  isVisible: boolean;
+  readonly isVisible: boolean;
   /** The minimum plan required to use the feature. */
-  plan: Exclude<ReservedPlanId, ReservedPlanId.Free | ReservedPlanId.Development>;
-  className?: string;
+  readonly plan: Exclude<ReservedPlanId, ReservedPlanId.Free | ReservedPlanId.Development>;
+  readonly className?: string;
 };
 
 /**

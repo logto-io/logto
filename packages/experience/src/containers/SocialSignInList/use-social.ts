@@ -1,4 +1,4 @@
-import type { ConnectorMetadata } from '@logto/schemas';
+import { ConnectorPlatform, type ConnectorMetadata } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
@@ -18,7 +18,7 @@ const useSocial = () => {
     const { id: connectorId, platform } = connector;
 
     const redirectUri =
-      platform === 'Universal'
+      platform === ConnectorPlatform.Universal
         ? buildSocialLandingUri(`/social/landing/${connectorId}`, redirectTo).toString()
         : redirectTo;
 

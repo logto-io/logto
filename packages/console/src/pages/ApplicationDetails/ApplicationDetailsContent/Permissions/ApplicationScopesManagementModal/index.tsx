@@ -24,9 +24,9 @@ import { type ScopesTableRowDataType, type UserScopeTableRowDataType } from '../
 export type EditableScopeData = Exclude<ScopesTableRowDataType, UserScopeTableRowDataType>;
 
 type Props = {
-  scope?: EditableScopeData;
-  onClose: () => void;
-  onSubmit: (scope: EditableScopeData) => void;
+  readonly scope?: EditableScopeData;
+  readonly onClose: () => void;
+  readonly onSubmit: (scope: EditableScopeData) => void;
 };
 
 function ApplicationScopesManagementModal({ scope, onClose, onSubmit }: Props) {

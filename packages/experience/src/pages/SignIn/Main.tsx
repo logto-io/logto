@@ -7,8 +7,8 @@ import PasswordSignInForm from './PasswordSignInForm';
 import * as styles from './index.module.scss';
 
 type Props = {
-  signInMethods: SignIn['methods'];
-  socialConnectors: ConnectorMetadata[];
+  readonly signInMethods: SignIn['methods'];
+  readonly socialConnectors: ConnectorMetadata[];
 };
 
 const Main = ({ signInMethods, socialConnectors }: Props) => {

@@ -93,7 +93,7 @@
   },
   "devDependencies": {
     "@logto/cloud": "0.2.5-821690c",
-    "@silverhand/eslint-config": "6.0.0",
+    "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/debug": "^4.1.7",
     "@types/etag": "^1.8.1",

@@ -19,16 +19,16 @@ import * as styles from './index.module.scss';
 const fileSizeLimit = 500 * 1024; // 500 KB
 
 export type Props = {
-  onChange: (fileContent?: string) => void;
-  value?: string;
-  attributes: {
+  readonly onChange: (fileContent?: string) => void;
+  readonly value?: string;
+  readonly attributes: {
     accept: Accept; // File reader accepted file types.
     buttonTitle: AdminConsoleKey; // I18n key for the button title.
     defaultFilename: string; // Default file name.
     defaultFileMimeType: string; // Default file MIME type when calculating the file size.
   };
-  fieldError?: FieldError;
-  setError: (error: FieldError) => void;
+  readonly fieldError?: FieldError;
+  readonly setError: (error: FieldError) => void;
 };
 
 function FileReader({ onChange, value, attributes, fieldError, setError }: Props) {

@@ -10,9 +10,9 @@ import { formatPeriod } from '@/utils/subscription';
 import * as styles from './index.module.scss';
 
 type Props = {
-  subscriptionUsage: SubscriptionUsage;
-  currentSubscription: Subscription;
-  currentPlan: SubscriptionPlan;
+  readonly subscriptionUsage: SubscriptionUsage;
+  readonly currentSubscription: Subscription;
+  readonly currentPlan: SubscriptionPlan;
 };
 
 function PlanUsage({ subscriptionUsage, currentSubscription, currentPlan }: Props) {

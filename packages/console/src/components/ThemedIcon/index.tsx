@@ -1,8 +1,8 @@
 import * as styles from './index.module.scss';
 
 type Props = {
-  for: SvgComponent;
-  size?: number;
+  readonly for: SvgComponent;
+  readonly size?: number;
 };
 
 /**

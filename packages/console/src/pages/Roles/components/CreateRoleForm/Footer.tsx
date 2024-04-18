@@ -13,10 +13,10 @@ import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 import { buildUrl } from '@/utils/url';
 
 type Props = {
-  roleType: RoleType;
-  selectedScopesCount: number;
-  isCreating: boolean;
-  onClickCreate: () => void;
+  readonly roleType: RoleType;
+  readonly selectedScopesCount: number;
+  readonly isCreating: boolean;
+  readonly onClickCreate: () => void;
 };
 
 function Footer({ roleType, selectedScopesCount, isCreating, onClickCreate }: Props) {

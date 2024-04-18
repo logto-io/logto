@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  isActive: boolean;
-  className?: string;
-  children: ReactNode;
+  readonly isActive: boolean;
+  readonly className?: string;
+  readonly children: ReactNode;
 };
 
 function TabWrapper({ isActive, className, children }: Props) {

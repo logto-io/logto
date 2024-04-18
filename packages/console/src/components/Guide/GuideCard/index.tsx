@@ -19,10 +19,10 @@ export type SelectedGuide = {
 };
 
 type Props = {
-  data: Guide;
-  onClick: (data: SelectedGuide) => void;
-  hasBorder?: boolean;
-  hasButton?: boolean;
+  readonly data: Guide;
+  readonly onClick: (data: SelectedGuide) => void;
+  readonly hasBorder?: boolean;
+  readonly hasButton?: boolean;
 };
 
 function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {

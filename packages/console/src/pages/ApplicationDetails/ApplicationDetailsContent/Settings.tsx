@@ -19,7 +19,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import ProtectedAppSettings from './ProtectedAppSettings';
 
 type Props = {
-  data: Application;
+  readonly data: Application;
 };
 
 function Settings({ data }: Props) {

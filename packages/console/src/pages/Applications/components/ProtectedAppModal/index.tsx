@@ -7,7 +7,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import ProtectedAppForm from '../ProtectedAppForm';
 
 type Props = {
-  onClose?: (createdApp?: Application) => void;
+  readonly onClose?: (createdApp?: Application) => void;
 };
 
 function ProtectedAppModal({ onClose }: Props) {

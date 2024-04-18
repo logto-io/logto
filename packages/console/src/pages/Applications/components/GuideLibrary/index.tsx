@@ -27,9 +27,9 @@ import ProtectedAppCard from '../ProtectedAppCard';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  hasCardBorder?: boolean;
-  hasCardButton?: boolean;
+  readonly className?: string;
+  readonly hasCardBorder?: boolean;
+  readonly hasCardButton?: boolean;
 };
 
 function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {

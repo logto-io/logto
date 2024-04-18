@@ -31,7 +31,7 @@ const tabs = Object.freeze({
 });
 
 type Props = {
-  tab?: keyof typeof tabs;
+  readonly tab?: keyof typeof tabs;
 };
 
 function Organizations({ tab }: Props) {

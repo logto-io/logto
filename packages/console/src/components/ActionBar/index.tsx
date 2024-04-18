@@ -5,9 +5,9 @@ import ProgressBar from '../ProgressBar';
 import * as styles from './index.module.scss';
 
 type Props = {
-  step: number;
-  totalSteps: number;
-  children: ReactNode;
+  readonly step: number;
+  readonly totalSteps: number;
+  readonly children: ReactNode;
 };
 
 function ActionBar({ step, totalSteps, children }: Props) {

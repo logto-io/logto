@@ -5,8 +5,8 @@ import { forwardRef } from 'react';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: ReactNode;
-  className?: string;
+  readonly children: ReactNode;
+  readonly className?: string;
 };
 
 function Card(props: Props, reference?: Ref<HTMLDivElement>) {

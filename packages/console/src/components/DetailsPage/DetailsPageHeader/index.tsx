@@ -53,45 +53,45 @@ type Props = {
   /**
    * The main 60x60 icon on the very left
    */
-  icon: ReactElement<HTMLElement>;
+  readonly icon: ReactElement<HTMLElement>;
   /**
    * The main title of the header
    */
-  title: ReactNode;
+  readonly title: ReactNode;
   /**
    * Shows a subtitle in the second row
    * Example usage: Secondary information of the user (if any) in user details page
    */
-  subtitle?: ReactNode;
+  readonly subtitle?: ReactNode;
   /**
    * Shows a tag in the second row of the header metadata
    * Example usage: Application type "Native / SPA / Traditional"
    */
-  primaryTag?: ReactNode;
+  readonly primaryTag?: ReactNode;
   /**
    * Shows a status tag in the second row of the header metadata
    * Example usage: Connector status "In use / Not in use" in connector details page
    */
-  statusTag?: StatusTag;
+  readonly statusTag?: StatusTag;
   /**
    * Shows the entity identifier in a "Copy to clipboard" component
    * Example usage: "App ID" in application details page
    */
-  identifier?: Identifier;
+  readonly identifier?: Identifier;
   /**
    * Shows an additional action button in the header, next to the "...(More)" button
    * Example usage: "Check Guide" button in application details page
    */
-  additionalActionButton?: AdditionalActionButton;
+  readonly additionalActionButton?: AdditionalActionButton;
   /**
    * Shows additional custom element in the header, next to the "...(More)" button
    * Example usage (special use case): "Total email sent (count)" in Logto email connector
    */
-  additionalCustomElement?: ReactElement<ResponsiveCustomElement>;
+  readonly additionalCustomElement?: ReactElement<ResponsiveCustomElement>;
   /**
    * Dropdown action menu items nested in the "...(More)" button
    */
-  actionMenuItems?: MenuItem[];
+  readonly actionMenuItems?: MenuItem[];
 };
 
 function DetailsPageHeader({

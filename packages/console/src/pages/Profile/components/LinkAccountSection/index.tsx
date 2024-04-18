@@ -27,9 +27,9 @@ import NotSet from '../NotSet';
 import * as styles from './index.module.scss';
 
 type Props = {
-  user: UserProfileResponse;
-  connectors?: ConnectorResponse[];
-  onUpdate: () => void;
+  readonly user: UserProfileResponse;
+  readonly connectors?: ConnectorResponse[];
+  readonly onUpdate: () => void;
 };
 
 function LinkAccountSection({ user, connectors, onUpdate }: Props) {

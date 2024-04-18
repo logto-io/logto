@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const scopeOpenid = 'openid' as const;
+const scopeOpenid = 'openid';
 export const delimiter = /[ +]/;
 
 // Space-delimited 'scope' MUST contain 'openid', see https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth

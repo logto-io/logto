@@ -14,8 +14,8 @@ import PlanQuotaDiffCard from './PlanQuotaDiffCard';
 import * as styles from './index.module.scss';
 
 type Props = {
-  currentPlan: SubscriptionPlan;
-  targetPlan: SubscriptionPlan;
+  readonly currentPlan: SubscriptionPlan;
+  readonly targetPlan: SubscriptionPlan;
 };
 
 const excludeComingSoonFeatures = (

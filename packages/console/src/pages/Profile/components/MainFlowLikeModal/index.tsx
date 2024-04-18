@@ -13,11 +13,11 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import * as styles from './index.module.scss';
 
 type Props = PropsWithChildren<{
-  title: AdminConsoleKey;
-  subtitle?: AdminConsoleKey;
-  subtitleProps?: Record<string, string>;
-  onClose: () => void;
-  onGoBack?: () => void;
+  readonly title: AdminConsoleKey;
+  readonly subtitle?: AdminConsoleKey;
+  readonly subtitleProps?: Record<string, string>;
+  readonly onClose: () => void;
+  readonly onGoBack?: () => void;
 }>;
 
 function MainFlowLikeModal({ title, subtitle, subtitleProps, children, onClose, onGoBack }: Props) {

@@ -29,8 +29,8 @@ const isOidcInvalidGrantError = (error: Error) => {
 };
 
 type Props = {
-  children: ReactNode;
-  t: TFunction<'translation', 'admin_console'>;
+  readonly children: ReactNode;
+  readonly t: TFunction<'translation', 'admin_console'>;
 };
 
 type State = {

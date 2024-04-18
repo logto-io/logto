@@ -21,7 +21,7 @@ export const IframeModalContext = createContext<
 export const useIframeModal = () => useContext(IframeModalContext);
 
 type Props = {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 };
 
 const IframeModalProvider = ({ children }: Props) => {

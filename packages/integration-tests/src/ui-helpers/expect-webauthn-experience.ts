@@ -64,9 +64,7 @@ export default class ExpectWebAuthnExperience extends ExpectMfaExperience {
   }
 
   private async getCdpClient() {
-    if (!this._cdpClient) {
-      this._cdpClient = await this.page.target().createCDPSession();
-    }
+    this._cdpClient ||= await this.page.target().createCDPSession();
     return this._cdpClient;
   }
 }

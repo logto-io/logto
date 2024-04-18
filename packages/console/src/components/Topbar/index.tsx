@@ -13,7 +13,7 @@ import UserInfo from './UserInfo';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 function Topbar({ className }: Props) {

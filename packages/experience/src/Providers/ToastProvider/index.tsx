@@ -5,7 +5,7 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 import Toast from '@/components/Toast';
 
 type Props = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 const ToastProvider = ({ children }: Props) => {

@@ -6,12 +6,12 @@ import CardItem from './CardItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  options: MultiCardSelectorOption[];
-  value: string[];
-  onChange: (value: string[]) => void;
-  isNotAllowEmpty?: boolean;
-  className?: string;
-  optionClassName?: string;
+  readonly options: MultiCardSelectorOption[];
+  readonly value: string[];
+  readonly onChange: (value: string[]) => void;
+  readonly isNotAllowEmpty?: boolean;
+  readonly className?: string;
+  readonly optionClassName?: string;
 };
 
 function MultiCardSelector({

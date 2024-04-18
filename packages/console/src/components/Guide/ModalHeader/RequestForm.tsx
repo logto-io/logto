@@ -13,12 +13,12 @@ import useCurrentUser from '@/hooks/use-current-user';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 type Props = {
-  title: AdminConsoleKey;
-  fieldLabel: AdminConsoleKey;
-  fieldPlaceholder: AdminConsoleKey;
-  successMessage: AdminConsoleKey;
-  isOpen: boolean;
-  onClose: () => void;
+  readonly title: AdminConsoleKey;
+  readonly fieldLabel: AdminConsoleKey;
+  readonly fieldPlaceholder: AdminConsoleKey;
+  readonly successMessage: AdminConsoleKey;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 export default function RequestForm({

@@ -11,8 +11,8 @@ import { type MfaFlowState } from '@/types/guard';
 import * as styles from './index.module.scss';
 
 type Props = {
-  flow: UserMfaFlow;
-  flowState: MfaFlowState;
+  readonly flow: UserMfaFlow;
+  readonly flowState: MfaFlowState;
 };
 
 const MfaFactorList = ({ flow, flowState }: Props) => {

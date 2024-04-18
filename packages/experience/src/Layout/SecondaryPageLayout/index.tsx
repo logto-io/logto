@@ -11,14 +11,14 @@ import { InlineNotification } from '../../components/Notification';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: TFuncKey;
-  description?: TFuncKey | ReactElement | '';
-  titleProps?: Record<string, unknown>;
-  descriptionProps?: Record<string, unknown>;
-  notification?: TFuncKey;
-  onSkip?: () => void;
-  isNavBarHidden?: boolean;
-  children: React.ReactNode;
+  readonly title: TFuncKey;
+  readonly description?: TFuncKey | ReactElement | '';
+  readonly titleProps?: Record<string, unknown>;
+  readonly descriptionProps?: Record<string, unknown>;
+  readonly notification?: TFuncKey;
+  readonly onSkip?: () => void;
+  readonly isNavBarHidden?: boolean;
+  readonly children: React.ReactNode;
 };
 
 const SecondaryPageLayout = ({

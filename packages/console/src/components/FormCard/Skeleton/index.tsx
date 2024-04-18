@@ -3,7 +3,7 @@ import FormCardLayout from '../FormCardLayout';
 import * as styles from './index.module.scss';
 
 type Props = {
-  formFieldCount?: number;
+  readonly formFieldCount?: number;
 };
 
 function Skeleton({ formFieldCount = 4 }: Props) {

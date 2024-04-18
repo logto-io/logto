@@ -15,13 +15,13 @@ import Skeleton from './Skeleton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  backLink: To;
-  backLinkTitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  isLoading?: boolean;
-  error?: RequestError;
-  onRetry?: () => void;
-  children: ReactNode;
-  className?: string;
+  readonly backLink: To;
+  readonly backLinkTitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly isLoading?: boolean;
+  readonly error?: RequestError;
+  readonly onRetry?: () => void;
+  readonly children: ReactNode;
+  readonly className?: string;
 };
 
 function DetailsPage({

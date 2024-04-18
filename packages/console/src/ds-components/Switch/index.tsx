@@ -5,8 +5,8 @@ import { forwardRef } from 'react';
 import * as styles from './index.module.scss';
 
 type Props = Omit<HTMLProps<HTMLInputElement>, 'label'> & {
-  label?: ReactNode;
-  hasError?: boolean;
+  readonly label?: ReactNode;
+  readonly hasError?: boolean;
 };
 
 function Switch({ label, hasError, ...rest }: Props, ref?: Ref<HTMLInputElement>) {

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 type Props = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 function AppBoundary({ children }: Props) {

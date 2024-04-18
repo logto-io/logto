@@ -1,9 +1,9 @@
 import * as styles from './index.module.scss';
 
 type Props = {
-  columnSpans: number[];
+  readonly columnSpans: number[];
   /** For the compact inline style table */
-  isCompact?: boolean;
+  readonly isCompact?: boolean;
 };
 
 function Skeleton({ columnSpans, isCompact }: Props) {

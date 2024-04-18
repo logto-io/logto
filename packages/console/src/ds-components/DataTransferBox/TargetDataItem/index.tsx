@@ -6,8 +6,8 @@ import { type DataEntry, type SelectedDataEntry } from '../type';
 import * as styles from './index.module.scss';
 
 type Props<TEntry extends DataEntry> = {
-  data: SelectedDataEntry<TEntry>;
-  onDelete: (data: SelectedDataEntry<TEntry>) => void;
+  readonly data: SelectedDataEntry<TEntry>;
+  readonly onDelete: (data: SelectedDataEntry<TEntry>) => void;
 };
 
 function TargetDataItem<TEntry extends DataEntry>({ data, onDelete }: Props<TEntry>) {

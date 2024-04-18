@@ -13,9 +13,9 @@ import type { ConnectorGroup } from '@/types/connector';
 import * as styles from './index.module.scss';
 
 type Props = {
-  options: ConnectorGroup[];
-  onSelected: (signInIdentifier: string) => void;
-  hasSelectedConnectors: boolean;
+  readonly options: ConnectorGroup[];
+  readonly onSelected: (signInIdentifier: string) => void;
+  readonly hasSelectedConnectors: boolean;
 };
 
 function AddButton({ options, onSelected, hasSelectedConnectors }: Props) {

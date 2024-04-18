@@ -40,8 +40,8 @@ const hookServerRequestListener: RequestListener = (request, response) => {
   // eslint-disable-next-line @silverhand/fp/no-mutation
   response.statusCode = 204;
 
-  const data: Buffer[] = [];
-  request.on('data', (chunk: Buffer) => {
+  const data: Uint8Array[] = [];
+  request.on('data', (chunk: Uint8Array) => {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     data.push(chunk);
   });

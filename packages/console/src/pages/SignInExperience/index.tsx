@@ -16,7 +16,7 @@ import Welcome from './Welcome';
 import * as styles from './index.module.scss';
 
 type PageWrapperProps = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 function PageWrapper({ children }: PageWrapperProps) {

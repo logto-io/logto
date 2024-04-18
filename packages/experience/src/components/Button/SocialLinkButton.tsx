@@ -5,12 +5,12 @@ import * as socialLinkButtonStyles from './SocialLinkButton.module.scss';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  isDisabled?: boolean;
-  className?: string;
-  target: string;
-  logo: string;
-  name: Record<string, string>;
-  onClick?: () => void;
+  readonly isDisabled?: boolean;
+  readonly className?: string;
+  readonly target: string;
+  readonly logo: string;
+  readonly name: Record<string, string>;
+  readonly onClick?: () => void;
 };
 
 const SocialLinkButton = ({ isDisabled, className, target, name, logo, onClick }: Props) => {

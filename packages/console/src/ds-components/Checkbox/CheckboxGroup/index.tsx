@@ -15,10 +15,10 @@ type Option<T> = {
 };
 
 type Props<T> = {
-  options: Array<Option<T>>;
-  value: T[];
-  onChange: (value: T[]) => void;
-  className?: string;
+  readonly options: Array<Option<T>>;
+  readonly value: T[];
+  readonly onChange: (value: T[]) => void;
+  readonly className?: string;
 };
 
 function CheckboxGroup<T extends string>({

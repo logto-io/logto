@@ -22,8 +22,8 @@ export const SubscriptionDataContext = createContext<Context>({
 });
 
 type Props = {
-  subscriptionData: Context;
-  children: ReactNode;
+  readonly subscriptionData: Context;
+  readonly children: ReactNode;
 };
 
 function SubscriptionDataProvider({ children, subscriptionData }: Props) {

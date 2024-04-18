@@ -4,9 +4,9 @@ import ReactModal from 'react-modal';
 import * as styles from './index.module.scss';
 
 type Props = {
-  message: string;
-  duration?: number;
-  callback?: () => void;
+  readonly message: string;
+  readonly duration?: number;
+  readonly callback?: () => void;
 };
 
 const Toast = ({ message, duration = 3000, callback }: Props) => {

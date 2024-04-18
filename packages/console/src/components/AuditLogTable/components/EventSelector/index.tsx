@@ -4,9 +4,9 @@ import { logEventTitle } from '@/consts/logs';
 import Select, { type Option } from '@/ds-components/Select';
 
 type Props = {
-  value?: string;
-  onChange: (value?: string) => void;
-  options?: Array<Option<string>>;
+  readonly value?: string;
+  readonly onChange: (value?: string) => void;
+  readonly options?: Array<Option<string>>;
 };
 
 const defaultEventOptions = Object.entries(logEventTitle).map(([value, title]) => ({

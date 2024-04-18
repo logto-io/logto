@@ -8,7 +8,7 @@ import useCurrentUser from '@/hooks/use-current-user';
 import * as styles from './index.module.scss';
 
 type Props = {
-  onClickSwitch: () => void;
+  readonly onClickSwitch: () => void;
 };
 
 function SwitchAccount({ onClickSwitch }: Props) {

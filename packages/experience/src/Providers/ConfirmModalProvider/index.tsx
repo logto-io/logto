@@ -33,7 +33,7 @@ export const ConfirmModalContext = createContext<ConfirmModalContextType>({
 });
 
 type Props = {
-  children?: React.ReactNode;
+  readonly children?: React.ReactNode;
 };
 
 const defaultModalState: ConfirmModalState = {

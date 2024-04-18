@@ -13,9 +13,9 @@ import * as mfaFactorButtonStyles from './MfaFactorButton.module.scss';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  factor: MfaFactor;
-  isBinding: boolean;
-  onClick?: () => void;
+  readonly factor: MfaFactor;
+  readonly isBinding: boolean;
+  readonly onClick?: () => void;
 };
 
 const factorIcon: Record<MfaFactor, SvgComponent> = {

@@ -26,9 +26,9 @@ const excludedQuotaKeys = new Set<keyof SubscriptionPlanQuota>([
 ]);
 
 type Props = {
-  targetPlan: SubscriptionPlan;
-  exceededQuotaKeys: Array<keyof SubscriptionPlanQuota>;
-  isDowngrade?: boolean;
+  readonly targetPlan: SubscriptionPlan;
+  readonly exceededQuotaKeys: Array<keyof SubscriptionPlanQuota>;
+  readonly isDowngrade?: boolean;
 };
 
 function NotEligibleSwitchPlanModalContent({

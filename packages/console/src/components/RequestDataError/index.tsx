@@ -12,9 +12,9 @@ import useTheme from '@/hooks/use-theme';
 import * as styles from './index.module.scss';
 
 type Props = {
-  error: RequestError;
-  onRetry?: () => void;
-  className?: string;
+  readonly error: RequestError;
+  readonly onRetry?: () => void;
+  readonly className?: string;
 };
 
 function RequestDataError({ error, onRetry, className }: Props) {

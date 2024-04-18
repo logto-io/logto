@@ -9,7 +9,7 @@ import Step from './Step';
 import * as styles from './index.module.scss';
 
 type Props = {
-  customDomain: CustomDomain;
+  readonly customDomain: CustomDomain;
 };
 
 function ActivationProcess({ customDomain }: Props) {

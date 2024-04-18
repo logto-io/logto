@@ -18,19 +18,19 @@ import ConnectorSetupWarning from '../../components/ConnectorSetupWarning';
 import * as styles from './index.module.scss';
 
 type Props = {
-  signInMethod: SignInMethod;
-  isPasswordCheckable: boolean;
-  isVerificationCodeCheckable: boolean;
-  isDeletable: boolean;
-  requiredConnectors: ConnectorType[];
-  hasError?: boolean;
-  errorMessage?: string;
-  onVerificationStateChange: (
+  readonly signInMethod: SignInMethod;
+  readonly isPasswordCheckable: boolean;
+  readonly isVerificationCodeCheckable: boolean;
+  readonly isDeletable: boolean;
+  readonly requiredConnectors: ConnectorType[];
+  readonly hasError?: boolean;
+  readonly errorMessage?: string;
+  readonly onVerificationStateChange: (
     verification: 'password' | 'verificationCode',
     checked: boolean
   ) => void;
-  onToggleVerificationPrimary: () => void;
-  onDelete: () => void;
+  readonly onToggleVerificationPrimary: () => void;
+  readonly onDelete: () => void;
 };
 
 function SignInMethodItem({

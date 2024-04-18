@@ -12,7 +12,7 @@ import * as styles from './index.module.scss';
 const SocialIdentityNotification = ({
   missingProfileTypes,
 }: {
-  missingProfileTypes: VerificationCodeIdentifier[];
+  readonly missingProfileTypes: VerificationCodeIdentifier[];
 }) => {
   const { t } = useTranslation();
   const { state } = useLocation();

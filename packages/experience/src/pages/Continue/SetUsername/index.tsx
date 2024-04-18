@@ -8,7 +8,7 @@ import IdentifierProfileForm from '../IdentifierProfileForm';
 import useSetUsername from './use-set-username';
 
 type Props = {
-  notification?: TFuncKey;
+  readonly notification?: TFuncKey;
 };
 
 const SetUsername = (props: Props) => {

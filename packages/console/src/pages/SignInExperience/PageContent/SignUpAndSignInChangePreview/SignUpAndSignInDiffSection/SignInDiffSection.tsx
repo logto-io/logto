@@ -13,9 +13,9 @@ import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
 
 type Props = {
-  before: SignInMethod[];
-  after: SignInMethod[];
-  isAfter?: boolean;
+  readonly before: SignInMethod[];
+  readonly after: SignInMethod[];
+  readonly isAfter?: boolean;
 };
 
 function SignInDiffSection({ before, after, isAfter = false }: Props) {

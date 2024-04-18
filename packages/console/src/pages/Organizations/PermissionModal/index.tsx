@@ -18,9 +18,9 @@ import { trySubmitSafe } from '@/utils/form';
 export const organizationScopesPath = 'api/organization-scopes';
 
 type Props = {
-  isOpen: boolean;
-  editData: Nullable<OrganizationScope>;
-  onClose: () => void;
+  readonly isOpen: boolean;
+  readonly editData: Nullable<OrganizationScope>;
+  readonly onClose: () => void;
 };
 
 /** A modal that allows users to create or edit an organization scope. */

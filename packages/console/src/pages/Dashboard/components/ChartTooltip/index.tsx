@@ -3,8 +3,8 @@ import { formatNumberWithComma } from '@/utils/number';
 import * as styles from './index.module.scss';
 
 type Props = {
-  label?: string;
-  payload?: Array<{ payload: { count: number; date: string } }>;
+  readonly label?: string;
+  readonly payload?: Array<{ payload: { count: number; date: string } }>;
 };
 
 function ChartTooltip({ label, payload }: Props) {

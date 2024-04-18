@@ -7,10 +7,10 @@ import IconButton from '@/ds-components/IconButton';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  title: string;
-  content: ReactNode;
-  className?: string;
-  onClose: () => void;
+  readonly title: string;
+  readonly content: ReactNode;
+  readonly className?: string;
+  readonly onClose: () => void;
 };
 
 function Dashboard({ title, content, className, onClose }: Props) {

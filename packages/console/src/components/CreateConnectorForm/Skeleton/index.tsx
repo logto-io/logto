@@ -6,7 +6,7 @@ import * as radioGroupStyles from '../ConnectorRadioGroup/index.module.scss';
 import * as styles from './index.module.scss';
 
 type Props = {
-  numberOfLoadingConnectors?: number;
+  readonly numberOfLoadingConnectors?: number;
 };
 
 function Skeleton({ numberOfLoadingConnectors = 8 }: Props) {

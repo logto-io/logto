@@ -9,9 +9,9 @@ import AppGuide from '../components/AppGuide';
 import * as styles from './index.module.scss';
 
 type Props = {
-  guideId: string;
-  app?: ApplicationResponse;
-  onClose: () => void;
+  readonly guideId: string;
+  readonly app?: ApplicationResponse;
+  readonly onClose: () => void;
 };
 
 function GuideModal({ guideId, app, onClose }: Props) {

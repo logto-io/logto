@@ -19,7 +19,7 @@ const noConnectorWarningPhrase = Object.freeze({
 }) satisfies NoConnectorWarningPhrase;
 
 type Props = {
-  requiredConnectors: ConnectorType[];
+  readonly requiredConnectors: ConnectorType[];
 };
 
 function ConnectorSetupWarning({ requiredConnectors }: Props) {

@@ -22,9 +22,9 @@ import * as styles from './index.module.scss';
 import { compareConnectors, getConnectorRadioGroupSize, getModalTitle } from './utils';
 
 type Props = {
-  isOpen: boolean;
-  type?: ConnectorType;
-  onClose?: (connectorId?: string) => void;
+  readonly isOpen: boolean;
+  readonly type?: ConnectorType;
+  readonly onClose?: (connectorId?: string) => void;
 };
 
 function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {

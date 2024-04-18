@@ -10,7 +10,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
 
 type Props = {
-  tokenType: LogtoJwtTokenKeyType;
+  readonly tokenType: LogtoJwtTokenKeyType;
 };
 
 function CreateButton({ tokenType }: Props) {

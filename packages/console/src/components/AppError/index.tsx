@@ -12,11 +12,11 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title?: string;
-  errorCode?: string;
-  errorMessage?: string;
-  callStack?: string;
-  children?: React.ReactNode;
+  readonly title?: string;
+  readonly errorCode?: string;
+  readonly errorMessage?: string;
+  readonly callStack?: string;
+  readonly children?: React.ReactNode;
 };
 
 function AppError({ title, errorCode, errorMessage, callStack, children }: Props) {

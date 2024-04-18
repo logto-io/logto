@@ -10,7 +10,7 @@ import { appearanceModeGuard, DynamicAppearanceMode } from '@/types/appearance-m
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 type Context = {

@@ -6,7 +6,7 @@ import usePreview from './use-preview';
 import useSignInExperience from './use-sign-in-experience';
 
 type Props = {
-  children: React.ReactElement;
+  readonly children: React.ReactElement;
 };
 
 const SettingsProvider = ({ children }: Props) => {

@@ -30,10 +30,10 @@ type FormData = {
 };
 
 type Props = {
-  isDefaultCreateThirdParty?: boolean;
-  defaultCreateType?: ApplicationType;
-  defaultCreateFrameworkName?: string;
-  onClose?: (createdApp?: Application) => void;
+  readonly isDefaultCreateThirdParty?: boolean;
+  readonly defaultCreateType?: ApplicationType;
+  readonly defaultCreateFrameworkName?: string;
+  readonly onClose?: (createdApp?: Application) => void;
 };
 
 function CreateForm({

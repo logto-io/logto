@@ -25,7 +25,7 @@ import GuideCard, { CardType } from './GuideCard';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isActive: boolean;
+  readonly isActive: boolean;
 };
 
 /* Instructions and environment variable settings for the custom JWT claims script. */

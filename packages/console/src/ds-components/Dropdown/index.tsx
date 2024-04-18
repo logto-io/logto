@@ -20,18 +20,18 @@ import * as styles from './index.module.scss';
 export { default as DropdownItem } from './DropdownItem';
 
 type Props = {
-  children: ReactNode;
-  title?: ReactNode;
-  isOpen: boolean;
-  onClose?: () => void;
-  anchorRef: RefObject<HTMLElement>;
-  isFullWidth?: boolean;
-  className?: string;
-  titleClassName?: string;
-  horizontalAlign?: HorizontalAlignment;
-  hasOverflowContent?: boolean;
+  readonly children: ReactNode;
+  readonly title?: ReactNode;
+  readonly isOpen: boolean;
+  readonly onClose?: () => void;
+  readonly anchorRef: RefObject<HTMLElement>;
+  readonly isFullWidth?: boolean;
+  readonly className?: string;
+  readonly titleClassName?: string;
+  readonly horizontalAlign?: HorizontalAlignment;
+  readonly hasOverflowContent?: boolean;
   /** Set to `true` to directly render the dropdown without the overlay. */
-  noOverlay?: true;
+  readonly noOverlay?: true;
 };
 
 function Div({

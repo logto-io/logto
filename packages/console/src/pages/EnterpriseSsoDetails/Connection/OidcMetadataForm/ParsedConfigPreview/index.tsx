@@ -6,8 +6,8 @@ import { type OidcProviderConfig } from '@/pages/EnterpriseSsoDetails/types/oidc
 import * as styles from './index.module.scss';
 
 type Props = {
-  providerConfig: OidcProviderConfig;
-  className?: string;
+  readonly providerConfig: OidcProviderConfig;
+  readonly className?: string;
 };
 
 function ParsedConfigPreview({ providerConfig, className }: Props) {
