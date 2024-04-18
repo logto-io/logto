@@ -1,4 +1,7 @@
 import { createMockUtils } from '@logto/shared/esm';
+import Sinon from 'sinon';
+
+import { EnvSet } from '#src/env-set/index.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -26,7 +29,7 @@ mockEsm('redis', () => ({
   }),
 }));
 
-const { RedisCache, RedisClusterCache } = await import('./index.js');
+const { RedisCache, RedisClusterCache, redisCacheFactory } = await import('./index.js');
 
 describe('RedisCache', () => {
   it('should successfully construct with no REDIS_URL', async () => {
@@ -46,8 +49,13 @@ describe('RedisCache', () => {
   it('should successfully construct with a Redis client', async () => {
     for (const url of ['1', 'redis://url']) {
       jest.clearAllMocks();
-      const cache = new RedisCache(url);
+      const stub = Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        redisUrl: url,
+      });
 
+      const cache = redisCacheFactory();
+      expect(cache instanceof RedisCache).toBeTruthy();
       expect(cache.client).toBeTruthy();
 
       // eslint-disable-next-line no-await-in-loop
@@ -61,14 +69,20 @@ describe('RedisCache', () => {
 
       // Do sanity check only
       expect(mockFunction).toBeCalledTimes(6);
+      stub.restore();
     }
   });
 
   it('should successfully construct with a Redis Cluster client', async () => {
-    for (const url of ['redis://url', 'redis:?host=h1&host=h2&host=h3']) {
+    for (const url of ['redis://url?cluster=1', 'redis:?host=h1&host=h2&host=h3&cluster=true']) {
       jest.clearAllMocks();
-      const cache = new RedisClusterCache(new URL(url));
+      const stub = Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        redisUrl: url,
+      });
 
+      const cache = redisCacheFactory();
+      expect(cache instanceof RedisClusterCache).toBeTruthy();
       expect(cache.client).toBeTruthy();
 
       // eslint-disable-next-line no-await-in-loop
@@ -82,6 +96,7 @@ describe('RedisCache', () => {
 
       // Do sanity check only
       expect(mockFunction).toBeCalledTimes(6);
+      stub.restore();
     }
   });
 });
