@@ -139,6 +139,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
             // eslint-disable-next-line no-restricted-syntax
             context: { user: logtoUserInfo as Record<string, Json> },
           },
+      search: {},
     });
   } catch (error: unknown) {
     const entry = new LogEntry(

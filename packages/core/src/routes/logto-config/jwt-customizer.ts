@@ -86,6 +86,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
         await deployJwtCustomizerScript(cloudConnection, {
           key,
           value: body,
+          useCase: 'production',
         });
       }
 
@@ -129,6 +130,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
         await deployJwtCustomizerScript(cloudConnection, {
           key,
           value: body,
+          useCase: 'production',
         });
       }
 
@@ -228,7 +230,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
             ? LogtoJwtTokenKey.AccessToken
             : LogtoJwtTokenKey.ClientCredentials,
         value: body,
-        isTest: true,
+        useCase: 'test',
       });
 
       const client = await cloudConnection.getClient();
@@ -236,6 +238,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       try {
         ctx.body = await client.post(`/api/services/custom-jwt`, {
           body,
+          search: { isTest: 'true' },
         });
       } catch (error: unknown) {
         /**

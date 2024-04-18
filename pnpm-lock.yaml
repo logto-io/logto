@@ -1211,8 +1211,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-821690c
-        version: 0.2.5-821690c(zod@3.22.4)
+        specifier: 0.2.5-e5d8200
+        version: 0.2.5-e5d8200(zod@3.22.4)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.7
         version: 25.0.7(rollup@4.12.0)
@@ -2688,8 +2688,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-821690c
-        version: 0.2.5-821690c(zod@3.22.4)
+        specifier: 0.2.5-e5d8200
+        version: 0.2.5-e5d8200(zod@3.22.4)
       '@logto/connector-kit':
         specifier: workspace:^3.0.0
         version: link:../toolkit/connector-kit
@@ -3184,8 +3184,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-821690c
-        version: 0.2.5-821690c(zod@3.22.4)
+        specifier: 0.2.5-e5d8200
+        version: 0.2.5-e5d8200(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -6690,8 +6690,8 @@ packages:
       jose: 5.2.2
     dev: true
 
-  /@logto/cloud@0.2.5-821690c(zod@3.22.4):
-    resolution: {integrity: sha512-eVTlJxknWbvmaeaitKzPPMTx6C4GK4TLTb97hFr91E2u6SwKP+csE3oMBgL7ZdoDLOGG+nY+j08JpVMQ8QdOWw==}
+  /@logto/cloud@0.2.5-e5d8200(zod@3.22.4):
+    resolution: {integrity: sha512-/ZPaiIU7ORfKtNqsopVg4jxDt/sM6CGAGny06ppv/2FNsL7h8rX6JXOUyyKmT6ffCh/K/5s2HZe7v86zx5gENQ==}
     engines: {node: ^20.9.0}
     dependencies:
       '@silverhand/essentials': 2.9.0
@@ -17833,6 +17833,9 @@ packages:
     resolution: {integrity: sha512-2GTVocFkwblV/TIg9AmT7TI2fO4xdWkyN8aFUEVtiVNWt96GTR3FgQyHFValfCbcj1k9Xf962Ws2hYXYUr9k1Q==}
     engines: {node: '>= 12.0.0'}
     hasBin: true
+    peerDependenciesMeta:
+      '@parcel/core':
+        optional: true
     dependencies:
       '@parcel/config-default': 2.9.3(@parcel/core@2.9.3)(postcss@8.4.31)
       '@parcel/core': 2.9.3

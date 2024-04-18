@@ -10,12 +10,16 @@ import {
 } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import chalk from 'chalk';
+import deepmerge from 'deepmerge';
 import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
-import { getJwtCustomizerScripts } from '#src/utils/custom-jwt.js';
+import {
+  getJwtCustomizerScripts,
+  type CustomJwtDeployRequestBody,
+} from '#src/utils/custom-jwt/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -143,14 +147,14 @@ export const createLogtoConfigLibrary = ({
    * @params payload - The latest JWT customizer payload needs to be deployed.
    * @params payload.key - The tokenType of the JWT customizer.
    * @params payload.value - JWT customizer value
-   * @params payload.isTest - Whether the JWT customizer is for test environment.
+   * @params payload.useCase - The use case of JWT customizer script, can be either `test` or `production`.
    */
   const deployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(
     cloudConnection: CloudConnectionLibrary,
     payload: {
       key: T;
       value: JwtCustomizerType[T];
-      isTest?: boolean;
+      useCase: 'test' | 'production';
     }
   ) => {
     const [client, jwtCustomizers] = await Promise.all([
@@ -160,17 +164,24 @@ export const createLogtoConfigLibrary = ({
 
     const customizerScriptsFromDatabase = getJwtCustomizerScripts(jwtCustomizers);
 
-    const newCustomizerScripts: { [key in LogtoJwtTokenKey]?: string } = {
-      [payload.key]: payload.value.script,
+    const newCustomizerScripts: CustomJwtDeployRequestBody = {
+      /**
+       * There are at most 4 custom JWT scripts in the `CustomJwtDeployRequestBody`-typed object,
+       * and can be indexed by `data[CustomJwtType][UseCase]`.
+       *
+       * Per our design, each script will be deployed as a API endpoint in the Cloudflare
+       * worker service. A production script will be deployed to `/api/custom-jwt`
+       * endpoint and a test script will be deployed to `/api/custom-jwt/test` endpoint.
+       *
+       * If the current use case is `test`, then the script should be deployed to a `/test` endpoint;
+       * otherwise, the script should be deployed to the `/api/custom-jwt` endpoint and overwrite
+       * previous handler of the API endpoint.
+       */
+      [payload.key]: { [payload.useCase]: payload.value.script },
     };
 
     await client.put(`/api/services/custom-jwt/worker`, {
-      body: {
-        production: payload.isTest
-          ? customizerScriptsFromDatabase
-          : { ...customizerScriptsFromDatabase, ...newCustomizerScripts },
-        test: payload.isTest ? newCustomizerScripts : undefined,
-      },
+      body: deepmerge(customizerScriptsFromDatabase, newCustomizerScripts),
     });
   };
 
@@ -191,16 +202,17 @@ export const createLogtoConfigLibrary = ({
       return;
     }
 
-    // Remove the JWT customizer script from the existing JWT customizer scripts and redeploy.
+    // Remove the JWT customizer script (of given `key`) from the existing JWT customizer scripts and redeploy.
     const customizerScriptsFromDatabase = getJwtCustomizerScripts(jwtCustomizers);
+    const newCustomizerScripts: CustomJwtDeployRequestBody = {
+      [key]: {
+        production: undefined,
+        test: undefined,
+      },
+    };
 
     await client.put(`/api/services/custom-jwt/worker`, {
-      body: {
-        production: {
-          ...customizerScriptsFromDatabase,
-          [key]: undefined,
-        },
-      },
+      body: deepmerge(customizerScriptsFromDatabase, newCustomizerScripts),
     });
   };
 

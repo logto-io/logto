@@ -111,6 +111,7 @@ function InstructionTab({ isActive }: Props) {
           language="typescript"
           className={styles.sampleCode}
           value={environmentVariablesCodeExample}
+          path="file:///env-variables-sample.js"
           height="400px"
           theme="logto-dark"
           options={sampleCodeEditorOptions}
