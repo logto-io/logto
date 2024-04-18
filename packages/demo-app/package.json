@@ -27,7 +27,7 @@
     "@parcel/core": "2.9.3",
     "@parcel/transformer-sass": "2.9.3",
     "@silverhand/eslint-config": "6.0.1",
-    "@silverhand/eslint-config-react": "6.0.1",
+    "@silverhand/eslint-config-react": "6.0.2",
     "@silverhand/ts-config": "6.0.0",
     "@silverhand/ts-config-react": "6.0.0",
     "@types/react": "^18.0.31",
@@ -44,7 +44,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-i18next": "^12.3.1",
-    "stylelint": "^16.0.0",
+    "stylelint": "^15.0.0",
     "typescript": "^5.3.3",
     "zod": "^3.22.4"
   },

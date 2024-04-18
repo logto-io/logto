@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/eslint-config-react": "6.0.2",
     "@silverhand/ts-config": "6.0.0",
     "@silverhand/ts-config-react": "6.0.0",
     "@types/color": "^3.0.3",
@@ -61,7 +62,7 @@
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.0",
-    "stylelint": "^16.0.0",
+    "stylelint": "^15.0.0",
     "typescript": "^5.3.3",
     "vitest": "^1.4.0"
   },
