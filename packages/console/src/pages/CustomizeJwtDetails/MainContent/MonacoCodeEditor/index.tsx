@@ -98,10 +98,17 @@ function MonacoCodeEditor({
     }
 
     if (activeModel.language === 'typescript') {
+      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+        noSemanticValidation: false,
+        noSyntaxValidation: false,
+      });
+
       // Set the typescript compiler options
       monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
         allowNonTsExtensions: true,
         strictNullChecks: true,
+        allowJs: true,
+        checkJs: true,
       });
     }
   }, [activeModel, monaco, environmentVariablesDefinition]);
