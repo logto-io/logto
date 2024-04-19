@@ -30,8 +30,8 @@ type Props = {
   readonly variant?: 'text' | 'contained' | 'border' | 'icon';
   readonly hasVisibilityToggle?: boolean;
   readonly size?: 'default' | 'small';
+  readonly displayType?: 'block' | 'inline';
   readonly isWordWrapAllowed?: boolean;
-  readonly isFullWidth?: boolean;
 };
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;
@@ -46,7 +46,7 @@ function CopyToClipboard(
     variant = 'contained',
     size = 'default',
     isWordWrapAllowed = false,
-    isFullWidth = false,
+    displayType = 'inline',
   }: Props,
   ref: ForwardedRef<HTMLDivElement>
 ) {
@@ -90,7 +90,7 @@ function CopyToClipboard(
         styles.container,
         styles[variant],
         styles[size],
-        isFullWidth && styles.fullWidth,
+        styles[displayType],
         className
       )}
       role="button"

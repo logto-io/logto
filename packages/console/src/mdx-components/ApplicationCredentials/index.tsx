@@ -34,12 +34,17 @@ function ApplicationCredentials() {
             </Trans>
           )}
         >
-          <CopyToClipboard isFullWidth value={id} variant="border" />
+          <CopyToClipboard displayType="block" value={id} variant="border" />
         </FormField>
       )}
       {secret && (
         <FormField title="application_details.application_secret">
-          <CopyToClipboard isFullWidth hasVisibilityToggle value={secret} variant="border" />
+          <CopyToClipboard
+            hasVisibilityToggle
+            displayType="block"
+            value={secret}
+            variant="border"
+          />
         </FormField>
       )}
     </div>

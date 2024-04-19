@@ -5,8 +5,6 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
 
-import * as styles from './index.module.scss';
-
 type Props = {
   readonly ssoConnectorId: string;
 };
@@ -19,7 +17,7 @@ function OidcConnectorSpInfo({ ssoConnectorId }: Props) {
     <FormField title="enterprise_sso.basic_info.oidc.redirect_uri_field_name">
       {/* Generated and passed in by Admin console. */}
       <CopyToClipboard
-        className={styles.copyToClipboard}
+        displayType="block"
         variant="border"
         value={applyCustomDomain(new URL(`/callback/${ssoConnectorId}`, tenantEndpoint).toString())}
       />

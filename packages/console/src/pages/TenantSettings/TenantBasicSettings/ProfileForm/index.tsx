@@ -28,7 +28,7 @@ function ProfileForm({ currentTenantId }: Props) {
   return (
     <FormCard title="tenants.settings.title" description="tenants.settings.description">
       <FormField title="tenants.settings.tenant_id">
-        <CopyToClipboard isFullWidth value={currentTenantId} variant="border" />
+        <CopyToClipboard displayType="block" value={currentTenantId} variant="border" />
       </FormField>
       <FormField isRequired title="tenants.settings.tenant_name">
         <TextInput

@@ -25,7 +25,7 @@ function OidcCallbackUri() {
       className={styles.inputField}
     >
       <CopyToClipboard
-        className={styles.copyToClipboard}
+        displayType="block"
         variant="border"
         value={applyCustomDomain(new URL(`/callback/${id}`, tenantEndpoint).toString())}
       />
