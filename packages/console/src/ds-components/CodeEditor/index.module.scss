@@ -25,7 +25,7 @@
     right: _.unit(3);
     opacity: 0%;
     transition: opacity 0.2s ease-in-out;
-    z-index: 1;
+    @include _.z-index(front);
     cursor: pointer;
   }
 

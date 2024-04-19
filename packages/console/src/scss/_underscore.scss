@@ -96,3 +96,23 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+$allowed-z-indexes: (
+  base: 0,
+  front: 1,
+  behind: -1,
+  modal-backdrop: 100,
+  modal: 101,
+  confirm-modal: 102,
+  dropdown: 199,
+  tooltip: 200,
+);
+
+@mixin z-index($index) {
+  @if map-has-key($allowed-z-indexes, $index) {
+    z-index: map-get($allowed-z-indexes, $index);
+  }
+  @else {
+    @error 'Invalid z-index value. Allowed values are #{map-keys($allowed-z-indexes)}';
+  }
+}
