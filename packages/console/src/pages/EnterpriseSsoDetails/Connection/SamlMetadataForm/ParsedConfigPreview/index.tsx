@@ -46,7 +46,7 @@ export function CertificatePreview({
           ),
         }}
       />
-      <CopyToClipboard className={styles.copyToClipboard} variant="icon" value={x509Certificate} />
+      <CopyToClipboard displayType="block" variant="icon" value={x509Certificate} />
     </div>
   );
 }

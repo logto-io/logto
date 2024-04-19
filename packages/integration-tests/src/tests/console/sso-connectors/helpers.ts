@@ -15,7 +15,7 @@ const getAndCheckValueByFieldName = async (page: Page, fieldName: string, expect
     { text: fieldName }
   );
   const value = await valueField.$eval(
-    [dcls('copyToClipboard'), dcls('row'), dcls('content')].join(' '),
+    [dcls('container'), dcls('row'), dcls('content')].join(' '),
     (element) => element.textContent
   );
 

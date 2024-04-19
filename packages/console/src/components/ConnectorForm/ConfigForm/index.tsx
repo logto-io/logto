@@ -56,7 +56,7 @@ function ConfigForm({
           tip={conditional(!isSamlConnector && t('connectors.guide.callback_uri_description'))}
         >
           <CopyToClipboard
-            className={styles.copyToClipboard}
+            displayType="block"
             variant="border"
             value={applyCustomDomain(displayUrl)}
           />

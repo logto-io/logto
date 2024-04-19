@@ -57,7 +57,7 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
       >
         {providerName === SsoProviderName.GOOGLE_WORKSPACE ? (
           <CopyToClipboard
-            className={styles.copyToClipboard}
+            displayType="block"
             variant="border"
             // TODO: this hard-coded value should align with the `googleIssuer` value defined in `packages/core/src/sso/GoogleWorkspaceSsoConnector/index.ts`.
             value={providerConfig?.issuer ?? 'https://accounts.google.com'}

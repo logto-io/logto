@@ -47,7 +47,7 @@ function SsoSamlSpMetadata() {
         className={styles.inputField}
       >
         <CopyToClipboard
-          className={styles.copyToClipboard}
+          displayType="block"
           variant="border"
           value={serviceProviderMetadata?.entityId ?? ''}
         />
@@ -57,7 +57,7 @@ function SsoSamlSpMetadata() {
         className={styles.inputField}
       >
         <CopyToClipboard
-          className={styles.copyToClipboard}
+          displayType="block"
           variant="border"
           value={serviceProviderMetadata?.assertionConsumerServiceUrl ?? ''}
         />
