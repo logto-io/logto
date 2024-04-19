@@ -1,8 +1,6 @@
 import classNames from 'classnames';
 import { useContext, useState } from 'react';
-// FIXME: @charles
-// eslint-disable-next-line no-restricted-imports
-import { Route, Routes } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import useSWRMutation from 'swr/mutation';
 
 import InvitationIcon from '@/assets/icons/invitation.svg';
@@ -16,15 +14,10 @@ import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import NotFound from '@/pages/NotFound';
 
-import Invitations from './Invitations';
 import InviteMemberModal from './InviteMemberModal';
-import Members from './Members';
 import useTenantMembersUsage from './hooks';
 import * as styles from './index.module.scss';
-
-const invitationsRoute = 'invitations';
 
 function TenantMembers() {
   const { hasTenantMembersSurpassedLimit } = useTenantMembersUsage();
@@ -34,9 +27,7 @@ function TenantMembers() {
     access: { canInviteMember },
   } = useCurrentTenantScopes();
 
-  const isInvitationTab = match(
-    `/tenant-settings/${TenantSettingsTabs.Members}/${invitationsRoute}`
-  );
+  const isInvitationTab = match(`/tenant-settings/${TenantSettingsTabs.Members}/invitations`);
 
   const { currentTenantId } = useContext(TenantsContext);
   const cloudApi = useAuthedCloudApi();
@@ -84,11 +75,7 @@ function TenantMembers() {
           />
         </div>
       )}
-      <Routes>
-        <Route path="*" element={<NotFound />} />
-        <Route index element={<Members />} />
-        {canInviteMember && <Route path={invitationsRoute} element={<Invitations />} />}
-      </Routes>
+      <Outlet />
       {canInviteMember && (
         <InviteMemberModal
           isOpen={showInviteModal}
