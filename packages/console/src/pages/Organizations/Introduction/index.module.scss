@@ -1,13 +1,6 @@
 @use '@/scss/underscore' as _;
 @use '@/scss/dimensions' as dim;
 
-.modalContainer {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  background: var(--color-base);
-}
 
 .stepContainer {
   flex: 1;
@@ -22,13 +15,33 @@
   align-items: center;
   gap: _.unit(6);
 
+  .title {
+    font: var(--font-title-1);
+  }
+
+  .sectionTitle {
+    font: var(--font-title-2);
+  }
+
+  .description {
+    font: var(--font-body-2);
+  }
+
+  .panel {
+    flex: 1;
+  }
+
+  .compact {
+    padding: _.unit(6);
+  }
+
   .card {
     display: flex;
     flex-direction: column;
     width: 100%;
     max-width: dim.$guide-main-content-max-width;
     min-width: dim.$guide-content-min-width;
-    padding: _.unit(12);
+    padding: _.unit(6);
     gap: _.unit(6);
 
     .section {

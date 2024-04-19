@@ -31,7 +31,7 @@ type Props<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValue
   readonly errorMessage?: string;
 };
 
-export const pageSize = 10;
+const pageSize = 10;
 
 /**
  * The table component for organization template editing, such as permissions and roles.

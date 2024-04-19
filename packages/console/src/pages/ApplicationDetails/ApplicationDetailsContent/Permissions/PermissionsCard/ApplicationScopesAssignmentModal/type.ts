@@ -35,11 +35,6 @@ export type ScopeAssignmentHook<
 export enum ScopeLevel {
   User = 'user',
   Organization = 'organization',
-  /**
-   * Only used when the new organization resource scope feature is not ready.
-   * Todo @xiaoyijun remove this when the new organization resource scope feature is ready.
-   */
-  All = 'all',
 }
 
 export type PermissionTabType = Partial<{

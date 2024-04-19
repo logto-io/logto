@@ -8,11 +8,7 @@ import DataTransferBox from '@/ds-components/DataTransferBox';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
 
-import {
-  allLevelPermissionTabs,
-  organizationLevelPermissionsTab,
-  userLevelPermissionsTabs,
-} from './constants';
+import { organizationLevelPermissionsTab, userLevelPermissionsTabs } from './constants';
 import { ScopeLevel } from './type';
 import useApplicationScopesAssignment from './use-application-scopes-assignment';
 
@@ -50,47 +46,33 @@ function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId, scop
     [scopesAssignment]
   );
 
-  const tabs = useMemo(() => {
-    const getPermissionTabs = () => {
-      if (scopeLevel === ScopeLevel.All) {
-        return allLevelPermissionTabs;
-      }
+  const tabs = useMemo(
+    () =>
+      Object.values(
+        scopeLevel === ScopeLevel.User ? userLevelPermissionsTabs : organizationLevelPermissionsTab
+      ).map(({ title, key }) => {
+        const selectedDataCount = scopesAssignment[key].selectedData.length;
 
-      return scopeLevel === ScopeLevel.User
-        ? userLevelPermissionsTabs
-        : organizationLevelPermissionsTab;
-    };
-
-    return Object.values(getPermissionTabs()).map(({ title, key }) => {
-      const selectedDataCount = scopesAssignment[key].selectedData.length;
-
-      return (
-        <TabNavItem
-          key={key}
-          isActive={key === activeTab}
-          onClick={() => {
-            setActiveTab(key);
-          }}
-        >
-          {`${String(t(title))}${selectedDataCount ? ` (${selectedDataCount})` : ''}`}
-        </TabNavItem>
-      );
-    });
-  }, [activeTab, scopeLevel, scopesAssignment, setActiveTab, t]);
+        return (
+          <TabNavItem
+            key={key}
+            isActive={key === activeTab}
+            onClick={() => {
+              setActiveTab(key);
+            }}
+          >
+            {`${String(t(title))}${selectedDataCount ? ` (${selectedDataCount})` : ''}`}
+          </TabNavItem>
+        );
+      }),
+    [activeTab, scopeLevel, scopesAssignment, setActiveTab, t]
+  );
 
   const modalText = useMemo<{
     title: AdminConsoleKey;
     subtitle: AdminConsoleKey;
     saveButton: AdminConsoleKey;
   }>(() => {
-    if (scopeLevel === ScopeLevel.All) {
-      return {
-        title: 'application_details.permissions.table_name',
-        subtitle: 'application_details.permissions.permissions_assignment_description',
-        saveButton: 'general.save',
-      };
-    }
-
     const scopeLevelPhrase = scopeLevel === ScopeLevel.User ? 'user' : 'organization';
 
     return {
@@ -115,7 +97,7 @@ function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId, scop
       onConfirm={onSubmitHandler}
     >
       <TabNav>{tabs}</TabNav>
-      {(scopeLevel === ScopeLevel.All || scopeLevel === ScopeLevel.User) && (
+      {scopeLevel === ScopeLevel.User && (
         <>
           <TabWrapper
             key={ApplicationUserConsentScopeType.UserScopes}
@@ -133,25 +115,25 @@ function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId, scop
           </TabWrapper>
         </>
       )}
-      {(scopeLevel === ScopeLevel.All || scopeLevel === ScopeLevel.Organization) && (
-        <TabWrapper
-          key={ApplicationUserConsentScopeType.OrganizationScopes}
-          isActive={ApplicationUserConsentScopeType.OrganizationScopes === activeTab}
-        >
-          <DataTransferBox
-            {...scopesAssignment[ApplicationUserConsentScopeType.OrganizationScopes]}
-          />
-        </TabWrapper>
-      )}
       {scopeLevel === ScopeLevel.Organization && (
-        <TabWrapper
-          key={ApplicationUserConsentScopeType.OrganizationResourceScopes}
-          isActive={ApplicationUserConsentScopeType.OrganizationResourceScopes === activeTab}
-        >
-          <DataTransferBox
-            {...scopesAssignment[ApplicationUserConsentScopeType.OrganizationResourceScopes]}
-          />
-        </TabWrapper>
+        <>
+          <TabWrapper
+            key={ApplicationUserConsentScopeType.OrganizationScopes}
+            isActive={ApplicationUserConsentScopeType.OrganizationScopes === activeTab}
+          >
+            <DataTransferBox
+              {...scopesAssignment[ApplicationUserConsentScopeType.OrganizationScopes]}
+            />
+          </TabWrapper>
+          <TabWrapper
+            key={ApplicationUserConsentScopeType.OrganizationResourceScopes}
+            isActive={ApplicationUserConsentScopeType.OrganizationResourceScopes === activeTab}
+          >
+            <DataTransferBox
+              {...scopesAssignment[ApplicationUserConsentScopeType.OrganizationResourceScopes]}
+            />
+          </TabWrapper>
+        </>
       )}
     </ConfirmModal>
   );
