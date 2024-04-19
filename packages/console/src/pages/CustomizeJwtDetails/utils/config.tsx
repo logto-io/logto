@@ -47,15 +47,13 @@ export const defaultAccessTokenJwtCustomizerCode = `/**
 * This function is called during the access token generation process to get custom claims for the JWT token.
 * Limit custom claims to under 50KB.
 *
-* @param {Payload} payload - The input payload of the function.
+* @param {Object} payload - The input payload of the function.
 * @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} payload.token -The JWT token.
 * @param {Context} payload.context - Logto internal data that can be used to pass additional information
-* @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} payload.context.user - The user info associated with the token.
 * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [payload.environmentVariables] - The environment variables.
 *
 * @returns The custom claims.
 */
-
 const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
   return {};
 }`;
@@ -64,19 +62,18 @@ export const defaultClientCredentialsJwtCustomizerCode = `/**
 * This function is called during the access token generation process to get custom claims for the JWT token.
 * Limit custom claims to under 50KB.
 *
-* @param {Payload} payload - The input payload of the function.
+* @param {Object} payload - The input payload of the function.
 * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} payload.token -The JWT token.
 * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [payload.environmentVariables] - The environment variables.
 *
 * @returns The custom claims.
 */
-
 const getCustomJwtClaims = async ({ token, environmentVariables }) => {
   return {};
 }`;
 
 export const accessTokenJwtCustomizerModel: ModelSettings = {
-  name: 'user-jwt.ts',
+  name: 'user-jwt.js',
   title: 'User access token',
   language: 'typescript',
   defaultValue: defaultAccessTokenJwtCustomizerCode,
@@ -93,7 +90,7 @@ export const accessTokenJwtCustomizerModel: ModelSettings = {
 };
 
 export const clientCredentialsModel: ModelSettings = {
-  name: 'machine-to-machine-jwt.ts',
+  name: 'machine-to-machine-jwt.js',
   title: 'Machine-to-machine token',
   language: 'typescript',
   defaultValue: defaultClientCredentialsJwtCustomizerCode,
