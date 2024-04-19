@@ -61,9 +61,13 @@ function MainContent<T extends LogtoJwtTokenKeyType>({
 
       await mutate(updatedJwtCustomizer);
 
+      // Need to reset the form data ahead to avoid the unsaved changes alert
       reset(formatResponseDataToFormData(tokenType, updatedJwtCustomizer));
 
+      // If the form is in create mode, navigate back to the previous page
       if (action === 'create') {
+        // Need to trigger a global mutate to update the cache
+        // Keep asynchrony to avoid page idling
         void globalMutate(getApiPath());
         navigate(-1);
       }
