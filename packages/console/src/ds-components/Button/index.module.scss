@@ -257,7 +257,7 @@
         position: absolute;
         inset: 0;
         background-color: var(--color-layer-1);
-        z-index: -1;
+        @include _.z-index(behind);
       }
     }
   }

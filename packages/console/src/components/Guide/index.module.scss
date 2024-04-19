@@ -74,7 +74,7 @@
   padding: _.unit(4) _.unit(6);
   background-color: var(--color-layer-1);
   box-shadow: var(--shadow-3);
-  z-index: 1;
+  @include _.z-index(front);
 
   .layout {
     margin: 0 auto;

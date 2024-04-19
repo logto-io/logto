@@ -15,7 +15,7 @@
   font: var(--font-title-2);
   color: var(--color-text);
   box-shadow: var(--shadow-1);
-  z-index: 1;
+  @include _.z-index(front);
 
   .separator {
     border-left: 1px solid var(--color-border);
