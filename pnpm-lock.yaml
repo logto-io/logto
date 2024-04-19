@@ -1857,12 +1857,18 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
+      '@logto/shared':
+        specifier: workspace:^3.1.0
+        version: link:../../shared
       '@silverhand/essentials':
         specifier: ^2.9.0
         version: 2.9.0
-      got:
-        specifier: ^14.0.0
-        version: 14.0.0
+      jose:
+        specifier: ^5.0.0
+        version: 5.2.2
+      ky:
+        specifier: ^1.2.3
+        version: 1.2.3
       query-string:
         specifier: ^9.0.0
         version: 9.0.0
@@ -1907,8 +1913,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: 14.0.0-beta.6
+        version: 14.0.0-beta.6
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1933,18 +1939,21 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
+      '@logto/connector-oauth':
+        specifier: workspace:^1.2.0
+        version: link:../connector-oauth2
       '@logto/shared':
         specifier: workspace:^3.1.0
         version: link:../../shared
       '@silverhand/essentials':
         specifier: ^2.9.0
         version: 2.9.0
-      got:
-        specifier: ^14.0.0
-        version: 14.0.0
       jose:
         specifier: ^5.0.0
         version: 5.0.1
+      ky:
+        specifier: ^1.2.3
+        version: 1.2.3
       nanoid:
         specifier: ^5.0.1
         version: 5.0.1
@@ -1989,8 +1998,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: 14.0.0-beta.6
+        version: 14.0.0-beta.6
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3848,9 +3857,6 @@ importers:
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
-      '@logto/connector-kit':
-        specifier: workspace:^3.0.0
-        version: link:../toolkit/connector-kit
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -17248,6 +17254,14 @@ packages:
 
   /nock@14.0.0-beta.5:
     resolution: {integrity: sha512-u255tf4DYvyErTlPZA9uTfXghiZZy+NflUOFONPVKZ5tP0yaHwKig28zyFOLhu8y5YcCRC+V5vDk4HHileh2iw==}
+    engines: {node: '>= 18'}
+    dependencies:
+      json-stringify-safe: 5.0.1
+      propagate: 2.0.1
+    dev: true
+
+  /nock@14.0.0-beta.6:
+    resolution: {integrity: sha512-b7lc7qvj1dQzxtbU7TqyTMnKbNKwGQd585xsRtcCZOv3I/yOK9Vwv4nOgnLFxFtX9m1yjhQDRbgqFCqNh9HuEw==}
     engines: {node: '>= 18'}
     dependencies:
       json-stringify-safe: 5.0.1

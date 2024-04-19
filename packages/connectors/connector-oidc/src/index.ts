@@ -1,6 +1,4 @@
-import { assert, conditional, pick } from '@silverhand/essentials';
-import { HTTPError } from 'got';
-import snakecaseKeys from 'snakecase-keys';
+import { assert, conditional } from '@silverhand/essentials';
 
 import type {
   GetAuthorizationUri,
@@ -16,11 +14,13 @@ import {
   ConnectorType,
   jsonGuard,
 } from '@logto/connector-kit';
+import { constructAuthorizationUri } from '@logto/connector-oauth';
 import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
+import { HTTPError } from 'ky';
 
 import { defaultMetadata } from './constant.js';
-import { idTokenProfileStandardClaimsGuard, oidcConfigGuard } from './types.js';
+import { idTokenProfileStandardClaimsGuard, oidcConnectorConfigGuard } from './types.js';
 import { getIdToken } from './utils.js';
 
 const generateNonce = () => generateStandardId();
@@ -29,8 +29,8 @@ const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig(config, oidcConfigGuard);
-    const parsedConfig = oidcConfigGuard.parse(config);
+    validateConfig(config, oidcConnectorConfigGuard);
+    const parsedConfig = oidcConnectorConfigGuard.parse(config);
 
     const nonce = generateNonce();
 
@@ -42,28 +42,33 @@ const getAuthorizationUri =
     );
     await setSession({ nonce, redirectUri });
 
-    const { customConfig, authRequestOptionalConfig, ...rest } = parsedConfig;
+    const {
+      authorizationEndpoint,
+      responseType,
+      clientId,
+      scope,
+      customConfig,
+      authRequestOptionalConfig,
+    } = parsedConfig;
 
-    const queryParameters = new URLSearchParams({
+    return constructAuthorizationUri(authorizationEndpoint, {
+      responseType,
+      clientId,
+      scope,
+      redirectUri,
       state,
-      ...snakecaseKeys({
-        ...pick(rest, 'responseType', 'scope', 'clientId'),
-        ...authRequestOptionalConfig,
-        ...customConfig,
-      }),
       nonce,
-      redirect_uri: redirectUri,
+      ...authRequestOptionalConfig,
+      ...customConfig,
     });
-
-    return `${parsedConfig.authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data, getSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig(config, oidcConfigGuard);
-    const parsedConfig = oidcConfigGuard.parse(config);
+    validateConfig(config, oidcConnectorConfigGuard);
+    const parsedConfig = oidcConnectorConfigGuard.parse(config);
 
     assert(
       getSession,
@@ -153,7 +158,7 @@ const createOidcConnector: CreateConnector<SocialConnector> = async ({ getConfig
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Social,
-    configGuard: oidcConfigGuard,
+    configGuard: oidcConnectorConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),
   };

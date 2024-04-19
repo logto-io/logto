@@ -1,5 +1,13 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType, ConnectorPlatform } from '@logto/connector-kit';
+import {
+  tokenEndpointAuthOptionsFormItems,
+  clientSecretFormItem,
+  clientIdFormItem,
+  tokenEndpointFormItem,
+  authorizationEndpointFormItem,
+  scopeFormItem,
+} from '@logto/connector-oauth';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'oidc',
@@ -18,40 +26,14 @@ export const defaultMetadata: ConnectorMetadata = {
   readme: './README.md',
   isStandard: true,
   formItems: [
+    authorizationEndpointFormItem,
+    tokenEndpointFormItem,
+    clientIdFormItem,
+    clientSecretFormItem,
+    ...tokenEndpointAuthOptionsFormItems,
     {
-      key: 'authorizationEndpoint',
-      label: 'Authorization Endpoint',
-      type: ConnectorConfigFormItemType.Text,
+      ...scopeFormItem,
       required: true,
-      placeholder: '<authorization-endpoint>',
-    },
-    {
-      key: 'tokenEndpoint',
-      label: 'Token Endpoint',
-      type: ConnectorConfigFormItemType.Text,
-      required: true,
-      placeholder: '<token-endpoint>',
-    },
-    {
-      key: 'clientId',
-      label: 'Client ID',
-      type: ConnectorConfigFormItemType.Text,
-      required: true,
-      placeholder: '<client-id>',
-    },
-    {
-      key: 'clientSecret',
-      label: 'Client Secret',
-      type: ConnectorConfigFormItemType.Text,
-      required: true,
-      placeholder: '<client-secret>',
-    },
-    {
-      key: 'scope',
-      label: 'Scope',
-      type: ConnectorConfigFormItemType.Text,
-      required: true,
-      placeholder: '<scope>',
     },
     {
       key: 'idTokenVerificationConfig',

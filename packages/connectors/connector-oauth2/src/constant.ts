@@ -1,6 +1,15 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType, ConnectorPlatform } from '@logto/connector-kit';
 
+import {
+  authorizationEndpointFormItem,
+  clientIdFormItem,
+  clientSecretFormItem,
+  scopeFormItem,
+  tokenEndpointAuthOptionsFormItems,
+  tokenEndpointFormItem,
+} from './oauth2/form-items.js';
+
 export const defaultMetadata: ConnectorMetadata = {
   id: 'oauth2',
   target: 'oauth2',
@@ -18,20 +27,8 @@ export const defaultMetadata: ConnectorMetadata = {
   readme: './README.md',
   isStandard: true,
   formItems: [
-    {
-      key: 'authorizationEndpoint',
-      label: 'Authorization Endpoint',
-      type: ConnectorConfigFormItemType.Text,
-      required: true,
-      placeholder: '<authorization-endpoint>',
-    },
-    {
-      key: 'tokenEndpoint',
-      label: 'Token Endpoint',
-      type: ConnectorConfigFormItemType.Text,
-      required: true,
-      placeholder: '<token-endpoint>',
-    },
+    authorizationEndpointFormItem,
+    tokenEndpointFormItem,
     {
       key: 'userInfoEndpoint',
       label: 'User Info Endpoint',
@@ -39,20 +36,9 @@ export const defaultMetadata: ConnectorMetadata = {
       required: true,
       placeholder: '<user-info-endpoint>',
     },
-    {
-      key: 'clientId',
-      label: 'Client ID',
-      type: ConnectorConfigFormItemType.Text,
-      required: true,
-      placeholder: '<client-id>',
-    },
-    {
-      key: 'clientSecret',
-      label: 'Client Secret',
-      type: ConnectorConfigFormItemType.Text,
-      required: true,
-      placeholder: '<client-secret>',
-    },
+    clientIdFormItem,
+    clientSecretFormItem,
+    ...tokenEndpointAuthOptionsFormItems,
     {
       key: 'tokenEndpointResponseType',
       label: 'Token Endpoint Response Type',
@@ -67,13 +53,7 @@ export const defaultMetadata: ConnectorMetadata = {
       required: false,
       defaultValue: 'query-string',
     },
-    {
-      key: 'scope',
-      label: 'Scope',
-      type: ConnectorConfigFormItemType.Text,
-      required: false,
-      placeholder: '<space-delimited-scope>',
-    },
+    scopeFormItem,
     {
       key: 'profileMap',
       label: 'Profile Map',

@@ -36,6 +36,10 @@ jobs:
       - name: Prepack
         run: pnpm prepack
 
+      # Build connectors before running lint since some connectors rely on the generated types
+      - name: Build connectors
+        run: pnpm connectors build
+
       - name: Lint
         run: pnpm ci:lint
 

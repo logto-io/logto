@@ -1,39 +1,12 @@
-import { pick } from '@silverhand/essentials';
-import type { Response } from 'got';
-import { got, HTTPError } from 'got';
-import snakecaseKeys from 'snakecase-keys';
-
 import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
+import { requestTokenEndpoint } from '@logto/connector-oauth';
+import { type KyResponse } from 'ky';
 
-import { defaultTimeout } from './constant.js';
-import type { AccessTokenResponse, OidcConfig } from './types.js';
+import type { AccessTokenResponse, OidcConnectorConfig } from './types.js';
 import { accessTokenResponseGuard, authResponseGuard } from './types.js';
 
-export const accessTokenRequester = async (
-  tokenEndpoint: string,
-  queryParameters: Record<string, string>,
-  timeout: number = defaultTimeout
-): Promise<AccessTokenResponse> => {
-  try {
-    const httpResponse = await got.post({
-      url: tokenEndpoint,
-      form: queryParameters,
-      timeout: { request: timeout },
-    });
-
-    return await accessTokenResponseHandler(httpResponse);
-  } catch (error: unknown) {
-    if (error instanceof HTTPError) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));
-    }
-    throw error;
-  }
-};
-
-const accessTokenResponseHandler = async (
-  response: Response<string>
-): Promise<AccessTokenResponse> => {
-  const result = accessTokenResponseGuard.safeParse(parseJson(response.body));
+const accessTokenResponseHandler = async (response: KyResponse): Promise<AccessTokenResponse> => {
+  const result = accessTokenResponseGuard.safeParse(parseJson(await response.text()));
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
@@ -42,7 +15,11 @@ const accessTokenResponseHandler = async (
   return result.data;
 };
 
-export const getIdToken = async (config: OidcConfig, data: unknown, redirectUri: string) => {
+export const getIdToken = async (
+  config: OidcConnectorConfig,
+  data: unknown,
+  redirectUri: string
+) => {
   const result = authResponseGuard.safeParse(data);
 
   if (!result.success) {
@@ -51,14 +28,31 @@ export const getIdToken = async (config: OidcConfig, data: unknown, redirectUri:
 
   const { code } = result.data;
 
-  const { customConfig, ...rest } = config;
+  const {
+    tokenEndpoint,
+    grantType,
+    clientId,
+    clientSecret,
+    tokenEndpointAuthMethod,
+    clientSecretJwtSigningAlgorithm,
+    customConfig,
+  } = config;
 
-  const parameterObject = snakecaseKeys({
-    ...pick(rest, 'grantType', 'clientId', 'clientSecret'),
-    ...customConfig,
-    code,
-    redirectUri,
+  const tokenResponse = await requestTokenEndpoint({
+    tokenEndpoint,
+    tokenEndpointAuthOptions: {
+      method: tokenEndpointAuthMethod,
+      clientSecretJwtSigningAlgorithm,
+    },
+    tokenRequestBody: {
+      grantType,
+      code,
+      redirectUri,
+      clientId,
+      clientSecret,
+      ...customConfig,
+    },
   });
 
-  return accessTokenRequester(config.tokenEndpoint, parameterObject);
+  return accessTokenResponseHandler(tokenResponse);
 };
