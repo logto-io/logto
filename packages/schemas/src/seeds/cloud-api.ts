@@ -22,6 +22,16 @@ export enum CloudScope {
    * scripts and fetch the parsed token payload.
    */
   FetchCustomJwt = 'fetch:custom:jwt',
+  /**
+   * From current design, we have two different ways to execute JWT customizer scripts:
+   * with Azure Functions (for Dev tenants) and with Cloudflare Workers (for Pro tenants).
+   *
+   * In order to secure the Cloudflare Workers (they are publicly accessible), we decide to use Logto's internal M2M
+   * mechanism to protect the Workers.
+   *
+   * The entity (this is designed to be a M2M application scope) can invoke Cloudflare Workers to fetch custom JWT result.
+   */
+  InvokeCustomJwtWorkers = 'invoke:custom:jwt:workers',
   /** The user can see and manage affiliates, including create, update, and delete. */
   ManageAffiliate = 'manage:affiliate',
   /** The user can create new affiliates and logs. */
@@ -69,6 +79,10 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
     buildScope(
       CloudScope.FetchCustomJwt,
       'Allow accessing external resource to execute JWT payload customizer script and fetch the parsed token payload.'
+    ),
+    buildScope(
+      CloudScope.InvokeCustomJwtWorkers,
+      'Allow accessing custom JWT workers to fetch the parsed token payload.'
     ),
     buildScope(CloudScope.CreateAffiliate, 'Allow creating new affiliates and logs.'),
     buildScope(
