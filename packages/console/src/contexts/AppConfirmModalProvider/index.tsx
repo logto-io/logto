@@ -5,27 +5,22 @@ import { createContext, useCallback, useEffect, useMemo, useRef, useState } from
 import type { ConfirmModalProps } from '@/ds-components/ConfirmModal';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 
-type ModalContentRenderProps = {
-  confirm: (data?: unknown) => void;
-  cancel: (data?: unknown) => void;
-};
-
 type ConfirmModalType = 'alert' | 'confirm';
 
 type ConfirmModalState = Omit<
   ConfirmModalProps,
   'onCancel' | 'onConfirm' | 'children' | 'isLoading'
 > & {
-  ModalContent: string | ((props: ModalContentRenderProps) => Nullable<JSX.Element>);
+  ModalContent: string | (() => Nullable<JSX.Element>);
   type: ConfirmModalType;
 };
 
-type AppConfirmModalProps = Omit<ConfirmModalState, 'isOpen' | 'type'> & {
+type ShowConfirmModalProps = Omit<ConfirmModalState, 'isOpen' | 'type'> & {
   type?: ConfirmModalType;
 };
 
 type ConfirmModalContextType = {
-  show: (props: AppConfirmModalProps) => Promise<[boolean, unknown?]>;
+  show: (props: ShowConfirmModalProps) => Promise<[boolean, unknown?]>;
   confirm: (data?: unknown) => void;
   cancel: (data?: unknown) => void;
 };
@@ -51,7 +46,7 @@ function AppConfirmModalProvider({ children }: Props) {
 
   const resolver = useRef<(value: [result: boolean, data?: unknown]) => void>();
 
-  const handleShow = useCallback(async ({ type = 'confirm', ...props }: AppConfirmModalProps) => {
+  const handleShow = useCallback(async ({ type = 'confirm', ...props }: ShowConfirmModalProps) => {
     resolver.current?.([false]);
 
     setModalState({
@@ -109,15 +104,9 @@ function AppConfirmModalProvider({ children }: Props) {
       <ConfirmModal
         {...restProps}
         onConfirm={type === 'confirm' ? handleConfirm : undefined}
-        onCancel={() => {
-          handleCancel();
-        }}
+        onCancel={handleCancel}
       >
-        {typeof ModalContent === 'string' ? (
-          ModalContent
-        ) : (
-          <ModalContent confirm={handleConfirm} cancel={handleCancel} />
-        )}
+        {typeof ModalContent === 'string' ? ModalContent : <ModalContent />}
       </ConfirmModal>
     </AppConfirmModalContext.Provider>
   );
