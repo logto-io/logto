@@ -13,7 +13,7 @@ type Props = {
   readonly className?: string;
 };
 
-const TermsAndPrivacy = ({ className }: Props) => {
+const TermsAndPrivacyCheckbox = ({ className }: Props) => {
   const { termsAgreement, setTermsAgreement, termsOfUseUrl, privacyPolicyUrl, isTermsDisabled } =
     useTerms();
   const { t } = useTranslation();
@@ -57,4 +57,4 @@ const TermsAndPrivacy = ({ className }: Props) => {
   );
 };
 
-export default TermsAndPrivacy;
+export default TermsAndPrivacyCheckbox;

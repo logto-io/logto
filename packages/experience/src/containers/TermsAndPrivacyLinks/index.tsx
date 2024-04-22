@@ -5,6 +5,7 @@ type Props = {
   readonly className?: string;
 };
 
+// For sign-in page displaying terms and privacy links use only. No user interaction is needed.
 const TermsAndPrivacyLinks = ({ className }: Props) => {
   const { termsOfUseUrl, privacyPolicyUrl, isTermsDisabled } = useTerms();
 

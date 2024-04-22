@@ -1,10 +1,12 @@
 import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import TermsLinks from '@/components/TermsLinks';
 
+// Used by useTerms hook to display the terms and privacy policy confirmation modal
+// This component should be used as the ModalContent prop in the useConfirmModal hook
 const TermsAndPrivacyConfirmModalContent = () => {
   const { experienceSettings } = useContext(PageContext);
   const { termsOfUseUrl, privacyPolicyUrl } = experienceSettings ?? {};
@@ -17,6 +19,7 @@ const TermsAndPrivacyConfirmModalContent = () => {
         link: (
           <TermsLinks
             inline
+            linkType="primary"
             termsOfUseUrl={conditional(termsOfUseUrl)}
             privacyPolicyUrl={conditional(privacyPolicyUrl)}
           />
