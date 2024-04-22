@@ -3541,8 +3541,8 @@ importers:
         specifier: ^18.0.0
         version: 18.2.0
       react-device-detect:
-        specifier: ^2.2.2
-        version: 2.2.2(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^2.2.3
+        version: 2.2.3(react-dom@18.2.0)(react@18.2.0)
       react-dom:
         specifier: ^18.0.0
         version: 18.2.0(react@18.2.0)
@@ -18657,15 +18657,15 @@ packages:
       tween-functions: 1.2.0
     dev: true
 
-  /react-device-detect@2.2.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-zSN1gIAztUekp5qUT/ybHwQ9fmOqVT1psxpSlTn1pe0CO+fnJHKRLOWWac5nKxOxvOpD/w84hk1I+EydrJp7SA==}
+  /react-device-detect@2.2.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-buYY3qrCnQVlIFHrC5UcUoAj7iANs/+srdkwsnNjI7anr3Tt7UY6MqNxtMLlr0tMBied0O49UZVK8XKs3ZIiPw==}
     peerDependencies:
       react: '>= 0.14.0 || ^18.0.0'
       react-dom: '>= 0.14.0'
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      ua-parser-js: 1.0.2
+      ua-parser-js: 1.0.37
     dev: true
 
   /react-dnd-html5-backend@16.0.0:
@@ -20861,8 +20861,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  /ua-parser-js@1.0.2:
-    resolution: {integrity: sha512-00y/AXhx0/SsnI51fTc0rLRmafiGOM4/O+ny10Ps7f+j/b8p/ZY11ytMgznXkOVo4GQ+KwQG5UQLkLGirsACRg==}
+  /ua-parser-js@1.0.37:
+    resolution: {integrity: sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==}
     dev: true
 
   /ufo@1.5.2:

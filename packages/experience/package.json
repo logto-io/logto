@@ -75,7 +75,7 @@
     "postcss-modules": "^4.3.0",
     "prettier": "^3.0.0",
     "react": "^18.0.0",
-    "react-device-detect": "^2.2.2",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.0.0",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.34.0",
