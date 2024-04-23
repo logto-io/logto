@@ -5,3 +5,5 @@ build:
 run:
 		docker-compose -f docker-compose-local.yml up --detach
 
+down:
+		docker-compose -f docker-compose-local.yml down 
