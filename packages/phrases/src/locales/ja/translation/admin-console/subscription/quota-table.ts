@@ -9,8 +9,7 @@ const quota_table = {
     title: 'アプリケーション',
     total: '総アプリケーション数',
     m2m: 'マシン・ツー・マシン',
-    /** UNTRANSLATED */
-    third_party: 'Third-party apps',
+    third_party: 'サードパーティーアプリ',
   },
   resource: {
     title: 'APIリソース',
@@ -66,22 +65,17 @@ const quota_table = {
     hipaa_or_baa_report: 'HIPAA/BAAレポート',
   },
   developers_and_platform: {
-    /** UNTRANSLATED */
-    title: 'Developers and platform',
-    /** UNTRANSLATED */
+    title: 'デベロッパーとプラットフォーム',
     hooks: 'Webhooks',
-    /** UNTRANSLATED */
-    audit_logs_retention: 'Audit logs retention',
-    /** UNTRANSLATED */
-    jwt_claims: 'JWT claims',
-    /** UNTRANSLATED */
-    tenant_members: 'Tenant members',
+    audit_logs_retention: '監査ログの保持',
+    jwt_claims: 'JWTクレーム',
+    tenant_members: 'テナントメンバー',
   },
   unlimited: '無制限',
   contact: 'お問い合わせ',
   monthly_price: '${{value, number}}/mo',
-  days_one: '{{count, number}}日',
-  days_other: '{{count, number}}日',
+  days_one: '{{count, number}} 日',
+  days_other: '{{count, number}} 日',
   add_on: 'アドオン',
   tier: 'レベル{{value, number}}: ',
   paid_token_limit_tip:
@@ -97,17 +91,15 @@ const quota_table = {
     'Logtoによって発行されたすべての種類のトークン、アクセストークン、リフレッシュトークンなどを含みます。',
   mao_tip:
     'MAO（月間アクティブ組織）は、請求サイクル内で少なくとも1つのMAU（月間アクティブユーザー）を持つユニークな組織の数を意味します。',
-  /** UNTRANSLATED */
   third_party_tip:
-    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
+    'LogtoをOIDCアイデンティティプロバイダーとして使用して、サードパーティーアプリケーションのサインインや権限の付与を行います。',
   included: '{{value, number}} 込み',
   included_mao: '{{value, number}} MAO込み',
   extra_quota_price: 'その後、各${{value, number}} / 月ごと',
   per_month_each: '各${{value, number}} / 月ごと',
   extra_mao_price: 'その後、MAOごとに${{value, number}}',
   per_month: '${{value, number}} / 月ごと',
-  /** UNTRANSLATED */
-  per_member: 'Then ${{value, number}} per member',
+  per_member: 'メンバーごとに ${{value, number}}',
 };
 
 export default Object.freeze(quota_table);

@@ -35,8 +35,7 @@ const upsell = {
     api_resource: 'API リソース',
     machine_to_machine: 'マシン対マシンアプリケーション',
     tokens: '{{limit}}M トークン',
-    /** UNTRANSLATED */
-    tenant_member: 'tenant member',
+    tenant_member: 'テナントメンバー',
   },
   charge_notification_for_quota_limit:
     '{{item}} のクォータ制限を超えています。Logto はクォータ制限を超える利用に対して料金を追加します。新しいアドオン価格設計がリリースされる日から請求が開始されます。 <a>詳細</a>',

@@ -25,11 +25,9 @@ const general = {
   customize: 'Настроить',
   enable: 'Включить',
   reminder: 'Напоминание',
-  /** UNTRANSLATED */
-  edit: 'Edit',
+  edit: 'Редактировать',
   delete: 'Удалить',
-  /** UNTRANSLATED */
-  deleted: 'Deleted',
+  deleted: 'Удалено',
   more_options: 'Дополнительные опции',
   close: 'Закрыть',
   copy: 'Копировать',
@@ -58,8 +56,7 @@ const general = {
   demo: 'Демо',
   unnamed: 'Без названия',
   view: 'Просмотр',
-  /** UNTRANSLATED */
-  open: 'Open',
+  open: 'Открыть',
   hide: 'Скрыть',
   unknown_error: 'Неизвестная ошибка, пожалуйста, попробуйте позже.',
   select: 'Выбрать',
@@ -71,8 +68,7 @@ const general = {
   edit_field: 'Изменить {{field}}',
   delete_field: 'Удалить {{field}}',
   coming_soon: 'Скоро',
-  /** UNTRANSLATED */
-  or: 'Or',
+  or: 'Или',
 };
 
 export default Object.freeze(general);

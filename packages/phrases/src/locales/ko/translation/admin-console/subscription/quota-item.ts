@@ -34,16 +34,11 @@ const quota_item = {
     not_eligible: '기계 간 앱을 제거하십시오',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your third-party apps',
+    name: '타사 앱',
+    limited: '{{count, number}} 타사 앱',
+    limited_other: '{{count, number}} 타사 앱',
+    unlimited: '무제한 타사 앱',
+    not_eligible: '타사 앱을 제거하십시오',
   },
   resources_limit: {
     name: 'API 리소스',
@@ -152,25 +147,16 @@ const quota_item = {
     not_eligible: '기업 SSO를 제거하십시오',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
     name: 'Tenant members',
-    /** UNTRANSLATED */
     limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
     limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
     unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
     not_eligible: 'Remove your tenant members',
   },
   custom_jwt_enabled: {
-    /** UNTRANSLATED */
     name: 'Custom JWT',
-    /** UNTRANSLATED */
     limited: 'Custom JWT',
-    /** UNTRANSLATED */
     unlimited: 'Custom JWT',
-    /** UNTRANSLATED */
     not_eligible: 'Remove your JWT claims customizer',
   },
 };

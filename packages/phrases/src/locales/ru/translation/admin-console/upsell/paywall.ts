@@ -52,24 +52,18 @@ const paywall = {
   mfa: 'Разблокируйте MFA для повышения безопасности с помощью перехода на платный план. Не стесняйтесь <a>связаться с нами</a>, если вам нужна помощь.',
   organizations:
     'Разблокируйте организации, перейдя на платный план. Не стесняйтесь <a>связаться с нами</a>, если вам нужна помощь.',
-  /** UNTRANSLATED */
   third_party_apps:
-    'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Разблокируйте Logto как IdP для сторонних приложений, обновив план до платного. Для получения помощи не стесняйтесь <a>связаться с нами</a>.',
   sso_connectors:
-    'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Разблокируйте единые серверы аутентификации для предприятия, перейдя на платный план. Для получения помощи не стесняйтесь <a>связаться с нами</a>.',
   tenant_members:
-    'Unlock collaboration feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Разблокируйте функцию сотрудничества, перейдя на платный план. Для получения помощи не стесняйтесь <a>связаться с нами</a>.',
   tenant_members_dev_plan:
-    "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
+    'Вы достигли лимита {{limit}} участников. Освободите место для новых участников или отмените ожидающее приглашение. Нужны дополнительные места? Не стесняйтесь <a>связаться с нами</a>.',
   custom_jwt: {
-    /** UNTRANSLATED */
-    title: 'Add custom claims',
-    /** UNTRANSLATED */
+    title: 'Добавить пользовательские претензии',
     description:
-      "Upgrade to a paid plan for custom JWT functionality and premium benefits. Don't hesitate to <a>contact us</a> if you have any questions.",
+      'Обновите платный план для функциональности пользовательского JWT и дополнительных премиальных возможностей. Если у вас есть вопросы, не стесняйтесь <a>связаться с нами</a>.',
   },
 };
 

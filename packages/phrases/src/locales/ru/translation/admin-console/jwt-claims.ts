@@ -1,98 +1,63 @@
 const jwt_claims = {
-  /** UNTRANSLATED */
-  title: 'Custom JWT',
-  /** UNTRANSLATED */
+  title: 'Пользовательский JWT',
   description:
-    'Set up custom JWT claims to include in the access token. These claims can be used to pass additional information to your application.',
+    'Настройте пользовательские утверждения JWT для включения в токен доступа. Эти утверждения могут использоваться для передачи дополнительной информации в ваше приложение.',
   user_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For user',
-    /** UNTRANSLATED */
-    card_field: 'User access token',
-    /** UNTRANSLATED */
-    card_description: 'Add user-specific data during access token issuance.',
-    /** UNTRANSLATED */
-    for: 'for user',
+    card_title: 'Для пользователя',
+    card_field: 'Токен доступа пользователя',
+    card_description:
+      'Добавление специфичных для пользователя данных во время выдачи токена доступа.',
+    for: 'для пользователя',
   },
   machine_to_machine_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For M2M',
-    /** UNTRANSLATED */
-    card_field: 'Machine-to-machine token',
-    /** UNTRANSLATED */
-    card_description: 'Add extra data during machine-to-machine token issuance.',
-    /** UNTRANSLATED */
-    for: 'for M2M',
+    card_title: 'Для М2М',
+    card_field: 'Токен от машины к машине',
+    card_description: 'Добавление дополнительных данных во время выдачи токена от машины к машине.',
+    for: 'для М2М',
   },
-  /** UNTRANSLATED */
-  code_editor_title: 'Customize the {{token}} claims',
-  /** UNTRANSLATED */
-  custom_jwt_create_button: 'Add custom claims',
-  /** UNTRANSLATED */
-  custom_jwt_item: 'Custom claims {{for}}',
-  /** UNTRANSLATED */
-  delete_modal_title: 'Delete custom claims',
-  /** UNTRANSLATED */
-  delete_modal_content: 'Are you sure you want to delete the custom claims?',
-  /** UNTRANSLATED */
-  clear: 'Clear',
-  /** UNTRANSLATED */
-  cleared: 'Cleared',
-  /** UNTRANSLATED */
-  restore: 'Restore defaults',
-  /** UNTRANSLATED */
-  restored: 'Restored',
-  /** UNTRANSLATED */
-  data_source_tab: 'Data source',
-  /** UNTRANSLATED */
-  test_tab: 'Test context',
-  /** UNTRANSLATED */
-  jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
+  code_editor_title: 'Настройка своих утверждений {{token}}',
+  custom_jwt_create_button: 'Добавить пользовательские утверждения',
+  custom_jwt_item: 'Пользовательские утверждения {{for}}',
+  delete_modal_title: 'Удалить пользовательские утверждения',
+  delete_modal_content: 'Вы уверены, что хотите удалить пользовательские утверждения?',
+  clear: 'Очистить',
+  cleared: 'Очищено',
+  restore: 'Восстановить по умолчанию',
+  restored: 'Восстановлено',
+  data_source_tab: 'Источник данных',
+  test_tab: 'Тестовый контекст',
+  jwt_claims_description:
+    'Утверждения по умолчанию автоматически включаются в JWT и не могут быть переопределены.',
   user_data: {
-    /** UNTRANSLATED */
-    title: 'User data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `data.user` input parameter to provide vital user info.',
+    title: 'Данные пользователя',
+    subtitle:
+      'Используйте параметр ввода `data.user` для предоставления важной информации о пользователе.',
   },
   token_data: {
-    /** UNTRANSLATED */
-    title: 'Token data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `token` input parameter for current access token payload. ',
+    title: 'Данные токена',
+    subtitle: 'Используйте параметр ввода `token` для полезной нагрузки текущего токена доступа. ',
   },
   fetch_external_data: {
-    /** UNTRANSLATED */
-    title: 'Fetch external data',
-    /** UNTRANSLATED */
-    subtitle: 'Incorporate data from your external APIs directly into claims.',
-    /** UNTRANSLATED */
+    title: 'Получение внешних данных',
+    subtitle: 'Интегрирование данных непосредственно из ваших внешних API в утверждения.',
     description:
-      'Use the `fetch` function to call your external APIs and include the data in your custom claims. Example: ',
+      'Используйте функцию `fetch` для вызова ваших внешних API и включения данных в ваши пользовательские утверждения. Пример: ',
   },
   environment_variables: {
-    /** UNTRANSLATED */
-    title: 'Set environment variables',
-    /** UNTRANSLATED */
-    subtitle: 'Use environment variables to store sensitive information.',
-    /** UNTRANSLATED */
-    input_field_title: 'Add environment variables',
-    /** UNTRANSLATED */
-    sample_code: 'Accessing environment variables in your custom JWT claims handler. Example: ',
+    title: 'Установка переменных среды',
+    subtitle: 'Используйте переменные среды для хранения конфиденциальной информации.',
+    input_field_title: 'Добавить переменные среды',
+    sample_code: 'Доступ к переменным среды в вашем обработчике утверждений JWT. Пример: ',
   },
-  /** UNTRANSLATED */
   jwt_claims_hint:
-    'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
+    'Ограничьте пользовательские утверждения до 50 КБ. Утверждения по умолчанию JWT автоматически включаются в токен и не могут быть переопределены.',
   tester: {
-    /** UNTRANSLATED */
-    subtitle: 'Adjust mock token and user data for testing.',
-    /** UNTRANSLATED */
-    run_button: 'Run test',
-    /** UNTRANSLATED */
-    result_title: 'Test result',
+    subtitle: 'Настройте макетный токен и данные пользователя для тестирования.',
+    run_button: 'Запустить тест',
+    result_title: 'Результат теста',
   },
   form_error: {
-    /** UNTRANSLATED */
-    invalid_json: 'Invalid JSON format',
+    invalid_json: 'Недопустимый формат JSON',
   },
 };
 

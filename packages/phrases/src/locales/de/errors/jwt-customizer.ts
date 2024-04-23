@@ -1,8 +1,8 @@
 const jwt_customizer = {
-  /** UNTRANSLATED */
-  general: 'An error occurred while customizing the JWT token. Please try again later.',
-  /** UNTRANSLATED */
-  can_not_create_for_admin_tenant: 'Cannot create a JWT token customizer for the admin tenant.',
+  general:
+    'Bei der Anpassung des JWT-Tokens ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.',
+  can_not_create_for_admin_tenant:
+    'Kann keinen JWT-Token-Anpasser für den Admin-Mandanten erstellen.',
 };
 
 export default Object.freeze(jwt_customizer);

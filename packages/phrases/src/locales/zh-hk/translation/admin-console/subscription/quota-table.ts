@@ -9,8 +9,7 @@ const quota_table = {
     title: '應用程式',
     total: '應用程式總數',
     m2m: '機器到機器',
-    /** UNTRANSLATED */
-    third_party: 'Third-party apps',
+    third_party: '第三方應用程式',
   },
   resource: {
     title: 'API 資源',
@@ -61,25 +60,20 @@ const quota_table = {
     community: '社群',
     customer_ticket: '客戶支援票據',
     premium: '高級版',
-    email_ticket_support: 'Email ticket support',
+    email_ticket_support: '電子郵件票務支援',
     soc2_report: 'SOC2報告',
     hipaa_or_baa_report: 'HIPAA/BAA報告',
   },
   developers_and_platform: {
-    /** UNTRANSLATED */
-    title: 'Developers and platform',
-    /** UNTRANSLATED */
+    title: '開發者和平台',
     hooks: 'Webhooks',
-    /** UNTRANSLATED */
-    audit_logs_retention: 'Audit logs retention',
-    /** UNTRANSLATED */
-    jwt_claims: 'JWT claims',
-    /** UNTRANSLATED */
-    tenant_members: 'Tenant members',
+    audit_logs_retention: '審計日誌保留',
+    jwt_claims: 'JWT聲明',
+    tenant_members: '租戶成員',
   },
   unlimited: '無限制',
   contact: '聯絡',
-  monthly_price: '${{value, number}}/月',
+  monthly_price: '${{value, number}} /月',
   days_one: '{{count, number}} 天',
   days_other: '{{count, number}} 天',
   add_on: '附加功能',
@@ -94,17 +88,14 @@ const quota_table = {
   mau_tip: 'MAU（每月活躍用戶）是指在計費週期內與Logto交換過至少一個令牌的獨立用戶數量。',
   tokens_tip: 'Logto 發行的所有類型令牌，包括訪問令牌、刷新令牌等。',
   mao_tip: 'MAO（月度活躍組織）指的是在計費週期內至少有一個MAU（月度活躍用戶）的獨特組織數量。',
-  /** UNTRANSLATED */
-  third_party_tip:
-    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
+  third_party_tip: '使用Logto作為您的OIDC身份提供者，用於第三方應用程式的登錄和權限授予。',
   included: '已包含 {{value, number}}',
   included_mao: '已包含 {{value, number}} MAO',
   extra_quota_price: '然後每月 ${{value, number}} / 每個之後',
   per_month_each: '每月 ${{value, number}} / 每個',
   extra_mao_price: '然後每 MAO ${{value, number}}',
   per_month: '每月 ${{value, number}}',
-  /** UNTRANSLATED */
-  per_member: 'Then ${{value, number}} per member',
+  per_member: '然後 ${{value, number}} 每個成員',
 };
 
 export default Object.freeze(quota_table);

@@ -25,11 +25,9 @@ const general = {
   customize: '自定義',
   enable: '啟用',
   reminder: '提示',
-  /** UNTRANSLATED */
-  edit: 'Edit',
+  edit: '編輯',
   delete: '刪除',
-  /** UNTRANSLATED */
-  deleted: 'Deleted',
+  deleted: '已刪除',
   more_options: '更多選項',
   close: '關閉',
   copy: '複製',
@@ -58,8 +56,7 @@ const general = {
   demo: '演示',
   unnamed: '未命名',
   view: '查看',
-  /** UNTRANSLATED */
-  open: 'Open',
+  open: '打開',
   hide: '隱藏',
   unknown_error: '未知錯誤，請稍後重試。',
   select: '選擇',
@@ -71,8 +68,7 @@ const general = {
   edit_field: '編輯{{field}}',
   delete_field: '刪除{{field}}',
   coming_soon: '即將上線',
-  /** UNTRANSLATED */
-  or: 'Or',
+  or: '或',
 };
 
 export default Object.freeze(general);
