@@ -33,7 +33,7 @@ jobs:
       - name: Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@3.0.0
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload ESLint report
         uses: actions/upload-artifact@v4
