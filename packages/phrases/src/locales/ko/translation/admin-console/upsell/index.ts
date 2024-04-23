@@ -35,8 +35,7 @@ const upsell = {
     api_resource: 'API 리소스',
     machine_to_machine: '머신 투 머신 애플리케이션',
     tokens: '{{limit}}M 토큰',
-    /** UNTRANSLATED */
-    tenant_member: 'tenant member',
+    tenant_member: 'tenant 회원',
   },
   charge_notification_for_quota_limit:
     '{{item}} 할당량 한도를 초과했습니다. Logto는 할당량을 초과하는 사용에 대한 요금을 추가합니다. 새로운 애드온 가격 디자인이 출시된 날부터 청구가 시작됩니다. <a>더 알아보기</a>',

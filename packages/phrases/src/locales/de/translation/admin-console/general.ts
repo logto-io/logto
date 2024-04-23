@@ -25,11 +25,9 @@ const general = {
   customize: 'Anpassen',
   enable: 'Aktivieren',
   reminder: 'Erinnerung',
-  /** UNTRANSLATED */
-  edit: 'Edit',
+  edit: 'Bearbeiten',
   delete: 'Löschen',
-  /** UNTRANSLATED */
-  deleted: 'Deleted',
+  deleted: 'Gelöscht',
   more_options: 'MEHR OPTIONEN',
   close: 'Schließen',
   copy: 'Kopieren',
@@ -59,8 +57,7 @@ const general = {
   demo: 'Demo',
   unnamed: 'Unbenannt',
   view: 'Anzeigen',
-  /** UNTRANSLATED */
-  open: 'Open',
+  open: 'Öffnen',
   hide: 'Verbergen',
   unknown_error: 'Unbekannter Fehler, bitte versuchen Sie es später erneut.',
   select: 'Auswählen',
@@ -72,8 +69,7 @@ const general = {
   edit_field: 'Bearbeite {{field}}',
   delete_field: 'Lösche {{field}}',
   coming_soon: 'Demnächst verfügbar',
-  /** UNTRANSLATED */
-  or: 'Or',
+  or: 'Oder',
 };
 
 export default Object.freeze(general);

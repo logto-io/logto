@@ -1,98 +1,59 @@
 const jwt_claims = {
-  /** UNTRANSLATED */
-  title: 'Custom JWT',
-  /** UNTRANSLATED */
+  title: 'カスタムJWT',
   description:
-    'Set up custom JWT claims to include in the access token. These claims can be used to pass additional information to your application.',
+    'アクセストークンに含めるカスタムJWTクレームを設定します。これらのクレームを使用して、追加の情報をアプリケーションに渡すことができます。',
   user_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For user',
-    /** UNTRANSLATED */
-    card_field: 'User access token',
-    /** UNTRANSLATED */
-    card_description: 'Add user-specific data during access token issuance.',
-    /** UNTRANSLATED */
-    for: 'for user',
+    card_title: 'ユーザー向け',
+    card_field: 'ユーザーアクセストークン',
+    card_description: 'アクセストークン発行時にユーザー固有のデータを追加します。',
+    for: 'ユーザー向け',
   },
   machine_to_machine_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For M2M',
-    /** UNTRANSLATED */
-    card_field: 'Machine-to-machine token',
-    /** UNTRANSLATED */
-    card_description: 'Add extra data during machine-to-machine token issuance.',
-    /** UNTRANSLATED */
-    for: 'for M2M',
+    card_title: 'M2M向け',
+    card_field: 'マシン対マシントークン',
+    card_description: 'マシン対マシントークン発行時に追加データを含めます。',
+    for: 'M2M向け',
   },
-  /** UNTRANSLATED */
-  code_editor_title: 'Customize the {{token}} claims',
-  /** UNTRANSLATED */
-  custom_jwt_create_button: 'Add custom claims',
-  /** UNTRANSLATED */
-  custom_jwt_item: 'Custom claims {{for}}',
-  /** UNTRANSLATED */
-  delete_modal_title: 'Delete custom claims',
-  /** UNTRANSLATED */
-  delete_modal_content: 'Are you sure you want to delete the custom claims?',
-  /** UNTRANSLATED */
-  clear: 'Clear',
-  /** UNTRANSLATED */
-  cleared: 'Cleared',
-  /** UNTRANSLATED */
-  restore: 'Restore defaults',
-  /** UNTRANSLATED */
-  restored: 'Restored',
-  /** UNTRANSLATED */
-  data_source_tab: 'Data source',
-  /** UNTRANSLATED */
-  test_tab: 'Test context',
-  /** UNTRANSLATED */
-  jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
+  code_editor_title: 'カスタマイズ{{token}}クレーム',
+  custom_jwt_create_button: 'カスタムクレームを追加',
+  custom_jwt_item: 'カスタムクレーム{{for}}',
+  delete_modal_title: 'カスタムクレームを削除',
+  delete_modal_content: 'カスタムクレームを削除してもよろしいですか？',
+  clear: 'クリア',
+  cleared: 'クリアされた',
+  restore: 'デフォルトに戻す',
+  restored: '復元されました',
+  data_source_tab: 'データソース',
+  test_tab: 'コンテキストをテスト',
+  jwt_claims_description: 'デフォルトクレームはJWTに自動的に含まれ、オーバーライドできません。',
   user_data: {
-    /** UNTRANSLATED */
-    title: 'User data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `data.user` input parameter to provide vital user info.',
+    title: 'ユーザーデータ',
+    subtitle: '`data.user`入力パラメータを使用して重要なユーザー情報を提供します。',
   },
   token_data: {
-    /** UNTRANSLATED */
-    title: 'Token data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `token` input parameter for current access token payload. ',
+    title: 'トークンデータ',
+    subtitle: '現在のアクセストークンペイロードに対して`token`入力パラメータを使用します。',
   },
   fetch_external_data: {
-    /** UNTRANSLATED */
-    title: 'Fetch external data',
-    /** UNTRANSLATED */
-    subtitle: 'Incorporate data from your external APIs directly into claims.',
-    /** UNTRANSLATED */
-    description:
-      'Use the `fetch` function to call your external APIs and include the data in your custom claims. Example: ',
+    title: '外部データを取得',
+    subtitle: '外部APIからデータを直接クレームに組み込みます。',
+    description: '`fetch`関数を使用して外部APIを呼び出し、データをカスタムクレームに含めます。例：',
   },
   environment_variables: {
-    /** UNTRANSLATED */
-    title: 'Set environment variables',
-    /** UNTRANSLATED */
-    subtitle: 'Use environment variables to store sensitive information.',
-    /** UNTRANSLATED */
-    input_field_title: 'Add environment variables',
-    /** UNTRANSLATED */
-    sample_code: 'Accessing environment variables in your custom JWT claims handler. Example: ',
+    title: '環境変数を設定',
+    subtitle: '機密情報を保存するために環境変数を使用します。',
+    input_field_title: '環境変数を追加',
+    sample_code: 'カスタムJWTクレームハンドラで環境変数にアクセスする方法。例：',
   },
-  /** UNTRANSLATED */
   jwt_claims_hint:
-    'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
+    'カスタムクレームの制限は50KB未満です。デフォルトのJWTクレームは自動的にトークンに含まれ、オーバーライドできません。',
   tester: {
-    /** UNTRANSLATED */
-    subtitle: 'Adjust mock token and user data for testing.',
-    /** UNTRANSLATED */
-    run_button: 'Run test',
-    /** UNTRANSLATED */
-    result_title: 'Test result',
+    subtitle: 'テストのためにモックトークンとユーザーデータを調整します。',
+    run_button: 'テストを実行',
+    result_title: 'テスト結果',
   },
   form_error: {
-    /** UNTRANSLATED */
-    invalid_json: 'Invalid JSON format',
+    invalid_json: '無効なJSON形式',
   },
 };
 

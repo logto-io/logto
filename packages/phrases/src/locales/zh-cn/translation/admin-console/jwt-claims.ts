@@ -1,98 +1,57 @@
 const jwt_claims = {
-  /** UNTRANSLATED */
-  title: 'Custom JWT',
-  /** UNTRANSLATED */
-  description:
-    'Set up custom JWT claims to include in the access token. These claims can be used to pass additional information to your application.',
+  title: '自定义JWT',
+  description: '设置自定义JWT声明以包含在访问令牌中。这些声明可以用于向应用程序传递附加信息。',
   user_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For user',
-    /** UNTRANSLATED */
-    card_field: 'User access token',
-    /** UNTRANSLATED */
-    card_description: 'Add user-specific data during access token issuance.',
-    /** UNTRANSLATED */
-    for: 'for user',
+    card_title: '对于用户',
+    card_field: '用户访问令牌',
+    card_description: '在访问令牌发放期间添加用户特定数据。',
+    for: '给用户',
   },
   machine_to_machine_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For M2M',
-    /** UNTRANSLATED */
-    card_field: 'Machine-to-machine token',
-    /** UNTRANSLATED */
-    card_description: 'Add extra data during machine-to-machine token issuance.',
-    /** UNTRANSLATED */
-    for: 'for M2M',
+    card_title: '对于M2M',
+    card_field: '机器间令牌',
+    card_description: '在机器间令牌发放期间添加额外数据。',
+    for: '给M2M',
   },
-  /** UNTRANSLATED */
-  code_editor_title: 'Customize the {{token}} claims',
-  /** UNTRANSLATED */
-  custom_jwt_create_button: 'Add custom claims',
-  /** UNTRANSLATED */
-  custom_jwt_item: 'Custom claims {{for}}',
-  /** UNTRANSLATED */
-  delete_modal_title: 'Delete custom claims',
-  /** UNTRANSLATED */
-  delete_modal_content: 'Are you sure you want to delete the custom claims?',
-  /** UNTRANSLATED */
-  clear: 'Clear',
-  /** UNTRANSLATED */
-  cleared: 'Cleared',
-  /** UNTRANSLATED */
-  restore: 'Restore defaults',
-  /** UNTRANSLATED */
-  restored: 'Restored',
-  /** UNTRANSLATED */
-  data_source_tab: 'Data source',
-  /** UNTRANSLATED */
-  test_tab: 'Test context',
-  /** UNTRANSLATED */
-  jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
+  code_editor_title: '自定义{{token}}声明',
+  custom_jwt_create_button: '添加自定义声明',
+  custom_jwt_item: '自定义声明{{for}}',
+  delete_modal_title: '删除自定义声明',
+  delete_modal_content: '您确定要删除自定义声明吗？',
+  clear: '清除',
+  cleared: '已清除',
+  restore: '恢复默认',
+  restored: '已恢复',
+  data_source_tab: '数据来源',
+  test_tab: '测试上下文',
+  jwt_claims_description: '默认声明会自动包含在JWT中，不能被覆盖。',
   user_data: {
-    /** UNTRANSLATED */
-    title: 'User data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `data.user` input parameter to provide vital user info.',
+    title: '用户数据',
+    subtitle: '使用`data.user`输入参数提供重要用户信息。',
   },
   token_data: {
-    /** UNTRANSLATED */
-    title: 'Token data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `token` input parameter for current access token payload. ',
+    title: '令牌数据',
+    subtitle: '使用`token`输入参数查看当前访问令牌负载。',
   },
   fetch_external_data: {
-    /** UNTRANSLATED */
-    title: 'Fetch external data',
-    /** UNTRANSLATED */
-    subtitle: 'Incorporate data from your external APIs directly into claims.',
-    /** UNTRANSLATED */
-    description:
-      'Use the `fetch` function to call your external APIs and include the data in your custom claims. Example: ',
+    title: '获取外部数据',
+    subtitle: '直接将外部API中的数据纳入声明。',
+    description: '使用`fetch`函数调用外部API并将数据包含在自定义声明中。示例：',
   },
   environment_variables: {
-    /** UNTRANSLATED */
-    title: 'Set environment variables',
-    /** UNTRANSLATED */
-    subtitle: 'Use environment variables to store sensitive information.',
-    /** UNTRANSLATED */
-    input_field_title: 'Add environment variables',
-    /** UNTRANSLATED */
-    sample_code: 'Accessing environment variables in your custom JWT claims handler. Example: ',
+    title: '设置环境变量',
+    subtitle: '使用环境变量存储敏感信息。',
+    input_field_title: '添加环境变量',
+    sample_code: '在自定义JWT声明处理程序中访问环境变量。示例：',
   },
-  /** UNTRANSLATED */
-  jwt_claims_hint:
-    'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
+  jwt_claims_hint: '将自定义声明限制在50KB以下。默认JWT声明会自动包含在令牌中，无法覆盖。',
   tester: {
-    /** UNTRANSLATED */
-    subtitle: 'Adjust mock token and user data for testing.',
-    /** UNTRANSLATED */
-    run_button: 'Run test',
-    /** UNTRANSLATED */
-    result_title: 'Test result',
+    subtitle: '调整模拟令牌和用户数据进行测试。',
+    run_button: '运行测试',
+    result_title: '测试结果',
   },
   form_error: {
-    /** UNTRANSLATED */
-    invalid_json: 'Invalid JSON format',
+    invalid_json: 'JSON格式无效',
   },
 };
 

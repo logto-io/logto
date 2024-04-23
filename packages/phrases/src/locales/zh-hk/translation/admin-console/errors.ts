@@ -7,8 +7,7 @@ const errors = {
   invalid_uri_format: '無效的 URI 格式',
   invalid_origin_format: '無效的 URI origin 格式',
   invalid_json_format: '無效的 JSON 格式',
-  /** UNTRANSLATED */
-  invalid_regex: 'Invalid regular expression',
+  invalid_regex: '無效的正則表達式',
   invalid_error_message_format: '非法的錯誤信息格式',
   required_field_missing: '請輸入{{field}}',
   required_field_missing_plural: '至少需要輸入一個{{field}}',
@@ -21,8 +20,8 @@ const errors = {
   not_found: '404 找不到資源',
   create_internal_role_violation:
     '你正在創建一個被 Logto 禁止內部角色。嘗試使用不以 "#internal:" 開頭的其他名稱。',
-  should_be_an_integer: '必须为整数。',
-  number_should_be_between_inclusive: '数值必须在{{min}}和{{max}}之间（包括{{min}}和{{max}}）。',
+  should_be_an_integer: '必須為整數。',
+  number_should_be_between_inclusive: '數值必須在{{min}}和{{max}}之間（包括{{min}}和{{max}}）',
 };
 
 export default Object.freeze(errors);

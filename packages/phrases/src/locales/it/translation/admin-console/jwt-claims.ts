@@ -1,98 +1,65 @@
 const jwt_claims = {
-  /** UNTRANSLATED */
-  title: 'Custom JWT',
-  /** UNTRANSLATED */
+  title: 'JWT personalizzato',
   description:
-    'Set up custom JWT claims to include in the access token. These claims can be used to pass additional information to your application.',
+    'Imposta richieste JWT personalizzate da includere nel token di accesso. Queste richieste possono essere utilizzate per passare informazioni aggiuntive alla tua applicazione.',
   user_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For user',
-    /** UNTRANSLATED */
-    card_field: 'User access token',
-    /** UNTRANSLATED */
-    card_description: 'Add user-specific data during access token issuance.',
-    /** UNTRANSLATED */
-    for: 'for user',
+    card_title: 'Per utente',
+    card_field: 'Token di accesso utente',
+    card_description:
+      "Aggiungi dati specifici dell'utente durante l'emissione del token di accesso.",
+    for: 'per utente',
   },
   machine_to_machine_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For M2M',
-    /** UNTRANSLATED */
-    card_field: 'Machine-to-machine token',
-    /** UNTRANSLATED */
-    card_description: 'Add extra data during machine-to-machine token issuance.',
-    /** UNTRANSLATED */
-    for: 'for M2M',
+    card_title: 'Per M2M',
+    card_field: 'Token da macchina a macchina',
+    card_description: "Aggiungi dati extra durante l'emissione del token da macchina a macchina.",
+    for: 'per M2M',
   },
-  /** UNTRANSLATED */
-  code_editor_title: 'Customize the {{token}} claims',
-  /** UNTRANSLATED */
-  custom_jwt_create_button: 'Add custom claims',
-  /** UNTRANSLATED */
-  custom_jwt_item: 'Custom claims {{for}}',
-  /** UNTRANSLATED */
-  delete_modal_title: 'Delete custom claims',
-  /** UNTRANSLATED */
-  delete_modal_content: 'Are you sure you want to delete the custom claims?',
-  /** UNTRANSLATED */
-  clear: 'Clear',
-  /** UNTRANSLATED */
-  cleared: 'Cleared',
-  /** UNTRANSLATED */
-  restore: 'Restore defaults',
-  /** UNTRANSLATED */
-  restored: 'Restored',
-  /** UNTRANSLATED */
-  data_source_tab: 'Data source',
-  /** UNTRANSLATED */
-  test_tab: 'Test context',
-  /** UNTRANSLATED */
-  jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
+  code_editor_title: 'Personalizza le richieste {{token}}',
+  custom_jwt_create_button: 'Aggiungi richieste personalizzate',
+  custom_jwt_item: 'Richieste personalizzate {{for}}',
+  delete_modal_title: 'Elimina richieste personalizzate',
+  delete_modal_content: 'Sei sicuro di voler eliminare le richieste personalizzate?',
+  clear: 'Pulisci',
+  cleared: 'Pulito',
+  restore: 'Ripristina predefiniti',
+  restored: 'Ripristinato',
+  data_source_tab: 'Sorgente dati',
+  test_tab: 'Contesto di test',
+  jwt_claims_description:
+    'Le richieste predefinite sono incluse automaticamente nel JWT e non possono essere sovrascritte.',
   user_data: {
-    /** UNTRANSLATED */
-    title: 'User data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `data.user` input parameter to provide vital user info.',
+    title: 'Dati utente',
+    subtitle:
+      "Utilizza il parametro di input `data.user` per fornire informazioni vitali sull'utente.",
   },
   token_data: {
-    /** UNTRANSLATED */
-    title: 'Token data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `token` input parameter for current access token payload. ',
+    title: 'Dati token',
+    subtitle:
+      'Utilizza il parametro di input `token` per il payload corrente del token di accesso. ',
   },
   fetch_external_data: {
-    /** UNTRANSLATED */
-    title: 'Fetch external data',
-    /** UNTRANSLATED */
-    subtitle: 'Incorporate data from your external APIs directly into claims.',
-    /** UNTRANSLATED */
+    title: 'Recupera dati esterni',
+    subtitle: 'Incorpora dati direttamente dai tuoi API esterni nelle richieste.',
     description:
-      'Use the `fetch` function to call your external APIs and include the data in your custom claims. Example: ',
+      'Utilizza la funzione `fetch` per chiamare le tue API esterne e includere i dati nelle richieste personalizzate. Esempio: ',
   },
   environment_variables: {
-    /** UNTRANSLATED */
-    title: 'Set environment variables',
-    /** UNTRANSLATED */
-    subtitle: 'Use environment variables to store sensitive information.',
-    /** UNTRANSLATED */
-    input_field_title: 'Add environment variables',
-    /** UNTRANSLATED */
-    sample_code: 'Accessing environment variables in your custom JWT claims handler. Example: ',
+    title: "Imposta variabili d'ambiente",
+    subtitle: "Utilizza variabili d'ambiente per memorizzare informazioni sensibili.",
+    input_field_title: "Aggiungi variabili d'ambiente",
+    sample_code:
+      "Accesso alle variabili d'ambiente nel gestore delle richieste JWT personalizzate. Esempio: ",
   },
-  /** UNTRANSLATED */
   jwt_claims_hint:
-    'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
+    'Limita le richieste personalizzate a meno di 50KB. Le richieste JWT predefinite sono incluse automaticamente nel token e non possono essere sovrascritte.',
   tester: {
-    /** UNTRANSLATED */
-    subtitle: 'Adjust mock token and user data for testing.',
-    /** UNTRANSLATED */
-    run_button: 'Run test',
-    /** UNTRANSLATED */
-    result_title: 'Test result',
+    subtitle: 'Regola il token fittizio e i dati utente per il test.',
+    run_button: 'Esegui test',
+    result_title: 'Risultato del test',
   },
   form_error: {
-    /** UNTRANSLATED */
-    invalid_json: 'Invalid JSON format',
+    invalid_json: 'Formato JSON non valido',
   },
 };
 

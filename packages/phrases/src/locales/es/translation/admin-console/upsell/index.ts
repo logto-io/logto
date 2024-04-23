@@ -35,8 +35,7 @@ const upsell = {
     api_resource: 'Recurso de API',
     machine_to_machine: 'aplicación de máquina a máquina',
     tokens: '{{limit}}M tokens',
-    /** UNTRANSLATED */
-    tenant_member: 'tenant member',
+    tenant_member: 'miembro del tenant',
   },
   charge_notification_for_quota_limit:
     'Has superado tu límite de cuota de {{item}}. Logto agregará cargos por el uso más allá de tu límite de cuota. La facturación comenzará el día en que se lance el nuevo diseño de precios del complemento. <a>Más información</a>',

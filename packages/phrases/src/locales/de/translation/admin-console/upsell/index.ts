@@ -34,9 +34,8 @@ const upsell = {
   add_on_quota_item: {
     api_resource: 'API-Ressource',
     machine_to_machine: 'Machine-to-Machine-Anwendung',
-    tokens: '{{limit}}M Tokens',
-    /** UNTRANSLATED */
-    tenant_member: 'tenant member',
+    tokens: '{{limit}}M Token',
+    tenant_member: 'Mietermitglied',
   },
   charge_notification_for_quota_limit:
     'Sie haben Ihr {{item}}-Quotenlimit überschritten. Logto wird Gebühren für die Nutzung über Ihr Quotenlimit hinaus hinzufügen. Die Abrechnung beginnt am Tag der Veröffentlichung des neuen Add-On-Preisdesigns. <a>Mehr erfahren</a>',

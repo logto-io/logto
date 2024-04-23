@@ -9,8 +9,7 @@ const quota_table = {
     title: '애플리케이션',
     total: '총 애플리케이션 수',
     m2m: '머신 투 머신',
-    /** UNTRANSLATED */
-    third_party: 'Third-party apps',
+    third_party: '타사 앱',
   },
   resource: {
     title: 'API 리소스',
@@ -27,9 +26,9 @@ const quota_table = {
   },
   user_authn: {
     title: '사용자 인증',
-    omni_sign_in: '옴니 사인인',
+    omni_sign_in: '옴니 로그인',
     password: '비밀번호',
-    passwordless: '비밀번호 없음 - 이메일과 SMS',
+    passwordless: '비밀번호 없음 - 이메일 및 SMS',
     email_connector: '이메일 커넥터',
     sms_connector: 'SMS 커넥터',
     social_connectors: '소셜 커넥터',
@@ -66,16 +65,11 @@ const quota_table = {
     hipaa_or_baa_report: 'HIPAA/BAA 보고서',
   },
   developers_and_platform: {
-    /** UNTRANSLATED */
-    title: 'Developers and platform',
-    /** UNTRANSLATED */
-    hooks: 'Webhooks',
-    /** UNTRANSLATED */
-    audit_logs_retention: 'Audit logs retention',
-    /** UNTRANSLATED */
-    jwt_claims: 'JWT claims',
-    /** UNTRANSLATED */
-    tenant_members: 'Tenant members',
+    title: '개발자와 플랫폼',
+    hooks: '웹훅',
+    audit_logs_retention: '감사 로그 보존',
+    jwt_claims: 'JWT 클레임',
+    tenant_members: '테넌트 멤버',
   },
   unlimited: '무제한',
   contact: '문의',
@@ -96,17 +90,14 @@ const quota_table = {
   tokens_tip: 'Logto에서 발행한 모든 종류의 토큰, 액세스 토큰, 리프레시 토큰 등을 포함합니다.',
   mao_tip:
     'MAO (월간 활성 조직)는 빌링 주기 내에서 적어도 하나의 MAU (월간 활성 사용자)를 가진 고유한 조직의 수를 의미합니다.',
-  /** UNTRANSLATED */
-  third_party_tip:
-    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
+  third_party_tip: '타사 앱의 로그인 및 권한 부여에 대해 OIDC ID 공급자로서 Logto를 사용합니다.',
   included: '{{value, number}} 포함',
   included_mao: '{{value, number}} MAO 포함',
   extra_quota_price: '이후 월당 ${{value, number}} / 각각',
   per_month_each: '월당 ${{value, number}} / 각각',
   extra_mao_price: '이후 MAO당 ${{value, number}}',
   per_month: '월당 ${{value, number}}',
-  /** UNTRANSLATED */
-  per_member: 'Then ${{value, number}} per member',
+  per_member: '그런 다음 ${{value, number}} / 회원',
 };
 
 export default Object.freeze(quota_table);

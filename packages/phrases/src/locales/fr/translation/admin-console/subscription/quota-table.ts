@@ -9,8 +9,7 @@ const quota_table = {
     title: 'Applications',
     total: 'Total des applications',
     m2m: 'Machine-à-machine',
-    /** UNTRANSLATED */
-    third_party: 'Third-party apps',
+    third_party: 'Applications tierces',
   },
   resource: {
     title: 'Ressources API',
@@ -66,16 +65,11 @@ const quota_table = {
     hipaa_or_baa_report: 'Rapport HIPAA/BAA',
   },
   developers_and_platform: {
-    /** UNTRANSLATED */
-    title: 'Developers and platform',
-    /** UNTRANSLATED */
+    title: 'Développeurs et plateforme',
     hooks: 'Webhooks',
-    /** UNTRANSLATED */
-    audit_logs_retention: 'Audit logs retention',
-    /** UNTRANSLATED */
-    jwt_claims: 'JWT claims',
-    /** UNTRANSLATED */
-    tenant_members: 'Tenant members',
+    audit_logs_retention: "Conservation des journaux d'audit",
+    jwt_claims: 'Revendications JWT',
+    tenant_members: 'Membres du locataire',
   },
   unlimited: 'Illimité',
   contact: 'Contact',
@@ -83,7 +77,7 @@ const quota_table = {
   days_one: '{{count, number}} jour',
   days_other: '{{count, number}} jours',
   add_on: 'Module complémentaire',
-  tier: 'Niveau{{value, number}} : ',
+  tier: 'Niveau{{value, number}} :',
   paid_token_limit_tip:
     "Logto facturera des frais pour les fonctionnalités qui dépassent votre limite de quota. Vous pouvez l'utiliser gratuitement jusqu'à ce que nous commencions à facturer vers le deuxième trimestre 2024. Si vous avez besoin de plus de jetons, veuillez nous contacter. Par défaut, nous facturons 80 $ par mois pour chaque million de jetons.",
   paid_quota_limit_tip:
@@ -97,17 +91,15 @@ const quota_table = {
     "Tous types de jetons émis par Logto, y compris les jetons d'accès, les jetons de rafraîchissement, etc.",
   mao_tip:
     "MAO (Organisation active mensuelle) désigne le nombre d'organisations uniques ayant au moins un MAU (utilisateur actif mensuel) au cours d'un cycle de facturation.",
-  /** UNTRANSLATED */
   third_party_tip:
-    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
+    "Utilisez Logto comme votre fournisseur d'identité OIDC pour les connexions et les autorisations des applications tierces.",
   included: '{{value, number}} inclus',
   included_mao: '{{value, number}} MAO inclus',
   extra_quota_price: 'Ensuite ${{value, number}} par mois / chacun après',
   per_month_each: '${{value, number}} par mois / chacun',
   extra_mao_price: 'Ensuite ${{value, number}} par MAO',
   per_month: '${{value, number}} par mois',
-  /** UNTRANSLATED */
-  per_member: 'Then ${{value, number}} per member',
+  per_member: 'Ensuite ${{value, number}} par membre',
 };
 
 export default Object.freeze(quota_table);

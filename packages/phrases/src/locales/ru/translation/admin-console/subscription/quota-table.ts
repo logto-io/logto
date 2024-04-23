@@ -9,8 +9,7 @@ const quota_table = {
     title: 'Приложения',
     total: 'Всего приложений',
     m2m: 'Приложения "машина-машина"',
-    /** UNTRANSLATED */
-    third_party: 'Third-party apps',
+    third_party: 'Приложения третьих сторон',
   },
   resource: {
     title: 'Ресурсы API',
@@ -66,24 +65,19 @@ const quota_table = {
     hipaa_or_baa_report: 'Отчет HIPAA/BAA',
   },
   developers_and_platform: {
-    /** UNTRANSLATED */
-    title: 'Developers and platform',
-    /** UNTRANSLATED */
+    title: 'Разработчики и платформа',
     hooks: 'Webhooks',
-    /** UNTRANSLATED */
-    audit_logs_retention: 'Audit logs retention',
-    /** UNTRANSLATED */
-    jwt_claims: 'JWT claims',
-    /** UNTRANSLATED */
-    tenant_members: 'Tenant members',
+    audit_logs_retention: 'Сохранение журналов аудита',
+    jwt_claims: 'JWT утверждения',
+    tenant_members: 'Члены арендаторов',
   },
   unlimited: 'Неограниченно',
   contact: 'Связаться',
-  monthly_price: '${{value, number}}/мес.',
+  monthly_price: '$ {{value, number}} /мес.',
   days_one: '{{count, number}} день',
   days_other: '{{count, number}} дней',
   add_on: 'Дополнительно',
-  tier: 'Уровень{{value, number}}: ',
+  tier: 'Уровень {{value, number}}: ',
   paid_token_limit_tip:
     'Logto будет взимать плату за функции, выходящие за пределы вашего квоты. Вы можете использовать его бесплатно до начала начисления сборов, примерно со второго квартала 2024 года. Если вам нужны дополнительные токены, свяжитесь с нами. По умолчанию мы выставляем счет в $80 в месяц за каждый миллион токенов.',
   paid_quota_limit_tip:
@@ -97,17 +91,15 @@ const quota_table = {
     'Все виды токенов, выпущенных Logto, включая токены доступа, токены обновления и т. д.',
   mao_tip:
     'MAO (ежемесячно активная организация) означает количество уникальных организаций, у которых есть хотя бы один MAU (ежемесячно активный пользователь) в биллинговом цикле.',
-  /** UNTRANSLATED */
   third_party_tip:
-    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
-  included: 'включено{{value, number}}',
+    'Используйте Logto в качестве поставщика идентификации OIDC для входа в сторонние приложения и предоставления разрешений.',
+  included: 'включено {{value, number}}',
   included_mao: '{{value, number}} MAO включено',
-  extra_quota_price: 'Затем ${{value, number}} в месяц / за каждый после',
-  per_month_each: '${{value, number}} в месяц / за каждый',
-  extra_mao_price: 'Затем ${{value, number}} за MAO',
-  per_month: '${{value, number}} в месяц',
-  /** UNTRANSLATED */
-  per_member: 'Then ${{value, number}} per member',
+  extra_quota_price: 'Затем $ {{value, number}} в месяц / за каждый после',
+  per_month_each: '$ {{value, number}} в месяц / за каждый',
+  extra_mao_price: 'Затем $ {{value, number}} за MAO',
+  per_month: '$ {{value, number}} в месяц',
+  per_member: 'Затем $ {{value, number}} за участника',
 };
 
 export default Object.freeze(quota_table);

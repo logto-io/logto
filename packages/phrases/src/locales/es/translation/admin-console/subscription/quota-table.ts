@@ -9,8 +9,7 @@ const quota_table = {
     title: 'Aplicaciones',
     total: 'Total de aplicaciones',
     m2m: 'Aplicación machine-to-machine',
-    /** UNTRANSLATED */
-    third_party: 'Third-party apps',
+    third_party: 'Aplicaciones de terceros',
   },
   resource: {
     title: 'Recursos de API',
@@ -29,7 +28,7 @@ const quota_table = {
     title: 'Autenticación de usuario',
     omni_sign_in: 'Inicio de sesión omnicanal',
     password: 'Contraseña',
-    passwordless: 'Sin contraseña - Correo electrónico y SMS',
+    passwordless: 'Inicio de sesión sin contraseña - Correo electrónico y SMS',
     email_connector: 'Conector de correo electrónico',
     sms_connector: 'Conector de SMS',
     social_connectors: 'Conectores sociales',
@@ -66,16 +65,11 @@ const quota_table = {
     hipaa_or_baa_report: 'Informe HIPAA/BAA (Próximamente)',
   },
   developers_and_platform: {
-    /** UNTRANSLATED */
-    title: 'Developers and platform',
-    /** UNTRANSLATED */
+    title: 'Desarrolladores y plataforma',
     hooks: 'Webhooks',
-    /** UNTRANSLATED */
-    audit_logs_retention: 'Audit logs retention',
-    /** UNTRANSLATED */
-    jwt_claims: 'JWT claims',
-    /** UNTRANSLATED */
-    tenant_members: 'Tenant members',
+    audit_logs_retention: 'Retención de registros de auditoría',
+    jwt_claims: 'Reclamos JWT',
+    tenant_members: 'Miembros del inquilino',
   },
   unlimited: 'Ilimitado',
   contact: 'Contacto',
@@ -97,17 +91,15 @@ const quota_table = {
     'Todo tipo de tokens emitidos por Logto, incluyendo tokens de acceso, tokens de actualización, etc.',
   mao_tip:
     'MAO (Organización activa mensual) significa la cantidad de organizaciones únicas que tienen al menos un MAU (usuario activo mensual) en un ciclo de facturación.',
-  /** UNTRANSLATED */
   third_party_tip:
-    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
+    'Utilice Logto como su proveedor de identidades OIDC para iniciar sesión en aplicaciones de terceros y otorgar permisos.',
   included: 'incluido{{value, number}}',
   included_mao: '{{value, number}} MAO incluido',
   extra_quota_price: 'Luego ${{value, number}} por mes / cada uno después',
   per_month_each: '${{value, number}} por mes / cada uno',
   extra_mao_price: 'Luego ${{value, number}} por MAO',
   per_month: '${{value, number}} por mes',
-  /** UNTRANSLATED */
-  per_member: 'Then ${{value, number}} per member',
+  per_member: 'Luego ${{value, number}} por miembro',
 };
 
 export default Object.freeze(quota_table);

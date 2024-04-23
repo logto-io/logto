@@ -7,11 +7,10 @@ const errors = {
   invalid_uri_format: '無効なURI形式',
   invalid_origin_format: '無効なURIの起源の形式',
   invalid_json_format: '無効なJSON形式',
-  /** UNTRANSLATED */
-  invalid_regex: 'Invalid regular expression',
+  invalid_regex: '無効な正規表現',
   invalid_error_message_format: 'エラーメッセージの形式が無効です。',
-  required_field_missing: '{{field}}を入力してください',
-  required_field_missing_plural: '少なくとも1つの{{field}}を入力する必要があります',
+  required_field_missing: "'{{field}}'を入力してください",
+  required_field_missing_plural: "少なくとも1つの'{{field}}'を入力する必要があります",
   more_details: '詳細を見る',
   username_pattern_error:
     'ユーザー名には、文字、数字、またはアンダースコアしか含めることができず、数字で始めることはできません。',
@@ -24,7 +23,7 @@ const errors = {
     '新しい内部ロールを作成しているため、Logtoによって禁止されています。 「#internal：」で始まらない別の名前を試してください。',
   should_be_an_integer: '整数である必要があります。',
   number_should_be_between_inclusive:
-    '{{min}}から{{max}}（両方含む）までの数値である必要があります。',
+    "'{{min}}'から'{{max}}'（両方含む）までの数値である必要があります。",
 };
 
 export default Object.freeze(errors);

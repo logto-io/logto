@@ -7,8 +7,7 @@ const errors = {
   invalid_uri_format: '无效的 URI 格式',
   invalid_origin_format: '无效的 URI origin 格式',
   invalid_json_format: '无效的 JSON 格式',
-  /** UNTRANSLATED */
-  invalid_regex: 'Invalid regular expression',
+  invalid_regex: '无效的正则表达式',
   invalid_error_message_format: '非法的错误信息格式',
   required_field_missing: '请输入{{field}}',
   required_field_missing_plural: '至少需要输入一个{{field}}',

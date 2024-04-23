@@ -1,8 +1,6 @@
 const jwt_customizer = {
-  /** UNTRANSLATED */
-  general: 'An error occurred while customizing the JWT token. Please try again later.',
-  /** UNTRANSLATED */
-  can_not_create_for_admin_tenant: 'Cannot create a JWT token customizer for the admin tenant.',
+  general: 'JWT belirteci özelleştirilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.',
+  can_not_create_for_admin_tenant: 'Yönetici kiracı için bir JWT belirteci özelleştirelemez.',
 };
 
 export default Object.freeze(jwt_customizer);

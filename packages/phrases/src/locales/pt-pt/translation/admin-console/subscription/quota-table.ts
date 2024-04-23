@@ -9,8 +9,7 @@ const quota_table = {
     title: 'Aplicações',
     total: 'Total de aplicações',
     m2m: 'Aplicações de máquina para máquina',
-    /** UNTRANSLATED */
-    third_party: 'Third-party apps',
+    third_party: 'Aplicações de terceiros',
   },
   resource: {
     title: 'Recursos da API',
@@ -66,16 +65,11 @@ const quota_table = {
     hipaa_or_baa_report: 'Relatório HIPAA/BAA',
   },
   developers_and_platform: {
-    /** UNTRANSLATED */
-    title: 'Developers and platform',
-    /** UNTRANSLATED */
+    title: 'Programadores e plataforma',
     hooks: 'Webhooks',
-    /** UNTRANSLATED */
-    audit_logs_retention: 'Audit logs retention',
-    /** UNTRANSLATED */
-    jwt_claims: 'JWT claims',
-    /** UNTRANSLATED */
-    tenant_members: 'Tenant members',
+    audit_logs_retention: 'Retenção de registos de auditoria',
+    jwt_claims: 'Reivindicações JWT',
+    tenant_members: 'Membros do inquilino',
   },
   unlimited: 'Ilimitado',
   contact: 'Contactar',
@@ -97,17 +91,15 @@ const quota_table = {
     'Todos os tipos de tokens emitidos pelo Logto, incluindo token de acesso, token de atualização, etc.',
   mao_tip:
     'MAO (Organização Ativa Mensal) significa o número de organizações únicas que têm pelo menos um MAU (Utilizador Ativo Mensal) num ciclo de faturação.',
-  /** UNTRANSLATED */
   third_party_tip:
-    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
+    'Utilize o Logto como o seu fornecedor de identidade OIDC para inícios de sessão de aplicações de terceiros e outorga de permissões.',
   included: 'incluído{{value, number}}',
   included_mao: '{{value, number}} MAO incluída',
   extra_quota_price: 'Depois ${{value, number}} por mês / cada um depois',
   per_month_each: '${{value, number}} por mês / cada um',
   extra_mao_price: 'Depois ${{value, number}} por MAO',
   per_month: '${{value, number}} por mês',
-  /** UNTRANSLATED */
-  per_member: 'Then ${{value, number}} per member',
+  per_member: 'Depois ${{value, number}} por membro',
 };
 
 export default Object.freeze(quota_table);

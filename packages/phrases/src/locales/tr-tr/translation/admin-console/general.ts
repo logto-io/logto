@@ -25,11 +25,9 @@ const general = {
   customize: 'Özelleştir',
   enable: 'Etkinleştir',
   reminder: 'Hatırlatıcı',
-  /** UNTRANSLATED */
-  edit: 'Edit',
+  edit: 'Düzenle',
   delete: 'Sil',
-  /** UNTRANSLATED */
-  deleted: 'Deleted',
+  deleted: 'Silindi',
   more_options: 'DAHA FAZLA SEÇENEK',
   close: 'Kapat',
   copy: 'Kopyala',
@@ -59,8 +57,7 @@ const general = {
   demo: 'Demo',
   unnamed: 'İsimsiz',
   view: 'Görünüm',
-  /** UNTRANSLATED */
-  open: 'Open',
+  open: 'Aç',
   hide: 'Gizle',
   unknown_error: 'Bilinmeyen hata, lütfen daha sonra tekrar deneyin.',
   select: 'Seç',
@@ -72,8 +69,7 @@ const general = {
   edit_field: '{{field}} Düzenle',
   delete_field: '{{field}} Sil',
   coming_soon: 'Yakında',
-  /** UNTRANSLATED */
-  or: 'Or',
+  or: 'Veya',
 };
 
 export default Object.freeze(general);

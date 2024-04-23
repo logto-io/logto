@@ -7,8 +7,7 @@ const errors = {
   invalid_uri_format: 'Geçersiz URI biçimi',
   invalid_origin_format: 'Geçersiz URI kaynak biçimi',
   invalid_json_format: 'Geçersiz JSON biçimi',
-  /** UNTRANSLATED */
-  invalid_regex: 'Invalid regular expression',
+  invalid_regex: 'Geçersiz düzenli ifade',
   invalid_error_message_format: 'Hata mesajı biçimi geçersiz.',
   required_field_missing: 'Lütfen {{field}} giriniz',
   required_field_missing_plural: 'En az bir {{field}} girmek zorundasınız.',

@@ -25,11 +25,9 @@ const general = {
   customize: '사용자화',
   enable: '활성화',
   reminder: '리마인더',
-  /** UNTRANSLATED */
-  edit: 'Edit',
+  edit: '편집',
   delete: '삭제',
-  /** UNTRANSLATED */
-  deleted: 'Deleted',
+  deleted: '삭제됨',
   more_options: '더 많은 설정',
   close: '닫기',
   copy: '복사',
@@ -58,8 +56,7 @@ const general = {
   demo: '데모',
   unnamed: '이름없음',
   view: '보기',
-  /** UNTRANSLATED */
-  open: 'Open',
+  open: '열기',
   hide: '숨기기',
   unknown_error: '알 수 없는 오류가 발생했습니다. 나중에 다시 시도해주세요.',
   select: '선택',
@@ -71,8 +68,7 @@ const general = {
   edit_field: '{{field}} 편집',
   delete_field: '{{field}} 삭제',
   coming_soon: '곧 출시 예정',
-  /** UNTRANSLATED */
-  or: 'Or',
+  or: '또는',
 };
 
 export default Object.freeze(general);

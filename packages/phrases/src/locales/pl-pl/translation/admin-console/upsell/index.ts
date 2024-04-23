@@ -8,7 +8,7 @@ const upsell = {
   create_tenant: {
     title: 'Wybierz swój plan najemcy',
     description:
-      'Logto oferuje konkurencyjne opcje planów z innowacyjnym i przystępnym cenowo modelu dla rozwijających się firm. <a>Dowiedz się więcej</a>',
+      'Logto oferuje konkurencyjne opcje planów z innowacyjnym i przystępnym cenowo modelem dla rozwijających się firm. <a>Dowiedz się więcej</a>',
     base_price: 'Cena podstawowa',
     monthly_price: '{{value, number}}/mies.',
     view_all_features: 'Zobacz wszystkie funkcje',
@@ -35,11 +35,10 @@ const upsell = {
     api_resource: 'Zasób API',
     machine_to_machine: 'aplikacja od maszyny do maszyny',
     tokens: '{{limit}}M tokenów',
-    /** UNTRANSLATED */
-    tenant_member: 'tenant member',
+    tenant_member: 'członek najemcy',
   },
   charge_notification_for_quota_limit:
-    'Przekroczyłeś limit kwoty {{item}}. Logto doliczy opłaty za korzystanie poza limitem kwoty. Fakturowanie rozpocznie się w dniu wprowadzenia nowego projektu cenowego dodatku. <a>Dowiedz się więcej</a>',
+    'Przekroczyłeś limit kwoty {{item}}. Logto doliczy opłaty za korzystanie poza limitem. Fakturowanie rozpocznie się w dniu wprowadzenia nowego projektu cenowego dodatku. <a>Dowiedz się więcej</a>',
   paywall,
   featured_plan_content,
 };

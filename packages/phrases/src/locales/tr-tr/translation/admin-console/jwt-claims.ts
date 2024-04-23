@@ -1,98 +1,62 @@
 const jwt_claims = {
-  /** UNTRANSLATED */
-  title: 'Custom JWT',
-  /** UNTRANSLATED */
+  title: 'Özel JWT',
   description:
-    'Set up custom JWT claims to include in the access token. These claims can be used to pass additional information to your application.',
+    'Erişim belgesine dahil edilecek özel JWT iddialarını ayarlayın. Bu iddialar, uygulamanıza ek bilgi iletmek için kullanılabilir.',
   user_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For user',
-    /** UNTRANSLATED */
-    card_field: 'User access token',
-    /** UNTRANSLATED */
-    card_description: 'Add user-specific data during access token issuance.',
-    /** UNTRANSLATED */
-    for: 'for user',
+    card_title: 'Kullanıcı İçin',
+    card_field: 'Kullanıcı erişim belgesi',
+    card_description: 'Erişim belgesi verilirken kullanıcıya özgü veri ekleyin.',
+    for: 'kullanıcı için',
   },
   machine_to_machine_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For M2M',
-    /** UNTRANSLATED */
-    card_field: 'Machine-to-machine token',
-    /** UNTRANSLATED */
-    card_description: 'Add extra data during machine-to-machine token issuance.',
-    /** UNTRANSLATED */
-    for: 'for M2M',
+    card_title: 'Makine için',
+    card_field: 'Makine-makine belgesi',
+    card_description: 'Makine-makine belgesi verilirken ek veri ekleyin.',
+    for: 'M2M için',
   },
-  /** UNTRANSLATED */
-  code_editor_title: 'Customize the {{token}} claims',
-  /** UNTRANSLATED */
-  custom_jwt_create_button: 'Add custom claims',
-  /** UNTRANSLATED */
-  custom_jwt_item: 'Custom claims {{for}}',
-  /** UNTRANSLATED */
-  delete_modal_title: 'Delete custom claims',
-  /** UNTRANSLATED */
-  delete_modal_content: 'Are you sure you want to delete the custom claims?',
-  /** UNTRANSLATED */
-  clear: 'Clear',
-  /** UNTRANSLATED */
-  cleared: 'Cleared',
-  /** UNTRANSLATED */
-  restore: 'Restore defaults',
-  /** UNTRANSLATED */
-  restored: 'Restored',
-  /** UNTRANSLATED */
-  data_source_tab: 'Data source',
-  /** UNTRANSLATED */
-  test_tab: 'Test context',
-  /** UNTRANSLATED */
-  jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
+  code_editor_title: 'Özel {{token}} iddialarını özelleştirin',
+  custom_jwt_create_button: 'Özel iddialar ekle',
+  custom_jwt_item: 'Özel iddialar {{for}}',
+  delete_modal_title: 'Özel iddiaları sil',
+  delete_modal_content: 'Özel iddiaları silmek istediğinizden emin misiniz?',
+  clear: 'Temizle',
+  cleared: 'Temizlendi',
+  restore: 'Varsayılanları geri yükle',
+  restored: 'Geri yüklendi',
+  data_source_tab: 'Veri kaynağı',
+  test_tab: 'Test bağlamı',
+  jwt_claims_description:
+    "Varsayılan iddialar JWT'de otomatik olarak dahil edilir ve geçersiz kılınabilir.",
   user_data: {
-    /** UNTRANSLATED */
-    title: 'User data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `data.user` input parameter to provide vital user info.',
+    title: 'Kullanıcı verisi',
+    subtitle:
+      '`veri.kullanıcı` giriş parametresini kullanarak önemli kullanıcı bilgilerini sağlayın.',
   },
   token_data: {
-    /** UNTRANSLATED */
-    title: 'Token data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `token` input parameter for current access token payload. ',
+    title: 'Belge verisi',
+    subtitle: '`belge` giriş parametresini mevcut erişim belgesi yükü için kullanın. ',
   },
   fetch_external_data: {
-    /** UNTRANSLATED */
-    title: 'Fetch external data',
-    /** UNTRANSLATED */
-    subtitle: 'Incorporate data from your external APIs directly into claims.',
-    /** UNTRANSLATED */
+    title: 'Harici veri al',
+    subtitle: "Harici API'larınızdan verileri doğrudan iddialara dahil edin.",
     description:
-      'Use the `fetch` function to call your external APIs and include the data in your custom claims. Example: ',
+      "`fetch` işlevini kullanarak harici API'larınızı çağırın ve verileri özel iddialarınıza dahil edin. Örnek: ",
   },
   environment_variables: {
-    /** UNTRANSLATED */
-    title: 'Set environment variables',
-    /** UNTRANSLATED */
-    subtitle: 'Use environment variables to store sensitive information.',
-    /** UNTRANSLATED */
-    input_field_title: 'Add environment variables',
-    /** UNTRANSLATED */
-    sample_code: 'Accessing environment variables in your custom JWT claims handler. Example: ',
+    title: 'Ortam değişkenlerini ayarla',
+    subtitle: 'Hassas bilgileri depolamak için ortam değişkenlerini kullanın.',
+    input_field_title: 'Ortam değişkenleri ekle',
+    sample_code: 'Özel JWT iddialarınızı ele alan ortam değişkenlerine erişim. Örnek: ',
   },
-  /** UNTRANSLATED */
   jwt_claims_hint:
-    'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
+    "Özel iddiaları 50KB'ın altında tutun. Varsayılan JWT iddiaları otomatik olarak belgeye dahil edilir ve geçersiz kılınamazlar.",
   tester: {
-    /** UNTRANSLATED */
-    subtitle: 'Adjust mock token and user data for testing.',
-    /** UNTRANSLATED */
-    run_button: 'Run test',
-    /** UNTRANSLATED */
-    result_title: 'Test result',
+    subtitle: 'Test için sahte belge ve kullanıcı verilerini ayarlayın.',
+    run_button: 'Testi Çalıştır',
+    result_title: 'Test sonucu',
   },
   form_error: {
-    /** UNTRANSLATED */
-    invalid_json: 'Invalid JSON format',
+    invalid_json: 'Geçersiz JSON biçimi',
   },
 };
 
