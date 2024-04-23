@@ -34,11 +34,11 @@ const quota_item = {
     not_eligible: 'Удалите свои приложения для машин ко машине',
   },
   third_party_applications_limit: {
-    name: 'Third-party apps',
-    limited: '{{count, number}} third-party app',
-    limited_other: '{{count, number}} third-party apps',
-    unlimited: 'Unlimited third-party apps',
-    not_eligible: 'Remove your third-party apps',
+    name: 'Приложения сторонних разработчиков',
+    limited: '{{count, number}} приложение сторонних разработчиков',
+    limited_other: '{{count, number}} приложения сторонних разработчиков',
+    unlimited: 'Неограниченное количество приложений сторонних разработчиков',
+    not_eligible: 'Удалите свои приложения сторонних разработчиков',
   },
   resources_limit: {
     name: 'API ресурсы',
@@ -147,17 +147,17 @@ const quota_item = {
     not_eligible: 'Удалите свой Единый вход для предприятий',
   },
   tenant_members_limit: {
-    name: 'Tenant members',
-    limited: '{{count, number}} tenant member',
-    limited_other: '{{count, number}} tenant members',
-    unlimited: 'Unlimited tenant members',
-    not_eligible: 'Remove your tenant members',
+    name: 'Участники арендаторов',
+    limited: '{{count, number}} участник арендатора',
+    limited_other: '{{count, number}} участников арендатора',
+    unlimited: 'Неограниченное количество участников арендатора',
+    not_eligible: 'Удалите своих участников арендатора',
   },
   custom_jwt_enabled: {
-    name: 'Custom JWT',
-    limited: 'Custom JWT',
-    unlimited: 'Custom JWT',
-    not_eligible: 'Remove your JWT claims customizer',
+    name: 'Пользовательский JWT',
+    limited: 'Пользовательский JWT',
+    unlimited: 'Пользовательский JWT',
+    not_eligible: 'Удалите свой настраиваемый создатель токенов JWT',
   },
 };
 

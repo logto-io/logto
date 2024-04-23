@@ -154,9 +154,9 @@ const quota_item = {
     not_eligible: 'Rimuovi i tuoi membri Tenant',
   },
   custom_jwt_enabled: {
-    name: 'Custom JWT',
-    limited: 'Custom JWT',
-    unlimited: 'Custom JWT',
+    name: 'JWT personalizzato',
+    limited: 'JWT personalizzato',
+    unlimited: 'JWT personalizzato',
     not_eligible: 'Rimuovi il tuo personalizzatore di claim JWT',
   },
 };

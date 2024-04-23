@@ -35,7 +35,6 @@ const upsell = {
     api_resource: 'API-ресурс',
     machine_to_machine: 'приложение "машина-машина"',
     tokens: '{{limit}}M токенов',
-    /** UNTRANSLATED */
     tenant_member: 'член арендатора',
   },
   charge_notification_for_quota_limit:

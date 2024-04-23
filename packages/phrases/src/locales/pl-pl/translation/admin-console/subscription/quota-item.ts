@@ -147,17 +147,17 @@ const quota_item = {
     not_eligible: 'Usuń swoje SSO przedsiębiorstwa',
   },
   tenant_members_limit: {
-    name: 'Tenant members',
-    limited: '{{count, number}} tenant member',
-    limited_other: '{{count, number}} tenant members',
-    unlimited: 'Unlimited tenant members',
-    not_eligible: 'Remove your tenant members',
+    name: 'Członkowie najemcy',
+    limited: '{{count, number}} członek najemcy',
+    limited_other: '{{count, number}} członków najemcy',
+    unlimited: 'Nieograniczona liczba członków najemcy',
+    not_eligible: 'Usuń swoich członków najemcy',
   },
   custom_jwt_enabled: {
-    name: 'Custom JWT',
-    limited: 'Custom JWT',
-    unlimited: 'Custom JWT',
-    not_eligible: 'Remove your JWT claims customizer',
+    name: 'Niestandardowy JWT',
+    limited: 'Niestandardowy JWT',
+    unlimited: 'Niestandardowy JWT',
+    not_eligible: 'Usuń swoje niestandardowe narzędzie tworzące JWT',
   },
 };
 

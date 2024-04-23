@@ -34,11 +34,11 @@ const quota_item = {
     not_eligible: 'Makineye makine uygulamalarınızı kaldırın',
   },
   third_party_applications_limit: {
-    name: 'Third-party apps',
-    limited: '{{count, number}} third-party app',
-    limited_other: '{{count, number}} third-party apps',
-    unlimited: 'Unlimited third-party apps',
-    not_eligible: 'Remove your third-party apps',
+    name: 'Üçüncü taraf uygulamalar',
+    limited: '{{count, number}} üçüncü taraf uygulama',
+    limited_other: '{{count, number}} üçüncü taraf uygulamalar',
+    unlimited: 'Sınırsız üçüncü taraf uygulamalar',
+    not_eligible: 'Üçüncü taraf uygulamalarınızı kaldırın',
   },
   resources_limit: {
     name: 'API kaynakları',
@@ -147,17 +147,17 @@ const quota_item = {
     not_eligible: "Kurumsal SSO'nuzu kaldırın",
   },
   tenant_members_limit: {
-    name: 'Tenant members',
-    limited: '{{count, number}} tenant member',
-    limited_other: '{{count, number}} tenant members',
-    unlimited: 'Unlimited tenant members',
-    not_eligible: 'Remove your tenant members',
+    name: 'Kiracı üyeleri',
+    limited: '{{count, number}} kiracı üyesi',
+    limited_other: '{{count, number}} kiracı üyeleri',
+    unlimited: 'Sınırsız kiracı üyeleri',
+    not_eligible: 'Kiracı üyelerinizi kaldırın',
   },
   custom_jwt_enabled: {
-    name: 'Custom JWT',
-    limited: 'Custom JWT',
-    unlimited: 'Custom JWT',
-    not_eligible: 'Remove your JWT claims customizer',
+    name: 'Özel JWT',
+    limited: 'Özel JWT',
+    unlimited: 'Özel JWT',
+    not_eligible: 'JWT taleplerinizin özelleştiricisini kaldırın',
   },
 };
 

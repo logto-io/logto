@@ -147,17 +147,17 @@ const quota_item = {
     not_eligible: '기업 SSO를 제거하십시오',
   },
   tenant_members_limit: {
-    name: 'Tenant members',
-    limited: '{{count, number}} tenant member',
-    limited_other: '{{count, number}} tenant members',
-    unlimited: 'Unlimited tenant members',
-    not_eligible: 'Remove your tenant members',
+    name: '테넌트 멤버',
+    limited: '{{count, number}} 테넌트 멤버',
+    limited_other: '{{count, number}} 테넌트 멤버',
+    unlimited: '제한 없는 테넌트 멤버',
+    not_eligible: '테넌트 멤버를 제거하십시오',
   },
   custom_jwt_enabled: {
-    name: 'Custom JWT',
-    limited: 'Custom JWT',
-    unlimited: 'Custom JWT',
-    not_eligible: 'Remove your JWT claims customizer',
+    name: '사용자 정의 JWT',
+    limited: '사용자 정의 JWT',
+    unlimited: '사용자 정의 JWT',
+    not_eligible: '사용자 정의 JWT 클레임 사용자를 제거하십시오',
   },
 };
 
