@@ -144,7 +144,7 @@ export default function initOidc(
 
           const { client, params } = ctx.oidc;
           /**
-           * In consent or code excange flow, the organization_id is undefined,
+           * In consent or code exchange flow, the organization_id is undefined,
            * and all the scopes inherited from the all organization roles will be granted.
            * In the flow of granting token for organization with api resource,
            * this value is set to the organization id,
