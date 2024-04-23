@@ -38,6 +38,9 @@
     "pnpm": "^8.10.0"
   },
   "pnpm": {
+    "overrides": {
+      "formidable@<3.2.4": "^3.2.4"
+    },
     "peerDependencyRules": {
       "allowedVersions": {
         "react": "^18.0.0",
