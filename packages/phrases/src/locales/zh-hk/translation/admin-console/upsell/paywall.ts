@@ -31,6 +31,8 @@ const paywall = {
     '已達到<planName/>的{{count, number}}個社交連接器限制。為滿足您團隊的需求，請升級計劃以獲取額外的社交連接器，並可以使用 OIDC、OAuth 2.0 和 SAML 協議創建您自己的連接器。如需任何協助，請<a>聯繫我們</a>。',
   standard_connectors_pro:
     '已達到<planName/>的{{count, number}}個標準連接器限制。為滿足您團隊的需求，請升級至企業版計劃以獲取額外的社交連接器，並可以使用 OIDC、OAuth 2.0 和 SAML 協議創建您自己的連接器。如需任何協助，歡迎<a>聯絡我們</a>。',
+  standard_connectors_pro_other:
+    '已達到<planName/>的{{count, number}}個標準連接器限制。為滿足您團隊的需求，請升級至企業版計劃以獲取額外的社交連接器，並可以使用 OIDC、OAuth 2.0 和 SAML 協議創建您自己的連接器。如需任何協助，歡迎<a>聯繫我們</a>。',
   roles:
     '已達到<planName/>的{{count, number}}個角色限制。升級計劃以添加額外的角色和權限。如需任何協助，歡迎<a>聯絡我們</a>。',
   roles_other:
