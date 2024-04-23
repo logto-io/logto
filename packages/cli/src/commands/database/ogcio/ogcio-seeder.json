@@ -95,22 +95,22 @@
             {
                 "id": "mock-api",
                 "name": "Life Events Mock API",
-                "indicator": "http://localhost:8000"
+                "indicator": "http://localhost:8000/"
             },
             {
                 "id": "payments-api",
                 "name": "Life Events Payments API",
-                "indicator": "http://localhost:8001"
+                "indicator": "http://localhost:8001/"
             },
             {
                 "id": "messaging-api",
                 "name": "Life Events Messaging API",
-                "indicator": "http://localhost:8002"
+                "indicator": "http://localhost:8002/"
             },
             {
                 "id": "user-profile-api",
                 "name": "Life Events User Profile API",
-                "indicator": "http://localhost:8003"
+                "indicator": "http://localhost:8003/"
             }
         ],
         "resource_permissions": [
