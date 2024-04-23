@@ -66,9 +66,9 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     cloudConnection: CloudConnectionLibrary;
   }
 ): Promise<UnknownObject | undefined> => {
-  const { isDevFeaturesEnabled, isCloud } = EnvSet.values;
+  const { isCloud } = EnvSet.values;
   // No cloud connection for OSS version, skip.
-  if (!isDevFeaturesEnabled || !isCloud) {
+  if (!isCloud) {
     return;
   }
 
