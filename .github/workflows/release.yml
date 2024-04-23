@@ -12,7 +12,7 @@ concurrency:
 jobs:
   dockerize:
     if: startsWith(github.ref, 'refs/tags/')
-    environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' || '' }}
+    environment: "release"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -58,6 +58,51 @@ jobs:
         with:
           platforms: linux/amd64, linux/arm64
           project: g902cp6dvv
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  # Build and push the edge image on every master push
+  # Use docker to build and push the amd64 image directly.
+  # No need to use depot without arm64 support
+  dockerize-ghcr-edge:
+    if: ${{ !startsWith(github.ref, 'refs/tags/')}}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/logto-io/logto
+            svhd/logto
+          tags: |
+            type=edge
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: |
+            ghcr.io
+          username: silverhand-bot
+          password: ${{ secrets.BOT_PAT }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push docker image
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
