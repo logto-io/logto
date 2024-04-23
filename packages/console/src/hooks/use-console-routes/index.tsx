@@ -65,7 +65,7 @@ export const useConsoleRoutes = () => {
         profile,
         { path: 'signing-keys', element: <SigningKeys /> },
         isCloud && tenantSettings,
-        isCloud && isDevFeaturesEnabled && customizeJwt
+        isCloud && customizeJwt
       ),
     [tenantSettings]
   );
