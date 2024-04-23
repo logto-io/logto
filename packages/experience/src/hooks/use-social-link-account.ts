@@ -4,10 +4,12 @@ import { linkWithSocial } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 
 import useErrorHandler from './use-error-handler';
+import useGlobalRedirectTo from './use-global-redirect-to';
 
 const useLinkSocial = () => {
   const handleError = useErrorHandler();
   const asyncLinkWithSocial = useApi(linkWithSocial);
+  const redirectTo = useGlobalRedirectTo();
 
   return useCallback(
     async (connectorId: string) => {
@@ -20,10 +22,10 @@ const useLinkSocial = () => {
       }
 
       if (result?.redirectTo) {
-        window.location.replace(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
-    [asyncLinkWithSocial, handleError]
+    [asyncLinkWithSocial, handleError, redirectTo]
   );
 };
 

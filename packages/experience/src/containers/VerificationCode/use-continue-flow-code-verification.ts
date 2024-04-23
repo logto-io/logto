@@ -1,12 +1,13 @@
 import type { EmailVerificationCodePayload, PhoneVerificationCodePayload } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
-import { useMemo, useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { addProfileWithVerificationCodeIdentifier } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import type { VerificationCodeIdentifier } from '@/types';
 import { SearchParameters } from '@/types';
@@ -21,6 +22,7 @@ const useContinueFlowCodeVerification = (
   errorCallback?: () => void
 ) => {
   const [searchParameters] = useSearchParams();
+  const redirectTo = useGlobalRedirectTo();
 
   const handleError = useErrorHandler();
   const verifyVerificationCode = useApi(addProfileWithVerificationCodeIdentifier);
@@ -76,10 +78,16 @@ const useContinueFlowCodeVerification = (
       }
 
       if (result?.redirectTo) {
-        window.location.replace(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
-    [errorCallback, handleError, verifyVerificationCode, verifyVerificationCodeErrorHandlers]
+    [
+      errorCallback,
+      handleError,
+      redirectTo,
+      verifyVerificationCode,
+      verifyVerificationCodeErrorHandlers,
+    ]
   );
 
   return {

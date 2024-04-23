@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import type { PasswordSignInPayload } from '@/apis/interaction';
 import { signInWithPasswordIdentifier } from '@/apis/interaction';
@@ -7,11 +7,13 @@ import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 
+import useGlobalRedirectTo from './use-global-redirect-to';
 import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
 
 const usePasswordSignIn = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
+  const redirectTo = useGlobalRedirectTo();
 
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
@@ -51,10 +53,10 @@ const usePasswordSignIn = () => {
       }
 
       if (result?.redirectTo) {
-        window.location.replace(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
-    [asyncSignIn, checkSingleSignOn, errorHandlers, handleError]
+    [asyncSignIn, checkSingleSignOn, errorHandlers, handleError, redirectTo]
   );
 
   return {

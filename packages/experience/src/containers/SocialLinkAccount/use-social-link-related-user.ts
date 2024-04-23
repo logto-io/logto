@@ -3,11 +3,13 @@ import { useCallback } from 'react';
 import { bindSocialRelatedUser } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 
 const useBindSocialRelatedUser = () => {
   const handleError = useErrorHandler();
   const preSignInErrorHandler = usePreSignInErrorHandler();
+  const redirectTo = useGlobalRedirectTo();
 
   const asyncBindSocialRelatedUser = useApi(bindSocialRelatedUser);
 
@@ -22,10 +24,10 @@ const useBindSocialRelatedUser = () => {
       }
 
       if (result?.redirectTo) {
-        window.location.replace(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
-    [asyncBindSocialRelatedUser, handleError, preSignInErrorHandler]
+    [asyncBindSocialRelatedUser, handleError, preSignInErrorHandler, redirectTo]
   );
 };
 

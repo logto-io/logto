@@ -1,6 +1,6 @@
 import type { EmailVerificationCodePayload, PhoneVerificationCodePayload } from '@logto/schemas';
 import { SignInIdentifier, SignInMode } from '@logto/schemas';
-import { useMemo, useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
@@ -28,6 +29,7 @@ const useRegisterFlowCodeVerification = (
   const { t } = useTranslation();
   const { show } = useConfirmModal();
   const navigate = useNavigate();
+  const redirectTo = useGlobalRedirectTo();
 
   const { signInMode } = useSieMethods();
 
@@ -74,13 +76,14 @@ const useRegisterFlowCodeVerification = (
     }
 
     if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
+      redirectTo(result.redirectTo);
     }
   }, [
     handleError,
     method,
     navigate,
     preSignInErrorHandler,
+    redirectTo,
     show,
     showIdentifierErrorAlert,
     signInMode,
@@ -117,10 +120,10 @@ const useRegisterFlowCodeVerification = (
       }
 
       if (result?.redirectTo) {
-        window.location.replace(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
-    [errorCallback, errorHandlers, handleError, verifyVerificationCode]
+    [errorCallback, errorHandlers, handleError, redirectTo, verifyVerificationCode]
   );
 
   return {

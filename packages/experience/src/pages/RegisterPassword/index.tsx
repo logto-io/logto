@@ -7,6 +7,7 @@ import { setUserPassword } from '@/apis/interaction';
 import SetPassword from '@/containers/SetPassword';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import { type ErrorHandlers } from '@/hooks/use-error-handler';
+import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useMfaErrorHandler from '@/hooks/use-mfa-error-handler';
 import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
 import { usePasswordPolicy, useSieMethods } from '@/hooks/use-sie';
@@ -17,6 +18,7 @@ const RegisterPassword = () => {
   const { signUpMethods } = useSieMethods();
 
   const navigate = useNavigate();
+  const redirectTo = useGlobalRedirectTo();
   const { show } = useConfirmModal();
   const [errorMessage, setErrorMessage] = useState<string>();
   const clearErrorMessage = useCallback(() => {
@@ -37,11 +39,14 @@ const RegisterPassword = () => {
     [navigate, mfaErrorHandler, show]
   );
 
-  const successHandler: SuccessHandler<typeof setUserPassword> = useCallback((result) => {
-    if (result && 'redirectTo' in result) {
-      window.location.replace(result.redirectTo);
-    }
-  }, []);
+  const successHandler: SuccessHandler<typeof setUserPassword> = useCallback(
+    (result) => {
+      if (result && 'redirectTo' in result) {
+        redirectTo(result.redirectTo);
+      }
+    },
+    [redirectTo]
+  );
 
   const [action] = usePasswordAction({
     api: setUserPassword,
