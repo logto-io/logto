@@ -66,7 +66,7 @@ jobs:
   # Build and push the edge image on every master push
   # Use docker to build and push the amd64 image directly.
   # No need to use depot without arm64 support
-  dockerize-ghcr-edge:
+  dockerize-edge-image:
     if: ${{ !startsWith(github.ref, 'refs/tags/')}}
     runs-on: ubuntu-latest
     permissions:
