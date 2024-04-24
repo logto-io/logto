@@ -20,6 +20,13 @@ const organization_details = {
     '移除後，使用者將失去他們在此組織的成員資格和角色。此操作無法撤銷。',
   search_user_placeholder: '按姓名、電子郵件、電話或使用者 ID 搜尋',
   at_least_one_user: '至少需要一名使用者。',
+  /** UNTRANSLATED */
+  custom_data: 'Custom data',
+  /** UNTRANSLATED */
+  custom_data_tip:
+    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
+  /** UNTRANSLATED */
+  invalid_json_object: 'Invalid JSON object.',
 };
 
 export default Object.freeze(organization_details);

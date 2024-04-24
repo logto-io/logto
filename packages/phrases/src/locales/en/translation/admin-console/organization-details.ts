@@ -22,6 +22,10 @@ const organization_details = {
     'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
   search_user_placeholder: 'Search by name, email, phone or user ID',
   at_least_one_user: 'At least one user is required.',
+  custom_data: 'Custom data',
+  custom_data_tip:
+    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
+  invalid_json_object: 'Invalid JSON object.',
 };
 
 export default Object.freeze(organization_details);
