@@ -17,14 +17,16 @@ import { userSearchKeys } from '#src/queries/user.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 
-import { type AuthedRouter, type RouterInitArgs } from '../types.js';
+import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import organizationInvitationRoutes from './invitations.js';
 import organizationRoleRoutes from './roles.js';
 import organizationScopeRoutes from './scopes.js';
 import { errorHandler } from './utils.js';
 
-export default function organizationRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
+export default function organizationRoutes<T extends ManagementApiRouter>(
+  ...args: RouterInitArgs<T>
+) {
   const [
     originalRouter,
     {

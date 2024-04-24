@@ -5,9 +5,9 @@ import { object, string } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type AuthedRouter, type RouterInitArgs } from '../types.js';
+import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
-export default function connectorAuthorizationUriRoutes<T extends AuthedRouter>(
+export default function connectorAuthorizationUriRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   const { getLogtoConnectorById } = tenant.connectors;

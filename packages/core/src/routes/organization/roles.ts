@@ -15,11 +15,11 @@ import { organizationRoleSearchKeys } from '#src/queries/organization/index.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 
-import { type AuthedRouter, type RouterInitArgs } from '../types.js';
+import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import { errorHandler } from './utils.js';
 
-export default function organizationRoleRoutes<T extends AuthedRouter>(
+export default function organizationRoleRoutes<T extends ManagementApiRouter>(
   ...[
     originalRouter,
     {

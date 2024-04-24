@@ -14,9 +14,11 @@ import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
+export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
+  ...args: RouterInitArgs<T>
+) {
   const [router, { queries, libraries }] = args;
   const {
     oidcModelInstances: { revokeInstanceByUserId },
@@ -346,9 +348,9 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
 
       ctx.body = pick(user, ...userInfoSelectFields);
 
+      // eslint-disable-next-line max-lines
       return next();
     }
-    // eslint-disable-next-line max-lines
   );
 
   router.delete(

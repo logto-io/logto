@@ -20,9 +20,11 @@ import { uploadFileGuard } from '#src/utils/storage/consts.js';
 import { buildUploadFile } from '#src/utils/storage/index.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function userAssetsRoutes<T extends ManagementApiRouter>(
+  ...[router]: RouterInitArgs<T>
+) {
   router.get(
     '/user-assets/service-status',
     koaGuard({

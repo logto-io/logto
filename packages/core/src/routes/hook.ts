@@ -20,13 +20,13 @@ import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { type AllowedKeyPrefix } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 const nonemptyUniqueHookEventsGuard = hookEventsGuard
   .nonempty()
   .transform((events) => deduplicate(events));
 
-export default function hookRoutes<T extends AuthedRouter>(
+export default function hookRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {

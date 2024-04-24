@@ -5,9 +5,9 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { type AllowedKeyPrefix } from '#src/queries/log.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function logRoutes<T extends AuthedRouter>(
+export default function logRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const { findLogById, countLogs, findLogs } = queries.logs;

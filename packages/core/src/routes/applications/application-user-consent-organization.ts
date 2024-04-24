@@ -4,9 +4,9 @@ import { z } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 
-import { type AuthedRouter, type RouterInitArgs } from '../types.js';
+import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
-export default function applicationUserConsentOrganizationRoutes<T extends AuthedRouter>(
+export default function applicationUserConsentOrganizationRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {

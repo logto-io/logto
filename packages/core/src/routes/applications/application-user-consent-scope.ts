@@ -7,9 +7,9 @@ import { object, string, nativeEnum } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-export default function applicationUserConsentScopeRoutes<T extends AuthedRouter>(
+export default function applicationUserConsentScopeRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {

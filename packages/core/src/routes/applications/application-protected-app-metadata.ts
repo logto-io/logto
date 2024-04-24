@@ -6,9 +6,9 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type AuthedRouter, type RouterInitArgs } from '../types.js';
+import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
-export default function applicationProtectedAppMetadataRoutes<T extends AuthedRouter>(
+export default function applicationProtectedAppMetadataRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {

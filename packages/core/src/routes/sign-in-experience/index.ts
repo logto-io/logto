@@ -6,9 +6,9 @@ import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experienc
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-export default function signInExperiencesRoutes<T extends AuthedRouter>(
+export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries, connectors }]: RouterInitArgs<T>
 ) {
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;

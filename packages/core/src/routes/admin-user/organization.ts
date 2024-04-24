@@ -3,9 +3,9 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { type AuthedRouter, type RouterInitArgs } from '../types.js';
+import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
-export default function adminUserOrganizationRoutes<T extends AuthedRouter>(
+export default function adminUserOrganizationRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   router.get(
