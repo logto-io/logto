@@ -1,4 +1,4 @@
-import { HookEvent, type Hook } from '@logto/schemas';
+import { InteractionHookEvent, type Hook } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
 import { getHookCreationPayload } from '#src/helpers/hook.js';
@@ -32,10 +32,13 @@ describe('hook testing', () => {
   });
 
   it('should return 204 if test hook successfully', async () => {
-    const payload = getHookCreationPayload(HookEvent.PostRegister, responseSuccessEndpoint);
+    const payload = getHookCreationPayload(
+      InteractionHookEvent.PostRegister,
+      responseSuccessEndpoint
+    );
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
     const response = await authedAdminApi.post(`hooks/${created.id}/test`, {
-      json: { events: [HookEvent.PostSignIn], config: { url: responseSuccessEndpoint } },
+      json: { events: [InteractionHookEvent.PostSignIn], config: { url: responseSuccessEndpoint } },
     });
     expect(response.status).toBe(204);
 
@@ -47,7 +50,10 @@ describe('hook testing', () => {
     const invalidHookId = 'invalid_id';
     await expectRejects(
       authedAdminApi.post(`hooks/${invalidHookId}/test`, {
-        json: { events: [HookEvent.PostSignIn], config: { url: responseSuccessEndpoint } },
+        json: {
+          events: [InteractionHookEvent.PostSignIn],
+          config: { url: responseSuccessEndpoint },
+        },
       }),
       {
         code: 'entity.not_exists_with_id',
@@ -57,11 +63,11 @@ describe('hook testing', () => {
   });
 
   it('should return 422 if the hook endpoint is not working', async () => {
-    const payload = getHookCreationPayload(HookEvent.PostRegister);
+    const payload = getHookCreationPayload(InteractionHookEvent.PostRegister);
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
     await expectRejects(
       authedAdminApi.post(`hooks/${created.id}/test`, {
-        json: { events: [HookEvent.PostSignIn], config: { url: 'not_work_url' } },
+        json: { events: [InteractionHookEvent.PostSignIn], config: { url: 'not_work_url' } },
       }),
       {
         code: 'hook.send_test_payload_failed',
@@ -74,11 +80,11 @@ describe('hook testing', () => {
   });
 
   it('should return 422 and contains endpoint response if the hook endpoint return 500', async () => {
-    const payload = getHookCreationPayload(HookEvent.PostRegister);
+    const payload = getHookCreationPayload(InteractionHookEvent.PostRegister);
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
     await expectRejects(
       authedAdminApi.post(`hooks/${created.id}/test`, {
-        json: { events: [HookEvent.PostSignIn], config: { url: responseErrorEndpoint } },
+        json: { events: [InteractionHookEvent.PostSignIn], config: { url: responseErrorEndpoint } },
       }),
       {
         code: 'hook.endpoint_responded_with_error',

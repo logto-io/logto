@@ -5,7 +5,7 @@ import type { IRouterParamContext } from 'koa-router';
 import {
   type InteractionHookContext,
   type InteractionHookResult,
-} from '#src/libraries/hook/index.js';
+} from '#src/libraries/hook/types.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 

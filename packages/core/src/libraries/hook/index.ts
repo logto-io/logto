@@ -1,7 +1,6 @@
 import {
-  HookEvent,
+  type HookEvent,
   type HookEventPayload,
-  InteractionEvent,
   LogResult,
   userInfoSelectFields,
   type HookConfig,
@@ -15,34 +14,13 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 
+import {
+  type InteractionHookContext,
+  type InteractionHookResult,
+  eventToHook,
+  type ManagementHookContextManager,
+} from './types.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
-
-/**
- * The context for triggering interaction hooks by `triggerInteractionHooks`.
- * In the `koaInteractionHooks` middleware,
- * we will store the context before processing the interaction and consume it after the interaction is processed if needed.
- */
-export type InteractionHookContext = {
-  event: InteractionEvent;
-  sessionId?: string;
-  applicationId?: string;
-  userIp?: string;
-};
-
-/**
- * The interaction hook result for triggering interaction hooks by `triggerInteractionHooks`.
- * In the `koaInteractionHooks` middleware,
- * if we get an interaction hook result after the interaction is processed, related hooks will be triggered.
- */
-export type InteractionHookResult = {
-  userId: string;
-};
-
-const eventToHook: Record<InteractionEvent, HookEvent> = {
-  [InteractionEvent.Register]: HookEvent.PostRegister,
-  [InteractionEvent.SignIn]: HookEvent.PostSignIn,
-  [InteractionEvent.ForgotPassword]: HookEvent.PostResetPassword,
-};
 
 export const createHookLibrary = (queries: Queries) => {
   const {
@@ -132,6 +110,15 @@ export const createHookLibrary = (queries: Queries) => {
     );
   };
 
+  /**
+   * Trigger management hooks with the given context. All context objects will be used to trigger
+   * hooks.
+   */
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const triggerManagementHooks = async (hooks: ManagementHookContextManager) => {
+    // TODO: To be implemented
+  };
+
   const testHook = async (hookId: string, events: HookEvent[], config: HookConfig) => {
     const { signingKey } = await findHookById(hookId);
     try {
@@ -169,6 +156,7 @@ export const createHookLibrary = (queries: Queries) => {
 
   return {
     triggerInteractionHooks,
+    triggerManagementHooks,
     testHook,
   };
 };

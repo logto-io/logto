@@ -3,7 +3,7 @@ import { type RequestListener } from 'node:http';
 
 import {
   type Hook,
-  HookEvent,
+  InteractionHookEvent,
   type LogKey,
   LogResult,
   SignInIdentifier,
@@ -76,7 +76,7 @@ describe('trigger hooks', () => {
 
   it('should trigger sign-in hook and record error when interaction finished', async () => {
     const createdHook = await authedAdminApi
-      .post('hooks', { json: getHookCreationPayload(HookEvent.PostSignIn) })
+      .post('hooks', { json: getHookCreationPayload(InteractionHookEvent.PostSignIn) })
       .json<Hook>();
     const logKey: LogKey = 'TriggerHook.PostSignIn';
 
@@ -107,18 +107,18 @@ describe('trigger hooks', () => {
   it('should trigger multiple register hooks and record properly when interaction finished', async () => {
     const [hook1, hook2, hook3] = await Promise.all([
       authedAdminApi
-        .post('hooks', { json: getHookCreationPayload(HookEvent.PostRegister) })
+        .post('hooks', { json: getHookCreationPayload(InteractionHookEvent.PostRegister) })
         .json<Hook>(),
       authedAdminApi
         .post('hooks', {
-          json: getHookCreationPayload(HookEvent.PostRegister, 'http://localhost:9999'),
+          json: getHookCreationPayload(InteractionHookEvent.PostRegister, 'http://localhost:9999'),
         })
         .json<Hook>(),
       // Using the old API to create a hook
       authedAdminApi
         .post('hooks', {
           json: {
-            event: HookEvent.PostRegister,
+            event: InteractionHookEvent.PostRegister,
             config: { url: 'http://localhost:9999', retries: 2 },
           },
         })
@@ -172,7 +172,7 @@ describe('trigger hooks', () => {
   it('should secure webhook payload data successfully', async () => {
     const createdHook = await authedAdminApi
       .post('hooks', {
-        json: getHookCreationPayload(HookEvent.PostRegister, 'http://localhost:9999'),
+        json: getHookCreationPayload(InteractionHookEvent.PostRegister, 'http://localhost:9999'),
       })
       .json<Hook>();
 
@@ -219,7 +219,10 @@ describe('trigger hooks', () => {
     // Create a reset password hook
     const resetPasswordHook = await authedAdminApi
       .post('hooks', {
-        json: getHookCreationPayload(HookEvent.PostResetPassword, 'http://localhost:9999'),
+        json: getHookCreationPayload(
+          InteractionHookEvent.PostResetPassword,
+          'http://localhost:9999'
+        ),
       })
       .json<Hook>();
     const logKey: LogKey = 'TriggerHook.PostResetPassword';

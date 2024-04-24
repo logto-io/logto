@@ -1,12 +1,39 @@
 import { z } from 'zod';
 
-export enum HookEvent {
+export enum InteractionHookEvent {
   PostRegister = 'PostRegister',
   PostSignIn = 'PostSignIn',
   PostResetPassword = 'PostResetPassword',
 }
 
-export const hookEventGuard: z.ZodType<HookEvent> = z.nativeEnum(HookEvent);
+enum HookMutableTarget {
+  Role = 'Role',
+  Scope = 'Scope',
+}
+
+enum HookMutationType {
+  Created = 'Created',
+  Updated = 'Updated',
+  Deleted = 'Deleted',
+}
+
+export type ManagementHookEvent = `${HookMutableTarget}.${HookMutationType}`;
+
+export type HookEvent = InteractionHookEvent | ManagementHookEvent;
+
+const hookEvent = Object.freeze([
+  InteractionHookEvent.PostRegister,
+  InteractionHookEvent.PostSignIn,
+  InteractionHookEvent.PostResetPassword,
+  'Role.Created',
+  'Role.Updated',
+  'Role.Deleted',
+  'Scope.Created',
+  'Scope.Updated',
+  'Scope.Deleted',
+] as const satisfies HookEvent[]);
+
+export const hookEventGuard = z.enum(hookEvent);
 
 export const hookEventsGuard = hookEventGuard.array();
 

@@ -1,6 +1,5 @@
 import type { Hook } from '@logto/schemas';
-import { HookEvent, InteractionEvent, LogResult } from '@logto/schemas';
-import { ConsoleLog } from '@logto/shared';
+import { InteractionEvent, InteractionHookEvent, LogResult } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -33,8 +32,8 @@ const hook: Hook = {
   tenantId: 'bar',
   id: 'foo',
   name: 'hook_name',
-  event: HookEvent.PostSignIn,
-  events: [HookEvent.PostSignIn],
+  event: InteractionHookEvent.PostSignIn,
+  events: [InteractionHookEvent.PostSignIn],
   signingKey: 'signing_key',
   enabled: true,
   config: { headers: { bar: 'baz' }, url, retries: 3 },
@@ -97,10 +96,13 @@ describe('triggerInteractionHooks()', () => {
 
     const calledPayload: unknown = insertLog.mock.calls[0][0];
     expect(calledPayload).toHaveProperty('id', mockId);
-    expect(calledPayload).toHaveProperty('key', 'TriggerHook.' + HookEvent.PostSignIn);
+    expect(calledPayload).toHaveProperty('key', 'TriggerHook.' + InteractionHookEvent.PostSignIn);
     expect(calledPayload).toHaveProperty('payload.result', LogResult.Success);
     expect(calledPayload).toHaveProperty('payload.hookId', 'foo');
-    expect(calledPayload).toHaveProperty('payload.hookRequest.body.event', HookEvent.PostSignIn);
+    expect(calledPayload).toHaveProperty(
+      'payload.hookRequest.body.event',
+      InteractionHookEvent.PostSignIn
+    );
     expect(calledPayload).toHaveProperty(
       'payload.hookRequest.body.interactionEvent',
       InteractionEvent.SignIn
@@ -121,8 +123,8 @@ describe('testHook', () => {
   it('should call sendWebhookRequest with correct values', async () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
-    await testHook(hook.id, [HookEvent.PostSignIn], hook.config);
-    const testHookPayload = generateHookTestPayload(hook.id, HookEvent.PostSignIn);
+    await testHook(hook.id, [InteractionHookEvent.PostSignIn], hook.config);
+    const testHookPayload = generateHookTestPayload(hook.id, InteractionHookEvent.PostSignIn);
     expect(sendWebhookRequest).toHaveBeenCalledWith({
       hookConfig: hook.config,
       payload: testHookPayload,
@@ -133,13 +135,19 @@ describe('testHook', () => {
   });
 
   it('should call sendWebhookRequest with correct times if multiple events are provided', async () => {
-    await testHook(hook.id, [HookEvent.PostSignIn, HookEvent.PostResetPassword], hook.config);
+    await testHook(
+      hook.id,
+      [InteractionHookEvent.PostSignIn, InteractionHookEvent.PostResetPassword],
+      hook.config
+    );
     expect(sendWebhookRequest).toBeCalledTimes(2);
   });
 
   it('should throw send test payload failed error if sendWebhookRequest fails', async () => {
     sendWebhookRequest.mockRejectedValueOnce(new Error('test error'));
-    await expect(testHook(hook.id, [HookEvent.PostSignIn], hook.config)).rejects.toThrowError(
+    await expect(
+      testHook(hook.id, [InteractionHookEvent.PostSignIn], hook.config)
+    ).rejects.toThrowError(
       new RequestError({
         code: 'hook.send_test_payload_failed',
         message: 'Error: test error',

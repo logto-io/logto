@@ -1,4 +1,4 @@
-import { type Hook, HookEvent } from '@logto/schemas';
+import { type Hook, InteractionHookEvent } from '@logto/schemas';
 
 export const mockNanoIdForHook = 'random_string';
 
@@ -11,7 +11,7 @@ export const mockHook: Hook = {
   id: mockNanoIdForHook,
   name: 'foo',
   event: null,
-  events: [HookEvent.PostRegister],
+  events: [InteractionHookEvent.PostRegister],
   config: {
     url: 'https://example.com',
   },
@@ -25,7 +25,7 @@ const mockHookData1: Hook = {
   id: 'hook_id_1',
   name: 'foo',
   event: null,
-  events: [HookEvent.PostRegister],
+  events: [InteractionHookEvent.PostRegister],
   config: {
     url: 'https://example1.com',
   },
@@ -39,7 +39,7 @@ const mockHookData2: Hook = {
   id: 'hook_id_2',
   name: 'bar',
   event: null,
-  events: [HookEvent.PostResetPassword],
+  events: [InteractionHookEvent.PostResetPassword],
   config: {
     url: 'https://example2.com',
   },
@@ -53,7 +53,7 @@ const mockHookData3: Hook = {
   id: 'hook_id_3',
   name: 'baz',
   event: null,
-  events: [HookEvent.PostSignIn],
+  events: [InteractionHookEvent.PostSignIn],
   config: {
     url: 'https://example3.com',
   },
