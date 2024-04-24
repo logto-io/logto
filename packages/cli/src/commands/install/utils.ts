@@ -9,7 +9,7 @@ import chalk from 'chalk';
 import { got, RequestError } from 'got';
 import inquirer from 'inquirer';
 import * as semver from 'semver';
-import tar from 'tar';
+import { extract } from 'tar';
 
 import { defaultPath } from '../../constants.js';
 import { createPoolAndDatabaseIfNeeded } from '../../database.js';
@@ -140,7 +140,7 @@ export const decompress = async (toPath: string, tarPath: string) => {
   const run = async () => {
     try {
       await fs.mkdir(toPath);
-      await tar.extract({ file: tarPath, cwd: toPath, strip: 1 });
+      await extract({ file: tarPath, cwd: toPath, strip: 1 });
     } catch (error: unknown) {
       consoleLog.fatal(error);
     }
