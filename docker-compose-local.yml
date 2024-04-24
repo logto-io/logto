@@ -1,5 +1,3 @@
-# This compose file is for demonstration only, do not use in prod.
-version: "3.9"
 services:
   app:
     depends_on:
@@ -27,6 +25,9 @@ services:
   postgres:
     image: postgres:14-alpine
     user: postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: p0stgr3s
@@ -38,3 +39,7 @@ services:
       retries: 5
     ports:
       - 5433:5433
+
+volumes:
+  db:
+    driver: local

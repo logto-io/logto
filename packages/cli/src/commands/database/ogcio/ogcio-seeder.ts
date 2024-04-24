@@ -37,6 +37,8 @@ export type ApplicationSeeder = {
   type: string;
   redirect_uri: string;
   logout_redirect_uri: string;
+  id: string;
+  secret: string;
 };
 
 export type ResourceSeeder = {

@@ -2,13 +2,13 @@
 /* eslint-disable @silverhand/fp/no-mutating-methods */
 /* eslint-disable @silverhand/fp/no-mutation */
 import { Applications } from '@logto/schemas';
-import { generateStandardSecret } from '@logto/shared';
 import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { type ApplicationSeeder } from './ogcio-seeder.js';
 import { createItem } from './queries.js';
 
 type SeedingApplication = {
+  id: string;
   name: string;
   secret: string;
   description: string;
@@ -47,8 +47,9 @@ const fillApplications = (
   const outputValues: Record<string, SeedingApplication> = {};
   for (const inputApp of inputApplications) {
     outputValues[inputApp.name] = {
+      id: inputApp.id,
       name: inputApp.name,
-      secret: generateStandardSecret(),
+      secret: inputApp.secret,
       description: inputApp.description,
       type: inputApp.type,
       oidc_client_metadata: `{"redirectUris": ["${inputApp.redirect_uri}"], "postLogoutRedirectUris": ["${inputApp.logout_redirect_uri}"]}`,

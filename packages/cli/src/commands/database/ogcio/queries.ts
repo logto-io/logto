@@ -91,9 +91,12 @@ export const createItem = async <
 
     const toInsertData = {
       ...params.toInsert,
-      id: generateStandardId(),
       tenant_id: params.tenantId,
     };
+
+    if (!toInsertData.id) {
+      toInsertData.id = generateStandardId();
+    }
 
     await params.transaction.query(insertInto(toInsertData, params.tableName));
     params.toInsert.id = await getInsertedId(

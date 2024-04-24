@@ -74,21 +74,27 @@
                 "description": "Payments App of Life Events",
                 "type": "Traditional",
                 "redirect_uri": "http://localhost:3001/callback",
-                "logout_redirect_uri": "http://localhost:3001"
+                "logout_redirect_uri": "http://localhost:3001",
+                "secret": "bgHz4Ouv2lxXCdc6s6s4IUoNpFAklC15",
+                "id": "2xz6sbi8ch01uhjt1oq8r"
             },
             {
                 "name": "Life Events Messaging App",
                 "description": "Messaging App of Life Events",
                 "type": "Traditional",
                 "redirect_uri": "http://localhost:3002/callback",
-                "logout_redirect_uri": "http://localhost:3002"
+                "logout_redirect_uri": "http://localhost:3002",
+                "secret": "Y3nBMm8Hs3Ugcl4596w5ewgOosvwX4im",
+                "id": "4695d8onfb9f3bv18phtq"
             },
             {
                 "name": "Life Events User Profile App",
                 "description": "User Profile App of Life Events",
                 "type": "Traditional",
                 "redirect_uri": "http://localhost:3003/callback",
-                "logout_redirect_uri": "http://localhost:3003"
+                "logout_redirect_uri": "http://localhost:3003",
+                "secret": "cJIQnTk5txGWWhR9TbCOm9SyiszAd8DP",
+                "id": "cxhrg1h7mu6lqxwc6gl0f"
             }
         ],
         "resources": [
