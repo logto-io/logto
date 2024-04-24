@@ -19,9 +19,8 @@ enum HookMutationType {
 
 export type ManagementHookEvent = `${HookMutableTarget}.${HookMutationType}`;
 
-export type HookEvent = InteractionHookEvent | ManagementHookEvent;
-
-const hookEvent = Object.freeze([
+/** The hook event values that can be registered. */
+export const hookEvents = Object.freeze([
   InteractionHookEvent.PostRegister,
   InteractionHookEvent.PostSignIn,
   InteractionHookEvent.PostResetPassword,
@@ -31,9 +30,12 @@ const hookEvent = Object.freeze([
   'Scope.Created',
   'Scope.Updated',
   'Scope.Deleted',
-] as const satisfies HookEvent[]);
+] as const satisfies Array<InteractionHookEvent | ManagementHookEvent>);
 
-export const hookEventGuard = z.enum(hookEvent);
+/** The type of hook event values that can be registered. */
+export type HookEvent = (typeof hookEvents)[number];
+
+export const hookEventGuard = z.enum(hookEvents);
 
 export const hookEventsGuard = hookEventGuard.array();
 

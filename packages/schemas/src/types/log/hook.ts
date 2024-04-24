@@ -1,8 +1,9 @@
-import type { HookEvent } from '../../foundations/index.js';
+import type { InteractionHookEvent } from '../../foundations/index.js';
 
 /** The type of a hook event. */
 export enum Type {
   TriggerHook = 'TriggerHook',
 }
 
-export type LogKey = `${Type}.${HookEvent}`;
+// TODO: Implement all hook events
+export type LogKey = `${Type}.${InteractionHookEvent}`;

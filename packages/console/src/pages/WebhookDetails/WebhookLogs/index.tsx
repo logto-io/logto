@@ -1,4 +1,4 @@
-import { type Log, HookEvent } from '@logto/schemas';
+import { type Log, InteractionHookEvent } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
@@ -21,7 +21,8 @@ import { type WebhookDetailsOutletContext } from '../types';
 
 import * as styles from './index.module.scss';
 
-const hookLogEventOptions = Object.values(HookEvent).map((event) => ({
+// TODO: Implement all hook events
+const hookLogEventOptions = Object.values(InteractionHookEvent).map((event) => ({
   title: <DynamicT forKey={hookEventLabel[event]} />,
   value: hookEventLogKey[event],
 }));
@@ -96,7 +97,10 @@ function WebhookLogs() {
           dataIndex: 'event',
           colSpan: 6,
           render: ({ key }) => {
-            const event = Object.values(HookEvent).find((event) => hookEventLogKey[event] === key);
+            // TODO: Implement all hook events
+            const event = Object.values(InteractionHookEvent).find(
+              (event) => hookEventLogKey[event] === key
+            );
             return conditional(event && t(hookEventLabel[event])) ?? '-';
           },
         },
