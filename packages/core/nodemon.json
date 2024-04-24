@@ -9,7 +9,8 @@
     "../core/src/",
     "../core/node_modules/",
     ".env",
-    "../../.env"
+    "../../.env",
+    "../connectors/*/lib/"
   ],
   "ext": "json,js,jsx,ts,tsx",
   "delay": 500

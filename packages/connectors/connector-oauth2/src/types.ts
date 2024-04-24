@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { oauth2ConfigGuard } from './oauth2/types.js';
+
 export const profileMapGuard = z
   .object({
     id: z.string().optional().default('id'),
@@ -36,35 +38,11 @@ const tokenEndpointResponseTypeGuard = z
 
 export type TokenEndpointResponseType = z.input<typeof tokenEndpointResponseTypeGuard>;
 
-export const oauthConfigGuard = z.object({
-  responseType: z.literal('code').optional().default('code'),
-  grantType: z.literal('authorization_code').optional().default('authorization_code'),
-  tokenEndpointResponseType: tokenEndpointResponseTypeGuard,
-  authorizationEndpoint: z.string(),
-  tokenEndpoint: z.string(),
+export const oauth2ConnectorConfigGuard = oauth2ConfigGuard.extend({
   userInfoEndpoint: z.string(),
-  clientId: z.string(),
-  clientSecret: z.string(),
-  scope: z.string().optional(),
+  tokenEndpointResponseType: tokenEndpointResponseTypeGuard,
   profileMap: profileMapGuard,
   customConfig: z.record(z.string()).optional(),
 });
 
-export type OauthConfig = z.infer<typeof oauthConfigGuard>;
-
-export const authResponseGuard = z.object({
-  code: z.string(),
-  state: z.string().optional(),
-});
-
-export type AuthResponse = z.infer<typeof authResponseGuard>;
-
-export const accessTokenResponseGuard = z.object({
-  access_token: z.string(),
-  token_type: z.string(),
-  expires_in: z.number().optional(),
-  refresh_token: z.string().optional(),
-  scope: z.string().optional(),
-});
-
-export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
+export type Oauth2ConnectorConfig = z.infer<typeof oauth2ConnectorConfigGuard>;

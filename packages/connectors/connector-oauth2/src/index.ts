@@ -1,6 +1,4 @@
 import { assert, pick } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
-import snakecaseKeys from 'snakecase-keys';
 
 import {
   type GetAuthorizationUri,
@@ -14,45 +12,40 @@ import {
   validateConfig,
   ConnectorType,
 } from '@logto/connector-kit';
+import ky, { HTTPError } from 'ky';
 
 import { defaultMetadata, defaultTimeout } from './constant.js';
-import { oauthConfigGuard } from './types.js';
+import { constructAuthorizationUri } from './oauth2/utils.js';
+import { oauth2ConnectorConfigGuard } from './types.js';
 import { userProfileMapping, getAccessToken } from './utils.js';
 
-const removeUndefinedKeys = (object: Record<string, unknown>) =>
-  Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
+export * from './oauth2/index.js';
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig(config, oauthConfigGuard);
-    const parsedConfig = oauthConfigGuard.parse(config);
-
-    const { customConfig, ...rest } = parsedConfig;
-
-    const parameterObject = snakecaseKeys({
-      ...pick(rest, 'responseType', 'clientId', 'scope'),
-      ...customConfig,
-    });
+    validateConfig(config, oauth2ConnectorConfigGuard);
+    const parsedConfig = oauth2ConnectorConfigGuard.parse(config);
 
     await setSession({ redirectUri });
 
-    const queryParameters = new URLSearchParams({
-      ...removeUndefinedKeys(parameterObject),
-      state,
-      redirect_uri: redirectUri,
-    });
+    const { authorizationEndpoint, customConfig } = parsedConfig;
 
-    return `${parsedConfig.authorizationEndpoint}?${queryParameters.toString()}`;
+    return constructAuthorizationUri(authorizationEndpoint, {
+      ...pick(parsedConfig, 'responseType', 'clientId', 'scope'),
+      redirectUri,
+      state,
+      ...customConfig,
+    });
   };
 
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data, getSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig(config, oauthConfigGuard);
-    const parsedConfig = oauthConfigGuard.parse(config);
+    validateConfig(config, oauth2ConnectorConfigGuard);
+    const parsedConfig = oauth2ConnectorConfigGuard.parse(config);
 
     const { redirectUri } = await getSession();
     assert(
@@ -65,13 +58,14 @@ const getUserInfo =
     const { access_token, token_type } = await getAccessToken(parsedConfig, data, redirectUri);
 
     try {
-      const httpResponse = await got.get(parsedConfig.userInfoEndpoint, {
+      const httpResponse = await ky.get(parsedConfig.userInfoEndpoint, {
         headers: {
           authorization: `${token_type} ${access_token}`,
         },
-        timeout: { request: defaultTimeout },
+        timeout: defaultTimeout,
       });
-      const rawData = parseJsonObject(httpResponse.body);
+
+      const rawData = parseJsonObject(await httpResponse.text());
 
       return { ...userProfileMapping(rawData, parsedConfig.profileMap), rawData };
     } catch (error: unknown) {
@@ -87,7 +81,7 @@ const createOauthConnector: CreateConnector<SocialConnector> = async ({ getConfi
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Social,
-    configGuard: oauthConfigGuard,
+    configGuard: oauth2ConnectorConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),
   };
