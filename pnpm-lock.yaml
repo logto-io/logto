@@ -3141,8 +3141,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       oidc-provider:
-        specifier: ^8.4.5
-        version: 8.4.5
+        specifier: ^8.4.6
+        version: 8.4.6
       openapi-types:
         specifier: ^12.1.3
         version: 12.1.3
@@ -11368,6 +11368,14 @@ packages:
       depd: 2.0.0
       keygrip: 1.1.0
 
+  /cookies@0.9.1:
+    resolution: {integrity: sha512-TG2hpqe4ELx54QER/S3HQ9SRVnQnGBtKUz5bLQWtYAQ+o6GpgMs6sYUvaiJjVxb+UXwhRhAEP3m7LbsIZ77Hmw==}
+    engines: {node: '>= 0.8'}
+    dependencies:
+      depd: 2.0.0
+      keygrip: 1.1.0
+    dev: false
+
   /core-js-compat@3.37.0:
     resolution: {integrity: sha512-vYq4L+T8aS5UuFg4UwDhc7YNRWVeVZwltad9C/jV3R2LgVOpS9BDr7l/WL6BN0dbV3k1XejPTHqqEzJgsa0frA==}
     dependencies:
@@ -15631,6 +15639,11 @@ packages:
 
   /jose@5.2.2:
     resolution: {integrity: sha512-/WByRr4jDcsKlvMd1dRJnPfS1GVO3WuKyaurJ/vvXcOaUQO8rnNObCQMlv/5uCceVQIq5Q4WLF44ohsdiTohdg==}
+    dev: true
+
+  /jose@5.2.4:
+    resolution: {integrity: sha512-6ScbIk2WWCeXkmzF6bRPmEuaqy1m8SbsRFMa/FLrSCkGIhj8OLVG/IH+XHVmNMx/KUo8cVWEE6oKR4dJ+S0Rkg==}
+    dev: false
 
   /js-base64@3.7.5:
     resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
@@ -16001,15 +16014,15 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /koa@2.14.2:
-    resolution: {integrity: sha512-VFI2bpJaodz6P7x2uyLiX6RLYpZmOJqNmoCst/Yyd7hQlszyPwG/I9CQJ63nOtKSxpt5M7NH67V6nJL2BwCl7g==}
+  /koa@2.15.3:
+    resolution: {integrity: sha512-j/8tY9j5t+GVMLeioLaxweJiKUayFhlGqNTzf2ZGwL0ZCQijd2RLHK0SLW5Tsko8YyyqCZC2cojIb0/s62qTAg==}
     engines: {node: ^4.8.4 || ^6.10.1 || ^7.10.1 || >= 8.1.4}
     dependencies:
       accepts: 1.3.8
       cache-content-type: 1.0.1
       content-disposition: 0.5.4
       content-type: 1.0.5
-      cookies: 0.8.0
+      cookies: 0.9.1
       debug: 4.3.4
       delegates: 1.0.0
       depd: 2.0.0
@@ -17524,17 +17537,17 @@ packages:
   /obuf@1.1.2:
     resolution: {integrity: sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==}
 
-  /oidc-provider@8.4.5:
-    resolution: {integrity: sha512-2NsPrvIAX1W4ZR41cGbz2Lt2Ci8iXvECh+x+LcKcM115s/h8iB1pwnNlCdIrvAA2iBGM4/TkO75Xg7xb2FCzWA==}
+  /oidc-provider@8.4.6:
+    resolution: {integrity: sha512-liuHBXRaIjer6nPGWagrl5UjPhIZqahqLVPoYlc2WXsRR7XddwNCBUl1ks5r3Q3uCUfMdQTv1VsjmlaObdff8w==}
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 12.0.1
       debug: 4.3.4
       eta: 3.4.0
       got: 13.0.0
-      jose: 5.2.2
+      jose: 5.2.4
       jsesc: 3.0.2
-      koa: 2.14.2
+      koa: 2.15.3
       nanoid: 5.0.7
       object-hash: 3.0.0
       oidc-token-hash: 5.0.3
