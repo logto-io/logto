@@ -87,6 +87,11 @@ const useSingleSignOnListener = (connectorId: string) => {
 
             await registerSingleSignOnIdentity(connectorId);
           },
+          // Redirect to sign-in page if error is not handled by the error handlers
+          global: async (error) => {
+            setToast(error.message);
+            navigate('/' + experience.routes.signIn);
+          },
         });
         return;
       }

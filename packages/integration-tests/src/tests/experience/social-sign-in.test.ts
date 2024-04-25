@@ -31,15 +31,17 @@ describe('social sign-in (with email identifier)', () => {
   // eslint-disable-next-line @silverhand/fp/no-let
   let experience: ExpectExperience;
   const socialUserId = 'foo_' + randomString();
+  const ssoEmailDomain = `foo${randomString()}.com`;
 
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     await setSocialConnector();
+
     const ssoConnector = await createSsoConnector({
       providerName: SsoProviderName.OIDC,
       connectorName: 'test-oidc-' + randomString(),
-      domains: [`foo${randomString()}.com`],
+      domains: [ssoEmailDomain],
       config: {
         clientId: 'foo',
         clientSecret: 'bar',
@@ -159,5 +161,19 @@ describe('social sign-in (with email identifier)', () => {
     await experience.toFillInput('identifier', generateEmail(), { submit: true });
     await experience.toCompleteVerification('continue', 'Email');
     await experience.verifyThenEnd();
+  });
+
+  it('should redirect to the sign-in page if the socialEmail is SSO email domain', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    experience = new ExpectExperience(await browser.newPage());
+    await experience.startWith(demoAppUrl, 'sign-in');
+    await experience.toProcessSocialSignIn({
+      socialUserId,
+      socialEmail: generateEmail(ssoEmailDomain),
+    });
+    await experience.waitForToast(
+      'Single sign on is enabled for this given email. Please sign in with SSO.'
+    );
+    experience.toBeAt('sign-in');
   });
 });
