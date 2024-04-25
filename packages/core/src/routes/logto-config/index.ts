@@ -19,7 +19,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import logtoConfigJwtCustomizerRoutes from './jwt-customizer.js';
 
@@ -59,7 +59,7 @@ const getRedactedOidcKeyResponse = async (
     })
   );
 
-export default function logtoConfigRoutes<T extends AuthedRouter>(
+export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   const { getAdminConsoleConfig, updateAdminConsoleConfig, updateOidcConfigsByKey } =

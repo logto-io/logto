@@ -10,9 +10,9 @@ import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { attachScopesToResources } from '#src/utils/resource.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function resourceRoutes<T extends AuthedRouter>(
+export default function resourceRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {

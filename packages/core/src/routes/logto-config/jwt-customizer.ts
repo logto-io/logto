@@ -16,7 +16,7 @@ import RequestError, { formatZodError } from '#src/errors/RequestError/index.js'
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenKeyType, body: unknown) => {
   if (tokenPath === LogtoJwtTokenKeyType.AccessToken) {
@@ -31,7 +31,7 @@ const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenKeyType, body: unknown) =
   };
 };
 
-export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
+export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     { id: tenantId, queries, logtoConfigs, cloudConnection, libraries },

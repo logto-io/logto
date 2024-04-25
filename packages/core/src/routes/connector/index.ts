@@ -15,7 +15,7 @@ import { buildExtraInfo } from '#src/utils/connectors/extra-information.js';
 import { loadConnectorFactories, transpileLogtoConnector } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import connectorAuthorizationUriRoutes from './authorization-uri.js';
 import connectorConfigTestingRoutes from './config-testing.js';
@@ -32,7 +32,7 @@ const guardConnectorsQuota = async (
 
 const passwordlessConnector = new Set([ConnectorType.Email, ConnectorType.Sms]);
 
-export default function connectorRoutes<T extends AuthedRouter>(
+export default function connectorRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   const {

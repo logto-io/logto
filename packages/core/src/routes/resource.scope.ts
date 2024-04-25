@@ -9,9 +9,9 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function resourceScopeRoutes<T extends AuthedRouter>(
+export default function resourceScopeRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {

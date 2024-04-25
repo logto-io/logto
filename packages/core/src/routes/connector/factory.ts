@@ -6,9 +6,9 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories, transpileConnectorFactory } from '#src/utils/connectors/index.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-export default function connectorFactoryRoutes<T extends AuthedRouter>(
+export default function connectorFactoryRoutes<T extends ManagementApiRouter>(
   ...[router]: RouterInitArgs<T>
 ) {
   router.get(

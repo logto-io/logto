@@ -17,7 +17,7 @@ import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type AuthedRouter, type RouterInitArgs } from '../types.js';
+import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import {
   parseFactoryDetail,
@@ -27,7 +27,7 @@ import {
   validateConnectorConfigConnectionStatus,
 } from './utils.js';
 
-export default function singleSignOnConnectorsRoutes<T extends AuthedRouter>(
+export default function singleSignOnConnectorsRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
   const [

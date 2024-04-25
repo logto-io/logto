@@ -6,11 +6,11 @@ import {
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 const codeType = TemplateType.Generic;
 
-export default function verificationCodeRoutes<T extends AuthedRouter>(
+export default function verificationCodeRoutes<T extends ManagementApiRouter>(
   ...[router, { libraries }]: RouterInitArgs<T>
 ) {
   const {

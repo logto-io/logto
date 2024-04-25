@@ -12,7 +12,7 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import { type UserConditions } from '#src/queries/user.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 const getQueryRelation = (
   excludeRoleId: Nullable<string>,
@@ -39,7 +39,7 @@ const getQueryRelation = (
   return undefined;
 };
 
-export default function adminUserSearchRoutes<T extends AuthedRouter>(
+export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {

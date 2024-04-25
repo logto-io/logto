@@ -10,14 +10,14 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isStrictlyPartial } from '#src/utils/translation.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 const cleanDeepTranslation = (translation: Translation) =>
   // Since `Translation` type actually equals `Partial<Translation>`, force to cast it back to `Translation`.
   // eslint-disable-next-line no-restricted-syntax
   cleanDeep(translation) as Translation;
 
-export default function customPhraseRoutes<T extends AuthedRouter>(
+export default function customPhraseRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {

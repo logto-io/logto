@@ -7,9 +7,9 @@ import { object, string } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-function applicationSignInExperienceRoutes<T extends AuthedRouter>(
+function applicationSignInExperienceRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {

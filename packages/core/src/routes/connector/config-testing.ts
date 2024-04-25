@@ -18,9 +18,9 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/index.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
+export default function connectorConfigTestingRoutes<T extends ManagementApiRouter>(
   ...[router, { cloudConnection }]: RouterInitArgs<T>
 ) {
   const { getClient } = cloudConnection;

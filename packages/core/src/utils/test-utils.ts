@@ -10,7 +10,7 @@ import type { IRouterParamContext } from 'koa-router';
 import Router from 'koa-router';
 import request from 'supertest';
 
-import type { AuthedRouter, AnonymousRouter } from '#src/routes/types.js';
+import type { ManagementApiRouter, AnonymousRouter } from '#src/routes/types.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import type { Options } from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
@@ -106,7 +106,7 @@ export const createContextWithRouteParameters = (
 /**
  * Supertest Request Mock Utils
  **/
-type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (
+type RouteLauncher<T extends ManagementApiRouter | AnonymousRouter> = (
   router: T,
   tenant: TenantContext
 ) => void;
@@ -118,7 +118,7 @@ export function createRequester({
   tenantContext,
 }: {
   anonymousRoutes?: RouteLauncher<AnonymousRouter> | Array<RouteLauncher<AnonymousRouter>>;
-  authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
+  authedRoutes?: RouteLauncher<ManagementApiRouter> | Array<RouteLauncher<ManagementApiRouter>>;
   middlewares?: Middleware[];
   tenantContext?: TenantContext;
 }) {
@@ -142,7 +142,7 @@ export function createRequester({
   }
 
   if (authedRoutes) {
-    const authRouter: AuthedRouter = new Router();
+    const authRouter: ManagementApiRouter = new Router();
 
     authRouter.use(async (ctx, next) => {
       ctx.auth = { type: 'user', id: 'foo' };
