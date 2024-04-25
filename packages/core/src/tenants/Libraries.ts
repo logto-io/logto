@@ -3,7 +3,7 @@ import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js'
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
-import { createJwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
+import { CreateJwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { OrganizationInvitationLibrary } from '#src/libraries/organization-invitation.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
@@ -26,7 +26,7 @@ export default class Libraries {
   hooks = createHookLibrary(this.queries);
   scopes = createScopeLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
-  jwtCustomizers = createJwtCustomizerLibrary(
+  jwtCustomizers = new CreateJwtCustomizerLibrary(
     this.queries,
     this.logtoConfigs,
     this.cloudConnection,

@@ -13,6 +13,7 @@ import { ZodError, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError, { formatZodError } from '#src/errors/RequestError/index.js';
+import { CreateJwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -204,10 +205,6 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
     }
   );
 
-  if (!EnvSet.values.isCloud && !EnvSet.values.isUnitTest) {
-    return;
-  }
-
   router.post(
     '/configs/jwt-customizer/test',
     koaGuard({
@@ -237,7 +234,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
             search: { isTest: 'true' },
           });
         } else {
-          // ctx.body = await libraries.jwtCustomizers.runScriptInLocalVm(body);
+          ctx.body = await CreateJwtCustomizerLibrary.runScriptInLocalVm(body);
         }
       } catch (error: unknown) {
         /**

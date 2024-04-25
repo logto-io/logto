@@ -63,7 +63,7 @@ export const useConsoleRoutes = () => {
         },
         { path: 'signing-keys', element: <SigningKeys /> },
         isCloud && tenantSettings,
-        isCloud && customizeJwt
+        customizeJwt
       ),
     [tenantSettings]
   );

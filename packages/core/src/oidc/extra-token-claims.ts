@@ -12,6 +12,7 @@ import { type KoaContextWithOIDC, type UnknownObject } from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
+import { CreateJwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -145,7 +146,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         search: {},
       });
     }
-    // return await libraries.jwtCustomizers.runScriptInLocalVm(payload);
+    return await CreateJwtCustomizerLibrary.runScriptInLocalVm(payload);
   } catch (error: unknown) {
     const entry = new LogEntry(
       `${jwtCustomizerLog.prefix}.${
