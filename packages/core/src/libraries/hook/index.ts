@@ -1,23 +1,27 @@
 import {
-  type HookEvent,
-  type HookEventPayload,
   LogResult,
   userInfoSelectFields,
+  type Hook,
   type HookConfig,
+  type HookEvent,
+  type HookEventPayload,
   type HookTestErrorResponseData,
+  type InteractionHookEventPayload,
+  type ManagementHookEventPayload,
 } from '@logto/schemas';
-import { type ConsoleLog, generateStandardId } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
+import { consoleLog } from '#src/utils/console.js';
 
 import {
+  eventToHook,
   type InteractionHookContext,
   type InteractionHookResult,
-  eventToHook,
   type ManagementHookContextManager,
 } from './types.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
@@ -31,48 +35,14 @@ export const createHookLibrary = (queries: Queries) => {
     hooks: { findAllHooks, findHookById },
   } = queries;
 
-  const triggerInteractionHooks = async (
-    consoleLog: ConsoleLog,
-    interactionContext: InteractionHookContext,
-    interactionResult: InteractionHookResult,
-    userAgent?: string
-  ) => {
-    const { userId } = interactionResult;
-    const { event, sessionId, applicationId, userIp } = interactionContext;
+  const sendWebhooks = async <T extends HookEventPayload>(hooks: Hook[], payload: T) =>
+    Promise.all(
+      hooks.map(async ({ id, config, signingKey }) => {
+        consoleLog.info(`\tTriggering hook ${id} due to ${payload.event} event`);
 
-    const hookEvent = eventToHook[event];
-    const found = await findAllHooks();
-    const rows = found.filter(
-      ({ event, events, enabled }) =>
-        enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
-    );
-
-    if (rows.length === 0) {
-      return;
-    }
-
-    const [user, application] = await Promise.all([
-      trySafe(findUserById(userId)),
-      trySafe(async () => conditional(applicationId && (await findApplicationById(applicationId)))),
-    ]);
-
-    const payload = {
-      event: hookEvent,
-      interactionEvent: event,
-      createdAt: new Date().toISOString(),
-      sessionId,
-      userAgent,
-      userId,
-      userIp,
-      user: user && pick(user, ...userInfoSelectFields),
-      application: application && pick(application, 'id', 'type', 'name', 'description'),
-    } satisfies Omit<HookEventPayload, 'hookId'>;
-
-    await Promise.all(
-      rows.map(async ({ id, config, signingKey }) => {
-        consoleLog.info(`\tTriggering hook ${id} due to ${hookEvent} event`);
-        const json: HookEventPayload = { hookId: id, ...payload };
-        const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
+        // Required:  Override the hookId in the payload
+        const json: HookEventPayload = { ...payload, hookId: id };
+        const logEntry = new LogEntry(`TriggerHook.${payload.event}`);
 
         logEntry.append({ hookId: id, hookRequest: { body: json } });
 
@@ -108,15 +78,92 @@ export const createHookLibrary = (queries: Queries) => {
         });
       })
     );
+
+  const triggerInteractionHooks = async (
+    interactionContext: InteractionHookContext,
+    interactionResult: InteractionHookResult,
+    userAgent?: string
+  ) => {
+    const { userId } = interactionResult;
+    const { event, sessionId, applicationId, userIp } = interactionContext;
+
+    const hookEvent = eventToHook[event];
+    const found = await findAllHooks();
+    const rows = found.filter(
+      ({ event, events, enabled }) =>
+        enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
+    );
+
+    if (rows.length === 0) {
+      return;
+    }
+
+    const [user, application] = await Promise.all([
+      trySafe(findUserById(userId)),
+      trySafe(async () => conditional(applicationId && (await findApplicationById(applicationId)))),
+    ]);
+
+    const payload = {
+      event: hookEvent,
+      interactionEvent: event,
+      createdAt: new Date().toISOString(),
+      sessionId,
+      userAgent,
+      userId,
+      userIp,
+      user: user && pick(user, ...userInfoSelectFields),
+      application: application && pick(application, 'id', 'type', 'name', 'description'),
+    } satisfies Omit<InteractionHookEventPayload, 'hookId'>;
+
+    await sendWebhooks(rows, {
+      ...payload,
+      /**
+       * Make the typescript happy.
+       * Should not pass the hookId to the payload here.
+       * The hookId should be passed in from the hooks DB element.
+       * This is because typescript Omit does not work well with the Record<string, unknown> type.
+       * We can not use the Omit<HookEventPayload, 'hookId'> type for the sendWebHooks function.
+       */
+      hookId: '',
+    });
   };
 
   /**
    * Trigger management hooks with the given context. All context objects will be used to trigger
    * hooks.
    */
-  // eslint-disable-next-line unicorn/consistent-function-scoping
   const triggerManagementHooks = async (hooks: ManagementHookContextManager) => {
-    // TODO: To be implemented
+    if (hooks.contextArray.length === 0) {
+      return;
+    }
+
+    const found = await findAllHooks();
+
+    await Promise.all(
+      hooks.contextArray.map(async ({ event, data }) => {
+        const rows = found.filter(
+          ({ event: hookEvent, events, enabled }) =>
+            enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
+        );
+
+        if (rows.length === 0) {
+          return;
+        }
+
+        const payload = {
+          event,
+          createdAt: new Date().toISOString(),
+          ...hooks.metadata,
+          ...data,
+        } satisfies Omit<ManagementHookEventPayload, 'hookId'>;
+
+        await sendWebhooks(rows, {
+          ...payload,
+          // Make the typescript happy.
+          hookId: '',
+        });
+      })
+    );
   };
 
   const testHook = async (hookId: string, events: HookEvent[], config: HookConfig) => {

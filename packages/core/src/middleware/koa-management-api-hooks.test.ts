@@ -1,9 +1,10 @@
+import { managementApiHooksRegistration } from '@logto/schemas';
 import { type ParameterizedContext } from 'koa';
 
 import type Libraries from '#src/tenants/Libraries.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { type WithHookContext, koaManagementApiHooks } from './koa-management-api-hooks.js';
+import { koaManagementApiHooks, type WithHookContext } from './koa-management-api-hooks.js';
 
 const { jest } = import.meta;
 
@@ -51,5 +52,41 @@ describe('koaManagementApiHooks', () => {
         ],
       })
     );
+  });
+
+  describe('auto append pre-registered management API hooks', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    const events = Object.entries(managementApiHooksRegistration);
+
+    it.each(events)('should append hook context for %s', async (key, event) => {
+      const [method, route] = key.split(' ') as [string, string];
+
+      const ctx: ParameterizedContext<unknown, WithHookContext> = {
+        ...createContextWithRouteParameters(),
+        header: {},
+        appendHookContext: notToBeCalled,
+        method,
+        _matchedRoute: route,
+        path: route,
+        body: { key },
+        status: 200,
+      };
+
+      await koaManagementApiHooks(mockHooksLibrary)(ctx, next);
+
+      expect(triggerManagementHooks).toBeCalledWith(
+        expect.objectContaining({
+          contextArray: [
+            {
+              event,
+              data: { path: route, method, body: { key }, status: 200 },
+            },
+          ],
+        })
+      );
+    });
   });
 });

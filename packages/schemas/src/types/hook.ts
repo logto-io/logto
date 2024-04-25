@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
 import { Hooks, type Application, type User } from '../db-entries/index.js';
-import { type HookEvent } from '../foundations/index.js';
+import { type InteractionHookEvent, type ManagementHookEvent } from '../foundations/index.js';
 
 import type { userInfoSelectFields } from './user.js';
 
-export type HookEventPayload = {
+export type InteractionHookEventPayload = {
   hookId: string;
-  event: HookEvent;
+  event: InteractionHookEvent;
   createdAt: string;
   sessionId?: string;
   userAgent?: string;
@@ -16,6 +16,20 @@ export type HookEventPayload = {
   user?: Pick<User, (typeof userInfoSelectFields)[number]>;
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
 } & Record<string, unknown>;
+
+export type ManagementHookEventPayload = {
+  hookId: string;
+  event: ManagementHookEvent;
+  createdAt: string;
+  ip?: string;
+  userAgent?: string;
+  body?: Record<string, unknown>;
+  path?: string;
+  status?: number;
+  method?: string;
+} & Record<string, unknown>;
+
+export type HookEventPayload = InteractionHookEventPayload | ManagementHookEventPayload;
 
 const hookExecutionStatsGuard = z.object({
   successCount: z.number(),

@@ -2,7 +2,7 @@ import { InteractionEvent, InteractionHookEvent, type ManagementHookEvent } from
 
 type ManagementHookContext = {
   event: ManagementHookEvent;
-  data: unknown;
+  data?: Record<string, unknown>;
 };
 
 type ManagementHookMetadata = {
@@ -18,9 +18,28 @@ export class ManagementHookContextManager {
 
   constructor(public metadata: ManagementHookMetadata) {}
 
-  appendContext(context: ManagementHookContext) {
+  appendContext({ event, data }: ManagementHookContext) {
+    const existingContext = this.contextArray.find((ctx) => ctx.event === event);
+
+    // Merge with the existing context if event is the same
+    if (existingContext) {
+      this.contextArray = this.contextArray.map((currentContext) => {
+        if (currentContext.event === event) {
+          return {
+            ...currentContext,
+            data: {
+              ...currentContext.data,
+              ...data,
+            },
+          };
+        }
+
+        return currentContext;
+      });
+    }
+
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    this.contextArray.push(context);
+    this.contextArray.push({ event, data });
   }
 }
 

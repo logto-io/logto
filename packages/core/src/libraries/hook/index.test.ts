@@ -5,6 +5,7 @@ import { createMockUtils } from '@logto/shared/esm';
 import RequestError from '#src/errors/RequestError/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 
+import { ManagementHookContextManager } from './types.js';
 import { generateHookTestPayload, parseResponse } from './utils.js';
 
 const { jest } = import.meta;
@@ -28,6 +29,7 @@ const { sendWebhookRequest } = mockEsm('./utils.js', () => ({
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 
 const url = 'https://logto.gg';
+
 const hook: Hook = {
   tenantId: 'bar',
   id: 'foo',
@@ -40,14 +42,26 @@ const hook: Hook = {
   createdAt: Date.now() / 1000,
 };
 
+const managementHook: Hook = {
+  tenantId: 'bar',
+  id: 'foo',
+  name: 'hook_name',
+  event: 'Role.Created',
+  events: ['Role.Created'],
+  enabled: true,
+  signingKey: 'signing_key',
+  config: { headers: { bar: 'baz' }, url, retries: 3 },
+  createdAt: Date.now() / 1000,
+};
+
 const insertLog = jest.fn();
 const mockHookState = { requestCount: 100, successCount: 10 };
 const getHookExecutionStatsByHookId = jest.fn().mockResolvedValue(mockHookState);
-const findAllHooks = jest.fn().mockResolvedValue([hook]);
+const findAllHooks = jest.fn().mockResolvedValue([hook, managementHook]);
 const findHookById = jest.fn().mockResolvedValue(hook);
 
 const { createHookLibrary } = await import('./index.js');
-const { triggerInteractionHooks, testHook } = createHookLibrary(
+const { triggerInteractionHooks, testHook, triggerManagementHooks } = createHookLibrary(
   new MockQueries({
     users: {
       findUserById: jest.fn().mockReturnValue({
@@ -154,5 +168,51 @@ describe('testHook', () => {
         status: 422,
       })
     );
+  });
+});
+
+describe('triggerManagementHooks()', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should set correct payload when hook triggered', async () => {
+    jest.useFakeTimers().setSystemTime(100_000);
+
+    const metadata = { userAgent: 'ua', ip: 'ip' };
+    const hookData = { path: '/test', method: 'POST', body: { success: true } };
+
+    const hooksManager = new ManagementHookContextManager(metadata);
+    hooksManager.appendContext({
+      event: 'Role.Created',
+      data: hookData,
+    });
+
+    await triggerManagementHooks(hooksManager);
+
+    expect(findAllHooks).toHaveBeenCalled();
+
+    expect(sendWebhookRequest).toHaveBeenCalledWith({
+      hookConfig: managementHook.config,
+      payload: {
+        hookId: 'foo',
+        event: 'Role.Created',
+        createdAt: new Date(100_000).toISOString(),
+        ...hookData,
+        ...metadata,
+      },
+      signingKey: managementHook.signingKey,
+    });
+
+    const calledPayload: unknown = insertLog.mock.calls[0][0];
+    expect(calledPayload).toHaveProperty('id', mockId);
+    expect(calledPayload).toHaveProperty('key', 'TriggerHook.Role.Created');
+    expect(calledPayload).toHaveProperty('payload.result', LogResult.Success);
+    expect(calledPayload).toHaveProperty('payload.hookId', 'foo');
+    expect(calledPayload).toHaveProperty('payload.hookRequest.body.event', 'Role.Created');
+    expect(calledPayload).toHaveProperty('payload.hookRequest.body.hookId', 'foo');
+    expect(calledPayload).toHaveProperty('payload.response.statusCode', 200);
+    expect(calledPayload).toHaveProperty('payload.response.body.message', 'ok');
+    jest.useRealTimers();
   });
 });

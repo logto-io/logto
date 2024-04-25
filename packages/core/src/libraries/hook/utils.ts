@@ -1,10 +1,12 @@
 import {
+  ApplicationType,
+  managementApiHooksRegistration,
+  type HookConfig,
   type HookEvent,
   type HookEventPayload,
-  ApplicationType,
-  type HookConfig,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
+import { type IRouterParamContext } from 'koa-router';
 import ky, { type KyResponse } from 'ky';
 
 import { sign } from '#src/utils/sign.js';
@@ -83,3 +85,12 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
     },
   };
 };
+
+export const buildManagementApiHookRegistrationKey = (
+  method: string,
+  route: IRouterParamContext['_matchedRoute']
+) => `${method} ${route}`;
+
+export const hasRegisteredManagementApiHook = (
+  key: string
+): key is keyof typeof managementApiHooksRegistration => key in managementApiHooksRegistration;
