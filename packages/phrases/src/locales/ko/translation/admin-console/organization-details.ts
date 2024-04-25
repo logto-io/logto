@@ -22,6 +22,13 @@ const organization_details = {
     '제거하면 사용자가 이 조직에서 멤버십과 역할을 잃습니다. 이 작업은 취소할 수 없습니다.',
   search_user_placeholder: '이름, 이메일, 전화 또는 사용자 ID로 검색',
   at_least_one_user: '최소한 한 명의 사용자가 필요합니다.',
+  /** UNTRANSLATED */
+  custom_data: 'Custom data',
+  /** UNTRANSLATED */
+  custom_data_tip:
+    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
+  /** UNTRANSLATED */
+  invalid_json_object: 'Invalid JSON object.',
 };
 
 export default Object.freeze(organization_details);

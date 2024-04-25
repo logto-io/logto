@@ -23,6 +23,13 @@ const organization_details = {
   search_user_placeholder:
     'Поиск по имени, электронной почте, телефону или идентификатору пользователя',
   at_least_one_user: 'Необходимо указать хотя бы одного пользователя.',
+  /** UNTRANSLATED */
+  custom_data: 'Custom data',
+  /** UNTRANSLATED */
+  custom_data_tip:
+    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
+  /** UNTRANSLATED */
+  invalid_json_object: 'Invalid JSON object.',
 };
 
 export default Object.freeze(organization_details);
