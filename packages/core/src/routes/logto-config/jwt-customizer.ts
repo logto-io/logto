@@ -229,13 +229,16 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
         useCase: 'test',
       });
 
-      const client = await cloudConnection.getClient();
-
       try {
-        ctx.body = await client.post(`/api/services/custom-jwt`, {
-          body,
-          search: { isTest: 'true' },
-        });
+        if (EnvSet.values.isCloud) {
+          const client = await cloudConnection.getClient();
+          ctx.body = await client.post(`/api/services/custom-jwt`, {
+            body,
+            search: { isTest: 'true' },
+          });
+        } else {
+          // ctx.body = await libraries.jwtCustomizers.runScriptInLocalVm(body);
+        }
       } catch (error: unknown) {
         /**
          * All APIs should throw `RequestError` instead of `Error`.
