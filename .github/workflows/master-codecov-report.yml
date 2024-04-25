@@ -27,9 +27,11 @@ jobs:
         with:
           flags: core
           directory: ./packages/core
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Codecov UI
         uses: codecov/codecov-action@v4
         with:
           flags: experience
           directory: ./packages/experience
+          token: ${{ secrets.CODECOV_TOKEN }}
