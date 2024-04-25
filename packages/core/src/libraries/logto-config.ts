@@ -8,20 +8,12 @@ import {
   jwtCustomizerConfigGuard,
   logtoOidcConfigGuard,
 } from '@logto/schemas';
-import { assert } from '@silverhand/essentials';
 import chalk from 'chalk';
-import deepmerge from 'deepmerge';
 import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
-import {
-  getJwtCustomizerScripts,
-  type CustomJwtDeployRequestBody,
-} from '#src/utils/custom-jwt/index.js';
-
-import { type CloudConnectionLibrary } from './cloud-connection.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
 
@@ -137,85 +129,6 @@ export const createLogtoConfigLibrary = ({
     return updatedRow.value;
   };
 
-  /**
-   * This method is used to deploy the give JWT customizer scripts to the cloud worker service.
-   *
-   * @remarks Since cloud worker service deploy all the JWT customizer scripts at once,
-   * and the latest JWT customizer updates needs to be deployed ahead before saving it to the database,
-   * we need to merge the input payload with the existing JWT customizer scripts.
-   *
-   * @params payload - The latest JWT customizer payload needs to be deployed.
-   * @params payload.key - The tokenType of the JWT customizer.
-   * @params payload.value - JWT customizer value
-   * @params payload.useCase - The use case of JWT customizer script, can be either `test` or `production`.
-   */
-  const deployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(
-    cloudConnection: CloudConnectionLibrary,
-    payload: {
-      key: T;
-      value: JwtCustomizerType[T];
-      useCase: 'test' | 'production';
-    }
-  ) => {
-    const [client, jwtCustomizers] = await Promise.all([
-      cloudConnection.getClient(),
-      getJwtCustomizers(),
-    ]);
-
-    const customizerScriptsFromDatabase = getJwtCustomizerScripts(jwtCustomizers);
-
-    const newCustomizerScripts: CustomJwtDeployRequestBody = {
-      /**
-       * There are at most 4 custom JWT scripts in the `CustomJwtDeployRequestBody`-typed object,
-       * and can be indexed by `data[CustomJwtType][UseCase]`.
-       *
-       * Per our design, each script will be deployed as a API endpoint in the Cloudflare
-       * worker service. A production script will be deployed to `/api/custom-jwt`
-       * endpoint and a test script will be deployed to `/api/custom-jwt/test` endpoint.
-       *
-       * If the current use case is `test`, then the script should be deployed to a `/test` endpoint;
-       * otherwise, the script should be deployed to the `/api/custom-jwt` endpoint and overwrite
-       * previous handler of the API endpoint.
-       */
-      [payload.key]: { [payload.useCase]: payload.value.script },
-    };
-
-    await client.put(`/api/services/custom-jwt/worker`, {
-      body: deepmerge(customizerScriptsFromDatabase, newCustomizerScripts),
-    });
-  };
-
-  const undeployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(
-    cloudConnection: CloudConnectionLibrary,
-    key: T
-  ) => {
-    const [client, jwtCustomizers] = await Promise.all([
-      cloudConnection.getClient(),
-      getJwtCustomizers(),
-    ]);
-
-    assert(jwtCustomizers[key], new RequestError({ code: 'entity.not_exists', key }));
-
-    // Undeploy the worker directly if the only JWT customizer is being deleted.
-    if (Object.entries(jwtCustomizers).length === 1) {
-      await client.delete(`/api/services/custom-jwt/worker`);
-      return;
-    }
-
-    // Remove the JWT customizer script (of given `key`) from the existing JWT customizer scripts and redeploy.
-    const customizerScriptsFromDatabase = getJwtCustomizerScripts(jwtCustomizers);
-    const newCustomizerScripts: CustomJwtDeployRequestBody = {
-      [key]: {
-        production: undefined,
-        test: undefined,
-      },
-    };
-
-    await client.put(`/api/services/custom-jwt/worker`, {
-      body: deepmerge(customizerScriptsFromDatabase, newCustomizerScripts),
-    });
-  };
-
   return {
     getOidcConfigs,
     getCloudConnectionData,
@@ -223,7 +136,5 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizer,
     getJwtCustomizers,
     updateJwtCustomizer,
-    deployJwtCustomizerScript,
-    undeployJwtCustomizerScript,
   };
 };
