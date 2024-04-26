@@ -42,7 +42,7 @@ const hook: Hook = {
   createdAt: Date.now() / 1000,
 };
 
-const managementHook: Hook = {
+const dataHook: Hook = {
   tenantId: 'bar',
   id: 'foo',
   name: 'hook_name',
@@ -57,7 +57,7 @@ const managementHook: Hook = {
 const insertLog = jest.fn();
 const mockHookState = { requestCount: 100, successCount: 10 };
 const getHookExecutionStatsByHookId = jest.fn().mockResolvedValue(mockHookState);
-const findAllHooks = jest.fn().mockResolvedValue([hook, managementHook]);
+const findAllHooks = jest.fn().mockResolvedValue([hook, dataHook]);
 const findHookById = jest.fn().mockResolvedValue(hook);
 
 const { createHookLibrary } = await import('./index.js');
@@ -196,7 +196,7 @@ describe('triggerDataHooks()', () => {
     expect(findAllHooks).toHaveBeenCalled();
 
     expect(sendWebhookRequest).toHaveBeenCalledWith({
-      hookConfig: managementHook.config,
+      hookConfig: dataHook.config,
       payload: {
         hookId: 'foo',
         event: 'Role.Created',
@@ -204,7 +204,7 @@ describe('triggerDataHooks()', () => {
         ...hookData,
         ...metadata,
       },
-      signingKey: managementHook.signingKey,
+      signingKey: dataHook.signingKey,
     });
 
     const calledPayload: unknown = insertLog.mock.calls[0][0];
