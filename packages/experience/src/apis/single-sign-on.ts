@@ -1,6 +1,9 @@
-import api from './api';
+import { InteractionEvent } from '@logto/schemas';
 
-const ssoPrefix = '/api/interaction/single-sign-on';
+import api from './api';
+import { interactionPrefix } from './interaction';
+
+const ssoPrefix = `${interactionPrefix}/single-sign-on`;
 
 type Response = {
   redirectTo: string;
@@ -39,5 +42,12 @@ export const singleSignOnAuthorization = async (connectorId: string, payload: un
     })
     .json<Response>();
 
-export const singleSignOnRegistration = async (connectorId: string) =>
-  api.post(`${ssoPrefix}/${connectorId}/registration`).json<Response>();
+export const singleSignOnRegistration = async (connectorId: string) => {
+  await api.put(`${interactionPrefix}/event`, {
+    json: {
+      event: InteractionEvent.Register,
+    },
+  });
+
+  return api.post(`${ssoPrefix}/${connectorId}/registration`).json<Response>();
+};
