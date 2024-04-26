@@ -29,7 +29,12 @@ describe('configs JWT customizer routes', () => {
     undefined,
     { logtoConfigs: logtoConfigQueries },
     undefined,
-    undefined,
+    {
+      jwtCustomizers: {
+        deployJwtCustomizerScript: jest.fn(),
+        undeployJwtCustomizerScript: jest.fn(),
+      },
+    },
     mockLogtoConfigsLibrary
   );
 
@@ -55,14 +60,11 @@ describe('configs JWT customizer routes', () => {
       .put(`/configs/jwt-customizer/access-token`)
       .send(mockJwtCustomizerConfigForAccessToken.value);
 
-    expect(mockLogtoConfigsLibrary.deployJwtCustomizerScript).toHaveBeenCalledWith(
-      tenantContext.cloudConnection,
-      {
-        key: LogtoJwtTokenKey.AccessToken,
-        value: mockJwtCustomizerConfigForAccessToken.value,
-        useCase: 'production',
-      }
-    );
+    expect(tenantContext.libraries.jwtCustomizers.deployJwtCustomizerScript).toHaveBeenCalledWith({
+      key: LogtoJwtTokenKey.AccessToken,
+      value: mockJwtCustomizerConfigForAccessToken.value,
+      useCase: 'production',
+    });
 
     expect(mockLogtoConfigsLibrary.upsertJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.AccessToken,
@@ -100,14 +102,11 @@ describe('configs JWT customizer routes', () => {
       .patch('/configs/jwt-customizer/access-token')
       .send(mockJwtCustomizerConfigForAccessToken.value);
 
-    expect(mockLogtoConfigsLibrary.deployJwtCustomizerScript).toHaveBeenCalledWith(
-      tenantContext.cloudConnection,
-      {
-        key: LogtoJwtTokenKey.AccessToken,
-        value: mockJwtCustomizerConfigForAccessToken.value,
-        useCase: 'production',
-      }
-    );
+    expect(tenantContext.libraries.jwtCustomizers.deployJwtCustomizerScript).toHaveBeenCalledWith({
+      key: LogtoJwtTokenKey.AccessToken,
+      value: mockJwtCustomizerConfigForAccessToken.value,
+      useCase: 'production',
+    });
 
     expect(mockLogtoConfigsLibrary.updateJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.AccessToken,
@@ -141,8 +140,7 @@ describe('configs JWT customizer routes', () => {
 
   it('DELETE /configs/jwt-customizer/:tokenType should delete the record', async () => {
     const response = await routeRequester.delete('/configs/jwt-customizer/client-credentials');
-    expect(mockLogtoConfigsLibrary.undeployJwtCustomizerScript).toHaveBeenCalledWith(
-      tenantContext.cloudConnection,
+    expect(tenantContext.libraries.jwtCustomizers.undeployJwtCustomizerScript).toHaveBeenCalledWith(
       LogtoJwtTokenKey.ClientCredentials
     );
     expect(logtoConfigQueries.deleteJwtCustomizer).toHaveBeenCalledWith(
@@ -165,14 +163,11 @@ describe('configs JWT customizer routes', () => {
 
     const response = await routeRequester.post('/configs/jwt-customizer/test').send(payload);
 
-    expect(mockLogtoConfigsLibrary.deployJwtCustomizerScript).toHaveBeenCalledWith(
-      tenantContext.cloudConnection,
-      {
-        key: LogtoJwtTokenKey.ClientCredentials,
-        value: payload,
-        useCase: 'test',
-      }
-    );
+    expect(tenantContext.libraries.jwtCustomizers.deployJwtCustomizerScript).toHaveBeenCalledWith({
+      key: LogtoJwtTokenKey.ClientCredentials,
+      value: payload,
+      useCase: 'test',
+    });
 
     expect(mockCloudClient.post).toHaveBeenCalledWith('/api/services/custom-jwt', {
       body: payload,

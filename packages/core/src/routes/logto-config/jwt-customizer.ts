@@ -38,14 +38,9 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
   ]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteJwtCustomizer } = queries.logtoConfigs;
-  const {
-    upsertJwtCustomizer,
-    getJwtCustomizer,
-    getJwtCustomizers,
-    updateJwtCustomizer,
-    deployJwtCustomizerScript,
-    undeployJwtCustomizerScript,
-  } = logtoConfigs;
+  const { upsertJwtCustomizer, getJwtCustomizer, getJwtCustomizers, updateJwtCustomizer } =
+    logtoConfigs;
+  const { deployJwtCustomizerScript, undeployJwtCustomizerScript } = libraries.jwtCustomizers;
 
   router.put(
     '/configs/jwt-customizer/:tokenTypePath',
@@ -83,7 +78,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
       if (!isIntegrationTest) {
-        await deployJwtCustomizerScript(cloudConnection, {
+        await deployJwtCustomizerScript({
           key,
           value: body,
           useCase: 'production',
@@ -127,7 +122,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
       if (!isIntegrationTest) {
-        await deployJwtCustomizerScript(cloudConnection, {
+        await deployJwtCustomizerScript({
           key,
           value: body,
           useCase: 'production',
@@ -199,7 +194,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Undeploy the script first to avoid the case where the JWT customizer was deleted from DB but worker script not updated successfully.
       if (!isIntegrationTest) {
-        await undeployJwtCustomizerScript(cloudConnection, tokenKey);
+        await undeployJwtCustomizerScript(tokenKey);
       }
 
       await deleteJwtCustomizer(tokenKey);
@@ -224,7 +219,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       const { body } = ctx.guard;
 
       // Deploy the test script
-      await deployJwtCustomizerScript(cloudConnection, {
+      await deployJwtCustomizerScript({
         key:
           body.tokenType === LogtoJwtTokenKeyType.AccessToken
             ? LogtoJwtTokenKey.AccessToken

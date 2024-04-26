@@ -84,7 +84,13 @@ export class MockTenant implements TenantContext {
       ...createConnectorLibrary(this.queries, this.cloudConnection),
       ...connectorsOverride,
     };
-    this.libraries = new Libraries(this.id, this.queries, this.connectors, this.cloudConnection);
+    this.libraries = new Libraries(
+      this.id,
+      this.queries,
+      this.connectors,
+      this.cloudConnection,
+      this.logtoConfigs
+    );
     this.setPartial('libraries', librariesOverride);
     this.sentinel = new MockSentinel();
   }
