@@ -14,10 +14,10 @@ const notToBeCalled = () => {
 
 describe('koaManagementApiHooks', () => {
   const next = jest.fn();
-  const triggerManagementHooks = jest.fn();
+  const triggerDataHooks = jest.fn();
   // @ts-expect-error mock
   const mockHooksLibrary: Libraries['hooks'] = {
-    triggerManagementHooks,
+    triggerDataHooks,
   };
 
   it("should do nothing if there's no hook context", async () => {
@@ -27,7 +27,7 @@ describe('koaManagementApiHooks', () => {
       appendHookContext: notToBeCalled,
     };
     await koaManagementApiHooks(mockHooksLibrary)(ctx, next);
-    expect(triggerManagementHooks).not.toBeCalled();
+    expect(triggerDataHooks).not.toBeCalled();
   });
 
   it('should trigger management hooks', async () => {
@@ -41,8 +41,8 @@ describe('koaManagementApiHooks', () => {
     });
 
     await koaManagementApiHooks(mockHooksLibrary)(ctx, next);
-    expect(triggerManagementHooks).toBeCalledTimes(1);
-    expect(triggerManagementHooks).toBeCalledWith(
+    expect(triggerDataHooks).toBeCalledTimes(1);
+    expect(triggerDataHooks).toBeCalledWith(
       expect.objectContaining({
         contextArray: [
           {
@@ -77,7 +77,7 @@ describe('koaManagementApiHooks', () => {
 
       await koaManagementApiHooks(mockHooksLibrary)(ctx, next);
 
-      expect(triggerManagementHooks).toBeCalledWith(
+      expect(triggerDataHooks).toBeCalledWith(
         expect.objectContaining({
           contextArray: [
             {

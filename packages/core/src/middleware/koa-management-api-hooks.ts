@@ -3,15 +3,15 @@ import { trySafe } from '@silverhand/essentials';
 import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
-import { ManagementHookContextManager } from '#src/libraries/hook/types.js';
+import { DataHookContextManager } from '#src/libraries/hook/hook-context-manager.js';
 import {
-  buildManagementApiHookRegistrationKey,
-  hasRegisteredManagementApiHook,
+  buildManagementApiDataHookRegistrationKey,
+  hasRegisteredDataHookEvent,
 } from '#src/libraries/hook/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
 
 export type WithHookContext<ContextT extends IRouterParamContext = IRouterParamContext> =
-  ContextT & { appendHookContext: ManagementHookContextManager['appendContext'] };
+  ContextT & { appendHookContext: DataHookContextManager['appendContext'] };
 
 /**
  * The factory to create a new management hook middleware function.
@@ -30,7 +30,7 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
       ip,
     } = ctx;
 
-    const managementHooks = new ManagementHookContextManager({ userAgent, ip });
+    const managementHooks = new DataHookContextManager({ userAgent, ip });
 
     /**
      * Append a hook context to trigger management hooks. If multiple contexts are appended, all of
@@ -42,17 +42,17 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
 
     // Auto append pre-registered management API hooks if any
     const { path, method, body, status, _matchedRoute } = ctx;
-    const hookRegistrationKey = buildManagementApiHookRegistrationKey(method, _matchedRoute);
+    const hookRegistrationKey = buildManagementApiDataHookRegistrationKey(method, _matchedRoute);
 
     // TODO: @simeng-li do we need to insert the request body to the hook context?
-    if (hasRegisteredManagementApiHook(hookRegistrationKey)) {
+    if (hasRegisteredDataHookEvent(hookRegistrationKey)) {
       const event = managementApiHooksRegistration[hookRegistrationKey];
       managementHooks.appendContext({ event, data: { path, method, body, status } });
     }
 
     if (managementHooks.contextArray.length > 0) {
       // Hooks should not crash the app
-      void trySafe(hooks.triggerManagementHooks(managementHooks));
+      void trySafe(hooks.triggerDataHooks(managementHooks));
     }
   };
 };

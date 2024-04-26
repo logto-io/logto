@@ -1,12 +1,12 @@
 import {
   InteractionHookEvent,
+  LogResult,
+  hook,
+  type CreateHook,
   type Hook,
   type HookConfig,
-  type CreateHook,
-  LogResult,
-  type Log,
-  hook,
   type HookEvents,
+  type Log,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { subDays } from 'date-fns';
@@ -76,10 +76,10 @@ const mockQueries = {
   logs,
 };
 
-const testHook = jest.fn();
+const triggerTestHook = jest.fn();
 
 const mockLibraries = {
-  hooks: { testHook },
+  hooks: { triggerTestHook },
   quota: createMockQuotaLibrary(),
 };
 

@@ -1,23 +1,31 @@
 import { z } from 'zod';
 
+/**
+ * We categorize the hook events into two types:
+ *
+ * InteractionHookEvent: The hook events that are triggered by user interactions.
+ * DataHookEvent: The hook events that are triggered by Logto data mutations.
+ */
+
+// InteractionHookEvent
 export enum InteractionHookEvent {
   PostRegister = 'PostRegister',
   PostSignIn = 'PostSignIn',
   PostResetPassword = 'PostResetPassword',
 }
 
-enum HookMutableTarget {
+// DataHookEvent
+// TODO: @simeng-li implement more data hook events
+enum DataHookMutableSchema {
   Role = 'Role',
-  Scope = 'Scope',
 }
 
-enum HookMutationType {
+enum DataHookMutationType {
   Created = 'Created',
   Updated = 'Updated',
   Deleted = 'Deleted',
 }
-
-export type ManagementHookEvent = `${HookMutableTarget}.${HookMutationType}`;
+export type DataHookEvent = `${DataHookMutableSchema}.${DataHookMutationType}`;
 
 /** The hook event values that can be registered. */
 export const hookEvents = Object.freeze([
@@ -27,10 +35,7 @@ export const hookEvents = Object.freeze([
   'Role.Created',
   'Role.Updated',
   'Role.Deleted',
-  'Scope.Created',
-  'Scope.Updated',
-  'Scope.Deleted',
-] as const satisfies Array<InteractionHookEvent | ManagementHookEvent>);
+] as const satisfies Array<InteractionHookEvent | DataHookEvent>);
 
 /** The type of hook event values that can be registered. */
 export type HookEvent = (typeof hookEvents)[number];
@@ -41,6 +46,9 @@ export const hookEventsGuard = hookEventGuard.array();
 
 export type HookEvents = z.infer<typeof hookEventsGuard>;
 
+/**
+ * Hook configuration for web hook.
+ */
 export const hookConfigGuard = z.object({
   /** We don't need `type` since v1 only has web hook */
   // type: 'web';
@@ -59,7 +67,13 @@ export const hookConfigGuard = z.object({
 
 export type HookConfig = z.infer<typeof hookConfigGuard>;
 
-/** Pre registered management API hooks */
+/**
+ * Management API hooks registration.
+ *
+ * Pre register the hooks that will be triggered by the management API.
+ * Used by the managementApiHooks middleware.
+ * Auto register the following hooks when the management API is called.
+ */
 type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 type ManagementApiHookKey = `${ApiMethod} ${string}`;
 
@@ -67,4 +81,4 @@ export const managementApiHooksRegistration = Object.freeze({
   'POST /roles': 'Role.Created',
   'PATCH /roles/:id': 'Role.Updated',
   'DELETE /roles/:id': 'Role.Deleted',
-} satisfies Record<ManagementApiHookKey, ManagementHookEvent>);
+} satisfies Record<ManagementApiHookKey, DataHookEvent>);

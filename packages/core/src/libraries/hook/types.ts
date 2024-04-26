@@ -1,47 +1,4 @@
-import { InteractionEvent, InteractionHookEvent, type ManagementHookEvent } from '@logto/schemas';
-
-type ManagementHookContext = {
-  event: ManagementHookEvent;
-  data?: Record<string, unknown>;
-};
-
-type ManagementHookMetadata = {
-  userAgent?: string;
-  ip: string;
-};
-
-/**
- * The class for managing Management API hook contexts.
- */
-export class ManagementHookContextManager {
-  contextArray: ManagementHookContext[] = [];
-
-  constructor(public metadata: ManagementHookMetadata) {}
-
-  appendContext({ event, data }: ManagementHookContext) {
-    const existingContext = this.contextArray.find((ctx) => ctx.event === event);
-
-    // Merge with the existing context if event is the same
-    if (existingContext) {
-      this.contextArray = this.contextArray.map((currentContext) => {
-        if (currentContext.event === event) {
-          return {
-            ...currentContext,
-            data: {
-              ...currentContext.data,
-              ...data,
-            },
-          };
-        }
-
-        return currentContext;
-      });
-    }
-
-    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    this.contextArray.push({ event, data });
-  }
-}
+import { InteractionEvent, InteractionHookEvent } from '@logto/schemas';
 
 /**
  * The context for triggering interaction hooks by `triggerInteractionHooks`.
@@ -64,7 +21,7 @@ export type InteractionHookResult = {
   userId: string;
 };
 
-export const eventToHook: Record<InteractionEvent, InteractionHookEvent> = {
+export const interactionEventToHookEvent: Record<InteractionEvent, InteractionHookEvent> = {
   [InteractionEvent.Register]: InteractionHookEvent.PostRegister,
   [InteractionEvent.SignIn]: InteractionHookEvent.PostSignIn,
   [InteractionEvent.ForgotPassword]: InteractionHookEvent.PostResetPassword,

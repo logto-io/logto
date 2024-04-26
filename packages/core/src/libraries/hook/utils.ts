@@ -86,11 +86,11 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
   };
 };
 
-export const buildManagementApiHookRegistrationKey = (
+export const buildManagementApiDataHookRegistrationKey = (
   method: string,
   route: IRouterParamContext['_matchedRoute']
 ) => `${method} ${route}`;
 
-export const hasRegisteredManagementApiHook = (
+export const hasRegisteredDataHookEvent = (
   key: string
 ): key is keyof typeof managementApiHooksRegistration => key in managementApiHooksRegistration;

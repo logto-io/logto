@@ -1,12 +1,14 @@
 import { z } from 'zod';
 
 import { Hooks, type Application, type User } from '../db-entries/index.js';
-import { type InteractionHookEvent, type ManagementHookEvent } from '../foundations/index.js';
+import { type DataHookEvent, type InteractionHookEvent } from '../foundations/index.js';
 
 import type { userInfoSelectFields } from './user.js';
 
-export type InteractionHookEventPayload = {
-  hookId: string;
+// Define a without hookId type ahead.
+// That is because using Omit with Record<string, unknown> will loose type definition.
+// @see https://stackoverflow.com/questions/65013802/loose-type-definition-with-omit-and-keystring-unknown
+export type InteractionHookEventPayloadWithoutHookId = {
   event: InteractionHookEvent;
   createdAt: string;
   sessionId?: string;
@@ -17,9 +19,8 @@ export type InteractionHookEventPayload = {
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
 } & Record<string, unknown>;
 
-export type ManagementHookEventPayload = {
-  hookId: string;
-  event: ManagementHookEvent;
+export type DataHookEventPayloadWithoutHookId = {
+  event: DataHookEvent;
   createdAt: string;
   ip?: string;
   userAgent?: string;
@@ -29,7 +30,19 @@ export type ManagementHookEventPayload = {
   method?: string;
 } & Record<string, unknown>;
 
-export type HookEventPayload = InteractionHookEventPayload | ManagementHookEventPayload;
+export type InteractionHookEventPayload = InteractionHookEventPayloadWithoutHookId & {
+  hookId: string;
+};
+
+export type DataHookEventPayload = DataHookEventPayloadWithoutHookId & {
+  hookId: string;
+};
+
+export type HookEventPayloadWithoutHookId =
+  | InteractionHookEventPayloadWithoutHookId
+  | DataHookEventPayloadWithoutHookId;
+
+export type HookEventPayload = InteractionHookEventPayload | DataHookEventPayload;
 
 const hookExecutionStatsGuard = z.object({
   successCount: z.number(),
