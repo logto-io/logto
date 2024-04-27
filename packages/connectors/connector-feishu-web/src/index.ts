@@ -153,7 +153,7 @@ export function getUserInfo(getConfig: GetConnectorConfig): GetUserInfo {
         avatar,
         email: conditional(email),
         userId: conditional(user_id),
-        phone: conditional(mobile),
+        phone: conditional(mobile?.replace('+', '')),
         rawData: jsonGuard.parse(response.body),
       };
     } catch (error: unknown) {
