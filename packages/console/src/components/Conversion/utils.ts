@@ -13,7 +13,7 @@ export enum GtagConversionId {
 }
 
 export const redditPixelId = 't2_ggt11omdo';
-export const plausibleDataDomain = 'cloud.logto.io';
+export const plausibleDataDomain = 'logto.io';
 
 const logtoProductionHostname = 'logto.io';
 
