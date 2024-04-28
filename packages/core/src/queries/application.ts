@@ -15,6 +15,7 @@ import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
 import ApplicationUserConsentOrganizationsQuery from './application-user-consent-organizations.js';
 import {
+  ApplicationUserConsentOrganizationResourceScopeQueries,
   ApplicationUserConsentOrganizationScopeQueries,
   ApplicationUserConsentResourceScopeQueries,
   createApplicationUserConsentUserScopeQueries,
@@ -253,6 +254,8 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     deleteApplicationById,
     userConsentOrganizationScopes: new ApplicationUserConsentOrganizationScopeQueries(pool),
     userConsentResourceScopes: new ApplicationUserConsentResourceScopeQueries(pool),
+    userConsentOrganizationResourceScopes:
+      new ApplicationUserConsentOrganizationResourceScopeQueries(pool),
     userConsentUserScopes: createApplicationUserConsentUserScopeQueries(pool),
     userConsentOrganizations: new ApplicationUserConsentOrganizationsQuery(pool),
   };

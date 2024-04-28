@@ -15,6 +15,9 @@
                   "resourceScopes": {
                     "description": "A list of resource scope id to assign to the application. Throws error if any given resource scope is not found."
                   },
+                  "organizationResourceScopes": {
+                    "description": "A list of organization resource scope id to assign to the application. Throws error if any given resource scope is not found."
+                  },
                   "userScopes": {
                     "description": "A list of user scope enum value to assign to the application."
                   }
@@ -50,6 +53,9 @@
                     },
                     "resourceScopes": {
                       "description": "A list of resource scope details grouped by resource id assigned to the application."
+                    },
+                    "organizationResourceScopes": {
+                      "description": "A list of organization resource scope details grouped by resource id assigned to the application."
                     },
                     "userScopes": {
                       "description": "A list of user scope enum value assigned to the application."

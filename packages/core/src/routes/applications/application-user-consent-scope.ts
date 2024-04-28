@@ -5,6 +5,7 @@ import {
 } from '@logto/schemas';
 import { object, string, nativeEnum } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -24,6 +25,7 @@ export default function applicationUserConsentScopeRoutes<T extends ManagementAp
           assignApplicationUserConsentScopes,
           getApplicationUserConsentOrganizationScopes,
           getApplicationUserConsentResourceScopes,
+          getApplicationUserConsentOrganizationResourceScopes,
           getApplicationUserConsentScopes,
           deleteApplicationUserConsentScopesByTypeAndScopeId,
         },
@@ -40,6 +42,7 @@ export default function applicationUserConsentScopeRoutes<T extends ManagementAp
       body: object({
         organizationScopes: string().array().optional(),
         resourceScopes: string().array().optional(),
+        organizationResourceScopes: string().array().optional(),
         userScopes: nativeEnum(UserScope).array().optional(),
       }),
       status: [201, 404, 422],
@@ -50,11 +53,15 @@ export default function applicationUserConsentScopeRoutes<T extends ManagementAp
         body,
       } = ctx.guard;
 
+      // TODO @wangsijie: Remove this when feature is enabled in production
+      const { organizationResourceScopes, ...rest } = body;
+      const theBody = EnvSet.values.isDevFeaturesEnabled ? body : rest;
+
       await validateThirdPartyApplicationById(applicationId);
 
-      await validateApplicationUserConsentScopes(body, tenantId);
+      await validateApplicationUserConsentScopes(theBody, tenantId);
 
-      await assignApplicationUserConsentScopes(applicationId, body);
+      await assignApplicationUserConsentScopes(applicationId, theBody);
 
       ctx.status = 201;
 
@@ -68,7 +75,9 @@ export default function applicationUserConsentScopeRoutes<T extends ManagementAp
       params: object({
         applicationId: string(),
       }),
-      response: applicationUserConsentScopesResponseGuard,
+      response: EnvSet.values.isDevFeaturesEnabled
+        ? applicationUserConsentScopesResponseGuard
+        : applicationUserConsentScopesResponseGuard.omit({ organizationResourceScopes: true }),
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -77,17 +86,26 @@ export default function applicationUserConsentScopeRoutes<T extends ManagementAp
       await findApplicationById(applicationId);
 
       // Note: The following queries will return full data schema, we rely on the response guard to filter out the fields we don't need.
-      const [organizationScopes, resourceScopes, userScopes] = await Promise.all([
-        getApplicationUserConsentOrganizationScopes(applicationId),
-        getApplicationUserConsentResourceScopes(applicationId),
-        getApplicationUserConsentScopes(applicationId),
-      ]);
+      const [organizationScopes, resourceScopes, organizationResourceScopes, userScopes] =
+        await Promise.all([
+          getApplicationUserConsentOrganizationScopes(applicationId),
+          getApplicationUserConsentResourceScopes(applicationId),
+          getApplicationUserConsentOrganizationResourceScopes(applicationId),
+          getApplicationUserConsentScopes(applicationId),
+        ]);
 
-      ctx.body = {
-        organizationScopes,
-        resourceScopes,
-        userScopes,
-      };
+      ctx.body = EnvSet.values.isDevFeaturesEnabled
+        ? {
+            organizationScopes,
+            resourceScopes,
+            organizationResourceScopes,
+            userScopes,
+          }
+        : {
+            organizationScopes,
+            resourceScopes,
+            userScopes,
+          };
 
       return next();
     }
