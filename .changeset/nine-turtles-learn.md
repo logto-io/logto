@@ -3,7 +3,7 @@
 "@logto/core": patch
 ---
 
-## Fix the new user from SSO register hook event not triggering bug
+fix the new user from SSO register hook event not triggering bug
 
 ### Issue
 
