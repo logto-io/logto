@@ -18,8 +18,8 @@ import { getInteractionStorage, storeInteractionResult } from './utils/interacti
 import { getSingleSignOnAuthenticationResult } from './utils/single-sign-on-session.js';
 import {
   authorizationUrlPayloadGuard,
-  getSsoAuthorizationUrl,
   getSsoAuthentication,
+  getSsoAuthorizationUrl,
   handleSsoAuthentication,
   registerWithSsoAuthentication,
 } from './utils/single-sign-on.js';
@@ -134,7 +134,6 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     koaInteractionHooks(libraries),
     async (ctx, next) => {
       const {
-        createLog,
         assignInteractionHookResult,
         guard: { params },
       } = ctx;
@@ -146,13 +145,6 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
         signInMode !== SignInMode.SignIn,
         new RequestError({ code: 'auth.forbidden', status: 403 })
       );
-
-      const registerEventUpdateLog = createLog(`Interaction.Register.Update`);
-      registerEventUpdateLog.append({ event: 'register' });
-
-      // Update the interaction session event to register if no related user account found.
-      // Set the merge flag to true to merge the register event with the existing sso interaction session
-      await storeInteractionResult({ event: InteractionEvent.Register }, ctx, provider, true);
 
       // Throw 404 if no related session found
       const authenticationResult = await getSingleSignOnAuthenticationResult(

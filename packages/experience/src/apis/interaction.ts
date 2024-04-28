@@ -2,22 +2,23 @@
 
 import {
   InteractionEvent,
-  type SignInIdentifier,
+  type BindMfaPayload,
   type EmailVerificationCodePayload,
   type PhoneVerificationCodePayload,
+  type SignInIdentifier,
   type SocialConnectorPayload,
   type SocialEmailPayload,
   type SocialPhonePayload,
-  type BindMfaPayload,
   type VerifyMfaPayload,
-  type WebAuthnRegistrationOptions,
   type WebAuthnAuthenticationOptions,
+  type WebAuthnRegistrationOptions,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import api from './api';
 
-const interactionPrefix = '/api/interaction';
+export const interactionPrefix = '/api/interaction';
+
 const verificationPath = `verification`;
 
 type Response = {
