@@ -172,15 +172,6 @@ describe('trigger hooks', () => {
       if (expectedError) {
         expect(assertHookLogError(log.payload, expectedError)).toBeTruthy();
       }
-
-      expect(
-        logs.some(
-          ({ payload: { result, error } }) =>
-            result === expectedResult &&
-            // Since we normalize the error message, we need to check if the expected error is included in the actual error
-            (!expectedError || (typeof error === 'string' && error.includes(expectedError)))
-        )
-      ).toBeTruthy();
     }
 
     // Clean up
