@@ -2,13 +2,14 @@ import { createHmac } from 'node:crypto';
 import { type RequestListener } from 'node:http';
 
 import {
-  type Hook,
+  ConnectorType,
   InteractionHookEvent,
-  type LogKey,
   LogResult,
   SignInIdentifier,
+  type Hook,
   type Log,
-  ConnectorType,
+  type LogContextPayload,
+  type LogKey,
 } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
@@ -58,6 +59,9 @@ const hookServerRequestListener: RequestListener = (request, response) => {
   });
 };
 
+const assertHookLogError = ({ result, error }: LogContextPayload, errorMessage: string) =>
+  result === LogResult.Error && typeof error === 'string' && error.includes(errorMessage);
+
 describe('trigger hooks', () => {
   const { listen, close } = createMockServer(9999, hookServerRequestListener);
 
@@ -92,12 +96,15 @@ describe('trigger hooks', () => {
       createdHook.id,
       new URLSearchParams({ logKey, page_size: '100' })
     );
-    expect(
-      logs.some(
-        ({ payload: { result, error } }) =>
-          result === LogResult.Error && error === 'TypeError: Failed to parse URL from not_work_url'
-      )
-    ).toBeTruthy();
+
+    const hookLog = logs.find(({ payload: { hookId } }) => hookId === createdHook.id);
+    expect(hookLog).toBeTruthy();
+
+    if (hookLog) {
+      expect(
+        assertHookLogError(hookLog.payload, 'Failed to parse URL from not_work_url')
+      ).toBeTruthy();
+    }
 
     // Clean up
     await authedAdminApi.delete(`hooks/${createdHook.id}`);
@@ -137,7 +144,7 @@ describe('trigger hooks', () => {
 
     // Check hook trigger log
     for (const [hook, expectedResult, expectedError] of [
-      [hook1, LogResult.Error, 'TypeError: Failed to parse URL from not_work_url'],
+      [hook1, LogResult.Error, 'Failed to parse URL from not_work_url'],
       [hook2, LogResult.Success, undefined],
       [hook3, LogResult.Success, undefined],
     ] satisfies Array<[Hook, LogResult, Optional<string>]>) {
@@ -147,15 +154,31 @@ describe('trigger hooks', () => {
         new URLSearchParams({ logKey, page_size: '100' })
       );
 
+      const log = logs.find(({ payload: { hookId } }) => hookId === hook.id);
+
+      expect(log).toBeTruthy();
+
+      // Skip the test if the log is not found
+      if (!log) {
+        return;
+      }
+
       // Assert user ip is in the hook request
-      expect(
-        logs.every(({ payload }) => (payload.hookRequest as HookRequest).body.userIp)
-      ).toBeTruthy();
+      expect((log.payload.hookRequest as HookRequest).body.userIp).toBeTruthy();
+
+      // Assert the log result and error message
+      expect(log.payload.result).toEqual(expectedResult);
+
+      if (expectedError) {
+        expect(assertHookLogError(log.payload, expectedError)).toBeTruthy();
+      }
 
       expect(
         logs.some(
           ({ payload: { result, error } }) =>
-            result === expectedResult && (!expectedError || error === expectedError)
+            result === expectedResult &&
+            // Since we normalize the error message, we need to check if the expected error is included in the actual error
+            (!expectedError || (typeof error === 'string' && error.includes(expectedError)))
         )
       ).toBeTruthy();
     }
