@@ -5,5 +5,4 @@ export enum Type {
   TriggerHook = 'TriggerHook',
 }
 
-// TODO: Implement all hook events
 export type LogKey = `${Type}.${HookEvent}`;

@@ -16,25 +16,6 @@ export class DataHookContextManager {
   constructor(public metadata: DataHookMetadata) {}
 
   appendContext({ event, data }: DataHookContext) {
-    const existingContext = this.contextArray.find((ctx) => ctx.event === event);
-
-    // Merge with the existing context if event is the same
-    if (existingContext) {
-      this.contextArray = this.contextArray.map((currentContext) => {
-        if (currentContext.event === event) {
-          return {
-            ...currentContext,
-            data: {
-              ...currentContext.data,
-              ...data,
-            },
-          };
-        }
-
-        return currentContext;
-      });
-    }
-
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     this.contextArray.push({ event, data });
   }
