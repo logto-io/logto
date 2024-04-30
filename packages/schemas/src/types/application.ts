@@ -40,22 +40,26 @@ export const applicationPatchGuard = applicationCreateGuard.partial().omit({
   isThirdParty: true,
 });
 
+const resourceScopesGuard = z.array(
+  z.object({
+    resource: Resources.guard.pick({ id: true, name: true, indicator: true }),
+    scopes: z.array(Scopes.guard.pick({ id: true, name: true, description: true })),
+  })
+);
+
 export const applicationUserConsentScopesResponseGuard = z.object({
   organizationScopes: z.array(
     OrganizationScopes.guard.pick({ id: true, name: true, description: true })
   ),
-  resourceScopes: z.array(
-    z.object({
-      resource: Resources.guard.pick({ id: true, name: true, indicator: true }),
-      scopes: z.array(Scopes.guard.pick({ id: true, name: true, description: true })),
-    })
-  ),
+  resourceScopes: resourceScopesGuard,
+  organizationResourceScopes: resourceScopesGuard,
   userScopes: z.array(z.nativeEnum(UserScope)),
 });
 
 export enum ApplicationUserConsentScopeType {
   OrganizationScopes = 'organization-scopes',
   ResourceScopes = 'resource-scopes',
+  OrganizationResourceScopes = 'organization-resource-scopes',
   UserScopes = 'user-scopes',
 }
 

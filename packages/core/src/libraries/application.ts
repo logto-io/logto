@@ -32,6 +32,7 @@ export const createApplicationLibrary = (queries: Queries) => {
     applications: {
       findApplicationById,
       userConsentOrganizationScopes,
+      userConsentOrganizationResourceScopes,
       userConsentResourceScopes,
       userConsentUserScopes,
     },
@@ -76,16 +77,20 @@ export const createApplicationLibrary = (queries: Queries) => {
     {
       organizationScopes = [],
       resourceScopes = [],
+      organizationResourceScopes = [],
     }: {
       organizationScopes?: string[];
       resourceScopes?: string[];
+      organizationResourceScopes?: string[];
     },
     tenantId: string
   ) => {
-    const [organizationScopesData, resourceScopesData] = await Promise.all([
-      organizationScopesQuery.findByIds(organizationScopes),
-      findScopesByIds(resourceScopes),
-    ]);
+    const [organizationScopesData, resourceScopesData, organizationResourceScopesData] =
+      await Promise.all([
+        organizationScopesQuery.findByIds(organizationScopes),
+        findScopesByIds(resourceScopes),
+        findScopesByIds(organizationResourceScopes),
+      ]);
 
     const invalidOrganizationScopes = organizationScopes.filter(
       (scope) => !organizationScopesData.some(({ id }) => id === scope)
@@ -95,22 +100,28 @@ export const createApplicationLibrary = (queries: Queries) => {
       (scope) => !resourceScopesData.some(({ id }) => id === scope)
     );
 
+    const invalidOrganizationResourceScopes = organizationResourceScopes.filter(
+      (scope) => !organizationResourceScopesData.some(({ id }) => id === scope)
+    );
+
     // Assert that all scopes exist, return the missing ones
     assertThat(
-      invalidOrganizationScopes.length === 0 && invalidResourceScopes.length === 0,
+      invalidOrganizationScopes.length === 0 &&
+        invalidResourceScopes.length === 0 &&
+        invalidOrganizationResourceScopes.length === 0,
       new RequestError(
         {
           code: 'application.user_consent_scopes_not_found',
           status: 422,
         },
-        { invalidOrganizationScopes, invalidResourceScopes }
+        { invalidOrganizationScopes, invalidResourceScopes, invalidOrganizationResourceScopes }
       )
     );
 
     const managementApiResourceIndicator = getManagementApiResourceIndicator(tenantId);
 
     const managementApiScopes = await findScopesByIdsAndResourceIndicator(
-      resourceScopes,
+      [...resourceScopes, ...organizationResourceScopes],
       managementApiResourceIndicator
     );
 
@@ -129,10 +140,12 @@ export const createApplicationLibrary = (queries: Queries) => {
     {
       organizationScopes,
       resourceScopes,
+      organizationResourceScopes,
       userScopes,
     }: {
       organizationScopes?: string[];
       resourceScopes?: string[];
+      organizationResourceScopes?: string[];
       userScopes?: string[];
     }
   ) => {
@@ -145,6 +158,12 @@ export const createApplicationLibrary = (queries: Queries) => {
     if (resourceScopes) {
       await userConsentResourceScopes.insert(
         ...resourceScopes.map<[string, string]>((scope) => [applicationId, scope])
+      );
+    }
+
+    if (organizationResourceScopes) {
+      await userConsentOrganizationResourceScopes.insert(
+        ...organizationResourceScopes.map<[string, string]>((scope) => [applicationId, scope])
       );
     }
 
@@ -181,6 +200,21 @@ export const createApplicationLibrary = (queries: Queries) => {
     );
   };
 
+  const getApplicationUserConsentOrganizationResourceScopes = async (applicationId: string) => {
+    const [, scopes] = await userConsentOrganizationResourceScopes.getEntities(Scopes, {
+      applicationId,
+    });
+
+    const groupedScopes = groupResourceScopesByResourceId(scopes);
+
+    return Promise.all(
+      groupedScopes.map(async ({ resourceId, scopes }) => ({
+        resource: await findResourceById(resourceId),
+        scopes,
+      }))
+    );
+  };
+
   const getApplicationUserConsentScopes = async (applicationId: string) =>
     userConsentUserScopes.findAllByApplicationId(applicationId);
 
@@ -196,6 +230,10 @@ export const createApplicationLibrary = (queries: Queries) => {
       }
       case ApplicationUserConsentScopeType.ResourceScopes: {
         await userConsentResourceScopes.delete({ applicationId, scopeId });
+        break;
+      }
+      case ApplicationUserConsentScopeType.OrganizationResourceScopes: {
+        await userConsentOrganizationResourceScopes.delete({ applicationId, scopeId });
         break;
       }
       case ApplicationUserConsentScopeType.UserScopes: {
@@ -250,6 +288,7 @@ export const createApplicationLibrary = (queries: Queries) => {
     assignApplicationUserConsentScopes,
     getApplicationUserConsentOrganizationScopes,
     getApplicationUserConsentResourceScopes,
+    getApplicationUserConsentOrganizationResourceScopes,
     getApplicationUserConsentScopes,
     deleteApplicationUserConsentScopesByTypeAndScopeId,
     validateUserConsentOrganizationMembership,

@@ -10,6 +10,11 @@ export const permissionTabs = Object.freeze({
     title: 'application_details.permissions.api_resource',
     key: ApplicationUserConsentScopeType.ResourceScopes,
   },
+  [ApplicationUserConsentScopeType.OrganizationResourceScopes]: {
+    // TODO @xiaoyijun: update the title
+    title: 'application_details.permissions.api_resource',
+    key: ApplicationUserConsentScopeType.OrganizationResourceScopes,
+  },
   [ApplicationUserConsentScopeType.OrganizationScopes]: {
     title: 'application_details.permissions.organization',
     key: ApplicationUserConsentScopeType.OrganizationScopes,

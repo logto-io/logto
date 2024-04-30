@@ -72,6 +72,8 @@ const useApplicationScopesAssignment = (applicationId: string) => {
       [ApplicationUserConsentScopeType.UserScopes]: userScopesAssignment,
       [ApplicationUserConsentScopeType.OrganizationScopes]: organizationScopesAssignment,
       [ApplicationUserConsentScopeType.ResourceScopes]: resourceScopesAssignment,
+      // TODO @xiaoyijun: Replace with correct scopes
+      [ApplicationUserConsentScopeType.OrganizationResourceScopes]: resourceScopesAssignment,
     }),
     [organizationScopesAssignment, resourceScopesAssignment, userScopesAssignment]
   );

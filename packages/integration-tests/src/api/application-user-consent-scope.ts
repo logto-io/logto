@@ -11,6 +11,7 @@ export const assignUserConsentScopes = async (
   payload: {
     organizationScopes?: string[];
     resourceScopes?: string[];
+    organizationResourceScopes?: string[];
     userScopes?: UserScope[];
   }
 ) => authedAdminApi.post(`applications/${applicationId}/user-consent-scopes`, { json: payload });

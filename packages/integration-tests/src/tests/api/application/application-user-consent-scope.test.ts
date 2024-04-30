@@ -16,6 +16,7 @@ describe('assign user consent scopes to application', () => {
   const applicationIds = new Map<string, string>();
   const organizationScopes = new Map<string, string>();
   const resourceScopes = new Map<string, string>();
+  const organizationResourceScopes = new Map<string, string>();
   const resourceIds = new Set<string>();
 
   const organizationScopeApi = new OrganizationScopeApi();
@@ -52,6 +53,12 @@ describe('assign user consent scopes to application', () => {
 
     resourceScopes.set('resourceScope1', resourceScope1.id);
     resourceScopes.set('resourceScope2', resourceScope2.id);
+
+    const resourceScope3 = await createScope(resource.id);
+    const resourceScope4 = await createScope(resource.id);
+
+    organizationResourceScopes.set('resourceScope1', resourceScope3.id);
+    organizationResourceScopes.set('resourceScope2', resourceScope4.id);
   });
 
   afterAll(async () => {
@@ -75,6 +82,7 @@ describe('assign user consent scopes to application', () => {
       assignUserConsentScopes(applicationIds.get('firstPartyApp')!, {
         organizationScopes: Array.from(organizationScopes.values()),
         resourceScopes: Array.from(resourceScopes.values()),
+        organizationResourceScopes: Array.from(organizationResourceScopes.values()),
       }),
       {
         code: 'application.third_party_application_only',
@@ -107,11 +115,24 @@ describe('assign user consent scopes to application', () => {
     );
   });
 
+  it('should throw error when trying to assign a non-existing organization resource scope', async () => {
+    await expectRejects(
+      assignUserConsentScopes(applicationIds.get('thirdPartyApp')!, {
+        organizationResourceScopes: ['non-existing-resource-scope'],
+      }),
+      {
+        code: 'application.user_consent_scopes_not_found',
+        status: 422,
+      }
+    );
+  });
+
   it('should assign scopes to third-party application successfully', async () => {
     await expect(
       assignUserConsentScopes(applicationIds.get('thirdPartyApp')!, {
         organizationScopes: Array.from(organizationScopes.values()),
         resourceScopes: Array.from(resourceScopes.values()),
+        organizationResourceScopes: Array.from(organizationResourceScopes.values()),
         userScopes: [UserScope.Profile, UserScope.Email, UserScope.OrganizationRoles],
       })
     ).resolves.not.toThrow();
@@ -122,6 +143,7 @@ describe('assign user consent scopes to application', () => {
       assignUserConsentScopes(applicationIds.get('thirdPartyApp')!, {
         organizationScopes: [organizationScopes.get('organizationScope1')!],
         resourceScopes: [resourceScopes.get('resourceScope1')!],
+        organizationResourceScopes: [organizationResourceScopes.get('resourceScope1')!],
         userScopes: [UserScope.Profile],
       })
     ).resolves.not.toThrow();
@@ -154,6 +176,18 @@ describe('assign user consent scopes to application', () => {
       ).toBeTruthy();
     }
 
+    expect(result.organizationResourceScopes.length).toBe(1);
+    expect(result.organizationResourceScopes[0]!.resource.id).toBe(Array.from(resourceIds)[0]);
+    expect(result.organizationResourceScopes[0]!.scopes.length).toBe(
+      organizationResourceScopes.size
+    );
+
+    for (const resourceScopeId of organizationResourceScopes.values()) {
+      expect(
+        result.organizationResourceScopes[0]!.scopes.some(({ id }) => id === resourceScopeId)
+      ).toBeTruthy();
+    }
+
     expect(result.userScopes.length).toBe(3);
 
     for (const userScope of [UserScope.Profile, UserScope.Email, UserScope.OrganizationRoles]) {
@@ -170,6 +204,7 @@ describe('assign user consent scopes to application', () => {
 
     expect(result.organizationScopes.length).toBe(0);
     expect(result.resourceScopes.length).toBe(0);
+    expect(result.organizationResourceScopes.length).toBe(0);
     expect(result.userScopes.length).toBe(0);
 
     await deleteApplication(newApp.id);
@@ -217,6 +252,18 @@ describe('assign user consent scopes to application', () => {
     await expectRejects(
       deleteUserConsentScopes(
         applicationIds.get('thirdPartyApp')!,
+        ApplicationUserConsentScopeType.OrganizationResourceScopes,
+        'non-existing-resource-scope'
+      ),
+      {
+        code: 'entity.not_found',
+        status: 404,
+      }
+    );
+
+    await expectRejects(
+      deleteUserConsentScopes(
+        applicationIds.get('thirdPartyApp')!,
         ApplicationUserConsentScopeType.UserScopes,
         'non-existing-user-scope'
       ),
@@ -232,6 +279,7 @@ describe('assign user consent scopes to application', () => {
       assignUserConsentScopes(applicationIds.get('thirdPartyApp')!, {
         organizationScopes: Array.from(organizationScopes.values()),
         resourceScopes: Array.from(resourceScopes.values()),
+        organizationResourceScopes: Array.from(organizationResourceScopes.values()),
         userScopes: [UserScope.Profile, UserScope.Email, UserScope.OrganizationRoles],
       })
     ).resolves.not.toThrow();
@@ -255,6 +303,14 @@ describe('assign user consent scopes to application', () => {
     await expect(
       deleteUserConsentScopes(
         applicationIds.get('thirdPartyApp')!,
+        ApplicationUserConsentScopeType.OrganizationResourceScopes,
+        organizationResourceScopes.get('resourceScope1')!
+      )
+    ).resolves.not.toThrow();
+
+    await expect(
+      deleteUserConsentScopes(
+        applicationIds.get('thirdPartyApp')!,
         ApplicationUserConsentScopeType.UserScopes,
         UserScope.OrganizationRoles
       )
@@ -271,6 +327,12 @@ describe('assign user consent scopes to application', () => {
     expect(
       result.resourceScopes[0]!.scopes.find(
         ({ id }) => id === resourceScopes.get('resourceScope1')!
+      )
+    ).toBeUndefined();
+
+    expect(
+      result.organizationResourceScopes[0]!.scopes.find(
+        ({ id }) => id === organizationResourceScopes.get('resourceScope1')!
       )
     ).toBeUndefined();
 
