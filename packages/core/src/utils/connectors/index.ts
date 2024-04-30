@@ -22,7 +22,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 
 import { type LogtoConnector } from './types.js';
 
-export const isPasswordlessLogtoConnector = (
+const isPasswordlessLogtoConnector = (
   connector: LogtoConnector
 ): connector is LogtoConnector<EmailConnector | SmsConnector> =>
   connector.type !== ConnectorType.Social;

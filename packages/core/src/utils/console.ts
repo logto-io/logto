@@ -1,7 +1,20 @@
 import { ConsoleLog } from '@logto/shared';
+import { noop } from '@silverhand/essentials';
 import chalk from 'chalk';
 
 import { EnvSet } from '#src/env-set/index.js';
+
+class SilentConsoleLog extends ConsoleLog {
+  plain = noop;
+  info = noop;
+  succeed = noop;
+  warn = noop;
+  error = noop;
+  fatal = () => {
+    // eslint-disable-next-line unicorn/no-process-exit
+    process.exit(1);
+  };
+}
 
 const unknownConsole: ConsoleLog = new ConsoleLog(chalk.yellow('unknown'));
 
@@ -26,11 +39,15 @@ export const getConsoleLogFromContext = (context: object): ConsoleLog => {
     return context.console;
   }
 
-  if (!EnvSet.values.isProduction || EnvSet.values.isUnitTest || EnvSet.values.isIntegrationTest) {
+  // In production or unit testing, we should safely return the default console log
+  if (!EnvSet.values.isProduction && !EnvSet.values.isUnitTest) {
     throw new Error('Failed to get console log from context, please provide a valid context.');
   }
 
-  // In production, we should safely return the default console log
+  if (EnvSet.values.isUnitTest) {
+    return new SilentConsoleLog();
+  }
+
   unknownConsole.warn('Failed to get console log from context, returning the default console log.');
   return unknownConsole;
 };

@@ -62,7 +62,7 @@ describe('ConsoleLog', () => {
     const logSpy = vi.spyOn(console, 'log').mockImplementation(noop);
     new ConsoleLog('custom').plain('message', 1, null);
 
-    expect(logSpy).toHaveBeenCalledWith('custom', 'message', 1, null);
+    expect(logSpy).toHaveBeenCalledWith('custom  ', 'message', 1, null);
   });
 
   it('logs the message with a custom prefix and an info prefix', () => {
@@ -70,11 +70,18 @@ describe('ConsoleLog', () => {
     new ConsoleLog('custom').info('message', 1, null);
 
     expect(logSpy).toHaveBeenCalledWith(
-      'custom',
+      'custom  ',
       expect.stringMatching(/info/),
       'message',
       1,
       null
     );
+  });
+
+  it('logs the message with a custom prefix and padding', () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(noop);
+    new ConsoleLog('custom', 10).plain('message', 1, null);
+
+    expect(logSpy).toHaveBeenCalledWith('custom    ', 'message', 1, null);
   });
 });

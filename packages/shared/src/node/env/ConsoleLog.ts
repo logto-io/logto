@@ -9,7 +9,14 @@ export default class ConsoleLog {
   });
 
   constructor(
+    /** A prefix to prepend to all log messages. */
     public readonly prefix?: string,
+    /**
+     * The number of spaces to pad the prefix. For example, if the prefix is `custom` and the
+     * padding is 8, the output will be `custom  `.
+     *
+     * @default 8
+     */
     public readonly padding = 8
   ) {}
 

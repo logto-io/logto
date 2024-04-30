@@ -9,7 +9,7 @@ import Tenant from './Tenant.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('tenant'));
 
-export class TenantPool {
+class TenantPool {
   protected cache = new LRUCache<string, Promise<Tenant>>({
     max: EnvSet.values.tenantPoolSize,
     dispose: async (entry) => {

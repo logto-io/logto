@@ -7,6 +7,6 @@ describe('health check', () => {
 
   it('should return request id in headers', async () => {
     const { headers } = await api.get('status');
-    expect(headers).toHaveProperty('logto-core-request-id');
+    expect(headers.has('logto-core-request-id')).toBe(true);
   });
 });
