@@ -5,9 +5,9 @@ import { type Optional, conditional, yes, trySafe } from '@silverhand/essentials
 import { createClient, createCluster, type RedisClientType, type RedisClusterType } from 'redis';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { consoleLog } from '#src/utils/console.js';
 
 import { type CacheStore } from './types.js';
+import { cacheConsole } from './utils.js';
 
 abstract class RedisCacheBase implements CacheStore {
   readonly client?: RedisClientType | RedisClusterType;
@@ -32,17 +32,17 @@ abstract class RedisCacheBase implements CacheStore {
       const pong = await this.ping();
 
       if (pong === 'PONG') {
-        consoleLog.info('[CACHE] Connected to Redis');
+        cacheConsole.info('Connected to Redis');
         return;
       }
     }
-    consoleLog.warn('[CACHE] No Redis client initialized, skipping');
+    cacheConsole.warn('No Redis client initialized, skipping');
   }
 
   async disconnect() {
     if (this.client) {
       await this.client.disconnect();
-      consoleLog.info('[CACHE] Disconnected from Redis');
+      cacheConsole.info('Disconnected from Redis');
     }
   }
 

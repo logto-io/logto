@@ -9,7 +9,8 @@ import type { ZodType, ZodTypeDef } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ResponseBodyError, StatusCodeError } from '#src/errors/ServerError/index.js';
-import { consoleLog } from '#src/utils/console.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 /** Configure what and how to guard. */
 export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
@@ -121,6 +122,11 @@ const tryParse = <Output, Definition extends ZodTypeDef, Input>(
   return parse(type, guard, data);
 };
 
+/**
+ * Guard middleware factory for request and response.
+ *
+ * Note: A context-aware console log is required to be present in the context (i.e. `ctx.console`).
+ */
 export default function koaGuard<
   StateT,
   ContextT extends IRouterParamContext,
@@ -170,6 +176,8 @@ export default function koaGuard<
       GuardResponseT
     >
   > = async function (ctx, next) {
+    const consoleLog = getConsoleLogFromContext(ctx);
+
     /**
      * Assert the status code matches the value(s) in the config. If the config does not
      * specify a status code, it will not assert anything.
@@ -191,7 +199,10 @@ export default function koaGuard<
 
       if (EnvSet.values.isProduction) {
         consoleLog.warn('Unexpected status code:', value, 'expected:', status);
-        void appInsights.trackException(new StatusCodeError(status, value));
+        void appInsights.trackException(
+          new StatusCodeError(status, value),
+          buildAppInsightsTelemetry(ctx)
+        );
         return;
       }
 

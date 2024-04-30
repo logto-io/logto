@@ -15,7 +15,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
-import { consoleLog } from '#src/utils/console.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { uploadFileGuard } from '#src/utils/storage/consts.js';
 import { buildUploadFile } from '#src/utils/storage/index.js';
 import { getTenantId } from '#src/utils/tenant.js';
@@ -92,7 +92,7 @@ export default function userAssetsRoutes<T extends ManagementApiRouter>(
 
         ctx.body = result;
       } catch (error: unknown) {
-        consoleLog.error(error);
+        getConsoleLogFromContext(ctx).error(error);
         throw new RequestError({
           code: 'storage.upload_error',
           status: 500,

@@ -8,10 +8,17 @@ export default class ConsoleLog {
     fatal: chalk.bold(chalk.red('fatal')),
   });
 
-  plain = console.log;
+  constructor(
+    public readonly prefix?: string,
+    public readonly padding = 8
+  ) {}
+
+  plain: typeof console.log = (...args) => {
+    console.log(...this.getArgs(args));
+  };
 
   info: typeof console.log = (...args) => {
-    console.log(ConsoleLog.prefixes.info, ...args);
+    this.plain(ConsoleLog.prefixes.info, ...args);
   };
 
   succeed: typeof console.log = (...args) => {
@@ -19,16 +26,25 @@ export default class ConsoleLog {
   };
 
   warn: typeof console.log = (...args) => {
-    console.warn(ConsoleLog.prefixes.warn, ...args);
+    console.warn(...this.getArgs([ConsoleLog.prefixes.warn, ...args]));
   };
 
   error: typeof console.log = (...args) => {
-    console.error(ConsoleLog.prefixes.error, ...args);
+    console.error(...this.getArgs([ConsoleLog.prefixes.error, ...args]));
   };
 
   fatal: (...args: Parameters<typeof console.log>) => never = (...args) => {
-    console.error(ConsoleLog.prefixes.fatal, ...args);
+    console.error(...this.getArgs([ConsoleLog.prefixes.fatal, ...args]));
     // eslint-disable-next-line unicorn/no-process-exit
     process.exit(1);
   };
+
+  protected getArgs(args: Parameters<typeof console.log>) {
+    if (this.prefix) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return [this.prefix.padEnd(this.padding), ...args];
+    }
+
+    return args;
+  }
 }

@@ -5,7 +5,7 @@ import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { consoleLog } from '#src/utils/console.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 /**
  * Supplementary URIs for oidc-provider errors.
@@ -17,6 +17,8 @@ const errorUris: Record<string, string> = Object.freeze({
 /**
  * Transform oidc-provider error to a format for the client. This is edited from oidc-provider's
  * own implementation.
+ *
+ * Note: A context-aware console log is required to be present in the context (i.e. `ctx.console`).
  *
  * @see {@link https://github.com/panva/node-oidc-provider/blob/37d0a6cfb3c618141a44cbb904ce45659438f821/lib/helpers/err_out.js | oidc-provider/lib/helpers/err_out.js}
  */
@@ -92,7 +94,7 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
       ctx.body = errorOut(error);
 
       if (!EnvSet.values.isUnitTest && (!EnvSet.values.isProduction || ctx.status >= 500)) {
-        consoleLog.error(error);
+        getConsoleLogFromContext(ctx).error(error);
       }
     }
 

@@ -1,10 +1,13 @@
+import { ConsoleLog } from '@logto/shared';
+import chalk from 'chalk';
 import { LRUCache } from 'lru-cache';
 
 import { redisCache } from '#src/caches/index.js';
 import { EnvSet } from '#src/env-set/index.js';
-import { consoleLog } from '#src/utils/console.js';
 
 import Tenant from './Tenant.js';
+
+const consoleLog = new ConsoleLog(chalk.magenta('tenant'));
 
 export class TenantPool {
   protected cache = new LRUCache<string, Promise<Tenant>>({
@@ -29,7 +32,7 @@ export class TenantPool {
     }
 
     consoleLog.info('Init tenant:', tenantId, customDomain);
-    const newTenantPromise = Tenant.create(tenantId, redisCache, customDomain);
+    const newTenantPromise = Tenant.create({ id: tenantId, redisCache, customDomain });
     this.cache.set(cacheKey, newTenantPromise);
 
     return newTenantPromise;

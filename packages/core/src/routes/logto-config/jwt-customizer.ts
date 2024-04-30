@@ -15,6 +15,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError, { formatZodError } from '#src/errors/RequestError/index.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -78,7 +79,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
       if (!isIntegrationTest) {
-        await deployJwtCustomizerScript({
+        await deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
           key,
           value: body,
           useCase: 'production',
@@ -122,7 +123,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
       if (!isIntegrationTest) {
-        await deployJwtCustomizerScript({
+        await deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
           key,
           value: body,
           useCase: 'production',
@@ -142,7 +143,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       status: [200],
     }),
     async (ctx, next) => {
-      const jwtCustomizer = await getJwtCustomizers();
+      const jwtCustomizer = await getJwtCustomizers(getConsoleLogFromContext(ctx));
       ctx.body = Object.values(LogtoJwtTokenKey)
         .filter((key) => jwtCustomizer[key])
         .map((key) => ({ key, value: jwtCustomizer[key] }));
@@ -194,7 +195,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Undeploy the script first to avoid the case where the JWT customizer was deleted from DB but worker script not updated successfully.
       if (!isIntegrationTest) {
-        await undeployJwtCustomizerScript(tokenKey);
+        await undeployJwtCustomizerScript(getConsoleLogFromContext(ctx), tokenKey);
       }
 
       await deleteJwtCustomizer(tokenKey);
@@ -219,7 +220,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       const { body } = ctx.guard;
 
       // Deploy the test script
-      await deployJwtCustomizerScript({
+      await deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
         key:
           body.tokenType === LogtoJwtTokenKeyType.AccessToken
             ? LogtoJwtTokenKey.AccessToken

@@ -1,7 +1,10 @@
 import { trySafe } from '@silverhand/essentials';
 import type { TelemetryClient } from 'applicationinsights';
+import { type ExceptionTelemetry } from 'applicationinsights/out/Declarations/Contracts/index.js';
 
 import { normalizeError } from './normalize-error.js';
+
+export { type ExceptionTelemetry } from 'applicationinsights/out/Declarations/Contracts/index.js';
 
 class AppInsights {
   client?: TelemetryClient;
@@ -29,9 +32,14 @@ class AppInsights {
     return true;
   }
 
-  /** The function is async to avoid blocking the main script and force the use of `await` or `void`. */
-  async trackException(error: unknown) {
-    this.client?.trackException({ exception: normalizeError(error) });
+  /**
+   * The function is async to avoid blocking the main script and force the use of `await` or `void`.
+   *
+   * @param error The error to track. It will be normalized for better telemetry.
+   * @param telemetry Additional telemetry to include in the exception.
+   */
+  async trackException(error: unknown, telemetry?: Partial<ExceptionTelemetry>) {
+    this.client?.trackException({ exception: normalizeError(error), ...telemetry });
   }
 }
 

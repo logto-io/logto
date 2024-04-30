@@ -54,7 +54,7 @@ describe('Tenant', () => {
   });
 
   it('should call middleware factories for user tenants', async () => {
-    await Tenant.create(defaultTenantId, new RedisCache());
+    await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
 
     for (const [, middleware, shouldCall] of userMiddlewareList) {
       if (shouldCall) {
@@ -66,7 +66,7 @@ describe('Tenant', () => {
   });
 
   it('should call middleware factories for the admin tenant', async () => {
-    await Tenant.create(adminTenantId, new RedisCache());
+    await Tenant.create({ id: adminTenantId, redisCache: new RedisCache() });
 
     for (const [, middleware, shouldCall] of adminMiddlewareList) {
       if (shouldCall) {
@@ -80,7 +80,7 @@ describe('Tenant', () => {
 
 describe('Tenant `.run()`', () => {
   it('should return a function ', async () => {
-    const tenant = await Tenant.create(defaultTenantId, new RedisCache());
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
     expect(typeof tenant.run).toBe('function');
   });
 });
@@ -88,7 +88,7 @@ describe('Tenant `.run()`', () => {
 describe('Tenant cache health check', () => {
   it('should set expiration timestamp in redis', async () => {
     const redisCache = new RedisCache();
-    const tenant = await Tenant.create(defaultTenantId, redisCache);
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache });
     expect(typeof tenant.invalidateCache).toBe('function');
 
     Sinon.stub(tenant.wellKnownCache, 'set').value(jest.fn());
@@ -102,7 +102,7 @@ describe('Tenant cache health check', () => {
   });
 
   it('should be able to check the health of tenant cache', async () => {
-    const tenant = await Tenant.create(defaultTenantId, new RedisCache());
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
     expect(typeof tenant.checkHealth).toBe('function');
     expect(await tenant.checkHealth()).toBe(true);
 

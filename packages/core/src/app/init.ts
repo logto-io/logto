@@ -2,17 +2,21 @@ import fs from 'node:fs/promises';
 import http2 from 'node:http2';
 
 import { appInsights } from '@logto/app-insights/node';
+import { ConsoleLog } from '@logto/shared';
 import { toTitle, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type Koa from 'koa';
+import koaLogger from 'koa-logger';
+import { nanoid } from 'nanoid';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { TenantNotFoundError, tenantPool } from '#src/tenants/index.js';
-import { consoleLog } from '#src/utils/console.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 const logListening = (type: 'core' | 'admin' = 'core') => {
   const urlSet = type === 'core' ? EnvSet.values.urlSet : EnvSet.values.adminUrlSet;
+  const consoleLog = new ConsoleLog(chalk.magenta(type));
 
   for (const url of urlSet.deduplicated()) {
     consoleLog.info(chalk.bold(`${toTitle(type)} app is running at ${url.toString()}`));
@@ -22,6 +26,22 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
 const serverTimeout = 120_000;
 
 export default async function initApp(app: Koa): Promise<void> {
+  app.use(async (ctx, next) => {
+    const requestId = nanoid(16);
+    const consoleLog = new ConsoleLog(chalk.blue(requestId));
+    ctx.requestId = requestId;
+    ctx.console = consoleLog;
+
+    await koaLogger({
+      transporter: (string) => {
+        consoleLog.plain(string);
+      },
+    })(ctx, next);
+
+    // Set the header in the end to avoid other middleware from overwriting it
+    ctx.set('Logto-Core-Request-Id', requestId);
+  });
+
   app.use(async (ctx, next) => {
     if (EnvSet.values.isDomainBasedMultiTenancy && ['/status', '/'].includes(ctx.URL.pathname)) {
       ctx.status = 204;
@@ -43,7 +63,7 @@ export default async function initApp(app: Koa): Promise<void> {
 
     const tenant = await trySafe(tenantPool.get(tenantId, customEndpoint), (error) => {
       ctx.status = error instanceof TenantNotFoundError ? 404 : 500;
-      void appInsights.trackException(error);
+      void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
     });
 
     if (!tenant) {
@@ -56,7 +76,7 @@ export default async function initApp(app: Koa): Promise<void> {
       tenant.requestEnd();
     } catch (error: unknown) {
       tenant.requestEnd();
-      void appInsights.trackException(error);
+      void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
 
       throw error;
     }

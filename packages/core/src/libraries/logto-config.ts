@@ -8,12 +8,12 @@ import {
   jwtCustomizerConfigGuard,
   logtoOidcConfigGuard,
 } from '@logto/schemas';
+import { type ConsoleLog } from '@logto/shared';
 import chalk from 'chalk';
 import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
-import { consoleLog } from '#src/utils/console.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
 
@@ -24,7 +24,7 @@ export const createLogtoConfigLibrary = ({
     upsertJwtCustomizer: queryUpsertJwtCustomizer,
   },
 }: Pick<Queries, 'logtoConfigs'>) => {
-  const getOidcConfigs = async (): Promise<LogtoOidcConfigType> => {
+  const getOidcConfigs = async (consoleLog: ConsoleLog): Promise<LogtoOidcConfigType> => {
     try {
       const { rows } = await getRowsByKeys(Object.values(LogtoOidcConfigKey));
 
@@ -96,7 +96,7 @@ export const createLogtoConfigLibrary = ({
     return z.object({ value: jwtCustomizerConfigGuard[key] }).parse(rows[0]).value;
   };
 
-  const getJwtCustomizers = async (): Promise<Partial<JwtCustomizerType>> => {
+  const getJwtCustomizers = async (consoleLog: ConsoleLog): Promise<Partial<JwtCustomizerType>> => {
     try {
       const { rows } = await getRowsByKeys(Object.values(LogtoJwtTokenKey));
 
