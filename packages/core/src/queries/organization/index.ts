@@ -45,8 +45,8 @@ class OrganizationRolesQueries extends SchemaQueries<
   }
 
   override async findAll(
-    limit: number,
-    offset: number,
+    limit?: number,
+    offset?: number,
     search?: SearchOptions<OrganizationRoleKeys>
   ): Promise<[totalNumber: number, rows: Readonly<OrganizationRoleWithScopes[]>]> {
     return Promise.all([

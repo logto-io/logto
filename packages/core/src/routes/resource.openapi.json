@@ -12,7 +12,7 @@
           {
             "in": "query",
             "name": "includeScopes",
-            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), the scopes of each resource will be included in the response."
+            "description": "If it's provided with a truthy value (`true`, `1`, `yes`) or `assignedByOrganizations`, the scopes of each resource will be included in the response. And if it is set to `assignedByOrganizations`, only the scopes assigned by organizations will be included."
           }
         ],
         "responses": {

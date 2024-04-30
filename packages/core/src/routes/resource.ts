@@ -3,6 +3,7 @@ import { generateStandardId } from '@logto/shared';
 import { yes } from '@silverhand/essentials';
 import { boolean, object, string } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -33,6 +34,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
       deleteResourceById,
     },
     scopes: scopeQueries,
+    organizations: { roles: organizationRolesQueries },
   } = queries;
 
   router.get(
@@ -48,13 +50,22 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { limit, offset, disabled } = ctx.pagination;
       const {
-        query: { includeScopes },
+        query: { includeScopes: includeScopesQuery },
       } = ctx.guard;
+
+      const includeOnlyOrganizationScopes = includeScopesQuery === 'assignedByOrganizations';
+      const includeScopes = includeOnlyOrganizationScopes || yes(includeScopesQuery);
+
+      const [, organizationRoles] =
+        includeOnlyOrganizationScopes && EnvSet.values.isDevFeaturesEnabled
+          ? await organizationRolesQueries.findAll()
+          : [undefined, undefined];
 
       if (disabled) {
         const resources = await findAllResources();
-        ctx.body = yes(includeScopes)
-          ? await attachScopesToResources(resources, scopeQueries)
+
+        ctx.body = includeScopes
+          ? await attachScopesToResources(resources, scopeQueries, organizationRoles)
           : resources;
 
         return next();
@@ -66,8 +77,8 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
       ]);
 
       ctx.pagination.totalCount = count;
-      ctx.body = yes(includeScopes)
-        ? await attachScopesToResources(resources, scopeQueries)
+      ctx.body = includeScopes
+        ? await attachScopesToResources(resources, scopeQueries, organizationRoles)
         : resources;
 
       return next();

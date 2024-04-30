@@ -9,8 +9,15 @@ import {
   deleteResource,
   setDefaultResource,
 } from '#src/api/index.js';
+import { createScope } from '#src/api/scope.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
+import { OrganizationRoleApiTest } from '#src/helpers/organization.js';
+import {
+  generateResourceIndicator,
+  generateResourceName,
+  generateRoleName,
+  generateScopeName,
+} from '#src/utils.js';
 
 describe('admin console api resources', () => {
   it('should get management api resource details successfully', async () => {
@@ -65,6 +72,49 @@ describe('admin console api resources', () => {
 
     expect(resources.length).toBeGreaterThan(0);
     expect(resources.findIndex(({ name }) => name === resourceName)).not.toBe(-1);
+  });
+
+  it('should get resource list with scopes successfully', async () => {
+    const resourceName = generateResourceName();
+    const resourceIndicator = generateResourceIndicator();
+
+    const resource = await createResource(resourceName, resourceIndicator);
+    const scopeName = generateScopeName();
+    await createScope(resource.id, scopeName);
+
+    // Get all resources
+    const resources = await getResources('includeScopes=true');
+
+    expect(resources.find(({ name }) => name === resourceName)).toHaveProperty('scopes');
+  });
+
+  it('should get resource list with organization assigned scopes successfully', async () => {
+    const roleApi = new OrganizationRoleApiTest();
+
+    const resourceName = generateResourceName();
+    const resourceIndicator = generateResourceIndicator();
+
+    const resource = await createResource(resourceName, resourceIndicator);
+    const scopeName = generateScopeName();
+    const scopeName2 = generateScopeName();
+    const scope = await createScope(resource.id, scopeName);
+    await createScope(resource.id, scopeName2);
+
+    await roleApi.create({
+      name: generateRoleName(),
+      description: 'test description.',
+      resourceScopeIds: [scope.id],
+    });
+
+    const resourcesWithAllScopes = await getResources('includeScopes=true');
+    expect(resourcesWithAllScopes.find(({ name }) => name === resourceName)?.scopes).toHaveLength(
+      2
+    );
+
+    const resources = await getResources('includeScopes=assignedByOrganizations');
+    expect(resources.find(({ name }) => name === resourceName)?.scopes).toHaveLength(1);
+
+    await roleApi.cleanUp();
   });
 
   it('should update api resource details successfully', async () => {
