@@ -7,14 +7,13 @@ import {
   type HookConfig,
   type HookTestErrorResponseData,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
+import { type ConsoleLog, generateStandardId } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
-import { consoleLog } from '#src/utils/console.js';
 
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
@@ -55,6 +54,7 @@ export const createHookLibrary = (queries: Queries) => {
   } = queries;
 
   const triggerInteractionHooks = async (
+    consoleLog: ConsoleLog,
     interactionContext: InteractionHookContext,
     interactionResult: InteractionHookResult,
     userAgent?: string

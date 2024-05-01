@@ -13,7 +13,7 @@ import type { CommonQueryMethods } from '@silverhand/slonik';
 import { type ZodType } from 'zod';
 
 import { createSystemsQuery } from '#src/queries/system.js';
-import { consoleLog } from '#src/utils/console.js';
+import { devConsole } from '#src/utils/console.js';
 
 export default class SystemContext {
   static shared = new SystemContext();
@@ -70,7 +70,7 @@ export default class SystemContext {
     const result = guard.safeParse(record.value);
 
     if (!result.success) {
-      consoleLog.error(`Failed to parse ${key} config:`, result.error);
+      devConsole.error(`Failed to parse ${key} config:`, result.error);
 
       return;
     }

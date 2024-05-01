@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type DeepPartial } from '#src/test-utils/tenant.js';
-import { consoleLog } from '#src/utils/console.js';
+import { devConsole } from '#src/utils/console.js';
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
@@ -166,7 +166,7 @@ export const validateSupplement = (
 export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
   for (const [path, operations] of Object.entries(document.paths)) {
     if (path.startsWith('/api/interaction')) {
-      consoleLog.warn(`Path \`${path}\` is not documented. Do something!`);
+      devConsole.warn(`Path \`${path}\` is not documented. Do something!`);
       continue;
     }
 

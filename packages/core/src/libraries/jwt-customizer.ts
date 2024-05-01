@@ -5,6 +5,7 @@ import {
   type JwtCustomizerType,
   type JwtCustomizerUserContext,
 } from '@logto/schemas';
+import { type ConsoleLog } from '@logto/shared';
 import { deduplicate, pick, pickState, assert } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
@@ -94,14 +95,17 @@ export const createJwtCustomizerLibrary = (
    * @params payload.value - JWT customizer value
    * @params payload.useCase - The use case of JWT customizer script, can be either `test` or `production`.
    */
-  const deployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(payload: {
-    key: T;
-    value: JwtCustomizerType[T];
-    useCase: 'test' | 'production';
-  }) => {
+  const deployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(
+    consoleLog: ConsoleLog,
+    payload: {
+      key: T;
+      value: JwtCustomizerType[T];
+      useCase: 'test' | 'production';
+    }
+  ) => {
     const [client, jwtCustomizers] = await Promise.all([
       cloudConnection.getClient(),
-      getJwtCustomizers(),
+      getJwtCustomizers(consoleLog),
     ]);
 
     const customizerScriptsFromDatabase = getJwtCustomizerScripts(jwtCustomizers);
@@ -127,10 +131,13 @@ export const createJwtCustomizerLibrary = (
     });
   };
 
-  const undeployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(key: T) => {
+  const undeployJwtCustomizerScript = async <T extends LogtoJwtTokenKey>(
+    consoleLog: ConsoleLog,
+    key: T
+  ) => {
     const [client, jwtCustomizers] = await Promise.all([
       cloudConnection.getClient(),
-      getJwtCustomizers(),
+      getJwtCustomizers(consoleLog),
     ]);
 
     assert(jwtCustomizers[key], new RequestError({ code: 'entity.not_exists', key }));

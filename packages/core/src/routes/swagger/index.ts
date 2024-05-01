@@ -16,7 +16,7 @@ import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
 import { isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
 import { type DeepPartial } from '#src/test-utils/tenant.js';
 import assertThat from '#src/utils/assert-that.js';
-import { consoleLog } from '#src/utils/console.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from '../types.js';
@@ -241,7 +241,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     );
 
     if (EnvSet.values.isUnitTest) {
-      consoleLog.warn('Skip validating swagger document in unit test.');
+      getConsoleLogFromContext(ctx).warn('Skip validating swagger document in unit test.');
     }
     // Don't throw for integrity check in production as it has no benefit.
     else if (!EnvSet.values.isProduction || EnvSet.values.isIntegrationTest) {

@@ -1,5 +1,6 @@
 import type { Hook } from '@logto/schemas';
 import { HookEvent, InteractionEvent, LogResult } from '@logto/schemas';
+import { ConsoleLog } from '@logto/shared';
 import { createMockUtils } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -73,6 +74,7 @@ describe('triggerInteractionHooks()', () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
     await triggerInteractionHooks(
+      new ConsoleLog(),
       { event: InteractionEvent.SignIn, sessionId: 'some_jti', applicationId: 'some_client' },
       { userId: '123' }
     );

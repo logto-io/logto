@@ -1,7 +1,8 @@
-import { GlobalValues } from '@logto/shared';
+import { ConsoleLog, GlobalValues } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath } from '@silverhand/essentials';
 import type { DatabasePool } from '@silverhand/slonik';
+import chalk from 'chalk';
 
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
@@ -72,11 +73,12 @@ export class EnvSet {
 
     this.#pool = pool;
 
+    const consoleLog = new ConsoleLog(chalk.magenta('env-set'));
     const { getOidcConfigs } = createLogtoConfigLibrary({
       logtoConfigs: createLogtoConfigQueries(pool),
     });
 
-    const oidcConfigs = await getOidcConfigs();
+    const oidcConfigs = await getOidcConfigs(consoleLog);
     const endpoint = customDomain
       ? new URL(customDomain)
       : getTenantEndpoint(this.tenantId, EnvSet.values);

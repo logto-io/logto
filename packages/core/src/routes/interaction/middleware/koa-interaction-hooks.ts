@@ -7,6 +7,7 @@ import {
   type InteractionHookResult,
 } from '#src/libraries/hook/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { getInteractionStorage } from '../utils/interaction.js';
 
@@ -64,7 +65,12 @@ export default function koaInteractionHooks<
     if (interactionHookResult) {
       // Hooks should not crash the app
       void trySafe(
-        triggerInteractionHooks(interactionHookContext, interactionHookResult, userAgent)
+        triggerInteractionHooks(
+          getConsoleLogFromContext(ctx),
+          interactionHookContext,
+          interactionHookResult,
+          userAgent
+        )
       );
     }
   };
