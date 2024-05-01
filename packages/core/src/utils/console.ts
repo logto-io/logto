@@ -4,7 +4,7 @@ import chalk from 'chalk';
 
 import { EnvSet } from '#src/env-set/index.js';
 
-class SilentConsoleLog extends ConsoleLog {
+export class SilentConsoleLog extends ConsoleLog {
   plain = noop;
   info = noop;
   succeed = noop;
@@ -16,7 +16,8 @@ class SilentConsoleLog extends ConsoleLog {
   };
 }
 
-const unknownConsole: ConsoleLog = new ConsoleLog(chalk.yellow('unknown'));
+/** The fallback console log with `unknown` prefix. */
+export const unknownConsole: ConsoleLog = new ConsoleLog(chalk.yellow('unknown'));
 
 /**
  * The development console log with `dev` prefix. Usually you should use context-aware console log
@@ -39,7 +40,7 @@ export const getConsoleLogFromContext = (context: object): ConsoleLog => {
     return context.console;
   }
 
-  // In production or unit testing, we should safely return the default console log
+  // In production or unit testing, we should safely return an instance of `ConsoleLog`
   if (!EnvSet.values.isProduction && !EnvSet.values.isUnitTest) {
     throw new Error('Failed to get console log from context, please provide a valid context.');
   }
@@ -48,6 +49,8 @@ export const getConsoleLogFromContext = (context: object): ConsoleLog => {
     return new SilentConsoleLog();
   }
 
-  unknownConsole.warn('Failed to get console log from context, returning the default console log.');
+  unknownConsole.warn(
+    'Failed to get console log from context, returning the unknown-prefixed `ConsoleLog`.'
+  );
   return unknownConsole;
 };
