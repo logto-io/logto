@@ -13,7 +13,7 @@ import type { AnonymousRouter, RouterInitArgs } from '../types.js';
 
 import submitInteraction from './actions/submit-interaction.js';
 import additionalRoutes from './additional.js';
-import consentRoutes from './consent.js';
+import consentRoutes from './consent/index.js';
 import { interactionPrefix } from './const.js';
 import mfaRoutes from './mfa.js';
 import koaInteractionDetails from './middleware/koa-interaction-details.js';

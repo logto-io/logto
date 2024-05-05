@@ -133,7 +133,7 @@ export const skipMfaBinding = async (cookie: string) =>
     },
   });
 
-export const consent = async (api: KyInstance, cookie: string) =>
+export const consent = async (cookie: string, payload: { organizationIds?: string[] } = {}) =>
   api
     .post('interaction/consent', {
       headers: {
@@ -141,6 +141,7 @@ export const consent = async (api: KyInstance, cookie: string) =>
       },
       redirect: 'manual',
       throwHttpErrors: false,
+      json: payload,
     })
     .json<RedirectResponse>();
 

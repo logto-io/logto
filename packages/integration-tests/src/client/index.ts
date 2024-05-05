@@ -127,6 +127,23 @@ export default class MockClient {
     await this.logto.handleSignInCallback(signInCallbackUri);
   }
 
+  public async manualConsent(redirectTo: string) {
+    const authCodeResponse = await ky.get(redirectTo, {
+      headers: {
+        cookie: this.interactionCookie,
+      },
+      redirect: 'manual',
+      throwHttpErrors: false,
+    });
+
+    // Note: Should redirect to the signInCallbackUri
+    assert(authCodeResponse.status === 303, new Error('Complete auth failed'));
+    const signInCallbackUri = authCodeResponse.headers.get('location');
+    assert(signInCallbackUri, new Error('Get sign in callback uri failed'));
+
+    return this.logto.handleSignInCallback(signInCallbackUri);
+  }
+
   public async getAccessToken(resource?: string, organizationId?: string) {
     return this.logto.getAccessToken(resource, organizationId);
   }
