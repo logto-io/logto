@@ -209,14 +209,27 @@ describe('triggerDataHooks()', () => {
     });
 
     const calledPayload: unknown = insertLog.mock.calls[0][0];
-    expect(calledPayload).toHaveProperty('id', mockId);
-    expect(calledPayload).toHaveProperty('key', 'TriggerHook.Role.Created');
-    expect(calledPayload).toHaveProperty('payload.result', LogResult.Success);
-    expect(calledPayload).toHaveProperty('payload.hookId', 'foo');
-    expect(calledPayload).toHaveProperty('payload.hookRequest.body.event', 'Role.Created');
-    expect(calledPayload).toHaveProperty('payload.hookRequest.body.hookId', 'foo');
-    expect(calledPayload).toHaveProperty('payload.response.statusCode', 200);
-    expect(calledPayload).toHaveProperty('payload.response.body.message', 'ok');
+
+    expect(calledPayload).toMatchObject({
+      id: mockId,
+      key: 'TriggerHook.Role.Created',
+      payload: {
+        result: LogResult.Success,
+        hookId: 'foo',
+        hookRequest: {
+          body: {
+            event: 'Role.Created',
+            hookId: 'foo',
+            ...hookData,
+          },
+        },
+        response: {
+          statusCode: 200,
+          body: { message: 'ok' },
+        },
+      },
+    });
+
     jest.useRealTimers();
   });
 });

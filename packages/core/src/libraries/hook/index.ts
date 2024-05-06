@@ -42,9 +42,7 @@ export const createHookLibrary = (queries: Queries) => {
   } = queries;
 
   /**
-   * Trigger web hook with the given payload.
-   *
-   * - create audit log for each hook request
+   * Trigger web hook with the given payload and create a log entry for the request and response.
    */
   const sendWebhook = async (
     hook: Hook,
@@ -149,40 +147,38 @@ export const createHookLibrary = (queries: Queries) => {
   /**
    * Trigger data hooks with the given data mutation context. All context objects will be used to trigger hooks.
    */
-  const triggerDataHooks = async (consoleLog: ConsoleLog, hooksManager: DataHookContextManager) => {
-    if (hooksManager.contextArray.length === 0) {
+  const triggerDataHooks = async (
+    consoleLog: ConsoleLog,
+    contextManager: DataHookContextManager
+  ) => {
+    if (contextManager.contextArray.length === 0) {
       return;
     }
 
     const found = await findAllHooks();
 
     // Filter hooks that match each events
-    const webhooks = hooksManager.contextArray
-      .map(({ event, data }) => {
-        const hooks = found.filter(
-          ({ event: hookEvent, events, enabled }) =>
-            enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
-        );
+    const webhooks = contextManager.contextArray.flatMap(({ event, data }) => {
+      const hooks = found.filter(
+        ({ event: hookEvent, events, enabled }) =>
+          enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
+      );
 
-        if (hooks.length === 0) {
-          return;
-        }
+      if (hooks.length === 0) {
+        return [];
+      }
 
-        const payload = {
-          event,
-          createdAt: new Date().toISOString(),
-          ...hooksManager.metadata,
-          ...data,
-        } satisfies BetterOmit<DataHookEventPayload, 'hookId'>;
+      const payload = {
+        event,
+        createdAt: new Date().toISOString(),
+        ...contextManager.metadata,
+        ...data,
+      } satisfies BetterOmit<DataHookEventPayload, 'hookId'>;
 
-        return { hooks, payload };
-      })
-      .filter(Boolean);
+      return hooks.map((hook) => ({ hook, payload }));
+    });
 
-    await sendWebhooks(
-      webhooks.flatMap(({ hooks, payload }) => hooks.map((hook) => ({ hook, payload }))),
-      consoleLog
-    );
+    await sendWebhooks(webhooks, consoleLog);
   };
 
   const triggerTestHook = async (hookId: string, events: HookEvent[], config: HookConfig) => {
