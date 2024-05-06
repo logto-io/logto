@@ -1,14 +1,13 @@
 import {
   LogResult,
   userInfoSelectFields,
-  type DataHookEventPayloadWithoutHookId,
+  type DataHookEventPayload,
   type Hook,
   type HookConfig,
   type HookEvent,
   type HookEventPayload,
-  type HookEventPayloadWithoutHookId,
   type HookTestErrorResponseData,
-  type InteractionHookEventPayloadWithoutHookId,
+  type InteractionHookEventPayload,
 } from '@logto/schemas';
 import { generateStandardId, normalizeError } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
@@ -20,13 +19,19 @@ import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
 
-import { type DataHookContextManager } from './hook-context-manager.js';
+import { type DataHookContextManager } from './context-manager.js';
 import {
   interactionEventToHookEvent,
   type InteractionHookContext,
   type InteractionHookResult,
 } from './types.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
+
+type BetterOmit<T, Ignore> = {
+  [key in keyof T as key extends Ignore ? never : key]: T[key];
+};
+
+type HookEventPayloadWithoutHookId = BetterOmit<HookEventPayload, 'hookId'>;
 
 export const createHookLibrary = (queries: Queries) => {
   const {
@@ -37,58 +42,59 @@ export const createHookLibrary = (queries: Queries) => {
     hooks: { findAllHooks, findHookById },
   } = queries;
 
-  // Send webhook requests with given payloads to the matching hooks. Log the response and error is any.
-  const sendWebhooks = async <T extends HookEventPayloadWithoutHookId>(
-    webhookRequests: Array<{ hooks: Hook[]; payload: T }>
-  ) => {
-    const flatMapRequests = webhookRequests.flatMap(({ hooks, payload }) =>
-      hooks.map((hook) => ({ hook, payload }))
+  /**
+   * Trigger web hook with the given payload.
+   *
+   * - create audit log for each hook request
+   */
+  const sendWebhook = async (hook: Hook, payload: HookEventPayloadWithoutHookId) => {
+    const { id, config, signingKey } = hook;
+    consoleLog.info(`\tTriggering hook ${id} due to ${payload.event} event`);
+
+    const json: HookEventPayload = { ...payload, hookId: id };
+    const logEntry = new LogEntry(`TriggerHook.${payload.event}`);
+
+    logEntry.append({ hookId: id, hookRequest: { body: json } });
+
+    // Trigger web hook and log response
+    try {
+      const response = await sendWebhookRequest({
+        hookConfig: config,
+        payload: json,
+        signingKey,
+      });
+
+      logEntry.append({
+        response: await parseResponse(response),
+      });
+    } catch (error: unknown) {
+      logEntry.append({
+        result: LogResult.Error,
+        response: conditional(error instanceof HTTPError && (await parseResponse(error.response))),
+        error: String(normalizeError(error)),
+      });
+    }
+
+    consoleLog.info(
+      `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
     );
 
-    return pMap(
-      flatMapRequests,
-      async ({ hook: { id, config, signingKey }, payload }) => {
-        consoleLog.info(`\tTriggering hook ${id} due to ${payload.event} event`);
-
-        const json: HookEventPayload = { ...payload, hookId: id };
-        const logEntry = new LogEntry(`TriggerHook.${payload.event}`);
-
-        logEntry.append({ hookId: id, hookRequest: { body: json } });
-
-        // Trigger web hook and log response
-        try {
-          const response = await sendWebhookRequest({
-            hookConfig: config,
-            payload: json,
-            signingKey,
-          });
-
-          logEntry.append({
-            response: await parseResponse(response),
-          });
-        } catch (error: unknown) {
-          logEntry.append({
-            result: LogResult.Error,
-            response: conditional(
-              error instanceof HTTPError && (await parseResponse(error.response))
-            ),
-            error: String(normalizeError(error)),
-          });
-        }
-
-        consoleLog.info(
-          `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
-        );
-
-        await insertLog({
-          id: generateStandardId(),
-          key: logEntry.key,
-          payload: logEntry.payload,
-        });
-      },
-      { concurrency: 10 }
-    );
+    await insertLog({
+      id: generateStandardId(),
+      key: logEntry.key,
+      payload: logEntry.payload,
+    });
   };
+
+  /**
+   * Trigger multiple web hooks with concurrency control.
+   */
+  const sendWebhooks = async <T extends HookEventPayloadWithoutHookId>(
+    webhooks: Array<{ hook: Hook; payload: T }>
+  ) =>
+    pMap(webhooks, async ({ hook, payload }) => sendWebhook(hook, payload), {
+      concurrency: 10,
+    });
 
   /**
    * Trigger interaction hooks with the given interaction context and result.
@@ -127,9 +133,9 @@ export const createHookLibrary = (queries: Queries) => {
       userIp,
       user: user && pick(user, ...userInfoSelectFields),
       application: application && pick(application, 'id', 'type', 'name', 'description'),
-    } satisfies InteractionHookEventPayloadWithoutHookId;
+    } satisfies BetterOmit<InteractionHookEventPayload, 'hookId'>;
 
-    await sendWebhooks([{ hooks, payload }]);
+    await sendWebhooks(hooks.map((hook) => ({ hook, payload })));
   };
 
   /**
@@ -143,7 +149,7 @@ export const createHookLibrary = (queries: Queries) => {
     const found = await findAllHooks();
 
     // Filter hooks that match each events
-    const webhookRequests = hooksManager.contextArray
+    const webhooks = hooksManager.contextArray
       .map(({ event, data }) => {
         const hooks = found.filter(
           ({ event: hookEvent, events, enabled }) =>
@@ -159,13 +165,15 @@ export const createHookLibrary = (queries: Queries) => {
           createdAt: new Date().toISOString(),
           ...hooksManager.metadata,
           ...data,
-        } satisfies DataHookEventPayloadWithoutHookId;
+        } satisfies BetterOmit<DataHookEventPayload, 'hookId'>;
 
         return { hooks, payload };
       })
       .filter(Boolean);
 
-    await sendWebhooks(webhookRequests);
+    await sendWebhooks(
+      webhooks.flatMap(({ hooks, payload }) => hooks.map((hook) => ({ hook, payload })))
+    );
   };
 
   const triggerTestHook = async (hookId: string, events: HookEvent[], config: HookConfig) => {

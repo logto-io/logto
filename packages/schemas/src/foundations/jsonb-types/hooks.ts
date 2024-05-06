@@ -67,16 +67,13 @@ export const hookConfigGuard = z.object({
 
 export type HookConfig = z.infer<typeof hookConfigGuard>;
 
-/**
- * Management API hooks registration.
- *
- * Pre register the hooks that will be triggered by the management API.
- * Used by the managementApiHooks middleware.
- * Auto register the following hooks when the management API is called.
- */
 type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 type ManagementApiHookKey = `${ApiMethod} ${string}`;
 
+/**
+ * Management API hooks registration.
+ * Define the hook event that should be triggered when the management API is called.
+ */
 export const managementApiHooksRegistration = Object.freeze({
   'POST /roles': 'Role.Created',
   'PATCH /roles/:id': 'Role.Updated',

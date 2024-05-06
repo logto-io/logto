@@ -4,7 +4,7 @@ import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { DataHookContextManager } from '#src/libraries/hook/hook-context-manager.js';
+import { DataHookContextManager } from '#src/libraries/hook/context-manager.js';
 import {
   buildManagementApiDataHookRegistrationKey,
   hasRegisteredDataHookEvent,

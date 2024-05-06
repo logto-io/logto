@@ -5,7 +5,7 @@ import { createMockUtils } from '@logto/shared/esm';
 import RequestError from '#src/errors/RequestError/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 
-import { DataHookContextManager } from './hook-context-manager.js';
+import { DataHookContextManager } from './context-manager.js';
 import { generateHookTestPayload, parseResponse } from './utils.js';
 
 const { jest } = import.meta;

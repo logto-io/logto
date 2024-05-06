@@ -4,7 +4,7 @@
 "@logto/console": minor
 ---
 
-refactor the definition of Hook event types:
+refactor the definition of hook event types:
 
-- Add DataHook event types. DataHook events are webhook events that are triggered by data changes.
-- Rename old Hook event types to InteractionHook event types. InteractionHook events are webhook events that are triggered by user interactions.
+- Add `DataHook` event types. `DataHook` are triggered by data changes.
+- Add "interaction" prefix to existing hook event types. Interaction hook events are triggered by end user interactions, e.g. completing sign-in.

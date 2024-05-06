@@ -66,7 +66,7 @@ function getCircularReplacer() {
 
 /**
  * Clone and stringify error object for logging purpose.
- * The stringified result  will be used as the error message.
+ * The stringified result will be used as the error message.
  * This is necessary because directly stringify an non-Error object will lose the stack trace.
  */
 export const normalizeError = (error: unknown) => {

@@ -8,9 +8,10 @@ import type { userInfoSelectFields } from './user.js';
 // Define a without hookId type ahead.
 // That is because using Omit with Record<string, unknown> will loose type definition.
 // @see https://stackoverflow.com/questions/65013802/loose-type-definition-with-omit-and-keystring-unknown
-export type InteractionHookEventPayloadWithoutHookId = {
+export type InteractionHookEventPayload = {
   event: InteractionHookEvent;
   createdAt: string;
+  hookId: string;
   sessionId?: string;
   userAgent?: string;
   userId?: string;
@@ -19,9 +20,10 @@ export type InteractionHookEventPayloadWithoutHookId = {
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
 } & Record<string, unknown>;
 
-export type DataHookEventPayloadWithoutHookId = {
+export type DataHookEventPayload = {
   event: DataHookEvent;
   createdAt: string;
+  hookId: string;
   ip?: string;
   userAgent?: string;
   body?: Record<string, unknown>;
@@ -29,18 +31,6 @@ export type DataHookEventPayloadWithoutHookId = {
   status?: number;
   method?: string;
 } & Record<string, unknown>;
-
-export type InteractionHookEventPayload = InteractionHookEventPayloadWithoutHookId & {
-  hookId: string;
-};
-
-export type DataHookEventPayload = DataHookEventPayloadWithoutHookId & {
-  hookId: string;
-};
-
-export type HookEventPayloadWithoutHookId =
-  | InteractionHookEventPayloadWithoutHookId
-  | DataHookEventPayloadWithoutHookId;
 
 export type HookEventPayload = InteractionHookEventPayload | DataHookEventPayload;
 
