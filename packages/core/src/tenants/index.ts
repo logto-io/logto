@@ -31,7 +31,7 @@ class TenantPool {
       // Otherwise, create a new tenant instance and store in LRU cache, using the code below.
     }
 
-    consoleLog.info('Init tenant:', tenantId, customDomain);
+    consoleLog.info('Init tenant:', tenantId, 'Custom domain:', customDomain);
     const newTenantPromise = Tenant.create({ id: tenantId, redisCache, customDomain });
     this.cache.set(cacheKey, newTenantPromise);
 
