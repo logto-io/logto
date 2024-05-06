@@ -5,9 +5,6 @@ import { type DataHookEvent, type InteractionHookEvent } from '../foundations/in
 
 import type { userInfoSelectFields } from './user.js';
 
-// Define a without hookId type ahead.
-// That is because using Omit with Record<string, unknown> will loose type definition.
-// @see https://stackoverflow.com/questions/65013802/loose-type-definition-with-omit-and-keystring-unknown
 export type InteractionHookEventPayload = {
   event: InteractionHookEvent;
   createdAt: string;

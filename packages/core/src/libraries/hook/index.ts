@@ -164,10 +164,6 @@ export const createHookLibrary = (queries: Queries) => {
           enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
       );
 
-      if (hooks.length === 0) {
-        return [];
-      }
-
       const payload = {
         event,
         createdAt: new Date().toISOString(),

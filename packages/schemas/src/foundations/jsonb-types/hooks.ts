@@ -68,7 +68,6 @@ export const hookConfigGuard = z.object({
 export type HookConfig = z.infer<typeof hookConfigGuard>;
 
 type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-type ManagementApiHookKey = `${ApiMethod} ${string}`;
 
 /**
  * Management API hooks registration.
@@ -78,4 +77,4 @@ export const managementApiHooksRegistration = Object.freeze({
   'POST /roles': 'Role.Created',
   'PATCH /roles/:id': 'Role.Updated',
   'DELETE /roles/:id': 'Role.Deleted',
-} satisfies Record<ManagementApiHookKey, DataHookEvent>);
+} satisfies Record<`${ApiMethod} ${string}`, DataHookEvent>);

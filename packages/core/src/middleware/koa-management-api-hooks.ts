@@ -27,7 +27,7 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
   hooks: Libraries['hooks']
 ): MiddlewareType<StateT, WithHookContext<ContextT>, ResponseT> => {
   return async (ctx, next) => {
-    // TODO: Dev feature guard
+    // TODO: Remove dev feature guard
     const { isDevFeaturesEnabled } = EnvSet.values;
     if (!isDevFeaturesEnabled) {
       return;
