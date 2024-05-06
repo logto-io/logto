@@ -192,8 +192,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       '@withtyped/server':
-        specifier: ^0.13.3
-        version: 0.13.3(zod@3.22.4)
+        specifier: ^0.13.5
+        version: 0.13.5(zod@3.22.4)
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2881,8 +2881,8 @@ importers:
         specifier: ^15.5.1
         version: 15.5.1
       '@withtyped/client':
-        specifier: ^0.8.4
-        version: 0.8.4(zod@3.22.4)
+        specifier: ^0.8.6
+        version: 0.8.6(zod@3.22.4)
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
@@ -3136,8 +3136,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1
       '@withtyped/client':
-        specifier: ^0.8.4
-        version: 0.8.4(zod@3.22.4)
+        specifier: ^0.8.6
+        version: 0.8.6(zod@3.22.4)
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -3854,8 +3854,8 @@ importers:
         specifier: workspace:^3.1.0
         version: link:../shared
       '@withtyped/server':
-        specifier: ^0.13.3
-        version: 0.13.3(zod@3.22.4)
+        specifier: ^0.13.5
+        version: 0.13.5(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3970,11 +3970,11 @@ importers:
         specifier: ^2.9.0
         version: 2.9.0
       '@withtyped/client':
-        specifier: ^0.8.4
-        version: 0.8.4(zod@3.22.4)
+        specifier: ^0.8.6
+        version: 0.8.6(zod@3.22.4)
       '@withtyped/server':
-        specifier: ^0.13.3
-        version: 0.13.3(zod@3.22.4)
+        specifier: ^0.13.5
+        version: 0.13.5(zod@3.22.4)
     optionalDependencies:
       zod:
         specifier: ^3.22.4
@@ -6788,7 +6788,7 @@ packages:
     engines: {node: ^20.9.0}
     dependencies:
       '@silverhand/essentials': 2.9.0
-      '@withtyped/server': 0.13.3(zod@3.22.4)
+      '@withtyped/server': 0.13.5(zod@3.22.4)
     transitivePeerDependencies:
       - zod
     dev: true
@@ -10186,7 +10186,7 @@ packages:
       strip-literal: 2.0.0
       test-exclude: 6.0.0
       v8-to-istanbul: 9.2.0
-      vitest: 1.4.0(@types/node@20.12.7)
+      vitest: 1.4.0(@types/node@20.10.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -10230,21 +10230,22 @@ packages:
       pretty-format: 29.7.0
     dev: true
 
-  /@withtyped/client@0.8.4(zod@3.22.4):
-    resolution: {integrity: sha512-oX19xZRjUASZLWUzQW4LKhLsDgtwFfWU7mgReKiY/tddwvHLoakLqz1o1MvRDuz+EOoYrQM+VpkwJeMsnbNT1w==}
+  /@withtyped/client@0.8.6(zod@3.22.4):
+    resolution: {integrity: sha512-LJXMHBEJ4VkRMGHF08WDowJRQttrS2QII+6QCcQp4m9M88qJS/2Kvfii1H6u2N4yWNZqHKs3zWVEDRCPV4VLGg==}
     dependencies:
-      '@withtyped/server': 0.13.3(zod@3.22.4)
+      '@withtyped/server': 0.13.5(zod@3.22.4)
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
 
-  /@withtyped/server@0.13.3(zod@3.22.4):
-    resolution: {integrity: sha512-MPyjRPQd5JySDnMnXPxGXXnw7AACAl8TLhWPjm4sdBgVMssSrmBbjRxBep0jY64PJ3xzICZh0ArWTRdXyNFIog==}
+  /@withtyped/server@0.13.5(zod@3.22.4):
+    resolution: {integrity: sha512-Q5lr6f4G+vjV4q0vBbpEvPUhKOIjAbRqRDXCSHC2nblgB9637njQPvRV8ulXHQWNk5PAMknkgFRJsZWVuHBhAg==}
     peerDependencies:
       zod: ^3.19.1
     dependencies:
       '@silverhand/essentials': 2.9.0
       '@withtyped/shared': 0.2.2
+      nanoid: 4.0.2
       zod: 3.22.4
 
   /@withtyped/shared@0.2.2:
@@ -11930,17 +11931,6 @@ packages:
   /dayjs@1.11.6:
     resolution: {integrity: sha512-zZbY5giJAinCG+7AGaw0wIhNZ6J8AhWuSXKvuc1KAyMiRsvGQWqh4L+MomvhdAYjN+lqvVCMq1I41e3YHvXkyQ==}
 
-  /debug@3.2.7:
-    resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.3
-    dev: true
-
   /debug@3.2.7(supports-color@5.5.0):
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -12705,7 +12695,7 @@ packages:
   /eslint-import-resolver-node@0.3.9:
     resolution: {integrity: sha512-WFj2isz22JahUv+B788TlO3N6zL3nNJGU8CcZbPZvVEkBPaJdCV4vy5wyghty5ROFbCRnm132v8BScu5/1BQ8g==}
     dependencies:
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@5.5.0)
       is-core-module: 2.13.1
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -12757,7 +12747,7 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@5.5.0)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
@@ -12811,7 +12801,7 @@ packages:
       array.prototype.findlastindex: 1.2.5
       array.prototype.flat: 1.3.2
       array.prototype.flatmap: 1.3.2
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@5.5.0)
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
@@ -17356,6 +17346,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
     dev: true
+
+  /nanoid@4.0.2:
+    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
+    engines: {node: ^14 || ^16 || >=18}
+    hasBin: true
 
   /nanoid@5.0.1:
     resolution: {integrity: sha512-vWeVtV5Cw68aML/QaZvqN/3QQXc6fBfIieAlu05m7FZW2Dgb+3f0xc0TTxuJW+7u30t7iSDTV/j3kVI0oJqIfQ==}
