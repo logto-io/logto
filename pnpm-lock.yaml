@@ -192,8 +192,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       '@withtyped/server':
-        specifier: ^0.13.5
-        version: 0.13.5(zod@3.22.4)
+        specifier: ^0.13.6
+        version: 0.13.6(zod@3.22.4)
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2881,8 +2881,8 @@ importers:
         specifier: ^15.5.1
         version: 15.5.1
       '@withtyped/client':
-        specifier: ^0.8.6
-        version: 0.8.6(zod@3.22.4)
+        specifier: ^0.8.7
+        version: 0.8.7(zod@3.22.4)
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
@@ -3136,8 +3136,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1
       '@withtyped/client':
-        specifier: ^0.8.6
-        version: 0.8.6(zod@3.22.4)
+        specifier: ^0.8.7
+        version: 0.8.7(zod@3.22.4)
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -3854,8 +3854,8 @@ importers:
         specifier: workspace:^3.1.0
         version: link:../shared
       '@withtyped/server':
-        specifier: ^0.13.5
-        version: 0.13.5(zod@3.22.4)
+        specifier: ^0.13.6
+        version: 0.13.6(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3970,11 +3970,11 @@ importers:
         specifier: ^2.9.0
         version: 2.9.0
       '@withtyped/client':
-        specifier: ^0.8.6
-        version: 0.8.6(zod@3.22.4)
+        specifier: ^0.8.7
+        version: 0.8.7(zod@3.22.4)
       '@withtyped/server':
-        specifier: ^0.13.5
-        version: 0.13.5(zod@3.22.4)
+        specifier: ^0.13.6
+        version: 0.13.6(zod@3.22.4)
     optionalDependencies:
       zod:
         specifier: ^3.22.4
@@ -6788,7 +6788,7 @@ packages:
     engines: {node: ^20.9.0}
     dependencies:
       '@silverhand/essentials': 2.9.0
-      '@withtyped/server': 0.13.5(zod@3.22.4)
+      '@withtyped/server': 0.13.6(zod@3.22.4)
     transitivePeerDependencies:
       - zod
     dev: true
@@ -10230,16 +10230,16 @@ packages:
       pretty-format: 29.7.0
     dev: true
 
-  /@withtyped/client@0.8.6(zod@3.22.4):
-    resolution: {integrity: sha512-LJXMHBEJ4VkRMGHF08WDowJRQttrS2QII+6QCcQp4m9M88qJS/2Kvfii1H6u2N4yWNZqHKs3zWVEDRCPV4VLGg==}
+  /@withtyped/client@0.8.7(zod@3.22.4):
+    resolution: {integrity: sha512-qK+Tsczvko8mBRACtHGYj0CdMZFaBmosMGUahTAr544Jb183INPZPn/NpUFtTEpl5g3e4lUjMc5jPH0V78D0+g==}
     dependencies:
-      '@withtyped/server': 0.13.5(zod@3.22.4)
+      '@withtyped/server': 0.13.6(zod@3.22.4)
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
 
-  /@withtyped/server@0.13.5(zod@3.22.4):
-    resolution: {integrity: sha512-Q5lr6f4G+vjV4q0vBbpEvPUhKOIjAbRqRDXCSHC2nblgB9637njQPvRV8ulXHQWNk5PAMknkgFRJsZWVuHBhAg==}
+  /@withtyped/server@0.13.6(zod@3.22.4):
+    resolution: {integrity: sha512-l+jaZ6Gy/S3oF9q91JuHtWlRqB+bK8ycniAK2atK05/ZfhS/qBPV/JPA18fM+JzSQA+tr3CYXnul5SshmYsRoA==}
     peerDependencies:
       zod: ^3.19.1
     dependencies:
