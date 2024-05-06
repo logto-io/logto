@@ -15,7 +15,6 @@ export enum InteractionHookEvent {
 }
 
 // DataHookEvent
-// TODO: @simeng-li implement more data hook events
 enum DataHookSchema {
   User = 'User',
   Role = 'Role',
@@ -25,14 +24,14 @@ enum DataHookSchema {
   OrganizationScope = 'OrganizationScope',
 }
 
-enum DataHookMutationType {
+enum DataHookBasicMutationType {
   Created = 'Created',
   Deleted = 'Deleted',
-  Updated = 'Updated',
 }
 
-type BasicDataHookEvent = `${DataHookSchema}.${DataHookMutationType}`;
+type BasicDataHookEvent = `${DataHookSchema}.${DataHookBasicMutationType}`;
 
+// Mutable schemas
 type DataHookBasicInfoMutableSchema =
   | DataHookSchema.User
   | DataHookSchema.Role
@@ -45,9 +44,13 @@ type DataHookCustomMutableSchema =
   | `${DataHookSchema.Organization}.Membership`
   | `${DataHookSchema.OrganizationRole}.Scopes`;
 
-type DataHookPropertyUpdateEvent =
-  | `${DataHookBasicInfoMutableSchema}.Info.${DataHookMutationType.Updated}`
-  | `${DataHookCustomMutableSchema}.${DataHookMutationType.Updated}`;
+type DataHookMutableSchema =
+  | DataHookSchema.Scope
+  | DataHookSchema.OrganizationScope
+  | `${DataHookBasicInfoMutableSchema}.Info`
+  | DataHookCustomMutableSchema;
+
+type DataHookPropertyUpdateEvent = `${DataHookMutableSchema}.Updated`;
 
 export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
 

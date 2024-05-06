@@ -23,7 +23,11 @@ export type DataHookEventPayload = {
   hookId: string;
   ip?: string;
   userAgent?: string;
+  // Koa response body
   body?: Record<string, unknown>;
+  // Koa route params
+  params?: Record<string, string>;
+  // Koa route path
   path?: string;
   status?: number;
   method?: string;
