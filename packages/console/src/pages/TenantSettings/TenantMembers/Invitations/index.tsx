@@ -134,7 +134,7 @@ function Invitations() {
             dataIndex: 'user',
             colSpan: 2,
             title: t('user'),
-            render: ({ invitee }) => <span>{invitee}</span>,
+            render: ({ invitee }) => <Breakable>{invitee}</Breakable>,
           },
           {
             dataIndex: 'roles',
