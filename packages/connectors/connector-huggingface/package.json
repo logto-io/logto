@@ -1,0 +1,74 @@
+{
+  "name": "@logto/connector-huggingface",
+  "version": "0.0.0",
+  "description": "Hugging Face connector implementation.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "dependencies": {
+    "@logto/connector-kit": "workspace:^3.0.0",
+    "@logto/connector-oauth": "workspace:^1.2.0",
+    "@silverhand/essentials": "^2.9.0",
+    "ky": "^1.2.3",
+    "zod": "^3.22.4"
+  },
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "exports": "./lib/index.js",
+  "license": "MPL-2.0",
+  "type": "module",
+  "files": [
+    "lib",
+    "docs",
+    "logo.svg",
+    "logo-dark.svg"
+  ],
+  "scripts": {
+    "precommit": "lint-staged",
+    "build:test": "rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage",
+    "prepublishOnly": "pnpm build"
+  },
+  "engines": {
+    "node": "^20.9.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand",
+    "settings": {
+      "import/core-modules": [
+        "@silverhand/essentials",
+        "got",
+        "nock",
+        "snakecase-keys",
+        "zod"
+      ]
+    }
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/ts-config": "6.0.0",
+    "@types/node": "^20.11.20",
+    "@types/supertest": "^6.0.2",
+    "@vitest/coverage-v8": "^1.4.0",
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.0.2",
+    "nock": "14.0.0-beta.6",
+    "prettier": "^3.0.0",
+    "rollup": "^4.12.0",
+    "rollup-plugin-output-size": "^1.3.0",
+    "supertest": "^7.0.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.4.0"
+  }
+}
