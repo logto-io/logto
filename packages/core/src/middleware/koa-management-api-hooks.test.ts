@@ -1,4 +1,5 @@
 import { managementApiHooksRegistration } from '@logto/schemas';
+import { ConsoleLog } from '@logto/shared';
 import { type ParameterizedContext } from 'koa';
 
 import type Libraries from '#src/tenants/Libraries.js';
@@ -43,6 +44,7 @@ describe('koaManagementApiHooks', () => {
     await koaManagementApiHooks(mockHooksLibrary)(ctx, next);
     expect(triggerDataHooks).toBeCalledTimes(1);
     expect(triggerDataHooks).toBeCalledWith(
+      expect.any(ConsoleLog),
       expect.objectContaining({
         contextArray: [
           {
@@ -78,6 +80,7 @@ describe('koaManagementApiHooks', () => {
       await koaManagementApiHooks(mockHooksLibrary)(ctx, next);
 
       expect(triggerDataHooks).toBeCalledWith(
+        expect.any(ConsoleLog),
         expect.objectContaining({
           contextArray: [
             {
