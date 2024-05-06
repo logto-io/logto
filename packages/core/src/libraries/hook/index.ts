@@ -9,7 +9,7 @@ import {
   type HookTestErrorResponseData,
   type InteractionHookEventPayload,
 } from '@logto/schemas';
-import { generateStandardId, normalizeError } from '@logto/shared';
+import { generateStandardId, normalizeError, type ConsoleLog } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 import pMap from 'p-map';
@@ -17,7 +17,6 @@ import pMap from 'p-map';
 import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
-import { consoleLog } from '#src/utils/console.js';
 
 import { type DataHookContextManager } from './context-manager.js';
 import {
@@ -47,7 +46,11 @@ export const createHookLibrary = (queries: Queries) => {
    *
    * - create audit log for each hook request
    */
-  const sendWebhook = async (hook: Hook, payload: HookEventPayloadWithoutHookId) => {
+  const sendWebhook = async (
+    hook: Hook,
+    payload: HookEventPayloadWithoutHookId,
+    consoleLog: ConsoleLog
+  ) => {
     const { id, config, signingKey } = hook;
     consoleLog.info(`\tTriggering hook ${id} due to ${payload.event} event`);
 
@@ -90,9 +93,10 @@ export const createHookLibrary = (queries: Queries) => {
    * Trigger multiple web hooks with concurrency control.
    */
   const sendWebhooks = async <T extends HookEventPayloadWithoutHookId>(
-    webhooks: Array<{ hook: Hook; payload: T }>
+    webhooks: Array<{ hook: Hook; payload: T }>,
+    consoleLog: ConsoleLog
   ) =>
-    pMap(webhooks, async ({ hook, payload }) => sendWebhook(hook, payload), {
+    pMap(webhooks, async ({ hook, payload }) => sendWebhook(hook, payload, consoleLog), {
       concurrency: 10,
     });
 
@@ -100,6 +104,7 @@ export const createHookLibrary = (queries: Queries) => {
    * Trigger interaction hooks with the given interaction context and result.
    */
   const triggerInteractionHooks = async (
+    consoleLog: ConsoleLog,
     interactionContext: InteractionHookContext,
     interactionResult: InteractionHookResult,
     userAgent?: string
@@ -135,13 +140,16 @@ export const createHookLibrary = (queries: Queries) => {
       application: application && pick(application, 'id', 'type', 'name', 'description'),
     } satisfies BetterOmit<InteractionHookEventPayload, 'hookId'>;
 
-    await sendWebhooks(hooks.map((hook) => ({ hook, payload })));
+    await sendWebhooks(
+      hooks.map((hook) => ({ hook, payload })),
+      consoleLog
+    );
   };
 
   /**
    * Trigger data hooks with the given data mutation context. All context objects will be used to trigger hooks.
    */
-  const triggerDataHooks = async (hooksManager: DataHookContextManager) => {
+  const triggerDataHooks = async (consoleLog: ConsoleLog, hooksManager: DataHookContextManager) => {
     if (hooksManager.contextArray.length === 0) {
       return;
     }
@@ -172,7 +180,8 @@ export const createHookLibrary = (queries: Queries) => {
       .filter(Boolean);
 
     await sendWebhooks(
-      webhooks.flatMap(({ hooks, payload }) => hooks.map((hook) => ({ hook, payload })))
+      webhooks.flatMap(({ hooks, payload }) => hooks.map((hook) => ({ hook, payload }))),
+      consoleLog
     );
   };
 

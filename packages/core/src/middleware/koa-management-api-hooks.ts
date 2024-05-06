@@ -10,6 +10,7 @@ import {
   hasRegisteredDataHookEvent,
 } from '#src/libraries/hook/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 export type WithHookContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & { appendDataHookContext: DataHookContextManager['appendContext'] };
@@ -59,7 +60,7 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
 
     if (dataHooks.contextArray.length > 0) {
       // Hooks should not crash the app
-      void trySafe(hooks.triggerDataHooks(dataHooks));
+      void trySafe(hooks.triggerDataHooks(getConsoleLogFromContext(ctx), dataHooks));
     }
   };
 };

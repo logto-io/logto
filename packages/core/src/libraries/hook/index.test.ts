@@ -1,5 +1,6 @@
 import type { Hook } from '@logto/schemas';
 import { InteractionEvent, InteractionHookEvent, LogResult } from '@logto/schemas';
+import { ConsoleLog } from '@logto/shared';
 import { createMockUtils } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -191,7 +192,7 @@ describe('triggerDataHooks()', () => {
       data: hookData,
     });
 
-    await triggerDataHooks(hooksManager);
+    await triggerDataHooks(new ConsoleLog(), hooksManager);
 
     expect(findAllHooks).toHaveBeenCalled();
 
