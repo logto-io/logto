@@ -47,21 +47,28 @@ function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId }: Pr
 
   const tabs = useMemo(
     () =>
-      Object.values(permissionTabs).map(({ title, key }) => {
-        const selectedDataCount = scopesAssignment[key].selectedData.length;
+      Object.values(permissionTabs)
+        /**
+         * Hide the organization resource scopes tab since the feature is not ready.
+         * We don't need the `isDevFeaturesEnabled` flag since the feature will change the UI.
+         * Todo @xiaoyijun Implement the new organization resource scopes feature. LOG-8823
+         */
+        .filter(({ key }) => key !== ApplicationUserConsentScopeType.OrganizationResourceScopes)
+        .map(({ title, key }) => {
+          const selectedDataCount = scopesAssignment[key].selectedData.length;
 
-        return (
-          <TabNavItem
-            key={key}
-            isActive={key === activeTab}
-            onClick={() => {
-              setActiveTab(key);
-            }}
-          >
-            {`${t(title)}${selectedDataCount ? ` (${selectedDataCount})` : ''}`}
-          </TabNavItem>
-        );
-      }),
+          return (
+            <TabNavItem
+              key={key}
+              isActive={key === activeTab}
+              onClick={() => {
+                setActiveTab(key);
+              }}
+            >
+              {`${t(title)}${selectedDataCount ? ` (${selectedDataCount})` : ''}`}
+            </TabNavItem>
+          );
+        }),
     [activeTab, scopesAssignment, setActiveTab, t]
   );
 
