@@ -3093,6 +3093,9 @@ importers:
       '@logto/app-insights':
         specifier: workspace:^1.4.0
         version: link:../app-insights
+      '@logto/azure-functions-kit':
+        specifier: workspace:^0.1.0
+        version: link:../toolkit/azure-functions-kit
       '@logto/cli':
         specifier: workspace:^1.15.0
         version: link:../cli
@@ -3963,6 +3966,39 @@ importers:
       vitest:
         specifier: ^1.4.0
         version: 1.4.0(@types/node@20.10.4)
+
+  packages/toolkit/azure-functions-kit:
+    devDependencies:
+      '@azure/functions':
+        specifier: ^4.0.0
+        version: 4.4.0
+      '@logto/schemas':
+        specifier: workspace:1.15.0
+        version: link:../../schemas
+      '@silverhand/eslint-config':
+        specifier: 6.0.1
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+      '@silverhand/essentials':
+        specifier: ^2.9.0
+        version: 2.9.0
+      '@silverhand/ts-config':
+        specifier: 6.0.0
+        version: 6.0.0(typescript@5.3.3)
+      '@types/node':
+        specifier: ^20.9.5
+        version: 20.12.7
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      lint-staged:
+        specifier: ^15.0.0
+        version: 15.0.2
+      prettier:
+        specifier: ^3.0.0
+        version: 3.0.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
 
   packages/toolkit/connector-kit:
     dependencies:

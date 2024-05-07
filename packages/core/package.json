@@ -32,6 +32,7 @@
     "@koa/cors": "^5.0.0",
     "@logto/affiliate": "^0.1.0",
     "@logto/app-insights": "workspace:^1.4.0",
+    "@logto/azure-functions-kit": "workspace:^0.1.0",
     "@logto/cli": "workspace:^1.15.0",
     "@logto/connector-kit": "workspace:^3.0.0",
     "@logto/console": "workspace:*",

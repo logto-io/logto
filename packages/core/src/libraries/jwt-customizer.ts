@@ -1,10 +1,9 @@
 import { types } from 'node:util';
-import { runInNewContext } from 'node:vm';
 
+import { runCustomJwtClaimsScriptInLocalVm } from '@logto/azure-functions-kit';
 import {
   userInfoSelectFields,
   jwtCustomizerUserContextGuard,
-  LogtoJwtTokenKeyType,
   type LogtoJwtTokenKey,
   type JwtCustomizerType,
   type JwtCustomizerUserContext,
@@ -12,7 +11,6 @@ import {
 } from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
 import { deduplicate, pick, pickState, assert } from '@silverhand/essentials';
-import { ResponseError } from '@withtyped/client';
 import deepmerge from 'deepmerge';
 import { z, ZodError } from 'zod';
 
@@ -26,6 +24,7 @@ import {
   getJwtCustomizerScripts,
   type CustomJwtDeployRequestBody,
 } from '#src/utils/custom-jwt/index.js';
+import { buildResponseError } from '#src/utils/custom-jwt/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -41,73 +40,26 @@ const buildErrorResponse = (error: unknown) =>
 export class CreateJwtCustomizerLibrary {
   static async runScriptInLocalVm(data: CustomJwtFetcher) {
     try {
-      const getCustomJwtClaims: unknown = runInNewContext(
-        data.script + ';getCustomJwtClaims;',
-        Object.freeze({
-          fetch: async (...args: Parameters<typeof fetch>) => fetch(...args),
-        })
-      );
-
-      if (typeof getCustomJwtClaims !== 'function') {
-        throw new TypeError('The script does not have a function named `getCustomJwtClaims`');
-      }
-
-      const payload =
-        data.tokenType === LogtoJwtTokenKeyType.AccessToken
-          ? pick(data, 'token', 'context', 'environmentVariables')
-          : pick(data, 'token', 'environmentVariables');
-
-      /**
-       * We can not use top-level await in `vm`, use the following implementation instead.
-       *
-       * Ref:
-       * 1. https://github.com/nodejs/node/issues/40898
-       * 2. https://github.com/n-riesco/ijavascript/issues/173#issuecomment-693924098
-       */
-      const result: unknown = await runInNewContext(
-        '(async () => getCustomJwtClaims(payload))();',
-        Object.freeze({ getCustomJwtClaims, payload }),
-        // Limit the execution time to 3 seconds, throws error if the script takes too long to execute.
-        { timeout: 3000 }
-      );
+      const result = await runCustomJwtClaimsScriptInLocalVm(data);
 
       // If the `result` is not a record, we cannot merge it to the existing token payload.
-      const parsedResult = z.record(z.unknown()).parse(result);
-      return parsedResult;
+      return z.record(z.unknown()).parse(result);
     } catch (error: unknown) {
       // Assuming we only use zod for request body validation
       if (error instanceof ZodError) {
         const { errors } = error;
-        throw new ResponseError(
-          new Response(
-            new Blob(
-              [
-                JSON.stringify({
-                  message: 'Invalid input',
-                  errors,
-                }),
-              ],
-              {
-                type: 'application/json',
-              }
-            ),
-            {
-              status: 400,
-            }
-          )
+        throw buildResponseError(
+          {
+            message: 'Invalid input',
+            errors,
+          },
+          400
         );
       }
 
-      throw new ResponseError(
-        new Response(
-          new Blob([JSON.stringify(buildErrorResponse(error))], {
-            type: 'application/json',
-          }),
-          {
-            // Likely a JSON parsing error
-            status: error instanceof SyntaxError || error instanceof TypeError ? 422 : 500,
-          }
-        )
+      throw buildResponseError(
+        buildErrorResponse(error),
+        error instanceof SyntaxError || error instanceof TypeError ? 422 : 500
       );
     }
   }
