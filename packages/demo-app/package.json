@@ -34,7 +34,7 @@
     "@types/react-dom": "^18.0.0",
     "buffer": "^5.7.1",
     "cross-env": "^7.0.3",
-    "eslint": "^8.56.0",
+    "eslint": "^9.0.0",
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^7.0.1",
     "lint-staged": "^15.0.0",

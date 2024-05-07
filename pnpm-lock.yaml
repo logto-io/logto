@@ -54,7 +54,7 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -65,8 +65,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -166,7 +166,7 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -195,8 +195,8 @@ importers:
         specifier: ^0.13.6
         version: 0.13.6(zod@3.22.4)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -251,7 +251,7 @@ importers:
         version: 5.0.0
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -265,8 +265,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -333,7 +333,7 @@ importers:
         version: 5.0.0
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -347,8 +347,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -406,7 +406,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -420,8 +420,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -479,7 +479,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -493,8 +493,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -558,7 +558,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -572,8 +572,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -637,7 +637,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -651,8 +651,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -713,7 +713,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -727,8 +727,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -786,7 +786,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -800,8 +800,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -859,7 +859,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -873,8 +873,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -932,7 +932,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -946,8 +946,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1008,7 +1008,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1022,8 +1022,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1081,7 +1081,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1095,8 +1095,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1154,7 +1154,7 @@ importers:
         version: 11.1.6(rollup@4.14.3)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1168,8 +1168,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1227,7 +1227,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1241,8 +1241,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1303,7 +1303,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1317,8 +1317,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1376,7 +1376,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1390,8 +1390,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1449,7 +1449,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1463,8 +1463,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1522,7 +1522,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1536,8 +1536,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1595,7 +1595,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1609,8 +1609,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1668,7 +1668,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1682,8 +1682,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1741,7 +1741,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1755,8 +1755,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1814,7 +1814,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1828,8 +1828,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1887,7 +1887,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1901,8 +1901,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -1969,7 +1969,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -1983,8 +1983,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2054,7 +2054,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2068,8 +2068,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2133,7 +2133,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2147,8 +2147,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2206,7 +2206,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2220,8 +2220,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2279,7 +2279,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2293,8 +2293,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2355,7 +2355,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2372,8 +2372,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2431,7 +2431,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2445,8 +2445,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2504,7 +2504,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2518,8 +2518,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2577,7 +2577,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2591,8 +2591,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2650,7 +2650,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2664,8 +2664,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2723,7 +2723,7 @@ importers:
         version: 11.1.6(rollup@4.12.0)(typescript@5.3.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -2737,8 +2737,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.2
         version: 15.0.2
@@ -2825,10 +2825,10 @@ importers:
         version: 2.9.3(@parcel/core@2.9.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3)
+        version: 6.0.2(eslint@9.2.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3)
       '@silverhand/essentials':
         specifier: ^2.9.0
         version: 2.9.0
@@ -2917,8 +2917,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       history:
         specifier: ^5.3.0
         version: 5.3.0
@@ -3273,7 +3273,7 @@ importers:
         version: 0.2.5-e5d8200(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -3329,8 +3329,8 @@ importers:
         specifier: ^6.0.2
         version: 6.0.2
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.10.4)
@@ -3396,10 +3396,10 @@ importers:
         version: 2.9.3(@parcel/core@2.9.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3)
+        version: 6.0.2(eslint@9.2.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -3419,8 +3419,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       i18next:
         specifier: ^22.4.15
         version: 22.4.15
@@ -3504,10 +3504,10 @@ importers:
         version: 9.6.1(react-dom@18.2.0)(react@18.2.0)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3)
+        version: 6.0.2(eslint@9.2.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3)
       '@silverhand/essentials':
         specifier: ^2.9.0
         version: 2.9.0
@@ -3572,8 +3572,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       i18next:
         specifier: ^22.4.15
         version: 22.4.15
@@ -3709,7 +3709,7 @@ importers:
         version: link:../shared
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/essentials':
         specifier: ^2.9.0
         version: 2.9.0
@@ -3726,8 +3726,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       expect-puppeteer:
         specifier: ^10.0.0
         version: 10.0.0
@@ -3779,13 +3779,13 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -3813,7 +3813,7 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -3821,8 +3821,8 @@ importers:
         specifier: ^5.7.1
         version: 5.7.1
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -3862,7 +3862,7 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/essentials':
         specifier: ^2.9.0
         version: 2.9.0
@@ -3891,8 +3891,8 @@ importers:
         specifier: ^5.0.0
         version: 5.1.2
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -3935,7 +3935,7 @@ importers:
         version: 29.7.0
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -3946,8 +3946,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -3982,7 +3982,7 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -3993,8 +3993,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -4029,10 +4029,10 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3)
+        version: 6.0.2(eslint@9.2.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -4052,8 +4052,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -4081,7 +4081,7 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -4092,8 +4092,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(vitest@1.4.0)
       eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
+        specifier: ^9.0.0
+        version: 9.2.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -6144,13 +6144,13 @@ packages:
     dev: true
     optional: true
 
-  /@eslint-community/eslint-utils@4.4.0(eslint@8.57.0):
+  /@eslint-community/eslint-utils@4.4.0(eslint@9.2.0):
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
     dependencies:
-      eslint: 8.57.0
+      eslint: 9.2.0
       eslint-visitor-keys: 3.4.3
     dev: true
 
@@ -6176,9 +6176,26 @@ packages:
       - supports-color
     dev: true
 
-  /@eslint/js@8.57.0:
-    resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+  /@eslint/eslintrc@3.0.2:
+    resolution: {integrity: sha512-wV19ZEGEMAC1eHgrS7UQPqsdEiCIbTKTasEfcXAigzoXICcqZSjBZEHlZwNVvKg6UBCjSlos84XiLqsRJnIcIg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    dependencies:
+      ajv: 6.12.6
+      debug: 4.3.4
+      espree: 10.0.1
+      globals: 14.0.0
+      ignore: 5.3.1
+      import-fresh: 3.3.0
+      js-yaml: 4.1.0
+      minimatch: 3.1.2
+      strip-json-comments: 3.1.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@eslint/js@9.2.0:
+    resolution: {integrity: sha512-ESiIudvhoYni+MdsI8oD7skpprZ89qKocwRM2KEvhhBJ9nl5MRh7BXU5GTod7Mdygq+AUl+QzId6iWJKR/wABA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dev: true
 
   /@fontsource/roboto-mono@5.0.0:
@@ -6241,8 +6258,8 @@ packages:
     resolution: {integrity: sha512-lhqDEAvWixy3bZ+UOYbPwUbBkwBq5C1LAJ/xPC8Oi+lL54oyakv/npbA0aU2hgCsx/1NUd4IBvV03+aUBWxerw==}
     dev: false
 
-  /@humanwhocodes/config-array@0.11.14:
-    resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
+  /@humanwhocodes/config-array@0.13.0:
+    resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
@@ -6259,6 +6276,11 @@ packages:
 
   /@humanwhocodes/object-schema@2.0.3:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
+    dev: true
+
+  /@humanwhocodes/retry@0.2.4:
+    resolution: {integrity: sha512-Ttl/jHpxfS3st5sxwICYfk4pOH0WrLI1SpW283GgQL7sCWU7EHIOhX4b4fkIxr3tkfzwg8+FNojtzsIEE7Ecgg==}
+    engines: {node: '>=18.18'}
     dev: true
 
   /@icons/material@0.2.4(react@18.2.0):
@@ -8428,17 +8450,17 @@ packages:
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
     dev: true
 
-  /@silverhand/eslint-config-react@6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3):
+  /@silverhand/eslint-config-react@6.0.2(eslint@9.2.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0)(typescript@5.3.3):
     resolution: {integrity: sha512-4PqhypLqrX5FVXimKBz3S1c+usDns3N/XG66n2FQtO1FIa8WUVw1CsuWHT+tkqeIxDR1PRQX1e8Iwyy7vPclPA==}
     engines: {node: ^20.9.0}
     peerDependencies:
       stylelint: ^15.0.0 || ^16.0.0
     dependencies:
-      '@silverhand/eslint-config': 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
-      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.34.1)(eslint@8.57.0)
-      eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
-      eslint-plugin-react: 7.34.1(eslint@8.57.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
+      '@silverhand/eslint-config': 6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3)
+      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.34.1)(eslint@9.2.0)
+      eslint-plugin-jsx-a11y: 6.8.0(eslint@9.2.0)
+      eslint-plugin-react: 7.34.1(eslint@9.2.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@9.2.0)
       postcss-scss: 4.0.9(postcss@8.4.31)
       stylelint: 15.11.0(typescript@5.3.3)
       stylelint-config-xo: 0.22.0(stylelint@15.11.0)
@@ -8454,31 +8476,31 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config@6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3):
+  /@silverhand/eslint-config@6.0.1(eslint@9.2.0)(prettier@3.0.0)(typescript@5.3.3):
     resolution: {integrity: sha512-v7VbAiNgVwcjwGXe4LK6qNVKgltcm4XX9dkYgyaD22vcYCtp1BSd8NVsPDISV1nAwwirCklL0KSDtcD7pxkbHw==}
     engines: {node: ^20.9.0}
     peerDependencies:
       eslint: ^8.57.0
       prettier: ^3.0.0
     dependencies:
-      '@silverhand/eslint-plugin-fp': 2.5.0(eslint@8.57.0)
-      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0)(eslint@8.57.0)(typescript@5.3.3)
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
-      eslint: 8.57.0
-      eslint-config-prettier: 9.1.0(eslint@8.57.0)
-      eslint-config-xo: 0.44.0(eslint@8.57.0)
-      eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0)(@typescript-eslint/parser@7.7.0)(eslint@8.57.0)(typescript@5.3.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      '@silverhand/eslint-plugin-fp': 2.5.0(eslint@9.2.0)
+      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0)(eslint@9.2.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@9.2.0)(typescript@5.3.3)
+      eslint: 9.2.0
+      eslint-config-prettier: 9.1.0(eslint@9.2.0)
+      eslint-config-xo: 0.44.0(eslint@9.2.0)
+      eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0)(@typescript-eslint/parser@7.7.0)(eslint@9.2.0)(typescript@5.3.3)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0)(eslint-plugin-import@2.29.1)(eslint@9.2.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
-      eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
-      eslint-plugin-n: 17.2.1(eslint@8.57.0)
+      eslint-plugin-eslint-comments: 3.2.0(eslint@9.2.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-typescript@3.6.1)(eslint@9.2.0)
+      eslint-plugin-n: 17.2.1(eslint@9.2.0)
       eslint-plugin-no-use-extend-native: 0.5.0
-      eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.0.0)
-      eslint-plugin-promise: 6.1.1(eslint@8.57.0)
-      eslint-plugin-sql: 2.1.0(eslint@8.57.0)
-      eslint-plugin-unicorn: 52.0.0(eslint@8.57.0)
-      eslint-plugin-unused-imports: 3.1.0(@typescript-eslint/eslint-plugin@7.7.0)(eslint@8.57.0)
+      eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0)(eslint@9.2.0)(prettier@3.0.0)
+      eslint-plugin-promise: 6.1.1(eslint@9.2.0)
+      eslint-plugin-sql: 2.1.0(eslint@9.2.0)
+      eslint-plugin-unicorn: 52.0.0(eslint@9.2.0)
+      eslint-plugin-unused-imports: 3.1.0(@typescript-eslint/eslint-plugin@7.7.0)(eslint@9.2.0)
       prettier: 3.0.0
     transitivePeerDependencies:
       - '@types/eslint'
@@ -8488,14 +8510,14 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-plugin-fp@2.5.0(eslint@8.57.0):
+  /@silverhand/eslint-plugin-fp@2.5.0(eslint@9.2.0):
     resolution: {integrity: sha512-/oLO2Rs9nkhOk+rmC3PsWDvrDKrOfKuRtbSAwH4Scawn5GqAjo7ZXIZXj7RWa4nxLsCGc3ULvaVs1e1m4n6G/A==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       eslint: ^8.1.0
     dependencies:
       create-eslint-index: 1.0.0
-      eslint: 8.57.0
+      eslint: 9.2.0
       eslint-ast-utils: 1.1.0
       import-modules: 2.1.0
       lodash: 4.17.21
@@ -10031,7 +10053,7 @@ packages:
     dev: true
     optional: true
 
-  /@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0)(eslint@8.57.0)(typescript@5.3.3):
+  /@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0)(eslint@9.2.0)(typescript@5.3.3):
     resolution: {integrity: sha512-GJWR0YnfrKnsRoluVO3PRb9r5aMZriiMMM/RHj5nnTrBy1/wIgk76XCtCKcnXGjpZQJQRFtGV9/0JJ6n30uwpQ==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
@@ -10043,13 +10065,13 @@ packages:
         optional: true
     dependencies:
       '@eslint-community/regexpp': 4.10.0
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@9.2.0)(typescript@5.3.3)
       '@typescript-eslint/scope-manager': 7.7.0
-      '@typescript-eslint/type-utils': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
-      '@typescript-eslint/utils': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/type-utils': 7.7.0(eslint@9.2.0)(typescript@5.3.3)
+      '@typescript-eslint/utils': 7.7.0(eslint@9.2.0)(typescript@5.3.3)
       '@typescript-eslint/visitor-keys': 7.7.0
       debug: 4.3.4
-      eslint: 8.57.0
+      eslint: 9.2.0
       graphemer: 1.4.0
       ignore: 5.3.1
       natural-compare: 1.4.0
@@ -10060,7 +10082,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3):
+  /@typescript-eslint/parser@7.7.0(eslint@9.2.0)(typescript@5.3.3):
     resolution: {integrity: sha512-fNcDm3wSwVM8QYL4HKVBggdIPAy9Q41vcvC/GtDobw3c4ndVT3K6cqudUmjHPw8EAp4ufax0o58/xvWaP2FmTg==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
@@ -10075,7 +10097,7 @@ packages:
       '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.3.3)
       '@typescript-eslint/visitor-keys': 7.7.0
       debug: 4.3.4
-      eslint: 8.57.0
+      eslint: 9.2.0
       typescript: 5.3.3
     transitivePeerDependencies:
       - supports-color
@@ -10089,7 +10111,7 @@ packages:
       '@typescript-eslint/visitor-keys': 7.7.0
     dev: true
 
-  /@typescript-eslint/type-utils@7.7.0(eslint@8.57.0)(typescript@5.3.3):
+  /@typescript-eslint/type-utils@7.7.0(eslint@9.2.0)(typescript@5.3.3):
     resolution: {integrity: sha512-bOp3ejoRYrhAlnT/bozNQi3nio9tIgv3U5C0mVDdZC7cpcQEDZXvq8inrHYghLVwuNABRqrMW5tzAv88Vy77Sg==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
@@ -10100,9 +10122,9 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.3.3)
-      '@typescript-eslint/utils': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/utils': 7.7.0(eslint@9.2.0)(typescript@5.3.3)
       debug: 4.3.4
-      eslint: 8.57.0
+      eslint: 9.2.0
       ts-api-utils: 1.3.0(typescript@5.3.3)
       typescript: 5.3.3
     transitivePeerDependencies:
@@ -10136,19 +10158,19 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/utils@7.7.0(eslint@8.57.0)(typescript@5.3.3):
+  /@typescript-eslint/utils@7.7.0(eslint@9.2.0)(typescript@5.3.3):
     resolution: {integrity: sha512-LKGAXMPQs8U/zMRFXDZOzmMKgFv3COlxUQ+2NMPhbqgVm6R1w+nU1i4836Pmxu9jZAuIeyySNrN/6Rc657ggig==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
       eslint: ^8.56.0
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@9.2.0)
       '@types/json-schema': 7.0.15
       '@types/semver': 7.5.8
       '@typescript-eslint/scope-manager': 7.7.0
       '@typescript-eslint/types': 7.7.0
       '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.3.3)
-      eslint: 8.57.0
+      eslint: 9.2.0
       semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
@@ -10300,7 +10322,7 @@ packages:
   /acorn-globals@7.0.1:
     resolution: {integrity: sha512-umOSDSDrfHbTNPuNpC2NSnnA3LUrqpevPb4T9jRx4MagXNS0rs+gwiTcAvqCRmsD6utzsrzNt+ebm00SNWiC3Q==}
     dependencies:
-      acorn: 8.10.0
+      acorn: 8.11.3
       acorn-walk: 8.3.2
     dev: true
 
@@ -12208,13 +12230,6 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /doctrine@3.0.0:
-    resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
-    engines: {node: '>=6.0.0'}
-    dependencies:
-      esutils: 2.0.3
-    dev: true
-
   /dom-accessibility-api@0.5.10:
     resolution: {integrity: sha512-Xu9mD0UjrJisTmv7lmVSDMagQcU9R5hwAbxsaAE/35XPnPLJobbuREfV/rraiSaEj/UOvgrzQs66zyTWTlyd+g==}
     dev: true
@@ -12635,26 +12650,26 @@ packages:
       lodash.zip: 4.2.0
     dev: true
 
-  /eslint-compat-utils@0.5.0(eslint@8.57.0):
+  /eslint-compat-utils@0.5.0(eslint@9.2.0):
     resolution: {integrity: sha512-dc6Y8tzEcSYZMHa+CMPLi/hyo1FzNeonbhJL7Ol0ccuKQkwopJcJBA9YL/xmMTLU1eKigXo9vj9nALElWYSowg==}
     engines: {node: '>=12'}
     peerDependencies:
       eslint: '>=6.0.0'
     dependencies:
-      eslint: 8.57.0
+      eslint: 9.2.0
       semver: 7.6.0
     dev: true
 
-  /eslint-config-prettier@9.1.0(eslint@8.57.0):
+  /eslint-config-prettier@9.1.0(eslint@9.2.0):
     resolution: {integrity: sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
     dependencies:
-      eslint: 8.57.0
+      eslint: 9.2.0
     dev: true
 
-  /eslint-config-xo-react@0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.34.1)(eslint@8.57.0):
+  /eslint-config-xo-react@0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.34.1)(eslint@9.2.0):
     resolution: {integrity: sha512-wiV215xQIn71XZyyVfaOXHaFpR1B14IJttwOjMi/eqUK1s+ojJdHr7eHqTLaGUfh6FKgWha1QNwePlIXx7mBUg==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -12662,12 +12677,12 @@ packages:
       eslint-plugin-react: '>=7.29.0'
       eslint-plugin-react-hooks: '>=4.3.0'
     dependencies:
-      eslint: 8.57.0
-      eslint-plugin-react: 7.34.1(eslint@8.57.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
+      eslint: 9.2.0
+      eslint-plugin-react: 7.34.1(eslint@9.2.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@9.2.0)
     dev: true
 
-  /eslint-config-xo-typescript@4.0.0(@typescript-eslint/eslint-plugin@7.7.0)(@typescript-eslint/parser@7.7.0)(eslint@8.57.0)(typescript@5.3.3):
+  /eslint-config-xo-typescript@4.0.0(@typescript-eslint/eslint-plugin@7.7.0)(@typescript-eslint/parser@7.7.0)(eslint@9.2.0)(typescript@5.3.3):
     resolution: {integrity: sha512-pmSWzVpvzEjZHG7S/rN34cFXAoe6YbvWFBQSitEXD5CcT2SULfykYl8hcYXss37r5N3SmJYAiO6VlcfkPiDRxg==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -12676,20 +12691,20 @@ packages:
       eslint: '>=8.56.0'
       typescript: '>=5.0.0'
     dependencies:
-      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0)(eslint@8.57.0)(typescript@5.3.3)
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
-      eslint: 8.57.0
+      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0)(eslint@9.2.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@9.2.0)(typescript@5.3.3)
+      eslint: 9.2.0
       typescript: 5.3.3
     dev: true
 
-  /eslint-config-xo@0.44.0(eslint@8.57.0):
+  /eslint-config-xo@0.44.0(eslint@9.2.0):
     resolution: {integrity: sha512-YG4gdaor0mJJi8UBeRJqDPO42MedTWYMaUyucF5bhm2pi/HS98JIxfFQmTLuyj6hGpQlAazNfyVnn7JuDn+Sew==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: '>=8.56.0'
     dependencies:
       confusing-browser-globals: 1.0.11
-      eslint: 8.57.0
+      eslint: 9.2.0
     dev: true
 
   /eslint-import-resolver-node@0.3.9:
@@ -12702,7 +12717,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0)(eslint-plugin-import@2.29.1)(eslint@8.57.0):
+  /eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0)(eslint-plugin-import@2.29.1)(eslint@9.2.0):
     resolution: {integrity: sha512-xgdptdoi5W3niYeuQxKmzVDTATvLYqhpwmykwsh7f6HIOStGWEIL9iqZgQDF9u9OEzrRwR8no5q2VT+bjAujTg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -12711,9 +12726,9 @@ packages:
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.16.0
-      eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint: 9.2.0
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@9.2.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-typescript@3.6.1)(eslint@9.2.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -12725,7 +12740,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  /eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@9.2.0):
     resolution: {integrity: sha512-rXDXR3h7cs7dy9RNpUlQf80nX31XWJEyGq1tRMo+6GsO5VmTe4UTwtmonAD4ZkAsrfMVDA2wlGJ3790Ys+D49Q==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -12746,11 +12761,11 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@9.2.0)(typescript@5.3.3)
       debug: 3.2.7(supports-color@5.5.0)
-      eslint: 8.57.0
+      eslint: 9.2.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0)(eslint-plugin-import@2.29.1)(eslint@9.2.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -12763,30 +12778,30 @@ packages:
       pkg-dir: 5.0.0
     dev: true
 
-  /eslint-plugin-es-x@7.6.0(eslint@8.57.0):
+  /eslint-plugin-es-x@7.6.0(eslint@9.2.0):
     resolution: {integrity: sha512-I0AmeNgevgaTR7y2lrVCJmGYF0rjoznpDvqV/kIkZSZbZ8Rw3eu4cGlvBBULScfkSOCzqKbff5LR4CNrV7mZHA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       eslint: '>=8'
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@9.2.0)
       '@eslint-community/regexpp': 4.10.0
-      eslint: 8.57.0
-      eslint-compat-utils: 0.5.0(eslint@8.57.0)
+      eslint: 9.2.0
+      eslint-compat-utils: 0.5.0(eslint@9.2.0)
     dev: true
 
-  /eslint-plugin-eslint-comments@3.2.0(eslint@8.57.0):
+  /eslint-plugin-eslint-comments@3.2.0(eslint@9.2.0):
     resolution: {integrity: sha512-0jkOl0hfojIHHmEHgmNdqv4fmh7300NdpA9FFpF7zaoLvB/QeXOGNLIo86oAveJFrfB1p05kC8hpEMHM8DwWVQ==}
     engines: {node: '>=6.5.0'}
     peerDependencies:
       eslint: '>=4.19.1'
     dependencies:
       escape-string-regexp: 1.0.5
-      eslint: 8.57.0
+      eslint: 9.2.0
       ignore: 5.3.1
     dev: true
 
-  /eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  /eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-typescript@3.6.1)(eslint@9.2.0):
     resolution: {integrity: sha512-BbPC0cuExzhiMo4Ff1BTVwHpjjv28C5R+btTOGaCRC7UEz801up0JadwkeSk5Ued6TG34uaczuVuH6qyy5YUxw==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -12796,16 +12811,16 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@9.2.0)(typescript@5.3.3)
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
       array.prototype.flat: 1.3.2
       array.prototype.flatmap: 1.3.2
       debug: 3.2.7(supports-color@5.5.0)
       doctrine: 2.1.0
-      eslint: 8.57.0
+      eslint: 9.2.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@9.2.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -12821,7 +12836,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-jsx-a11y@6.8.0(eslint@8.57.0):
+  /eslint-plugin-jsx-a11y@6.8.0(eslint@9.2.0):
     resolution: {integrity: sha512-Hdh937BS3KdwwbBaKd5+PLCOmYY6U4f2h9Z2ktwtNKvIdIEu137rjYbcb9ApSbVJfWxANNuiKTD/9tOKjK9qOA==}
     engines: {node: '>=4.0'}
     peerDependencies:
@@ -12837,7 +12852,7 @@ packages:
       damerau-levenshtein: 1.0.8
       emoji-regex: 9.2.2
       es-iterator-helpers: 1.0.18
-      eslint: 8.57.0
+      eslint: 9.2.0
       hasown: 2.0.2
       jsx-ast-utils: 3.3.5
       language-tags: 1.0.9
@@ -12846,16 +12861,16 @@ packages:
       object.fromentries: 2.0.8
     dev: true
 
-  /eslint-plugin-n@17.2.1(eslint@8.57.0):
+  /eslint-plugin-n@17.2.1(eslint@9.2.0):
     resolution: {integrity: sha512-uW1+df2bo06kR7ix6nB614RUlvjRPrYxlaX832O6e1MCJp4V7YozEdvMgCYuvn4ltnjPu1FVYhQ2KRrmTNoJfg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: '>=8.23.0'
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@9.2.0)
       enhanced-resolve: 5.16.0
-      eslint: 8.57.0
-      eslint-plugin-es-x: 7.6.0(eslint@8.57.0)
+      eslint: 9.2.0
+      eslint-plugin-es-x: 7.6.0(eslint@9.2.0)
       get-tsconfig: 4.7.3
       globals: 14.0.0
       ignore: 5.3.1
@@ -12873,7 +12888,7 @@ packages:
       is-proto-prop: 2.0.0
     dev: true
 
-  /eslint-plugin-prettier@5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.0.0):
+  /eslint-plugin-prettier@5.1.3(eslint-config-prettier@9.1.0)(eslint@9.2.0)(prettier@3.0.0):
     resolution: {integrity: sha512-C9GCVAs4Eq7ZC/XFQHITLiHJxQngdtraXaM+LoUFoFp/lHNl2Zn8f3WQbe9HvTBBQ9YnKFB0/2Ajdqwo5D1EAw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -12887,32 +12902,32 @@ packages:
       eslint-config-prettier:
         optional: true
     dependencies:
-      eslint: 8.57.0
-      eslint-config-prettier: 9.1.0(eslint@8.57.0)
+      eslint: 9.2.0
+      eslint-config-prettier: 9.1.0(eslint@9.2.0)
       prettier: 3.0.0
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.8
     dev: true
 
-  /eslint-plugin-promise@6.1.1(eslint@8.57.0):
+  /eslint-plugin-promise@6.1.1(eslint@9.2.0):
     resolution: {integrity: sha512-tjqWDwVZQo7UIPMeDReOpUgHCmCiH+ePnVT+5zVapL0uuHnegBUs2smM13CzOs2Xb5+MHMRFTs9v24yjba4Oig==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
     dependencies:
-      eslint: 8.57.0
+      eslint: 9.2.0
     dev: true
 
-  /eslint-plugin-react-hooks@4.6.0(eslint@8.57.0):
+  /eslint-plugin-react-hooks@4.6.0(eslint@9.2.0):
     resolution: {integrity: sha512-oFc7Itz9Qxh2x4gNHStv3BqJq54ExXmfC+a1NjAta66IAN87Wu0R/QArgIS9qKzX3dXKPI9H5crl9QchNMY9+g==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
     dependencies:
-      eslint: 8.57.0
+      eslint: 9.2.0
     dev: true
 
-  /eslint-plugin-react@7.34.1(eslint@8.57.0):
+  /eslint-plugin-react@7.34.1(eslint@9.2.0):
     resolution: {integrity: sha512-N97CxlouPT1AHt8Jn0mhhN2RrADlUAsk1/atcT2KyA/l9Q/E6ll7OIGwNumFmWfZ9skV3XXccYS19h80rHtgkw==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -12925,7 +12940,7 @@ packages:
       array.prototype.tosorted: 1.1.3
       doctrine: 2.1.0
       es-iterator-helpers: 1.0.18
-      eslint: 8.57.0
+      eslint: 9.2.0
       estraverse: 5.3.0
       jsx-ast-utils: 3.3.5
       minimatch: 3.1.2
@@ -12939,7 +12954,7 @@ packages:
       string.prototype.matchall: 4.0.11
     dev: true
 
-  /eslint-plugin-sql@2.1.0(eslint@8.57.0):
+  /eslint-plugin-sql@2.1.0(eslint@9.2.0):
     resolution: {integrity: sha512-UPapPPhK1ADgQDTogpApiSAh6bYjrt2daYkKCdApHm5KPbq9qR4ca4TPyYod06bAnLgswbri6Z9gEPAy0R+B1A==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -12947,7 +12962,7 @@ packages:
     dependencies:
       astring: 1.8.3
       debug: 4.3.4
-      eslint: 8.57.0
+      eslint: 9.2.0
       lodash: 4.17.21
       pg-formatter: 1.3.0
       sql-parse: 0.1.5
@@ -12955,19 +12970,19 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-unicorn@52.0.0(eslint@8.57.0):
+  /eslint-plugin-unicorn@52.0.0(eslint@9.2.0):
     resolution: {integrity: sha512-1Yzm7/m+0R4djH0tjDjfVei/ju2w3AzUGjG6q8JnuNIL5xIwsflyCooW5sfBvQp2pMYQFSWWCFONsjCax1EHng==}
     engines: {node: '>=16'}
     peerDependencies:
       eslint: '>=8.56.0'
     dependencies:
       '@babel/helper-validator-identifier': 7.22.20
-      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@9.2.0)
       '@eslint/eslintrc': 2.1.4
       ci-info: 4.0.0
       clean-regexp: 1.0.0
       core-js-compat: 3.37.0
-      eslint: 8.57.0
+      eslint: 9.2.0
       esquery: 1.5.0
       indent-string: 4.0.0
       is-builtin-module: 3.2.1
@@ -12982,7 +12997,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-unused-imports@3.1.0(@typescript-eslint/eslint-plugin@7.7.0)(eslint@8.57.0):
+  /eslint-plugin-unused-imports@3.1.0(@typescript-eslint/eslint-plugin@7.7.0)(eslint@9.2.0):
     resolution: {integrity: sha512-9l1YFCzXKkw1qtAru1RWUtG2EVDZY0a0eChKXcL+EZ5jitG7qxdctu4RnvhOJHv4xfmUf7h+JJPINlVpGhZMrw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -12992,8 +13007,8 @@ packages:
       '@typescript-eslint/eslint-plugin':
         optional: true
     dependencies:
-      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0)(eslint@8.57.0)(typescript@5.3.3)
-      eslint: 8.57.0
+      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0)(eslint@9.2.0)(typescript@5.3.3)
+      eslint: 9.2.0
       eslint-rule-composer: 0.3.0
     dev: true
 
@@ -13002,9 +13017,9 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: true
 
-  /eslint-scope@7.2.2:
-    resolution: {integrity: sha512-dOt21O7lTMhDM+X9mB4GX+DZrZtCUJPL/wlcTqxyrx5IvO0IYtILdtrQGQp+8n5S0gwSVmOf9NQrjMOgfQZlIg==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+  /eslint-scope@8.0.1:
+    resolution: {integrity: sha512-pL8XjgP4ZOmmwfFE8mEhSxA7ZY4C+LWyqjQ3o4yWkkmD0qcMT9kkW3zWHOczhWcjTSgqycYAgwSlXvZltv65og==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dependencies:
       esrecurse: 4.3.0
       estraverse: 5.3.0
@@ -13020,41 +13035,42 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /eslint@8.57.0:
-    resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+  /eslint-visitor-keys@4.0.0:
+    resolution: {integrity: sha512-OtIRv/2GyiF6o/d8K7MYKKbXrOUBIK6SfkIRM4Z0dY3w+LiQ0vy3F57m0Z71bjbyeiWFiHJ8brqnmE6H6/jEuw==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    dev: true
+
+  /eslint@9.2.0:
+    resolution: {integrity: sha512-0n/I88vZpCOzO+PQpt0lbsqmn9AsnsJAQseIqhZFI8ibQT0U1AkEKRxA3EVMos0BoHSXDQvCXY25TUjB5tr8Og==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     hasBin: true
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@9.2.0)
       '@eslint-community/regexpp': 4.10.0
-      '@eslint/eslintrc': 2.1.4
-      '@eslint/js': 8.57.0
-      '@humanwhocodes/config-array': 0.11.14
+      '@eslint/eslintrc': 3.0.2
+      '@eslint/js': 9.2.0
+      '@humanwhocodes/config-array': 0.13.0
       '@humanwhocodes/module-importer': 1.0.1
+      '@humanwhocodes/retry': 0.2.4
       '@nodelib/fs.walk': 1.2.8
-      '@ungap/structured-clone': 1.2.0
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
       debug: 4.3.4
-      doctrine: 3.0.0
       escape-string-regexp: 4.0.0
-      eslint-scope: 7.2.2
-      eslint-visitor-keys: 3.4.3
-      espree: 9.6.1
+      eslint-scope: 8.0.1
+      eslint-visitor-keys: 4.0.0
+      espree: 10.0.1
       esquery: 1.5.0
       esutils: 2.0.3
       fast-deep-equal: 3.1.3
-      file-entry-cache: 6.0.1
+      file-entry-cache: 8.0.0
       find-up: 5.0.0
       glob-parent: 6.0.2
-      globals: 13.20.0
-      graphemer: 1.4.0
       ignore: 5.3.1
       imurmurhash: 0.1.4
       is-glob: 4.0.3
       is-path-inside: 3.0.3
-      js-yaml: 4.1.0
       json-stable-stringify-without-jsonify: 1.0.1
       levn: 0.4.1
       lodash.merge: 4.6.2
@@ -13065,6 +13081,15 @@ packages:
       text-table: 0.2.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /espree@10.0.1:
+    resolution: {integrity: sha512-MWkrWZbJsL2UwnjxTX3gG8FneachS/Mwg7tdGXce011sJd5b0JG54vat5KHnfSBODZ3Wvzd2WnjxyzsRoVv+ww==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    dependencies:
+      acorn: 8.11.3
+      acorn-jsx: 5.3.2(acorn@8.11.3)
+      eslint-visitor-keys: 4.0.0
     dev: true
 
   /espree@9.6.0:
@@ -13344,18 +13369,18 @@ packages:
       is-unicode-supported: 1.3.0
     dev: false
 
-  /file-entry-cache@6.0.1:
-    resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
-    engines: {node: ^10.12.0 || >=12.0.0}
-    dependencies:
-      flat-cache: 3.0.4
-    dev: true
-
   /file-entry-cache@7.0.2:
     resolution: {integrity: sha512-TfW7/1iI4Cy7Y8L6iqNdZQVvdXn0f8B4QcIXmkIbtTIe/Okm/nSlHb4IwGzRVOd3WfSieCgvf5cMzEfySAIl0g==}
     engines: {node: '>=12.0.0'}
     dependencies:
       flat-cache: 3.2.0
+    dev: true
+
+  /file-entry-cache@8.0.0:
+    resolution: {integrity: sha512-XXTUwCvisa5oacNGRP9SfNtYBNAMi+RPwBFmblZEF7N7swHYQS6/Zfk7SRwx4D5j3CH211YNRco1DEMNVfZCnQ==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      flat-cache: 4.0.1
     dev: true
 
   /file-selector@0.6.0:
@@ -13433,14 +13458,6 @@ packages:
       pkg-dir: 4.2.0
     dev: true
 
-  /flat-cache@3.0.4:
-    resolution: {integrity: sha512-dm9s5Pw7Jc0GvMYbshN6zchCA9RgQlzzEZX3vylR9IqFfS8XciblUXOKfW6SiuJ0e13eDYZoZV5wdrev7P3Nwg==}
-    engines: {node: ^10.12.0 || >=12.0.0}
-    dependencies:
-      flatted: 3.2.7
-      rimraf: 3.0.2
-    dev: true
-
   /flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -13450,8 +13467,12 @@ packages:
       rimraf: 3.0.2
     dev: true
 
-  /flatted@3.2.7:
-    resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
+  /flat-cache@4.0.1:
+    resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==}
+    engines: {node: '>=16'}
+    dependencies:
+      flatted: 3.3.1
+      keyv: 4.5.4
     dev: true
 
   /flatted@3.3.1:
@@ -17802,7 +17823,7 @@ packages:
       is-interactive: 2.0.0
       is-unicode-supported: 1.3.0
       log-symbols: 5.1.0
-      strip-ansi: 7.0.1
+      strip-ansi: 7.1.0
       wcwidth: 1.0.1
     dev: false
 
@@ -21893,7 +21914,7 @@ packages:
     dependencies:
       ansi-styles: 6.2.1
       string-width: 5.1.2
-      strip-ansi: 7.0.1
+      strip-ansi: 7.1.0
     dev: false
 
   /wrap-ansi@8.1.0:

@@ -42,7 +42,7 @@
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.9.5",
     "@vitest/coverage-v8": "^1.4.0",
-    "eslint": "^8.56.0",
+    "eslint": "^9.0.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",

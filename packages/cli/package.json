@@ -81,7 +81,7 @@
     "@types/yargs": "^17.0.13",
     "@vitest/coverage-v8": "^1.4.0",
     "@withtyped/server": "^0.13.6",
-    "eslint": "^8.56.0",
+    "eslint": "^9.0.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "sinon": "^17.0.0",
