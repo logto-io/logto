@@ -46,7 +46,7 @@
     "@silverhand/essentials": "^2.9.0",
     "@silverhand/slonik": "31.0.0-beta.2",
     "@simplewebauthn/server": "^9.0.0",
-    "@withtyped/client": "^0.8.6",
+    "@withtyped/client": "^0.8.7",
     "camelcase": "^8.0.0",
     "camelcase-keys": "^9.0.0",
     "chalk": "^5.0.0",
