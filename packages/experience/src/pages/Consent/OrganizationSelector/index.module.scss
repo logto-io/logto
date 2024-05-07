@@ -5,6 +5,13 @@
   margin-bottom: _.unit(2);
 }
 
+.scopeListWrapper {
+  border: _.border(var(--color-line-divider));
+  border-bottom: unset;
+  border-radius: 8px 8px 0 0;
+  padding: _.unit(2) 0;
+}
+
 .cardWrapper {
   border: _.border(var(--color-line-divider));
   border-radius: 8px;
@@ -14,6 +21,10 @@
   &[data-active='true'] {
     border-color: var(--color-brand-default);
     outline: 3px solid var(--color-overlay-brand-focused);
+  }
+
+  &.withoutTopRadius {
+    border-radius: 0 0 8px 8px;
   }
 }
 

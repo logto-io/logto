@@ -1,62 +1,17 @@
 import { ReservedResource, UserScope } from '@logto/core-kit';
 import { type ConsentInfoResponse } from '@logto/schemas';
-import { type Nullable } from '@silverhand/essentials';
-import classNames from 'classnames';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import DownArrowIcon from '@/assets/icons/arrow-down.svg';
-import CheckMark from '@/assets/icons/check-mark.svg';
 import TermsLinks from '@/components/TermsLinks';
-import { onKeyDownHandler } from '@/utils/a11y';
+import { isDevFeaturesEnabled } from '@/constants/env';
+
+import ScopeGroup from '../ScopeGroup';
 
 import * as styles from './index.module.scss';
 
 const isUserScope = (scope: string): scope is UserScope =>
   Object.values<string>(UserScope).includes(scope);
-
-type ScopeGroupProps = {
-  readonly groupName: string;
-  readonly isAutoExpand?: boolean;
-  readonly scopes: Array<{
-    id: string;
-    name: string;
-    description?: Nullable<string>; // Organization scope description cloud be `null`
-  }>;
-};
-
-const ScopeGroup = ({ groupName, scopes, isAutoExpand = false }: ScopeGroupProps) => {
-  const [expanded, setExpanded] = useState(isAutoExpand);
-
-  const toggle = useCallback(() => {
-    setExpanded((previous) => !previous);
-  }, []);
-
-  return (
-    <div className={classNames(styles.scopeGroup)}>
-      <div
-        className={styles.scopeGroupHeader}
-        role="button"
-        tabIndex={0}
-        onClick={toggle}
-        onKeyDown={onKeyDownHandler(toggle)}
-      >
-        <CheckMark className={styles.check} />
-        <div className={styles.scopeGroupName}>{groupName}</div>
-        <DownArrowIcon className={styles.toggleButton} data-expanded={expanded} />
-      </div>
-      {expanded && (
-        <ul className={styles.scopesList}>
-          {scopes.map(({ id, name, description }) => (
-            <li key={id} className={styles.scopeItem}>
-              {description ?? name}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-};
 
 type Props = {
   readonly userScopes: ConsentInfoResponse['missingOIDCScope'];
@@ -94,7 +49,11 @@ const ScopesListCard = ({
 
   // If there is no user scopes and resource scopes, we don't need to show the scopes list.
   // This is a fallback for the corner case that all the scopes are already granted.
-  if (!userScopesData?.length && !resourceScopes?.length) {
+  if (
+    !isDevFeaturesEnabled && // Todo @xiaoyijun remove dev feature flag
+    !userScopesData?.length &&
+    !resourceScopes?.length
+  ) {
     return showTerms ? (
       <div className={className}>
         <Trans
@@ -110,7 +69,14 @@ const ScopesListCard = ({
 
   return (
     <div className={className}>
-      <div className={styles.title}>{t('description.request_permission', { name: appName })}</div>
+      <div className={styles.title}>
+        {t(
+          `description.${
+            isDevFeaturesEnabled ? 'authorize_personal_data_usage' : 'request_permission'
+          }`,
+          { name: appName }
+        )}
+      </div>
       <div className={styles.cardWrapper}>
         {userScopesData && userScopesData.length > 0 && (
           <ScopeGroup
@@ -124,7 +90,8 @@ const ScopesListCard = ({
           <ScopeGroup
             key={resource.id}
             groupName={
-              resource.name === ReservedResource.Organization
+              // Todo @xiaoyijun remove this when the org scopes display in the new card
+              resource.id === ReservedResource.Organization
                 ? t('description.organization_scopes')
                 : resource.name
             }
@@ -133,17 +100,20 @@ const ScopesListCard = ({
             isAutoExpand={!userScopesData?.length && resourceScopes.length === 1}
           />
         ))}
-        {showTerms && (
-          <div className={styles.terms}>
-            <Trans
-              components={{
-                link: <TermsLinks inline termsOfUseUrl={termsUrl} privacyPolicyUrl={privacyUrl} />,
-              }}
-            >
-              {t('description.authorize_agreement', { name: appName })}
-            </Trans>
-          </div>
-        )}
+        {!isDevFeaturesEnabled && // Todo @xiaoyijun remove dev feature flag
+          showTerms && (
+            <div className={styles.terms}>
+              <Trans
+                components={{
+                  link: (
+                    <TermsLinks inline termsOfUseUrl={termsUrl} privacyPolicyUrl={privacyUrl} />
+                  ),
+                }}
+              >
+                {t('description.authorize_agreement', { name: appName })}
+              </Trans>
+            </div>
+          )}
       </div>
     </div>
   );
