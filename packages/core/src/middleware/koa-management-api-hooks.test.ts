@@ -65,9 +65,10 @@ describe('koaManagementApiHooks', () => {
 
     it.each(events)('should append hook context for %s', async (key, event) => {
       const [method, route] = key.split(' ') as [string, string];
+      const ctxParams = createContextWithRouteParameters();
 
       const ctx: ParameterizedContext<unknown, WithHookContext> = {
-        ...createContextWithRouteParameters(),
+        ...ctxParams,
         header: {},
         appendDataHookContext: notToBeCalled,
         method,
@@ -85,7 +86,7 @@ describe('koaManagementApiHooks', () => {
           contextArray: [
             {
               event,
-              data: { path: route, method, body: { key }, status: 200 },
+              data: { path: route, method, body: { key }, params: ctxParams.params, status: 200 },
             },
           ],
         })
