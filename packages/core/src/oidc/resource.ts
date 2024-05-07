@@ -1,9 +1,9 @@
 import { ReservedResource } from '@logto/core-kit';
 import { type Resource } from '@logto/schemas';
 import { trySafe, type Nullable } from '@silverhand/essentials';
-import { type ResourceServer, type KoaContextWithOIDC } from 'oidc-provider';
+import { type ResourceServer } from 'oidc-provider';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -28,13 +28,23 @@ export const getSharedResourceServerData = (
  *
  * @see {@link ReservedResource} for the list of reserved resources.
  */
-export const findResourceScopes = async (
-  queries: Queries,
-  libraries: Libraries,
-  ctx: KoaContextWithOIDC,
-  indicator: string,
-  organizationId?: string
-): Promise<ReadonlyArray<{ name: string; id: string }>> => {
+export const findResourceScopes = async ({
+  queries,
+  libraries,
+  userId,
+  applicationId,
+  indicator,
+  organizationId,
+  findFromOrganizations,
+}: {
+  queries: Queries;
+  libraries: Libraries;
+  indicator: string;
+  findFromOrganizations: boolean;
+  userId?: string;
+  applicationId?: string;
+  organizationId?: string;
+}): Promise<ReadonlyArray<{ name: string; id: string }>> => {
   if (isReservedResource(indicator)) {
     switch (indicator) {
       case ReservedResource.Organization: {
@@ -44,21 +54,22 @@ export const findResourceScopes = async (
     }
   }
 
-  const { oidc } = ctx;
   const {
     users: { findUserScopesForResourceIndicator },
     applications: { findApplicationScopesForResourceIndicator },
   } = libraries;
-  const userId = oidc.session?.accountId ?? oidc.entities.Account?.accountId;
 
   if (userId) {
-    return findUserScopesForResourceIndicator(userId, indicator, organizationId);
+    return findUserScopesForResourceIndicator(
+      userId,
+      indicator,
+      findFromOrganizations,
+      organizationId
+    );
   }
 
-  const clientId = oidc.entities.Client?.clientId;
-
-  if (clientId) {
-    return findApplicationScopesForResourceIndicator(clientId, indicator);
+  if (applicationId) {
+    return findApplicationScopesForResourceIndicator(applicationId, indicator);
   }
 
   return [];
@@ -115,6 +126,7 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
     applications: {
       getApplicationUserConsentOrganizationScopes,
       getApplicationUserConsentResourceScopes,
+      getApplicationUserConsentOrganizationResourceScopes,
     },
   } = libraries;
 
@@ -146,16 +158,20 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
   const userConsentResource = userConsentResources.find(
     ({ resource }) => resource.indicator === indicator
   );
+  const userConsentOrganizationResources = EnvSet.values.isDevFeaturesEnabled
+    ? await getApplicationUserConsentOrganizationResourceScopes(applicationId)
+    : [];
+  const userConsentOrganizationResource = userConsentOrganizationResources.find(
+    ({ resource }) => resource.indicator === indicator
+  );
 
-  // If the resource is not in the application enabled user consent resources, return empty array
-  if (!userConsentResource) {
-    return [];
-  }
-
-  const { scopes: userConsentResourceScopes } = userConsentResource;
+  const resourceScopes = [
+    ...(userConsentResource?.scopes ?? []),
+    ...(userConsentOrganizationResource?.scopes ?? []),
+  ];
 
   return scopes.filter(({ id: resourceScopeId }) =>
-    userConsentResourceScopes.some(
+    resourceScopes.some(
       ({ id: consentResourceScopeId }) => consentResourceScopeId === resourceScopeId
     )
   );

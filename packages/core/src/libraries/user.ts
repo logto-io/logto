@@ -175,15 +175,18 @@ export const createUserLibrary = (queries: Queries) => {
   const findUserScopesForResourceIndicator = async (
     userId: string,
     resourceIndicator: string,
+    findFromOrganizations = false,
     organizationId?: string
   ): Promise<readonly Scope[]> => {
     const usersRoles = await findUsersRolesByUserId(userId);
     const rolesScopes = await findRolesScopesByRoleIds(usersRoles.map(({ roleId }) => roleId));
-    const organizationScopes = await organizations.relations.rolesUsers.getUserResourceScopes(
-      userId,
-      resourceIndicator,
-      organizationId
-    );
+    const organizationScopes = findFromOrganizations
+      ? await organizations.relations.rolesUsers.getUserResourceScopes(
+          userId,
+          resourceIndicator,
+          organizationId
+        )
+      : [];
 
     const scopes = await findScopesByIdsAndResourceIndicator(
       [...rolesScopes.map(({ scopeId }) => scopeId), ...organizationScopes.map(({ id }) => id)],

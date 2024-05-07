@@ -4,7 +4,6 @@ import {
   publicApplicationGuard,
   publicUserInfoGuard,
   applicationSignInExperienceGuard,
-  publicOrganizationGuard,
   missingResourceScopesGuard,
   type ConsentInfoResponse,
   type MissingResourceScopes,
@@ -16,8 +15,10 @@ import { type IRouterParamContext } from 'koa-router';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { consent, getMissingScopes } from '#src/libraries/session.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { findResourceScopes } from '#src/oidc/resource.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -96,16 +97,63 @@ const parseMissingResourceScopesInfo = async (
   );
 };
 
+/**
+ * The missingResourceScopes in the prompt details are from `getResourceServerInfo`,
+ * which contains resource scopes and organization resource scopes.
+ * We need to separate the organization resource scopes from the resource scopes.
+ * The "scopes" in `missingResourceScopes` do not have "id", so we have to rebuild the scopes list first.
+ */
+const filterAndParseMissingResourceScopes = async ({
+  resourceScopes,
+  queries,
+  libraries,
+  userId,
+  organizationId,
+}: {
+  resourceScopes: Record<string, string[]>;
+  queries: Queries;
+  libraries: TenantContext['libraries'];
+  userId: string;
+  organizationId?: string;
+}) => {
+  const filteredResourceScopes = Object.fromEntries(
+    await Promise.all(
+      Object.entries(resourceScopes).map(
+        async ([resourceIndicator, missingScopes]): Promise<[string, string[]]> => {
+          if (!EnvSet.values.isDevFeaturesEnabled) {
+            return [resourceIndicator, missingScopes];
+          }
+
+          // Fetch the list of scopes, `findFromOrganizations` is set to false,
+          // so it will only search the user resource scopes.
+          const scopes = await findResourceScopes({
+            queries,
+            libraries,
+            indicator: resourceIndicator,
+            userId,
+            findFromOrganizations: Boolean(organizationId),
+            organizationId,
+          });
+
+          return [
+            resourceIndicator,
+            missingScopes.filter((scope) => scopes.some(({ name }) => name === scope)),
+          ];
+        }
+      )
+    )
+  );
+
+  return parseMissingResourceScopesInfo(queries, filteredResourceScopes);
+};
+
 export default function consentRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<T>>,
-  {
-    provider,
-    queries,
-    libraries: {
-      applications: { validateUserConsentOrganizationMembership },
-    },
-  }: TenantContext
+  { provider, queries, libraries }: TenantContext
 ) {
+  const {
+    applications: { validateUserConsentOrganizationMembership },
+  } = libraries;
   const consentPath = `${interactionPrefix}/consent`;
 
   router.post(
@@ -201,12 +249,42 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const userInfo = await queries.users.findUserById(accountId);
 
-      const { missingOIDCScope, missingResourceScopes } = getMissingScopes(prompt);
+      const { missingOIDCScope, missingResourceScopes: allMissingResourceScopes = {} } =
+        getMissingScopes(prompt);
+
+      // The missingResourceScopes from the prompt details are from `getResourceServerInfo`,
+      // which contains resource scopes and organization resource scopes.
+      // We need to separate the organization resource scopes from the resource scopes.
+      // The "scopes" in `missingResourceScopes` do not have "id", so we have to rebuild the scopes list.
+      const missingResourceScopes = await filterAndParseMissingResourceScopes({
+        resourceScopes: allMissingResourceScopes,
+        queries,
+        libraries,
+        userId: accountId,
+      });
 
       // Find the organizations if the application is requesting the organizations scope
       const organizations = missingOIDCScope?.includes(UserScope.Organizations)
         ? await queries.organizations.relations.users.getOrganizationsByUserId(accountId)
-        : undefined;
+        : [];
+
+      const organizationsWithMissingResourceScopes = await Promise.all(
+        organizations.map(async ({ name, id }) => {
+          if (!EnvSet.values.isDevFeaturesEnabled) {
+            return { name, id };
+          }
+
+          const missingResourceScopes = await filterAndParseMissingResourceScopes({
+            resourceScopes: allMissingResourceScopes,
+            queries,
+            libraries,
+            userId: accountId,
+            organizationId: id,
+          });
+
+          return { name, id, missingResourceScopes };
+        })
+      );
 
       ctx.body = {
         // Merge the public application data and application sign-in-experience data
@@ -218,15 +296,12 @@ export default function consentRoutes<T extends IRouterParamContext>(
           ),
         },
         user: publicUserInfoGuard.parse(userInfo),
-        organizations: organizations?.map((organization) =>
-          publicOrganizationGuard.parse(organization)
-        ),
+        organizations: organizationsWithMissingResourceScopes,
         // Filter out the OIDC scopes that are not needed for the consent page.
         missingOIDCScope: missingOIDCScope?.filter(
           (scope) => scope !== 'openid' && scope !== 'offline_access'
         ),
-        // Parse the missing resource scopes info with details.
-        missingResourceScopes: await parseMissingResourceScopesInfo(queries, missingResourceScopes),
+        missingResourceScopes,
         redirectUri,
       } satisfies ConsentInfoResponse;
 

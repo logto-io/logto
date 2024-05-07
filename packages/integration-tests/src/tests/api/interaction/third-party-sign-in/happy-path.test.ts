@@ -7,9 +7,18 @@ import { assignUserConsentScopes } from '#src/api/application-user-consent-scope
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { getConsentInfo, putInteraction } from '#src/api/interaction.js';
 import { OrganizationScopeApi } from '#src/api/organization-scope.js';
+import { createResource, deleteResource } from '#src/api/resource.js';
+import { createScope } from '#src/api/scope.js';
 import { initClient } from '#src/helpers/client.js';
+import { OrganizationApiTest, OrganizationRoleApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
+import {
+  generateResourceIndicator,
+  generateResourceName,
+  generateRoleName,
+  generateScopeName,
+} from '#src/utils.js';
 
 describe('consent api', () => {
   const applications = new Map<string, Application>();
@@ -123,6 +132,63 @@ describe('consent api', () => {
     ).not.toBeUndefined();
 
     await organizationScopeApi.delete(organizationScope.id);
+    await deleteUser(user.id);
+  });
+
+  it('get consent info with organization resource scopes', async () => {
+    const application = applications.get(thirdPartyApplicationName);
+    assert(application, new Error('application.not_found'));
+
+    const resource = await createResource(generateResourceName(), generateResourceIndicator());
+    const scope = await createScope(resource.id, generateScopeName());
+    const scope2 = await createScope(resource.id, generateScopeName());
+    const roleApi = new OrganizationRoleApiTest();
+    const role = await roleApi.create({
+      name: generateRoleName(),
+      resourceScopeIds: [scope.id],
+    });
+    const organizationApi = new OrganizationApiTest();
+    const organization = await organizationApi.create({ name: 'test_org' });
+    const { userProfile, user } = await generateNewUser({ username: true, password: true });
+    await organizationApi.addUsers(organization.id, [user.id]);
+    await organizationApi.addUserRoles(organization.id, user.id, [role.id]);
+
+    await assignUserConsentScopes(application.id, {
+      organizationResourceScopes: [scope.id],
+      userScopes: [UserScope.Organizations],
+    });
+
+    const client = await initClient(
+      {
+        appId: application.id,
+        appSecret: application.secret,
+        scopes: [UserScope.Organizations, UserScope.Profile, scope.name, scope2.name],
+        resources: [resource.indicator],
+      },
+      redirectUri
+    );
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        username: userProfile.username,
+        password: userProfile.password,
+      },
+    });
+
+    const { redirectTo } = await client.submitInteraction();
+
+    await client.processSession(redirectTo, false);
+
+    const result = await client.send(getConsentInfo);
+
+    expect(result.missingResourceScopes).toHaveLength(0);
+    // Only scope1, scope2 is removed
+    expect(result.organizations?.[0]?.missingResourceScopes).toHaveLength(1);
+
+    await roleApi.cleanUp();
+    await organizationApi.cleanUp();
+    await deleteResource(resource.id);
     await deleteUser(user.id);
   });
 

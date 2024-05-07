@@ -143,7 +143,9 @@ export default function initOidc(
 
           const { accessTokenTtl: accessTokenTTL } = resourceServer;
 
-          const { client, params } = ctx.oidc;
+          const { client, params, session, entities } = ctx.oidc;
+          const userId = session?.accountId ?? entities.Account?.accountId;
+
           /**
            * In consent or code exchange flow, the organization_id is undefined,
            * and all the scopes inherited from the all organization roles will be granted.
@@ -152,16 +154,19 @@ export default function initOidc(
            * and will then narrow down the scopes to the specific organization.
            */
           const organizationId = params?.organization_id;
-          const scopes = await findResourceScopes(
+          const scopes = await findResourceScopes({
             queries,
             libraries,
-            ctx,
             indicator,
-            typeof organizationId === 'string' ? organizationId : undefined
-          );
+            findFromOrganizations: true,
+            organizationId: typeof organizationId === 'string' ? organizationId : undefined,
+            applicationId: client?.clientId,
+            userId,
+          });
 
           // Need to filter out the unsupported scopes for the third-party application.
           if (client && (await isThirdPartyApplication(queries, client.clientId))) {
+            // Get application consent resource scopes, from RBAC roles
             const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
               libraries,
               client.clientId,
