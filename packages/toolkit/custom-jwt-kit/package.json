@@ -1,5 +1,5 @@
 {
-  "name": "@logto/azure-functions-kit",
+  "name": "@logto/custom-jwt-kit",
   "version": "0.1.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/toolkit#readme",

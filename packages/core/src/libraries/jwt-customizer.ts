@@ -1,6 +1,4 @@
-import { types } from 'node:util';
-
-import { runCustomJwtClaimsScriptInLocalVm } from '@logto/azure-functions-kit';
+import { runCustomJwtClaimsScriptInLocalVm, buildErrorResponse } from '@logto/custom-jwt-kit';
 import {
   userInfoSelectFields,
   jwtCustomizerUserContextGuard,
@@ -24,20 +22,12 @@ import {
   getJwtCustomizerScripts,
   type CustomJwtDeployRequestBody,
 } from '#src/utils/custom-jwt/index.js';
-import { buildResponseError } from '#src/utils/custom-jwt/index.js';
+import { buildWithtypedClientResponseError } from '#src/utils/custom-jwt/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
-const buildErrorResponse = (error: unknown) =>
-  /**
-   * Use `isNativeError` to check if the error is an instance of `Error`.
-   * If the error comes from `node:vm` module, then it will not be an instance of `Error` but can be captured by `isNativeError`.
-   */
-  types.isNativeError(error)
-    ? { message: error.message, stack: error.stack }
-    : { message: String(error) };
-
-export class CreateJwtCustomizerLibrary {
+export class JwtCustomizerLibrary {
+  // Convert errors to WithTyped client response error to share the error handling logic.
   static async runScriptInLocalVm(data: CustomJwtFetcher) {
     try {
       const result = await runCustomJwtClaimsScriptInLocalVm(data);
@@ -48,7 +38,7 @@ export class CreateJwtCustomizerLibrary {
       // Assuming we only use zod for request body validation
       if (error instanceof ZodError) {
         const { errors } = error;
-        throw buildResponseError(
+        throw buildWithtypedClientResponseError(
           {
             message: 'Invalid input',
             errors,
@@ -57,7 +47,7 @@ export class CreateJwtCustomizerLibrary {
         );
       }
 
-      throw buildResponseError(
+      throw buildWithtypedClientResponseError(
         buildErrorResponse(error),
         error instanceof SyntaxError || error instanceof TypeError ? 422 : 500
       );
