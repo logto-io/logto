@@ -79,11 +79,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
       if (!isIntegrationTest) {
-<<<<<<< HEAD
-        await deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
-=======
-        await libraries.jwtCustomizers.deployJwtCustomizerScript({
->>>>>>> 81917ef81 (chore: update the deploy/undeploy method calls and API docs)
+        await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
           key,
           value: body,
           useCase: 'production',
@@ -127,11 +123,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
       if (!isIntegrationTest) {
-<<<<<<< HEAD
-        await deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
-=======
-        await libraries.jwtCustomizers.deployJwtCustomizerScript({
->>>>>>> 81917ef81 (chore: update the deploy/undeploy method calls and API docs)
+        await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
           key,
           value: body,
           useCase: 'production',
@@ -203,7 +195,10 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Undeploy the script first to avoid the case where the JWT customizer was deleted from DB but worker script not updated successfully.
       if (!isIntegrationTest) {
-        await libraries.jwtCustomizers.undeployJwtCustomizerScript(getConsoleLogFromContext(ctx), tokenKey);
+        await libraries.jwtCustomizers.undeployJwtCustomizerScript(
+          getConsoleLogFromContext(ctx),
+          tokenKey
+        );
       }
 
       await deleteJwtCustomizer(tokenKey);
@@ -224,7 +219,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       const { body } = ctx.guard;
 
       // Deploy the test script
-      await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx),{
+      await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
         key:
           body.tokenType === LogtoJwtTokenKeyType.AccessToken
             ? LogtoJwtTokenKey.AccessToken
