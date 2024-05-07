@@ -68,12 +68,6 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     cloudConnection: CloudConnectionLibrary;
   }
 ): Promise<UnknownObject | undefined> => {
-  const { isCloud } = EnvSet.values;
-  // No cloud connection for OSS version, skip.
-  if (!isCloud) {
-    return;
-  }
-
   // Narrow down the token type to `AccessToken` and `ClientCredentials`.
   if (
     !(token instanceof ctx.oidc.provider.AccessToken) &&
