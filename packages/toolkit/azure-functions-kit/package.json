@@ -25,11 +25,13 @@
   "engines": {
     "node": "^20.9.0"
   },
+  "dependencies": {
+    "@logto/schemas": "workspace:1.15.0",
+    "@silverhand/essentials": "^2.9.0"
+  },
   "devDependencies": {
     "@azure/functions": "^4.0.0",
-    "@logto/schemas": "workspace:1.15.0",
     "@silverhand/eslint-config": "6.0.1",
-    "@silverhand/essentials": "^2.9.0",
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.9.5",
     "eslint": "^8.56.0",

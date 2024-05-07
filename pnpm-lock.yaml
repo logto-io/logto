@@ -3968,19 +3968,20 @@ importers:
         version: 1.4.0(@types/node@20.10.4)
 
   packages/toolkit/azure-functions-kit:
+    dependencies:
+      '@logto/schemas':
+        specifier: workspace:1.15.0
+        version: link:../../schemas
+      '@silverhand/essentials':
+        specifier: ^2.9.0
+        version: 2.9.0
     devDependencies:
       '@azure/functions':
         specifier: ^4.0.0
         version: 4.4.0
-      '@logto/schemas':
-        specifier: workspace:1.15.0
-        version: link:../../schemas
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
-      '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
