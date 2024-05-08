@@ -4,10 +4,12 @@ import {
   type ApplicationUserConsentScopesResponse,
   ApplicationUserConsentScopeType,
 } from '@logto/schemas';
+import { condArray } from '@silverhand/essentials';
 import { useCallback, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import IconButton from '@/ds-components/IconButton';
 import { ToggleTip } from '@/ds-components/Tip';
 import useApi from '@/hooks/use-api';
@@ -26,7 +28,9 @@ type OrganizationScopeTableRowDataType = {
 } & ApplicationUserConsentScopesResponse['organizationScopes'][number];
 
 type ResourceScopeTableRowDataType = {
-  type: ApplicationUserConsentScopeType.ResourceScopes;
+  type:
+    | ApplicationUserConsentScopeType.ResourceScopes
+    | ApplicationUserConsentScopeType.OrganizationResourceScopes;
   // Resource ID is required for resource scope patch request
   resourceId: string;
   resourceName: string;
@@ -54,12 +58,20 @@ const useScopesTable = () => {
   const api = useApi();
 
   const parseRowGroup = useCallback(
-    (data?: ApplicationUserConsentScopesResponse): ScopesTableRowGroupType[] => {
+    (
+      data?: ApplicationUserConsentScopesResponse
+    ): {
+      userLevelRowGroups: ScopesTableRowGroupType[];
+      organizationLevelGroups: ScopesTableRowGroupType[];
+    } => {
       if (!data) {
-        return [];
+        return {
+          userLevelRowGroups: [],
+          organizationLevelGroups: [],
+        };
       }
 
-      const { organizationScopes, userScopes, resourceScopes } = data;
+      const { userScopes, resourceScopes, organizationScopes, organizationResourceScopes } = data;
 
       const userScopesGroup: ScopesTableRowGroupType = {
         key: ApplicationUserConsentScopeType.UserScopes,
@@ -85,16 +97,6 @@ const useScopesTable = () => {
         })),
       };
 
-      const organizationScopesGroup: ScopesTableRowGroupType = {
-        key: ApplicationUserConsentScopeType.OrganizationScopes,
-        label: t('application_details.permissions.organization_permissions'),
-        labelRowClassName: styles.sectionTitleRow,
-        data: organizationScopes.map((scope) => ({
-          type: ApplicationUserConsentScopeType.OrganizationScopes,
-          ...scope,
-        })),
-      };
-
       const resourceScopesGroups = resourceScopes.map<ScopesTableRowGroupType>(
         ({ resource, scopes }) => ({
           key: resource.indicator,
@@ -109,13 +111,48 @@ const useScopesTable = () => {
         })
       );
 
-      return [
-        // Hide the user scopes group if there is no user scopes
-        ...(userScopesGroup.data.length > 0 ? [userScopesGroup] : []),
-        ...resourceScopesGroups,
-        // Hide the organization scopes group if there is no organization scopes
-        ...(organizationScopesGroup.data.length > 0 ? [organizationScopesGroup] : []),
-      ];
+      const organizationScopesGroup: ScopesTableRowGroupType = {
+        key: ApplicationUserConsentScopeType.OrganizationScopes,
+        label: t('application_details.permissions.organization_permissions'),
+        labelRowClassName: styles.sectionTitleRow,
+        data: organizationScopes.map((scope) => ({
+          type: ApplicationUserConsentScopeType.OrganizationScopes,
+          ...scope,
+        })),
+      };
+
+      const organizationResourceScopesGroup =
+        organizationResourceScopes.map<ScopesTableRowGroupType>(({ resource, scopes }) => ({
+          key: resource.indicator,
+          label: resource.name,
+          labelRowClassName: styles.sectionTitleRow,
+          data: scopes.map((scope) => ({
+            type: ApplicationUserConsentScopeType.OrganizationResourceScopes,
+            ...scope,
+            resourceId: resource.id,
+            resourceName: resource.name,
+          })),
+        }));
+
+      return {
+        userLevelRowGroups: [
+          // Hide the user scopes group if there is no user scopes
+          ...(userScopesGroup.data.length > 0 ? [userScopesGroup] : []),
+          ...resourceScopesGroups,
+        ],
+        organizationLevelGroups: [
+          // Hide the organization scopes group if there is no organization scopes
+          ...(organizationScopesGroup.data.length > 0 ? [organizationScopesGroup] : []),
+          ...condArray(
+            /**
+             * Hide the organization resource scopes group if the organization resource scopes feature is not ready
+             */
+            isDevFeaturesEnabled &&
+              organizationResourceScopesGroup.length > 0 &&
+              organizationResourceScopesGroup
+          ),
+        ],
+      };
     },
     [experienceT, t]
   );

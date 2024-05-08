@@ -8,13 +8,16 @@ import useSWR from 'swr';
 
 import useApi, { type RequestError } from '@/hooks/use-api';
 
+import { ScopeLevel } from './type';
 import useOrganizationScopesAssignment from './use-organization-scopes-assignment';
 import useResourceScopesAssignment from './use-resource-scopes-assignment';
 import useUserScopesAssignment from './use-user-scopes-assignment';
 
-const useApplicationScopesAssignment = (applicationId: string) => {
+const useApplicationScopesAssignment = (applicationId: string, scopeLevel: ScopeLevel) => {
   const [activeTab, setActiveTab] = useState<ApplicationUserConsentScopeType>(
-    ApplicationUserConsentScopeType.UserScopes
+    scopeLevel === ScopeLevel.Organization
+      ? ApplicationUserConsentScopeType.OrganizationScopes
+      : ApplicationUserConsentScopeType.UserScopes
   );
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,18 +30,31 @@ const useApplicationScopesAssignment = (applicationId: string) => {
   const userScopesAssignment = useUserScopesAssignment(data?.userScopes);
   const organizationScopesAssignment = useOrganizationScopesAssignment(data?.organizationScopes);
   const resourceScopesAssignment = useResourceScopesAssignment(data?.resourceScopes);
+  const organizationResourceScopesAssignment = useResourceScopesAssignment(
+    data?.organizationResourceScopes,
+    { isForOrganization: true }
+  );
 
   const clearSelectedData = useCallback(() => {
     userScopesAssignment.setSelectedData([]);
-    organizationScopesAssignment.setSelectedData([]);
     resourceScopesAssignment.setSelectedData([]);
-  }, [organizationScopesAssignment, resourceScopesAssignment, userScopesAssignment]);
+    organizationScopesAssignment.setSelectedData([]);
+    organizationResourceScopesAssignment.setSelectedData([]);
+  }, [
+    organizationResourceScopesAssignment,
+    organizationScopesAssignment,
+    resourceScopesAssignment,
+    userScopesAssignment,
+  ]);
 
   const onSubmit = useCallback(async () => {
     setIsLoading(true);
     const newUserScopes = userScopesAssignment.selectedData.map(({ id }) => id);
     const newOrganizationScopes = organizationScopesAssignment.selectedData.map(({ id }) => id);
     const newResourceScopes = resourceScopesAssignment.selectedData.map(({ id }) => id);
+    const newOrganizationResourceScopes = organizationResourceScopesAssignment.selectedData.map(
+      ({ id }) => id
+    );
 
     await api
       .post(`api/applications/${applicationId}/user-consent-scopes`, {
@@ -50,6 +66,11 @@ const useApplicationScopesAssignment = (applicationId: string) => {
             }
           ),
           ...conditional(newResourceScopes.length > 0 && { resourceScopes: newResourceScopes }),
+          ...conditional(
+            newOrganizationResourceScopes.length > 0 && {
+              organizationResourceScopes: newOrganizationResourceScopes,
+            }
+          ),
         },
       })
       .finally(() => {
@@ -61,6 +82,7 @@ const useApplicationScopesAssignment = (applicationId: string) => {
     api,
     applicationId,
     mutate,
+    organizationResourceScopesAssignment.selectedData,
     organizationScopesAssignment.selectedData,
     resourceScopesAssignment.selectedData,
     userScopesAssignment.selectedData,
@@ -70,12 +92,17 @@ const useApplicationScopesAssignment = (applicationId: string) => {
   const scopesAssignment = useMemo(
     () => ({
       [ApplicationUserConsentScopeType.UserScopes]: userScopesAssignment,
-      [ApplicationUserConsentScopeType.OrganizationScopes]: organizationScopesAssignment,
       [ApplicationUserConsentScopeType.ResourceScopes]: resourceScopesAssignment,
-      // TODO @xiaoyijun: Replace with correct scopes
-      [ApplicationUserConsentScopeType.OrganizationResourceScopes]: resourceScopesAssignment,
+      [ApplicationUserConsentScopeType.OrganizationScopes]: organizationScopesAssignment,
+      [ApplicationUserConsentScopeType.OrganizationResourceScopes]:
+        organizationResourceScopesAssignment,
     }),
-    [organizationScopesAssignment, resourceScopesAssignment, userScopesAssignment]
+    [
+      userScopesAssignment,
+      resourceScopesAssignment,
+      organizationScopesAssignment,
+      organizationResourceScopesAssignment,
+    ]
   );
 
   return {

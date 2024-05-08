@@ -8,7 +8,7 @@ import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 import FormCardLayout from './FormCardLayout';
 import * as styles from './index.module.scss';
 
-type Props = {
+export type Props = {
   readonly title: AdminConsoleKey;
   readonly tag?: ReactNode;
   readonly description?: AdminConsoleKey;

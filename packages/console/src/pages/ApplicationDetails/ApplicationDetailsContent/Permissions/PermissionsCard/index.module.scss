@@ -1,0 +1,20 @@
+@use '@/scss/underscore' as _;
+
+// Override the Table  component styles
+.permissionsModal [class*='tableContainer'] [class*='bodyTable'] tr.sectionTitleRow {
+  height: _.unit(9);
+
+  td {
+    font: var(--font-label-2);
+    color: var(--color-text-secondary);
+    background-color: var(--color-layer-light);
+    padding-top: _.unit(2);
+    padding-bottom: _.unit(2);
+  }
+}
+
+.label {
+  display: flex;
+  gap: _.unit(1);
+  align-items: center;
+}
