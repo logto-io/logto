@@ -29,6 +29,8 @@ export type DataHookEventPayload = {
   params?: Record<string, string>;
   // Koa route path
   path?: string;
+  // Koa route matched route
+  _matchedRoute?: string;
   status?: number;
   method?: string;
 } & Record<string, unknown>;

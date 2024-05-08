@@ -149,5 +149,5 @@ export const managementApiHooksRegistration = Object.freeze({
   'PATCH /organization-scopes/:id': 'OrganizationScope.Updated',
   'PUT /organization-roles/:id/scopes': 'OrganizationRole.Scopes.Updated',
   'POST /organization-roles/:id/scopes': 'OrganizationRole.Scopes.Updated',
-  'DELETE /organization-roles/:id/scopes/:scopeId': 'OrganizationRole.Scopes.Updated',
+  'DELETE /organization-roles/:id/scopes/:organizationScopeId': 'OrganizationRole.Scopes.Updated',
 } satisfies Record<`${ApiMethod} ${string}`, DataHookEvent>);

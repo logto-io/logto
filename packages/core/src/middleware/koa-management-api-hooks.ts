@@ -54,7 +54,11 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
 
     if (hasRegisteredDataHookEvent(hookRegistrationKey)) {
       const event = managementApiHooksRegistration[hookRegistrationKey];
-      dataHooks.appendContext({ event, data: { path, method, body, status, params } });
+
+      dataHooks.appendContext({
+        event,
+        data: { path, method, body, status, params, _matchedRoute },
+      });
     }
 
     if (dataHooks.contextArray.length > 0) {
