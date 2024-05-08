@@ -1,5 +1,15 @@
 import { createServer, type RequestListener, type Server } from 'node:http';
 
+/**
+ * A mock server that listens for incoming requests and responds with the request body.
+ *
+ * @example
+ * const server = new WebhookMockServer(3000);
+ * await server.listen();
+ *
+ * @param port The port to listen on.
+ * @param requestCallback A callback that is called with the request body.
+ */
 class WebhookMockServer {
   public readonly endpoint = `http://localhost:${this.port}`;
   private readonly server: Server;
@@ -9,9 +19,6 @@ class WebhookMockServer {
     requestCallback?: (body: string) => void
   ) {
     const requestListener: RequestListener = (request, response) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      response.statusCode = 204;
-
       const data: Uint8Array[] = [];
 
       request.on('data', (chunk: Uint8Array) => {

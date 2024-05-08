@@ -4,13 +4,13 @@ import type {
   PrimitiveValueExpression,
   TaggedTemplateLiteralInvocation,
 } from '@silverhand/slonik/dist/src/types.js';
-import type { MiddlewareType, Context, Middleware } from 'koa';
+import type { Context, Middleware, MiddlewareType } from 'koa';
 import Koa from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import Router from 'koa-router';
 import request from 'supertest';
 
-import type { ManagementApiRouter, AnonymousRouter } from '#src/routes/types.js';
+import type { AnonymousRouter, ManagementApiRouter } from '#src/routes/types.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import type { Options } from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';

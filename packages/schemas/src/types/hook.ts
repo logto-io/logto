@@ -17,20 +17,24 @@ export type InteractionHookEventPayload = {
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
 } & Record<string, unknown>;
 
+/**
+ * The payload of a data hook event.
+ *
+ * @param body: response body
+ * @param params: route params
+ * @param path: route path
+ * @param matchedRoute: matched route used as the identifier to trigger the hook
+ */
 export type DataHookEventPayload = {
   event: DataHookEvent;
   createdAt: string;
   hookId: string;
   ip?: string;
   userAgent?: string;
-  // Koa response body
   body?: Record<string, unknown>;
-  // Koa route params
   params?: Record<string, string>;
-  // Koa route path
   path?: string;
-  // Koa route matched route
-  _matchedRoute?: string;
+  matchedRoute?: string;
   status?: number;
   method?: string;
 } & Record<string, unknown>;

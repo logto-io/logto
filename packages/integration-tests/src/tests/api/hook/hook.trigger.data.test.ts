@@ -41,13 +41,13 @@ const mockHookResponseGuard = z.object({
       .string()
       .optional()
       .transform((value) => value?.toUpperCase()),
-    _matchedRoute: z.string().optional(),
+    matchedRoute: z.string().optional(),
   }),
 });
 
 type MockHookResponse = z.infer<typeof mockHookResponseGuard>;
 
-describe('Trigger DataHook through management API', () => {
+describe('management api triggered data hook events', () => {
   const hookName = 'management-api-hook';
   const webhooks = new Map<string, Hook>();
   const webhookResults = new Map<string, MockHookResponse>();
@@ -58,15 +58,20 @@ describe('Trigger DataHook through management API', () => {
     const result = mockHookResponseGuard.parse(JSON.parse(response));
     const { payload } = result;
 
-    // Use _matchedRoute as the key
-    if (payload._matchedRoute) {
-      webhookResults.set(`${payload.method} ${payload._matchedRoute}`, result);
+    // Use matchedRoute as the key
+    if (payload.matchedRoute) {
+      webhookResults.set(`${payload.method} ${payload.matchedRoute}`, result);
     }
   };
 
+  /**
+   * Get the webhook result by the key.
+   *
+   * @remark Since the webhook request is async, we need to wait for a while
+   * to ensure the webhook response is received.
+   */
   const getWebhookResult = async (key: string) => {
-    // Wait for 100ms to ensure all webhook responses are received.
-    await waitFor(100);
+    await waitFor(10);
 
     return webhookResults.get(key);
   };
@@ -96,9 +101,6 @@ describe('Trigger DataHook through management API', () => {
     await Promise.all(
       Array.from(webhooks.values()).map(async (hook) => authedAdminApi.delete(`hooks/${hook.id}`))
     );
-
-    // Idle for 100ms to ensure all webhook responses are received.
-    await waitFor(100);
 
     await webhookServer.close();
   });
