@@ -86,7 +86,14 @@ describe('koaManagementApiHooks', () => {
           contextArray: [
             {
               event,
-              data: { path: route, method, body: { key }, params: ctxParams.params, status: 200 },
+              data: {
+                path: route,
+                method,
+                body: { key },
+                params: ctxParams.params,
+                _matchedRoute: route,
+                status: 200,
+              },
             },
           ],
         })
