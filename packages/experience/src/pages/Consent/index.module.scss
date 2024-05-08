@@ -6,6 +6,12 @@
   margin-top: _.unit(6);
 }
 
+.terms {
+  margin-top: _.unit(5);
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+}
+
 .redirectUri {
   margin-top: _.unit(5);
   text-align: center;

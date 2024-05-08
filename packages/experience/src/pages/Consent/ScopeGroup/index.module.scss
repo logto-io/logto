@@ -1,0 +1,53 @@
+@use '@/scss/underscore' as _;
+
+.scopeGroup {
+  padding: 0 _.unit(2);
+
+  .scopeGroupHeader {
+    @include _.flex-row;
+    border-radius: _.unit(2);
+    padding: _.unit(2);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-overlay-neutral-hover);
+    }
+  }
+
+  .check {
+    color: var(--color-success-pressed);
+    width: 20px;
+    height: 20px;
+    margin-right: _.unit(2);
+  }
+
+  .scopeGroupName {
+    font: var(--font-body-2);
+    flex: 1;
+    margin-right: _.unit(2);
+  }
+
+  .toggleButton {
+    transition: transform 0.2s ease-in-out;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    color: var(--color-type-disable);
+
+    &[data-expanded='true'] {
+      transform: rotate(180deg);
+    }
+  }
+
+  .scopesList {
+    padding-inline-start: _.unit(8);
+    font: var(--font-body-3);
+    color: var(--color-type-secondary);
+    margin: 0;
+  }
+
+  .scopeItem {
+    padding: _.unit(0.5) 0 _.unit(0.5) _.unit(1);
+    margin-bottom: _.unit(1.5);
+  }
+}
