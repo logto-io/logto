@@ -74,7 +74,10 @@ describe('koaManagementApiHooks', () => {
         method,
         _matchedRoute: route,
         path: route,
-        body: { key },
+        response: {
+          ...ctxParams.response,
+          body: { key },
+        },
         status: 200,
       };
 

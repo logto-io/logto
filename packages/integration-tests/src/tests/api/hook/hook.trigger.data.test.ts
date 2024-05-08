@@ -70,7 +70,7 @@ const webhookResponseHandler = (response: string) => {
  * to ensure the webhook response is received.
  */
 const getWebhookResult = async (key: string) => {
-  await waitFor(10);
+  await waitFor(100);
 
   return webhookResults.get(key);
 };
