@@ -47,297 +47,295 @@ const mockHookResponseGuard = z.object({
 
 type MockHookResponse = z.infer<typeof mockHookResponseGuard>;
 
-describe('management api triggered data hook events', () => {
-  const hookName = 'management-api-hook';
-  const webhooks = new Map<string, Hook>();
-  const webhookResults = new Map<string, MockHookResponse>();
+const hookName = 'management-api-hook';
+const webhooks = new Map<string, Hook>();
+const webhookResults = new Map<string, MockHookResponse>();
 
-  // Record the hook response to the webhookResults map.
-  // Compare the webhookResults map with the managementApiHooksRegistration to verify all hook is triggered.
-  const webhookResponseHandler = (response: string) => {
-    const result = mockHookResponseGuard.parse(JSON.parse(response));
-    const { payload } = result;
+// Record the hook response to the webhookResults map.
+// Compare the webhookResults map with the managementApiHooksRegistration to verify all hook is triggered.
+const webhookResponseHandler = (response: string) => {
+  const result = mockHookResponseGuard.parse(JSON.parse(response));
+  const { payload } = result;
 
-    // Use matchedRoute as the key
-    if (payload.matchedRoute) {
-      webhookResults.set(`${payload.method} ${payload.matchedRoute}`, result);
-    }
-  };
+  // Use matchedRoute as the key
+  if (payload.matchedRoute) {
+    webhookResults.set(`${payload.method} ${payload.matchedRoute}`, result);
+  }
+};
 
-  /**
-   * Get the webhook result by the key.
-   *
-   * @remark Since the webhook request is async, we need to wait for a while
-   * to ensure the webhook response is received.
-   */
-  const getWebhookResult = async (key: string) => {
-    await waitFor(10);
+/**
+ * Get the webhook result by the key.
+ *
+ * @remark Since the webhook request is async, we need to wait for a while
+ * to ensure the webhook response is received.
+ */
+const getWebhookResult = async (key: string) => {
+  await waitFor(10);
 
-    return webhookResults.get(key);
-  };
+  return webhookResults.get(key);
+};
 
-  const webhookServer = new WebhookMockServer(9999, webhookResponseHandler);
+const webhookServer = new WebhookMockServer(9999, webhookResponseHandler);
+
+beforeAll(async () => {
+  await webhookServer.listen();
+
+  const webhookInstance = await authedAdminApi
+    .post('hooks', {
+      json: {
+        name: hookName,
+        events: [...hookEvents],
+        config: {
+          url: webhookServer.endpoint,
+          headers: { foo: 'bar' },
+        },
+      },
+    })
+    .json<Hook>();
+
+  webhooks.set(hookName, webhookInstance);
+});
+
+afterAll(async () => {
+  await Promise.all(
+    Array.from(webhooks.values()).map(async (hook) => authedAdminApi.delete(`hooks/${hook.id}`))
+  );
+
+  await webhookServer.close();
+});
+
+describe('user data hook events', () => {
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let userId: string;
 
   beforeAll(async () => {
-    await webhookServer.listen();
+    // Create a user to trigger the User.Created event.
+    const { user } = await generateNewUser({ username: true, password: true });
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    userId = user.id;
+    const userCreateHook = await getWebhookResult('POST /users');
+    expect(userCreateHook?.payload.event).toBe('User.Created');
+  });
 
-    const webhookInstance = await authedAdminApi
-      .post('hooks', {
-        json: {
-          name: hookName,
-          events: [...hookEvents],
-          config: {
-            url: webhookServer.endpoint,
-            headers: { foo: 'bar' },
-          },
-        },
+  it.each(userDataHookTestCases)(
+    'test case %#: %p',
+    async ({ route, event, method, endpoint, payload }) => {
+      await authedAdminApi[method](endpoint.replace('{userId}', userId), { json: payload });
+      const hook = await getWebhookResult(route);
+      expect(hook?.payload.event).toBe(event);
+    }
+  );
+});
+
+describe('role data hook events', () => {
+  /* eslint-disable @silverhand/fp/no-let */
+  let roleId: string;
+  let scopeId: string;
+  let resourceId: string;
+  /* eslint-enable @silverhand/fp/no-let */
+
+  beforeAll(async () => {
+    // Create a role to trigger the Role.Created event.
+    const role = await authedAdminApi
+      .post('roles', {
+        json: { name: generateName(), description: 'data-hook-role', type: RoleType.User },
       })
-      .json<Hook>();
+      .json<Role>();
 
-    webhooks.set(hookName, webhookInstance);
+    const roleCreateHook = await getWebhookResult('POST /roles');
+    expect(roleCreateHook?.payload.event).toBe('Role.Created');
+
+    // Prepare the role and scope id for the Role.Scopes.Updated event.
+    /* eslint-disable @silverhand/fp/no-mutation */
+    roleId = role.id;
+    const resource = await createResource();
+    const scope = await createScope(resource.id);
+
+    scopeId = scope.id;
+    resourceId = resource.id;
+    /* eslint-enable @silverhand/fp/no-mutation */
   });
 
   afterAll(async () => {
-    await Promise.all(
-      Array.from(webhooks.values()).map(async (hook) => authedAdminApi.delete(`hooks/${hook.id}`))
-    );
-
-    await webhookServer.close();
+    await authedAdminApi.delete(`resources/${resourceId}`);
   });
 
-  describe('user data hook events', () => {
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let userId: string;
+  it.each(roleDataHookTestCases)(
+    'test case %#: %p',
+    async ({ route, event, method, endpoint, payload }) => {
+      await authedAdminApi[method](
+        endpoint.replace('{roleId}', roleId).replace('{scopeId}', scopeId),
+        // Replace all the scopeId placeholder in the payload
+        { json: JSON.parse(JSON.stringify(payload).replace('{scopeId}', scopeId)) }
+      );
+      const hook = await getWebhookResult(route);
+      expect(hook?.payload.event).toBe(event);
+    }
+  );
+});
 
-    beforeAll(async () => {
-      // Create a user to trigger the User.Created event.
-      const { user } = await generateNewUser({ username: true, password: true });
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      userId = user.id;
-      const userCreateHook = await getWebhookResult('POST /users');
-      expect(userCreateHook?.payload.event).toBe('User.Created');
-    });
+describe('scope data hook events', () => {
+  /* eslint-disable @silverhand/fp/no-let */
+  let resourceId: string;
+  let scopeId: string;
+  /* eslint-enable @silverhand/fp/no-let */
 
-    it.each(userDataHookTestCases)(
-      'test case %#: %p',
-      async ({ route, event, method, endpoint, payload }) => {
-        await authedAdminApi[method](endpoint.replace('{userId}', userId), { json: payload });
-        const hook = await getWebhookResult(route);
-        expect(hook?.payload.event).toBe(event);
-      }
-    );
+  beforeAll(async () => {
+    const resource = await createResource();
+    const scope = await createScope(resource.id);
+
+    /* eslint-disable @silverhand/fp/no-mutation */
+    resourceId = resource.id;
+    scopeId = scope.id;
+    /* eslint-enable @silverhand/fp/no-mutation */
+
+    const scopesCreateHook = await getWebhookResult('POST /resources/:resourceId/scopes');
+    expect(scopesCreateHook?.payload.event).toBe('Scope.Created');
   });
 
-  describe('role data hook events', () => {
-    /* eslint-disable @silverhand/fp/no-let */
-    let roleId: string;
-    let scopeId: string;
-    let resourceId: string;
-    /* eslint-enable @silverhand/fp/no-let */
-
-    beforeAll(async () => {
-      // Create a role to trigger the Role.Created event.
-      const role = await authedAdminApi
-        .post('roles', {
-          json: { name: generateName(), description: 'data-hook-role', type: RoleType.User },
-        })
-        .json<Role>();
-
-      const roleCreateHook = await getWebhookResult('POST /roles');
-      expect(roleCreateHook?.payload.event).toBe('Role.Created');
-
-      // Prepare the role and scope id for the Role.Scopes.Updated event.
-      /* eslint-disable @silverhand/fp/no-mutation */
-      roleId = role.id;
-      const resource = await createResource();
-      const scope = await createScope(resource.id);
-
-      scopeId = scope.id;
-      resourceId = resource.id;
-      /* eslint-enable @silverhand/fp/no-mutation */
-    });
-
-    afterAll(async () => {
-      await authedAdminApi.delete(`resources/${resourceId}`);
-    });
-
-    it.each(roleDataHookTestCases)(
-      'test case %#: %p',
-      async ({ route, event, method, endpoint, payload }) => {
-        await authedAdminApi[method](
-          endpoint.replace('{roleId}', roleId).replace('{scopeId}', scopeId),
-          // Replace all the scopeId placeholder in the payload
-          { json: JSON.parse(JSON.stringify(payload).replace('{scopeId}', scopeId)) }
-        );
-        const hook = await getWebhookResult(route);
-        expect(hook?.payload.event).toBe(event);
-      }
-    );
+  afterAll(async () => {
+    await authedAdminApi.delete(`resources/${resourceId}`);
   });
 
-  describe('scope data hook events', () => {
-    /* eslint-disable @silverhand/fp/no-let */
-    let resourceId: string;
-    let scopeId: string;
-    /* eslint-enable @silverhand/fp/no-let */
+  it.each(scopesDataHookTestCases)(
+    'test case %#: %p',
+    async ({ route, event, method, endpoint, payload }) => {
+      await authedAdminApi[method](
+        endpoint.replace('{resourceId}', resourceId).replace('{scopeId}', scopeId),
+        { json: payload }
+      );
+      const hook = await getWebhookResult(route);
+      expect(hook?.payload.event).toBe(event);
+    }
+  );
+});
 
-    beforeAll(async () => {
-      const resource = await createResource();
-      const scope = await createScope(resource.id);
+describe('organization data hook events', () => {
+  /* eslint-disable @silverhand/fp/no-let */
+  let organizationId: string;
+  let userId: string;
+  /* eslint-enable @silverhand/fp/no-let */
 
-      /* eslint-disable @silverhand/fp/no-mutation */
-      resourceId = resource.id;
-      scopeId = scope.id;
-      /* eslint-enable @silverhand/fp/no-mutation */
+  const organizationApi = new OrganizationApiTest();
+  const userApi = new UserApiTest();
 
-      const scopesCreateHook = await getWebhookResult('POST /resources/:resourceId/scopes');
-      expect(scopesCreateHook?.payload.event).toBe('Scope.Created');
+  beforeAll(async () => {
+    const organization = await organizationApi.create({
+      name: generateName(),
+      description: 'organization data hook test organization.',
     });
 
-    afterAll(async () => {
-      await authedAdminApi.delete(`resources/${resourceId}`);
-    });
+    const user = await userApi.create({ name: generateName() });
 
-    it.each(scopesDataHookTestCases)(
-      'test case %#: %p',
-      async ({ route, event, method, endpoint, payload }) => {
-        await authedAdminApi[method](
-          endpoint.replace('{resourceId}', resourceId).replace('{scopeId}', scopeId),
-          { json: payload }
-        );
-        const hook = await getWebhookResult(route);
-        expect(hook?.payload.event).toBe(event);
-      }
-    );
+    /* eslint-disable @silverhand/fp/no-mutation */
+    organizationId = organization.id;
+    userId = user.id;
+    /* eslint-enable @silverhand/fp/no-mutation */
+
+    const organizationCreateHook = await getWebhookResult('POST /organizations');
+    expect(organizationCreateHook?.payload.event).toBe('Organization.Created');
   });
 
-  describe('organization data hook events', () => {
-    /* eslint-disable @silverhand/fp/no-let */
-    let organizationId: string;
-    let userId: string;
-    /* eslint-enable @silverhand/fp/no-let */
+  afterAll(async () => {
+    await userApi.cleanUp();
+  });
 
-    const organizationApi = new OrganizationApiTest();
-    const userApi = new UserApiTest();
+  it.each(organizationDataHookTestCases)(
+    'test case %#: %p',
+    async ({ route, event, method, endpoint, payload }) => {
+      await authedAdminApi[method](
+        endpoint.replace('{organizationId}', organizationId).replace('{userId}', userId),
+        { json: JSON.parse(JSON.stringify(payload).replace('{userId}', userId)) }
+      );
+      const hook = await getWebhookResult(route);
+      expect(hook?.payload.event).toBe(event);
+    }
+  );
+});
 
-    beforeAll(async () => {
-      const organization = await organizationApi.create({
-        name: generateName(),
-        description: 'organization data hook test organization.',
+describe('organization scope data hook events', () => {
+  /* eslint-disable @silverhand/fp/no-let */
+  let scopeId: string;
+  /* eslint-enable @silverhand/fp/no-let */
+
+  const organizationScopeApi = new OrganizationScopeApiTest();
+
+  beforeAll(async () => {
+    const scope = await organizationScopeApi.create({
+      name: generateName(),
+      description: 'organization scope data hook test scope.',
+    });
+
+    /* eslint-disable @silverhand/fp/no-mutation */
+    scopeId = scope.id;
+    /* eslint-enable @silverhand/fp/no-mutation */
+
+    const organizationScopeCreateHook = await getWebhookResult('POST /organization-scopes');
+    expect(organizationScopeCreateHook?.payload.event).toBe('OrganizationScope.Created');
+  });
+
+  it.each(organizationScopeDataHookTestCases)(
+    'test case %#: %p',
+    async ({ route, event, method, endpoint, payload }) => {
+      await authedAdminApi[method](endpoint.replace('{organizationScopeId}', scopeId), {
+        json: payload,
       });
+      const hook = await getWebhookResult(route);
+      expect(hook?.payload.event).toBe(event);
+    }
+  );
+});
 
-      const user = await userApi.create({ name: generateName() });
+describe('organization role data hook events', () => {
+  /* eslint-disable @silverhand/fp/no-let */
+  let roleId: string;
+  let scopeId: string;
+  /* eslint-enable @silverhand/fp/no-let */
 
-      /* eslint-disable @silverhand/fp/no-mutation */
-      organizationId = organization.id;
-      userId = user.id;
-      /* eslint-enable @silverhand/fp/no-mutation */
+  const organizationScopeApi = new OrganizationScopeApiTest();
+  const roleApi = new OrganizationRoleApiTest();
 
-      const organizationCreateHook = await getWebhookResult('POST /organizations');
-      expect(organizationCreateHook?.payload.event).toBe('Organization.Created');
+  beforeAll(async () => {
+    const role = await roleApi.create({
+      name: generateName(),
+      description: 'organization role data hook test role.',
     });
 
-    afterAll(async () => {
-      await userApi.cleanUp();
+    const scope = await organizationScopeApi.create({
+      name: generateName(),
+      description: 'organization role data hook test scope.',
     });
 
-    it.each(organizationDataHookTestCases)(
-      'test case %#: %p',
-      async ({ route, event, method, endpoint, payload }) => {
-        await authedAdminApi[method](
-          endpoint.replace('{organizationId}', organizationId).replace('{userId}', userId),
-          { json: JSON.parse(JSON.stringify(payload).replace('{userId}', userId)) }
-        );
-        const hook = await getWebhookResult(route);
-        expect(hook?.payload.event).toBe(event);
-      }
-    );
+    /* eslint-disable @silverhand/fp/no-mutation */
+    roleId = role.id;
+    scopeId = scope.id;
+    /* eslint-enable @silverhand/fp/no-mutation */
+
+    const organizationRoleCreateHook = await getWebhookResult('POST /organization-roles');
+    expect(organizationRoleCreateHook?.payload.event).toBe('OrganizationRole.Created');
   });
 
-  describe('organization scope data hook events', () => {
-    /* eslint-disable @silverhand/fp/no-let */
-    let scopeId: string;
-    /* eslint-enable @silverhand/fp/no-let */
-
-    const organizationScopeApi = new OrganizationScopeApiTest();
-
-    beforeAll(async () => {
-      const scope = await organizationScopeApi.create({
-        name: generateName(),
-        description: 'organization scope data hook test scope.',
-      });
-
-      /* eslint-disable @silverhand/fp/no-mutation */
-      scopeId = scope.id;
-      /* eslint-enable @silverhand/fp/no-mutation */
-
-      const organizationScopeCreateHook = await getWebhookResult('POST /organization-scopes');
-      expect(organizationScopeCreateHook?.payload.event).toBe('OrganizationScope.Created');
-    });
-
-    it.each(organizationScopeDataHookTestCases)(
-      'test case %#: %p',
-      async ({ route, event, method, endpoint, payload }) => {
-        await authedAdminApi[method](endpoint.replace('{organizationScopeId}', scopeId), {
-          json: payload,
-        });
-        const hook = await getWebhookResult(route);
-        expect(hook?.payload.event).toBe(event);
-      }
-    );
+  afterAll(async () => {
+    await organizationScopeApi.cleanUp();
   });
 
-  describe('organization role data hook events', () => {
-    /* eslint-disable @silverhand/fp/no-let */
-    let roleId: string;
-    let scopeId: string;
-    /* eslint-enable @silverhand/fp/no-let */
+  it.each(organizationRoleDataHookTestCases)(
+    'test case %#: %p',
+    async ({ route, event, method, endpoint, payload }) => {
+      await authedAdminApi[method](
+        endpoint.replace('{organizationRoleId}', roleId).replace('{scopeId}', scopeId),
+        { json: JSON.parse(JSON.stringify(payload).replace('{scopeId}', scopeId)) }
+      );
+      const hook = await getWebhookResult(route);
+      expect(hook?.payload.event).toBe(event);
+    }
+  );
+});
 
-    const organizationScopeApi = new OrganizationScopeApiTest();
-    const roleApi = new OrganizationRoleApiTest();
-
-    beforeAll(async () => {
-      const role = await roleApi.create({
-        name: generateName(),
-        description: 'organization role data hook test role.',
-      });
-
-      const scope = await organizationScopeApi.create({
-        name: generateName(),
-        description: 'organization role data hook test scope.',
-      });
-
-      /* eslint-disable @silverhand/fp/no-mutation */
-      roleId = role.id;
-      scopeId = scope.id;
-      /* eslint-enable @silverhand/fp/no-mutation */
-
-      const organizationRoleCreateHook = await getWebhookResult('POST /organization-roles');
-      expect(organizationRoleCreateHook?.payload.event).toBe('OrganizationRole.Created');
-    });
-
-    afterAll(async () => {
-      await organizationScopeApi.cleanUp();
-    });
-
-    it.each(organizationRoleDataHookTestCases)(
-      'test case %#: %p',
-      async ({ route, event, method, endpoint, payload }) => {
-        await authedAdminApi[method](
-          endpoint.replace('{organizationRoleId}', roleId).replace('{scopeId}', scopeId),
-          { json: JSON.parse(JSON.stringify(payload).replace('{scopeId}', scopeId)) }
-        );
-        const hook = await getWebhookResult(route);
-        expect(hook?.payload.event).toBe(event);
-      }
-    );
-  });
-
-  describe('data hook events coverage', () => {
-    const keys = Object.keys(managementApiHooksRegistration);
-    it.each(keys)('should have test case for %s', async (key) => {
-      const webhookResult = await getWebhookResult(key);
-      expect(webhookResult).toBeDefined();
-    });
+describe('data hook events coverage', () => {
+  const keys = Object.keys(managementApiHooksRegistration);
+  it.each(keys)('should have test case for %s', async (key) => {
+    const webhookResult = await getWebhookResult(key);
+    expect(webhookResult).toBeDefined();
   });
 });
