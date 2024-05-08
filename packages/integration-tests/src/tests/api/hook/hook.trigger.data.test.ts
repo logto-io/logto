@@ -339,3 +339,20 @@ describe('data hook events coverage', () => {
     expect(webhookResult).toBeDefined();
   });
 });
+
+type SupportedKey = 'a' | 'b';
+
+const map: { [K in SupportedKey]: K } = {
+  a: 'a',
+  b: 'b',
+};
+
+const keyIsKeyOfMap = (key: string): key is SupportedKey => key in map;
+
+const getKeys = (key: string): SupportedKey => {
+  if (keyIsKeyOfMap(key)) {
+    return map[key];
+  }
+
+  return 'a';
+};

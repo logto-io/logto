@@ -11,28 +11,28 @@ type TestCase = {
 export const userDataHookTestCases: TestCase[] = [
   {
     route: 'PATCH /users/:userId',
-    event: 'User.Info.Updated',
+    event: 'User.Updated',
     method: 'patch',
     endpoint: `users/{userId}`,
     payload: { name: 'new name' },
   },
   {
     route: 'PATCH /users/:userId/custom-data',
-    event: 'User.Info.Updated',
+    event: 'User.Updated',
     method: 'patch',
     endpoint: `users/{userId}/custom-data`,
     payload: { customData: { foo: 'bar' } },
   },
   {
     route: 'PATCH /users/:userId/profile',
-    event: 'User.Info.Updated',
+    event: 'User.Updated',
     method: 'patch',
     endpoint: `users/{userId}/profile`,
     payload: { profile: { nickname: 'darcy' } },
   },
   {
     route: 'PATCH /users/:userId/password',
-    event: 'User.Info.Updated',
+    event: 'User.Updated',
     method: 'patch',
     endpoint: `users/{userId}/password`,
     payload: { password: 'new-password' },
@@ -56,7 +56,7 @@ export const userDataHookTestCases: TestCase[] = [
 export const roleDataHookTestCases: TestCase[] = [
   {
     route: 'PATCH /roles/:id',
-    event: 'Role.Info.Updated',
+    event: 'Role.Updated',
     method: 'patch',
     endpoint: `roles/{roleId}`,
     payload: { name: 'new name' },
@@ -104,7 +104,7 @@ export const scopesDataHookTestCases: TestCase[] = [
 export const organizationDataHookTestCases: TestCase[] = [
   {
     route: 'PATCH /organizations/:id',
-    event: 'Organization.Info.Updated',
+    event: 'Organization.Updated',
     method: 'patch',
     endpoint: `organizations/{organizationId}`,
     payload: { description: 'new org description' },
@@ -159,7 +159,7 @@ export const organizationScopeDataHookTestCases: TestCase[] = [
 export const organizationRoleDataHookTestCases: TestCase[] = [
   {
     route: 'PATCH /organization-roles/:id',
-    event: 'OrganizationRole.Info.Updated',
+    event: 'OrganizationRole.Updated',
     method: 'patch',
     endpoint: `organization-roles/{organizationRoleId}`,
     payload: { name: generateName() },

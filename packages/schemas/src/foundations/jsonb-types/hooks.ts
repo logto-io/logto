@@ -27,30 +27,20 @@ enum DataHookSchema {
 enum DataHookBasicMutationType {
   Created = 'Created',
   Deleted = 'Deleted',
+  Updated = 'Updated',
 }
 
 type BasicDataHookEvent = `${DataHookSchema}.${DataHookBasicMutationType}`;
 
 // Mutable schemas
-type DataHookBasicInfoMutableSchema =
-  | DataHookSchema.User
-  | DataHookSchema.Role
-  | DataHookSchema.Organization
-  | DataHookSchema.OrganizationRole;
-
 type DataHookCustomMutableSchema =
   | `${DataHookSchema.User}.SuspendStatus`
   | `${DataHookSchema.Role}.Scopes`
   | `${DataHookSchema.Organization}.Membership`
   | `${DataHookSchema.OrganizationRole}.Scopes`;
 
-type DataHookMutableSchema =
-  | DataHookSchema.Scope
-  | DataHookSchema.OrganizationScope
-  | `${DataHookBasicInfoMutableSchema}.Info`
-  | DataHookCustomMutableSchema;
-
-type DataHookPropertyUpdateEvent = `${DataHookMutableSchema}.Updated`;
+type DataHookPropertyUpdateEvent =
+  `${DataHookCustomMutableSchema}.${DataHookBasicMutationType.Updated}`;
 
 export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
 
@@ -61,22 +51,22 @@ export const hookEvents = Object.freeze([
   InteractionHookEvent.PostResetPassword,
   'User.Created',
   'User.Deleted',
-  'User.Info.Updated',
+  'User.Updated',
   'User.SuspendStatus.Updated',
   'Role.Created',
   'Role.Deleted',
-  'Role.Info.Updated',
+  'Role.Updated',
   'Role.Scopes.Updated',
   'Scope.Created',
   'Scope.Deleted',
   'Scope.Updated',
   'Organization.Created',
   'Organization.Deleted',
-  'Organization.Info.Updated',
+  'Organization.Updated',
   'Organization.Membership.Updated',
   'OrganizationRole.Created',
   'OrganizationRole.Deleted',
-  'OrganizationRole.Info.Updated',
+  'OrganizationRole.Updated',
   'OrganizationRole.Scopes.Updated',
   'OrganizationScope.Created',
   'OrganizationScope.Deleted',
@@ -122,14 +112,14 @@ type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 export const managementApiHooksRegistration = Object.freeze({
   'POST /users': 'User.Created',
   'DELETE /users/:userId': 'User.Deleted',
-  'PATCH /users/:userId': 'User.Info.Updated',
-  'PATCH /users/:userId/custom-data': 'User.Info.Updated',
-  'PATCH /users/:userId/profile': 'User.Info.Updated',
-  'PATCH /users/:userId/password': 'User.Info.Updated',
+  'PATCH /users/:userId': 'User.Updated',
+  'PATCH /users/:userId/custom-data': 'User.Updated',
+  'PATCH /users/:userId/profile': 'User.Updated',
+  'PATCH /users/:userId/password': 'User.Updated',
   'PATCH /users/:userId/is-suspended': 'User.SuspendStatus.Updated',
   'POST /roles': 'Role.Created',
   'DELETE /roles/:id': 'Role.Deleted',
-  'PATCH /roles/:id': 'Role.Info.Updated',
+  'PATCH /roles/:id': 'Role.Updated',
   'POST /roles/:id/scopes': 'Role.Scopes.Updated',
   'DELETE /roles/:id/scopes/:scopeId': 'Role.Scopes.Updated',
   'POST /resources/:resourceId/scopes': 'Scope.Created',
@@ -137,13 +127,13 @@ export const managementApiHooksRegistration = Object.freeze({
   'PATCH /resources/:resourceId/scopes/:scopeId': 'Scope.Updated',
   'POST /organizations': 'Organization.Created',
   'DELETE /organizations/:id': 'Organization.Deleted',
-  'PATCH /organizations/:id': 'Organization.Info.Updated',
+  'PATCH /organizations/:id': 'Organization.Updated',
   'PUT /organizations/:id/users': 'Organization.Membership.Updated',
   'POST /organizations/:id/users': 'Organization.Membership.Updated',
   'DELETE /organizations/:id/users/:userId': 'Organization.Membership.Updated',
   'POST /organization-roles': 'OrganizationRole.Created',
   'DELETE /organization-roles/:id': 'OrganizationRole.Deleted',
-  'PATCH /organization-roles/:id': 'OrganizationRole.Info.Updated',
+  'PATCH /organization-roles/:id': 'OrganizationRole.Updated',
   'POST /organization-scopes': 'OrganizationScope.Created',
   'DELETE /organization-scopes/:id': 'OrganizationScope.Deleted',
   'PATCH /organization-scopes/:id': 'OrganizationScope.Updated',
