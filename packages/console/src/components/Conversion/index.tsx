@@ -3,16 +3,11 @@ import { Helmet } from 'react-helmet';
 
 import useCurrentUser from '@/hooks/use-current-user';
 
-import { useRetry } from './use-retry';
 import {
   shouldReport,
   gtagAwTrackingId,
   redditPixelId,
   hashEmail,
-  type GtagConversionId,
-  type RedditReportType,
-  reportToGoogle,
-  reportToReddit,
   plausibleDataDomain,
 } from './utils';
 
@@ -109,25 +104,3 @@ export function GlobalScripts() {
     </>
   );
 }
-
-type ReportConversionOptions = {
-  transactionId?: string;
-  gtagId?: GtagConversionId;
-  redditType?: RedditReportType;
-};
-
-export const useReportConversion = ({
-  gtagId,
-  redditType,
-  transactionId,
-}: ReportConversionOptions) => {
-  useRetry({
-    precondition: Boolean(shouldReport && gtagId),
-    execute: () => (gtagId ? reportToGoogle(gtagId, { transactionId }) : false),
-  });
-
-  useRetry({
-    precondition: Boolean(shouldReport && redditType),
-    execute: () => (redditType ? reportToReddit(redditType) : false),
-  });
-};

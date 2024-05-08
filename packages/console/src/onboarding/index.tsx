@@ -3,14 +3,11 @@ import { useContext, useEffect } from 'react';
 import { Route, Navigate, Outlet, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
-import { useReportConversion } from '@/components/Conversion';
-import { GtagConversionId } from '@/components/Conversion/utils';
 import AppBoundary from '@/containers/AppBoundary';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import Toast from '@/ds-components/Toast';
-import useCurrentUser from '@/hooks/use-current-user';
 import useSwrOptions from '@/hooks/use-swr-options';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
@@ -26,23 +23,6 @@ function Layout() {
   const swrOptions = useSwrOptions();
   const { setThemeOverride } = useContext(AppThemeContext);
   const { match, getTo } = useTenantPathname();
-
-  // User object should be available at this point as it's rendered by the `<AppRoutes />`
-  // component in `packages/console/src/App.tsx`.
-  const { user } = useCurrentUser();
-
-  /**
-   * Report a sign-up conversion.
-   *
-   * Note it may run multiple times (e.g. a user visit multiple times to finish the onboarding process,
-   * which rarely happens). We should turn on deduplication settings in the provider's dashboard. For
-   * example, in Google, we should set conversion's "Count" to "One".
-   */
-  useReportConversion({
-    gtagId: GtagConversionId.SignUp,
-    redditType: 'SignUp',
-    transactionId: user?.id,
-  });
 
   useEffect(() => {
     setThemeOverride(Theme.Light);
