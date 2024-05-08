@@ -18,6 +18,7 @@ export class RedisCache implements CacheStore {
         url: conditional(!yes(redisUrl) && redisUrl),
       });
       this.client.on('error', (error) => {
+        consoleLog.error('Redis error', error);
         void appInsights.trackException(error);
       });
     }
