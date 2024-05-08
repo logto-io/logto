@@ -32,15 +32,15 @@ enum DataHookBasicMutationType {
 
 type BasicDataHookEvent = `${DataHookSchema}.${DataHookBasicMutationType}`;
 
-// Mutable schemas
-type DataHookCustomMutableSchema =
+// Mutable property schemas
+type DataHookPropertyMutableSchema =
   | `${DataHookSchema.User}.SuspendStatus`
   | `${DataHookSchema.Role}.Scopes`
   | `${DataHookSchema.Organization}.Membership`
   | `${DataHookSchema.OrganizationRole}.Scopes`;
 
 type DataHookPropertyUpdateEvent =
-  `${DataHookCustomMutableSchema}.${DataHookBasicMutationType.Updated}`;
+  `${DataHookPropertyMutableSchema}.${DataHookBasicMutationType.Updated}`;
 
 export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
 
