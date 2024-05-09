@@ -23,6 +23,8 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        with:
+          pnpm-version: 9
 
       - name: Prepack
         run: pnpm prepack

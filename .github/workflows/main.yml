@@ -20,6 +20,8 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        with:
+          pnpm-version: 9
 
       - name: Build
         run: pnpm ci:build
@@ -32,6 +34,8 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        with:
+          pnpm-version: 9
 
       - name: Prepack
         run: pnpm prepack
@@ -54,6 +58,8 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        with:
+          pnpm-version: 9
 
       - name: Build for test
         run: pnpm -r build:test
@@ -120,6 +126,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v4
         with:
+          pnpm-version: 9
           run-install: false
 
       # ** Prepack packages **
@@ -129,7 +136,11 @@ jobs:
 
       - name: Prepack alteration
         working-directory: ./alteration
-        run: pnpm i && pnpm prepack
+        run: |
+          # Remove corepack commands once a new Logto release is out
+          corepack enable pnpm
+          corepack use pnpm@8
+          pnpm i && pnpm prepack
       # ** End **
 
       - name: Setup Postgres
