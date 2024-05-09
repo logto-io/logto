@@ -1,6 +1,7 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRoutes } from 'react-router-dom';
 import useSWRImmutable from 'swr/immutable';
 
 import FormCard from '@/components/FormCard';
@@ -13,7 +14,9 @@ import CardTitle from '@/ds-components/CardTitle';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import type { RequestError } from '@/hooks/use-api';
 import { useStaticApi } from '@/hooks/use-api';
+import { profile } from '@/hooks/use-console-routes/routes/profile';
 import useCurrentUser from '@/hooks/use-current-user';
+import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
@@ -30,6 +33,9 @@ import * as styles from './index.module.scss';
 function Profile() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
+  const childrenRoutes = useRoutes(profile);
+  usePlausiblePageview(profile);
+
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
   const fetcher = useSwrFetcher<ConnectorResponse[]>(api);
   const { data: connectors, error: fetchConnectorsError } = useSWRImmutable<
@@ -105,6 +111,7 @@ function Profile() {
           )}
         </div>
       </OverlayScrollbar>
+      {childrenRoutes}
     </div>
   );
 }

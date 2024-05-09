@@ -1,5 +1,5 @@
 import { ossConsolePath } from '@logto/schemas';
-import { Navigate, Outlet, Route, Routes, useRoutes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import { isCloud } from '@/consts/env';
@@ -8,12 +8,12 @@ import AppContent, { RedirectToFirstItem } from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
-import { GlobalRoute } from '@/contexts/TenantsProvider';
+import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import Toast from '@/ds-components/Toast';
-import { profile } from '@/hooks/use-console-routes/routes/profile';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
+import Profile from '@/pages/Profile';
 import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 import Welcome from '@/pages/Welcome';
 import { dropLeadingSlash } from '@/utils/url';
@@ -32,8 +32,6 @@ function Layout() {
 }
 
 export function ConsoleRoutes() {
-  const profileRoutes = useRoutes(profile);
-
   return (
     <Routes>
       {/**
@@ -42,12 +40,14 @@ export function ConsoleRoutes() {
        * console path to trigger the console routes.
        */}
       {!isCloud && <Route path="/" element={<Navigate to={ossConsolePath} />} />}
+      {!isCloud && (
+        <Route path={ossConsolePath + GlobalAnonymousRoute.Profile + '/*'} element={<Profile />} />
+      )}
       <Route path="/:tenantId" element={<Layout />}>
         <Route path="callback" element={<Callback />} />
         <Route path="welcome" element={<Welcome />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="handle-social" element={<HandleSocialCallback />} />
-          <Route path={dropLeadingSlash(GlobalRoute.Profile)}>{profileRoutes}</Route>
           <Route element={<TenantAccess />}>
             {isCloud && (
               <Route
