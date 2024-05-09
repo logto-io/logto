@@ -8,6 +8,7 @@ import useSWR from 'swr';
 
 import Tools from '@/assets/icons/tools.svg';
 import ActionBar from '@/components/ActionBar';
+import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import PageMeta from '@/components/PageMeta';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -18,6 +19,7 @@ import TextInput from '@/ds-components/TextInput';
 import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
 import useApi from '@/hooks/use-api';
 import type { RequestError } from '@/hooks/use-api';
+import useCurrentUser from '@/hooks/use-current-user';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
@@ -53,6 +55,7 @@ function SignInExperience() {
   const api = useApi();
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
   const { update } = useUserOnboardingData();
+  const { user } = useCurrentUser();
   const { navigateTenant, currentTenantId } = useContext(TenantsContext);
 
   const enterAdminConsole = async () => {
@@ -115,11 +118,18 @@ function SignInExperience() {
         }
       }
 
-      const updatedData = await api
-        .patch(buildUrl('api/sign-in-exp', { removeUnusedDemoSocialConnector: '1' }), {
-          json: formDataParser.toUpdateOnboardingSieData(formData, signInExperience),
-        })
-        .json<SignInExperienceType>();
+      const [updatedData] = await Promise.all([
+        api
+          .patch(buildUrl('api/sign-in-exp', { removeUnusedDemoSocialConnector: '1' }), {
+            json: formDataParser.toUpdateOnboardingSieData(formData, signInExperience),
+          })
+          .json<SignInExperienceType>(),
+        reportConversion({
+          gtagId: GtagConversionId.SignUp,
+          redditType: 'SignUp',
+          transactionId: user?.id,
+        }),
+      ]);
 
       void mutate(updatedData);
 
