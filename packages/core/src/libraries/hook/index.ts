@@ -163,7 +163,9 @@ export const createHookLibrary = (queries: Queries) => {
 
     // Fetch application detail if available
     const { applicationId } = contextManager.metadata;
-    const application = applicationId ? await findApplicationById(applicationId) : null;
+    const application = applicationId
+      ? await trySafe(async () => findApplicationById(applicationId))
+      : undefined;
 
     // Filter hooks that match each events
     const webhooks = contextManager.contextArray.flatMap(({ event, ...rest }) => {
