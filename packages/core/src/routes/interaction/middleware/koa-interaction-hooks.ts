@@ -1,11 +1,11 @@
-import { conditionalString, trySafe, type Optional } from '@silverhand/essentials';
+import { conditionalString, trySafe } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import {
-  type InteractionHookContext,
+  InteractionHookContextManager,
   type InteractionHookResult,
-} from '#src/libraries/hook/types.js';
+} from '#src/libraries/hook/context-manager.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
@@ -32,7 +32,7 @@ export default function koaInteractionHooks<
   hooks: { triggerInteractionHooks },
 }: Libraries): MiddlewareType<StateT, WithInteractionHooksContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
-    const { event } = getInteractionStorage(ctx.interactionDetails.result);
+    const { event: interactionEvent } = getInteractionStorage(ctx.interactionDetails.result);
 
     const {
       interactionDetails,
@@ -40,41 +40,24 @@ export default function koaInteractionHooks<
       ip,
     } = ctx;
 
-    // Predefined interaction hook context
-    const interactionHookContext: InteractionHookContext = {
-      event,
-      sessionId: interactionDetails.jti,
-      applicationId: conditionalString(interactionDetails.params.client_id),
+    const interactionHookContext = new InteractionHookContextManager({
+      interactionEvent,
+      userAgent,
       userIp: ip,
-    };
+      applicationId: conditionalString(interactionDetails.params.client_id),
+      sessionId: interactionDetails.jti,
+    });
 
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let interactionHookResult: Optional<InteractionHookResult>;
-
-    /**
-     * Assign an interaction hook result to trigger webhook.
-     * Calling it multiple times will overwrite the original result, but only one webhook will be triggered.
-     * @param result The result to assign.
-     */
-    ctx.assignInteractionHookResult = (result) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      interactionHookResult = result;
-    };
+    ctx.assignInteractionHookResult =
+      interactionHookContext.assignInteractionHookResult.bind(interactionHookContext);
 
     // TODO: @simeng-li Add DataHookContext to the interaction hook middleware as well
 
     await next();
 
-    if (interactionHookResult) {
+    if (interactionHookContext.interactionHookResult) {
       // Hooks should not crash the app
-      void trySafe(
-        triggerInteractionHooks(
-          getConsoleLogFromContext(ctx),
-          interactionHookContext,
-          interactionHookResult,
-          userAgent
-        )
-      );
+      void trySafe(triggerInteractionHooks(getConsoleLogFromContext(ctx), interactionHookContext));
     }
   };
 }

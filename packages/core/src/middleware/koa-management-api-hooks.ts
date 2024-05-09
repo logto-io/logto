@@ -38,17 +38,16 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
       ip,
     } = ctx;
 
-    const dataHooks = new DataHookContextManager({ userAgent, ip });
+    const dataHooksContextManager = new DataHookContextManager({ userAgent, ip });
 
     /**
      * Append a hook context to trigger management hooks. If multiple contexts are appended, all of
      * them will be triggered.
      */
-    ctx.appendDataHookContext = dataHooks.appendContext.bind(dataHooks);
+    ctx.appendDataHookContext = dataHooksContextManager.appendContext.bind(dataHooksContextManager);
 
     await next();
 
-    // Auto append pre-registered management API hooks if any
     const {
       path,
       method,
@@ -58,20 +57,25 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
       response: { body },
     } = ctx;
 
-    const hookRegistrationKey = buildManagementApiDataHookRegistrationKey(method, matchedRoute);
+    const hookRegistrationMatchedRouteKey = buildManagementApiDataHookRegistrationKey(
+      method,
+      matchedRoute
+    );
 
-    if (hasRegisteredDataHookEvent(hookRegistrationKey)) {
-      const event = managementApiHooksRegistration[hookRegistrationKey];
+    // Auto append pre-registered management API hooks if any
+    if (hasRegisteredDataHookEvent(hookRegistrationMatchedRouteKey)) {
+      const event = managementApiHooksRegistration[hookRegistrationMatchedRouteKey];
 
-      dataHooks.appendContext({
+      dataHooksContextManager.appendContext({
         event,
         data: { path, method, response: { body }, status, params, matchedRoute },
       });
     }
 
-    if (dataHooks.contextArray.length > 0) {
+    // Trigger data hooks
+    if (dataHooksContextManager.contextArray.length > 0) {
       // Hooks should not crash the app
-      void trySafe(hooks.triggerDataHooks(getConsoleLogFromContext(ctx), dataHooks));
+      void trySafe(hooks.triggerDataHooks(getConsoleLogFromContext(ctx), dataHooksContextManager));
     }
   };
 };

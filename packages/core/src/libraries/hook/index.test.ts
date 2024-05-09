@@ -6,7 +6,6 @@ import { createMockUtils } from '@logto/shared/esm';
 import RequestError from '#src/errors/RequestError/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 
-import { DataHookContextManager } from './context-manager.js';
 import { generateHookTestPayload, parseResponse } from './utils.js';
 
 const { jest } = import.meta;
@@ -79,6 +78,10 @@ const { triggerInteractionHooks, triggerTestHook, triggerDataHooks } = createHoo
   })
 );
 
+const { DataHookContextManager, InteractionHookContextManager } = await import(
+  './context-manager.js'
+);
+
 describe('triggerInteractionHooks()', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -87,11 +90,19 @@ describe('triggerInteractionHooks()', () => {
   it('should set correct payload when hook triggered', async () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
-    await triggerInteractionHooks(
-      new ConsoleLog(),
-      { event: InteractionEvent.SignIn, sessionId: 'some_jti', applicationId: 'some_client' },
-      { userId: '123' }
-    );
+    const interactionHookContext = new InteractionHookContextManager({
+      interactionEvent: InteractionEvent.SignIn,
+      userAgent: 'ua',
+      userIp: 'ip',
+      applicationId: 'some_client',
+      sessionId: 'some_jti',
+    });
+
+    interactionHookContext.assignInteractionHookResult({
+      userId: '123',
+    });
+
+    await triggerInteractionHooks(new ConsoleLog(), interactionHookContext);
 
     expect(findAllHooks).toHaveBeenCalled();
     expect(sendWebhookRequest).toHaveBeenCalledWith({
@@ -100,7 +111,7 @@ describe('triggerInteractionHooks()', () => {
         hookId: 'foo',
         event: 'PostSignIn',
         interactionEvent: 'SignIn',
-        sessionId: 'some_jti',
+        sessionId: interactionHookContext.metadata.sessionId,
         userId: '123',
         user: { id: 'user_id', username: 'user' },
         application: { id: 'app_id' },

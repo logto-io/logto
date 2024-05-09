@@ -18,12 +18,10 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 
-import { type DataHookContextManager } from './context-manager.js';
 import {
-  interactionEventToHookEvent,
-  type InteractionHookContext,
-  type InteractionHookResult,
-} from './types.js';
+  type DataHookContextManager,
+  type InteractionHookContextManager,
+} from './context-manager.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
 type BetterOmit<T, Ignore> = {
@@ -103,15 +101,19 @@ export const createHookLibrary = (queries: Queries) => {
    */
   const triggerInteractionHooks = async (
     consoleLog: ConsoleLog,
-    interactionContext: InteractionHookContext,
-    interactionResult: InteractionHookResult,
-    userAgent?: string
+    contextManager: InteractionHookContextManager
   ) => {
-    const { userId } = interactionResult;
-    const { event, sessionId, applicationId, userIp } = interactionContext;
+    if (!contextManager.interactionHookResult) {
+      return;
+    }
 
-    const hookEvent = interactionEventToHookEvent[event];
+    const { interactionEvent, sessionId, applicationId, userIp, userAgent } =
+      contextManager.metadata;
+    const { userId } = contextManager.interactionHookResult;
+    const { hookEvent } = contextManager;
+
     const found = await findAllHooks();
+
     const hooks = found.filter(
       ({ event, events, enabled }) =>
         enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
@@ -128,7 +130,7 @@ export const createHookLibrary = (queries: Queries) => {
 
     const payload = {
       event: hookEvent,
-      interactionEvent: event,
+      interactionEvent,
       createdAt: new Date().toISOString(),
       sessionId,
       userAgent,
