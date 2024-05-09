@@ -26,6 +26,8 @@ import type { AuthedMeRouter } from './types.js';
 /**
  * Duplicated from `/user-assets` management API and used specifically for admin tenant.
  * E.g. Profile avatar upload.
+ *
+ * @todo: Refactor to reuse as much code as possible. @Charles
  */
 export default function userAssetsRoutes<T extends AuthedMeRouter>(...[router]: RouterInitArgs<T>) {
   router.get(
