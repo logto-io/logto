@@ -1,6 +1,7 @@
 import type { AllowedUploadMimeType, UserAssets } from '@logto/schemas';
 import { maxUploadFileSize } from '@logto/schemas';
 import classNames from 'classnames';
+import { type KyInstance } from 'ky';
 import { useCallback, useEffect, useState } from 'react';
 import { type FileRejection, useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +21,15 @@ export type Props = {
   readonly onCompleted: (fileUrl: string) => void;
   readonly onUploadErrorChange: (errorMessage?: string) => void;
   readonly className?: string;
+  /**
+   * Specify which API instance to use for the upload request. For example, you can use admin tenant API instead.
+   * Defaults to the return value of `useApi()`.
+   */
+  readonly apiInstance?: KyInstance;
+  /**
+   * Specify the URL to upload the file to. Defaults to `api/user-assets`.
+   */
+  readonly uploadUrl?: string;
 };
 
 function FileUploader({
@@ -29,6 +39,8 @@ function FileUploader({
   onCompleted,
   onUploadErrorChange,
   className,
+  apiInstance,
+  uploadUrl = 'api/user-assets',
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isUploading, setIsUploading] = useState(false);
@@ -91,7 +103,8 @@ function FileUploader({
 
       try {
         setIsUploading(true);
-        const { url } = await api.post('api/user-assets', { body: formData }).json<UserAssets>();
+        const uploadApi = apiInstance ?? api;
+        const { url } = await uploadApi.post(uploadUrl, { body: formData }).json<UserAssets>();
 
         onCompleted(url);
       } catch {
@@ -100,7 +113,7 @@ function FileUploader({
         setIsUploading(false);
       }
     },
-    [allowedMimeTypes, api, maxSize, onCompleted, t]
+    [api, apiInstance, allowedMimeTypes, maxSize, onCompleted, t, uploadUrl]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

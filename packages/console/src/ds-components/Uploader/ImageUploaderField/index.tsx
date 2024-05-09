@@ -9,7 +9,7 @@ import type { Props as ImageUploaderProps } from '../ImageUploader';
 
 import * as styles from './index.module.scss';
 
-type Props = Pick<ImageUploaderProps, 'name' | 'value' | 'actionDescription'> & {
+type Props = Omit<ImageUploaderProps, 'onDelete' | 'onCompleted' | 'onUploadErrorChange'> & {
   readonly onChange: (value: string) => void;
   readonly allowedMimeTypes?: UserAssetsServiceStatus['allowUploadMimeTypes'];
 };

@@ -23,7 +23,6 @@ import { customizeJwt } from './routes/customize-jwt';
 import { enterpriseSso } from './routes/enterprise-sso';
 import { organizationTemplate } from './routes/organization-template';
 import { organizations } from './routes/organizations';
-import { profile } from './routes/profile';
 import { roles } from './routes/roles';
 import { signInExperience } from './routes/sign-in-experience';
 import { useTenantSettings } from './routes/tenant-settings';
@@ -62,7 +61,6 @@ export const useConsoleRoutes = () => {
             { path: steps.organizationInfo, element: <OrganizationInfo /> },
           ],
         },
-        profile,
         { path: 'signing-keys', element: <SigningKeys /> },
         isCloud && tenantSettings,
         isCloud && customizeJwt

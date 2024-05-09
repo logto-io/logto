@@ -14,9 +14,10 @@ function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
   const routeObjects = useConsoleRoutes();
   const routes = useRoutes(routeObjects);
+  usePlausiblePageview(routeObjects);
+
   // Use this hook here to make sure console listens to user tenant scope changes.
   useTenantScopeListener();
-  usePlausiblePageview(routeObjects);
 
   return (
     <div className={styles.content}>

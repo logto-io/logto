@@ -8,11 +8,12 @@ import AppContent, { RedirectToFirstItem } from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
-import { GlobalRoute } from '@/contexts/TenantsProvider';
+import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
+import Profile from '@/pages/Profile';
 import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 import Welcome from '@/pages/Welcome';
 import { dropLeadingSlash } from '@/utils/url';
@@ -39,6 +40,9 @@ export function ConsoleRoutes() {
        * console path to trigger the console routes.
        */}
       {!isCloud && <Route path="/" element={<Navigate to={ossConsolePath} />} />}
+      {!isCloud && (
+        <Route path={ossConsolePath + GlobalAnonymousRoute.Profile + '/*'} element={<Profile />} />
+      )}
       <Route path="/:tenantId" element={<Layout />}>
         <Route path="callback" element={<Callback />} />
         <Route path="welcome" element={<Welcome />} />

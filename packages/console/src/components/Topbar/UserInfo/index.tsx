@@ -5,12 +5,14 @@ import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import ExternalLinkIcon from '@/assets/icons/external-link.svg';
 import Globe from '@/assets/icons/globe.svg';
 import Palette from '@/assets/icons/palette.svg';
 import Profile from '@/assets/icons/profile.svg';
 import SignOut from '@/assets/icons/sign-out.svg';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
+import { isCloud } from '@/consts/env';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import Spacer from '@/ds-components/Spacer';
@@ -28,7 +30,7 @@ import * as styles from './index.module.scss';
 
 function UserInfo() {
   const { signOut } = useLogto();
-  const { navigate } = useTenantPathname();
+  const { getUrl } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { user, isLoading: isLoadingUser } = useCurrentUser();
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -77,10 +79,19 @@ function UserInfo() {
           className={classNames(styles.dropdownItem, isLoading && styles.loading)}
           icon={<Profile className={styles.icon} />}
           onClick={() => {
-            navigate('/profile');
+            // In OSS version, there will be a `/console` context path in the URL.
+            const profileRouteWithConsoleContext = getUrl('/profile');
+
+            // Open the profile page in a new tab. In Logto Cloud, the profile page is not nested in the tenant independent,
+            // whereas in OSS version, it is under the `/console` context path.
+            window.open(isCloud ? '/profile' : profileRouteWithConsoleContext, '_blank');
           }}
         >
           {t('menu.profile')}
+          <Spacer />
+          <div className={styles.icon}>
+            <ExternalLinkIcon />
+          </div>
         </DropdownItem>
         <Divider />
         <SubMenu

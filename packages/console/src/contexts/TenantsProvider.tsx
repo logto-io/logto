@@ -21,6 +21,7 @@ import { isCloud } from '@/consts/env';
 export enum GlobalAnonymousRoute {
   Callback = '/callback',
   SocialDemoCallback = '/social-demo-callback',
+  Profile = '/profile',
 }
 
 /**
