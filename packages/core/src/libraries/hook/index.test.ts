@@ -92,8 +92,6 @@ describe('triggerInteractionHooks()', () => {
 
     const interactionHookContext = new InteractionHookContextManager({
       interactionEvent: InteractionEvent.SignIn,
-      userAgent: 'ua',
-      userIp: 'ip',
       applicationId: 'some_client',
       sessionId: 'some_jti',
     });
