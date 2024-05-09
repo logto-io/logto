@@ -111,8 +111,8 @@ const application_details = {
     permissions_assignment_description:
       'Select the permissions the third-party application requests for user authorization to access specific data types.',
     user_profile: 'User data',
-    api_resource: 'API resource',
-    organization: 'Organization',
+    api_permissions: 'API permissions',
+    organization: 'Organization permissions',
     user_permissions_assignment_form_title: 'Add the user profile permissions',
     organization_permissions_assignment_form_title: 'Add the organization permissions',
     api_resource_permissions_assignment_form_title: 'Add the API resource permissions',
@@ -120,6 +120,16 @@ const application_details = {
       'You can modify the description of the personal user data permissions via "Sign-in Experience > Content > Manage Language"',
     permission_description_tips:
       'When Logto is used as an Identity Provider (IdP) for authentication in third-party apps, and users are asked for authorization, this description appears on the consent screen.',
+    user_title: 'User',
+    user_description:
+      'Select the permissions requested by the third-party app for accessing specific user data.',
+    grant_user_level_permissions: 'Grant permissions of user data',
+    organization_title: 'Organization',
+    organization_description:
+      'Select the permissions requested by the third-party app for accessing specific organization data.',
+    grant_organization_level_permissions: 'Grant permissions of organization data',
+    add_permissions_for_organization:
+      'Add the API resource permissions used in the "Organization template"',
   },
   roles: {
     name_column: 'Role',

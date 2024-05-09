@@ -8,21 +8,30 @@ import { useState, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { type RequestError } from '@/hooks/use-api';
+import { buildUrl } from '@/utils/url';
 
 import { type ScopeAssignmentHook } from './type';
 
 type HookType = ScopeAssignmentHook<
-  ApplicationUserConsentScopeType.ResourceScopes,
-  ApplicationUserConsentScopesResponse['resourceScopes'][number]['scopes'][number]
+  | ApplicationUserConsentScopeType.ResourceScopes
+  | ApplicationUserConsentScopeType.OrganizationResourceScopes,
+  ApplicationUserConsentScopesResponse['resourceScopes'][number]['scopes'][number],
+  {
+    /** Whether the assignment is for an organization */
+    isForOrganization?: boolean;
+  }
 >;
 
 type SelectedDataType = ReturnType<HookType>['selectedData'][number];
 
-const useResourceScopesAssignment: HookType = (assignedResourceScopes) => {
+const useResourceScopesAssignment: HookType = (assignedResourceScopes, options) => {
   const [selectedData, setSelectedData] = useState<SelectedDataType[]>([]);
+  const { isForOrganization } = options ?? {};
 
   const { data: allResources } = useSWR<ResourceResponse[], RequestError>(
-    'api/resources?includeScopes=true'
+    buildUrl('api/resources', {
+      includeScopes: String(true),
+    })
   );
 
   const availableDataGroups = useMemo(() => {
@@ -58,11 +67,17 @@ const useResourceScopesAssignment: HookType = (assignedResourceScopes) => {
   }, [allResources, assignedResourceScopes]);
 
   return {
-    scopeType: ApplicationUserConsentScopeType.ResourceScopes,
+    scopeType: isForOrganization
+      ? ApplicationUserConsentScopeType.OrganizationResourceScopes
+      : ApplicationUserConsentScopeType.ResourceScopes,
     selectedData,
     setSelectedData,
     availableDataGroups,
-    title: 'application_details.permissions.api_resource_permissions_assignment_form_title',
+    title: `application_details.permissions.${
+      isForOrganization
+        ? 'add_permissions_for_organization'
+        : 'api_resource_permissions_assignment_form_title'
+    }`,
   };
 };
 

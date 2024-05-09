@@ -1,4 +1,6 @@
+import { type AdminConsoleKey } from '@logto/phrases';
 import {
+  type JsonObject,
   type ApplicationUserConsentScopesResponse,
   type ApplicationUserConsentScopeType,
 } from '@logto/schemas';
@@ -24,6 +26,25 @@ type CamelCase<T> = T extends `${infer A}-${infer B}` ? `${A}${Capitalize<CamelC
 export type ScopeAssignmentHook<
   T extends ApplicationUserConsentScopeType,
   V extends DataEntry = DataEntry,
+  U extends JsonObject = JsonObject,
 > = (
-  assignedScopes?: ApplicationUserConsentScopesResponse[CamelCase<T>]
+  assignedScopes?: ApplicationUserConsentScopesResponse[CamelCase<T>],
+  options?: U
 ) => ScopeAssignmentHookReturnType<T, V>;
+
+export enum ScopeLevel {
+  User = 'user',
+  Organization = 'organization',
+  /**
+   * Only used when the new organization resource scope feature is not ready.
+   * Todo @xiaoyijun remove this when the new organization resource scope feature is ready.
+   */
+  All = 'all',
+}
+
+export type PermissionTabType = Partial<{
+  [Key in ApplicationUserConsentScopeType]: {
+    title: AdminConsoleKey;
+    key: Key;
+  };
+}>;
