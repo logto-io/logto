@@ -1,4 +1,4 @@
-import { HookEvent } from '@logto/schemas';
+import { type HookEvent, InteractionHookEvent } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import ky from 'ky';
 
@@ -21,7 +21,7 @@ const { generateHookTestPayload, sendWebhookRequest } = await import('./utils.js
 describe('sendWebhookRequest', () => {
   it('should call got.post with correct values', async () => {
     const mockHookId = 'mockHookId';
-    const mockEvent: HookEvent = HookEvent.PostSignIn;
+    const mockEvent: HookEvent = InteractionHookEvent.PostSignIn;
     const testPayload = generateHookTestPayload(mockHookId, mockEvent);
 
     const mockUrl = 'https://logto.gg';

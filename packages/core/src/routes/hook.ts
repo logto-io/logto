@@ -1,12 +1,12 @@
 import {
   Hooks,
   Logs,
+  hook,
   hookConfigGuard,
   hookEventsGuard,
   hookResponseGuard,
-  hook,
-  type HookResponse,
   type Hook,
+  type HookResponse,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional, deduplicate, yes } from '@silverhand/essentials';
@@ -42,7 +42,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
   } = queries;
 
   const {
-    hooks: { testHook },
+    hooks: { triggerTestHook },
     quota,
   } = libraries;
 
@@ -196,7 +196,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         body: { events, config },
       } = ctx.guard;
 
-      await testHook(id, events, config);
+      await triggerTestHook(id, events, config);
 
       ctx.status = 204;
 

@@ -2,13 +2,14 @@ import { createHmac } from 'node:crypto';
 import { type RequestListener } from 'node:http';
 
 import {
-  type Hook,
-  HookEvent,
-  type LogKey,
+  ConnectorType,
+  InteractionHookEvent,
   LogResult,
   SignInIdentifier,
+  type Hook,
   type Log,
-  ConnectorType,
+  type LogContextPayload,
+  type LogKey,
 } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
@@ -58,6 +59,9 @@ const hookServerRequestListener: RequestListener = (request, response) => {
   });
 };
 
+const assertHookLogError = ({ result, error }: LogContextPayload, errorMessage: string) =>
+  result === LogResult.Error && typeof error === 'string' && error.includes(errorMessage);
+
 describe('trigger hooks', () => {
   const { listen, close } = createMockServer(9999, hookServerRequestListener);
 
@@ -76,7 +80,7 @@ describe('trigger hooks', () => {
 
   it('should trigger sign-in hook and record error when interaction finished', async () => {
     const createdHook = await authedAdminApi
-      .post('hooks', { json: getHookCreationPayload(HookEvent.PostSignIn) })
+      .post('hooks', { json: getHookCreationPayload(InteractionHookEvent.PostSignIn) })
       .json<Hook>();
     const logKey: LogKey = 'TriggerHook.PostSignIn';
 
@@ -92,12 +96,15 @@ describe('trigger hooks', () => {
       createdHook.id,
       new URLSearchParams({ logKey, page_size: '100' })
     );
-    expect(
-      logs.some(
-        ({ payload: { result, error } }) =>
-          result === LogResult.Error && error === 'TypeError: Failed to parse URL from not_work_url'
-      )
-    ).toBeTruthy();
+
+    const hookLog = logs.find(({ payload: { hookId } }) => hookId === createdHook.id);
+    expect(hookLog).toBeTruthy();
+
+    if (hookLog) {
+      expect(
+        assertHookLogError(hookLog.payload, 'Failed to parse URL from not_work_url')
+      ).toBeTruthy();
+    }
 
     // Clean up
     await authedAdminApi.delete(`hooks/${createdHook.id}`);
@@ -107,18 +114,18 @@ describe('trigger hooks', () => {
   it('should trigger multiple register hooks and record properly when interaction finished', async () => {
     const [hook1, hook2, hook3] = await Promise.all([
       authedAdminApi
-        .post('hooks', { json: getHookCreationPayload(HookEvent.PostRegister) })
+        .post('hooks', { json: getHookCreationPayload(InteractionHookEvent.PostRegister) })
         .json<Hook>(),
       authedAdminApi
         .post('hooks', {
-          json: getHookCreationPayload(HookEvent.PostRegister, 'http://localhost:9999'),
+          json: getHookCreationPayload(InteractionHookEvent.PostRegister, 'http://localhost:9999'),
         })
         .json<Hook>(),
       // Using the old API to create a hook
       authedAdminApi
         .post('hooks', {
           json: {
-            event: HookEvent.PostRegister,
+            event: InteractionHookEvent.PostRegister,
             config: { url: 'http://localhost:9999', retries: 2 },
           },
         })
@@ -137,7 +144,7 @@ describe('trigger hooks', () => {
 
     // Check hook trigger log
     for (const [hook, expectedResult, expectedError] of [
-      [hook1, LogResult.Error, 'TypeError: Failed to parse URL from not_work_url'],
+      [hook1, LogResult.Error, 'Failed to parse URL from not_work_url'],
       [hook2, LogResult.Success, undefined],
       [hook3, LogResult.Success, undefined],
     ] satisfies Array<[Hook, LogResult, Optional<string>]>) {
@@ -147,17 +154,24 @@ describe('trigger hooks', () => {
         new URLSearchParams({ logKey, page_size: '100' })
       );
 
-      // Assert user ip is in the hook request
-      expect(
-        logs.every(({ payload }) => (payload.hookRequest as HookRequest).body.userIp)
-      ).toBeTruthy();
+      const log = logs.find(({ payload: { hookId } }) => hookId === hook.id);
 
-      expect(
-        logs.some(
-          ({ payload: { result, error } }) =>
-            result === expectedResult && (!expectedError || error === expectedError)
-        )
-      ).toBeTruthy();
+      expect(log).toBeTruthy();
+
+      // Skip the test if the log is not found
+      if (!log) {
+        return;
+      }
+
+      // Assert user ip is in the hook request
+      expect((log.payload.hookRequest as HookRequest).body.userIp).toBeTruthy();
+
+      // Assert the log result and error message
+      expect(log.payload.result).toEqual(expectedResult);
+
+      if (expectedError) {
+        expect(assertHookLogError(log.payload, expectedError)).toBeTruthy();
+      }
     }
 
     // Clean up
@@ -172,7 +186,7 @@ describe('trigger hooks', () => {
   it('should secure webhook payload data successfully', async () => {
     const createdHook = await authedAdminApi
       .post('hooks', {
-        json: getHookCreationPayload(HookEvent.PostRegister, 'http://localhost:9999'),
+        json: getHookCreationPayload(InteractionHookEvent.PostRegister, 'http://localhost:9999'),
       })
       .json<Hook>();
 
@@ -219,7 +233,10 @@ describe('trigger hooks', () => {
     // Create a reset password hook
     const resetPasswordHook = await authedAdminApi
       .post('hooks', {
-        json: getHookCreationPayload(HookEvent.PostResetPassword, 'http://localhost:9999'),
+        json: getHookCreationPayload(
+          InteractionHookEvent.PostResetPassword,
+          'http://localhost:9999'
+        ),
       })
       .json<Hook>();
     const logKey: LogKey = 'TriggerHook.PostResetPassword';

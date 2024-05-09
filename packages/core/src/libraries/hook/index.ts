@@ -1,48 +1,36 @@
 import {
-  HookEvent,
-  type HookEventPayload,
-  InteractionEvent,
   LogResult,
   userInfoSelectFields,
+  type DataHookEventPayload,
+  type Hook,
   type HookConfig,
+  type HookEvent,
+  type HookEventPayload,
   type HookTestErrorResponseData,
+  type InteractionHookEventPayload,
 } from '@logto/schemas';
-import { type ConsoleLog, generateStandardId } from '@logto/shared';
+import { generateStandardId, normalizeError, type ConsoleLog } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
+import pMap from 'p-map';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 
+import { type DataHookContextManager } from './context-manager.js';
+import {
+  interactionEventToHookEvent,
+  type InteractionHookContext,
+  type InteractionHookResult,
+} from './types.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
-/**
- * The context for triggering interaction hooks by `triggerInteractionHooks`.
- * In the `koaInteractionHooks` middleware,
- * we will store the context before processing the interaction and consume it after the interaction is processed if needed.
- */
-export type InteractionHookContext = {
-  event: InteractionEvent;
-  sessionId?: string;
-  applicationId?: string;
-  userIp?: string;
+type BetterOmit<T, Ignore> = {
+  [key in keyof T as key extends Ignore ? never : key]: T[key];
 };
 
-/**
- * The interaction hook result for triggering interaction hooks by `triggerInteractionHooks`.
- * In the `koaInteractionHooks` middleware,
- * if we get an interaction hook result after the interaction is processed, related hooks will be triggered.
- */
-export type InteractionHookResult = {
-  userId: string;
-};
-
-const eventToHook: Record<InteractionEvent, HookEvent> = {
-  [InteractionEvent.Register]: HookEvent.PostRegister,
-  [InteractionEvent.SignIn]: HookEvent.PostSignIn,
-  [InteractionEvent.ForgotPassword]: HookEvent.PostResetPassword,
-};
+type HookEventPayloadWithoutHookId = BetterOmit<HookEventPayload, 'hookId'>;
 
 export const createHookLibrary = (queries: Queries) => {
   const {
@@ -53,6 +41,66 @@ export const createHookLibrary = (queries: Queries) => {
     hooks: { findAllHooks, findHookById },
   } = queries;
 
+  /**
+   * Trigger web hook with the given payload and create a log entry for the request and response.
+   */
+  const sendWebhook = async (
+    hook: Hook,
+    payload: HookEventPayloadWithoutHookId,
+    consoleLog: ConsoleLog
+  ) => {
+    const { id, config, signingKey } = hook;
+    consoleLog.info(`\tTriggering hook ${id} due to ${payload.event} event`);
+
+    const json: HookEventPayload = { ...payload, hookId: id };
+    const logEntry = new LogEntry(`TriggerHook.${payload.event}`);
+
+    logEntry.append({ hookId: id, hookRequest: { body: json } });
+
+    // Trigger web hook and log response
+    try {
+      const response = await sendWebhookRequest({
+        hookConfig: config,
+        payload: json,
+        signingKey,
+      });
+
+      logEntry.append({
+        response: await parseResponse(response),
+      });
+    } catch (error: unknown) {
+      logEntry.append({
+        result: LogResult.Error,
+        response: conditional(error instanceof HTTPError && (await parseResponse(error.response))),
+        error: String(normalizeError(error)),
+      });
+    }
+
+    consoleLog.info(
+      `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
+    );
+
+    await insertLog({
+      id: generateStandardId(),
+      key: logEntry.key,
+      payload: logEntry.payload,
+    });
+  };
+
+  /**
+   * Trigger multiple web hooks with concurrency control.
+   */
+  const sendWebhooks = async <T extends HookEventPayloadWithoutHookId>(
+    webhooks: Array<{ hook: Hook; payload: T }>,
+    consoleLog: ConsoleLog
+  ) =>
+    pMap(webhooks, async ({ hook, payload }) => sendWebhook(hook, payload, consoleLog), {
+      concurrency: 10,
+    });
+
+  /**
+   * Trigger interaction hooks with the given interaction context and result.
+   */
   const triggerInteractionHooks = async (
     consoleLog: ConsoleLog,
     interactionContext: InteractionHookContext,
@@ -62,14 +110,14 @@ export const createHookLibrary = (queries: Queries) => {
     const { userId } = interactionResult;
     const { event, sessionId, applicationId, userIp } = interactionContext;
 
-    const hookEvent = eventToHook[event];
+    const hookEvent = interactionEventToHookEvent[event];
     const found = await findAllHooks();
-    const rows = found.filter(
+    const hooks = found.filter(
       ({ event, events, enabled }) =>
         enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
     );
 
-    if (rows.length === 0) {
+    if (hooks.length === 0) {
       return;
     }
 
@@ -88,51 +136,48 @@ export const createHookLibrary = (queries: Queries) => {
       userIp,
       user: user && pick(user, ...userInfoSelectFields),
       application: application && pick(application, 'id', 'type', 'name', 'description'),
-    } satisfies Omit<HookEventPayload, 'hookId'>;
+    } satisfies BetterOmit<InteractionHookEventPayload, 'hookId'>;
 
-    await Promise.all(
-      rows.map(async ({ id, config, signingKey }) => {
-        consoleLog.info(`\tTriggering hook ${id} due to ${hookEvent} event`);
-        const json: HookEventPayload = { hookId: id, ...payload };
-        const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
-
-        logEntry.append({ hookId: id, hookRequest: { body: json } });
-
-        // Trigger web hook and log response
-        await sendWebhookRequest({
-          hookConfig: config,
-          payload: json,
-          signingKey,
-        })
-          .then(async (response) => {
-            logEntry.append({
-              response: await parseResponse(response),
-            });
-          })
-          .catch(async (error) => {
-            logEntry.append({
-              result: LogResult.Error,
-              response: conditional(
-                error instanceof HTTPError && (await parseResponse(error.response))
-              ),
-              error: conditional(error instanceof Error && String(error)),
-            });
-          });
-
-        consoleLog.info(
-          `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
-        );
-
-        await insertLog({
-          id: generateStandardId(),
-          key: logEntry.key,
-          payload: logEntry.payload,
-        });
-      })
+    await sendWebhooks(
+      hooks.map((hook) => ({ hook, payload })),
+      consoleLog
     );
   };
 
-  const testHook = async (hookId: string, events: HookEvent[], config: HookConfig) => {
+  /**
+   * Trigger data hooks with the given data mutation context. All context objects will be used to trigger hooks.
+   */
+  const triggerDataHooks = async (
+    consoleLog: ConsoleLog,
+    contextManager: DataHookContextManager
+  ) => {
+    if (contextManager.contextArray.length === 0) {
+      return;
+    }
+
+    const found = await findAllHooks();
+
+    // Filter hooks that match each events
+    const webhooks = contextManager.contextArray.flatMap(({ event, data }) => {
+      const hooks = found.filter(
+        ({ event: hookEvent, events, enabled }) =>
+          enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
+      );
+
+      const payload = {
+        event,
+        createdAt: new Date().toISOString(),
+        ...contextManager.metadata,
+        ...data,
+      } satisfies BetterOmit<DataHookEventPayload, 'hookId'>;
+
+      return hooks.map((hook) => ({ hook, payload }));
+    });
+
+    await sendWebhooks(webhooks, consoleLog);
+  };
+
+  const triggerTestHook = async (hookId: string, events: HookEvent[], config: HookConfig) => {
     const { signingKey } = await findHookById(hookId);
     try {
       await Promise.all(
@@ -169,6 +214,7 @@ export const createHookLibrary = (queries: Queries) => {
 
   return {
     triggerInteractionHooks,
-    testHook,
+    triggerDataHooks,
+    triggerTestHook,
   };
 };

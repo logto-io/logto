@@ -1,12 +1,12 @@
 import {
-  HookEvent,
-  type Hook,
-  type HookEvents,
-  type HookConfig,
-  type CreateHook,
+  InteractionHookEvent,
   LogResult,
-  type Log,
   hook,
+  type CreateHook,
+  type Hook,
+  type HookConfig,
+  type HookEvents,
+  type Log,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { subDays } from 'date-fns';
@@ -76,10 +76,10 @@ const mockQueries = {
   logs,
 };
 
-const testHook = jest.fn();
+const triggerTestHook = jest.fn();
 
 const mockLibraries = {
-  hooks: { testHook },
+  hooks: { triggerTestHook },
   quota: createMockQuotaLibrary(),
 };
 
@@ -165,7 +165,7 @@ describe('hook routes', () => {
 
   it('POST /hooks', async () => {
     const name = 'fooName';
-    const events: HookEvents = [HookEvent.PostRegister];
+    const events: HookEvents = [InteractionHookEvent.PostRegister];
     const config: HookConfig = {
       url: 'https://example.com',
     };
@@ -187,7 +187,7 @@ describe('hook routes', () => {
 
   it('POST /hooks should be able to create a hook with multi events', async () => {
     const name = 'anyName';
-    const events: HookEvents = [HookEvent.PostSignIn, HookEvent.PostRegister];
+    const events: HookEvents = [InteractionHookEvent.PostSignIn, InteractionHookEvent.PostRegister];
     const config: HookConfig = {
       url: 'https://example.com',
     };
@@ -219,7 +219,7 @@ describe('hook routes', () => {
 
   it('POST /hooks should success when create a hook with the old payload format', async () => {
     const payload: Partial<Hook> = {
-      event: HookEvent.PostRegister,
+      event: InteractionHookEvent.PostRegister,
       config: {
         url: 'https://example.com',
         retries: 2,
@@ -232,7 +232,7 @@ describe('hook routes', () => {
     expect(response.body).toMatchObject({
       tenantId: mockTenantIdForHook,
       id: generatedId,
-      event: HookEvent.PostRegister,
+      event: InteractionHookEvent.PostRegister,
       config: {
         url: 'https://example.com',
         retries: 2,
@@ -243,7 +243,7 @@ describe('hook routes', () => {
   it('POST /hooks/:id/test should return 204 if test is successful', async () => {
     const targetMockHook = mockHookList[0] ?? mockHook;
     const response = await hookRequest.post(`/hooks/${targetMockHook.id}/test`).send({
-      events: [HookEvent.PostRegister],
+      events: [InteractionHookEvent.PostRegister],
       config: { url: 'https://example.com' },
     });
     expect(response.status).toEqual(204);
@@ -252,7 +252,7 @@ describe('hook routes', () => {
   it('PATCH /hooks/:id', async () => {
     const targetMockHook = mockHookList[0] ?? mockHook;
     const name = 'newName';
-    const events: HookEvents = [HookEvent.PostSignIn];
+    const events: HookEvents = [InteractionHookEvent.PostSignIn];
     const config: HookConfig = {
       url: 'https://new.com',
     };
@@ -272,7 +272,7 @@ describe('hook routes', () => {
 
   it('PATCH /hooks/:id should success when update a hook with multi events', async () => {
     const targetMockHook = mockHookList[0] ?? mockHook;
-    const events = [HookEvent.PostSignIn, HookEvent.PostResetPassword];
+    const events = [InteractionHookEvent.PostSignIn, InteractionHookEvent.PostResetPassword];
     const response = await hookRequest.patch(`/hooks/${targetMockHook.id}`).send({ events });
 
     expect(response.status).toEqual(200);
@@ -283,7 +283,7 @@ describe('hook routes', () => {
 
   it('PATCH /hooks/:id should success when update a hook with the old payload format', async () => {
     const targetMockHook = mockHookList[0] ?? mockHook;
-    const event = HookEvent.PostSignIn;
+    const event = InteractionHookEvent.PostSignIn;
     const response = await hookRequest.patch(`/hooks/${targetMockHook.id}`).send({
       event,
       config: {
@@ -303,7 +303,7 @@ describe('hook routes', () => {
   });
 
   it('PATCH /hooks/:id with empty events list should fail', async () => {
-    const invalidEvents: HookEvent[] = [];
+    const invalidEvents: InteractionHookEvent[] = [];
     const response = await hookRequest
       .patch(`/hooks/${mockNanoIdForHook}`)
       .send({ events: invalidEvents });
