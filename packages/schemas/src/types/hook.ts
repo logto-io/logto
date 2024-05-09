@@ -27,7 +27,7 @@ export type DataHookEventPayload = {
   ip?: string;
   userAgent?: string;
   /** Response body */
-  body?: Record<string, unknown>;
+  response?: { body?: Record<string, unknown> };
   /** Route params */
   params?: Record<string, string>;
   /** Route path */
