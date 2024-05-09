@@ -1,4 +1,4 @@
-import { runCustomJwtClaimsScriptInLocalVm, buildErrorResponse } from '@logto/custom-jwt-kit';
+import { runCustomJwtClaimsScriptInLocalVm, buildErrorResponse } from '@logto/core-kit';
 import {
   userInfoSelectFields,
   jwtCustomizerUserContextGuard,

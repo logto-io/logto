@@ -4,3 +4,4 @@ export * from './openid.js';
 export * from './models/index.js';
 export * from './http.js';
 export * from './password-policy.js';
+export * from './custom-jwt/index.js';

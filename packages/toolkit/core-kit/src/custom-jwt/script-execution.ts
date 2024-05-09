@@ -1,7 +1,8 @@
 import { runInNewContext } from 'node:vm';
 
-import { LogtoJwtTokenKeyType, type CustomJwtFetcher } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
+
+import { LogtoJwtTokenKeyType, type CustomJwtFetcher } from './types.js';
 
 export const runCustomJwtClaimsScriptInLocalVm = async (data: CustomJwtFetcher) => {
   const globalContext = Object.freeze({
