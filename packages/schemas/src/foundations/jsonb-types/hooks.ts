@@ -32,15 +32,15 @@ enum DataHookBasicMutationType {
 
 type BasicDataHookEvent = `${DataHookSchema}.${DataHookBasicMutationType}`;
 
-// Mutable property schemas
-type DataHookPropertyMutableSchema =
-  | `${DataHookSchema.User}.SuspendStatus`
+// Custom DataHook mutable schemas
+type CustomDataHookMutableSchema =
+  | `${DataHookSchema.User}.SuspensionStatus`
   | `${DataHookSchema.Role}.Scopes`
   | `${DataHookSchema.Organization}.Membership`
   | `${DataHookSchema.OrganizationRole}.Scopes`;
 
 type DataHookPropertyUpdateEvent =
-  `${DataHookPropertyMutableSchema}.${DataHookBasicMutationType.Updated}`;
+  `${CustomDataHookMutableSchema}.${DataHookBasicMutationType.Updated}`;
 
 export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
 
@@ -52,7 +52,7 @@ export const hookEvents = Object.freeze([
   'User.Created',
   'User.Deleted',
   'User.Updated',
-  'User.SuspendStatus.Updated',
+  'User.SuspensionStatus.Updated',
   'Role.Created',
   'Role.Deleted',
   'Role.Updated',
@@ -116,7 +116,7 @@ export const managementApiHooksRegistration = Object.freeze({
   'PATCH /users/:userId/custom-data': 'User.Updated',
   'PATCH /users/:userId/profile': 'User.Updated',
   'PATCH /users/:userId/password': 'User.Updated',
-  'PATCH /users/:userId/is-suspended': 'User.SuspendStatus.Updated',
+  'PATCH /users/:userId/is-suspended': 'User.SuspensionStatus.Updated',
   'POST /roles': 'Role.Created',
   'DELETE /roles/:id': 'Role.Deleted',
   'PATCH /roles/:id': 'Role.Updated',

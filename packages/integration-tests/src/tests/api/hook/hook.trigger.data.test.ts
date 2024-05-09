@@ -337,22 +337,6 @@ describe('data hook events coverage', () => {
   it.each(keys)('should have test case for %s', async (key) => {
     const webhookResult = await getWebhookResult(key);
     expect(webhookResult).toBeDefined();
+    expect(webhookResult?.signature).toBeDefined();
   });
 });
-
-type SupportedKey = 'a' | 'b';
-
-const map: { [K in SupportedKey]: K } = {
-  a: 'a',
-  b: 'b',
-};
-
-const keyIsKeyOfMap = (key: string): key is SupportedKey => key in map;
-
-const getKeys = (key: string): SupportedKey => {
-  if (keyIsKeyOfMap(key)) {
-    return map[key];
-  }
-
-  return 'a';
-};

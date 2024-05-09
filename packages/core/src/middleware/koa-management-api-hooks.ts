@@ -49,7 +49,14 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
     await next();
 
     // Auto append pre-registered management API hooks if any
-    const { path, method, status, _matchedRoute: matchedRoute, params, response } = ctx;
+    const {
+      path,
+      method,
+      status,
+      _matchedRoute: matchedRoute,
+      params,
+      response: { body },
+    } = ctx;
 
     const hookRegistrationKey = buildManagementApiDataHookRegistrationKey(method, matchedRoute);
 
@@ -58,7 +65,7 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
 
       dataHooks.appendContext({
         event,
-        data: { path, method, body: response.body, status, params, matchedRoute },
+        data: { path, method, response: { body }, status, params, matchedRoute },
       });
     }
 

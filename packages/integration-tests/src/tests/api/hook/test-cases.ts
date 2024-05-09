@@ -39,7 +39,7 @@ export const userDataHookTestCases: TestCase[] = [
   },
   {
     route: 'PATCH /users/:userId/is-suspended',
-    event: 'User.SuspendStatus.Updated',
+    event: 'User.SuspensionStatus.Updated',
     method: 'patch',
     endpoint: `users/{userId}/is-suspended`,
     payload: { isSuspended: true },

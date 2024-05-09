@@ -19,11 +19,6 @@ export type InteractionHookEventPayload = {
 
 /**
  * The payload of a data hook event.
- *
- * @param body: response body
- * @param params: route params
- * @param path: route path
- * @param matchedRoute: matched route used as the identifier to trigger the hook
  */
 export type DataHookEventPayload = {
   event: DataHookEvent;
@@ -31,11 +26,17 @@ export type DataHookEventPayload = {
   hookId: string;
   ip?: string;
   userAgent?: string;
+  /** Response body */
   body?: Record<string, unknown>;
+  /** Route params */
   params?: Record<string, string>;
+  /** Route path */
   path?: string;
+  /** Matched route used as the identifier to trigger the hook */
   matchedRoute?: string;
+  /** Response status code */
   status?: number;
+  /** Request method */
   method?: string;
 } & Record<string, unknown>;
 
