@@ -1,39 +1,34 @@
 import { InteractionEvent, InteractionHookEvent, type DataHookEvent } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
-type DataHookContext = {
-  event: DataHookEvent;
-  data?: Record<string, unknown>;
-};
+import type { InteractionApiMetadata, ManagementApiContext } from './type.js';
 
 type DataHookMetadata = {
   userAgent?: string;
   ip: string;
-};
+} & Partial<InteractionApiMetadata>;
+
+type DataHookContext = {
+  event: DataHookEvent;
+  /** Data details */
+  data?: unknown;
+} & Partial<ManagementApiContext>;
 
 export class DataHookContextManager {
   contextArray: DataHookContext[] = [];
 
   constructor(public metadata: DataHookMetadata) {}
 
-  appendContext({ event, data }: DataHookContext) {
+  appendContext(context: DataHookContext) {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    this.contextArray.push({ event, data });
+    this.contextArray.push(context);
   }
 }
 
-/**
- * The context for triggering interaction hooks by `triggerInteractionHooks`.
- * In the `koaInteractionHooks` middleware,
- * we will store the context before processing the interaction and consume it after the interaction is processed if needed.
- */
 type InteractionHookMetadata = {
-  interactionEvent: InteractionEvent;
   userAgent?: string;
   userIp?: string;
-  applicationId?: string;
-  sessionId?: string;
-};
+} & InteractionApiMetadata;
 
 /**
  * The interaction hook result for triggering interaction hooks by `triggerInteractionHooks`.

@@ -1,13 +1,10 @@
 import {
   LogResult,
   userInfoSelectFields,
-  type DataHookEventPayload,
   type Hook,
   type HookConfig,
   type HookEvent,
-  type HookEventPayload,
   type HookTestErrorResponseData,
-  type InteractionHookEventPayload,
 } from '@logto/schemas';
 import { generateStandardId, normalizeError, type ConsoleLog } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
@@ -22,6 +19,11 @@ import {
   type DataHookContextManager,
   type InteractionHookContextManager,
 } from './context-manager.js';
+import type {
+  DataHookEventPayload,
+  HookEventPayload,
+  InteractionHookEventPayload,
+} from './type.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
 type BetterOmit<T, Ignore> = {
@@ -159,8 +161,12 @@ export const createHookLibrary = (queries: Queries) => {
 
     const found = await findAllHooks();
 
+    // Fetch application detail if available
+    const { applicationId } = contextManager.metadata;
+    const application = applicationId ? await findApplicationById(applicationId) : null;
+
     // Filter hooks that match each events
-    const webhooks = contextManager.contextArray.flatMap(({ event, data }) => {
+    const webhooks = contextManager.contextArray.flatMap(({ event, ...rest }) => {
       const hooks = found.filter(
         ({ event: hookEvent, events, enabled }) =>
           enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
@@ -170,7 +176,10 @@ export const createHookLibrary = (queries: Queries) => {
         event,
         createdAt: new Date().toISOString(),
         ...contextManager.metadata,
-        ...data,
+        ...conditional(
+          application && { application: pick(application, 'id', 'type', 'name', 'description') }
+        ),
+        ...rest,
       } satisfies BetterOmit<DataHookEventPayload, 'hookId'>;
 
       return hooks.map((hook) => ({ hook, payload }));

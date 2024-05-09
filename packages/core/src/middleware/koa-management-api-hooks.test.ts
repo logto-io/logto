@@ -46,6 +46,7 @@ describe('koaManagementApiHooks', () => {
     expect(triggerDataHooks).toBeCalledWith(
       expect.any(ConsoleLog),
       expect.objectContaining({
+        metadata: { userAgent: ctx.header['user-agent'], ip: ctx.ip },
         contextArray: [
           {
             event: 'Role.Created',
@@ -89,16 +90,12 @@ describe('koaManagementApiHooks', () => {
           contextArray: [
             {
               event,
-              data: {
-                path: route,
-                method,
-                response: {
-                  body: { key },
-                },
-                params: ctxParams.params,
-                matchedRoute: route,
-                status: 200,
-              },
+              data: { key },
+              path: route,
+              method,
+              params: ctxParams.params,
+              matchedRoute: route,
+              status: 200,
             },
           ],
         })

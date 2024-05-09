@@ -68,7 +68,12 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
 
       dataHooksContextManager.appendContext({
         event,
-        data: { path, method, response: { body }, status, params, matchedRoute },
+        path,
+        method,
+        status,
+        params,
+        matchedRoute: matchedRoute && String(matchedRoute),
+        data: body,
       });
     }
 
