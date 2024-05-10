@@ -45,15 +45,12 @@ const ScopesListCard = ({
     [t, userScopes]
   );
 
-  const showTerms = Boolean(termsUrl ?? privacyUrl);
+  // Todo @xiaoyijun remove dev feature flag and authorization agreement from this component
+  const showTerms = !isDevFeaturesEnabled && Boolean(termsUrl ?? privacyUrl);
 
   // If there is no user scopes and resource scopes, we don't need to show the scopes list.
   // This is a fallback for the corner case that all the scopes are already granted.
-  if (
-    !isDevFeaturesEnabled && // Todo @xiaoyijun remove dev feature flag
-    !userScopesData?.length &&
-    !resourceScopes?.length
-  ) {
+  if (!userScopesData?.length && !resourceScopes?.length) {
     return showTerms ? (
       <div className={className}>
         <Trans
