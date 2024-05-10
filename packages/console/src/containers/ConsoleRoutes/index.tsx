@@ -40,13 +40,14 @@ export function ConsoleRoutes() {
        * console path to trigger the console routes.
        */}
       {!isCloud && <Route path="/" element={<Navigate to={ossConsolePath} />} />}
-      {!isCloud && (
-        <Route path={ossConsolePath + GlobalAnonymousRoute.Profile + '/*'} element={<Profile />} />
-      )}
       <Route path="/:tenantId" element={<Layout />}>
         <Route path="callback" element={<Callback />} />
         <Route path="welcome" element={<Welcome />} />
         <Route element={<ProtectedRoutes />}>
+          <Route
+            path={dropLeadingSlash(GlobalAnonymousRoute.Profile) + '/*'}
+            element={<Profile />}
+          />
           <Route path="handle-social" element={<HandleSocialCallback />} />
           <Route element={<TenantAccess />}>
             {isCloud && (
