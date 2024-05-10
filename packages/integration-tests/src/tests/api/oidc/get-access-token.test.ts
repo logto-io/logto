@@ -124,7 +124,7 @@ describe('get access token', () => {
       'scope',
       testApiScopeNames.join(' ')
     );
-    expect(getAccessTokenPayload(accessToken)).not.toHaveProperty('user_id', guestUserId);
+    expect(getAccessTokenPayload(accessToken)).toHaveProperty('user_id', guestUserId);
 
     await deleteJwtCustomizer('access-token');
   });
