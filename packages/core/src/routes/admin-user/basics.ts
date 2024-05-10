@@ -1,3 +1,5 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import {
   UsersPasswordEncryptionMethod,
@@ -10,6 +12,7 @@ import { conditional, pick, yes } from '@silverhand/essentials';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { manageDefaultOrganizations } from '#src/libraries/ogcio-user.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -29,6 +32,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
       hasUserWithPhone,
     },
     userSsoIdentities,
+    organizations,
   } = queries;
   const {
     users: { checkIdentifierCollision, generateUserId, insertUser, verifyUserPassword },
@@ -212,6 +216,8 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         []
       );
 
+      await manageDefaultOrganizations({ userId: id, organizationQueries: organizations });
+
       ctx.body = pick(user, ...userInfoSelectFields);
 
       return next();
@@ -348,7 +354,6 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
 
       return next();
     }
-    // eslint-disable-next-line max-lines
   );
 
   router.delete(

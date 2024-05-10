@@ -22,6 +22,9 @@ services:
       - ADMIN_ENDPOINT
       - PORT=3301
       - ADMIN_PORT=3302
+      - USER_DEFAULT_ORGANIZATION_NAMES=OGCIO Seeded Org
+      - USER_DEFAULT_ORGANIZATION_ROLE_NAMES=OGCIO Employee, OGCIO Manager
+      - USER_DEFAULT_ROLE_NAMES=Payments Employee,User-Profile Employee
   postgres:
     image: postgres:14-alpine
     user: postgres

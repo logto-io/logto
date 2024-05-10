@@ -122,6 +122,16 @@ export default class GlobalValues {
     return this.urlSet.endpoint;
   }
 
+  /** OGCIO Definitions */
+  public readonly userDefaultOrganizationNames = getEnvAsStringArray(
+    'USER_DEFAULT_ORGANIZATION_NAMES'
+  );
+
+  public readonly userDefaultOrganizationRoleNames = getEnvAsStringArray(
+    'USER_DEFAULT_ORGANIZATION_ROLE_NAMES'
+  );
+  /** END OGCIO Definitions */
+
   constructor() {
     if (this.isPathBasedMultiTenancy) {
       console.warn(
