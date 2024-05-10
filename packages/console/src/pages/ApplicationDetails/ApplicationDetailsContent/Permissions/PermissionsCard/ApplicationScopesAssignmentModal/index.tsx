@@ -34,7 +34,7 @@ function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId, scop
     clearSelectedData();
     setActiveTab(
       scopeLevel === ScopeLevel.Organization
-        ? ApplicationUserConsentScopeType.OrganizationResourceScopes
+        ? ApplicationUserConsentScopeType.OrganizationScopes
         : ApplicationUserConsentScopeType.UserScopes
     );
   }, [clearSelectedData, onClose, scopeLevel, setActiveTab]);
