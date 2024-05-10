@@ -1,4 +1,4 @@
-import { LogtoJwtTokenKeyType, jwtCustomizerGuard } from '@logto/core-kit';
+import { LogtoJwtTokenKeyType, jwtCustomizerGuard } from '@logto/core-kit/custom-jwt';
 import { z } from 'zod';
 
 import { Organizations, Roles, UserSsoIdentities } from '../../db-entries/index.js';
@@ -8,7 +8,11 @@ import { userInfoGuard } from '../user.js';
 
 import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
 
-export { LogtoJwtTokenKeyType, jwtCustomizerGuard, type CustomJwtFetcher } from '@logto/core-kit';
+export {
+  LogtoJwtTokenKeyType,
+  jwtCustomizerGuard,
+  type CustomJwtFetcher,
+} from '@logto/core-kit/custom-jwt';
 
 export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
   ssoIdentities: UserSsoIdentities.guard
