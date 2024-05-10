@@ -21,6 +21,7 @@ import { isCloud } from '@/consts/env';
 export enum GlobalAnonymousRoute {
   Callback = '/callback',
   SocialDemoCallback = '/social-demo-callback',
+  AcceptInvitation = '/accept',
   Profile = '/profile',
 }
 
@@ -29,7 +30,6 @@ export enum GlobalAnonymousRoute {
  */
 export enum GlobalRoute {
   CheckoutSuccessCallback = '/checkout-success-callback',
-  AcceptInvitation = '/accept',
 }
 
 const reservedRoutes: Readonly<string[]> = Object.freeze([

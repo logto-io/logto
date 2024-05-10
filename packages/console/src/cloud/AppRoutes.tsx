@@ -6,6 +6,7 @@ import AcceptInvitation from '@/pages/AcceptInvitation';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
 import Profile from '@/pages/Profile';
+import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 
 import * as styles from './AppRoutes.module.scss';
 import Main from './pages/Main';
@@ -20,10 +21,11 @@ function AppRoutes() {
         <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
         <Route element={<ProtectedRoutes />}>
           <Route
-            path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
+            path={`${GlobalAnonymousRoute.AcceptInvitation}/:invitationId`}
             element={<AcceptInvitation />}
           />
           <Route path={GlobalAnonymousRoute.Profile + '/*'} element={<Profile />} />
+          <Route path="/handle-social" element={<HandleSocialCallback />} />
           <Route path={GlobalRoute.CheckoutSuccessCallback} element={<CheckoutSuccessCallback />} />
           <Route index element={<Main />} />
         </Route>
