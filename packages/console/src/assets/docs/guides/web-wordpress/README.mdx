@@ -1,0 +1,69 @@
+import UriInputField from '@/mdx-components/UriInputField';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+
+<Steps>
+
+<Step title="Get started">
+
+This tutorial will show you how to integrate Logto into your [Wordpress](https://wordpress.org) website.
+
+Follow the official [Wordpress installation guide](https://wordpress.org/support/article/how-to-install-wordpress/) to set up your Wordpress website before proceeding.
+
+</Step>
+
+<Step title="Install the plugin">
+
+We will use the [OpenID Connect Generic](https://wordpress.org/plugins/generic-openid-connect/) plugin to integrate Logto via OIDC protocal into your Wordpress website.
+
+1. Log in to your WordPress site.
+2. Navigate to "Plugins" and click "Add New".
+3. Search for "OpenID Connect Generic" and install the plugin by daggerhart.
+4. Activate the plugin.
+
+</Step>
+
+<Step title="Configure redirect URI">
+
+First, let’s enter your redirect URI. You can find it in the plugin settings, scroll down to the "Notes" section, and copy the "Redirect URI" value.
+
+<UriInputField name="redirectUris" />
+
+Don't forget to click the **Save** button.
+
+</Step>
+
+<Step title="Set up the plugin">
+
+Refer to the following table for the necessary configuration details:
+
+| Plugin Field                  | Description                                                                                                                                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Client ID                     | The app ID of your Logto application                                                                                                                                                            |
+| Client Secret                 | The app secret of your Logto application                                                                                                                                                        |
+| OpenID Scope                  | Enter `email profile openid offline_access`                                                                                                                                                     |
+| Login Endpoint URL            | The authorization endpoint URL of your Logto application, which is https://[tenant-id].logto.app/oidc/auth, you can click "show endpoint details" in the Logto application page to get the URL. |
+| Userinfo Endpoint URL         | The userinfo endpoint URL of your Logto application, which is https://[tenant-id].logto.app/oidc/me.                                                                                            |
+| Token Validation Endpoint URL | The token validation endpoint URL of your Logto application, which is https://[tenant-id].logto.app/oidc/token.                                                                                 |
+| End Session Endpoint URL      | The end session endpoint URL of your Logto application, which is https://[tenant-id].logto.app/oidc/session/end.                                                                                |
+| Identity Key                  | The unique key in the ID token that contains the user's identity, it can be email or sub, depending on your configuration.                                                                      |
+| Nickname Key                  | The key in the ID token that contains the user's nickname, you can set it to sub and change it later.                                                                                           |
+
+</Step>
+
+<Step title="Checkpoint: Test your application">
+
+Now, you can test your application:
+
+1. Log out of your WordPress site.
+2. Visit the WordPress login page and click the "Sign in with Logto" button.
+3. You will be redirected to the Logto sign-in page.
+4. Sign in with your Logto account.
+5. You will be redirected back to the WordPress site and logged in automatically.
+
+</Step>
+
+</Steps>

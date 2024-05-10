@@ -35,6 +35,7 @@ import webPhp from './web-php/index';
 import webPython from './web-python/index';
 import webRemix from './web-remix/index';
 import webSveltekit from './web-sveltekit/index';
+import webWordpress from './web-wordpress/index';
 
 const guides: Readonly<Guide[]> = Object.freeze([
   {
@@ -169,6 +170,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./spa-webflow/logo.svg')),
     Component: lazy(async () => import('./spa-webflow/README.mdx')),
     metadata: spaWebflow,
+  },
+  {
+    order: 2.2,
+    id: 'web-wordpress',
+    Logo: lazy(async () => import('./web-wordpress/logo.svg')),
+    Component: lazy(async () => import('./web-wordpress/README.mdx')),
+    metadata: webWordpress,
   },
   {
     order: 3,
