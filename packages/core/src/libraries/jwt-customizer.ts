@@ -137,6 +137,9 @@ export class JwtCustomizerLibrary {
     }
   ) {
     if (!EnvSet.values.isCloud) {
+      consoleLog.warn(
+        'Early terminate `deployJwtCustomizerScript` since we do not provide dedicated computing resource for OSS version.'
+      );
       return;
     }
 
@@ -170,6 +173,9 @@ export class JwtCustomizerLibrary {
 
   async undeployJwtCustomizerScript<T extends LogtoJwtTokenKey>(consoleLog: ConsoleLog, key: T) {
     if (!EnvSet.values.isCloud) {
+      consoleLog.warn(
+        'Early terminate `undeployJwtCustomizerScript` since we do not deploy the script to dedicated computing resource for OSS version.'
+      );
       return;
     }
 

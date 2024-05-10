@@ -4013,9 +4013,6 @@ importers:
 
   packages/toolkit/core-kit:
     dependencies:
-      '@logto/connector-kit':
-        specifier: workspace:^3.0.0
-        version: link:../connector-kit
       '@logto/language-kit':
         specifier: workspace:^1.1.0
         version: link:../language-kit
