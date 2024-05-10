@@ -50,20 +50,23 @@ export default function koaInteractionHooks<
       ip,
     } = ctx;
 
-    const interactionHookContext = new InteractionHookContextManager({
+    const interactionApiMetadata = {
       interactionEvent,
       userAgent,
       applicationId: conditionalString(interactionDetails.params.client_id),
       sessionId: interactionDetails.jti,
-    });
+    };
 
-    ctx.assignInteractionHookResult = interactionHookContext.assignInteractionHookResult.bind({
-      ...interactionHookContext,
+    const interactionHookContext = new InteractionHookContextManager({
+      ...interactionApiMetadata,
       userIp: ip,
     });
 
+    ctx.assignInteractionHookResult =
+      interactionHookContext.assignInteractionHookResult.bind(interactionHookContext);
+
     const dataHookContext = new DataHookContextManager({
-      ...interactionHookContext,
+      ...interactionApiMetadata,
       ip,
     });
 
