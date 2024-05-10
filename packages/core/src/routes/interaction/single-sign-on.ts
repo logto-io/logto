@@ -135,6 +135,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     async (ctx, next) => {
       const {
         assignInteractionHookResult,
+        assignDataHookContext,
         guard: { params },
       } = ctx;
       const {
@@ -153,10 +154,14 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
         params.connectorId
       );
 
-      const accountId = await registerWithSsoAuthentication(ctx, tenant, authenticationResult);
+      const user = await registerWithSsoAuthentication(ctx, tenant, authenticationResult);
+      const { id: accountId } = user;
 
       await assignInteractionResults(ctx, provider, { login: { accountId } });
+
+      // Trigger webhooks
       assignInteractionHookResult({ userId: accountId });
+      assignDataHookContext({ event: 'User.Created', user });
 
       return next();
     }
