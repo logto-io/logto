@@ -25,7 +25,7 @@ function AppRoutes() {
             element={<AcceptInvitation />}
           />
           <Route path={GlobalAnonymousRoute.Profile + '/*'} element={<Profile />} />
-          <Route path="/handle-social" element={<HandleSocialCallback />} />
+          <Route path={GlobalAnonymousRoute.HandleSocial} element={<HandleSocialCallback />} />
           <Route path={GlobalRoute.CheckoutSuccessCallback} element={<CheckoutSuccessCallback />} />
           <Route index element={<Main />} />
         </Route>

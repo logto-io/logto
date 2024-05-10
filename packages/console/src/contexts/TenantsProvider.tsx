@@ -23,6 +23,7 @@ export enum GlobalAnonymousRoute {
   SocialDemoCallback = '/social-demo-callback',
   AcceptInvitation = '/accept',
   Profile = '/profile',
+  HandleSocial = '/handle-social',
 }
 
 /**
