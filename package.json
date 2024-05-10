@@ -31,9 +31,7 @@
     "@types/pg": "^8.6.6",
     "husky": "^9.0.0",
     "pg": "^8.8.0",
-    "typescript": "^5.0.0",
-    "util": "^0.12.3",
-    "vm-browserify": "^1.1.2"
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": "^20.9.0",

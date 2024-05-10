@@ -32,9 +32,9 @@ export class JwtCustomizerLibrary {
   static async runScriptInLocalVm(data: CustomJwtFetcher) {
     try {
       const payload =
-    data.tokenType === LogtoJwtTokenKeyType.AccessToken
-      ? pick(data, 'token', 'context', 'environmentVariables')
-      : pick(data, 'token', 'environmentVariables');
+        data.tokenType === LogtoJwtTokenKeyType.AccessToken
+          ? pick(data, 'token', 'context', 'environmentVariables')
+          : pick(data, 'token', 'environmentVariables');
       const result = await runScriptFunction(data.script, 'getCustomJwtClaims', payload);
 
       // If the `result` is not a record, we cannot merge it to the existing token payload.
