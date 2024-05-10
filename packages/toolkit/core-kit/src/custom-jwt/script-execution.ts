@@ -1,6 +1,10 @@
 import { runInNewContext } from 'node:vm';
 
-export const runScriptFunction = async (script: string, functionName: string, payload: unknown) => {
+export const runScriptFunctionInLocalVm = async (
+  script: string,
+  functionName: string,
+  payload: unknown
+) => {
   const globalContext = Object.freeze({
     fetch: async (...args: Parameters<typeof fetch>) => fetch(...args),
   });

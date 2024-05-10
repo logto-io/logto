@@ -1,4 +1,4 @@
-import { runScriptFunction, buildErrorResponse } from '@logto/core-kit/custom-jwt';
+import { runScriptFunctionInLocalVm, buildErrorResponse } from '@logto/core-kit/custom-jwt';
 import {
   userInfoSelectFields,
   jwtCustomizerUserContextGuard,
@@ -35,7 +35,7 @@ export class JwtCustomizerLibrary {
         data.tokenType === LogtoJwtTokenKeyType.AccessToken
           ? pick(data, 'token', 'context', 'environmentVariables')
           : pick(data, 'token', 'environmentVariables');
-      const result = await runScriptFunction(data.script, 'getCustomJwtClaims', payload);
+      const result = await runScriptFunctionInLocalVm(data.script, 'getCustomJwtClaims', payload);
 
       // If the `result` is not a record, we cannot merge it to the existing token payload.
       return z.record(z.unknown()).parse(result);
