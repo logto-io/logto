@@ -14,7 +14,6 @@ import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
 import Profile from '@/pages/Profile';
-import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 import Welcome from '@/pages/Welcome';
 import { dropLeadingSlash } from '@/utils/url';
 
@@ -48,7 +47,6 @@ export function ConsoleRoutes() {
             path={dropLeadingSlash(GlobalAnonymousRoute.Profile) + '/*'}
             element={<Profile />}
           />
-          <Route path="handle-social" element={<HandleSocialCallback />} />
           <Route element={<TenantAccess />}>
             {isCloud && (
               <Route
