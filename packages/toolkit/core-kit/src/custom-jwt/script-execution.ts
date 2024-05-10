@@ -1,26 +1,14 @@
 import { runInNewContext } from 'node:vm';
 
-import { pick } from '@silverhand/essentials';
-
-import { LogtoJwtTokenKeyType, type CustomJwtFetcher } from './types.js';
-
-export const runCustomJwtClaimsScriptInLocalVm = async (data: CustomJwtFetcher) => {
+export const runScriptFunction = async (script: string, functionName: string, payload: unknown) => {
   const globalContext = Object.freeze({
     fetch: async (...args: Parameters<typeof fetch>) => fetch(...args),
   });
-  const getCustomJwtClaims: unknown = runInNewContext(
-    data.script + ';getCustomJwtClaims;',
-    globalContext
-  );
+  const customFunction: unknown = runInNewContext(script + `;${functionName};`, globalContext);
 
-  if (typeof getCustomJwtClaims !== 'function') {
-    throw new TypeError('The script does not have a function named `getCustomJwtClaims`');
+  if (typeof customFunction !== 'function') {
+    throw new TypeError(`The script does not have a function named \`${functionName}\``);
   }
-
-  const payload =
-    data.tokenType === LogtoJwtTokenKeyType.AccessToken
-      ? pick(data, 'token', 'context', 'environmentVariables')
-      : pick(data, 'token', 'environmentVariables');
 
   /**
    * We can not use top-level await in `vm`, use the following implementation instead.
@@ -30,8 +18,8 @@ export const runCustomJwtClaimsScriptInLocalVm = async (data: CustomJwtFetcher) 
    * 2. https://github.com/n-riesco/ijavascript/issues/173#issuecomment-693924098
    */
   const result: unknown = await runInNewContext(
-    '(async () => getCustomJwtClaims(payload))();',
-    Object.freeze({ getCustomJwtClaims, payload }),
+    '(async () => customFunction(payload))();',
+    Object.freeze({ customFunction, payload }),
     // Limit the execution time to 3 seconds, throws error if the script takes too long to execute.
     { timeout: 3000 }
   );

@@ -1,4 +1,4 @@
-import { runCustomJwtClaimsScriptInLocalVm, buildErrorResponse } from '@logto/core-kit/custom-jwt';
+import { runScriptFunction, buildErrorResponse } from '@logto/core-kit/custom-jwt';
 import {
   userInfoSelectFields,
   jwtCustomizerUserContextGuard,
@@ -6,6 +6,7 @@ import {
   type JwtCustomizerType,
   type JwtCustomizerUserContext,
   type CustomJwtFetcher,
+  LogtoJwtTokenKeyType,
 } from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
 import { deduplicate, pick, pickState, assert } from '@silverhand/essentials';
@@ -30,7 +31,11 @@ export class JwtCustomizerLibrary {
   // Convert errors to WithTyped client response error to share the error handling logic.
   static async runScriptInLocalVm(data: CustomJwtFetcher) {
     try {
-      const result = await runCustomJwtClaimsScriptInLocalVm(data);
+      const payload =
+    data.tokenType === LogtoJwtTokenKeyType.AccessToken
+      ? pick(data, 'token', 'context', 'environmentVariables')
+      : pick(data, 'token', 'environmentVariables');
+      const result = await runScriptFunction(data.script, 'getCustomJwtClaims', payload);
 
       // If the `result` is not a record, we cannot merge it to the existing token payload.
       return z.record(z.unknown()).parse(result);
