@@ -34,7 +34,7 @@ type Props = {
 
 function LinkAccountSection({ user, connectors, onUpdate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate, getUrl } = useTenantPathname();
+  const { navigate } = useTenantPathname();
   const theme = useTheme();
   const { show: showConfirm } = useConfirmModal();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
@@ -96,7 +96,10 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
               name: 'profile.link',
               handler: async () => {
                 const authUri = await getSocialAuthorizationUri(id);
-                const callback = getUrl('handle-social').href;
+                // Profile page has been moved to the root path instead of being nested inside a tenant context.
+                // Therefore, we don't need to use `getUrl` to prepend the tenant segment in the callback URL.
+                // Also, link social is Cloud only, so no need to conditionally prepend the `ossConsolePath`, either.
+                const callback = new URL('/handle-social', window.location.href).href;
 
                 const queries = new URLSearchParams({
                   redirectTo: authUri,
@@ -125,7 +128,6 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
     t,
     onUpdate,
     getSocialAuthorizationUri,
-    getUrl,
   ]);
 
   return (
