@@ -19,9 +19,8 @@
     "./declaration": "./declaration/index.ts",
     "./scss/*": "./scss/*.scss",
     "./custom-jwt": {
-      "default": "./lib/custom-jwt/index.js",
-      "types": "./lib/custom-jwt/index.d.ts",
-      "import": "./lib/custom-jwt/index.js"
+      "node": "./lib/custom-jwt/index.js",
+      "types": "./lib/custom-jwt/index.d.ts"
     }
   },
   "types": "./lib/index.d.ts",
