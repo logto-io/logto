@@ -155,6 +155,6 @@ export const hasUpdatedProfile = ({
   lastSignInAt,
   ...profile
 }: Omit<OmitAutoSetFields<CreateUser>, 'id'>) => {
-  // Check if the profile has been updated
+  // Check if the lastSignInAt is the only field in the updated profile
   return Object.keys(profile).length > 0;
 };
