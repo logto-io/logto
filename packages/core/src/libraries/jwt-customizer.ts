@@ -23,7 +23,7 @@ import {
   getJwtCustomizerScripts,
   type CustomJwtDeployRequestBody,
 } from '#src/utils/custom-jwt/index.js';
-import { buildWithtypedClientResponseError } from '#src/utils/custom-jwt/index.js';
+import { LocalVmError } from '#src/utils/custom-jwt/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -43,7 +43,7 @@ export class JwtCustomizerLibrary {
       // Assuming we only use zod for request body validation
       if (error instanceof ZodError) {
         const { errors } = error;
-        throw buildWithtypedClientResponseError(
+        throw new LocalVmError(
           {
             message: 'Invalid input',
             errors,
@@ -52,7 +52,7 @@ export class JwtCustomizerLibrary {
         );
       }
 
-      throw buildWithtypedClientResponseError(
+      throw new LocalVmError(
         buildErrorResponse(error),
         error instanceof SyntaxError || error instanceof TypeError ? 422 : 500
       );
