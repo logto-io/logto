@@ -120,7 +120,11 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
   libraries: Libraries,
   applicationId: string,
   indicator: string,
-  scopes: ReadonlyArray<{ name: string; id: string }>
+  scopes: ReadonlyArray<{ name: string; id: string }>,
+  {
+    includeOrganizationResourceScopes = true,
+    includeResourceScopes = true,
+  }: { includeOrganizationResourceScopes?: boolean; includeResourceScopes?: boolean } = {}
 ) => {
   const {
     applications: {
@@ -154,12 +158,16 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
   }
 
   // Get the API resource scopes that are enabled in the application
-  const userConsentResources = await getApplicationUserConsentResourceScopes(applicationId);
+  const userConsentResources = includeResourceScopes
+    ? await getApplicationUserConsentResourceScopes(applicationId)
+    : [];
   const userConsentResource = userConsentResources.find(
     ({ resource }) => resource.indicator === indicator
   );
   const userConsentOrganizationResources = EnvSet.values.isDevFeaturesEnabled
-    ? await getApplicationUserConsentOrganizationResourceScopes(applicationId)
+    ? includeOrganizationResourceScopes
+      ? await getApplicationUserConsentOrganizationResourceScopes(applicationId)
+      : []
     : [];
   const userConsentOrganizationResource = userConsentOrganizationResources.find(
     ({ resource }) => resource.indicator === indicator

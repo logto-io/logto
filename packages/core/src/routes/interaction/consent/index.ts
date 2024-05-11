@@ -106,6 +106,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         queries,
         libraries,
         userId,
+        applicationId,
       });
 
       const organizationsWithMissingResourceScopes = await Promise.all(
@@ -120,6 +121,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
             libraries,
             userId,
             organizationId: id,
+            applicationId,
           });
 
           return { name, id, missingResourceScopes };
@@ -249,6 +251,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         queries,
         libraries,
         userId: accountId,
+        applicationId: clientId,
       });
 
       // Find the organizations if the application is requesting the organizations scope
@@ -268,6 +271,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
             libraries,
             userId: accountId,
             organizationId: id,
+            applicationId: clientId,
           });
 
           return { name, id, missingResourceScopes };

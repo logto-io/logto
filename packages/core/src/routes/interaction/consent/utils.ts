@@ -3,7 +3,10 @@ import { type MissingResourceScopes, type Scope, missingResourceScopesGuard } fr
 import { errors } from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { findResourceScopes } from '#src/oidc/resource.js';
+import {
+  filterResourceScopesForTheThirdPartyApplication,
+  findResourceScopes,
+} from '#src/oidc/resource.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -91,12 +94,14 @@ export const filterAndParseMissingResourceScopes = async ({
   queries,
   libraries,
   userId,
+  applicationId,
   organizationId,
 }: {
   resourceScopes: Record<string, string[]>;
   queries: Queries;
   libraries: Libraries;
   userId: string;
+  applicationId: string;
   organizationId?: string;
 }) => {
   const filteredResourceScopes = Object.fromEntries(
@@ -118,9 +123,23 @@ export const filterAndParseMissingResourceScopes = async ({
             organizationId,
           });
 
+          // Filter the scopes for the third-party application.
+          // Although the "missingResourceScopes" from the prompt details are already filtered,
+          // there may be duplicated scopes from either resources or organization resources.
+          const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
+            libraries,
+            applicationId,
+            resourceIndicator,
+            scopes,
+            {
+              includeOrganizationResourceScopes: Boolean(organizationId),
+              includeResourceScopes: !organizationId,
+            }
+          );
+
           return [
             resourceIndicator,
-            missingScopes.filter((scope) => scopes.some(({ name }) => name === scope)),
+            missingScopes.filter((scope) => filteredScopes.some(({ name }) => name === scope)),
           ];
         }
       )
