@@ -106,12 +106,6 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         .map((field) => [field, Reflect.get(token, field)])
     );
 
-    const commonPayload = {
-      script,
-      environmentVariables,
-      token: readOnlyToken,
-    };
-
     // We pass context to the cloud API only when it is a user's access token.
     const logtoUserInfo = conditional(
       !isTokenClientCredentials &&
@@ -119,22 +113,23 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         (await libraries.jwtCustomizers.getUserContext(token.accountId))
     );
 
-    const payload: CustomJwtFetcher = isTokenClientCredentials
-      ? {
-          ...commonPayload,
-          tokenType: LogtoJwtTokenKeyType.ClientCredentials,
-        }
-      : {
-          ...commonPayload,
-          tokenType: LogtoJwtTokenKeyType.AccessToken,
-          // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
-          // eslint-disable-next-line no-restricted-syntax
-          context: { user: logtoUserInfo as Record<string, Json> },
-        };
+    const payload: CustomJwtFetcher = {
+      script,
+      environmentVariables,
+      token: readOnlyToken,
+      ...(isTokenClientCredentials
+        ? { tokenType: LogtoJwtTokenKeyType.ClientCredentials }
+        : {
+            tokenType: LogtoJwtTokenKeyType.AccessToken,
+            // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
+            // `context` parameter is only eligible for user's access token for now.
+            // eslint-disable-next-line no-restricted-syntax
+            context: { user: logtoUserInfo as Record<string, Json> },
+          }),
+    };
 
     if (EnvSet.values.isCloud) {
       const client = await cloudConnection.getClient();
-      // `context` parameter is only eligible for user's access token for now.
       return await client.post(`/api/services/custom-jwt`, {
         body: payload,
         search: {},

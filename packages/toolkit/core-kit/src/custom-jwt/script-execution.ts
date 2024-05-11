@@ -1,5 +1,14 @@
 import { runInNewContext } from 'node:vm';
 
+/**
+ * This function is used to execute a named function in a customized code script in a local
+ * virtual machine with the given payload as input.
+ *
+ * @param script Custom code snippet.
+ * @param functionName The name of the function to be executed.
+ * @param payload The input payload for the function.
+ * @returns The result of the function execution.
+ */
 export const runScriptFunctionInLocalVm = async (
   script: string,
   functionName: string,
