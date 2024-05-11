@@ -73,11 +73,7 @@ const useResourceScopesAssignment: HookType = (assignedResourceScopes, options) 
     selectedData,
     setSelectedData,
     availableDataGroups,
-    title: `application_details.permissions.${
-      isForOrganization
-        ? 'add_permissions_for_organization'
-        : 'api_resource_permissions_assignment_form_title'
-    }`,
+    title: `application_details.permissions.api_resource_permissions_assignment_form_title`,
   };
 };
 

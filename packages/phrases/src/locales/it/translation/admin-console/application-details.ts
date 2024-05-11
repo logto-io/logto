@@ -185,9 +185,6 @@ const application_details = {
       'Select the permissions requested by the third-party app for accessing specific organization data.',
     /** UNTRANSLATED */
     grant_organization_level_permissions: 'Grant permissions of organization data',
-    /** UNTRANSLATED */
-    add_permissions_for_organization:
-      'Add the API resource permissions used in the "Organization template"',
   },
   roles: {
     name_column: 'Ruolo',
