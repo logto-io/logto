@@ -46,7 +46,7 @@ jobs:
 
   package:
     needs: check-alteration-changes
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     if: ${{needs.check-alteration-changes.outputs.has-alteration-changes == 'true'}}
     env:
       INTEGRATION_TEST: true
