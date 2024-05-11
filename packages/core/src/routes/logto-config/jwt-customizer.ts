@@ -13,6 +13,7 @@ import { ZodError, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError, { formatZodError } from '#src/errors/RequestError/index.js';
+import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -41,7 +42,6 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
   const { getRowsByKeys, deleteJwtCustomizer } = queries.logtoConfigs;
   const { upsertJwtCustomizer, getJwtCustomizer, getJwtCustomizers, updateJwtCustomizer } =
     logtoConfigs;
-  const { deployJwtCustomizerScript, undeployJwtCustomizerScript } = libraries.jwtCustomizers;
 
   router.put(
     '/configs/jwt-customizer/:tokenTypePath',
@@ -79,7 +79,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
       if (!isIntegrationTest) {
-        await deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
+        await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
           key,
           value: body,
           useCase: 'production',
@@ -123,7 +123,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
       if (!isIntegrationTest) {
-        await deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
+        await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
           key,
           value: body,
           useCase: 'production',
@@ -195,7 +195,10 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       // Undeploy the script first to avoid the case where the JWT customizer was deleted from DB but worker script not updated successfully.
       if (!isIntegrationTest) {
-        await undeployJwtCustomizerScript(getConsoleLogFromContext(ctx), tokenKey);
+        await libraries.jwtCustomizers.undeployJwtCustomizerScript(
+          getConsoleLogFromContext(ctx),
+          tokenKey
+        );
       }
 
       await deleteJwtCustomizer(tokenKey);
@@ -203,10 +206,6 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       return next();
     }
   );
-
-  if (!EnvSet.values.isCloud && !EnvSet.values.isUnitTest) {
-    return;
-  }
 
   router.post(
     '/configs/jwt-customizer/test',
@@ -220,7 +219,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       const { body } = ctx.guard;
 
       // Deploy the test script
-      await deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
+      await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
         key:
           body.tokenType === LogtoJwtTokenKeyType.AccessToken
             ? LogtoJwtTokenKey.AccessToken
@@ -229,13 +228,16 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
         useCase: 'test',
       });
 
-      const client = await cloudConnection.getClient();
-
       try {
-        ctx.body = await client.post(`/api/services/custom-jwt`, {
-          body,
-          search: { isTest: 'true' },
-        });
+        if (EnvSet.values.isCloud) {
+          const client = await cloudConnection.getClient();
+          ctx.body = await client.post(`/api/services/custom-jwt`, {
+            body,
+            search: { isTest: 'true' },
+          });
+        } else {
+          ctx.body = await JwtCustomizerLibrary.runScriptInLocalVm(body);
+        }
       } catch (error: unknown) {
         /**
          * All APIs should throw `RequestError` instead of `Error`.

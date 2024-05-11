@@ -17,7 +17,11 @@
       "import": "./lib/index.js"
     },
     "./declaration": "./declaration/index.ts",
-    "./scss/*": "./scss/*.scss"
+    "./scss/*": "./scss/*.scss",
+    "./custom-jwt": {
+      "node": "./lib/custom-jwt/index.js",
+      "types": "./lib/custom-jwt/index.d.ts"
+    }
   },
   "types": "./lib/index.d.ts",
   "files": [

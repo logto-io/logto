@@ -6,6 +6,8 @@ import {
   type AccessTokenJwtCustomizer,
   type ClientCredentialsJwtCustomizer,
   type JwtCustomizerConfigs,
+  type JwtCustomizerTestRequestBody,
+  type Json,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -60,3 +62,10 @@ export const updateJwtCustomizer = async (
   authedAdminApi
     .patch(`configs/jwt-customizer/${keyTypePath}`, { json: value })
     .json<AccessTokenJwtCustomizer | ClientCredentialsJwtCustomizer>();
+
+export const testJwtCustomizer = async (payload: JwtCustomizerTestRequestBody) =>
+  authedAdminApi
+    .post(`configs/jwt-customizer/test`, {
+      json: payload,
+    })
+    .json<Json>();

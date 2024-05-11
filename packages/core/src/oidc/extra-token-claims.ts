@@ -4,6 +4,7 @@ import {
   LogtoJwtTokenKeyType,
   LogResult,
   jwtCustomizer as jwtCustomizerLog,
+  type CustomJwtFetcher,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -11,6 +12,7 @@ import { type KoaContextWithOIDC, type UnknownObject } from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
+import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -66,12 +68,6 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     cloudConnection: CloudConnectionLibrary;
   }
 ): Promise<UnknownObject | undefined> => {
-  const { isCloud } = EnvSet.values;
-  // No cloud connection for OSS version, skip.
-  if (!isCloud) {
-    return;
-  }
-
   // Narrow down the token type to `AccessToken` and `ClientCredentials`.
   if (
     !(token instanceof ctx.oidc.provider.AccessToken) &&
@@ -110,14 +106,6 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         .map((field) => [field, Reflect.get(token, field)])
     );
 
-    const client = await cloudConnection.getClient();
-
-    const commonPayload = {
-      script,
-      environmentVariables,
-      token: readOnlyToken,
-    };
-
     // We pass context to the cloud API only when it is a user's access token.
     const logtoUserInfo = conditional(
       !isTokenClientCredentials &&
@@ -125,22 +113,29 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         (await libraries.jwtCustomizers.getUserContext(token.accountId))
     );
 
-    // `context` parameter is only eligible for user's access token for now.
-    return await client.post(`/api/services/custom-jwt`, {
-      body: isTokenClientCredentials
-        ? {
-            ...commonPayload,
-            tokenType: LogtoJwtTokenKeyType.ClientCredentials,
-          }
+    const payload: CustomJwtFetcher = {
+      script,
+      environmentVariables,
+      token: readOnlyToken,
+      ...(isTokenClientCredentials
+        ? { tokenType: LogtoJwtTokenKeyType.ClientCredentials }
         : {
-            ...commonPayload,
             tokenType: LogtoJwtTokenKeyType.AccessToken,
             // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
+            // `context` parameter is only eligible for user's access token for now.
             // eslint-disable-next-line no-restricted-syntax
             context: { user: logtoUserInfo as Record<string, Json> },
-          },
-      search: {},
-    });
+          }),
+    };
+
+    if (EnvSet.values.isCloud) {
+      const client = await cloudConnection.getClient();
+      return await client.post(`/api/services/custom-jwt`, {
+        body: payload,
+        search: {},
+      });
+    }
+    return await JwtCustomizerLibrary.runScriptInLocalVm(payload);
   } catch (error: unknown) {
     const entry = new LogEntry(
       `${jwtCustomizerLog.prefix}.${
