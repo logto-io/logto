@@ -8,6 +8,22 @@ const webhooks = {
     post_sign_in: '로그인',
     post_reset_password: '비밀번호 재설정',
   },
+  schemas: {
+    /** UNTRANSLATED */
+    interaction: 'User interaction',
+    /** UNTRANSLATED */
+    user: 'User',
+    /** UNTRANSLATED */
+    organization: 'Organization',
+    /** UNTRANSLATED */
+    role: 'Role',
+    /** UNTRANSLATED */
+    scope: 'Permission',
+    /** UNTRANSLATED */
+    organization_role: 'Organization role',
+    /** UNTRANSLATED */
+    organization_scope: 'Organization permission',
+  },
   table: {
     name: '이름',
     events: '이벤트',

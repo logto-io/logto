@@ -9,6 +9,22 @@ const webhooks = {
     post_sign_in: 'Iniciar sesión',
     post_reset_password: 'Restablecer contraseña',
   },
+  schemas: {
+    /** UNTRANSLATED */
+    interaction: 'User interaction',
+    /** UNTRANSLATED */
+    user: 'User',
+    /** UNTRANSLATED */
+    organization: 'Organization',
+    /** UNTRANSLATED */
+    role: 'Role',
+    /** UNTRANSLATED */
+    scope: 'Permission',
+    /** UNTRANSLATED */
+    organization_role: 'Organization role',
+    /** UNTRANSLATED */
+    organization_scope: 'Organization permission',
+  },
   table: {
     name: 'Nombre',
     events: 'Eventos',

@@ -8,6 +8,15 @@ const webhooks = {
     post_sign_in: 'Sign in',
     post_reset_password: 'Reset password',
   },
+  schemas: {
+    interaction: 'User interaction',
+    user: 'User',
+    organization: 'Organization',
+    role: 'Role',
+    scope: 'Permission',
+    organization_role: 'Organization role',
+    organization_scope: 'Organization permission',
+  },
   table: {
     name: 'Name',
     events: 'Events',
