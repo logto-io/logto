@@ -23,9 +23,19 @@ export type DataHookEventPayload = {
   hookId: string;
   ip?: string;
   userAgent?: string;
-  body?: Record<string, unknown>;
+  /** An object that contains response data. */
+  response?: {
+    body?: Record<string, unknown>;
+  };
+  /** Request route params. */
+  params?: Record<string, string>;
+  /** Request route path. */
   path?: string;
+  /** Matched route used as the identifier to trigger the hook. */
+  matchedRoute?: string;
+  /** Response status code. */
   status?: number;
+  /** Request method. */
   method?: string;
 } & Record<string, unknown>;
 

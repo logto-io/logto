@@ -49,13 +49,24 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
     await next();
 
     // Auto append pre-registered management API hooks if any
-    const { path, method, body, status, _matchedRoute } = ctx;
-    const hookRegistrationKey = buildManagementApiDataHookRegistrationKey(method, _matchedRoute);
+    const {
+      path,
+      method,
+      status,
+      _matchedRoute: matchedRoute,
+      params,
+      response: { body },
+    } = ctx;
 
-    // TODO: @simeng-li do we need to insert the request body to the hook context?
+    const hookRegistrationKey = buildManagementApiDataHookRegistrationKey(method, matchedRoute);
+
     if (hasRegisteredDataHookEvent(hookRegistrationKey)) {
       const event = managementApiHooksRegistration[hookRegistrationKey];
-      dataHooks.appendContext({ event, data: { path, method, body, status } });
+
+      dataHooks.appendContext({
+        event,
+        data: { path, method, response: { body }, status, params, matchedRoute },
+      });
     }
 
     if (dataHooks.contextArray.length > 0) {
