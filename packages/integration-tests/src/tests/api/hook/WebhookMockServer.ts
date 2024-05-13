@@ -1,4 +1,8 @@
+import { createHmac } from 'node:crypto';
 import { createServer, type RequestListener, type Server } from 'node:http';
+
+import { hookEventGuard } from '@logto/schemas';
+import { z } from 'zod';
 
 /**
  * A mock server that listens for incoming requests and responds with the request body.
@@ -28,11 +32,14 @@ class WebhookMockServer {
       request.on('end', () => {
         response.writeHead(200, { 'Content-Type': 'application/json' });
 
-        const payload: unknown = JSON.parse(Buffer.concat(data).toString());
+        // Keep the raw payload for signature verification
+        const rawPayload = Buffer.concat(data).toString();
+        const payload: unknown = JSON.parse(rawPayload);
 
         const body = JSON.stringify({
           signature: request.headers['logto-signature-sha-256'],
           payload,
+          rawPayload,
         });
 
         requestCallback?.(body);
@@ -61,4 +68,24 @@ class WebhookMockServer {
   }
 }
 
+export const mockHookResponseGuard = z.object({
+  body: z.object({
+    signature: z.string(),
+    payload: z
+      .object({
+        event: hookEventGuard,
+        createdAt: z.string(),
+        hookId: z.string(),
+      })
+      .catchall(z.any()),
+    // Use the raw payload for signature verification
+    rawPayload: z.string(),
+  }),
+});
+
 export default WebhookMockServer;
+
+export const verifySignature = (payload: string, secret: string, signature: string) => {
+  const calculatedSignature = createHmac('sha256', secret).update(payload).digest('hex');
+  return calculatedSignature === signature;
+};

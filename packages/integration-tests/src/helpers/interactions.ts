@@ -1,20 +1,20 @@
 import type {
-  UsernamePasswordPayload,
   EmailPasswordPayload,
   PhonePasswordPayload,
+  UsernamePasswordPayload,
 } from '@logto/schemas';
 import { InteractionEvent } from '@logto/schemas';
 
 import {
-  putInteraction,
   createSocialAuthorizationUri,
   patchInteractionIdentifiers,
+  putInteraction,
   putInteractionProfile,
   sendVerificationCode,
 } from '#src/api/index.js';
 import { generateUserId } from '#src/utils.js';
 
-import { initClient, processSession, logoutClient } from './client.js';
+import { initClient, logoutClient, processSession } from './client.js';
 import { expectRejects, readConnectorMessage } from './index.js';
 import { enableAllPasswordSignInMethods } from './sign-in-experience.js';
 import { generateNewUser } from './user.js';
@@ -88,6 +88,43 @@ export const createNewSocialUserWithUsernameAndPassword = async (connectorId: st
   const { redirectTo } = await client.submitInteraction();
 
   return processSession(client, redirectTo);
+};
+
+export const signInWithUsernamePasswordAndUpdateEmailOrPhone = async (
+  username: string,
+  password: string,
+  profile: { email: string } | { phone: string }
+) => {
+  const client = await initClient();
+
+  await client.successSend(putInteraction, {
+    event: InteractionEvent.SignIn,
+    identifier: {
+      username,
+      password,
+    },
+  });
+
+  await expectRejects(client.submitInteraction(), {
+    code: 'user.missing_profile',
+    status: 422,
+  });
+
+  await client.successSend(sendVerificationCode, profile);
+
+  const { code } = await readConnectorMessage('email' in profile ? 'Email' : 'Sms');
+
+  await client.successSend(patchInteractionIdentifiers, {
+    ...profile,
+    verificationCode: code,
+  });
+
+  await client.successSend(putInteractionProfile, profile);
+
+  const { redirectTo } = await client.submitInteraction();
+
+  await processSession(client, redirectTo);
+  await logoutClient(client);
 };
 
 export const resetPassword = async (

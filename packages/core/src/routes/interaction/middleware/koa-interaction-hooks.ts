@@ -71,13 +71,13 @@ export default function koaInteractionHooks<
     });
 
     // Assign user and event data to the data hook context
-    const assignDataHookContext: AssignDataHookContext = ({ event, user, data }) => {
+    const assignDataHookContext: AssignDataHookContext = ({ event, user, data: extraData }) => {
       dataHookContext.appendContext({
         event,
         data: {
           // Only return the selected user fields
-          ...conditional(user && { user: pick(user, ...userInfoSelectFields) }),
-          ...data,
+          ...conditional(user && pick(user, ...userInfoSelectFields)),
+          ...extraData,
         },
       });
     };
