@@ -17,26 +17,25 @@ export type InteractionHookEventPayload = {
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
 } & Record<string, unknown>;
 
-/**
- * The payload of a data hook event.
- */
 export type DataHookEventPayload = {
   event: DataHookEvent;
   createdAt: string;
   hookId: string;
   ip?: string;
   userAgent?: string;
-  /** Response body */
-  response?: { body?: Record<string, unknown> };
-  /** Route params */
+  /** An object that contains response data. */
+  response?: {
+    body?: Record<string, unknown>;
+  };
+  /** Request route params. */
   params?: Record<string, string>;
-  /** Route path */
+  /** Request route path. */
   path?: string;
-  /** Matched route used as the identifier to trigger the hook */
+  /** Matched route used as the identifier to trigger the hook. */
   matchedRoute?: string;
-  /** Response status code */
+  /** Response status code. */
   status?: number;
-  /** Request method */
+  /** Request method. */
   method?: string;
 } & Record<string, unknown>;
 
