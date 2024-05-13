@@ -52,6 +52,10 @@ if (taggedPackages.length === 0) {
 
 try {
   execSync('pnpm prepack');
+  /**
+   * Build connectors before publish since some connectors rely on the generated types from oauth2 connector package.
+   */
+  execSync('pnpm connectors build');
   execSync('pnpm -r publish');
   execSync('git push --follow-tags');
 } catch (error) {
