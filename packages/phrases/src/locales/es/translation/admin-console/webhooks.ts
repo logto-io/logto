@@ -4,11 +4,6 @@ const webhooks = {
   subtitle:
     'Crea webhooks para recibir de manera fácil actualizaciones en tiempo real sobre eventos específicos.',
   create: 'Crear Webhook',
-  events: {
-    post_register: 'Crear nueva cuenta',
-    post_sign_in: 'Iniciar sesión',
-    post_reset_password: 'Restablecer contraseña',
-  },
   schemas: {
     /** UNTRANSLATED */
     interaction: 'User interaction',

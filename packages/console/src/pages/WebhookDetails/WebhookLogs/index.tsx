@@ -1,4 +1,4 @@
-import { type Log, InteractionHookEvent } from '@logto/schemas';
+import { hookEvents, type Log } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
@@ -8,8 +8,6 @@ import { z } from 'zod';
 import EventSelector from '@/components/AuditLogTable/components/EventSelector';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import { defaultPageSize } from '@/consts';
-import { hookEventLabel, hookEventLogKey } from '@/consts/webhooks';
-import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
@@ -18,13 +16,13 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl } from '@/utils/url';
 
 import { type WebhookDetailsOutletContext } from '../types';
+import { buildHookEventLogKey, getHookEventKey } from '../utils';
 
 import * as styles from './index.module.scss';
 
-// TODO: Implement all hook events
-const hookLogEventOptions = Object.values(InteractionHookEvent).map((event) => ({
-  title: <DynamicT forKey={hookEventLabel[event]} />,
-  value: hookEventLogKey[event],
+const hookLogEventOptions = hookEvents.map((event) => ({
+  title: event,
+  value: buildHookEventLogKey(event),
 }));
 
 function WebhookLogs() {
@@ -96,13 +94,7 @@ function WebhookLogs() {
           title: t('logs.event'),
           dataIndex: 'event',
           colSpan: 6,
-          render: ({ key }) => {
-            // TODO: Implement all hook events
-            const event = Object.values(InteractionHookEvent).find(
-              (event) => hookEventLogKey[event] === key
-            );
-            return conditional(event && t(hookEventLabel[event])) ?? '-';
-          },
+          render: ({ key }) => getHookEventKey(key),
         },
         {
           title: t('logs.time'),

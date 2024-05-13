@@ -1,4 +1,4 @@
-import { type Hook } from '@logto/schemas';
+import { hookEvents, type Hook, type HookEvent, type WebhookLogKey } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import { type WebhookDetailsFormType } from './types';
@@ -46,4 +46,21 @@ export const webhookDetailsParser = {
       },
     };
   },
+};
+
+export const buildHookEventLogKey = (event: HookEvent): WebhookLogKey => `TriggerHook.${event}`;
+
+export const isWebhookEventLogKey = (logKey: string): logKey is WebhookLogKey => {
+  const [prefix, ...events] = logKey.split('.');
+
+  // eslint-disable-next-line no-restricted-syntax
+  return prefix === 'TriggerHook' && hookEvents.includes(events.join('.') as HookEvent);
+};
+
+export const getHookEventKey = (logKey: string) => {
+  if (!isWebhookEventLogKey(logKey)) {
+    return ' - ';
+  }
+
+  return logKey.replace('TriggerHook.', '');
 };
