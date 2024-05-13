@@ -3524,8 +3524,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
       '@simplewebauthn/types':
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^10.0.0
+        version: 10.0.0
       '@swc/core':
         specifier: ^1.3.52
         version: 1.3.52(@swc/helpers@0.5.1)
