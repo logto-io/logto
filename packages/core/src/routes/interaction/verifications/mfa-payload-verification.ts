@@ -106,7 +106,7 @@ const verifyBindWebAuthn = async (
 
   return {
     type,
-    credentialId: isoBase64URL.fromBuffer(credentialID),
+    credentialId: credentialID,
     publicKey: isoBase64URL.fromBuffer(credentialPublicKey),
     counter,
     agent: userAgent,
