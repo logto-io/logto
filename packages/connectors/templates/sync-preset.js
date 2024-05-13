@@ -17,8 +17,10 @@ const templateKeys = Object.keys(templateJson);
 
 /**
  * An object that contains exceptions for scripts that are allowed to be different from the template.
+ * Value format: `{ "<connector-name>": ["<script-name>"] }`
+ * Example: `{ "connector-oauth2": ["prepack"] }`
  */
-const scriptExceptions = {};
+const scriptExceptions = { 'connector-oauth2': ['prepack'] };
 
 const sync = async () => {
   const packagesDirectory = './';
