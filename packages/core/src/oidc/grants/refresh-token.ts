@@ -35,7 +35,7 @@ import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
 import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -140,15 +140,11 @@ export const buildHandler: (
   // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
   // to `Boolean` first.
   const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
-  if (organizationId) {
-    // Validate if the refresh token has the required scope from RFC 0001.
-    if (!refreshToken.scopes.has(UserScope.Organizations)) {
-      throw new InsufficientScope('refresh token missing required scope', UserScope.Organizations);
-    }
-    // Does not allow requesting resource token when requesting organization token (yet).
-    if (!EnvSet.values.isDevFeaturesEnabled && params.resource) {
-      throw new InvalidRequest('resource is not allowed when requesting organization token');
-    }
+  if (
+    organizationId && // Validate if the refresh token has the required scope from RFC 0001.
+    !refreshToken.scopes.has(UserScope.Organizations)
+  ) {
+    throw new InsufficientScope('refresh token missing required scope', UserScope.Organizations);
   }
   /* === End RFC 0001 === */
 
