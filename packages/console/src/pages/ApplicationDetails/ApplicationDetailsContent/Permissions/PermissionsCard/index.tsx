@@ -47,10 +47,6 @@ function PermissionsCard({ applicationId, scopeLevel }: Props) {
   const rowGroups = useMemo(() => {
     const { userLevelRowGroups, organizationLevelGroups } = parseRowGroup(data);
 
-    if (scopeLevel === ScopeLevel.All) {
-      return [...userLevelRowGroups, ...organizationLevelGroups];
-    }
-
     return scopeLevel === ScopeLevel.User ? userLevelRowGroups : organizationLevelGroups;
   }, [data, parseRowGroup, scopeLevel]);
 
@@ -58,20 +54,6 @@ function PermissionsCard({ applicationId, scopeLevel }: Props) {
     formCard: Omit<FormCardProps, 'children'>;
     tableName: AdminConsoleKey;
   }>(() => {
-    if (scopeLevel === ScopeLevel.All) {
-      return {
-        formCard: {
-          title: 'application_details.permissions.name',
-          description: 'application_details.permissions.description',
-          learnMoreLink: {
-            href: getDocumentationUrl(logtoThirdPartyAppPermissionsLink),
-            targetBlank: 'noopener',
-          },
-        },
-        tableName: 'application_details.permissions.table_name',
-      };
-    }
-
     const scopeLevelPhrase = scopeLevel === ScopeLevel.User ? 'user' : 'organization';
 
     return {

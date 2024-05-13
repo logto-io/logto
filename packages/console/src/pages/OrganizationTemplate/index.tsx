@@ -23,7 +23,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
 
-import Introduction from '../Organizations/Guide/Introduction';
+import Introduction from '../Organizations/Introduction';
 
 import * as styles from './index.module.scss';
 
@@ -70,7 +70,7 @@ function OrganizationTemplate() {
             setIsGuideDrawerOpen(false);
           }}
         >
-          <Introduction isReadonly />
+          <Introduction />
         </Drawer>
       </div>
       {isOrganizationsDisabled && (

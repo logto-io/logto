@@ -4,7 +4,6 @@ import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ExpandableIcon from '@/assets/icons/expandable-icon.svg';
-import { isDevFeaturesEnabled } from '@/constants/env';
 
 import ScopeGroup from '../ScopeGroup';
 
@@ -35,22 +34,11 @@ const OrganizationSelector = ({
     return null;
   }
 
-  // Todo @xiaoyijun remove dev flag
-  const { missingResourceScopes: resourceScopes } = isDevFeaturesEnabled
-    ? selectedOrganization
-    : {
-        missingResourceScopes: [],
-      };
+  const { missingResourceScopes: resourceScopes } = selectedOrganization;
 
   return (
     <div className={className}>
-      <div className={styles.title}>
-        {t(
-          `description.${
-            isDevFeaturesEnabled ? 'authorize_organization_access' : 'grant_organization_access'
-          }`
-        )}
-      </div>
+      <div className={styles.title}>{t(`description.authorize_organization_access`)}</div>
       {resourceScopes && resourceScopes.length > 0 && (
         <div className={styles.scopeListWrapper}>
           {resourceScopes
@@ -80,10 +68,7 @@ const OrganizationSelector = ({
         ref={parentElementRef}
         className={classNames(
           styles.cardWrapper,
-          isDevFeaturesEnabled && // Todo @xiaoyijun remove dev feature flag
-            resourceScopes &&
-            resourceScopes.length > 0 &&
-            styles.withoutTopRadius
+          Boolean(resourceScopes?.length) && styles.withoutTopRadius
         )}
         data-active={showDropdown}
       >

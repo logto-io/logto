@@ -4,12 +4,10 @@ import {
   type ApplicationUserConsentScopesResponse,
   ApplicationUserConsentScopeType,
 } from '@logto/schemas';
-import { condArray } from '@silverhand/essentials';
 import { useCallback, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import IconButton from '@/ds-components/IconButton';
 import { ToggleTip } from '@/ds-components/Tip';
 import useApi from '@/hooks/use-api';
@@ -143,14 +141,7 @@ const useScopesTable = () => {
         organizationLevelGroups: [
           // Hide the organization scopes group if there is no organization scopes
           ...(organizationScopesGroup.data.length > 0 ? [organizationScopesGroup] : []),
-          ...condArray(
-            /**
-             * Hide the organization resource scopes group if the organization resource scopes feature is not ready
-             */
-            isDevFeaturesEnabled &&
-              organizationResourceScopesGroup.length > 0 &&
-              organizationResourceScopesGroup
-          ),
+          ...(organizationResourceScopesGroup.length > 0 ? organizationResourceScopesGroup : []),
         ],
       };
     },

@@ -19,7 +19,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import Introduction from '../Organizations/Guide/Introduction';
+import Introduction from '../Organizations/Introduction';
 
 import * as styles from './index.module.scss';
 import { OrganizationDetailsTabs, type OrganizationDetailsOutletContext } from './types';
@@ -91,7 +91,7 @@ function OrganizationDetails() {
               setIsGuideDrawerOpen(false);
             }}
           >
-            <Introduction isReadonly />
+            <Introduction />
           </Drawer>
           <DeleteConfirmModal
             isOpen={isDeleteFormOpen}
