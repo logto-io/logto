@@ -6,7 +6,6 @@ import { createMockUtils } from '@logto/shared/esm';
 import RequestError from '#src/errors/RequestError/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 
-import { DataHookContextManager } from './context-manager.js';
 import { generateHookTestPayload, parseResponse } from './utils.js';
 
 const { jest } = import.meta;
@@ -60,6 +59,7 @@ const mockHookState = { requestCount: 100, successCount: 10 };
 const getHookExecutionStatsByHookId = jest.fn().mockResolvedValue(mockHookState);
 const findAllHooks = jest.fn().mockResolvedValue([hook, dataHook]);
 const findHookById = jest.fn().mockResolvedValue(hook);
+const findApplicationById = jest.fn().mockResolvedValue({ id: 'app_id', extraField: 'not_ok' });
 
 const { createHookLibrary } = await import('./index.js');
 const { triggerInteractionHooks, triggerTestHook, triggerDataHooks } = createHookLibrary(
@@ -72,11 +72,15 @@ const { triggerInteractionHooks, triggerTestHook, triggerDataHooks } = createHoo
       }),
     },
     applications: {
-      findApplicationById: jest.fn().mockResolvedValue({ id: 'app_id', extraField: 'not_ok' }),
+      findApplicationById,
     },
     logs: { insertLog, getHookExecutionStatsByHookId },
     hooks: { findAllHooks, findHookById },
   })
+);
+
+const { DataHookContextManager, InteractionHookContextManager } = await import(
+  './context-manager.js'
 );
 
 describe('triggerInteractionHooks()', () => {
@@ -87,20 +91,27 @@ describe('triggerInteractionHooks()', () => {
   it('should set correct payload when hook triggered', async () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
-    await triggerInteractionHooks(
-      new ConsoleLog(),
-      { event: InteractionEvent.SignIn, sessionId: 'some_jti', applicationId: 'some_client' },
-      { userId: '123' }
-    );
+    const interactionHookContext = new InteractionHookContextManager({
+      interactionEvent: InteractionEvent.SignIn,
+      applicationId: 'some_client',
+      sessionId: 'some_jti',
+    });
+
+    interactionHookContext.assignInteractionHookResult({
+      userId: '123',
+    });
+
+    await triggerInteractionHooks(new ConsoleLog(), interactionHookContext);
 
     expect(findAllHooks).toHaveBeenCalled();
+    expect(findApplicationById).toHaveBeenCalledWith('some_client');
     expect(sendWebhookRequest).toHaveBeenCalledWith({
       hookConfig: hook.config,
       payload: {
         hookId: 'foo',
         event: 'PostSignIn',
         interactionEvent: 'SignIn',
-        sessionId: 'some_jti',
+        sessionId: interactionHookContext.metadata.sessionId,
         userId: '123',
         user: { id: 'user_id', username: 'user' },
         application: { id: 'app_id' },
@@ -180,22 +191,22 @@ describe('triggerDataHooks()', () => {
     jest.clearAllMocks();
   });
 
-  it('should set correct payload when hook triggered', async () => {
+  it('should set correct payload when hook triggered by management API', async () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
     const metadata = { userAgent: 'ua', ip: 'ip' };
-    const hookData = { path: '/test', method: 'POST', body: { success: true } };
+    const hookData = { path: '/test', method: 'POST', data: { success: true } };
 
     const hooksManager = new DataHookContextManager(metadata);
     hooksManager.appendContext({
       event: 'Role.Created',
-      data: hookData,
+      ...hookData,
     });
 
     await triggerDataHooks(new ConsoleLog(), hooksManager);
 
     expect(findAllHooks).toHaveBeenCalled();
-
+    expect(findApplicationById).not.toHaveBeenCalled();
     expect(sendWebhookRequest).toHaveBeenCalledWith({
       hookConfig: dataHook.config,
       payload: {
@@ -231,5 +242,41 @@ describe('triggerDataHooks()', () => {
     });
 
     jest.useRealTimers();
+  });
+
+  it('should set correct payload when hook triggered by interaction API', async () => {
+    jest.useFakeTimers().setSystemTime(100_000);
+
+    const metadata = {
+      userAgent: 'ua',
+      ip: 'ip',
+      interactionEvent: InteractionEvent.Register,
+      applicationId: 'some_client',
+      sessionId: 'some_jti',
+    };
+
+    const hooksManager = new DataHookContextManager(metadata);
+
+    hooksManager.appendContext({
+      event: 'Role.Created',
+      data: { id: 'user_id', username: 'user' },
+    });
+
+    await triggerDataHooks(new ConsoleLog(), hooksManager);
+
+    expect(findAllHooks).toHaveBeenCalled();
+    expect(findApplicationById).toHaveBeenCalledWith('some_client');
+    expect(sendWebhookRequest).toHaveBeenCalledWith({
+      hookConfig: dataHook.config,
+      payload: {
+        hookId: 'foo',
+        event: 'Role.Created',
+        createdAt: new Date(100_000).toISOString(),
+        data: { id: 'user_id', username: 'user' },
+        ...metadata,
+        application: { id: 'app_id' },
+      },
+      signingKey: dataHook.signingKey,
+    });
   });
 });

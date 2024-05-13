@@ -1,13 +1,10 @@
 import {
   LogResult,
   userInfoSelectFields,
-  type DataHookEventPayload,
   type Hook,
   type HookConfig,
   type HookEvent,
-  type HookEventPayload,
   type HookTestErrorResponseData,
-  type InteractionHookEventPayload,
 } from '@logto/schemas';
 import { generateStandardId, normalizeError, type ConsoleLog } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
@@ -18,12 +15,15 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 
-import { type DataHookContextManager } from './context-manager.js';
 import {
-  interactionEventToHookEvent,
-  type InteractionHookContext,
-  type InteractionHookResult,
-} from './types.js';
+  type DataHookContextManager,
+  type InteractionHookContextManager,
+} from './context-manager.js';
+import type {
+  DataHookEventPayload,
+  HookEventPayload,
+  InteractionHookEventPayload,
+} from './type.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
 type BetterOmit<T, Ignore> = {
@@ -103,15 +103,19 @@ export const createHookLibrary = (queries: Queries) => {
    */
   const triggerInteractionHooks = async (
     consoleLog: ConsoleLog,
-    interactionContext: InteractionHookContext,
-    interactionResult: InteractionHookResult,
-    userAgent?: string
+    contextManager: InteractionHookContextManager
   ) => {
-    const { userId } = interactionResult;
-    const { event, sessionId, applicationId, userIp } = interactionContext;
+    if (!contextManager.interactionHookResult) {
+      return;
+    }
 
-    const hookEvent = interactionEventToHookEvent[event];
+    const { interactionEvent, sessionId, applicationId, userIp, userAgent } =
+      contextManager.metadata;
+    const { userId } = contextManager.interactionHookResult;
+    const { hookEvent } = contextManager;
+
     const found = await findAllHooks();
+
     const hooks = found.filter(
       ({ event, events, enabled }) =>
         enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
@@ -128,7 +132,7 @@ export const createHookLibrary = (queries: Queries) => {
 
     const payload = {
       event: hookEvent,
-      interactionEvent: event,
+      interactionEvent,
       createdAt: new Date().toISOString(),
       sessionId,
       userAgent,
@@ -157,8 +161,14 @@ export const createHookLibrary = (queries: Queries) => {
 
     const found = await findAllHooks();
 
+    // Fetch application detail if available
+    const { applicationId } = contextManager.metadata;
+    const application = applicationId
+      ? await trySafe(async () => findApplicationById(applicationId))
+      : undefined;
+
     // Filter hooks that match each events
-    const webhooks = contextManager.contextArray.flatMap(({ event, data }) => {
+    const webhooks = contextManager.contextArray.flatMap(({ event, ...rest }) => {
       const hooks = found.filter(
         ({ event: hookEvent, events, enabled }) =>
           enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
@@ -168,7 +178,10 @@ export const createHookLibrary = (queries: Queries) => {
         event,
         createdAt: new Date().toISOString(),
         ...contextManager.metadata,
-        ...data,
+        ...conditional(
+          application && { application: pick(application, 'id', 'type', 'name', 'description') }
+        ),
+        ...rest,
       } satisfies BetterOmit<DataHookEventPayload, 'hookId'>;
 
       return hooks.map((hook) => ({ hook, payload }));

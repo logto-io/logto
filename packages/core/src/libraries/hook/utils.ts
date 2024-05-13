@@ -3,13 +3,14 @@ import {
   managementApiHooksRegistration,
   type HookConfig,
   type HookEvent,
-  type HookEventPayload,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type IRouterParamContext } from 'koa-router';
 import ky, { type KyResponse } from 'ky';
 
 import { sign } from '#src/utils/sign.js';
+
+import { type HookEventPayload } from './type.js';
 
 export const parseResponse = async (response: KyResponse) => {
   const body = await response.text();

@@ -36,7 +36,7 @@ const mockHookResponseGuard = z.object({
     event: hookEventGuard,
     createdAt: z.string(),
     hookId: z.string(),
-    body: jsonGuard.optional(),
+    data: jsonGuard.optional(),
     method: z
       .string()
       .optional()
