@@ -33,7 +33,8 @@
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "vitest src",
     "test:ci": "pnpm run test --silent --coverage",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "prepack": "pnpm build"
   },
   "engines": {
     "node": "^20.9.0"

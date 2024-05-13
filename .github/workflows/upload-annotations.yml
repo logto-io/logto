@@ -29,10 +29,6 @@ jobs:
       - name: Prepack
         run: pnpm prepack
 
-      # Build connectors before running lint since some connectors rely on the generated types
-      - name: Build connectors
-        run: pnpm connectors build
-
       - name: Lint with Report
         run: pnpm -r --parallel lint:report && node .scripts/merge-eslint-reports.js
 
