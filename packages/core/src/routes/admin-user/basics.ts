@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import {
   UsersPasswordEncryptionMethod,
@@ -21,7 +22,6 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 ) {
   const [router, { queries, libraries }] = args;
   const {
-    oidcModelInstances: { revokeInstanceByUserId },
     users: {
       deleteUserById,
       findUserById,
@@ -33,7 +33,13 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     userSsoIdentities,
   } = queries;
   const {
-    users: { checkIdentifierCollision, generateUserId, insertUser, verifyUserPassword },
+    users: {
+      checkIdentifierCollision,
+      generateUserId,
+      insertUser,
+      verifyUserPassword,
+      signOutUser,
+    },
   } = libraries;
 
   router.get(
@@ -343,12 +349,11 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       });
 
       if (isSuspended) {
-        await revokeInstanceByUserId('refreshToken', user.id);
+        await signOutUser(user.id);
       }
 
       ctx.body = pick(user, ...userInfoSelectFields);
 
-      // eslint-disable-next-line max-lines
       return next();
     }
   );
@@ -368,6 +373,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         throw new RequestError('user.cannot_delete_self');
       }
 
+      await signOutUser(userId);
       await deleteUserById(userId);
 
       ctx.status = 204;
@@ -376,3 +382,4 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     }
   );
 }
+/* eslint-enable max-lines */

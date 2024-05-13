@@ -89,6 +89,7 @@ export const createUserLibrary = (queries: Queries) => {
     rolesScopes: { findRolesScopesByRoleIds },
     scopes: { findScopesByIdsAndResourceIndicator },
     organizations,
+    oidcModelInstances: { revokeInstanceByUserId },
   } = queries;
 
   const generateUserId = async (retries = 500) =>
@@ -270,6 +271,14 @@ export const createUserLibrary = (queries: Queries) => {
     return user;
   };
 
+  const signOutUser = async (userId: string) => {
+    await Promise.all([
+      revokeInstanceByUserId('AccessToken', userId),
+      revokeInstanceByUserId('RefreshToken', userId),
+      revokeInstanceByUserId('Session', userId),
+    ]);
+  };
+
   return {
     generateUserId,
     insertUser,
@@ -279,5 +288,6 @@ export const createUserLibrary = (queries: Queries) => {
     findUserRoles,
     addUserMfaVerification,
     verifyUserPassword,
+    signOutUser,
   };
 };
