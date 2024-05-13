@@ -48,15 +48,15 @@ export type InteractionHookEventPayload = {
  * Can't put it in the DataHookMetadata because the matched API context is only available after the request is processed.
  */
 export type ManagementApiContext = {
-  /** Route params */
+  /** Request route params. */
   params?: Record<string, string>;
-  /** Route path */
+  /** Request route path. */
   path: string;
-  /** Matched route used as the identifier to trigger the hook */
+  /** Matched route used as the identifier to trigger the hook. */
   matchedRoute?: string;
-  /** Request method */
+  /** Request method. */
   method: string;
-  /** Response status code */
+  /** Response status code. */
   status: number;
 };
 
