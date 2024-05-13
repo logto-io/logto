@@ -37,7 +37,7 @@ export const generateWebAuthnRegistrationOptions = async ({
   const options: GenerateRegistrationOptionsOpts = {
     rpName: rpId,
     rpID: rpId,
-    userID: id,
+    userID: Uint8Array.from(Buffer.from(id)),
     userName: getUserDisplayName({ username, primaryEmail, primaryPhone }) ?? 'Unnamed User',
     timeout: 60_000,
     attestationType: 'none',
@@ -47,7 +47,7 @@ export const generateWebAuthnRegistrationOptions = async ({
           verification.type === MfaFactor.WebAuthn
       )
       .map(({ credentialId, transports }) => ({
-        id: Uint8Array.from(Buffer.from(credentialId, 'base64')),
+        id: credentialId,
         type: 'public-key',
         transports,
       })),
@@ -99,7 +99,7 @@ export const generateWebAuthnAuthenticationOptions = async ({
   const options: GenerateAuthenticationOptionsOpts = {
     timeout: 60_000,
     allowCredentials: webAuthnVerifications.map(({ credentialId, transports }) => ({
-      id: isoBase64URL.toBuffer(credentialId),
+      id: credentialId,
       type: 'public-key',
       transports,
     })),
@@ -151,7 +151,7 @@ export const verifyWebAuthnAuthentication = async ({
     expectedRPID: rpId,
     authenticator: {
       credentialPublicKey: isoBase64URL.toBuffer(publicKey),
-      credentialID: isoBase64URL.toBuffer(credentialId),
+      credentialID: credentialId,
       counter,
       transports,
     },
