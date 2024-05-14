@@ -8,6 +8,7 @@ import { createApplication, deleteApplication } from '#src/api/application.js';
 import { consent, getConsentInfo, putInteraction } from '#src/api/interaction.js';
 import { OrganizationScopeApi } from '#src/api/organization-scope.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
+import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
 import { createScope } from '#src/api/scope.js';
 import { initClient } from '#src/helpers/client.js';
 import { OrganizationApiTest, OrganizationRoleApiTest } from '#src/helpers/organization.js';
@@ -24,6 +25,7 @@ import {
 describe('consent api', () => {
   const applications = new Map<string, Application>();
   const thirdPartyApplicationName = 'consent-third-party-app';
+  const firstPartyApplicationName = 'consent-first-party-app';
   const redirectUri = 'http://example.com';
 
   const bootStrapApplication = async () => {
@@ -39,7 +41,20 @@ describe('consent api', () => {
       }
     );
 
+    const firstPartyApplication = await createApplication(
+      firstPartyApplicationName,
+      ApplicationType.Traditional,
+      {
+        isThirdParty: false,
+        oidcClientMetadata: {
+          redirectUris: [redirectUri],
+          postLogoutRedirectUris: [],
+        },
+      }
+    );
+
     applications.set(thirdPartyApplicationName, thirdPartyApplication);
+    applications.set(firstPartyApplicationName, firstPartyApplication);
 
     await assignUserConsentScopes(thirdPartyApplication.id, {
       userScopes: [UserScope.Profile],
@@ -253,6 +268,44 @@ describe('consent api', () => {
   });
 
   describe('submit consent info', () => {
+    it('should not affect first party app', async () => {
+      const application = applications.get(firstPartyApplicationName);
+      assert(application, new Error('application.not_found'));
+
+      const { userProfile, user } = await generateNewUser({ username: true, password: true });
+      const resource = await createResource(generateResourceName(), generateResourceIndicator());
+      const scope = await createScope(resource.id, generateScopeName());
+      const role = await createRole({ name: generateRoleName(), scopeIds: [scope.id] });
+      await assignUsersToRole([user.id], role.id);
+
+      const client = await initClient(
+        {
+          appId: application.id,
+          appSecret: application.secret,
+          // First party app should block the scope, even though it is not assigned to the app
+          scopes: [UserScope.Profile, scope.name],
+          resources: [resource.indicator],
+        },
+        redirectUri
+      );
+
+      await client.successSend(putInteraction, {
+        event: InteractionEvent.SignIn,
+        identifier: {
+          username: userProfile.username,
+          password: userProfile.password,
+        },
+      });
+
+      const { redirectTo } = await client.submitInteraction();
+
+      await client.processSession(redirectTo);
+
+      await deleteResource(resource.id);
+      await deleteUser(user.id);
+      await deleteRole(role.id);
+    });
+
     it('should perform manual consent successfully', async () => {
       const application = applications.get(thirdPartyApplicationName);
       assert(application, new Error('application.not_found'));
