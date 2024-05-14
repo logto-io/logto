@@ -7,7 +7,6 @@ import {
   hookEventsGuard,
   hookResponseGuard,
   interactionHookEventGuard,
-  interactionHookEventsGuard,
   type Hook,
   type HookResponse,
 } from '@logto/schemas';
@@ -28,7 +27,9 @@ import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 const { isDevFeaturesEnabled } = EnvSet.values;
 // TODO: remove dev features guard
-const webhookEventsGuard = isDevFeaturesEnabled ? hookEventsGuard : interactionHookEventsGuard;
+const webhookEventsGuard = isDevFeaturesEnabled
+  ? hookEventsGuard
+  : interactionHookEventGuard.array();
 const nonemptyUniqueHookEventsGuard = webhookEventsGuard
   .nonempty()
   .transform((events) => deduplicate(events));
