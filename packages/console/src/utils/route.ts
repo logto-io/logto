@@ -18,7 +18,11 @@ export const getRoutePattern = (pathname: string, routes: RouteObject[]) => {
           }
 
           // If the path is not a parameter, or it's an ID parameter, use the path as is.
-          if (!segment.startsWith(':') || segment.endsWith('Id') || segment.endsWith('id')) {
+          // Exception: For `:guideId`, we want to use the parameter value for better analytics.
+          if (
+            segment !== ':guideId' &&
+            (!segment.startsWith(':') || segment.endsWith('Id') || segment.endsWith('id'))
+          ) {
             return segment;
           }
 
