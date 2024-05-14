@@ -86,6 +86,7 @@ const getInitialUserRoles = (
     isCreatingFirstAdminUser && !isCloud && defaultManagementApiAdminName // OSS uses the legacy Management API user role
   );
 
+// eslint-disable-next-line complexity -- @simeng refactor me
 async function handleSubmitRegister(
   interaction: VerifiedRegisterInteractionResult,
   ctx: WithLogContext & WithInteractionDetailsContext & WithInteractionHooksContext,
@@ -113,8 +114,15 @@ async function handleSubmitRegister(
   const { isCloud } = EnvSet.values;
   const [currentTenantId] = await getTenantId(ctx.URL);
   const isInAdminTenant = currentTenantId === adminTenantId;
+  /**
+   * Only allow creating the first admin user when it's in OSS or integration tests to avoid
+   * security issues.
+   */
   const isCreatingFirstAdminUser =
-    isInAdminTenant && String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
+    (!EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) &&
+    isInAdminTenant &&
+    String(client_id) === adminConsoleApplicationId &&
+    !(await hasActiveUsers());
 
   // If it's Logto Cloud, Check if the new user has any pending invitations, if yes, skip onboarding flow.
   const invitations =
