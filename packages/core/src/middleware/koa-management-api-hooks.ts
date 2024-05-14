@@ -30,7 +30,7 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
     // TODO: Remove dev feature guard
     const { isDevFeaturesEnabled } = EnvSet.values;
     if (!isDevFeaturesEnabled) {
-      return;
+      return next();
     }
 
     const {
