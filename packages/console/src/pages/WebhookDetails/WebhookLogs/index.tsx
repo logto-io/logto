@@ -8,6 +8,8 @@ import { z } from 'zod';
 import EventSelector from '@/components/AuditLogTable/components/EventSelector';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import { defaultPageSize } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { interactionHookEvents } from '@/consts/webhooks';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
@@ -20,7 +22,10 @@ import { buildHookEventLogKey, getHookEventKey } from '../utils';
 
 import * as styles from './index.module.scss';
 
-const hookLogEventOptions = hookEvents.map((event) => ({
+// TODO: Remove dev feature guard
+const webhookEvents = isDevFeaturesEnabled ? hookEvents : interactionHookEvents;
+
+const hookLogEventOptions = webhookEvents.map((event) => ({
   title: event,
   value: buildHookEventLogKey(event),
 }));
