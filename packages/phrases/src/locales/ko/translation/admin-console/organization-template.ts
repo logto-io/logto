@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: '조직 권한',
     search_placeholder: '권한 이름으로 검색',
     create_org_permission: '조직 권한 생성',
-    permission_column: '권한',
+    permission_column: '조직 권한',
     description_column: '설명',
     placeholder_title: '조직 권한',
     placeholder_description: '조직 권한은 조직의 맥락에서 자원에 접근할 수 있는 권한을 의미합니다.',

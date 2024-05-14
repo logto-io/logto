@@ -21,7 +21,7 @@ const organization_template = {
     tab_name: '組織權限',
     search_placeholder: '按權限名稱搜尋',
     create_org_permission: '創建組織權限',
-    permission_column: '權限',
+    permission_column: '組織權限',
     description_column: '描述',
     placeholder_title: '組織權限',
     placeholder_description: '組織權限指的是在組織上下文中訪問資源的授權。',

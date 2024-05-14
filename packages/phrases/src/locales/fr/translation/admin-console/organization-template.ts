@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: 'Permissions org',
     search_placeholder: 'Rechercher par nom de permission',
     create_org_permission: 'Créer une permission org',
-    permission_column: 'Permission',
+    permission_column: "Permission de l'organisation",
     description_column: 'Description',
     placeholder_title: 'Permission d’organisation',
     placeholder_description:

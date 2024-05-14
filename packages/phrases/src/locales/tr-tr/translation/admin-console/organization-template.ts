@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: 'Org izinleri',
     search_placeholder: 'İzin adı ile ara',
     create_org_permission: 'Org izni oluştur',
-    permission_column: 'İzin',
+    permission_column: 'Разрешение организации',
     description_column: 'Açıklama',
     placeholder_title: 'Organizasyon izni',
     placeholder_description:
