@@ -5,6 +5,7 @@ import { errors } from 'oidc-provider';
 import {
   filterResourceScopesForTheThirdPartyApplication,
   findResourceScopes,
+  isThirdPartyApplication,
 } from '#src/oidc/resource.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -118,19 +119,23 @@ export const filterAndParseMissingResourceScopes = async ({
             organizationId,
           });
 
+          const isThirdPartyApp = await isThirdPartyApplication(queries, applicationId);
+
           // Filter the scopes for the third-party application.
           // Although the "missingResourceScopes" from the prompt details are already filtered,
           // there may be duplicated scopes from either resources or organization resources.
-          const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
-            libraries,
-            applicationId,
-            resourceIndicator,
-            scopes,
-            {
-              includeOrganizationResourceScopes: Boolean(organizationId),
-              includeResourceScopes: !organizationId,
-            }
-          );
+          const filteredScopes = isThirdPartyApp
+            ? await filterResourceScopesForTheThirdPartyApplication(
+                libraries,
+                applicationId,
+                resourceIndicator,
+                scopes,
+                {
+                  includeOrganizationResourceScopes: Boolean(organizationId),
+                  includeResourceScopes: !organizationId,
+                }
+              )
+            : scopes;
 
           return [
             resourceIndicator,
