@@ -1,5 +1,29 @@
 # Change Log
 
+## 1.16.0
+
+### Minor Changes
+
+- 21bb35b12: refactor the definition of hook event types
+
+  - Add `DataHook` event types. `DataHook` are triggered by data changes.
+  - Add "interaction" prefix to existing hook event types. Interaction hook events are triggered by end user interactions, e.g. completing sign-in.
+
+- e8c41b164: support organization custom data
+
+  Now you can save additional data associated with the organization with the organization-level `customData` field by:
+
+  - Edit in the Console organization details page.
+  - Specify `customData` field when using organization Management APIs.
+
+### Patch Changes
+
+- Updated dependencies [5b03030de]
+- Updated dependencies [21bb35b12]
+- Updated dependencies [3486b12e8]
+  - @logto/phrases@1.10.1
+  - @logto/shared@3.1.1
+
 ## 1.15.0
 
 ### Minor Changes

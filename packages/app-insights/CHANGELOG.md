@@ -1,5 +1,15 @@
 # @logto/app-insights
 
+## 2.0.0
+
+### Major Changes
+
+- c1c746bca: remove application insights for react
+
+### Patch Changes
+
+- a9ccfc738: allow additional telemetry for `trackException()`
+
 ## 1.4.0
 
 ### Minor Changes
