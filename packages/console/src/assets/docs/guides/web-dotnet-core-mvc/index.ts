@@ -12,7 +12,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full .NET Core (MVC) integration tutorial',
-    url: 'https://docs.logto.io/sdk/dotnet-core/mvc',
+    url: 'https://docs.logto.io/quick-starts/dotnet-core/mvc',
   },
 });
 

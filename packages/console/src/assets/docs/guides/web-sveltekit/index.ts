@@ -13,7 +13,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full SvelteKit guide',
-    url: 'https://docs.logto.io/sdk/sveltekit',
+    url: 'https://docs.logto.io/quick-starts/sveltekit',
   },
 });
 

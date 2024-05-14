@@ -14,7 +14,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   isFeatured: true,
   fullGuide: {
     title: 'Full Vue SDK tutorial',
-    url: 'https://docs.logto.io/sdk/vue',
+    url: 'https://docs.logto.io/quick-starts/vue',
   },
 });
 

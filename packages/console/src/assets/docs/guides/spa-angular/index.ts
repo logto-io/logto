@@ -12,7 +12,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full Angular guide',
-    url: 'https://docs.logto.io/sdk/angular',
+    url: 'https://docs.logto.io/quick-starts/angular',
   },
 });
 
