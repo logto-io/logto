@@ -12,7 +12,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full .NET Core (Blazor WASM) integration tutorial',
-    url: 'https://docs.logto.io/sdk/dotnet-core/blazor-wasm',
+    url: 'https://docs.logto.io/quick-starts/dotnet-core/blazor-wasm',
   },
 });
 

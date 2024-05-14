@@ -14,7 +14,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   isFeatured: true,
   fullGuide: {
     title: 'Full Next.js SDK tutorial',
-    url: 'https://docs.logto.io/sdk/next',
+    url: 'https://docs.logto.io/quick-starts/next',
   },
 });
 

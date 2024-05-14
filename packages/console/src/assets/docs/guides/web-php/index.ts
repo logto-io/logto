@@ -12,7 +12,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full PHP SDK tutorial',
-    url: 'https://docs.logto.io/sdk/php',
+    url: 'https://docs.logto.io/quick-starts/php',
   },
 });
 

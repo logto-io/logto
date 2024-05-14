@@ -12,7 +12,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full .NET Core (Blazor Server) integration tutorial',
-    url: 'https://docs.logto.io/sdk/dotnet-core/blazor-server',
+    url: 'https://docs.logto.io/quick-starts/dotnet-core/blazor-server',
   },
 });
 
