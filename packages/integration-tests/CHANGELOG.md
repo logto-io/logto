@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.6.1
+
+### Patch Changes
+
+- 5b03030de: Not allow to modify management API resource through API.
+
+  Previously, management API resource and its scopes are readonly in Console. But it was possible to modify through the API. This is not allowed anymore.
+
 ## 1.6.0
 
 ### Minor Changes

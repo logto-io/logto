@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.1.1
+
+### Patch Changes
+
+- 21bb35b12: add `normalizeError` method to `@logto/shared` package
+
+  Use this method to normalize error objects for logging. This method is useful for logging errors in a consistent format.
+
 ## 3.1.0
 
 ### Minor Changes

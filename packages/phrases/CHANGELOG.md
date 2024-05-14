@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.10.1
+
+### Patch Changes
+
+- 5b03030de: Not allow to modify management API resource through API.
+
+  Previously, management API resource and its scopes are readonly in Console. But it was possible to modify through the API. This is not allowed anymore.
+
+- 3486b12e8: Fix file upload API.
+
+  The `koa-body` has been upgraded to the latest version, which caused the file upload API to break. This change fixes the issue.
+
+  The `ctx.request.files.file` in the new version is an array, so the code has been updated to pick the first one.
+
 ## 1.10.0
 
 ### Minor Changes

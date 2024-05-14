@@ -1,5 +1,123 @@
 # Change Log
 
+## 1.16.0
+
+### Minor Changes
+
+- 8ef021fb3: add support for Redis Cluster and extra TLS options for Redis connections
+- 21bb35b12: refactor the definition of hook event types
+
+  - Add `DataHook` event types. `DataHook` are triggered by data changes.
+  - Add "interaction" prefix to existing hook event types. Interaction hook events are triggered by end user interactions, e.g. completing sign-in.
+
+- e8c41b164: support organization custom data
+
+  Now you can save additional data associated with the organization with the organization-level `customData` field by:
+
+  - Edit in the Console organization details page.
+  - Specify `customData` field when using organization Management APIs.
+
+- 5872172cb: enable custom JWT feature for OSS version
+
+  OSS version users can now use custom JWT feature to add custom claims to JWT access tokens payload (previously, this feature was only available to Logto Cloud).
+
+- 1ef32d6d5: update token grant to support organization API resources
+
+  Organization roles can be assigned with scopes (permissions) from the API resources, and the token grant now supports this.
+
+  Once the user is consent to an application with "resources" assigned, the token grant will now include the scopes inherited from all assigned organization roles.
+
+  Users can narrow down the scopes by passing `organization_id` when granting an access token, and the token will only include the scopes from the organization roles of the specified organization, the access token will contain an extra claim `organization_id` to indicate the organization the token is granted for. Then the resource server can use this claim to protect the resource with additional organization-level authorization.
+
+  This change is backward compatible, and the existing token grant will continue to work as before.
+
+### Patch Changes
+
+- 52df3ebbb: Bug fix: organization invitation APIs should handle invitee emails case insensitively
+- 368385b93: Management API will not return 500 in production for status codes that are not listed in the OpenAPI spec
+- d54530356: Fix OIDC AccessDenied error code to 403.
+
+  This error may happen when you try to grant an access token to a user lacking the required permissions, especially when granting for orgnization related resources. The error code should be 403 instead of 400.
+
+- 5b03030de: Not allow to modify management API resource through API.
+
+  Previously, management API resource and its scopes are readonly in Console. But it was possible to modify through the API. This is not allowed anymore.
+
+- 5660c54cb: Sign out user after deletion or suspension
+
+  When a user is deleted or suspended through Management API, they should be signed out immediately, including sessions and refresh tokens.
+
+- a9ccfc738: implement request ID for API requests
+
+  - All requests will now include a request ID in the headers (`Logto-Core-Request-Id`)
+  - Terminal logs will now include the request ID as the prefix
+
+- bbd399e15: fix the new user from SSO register hook event not triggering bug
+
+  ### Issue
+
+  When a new user registers via SSO, the `PostRegister` interaction hook event is not triggered. `PostSignIn` event is mistakenly triggered instead.
+
+  ### Root Cause
+
+  In the SSO `post /api/interaction/sso/:connectionId/registration` API, we update the interaction event to `Register`.
+  However, the hook middleware reads the event from interaction session ahead of the API logic, and the event is not updated resulting in the wrong event being triggered.
+
+  In the current interaction API design, we should mutate the interaction event by calling the `PUT /api/interaction/event` API, instead of updating the event directly in the submit interaction APIs. (Just like the no direct mutation rule for a react state). So we can ensure the correct side effect like logs and hooks are triggered properly.
+
+  All the other sign-in methods are using the `PUT /api/interaction/event` API to update the event. But when implementing the SSO registration API, we were trying to reduce the API requests and directly updated the event in the registration API which will submit the interaction directly.
+
+  ### Solution
+
+  Remove the event update logic in the SSO registration API and call the `PUT /api/interaction/event` API to update the event.
+  This will ensure the correct event is triggered in the hook middleware.
+
+  ### Action Items
+
+  Align the current interaction API design for now.
+  Need to improve the session/interaction API logic to simplify the whole process.
+
+- b4b8015db: fix a bug that prevents invitee from accepting the organization invitation if the email letter case is not matching
+- b575f57ac: Support comma separated resource parameter
+
+  Some third-party libraries or plugins do not support array of resources, and can only specify `resource` through `additionalParameters` config, e.g. `flutter-appauth`. However, only one resource can be specified at a time in this way. This PR enables comma separated resource parameter support in Logto core service, so that multiple resources can be specified via a single string.
+
+  For example: Auth URL like `/oidc/auth?resource=https://example.com/api1,https://example.com/api2` will be interpreted and parsed to Logto core service as `/ordc/auth?resource=https://example.com/api1&resource=https://example.com/api2`.
+
+- aacbebcbc: Provide management API to fetch user organization scopes based on user organization roles
+
+  - GET `organizations/:id/users/:userId/scopes`
+
+- 3486b12e8: Fix file upload API.
+
+  The `koa-body` has been upgraded to the latest version, which caused the file upload API to break. This change fixes the issue.
+
+  The `ctx.request.files.file` in the new version is an array, so the code has been updated to pick the first one.
+
+- ead2abde6: fix a bug that API resource indicator does not work if the indicator is not followed by a trailing slash or a pathname
+
+  - Bump `oidc-provider@8.4.6` to fix the above issue
+
+- Updated dependencies [21bb35b12]
+- Updated dependencies [5b03030de]
+- Updated dependencies [b80934ac5]
+- Updated dependencies [a9ccfc738]
+- Updated dependencies [e8c41b164]
+- Updated dependencies [5872172cb]
+- Updated dependencies [6fe6f87bc]
+- Updated dependencies [21bb35b12]
+- Updated dependencies [bbd399e15]
+- Updated dependencies [3486b12e8]
+- Updated dependencies [9cf03c8ed]
+- Updated dependencies [c1c746bca]
+  - @logto/schemas@1.16.0
+  - @logto/console@1.14.0
+  - @logto/phrases@1.10.1
+  - @logto/experience@1.6.1
+  - @logto/app-insights@2.0.0
+  - @logto/shared@3.1.1
+  - @logto/cli@1.16.0
+
 ## 1.15.0
 
 ### Minor Changes
