@@ -82,6 +82,9 @@ export const hookEventsGuard = hookEventGuard.array();
 
 export type HookEvents = z.infer<typeof hookEventsGuard>;
 
+export const interactionHookEventGuard = z.nativeEnum(InteractionHookEvent);
+export const interactionHookEventsGuard = interactionHookEventGuard.array();
+
 /**
  * Hook configuration for web hook.
  */
