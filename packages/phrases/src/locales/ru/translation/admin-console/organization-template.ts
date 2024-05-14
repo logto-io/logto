@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: 'Разрешения орг',
     search_placeholder: 'Поиск по названию разрешения',
     create_org_permission: 'Создать разрешение орг',
-    permission_column: 'Разрешение',
+    permission_column: 'Разрешение организации',
     description_column: 'Описание',
     placeholder_title: 'Разрешение организации',
     placeholder_description:

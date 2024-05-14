@@ -153,7 +153,7 @@ export default class ExpectOrganizations extends ExpectConsole {
     // Click the action button from the permission row
     await expect(permissionRow).toClick('td:last-of-type button');
 
-    await selectDropdownMenuItem(this.page, 'div[role=menuitem]', 'Delete permission');
+    await selectDropdownMenuItem(this.page, 'div[role=menuitem]', 'Delete organization permission');
 
     await this.toExpectModal('Reminder');
     await this.toClick(['.ReactModalPortal', `button${cls('danger')}`].join(' '), 'Delete', false);

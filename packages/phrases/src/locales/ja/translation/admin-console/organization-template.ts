@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: '組織の権限',
     search_placeholder: '権限名で検索',
     create_org_permission: '組織の権限を作成',
-    permission_column: '権限',
+    permission_column: '組織の許可',
     description_column: '説明',
     placeholder_title: '組織の権限',
     placeholder_description:
