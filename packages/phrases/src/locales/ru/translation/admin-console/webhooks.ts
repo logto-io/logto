@@ -4,10 +4,21 @@ const webhooks = {
   subtitle:
     'Создайте вебхуки, чтобы легко получать обновления в реальном времени относительно определенных событий.',
   create: 'Создать вебхук',
-  events: {
-    post_register: 'Создать новый аккаунт',
-    post_sign_in: 'Войти',
-    post_reset_password: 'Сбросить пароль',
+  schemas: {
+    /** UNTRANSLATED */
+    interaction: 'User interaction',
+    /** UNTRANSLATED */
+    user: 'User',
+    /** UNTRANSLATED */
+    organization: 'Organization',
+    /** UNTRANSLATED */
+    role: 'Role',
+    /** UNTRANSLATED */
+    scope: 'Permission',
+    /** UNTRANSLATED */
+    organization_role: 'Organization role',
+    /** UNTRANSLATED */
+    organization_scope: 'Organization permission',
   },
   table: {
     name: 'Имя',

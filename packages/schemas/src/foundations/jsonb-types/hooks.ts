@@ -15,7 +15,7 @@ export enum InteractionHookEvent {
 }
 
 // DataHookEvent
-enum DataHookSchema {
+export enum DataHookSchema {
   User = 'User',
   Role = 'Role',
   Scope = 'Scope',

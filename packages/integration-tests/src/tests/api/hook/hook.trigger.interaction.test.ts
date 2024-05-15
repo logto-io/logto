@@ -24,7 +24,7 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest, generateNewUserProfile } from '#src/helpers/user.js';
-import { generateEmail, generatePassword } from '#src/utils.js';
+import { generateEmail, generatePassword, waitFor } from '#src/utils.js';
 
 import WebhookMockServer, { mockHookResponseGuard, verifySignature } from './WebhookMockServer.js';
 
@@ -47,6 +47,9 @@ const assertHookLogResult = async (
     hookPayload?: Record<string, unknown>;
   }
 ) => {
+  //  Since the webhook request is async, we need to wait for a while to ensure the webhook response is received.
+  await waitFor(50);
+
   const logs = await getWebhookRecentLogs(
     hookId,
     new URLSearchParams({ logKey: `TriggerHook.${event}`, page_size: '10' })

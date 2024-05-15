@@ -4,10 +4,21 @@ const webhooks = {
   subtitle:
     'Belirli olaylarla ilgili gerçek zamanlı güncellemeler almak için webhooklar oluşturun.',
   create: 'Webhook Oluştur',
-  events: {
-    post_register: 'Yeni hesap oluştur',
-    post_sign_in: 'Oturum açın',
-    post_reset_password: 'Parolayı sıfırla',
+  schemas: {
+    /** UNTRANSLATED */
+    interaction: 'User interaction',
+    /** UNTRANSLATED */
+    user: 'User',
+    /** UNTRANSLATED */
+    organization: 'Organization',
+    /** UNTRANSLATED */
+    role: 'Role',
+    /** UNTRANSLATED */
+    scope: 'Permission',
+    /** UNTRANSLATED */
+    organization_role: 'Organization role',
+    /** UNTRANSLATED */
+    organization_scope: 'Organization permission',
   },
   table: {
     name: 'Adı',

@@ -3,10 +3,21 @@ const webhooks = {
   title: 'Webhooks',
   subtitle: '創建 Webhooks，輕鬆地接收有關特定事件的實時更新。',
   create: '創建 Webhook',
-  events: {
-    post_register: '創建新帳戶',
-    post_sign_in: '登錄',
-    post_reset_password: '重置密碼',
+  schemas: {
+    /** UNTRANSLATED */
+    interaction: 'User interaction',
+    /** UNTRANSLATED */
+    user: 'User',
+    /** UNTRANSLATED */
+    organization: 'Organization',
+    /** UNTRANSLATED */
+    role: 'Role',
+    /** UNTRANSLATED */
+    scope: 'Permission',
+    /** UNTRANSLATED */
+    organization_role: 'Organization role',
+    /** UNTRANSLATED */
+    organization_scope: 'Organization permission',
   },
   table: {
     name: '名稱',

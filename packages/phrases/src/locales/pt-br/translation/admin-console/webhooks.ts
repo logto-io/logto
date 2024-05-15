@@ -4,10 +4,21 @@ const webhooks = {
   subtitle:
     'Crie ganchos da web para receber atualizações em tempo real sobre eventos específicos sem esforço.',
   create: 'Criar Webhook',
-  events: {
-    post_register: 'Criar nova conta',
-    post_sign_in: 'Entrar',
-    post_reset_password: 'Redefinir senha',
+  schemas: {
+    /** UNTRANSLATED */
+    interaction: 'User interaction',
+    /** UNTRANSLATED */
+    user: 'User',
+    /** UNTRANSLATED */
+    organization: 'Organization',
+    /** UNTRANSLATED */
+    role: 'Role',
+    /** UNTRANSLATED */
+    scope: 'Permission',
+    /** UNTRANSLATED */
+    organization_role: 'Organization role',
+    /** UNTRANSLATED */
+    organization_scope: 'Organization permission',
   },
   table: {
     name: 'Nome',

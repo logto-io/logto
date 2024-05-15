@@ -3,10 +3,14 @@ const webhooks = {
   title: 'Webhooks',
   subtitle: 'Create webhooks to effortlessly receive real-time updates regarding specific events.',
   create: 'Create Webhook',
-  events: {
-    post_register: 'Create new account',
-    post_sign_in: 'Sign in',
-    post_reset_password: 'Reset password',
+  schemas: {
+    interaction: 'User interaction',
+    user: 'User',
+    organization: 'Organization',
+    role: 'Role',
+    scope: 'Permission',
+    organization_role: 'Organization role',
+    organization_scope: 'Organization permission',
   },
   table: {
     name: 'Name',

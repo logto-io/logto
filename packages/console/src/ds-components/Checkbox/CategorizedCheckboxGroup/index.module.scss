@@ -1,0 +1,14 @@
+@use '@/scss/underscore' as _;
+
+.groupTitle {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin-bottom: _.unit(2);
+}
+
+.groupList {
+  // Max two columns
+  gap: _.unit(5);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
