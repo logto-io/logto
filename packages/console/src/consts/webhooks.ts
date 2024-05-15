@@ -15,13 +15,19 @@ export const dataHookEventsLabel = Object.freeze({
   [DataHookSchema.OrganizationScope]: 'webhooks.schemas.organization_scope',
 } satisfies Record<DataHookSchema, AdminConsoleKey>);
 
+export const interactionHookEvents = Object.values(InteractionHookEvent);
+
 const dataHookEvents: DataHookEvent[] = hookEvents.filter(
-  (event): event is DataHookEvent => !(event in InteractionHookEvent)
+  // eslint-disable-next-line no-restricted-syntax
+  (event): event is DataHookEvent => !interactionHookEvents.includes(event as InteractionHookEvent)
 );
 
-const isDataHookSchema = (schema: string): schema is DataHookSchema => schema in DataHookSchema;
+const isDataHookSchema = (schema: string): schema is DataHookSchema =>
+  // eslint-disable-next-line no-restricted-syntax
+  Object.values(DataHookSchema).includes(schema as DataHookSchema);
 
 // Group DataHook events by schema
+// TODO: Replace this using groupBy once Node v22 goes LTS
 const schemaGroupedDataHookEventsMap = dataHookEvents.reduce<Map<DataHookSchema, DataHookEvent[]>>(
   (eventGroup, event) => {
     const [schema] = event.split('.');
@@ -35,8 +41,7 @@ const schemaGroupedDataHookEventsMap = dataHookEvents.reduce<Map<DataHookSchema,
   new Map()
 );
 
-export const interactionHookEvents = Object.values(InteractionHookEvent);
-
+// Sort the grouped DataHook events per console product design
 const hookEventSchemaOrder: {
   [key in DataHookSchema]: number;
 } = {

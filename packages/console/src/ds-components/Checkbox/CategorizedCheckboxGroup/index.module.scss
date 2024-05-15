@@ -7,7 +7,7 @@
 }
 
 .groupList {
-  // max two column
+  // Max two columns
   gap: _.unit(5);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
