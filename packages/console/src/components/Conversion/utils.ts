@@ -7,6 +7,8 @@ export const gtagAwTrackingId = 'AW-11124811245';
 export enum GtagConversionId {
   /** This ID indicates a user has truly signed up for Logto Cloud. */
   SignUp = 'AW-11192640559/ZuqUCLvNpasYEK_IiNkp',
+  /** This ID indicates a user has created their first app. */
+  CreateFirstApp = 'AW-11192640559/jbsaCPS67q8ZEK_IiNkp',
   /** This ID indicates a user has created a production tenant. */
   CreateProductionTenant = 'AW-11192640559/m04fCMDrxI0ZEK_IiNkp',
   /** This ID indicates a user has purchased a Pro plan. */
@@ -102,7 +104,7 @@ type ReportConversionOptions = {
   redditType?: RedditReportType;
 };
 
-export const reportConversion = async ({
+export const reportConversion = ({
   gtagId,
   redditType,
   transactionId,
@@ -112,8 +114,11 @@ export const reportConversion = async ({
     return;
   }
 
-  return Promise.all([
-    gtagId ? reportToGoogle(gtagId, { transactionId }) : undefined,
-    redditType ? reportToReddit(redditType) : undefined,
-  ]);
+  if (gtagId) {
+    reportToGoogle(gtagId, { transactionId });
+  }
+
+  if (redditType) {
+    reportToReddit(redditType);
+  }
 };

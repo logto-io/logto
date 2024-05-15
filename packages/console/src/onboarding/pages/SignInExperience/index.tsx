@@ -118,18 +118,17 @@ function SignInExperience() {
         }
       }
 
-      const [updatedData] = await Promise.all([
-        api
-          .patch(buildUrl('api/sign-in-exp', { removeUnusedDemoSocialConnector: '1' }), {
-            json: formDataParser.toUpdateOnboardingSieData(formData, signInExperience),
-          })
-          .json<SignInExperienceType>(),
-        reportConversion({
-          gtagId: GtagConversionId.SignUp,
-          redditType: 'SignUp',
-          transactionId: user?.id,
-        }),
-      ]);
+      const updatedData = await api
+        .patch(buildUrl('api/sign-in-exp', { removeUnusedDemoSocialConnector: '1' }), {
+          json: formDataParser.toUpdateOnboardingSieData(formData, signInExperience),
+        })
+        .json<SignInExperienceType>();
+
+      reportConversion({
+        gtagId: GtagConversionId.SignUp,
+        redditType: 'SignUp',
+        transactionId: user?.id,
+      });
 
       void mutate(updatedData);
 

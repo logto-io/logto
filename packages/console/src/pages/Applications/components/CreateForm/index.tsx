@@ -7,12 +7,14 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
+import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useCurrentUser from '@/hooks/use-current-user';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
@@ -50,6 +52,7 @@ function CreateForm({
   } = useForm<FormData>({
     defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
   });
+  const { user } = useCurrentUser();
 
   const {
     field: { onChange, value, name, ref },
@@ -69,6 +72,11 @@ function CreateForm({
       }
 
       const createdApp = await api.post('api/applications', { json: data }).json<Application>();
+
+      // Report the conversion event after the application is created. Note that the conversion
+      // should be set as count once since this will be reported multiple times.
+      reportConversion({ gtagId: GtagConversionId.CreateFirstApp, transactionId: user?.id });
+
       toast.success(t('applications.application_created'));
       onClose?.(createdApp);
     })
