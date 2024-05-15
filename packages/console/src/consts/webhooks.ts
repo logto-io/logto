@@ -27,7 +27,7 @@ const isDataHookSchema = (schema: string): schema is DataHookSchema =>
   Object.values(DataHookSchema).includes(schema as DataHookSchema);
 
 // Group DataHook events by schema
-// TODO: Replace this using groupBy once Node v22 goes LTS
+// TODO: Replace this using `groupBy` once Node v22 goes LTS
 const schemaGroupedDataHookEventsMap = dataHookEvents.reduce<Map<DataHookSchema, DataHookEvent[]>>(
   (eventGroup, event) => {
     const [schema] = event.split('.');
@@ -41,7 +41,7 @@ const schemaGroupedDataHookEventsMap = dataHookEvents.reduce<Map<DataHookSchema,
   new Map()
 );
 
-// Sort the grouped DataHook events per console product design
+// Sort the grouped `DataHook` events per console product design
 const hookEventSchemaOrder: {
   [key in DataHookSchema]: number;
 } = {
