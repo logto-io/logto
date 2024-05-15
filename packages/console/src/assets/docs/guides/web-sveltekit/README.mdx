@@ -42,6 +42,8 @@ pnpm add @logto/sveltekit
 
 <Step title="Add Logto hook">
 
+Create a `hooks.server.ts` file in your project `src` root if you don't have one. This file is used to define server hooks for your SvelteKit app.
+
 In your `hooks.server.ts` file, add the following code to inject the Logto hook into your server:
 
 <pre>
@@ -134,7 +136,9 @@ export const actions: Actions = {
     await locals.logtoClient.signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}');
   },
   signOut: async ({ locals }) => {
-    await locals.logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}');
+    await locals.logtoClient.signOut('${
+      props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'
+    }');
   },
 };
 `}
@@ -152,23 +156,12 @@ Then use these actions in your Svelte component:
 
 </Step>
 
-<Step title="Implement sign-in and sign-out">
-
-Since Nuxt pages will be hydrated and become a single-page application (SPA) after the initial load, we need to redirect the user to the sign-in or sign-out route when needed.
-
-```html
-<a :href="/sign-in">Sign in</a>
-<br />
-<a :href="/sign-out">Sign out</a>
-```
-
-</Step>
-
 <Step title="Display user information">
 
 To display the user's information, you can inject the `locals.user` object into the layout, thus making it available to all pages:
 
 ```ts
+// +layout.server.ts
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
@@ -179,6 +172,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 In your Svelte component:
 
 ```html
+{/* +page.svelte */}
 <script>
   /** @type {import('./$types').PageData} */
   export let data;
