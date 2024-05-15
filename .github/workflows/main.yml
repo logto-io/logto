@@ -132,11 +132,7 @@ jobs:
 
       - name: Prepack alteration
         working-directory: ./alteration
-        run: |
-          # Remove corepack commands once a new Logto release is out
-          corepack enable pnpm
-          corepack use pnpm@8
-          pnpm i && pnpm prepack
+        run: pnpm i && pnpm prepack
       # ** End **
 
       - name: Setup Postgres
