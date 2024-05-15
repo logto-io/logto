@@ -35,7 +35,7 @@ type InteractionHookMetadata = {
  * In the `koaInteractionHooks` middleware,
  * if we get an interaction hook result after the interaction is processed, related hooks will be triggered.
  */
-export type InteractionHookResult = {
+type InteractionHookResult = {
   userId: string;
 };
 

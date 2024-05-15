@@ -35,7 +35,7 @@ class MockOidcSsoConnector extends OidcSsoConnector {
   override getUserInfo = getUserInfoMock;
 }
 
-const { storeInteractionResult: storeInteractionResultMock } = mockEsm('./interaction.js', () => ({
+mockEsm('./interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
@@ -290,13 +290,13 @@ describe('Single sign on util methods tests', () => {
     it('should register if no related user account found', async () => {
       insertUserMock.mockResolvedValueOnce({ id: 'foo' });
 
-      const accountId = await registerWithSsoAuthentication(mockContext, tenant, {
+      const { id } = await registerWithSsoAuthentication(mockContext, tenant, {
         connectorId: wellConfiguredSsoConnector.id,
         issuer: mockIssuer,
         userInfo: mockSsoUserInfo,
       });
 
-      expect(accountId).toBe('foo');
+      expect(id).toBe('foo');
 
       // Should create new user
       expect(insertUserMock).toBeCalledWith(

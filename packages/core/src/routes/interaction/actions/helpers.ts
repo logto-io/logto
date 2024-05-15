@@ -1,5 +1,5 @@
 import { defaults, parseAffiliateData } from '@logto/affiliate';
-import { type CreateUser, type User, adminTenantId } from '@logto/schemas';
+import { adminTenantId, type CreateUser, type User } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type IRouterContext } from 'koa-router';
 
@@ -15,8 +15,8 @@ import { type OmitAutoSetFields } from '#src/utils/sql.js';
 import {
   type Identifier,
   type SocialIdentifier,
-  type VerifiedSignInInteractionResult,
   type VerifiedRegisterInteractionResult,
+  type VerifiedSignInInteractionResult,
 } from '../types/index.js';
 import { categorizeIdentifiers } from '../utils/interaction.js';
 
@@ -148,4 +148,13 @@ export const postAffiliateLogs = async (
     });
     getConsoleLogFromContext(ctx).info('Affiliate logs posted', userId);
   }
+};
+
+/* Verify if user has updated profile */
+export const hasUpdatedProfile = ({
+  lastSignInAt,
+  ...profile
+}: Omit<OmitAutoSetFields<CreateUser>, 'id'>) => {
+  // Check if the lastSignInAt is the only field in the updated profile
+  return Object.keys(profile).length > 0;
 };
