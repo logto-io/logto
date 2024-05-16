@@ -1,7 +1,11 @@
-import { InteractionEvent, InteractionHookEvent, type DataHookEvent } from '@logto/schemas';
+import {
+  InteractionEvent,
+  InteractionHookEvent,
+  type DataHookEvent,
+  type InteractionApiMetadata,
+  type ManagementApiContext,
+} from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
-
-import type { InteractionApiMetadata, ManagementApiContext } from './type.js';
 
 type DataHookMetadata = {
   userAgent?: string;
