@@ -52,19 +52,19 @@ const userQueries = {
     identities: { google: { userId: 'googleId', details: {} } },
     mfaVerifications: [],
   }),
-  updateUserById: jest.fn(async (id: string, user: Partial<User>) => user as User),
   hasActiveUsers: jest.fn().mockResolvedValue(true),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
   hasUserWithPhone: jest.fn().mockResolvedValue(false),
 };
 
-const { hasActiveUsers, updateUserById, hasUserWithEmail, hasUserWithPhone } = userQueries;
+const { hasActiveUsers, hasUserWithEmail, hasUserWithPhone } = userQueries;
 
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
   insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]),
+  updateUserById: jest.fn(async (id: string, user: Partial<User>) => user as User),
 };
-const { generateUserId, insertUser } = userLibraries;
+const { generateUserId, insertUser, updateUserById } = userLibraries;
 
 const submitInteraction = await pickDefault(import('./submit-interaction.js'));
 const now = Date.now();

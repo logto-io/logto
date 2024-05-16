@@ -230,7 +230,7 @@ export async function verifyMfaPayloadVerification(
 
     if (newCounter !== undefined) {
       // Update the authenticator's counter in the DB to the newest count in the authentication
-      await tenant.queries.users.updateUserById(accountId, {
+      await tenant.libraries.users.updateUserById(accountId, {
         mfaVerifications: user.mfaVerifications.map((mfa) => {
           if (mfa.type !== MfaFactor.WebAuthn || mfa.id !== result.id) {
             return mfa;
@@ -250,7 +250,7 @@ export async function verifyMfaPayloadVerification(
   const { id, type } = await verifyBackupCode(user.mfaVerifications, verifyMfaPayload);
 
   // Mark the backup code as used
-  await tenant.queries.users.updateUserById(accountId, {
+  await tenant.libraries.users.updateUserById(accountId, {
     mfaVerifications: user.mfaVerifications.map((mfa) => {
       if (mfa.id !== id || mfa.type !== MfaFactor.BackupCode) {
         return mfa;

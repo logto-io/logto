@@ -35,12 +35,6 @@ const mockedQueries = {
     hasUser: jest.fn(async () => mockHasUser()),
     hasUserWithEmail: jest.fn(async () => mockHasUserWithEmail()),
     hasUserWithPhone: jest.fn(async () => mockHasUserWithPhone()),
-    updateUserById: jest.fn(
-      async (_, data: Partial<CreateUser>): Promise<User> => ({
-        ...mockUser,
-        ...data,
-      })
-    ),
     deleteUserById: jest.fn(),
     deleteUserIdentity: jest.fn(),
   },
@@ -67,8 +61,7 @@ const mockHasUser = jest.fn(async () => false);
 const mockHasUserWithEmail = jest.fn(async () => false);
 const mockHasUserWithPhone = jest.fn(async () => false);
 
-const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
-  mockedQueries.users;
+const { hasUser, findUserById, deleteUserIdentity, deleteUserById } = mockedQueries.users;
 
 const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.utils.js', () => ({
   encryptUserPassword: jest.fn(() => ({
@@ -91,7 +84,15 @@ const usersLibraries = {
   ),
   verifyUserPassword,
   signOutUser,
+  updateUserById: jest.fn(
+    async (_, data: Partial<CreateUser>): Promise<User> => ({
+      ...mockUser,
+      ...data,
+    })
+  ),
 } satisfies Partial<Libraries['users']>;
+
+const { updateUserById } = usersLibraries;
 
 const adminUserRoutes = await pickDefault(import('./basics.js'));
 

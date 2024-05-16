@@ -225,11 +225,15 @@ describe('verifyUserPassword()', () => {
     };
     it('migrates password to Argon2', async () => {
       await verifyUserPassword(user, 'password');
-      expect(updateUserById).toHaveBeenCalledWith(user.id, {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        passwordEncrypted: expect.stringContaining('argon2'),
-        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-      });
+      expect(updateUserById).toHaveBeenCalledWith(
+        user.id,
+        {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          passwordEncrypted: expect.stringContaining('argon2'),
+          passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+        },
+        undefined
+      );
     });
   });
 });
@@ -259,6 +263,7 @@ describe('addUserMfaVerification()', () => {
   beforeAll(() => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date(createdAt));
+    jest.clearAllMocks();
   });
 
   afterAll(() => {
@@ -266,10 +271,19 @@ describe('addUserMfaVerification()', () => {
   });
 
   it('update user with new mfa verification', async () => {
-    await addUserMfaVerification(mockUser.id, { type: MfaFactor.TOTP, secret: 'secret' });
-    expect(updateUserById).toHaveBeenCalledWith(mockUser.id, {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      mfaVerifications: [{ type: MfaFactor.TOTP, key: 'secret', id: expect.anything(), createdAt }],
+    await addUserMfaVerification(mockUser.id, {
+      type: MfaFactor.TOTP,
+      secret: 'secret',
     });
+    expect(updateUserById).toHaveBeenCalledWith(
+      mockUser.id,
+      {
+        mfaVerifications: [
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          { type: MfaFactor.TOTP, key: 'secret', id: expect.anything(), createdAt },
+        ],
+      },
+      undefined
+    );
   });
 });

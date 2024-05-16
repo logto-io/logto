@@ -221,8 +221,9 @@ async function handleSubmitSignIn(
   tenantContext: TenantContext,
   log?: LogEntry
 ) {
-  const { provider, queries } = tenantContext;
-  const { findUserById, updateUserById } = queries.users;
+  const { provider, queries, libraries } = tenantContext;
+  const { findUserById } = queries.users;
+  const { updateUserById } = libraries.users;
 
   const { accountId } = interaction;
   log?.append({ userId: accountId });
@@ -270,8 +271,8 @@ export default async function submitInteraction(
   tenantContext: TenantContext,
   log?: LogEntry
 ) {
-  const { provider, queries } = tenantContext;
-  const { updateUserById } = queries.users;
+  const { provider, libraries } = tenantContext;
+  const { updateUserById } = libraries.users;
   const { event, profile } = interaction;
 
   if (event === InteractionEvent.Register) {

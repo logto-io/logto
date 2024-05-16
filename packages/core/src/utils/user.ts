@@ -6,7 +6,10 @@ import {
   type User,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
+import { parseE164PhoneNumberWithError, ParseError } from '@logto/shared/universal';
 import { pick } from '@silverhand/essentials';
+
+import RequestError from '#src/errors/RequestError/index.js';
 
 export const transpileUserMfaVerifications = (
   mfaVerifications: User['mfaVerifications']
@@ -61,4 +64,29 @@ export const transpileUserProfileResponse = (
     hasPassword: Boolean(user.passwordEncrypted),
     ...(ssoIdentities && { ssoIdentities }),
   };
+};
+
+export const getValidPhoneNumber = (phone: string): string => {
+  if (!phone) {
+    return phone;
+  }
+
+  try {
+    const phoneNumber = parseE164PhoneNumberWithError(phone);
+
+    if (!phoneNumber.isValid()) {
+      throw new RequestError({ code: 'user.invalid_phone', status: 422 });
+    }
+
+    const { number } = phoneNumber;
+    if (typeof number !== 'string') {
+      throw new RequestError({ code: 'user.invalid_phone', status: 422 });
+    }
+    return number.slice(1);
+  } catch (error) {
+    if (error instanceof ParseError) {
+      throw new RequestError({ code: 'user.invalid_phone', status: 422 }, error);
+    }
+    throw error;
+  }
 };

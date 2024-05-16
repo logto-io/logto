@@ -30,7 +30,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<WithLogContext<T>>>,
   tenant: TenantContext
 ) {
-  const { provider, queries } = tenant;
+  const { provider, queries, libraries } = tenant;
 
   // Set New MFA
   router.post(
@@ -131,7 +131,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
 
       // Update last used time
       const user = await queries.users.findUserById(accountId);
-      await queries.users.updateUserById(accountId, {
+      await libraries.users.updateUserById(accountId, {
         mfaVerifications: user.mfaVerifications.map((mfa) => {
           if (mfa.id !== verifiedMfa.id) {
             return mfa;

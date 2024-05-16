@@ -23,12 +23,6 @@ const mockedQueries = {
     hasUser: jest.fn(async () => mockHasUser()),
     hasUserWithEmail: jest.fn(async () => mockHasUserWithEmail()),
     hasUserWithPhone: jest.fn(async () => mockHasUserWithPhone()),
-    updateUserById: jest.fn(
-      async (_, data: Partial<CreateUser>): Promise<User> => ({
-        ...mockUser,
-        ...data,
-      })
-    ),
     deleteUserById: jest.fn(),
     deleteUserIdentity: jest.fn(),
   },
@@ -38,7 +32,7 @@ const mockHasUser = jest.fn(async () => false);
 const mockHasUserWithEmail = jest.fn(async () => false);
 const mockHasUserWithPhone = jest.fn(async () => false);
 
-const { findUserById, updateUserById } = mockedQueries.users;
+const { findUserById } = mockedQueries.users;
 
 await mockEsmWithActual('../interaction/utils/totp-validation.js', () => ({
   generateTotpSecret: jest.fn().mockReturnValue('totp_secret'),
@@ -47,17 +41,28 @@ await mockEsmWithActual('../interaction/utils/backup-code-validation.js', () => 
   generateBackupCodes: jest.fn().mockReturnValue(['code']),
 }));
 
-const usersLibraries = {
-  generateUserId: jest.fn(async () => 'fooId'),
-  insertUser: jest.fn(
-    async (user: CreateUser): Promise<InsertUserResult> => [
-      {
+const mockLibraries = {
+  users: {
+    generateUserId: jest.fn(async () => 'fooId'),
+    insertUser: jest.fn(
+      async (user: CreateUser): Promise<InsertUserResult> => [
+        {
+          ...mockUser,
+          ...removeUndefinedKeys(user), // No undefined values will be returned from database
+        },
+      ]
+    ),
+    updateUserById: jest.fn(
+      async (_, data: Partial<CreateUser>): Promise<User> => ({
         ...mockUser,
-        ...removeUndefinedKeys(user), // No undefined values will be returned from database
-      },
-    ]
-  ),
-} satisfies Partial<Libraries['users']>;
+        ...data,
+      })
+    ),
+    addUserMfaVerification: jest.fn(),
+  },
+} satisfies Partial2<Libraries>;
+
+const { updateUserById } = mockLibraries.users;
 
 const codes = [
   'd94c2f29ae',
@@ -75,9 +80,7 @@ const codes = [
 const adminUserRoutes = await pickDefault(import('./mfa-verifications.js'));
 
 describe('adminUserRoutes', () => {
-  const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
-    users: usersLibraries,
-  });
+  const tenantContext = new MockTenant(undefined, mockedQueries, undefined, mockLibraries);
   const userRequest = createRequester({ authedRoutes: adminUserRoutes, tenantContext });
 
   afterEach(() => {

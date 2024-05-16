@@ -1,7 +1,9 @@
+/* eslint-disable max-lines */
 import type { BindMfa, CreateUser, Scope, User } from '@logto/schemas';
 import { RoleType, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { generateStandardId, generateStandardShortId } from '@logto/shared';
-import { condArray, deduplicateByKey, type Nullable } from '@silverhand/essentials';
+import { generateStandardShortId, generateStandardId } from '@logto/shared';
+import type { Nullable } from '@silverhand/essentials';
+import { deduplicateByKey, condArray } from '@silverhand/essentials';
 import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
 import pRetry from 'p-retry';
 
@@ -14,6 +16,7 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { legacyVerify } from '#src/utils/password.js';
 import type { OmitAutoSetFields } from '#src/utils/sql.js';
+import { getValidPhoneNumber } from '#src/utils/user.js';
 
 import { convertBindMfaToMfaVerification, encryptUserPassword } from './user.utils.js';
 
@@ -32,7 +35,7 @@ export const createUserLibrary = (queries: Queries) => {
       hasUserWithPhone,
       hasUserWithIdentity,
       findUsersByIds,
-      updateUserById,
+      updateUserById: updateUserByIdQuery,
       findUserById,
     },
     usersRoles: { findUsersRolesByRoleId, findUsersRolesByUserId },
@@ -57,6 +60,24 @@ export const createUserLibrary = (queries: Queries) => {
       { retries, factor: 0 } // No need for exponential backoff
     );
 
+  const updateUserById = async (
+    id: string,
+    set: Partial<OmitAutoSetFields<CreateUser>>,
+    jsonbMode?: 'replace' | 'merge'
+  ) => {
+    const phoneNumber = typeof set.primaryPhone === 'string' ? set.primaryPhone : undefined;
+    const validPhoneNumber = phoneNumber ? getValidPhoneNumber(phoneNumber) : undefined;
+
+    return updateUserByIdQuery(
+      id,
+      {
+        ...set,
+        ...(validPhoneNumber && { primaryPhone: validPhoneNumber }),
+      },
+      jsonbMode
+    );
+  };
+
   const insertUser = async (
     data: OmitAutoSetFields<CreateUser>,
     additionalRoleNames: string[]
@@ -69,12 +90,18 @@ export const createUserLibrary = (queries: Queries) => {
 
     assertThat(parameterRoles.length === roleNames.length, 'role.default_role_missing');
 
+    const phoneNumber = typeof data.primaryPhone === 'string' ? data.primaryPhone : undefined;
+    const validPhoneNumber = phoneNumber ? getValidPhoneNumber(phoneNumber) : undefined;
+
     return pool.transaction(async (connection) => {
       const insertUserQuery = buildInsertIntoWithPool(connection)(Users, {
         returning: true,
       });
 
-      const user = await insertUserQuery(data);
+      const user = await insertUserQuery({
+        ...data,
+        ...(validPhoneNumber && { primaryPhone: validPhoneNumber }),
+      });
       const roles = deduplicateByKey([...parameterRoles, ...defaultRoles], 'id');
 
       if (roles.length > 0) {
@@ -338,5 +365,7 @@ export const createUserLibrary = (queries: Queries) => {
     signOutUser,
     findUserSsoIdentities,
     provisionOrganizations,
+    updateUserById,
   };
 };
+/* eslint-enable max-lines */

@@ -24,14 +24,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 ) {
   const [router, { queries, libraries }] = args;
   const {
-    users: {
-      deleteUserById,
-      findUserById,
-      hasUser,
-      updateUserById,
-      hasUserWithEmail,
-      hasUserWithPhone,
-    },
+    users: { deleteUserById, findUserById, hasUser, hasUserWithEmail, hasUserWithPhone },
   } = queries;
   const {
     users: {
@@ -41,6 +34,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       verifyUserPassword,
       signOutUser,
       findUserSsoIdentities,
+      updateUserById,
     },
   } = libraries;
 

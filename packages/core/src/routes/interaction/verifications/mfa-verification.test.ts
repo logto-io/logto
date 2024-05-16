@@ -28,12 +28,18 @@ const { mockEsmWithActual } = createMockUtils(jest);
 const findUserById = jest.fn();
 const updateUserById = jest.fn();
 
-const tenantContext = new MockTenant(undefined, {
-  users: {
-    findUserById,
-    updateUserById,
+const tenantContext = new MockTenant(
+  undefined,
+  {
+    users: {
+      findUserById,
+    },
   },
-});
+  undefined,
+  {
+    users: { updateUserById },
+  }
+);
 
 const mockBackupCodes = ['foo'];
 await mockEsmWithActual('../utils/backup-code-validation.js', () => ({
