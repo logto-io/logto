@@ -73,7 +73,7 @@ function Webhooks() {
           {
             title: <DynamicT forKey="webhooks.table.name" />,
             dataIndex: 'name',
-            colSpan: 5,
+            colSpan: 4,
             render: ({ id, name }) => {
               return (
                 <ItemPreview
@@ -87,10 +87,10 @@ function Webhooks() {
           {
             title: <DynamicT forKey="webhooks.table.events" />,
             dataIndex: 'events',
-            colSpan: 6,
+            colSpan: 7,
             render: ({ event, events }) => {
               const eventArray = conditional(events.length > 0 && events) ?? [event];
-              return eventArray.join(', ');
+              return eventArray.join(' / ');
             },
           },
           {
