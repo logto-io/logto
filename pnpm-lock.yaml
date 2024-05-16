@@ -3316,8 +3316,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       libphonenumber-js:
-        specifier: ^1.10.51
-        version: 1.11.12
+        specifier: ^1.12.6
+        version: 1.12.6
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -3962,6 +3962,9 @@ importers:
       '@logto/schemas':
         specifier: workspace:^1.27.0
         version: link:../schemas
+      '@logto/shared':
+        specifier: workspace:^3.1.4
+        version: link:../shared
       '@react-spring/shared':
         specifier: ^9.6.1
         version: 9.6.1(react@18.3.1)
@@ -4074,7 +4077,7 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       libphonenumber-js:
-        specifier: ^1.10.51
+        specifier: ^1.11.1
         version: 1.11.12
       lint-staged:
         specifier: ^15.0.0
@@ -4399,8 +4402,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       libphonenumber-js:
-        specifier: ^1.9.49
-        version: 1.11.12
+        specifier: ^1.12.6
+        version: 1.12.6
       nanoid:
         specifier: ^5.0.9
         version: 5.0.9
@@ -11817,6 +11820,9 @@ packages:
 
   libphonenumber-js@1.11.12:
     resolution: {integrity: sha512-QkJn9/D7zZ1ucvT++TQSvZuSA2xAWeUytU+DiEQwbPKLyrDpvbul2AFs1CGbRAPpSCCk47aRAb5DX5mmcayp4g==}
+
+  libphonenumber-js@1.12.6:
+    resolution: {integrity: sha512-PJiS4ETaUfCOFLpmtKzAbqZQjCCKVu2OhTV4SVNNE7c2nu/dACvtCqj4L0i/KWNnIgRv7yrILvBj5Lonv5Ncxw==}
 
   lighthouse-logger@1.4.2:
     resolution: {integrity: sha512-gPWxznF6TKmUHrOQjlVo2UbaL2EJ71mb2CCeRs/2qBpi4L/g4LUVc9+3lKQ6DTUZwJswfM7ainGrLO1+fOqa2g==}
@@ -24201,6 +24207,8 @@ snapshots:
       type-check: 0.4.0
 
   libphonenumber-js@1.11.12: {}
+
+  libphonenumber-js@1.12.6: {}
 
   lighthouse-logger@1.4.2:
     dependencies:

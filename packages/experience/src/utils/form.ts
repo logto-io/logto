@@ -1,12 +1,13 @@
 import { usernameRegEx, emailRegEx } from '@logto/core-kit';
 import { SignInIdentifier } from '@logto/schemas';
+import { parseE164PhoneNumberWithError } from '@logto/shared/universal';
 import i18next from 'i18next';
 import type { TFuncKey } from 'i18next';
-import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/mobile';
+import { ParseError } from 'libphonenumber-js/mobile';
 
 import type { ErrorType } from '@/components/ErrorMessage';
 import type { IdentifierInputType } from '@/components/InputFields/SmartInputField';
-import { parseE164Number, parsePhoneNumber } from '@/utils/country-code';
+import { parsePhoneNumber } from '@/utils/country-code';
 
 const { t } = i18next;
 
@@ -32,7 +33,7 @@ export const validateEmail = (email: string): ErrorType | undefined => {
 
 export const validatePhone = (value: string): ErrorType | undefined => {
   try {
-    const phoneNumber = parsePhoneNumberWithError(parseE164Number(value));
+    const phoneNumber = parseE164PhoneNumberWithError(value);
 
     if (!phoneNumber.isValid()) {
       return 'invalid_phone';

@@ -11,6 +11,7 @@ import {
 } from '#src/api/role.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
+import { generatePhone } from '#src/utils.js';
 
 describe('roles users', () => {
   it('should get role users successfully and can get roles correctly (specifying exclude user)', async () => {
@@ -38,7 +39,14 @@ describe('roles users', () => {
       name: 'user001',
       primaryEmail: 'user001@logto.io',
     });
-    const user2 = await createUser({ name: 'user002', primaryPhone: '123456789' });
+
+    // Can not create user with invalid phone number.
+    await expectRejects(createUser({ name: 'user002', primaryPhone: '123456789' }), {
+      code: 'user.invalid_phone',
+      status: 422,
+    });
+    const user2 = await createUser({ name: 'user002', primaryPhone: generatePhone() });
+
     const user3 = await createUser({ username: 'username3', primaryEmail: 'user3@logto.io' });
     await assignUsersToRole([user1.id, user2.id, user3.id], role.id);
 
