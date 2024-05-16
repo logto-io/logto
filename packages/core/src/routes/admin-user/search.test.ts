@@ -39,6 +39,7 @@ const mockedQueries = {
           name: 'admin',
           description: 'none',
           type: RoleType.User,
+          isDefault: false,
         },
       ]
     ),
