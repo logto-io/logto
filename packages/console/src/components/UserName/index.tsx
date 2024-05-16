@@ -1,11 +1,15 @@
 import type { User } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 import type { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
+import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { shouldRetryOnError } from '@/utils/request';
 import { getUserTitle } from '@/utils/user';
 
 import UserAvatar from '../UserAvatar';
@@ -18,18 +22,28 @@ type Props = {
 };
 
 function UserName({ userId, isLink = false }: Props) {
-  const { data, error } = useSWR<User, RequestError>(`api/users/${userId}`);
-  const isLoading = !data && !error;
-  const name = conditionalString(data && getUserTitle(data));
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const fetchApi = useApi({ hideErrorToast: true });
+  const fetcher = useSwrFetcher<User>(fetchApi);
+  const { data, error } = useSWR<User, RequestError>(`api/users/${userId}`, {
+    fetcher,
+    shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),
+  });
   const { getTo } = useTenantPathname();
 
-  if (isLoading) {
-    return null;
-  }
+  const name = useMemo(() => {
+    if (data) {
+      return getUserTitle(data);
+    }
+    if (error?.status === 404) {
+      return `${userId} (${t('general.deleted')})`;
+    }
+    return '-';
+  }, [userId, data, error?.status, t]);
 
   return (
     <div className={styles.userName}>
-      {isLink ? (
+      {isLink && data ? (
         <Link to={getTo(`/users/${userId}`)} className={classNames(styles.title, styles.link)}>
           <UserAvatar hasTooltip size="micro" user={data} />
           <span>{name}</span>
