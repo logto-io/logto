@@ -1,14 +1,9 @@
-import { managementApiHooksRegistration } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { DataHookContextManager } from '#src/libraries/hook/context-manager.js';
-import {
-  buildManagementApiDataHookRegistrationKey,
-  hasRegisteredDataHookEvent,
-} from '#src/libraries/hook/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
@@ -48,33 +43,12 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
 
     await next();
 
-    const {
-      path,
-      method,
-      status,
-      _matchedRoute: matchedRoute,
-      params,
-      response: { body },
-    } = ctx;
-
-    const hookRegistrationMatchedRouteKey = buildManagementApiDataHookRegistrationKey(
-      method,
-      matchedRoute
-    );
-
     // Auto append pre-registered management API hooks if any
-    if (hasRegisteredDataHookEvent(hookRegistrationMatchedRouteKey)) {
-      const event = managementApiHooksRegistration[hookRegistrationMatchedRouteKey];
+    const registeredHookEventContext =
+      dataHooksContextManager.getRegisteredDataHookEventContext(ctx);
 
-      dataHooksContextManager.appendContext({
-        event,
-        path,
-        method,
-        status,
-        params,
-        matchedRoute: matchedRoute && String(matchedRoute),
-        data: body,
-      });
+    if (registeredHookEventContext) {
+      dataHooksContextManager.appendContext(registeredHookEventContext);
     }
 
     // Trigger data hooks

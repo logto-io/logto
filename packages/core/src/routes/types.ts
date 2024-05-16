@@ -9,7 +9,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 
 export type AnonymousRouter = Router<unknown, WithLogContext & WithI18nContext>;
 
-type ManagementApiRouterContext = WithAuthContext &
+export type ManagementApiRouterContext = WithAuthContext &
   WithLogContext &
   WithI18nContext &
   WithHookContext &
