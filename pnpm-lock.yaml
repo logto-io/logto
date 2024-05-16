@@ -43,8 +43,8 @@ importers:
   packages/app-insights:
     dependencies:
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       applicationinsights:
         specifier: ^2.9.5
         version: 2.9.5
@@ -104,8 +104,8 @@ importers:
         specifier: workspace:^3.1.1
         version: link:../shared
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       '@silverhand/slonik':
         specifier: 31.0.0-beta.2
         version: 31.0.0-beta.2
@@ -216,8 +216,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       dayjs:
         specifier: ^1.10.5
         version: 1.11.6
@@ -298,8 +298,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       dayjs:
         specifier: ^1.10.5
         version: 1.11.6
@@ -380,8 +380,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -453,8 +453,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -529,8 +529,8 @@ importers:
         specifier: workspace:^3.1.0
         version: link:../../shared
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -611,8 +611,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -687,8 +687,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -760,8 +760,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -833,8 +833,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -906,8 +906,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -979,8 +979,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       ky:
         specifier: ^1.2.3
         version: 1.2.3
@@ -1055,8 +1055,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1131,8 +1131,8 @@ importers:
         specifier: workspace:^1.3.0
         version: link:../connector-oauth2
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       ky:
         specifier: ^1.2.3
         version: 1.2.3
@@ -1201,8 +1201,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1274,8 +1274,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1350,8 +1350,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1423,8 +1423,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1496,8 +1496,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1569,8 +1569,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1642,8 +1642,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1715,8 +1715,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1788,8 +1788,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1861,8 +1861,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1937,8 +1937,8 @@ importers:
         specifier: workspace:^3.1.1
         version: link:../../shared
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       jose:
         specifier: ^5.0.0
         version: 5.2.2
@@ -2022,8 +2022,8 @@ importers:
         specifier: workspace:^3.1.1
         version: link:../../shared
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       jose:
         specifier: ^5.0.0
         version: 5.0.1
@@ -2101,8 +2101,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       fast-xml-parser:
         specifier: ^4.3.6
         version: 4.3.6
@@ -2180,8 +2180,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2253,8 +2253,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2326,8 +2326,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2405,8 +2405,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2478,8 +2478,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2551,8 +2551,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2624,8 +2624,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2697,8 +2697,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -2830,8 +2830,8 @@ importers:
         specifier: 6.0.2
         version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.3.3))(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -3127,8 +3127,8 @@ importers:
         specifier: workspace:^3.1.1
         version: link:../shared
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       '@silverhand/slonik':
         specifier: 31.0.0-beta.2
         version: 31.0.0-beta.2
@@ -3512,8 +3512,8 @@ importers:
         specifier: 6.0.2
         version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.3.3))(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -3714,8 +3714,8 @@ importers:
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.3.3)
@@ -3777,8 +3777,8 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3811,8 +3811,8 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3870,8 +3870,8 @@ importers:
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       '@silverhand/slonik':
         specifier: 31.0.0-beta.2
         version: 31.0.0-beta.2
@@ -3921,8 +3921,8 @@ importers:
   packages/shared:
     dependencies:
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       chalk:
         specifier: ^5.0.0
         version: 5.1.2
@@ -3973,8 +3973,8 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../language-kit
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       '@withtyped/client':
         specifier: ^0.8.7
         version: 0.8.7(zod@3.22.4)
@@ -4023,8 +4023,8 @@ importers:
         specifier: workspace:^3.1.0
         version: link:../../shared
       '@silverhand/essentials':
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       color:
         specifier: ^4.2.3
         version: 4.2.3
@@ -5890,9 +5890,9 @@ packages:
     peerDependencies:
       eslint: ^8.1.0
 
-  '@silverhand/essentials@2.9.0':
-    resolution: {integrity: sha512-n9mSO/gsLj0GRFXBRNhaQLRK6qbn6pBnKjMQdFwweKgT12ODBXpgkpXohpOBqSofnoaCQWqiDAT6xpCy/5dMIg==}
-    engines: {node: ^18.12.0 || ^20.9.0, pnpm: ^8.0.0}
+  '@silverhand/essentials@2.9.1':
+    resolution: {integrity: sha512-rsql/ZxXMqVvt7ySDHd7xjCog4oCYg+dexxlj3veolajwjKiy/08ZtFyEtFjSEAaKbXwkWZ4TDtiNSxb7HS0yA==}
+    engines: {node: ^18.12.0 || ^20.9.0, pnpm: ^9.0.0}
 
   '@silverhand/slonik@31.0.0-beta.2':
     resolution: {integrity: sha512-4IM57Er5We8+hT8IY9z5La1JAGNRFZ63tp3N0XYUYTNV9fLfUXF78yT+PoW4arnf4qc+4n498bMmKgFmt/mo9Q==}
@@ -14691,44 +14691,44 @@ snapshots:
 
   '@logto/affiliate@0.1.0':
     dependencies:
-      '@silverhand/essentials': 2.9.0
+      '@silverhand/essentials': 2.9.1
       tiny-cookie: 2.4.1
 
   '@logto/browser@2.2.10':
     dependencies:
       '@logto/client': 2.6.6
-      '@silverhand/essentials': 2.9.0
+      '@silverhand/essentials': 2.9.1
       js-base64: 3.7.5
 
   '@logto/client@2.6.6':
     dependencies:
       '@logto/js': 4.1.1
-      '@silverhand/essentials': 2.9.0
+      '@silverhand/essentials': 2.9.1
       camelcase-keys: 7.0.2
       jose: 5.2.2
 
   '@logto/cloud@0.2.5-e5d8200(zod@3.22.4)':
     dependencies:
-      '@silverhand/essentials': 2.9.0
+      '@silverhand/essentials': 2.9.1
       '@withtyped/server': 0.13.6(zod@3.22.4)
     transitivePeerDependencies:
       - zod
 
   '@logto/js@4.1.1':
     dependencies:
-      '@silverhand/essentials': 2.9.0
+      '@silverhand/essentials': 2.9.1
       camelcase-keys: 7.0.2
 
   '@logto/node@2.4.7':
     dependencies:
       '@logto/client': 2.6.6
-      '@silverhand/essentials': 2.9.0
+      '@silverhand/essentials': 2.9.1
       js-base64: 3.7.5
 
   '@logto/react@3.0.8(react@18.2.0)':
     dependencies:
       '@logto/browser': 2.2.10
-      '@silverhand/essentials': 2.9.0
+      '@silverhand/essentials': 2.9.1
       react: 18.2.0
 
   '@manypkg/find-root@1.1.0':
@@ -15801,7 +15801,7 @@ snapshots:
       import-modules: 2.1.0
       lodash: 4.17.21
 
-  '@silverhand/essentials@2.9.0': {}
+  '@silverhand/essentials@2.9.1': {}
 
   '@silverhand/slonik@31.0.0-beta.2':
     dependencies:
@@ -16961,7 +16961,7 @@ snapshots:
 
   '@withtyped/server@0.13.6(zod@3.22.4)':
     dependencies:
-      '@silverhand/essentials': 2.9.0
+      '@silverhand/essentials': 2.9.1
       '@withtyped/shared': 0.2.2
       nanoid: 4.0.2
       zod: 3.22.4

@@ -5,7 +5,7 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
     "@logto/connector-kit": "workspace:^3.0.0",
-    "@silverhand/essentials": "^2.9.0",
+    "@silverhand/essentials": "^2.9.1",
     "fast-xml-parser": "^4.3.6",
     "got": "^14.0.0",
     "samlify": "2.8.11",

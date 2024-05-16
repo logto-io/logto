@@ -95,6 +95,16 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
       `)
       : [];
 
+  const findDefaultRoles = async (forType: RoleType.User) =>
+    pool.any<Role>(
+      sql`
+        select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.isDefault} is true
+        and ${fields.type}=${forType}
+      `
+    );
+
   const findRolesByRoleNames = async (roleNames: string[]) =>
     roleNames.length > 0
       ? pool.any<Role>(sql`
@@ -147,6 +157,7 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
     countRoles,
     findRoles,
     findRolesByRoleIds,
+    findDefaultRoles,
     findRolesByRoleNames,
     findRoleByRoleName,
     insertRoles,
