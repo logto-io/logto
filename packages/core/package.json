@@ -122,7 +122,7 @@
     "node-mocks-http": "^1.12.1",
     "nodemon": "^3.0.0",
     "prettier": "^3.0.0",
-    "sinon": "^17.0.0",
+    "sinon": "^18.0.0",
     "supertest": "^7.0.0",
     "typescript": "^5.3.3"
   },

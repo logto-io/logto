@@ -84,7 +84,7 @@
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
-    "sinon": "^17.0.0",
+    "sinon": "^18.0.0",
     "vitest": "^1.4.0"
   },
   "eslintConfig": {
