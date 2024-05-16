@@ -190,7 +190,7 @@ describe('interaction api trigger hooks', () => {
     });
 
     // Assert user updated event is not triggered
-    await assertHookLogResult(dataHook, 'User.Updated', {
+    await assertHookLogResult(dataHook, 'User.Data.Updated', {
       toBeUndefined: true,
     });
 
@@ -221,7 +221,7 @@ describe('interaction api trigger hooks', () => {
       toBeUndefined: true,
     });
 
-    await assertHookLogResult(dataHook, 'User.Updated', {
+    await assertHookLogResult(dataHook, 'User.Data.Updated', {
       toBeUndefined: true,
     });
   });
@@ -257,9 +257,9 @@ describe('interaction api trigger hooks', () => {
       toBeUndefined: true,
     });
 
-    await assertHookLogResult(dataHook, 'User.Updated', {
+    await assertHookLogResult(dataHook, 'User.Data.Updated', {
       hookPayload: {
-        event: 'User.Updated',
+        event: 'User.Data.Updated',
         interactionEvent: InteractionEvent.SignIn,
         sessionId: expect.any(String),
         data: expect.objectContaining({ id: user.id, username, primaryEmail: email }),
@@ -286,9 +286,9 @@ describe('interaction api trigger hooks', () => {
       hookPayload: interactionHookEventPayload,
     });
 
-    await assertHookLogResult(dataHook, 'User.Updated', {
+    await assertHookLogResult(dataHook, 'User.Data.Updated', {
       hookPayload: {
-        event: 'User.Updated',
+        event: 'User.Data.Updated',
         interactionEvent: InteractionEvent.ForgotPassword,
         sessionId: expect.any(String),
         data: expect.objectContaining({ id: user.id, username, primaryEmail: email }),

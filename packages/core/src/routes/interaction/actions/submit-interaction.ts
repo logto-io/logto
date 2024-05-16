@@ -127,7 +127,9 @@ async function handleSubmitRegister(
   // If it's Logto Cloud, Check if the new user has any pending invitations, if yes, skip onboarding flow.
   const invitations =
     isCloud && userProfile.primaryEmail
-      ? await organizations.invitations.findEntities({ invitee: userProfile.primaryEmail })
+      ? await organizations.invitations.findEntities({
+          invitee: userProfile.primaryEmail,
+        })
       : [];
   const hasPendingInvitations = invitations.some(
     (invitation) => invitation.status === OrganizationInvitationStatus.Pending
@@ -189,7 +191,9 @@ async function handleSubmitRegister(
   ctx.assignDataHookContext({ event: 'User.Created', user });
 
   log?.append({ userId: id });
-  appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.Register) });
+  appInsights.client?.trackEvent({
+    name: getEventName(Component.Core, CoreEvent.Register),
+  });
 
   void trySafe(postAffiliateLogs(ctx, cloudConnection, id, tenantId), (error) => {
     getConsoleLogFromContext(ctx).warn('Failed to post affiliate logs', error);
@@ -238,10 +242,15 @@ async function handleSubmitSignIn(
   ctx.assignInteractionHookResult({ userId: accountId });
   // Trigger user.updated data hook event if the user profile or mfa data is updated
   if (hasUpdatedProfile(updateUserProfile) || mfaVerifications.length > 0) {
-    ctx.assignDataHookContext({ event: 'User.Updated', user: updatedUser });
+    ctx.assignDataHookContext({
+      event: 'User.Data.Updated',
+      user: updatedUser,
+    });
   }
 
-  appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.SignIn) });
+  appInsights.client?.trackEvent({
+    name: getEventName(Component.Core, CoreEvent.SignIn),
+  });
 }
 
 export default async function submitInteraction(
@@ -270,9 +279,12 @@ export default async function submitInteraction(
     profile.password
   );
 
-  const user = await updateUserById(accountId, { passwordEncrypted, passwordEncryptionMethod });
+  const user = await updateUserById(accountId, {
+    passwordEncrypted,
+    passwordEncryptionMethod,
+  });
   ctx.assignInteractionHookResult({ userId: accountId });
-  ctx.assignDataHookContext({ event: 'User.Updated', user });
+  ctx.assignDataHookContext({ event: 'User.Data.Updated', user });
 
   await clearInteractionStorage(ctx, provider);
   ctx.status = 204;
