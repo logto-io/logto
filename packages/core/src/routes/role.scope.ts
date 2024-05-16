@@ -85,7 +85,7 @@ export default function roleScopeRoutes<T extends ManagementApiRouter>(
       params: object({ id: string().min(1) }),
       body: object({ scopeIds: string().min(1).array().nonempty() }),
       response: Scopes.guard.array(),
-      status: [200, 400, 404, 422],
+      status: [201, 400, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -100,9 +100,15 @@ export default function roleScopeRoutes<T extends ManagementApiRouter>(
         scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: id, scopeId }))
       );
 
+      /**
+       * @deprecated
+       *  Align with organization role scopes assignment.
+       *  All relation assignment should not return the entity details at the body
+       **/
       const newRolesScopes = await findRolesScopesByRoleId(id);
       const scopes = await findScopesByIds(newRolesScopes.map(({ scopeId }) => scopeId));
       ctx.body = scopes;
+      ctx.status = 201;
 
       return next();
     }

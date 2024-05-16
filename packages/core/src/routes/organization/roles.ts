@@ -114,6 +114,9 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
 
       const { isDevFeaturesEnabled } = EnvSet.values;
 
+      ctx.body = role;
+      ctx.status = 201;
+
       // Trigger `OrganizationRole.Scope.Updated` event if organizationScopeIds or resourceScopeIds are provided.
       // TODO: remove dev feature guard
       if (
@@ -127,8 +130,6 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
         });
       }
 
-      ctx.body = role;
-      ctx.status = 201;
       return next();
     }
   );
