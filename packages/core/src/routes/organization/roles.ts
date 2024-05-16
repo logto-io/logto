@@ -8,6 +8,7 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -111,8 +112,14 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
         );
       }
 
+      const { isDevFeaturesEnabled } = EnvSet.values;
+
       // Trigger `OrganizationRole.Scope.Updated` event if organizationScopeIds or resourceScopeIds are provided.
-      if (organizationScopeIds.length > 0 || resourceScopeIds.length > 0) {
+      // TODO: remove dev feature guard
+      if (
+        isDevFeaturesEnabled &&
+        (organizationScopeIds.length > 0 || resourceScopeIds.length > 0)
+      ) {
         ctx.appendDataHookContext({
           event: 'OrganizationRole.Scopes.Updated',
           ...buildManagementApiContext(ctx),

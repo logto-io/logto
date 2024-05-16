@@ -4,6 +4,7 @@ import { generateStandardId } from '@logto/shared';
 import { pickState, tryThat } from '@silverhand/essentials';
 import { number, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -174,12 +175,17 @@ export default function roleRoutes<T extends ManagementApiRouter>(
           scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: role.id, scopeId }))
         );
 
-        // Trigger the `Role.Scopes.Updated` event if scopeIds are provided.
-        ctx.appendDataHookContext({
-          event: 'Role.Scopes.Updated',
-          ...buildManagementApiContext(ctx),
-          roleId: role.id,
-        });
+        const { isDevFeaturesEnabled } = EnvSet.values;
+
+        // TODO: Remove dev feature guard
+        if (isDevFeaturesEnabled) {
+          // Trigger the `Role.Scopes.Updated` event if scopeIds are provided.
+          ctx.appendDataHookContext({
+            event: 'Role.Scopes.Updated',
+            ...buildManagementApiContext(ctx),
+            roleId: role.id,
+          });
+        }
       }
 
       ctx.body = role;
