@@ -16,7 +16,7 @@ export const assertHookLogResult = async (
   }
 ) => {
   //  Since the webhook request is async, we need to wait for a while to ensure the webhook response is received.
-  await waitFor(50);
+  await waitFor(100);
 
   const logs = await getWebhookRecentLogs(
     hookId,

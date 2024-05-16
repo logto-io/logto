@@ -56,6 +56,7 @@ describe('trigger custom data hook events', () => {
         event: 'Role.Scopes.Updated',
         path: '/roles',
         roleId: role.id,
+        data: [scope],
       },
     });
 
