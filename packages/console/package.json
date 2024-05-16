@@ -56,7 +56,7 @@
     "@types/debug": "^4.1.7",
     "@types/jest": "^29.4.0",
     "@types/mdx": "^2.0.1",
-    "@types/mdx-js__react": "^1.5.5",
+    "@types/mdx-js__react": "^2.0.0",
     "@types/react": "^18.0.31",
     "@types/react-color": "^3.0.6",
     "@types/react-dom": "^18.0.0",
