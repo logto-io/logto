@@ -372,7 +372,7 @@ describe('submit action', () => {
       login: { accountId: 'foo' },
     });
     expect(ctx.assignDataHookContext).toBeCalledWith({
-      event: 'User.Updated',
+      event: 'User.Data.Updated',
       user: updateProfile,
     });
   });
@@ -433,7 +433,7 @@ describe('submit action', () => {
       login: { accountId: 'foo' },
     });
     expect(ctx.assignDataHookContext).toBeCalledWith({
-      event: 'User.Updated',
+      event: 'User.Data.Updated',
       user: {
         primaryEmail: 'email',
         name: userInfo.name,
@@ -459,7 +459,7 @@ describe('submit action', () => {
     });
     expect(assignInteractionResults).not.toBeCalled();
     expect(ctx.assignDataHookContext).toBeCalledWith({
-      event: 'User.Updated',
+      event: 'User.Data.Updated',
       user: {
         passwordEncrypted: 'passwordEncrypted',
         passwordEncryptionMethod: 'plain',
