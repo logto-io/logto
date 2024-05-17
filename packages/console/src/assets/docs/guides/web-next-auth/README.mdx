@@ -1,0 +1,78 @@
+import InlineNotification from '@/ds-components/InlineNotification';
+import UriInputField from '@/mdx-components/UriInputField';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+
+<Steps>
+
+<Step title="Prerequisites">
+
+In this guide, we assume you have set up Next Auth in your Next.js project. If you haven't, check out the [Next Auth documentation](https://next-auth.js.org/getting-started/introduction) to get started.
+
+</Step>
+
+<Step title="Configure redirect URI">
+
+<InlineNotification>
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
+</InlineNotification>
+
+First, let’s enter your redirect URI.
+
+<UriInputField name="redirectUris" defaultValue="http://localhost:3000/api/auth/callback/logto" />
+
+Don't forget to click the **Save** button.
+
+</Step>
+
+<Step title="Configure the provider">
+
+Modify your API route config of Next Auth, if you are using Pages Router, the file is in `pages/api/auth/[...nextauth].js`, if you are using App Router, the file is in `app/api/auth/[...nextauth]/router.ts`.
+
+The following is an example of App Router:
+
+<pre>
+  <code className="language-ts">
+    {`import NextAuth from 'next-auth';
+
+const handler = NextAuth({
+  providers: [
+    {
+      id: 'logto',
+      name: 'Logto',
+      type: 'oauth',
+      // You can get the well-known URL from the Logto Application Details page,
+      // in the field "OpenID Provider configuration endpoint"
+      wellKnown: '${props.endpoint}oidc/.well-known/openid-configuration',
+      authorization: { params: { scope: 'openid offline_access profile email' } },
+      clientId: '${props.app.id}'',
+      clientSecret: '${props.app.secret}',
+      client: {
+        id_token_signed_response_alg: 'ES384',
+      },
+      profile(profile) {
+        // You can customize the user profile mapping here
+        return {
+          id: profile.sub,
+          name: profile.name ?? profile.username,
+          email: profile.email,
+          image: profile.picture,
+        };
+      },
+    },
+  ],
+});
+
+export { handler as GET, handler as POST };`}
+  </code>
+</pre>
+
+</Step>
+
+<Step title="Checkpoint: Test Logto and Next Auth integration">
+
+Now, you can test your application to see if the authentication works as expected.
+
+</Step>
+
+</Steps>
