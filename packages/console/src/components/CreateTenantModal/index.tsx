@@ -1,4 +1,4 @@
-import { Theme, TenantTag } from '@logto/schemas';
+import { Theme, TenantTag, type TenantModel } from '@logto/schemas';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +20,8 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import EnvTagOptionContent from './EnvTagOptionContent';
 import SelectTenantPlanModal from './SelectTenantPlanModal';
 import * as styles from './index.module.scss';
-import { type CreateTenantData } from './type';
+
+type CreateTenantData = Pick<TenantModel, 'name' | 'tag'>;
 
 type Props = {
   readonly isOpen: boolean;

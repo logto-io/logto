@@ -1,7 +1,10 @@
 import { type TenantTag } from '@logto/schemas';
-import type { TenantInfo } from '@logto/schemas/models';
+import type { TenantModel } from '@logto/schemas/models';
 
 import { cloudApi } from './api.js';
+
+// TODO: Import from cloud package after it's created
+type TenantInfo = Pick<TenantModel, 'id' | 'name' | 'tag' | 'isSuspended' | 'createdAt'>;
 
 export const createTenant = async (
   accessToken: string,
