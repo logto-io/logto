@@ -62,7 +62,7 @@ docker compose -p logto -f - up
 
 #### npm-init
 
-Requires [Node.js](https://nodejs.org/) `^18.12.0` + [PostgreSQL](https://postgresql.org/) `^14.0`.
+Requires [Node.js](https://nodejs.org/) `^20.9.0` + [PostgreSQL](https://postgresql.org/) `^14.0`.
 
 ```bash
 npm init @logto
