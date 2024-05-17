@@ -1,10 +1,12 @@
 import type { RoleResponse } from '@logto/schemas';
 import { RoleType, Roles, featuredApplicationGuard, featuredUserGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { pickState, tryThat } from '@silverhand/essentials';
-import { object, string, z, number } from 'zod';
+import { pickState, trySafe, tryThat } from '@silverhand/essentials';
+import { number, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.js';
@@ -21,6 +23,7 @@ export default function roleRoutes<T extends ManagementApiRouter>(
   const { queries, libraries } = tenant;
   const {
     rolesScopes: { insertRolesScopes },
+    scopes: { findScopesByIds },
     roles: {
       countRoles,
       deleteRoleById,
@@ -172,6 +175,24 @@ export default function roleRoutes<T extends ManagementApiRouter>(
         await insertRolesScopes(
           scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: role.id, scopeId }))
         );
+
+        const { isDevFeaturesEnabled } = EnvSet.values;
+
+        // TODO: Remove dev feature guard
+        if (isDevFeaturesEnabled) {
+          // Trigger the `Role.Scopes.Updated` event if scopeIds are provided. Should not break the request
+          await trySafe(async () => {
+            // Align the response type with POST /roles/:id/scopes
+            const newRolesScopes = await findScopesByIds(scopeIds);
+
+            ctx.appendDataHookContext({
+              event: 'Role.Scopes.Updated',
+              ...buildManagementApiContext(ctx),
+              roleId: role.id,
+              data: newRolesScopes,
+            });
+          });
+        }
       }
 
       ctx.body = role;

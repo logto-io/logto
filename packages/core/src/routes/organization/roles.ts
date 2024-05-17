@@ -1,11 +1,15 @@
 import {
-  type CreateOrganizationRole,
   OrganizationRoles,
   organizationRoleWithScopesGuard,
+  type CreateOrganizationRole,
+  type OrganizationRole,
+  type OrganizationRoleKeys,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
@@ -13,7 +17,11 @@ import { organizationRoleSearchKeys } from '#src/queries/organization/index.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 
-import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
+import {
+  type ManagementApiRouter,
+  type ManagementApiRouterContext,
+  type RouterInitArgs,
+} from '../types.js';
 
 import { errorHandler } from './utils.js';
 
@@ -31,7 +39,13 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  const router = new SchemaRouter(OrganizationRoles, roles, {
+  const router = new SchemaRouter<
+    OrganizationRoleKeys,
+    CreateOrganizationRole,
+    OrganizationRole,
+    unknown,
+    ManagementApiRouterContext
+  >(OrganizationRoles, roles, {
     middlewares: [koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })],
     disabled: { get: true, post: true },
     errorHandler,
@@ -98,8 +112,24 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
         );
       }
 
+      const { isDevFeaturesEnabled } = EnvSet.values;
+
       ctx.body = role;
       ctx.status = 201;
+
+      // Trigger `OrganizationRole.Scope.Updated` event if organizationScopeIds or resourceScopeIds are provided.
+      // TODO: remove dev feature guard
+      if (
+        isDevFeaturesEnabled &&
+        (organizationScopeIds.length > 0 || resourceScopeIds.length > 0)
+      ) {
+        ctx.appendDataHookContext({
+          event: 'OrganizationRole.Scopes.Updated',
+          ...buildManagementApiContext(ctx),
+          organizationRoleId: role.id,
+        });
+      }
+
       return next();
     }
   );

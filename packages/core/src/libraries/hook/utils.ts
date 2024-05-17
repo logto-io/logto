@@ -4,8 +4,10 @@ import {
   type HookConfig,
   type HookEvent,
   type HookEventPayload,
+  type ManagementApiContext,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
+import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 import ky, { type KyResponse } from 'ky';
 
@@ -94,3 +96,17 @@ export const buildManagementApiDataHookRegistrationKey = (
 export const hasRegisteredDataHookEvent = (
   key: string
 ): key is keyof typeof managementApiHooksRegistration => key in managementApiHooksRegistration;
+
+export const buildManagementApiContext = (
+  ctx: IRouterParamContext & Context
+): ManagementApiContext => {
+  const { path, method, status, _matchedRoute: matchedRoute, params } = ctx;
+
+  return {
+    path,
+    method,
+    status,
+    params,
+    matchedRoute: matchedRoute && String(matchedRoute),
+  };
+};

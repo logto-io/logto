@@ -1,16 +1,11 @@
 import {
   InteractionEvent,
   InteractionHookEvent,
-  LogResult,
   SignInIdentifier,
   hookEvents,
-  type Hook,
-  type HookEvent,
 } from '@logto/schemas';
-import { assert } from '@silverhand/essentials';
 
 import { authedAdminApi } from '#src/api/api.js';
-import { getWebhookRecentLogs } from '#src/api/logs.js';
 import { resetPasswordlessConnectors } from '#src/helpers/connector.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import {
@@ -24,9 +19,10 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest, generateNewUserProfile } from '#src/helpers/user.js';
-import { generateEmail, generatePassword, waitFor } from '#src/utils.js';
+import { generateEmail, generatePassword } from '#src/utils.js';
 
-import WebhookMockServer, { mockHookResponseGuard, verifySignature } from './WebhookMockServer.js';
+import WebhookMockServer from './WebhookMockServer.js';
+import { assertHookLogResult } from './utils.js';
 
 const webbHookMockServer = new WebhookMockServer(9999);
 const userNamePrefix = 'hookTriggerTestUser';
@@ -37,57 +33,6 @@ const email = generateEmail();
 
 const userApi = new UserApiTest();
 const webHookApi = new WebHookApiTest();
-
-const assertHookLogResult = async (
-  { id: hookId, signingKey }: Hook,
-  event: HookEvent,
-  assertions: {
-    errorMessage?: string;
-    toBeUndefined?: boolean;
-    hookPayload?: Record<string, unknown>;
-  }
-) => {
-  //  Since the webhook request is async, we need to wait for a while to ensure the webhook response is received.
-  await waitFor(50);
-
-  const logs = await getWebhookRecentLogs(
-    hookId,
-    new URLSearchParams({ logKey: `TriggerHook.${event}`, page_size: '10' })
-  );
-
-  const logEntry = logs[0];
-
-  if (assertions.toBeUndefined) {
-    expect(logEntry).toBeUndefined();
-    return;
-  }
-
-  expect(logEntry).toBeTruthy();
-  assert(logEntry, new Error('Log entry not found'));
-
-  const { payload } = logEntry;
-
-  expect(payload.hookId).toEqual(hookId);
-  expect(payload.key).toEqual(`TriggerHook.${event}`);
-
-  const { result, error } = payload;
-
-  if (result === LogResult.Success) {
-    expect(payload.response).toBeTruthy();
-
-    const { body } = mockHookResponseGuard.parse(payload.response);
-    expect(verifySignature(body.rawPayload, signingKey, body.signature)).toBeTruthy();
-
-    if (assertions.hookPayload) {
-      expect(body.payload).toEqual(expect.objectContaining(assertions.hookPayload));
-    }
-  }
-
-  if (assertions.errorMessage) {
-    expect(result).toEqual(LogResult.Error);
-    expect(error).toContain(assertions.errorMessage);
-  }
-};
 
 beforeAll(async () => {
   await Promise.all([
