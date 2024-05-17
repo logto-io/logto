@@ -16,7 +16,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { pickupFeaturedPlans } from '@/utils/subscription';
 
-import { type CreateTenantData } from '../type';
+import { type CreateTenantData } from '../types';
 
 import PlanCardItem from './PlanCardItem';
 import * as styles from './index.module.scss';

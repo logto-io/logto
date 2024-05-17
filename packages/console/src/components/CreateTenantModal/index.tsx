@@ -20,7 +20,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import EnvTagOptionContent from './EnvTagOptionContent';
 import SelectTenantPlanModal from './SelectTenantPlanModal';
 import * as styles from './index.module.scss';
-import { type CreateTenantData } from './type';
+import { type CreateTenantData } from './types';
 
 type Props = {
   readonly isOpen: boolean;
