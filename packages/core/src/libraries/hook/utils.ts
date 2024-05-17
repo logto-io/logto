@@ -1,5 +1,6 @@
 import {
   ApplicationType,
+  InteractionHookEvent,
   managementApiHooksRegistration,
   type HookConfig,
   type HookEvent,
@@ -48,17 +49,13 @@ export const sendWebhookRequest = async ({
 };
 
 export const generateHookTestPayload = (hookId: string, event: HookEvent): HookEventPayload => {
-  const fakeUserId = 'fake-user-id';
+  const fakeUserId = 'fake-id';
   const now = new Date();
 
-  return {
-    hookId,
-    event,
-    createdAt: now.toISOString(),
+  const interactionHookContext = {
     sessionId: 'fake-session-id',
-    userAgent: 'fake-user-agent',
-    userId: fakeUserId,
     userIp: 'fake-user-ip',
+    userId: fakeUserId,
     user: {
       id: fakeUserId,
       username: 'fake-user',
@@ -85,6 +82,26 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
       name: 'Fake Application',
       description: 'Fake application data for testing',
     },
+  };
+
+  const dataHookContext = {
+    path: '/fake-path/:id',
+    method: 'POST',
+    status: 200,
+    params: { id: fakeUserId },
+    data: { result: 'success' },
+  };
+
+  const isInteractionHookEvent = Object.values<string>(InteractionHookEvent).includes(event);
+
+  return {
+    hookId,
+    event,
+    createdAt: now.toISOString(),
+    sessionId: 'fake-session-id',
+    userAgent: 'fake-user-agent',
+    ip: 'fake-user-ip',
+    ...(isInteractionHookEvent ? interactionHookContext : dataHookContext),
   };
 };
 
