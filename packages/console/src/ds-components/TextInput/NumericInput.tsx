@@ -9,12 +9,12 @@ import * as styles from './NumericInput.module.scss';
 import TextInput from './index';
 
 type ButtonProps = {
-  className?: string;
-  onTrigger?: (
+  readonly className?: string;
+  readonly onTrigger?: (
     event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>
   ) => void;
-  children: React.ReactNode;
-  isDisabled?: boolean;
+  readonly children: React.ReactNode;
+  readonly isDisabled?: boolean;
 };
 
 function Button({ className, onTrigger, children, isDisabled }: ButtonProps) {
@@ -40,9 +40,9 @@ function Button({ className, onTrigger, children, isDisabled }: ButtonProps) {
 
 type Props = Omit<ComponentProps<typeof TextInput>, 'type' | 'suffix'> & {
   /** The event handler for when the value is incremented by the up button. */
-  onValueUp: ButtonProps['onTrigger'];
+  readonly onValueUp: ButtonProps['onTrigger'];
   /** The event handler for when the value is decremented by the down button. */
-  onValueDown: ButtonProps['onTrigger'];
+  readonly onValueDown: ButtonProps['onTrigger'];
 };
 
 /** A numeric text input with up and down buttons for incrementing and decrementing the value. */

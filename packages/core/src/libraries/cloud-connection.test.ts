@@ -2,6 +2,8 @@ import { GlobalValues } from '@logto/shared';
 import { createMockUtils } from '@logto/shared/esm';
 import nock from 'nock';
 
+import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
+
 import { type LogtoConfigLibrary } from './logto-config.js';
 
 const { jest } = import.meta;
@@ -28,16 +30,12 @@ await mockEsmWithActual('#src/env-set/index.js', () => ({
 const { createCloudConnectionLibrary } = await import('./cloud-connection.js');
 
 const logtoConfigs: LogtoConfigLibrary = {
+  ...mockLogtoConfigsLibrary,
   getCloudConnectionData: jest.fn().mockResolvedValue({
     appId: 'appId',
     appSecret: 'appSecret',
     resource: 'resource',
   }),
-  getOidcConfigs: jest.fn(),
-  upsertJwtCustomizer: jest.fn(),
-  getJwtCustomizer: jest.fn(),
-  getJwtCustomizers: jest.fn(),
-  updateJwtCustomizer: jest.fn(),
 };
 
 describe('getAccessToken()', () => {

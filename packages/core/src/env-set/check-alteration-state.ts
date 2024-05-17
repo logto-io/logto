@@ -1,8 +1,9 @@
 import { getAvailableAlterations } from '@logto/cli/lib/commands/database/alteration/index.js';
+import { ConsoleLog } from '@logto/shared';
 import type { DatabasePool } from '@silverhand/slonik';
 import chalk from 'chalk';
 
-import { consoleLog } from '#src/utils/console.js';
+const consoleLog = new ConsoleLog(chalk.magenta('db-alt'));
 
 export const checkAlterationState = async (pool: DatabasePool) => {
   const alterations = await getAvailableAlterations(pool);

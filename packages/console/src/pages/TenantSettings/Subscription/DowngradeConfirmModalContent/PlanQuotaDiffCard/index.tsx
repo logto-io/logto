@@ -14,9 +14,9 @@ import PlanQuotaList from './PlanQuotaList';
 import * as styles from './index.module.scss';
 
 type Props = {
-  planName: string;
-  quotaDiff: Partial<SubscriptionPlanQuota>;
-  isDowngradeTargetPlan?: boolean;
+  readonly planName: string;
+  readonly quotaDiff: Partial<SubscriptionPlanQuota>;
+  readonly isDowngradeTargetPlan?: boolean;
 };
 
 function PlanQuotaDiffCard({ planName, quotaDiff, isDowngradeTargetPlan = false }: Props) {

@@ -9,11 +9,11 @@ import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isOpen: boolean;
-  isLoading: boolean;
-  onClose: () => void;
-  onDelete: () => void;
-  tenant: Pick<TenantResponse, 'name' | 'tag'>;
+  readonly isOpen: boolean;
+  readonly isLoading: boolean;
+  readonly onClose: () => void;
+  readonly onDelete: () => void;
+  readonly tenant: Pick<TenantResponse, 'name' | 'tag'>;
 };
 
 function DeleteModal({ isOpen, isLoading, onClose, onDelete, tenant }: Props) {

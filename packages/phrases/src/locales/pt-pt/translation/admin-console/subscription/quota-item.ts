@@ -34,16 +34,11 @@ const quota_item = {
     not_eligible: 'Remover as tuas aplicações de máquina para máquina',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your third-party apps',
+    name: 'Aplicações de terceiros',
+    limited: '{{count, number}} aplicação de terceiros',
+    limited_other: '{{count, number}} aplicações de terceiros',
+    unlimited: 'Aplicações de terceiros ilimitadas',
+    not_eligible: 'Remover as tuas aplicações de terceiros',
   },
   resources_limit: {
     name: 'Recursos de API',
@@ -152,16 +147,17 @@ const quota_item = {
     not_eligible: 'Remover o teu SSO Empresarial',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
-    name: 'Tenant members',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your tenant members',
+    name: 'Membros do inquilino',
+    limited: '{{count, number}} membro do inquilino',
+    limited_other: '{{count, number}} membros do inquilino',
+    unlimited: 'Membros do inquilino ilimitados',
+    not_eligible: 'Remove os teus membros do inquilino',
+  },
+  custom_jwt_enabled: {
+    name: 'JWT personalizado',
+    limited: 'JWT personalizado',
+    unlimited: 'JWT personalizado',
+    not_eligible: 'Remove o teu personalizador de reivindicações JWT',
   },
 };
 

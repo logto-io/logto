@@ -16,7 +16,7 @@ const domainStatusToTag: Record<
 };
 
 type Props = {
-  status: DomainStatus;
+  readonly status: DomainStatus;
 };
 
 function DomainStatusTag({ status }: Props) {

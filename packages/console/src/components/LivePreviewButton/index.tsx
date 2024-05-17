@@ -12,9 +12,9 @@ import { Tooltip } from '@/ds-components/Tip';
 import * as styles from './index.module.scss';
 
 type Props = {
-  size?: ButtonProps['size'];
-  type?: ButtonType;
-  isDisabled: boolean;
+  readonly size?: ButtonProps['size'];
+  readonly type?: ButtonType;
+  readonly isDisabled: boolean;
 };
 
 function LivePreviewButton({ size, type, isDisabled }: Props) {

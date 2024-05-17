@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import Tag from '@/ds-components/Tag';
 
 type Props = {
-  stats?: HookResponse['executionStats'];
-  isNumberOnly?: boolean;
+  readonly stats?: HookResponse['executionStats'];
+  readonly isNumberOnly?: boolean;
 };
 
 function SuccessRate({ stats, isNumberOnly }: Props) {

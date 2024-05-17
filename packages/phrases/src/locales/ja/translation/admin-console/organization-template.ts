@@ -1,7 +1,7 @@
 const organization_template = {
   title: '組織テンプレート',
   subtitle:
-    'マルチテナントSaaSアプリケーションでは、複数の組織が同一のアクセス制御ポリシーを共有することが一般的です。これには、権限と役割が含まれます。Logtoでは、この概念を「組織テンプレート」と呼びます。これを使用することで、認証モデルの構築と設計のプロセスが簡素化されます。',
+    'マルチテナントSaaSアプリケーションでは、組織テンプレートが複数の組織の共有アクセス制御ポリシー（権限と役割）を定義します。',
   roles: {
     tab_name: '組織の役割',
     search_placeholder: '役割名で検索',
@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: '組織の権限',
     search_placeholder: '権限名で検索',
     create_org_permission: '組織の権限を作成',
-    permission_column: '権限',
+    permission_column: '組織の許可',
     description_column: '説明',
     placeholder_title: '組織の権限',
     placeholder_description:

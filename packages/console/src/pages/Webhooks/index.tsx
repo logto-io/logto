@@ -1,5 +1,4 @@
-import { withAppInsights } from '@logto/app-insights/react';
-import { type HookEvent, type Hook, Theme, type HookResponse } from '@logto/schemas';
+import { type Hook, Theme, type HookResponse, type InteractionHookEvent } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -94,8 +93,9 @@ function Webhooks() {
               const eventArray = conditional(events.length > 0 && events) ?? [event];
               return (
                 eventArray
+                  // TODO: Implement all hook events
                   // eslint-disable-next-line unicorn/prefer-native-coercion-functions
-                  .filter((_event): _event is HookEvent => Boolean(_event))
+                  .filter((_event): _event is InteractionHookEvent => Boolean(_event))
                   .map((_event) => t(hookEventLabel[_event]))
                   .join(', ')
               );
@@ -181,4 +181,4 @@ function Webhooks() {
   );
 }
 
-export default withAppInsights(Webhooks);
+export default Webhooks;

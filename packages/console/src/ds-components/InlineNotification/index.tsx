@@ -16,16 +16,16 @@ import TextLink from '../TextLink';
 import * as styles from './index.module.scss';
 
 type Props = {
-  severity?: 'info' | 'alert' | 'success' | 'error';
-  children?: ReactNode;
-  action?: AdminConsoleKey;
-  href?: string;
-  hrefTargetBlank?: TextLinkProps['targetBlank'];
-  onClick?: () => void;
-  variant?: 'plain' | 'shadow';
-  hasIcon?: boolean;
-  isActionLoading?: boolean;
-  className?: string;
+  readonly severity?: 'info' | 'alert' | 'success' | 'error';
+  readonly children?: ReactNode;
+  readonly action?: AdminConsoleKey;
+  readonly href?: string;
+  readonly hrefTargetBlank?: TextLinkProps['targetBlank'];
+  readonly onClick?: () => void;
+  readonly variant?: 'plain' | 'shadow';
+  readonly hasIcon?: boolean;
+  readonly isActionLoading?: boolean;
+  readonly className?: string;
 };
 
 function NotificationIcon({ severity }: Required<Pick<Props, 'severity'>>) {
@@ -41,9 +41,6 @@ function NotificationIcon({ severity }: Required<Pick<Props, 'severity'>>) {
     }
     case 'error': {
       return <Error />;
-    }
-    default: {
-      return null;
     }
   }
 }

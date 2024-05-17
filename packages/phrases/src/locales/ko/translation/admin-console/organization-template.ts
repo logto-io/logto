@@ -1,7 +1,7 @@
 const organization_template = {
   title: '조직 템플릿',
   subtitle:
-    '멀티-테넌트 SaaS 애플리케이션에서는 여러 조직이 동일한 접근 제어 정책을 공유하는 것이 일반적입니다. 이에는 권한과 역할이 포함됩니다. Logto에서는 이 개념을 "조직 템플릿"이라고 합니다. 이를 사용하면 권한 모델을 구축하고 설계하는 과정이 간소화됩니다.',
+    '멀티 테넌트 SaaS 애플리케이션에서 조직 템플릿은 여러 조직의 공유 액세스 제어 정책(권한 및 역할)을 정의합니다.',
   roles: {
     tab_name: '조직 역할',
     search_placeholder: '역할 이름으로 검색',
@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: '조직 권한',
     search_placeholder: '권한 이름으로 검색',
     create_org_permission: '조직 권한 생성',
-    permission_column: '권한',
+    permission_column: '조직 권한',
     description_column: '설명',
     placeholder_title: '조직 권한',
     placeholder_description: '조직 권한은 조직의 맥락에서 자원에 접근할 수 있는 권한을 의미합니다.',

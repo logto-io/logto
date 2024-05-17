@@ -9,7 +9,7 @@ import ToastProvider from '../ToastProvider';
 import AppMeta from './AppMeta';
 
 type Props = {
-  children: ReactElement;
+  readonly children: ReactElement;
 };
 
 const AppBoundary = ({ children }: Props) => {

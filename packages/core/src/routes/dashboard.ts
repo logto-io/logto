@@ -5,7 +5,7 @@ import { number, object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 const getDateString = (date: Date | number) => format(date, 'yyyy-MM-dd');
 
@@ -13,7 +13,7 @@ const indices = (length: number) => [...Array.from({ length }).keys()];
 
 const getEndOfDayTimestamp = (date: Date | number) => endOfDay(date).valueOf();
 
-export default function dashboardRoutes<T extends AuthedRouter>(
+export default function dashboardRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {

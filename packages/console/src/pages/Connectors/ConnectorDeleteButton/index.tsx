@@ -12,7 +12,7 @@ import useConnectorInUse from '@/hooks/use-connector-in-use';
 import type { ConnectorGroup } from '@/types/connector';
 
 type Props = {
-  connectorGroup: ConnectorGroup;
+  readonly connectorGroup: ConnectorGroup;
 };
 
 function ConnectorDeleteButton({ connectorGroup }: Props) {

@@ -1,7 +1,7 @@
 const organization_template = {
   title: 'Template de organização',
   subtitle:
-    'Em aplicações SaaS multi-tenant, é comum que várias organizações compartilhem políticas de controle de acesso idênticas, incluindo permissões e papéis. No Logto, este conceito é chamado de "template de organização". Usá-lo simplifica o processo de construção e design do seu modelo de autorização.',
+    'Em aplicações SaaS multi-inquilino, um template organizacional define políticas de controle de acesso compartilhado (permissões e papéis) para várias organizações.',
   roles: {
     tab_name: 'Papéis da org',
     search_placeholder: 'Buscar por nome do papel',
@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: 'Permissões da org',
     search_placeholder: 'Buscar por nome da permissão',
     create_org_permission: 'Criar permissão da org',
-    permission_column: 'Permissão',
+    permission_column: 'Permissão da organização',
     description_column: 'Descrição',
     placeholder_title: 'Permissão da organização',
     placeholder_description:

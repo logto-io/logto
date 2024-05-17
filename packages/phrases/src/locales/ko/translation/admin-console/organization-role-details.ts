@@ -19,12 +19,18 @@ const organization_role_details = {
     remove_confirmation:
       '이 권한을 제거하면이 조직 역할을하는 사용자는이 권한으로 부여된 액세스를 잃게됩니다.',
     removed: '권한 {{name}}이(가)이 조직 역할에서 성공적으로 제거되었습니다',
+    assign_description:
+      '이 조직 내의 역할에 권한을 할당합니다. 이는 조직 권한과 API 권한을 모두 포함할 수 있습니다.',
+    organization_permissions: '조직 권한',
+    api_permissions: 'API 권한',
+    assign_organization_permissions: '조직 권한 할당',
+    assign_api_permissions: 'API 권한 할당',
   },
   general: {
     tab: '일반',
     settings: '설정',
     description:
-      '조직 역할은 사용자에게 할당할 수있는 권한의 그룹입니다. 권한은 사전 정의 된 조직 권한에서 가져와야합니다.',
+      '조직 역할은 사용자에게 할당할 수 있는 권한의 그룹입니다. 권한은 사전에 정의된 조직 권한과 API 권한에서 올 수 있습니다.',
     name_field: '이름',
     description_field: '설명',
     description_field_placeholder: '읽기 전용 권한을 가진 사용자',

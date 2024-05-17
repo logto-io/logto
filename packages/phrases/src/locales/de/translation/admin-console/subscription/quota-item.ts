@@ -34,16 +34,11 @@ const quota_item = {
     not_eligible: 'Entferne deine Maschine-zu-Maschine-Apps',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your third-party apps',
+    name: 'Drittanbieter-Apps',
+    limited: '{{count, number}} Drittanbieter-App',
+    limited_other: '{{count, number}} Drittanbieter-Apps',
+    unlimited: 'Unbegrenzte Drittanbieter-Apps',
+    not_eligible: 'Entferne deine Drittanbieter-Apps',
   },
   resources_limit: {
     name: 'API-Ressourcen',
@@ -152,16 +147,17 @@ const quota_item = {
     not_eligible: 'Entferne dein Enterprise SSO',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
-    name: 'Tenant members',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
+    name: 'Mandantenmitglieder',
+    limited: '{{count, number}} Mandantenmitglied',
+    limited_other: '{{count, number}} Mandantenmitglieder',
+    unlimited: 'Unbegrenzte Mandantenmitglieder',
     not_eligible: 'Remove your tenant members',
+  },
+  custom_jwt_enabled: {
+    name: 'Benutzerdefiniertes JWT',
+    limited: 'Benutzerdefiniertes JWT',
+    unlimited: 'Benutzerdefiniertes JWT',
+    not_eligible: 'Remove your JWT claims customizer',
   },
 };
 

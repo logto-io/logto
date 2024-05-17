@@ -20,70 +20,41 @@ import {
  * JWT token code editor configuration
  */
 const accessTokenJwtCustomizerDefinition = `
-declare global {
-  export interface CustomJwtClaims extends Record<string, any> {}
+declare interface CustomJwtClaims extends Record<string, any> {}
 
-  /** Logto internal data that can be used to pass additional information
-   * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
-   */
-  export type Data = {
-    user: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext};
-  }
-
-  export interface Exports {
-    /**
-     * This function is called during the access token generation process to get custom claims for the JWT token.
-     * 
-     * @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token -The JWT token.
-     * @param {Data} data - Logto internal data that can be used to pass additional information
-     * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} data.user - The user info associated with the token.
-     * @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} envVariables - The environment variables.
-     * 
-     * @returns The custom claims.
-     */
-    getCustomJwtClaims: (token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}, data: Data, envVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}) => Promise<CustomJwtClaims>;
-  }
-
-  const exports: Exports;
+/** Logto internal data that can be used to pass additional information
+ * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
+ */
+declare type Context = {
+  user: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext};
 }
 
-export { exports as default };
-`;
+declare type Payload = {
+  token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
+  context: Context;
+  environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
+};`;
 
 const clientCredentialsJwtCustomizerDefinition = `
-declare global {
-  export interface CustomJwtClaims extends Record<string, any> {}
+declare interface CustomJwtClaims extends Record<string, any> {}
 
-  export interface Exports {
-    /**
-     * This function is called during the access token generation process to get custom claims for the JWT token.
-     * 
-     * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
-     * 
-     * @returns The custom claims.
-     */
-    getCustomJwtClaims: (token: ${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}, envVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}) => Promise<CustomJwtClaims>;
-  }
-
-  const exports: Exports;
-}
-
-export { exports as default };
-`;
+declare type Payload = {
+  token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
+  environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
+};`;
 
 export const defaultAccessTokenJwtCustomizerCode = `/**
 * This function is called during the access token generation process to get custom claims for the JWT token.
 * Limit custom claims to under 50KB.
-* 
-* @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} token -The JWT token.
-* @param {Data} data - Logto internal data that can be used to pass additional information
-* @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} data.user - The user info associated with the token.
-* @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [envVariables] - The environment variables.
+*
+* @param {Object} payload - The input payload of the function.
+* @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} payload.token -The JWT token.
+* @param {Context} payload.context - Logto internal data that can be used to pass additional information
+* @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [payload.environmentVariables] - The environment variables.
 *
 * @returns The custom claims.
 */
-
-exports.getCustomJwtClaims = async (token, data, envVariables) => {
+const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
   return {};
 }`;
 
@@ -91,18 +62,18 @@ export const defaultClientCredentialsJwtCustomizerCode = `/**
 * This function is called during the access token generation process to get custom claims for the JWT token.
 * Limit custom claims to under 50KB.
 *
-* @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} token -The JWT token.
-* @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [envVariables] - The environment variables.
+* @param {Object} payload - The input payload of the function.
+* @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} payload.token -The JWT token.
+* @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [payload.environmentVariables] - The environment variables.
 *
 * @returns The custom claims.
 */
-
-exports.getCustomJwtClaims = async (token, envVariables) => {
+const getCustomJwtClaims = async ({ token, environmentVariables }) => {
   return {};
 }`;
 
 export const accessTokenJwtCustomizerModel: ModelSettings = {
-  name: 'user-jwt.ts',
+  name: 'user-jwt.js',
   title: 'User access token',
   language: 'typescript',
   defaultValue: defaultAccessTokenJwtCustomizerCode,
@@ -119,7 +90,7 @@ export const accessTokenJwtCustomizerModel: ModelSettings = {
 };
 
 export const clientCredentialsModel: ModelSettings = {
-  name: 'machine-to-machine-jwt.ts',
+  name: 'machine-to-machine-jwt.js',
   title: 'Machine-to-machine token',
   language: 'typescript',
   defaultValue: defaultClientCredentialsJwtCustomizerCode,
@@ -170,15 +141,14 @@ return {
   externalData: data,
 };`;
 
-export const environmentVariablesCodeExample = `exports.getCustomJwtClaims = async (token, data, envVariables) => {
-  const { apiKey } = envVariables;
+export const environmentVariablesCodeExample = `const getCustomJwtClaimsSample = async ({ environmentVariables }) => {
+  const { apiKey } = environmentVariables;
 
   const response = await fetch('https://api.example.com/data', {
     headers: {
       Authorization: apiKey,
     }
   });
-  
   const data = await response.json();
 
   return {

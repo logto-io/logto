@@ -3,20 +3,16 @@ import { Helmet } from 'react-helmet';
 
 import useCurrentUser from '@/hooks/use-current-user';
 
-import { useRetry } from './use-retry';
 import {
   shouldReport,
   gtagAwTrackingId,
   redditPixelId,
   hashEmail,
-  type GtagConversionId,
-  type RedditReportType,
-  reportToGoogle,
-  reportToReddit,
+  plausibleDataDomain,
 } from './utils';
 
 type ScriptProps = {
-  userEmailHash?: string;
+  readonly userEmailHash?: string;
 };
 
 function GoogleScripts({ userEmailHash }: ScriptProps) {
@@ -61,6 +57,20 @@ function RedditScripts({ userEmailHash }: ScriptProps) {
   );
 }
 
+function PlausibleScripts() {
+  return (
+    <Helmet>
+      <script
+        async
+        defer
+        data-domain={plausibleDataDomain}
+        src="https://plausible.io/js/plausible.manual.js"
+      />
+      <script>{`window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`}</script>
+    </Helmet>
+  );
+}
+
 /**
  * Renders global scripts for conversion tracking.
  */
@@ -88,30 +98,9 @@ export function GlobalScripts() {
 
   return (
     <>
+      <PlausibleScripts />
       <GoogleScripts userEmailHash={userEmailHash} />
       <RedditScripts userEmailHash={userEmailHash} />
     </>
   );
 }
-
-type ReportConversionOptions = {
-  transactionId?: string;
-  gtagId?: GtagConversionId;
-  redditType?: RedditReportType;
-};
-
-export const useReportConversion = ({
-  gtagId,
-  redditType,
-  transactionId,
-}: ReportConversionOptions) => {
-  useRetry({
-    precondition: Boolean(shouldReport && gtagId),
-    execute: () => (gtagId ? reportToGoogle(gtagId, { transactionId }) : false),
-  });
-
-  useRetry({
-    precondition: Boolean(shouldReport && redditType),
-    execute: () => (redditType ? reportToReddit(redditType) : false),
-  });
-};

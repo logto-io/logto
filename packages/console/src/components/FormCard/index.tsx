@@ -8,13 +8,15 @@ import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 import FormCardLayout from './FormCardLayout';
 import * as styles from './index.module.scss';
 
-type Props = {
-  title: AdminConsoleKey;
-  tag?: ReactNode;
-  description?: AdminConsoleKey;
-  descriptionInterpolation?: Record<string, unknown>;
-  learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'> & { linkText?: AdminConsoleKey };
-  children: ReactNode;
+export type Props = {
+  readonly title: AdminConsoleKey;
+  readonly tag?: ReactNode;
+  readonly description?: AdminConsoleKey;
+  readonly descriptionInterpolation?: Record<string, unknown>;
+  readonly learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'> & {
+    linkText?: AdminConsoleKey;
+  };
+  readonly children: ReactNode;
 };
 
 function FormCard({

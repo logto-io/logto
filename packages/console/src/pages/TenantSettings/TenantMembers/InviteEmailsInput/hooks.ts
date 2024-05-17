@@ -24,7 +24,7 @@ const useEmailInputUtils = () => {
   );
 
   const { data: existingInvitations = [] } = useSWR<TenantInvitationResponse[], RequestError>(
-    'api/tenants/:tenantId/invitations',
+    `api/tenants/${currentTenantId}/invitations`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/invitations', { params: { tenantId: currentTenantId } })
   );
@@ -44,15 +44,16 @@ const useEmailInputUtils = () => {
       const validEmails = new Set<string>();
 
       const existingMemberEmails = new Set<string>(
-        existingMembers.map(({ primaryEmail }) => primaryEmail ?? '').filter(Boolean)
+        existingMembers.map(({ primaryEmail }) => primaryEmail?.toLowerCase() ?? '').filter(Boolean)
       );
       const existingInvitationEmails = new Set<string>(
         existingInvitations
           .filter(({ status }) => status === OrganizationInvitationStatus.Pending)
-          .map(({ invitee }) => invitee)
+          .map(({ invitee }) => invitee.toLowerCase())
       );
 
-      for (const email of emails) {
+      for (const userInputEmail of emails) {
+        const email = userInputEmail.toLowerCase();
         if (!emailRegEx.test(email)) {
           invalidEmails.add(email);
         }

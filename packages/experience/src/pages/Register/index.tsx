@@ -9,7 +9,7 @@ import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContext
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
 import SocialSignInList from '@/containers/SocialSignInList';
-import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
+import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import { useSieMethods } from '@/hooks/use-sie';
 
 import ErrorPage from '../ErrorPage';
@@ -79,9 +79,10 @@ const Register = () => {
         {signUpMethods.length > 0 && (
           <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
         )}
+        {/* Social sign-in methods only */}
         {signUpMethods.length === 0 && socialConnectors.length > 0 && (
           <>
-            <TermsAndPrivacy className={styles.terms} />
+            <TermsAndPrivacyCheckbox className={styles.terms} />
             <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />
           </>
         )}

@@ -8,8 +8,8 @@ import TargetScopeItem from '../TargetScopeItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  selectedScopes: ScopeResponse[];
-  onChange: (value: ScopeResponse[]) => void;
+  readonly selectedScopes: ScopeResponse[];
+  readonly onChange: (value: ScopeResponse[]) => void;
 };
 
 function TargetScopesBox({ selectedScopes, onChange }: Props) {

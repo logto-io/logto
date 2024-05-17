@@ -1,4 +1,8 @@
-import { type Resource, type CreateResource } from '@logto/schemas';
+import {
+  type Resource,
+  type CreateResource,
+  getManagementApiResourceIndicator,
+} from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { type Nullable } from '@silverhand/essentials';
 
@@ -91,6 +95,19 @@ describe('resource scope routes', () => {
     expect(response.status).toEqual(400);
   });
 
+  it('POST /resources/:id/scopes should throw when the resource is management API', async () => {
+    const { findResourceById } = resources;
+    findResourceById.mockResolvedValueOnce({
+      ...mockResource,
+      indicator: getManagementApiResourceIndicator('mock'),
+    });
+    await expect(
+      resourceScopeRequest
+        .post('/resources/foo/scopes')
+        .send({ name: 'name', description: 'description' })
+    ).resolves.toHaveProperty('status', 400);
+  });
+
   it('PATCH /resources/:id/scopes/:scopeId', async () => {
     const name = 'write:users';
     const description = 'description';
@@ -107,10 +124,35 @@ describe('resource scope routes', () => {
     });
   });
 
+  it('PATCH /resources/:id/scopes/:scopeId should throw when the resource is management API', async () => {
+    const { findResourceById } = resources;
+    findResourceById.mockResolvedValueOnce({
+      ...mockResource,
+      indicator: getManagementApiResourceIndicator('mock'),
+    });
+    await expect(
+      resourceScopeRequest
+        .patch('/resources/foo/scopes/foz')
+        .send({ name: 'name', description: 'description' })
+    ).resolves.toHaveProperty('status', 400);
+  });
+
   it('DELETE /resources/:id/scopes/:scopeId', async () => {
     await expect(resourceScopeRequest.delete('/resources/foo/scopes/foz')).resolves.toHaveProperty(
       'status',
       204
+    );
+  });
+
+  it('DELETE /resources/:id/scopes/:scopeId should throw when the resource is management API', async () => {
+    const { findResourceById } = resources;
+    findResourceById.mockResolvedValueOnce({
+      ...mockResource,
+      indicator: getManagementApiResourceIndicator('mock'),
+    });
+    await expect(resourceScopeRequest.delete('/resources/foo/scopes/foz')).resolves.toHaveProperty(
+      'status',
+      400
     );
   });
 });

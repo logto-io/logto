@@ -1,17 +1,18 @@
 import { useTranslation } from 'react-i18next';
 
-import TextLink from '@/components/TextLink';
+import TextLink, { type Props as TextLinkProps } from '@/components/TextLink';
 
 import * as styles from './index.module.scss';
 
 type Props = {
+  readonly linkType?: TextLinkProps['type'];
   // eslint-disable-next-line react/boolean-prop-naming
-  inline?: boolean;
-  termsOfUseUrl?: string;
-  privacyPolicyUrl?: string;
+  readonly inline?: boolean;
+  readonly termsOfUseUrl?: string;
+  readonly privacyPolicyUrl?: string;
 };
 
-const TermsLinks = ({ inline, termsOfUseUrl, privacyPolicyUrl }: Props) => {
+const TermsLinks = ({ inline, termsOfUseUrl, privacyPolicyUrl, linkType = 'secondary' }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -21,7 +22,7 @@ const TermsLinks = ({ inline, termsOfUseUrl, privacyPolicyUrl }: Props) => {
           className={styles.link}
           text="description.terms_of_use"
           href={termsOfUseUrl}
-          type="secondary"
+          type={linkType}
           target="_blank"
           onClick={(event) => {
             event.stopPropagation();
@@ -35,7 +36,7 @@ const TermsLinks = ({ inline, termsOfUseUrl, privacyPolicyUrl }: Props) => {
           className={styles.link}
           text="description.privacy_policy"
           href={privacyPolicyUrl}
-          type="secondary"
+          type={linkType}
           target="_blank"
           onClick={(event) => {
             event.stopPropagation();

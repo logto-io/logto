@@ -6,8 +6,8 @@ import IconButton from '@/ds-components/IconButton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  scope: ScopeResponse;
-  onDelete: (scope: ScopeResponse) => void;
+  readonly scope: ScopeResponse;
+  readonly onDelete: (scope: ScopeResponse) => void;
 };
 
 function TargetScopeItem({ scope, onDelete }: Props) {

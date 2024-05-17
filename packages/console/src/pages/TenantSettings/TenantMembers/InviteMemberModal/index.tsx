@@ -15,13 +15,14 @@ import * as modalStyles from '@/scss/modal.module.scss';
 
 import InviteEmailsInput from '../InviteEmailsInput';
 import useEmailInputUtils from '../InviteEmailsInput/hooks';
+import * as styles from '../index.module.scss';
 import { type InviteMemberForm } from '../types';
 
 import Footer from './Footer';
 
 type Props = {
-  isOpen: boolean;
-  onClose: (isSuccessful?: boolean) => void;
+  readonly isOpen: boolean;
+  readonly onClose: (isSuccessful?: boolean) => void;
 };
 
 function InviteMemberModal({ isOpen, onClose }: Props) {
@@ -66,7 +67,9 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     if (role === TenantRole.Admin) {
       const [result] = await show({
         ModalContent: () => (
-          <Trans components={{ ul: <ul />, li: <li /> }}>{t('assign_admin_confirm')}</Trans>
+          <Trans components={{ ul: <ul className={styles.list} />, li: <li /> }}>
+            {t('assign_admin_confirm')}
+          </Trans>
         ),
         confirmButtonText: 'general.confirm',
       });

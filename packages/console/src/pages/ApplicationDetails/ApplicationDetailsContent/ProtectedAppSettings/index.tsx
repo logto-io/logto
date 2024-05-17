@@ -38,7 +38,7 @@ import SessionForm from './components/SessionForm';
 import * as styles from './index.module.scss';
 
 type Props = {
-  data: Application;
+  readonly data: Application;
 };
 
 const routes = Object.freeze(['/register', '/sign-in', '/sign-in-callback', '/sign-out']);
@@ -170,7 +170,7 @@ function ProtectedAppSettings({ data }: Props) {
           />
         </FormField>
         {!!host && (
-          <FormField title="domain.custom.custom_domain_field">
+          <FormField title="protected_app.form.domain_field_label">
             {showCustomDomainLoadingMask && (
               <div className={styles.loadingSkeleton}>
                 <div className={classNames(styles.bone, styles.title)} />

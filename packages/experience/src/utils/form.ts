@@ -59,7 +59,6 @@ export const validateIdentifierField = (type: IdentifierInputType, value: string
     case SignInIdentifier.Phone: {
       return validatePhone(value);
     }
-    default:
   }
 };
 

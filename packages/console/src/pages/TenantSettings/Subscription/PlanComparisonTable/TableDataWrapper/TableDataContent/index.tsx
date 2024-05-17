@@ -3,7 +3,7 @@ import Success from '@/assets/icons/success.svg';
 import * as styles from './index.module.scss';
 
 type Props = {
-  content: string;
+  readonly content: string;
 };
 
 function TableDataContent({ content }: Props) {

@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     'Al hacerlo, se eliminarán los permisos asociados con este rol de los usuarios afectados y se eliminará la asignación entre roles, usuarios y permisos.',
   role_deleted: '{{name}} fue eliminado correctamente.',
-  settings_tab: 'Configuración',
+  general_tab: 'General',
   users_tab: 'Usuarios',
   m2m_apps_tab: 'Aplicaciones de máquina a máquina',
   permissions_tab: 'Permisos',

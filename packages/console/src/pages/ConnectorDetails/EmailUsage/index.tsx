@@ -14,8 +14,8 @@ import useTheme from '@/hooks/use-theme';
 import * as styles from './index.module.scss';
 
 type Props = {
-  usage: number;
-  isCompact?: boolean;
+  readonly usage: number;
+  readonly isCompact?: boolean;
 };
 
 function EmailUsage({ usage, isCompact }: Props) {

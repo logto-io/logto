@@ -12,10 +12,10 @@ import * as styles from './index.module.scss';
  */
 
 type Props = {
-  roleId?: string;
-  roleType: RoleType;
-  value: ScopeResponse[];
-  onChange: (value: ScopeResponse[]) => void;
+  readonly roleId?: string;
+  readonly roleType: RoleType;
+  readonly value: ScopeResponse[];
+  readonly onChange: (value: ScopeResponse[]) => void;
 };
 
 function RoleScopesTransfer({ roleId, roleType, value, onChange }: Props) {

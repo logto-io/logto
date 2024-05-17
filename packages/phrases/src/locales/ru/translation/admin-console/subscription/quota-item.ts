@@ -34,16 +34,11 @@ const quota_item = {
     not_eligible: 'Удалите свои приложения для машин ко машине',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your third-party apps',
+    name: 'Приложения сторонних разработчиков',
+    limited: '{{count, number}} приложение сторонних разработчиков',
+    limited_other: '{{count, number}} приложения сторонних разработчиков',
+    unlimited: 'Неограниченное количество приложений сторонних разработчиков',
+    not_eligible: 'Удалите свои приложения сторонних разработчиков',
   },
   resources_limit: {
     name: 'API ресурсы',
@@ -152,16 +147,17 @@ const quota_item = {
     not_eligible: 'Удалите свой Единый вход для предприятий',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
-    name: 'Tenant members',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your tenant members',
+    name: 'Участники арендаторов',
+    limited: '{{count, number}} участник арендатора',
+    limited_other: '{{count, number}} участников арендатора',
+    unlimited: 'Неограниченное количество участников арендатора',
+    not_eligible: 'Удалите своих участников арендатора',
+  },
+  custom_jwt_enabled: {
+    name: 'Пользовательский JWT',
+    limited: 'Пользовательский JWT',
+    unlimited: 'Пользовательский JWT',
+    not_eligible: 'Удалите свой настраиваемый создатель токенов JWT',
   },
 };
 

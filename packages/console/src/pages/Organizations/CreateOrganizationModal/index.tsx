@@ -17,8 +17,8 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 type Props = {
-  isOpen: boolean;
-  onClose: (createdId?: string) => void;
+  readonly isOpen: boolean;
+  readonly onClose: (createdId?: string) => void;
 };
 
 function CreateOrganizationModal({ isOpen, onClose }: Props) {

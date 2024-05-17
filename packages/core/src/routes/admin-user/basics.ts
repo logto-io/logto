@@ -17,12 +17,13 @@ import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
+export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
+  ...args: RouterInitArgs<T>
+) {
   const [router, { queries, libraries }] = args;
   const {
-    oidcModelInstances: { revokeInstanceByUserId },
     users: {
       deleteUserById,
       findUserById,
@@ -35,7 +36,13 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
     organizations,
   } = queries;
   const {
-    users: { checkIdentifierCollision, generateUserId, insertUser, verifyUserPassword },
+    users: {
+      checkIdentifierCollision,
+      generateUserId,
+      insertUser,
+      verifyUserPassword,
+      signOutUser,
+    },
   } = libraries;
 
   router.get(
@@ -155,7 +162,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         profile: userProfileGuard,
       }).partial(),
       response: userProfileResponseGuard,
-      status: [200, 404, 422],
+      status: [200, 400, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -347,7 +354,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
       });
 
       if (isSuspended) {
-        await revokeInstanceByUserId('refreshToken', user.id);
+        await signOutUser(user.id);
       }
 
       ctx.body = pick(user, ...userInfoSelectFields);
@@ -371,6 +378,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         throw new RequestError('user.cannot_delete_self');
       }
 
+      await signOutUser(userId);
       await deleteUserById(userId);
 
       ctx.status = 204;
@@ -379,3 +387,4 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
     }
   );
 }
+/* eslint-enable max-lines */

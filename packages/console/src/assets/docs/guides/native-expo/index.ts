@@ -12,7 +12,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full Expo (React Native) guide',
-    url: 'https://docs.logto.io/sdk/expo',
+    url: 'https://docs.logto.io/quick-starts/expo',
   },
 });
 

@@ -1,18 +1,21 @@
 import {
   Hooks,
   Logs,
+  hook,
   hookConfigGuard,
+  hookEventGuard,
   hookEventsGuard,
   hookResponseGuard,
-  hook,
-  type HookResponse,
+  interactionHookEventGuard,
   type Hook,
+  type HookResponse,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -20,13 +23,18 @@ import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { type AllowedKeyPrefix } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-const nonemptyUniqueHookEventsGuard = hookEventsGuard
+const { isDevFeaturesEnabled } = EnvSet.values;
+// TODO: remove dev features guard
+const webhookEventsGuard = isDevFeaturesEnabled
+  ? hookEventsGuard
+  : interactionHookEventGuard.array();
+const nonemptyUniqueHookEventsGuard = webhookEventsGuard
   .nonempty()
   .transform((events) => deduplicate(events));
 
-export default function hookRoutes<T extends AuthedRouter>(
+export default function hookRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
@@ -42,7 +50,7 @@ export default function hookRoutes<T extends AuthedRouter>(
   } = queries;
 
   const {
-    hooks: { testHook },
+    hooks: { triggerTestHook },
     quota,
   } = libraries;
 
@@ -159,6 +167,8 @@ export default function hookRoutes<T extends AuthedRouter>(
     koaQuotaGuard({ key: 'hooksLimit', quota }),
     koaGuard({
       body: Hooks.createGuard.omit({ id: true, signingKey: true }).extend({
+        // TODO: remove dev features guard
+        event: (isDevFeaturesEnabled ? hookEventGuard : interactionHookEventGuard).optional(),
         events: nonemptyUniqueHookEventsGuard.optional(),
       }),
       response: Hooks.guard,
@@ -196,7 +206,7 @@ export default function hookRoutes<T extends AuthedRouter>(
         body: { events, config },
       } = ctx.guard;
 
-      await testHook(id, events, config);
+      await triggerTestHook(id, events, config);
 
       ctx.status = 204;
 

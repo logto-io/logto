@@ -10,10 +10,10 @@ import Button from '../Button';
 import * as styles from './TableError.module.scss';
 
 type Props = {
-  title?: string;
-  content?: string;
-  onRetry?: () => void;
-  columns: number;
+  readonly title?: string;
+  readonly content?: string;
+  readonly onRetry?: () => void;
+  readonly columns: number;
 };
 
 function TableError({ title, content, onRetry, columns }: Props) {

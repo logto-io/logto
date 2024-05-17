@@ -15,8 +15,8 @@ import AppGuide from '../../components/AppGuide';
 import * as styles from './index.module.scss';
 
 type Props = {
-  app: ApplicationResponse;
-  onClose: () => void;
+  readonly app: ApplicationResponse;
+  readonly onClose: () => void;
 };
 
 function GuideDrawer({ app, onClose }: Props) {

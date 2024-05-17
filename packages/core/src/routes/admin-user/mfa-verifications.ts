@@ -11,9 +11,9 @@ import { transpileUserMfaVerifications } from '#src/utils/user.js';
 
 import { generateBackupCodes } from '../interaction/utils/backup-code-validation.js';
 import { generateTotpSecret } from '../interaction/utils/totp-validation.js';
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-export default function adminUserMfaVerificationsRoutes<T extends AuthedRouter>(
+export default function adminUserMfaVerificationsRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
   const [

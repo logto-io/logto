@@ -8,9 +8,9 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function roleScopeRoutes<T extends AuthedRouter>(
+export default function roleScopeRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {

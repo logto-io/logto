@@ -24,6 +24,10 @@ We ONLY support "Authorization Code" grant type for security consideration and i
 
 *clientSecret*: The client secret is a confidential key that is issued to the client application by the authorization server during registration. The client application uses this secret key to authenticate itself with the authorization server when requesting access tokens. The client secret is considered confidential information and should be kept secure at all times.
 
+*tokenEndpointAuthMethod*: The token endpoint authentication method is used by the client application to authenticate itself with the authorization server when requesting access tokens. To discover supported methods, consult the `token_endpoint_auth_methods_supported` field available at the OAuth 2.0 service provider’s OpenID Connect discovery endpoint, or refer to the relevant documentation provided by the OAuth 2.0 service provider.
+
+*clientSecretJwtSigningAlgorithm (Optional)*: Only required when `tokenEndpointAuthMethod` is `client_secret_jwt`. The client secret JWT signing algorithm is used by the client application to sign the JWT that is sent to the authorization server during the token request.
+
 *scope*: The scope parameter is used to specify the set of resources and permissions that the client application is requesting access to. The scope parameter is typically defined as a space-separated list of values that represent specific permissions. For example, a scope value of "read write" might indicate that the client application is requesting read and write access to a user's data.
 
 You are expected to find `authorizationEndpoint`, `tokenEndpoint`, `jwksUri` and `issuer` as OpenID Provider's configuration information. They should be available in social vendor's documentation.

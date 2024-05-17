@@ -1,10 +1,12 @@
+import { ReservedResource } from '@logto/core-kit';
 import { type ConsentInfoResponse } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import { consent, getConsentInfo } from '@/apis/consent';
 import Button from '@/components/Button';
+import TermsLinks from '@/components/TermsLinks';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -66,7 +68,12 @@ const Consent = () => {
     return null;
   }
 
-  const applicationName = consentData.application.displayName ?? consentData.application.name;
+  const {
+    application: { displayName, name, termsOfUseUrl, privacyPolicyUrl },
+  } = consentData;
+
+  const applicationName = displayName ?? name;
+  const showTerms = Boolean(termsOfUseUrl ?? privacyPolicyUrl);
 
   return (
     <LandingPageLayout
@@ -79,11 +86,14 @@ const Consent = () => {
       <UserProfile user={consentData.user} />
       <ScopesListCard
         userScopes={consentData.missingOIDCScope}
-        resourceScopes={consentData.missingResourceScopes}
+        /**
+         * The org resources is included in the user scopes for compatibility.
+         */
+        resourceScopes={consentData.missingResourceScopes?.filter(
+          ({ resource }) => resource.id !== ReservedResource.Organization
+        )}
         appName={applicationName}
         className={styles.scopesCard}
-        termsUrl={consentData.application.termsOfUseUrl ?? undefined}
-        privacyUrl={consentData.application.privacyPolicyUrl ?? undefined}
       />
       {consentData.organizations && (
         <OrganizationSelector
@@ -103,9 +113,31 @@ const Consent = () => {
         />
         <Button title="action.authorize" onClick={consentHandler} />
       </div>
-      <div className={styles.redirectUri}>
-        {t('description.redirect_to', { name: getRedirectUriOrigin(consentData.redirectUri) })}
-      </div>
+      {!showTerms && (
+        <div className={styles.redirectUri}>
+          {t('description.redirect_to', { name: getRedirectUriOrigin(consentData.redirectUri) })}
+        </div>
+      )}
+      {showTerms && (
+        <div className={styles.terms}>
+          <Trans
+            components={{
+              link: (
+                <TermsLinks
+                  inline
+                  termsOfUseUrl={termsOfUseUrl ?? ''}
+                  privacyPolicyUrl={privacyPolicyUrl ?? ''}
+                />
+              ),
+            }}
+          >
+            {t('description.authorize_agreement_with_redirect', {
+              name,
+              uri: getRedirectUriOrigin(consentData.redirectUri),
+            })}
+          </Trans>
+        </div>
+      )}
       <div className={styles.footerLink}>
         {t('description.not_you')}{' '}
         <TextLink replace to="/sign-in" text="action.use_another_account" />

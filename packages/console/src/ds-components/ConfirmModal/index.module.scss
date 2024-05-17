@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .overlay {
-  z-index: 1000;
+  @include _.z-index(confirm-modal);
 }
 
 .content {

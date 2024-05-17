@@ -5,6 +5,7 @@ import Router from 'koa-router';
 import { EnvSet } from '#src/env-set/index.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaCors from '#src/middleware/koa-cors.js';
+import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
@@ -36,7 +37,7 @@ import ssoConnectors from './sso-connector/index.js';
 import statusRoutes from './status.js';
 import swaggerRoutes from './swagger/index.js';
 import systemRoutes from './system.js';
-import type { AnonymousRouter, AuthedRouter } from './types.js';
+import type { AnonymousRouter, ManagementApiRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
 import verificationCodeRoutes from './verification-code.js';
 import wellKnownRoutes from './well-known.js';
@@ -45,9 +46,10 @@ const createRouters = (tenant: TenantContext) => {
   const interactionRouter: AnonymousRouter = new Router();
   interactionRoutes(interactionRouter, tenant);
 
-  const managementRouter: AuthedRouter = new Router();
+  const managementRouter: ManagementApiRouter = new Router();
   managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
   managementRouter.use(koaTenantGuard(tenant.id, tenant.queries));
+  managementRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
 
   applicationRoutes(managementRouter, tenant);
   applicationRoleRoutes(managementRouter, tenant);

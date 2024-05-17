@@ -9,7 +9,6 @@ const quota_table = {
     title: 'Anwendungen',
     total: 'Gesamtzahl der Anwendungen',
     m2m: 'Maschine-zu-Maschine',
-    /** UNTRANSLATED */
     third_party: 'Third-party apps',
   },
   resource: {
@@ -66,16 +65,11 @@ const quota_table = {
     hipaa_or_baa_report: 'HIPAA/BAA-Bericht',
   },
   developers_and_platform: {
-    /** UNTRANSLATED */
-    title: 'Developers and platform',
-    /** UNTRANSLATED */
+    title: 'Entwickler und Plattform',
     hooks: 'Webhooks',
-    /** UNTRANSLATED */
-    audit_logs_retention: 'Audit logs retention',
-    /** UNTRANSLATED */
-    jwt_claims: 'JWT claims',
-    /** UNTRANSLATED */
-    tenant_members: 'Tenant members',
+    audit_logs_retention: 'Auditprotokolle Aufbewahrung',
+    jwt_claims: 'JWT-Ansprüche',
+    tenant_members: 'Mandantenmitglieder',
   },
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',
@@ -97,17 +91,15 @@ const quota_table = {
     'Alle Arten von Tokens, die von Logto ausgegeben wurden, einschließlich Zugriffstoken, Aktualisierungstoken, usw.',
   mao_tip:
     'MAO (Monthly Active Org) bezeichnet die Anzahl der einzigartigen Organisationen, die in einem Abrechnungszyklus mindestens einen MAU (Monthly Active User) haben.',
-  /** UNTRANSLATED */
   third_party_tip:
-    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
+    'Verwenden Sie Logto als Ihren OIDC-Identitätsanbieter für Anmeldungen von Drittanbieter-Apps und Berechtigungsvergaben.',
   included: '{{value, number}} inklusive',
   included_mao: '{{value, number}} MAO enthalten',
   extra_quota_price: 'Dann ${{value, number}} pro Monat / je danach',
   per_month_each: '${{value, number}} pro Monat / je',
   extra_mao_price: 'Dann ${{value, number}} pro MAO',
   per_month: '${{value, number}} pro Monat',
-  /** UNTRANSLATED */
-  per_member: 'Then ${{value, number}} per member',
+  per_member: 'Dann ${{value, number}} pro Mitglied',
 };
 
 export default Object.freeze(quota_table);

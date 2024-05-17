@@ -23,15 +23,15 @@ import { Tooltip } from '../Tip';
 import * as styles from './index.module.scss';
 
 type Props = {
-  value: string;
-  className?: string;
-  style?: CSSProperties;
-  valueStyle?: CSSProperties;
-  variant?: 'text' | 'contained' | 'border' | 'icon';
-  hasVisibilityToggle?: boolean;
-  size?: 'default' | 'small';
-  isWordWrapAllowed?: boolean;
-  isFullWidth?: boolean;
+  readonly value: string;
+  readonly className?: string;
+  readonly style?: CSSProperties;
+  readonly valueStyle?: CSSProperties;
+  readonly variant?: 'text' | 'contained' | 'border' | 'icon';
+  readonly hasVisibilityToggle?: boolean;
+  readonly size?: 'default' | 'small';
+  readonly displayType?: 'block' | 'inline';
+  readonly isWordWrapAllowed?: boolean;
 };
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;
@@ -46,7 +46,7 @@ function CopyToClipboard(
     variant = 'contained',
     size = 'default',
     isWordWrapAllowed = false,
-    isFullWidth = false,
+    displayType = 'inline',
   }: Props,
   ref: ForwardedRef<HTMLDivElement>
 ) {
@@ -90,7 +90,7 @@ function CopyToClipboard(
         styles.container,
         styles[variant],
         styles[size],
-        isFullWidth && styles.fullWidth,
+        styles[displayType],
         className
       )}
       role="button"

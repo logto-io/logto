@@ -3,14 +3,15 @@ import { builtInLanguages } from '@logto/phrases-experience';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 
 import {
-  socialTarget01,
-  socialTarget02,
   mockSignInExperience,
   mockSocialConnectors,
+  socialTarget01,
+  socialTarget02,
   wellConfiguredSsoConnector,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
+import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
 
 import { createCloudConnectionLibrary } from '../cloud-connection.js';
 import { createConnectorLibrary } from '../connector.js';
@@ -51,16 +52,12 @@ const connectorLibrary = createConnectorLibrary(queries, {
   getClient: jest.fn(),
 });
 const cloudConnection = createCloudConnectionLibrary({
+  ...mockLogtoConfigsLibrary,
   getCloudConnectionData: jest.fn().mockResolvedValue({
     appId: 'appId',
     appSecret: 'appSecret',
     resource: 'resource',
   }),
-  getOidcConfigs: jest.fn(),
-  upsertJwtCustomizer: jest.fn(),
-  getJwtCustomizer: jest.fn(),
-  getJwtCustomizers: jest.fn(),
-  updateJwtCustomizer: jest.fn(),
 });
 
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');

@@ -5,7 +5,7 @@ import Universal from '@/assets/icons/connector-platform-icon-universal.svg';
 import Web from '@/assets/icons/connector-platform-icon-web.svg';
 
 type Props = {
-  platform: ConnectorPlatform;
+  readonly platform: ConnectorPlatform;
 };
 
 function ConnectorPlatformIcon({ platform }: Props) {

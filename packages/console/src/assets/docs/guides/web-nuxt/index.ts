@@ -13,7 +13,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full Nuxt guide',
-    url: 'https://docs.logto.io/sdk/nuxt',
+    url: 'https://docs.logto.io/quick-starts/nuxt',
   },
 });
 

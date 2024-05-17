@@ -10,7 +10,7 @@ const factorNameLabel: Record<MfaFactor, AdminConsoleKey> = {
 };
 
 export type Props = {
-  type: MfaFactor;
+  readonly type: MfaFactor;
 };
 
 function MfaFactorName({ type }: Props) {

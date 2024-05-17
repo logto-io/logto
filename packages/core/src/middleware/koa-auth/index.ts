@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
-import { consoleLog } from '#src/utils/console.js';
+import { devConsole } from '#src/utils/console.js';
 
 import { getAdminTenantTokenValidationSet } from './utils.js';
 
@@ -60,7 +60,7 @@ export const verifyBearerTokenFromRequest = async (
   if ((!isProduction || isIntegrationTest) && userId) {
     // This log is distracting in integration tests.
     if (!isIntegrationTest) {
-      consoleLog.warn(`Found dev user ID ${userId}, skip token validation.`);
+      devConsole.warn(`Found dev user ID ${userId}, skip token validation.`);
     }
 
     return {

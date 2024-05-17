@@ -1,61 +1,53 @@
-import { useLogto } from '@logto/react';
-import { TenantScope, getTenantOrganizationId } from '@logto/schemas';
-import { useContext, useEffect, useState } from 'react';
+import { TenantScope } from '@logto/schemas';
+import { useContext, useMemo } from 'react';
+import useSWR from 'swr';
 
+import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
+import { type RequestError } from './use-api';
+import useCurrentUser from './use-current-user';
+
 const useCurrentTenantScopes = () => {
-  const { currentTenantId, isInitComplete } = useContext(TenantsContext);
-  const { isAuthenticated, getOrganizationTokenClaims } = useLogto();
+  const { currentTenantId } = useContext(TenantsContext);
+  const cloudApi = useAuthedCloudApi();
+  const { user } = useCurrentUser();
+  const userId = user?.id ?? '';
 
-  const [scopes, setScopes] = useState<string[]>([]);
-  const [canInviteMember, setCanInviteMember] = useState(false);
-  const [canRemoveMember, setCanRemoveMember] = useState(false);
-  const [canUpdateMemberRole, setCanUpdateMemberRole] = useState(false);
-  const [canManageTenant, setCanManageTenant] = useState(false);
+  const {
+    data: scopes,
+    isLoading,
+    mutate,
+  } = useSWR<string[], RequestError>(
+    isCloud && userId && `api/tenants/${currentTenantId}/members/${userId}/scopes`,
+    async () => {
+      const scopes = await cloudApi.get('/api/tenants/:tenantId/members/:userId/scopes', {
+        params: { tenantId: currentTenantId, userId },
+      });
+      return scopes.map(({ name }) => name);
+    }
+  );
 
-  useEffect(() => {
-    (async () => {
-      if (isAuthenticated && isInitComplete) {
-        const organizationId = getTenantOrganizationId(currentTenantId);
-        const claims = await getOrganizationTokenClaims(organizationId);
-        const allScopes = claims?.scope?.split(' ') ?? [];
-        setScopes(allScopes);
+  const access = useMemo(
+    () => ({
+      canInviteMember: Boolean(scopes?.includes(TenantScope.InviteMember)),
+      canRemoveMember: Boolean(scopes?.includes(TenantScope.RemoveMember)),
+      canUpdateMemberRole: Boolean(scopes?.includes(TenantScope.UpdateMemberRole)),
+      canManageTenant: Boolean(scopes?.includes(TenantScope.ManageTenant)),
+    }),
+    [scopes]
+  );
 
-        for (const scope of allScopes) {
-          switch (scope) {
-            case TenantScope.InviteMember: {
-              setCanInviteMember(true);
-              break;
-            }
-            case TenantScope.RemoveMember: {
-              setCanRemoveMember(true);
-              break;
-            }
-            case TenantScope.UpdateMemberRole: {
-              setCanUpdateMemberRole(true);
-              break;
-            }
-            case TenantScope.ManageTenant: {
-              setCanManageTenant(true);
-              break;
-            }
-            default: {
-              break;
-            }
-          }
-        }
-      }
-    })();
-  }, [currentTenantId, getOrganizationTokenClaims, isAuthenticated, isInitComplete]);
-
-  return {
-    canInviteMember,
-    canRemoveMember,
-    canUpdateMemberRole,
-    canManageTenant,
-    scopes,
-  };
+  return useMemo(
+    () => ({
+      isLoading,
+      scopes,
+      access,
+      mutate,
+    }),
+    [isLoading, scopes, access, mutate]
+  );
 };
 
 export default useCurrentTenantScopes;

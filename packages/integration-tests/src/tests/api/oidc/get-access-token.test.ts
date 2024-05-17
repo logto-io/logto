@@ -5,7 +5,18 @@ import { InteractionEvent, type Resource, RoleType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
-import { createResource, deleteResource, deleteUser, putInteraction } from '#src/api/index.js';
+import {
+  accessTokenJwtCustomizerPayload,
+  accessTokenSampleScript,
+} from '#src/__mocks__/jwt-customizer.js';
+import {
+  createResource,
+  deleteJwtCustomizer,
+  deleteResource,
+  deleteUser,
+  putInteraction,
+  upsertJwtCustomizer,
+} from '#src/api/index.js';
 import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
 import { createScope, deleteScope } from '#src/api/scope.js';
 import MockClient, { defaultConfig } from '#src/client/index.js';
@@ -91,6 +102,11 @@ describe('get access token', () => {
   });
 
   it('can sign in and getAccessToken with guest user', async () => {
+    await upsertJwtCustomizer('access-token', {
+      ...accessTokenJwtCustomizerPayload,
+      script: accessTokenSampleScript,
+    });
+
     const client = new MockClient({
       resources: [testApiResourceInfo.indicator],
       scopes: testApiScopeNames,
@@ -108,6 +124,32 @@ describe('get access token', () => {
       'scope',
       testApiScopeNames.join(' ')
     );
+    expect(getAccessTokenPayload(accessToken)).toHaveProperty('user_id', guestUserId);
+
+    await deleteJwtCustomizer('access-token');
+  });
+
+  it('sign in and verify jwt', async () => {
+    const client = new MockClient({
+      resources: [testApiResourceInfo.indicator],
+      scopes: testApiScopeNames,
+    });
+    await client.initSession();
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: { username: guestUsername, password },
+    });
+    const { redirectTo } = await client.submitInteraction();
+    await processSession(client, redirectTo);
+    const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
+    await expect(
+      jwtVerify(accessToken, createRemoteJWKSet(new URL('/oidc/jwks', logtoUrl)), {
+        issuer: new URL('/oidc', logtoUrl).href,
+        audience: testApiResourceInfo.indicator,
+        requiredClaims: ['scope', 'client_id'],
+        subject: guestUserId,
+      })
+    ).resolves.toBeTruthy();
   });
 
   it('sign in and verify jwt', async () => {

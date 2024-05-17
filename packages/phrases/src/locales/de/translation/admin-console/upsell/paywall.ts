@@ -52,18 +52,19 @@ const paywall = {
   mfa: 'Schalten Sie MFA zur Sicherheitsüberprüfung frei, indem Sie auf einen kostenpflichtigen Plan aktualisieren. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Unterstützung benötigen.',
   organizations:
     'Organisationen freischalten, indem Sie auf einen kostenpflichtigen Plan aktualisieren. Zögern Sie nicht, <a>kontaktieren Sie uns</a>, wenn Sie Unterstützung benötigen.',
-  /** UNTRANSLATED */
   third_party_apps:
-    'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Entsperren Sie Logto als IdP für Drittanbieter-Apps, indem Sie auf einen kostenpflichtigen Plan aktualisieren. Bei Bedarf können Sie uns gerne <a>kontaktieren</a>.',
   sso_connectors:
-    'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Schalten Sie Enterprise-SSO frei, indem Sie auf einen kostenpflichtigen Plan aktualisieren. Bei Bedarf können Sie uns gerne <a>kontaktieren</a>.',
   tenant_members:
-    'Unlock collaboration feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Aktivieren Sie die Kollaborationsfunktion durch ein Upgrade auf einen kostenpflichtigen Plan. Bei Bedarf können Sie uns gerne <a>kontaktieren</a>.',
   tenant_members_dev_plan:
-    "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
+    'Sie haben Ihr Limit von {{limit}} Mitgliedern erreicht. Geben Sie ein Mitglied frei oder widerrufen Sie eine ausstehende Einladung, um jemand neuen hinzuzufügen. Benötigen Sie mehr Plätze? Zögern Sie nicht, uns zu kontaktieren.',
+  custom_jwt: {
+    title: 'Benutzerdefinierte Claims hinzufügen',
+    description:
+      'Upgrade auf einen kostenpflichtigen Plan für benutzerdefinierte JWT-Funktionalität und Premium-Vorteile. Wenn Sie Fragen haben, zögern Sie nicht, uns zu <a>kontaktieren</a>.',
+  },
 };
 
 export default Object.freeze(paywall);

@@ -11,7 +11,7 @@ const isValidKey = (key: string) => {
 };
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 function EnvironmentVariablesField({ className }: Props) {

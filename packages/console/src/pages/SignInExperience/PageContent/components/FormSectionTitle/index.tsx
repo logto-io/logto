@@ -5,7 +5,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: TFuncKey<'translation', 'admin_console.sign_in_exp'>;
+  readonly title: TFuncKey<'translation', 'admin_console.sign_in_exp'>;
 };
 
 function FormSectionTitle({ title }: Props) {

@@ -36,18 +36,18 @@
   "dependencies": {
     "@logto/language-kit": "workspace:^1.1.0",
     "@silverhand/essentials": "^2.9.0",
-    "@withtyped/client": "^0.8.4",
-    "@withtyped/server": "^0.13.3"
+    "@withtyped/client": "^0.8.7",
+    "@withtyped/server": "^0.13.6"
   },
   "optionalDependencies": {
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "5.0.0",
-    "@silverhand/ts-config": "5.0.0",
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.9.5",
     "@vitest/coverage-v8": "^1.4.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",

@@ -19,7 +19,7 @@ const upsell = {
     upgrade_success: '成功升級至<name/>',
   },
   mau_exceeded_modal: {
-    title: 'MAU 超過限制，請升級您的計劃。',
+    title: 'MAU 超出限制，請升級您的計劃。',
     notification:
       '您當前的 MAU 已超過<planName/>的限制。請立即升級到高級計劃，以避免 Logto 服務的暫停。',
     update_plan: '更新計劃',
@@ -35,8 +35,7 @@ const upsell = {
     api_resource: 'API 資源',
     machine_to_machine: '機器對機器應用',
     tokens: '{{limit}}M 令牌',
-    /** UNTRANSLATED */
-    tenant_member: 'tenant member',
+    tenant_member: '租戶成員',
   },
   charge_notification_for_quota_limit:
     '您已超出{{item}}配額限制。Logto將為超出配額限制的使用添加費用。計費將從新的附加定價設計發布當天開始。 <a>了解更多</a>',

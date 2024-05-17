@@ -16,10 +16,10 @@ import * as styles from './index.module.scss';
 import useOnSubmit from './use-on-submit';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
-  autoFocus?: boolean;
-  signInMethods: SignIn['methods'];
+  readonly autoFocus?: boolean;
+  readonly signInMethods: SignIn['methods'];
 };
 
 type FormState = {

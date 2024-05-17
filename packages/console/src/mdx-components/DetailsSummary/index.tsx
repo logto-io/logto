@@ -10,7 +10,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children?: ReactNode[] | ReactNode;
+  readonly children?: ReactNode[] | ReactNode;
 };
 
 function DetailsSummary({ children }: Props) {

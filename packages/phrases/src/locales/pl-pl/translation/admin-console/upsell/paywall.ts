@@ -52,18 +52,19 @@ const paywall = {
   mfa: 'Odblokuj MFA, aby zweryfikować bezpieczeństwo, przechodząc na płatny plan. Nie wahaj się <a>skontaktować z nami</a>, jeśli potrzebujesz pomocy.',
   organizations:
     'Odblokuj organizacje, ulepszając do płatnego planu. Nie wahaj się <a>skontaktować z nami</a>, jeśli potrzebujesz pomocy.',
-  /** UNTRANSLATED */
   third_party_apps:
-    'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Odblokuj Logto jako IdP dla aplikacji stron trzecich, ulepszając do płatnego planu. W razie potrzeby pomocy, proszę <a>skontaktuj się z nami</a>.',
   sso_connectors:
-    'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Odblokuj logowanie jednokrotne dla przedsiębiorstw, ulepszając do płatnego planu. W razie potrzeby pomocy, proszę <a>skontaktuj się z nami</a>.',
   tenant_members:
-    'Unlock collaboration feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Odblokuj funkcję współpracy, ulepszając do płatnego planu. W razie potrzeby pomocy, proszę <a>skontaktuj się z nami</a>.',
   tenant_members_dev_plan:
-    "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
+    'Osiągnąłeś limit {{limit}} członków. Zwolnij członka lub anuluj oczekiwanie na zaproszenie, aby dodać nowego. Potrzebujesz więcej miejsc? Proszę skontaktować się z nami.',
+  custom_jwt: {
+    title: 'Dodaj niestandardowe twierdzenia',
+    description:
+      'Ulepsz do płatnego planu, aby uzyskać funkcjonalność niestandardowego JWT i korzyści premium. Jeśli masz jakieś pytania, nie wahaj się <a>skontaktować z nami</a>.',
+  },
 };
 
 export default Object.freeze(paywall);

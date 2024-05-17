@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { type Domain, DomainStatus } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -23,7 +22,9 @@ function TenantDomainSettings() {
   const { data: customDomain, isLoading: isLoadingCustomDomain, mutate } = useCustomDomain(true);
   const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
-  const { canManageTenant } = useCurrentTenantScopes();
+  const {
+    access: { canManageTenant },
+  } = useCurrentTenantScopes();
 
   if (isLoadingCustomDomain) {
     return <Skeleton />;
@@ -90,4 +91,4 @@ function TenantDomainSettings() {
   );
 }
 
-export default withAppInsights(TenantDomainSettings);
+export default TenantDomainSettings;

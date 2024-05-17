@@ -25,8 +25,8 @@ export type Row<T> = {
 };
 
 type Props<T> = {
-  title: AdminConsoleKey;
-  data: Array<Row<T>>;
+  readonly title: AdminConsoleKey;
+  readonly data: Array<Row<T>>;
 };
 
 function CardContent<T extends Nullable<boolean | string | Record<string, unknown>> | undefined>({

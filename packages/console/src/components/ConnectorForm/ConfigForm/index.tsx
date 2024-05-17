@@ -19,11 +19,11 @@ import ConfigFormFields from './ConfigFormFields';
 import * as styles from './index.module.scss';
 
 type Props = {
-  formItems?: ConnectorConfigFormItem[];
-  className?: string;
-  connectorId: string;
-  connectorFactoryId?: string;
-  connectorType?: ConnectorType;
+  readonly formItems?: ConnectorConfigFormItem[];
+  readonly className?: string;
+  readonly connectorId: string;
+  readonly connectorFactoryId?: string;
+  readonly connectorType?: ConnectorType;
 };
 
 function ConfigForm({
@@ -56,7 +56,7 @@ function ConfigForm({
           tip={conditional(!isSamlConnector && t('connectors.guide.callback_uri_description'))}
         >
           <CopyToClipboard
-            className={styles.copyToClipboard}
+            displayType="block"
             variant="border"
             value={applyCustomDomain(displayUrl)}
           />

@@ -9,11 +9,11 @@ import DynamicT from '../DynamicT';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  className?: string;
-  logo?: Nullable<string>;
-  thirdPartyLogo?: Nullable<string>;
-  headline?: TFuncKey;
-  headlineInterpolation?: Record<string, unknown>;
+  readonly className?: string;
+  readonly logo?: Nullable<string>;
+  readonly thirdPartyLogo?: Nullable<string>;
+  readonly headline?: TFuncKey;
+  readonly headlineInterpolation?: Record<string, unknown>;
 };
 
 const BrandingHeader = ({

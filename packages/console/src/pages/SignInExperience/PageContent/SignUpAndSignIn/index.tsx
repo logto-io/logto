@@ -8,7 +8,7 @@ import SignUpForm from './SignUpForm';
 import SocialSignInForm from './SocialSignInForm';
 
 type Props = {
-  isActive: boolean;
+  readonly isActive: boolean;
 };
 
 function SignUpAndSignIn({ isActive }: Props) {

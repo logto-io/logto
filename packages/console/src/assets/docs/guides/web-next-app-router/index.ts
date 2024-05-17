@@ -13,7 +13,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full Next.js App Router SDK tutorial',
-    url: 'https://docs.logto.io/sdk/next-app-router',
+    url: 'https://docs.logto.io/quick-starts/next-app-router',
   },
 });
 

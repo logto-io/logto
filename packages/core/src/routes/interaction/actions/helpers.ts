@@ -1,5 +1,4 @@
 import { defaults, parseAffiliateData } from '@logto/affiliate';
-import { consoleLog } from '@logto/cli/lib/utils.js';
 import { type CreateUser, type User, adminTenantId } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type IRouterContext } from 'koa-router';
@@ -10,6 +9,7 @@ import { type ConnectorLibrary } from '#src/libraries/connector.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { type OmitAutoSetFields } from '#src/utils/sql.js';
 
 import {
@@ -146,6 +146,6 @@ export const postAffiliateLogs = async (
     await client.post('/api/affiliate-logs', {
       body: { userId, ...affiliateData },
     });
-    consoleLog.info('Affiliate logs posted', userId);
+    getConsoleLogFromContext(ctx).info('Affiliate logs posted', userId);
   }
 };

@@ -7,7 +7,7 @@ import { useSieMethods } from '@/hooks/use-sie';
 import SingleSignOnContext, { type SingleSignOnContextType } from './SingleSignOnContext';
 
 type Props = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 const SingleSignOnContextProvider = ({ children }: Props) => {

@@ -18,12 +18,12 @@ import type { CountryMetaData } from '@/utils/country-code';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isOpen: boolean;
-  countryCode: string;
-  countryList: CountryMetaData[];
-  inputRef?: Nullable<HTMLInputElement>;
-  onClose: () => void;
-  onChange?: (value: string) => void;
+  readonly isOpen: boolean;
+  readonly countryCode: string;
+  readonly countryList: CountryMetaData[];
+  readonly inputRef?: Nullable<HTMLInputElement>;
+  readonly onClose: () => void;
+  readonly onChange?: (value: string) => void;
 };
 
 const CountryCodeDropdown = ({

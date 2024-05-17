@@ -20,58 +20,58 @@ export type Props<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   /** The table data groups of the table. */
-  rowGroups: Array<RowGroup<TFieldValues>>;
+  readonly rowGroups: Array<RowGroup<TFieldValues>>;
   /** The table's column definitions. */
-  columns: Array<Column<TFieldValues>>;
+  readonly columns: Array<Column<TFieldValues>>;
   /**
    * The key of the table row.
    * It will be used as the unique identifier of the row data and is indexed by the field name of the data from the row group.
    */
-  rowIndexKey: TName;
+  readonly rowIndexKey: TName;
   /** The filter component that will be rendered on the top of the table. */
-  filter?: ReactNode;
+  readonly filter?: ReactNode;
   /** Determines whether the row has a hover effect or not. */
-  isRowHoverEffectDisabled?: boolean;
+  readonly isRowHoverEffectDisabled?: boolean;
   /** The function to determine whether the row is clickable or not. */
-  isRowClickable?: (row: TFieldValues) => boolean;
+  readonly isRowClickable?: (row: TFieldValues) => boolean;
   /** The function to handle the row click event. */
-  rowClickHandler?: (row: TFieldValues) => void;
+  readonly rowClickHandler?: (row: TFieldValues) => void;
   /** The function to customize the CSS className for the row. */
-  rowClassName?: (row: TFieldValues, index: number) => string | undefined;
+  readonly rowClassName?: (row: TFieldValues, index: number) => string | undefined;
   /** The CSS className for the table container. */
-  className?: string;
+  readonly className?: string;
   /** The CSS className for the header table. */
-  headerTableClassName?: string;
+  readonly headerTableClassName?: string;
   /** The CSS className for the body table wrapper. */
-  bodyTableWrapperClassName?: string;
+  readonly bodyTableWrapperClassName?: string;
   /**
    * Determines whether the table is in the loading state or not.
    * When the table is in the loading state, it will render the loading skeleton which is provided by the `loadingSkeleton` prop.
    */
-  isLoading?: boolean;
+  readonly isLoading?: boolean;
   /**
    * The pagination component props.
    * If it's provided, the pagination component will be rendered on the bottom-right of the table.
    */
-  pagination?: PaginationProps;
+  readonly pagination?: PaginationProps;
   /** The placeholder that will be rendered in the table when the table is empty. */
-  placeholder?: ReactNode;
+  readonly placeholder?: ReactNode;
   /** The loading skeleton that will be rendered in the table when the table is in the loading state. */
-  loadingSkeleton?: ReactNode;
+  readonly loadingSkeleton?: ReactNode;
   /**
    * The error message that will be rendered in the table when the table has an error.
    * If it's provided, the table will render the error message instead of the table data.
    */
-  errorMessage?: string;
+  readonly errorMessage?: string;
   /** The inline style table that is usually embedded in other card containers, has rounded-corner border */
-  hasBorder?: boolean;
+  readonly hasBorder?: boolean;
   /**
    * The retry button handler for the table.
    * When the table has an error, there will be a retry button inside the table, this handler will be called when the retry button is clicked.
    */
-  onRetry?: () => void;
+  readonly onRetry?: () => void;
   /** A footer that will be rendered on the bottom-left of the table. */
-  footer?: ReactNode;
+  readonly footer?: ReactNode;
 };
 
 function Table<

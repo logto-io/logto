@@ -55,7 +55,7 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
   useEffect(() => {
     if (!showSingleSignOnForm) {
       setSsoConnectors([]);
-      // eslint-disable-next-line unicorn/no-useless-undefined
+
       setEmail(undefined);
     }
   }, [setEmail, setSsoConnectors, showSingleSignOnForm]);

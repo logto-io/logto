@@ -7,7 +7,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 type DragDropContextProps = {

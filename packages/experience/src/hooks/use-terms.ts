@@ -1,8 +1,8 @@
 import { conditional } from '@silverhand/essentials';
-import { useContext, useCallback, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import TermsAndPrivacyConfirmModalContent from '@/containers/TermsAndPrivacy/TermsAndPrivacyConfirmModalContent';
+import TermsAndPrivacyConfirmModalContent from '@/containers/TermsAndPrivacyConfirmModalContent';
 
 import { useConfirmModal } from './use-confirm-modal';
 

@@ -14,8 +14,7 @@ const tabs = {
   docs: 'Dokumentation',
   tenant_settings: 'Einstellungen',
   mfa: 'Multi-Faktor-Authentifizierung',
-  /** UNTRANSLATED */
-  customize_jwt: 'JWT Claims',
+  customize_jwt: 'Benutzerdefiniertes JWT',
   signing_keys: 'Signierschlüssel',
   organization_template: 'Organisationstemplate',
 };

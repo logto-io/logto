@@ -11,7 +11,7 @@ import CardTitle from '@/ds-components/CardTitle';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 function PageWrapper({ children }: Props) {

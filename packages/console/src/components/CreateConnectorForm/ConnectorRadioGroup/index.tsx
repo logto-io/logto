@@ -10,11 +10,11 @@ import * as styles from './index.module.scss';
 export type ConnectorRadioGroupSize = 'medium' | 'large' | 'xlarge';
 
 type Props = {
-  name: string;
-  value?: string;
-  groups: Array<ConnectorGroup<ConnectorFactoryResponse>>;
-  size: ConnectorRadioGroupSize;
-  onChange: (groupId: string) => void;
+  readonly name: string;
+  readonly value?: string;
+  readonly groups: Array<ConnectorGroup<ConnectorFactoryResponse>>;
+  readonly size: ConnectorRadioGroupSize;
+  readonly onChange: (groupId: string) => void;
 };
 
 function ConnectorRadioGroup({ name, groups, value, size, onChange }: Props) {

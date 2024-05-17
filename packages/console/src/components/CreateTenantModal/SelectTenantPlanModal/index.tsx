@@ -22,8 +22,8 @@ import PlanCardItem from './PlanCardItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  tenantData?: CreateTenantData;
-  onClose: (tenant?: TenantResponse) => void;
+  readonly tenantData?: CreateTenantData;
+  readonly onClose: (tenant?: TenantResponse) => void;
 };
 
 function SelectTenantPlanModal({ tenantData, onClose }: Props) {

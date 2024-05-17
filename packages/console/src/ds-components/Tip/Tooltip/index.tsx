@@ -18,14 +18,14 @@ import {
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  isKeepOpen?: boolean;
-  isSuccessful?: boolean;
-  placement?: TipBubblePlacement;
-  horizontalAlign?: HorizontalAlignment;
-  anchorClassName?: string;
-  children?: ReactNode;
-  content?: ReactNode;
+  readonly className?: string;
+  readonly isKeepOpen?: boolean;
+  readonly isSuccessful?: boolean;
+  readonly placement?: TipBubblePlacement;
+  readonly horizontalAlign?: HorizontalAlignment;
+  readonly anchorClassName?: string;
+  readonly children?: ReactNode;
+  readonly content?: ReactNode;
 };
 
 function Tooltip({

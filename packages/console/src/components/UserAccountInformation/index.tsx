@@ -15,13 +15,13 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import * as styles from './index.module.scss';
 
 type Props = {
-  user: UserProfileResponse;
-  password: string;
-  title: AdminConsoleKey;
-  onClose: () => void;
-  onConfirm?: () => void;
-  passwordLabel?: string;
-  confirmButtonTitle?: AdminConsoleKey;
+  readonly user: UserProfileResponse;
+  readonly password: string;
+  readonly title: AdminConsoleKey;
+  readonly onClose: () => void;
+  readonly onConfirm?: () => void;
+  readonly passwordLabel?: string;
+  readonly confirmButtonTitle?: AdminConsoleKey;
 };
 
 function UserAccountInformation({

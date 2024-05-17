@@ -25,11 +25,9 @@ const general = {
   customize: 'カスタマイズする',
   enable: '有効にする',
   reminder: 'リマインダー',
-  /** UNTRANSLATED */
-  edit: 'Edit',
+  edit: '編集',
   delete: '削除',
-  /** UNTRANSLATED */
-  deleted: 'Deleted',
+  deleted: '削除済',
   more_options: 'その他のオプション',
   close: '閉じる',
   copy: 'コピーする',
@@ -58,8 +56,7 @@ const general = {
   demo: 'デモ',
   unnamed: '名前がありません',
   view: '表示',
-  /** UNTRANSLATED */
-  open: 'Open',
+  open: '開く',
   hide: '非表示',
   unknown_error: '不明なエラーが発生しました。後で再試行してください。',
   select: '選択する',
@@ -71,8 +68,7 @@ const general = {
   edit_field: '{{field}}を編集',
   delete_field: '{{field}}を削除',
   coming_soon: '近日公開予定',
-  /** UNTRANSLATED */
-  or: 'Or',
+  or: 'または',
 };
 
 export default Object.freeze(general);

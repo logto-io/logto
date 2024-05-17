@@ -24,10 +24,12 @@ function Members() {
   const cloudApi = useAuthedCloudApi();
   const { currentTenantId } = useContext(TenantsContext);
   const { user: currentUser } = useCurrentUser();
-  const { canRemoveMember, canUpdateMemberRole } = useCurrentTenantScopes();
+  const {
+    access: { canRemoveMember, canUpdateMemberRole },
+  } = useCurrentTenantScopes();
 
   const { data, error, isLoading, mutate } = useSWR<TenantMemberResponse[], RequestError>(
-    `api/tenants/:tenantId/members`,
+    `api/tenants/${currentTenantId}/members`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/members', { params: { tenantId: currentTenantId } })
   );

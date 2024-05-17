@@ -15,9 +15,9 @@ import * as styles from './index.module.scss';
 import useBindSocialRelatedUser from './use-social-link-related-user';
 
 type Props = {
-  className?: string;
-  connectorId: string;
-  relatedUser: SocialRelatedUserInfo;
+  readonly className?: string;
+  readonly connectorId: string;
+  readonly relatedUser: SocialRelatedUserInfo;
 };
 
 const getCreateAccountContent = (

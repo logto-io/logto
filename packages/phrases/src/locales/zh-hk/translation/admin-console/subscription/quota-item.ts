@@ -34,23 +34,18 @@ const quota_item = {
     not_eligible: '刪除您的機器對機器應用程式',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your third-party apps',
+    name: '第三方應用程式',
+    limited: '{{count, number}} 第三方應用程式',
+    limited_other: '{{count, number}} 第三方應用程式',
+    unlimited: '無限第三方應用程式',
+    not_eligible: '刪除您的第三方應用程式',
   },
   resources_limit: {
     name: 'API 資源',
-    limited: '{{count, number}} 個API 資源',
-    limited_other: '{{count, number}} 個API 資源',
-    unlimited: '無限API 資源',
-    not_eligible: '刪除您的API 資源',
+    limited: '{{count, number}} 個 API 資源',
+    limited_other: '{{count, number}} 個 API 資源',
+    unlimited: '無限 API 資源',
+    not_eligible: '刪除您的 API 資源',
   },
   scopes_per_resource_limit: {
     name: '資源範圍',
@@ -72,10 +67,10 @@ const quota_item = {
     not_eligible: '停用統一登入',
   },
   built_in_email_connector_enabled: {
-    name: '內置電子郵件連接器',
-    limited: '內置電子郵件連接器',
-    unlimited: '內置電子郵件連接器',
-    not_eligible: '刪除您的內置電子郵件連接器',
+    name: '內建電子郵件連接器',
+    limited: '內建電子郵件連接器',
+    unlimited: '內建電子郵件連接器',
+    not_eligible: '刪除您的內建電子郵件連接器',
   },
   social_connectors_limit: {
     name: '社交連接器',
@@ -152,16 +147,17 @@ const quota_item = {
     not_eligible: '移除您的企業單一登入',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
-    name: 'Tenant members',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your tenant members',
+    name: '租戶成員',
+    limited: '{{count, number}} 租戶成員',
+    limited_other: '{{count, number}} 租戶成員',
+    unlimited: '無限租戶成員',
+    not_eligible: '刪除您的租戶成員',
+  },
+  custom_jwt_enabled: {
+    name: '自定義JWT',
+    limited: '自定義JWT',
+    unlimited: '自定義JWT',
+    not_eligible: '刪除您的JWT聲明自訂程式',
   },
 };
 

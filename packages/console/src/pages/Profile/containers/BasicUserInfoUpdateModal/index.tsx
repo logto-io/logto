@@ -20,10 +20,10 @@ import { handleError } from '../../utils';
 export type BasicUserField = 'avatar' | 'username' | 'name';
 
 type Props = {
-  field?: BasicUserField;
-  value: string;
-  isOpen: boolean;
-  onClose: () => void;
+  readonly field?: BasicUserField;
+  readonly value: string;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 type FormFields = {
@@ -130,7 +130,13 @@ function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose 
             name="avatar"
             control={control}
             render={({ field: { onChange, value, name } }) => (
-              <ImageUploaderField name={name} value={value} onChange={onChange} />
+              <ImageUploaderField
+                name={name}
+                value={value}
+                uploadUrl="me/user-assets"
+                apiInstance={api}
+                onChange={onChange}
+              />
             )}
           />
         ) : (

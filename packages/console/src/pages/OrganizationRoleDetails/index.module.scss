@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.withTable {
+  height: 100%;
+  padding-bottom: _.unit(6);
+}

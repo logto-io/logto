@@ -8,11 +8,7 @@ export const buildAzureStorage = (connectionString: string, container: string) =
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
   const containerClient = blobServiceClient.getContainerClient(container);
 
-  const uploadFile: UploadFile = async (
-    data: Buffer,
-    objectKey: string,
-    { contentType, publicUrl } = {}
-  ) => {
+  const uploadFile: UploadFile = async (data, objectKey, { contentType, publicUrl } = {}) => {
     const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
 
     await blockBlobClient.uploadData(data, {

@@ -13,7 +13,7 @@ import {
 import * as styles from './index.module.scss';
 
 type Props = {
-  samlProviderConfig?: SamlProviderConfig;
+  readonly samlProviderConfig?: SamlProviderConfig;
 };
 
 const primaryKey = 'attributeMapping';
@@ -38,14 +38,14 @@ function SamlAttributeMapping({ samlProviderConfig }: Props) {
           return (
             <tr key={key} className={styles.row}>
               <td>
-                <CopyToClipboard className={styles.copyToClipboard} variant="border" value={key} />
+                <CopyToClipboard displayType="block" variant="border" value={key} />
               </td>
               <td>
                 {/* Show default value of `id` field to show that Logto has handled the default value. */}
                 {/* Per SAML protocol, this field is not eligible to change in most cases. */}
                 {key === 'id' ? (
                   <CopyToClipboard
-                    className={styles.copyToClipboard}
+                    displayType="block"
                     variant="border"
                     value={conditionalString(samlProviderConfig?.defaultAttributeMapping[key])}
                   />

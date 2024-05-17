@@ -8,13 +8,13 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: ReactNode;
-  subtitle?: ReactNode;
-  icon?: ReactNode;
-  to?: To;
-  size?: 'default' | 'compact';
-  suffix?: ReactNode;
-  toTarget?: HTMLAnchorElement['target'];
+  readonly title: ReactNode;
+  readonly subtitle?: ReactNode;
+  readonly icon?: ReactNode;
+  readonly to?: To;
+  readonly size?: 'default' | 'compact';
+  readonly suffix?: ReactNode;
+  readonly toTarget?: HTMLAnchorElement['target'];
 };
 
 function ItemPreview({ title, subtitle, icon, to, size = 'default', suffix, toTarget }: Props) {

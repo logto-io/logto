@@ -2,9 +2,15 @@ import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorPlatform, ConnectorConfigFormItemType } from '@logto/connector-kit';
 
 export const authorizationEndpoint = 'https://github.com/login/oauth/authorize';
-export const scope = 'read:user';
+/**
+ * `read:user` read user profile data; `user:email` read user email addresses (including private email addresses).
+ * Ref: https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps
+ */
+export const scope = 'read:user user:email';
 export const accessTokenEndpoint = 'https://github.com/login/oauth/access_token';
 export const userInfoEndpoint = 'https://api.github.com/user';
+// Ref: https://docs.github.com/en/rest/users/emails?apiVersion=2022-11-28#list-email-addresses-for-the-authenticated-user
+export const userEmailsEndpoint = 'https://api.github.com/user/emails';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'github-universal',

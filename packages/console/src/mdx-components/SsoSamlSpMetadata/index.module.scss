@@ -1,9 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.copyToClipboard {
-  display: block;
-}
-
 .inputField {
   margin: _.unit(4) 0;
 }

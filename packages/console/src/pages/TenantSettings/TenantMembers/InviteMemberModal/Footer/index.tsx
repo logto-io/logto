@@ -13,9 +13,9 @@ import useTenantMembersUsage from '../../hooks';
 import * as styles from './index.module.scss';
 
 type Props = {
-  newInvitationCount?: number;
-  isLoading: boolean;
-  onSubmit: () => void;
+  readonly newInvitationCount?: number;
+  readonly isLoading: boolean;
+  readonly onSubmit: () => void;
 };
 
 function Footer({ newInvitationCount = 0, isLoading, onSubmit }: Props) {

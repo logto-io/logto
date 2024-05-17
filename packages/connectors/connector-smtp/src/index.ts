@@ -70,12 +70,6 @@ const parseContents = (contents: string, contentType: ContextType) => {
     case ContextType.Html: {
       return { html: contents };
     }
-    default: {
-      throw new ConnectorError(
-        ConnectorErrorCodes.InvalidConfig,
-        '`contentType` should be ContextType.'
-      );
-    }
   }
 };
 

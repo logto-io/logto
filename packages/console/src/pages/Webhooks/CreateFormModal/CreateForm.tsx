@@ -15,8 +15,8 @@ import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type Props = {
-  totalWebhookCount: number;
-  onClose: (createdHook?: Hook) => void;
+  readonly totalWebhookCount: number;
+  readonly onClose: (createdHook?: Hook) => void;
 };
 
 type CreateHookPayload = Pick<CreateHook, 'name'> & {

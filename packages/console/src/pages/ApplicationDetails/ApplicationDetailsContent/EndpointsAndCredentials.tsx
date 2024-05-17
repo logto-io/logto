@@ -23,8 +23,8 @@ import useCustomDomain from '@/hooks/use-custom-domain';
 import * as styles from './index.module.scss';
 
 type Props = {
-  app: Application;
-  oidcConfig: SnakeCaseOidcConfig;
+  readonly app: Application;
+  readonly oidcConfig: SnakeCaseOidcConfig;
 };
 
 function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidcConfig }: Props) {
@@ -54,7 +54,7 @@ function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidc
       {tenantEndpoint && !isThirdParty && (
         <FormField title="application_details.logto_endpoint">
           <CopyToClipboard
-            isFullWidth
+            displayType="block"
             value={applyCustomDomain(tenantEndpoint.href)}
             variant="border"
           />
@@ -63,7 +63,7 @@ function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidc
       {tenantEndpoint && (
         <FormField title="application_details.config_endpoint">
           <CopyToClipboard
-            isFullWidth
+            displayType="block"
             value={applyCustomDomain(appendPath(tenantEndpoint, openIdProviderConfigPath).href)}
             variant="border"
           />
@@ -90,21 +90,21 @@ function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidc
             )}
           >
             <CopyToClipboard
-              isFullWidth
+              displayType="block"
               value={applyCustomDomain(oidcConfig.authorization_endpoint)}
               variant="border"
             />
           </FormField>
           <FormField title="application_details.token_endpoint">
             <CopyToClipboard
-              isFullWidth
+              displayType="block"
               value={applyCustomDomain(oidcConfig.token_endpoint)}
               variant="border"
             />
           </FormField>
           <FormField title="application_details.user_info_endpoint">
             <CopyToClipboard
-              isFullWidth
+              displayType="block"
               value={applyCustomDomain(oidcConfig.userinfo_endpoint)}
               variant="border"
             />
@@ -137,7 +137,7 @@ function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidc
         </div>
       )}
       <FormField title="application_details.application_id">
-        <CopyToClipboard isFullWidth value={id} variant="border" />
+        <CopyToClipboard displayType="block" value={id} variant="border" />
       </FormField>
       {[
         ApplicationType.Traditional,
@@ -145,7 +145,12 @@ function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidc
         ApplicationType.Protected,
       ].includes(type) && (
         <FormField title="application_details.application_secret">
-          <CopyToClipboard hasVisibilityToggle isFullWidth value={secret} variant="border" />
+          <CopyToClipboard
+            hasVisibilityToggle
+            displayType="block"
+            value={secret}
+            variant="border"
+          />
         </FormField>
       )}
     </FormCard>

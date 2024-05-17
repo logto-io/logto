@@ -2,28 +2,27 @@ import { type LogtoJwtTokenKeyType } from '@logto/schemas';
 import classNames from 'classnames';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { type KeyedMutator } from 'swr';
+import { useSWRConfig, type KeyedMutator } from 'swr';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import { getApiPath } from '@/pages/CustomizeJwt/utils/path';
 import { trySubmitSafe } from '@/utils/form';
 
-import useJwtCustomizer from '../../CustomizeJwt/use-jwt-customizer';
 import { type Action, type JwtCustomizer, type JwtCustomizerForm } from '../type';
 import { formatFormDataToRequestData, formatResponseDataToFormData } from '../utils/format';
-import { getApiPath } from '../utils/path';
 
 import ScriptSection from './ScriptSection';
 import SettingsSection from './SettingsSection';
 import * as styles from './index.module.scss';
 
 type Props<T extends LogtoJwtTokenKeyType> = {
-  className?: string;
-  token: T;
-  data?: JwtCustomizer<T>;
-  mutate: KeyedMutator<JwtCustomizer<T>>;
-  action: Action;
+  readonly className?: string;
+  readonly token: T;
+  readonly data?: JwtCustomizer<T>;
+  readonly mutate: KeyedMutator<JwtCustomizer<T>>;
+  readonly action: Action;
 };
 
 function MainContent<T extends LogtoJwtTokenKeyType>({
@@ -35,7 +34,7 @@ function MainContent<T extends LogtoJwtTokenKeyType>({
 }: Props<T>) {
   const api = useApi();
   const navigate = useNavigate();
-  const { mutate: mutateJwtCustomizers } = useJwtCustomizer();
+  const { mutate: globalMutate } = useSWRConfig();
 
   const methods = useForm<JwtCustomizerForm>({
     defaultValues: formatResponseDataToFormData(token, data),
@@ -62,16 +61,14 @@ function MainContent<T extends LogtoJwtTokenKeyType>({
 
       await mutate(updatedJwtCustomizer);
 
+      // Need to reset the form data ahead to avoid the unsaved changes alert
       reset(formatResponseDataToFormData(tokenType, updatedJwtCustomizer));
 
-      /**
-       * Should `reset` (to set `isDirty` to false) before navigating back to the custom JWT listing page.
-       * Otherwise, the unsaved changes alert modal will be triggered on clicking `create` button, which
-       * is not expected.
-       */
+      // If the form is in create mode, navigate back to the previous page
       if (action === 'create') {
-        // Refresh the JWT customizers list to reflect the latest changes.
-        await mutateJwtCustomizers();
+        // Need to trigger a global mutate to update the cache
+        // Keep asynchrony to avoid page idling
+        void globalMutate(getApiPath());
         navigate(-1);
       }
     })

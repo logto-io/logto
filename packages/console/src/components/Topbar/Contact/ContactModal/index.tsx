@@ -9,8 +9,8 @@ import { useContacts } from './hook';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isOpen: boolean;
-  onCancel?: () => void;
+  readonly isOpen: boolean;
+  readonly onCancel?: () => void;
 };
 
 function ContactModal({ isOpen, onCancel }: Props) {

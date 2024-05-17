@@ -16,7 +16,7 @@ import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
 import * as styles from '../UserSocialIdentities/index.module.scss';
 
 type Props = {
-  ssoIdentities: UserSsoIdentity[];
+  readonly ssoIdentities: UserSsoIdentity[];
 };
 
 type DisplayConnector = {

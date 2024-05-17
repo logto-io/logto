@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     'Dadurch werden die mit dieser Rolle verbundenen Berechtigungen von den betroffenen Benutzern entfernt und die Zuordnung zwischen Rollen, Benutzern und Berechtigungen gelöscht.',
   role_deleted: '{{name}} wurde erfolgreich gelöscht.',
-  settings_tab: 'Einstellungen',
+  general_tab: 'Allgemein',
   users_tab: 'Benutzer',
   m2m_apps_tab: 'Maschinen-zu-Maschinen-Apps',
   permissions_tab: 'Berechtigungen',

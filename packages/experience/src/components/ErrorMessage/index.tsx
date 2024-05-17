@@ -17,9 +17,9 @@ type ErrorCode = RemovePrefix<TFuncKey<'translation', 'error'>, 'password_reject
 export type ErrorType = ErrorCode | { code: ErrorCode; data?: Record<string, unknown> };
 
 export type Props = {
-  error?: ErrorType;
-  className?: string;
-  children?: ReactNode;
+  readonly error?: ErrorType;
+  readonly className?: string;
+  readonly children?: ReactNode;
 };
 
 const ErrorMessage = ({ error, className, children }: Props) => {

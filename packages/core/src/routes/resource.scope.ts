@@ -1,4 +1,4 @@
-import { Scopes } from '@logto/schemas';
+import { Scopes, isManagementApi } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
@@ -9,9 +9,9 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function resourceScopeRoutes<T extends AuthedRouter>(
+export default function resourceScopeRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {
@@ -93,15 +93,10 @@ export default function resourceScopeRoutes<T extends AuthedRouter>(
 
       assertThat(!/\s/.test(body.name), 'scope.name_with_space');
 
+      const { indicator } = await findResourceById(resourceId);
       assertThat(
-        await findResourceById(resourceId),
-        new RequestError({
-          code: 'entity.not_exists_with_id',
-          name: 'resource',
-          id: resourceId,
-          resourceId,
-          status: 404,
-        })
+        !isManagementApi(indicator),
+        new RequestError({ code: 'resource.cannot_modify_management_api' })
       );
 
       assertThat(
@@ -138,15 +133,10 @@ export default function resourceScopeRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
+      const { indicator } = await findResourceById(resourceId);
       assertThat(
-        await findResourceById(resourceId),
-        new RequestError({
-          code: 'entity.not_exists_with_id',
-          name: 'resource',
-          id: resourceId,
-          resourceId,
-          status: 404,
-        })
+        !isManagementApi(indicator),
+        new RequestError({ code: 'resource.cannot_modify_management_api' })
       );
 
       if (body.name) {
@@ -171,12 +161,18 @@ export default function resourceScopeRoutes<T extends AuthedRouter>(
     '/resources/:resourceId/scopes/:scopeId',
     koaGuard({
       params: object({ resourceId: string().min(1), scopeId: string().min(1) }),
-      status: [204, 404],
+      status: [204, 400, 404],
     }),
     async (ctx, next) => {
       const {
-        params: { scopeId },
+        params: { scopeId, resourceId },
       } = ctx.guard;
+
+      const { indicator } = await findResourceById(resourceId);
+      assertThat(
+        !isManagementApi(indicator),
+        new RequestError({ code: 'resource.cannot_modify_management_api' })
+      );
 
       await deleteScopeById(scopeId);
 

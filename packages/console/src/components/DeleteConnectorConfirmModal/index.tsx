@@ -6,12 +6,12 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 
 type Props = {
-  data: ConnectorResponse;
-  isOpen: boolean;
-  isInUse: boolean;
-  isLoading: boolean;
-  onCancel: () => void;
-  onConfirm: () => void;
+  readonly data: ConnectorResponse;
+  readonly isOpen: boolean;
+  readonly isInUse: boolean;
+  readonly isLoading: boolean;
+  readonly onCancel: () => void;
+  readonly onConfirm: () => void;
 };
 
 function DeleteConnectorConfirmModal({

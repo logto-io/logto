@@ -9,8 +9,7 @@ const quota_table = {
     title: '应用',
     total: '总应用数',
     m2m: '机器对机器',
-    /** UNTRANSLATED */
-    third_party: 'Third-party apps',
+    third_party: '第三方应用',
   },
   resource: {
     title: 'API 资源',
@@ -66,16 +65,11 @@ const quota_table = {
     hipaa_or_baa_report: 'HIPAA/BAA报告',
   },
   developers_and_platform: {
-    /** UNTRANSLATED */
-    title: 'Developers and platform',
-    /** UNTRANSLATED */
+    title: '开发者与平台',
     hooks: 'Webhooks',
-    /** UNTRANSLATED */
-    audit_logs_retention: 'Audit logs retention',
-    /** UNTRANSLATED */
-    jwt_claims: 'JWT claims',
-    /** UNTRANSLATED */
-    tenant_members: 'Tenant members',
+    audit_logs_retention: '审计日志保留',
+    jwt_claims: 'JWT声明',
+    tenant_members: '租户成员',
   },
   unlimited: '无限制',
   contact: '联系',
@@ -94,17 +88,14 @@ const quota_table = {
   mau_tip: 'MAU（月活跃用户）是指在计费周期内与Logto交换过至少一个令牌的独立用户数量。',
   tokens_tip: 'Logto 发行的所有类型令牌，包括访问令牌、刷新令牌等。',
   mao_tip: 'MAO（月度活跃组织）是指在计费周期内至少有一个MAU（月度活跃用户）的独特组织数量。',
-  /** UNTRANSLATED */
-  third_party_tip:
-    'Use Logto as your OIDC identity provider for third-party app sign-ins and permission grants.',
+  third_party_tip: '将Logto用作您的OIDC身份提供程序，用于第三方应用的登录和权限授予。',
   included: '已包含{{value, number}}',
   included_mao: '已包含 {{value, number}} MAO',
   extra_quota_price: '然后每月 ${{value, number}} / 每个之后',
   per_month_each: '每月 ${{value, number}} / 每个',
   extra_mao_price: '然后每 MAO ${{value, number}}',
   per_month: '每月 ${{value, number}}',
-  /** UNTRANSLATED */
-  per_member: 'Then ${{value, number}} per member',
+  per_member: '然后每成员 ${{value, number}}',
 };
 
 export default Object.freeze(quota_table);

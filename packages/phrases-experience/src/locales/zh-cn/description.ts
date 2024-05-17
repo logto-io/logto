@@ -66,9 +66,15 @@ const description = {
   authorize_title: '授权给 {{name}}',
   request_permission: '{{name}} 需要权限：',
   grant_organization_access: '授予组织访问权限：',
+  /** UNTRANSLATED */
+  authorize_personal_data_usage: 'Authorize the use of your personal data:',
+  /** UNTRANSLATED */
+  authorize_organization_access: 'Authorize access to the specific organization:',
   user_scopes: '用户个人信息',
   organization_scopes: '组织权限',
   authorize_agreement: `你将同意授权给 {{name}} <link></link>.`,
+  /** UNTRANSLATED */
+  authorize_agreement_with_redirect: `你将同意授权给 {{name}} <link></link>，然后你将被重定向到 {{uri}}。`,
   not_you: '不是你本人吗？',
   user_id: '用户 ID: {{id}}',
   redirect_to: '你将被重定向到 {{name}}。',

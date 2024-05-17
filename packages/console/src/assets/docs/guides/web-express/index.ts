@@ -13,7 +13,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full Express SDK tutorial',
-    url: 'https://docs.logto.io/sdk/express',
+    url: 'https://docs.logto.io/quick-starts/express',
   },
 });
 

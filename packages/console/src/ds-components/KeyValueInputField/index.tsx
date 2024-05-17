@@ -23,7 +23,7 @@ type InputFieldPropsGetter = {
 };
 
 type ErrorProps = {
-  error?: FieldError | string | undefined;
+  readonly error?: FieldError | string | undefined;
 };
 function Error({ error }: ErrorProps) {
   if (!error) {
@@ -38,12 +38,12 @@ function Error({ error }: ErrorProps) {
 }
 
 type Props = {
-  className?: string;
-  fields: Array<FieldType & { id: string }>; // Id is required to uniquely identify each field
-  errors?: Array<ErrorType | undefined>;
-  getInputFieldProps: InputFieldPropsGetter;
-  onRemove: (index: number) => void;
-  onAppend: (field: FieldType) => void;
+  readonly className?: string;
+  readonly fields: Array<FieldType & { id: string }>; // Id is required to uniquely identify each field
+  readonly errors?: Array<ErrorType | undefined>;
+  readonly getInputFieldProps: InputFieldPropsGetter;
+  readonly onRemove: (index: number) => void;
+  readonly onAppend: (field: FieldType) => void;
 };
 
 /**

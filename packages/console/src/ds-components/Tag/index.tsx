@@ -8,11 +8,11 @@ import Success from '@/assets/icons/success.svg';
 import * as styles from './index.module.scss';
 
 export type Props = Pick<HTMLProps<HTMLDivElement>, 'className' | 'onClick'> & {
-  type?: 'property' | 'state' | 'result';
-  status?: 'info' | 'success' | 'alert' | 'error';
-  variant?: 'plain' | 'outlined' | 'cell';
-  size?: 'medium' | 'small';
-  children: ReactNode;
+  readonly type?: 'property' | 'state' | 'result';
+  readonly status?: 'info' | 'success' | 'alert' | 'error';
+  readonly variant?: 'plain' | 'outlined' | 'cell';
+  readonly size?: 'medium' | 'small';
+  readonly children: ReactNode;
 };
 
 const ResultIconMap: Partial<Record<Required<Props>['status'], SvgComponent>> = {

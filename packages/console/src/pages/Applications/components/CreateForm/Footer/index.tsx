@@ -10,10 +10,10 @@ import Button from '@/ds-components/Button';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 
 type Props = {
-  selectedType?: ApplicationType;
-  isLoading: boolean;
-  isThirdParty?: boolean;
-  onClickCreate: () => void;
+  readonly selectedType?: ApplicationType;
+  readonly isLoading: boolean;
+  readonly isThirdParty?: boolean;
+  readonly onClickCreate: () => void;
 };
 
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {

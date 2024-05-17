@@ -9,12 +9,12 @@ import TextInput from '../TextInput';
 import * as styles from './index.module.scss';
 
 type Props = {
-  defaultValue?: string;
-  isClearable?: boolean;
-  placeholder?: string;
-  inputClassName?: string;
-  onSearch?: (value: string) => void;
-  onClearSearch?: () => void;
+  readonly defaultValue?: string;
+  readonly isClearable?: boolean;
+  readonly placeholder?: string;
+  readonly inputClassName?: string;
+  readonly onSearch?: (value: string) => void;
+  readonly onClearSearch?: () => void;
 };
 
 /**

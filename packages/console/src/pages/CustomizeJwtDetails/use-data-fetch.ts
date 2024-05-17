@@ -4,10 +4,10 @@ import useSWR from 'swr';
 
 import useApi from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
+import { getApiPath } from '@/pages/CustomizeJwt/utils/path';
 import { shouldRetryOnError } from '@/utils/request';
 
 import { type Action, type JwtCustomizer } from './type';
-import { getApiPath } from './utils/path';
 
 const useDataFetch = <T extends LogtoJwtTokenKeyType>(tokenType: T, action: Action) => {
   const apiPath = getApiPath(tokenType);

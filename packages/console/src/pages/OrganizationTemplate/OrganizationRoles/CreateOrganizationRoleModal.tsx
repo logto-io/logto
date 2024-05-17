@@ -1,4 +1,5 @@
 import { type OrganizationRole } from '@logto/schemas';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -15,17 +16,28 @@ import { trySubmitSafe } from '@/utils/form';
 type FormData = Pick<OrganizationRole, 'name' | 'description'>;
 
 type Props = {
-  onClose: (createdOrganizationRole?: OrganizationRole) => void;
+  readonly isOpen: boolean;
+  readonly onClose: (createdOrganizationRole?: OrganizationRole) => void;
 };
 
-function CreateOrganizationRoleModal({ onClose }: Props) {
+function CreateOrganizationRoleModal({ isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
     register,
     formState: { errors, isSubmitting },
     handleSubmit,
+    reset,
   } = useForm<FormData>();
+
+  const onCloseHandler = useCallback(
+    (createdData?: OrganizationRole) => {
+      // Reset form when modal is closed
+      reset();
+      onClose(createdData);
+    },
+    [onClose, reset]
+  );
 
   const api = useApi();
 
@@ -37,17 +49,17 @@ function CreateOrganizationRoleModal({ onClose }: Props) {
       toast.success(
         t('organization_template.roles.create_modal.created', { name: createdData.name })
       );
-      onClose(createdData);
+      onCloseHandler(createdData);
     })
   );
 
   return (
     <ReactModal
-      isOpen
+      isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
       onRequestClose={() => {
-        onClose();
+        onCloseHandler();
       }}
     >
       <ModalLayout
@@ -60,7 +72,7 @@ function CreateOrganizationRoleModal({ onClose }: Props) {
             onClick={submit}
           />
         }
-        onClose={onClose}
+        onClose={onCloseHandler}
       >
         <FormField isRequired title="organization_template.roles.create_modal.name_field">
           <TextInput

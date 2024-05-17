@@ -37,7 +37,6 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const adminOrigins = isCloud ? cloudUrlSet.origins : adminUrlSet.origins;
   const coreOrigins = urlSet.origins;
   const developmentOrigins = conditionalArray(!isProduction && 'ws:');
-  const appInsightsOrigins = ['https://*.applicationinsights.azure.com'];
 
   // We use react-monaco-editor for code editing in the admin console. It loads the monaco editor asynchronously from a CDN.
   // Allow the CDN src in the CSP.
@@ -92,7 +91,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           "'unsafe-inline'",
           ...conditionalArray(!isProduction && "'unsafe-eval'"),
         ],
-        connectSrc: ["'self'", tenantEndpointOrigin, ...developmentOrigins, ...appInsightsOrigins],
+        connectSrc: ["'self'", tenantEndpointOrigin, ...developmentOrigins],
         // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
         frameSrc: ["'self'", 'https:'],
         // Alow loaded by console preview iframe
@@ -117,13 +116,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
           ...monacoEditorCDNSource,
         ],
-        connectSrc: [
-          "'self'",
-          ...adminOrigins,
-          ...coreOrigins,
-          ...developmentOrigins,
-          ...appInsightsOrigins,
-        ],
+        connectSrc: ["'self'", ...adminOrigins, ...coreOrigins, ...developmentOrigins],
         // Allow Main Flow origin loaded in preview iframe
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],
       },

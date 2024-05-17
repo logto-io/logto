@@ -1,4 +1,4 @@
-import { HookEvent, type Hook, type HookConfig } from '@logto/schemas';
+import { type HookEvent, type Hook, type HookConfig, InteractionHookEvent } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -10,7 +10,8 @@ import { uriValidator } from '@/utils/validator';
 
 import * as styles from './index.module.scss';
 
-const hookEventOptions = Object.values(HookEvent).map((event) => ({
+// TODO: Implement all hook events
+const hookEventOptions = Object.values(InteractionHookEvent).map((event) => ({
   title: hookEventLabel[event],
   value: event,
 }));

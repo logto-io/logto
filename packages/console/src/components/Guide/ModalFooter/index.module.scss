@@ -2,12 +2,12 @@
 @use '@/scss/dimensions' as dim;
 
 .actionBar {
-  inset: auto 0 0 0;
+  inset: auto 0 0;
   width: 100%;
   padding: _.unit(4) _.unit(6);
   background-color: var(--color-layer-1);
   box-shadow: var(--shadow-3);
-  z-index: 1;
+  @include _.z-index(front);
 
   .wrapper {
     display: flex;

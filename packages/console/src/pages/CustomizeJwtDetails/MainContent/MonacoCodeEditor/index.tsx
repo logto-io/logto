@@ -21,17 +21,17 @@ export type { ModelControl, ModelSettings } from './type.js';
 type ActionButtonType = 'restore' | 'copy';
 
 type Props = {
-  className?: string;
-  enabledActions?: ActionButtonType[];
-  models: ModelSettings[];
-  activeModelName?: string;
-  setActiveModel?: (name: string) => void;
-  value?: string;
-  environmentVariablesDefinition?: string;
-  onChange?: (value: string | undefined) => void;
-  onMountHandler?: (editor: IStandaloneCodeEditor) => void;
-  actionButtons?: ReactNode;
-  dashboard?: DashboardProps;
+  readonly className?: string;
+  readonly enabledActions?: ActionButtonType[];
+  readonly models: ModelSettings[];
+  readonly activeModelName?: string;
+  readonly setActiveModel?: (name: string) => void;
+  readonly value?: string;
+  readonly environmentVariablesDefinition?: string;
+  readonly onChange?: (value: string | undefined) => void;
+  readonly onMountHandler?: (editor: IStandaloneCodeEditor) => void;
+  readonly actionButtons?: ReactNode;
+  readonly dashboard?: DashboardProps;
 };
 /**
  * Monaco code editor component.
@@ -98,10 +98,17 @@ function MonacoCodeEditor({
     }
 
     if (activeModel.language === 'typescript') {
+      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+        noSemanticValidation: false,
+        noSyntaxValidation: false,
+      });
+
       // Set the typescript compiler options
       monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
         allowNonTsExtensions: true,
         strictNullChecks: true,
+        allowJs: true,
+        checkJs: true,
       });
     }
   }, [activeModel, monaco, environmentVariablesDefinition]);

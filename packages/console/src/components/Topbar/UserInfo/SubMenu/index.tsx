@@ -14,13 +14,13 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './index.module.scss';
 
 type Props<T> = {
-  className?: string;
-  menuItemClassName?: string;
-  icon?: ReactNode;
-  title: AdminConsoleKey;
-  options: Array<Option<T>>;
-  selectedOption: T;
-  onItemClick: (value: T) => void;
+  readonly className?: string;
+  readonly menuItemClassName?: string;
+  readonly icon?: ReactNode;
+  readonly title: AdminConsoleKey;
+  readonly options: Array<Option<T>>;
+  readonly selectedOption: T;
+  readonly onItemClick: (value: T) => void;
 };
 
 const menuItemHeight = 40;

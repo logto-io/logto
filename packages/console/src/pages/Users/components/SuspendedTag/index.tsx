@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Tag from '@/ds-components/Tag';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 function SuspendedTag({ className }: Props) {

@@ -4,11 +4,11 @@ import {
   Organizations,
   featuredUserGuard,
   userWithOrganizationRolesGuard,
+  OrganizationScopes,
 } from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -17,14 +17,16 @@ import { userSearchKeys } from '#src/queries/user.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 
-import { type AuthedRouter, type RouterInitArgs } from '../types.js';
+import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import organizationInvitationRoutes from './invitations.js';
 import organizationRoleRoutes from './roles.js';
 import organizationScopeRoutes from './scopes.js';
 import { errorHandler } from './utils.js';
 
-export default function organizationRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
+export default function organizationRoutes<T extends ManagementApiRouter>(
+  ...args: RouterInitArgs<T>
+) {
   const [
     originalRouter,
     {
@@ -236,14 +238,27 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     }
   );
 
+  router.get(
+    '/:id/users/:userId/scopes',
+    koaGuard({
+      params: z.object(params),
+      response: z.array(OrganizationScopes.guard),
+      status: [200, 422],
+    }),
+    async (ctx, next) => {
+      const { id, userId } = ctx.guard.params;
+
+      const scopes = await organizations.relations.rolesUsers.getUserScopes(id, userId);
+
+      ctx.body = scopes;
+      return next();
+    }
+  );
+
   // MARK: Mount sub-routes
   organizationRoleRoutes(...args);
   organizationScopeRoutes(...args);
-
-  // FIXME: @gao-sun
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    organizationInvitationRoutes(...args);
-  }
+  organizationInvitationRoutes(...args);
 
   // Add routes to the router
   originalRouter.use(router.routes());

@@ -16,8 +16,8 @@ const registeredPlanNamePhraseMap: Record<
 };
 
 type Props = {
-  name: string;
-  isTitleCase?: boolean;
+  readonly name: string;
+  readonly isTitleCase?: boolean;
 };
 
 function PlanName({ name, isTitleCase = false }: Props) {

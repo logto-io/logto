@@ -8,7 +8,7 @@ import WebAuthnTipContent from './WebAuthnTipContent';
 import * as styles from './index.module.scss';
 
 type Props = {
-  type: MfaFactor;
+  readonly type: MfaFactor;
 };
 
 const factorDescriptionLabel: Record<MfaFactor, AdminConsoleKey> = {

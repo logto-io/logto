@@ -34,16 +34,11 @@ const quota_item = {
     not_eligible: 'マシン間アプリケーションを削除してください',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your third-party apps',
+    name: 'サードパーティーアプリ',
+    limited: '{{count, number}} サードパーティーアプリ',
+    limited_other: '{{count, number}} サードパーティーアプリ',
+    unlimited: '無制限のサードパーティーアプリ',
+    not_eligible: 'サードパーティーアプリを削除してください',
   },
   resources_limit: {
     name: 'APIリソース',
@@ -53,11 +48,11 @@ const quota_item = {
     not_eligible: 'APIリソースを削除してください',
   },
   scopes_per_resource_limit: {
-    name: 'リソースの権限',
-    limited: '{{count, number}} リソースごとの権限',
-    limited_other: '{{count, number}} リソースごとの権限',
-    unlimited: '無制限のリソースごとの権限',
-    not_eligible: 'リソースの権限を削除してください',
+    name: 'リソースごとのスコープ',
+    limited: '{{count, number}} リソースごとのスコープ',
+    limited_other: '{{count, number}} リソースごとのスコープ',
+    unlimited: '無制限のリソースごとのスコープ',
+    not_eligible: 'リソースごとのスコープを削除してください',
   },
   custom_domain_enabled: {
     name: 'カスタムドメイン',
@@ -106,7 +101,7 @@ const quota_item = {
     not_eligible: 'マシン間ロールを削除してください',
   },
   scopes_per_role_limit: {
-    name: 'ロールの権限',
+    name: 'ロールごとの権限',
     limited: '{{count, number}} ロールごとの権限',
     limited_other: '{{count, number}} ロールごとの権限',
     unlimited: '無制限のロールごとの権限',
@@ -152,16 +147,17 @@ const quota_item = {
     not_eligible: 'エンタープライズSSOを削除してください',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
-    name: 'Tenant members',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your tenant members',
+    name: 'テナントメンバー',
+    limited: '{{count, number}} テナントメンバー',
+    limited_other: '{{count, number}} テナントメンバー',
+    unlimited: '無制限のテナントメンバー',
+    not_eligible: 'テナントメンバーを削除してください',
+  },
+  custom_jwt_enabled: {
+    name: 'カスタムJWT',
+    limited: 'カスタムJWT',
+    unlimited: 'カスタムJWT',
+    not_eligible: 'JWTクレームカスタマイザーを削除してください',
   },
 };
 

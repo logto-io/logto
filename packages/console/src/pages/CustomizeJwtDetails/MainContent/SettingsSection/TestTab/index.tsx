@@ -20,7 +20,7 @@ import * as tabContentStyles from '../index.module.scss';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isActive: boolean;
+  readonly isActive: boolean;
 };
 
 const accessTokenModelSettings = [accessTokenPayloadTestModel, userContextTestModel];

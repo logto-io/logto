@@ -1,7 +1,7 @@
 import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import LockIcon from '@/assets/icons/lock.svg';
@@ -9,7 +9,7 @@ import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
-import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
+import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
@@ -18,10 +18,10 @@ import * as styles from './index.module.scss';
 import useOnSubmit from './use-on-submit';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
-  autoFocus?: boolean;
-  signUpMethods: SignInIdentifier[];
+  readonly autoFocus?: boolean;
+  readonly signUpMethods: SignInIdentifier[];
 };
 
 type FormState = {
@@ -130,7 +130,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
        * Form rerender will trigger autofill.
        * If the autofill value is SSO enabled, it will always show SSO form.
        */}
-      <TermsAndPrivacy
+      <TermsAndPrivacyCheckbox
         className={classNames(styles.terms, showSingleSignOnForm && styles.hidden)}
       />
 

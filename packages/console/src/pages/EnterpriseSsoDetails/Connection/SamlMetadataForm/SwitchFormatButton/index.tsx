@@ -11,8 +11,8 @@ import DynamicT from '@/ds-components/DynamicT';
 import * as styles from './index.module.scss';
 
 type Props = {
-  value: FormFormat;
-  onChange: (formFormat: FormFormat) => void;
+  readonly value: FormFormat;
+  readonly onChange: (formFormat: FormFormat) => void;
 };
 
 export enum FormFormat {

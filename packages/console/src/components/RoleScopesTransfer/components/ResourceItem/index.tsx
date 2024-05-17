@@ -15,10 +15,10 @@ import SourceScopeItem from '../SourceScopeItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  resource: DetailedResourceResponse;
-  selectedScopes: ScopeResponse[];
-  onSelectResource: (resource: DetailedResourceResponse) => void;
-  onSelectScope: (scope: ScopeResponse) => void;
+  readonly resource: DetailedResourceResponse;
+  readonly selectedScopes: ScopeResponse[];
+  readonly onSelectResource: (resource: DetailedResourceResponse) => void;
+  readonly onSelectScope: (scope: ScopeResponse) => void;
 };
 
 function ResourceItem({ resource, selectedScopes, onSelectResource, onSelectScope }: Props) {

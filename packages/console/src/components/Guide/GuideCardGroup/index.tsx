@@ -8,12 +8,12 @@ import GuideCard, { type SelectedGuide } from '../GuideCard';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  categoryName?: string;
-  guides?: readonly Guide[];
-  hasCardBorder?: boolean;
-  hasCardButton?: boolean;
-  onClickGuide: (data: SelectedGuide) => void;
+  readonly className?: string;
+  readonly categoryName?: string;
+  readonly guides?: readonly Guide[];
+  readonly hasCardBorder?: boolean;
+  readonly hasCardButton?: boolean;
+  readonly onClickGuide: (data: SelectedGuide) => void;
 };
 
 function GuideCardGroup(

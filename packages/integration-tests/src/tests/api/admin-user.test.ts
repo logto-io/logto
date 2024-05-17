@@ -22,7 +22,11 @@ import {
 } from '#src/api/index.js';
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
-import { createNewSocialUserWithUsernameAndPassword } from '#src/helpers/interactions.js';
+import {
+  createNewSocialUserWithUsernameAndPassword,
+  signInWithPassword,
+} from '#src/helpers/interactions.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import {
   generateUsername,
   generateEmail,
@@ -177,7 +181,9 @@ describe('admin console user management', () => {
   });
 
   it('should delete user successfully', async () => {
-    const user = await createUserByAdmin();
+    const username = generateUsername();
+    const password = 'password';
+    const user = await createUserByAdmin({ username, password });
 
     const userEntity = await getUser(user.id);
     expect(userEntity).toMatchObject(user);
@@ -186,6 +192,10 @@ describe('admin console user management', () => {
 
     const response = await getUser(user.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
+
+    await enableAllPasswordSignInMethods();
+    // Sign in with deleted user should throw error
+    await expect(signInWithPassword({ username, password })).rejects.toThrowError();
   });
 
   it('should update user password successfully', async () => {

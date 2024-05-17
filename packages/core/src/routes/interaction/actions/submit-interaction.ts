@@ -25,7 +25,8 @@ import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
-import { consoleLog } from '#src/utils/console.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
@@ -86,6 +87,7 @@ const getInitialUserRoles = (
     isCreatingFirstAdminUser && !isCloud && defaultManagementApiAdminName // OSS uses the legacy Management API user role
   );
 
+// eslint-disable-next-line complexity -- @simeng refactor me
 async function handleSubmitRegister(
   interaction: VerifiedRegisterInteractionResult,
   ctx: WithLogContext & WithInteractionDetailsContext & WithInteractionHooksContext,
@@ -113,8 +115,15 @@ async function handleSubmitRegister(
   const { isCloud } = EnvSet.values;
   const [currentTenantId] = await getTenantId(ctx.URL);
   const isInAdminTenant = currentTenantId === adminTenantId;
+  /**
+   * Only allow creating the first admin user when it's in OSS or integration tests to avoid
+   * security issues.
+   */
   const isCreatingFirstAdminUser =
-    isInAdminTenant && String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
+    (!EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) &&
+    isInAdminTenant &&
+    String(client_id) === adminConsoleApplicationId &&
+    !(await hasActiveUsers());
 
   // If it's Logto Cloud, Check if the new user has any pending invitations, if yes, skip onboarding flow.
   const invitations =
@@ -154,7 +163,8 @@ async function handleSubmitRegister(
         }
       ),
     },
-    getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud)
+    getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud),
+    tenantId
   );
 
   if (isCreatingFirstAdminUser) {
@@ -173,18 +183,17 @@ async function handleSubmitRegister(
       getTenantRole(TenantRole.Admin).id,
       id,
     ]);
+  } else {
+    await manageDefaultOrganizations({ userId: id, organizationQueries: organizations });
   }
-
-  await manageDefaultOrganizations({ userId: id, organizationQueries: organizations });
-
   await assignInteractionResults(ctx, provider, { login: { accountId: id } });
   ctx.assignInteractionHookResult({ userId: id });
 
   log?.append({ userId: id });
   appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.Register) });
   void trySafe(postAffiliateLogs(ctx, cloudConnection, id, tenantId), (error) => {
-    consoleLog.warn('Failed to post affiliate logs', error);
-    void appInsights.trackException(error);
+    getConsoleLogFromContext(ctx).warn('Failed to post affiliate logs', error);
+    void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
   });
 }
 

@@ -15,15 +15,15 @@ import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/uti
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
-  autoFocus?: boolean;
-  defaultType?: IdentifierInputType;
-  enabledTypes: IdentifierInputType[];
+  readonly autoFocus?: boolean;
+  readonly defaultType?: IdentifierInputType;
+  readonly enabledTypes: IdentifierInputType[];
 
-  onSubmit?: (identifier: IdentifierInputType, value: string) => Promise<void> | void;
-  errorMessage?: string;
-  clearErrorMessage?: () => void;
+  readonly onSubmit?: (identifier: IdentifierInputType, value: string) => Promise<void> | void;
+  readonly errorMessage?: string;
+  readonly clearErrorMessage?: () => void;
 };
 
 type FormState = {

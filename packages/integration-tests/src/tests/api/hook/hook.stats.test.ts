@@ -1,10 +1,10 @@
 import {
   type Hook,
-  HookEvent,
   type HookResponse,
   type Log,
   LogResult,
   SignInIdentifier,
+  InteractionHookEvent,
 } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
@@ -34,7 +34,7 @@ describe('hook logs', () => {
   it('should get recent hook logs correctly', async () => {
     const createdHook = await authedAdminApi
       .post('hooks', {
-        json: getHookCreationPayload(HookEvent.PostRegister, 'http://localhost:9999'),
+        json: getHookCreationPayload(InteractionHookEvent.PostRegister, 'http://localhost:9999'),
       })
       .json<Hook>();
 
@@ -59,7 +59,7 @@ describe('hook logs', () => {
   it('should get hook execution stats correctly', async () => {
     const createdHook = await authedAdminApi
       .post('hooks', {
-        json: getHookCreationPayload(HookEvent.PostRegister, 'http://localhost:9999'),
+        json: getHookCreationPayload(InteractionHookEvent.PostRegister, 'http://localhost:9999'),
       })
       .json<Hook>();
 

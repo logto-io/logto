@@ -1,15 +1,16 @@
+import { appInsights } from '@logto/app-insights/node';
 import type { Optional } from '@silverhand/essentials';
 import { has } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
-import koaBody from 'koa-body';
+import { koaBody } from 'koa-body';
 import type { IMiddleware, IRouterParamContext } from 'koa-router';
 import type { ZodType, ZodTypeDef } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ResponseBodyError, StatusCodeError } from '#src/errors/ServerError/index.js';
-import assertThat from '#src/utils/assert-that.js';
-import { consoleLog } from '#src/utils/console.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 /** Configure what and how to guard. */
 export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
@@ -121,6 +122,11 @@ const tryParse = <Output, Definition extends ZodTypeDef, Input>(
   return parse(type, guard, data);
 };
 
+/**
+ * Guard middleware factory for request and response.
+ *
+ * Note: A context-aware console log is required to be present in the context (i.e. `ctx.console`).
+ */
 export default function koaGuard<
   StateT,
   ContextT extends IRouterParamContext,
@@ -155,7 +161,7 @@ export default function koaGuard<
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
     ctx.guard = {
       query: tryParse('query', query, ctx.request.query),
-      body: tryParse('body', body, ctx.request.body),
+      body: tryParse('body', body, ctx.request.body ?? {}), // Fallback to empty object since it's the original behavior of koa-body@5
       params: tryParse('params', params, ctx.params),
       files: tryParse('files', files, ctx.request.files),
     } as GuardedRequest<GuardQueryT, GuardBodyT, GuardParametersT, GuardFilesT>; // Have to do this since it's too complicated for TS
@@ -170,9 +176,14 @@ export default function koaGuard<
       GuardResponseT
     >
   > = async function (ctx, next) {
+    const consoleLog = getConsoleLogFromContext(ctx);
+
     /**
      * Assert the status code matches the value(s) in the config. If the config does not
      * specify a status code, it will not assert anything.
+     *
+     * In production, it will log a warning if the status code does not match the value(s) in the
+     * config for better user experience.
      *
      * @param value The status code to assert.
      * @throws {StatusCodeError} If the status code does not match the value(s) in the config.
@@ -182,10 +193,20 @@ export default function koaGuard<
         return;
       }
 
-      assertThat(
-        Array.isArray(status) ? status.includes(value) : status === value,
-        new StatusCodeError(status, value)
-      );
+      if (Array.isArray(status) ? status.includes(value) : status === value) {
+        return;
+      }
+
+      if (EnvSet.values.isProduction) {
+        consoleLog.warn('Unexpected status code:', value, 'expected:', status);
+        void appInsights.trackException(
+          new StatusCodeError(status, value),
+          buildAppInsightsTelemetry(ctx)
+        );
+        return;
+      }
+
+      throw new StatusCodeError(status, value);
     };
 
     try {
@@ -215,10 +236,7 @@ export default function koaGuard<
         // the properties that are not defined in the schema.
         ctx.body = result.data;
       } else {
-        if (!EnvSet.values.isProduction) {
-          consoleLog.error('Invalid response:', result.error);
-        }
-
+        consoleLog.error('Invalid response:', result.error);
         throw new ResponseBodyError(result.error);
       }
     }

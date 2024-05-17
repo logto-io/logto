@@ -157,7 +157,7 @@ export class OrganizationInvitationLibrary {
 
           const user = await userQueries.findUserById(acceptedUserId);
 
-          if (user.primaryEmail !== entity.invitee) {
+          if (user.primaryEmail?.toLowerCase() !== entity.invitee.toLowerCase()) {
             throw new RequestError({
               status: 422,
               code: 'request.invalid_input',

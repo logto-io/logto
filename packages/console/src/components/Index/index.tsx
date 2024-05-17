@@ -5,10 +5,10 @@ import Tick from '@/assets/icons/tick.svg';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  index: number;
-  isActive?: boolean;
-  isComplete?: boolean;
+  readonly className?: string;
+  readonly index: number;
+  readonly isActive?: boolean;
+  readonly isComplete?: boolean;
 };
 
 function Index({ className, index, isActive, isComplete }: Props) {

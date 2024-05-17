@@ -9,12 +9,12 @@ import { type Organization } from '../OrganizationItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isOpen: boolean;
-  parentElementRef: React.RefObject<HTMLDivElement>;
-  organizations: Organization[];
-  selectedOrganization: Organization;
-  onSelect: (organization: Organization) => void;
-  onClose: () => void;
+  readonly isOpen: boolean;
+  readonly parentElementRef: React.RefObject<HTMLDivElement>;
+  readonly organizations: Organization[];
+  readonly selectedOrganization: Organization;
+  readonly onSelect: (organization: Organization) => void;
+  readonly onClose: () => void;
 };
 
 const OrganizationSelectorModal = ({

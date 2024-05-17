@@ -1,0 +1,138 @@
+import UriInputField from '@/mdx-components/UriInputField';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+
+<Steps>
+
+<Step title="Preparation">
+
+### Prerequisits:
+
+1. Integrating Logto with Webflow requires the "Custom code" feature of Webflow, which requires at least the "Basic" plan.
+2. A Webflow site, either use an existing site or create a new one.
+
+</Step>
+
+<Step title="Init LogtoClient">
+
+In this step, we'll add global-level custom code to your Webflow site. Since NPM is not supported in Webflow, we'll use the [jsdelivr.com](https://www.jsdelivr.com/) CDN service to import the Logto SDK.
+
+Open the "Site settings" page, and navigate to the "Custom code" section. Add the following code to the "Head code" section.
+
+<pre>
+  <code className="language-html">
+    {`<script type="module">
+  // Import \`@logto/browser\` SDK from the jsdelivr CDN
+  import LogtoClient from 'https://esm.run/@logto/browser';
+
+  // Assign the \`logtoClient\` instance to window object,
+  // enabling global usage in other pages
+  window.logtoClient = new LogtoClient({
+    endpoint: '${props.endpoint}',
+    appId: '${props.app.id}',
+  });
+</script>`}
+  </code>
+</pre>
+
+</Step>
+
+<Step
+  title="Implement sign-in"
+  subtitle="3 steps"
+>
+
+<InlineNotification>
+  In the following steps, we assume your Webflow site is running on <code>https://your-awesome-site.webflow.io</code>.
+</InlineNotification>
+
+### Configure Redirect URI
+
+First, let’s enter your redirect URI. E.g. `https://your-awesome-site.webflow.io/callback`.
+
+<UriInputField name="redirectUris" />
+
+### Implement a sign-in button
+
+Return to your Webflow designer, drag and drop a "Sign in" button to the home page, and assign it an ID “sign-in” for later reference using `getElementById()`.
+
+<pre>
+  <code className="language-html">
+    {`<script type="module">
+  const signInButton = document.getElementById('sign-in');
+  const onClickSignIn = () => logtoClient.signIn('${props.redirectUris[0] ?? 'https://your-awesome-site.webflow.io/callback'}');
+  signInButton.addEventListener('click', onClickSignIn);
+</script>`}
+  </code>
+</pre>
+
+### Handle redirect
+
+<p>We're almost there! In the last step, we use <code>{`${props.redirectUris[0] ?? 'https://your-awesome-site.webflow.io/callback'}`}</code> as the Redirect URI, and now we need to handle it properly.</p>
+
+First let's create a "Callback" page in Webflow, and simply put some static text "Redirecting..." on it. Then add the following page-level custom code to "Callback" page.
+
+```html
+<script type="module">
+  (async () => {
+    // Handle sign-in callback logic by calling the SDK method
+    await logtoClient.handleSignInCallback(window.location.href);
+
+    // Redirect back to the home page when the handling is done
+    window.location.assign('https://your-awesome-site.webflow.io');
+  })();
+</script>
+```
+
+</Step>
+
+<Step title="Implement sign-out">
+
+After signing out, it'll be great to redirect user back to your website. Let's add `https://your-awesome-site.webflow.io` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
+
+<UriInputField name="postLogoutRedirectUris" />
+
+### Implement a sign-out button
+
+Return to the Webflow designer, and add a “Sign out” button on your home page. Similarly, assign an ID “sign-out” to the button, and add the following code to the page-level custom code.
+
+<pre>
+  <code className="language-js">
+    {`const signOutButton = document.getElementById('sign-out');
+const onClickSignOut = () => logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? 'https://your-awesome-site.webflow.io'}');
+signOutButton.addEventListener('click', onClickSignOut);`}
+  </code>
+</pre>
+
+</Step>
+
+<Step title="Handle authentication status">
+
+In Logto SDK, generally we can use `logtoClient.isAuthenticated()` method to check the authentication status, if the user is signed in, the value will be `true`; otherwise, it will be `false`.
+
+In your Webflow site, you can also use it to programmatically show and hide the sign-in and sign-out buttons. Apply the following custom code to adjust button CSS accordingly.
+
+```js
+const isAuthenticated = await logtoClient.isAuthenticated();
+
+signInButton.style.display = isAuthenticated ? 'none' : 'block';
+signOutButton.style.display = isAuthenticated ? 'block' : 'none';
+```
+
+</Step>
+
+<Step title="Checkpoint: Test your application">
+
+Now, test your Webflow site:
+
+1. Deploy and visit your site URL, the sign-in button should be visible.
+2. Click the sign-in button, the SDK will initiate the sign-in process, redirecting you to the Logto sign-in page.
+3. After signing in, you will be redirected back to your site, seeing the username and the sign-out button.
+4. Click the sign-out button to sign-out.
+
+</Step>
+
+</Steps>

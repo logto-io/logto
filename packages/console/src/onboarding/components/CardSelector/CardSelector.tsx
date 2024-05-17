@@ -3,11 +3,11 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import type { CardSelectorOption } from './types';
 
 type Props = {
-  name: string;
-  value: string;
-  options: CardSelectorOption[];
-  onChange: (value: string) => void;
-  optionClassName?: string;
+  readonly name: string;
+  readonly value: string;
+  readonly options: CardSelectorOption[];
+  readonly onChange: (value: string) => void;
+  readonly optionClassName?: string;
 };
 
 function CardSelector({ name, value, options, onChange, optionClassName }: Props) {

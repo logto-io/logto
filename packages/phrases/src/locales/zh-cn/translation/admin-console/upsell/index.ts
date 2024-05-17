@@ -35,8 +35,7 @@ const upsell = {
     api_resource: 'API 资源',
     machine_to_machine: '机器对机器应用',
     tokens: '{{limit}}M 令牌',
-    /** UNTRANSLATED */
-    tenant_member: 'tenant member',
+    tenant_member: '租户成员',
   },
   charge_notification_for_quota_limit:
     '您已超过{{item}}配额限制。Logto将为超出配额限制的使用添加费用。计费将从新的附加定价设计发布当天开始。 <a>了解更多</a>',

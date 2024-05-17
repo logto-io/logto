@@ -1,48 +1,65 @@
 import { type Organization } from '@logto/schemas';
-import { useForm } from 'react-hook-form';
+import { trySafe } from '@silverhand/essentials';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 
-type Props = {
-  /**
-   * Whether the organization is being deleted, this is used to disable the unsaved
-   * changes alert modal.
-   */
-  isDeleting: boolean;
-  data: Organization;
-  onUpdated: (data: Organization) => void;
+import { type OrganizationDetailsOutletContext } from '../types';
+
+type FormData = Partial<Omit<Organization, 'customData'> & { customData: string }>;
+
+const isJsonObject = (value: string) => {
+  const parsed = trySafe<unknown>(() => JSON.parse(value));
+  return Boolean(parsed && typeof parsed === 'object');
 };
 
-function Settings({ isDeleting, data, onUpdated }: Props) {
+const normalizeData = (data: Organization): FormData => ({
+  ...data,
+  customData: JSON.stringify(data.customData, undefined, 2),
+});
+
+const assembleData = (data: FormData): Partial<Organization> => ({
+  ...data,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  customData: JSON.parse(data.customData ?? '{}'),
+});
+
+function Settings() {
+  const { isDeleting, data, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
     reset,
+    control,
     handleSubmit,
     formState: { isDirty, isSubmitting, errors },
-  } = useForm<Partial<Organization>>({
-    defaultValues: data,
+  } = useForm<FormData>({
+    defaultValues: normalizeData(data),
   });
   const api = useApi();
 
   const onSubmit = handleSubmit(
-    trySubmitSafe(async (json) => {
+    trySubmitSafe(async (data) => {
       if (isSubmitting) {
         return;
       }
 
       const updatedData = await api
-        .patch(`api/organizations/${data.id}`, { json })
+        .patch(`api/organizations/${data.id}`, {
+          json: assembleData(data),
+        })
         .json<Organization>();
-      reset(updatedData);
+      reset(normalizeData(updatedData));
       toast.success(t('general.saved'));
       onUpdated(updatedData);
     })
@@ -70,6 +87,22 @@ function Settings({ isDeleting, data, onUpdated }: Props) {
           <TextInput
             placeholder={t('organization_details.description_placeholder')}
             {...register('description')}
+          />
+        </FormField>
+        <FormField
+          title="organization_details.custom_data"
+          tip={t('organization_details.custom_data_tip')}
+        >
+          <Controller
+            name="customData"
+            control={control}
+            rules={{
+              validate: (value) =>
+                isJsonObject(value ?? '') ? true : t('organization_details.invalid_json_object'),
+            }}
+            render={({ field }) => (
+              <CodeEditor language="json" {...field} error={errors.customData?.message} />
+            )}
           />
         </FormField>
       </FormCard>

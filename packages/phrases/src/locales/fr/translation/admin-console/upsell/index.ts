@@ -35,8 +35,7 @@ const upsell = {
     api_resource: 'Ressource API',
     machine_to_machine: 'application machine à machine',
     tokens: '{{limit}}M jetons',
-    /** UNTRANSLATED */
-    tenant_member: 'tenant member',
+    tenant_member: 'membre du locataire',
   },
   charge_notification_for_quota_limit:
     "Vous avez dépassé votre limite de quota {{item}}. Logto ajoutera des frais pour l'utilisation au-delà de votre limite de quota. La facturation commencera le jour de la publication du nouveau design tarifaire de l'extension. <a>En savoir plus</a>",

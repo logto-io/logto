@@ -1,6 +1,6 @@
 import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
-import type { InteractionResults } from 'oidc-provider';
+import type { InteractionResults, PromptDetail } from 'oidc-provider';
 import type Provider from 'oidc-provider';
 import { z } from 'zod';
 
@@ -64,21 +64,31 @@ const missingScopesGuard = z.object({
   missingResourceScopes: z.object({}).catchall(z.string().array()).optional(),
 });
 
-export const getMissingScopes = (prompt: Provider.PromptDetail) => {
+export const getMissingScopes = (prompt: PromptDetail) => {
   return missingScopesGuard.parse(prompt.details);
 };
 
-export const consent = async (
-  ctx: Context,
-  provider: Provider,
-  queries: Queries,
-  interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>
-) => {
+export const consent = async ({
+  ctx,
+  provider,
+  queries,
+  interactionDetails,
+  missingOIDCScopes = [],
+  resourceScopesToGrant = {},
+  resourceScopesToReject = {},
+}: {
+  ctx: Context;
+  provider: Provider;
+  queries: Queries;
+  interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>;
+  missingOIDCScopes?: string[];
+  resourceScopesToGrant?: Record<string, string[]>;
+  resourceScopesToReject?: Record<string, string[]>;
+}) => {
   const {
     session,
     grantId,
     params: { client_id },
-    prompt,
   } = interactionDetails;
 
   assertThat(session, 'session.not_found');
@@ -91,17 +101,17 @@ export const consent = async (
 
   await saveUserFirstConsentedAppId(queries, accountId, String(client_id));
 
-  const { missingOIDCScope, missingResourceScopes } = getMissingScopes(prompt);
-
   // Fulfill missing scopes
-  if (missingOIDCScope) {
-    grant.addOIDCScope(missingOIDCScope.join(' '));
+  if (missingOIDCScopes.length > 0) {
+    grant.addOIDCScope(missingOIDCScopes.join(' '));
   }
 
-  if (missingResourceScopes) {
-    for (const [indicator, scope] of Object.entries(missingResourceScopes)) {
-      grant.addResourceScope(indicator, scope.join(' '));
-    }
+  for (const [indicator, scope] of Object.entries(resourceScopesToGrant)) {
+    grant.addResourceScope(indicator, scope.join(' '));
+  }
+
+  for (const [indicator, scope] of Object.entries(resourceScopesToReject)) {
+    grant.rejectResourceScope(indicator, scope.join(' '));
   }
 
   const finalGrantId = await grant.save();

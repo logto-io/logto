@@ -14,9 +14,9 @@ import ParsedConfigPreview from './ParsedConfigPreview';
 import * as styles from './index.module.scss';
 
 type Props = {
-  providerConfig?: OidcProviderConfig;
-  config?: OidcConnectorConfig;
-  providerName: SsoProviderName;
+  readonly providerConfig?: OidcProviderConfig;
+  readonly config?: OidcConnectorConfig;
+  readonly providerName: SsoProviderName;
 };
 
 // Do not show inline notification and parsed config preview if it is on guide page.
@@ -57,7 +57,7 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
       >
         {providerName === SsoProviderName.GOOGLE_WORKSPACE ? (
           <CopyToClipboard
-            className={styles.copyToClipboard}
+            displayType="block"
             variant="border"
             // TODO: this hard-coded value should align with the `googleIssuer` value defined in `packages/core/src/sso/GoogleWorkspaceSsoConnector/index.ts`.
             value={providerConfig?.issuer ?? 'https://accounts.google.com'}

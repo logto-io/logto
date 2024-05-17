@@ -9,7 +9,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   isFeatured: true,
   fullGuide: {
     title: 'Full machine-to-machine integration tutorial',
-    url: 'https://docs.logto.io/sdk/m2m',
+    url: 'https://docs.logto.io/quick-starts/m2m',
   },
 });
 

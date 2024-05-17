@@ -3,11 +3,14 @@ import {
   type AdminConsoleData,
   LogtoOidcConfigKeyType,
   LogtoJwtTokenKey,
+  LogtoJwtTokenKeyType,
 } from '@logto/schemas';
 
 import {
   accessTokenJwtCustomizerPayload,
   clientCredentialsJwtCustomizerPayload,
+  accessTokenSampleScript,
+  clientCredentialsSampleScript,
 } from '#src/__mocks__/jwt-customizer.js';
 import {
   deleteOidcKey,
@@ -20,6 +23,7 @@ import {
   getJwtCustomizer,
   getJwtCustomizers,
   deleteJwtCustomizer,
+  testJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -240,5 +244,28 @@ describe('admin console sign-in experience', () => {
     ]);
     await deleteJwtCustomizer('client-credentials');
     await expect(getJwtCustomizers()).resolves.toEqual([]);
+  });
+
+  it('should successfully test an access token JWT customizer', async () => {
+    const testResult = await testJwtCustomizer({
+      tokenType: LogtoJwtTokenKeyType.AccessToken,
+      token: accessTokenJwtCustomizerPayload.tokenSample,
+      context: accessTokenJwtCustomizerPayload.contextSample,
+      script: accessTokenSampleScript,
+      environmentVariables: accessTokenJwtCustomizerPayload.environmentVariables,
+    });
+    expect(testResult).toMatchObject({
+      user_id: accessTokenJwtCustomizerPayload.contextSample.user.id,
+    });
+  });
+
+  it('should successfully test a client credentials JWT customizer', async () => {
+    const testResult = await testJwtCustomizer({
+      tokenType: LogtoJwtTokenKeyType.ClientCredentials,
+      token: clientCredentialsJwtCustomizerPayload.tokenSample,
+      script: clientCredentialsSampleScript,
+      environmentVariables: clientCredentialsJwtCustomizerPayload.environmentVariables,
+    });
+    expect(testResult).toMatchObject(clientCredentialsJwtCustomizerPayload.environmentVariables);
   });
 });

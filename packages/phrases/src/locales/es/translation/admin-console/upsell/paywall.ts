@@ -52,18 +52,19 @@ const paywall = {
   mfa: 'Desbloquea MFA para verificar la seguridad al actualizar a un plan pago. No dudes en <a>contactarnos</a> si necesitas ayuda.',
   organizations:
     'Desbloquea las organizaciones al actualizar a un plan pago. No dudes en <a>contactarnos</a> si necesitas ayuda.',
-  /** UNTRANSLATED */
   third_party_apps:
-    'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Desbloquea Logto como proveedor de identidades para aplicaciones de terceros al actualizar a un plan de pago. Para cualquier asistencia, no dudes en <a>contactarnos</a>.',
   sso_connectors:
-    'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Desbloquea el SSO empresarial al actualizar a un plan de pago. Para cualquier asistencia, no dudes en <a>contactarnos</a>.',
   tenant_members:
-    'Unlock collaboration feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Desbloquea la función de colaboración al actualizar a un plan de pago. Para cualquier asistencia, no dudes en <a>contactarnos</a>.',
   tenant_members_dev_plan:
-    "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
+    'Has alcanzado tu límite de {{limit}} miembros. Libera a un miembro o revoca una invitación pendiente para agregar a alguien nuevo. ¿Necesitas más puestos? No dudes en contactarnos.',
+  custom_jwt: {
+    title: 'Agregar reclamaciones personalizadas',
+    description:
+      'Actualiza a un plan de pago para obtener funcionalidades personalizadas de JWT y beneficios premium. No dudes en <a>contactarnos</a> si tienes alguna pregunta.',
+  },
 };
 
 export default Object.freeze(paywall);

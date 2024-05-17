@@ -61,18 +61,19 @@ describe('organization invitation creation', () => {
     await Promise.all([deleteUser(inviter.id), deleteUser(inviter2.id)]);
   });
 
-  it('should be able to get invitations by invitee', async () => {
+  it('should be able to get invitations by invitee email (case insensitive)', async () => {
     const organization = await organizationApi.create({ name: 'test' });
     const invitee = `${randomId()}@example.com`;
     await invitationApi.create({
       organizationId: organization.id,
-      invitee,
+      // Deliberately use uppercase email when creating the invitation
+      invitee: invitee.toUpperCase(),
       expiresAt: Date.now() + 1_000_000,
     });
 
     const invitations = await invitationApi.getList(new URLSearchParams({ invitee }));
     expect(invitations.length).toBe(1);
-    expect(invitations[0]?.invitee).toBe(invitee);
+    expect(invitations[0]?.invitee.toLocaleLowerCase()).toBe(invitee.toLowerCase());
   });
 
   it('should have no pagination', async () => {

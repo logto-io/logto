@@ -10,11 +10,11 @@ import { getPath } from '../../utils';
 import * as styles from './index.module.scss';
 
 type Props = {
-  icon?: ReactNode;
-  titleKey: TFuncKey<'translation', 'admin_console.tabs'>;
-  isActive?: boolean;
-  modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
-  externalLink?: string;
+  readonly icon?: ReactNode;
+  readonly titleKey: TFuncKey<'translation', 'admin_console.tabs'>;
+  readonly isActive?: boolean;
+  readonly modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
+  readonly externalLink?: string;
 };
 
 function Item({ icon, titleKey, modal, externalLink, isActive = false }: Props) {

@@ -13,20 +13,36 @@ describe('organization APIs', () => {
   });
 
   it('should get organizations successfully', async () => {
-    await organizationApi.create({ name: 'test', description: 'A test organization.' });
+    await organizationApi.create({
+      name: 'test',
+      description: 'A test organization.',
+      customData: { foo: 'bar' },
+    });
     await organizationApi.create({ name: 'test2' });
     const organizations = await organizationApi.getList();
 
     expect(organizations).toContainEqual(
-      expect.objectContaining({ name: 'test', description: 'A test organization.' })
+      expect.objectContaining({
+        name: 'test',
+        description: 'A test organization.',
+        customData: { foo: 'bar' },
+      })
     );
     expect(organizations).toContainEqual(
-      expect.objectContaining({ name: 'test2', description: null })
+      expect.objectContaining({ name: 'test2', description: null, customData: {} })
     );
     for (const organization of organizations) {
       expect(organization).not.toHaveProperty('usersCount');
       expect(organization).not.toHaveProperty('featuredUsers');
     }
+  });
+
+  it('should fail when input data is malformed', async () => {
+    const response = await organizationApi
+      // @ts-expect-error intended to test invalid input
+      .create({ name: 'a', customData: 'b' })
+      .catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.status).toBe(400);
   });
 
   it('should get organizations with featured users', async () => {

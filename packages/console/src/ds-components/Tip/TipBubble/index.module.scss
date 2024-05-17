@@ -10,7 +10,7 @@
   font: var(--font-body-2);
   max-width: 300px;
   white-space: pre-wrap;
-  z-index: 200;
+  @include _.z-index(tooltip);
 
   &.successful {
     background: var(--color-success-60);

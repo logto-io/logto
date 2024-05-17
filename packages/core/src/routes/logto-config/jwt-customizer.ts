@@ -1,10 +1,10 @@
 import {
-  accessTokenJwtCustomizerGuard,
-  clientCredentialsJwtCustomizerGuard,
   LogtoJwtTokenKey,
   LogtoJwtTokenKeyType,
-  jsonObjectGuard,
+  accessTokenJwtCustomizerGuard,
   adminTenantId,
+  clientCredentialsJwtCustomizerGuard,
+  jsonObjectGuard,
   jwtCustomizerConfigsGuard,
   jwtCustomizerTestRequestBodyGuard,
 } from '@logto/schemas';
@@ -13,9 +13,12 @@ import { ZodError, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError, { formatZodError } from '#src/errors/RequestError/index.js';
+import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenKeyType, body: unknown) => {
   if (tokenPath === LogtoJwtTokenKeyType.AccessToken) {
@@ -30,8 +33,11 @@ const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenKeyType, body: unknown) =
   };
 };
 
-export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
-  ...[router, { id: tenantId, queries, logtoConfigs, cloudConnection }]: RouterInitArgs<T>
+export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRouter>(
+  ...[
+    router,
+    { id: tenantId, queries, logtoConfigs, cloudConnection, libraries },
+  ]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteJwtCustomizer } = queries.logtoConfigs;
   const { upsertJwtCustomizer, getJwtCustomizer, getJwtCustomizers, updateJwtCustomizer } =
@@ -54,6 +60,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 201, 400, 403],
     }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { isCloud, isIntegrationTest } = EnvSet.values;
       if (tenantId === adminTenantId && isCloud && !isIntegrationTest) {
@@ -67,7 +74,17 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
         params: { tokenTypePath },
         body: rawBody,
       } = ctx.guard;
+
       const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
+
+      // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
+      if (!isIntegrationTest) {
+        await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
+          key,
+          value: body,
+          useCase: 'production',
+        });
+      }
 
       const { rows } = await getRowsByKeys([key]);
 
@@ -93,12 +110,24 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 400, 404],
     }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
+      const { isIntegrationTest } = EnvSet.values;
+
       const {
         params: { tokenTypePath },
         body: rawBody,
       } = ctx.guard;
       const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
+
+      // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
+      if (!isIntegrationTest) {
+        await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
+          key,
+          value: body,
+          useCase: 'production',
+        });
+      }
 
       ctx.body = await updateJwtCustomizer(key, body);
 
@@ -113,7 +142,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       status: [200],
     }),
     async (ctx, next) => {
-      const jwtCustomizer = await getJwtCustomizers();
+      const jwtCustomizer = await getJwtCustomizers(getConsoleLogFromContext(ctx));
       ctx.body = Object.values(LogtoJwtTokenKey)
         .filter((key) => jwtCustomizer[key])
         .map((key) => ({ key, value: jwtCustomizer[key] }));
@@ -152,45 +181,62 @@ export default function logtoConfigJwtCustomizerRoutes<T extends AuthedRouter>(
       status: [204, 404],
     }),
     async (ctx, next) => {
+      const { isIntegrationTest } = EnvSet.values;
+
       const {
         params: { tokenTypePath },
       } = ctx.guard;
 
-      await deleteJwtCustomizer(
+      const tokenKey =
         tokenTypePath === LogtoJwtTokenKeyType.AccessToken
           ? LogtoJwtTokenKey.AccessToken
-          : LogtoJwtTokenKey.ClientCredentials
-      );
+          : LogtoJwtTokenKey.ClientCredentials;
+
+      // Undeploy the script first to avoid the case where the JWT customizer was deleted from DB but worker script not updated successfully.
+      if (!isIntegrationTest) {
+        await libraries.jwtCustomizers.undeployJwtCustomizerScript(
+          getConsoleLogFromContext(ctx),
+          tokenKey
+        );
+      }
+
+      await deleteJwtCustomizer(tokenKey);
       ctx.status = 204;
       return next();
     }
   );
 
-  if (!EnvSet.values.isCloud) {
-    return;
-  }
-
   router.post(
     '/configs/jwt-customizer/test',
     koaGuard({
-      /**
-       * Early throws when:
-       * 1. no `script` provided.
-       * 2. no `tokenSample` provided.
-       */
       body: jwtCustomizerTestRequestBodyGuard,
       response: jsonObjectGuard,
       status: [200, 400, 403, 422],
     }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { body } = ctx.guard;
 
-      const client = await cloudConnection.getClient();
+      // Deploy the test script
+      await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
+        key:
+          body.tokenType === LogtoJwtTokenKeyType.AccessToken
+            ? LogtoJwtTokenKey.AccessToken
+            : LogtoJwtTokenKey.ClientCredentials,
+        value: body,
+        useCase: 'test',
+      });
 
       try {
-        ctx.body = await client.post(`/api/services/custom-jwt`, {
-          body,
-        });
+        if (EnvSet.values.isCloud) {
+          const client = await cloudConnection.getClient();
+          ctx.body = await client.post(`/api/services/custom-jwt`, {
+            body,
+            search: { isTest: 'true' },
+          });
+        } else {
+          ctx.body = await JwtCustomizerLibrary.runScriptInLocalVm(body);
+        }
       } catch (error: unknown) {
         /**
          * All APIs should throw `RequestError` instead of `Error`.

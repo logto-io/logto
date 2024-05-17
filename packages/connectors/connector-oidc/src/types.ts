@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-const scopeOpenid = 'openid' as const;
+import { oauth2ConfigGuard } from '@logto/connector-oauth';
+
+const scopeOpenid = 'openid';
 export const delimiter = /[ +]/;
 
 // Space-delimited 'scope' MUST contain 'openid', see https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth
@@ -38,16 +40,6 @@ export const userProfileGuard = z.object({
 
 export type UserProfile = z.infer<typeof userProfileGuard>;
 
-const endpointConfigObject = {
-  authorizationEndpoint: z.string(),
-  tokenEndpoint: z.string(),
-};
-
-const clientConfigObject = {
-  clientId: z.string(),
-  clientSecret: z.string(),
-};
-
 /**
  * We remove `nonce` in `authRequestOptionalConfigGuard` because it should be a randomly generated string,
  * should not be fixed in config and will be generated in Logto core according to `response_type` of authorization request.
@@ -84,18 +76,15 @@ export const idTokenVerificationConfigGuard = z.object({ jwksUri: z.string() }).
 
 export type IdTokenVerificationConfig = z.infer<typeof idTokenVerificationConfigGuard>;
 
-export const oidcConfigGuard = z.object({
-  responseType: z.literal('code').optional().default('code'),
-  grantType: z.literal('authorization_code').optional().default('authorization_code'),
+export const oidcConnectorConfigGuard = oauth2ConfigGuard.extend({
+  // Override `scope` to ensure it contains 'openid'.
   scope: z.string().transform(scopePostProcessor),
   idTokenVerificationConfig: idTokenVerificationConfigGuard,
   authRequestOptionalConfig: authRequestOptionalConfigGuard.optional(),
   customConfig: z.record(z.string()).optional(),
-  ...endpointConfigObject,
-  ...clientConfigObject,
 });
 
-export type OidcConfig = z.infer<typeof oidcConfigGuard>;
+export type OidcConnectorConfig = z.infer<typeof oidcConnectorConfigGuard>;
 
 export const authResponseGuard = z
   .object({

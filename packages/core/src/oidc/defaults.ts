@@ -1,5 +1,5 @@
 import type Provider from 'oidc-provider';
-import { type KoaContextWithOIDC } from 'oidc-provider';
+import type { TTLFunction, KoaContextWithOIDC } from 'oidc-provider';
 
 /**
  * Keep the default pre-checks from oidc-provider.
@@ -7,7 +7,7 @@ import { type KoaContextWithOIDC } from 'oidc-provider';
  * @see {@link https://github.com/panva/node-oidc-provider/blob/d6edf2a0b9efc777081e6f9cc358a0677ccd9897/docs/README.md#ttl | ttl's default value}
  */
 const refreshTokenTtl = (
-  ...[ctx, token, client]: Parameters<Provider.TTLFunction<InstanceType<Provider['RefreshToken']>>>
+  ...[ctx, token, client]: Parameters<TTLFunction<InstanceType<Provider['RefreshToken']>>>
 ) => {
   if (
     ctx.oidc.entities.RotatedRefreshToken &&

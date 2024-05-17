@@ -16,18 +16,18 @@ type Props = {
   /** A function that will be called when the user confirms the deletion. If not provided,
    * the delete button will not be displayed.
    */
-  onDelete?: () => void | Promise<void>;
+  readonly onDelete?: () => void | Promise<void>;
   /**
    * A function that will be called when the user clicks the edit button. If not provided,
    * the edit button will not be displayed.
    */
-  onEdit?: () => void | Promise<void>;
+  readonly onEdit?: () => void | Promise<void>;
   /** The translation key of the content that will be displayed in the confirmation modal. */
-  deleteConfirmation: AdminConsoleKey;
+  readonly deleteConfirmation: AdminConsoleKey;
   /** The name of the field that is being operated. */
-  fieldName: AdminConsoleKey;
+  readonly fieldName: AdminConsoleKey;
   /** Overrides the default translations of the edit and delete buttons. */
-  textOverrides?: {
+  readonly textOverrides?: {
     /** The translation key of the edit button. */
     edit?: AdminConsoleKey;
     /** The translation key of the delete button. */

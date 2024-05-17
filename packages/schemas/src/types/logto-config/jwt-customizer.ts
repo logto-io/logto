@@ -1,11 +1,23 @@
+import { jsonObjectGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import { Roles, UserSsoIdentities, Organizations } from '../../db-entries/index.js';
-import { jsonObjectGuard, mfaFactorsGuard } from '../../foundations/index.js';
+import { Organizations, Roles, UserSsoIdentities } from '../../db-entries/index.js';
+import { mfaFactorsGuard } from '../../foundations/index.js';
 import { scopeResponseGuard } from '../scope.js';
 import { userInfoGuard } from '../user.js';
 
 import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
+
+export const jwtCustomizerGuard = z.object({
+  script: z.string(),
+  environmentVariables: z.record(z.string()).optional(),
+  contextSample: jsonObjectGuard.optional(),
+});
+
+export enum LogtoJwtTokenKeyType {
+  AccessToken = 'access-token',
+  ClientCredentials = 'client-credentials',
+}
 
 export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
   ssoIdentities: UserSsoIdentities.guard
@@ -32,14 +44,6 @@ export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
 
 export type JwtCustomizerUserContext = z.infer<typeof jwtCustomizerUserContextGuard>;
 
-export const jwtCustomizerGuard = z
-  .object({
-    script: z.string(),
-    environmentVariables: z.record(z.string()),
-    contextSample: jsonObjectGuard,
-  })
-  .partial();
-
 export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
   .extend({
     // Use partial token guard since users customization may not rely on all fields.
@@ -59,32 +63,23 @@ export const clientCredentialsJwtCustomizerGuard = jwtCustomizerGuard
 
 export type ClientCredentialsJwtCustomizer = z.infer<typeof clientCredentialsJwtCustomizerGuard>;
 
-export enum LogtoJwtTokenKeyType {
-  AccessToken = 'access-token',
-  ClientCredentials = 'client-credentials',
-}
-
 /**
  * This guard is for the core JWT customizer testing API request body guard.
+ * Unlike the DB guard
+ *
+ * - rename the `tokenSample` to `token` and is required for testing.
+ * - rename the `contextSample` to `context` and is required for AccessToken testing.
  */
 export const jwtCustomizerTestRequestBodyGuard = z.discriminatedUnion('tokenType', [
   z.object({
     tokenType: z.literal(LogtoJwtTokenKeyType.AccessToken),
-    ...accessTokenJwtCustomizerGuard
-      .required({
-        script: true,
-      })
-      .pick({ environmentVariables: true, script: true }).shape,
+    ...accessTokenJwtCustomizerGuard.pick({ environmentVariables: true, script: true }).shape,
     token: accessTokenJwtCustomizerGuard.required().shape.tokenSample,
     context: accessTokenJwtCustomizerGuard.required().shape.contextSample,
   }),
   z.object({
     tokenType: z.literal(LogtoJwtTokenKeyType.ClientCredentials),
-    ...clientCredentialsJwtCustomizerGuard
-      .required({
-        script: true,
-      })
-      .pick({ environmentVariables: true, script: true }).shape,
+    ...clientCredentialsJwtCustomizerGuard.pick({ environmentVariables: true, script: true }).shape,
     token: clientCredentialsJwtCustomizerGuard.required().shape.tokenSample,
   }),
 ]);

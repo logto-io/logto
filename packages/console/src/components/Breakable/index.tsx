@@ -1,7 +1,7 @@
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 };
 
 /**

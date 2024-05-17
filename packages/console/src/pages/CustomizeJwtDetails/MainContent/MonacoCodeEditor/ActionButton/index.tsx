@@ -4,12 +4,12 @@ import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';
 
 type Props = {
-  actionTip: string;
-  actionSuccessTip: string;
-  actionLoadingTip?: string;
-  className?: string;
-  icon: React.ReactNode;
-  onClick: () => Promise<void> | void;
+  readonly actionTip: string;
+  readonly actionSuccessTip: string;
+  readonly actionLoadingTip?: string;
+  readonly className?: string;
+  readonly icon: React.ReactNode;
+  readonly onClick: () => Promise<void> | void;
 };
 
 function ActionButton({

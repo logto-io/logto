@@ -14,8 +14,7 @@ const tabs = {
   docs: 'ドキュメント',
   tenant_settings: '設定',
   mfa: 'Multi-factor auth',
-  /** UNTRANSLATED */
-  customize_jwt: 'JWT Claims',
+  customize_jwt: 'カスタム JWT',
   signing_keys: '署名キー',
   organization_template: '組織テンプレート',
 };

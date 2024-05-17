@@ -18,23 +18,13 @@ const organizations = {
   organization_description_placeholder: '組織的簡要描述',
   organization_permission: '組織權限',
   organization_permission_other: '組織權限',
-  organization_permission_description:
-    '組織權限指授權在組織上下文中存取資源的許可。組織權限應該以有意義的字串形式表示，同時作為名稱和唯一標識。',
-  organization_permission_delete_confirm:
-    '如果刪除此權限，所有包含此權限的組織角色都將失去此權限，具有此權限的用戶將失去其授予的訪問權限。',
   create_permission_placeholder: '讀取預約歷史',
-  permission: '權限',
-  permission_other: '權限',
   organization_role: '組織角色',
   organization_role_other: '組織角色',
   organization_role_description:
     '組織角色是可以分配給用戶的權限的分組。權限必須來自預定義的組織權限。',
-  organization_role_delete_confirm:
-    '這樣將從受影響的用戶身上刪除與此角色關聯的權限，並刪除組織角色、組織成員和組織權限之間的關係。',
   role: '角色',
-  create_role_placeholder: '僅擁有檢視權限的用戶',
   search_placeholder: '按組織名稱或 ID 搜索',
-  search_permission_placeholder: '輸入並搜索選擇權限',
   search_role_placeholder: '輸入並搜索選擇角色',
   empty_placeholder: '🤔 你尚未設置任何 {{entity}}。',
   organization_and_member: '組織和成員',
@@ -53,29 +43,22 @@ const organizations = {
         description:
           '在多租戶 SaaS 應用程式中，多個組織通常共用相同的訪問控制模板，其中包括權限和角色。在 Logto 中，我們稱之為「組織模板」。',
         permission_description: '組織權限指授權在組織上下文中存取資源。',
-        role_description: '組織角色是可以分配給成員的組織權限的分組。',
+        role_description_deprecated: '組織角色是可以分配給成員的組織權限的分組。',
+        role_description: '組繇角色是可以分配給成員的組繇權限或API權限的分組。',
       },
       section_3: {
+        title: '我可以將API權限分配給組織角色嗎？',
+        description:
+          '是的，您可以將API權限分配給組織角色。Logto提供靈活性，有效管理您組織的角色，允許您在這些角色中包括組織權限和API權限。',
+      },
+      section_4: {
         title: '交互示意圖，看看它們之間的關係',
         description:
           '讓我們舉個例子。John、Sarah 屬於不同的組織，在不同組織的上下文中具有不同的角色。懸停在不同的模塊上，看看會發生什麼。',
       },
     },
-    step_1: '第 1 步：定義組織權限',
-    step_2: '第 2 步：定義組織角色',
-    step_3: '第 3 步：創建您的第一個組織',
-    step_3_description:
-      '讓我們一起建立您的第一個組織。它具有唯一的 ID，可以作為處理各種面向業務的實體的容器。',
-    more_next_steps: '更多下一步',
-    add_members: '將成員添加到您的組織',
-    /** UNTRANSLATED */
-    config_organization: 'Configure organization',
     organization_permissions: '組織權限',
-    permission_name: '權限名稱',
-    permissions: '權限列表',
     organization_roles: '組織角色',
-    role_name: '角色名稱',
-    organization_name: '組織名稱',
     admin: '管理員',
     member: '成員',
     guest: '訪客',

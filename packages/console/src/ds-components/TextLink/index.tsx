@@ -12,8 +12,8 @@ import * as styles from './index.module.scss';
 
 export type Props = AnchorHTMLAttributes<HTMLAnchorElement> &
   Partial<LinkProps> & {
-    icon?: ReactNode;
-    isTrailingIcon?: boolean;
+    readonly icon?: ReactNode;
+    readonly isTrailingIcon?: boolean;
     /**
      * If the link will be opened in a new tab. This prop will override the `target`
      * and `rel` attributes.
@@ -25,7 +25,7 @@ export type Props = AnchorHTMLAttributes<HTMLAnchorElement> &
      *
      * Note: This prop is align with the `targetBlank` prop of {@link LinkButton}, they share the same logic.
      */
-    targetBlank?: boolean | 'noopener';
+    readonly targetBlank?: boolean | 'noopener';
   };
 
 function TextLink({

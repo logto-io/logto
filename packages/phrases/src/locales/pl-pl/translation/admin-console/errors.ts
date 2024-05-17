@@ -7,8 +7,7 @@ const errors = {
   invalid_uri_format: 'Nieprawidłowy format URI',
   invalid_origin_format: 'Nieprawidłowy format pochodzenia URI',
   invalid_json_format: 'Nieprawidłowy format JSON',
-  /** UNTRANSLATED */
-  invalid_regex: 'Invalid regular expression',
+  invalid_regex: 'Nieprawidłowe wyrażenie regularne',
   invalid_error_message_format: 'Nieprawidłowy format komunikatu błędu.',
   required_field_missing: 'Wpisz {{field}}',
   required_field_missing_plural: 'Musisz wprowadzić przynajmniej jeden {{field}}',
@@ -21,7 +20,7 @@ const errors = {
   unexpected_error: 'Wystąpił nieoczekiwany błąd.',
   not_found: '404 nie znaleziono',
   create_internal_role_violation:
-    'Tworzysz nową wewnętrzną rolę, co jest zabronione przez Logto. Spróbuj użyć innego nazwy, która nie zaczyna się od "#internal:".',
+    'Tworzysz nową wewnętrzną rolę, co jest zabronione przez Logto. Spróbuj użyć innego nazwy, która nie zaczyna się od "#internal:". ',
   should_be_an_integer: 'Powinno być liczbą całkowitą.',
   number_should_be_between_inclusive:
     'Następnie liczba powinna być między {{min}} a {{max}} (włącznie).',

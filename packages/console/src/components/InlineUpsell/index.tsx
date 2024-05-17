@@ -11,13 +11,13 @@ import ContactUsPhraseLink from '../ContactUsPhraseLink';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  for: TFuncKey<'translation', 'admin_console.upsell.paywall'>;
+  readonly className?: string;
+  readonly for: TFuncKey<'translation', 'admin_console.upsell.paywall'>;
   /**
    * The text to be displayed on the clickable action button which links to the subscription page.
    * @default 'upsell.compare_plans'
    */
-  actionButtonText?: AdminConsoleKey;
+  readonly actionButtonText?: AdminConsoleKey;
 };
 
 /** Displays an inline notification that explains the paywall and provides a clickable action button which links to the subscription page. */

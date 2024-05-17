@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import type { ReactNode } from 'react';
 import useSWR from 'swr';
@@ -17,7 +16,7 @@ import Welcome from './Welcome';
 import * as styles from './index.module.scss';
 
 type PageWrapperProps = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 function PageWrapper({ children }: PageWrapperProps) {
@@ -101,4 +100,4 @@ function SignInExperience() {
   );
 }
 
-export default withAppInsights(SignInExperience);
+export default SignInExperience;

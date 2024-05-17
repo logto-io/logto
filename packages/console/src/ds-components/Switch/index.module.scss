@@ -15,10 +15,7 @@
   .slider {
     position: absolute;
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background-color: var(--color-neutral-90);
     transition: 0.4s;
     border-radius: 12px;

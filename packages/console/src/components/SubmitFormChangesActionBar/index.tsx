@@ -6,12 +6,12 @@ import Button from '@/ds-components/Button';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isOpen: boolean;
-  isSubmitting: boolean;
-  onSubmit: () => Promise<void>;
-  onDiscard: () => void;
-  confirmText?: AdminConsoleKey;
-  className?: string;
+  readonly isOpen: boolean;
+  readonly isSubmitting: boolean;
+  readonly onSubmit: () => Promise<void>;
+  readonly onDiscard: () => void;
+  readonly confirmText?: AdminConsoleKey;
+  readonly className?: string;
 };
 
 function SubmitFormChangesActionBar({

@@ -17,8 +17,8 @@ type Props = {
   /**
    * The organization permission data to edit. If null, the modal will be in create mode.
    */
-  data: Nullable<OrganizationScope>;
-  onClose: () => void;
+  readonly data: Nullable<OrganizationScope>;
+  readonly onClose: () => void;
 };
 
 type FormData = Pick<OrganizationScope, 'name' | 'description'>;

@@ -42,10 +42,10 @@ describe('SocialCallbackPage with code', () => {
       renderWithPageContext(
         <SettingsProvider>
           <Routes>
-            <Route path="/sign-in/social/:connectorId" element={<SocialCallback />} />
+            <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
           </Routes>
         </SettingsProvider>,
-        { initialEntries: ['/sign-in/social/invalid'] }
+        { initialEntries: ['/callback/social/invalid'] }
       );
 
       await waitFor(() => {
@@ -69,10 +69,10 @@ describe('SocialCallbackPage with code', () => {
       renderWithPageContext(
         <SettingsProvider>
           <Routes>
-            <Route path="/sign-in/social/:connectorId" element={<SocialCallback />} />
+            <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
           </Routes>
         </SettingsProvider>,
-        { initialEntries: [`/sign-in/social/${connectorId}`] }
+        { initialEntries: [`/callback/social/${connectorId}`] }
       );
 
       await waitFor(() => {
@@ -91,10 +91,10 @@ describe('SocialCallbackPage with code', () => {
       renderWithPageContext(
         <SettingsProvider>
           <Routes>
-            <Route path="/sign-in/social/:connectorId" element={<SocialCallback />} />
+            <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
           </Routes>
         </SettingsProvider>,
-        { initialEntries: [`/sign-in/social/${connectorId}`] }
+        { initialEntries: [`/callback/social/${connectorId}`] }
       );
 
       await waitFor(() => {
@@ -122,10 +122,10 @@ describe('SocialCallbackPage with code', () => {
       renderWithPageContext(
         <SettingsProvider settings={sieSettings}>
           <Routes>
-            <Route path="/sign-in/social/:connectorId" element={<SocialCallback />} />
+            <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
           </Routes>
         </SettingsProvider>,
-        { initialEntries: [`/sign-in/social/${connectorId}`] }
+        { initialEntries: [`/callback/social/${connectorId}`] }
       );
 
       await waitFor(() => {
@@ -144,10 +144,10 @@ describe('SocialCallbackPage with code', () => {
       renderWithPageContext(
         <SettingsProvider settings={sieSettings}>
           <Routes>
-            <Route path="/sign-in/social/:connectorId" element={<SocialCallback />} />
+            <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
           </Routes>
         </SettingsProvider>,
-        { initialEntries: [`/sign-in/social/${connectorId}`] }
+        { initialEntries: [`/callback/social/${connectorId}`] }
       );
 
       await waitFor(() => {

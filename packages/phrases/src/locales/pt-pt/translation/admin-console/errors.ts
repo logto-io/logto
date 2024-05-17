@@ -7,8 +7,7 @@ const errors = {
   invalid_uri_format: 'Formato de URI inválido',
   invalid_origin_format: 'Formato de origem de URI inválido',
   invalid_json_format: 'Formato JSON inválido',
-  /** UNTRANSLATED */
-  invalid_regex: 'Invalid regular expression',
+  invalid_regex: 'Expressão regular inválida',
   invalid_error_message_format: 'O formato da mensagem de erro é inválido.',
   required_field_missing: 'Por favor, introduza {{field}}',
   required_field_missing_plural: 'Deve inserir pelo menos um {{field}}',
@@ -19,7 +18,7 @@ const errors = {
   phone_pattern_error: 'O número de telefone é inválido.',
   insecure_contexts: 'Contextos inseguros (não HTTPS) não são compatíveis.',
   unexpected_error: 'Ocorreu um erro inesperado',
-  not_found: '404 not found',
+  not_found: '404 página não encontrada',
   create_internal_role_violation:
     'Está a criar uma nova função interna que é proibida pelo Logto. Tente outro nome que não comece com "#internal:".',
   should_be_an_integer: 'Deve ser um inteiro.',

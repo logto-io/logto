@@ -3,8 +3,8 @@ import type { ReactNode } from 'react';
 import * as styles from './TableEmptyWrapper.module.scss';
 
 type Props = {
-  columns: number;
-  children: ReactNode;
+  readonly columns: number;
+  readonly children: ReactNode;
 };
 
 function TableEmptyWrapper({ columns, children }: Props) {

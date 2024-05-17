@@ -4,7 +4,7 @@ import { type IRouterParamContext } from 'koa-router';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
-import { consent } from '#src/libraries/session.js';
+import { consent, getMissingScopes } from '#src/libraries/session.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -18,7 +18,10 @@ export default function koaAutoConsent<StateT, ContextT extends IRouterParamCont
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
     const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
-    const { client_id: clientId } = interactionDetails.params;
+    const {
+      params: { client_id: clientId },
+      prompt,
+    } = interactionDetails;
 
     const {
       applications: { findApplicationById },
@@ -36,7 +39,17 @@ export default function koaAutoConsent<StateT, ContextT extends IRouterParamCont
     const shouldAutoConsent = !application?.isThirdParty;
 
     if (shouldAutoConsent) {
-      const redirectTo = await consent(ctx, provider, query, interactionDetails);
+      const { missingOIDCScope: missingOIDCScopes, missingResourceScopes: resourceScopesToGrant } =
+        getMissingScopes(prompt);
+
+      const redirectTo = await consent({
+        ctx,
+        provider,
+        queries: query,
+        interactionDetails,
+        missingOIDCScopes,
+        resourceScopesToGrant,
+      });
 
       ctx.redirect(redirectTo);
       return;

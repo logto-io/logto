@@ -14,8 +14,7 @@ const tabs = {
   docs: 'Documentos',
   tenant_settings: 'Configuraciones del inquilino',
   mfa: 'Autenticación multifactor',
-  /** UNTRANSLATED */
-  customize_jwt: 'JWT Claims',
+  customize_jwt: 'JWT personalizado',
   signing_keys: 'Claves de firma',
   organization_template: 'Plantilla de organización',
 };

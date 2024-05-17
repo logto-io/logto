@@ -1,5 +1,31 @@
 # Change Log
 
+## 1.14.0
+
+### Minor Changes
+
+- 21bb35b12: refactor the definition of hook event types
+
+  - Add `DataHook` event types. `DataHook` are triggered by data changes.
+  - Add "interaction" prefix to existing hook event types. Interaction hook events are triggered by end user interactions, e.g. completing sign-in.
+
+- 5872172cb: enable custom JWT feature for OSS version
+
+  OSS version users can now use custom JWT feature to add custom claims to JWT access tokens payload (previously, this feature was only available to Logto Cloud).
+
+- 6fe6f87bc: support adding API resource permissions to organization roles and organization permissions in 3rd-party applications
+
+  ## Updates
+
+  - Separated the "Organization template" from the "Organization" page, establishing it as a standalone page for clearer navigation and functionality.
+  - Enhanced the "Organization template" page by adding functionality that allows users to click on an organization role, which then navigates to the organization role details page where users can view its corresponding permissions and general settings.
+  - Enabled the assignment of API resource permissions directly from the organization role details page, improving role management and access control.
+  - Split the permission list for third-party apps into two separate lists: user permissions and organization permissions. Users can now add user profile permissions and API resource permissions for users under user permissions, and add organization permissions and API resource permissions for organizations under organization permissions.
+
+### Patch Changes
+
+- 9cf03c8ed: Add Java Spring Boot web integration guide to the application creation page
+
 ## 1.13.0
 
 ### Minor Changes

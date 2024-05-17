@@ -5,7 +5,7 @@ import { useSieMethods } from '@/hooks/use-sie';
 import useSingleSignOnListener from './use-single-sign-on-listener';
 
 type Props = {
-  connectorId: string;
+  readonly connectorId: string;
 };
 
 const SingleSignOn = ({ connectorId }: Props) => {

@@ -34,16 +34,11 @@ const quota_item = {
     not_eligible: '移除你的机器到机器应用',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your third-party apps',
+    name: '第三方应用',
+    limited: '{{count, number}} 第三方应用',
+    limited_other: '{{count, number}} 第三方应用',
+    unlimited: '无限制第三方应用',
+    not_eligible: '移除你的第三方应用',
   },
   resources_limit: {
     name: 'API 资源',
@@ -115,9 +110,9 @@ const quota_item = {
   hooks_limit: {
     name: 'Webhooks',
     limited: '{{count, number}} 个 Webhook',
-    limited_other: '{{count, number}} 个 Webhooks',
-    unlimited: '无限制的 Webhooks',
-    not_eligible: '移除你的 Webhooks',
+    limited_other: '{{count, number}} 个 Webhook',
+    unlimited: '无限制的 Webhook',
+    not_eligible: '移除你的 Webhook',
   },
   organizations_enabled: {
     name: '组织',
@@ -152,16 +147,17 @@ const quota_item = {
     not_eligible: '移除你的 企业SSO',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
-    name: 'Tenant members',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your tenant members',
+    name: '租户成员',
+    limited: '{{count, number}} 个租户成员',
+    limited_other: '{{count, number}} 个租户成员',
+    unlimited: '无限制租户成员',
+    not_eligible: '移除你的租户成员',
+  },
+  custom_jwt_enabled: {
+    name: '自定义 JWT',
+    limited: '自定义 JWT',
+    unlimited: '自定义 JWT',
+    not_eligible: '移除你的 JWT 声明自定义器',
   },
 };
 

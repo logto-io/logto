@@ -114,7 +114,7 @@ export const cls = <C extends string>(className: C) => `[class*=_${className}]` 
 export const dcls = <C extends string>(className: C) => `div${cls(className)}` as const;
 
 /** Build the string for a CSS selector that matches a `<div>` element with `aria-modal=true`. */
-export const dmodal = () => `div[aria-modal=true]` as const;
+export const dmodal = () => `div[aria-modal=true]`;
 
 /**
  * Generate a random test name that starts with `test_` and followed by 4 random characters.

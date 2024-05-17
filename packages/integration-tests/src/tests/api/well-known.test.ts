@@ -18,6 +18,11 @@ describe('.well-known api', () => {
     expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
 
+  it('should return request id in headers', async () => {
+    const { headers } = await adminTenantApi.get(`.well-known/endpoints/123`);
+    expect(headers.has('logto-core-request-id')).toBe(true);
+  });
+
   it('get /.well-known/sign-in-exp for console', async () => {
     const response = await adminTenantApi.get('.well-known/sign-in-exp').json<SignInExperience>();
 

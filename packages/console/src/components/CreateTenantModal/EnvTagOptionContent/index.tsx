@@ -10,7 +10,7 @@ import { ReservedPlanName } from '@/types/subscriptions';
 import * as styles from './index.module.scss';
 
 type Props = {
-  tag: TenantTag;
+  readonly tag: TenantTag;
 };
 
 const descriptionMap: Record<TenantTag, AdminConsoleKey> = {

@@ -13,9 +13,11 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import roleApplicationRoutes from './role.application.js';
 import roleUserRoutes from './role.user.js';
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: RouterInitArgs<T>) {
+export default function roleRoutes<T extends ManagementApiRouter>(
+  ...[router, tenant]: RouterInitArgs<T>
+) {
   const { queries, libraries } = tenant;
   const {
     rolesScopes: { insertRolesScopes },

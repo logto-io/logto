@@ -12,7 +12,7 @@ concurrency:
 jobs:
   dockerize:
     if: startsWith(github.ref, 'refs/tags/')
-    environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' || '' }}
+    environment: release
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -63,6 +63,56 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+  # Build and push the edge image on every master push
+  # Use official docker workflows since we only need to build amd64 images.
+  dockerize-edge:
+    if: ${{ !startsWith(github.ref, 'refs/tags/')}}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/logto-io/logto
+            svhd/logto
+          tags: |
+            type=edge
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: |
+            ghcr.io
+          username: silverhand-bot
+          password: ${{ secrets.BOT_PAT }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push docker image
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
   # Publish packages and create git tags if needed
   publish-and-tag:
     runs-on: ubuntu-latest
@@ -80,6 +130,8 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        with:
+          pnpm-version: 9
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
@@ -110,6 +162,8 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        with:
+          pnpm-version: 9
 
       - name: Build
         run: pnpm -r build

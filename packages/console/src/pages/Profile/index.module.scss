@@ -1,24 +1,43 @@
 @use '@/scss/underscore' as _;
 
-.content {
-  margin-top: _.unit(4);
-  padding-bottom: _.unit(6);
-
-  > div + div {
-    margin-top: _.unit(4);
-  }
-}
-
-.deleteAccount {
-  flex: 1;
+.pageContainer {
+  position: absolute;
+  inset: 0;
   display: flex;
-  align-items: center;
-  border: 1px solid var(--color-divider);
-  border-radius: 8px;
-  padding: _.unit(4);
+  flex-direction: column;
+  height: 100%;
 
-  .description {
-    font: var(--font-body-2);
-    margin-right: _.unit(2);
+  .scrollable {
+    width: 100%;
+  }
+
+  .wrapper {
+    @include _.main-content-width;
+    width: 100%;
+    padding: _.unit(3) _.unit(6) 0;
+  }
+
+  .content {
+    width: 100%;
+    margin-top: _.unit(4);
+    padding-bottom: _.unit(6);
+
+    > div + div {
+      margin-top: _.unit(4);
+    }
+  }
+
+  .deleteAccount {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-divider);
+    border-radius: 8px;
+    padding: _.unit(4);
+
+    .description {
+      font: var(--font-body-2);
+      margin-right: _.unit(2);
+    }
   }
 }

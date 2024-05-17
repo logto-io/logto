@@ -35,8 +35,7 @@ const upsell = {
     api_resource: 'API kaynağı',
     machine_to_machine: 'makine-makine uygulaması',
     tokens: '{{limit}}M jeton',
-    /** UNTRANSLATED */
-    tenant_member: 'tenant member',
+    tenant_member: 'kiracı üyesi',
   },
   charge_notification_for_quota_limit:
     '{{item}} kota sınırını aştınız. Logto, kota sınırınızın ötesindeki kullanım için ücret ekleyecektir. Yeni ek paket fiyatlandırma tasarımı gününüzde başlayacaktır. <a>Daha fazla bilgi</a>',

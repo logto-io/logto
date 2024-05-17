@@ -36,11 +36,7 @@ function getCircularReplacer() {
 
   return function (this: unknown, key: string, value: unknown) {
     // Ignore `stack` property since ApplicationInsights will show it
-    if (
-      isObject(this) &&
-      Object.prototype.hasOwnProperty.call(this, transformedKey) &&
-      key === 'stack'
-    ) {
+    if (isObject(this) && Object.hasOwn(this, transformedKey) && key === 'stack') {
       return;
     }
 

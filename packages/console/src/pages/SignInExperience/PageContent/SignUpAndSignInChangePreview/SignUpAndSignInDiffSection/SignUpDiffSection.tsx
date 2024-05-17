@@ -13,9 +13,9 @@ import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
 
 type Props = {
-  before: SignUp;
-  after: SignUp;
-  isAfter?: boolean;
+  readonly before: SignUp;
+  readonly after: SignUp;
+  readonly isAfter?: boolean;
 };
 
 function SignUpDiffSection({ before, after, isAfter = false }: Props) {

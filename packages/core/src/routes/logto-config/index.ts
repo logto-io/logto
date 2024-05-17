@@ -17,9 +17,10 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import logtoConfigJwtCustomizerRoutes from './jwt-customizer.js';
 
@@ -59,7 +60,7 @@ const getRedactedOidcKeyResponse = async (
     })
   );
 
-export default function logtoConfigRoutes<T extends AuthedRouter>(
+export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   const { getAdminConsoleConfig, updateAdminConsoleConfig, updateOidcConfigsByKey } =
@@ -104,7 +105,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const { keyType } = ctx.guard.params;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
-      const configs = await getOidcConfigs();
+      const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
 
       // Remove actual values of the private keys from response
       ctx.body = await getRedactedOidcKeyResponse(configKey, configs[configKey]);
@@ -125,7 +126,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const { keyType, keyId } = ctx.guard.params;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
-      const configs = await getOidcConfigs();
+      const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
       const existingKeys = configs[configKey];
 
       if (existingKeys.length <= 1) {
@@ -163,7 +164,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       const { keyType } = ctx.guard.params;
       const { signingKeyAlgorithm } = ctx.guard.body;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
-      const configs = await getOidcConfigs();
+      const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
       const existingKeys = configs[configKey];
 
       const newPrivateKey =

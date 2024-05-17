@@ -1,45 +1,23 @@
 import { LogtoJwtTokenKeyType } from '@logto/schemas';
-import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DeleteIcon from '@/assets/icons/delete.svg';
 import EditIcon from '@/assets/icons/edit.svg';
 import Button from '@/ds-components/Button';
-import useApi from '@/hooks/use-api';
-import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import { getApiPath, getPagePath } from '@/pages/CustomizeJwt/utils/path';
-
-import useJwtCustomizer from '../use-jwt-customizer';
+import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  tokenType: LogtoJwtTokenKeyType;
+  readonly tokenType: LogtoJwtTokenKeyType;
+  readonly onDelete: (token: LogtoJwtTokenKeyType) => void;
 };
 
-function CustomizerItem({ tokenType }: Props) {
+function CustomizerItem({ tokenType, onDelete }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const apiLink = getApiPath(tokenType);
   const editLink = getPagePath(tokenType, 'edit');
   const { navigate } = useTenantPathname();
-  const { show } = useConfirmModal();
-  const { mutate } = useJwtCustomizer();
-
-  const api = useApi();
-
-  const onDelete = useCallback(async () => {
-    const [confirm] = await show({
-      title: 'jwt_claims.delete_modal_title',
-      ModalContent: t('jwt_claims.delete_modal_content'),
-      confirmButtonText: 'general.delete',
-    });
-
-    if (confirm) {
-      await api.delete(apiLink);
-      await mutate();
-    }
-  }, [api, apiLink, mutate, show, t]);
 
   return (
     <div className={styles.container}>
@@ -67,7 +45,9 @@ function CustomizerItem({ tokenType }: Props) {
           type="text"
           size="small"
           title="general.delete"
-          onClick={onDelete}
+          onClick={() => {
+            onDelete(tokenType);
+          }}
         />
       </div>
     </div>

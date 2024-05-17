@@ -1,7 +1,6 @@
 import { ReservedPlanId } from '@logto/schemas';
-import { cond, conditional, joinPath } from '@silverhand/essentials';
+import { cond } from '@silverhand/essentials';
 import { useCallback, useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg';
 import PageMeta from '@/components/PageMeta';
@@ -13,8 +12,6 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
-import TabNav, { TabNavItem } from '@/ds-components/TabNav';
-import useConfigs from '@/hooks/use-configs';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
@@ -22,41 +19,27 @@ import * as pageLayout from '@/scss/page-layout.module.scss';
 import CreateOrganizationModal from './CreateOrganizationModal';
 import OrganizationsTable from './OrganizationsTable';
 import EmptyDataPlaceholder from './OrganizationsTable/EmptyDataPlaceholder';
-import Settings from './Settings';
-import { guidePathname, organizationsPathname } from './consts';
 import * as styles from './index.module.scss';
 
-const tabs = Object.freeze({
-  template: 'template',
-});
+const organizationsPathname = '/organizations';
 
-type Props = {
-  tab?: keyof typeof tabs;
-};
-
-function Organizations({ tab }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+function Organizations() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const { currentPlan } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
 
   const { navigate } = useTenantPathname();
   const [isCreating, setIsCreating] = useState(false);
-  const { configs, isLoading: isLoadingConfigs } = useConfigs();
-  const isInitialSetup = !isLoadingConfigs && !configs?.organizationCreated;
+
   const isOrganizationsDisabled = isCloud && !currentPlan.quota.organizationsEnabled;
 
   const upgradePlan = useCallback(() => {
     navigate(subscriptionPage);
   }, [navigate]);
 
-  const handleCreate = useCallback(() => {
-    if (isInitialSetup) {
-      navigate(guidePathname);
-      return;
-    }
+  const handleCreate = () => {
     setIsCreating(true);
-  }, [isInitialSetup, navigate]);
+  };
 
   return (
     <div className={pageLayout.container}>
@@ -81,7 +64,7 @@ function Organizations({ tab }: Props) {
             targetBlank: 'noopener',
           }}
         />
-        {!isInitialSetup && (
+        {!isOrganizationsDisabled && (
           <Button
             icon={<Plus />}
             type="primary"
@@ -91,36 +74,19 @@ function Organizations({ tab }: Props) {
           />
         )}
       </div>
-      {isInitialSetup && (
+      {isOrganizationsDisabled && (
         <Card className={styles.emptyCardContainer}>
           <EmptyDataPlaceholder
             buttonProps={{
-              title: isOrganizationsDisabled
-                ? 'upsell.upgrade_plan'
-                : 'organizations.setup_organization',
-              onClick: isOrganizationsDisabled ? upgradePlan : handleCreate,
-              ...conditional(isOrganizationsDisabled && { icon: undefined }),
+              title: 'upsell.upgrade_plan',
+              onClick: upgradePlan,
+              // Set to `undefined` to override the default icon
+              icon: undefined,
             }}
           />
         </Card>
       )}
-      {!isInitialSetup && (
-        <>
-          <TabNav className={styles.tabs}>
-            <TabNavItem href="/organizations" isActive={!tab}>
-              {t('organizations.title')}
-            </TabNavItem>
-            <TabNavItem
-              href={joinPath('/organizations', tabs.template)}
-              isActive={tab === 'template'}
-            >
-              {t('organizations.organization_template')}
-            </TabNavItem>
-          </TabNav>
-          {!tab && <OrganizationsTable isLoading={isLoadingConfigs} onCreate={handleCreate} />}
-          {tab === 'template' && <Settings />}
-        </>
-      )}
+      {!isOrganizationsDisabled && <OrganizationsTable onCreate={handleCreate} />}
     </div>
   );
 }

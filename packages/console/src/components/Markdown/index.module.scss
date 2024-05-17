@@ -14,8 +14,7 @@
     padding-inline-start: 4ch;
 
     > li {
-      margin-block-start: _.unit(2);
-      margin-block-end: _.unit(2);
+      margin-block: _.unit(2) _.unit(2);
       padding-inline-start: _.unit(1);
     }
   }
@@ -24,8 +23,7 @@
     padding-inline-start: 2ch;
 
     > li {
-      margin-block-start: _.unit(3);
-      margin-block-end: _.unit(3);
+      margin-block: _.unit(3) _.unit(3);
       padding-inline-start: _.unit(1);
     }
   }

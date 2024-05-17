@@ -15,11 +15,11 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import * as styles from './index.module.scss';
 
 type Props = {
-  customDomain: CustomDomain;
-  hasExtraTipsOnDelete?: boolean;
-  hasOpenExternalLink?: boolean;
-  isReadonly?: boolean;
-  onDeleteCustomDomain: () => Promise<void>;
+  readonly customDomain: CustomDomain;
+  readonly hasExtraTipsOnDelete?: boolean;
+  readonly hasOpenExternalLink?: boolean;
+  readonly isReadonly?: boolean;
+  readonly onDeleteCustomDomain: () => Promise<void>;
 };
 
 function CustomDomainHeader({

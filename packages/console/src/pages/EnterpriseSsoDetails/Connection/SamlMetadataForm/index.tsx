@@ -18,8 +18,8 @@ import SwitchFormatButton, { FormFormat } from './SwitchFormatButton';
 import * as styles from './index.module.scss';
 
 type SamlMetadataFormFieldsProps = Pick<SamlMetadataFormProps, 'config'> & {
-  identityProviderConfig?: SamlProviderConfig['identityProvider'];
-  formFormat: FormFormat;
+  readonly identityProviderConfig?: SamlProviderConfig['identityProvider'];
+  readonly formFormat: FormFormat;
 };
 
 type FileValueKeyType = keyof Pick<SamlConnectorConfig, 'metadata' | 'x509Certificate'>; // I.e. 'metadata' | 'x509Certificate'.
@@ -176,15 +176,12 @@ function SamlMetadataFormFields({
         </>
       );
     }
-    default: {
-      return null;
-    }
   }
 }
 
 type SamlMetadataFormProps = {
-  config?: SamlConnectorConfig;
-  providerConfig?: SamlProviderConfig;
+  readonly config?: SamlConnectorConfig;
+  readonly providerConfig?: SamlProviderConfig;
 };
 
 // Do not show inline notification and parsed config preview if it is on guide page.
@@ -237,9 +234,6 @@ function SamlMetadataForm({ config, providerConfig }: SamlMetadataFormProps) {
         setValue('x509Certificate', undefined);
         break;
       }
-      default: {
-        break;
-      }
     }
 
     // Resume field if exists in `config`; should show original value if switch to another form format and switch back.
@@ -256,9 +250,6 @@ function SamlMetadataForm({ config, providerConfig }: SamlMetadataFormProps) {
         setValue('entityId', config?.entityId);
         setValue('signInEndpoint', config?.signInEndpoint);
         setValue('x509Certificate', config?.x509Certificate);
-        break;
-      }
-      default: {
         break;
       }
     }

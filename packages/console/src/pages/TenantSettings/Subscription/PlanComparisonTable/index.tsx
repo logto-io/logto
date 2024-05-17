@@ -234,7 +234,7 @@ function PlanComparisonTable() {
         rows: [
           { name: webhooks, data: ['1', '10', contact] },
           { name: auditLogRetention, data: [freePlanLogRetention, paidPlanLogRetention, contact] },
-          { name: jwtClaims, data: ['-', comingSoon, comingSoon] },
+          { name: jwtClaims, data: ['-', '✓', contact] },
           {
             name: tenantMembers,
             data: [

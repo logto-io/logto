@@ -1,3 +1,4 @@
+import { consoleLog } from '@logto/cli/lib/utils.js';
 import type { User, CreateUser, Scope, BindMfa, MfaVerification } from '@logto/schemas';
 import { MfaFactor, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
@@ -88,6 +89,8 @@ export const createUserLibrary = (queries: Queries) => {
     usersRoles: { findUsersRolesByRoleId, findUsersRolesByUserId },
     rolesScopes: { findRolesScopesByRoleIds },
     scopes: { findScopesByIdsAndResourceIndicator },
+    organizations,
+    oidcModelInstances: { revokeInstanceByUserId },
   } = queries;
 
   const generateUserId = async (retries = 500) =>
@@ -104,10 +107,15 @@ export const createUserLibrary = (queries: Queries) => {
       { retries, factor: 0 } // No need for exponential backoff
     );
 
-  const insertUser = async (data: OmitAutoSetFields<CreateUser>, additionalRoleNames: string[]) => {
-    const roleNames = deduplicate([...EnvSet.values.userDefaultRoleNames, ...additionalRoleNames]);
+  const insertUser = async (
+    data: OmitAutoSetFields<CreateUser>,
+    additionalRoleNames: string[],
+    tenantId?: string
+  ) => {
+    const defaultRoleNames = tenantId === 'admin' ? [] : EnvSet.values.userDefaultRoleNames;
+    const roleNames = deduplicate([...defaultRoleNames, ...additionalRoleNames]);
     const roles = await findRolesByRoleNames(roleNames);
-
+    consoleLog.info({ roleNames, roles });
     assertThat(roles.length === roleNames.length, 'role.default_role_missing');
 
     return pool.transaction(async (connection) => {
@@ -167,15 +175,28 @@ export const createUserLibrary = (queries: Queries) => {
     return findUsersByIds(usersRoles.map(({ userId }) => userId));
   };
 
+  /**
+   * Find user scopes for a resource indicator, from roles and organization roles.
+   * Set `organizationId` to narrow down the search to the specific organization, otherwise it will search all organizations.
+   */
   const findUserScopesForResourceIndicator = async (
     userId: string,
-    resourceIndicator: string
+    resourceIndicator: string,
+    findFromOrganizations = false,
+    organizationId?: string
   ): Promise<readonly Scope[]> => {
     const usersRoles = await findUsersRolesByUserId(userId);
     const rolesScopes = await findRolesScopesByRoleIds(usersRoles.map(({ roleId }) => roleId));
+    const organizationScopes = findFromOrganizations
+      ? await organizations.relations.rolesUsers.getUserResourceScopes(
+          userId,
+          resourceIndicator,
+          organizationId
+        )
+      : [];
 
     const scopes = await findScopesByIdsAndResourceIndicator(
-      rolesScopes.map(({ scopeId }) => scopeId),
+      [...rolesScopes.map(({ scopeId }) => scopeId), ...organizationScopes.map(({ id }) => id)],
       resourceIndicator
     );
 
@@ -241,9 +262,6 @@ export const createUserLibrary = (queries: Queries) => {
         assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
         break;
       }
-      default: {
-        throw new RequestError({ code: 'session.invalid_credentials', status: 422 });
-      }
     }
 
     // Migrate password to default algorithm: argon2i
@@ -259,6 +277,14 @@ export const createUserLibrary = (queries: Queries) => {
     return user;
   };
 
+  const signOutUser = async (userId: string) => {
+    await Promise.all([
+      revokeInstanceByUserId('AccessToken', userId),
+      revokeInstanceByUserId('RefreshToken', userId),
+      revokeInstanceByUserId('Session', userId),
+    ]);
+  };
+
   return {
     generateUserId,
     insertUser,
@@ -268,5 +294,6 @@ export const createUserLibrary = (queries: Queries) => {
     findUserRoles,
     addUserMfaVerification,
     verifyUserPassword,
+    signOutUser,
   };
 };

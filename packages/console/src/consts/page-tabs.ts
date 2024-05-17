@@ -29,10 +29,10 @@ export enum UserDetailsTabs {
 }
 
 export enum RoleDetailsTabs {
-  Settings = 'settings',
   Permissions = 'permissions',
   Users = 'users',
   M2mApps = 'machine-to-machine-apps',
+  General = 'general',
 }
 
 export enum TenantSettingsTabs {

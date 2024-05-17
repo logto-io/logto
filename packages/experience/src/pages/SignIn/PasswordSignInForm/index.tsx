@@ -18,10 +18,10 @@ import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/uti
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
-  autoFocus?: boolean;
-  signInMethods: SignInIdentifier[];
+  readonly autoFocus?: boolean;
+  readonly signInMethods: SignInIdentifier[];
 };
 
 export type FormState = {

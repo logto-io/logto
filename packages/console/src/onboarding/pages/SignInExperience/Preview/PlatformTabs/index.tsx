@@ -6,8 +6,8 @@ import PlatformTab from './PlatformTab';
 import * as styles from './index.module.scss';
 
 type Props = {
-  currentTab: PreviewPlatform;
-  onSelect: (tab: PreviewPlatform) => void;
+  readonly currentTab: PreviewPlatform;
+  readonly onSelect: (tab: PreviewPlatform) => void;
 };
 
 function PlatformTabs({ currentTab, onSelect }: Props) {

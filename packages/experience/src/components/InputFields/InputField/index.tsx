@@ -7,12 +7,12 @@ import ErrorMessage from '@/components/ErrorMessage';
 import * as styles from './index.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
-  className?: string;
-  errorMessage?: string;
-  isDanger?: boolean;
-  prefix?: ReactElement;
-  suffix?: ReactElement;
-  isSuffixFocusVisible?: boolean;
+  readonly className?: string;
+  readonly errorMessage?: string;
+  readonly isDanger?: boolean;
+  readonly prefix?: ReactElement;
+  readonly suffix?: ReactElement;
+  readonly isSuffixFocusVisible?: boolean;
 };
 
 const InputField = (

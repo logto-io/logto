@@ -1,7 +1,12 @@
 import { ApplicationType, RoleType } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
+import { generateStandardId, formUrlEncodedHeaders } from '@logto/shared';
 import { HTTPError } from 'ky';
 
+import {
+  clientCredentialsJwtCustomizerPayload,
+  clientCredentialsSampleScript,
+} from '#src/__mocks__/jwt-customizer.js';
+import { oidcApi } from '#src/api/api.js';
 import {
   createApplication,
   getApplicationRoles,
@@ -9,9 +14,14 @@ import {
   deleteRoleFromApplication,
   putRolesToApplication,
   getApplications,
+  createResource,
+  upsertJwtCustomizer,
+  deleteJwtCustomizer,
 } from '#src/api/index.js';
 import { createRole, assignApplicationsToRole } from '#src/api/role.js';
+import { createScope } from '#src/api/scope.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { getAccessTokenPayload } from '#src/utils.js';
 
 describe('admin console application management (roles)', () => {
   it('should get empty list successfully', async () => {
@@ -145,5 +155,41 @@ describe('admin console application management (roles)', () => {
     expect(applications.length).toBe(1);
     expect(applications.find(({ name }) => name === 'test-m2m-app-002')).toBeFalsy();
     expect(applications.find(({ name }) => name === 'test-spa-app-002')).toBeTruthy();
+  });
+
+  it('test m2m application client credentials grant type with custom JWT', async () => {
+    await upsertJwtCustomizer('client-credentials', {
+      ...clientCredentialsJwtCustomizerPayload,
+      script: clientCredentialsSampleScript,
+    });
+
+    const m2mApp = await createApplication(generateStandardId(), ApplicationType.MachineToMachine);
+    const resource = await createResource();
+    const createdScope = await createScope(resource.id);
+    const createdScope2 = await createScope(resource.id);
+    const role = await createRole({
+      type: RoleType.MachineToMachine,
+      scopeIds: [createdScope.id, createdScope2.id],
+    });
+    await assignApplicationsToRole([m2mApp.id], role.id);
+
+    const { access_token: accessToken } = await oidcApi
+      .post('token', {
+        headers: formUrlEncodedHeaders,
+        body: new URLSearchParams({
+          client_id: m2mApp.id,
+          client_secret: m2mApp.secret,
+          grant_type: 'client_credentials',
+          resource: resource.indicator,
+          scope: [createdScope.name, createdScope2.name].join(' '),
+        }),
+      })
+      .json<{ access_token: string }>();
+
+    const payload = getAccessTokenPayload(accessToken);
+    expect(payload).toHaveProperty('foo', 'bar');
+    expect(payload).toHaveProperty('API_KEY', '12345');
+
+    await deleteJwtCustomizer('client-credentials');
   });
 });

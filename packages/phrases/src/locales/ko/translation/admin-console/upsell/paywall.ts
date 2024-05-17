@@ -52,18 +52,19 @@ const paywall = {
   mfa: '보안을 확인하기 위해 MFA를 잠금 해제하여 유료 플랜으로 업그레이드하세요. 궁금한 점이 있으면 <a>문의하세요</a>.',
   organizations:
     'Unlock organizations by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
-  /** UNTRANSLATED */
   third_party_apps:
-    'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    '로그토를 IdP로서 타사 앱에 대해 잠금 해제하려면 유료 플랜으로 업그레이드하세요. 도움이 필요하면 <a>문의하세요</a>.',
   sso_connectors:
-    'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    '엔터프라이즈 SSO를 잠금 해제하려면 유료 플랜으로 업그레이드하세요. 도움이 필요하면 <a>문의하세요</a>.',
   tenant_members:
-    'Unlock collaboration feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    '협력 기능을 잠금 해제하려면 유료 플랜으로 업그레이드하세요. 도움이 필요하면 <a>문의하세요</a>.',
   tenant_members_dev_plan:
-    "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
+    '회원 제한에 도달했습니다. 새로운 회원을 추가하려면 회원을 해제하거나 보류 중인 초대를 철회하십시오. 더 많은 좌석이 필요하면 문의하십시오.',
+  custom_jwt: {
+    title: '사용자 정의 클레임 추가',
+    description:
+      '사용자 정의 JWT 기능 및 프리미엄 혜택을 위해 유료 플랜으로 업그레이드하세요. 궁금한 점이 있으면 <a>문의하세요</a>.',
+  },
 };
 
 export default Object.freeze(paywall);

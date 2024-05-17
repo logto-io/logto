@@ -16,9 +16,9 @@ import PaymentOverdueNotification from './PaymentOverdueNotification';
 import * as styles from './index.module.scss';
 
 type Props = {
-  subscription: Subscription;
-  subscriptionPlan: SubscriptionPlan;
-  subscriptionUsage: SubscriptionUsage;
+  readonly subscription: Subscription;
+  readonly subscriptionPlan: SubscriptionPlan;
+  readonly subscriptionUsage: SubscriptionUsage;
 };
 
 function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Props) {

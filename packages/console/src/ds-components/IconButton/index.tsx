@@ -5,8 +5,8 @@ import { forwardRef, useRef } from 'react';
 import * as styles from './index.module.scss';
 
 type Props = Omit<HTMLProps<HTMLButtonElement>, 'size' | 'type'> & {
-  size?: 'small' | 'medium' | 'large';
-  iconClassName?: string;
+  readonly size?: 'small' | 'medium' | 'large';
+  readonly iconClassName?: string;
 };
 
 function IconButton(

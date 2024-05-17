@@ -1,14 +1,15 @@
 import { createMockUtils } from '@logto/shared/esm';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import ServerError from '#src/errors/ServerError/index.js';
 import { emptyMiddleware, createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsmDefault } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
-mockEsmDefault('koa-body', () => emptyMiddleware);
+mockEsm('koa-body', () => ({ koaBody: emptyMiddleware }));
 const { default: koaGuard, isGuardMiddleware } = await import('./koa-guard.js');
 
 describe('koaGuardMiddleware', () => {
@@ -135,6 +136,26 @@ describe('koaGuardMiddleware', () => {
       await expect(koaGuard({ status: [200, 204] })(ctx, next)).rejects.toThrow(ServerError);
     });
 
+    it('should not throw when status is invalid in production', async () => {
+      const ctx = {
+        ...baseCtx,
+        params: {},
+        body: {},
+        guard: {},
+        response: { status: 301 },
+      };
+      const { isProduction } = EnvSet.values;
+
+      // eslint-disable-next-line @silverhand/fp/no-mutating-assign
+      Object.assign(EnvSet.values, { isProduction: true });
+      // @ts-expect-error
+      await expect(koaGuard({ status: 200 })(ctx, next)).resolves.toBeUndefined();
+      // @ts-expect-error
+      await expect(koaGuard({ status: [200, 204] })(ctx, next)).resolves.toBeUndefined();
+      // eslint-disable-next-line @silverhand/fp/no-mutating-assign
+      Object.assign(EnvSet.values, { isProduction });
+    });
+
     it('should throw when inner middleware throws invalid status', async () => {
       const ctx = {
         ...baseCtx,
@@ -215,6 +236,23 @@ describe('koaGuardMiddleware', () => {
       expect(ctx.guard.body).toHaveProperty('foo', '3');
       expect(ctx.guard.query).toHaveProperty('foo', '2');
       expect(ctx.guard.params).toHaveProperty('foo', '1');
+    });
+
+    it('should fallback to empty object when no body is provided', async () => {
+      const ctx = {
+        ...baseCtx,
+        request: {
+          ...baseCtx.request,
+          body: undefined,
+        },
+        guard: {
+          ...defaultGuard,
+          body: { foo: '1' },
+        },
+      };
+
+      await koaGuard({ body: z.object({ foo: z.string().optional() }) })(ctx, next);
+      expect(ctx.guard.body).toEqual({});
     });
   });
 });

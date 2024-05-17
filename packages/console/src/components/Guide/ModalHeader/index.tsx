@@ -11,14 +11,14 @@ import RequestForm from './RequestForm';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: AdminConsoleKey;
-  subtitle: AdminConsoleKey;
-  buttonText: AdminConsoleKey;
-  requestFormTitle?: AdminConsoleKey;
-  requestFormFieldLabel: AdminConsoleKey;
-  requestFormFieldPlaceholder: AdminConsoleKey;
-  requestSuccessMessage: AdminConsoleKey;
-  onClose: () => void;
+  readonly title: AdminConsoleKey;
+  readonly subtitle: AdminConsoleKey;
+  readonly buttonText: AdminConsoleKey;
+  readonly requestFormTitle?: AdminConsoleKey;
+  readonly requestFormFieldLabel: AdminConsoleKey;
+  readonly requestFormFieldPlaceholder: AdminConsoleKey;
+  readonly requestSuccessMessage: AdminConsoleKey;
+  readonly onClose: () => void;
 };
 
 function ModalHeader({

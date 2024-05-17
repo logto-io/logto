@@ -3,7 +3,8 @@ import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js'
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
-import { createJwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
+import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
+import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { OrganizationInvitationLibrary } from '#src/libraries/organization-invitation.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
@@ -25,7 +26,14 @@ export default class Libraries {
   hooks = createHookLibrary(this.queries);
   scopes = createScopeLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
-  jwtCustomizers = createJwtCustomizerLibrary(this.queries, this.users, this.scopes);
+  jwtCustomizers = new JwtCustomizerLibrary(
+    this.queries,
+    this.logtoConfigs,
+    this.cloudConnection,
+    this.users,
+    this.scopes
+  );
+
   passcodes = createPasscodeLibrary(this.queries, this.connectors);
   applications = createApplicationLibrary(this.queries);
   verificationStatuses = createVerificationStatusLibrary(this.queries);
@@ -52,6 +60,7 @@ export default class Libraries {
     private readonly queries: Queries,
     // Explicitly passing connector library to eliminate dependency issue
     private readonly connectors: ConnectorLibrary,
-    private readonly cloudConnection: CloudConnectionLibrary
+    private readonly cloudConnection: CloudConnectionLibrary,
+    private readonly logtoConfigs: LogtoConfigLibrary
   ) {}
 }

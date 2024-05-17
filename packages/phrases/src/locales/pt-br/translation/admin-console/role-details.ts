@@ -4,7 +4,7 @@ const role_details = {
   delete_description:
     'Fazê-lo removerá as permissões associadas a este papel dos usuários afetados e excluirá o mapeamento entre papéis, usuários e permissões.',
   role_deleted: '{{name}} foi excluído com sucesso.',
-  settings_tab: 'Configurações',
+  general_tab: 'Geral',
   users_tab: 'Usuários',
   m2m_apps_tab: 'Aplicativos máquina-a-máquina',
   permissions_tab: 'Permissões',

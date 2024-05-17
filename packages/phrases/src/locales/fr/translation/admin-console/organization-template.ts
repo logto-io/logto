@@ -1,7 +1,7 @@
 const organization_template = {
   title: 'Modèle d’organisation',
   subtitle:
-    'Dans les applications SaaS multi-locataires, il est courant que plusieurs organisations partagent des politiques de contrôle d’accès identiques, incluant les permissions et les rôles. Chez Logto, ce concept est désigné par "modèle d’organisation". Son utilisation simplifie le processus de construction et de conception de votre modèle d’autorisation.',
+    "Dans les applications SaaS multi-tenant, un modèle d'organisation définit des politiques de contrôle d'accès partagées (permissions et rôles) pour plusieurs organisations.",
   roles: {
     tab_name: 'Rôles org',
     search_placeholder: 'Rechercher par nom de rôle',
@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: 'Permissions org',
     search_placeholder: 'Rechercher par nom de permission',
     create_org_permission: 'Créer une permission org',
-    permission_column: 'Permission',
+    permission_column: "Permission de l'organisation",
     description_column: 'Description',
     placeholder_title: 'Permission d’organisation',
     placeholder_description:

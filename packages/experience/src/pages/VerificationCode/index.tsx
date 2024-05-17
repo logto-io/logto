@@ -1,3 +1,4 @@
+import { SignInIdentifier } from '@logto/schemas';
 import { t } from 'i18next';
 import { useParams, useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
@@ -44,8 +45,13 @@ const VerificationCode = () => {
       title={`description.verify_${identifier}`}
       description="description.enter_passcode"
       descriptionProps={{
-        address: t(`description.${identifier === 'email' ? 'email' : 'phone_number'}`),
-        target: identifier === 'phone' ? formatPhoneNumberWithCountryCallingCode(value) : value,
+        address: t(
+          `description.${identifier === SignInIdentifier.Email ? 'email' : 'phone_number'}`
+        ),
+        target:
+          identifier === SignInIdentifier.Phone
+            ? formatPhoneNumberWithCountryCallingCode(value)
+            : value,
       }}
     >
       <VerificationCodeContainer

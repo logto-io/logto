@@ -13,7 +13,7 @@ import { type OnboardingSieFormData } from '../types';
 import * as styles from './index.module.scss';
 
 type Props = {
-  onInspired: (template: OnboardingSieFormData) => void;
+  readonly onInspired: (template: OnboardingSieFormData) => void;
 };
 
 function InspireMe({ onInspired }: Props) {

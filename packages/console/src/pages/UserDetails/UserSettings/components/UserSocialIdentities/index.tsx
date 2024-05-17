@@ -16,9 +16,9 @@ import { getConnectorGroups } from '@/pages/Connectors/utils';
 import * as styles from './index.module.scss';
 
 type Props = {
-  userId: string;
-  identities: Identities;
-  onDelete?: (connectorId: string) => void;
+  readonly userId: string;
+  readonly identities: Identities;
+  readonly onDelete?: (connectorId: string) => void;
 };
 
 type DisplayConnector = {
@@ -28,7 +28,7 @@ type DisplayConnector = {
   name: ConnectorResponse['name'] | string;
 };
 
-function ConnectorName({ name }: { name: DisplayConnector['name'] }) {
+function ConnectorName({ name }: { readonly name: DisplayConnector['name'] }) {
   return typeof name === 'string' ? <span>{name}</span> : <UnnamedTrans resource={name} />;
 }
 

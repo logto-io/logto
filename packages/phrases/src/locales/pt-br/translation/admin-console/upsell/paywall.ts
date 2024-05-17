@@ -52,18 +52,19 @@ const paywall = {
   mfa: 'Desbloqueie o MFA para verificar a segurança, fazendo upgrade para um plano pago. Não hesite em <a>nos contatar</a> se precisar de alguma assistência.',
   organizations:
     'Desbloqueie organizações ao fazer upgrade para um plano pago. Não hesite em <a>entrar em contato conosco</a> se precisar de alguma assistência.',
-  /** UNTRANSLATED */
   third_party_apps:
-    'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Desbloqueie Logto como provedor de identidade para aplicativos de terceiros, ao fazer upgrade para um plano pago. Para qualquer ajuda, sinta-se à vontade para <a>entrar em contato conosco</a>.',
   sso_connectors:
-    'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Desbloqueie SSO corporativo ao fazer upgrade para um plano pago. Para qualquer ajuda, sinta-se à vontade para <a>entrar em contato conosco</a>.',
   tenant_members:
-    'Unlock collaboration feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
+    'Desbloqueie a funcionalidade de colaboração ao fazer upgrade para um plano pago. Para qualquer ajuda, sinta-se à vontade para <a>entrar em contato conosco</a>.',
   tenant_members_dev_plan:
-    "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
+    'Você atingiu seu limite de {{limit}} membros. Libere um membro ou revogue um convite pendente para adicionar alguém novo. Precisa de mais vagas? Fale conosco.',
+  custom_jwt: {
+    title: 'Adicionar reivindicações personalizadas',
+    description:
+      'Atualize para um plano pago para funcionalidades de JWT personalizadas e benefícios premium. Não hesite em <a>entrar em contato conosco</a> se tiver alguma dúvida.',
+  },
 };
 
 export default Object.freeze(paywall);

@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react';
 import { type SignInExperience, type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
@@ -31,7 +30,7 @@ import useDeleteConnector from './use-delete-connector';
 const getSsoConnectorDetailsPathname = (ssoConnectorId: string, tab: EnterpriseSsoDetailsTabs) =>
   `${enterpriseSsoPathname}/${ssoConnectorId}/${tab}`;
 
-function EnterpriseSsoConnectorDetails() {
+function EnterpriseSsoDetails() {
   const { pathname } = useLocation();
   const { ssoConnectorId, tab } = useParams();
 
@@ -175,4 +174,4 @@ function EnterpriseSsoConnectorDetails() {
   );
 }
 
-export default withAppInsights(EnterpriseSsoConnectorDetails);
+export default EnterpriseSsoDetails;

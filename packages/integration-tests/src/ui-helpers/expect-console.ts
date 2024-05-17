@@ -19,7 +19,11 @@ type ExpectConsoleOptions = {
   tenantId?: string;
 };
 
-export type ConsoleTitle = 'Sign-in experience' | 'Organizations';
+export type ConsoleTitle =
+  | 'Sign-in experience'
+  | 'Organizations'
+  | 'API resources'
+  | 'Organization template';
 
 export default class ExpectConsole extends ExpectPage {
   readonly options: Required<ExpectConsoleOptions>;
@@ -59,9 +63,15 @@ export default class ExpectConsole extends ExpectPage {
 
   /**
    * Navigate to a specific page in the Console.
+   * If the current page is the target page, it will not navigate.
    */
   async gotoPage(pathname: string, title: ConsoleTitle) {
-    await this.navigateTo(this.buildUrl(path.join(this.options.tenantId, pathname)));
+    const target = this.buildUrl(path.join(this.options.tenantId, pathname));
+    if (this.page.url() === target.href) {
+      return;
+    }
+
+    await this.navigateTo(target);
     await expect(this.page).toMatchElement(
       [dcls('main'), dcls('container'), dcls('title')].join(' '),
       { text: title }
@@ -110,6 +120,19 @@ export default class ExpectConsole extends ExpectPage {
       text: new RegExp(text, 'i'),
       visible: true,
     });
+  }
+
+  /**
+   * To click a table cell with the given text.
+   * @param text The text to expect, case-insensitive.
+   * @param shouldNavigate Whether to navigate to the page after clicking the cell.
+   */
+  async toClickTableCell(text: string, shouldNavigate = true) {
+    await this.toClick(
+      ['table', 'tbody', 'tr', 'td'].join(' '),
+      new RegExp(text, 'i'),
+      shouldNavigate
+    );
   }
 
   /**

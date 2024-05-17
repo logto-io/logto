@@ -1,7 +1,6 @@
 const organization_template = {
   title: '组织模板',
-  subtitle:
-    '在多租户SaaS应用中，多个组织共享相同的访问控制政策，包括权限和角色，是很常见的。在Logto中，这一概念被称为“组织模板”。使用它可以简化构建和设计授权模型的过程。',
+  subtitle: '在多租户 SaaS 应用中，组织模板定义了多个组织的共享访问控制政策（权限和角色）。',
   roles: {
     tab_name: '组织角色',
     search_placeholder: '按角色名称搜索',
@@ -22,7 +21,7 @@ const organization_template = {
     tab_name: '组织权限',
     search_placeholder: '按权限名称搜索',
     create_org_permission: '创建组织权限',
-    permission_column: '权限',
+    permission_column: '组织权限',
     description_column: '描述',
     placeholder_title: '组织权限',
     placeholder_description: '组织权限指的是在组织上下文中访问资源的授权。',

@@ -6,10 +6,8 @@ import useCustomDomain from '@/hooks/use-custom-domain';
 
 import { type SamlProviderConfig } from '../../types/saml';
 
-import * as styles from './index.module.scss';
-
 type Props = {
-  samlProviderConfig?: SamlProviderConfig;
+  readonly samlProviderConfig?: SamlProviderConfig;
 };
 
 function SamlConnectorSpInfo({ samlProviderConfig }: Props) {
@@ -23,7 +21,7 @@ function SamlConnectorSpInfo({ samlProviderConfig }: Props) {
     <>
       <FormField title="enterprise_sso.basic_info.saml.acs_url_field_name">
         <CopyToClipboard
-          className={styles.copyToClipboard}
+          displayType="block"
           variant="border"
           value={conditionalString(
             samlProviderConfig?.serviceProvider &&
@@ -33,7 +31,7 @@ function SamlConnectorSpInfo({ samlProviderConfig }: Props) {
       </FormField>
       <FormField title="enterprise_sso.basic_info.saml.audience_uri_field_name">
         <CopyToClipboard
-          className={styles.copyToClipboard}
+          displayType="block"
           variant="border"
           value={conditionalString(
             samlProviderConfig?.serviceProvider &&

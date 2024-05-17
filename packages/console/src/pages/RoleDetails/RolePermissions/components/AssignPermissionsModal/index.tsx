@@ -17,10 +17,10 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import { hasSurpassedQuotaLimit } from '@/utils/quota';
 
 type Props = {
-  roleId: string;
-  roleType: RoleType;
-  totalRoleScopeCount: number;
-  onClose: (success?: boolean) => void;
+  readonly roleId: string;
+  readonly roleType: RoleType;
+  readonly totalRoleScopeCount: number;
+  readonly onClose: (success?: boolean) => void;
 };
 
 function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose }: Props) {

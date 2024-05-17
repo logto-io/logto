@@ -205,7 +205,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `
     );
 
-  const findUsersByIds = async (userIds: string[]) =>
+  const findUsersByIds = async (userIds: string[]): Promise<readonly User[]> =>
     userIds.length > 0
       ? pool.any<User>(sql`
         select ${sql.join(Object.values(fields), sql`, `)}

@@ -1,4 +1,3 @@
-import { withAppInsights } from '@logto/app-insights/react/AppInsightsReact';
 import { type LogtoJwtTokenKeyType } from '@logto/schemas';
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,11 +13,11 @@ import { pageParamsGuard, type Action } from './type';
 import useDataFetch from './use-data-fetch';
 
 type Props = {
-  tokenType: LogtoJwtTokenKeyType;
-  action: Action;
+  readonly tokenType: LogtoJwtTokenKeyType;
+  readonly action: Action;
 };
 
-function CustomizeJwtDetails({ tokenType, action }: Props) {
+function Content({ tokenType, action }: Props) {
   const { isLoading, error, ...rest } = useDataFetch(tokenType, action);
 
   const [isMonacoLoaded, setIsMonacoLoaded] = useState(false);
@@ -51,7 +50,7 @@ function CustomizeJwtDetails({ tokenType, action }: Props) {
 }
 
 // Guard the parameters to ensure they are valid
-function CustomizeJwtDetailsWrapper() {
+function CustomizeJwtDetails() {
   const { tokenType, action } = useParams();
 
   const params = pageParamsGuard.safeParse({ tokenType, action });
@@ -60,7 +59,7 @@ function CustomizeJwtDetailsWrapper() {
     return <EmptyDataPlaceholder />;
   }
 
-  return <CustomizeJwtDetails tokenType={params.data.tokenType} action={params.data.action} />;
+  return <Content tokenType={params.data.tokenType} action={params.data.action} />;
 }
 
-export default withAppInsights(CustomizeJwtDetailsWrapper);
+export default CustomizeJwtDetails;

@@ -14,7 +14,7 @@ import { type UserMfaVerification } from '@/types/mfa';
 import * as styles from './index.module.scss';
 
 type Props = {
-  userId: string;
+  readonly userId: string;
 };
 
 function UserMfaVerifications({ userId }: Props) {

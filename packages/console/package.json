@@ -1,6 +1,6 @@
 {
   "name": "@logto/console",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "> TODO: description",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -27,16 +27,15 @@
   "devDependencies": {
     "@fontsource/roboto-mono": "^5.0.0",
     "@jest/types": "^29.5.0",
-    "@logto/app-insights": "workspace:^1.4.0",
-    "@logto/cloud": "0.2.5-ab8a489",
+    "@logto/cloud": "0.2.5-e5d8200",
     "@logto/connector-kit": "workspace:^3.0.0",
     "@logto/core-kit": "workspace:^2.4.0",
     "@logto/language-kit": "workspace:^1.1.0",
-    "@logto/phrases": "workspace:^1.10.0",
+    "@logto/phrases": "workspace:^1.10.1",
     "@logto/phrases-experience": "workspace:^1.6.1",
-    "@logto/react": "^3.0.5",
-    "@logto/schemas": "workspace:^1.15.0",
-    "@logto/shared": "workspace:^3.1.0",
+    "@logto/react": "^3.0.8",
+    "@logto/schemas": "workspace:^1.16.0",
+    "@logto/shared": "workspace:^3.1.1",
     "@mdx-js/react": "^1.6.22",
     "@monaco-editor/react": "^4.6.0",
     "@parcel/compressor-brotli": "2.9.3",
@@ -45,15 +44,16 @@
     "@parcel/transformer-mdx": "2.9.3",
     "@parcel/transformer-sass": "2.9.3",
     "@parcel/transformer-svg-react": "2.9.3",
-    "@silverhand/eslint-config": "5.0.0",
-    "@silverhand/eslint-config-react": "5.0.0",
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/eslint-config-react": "6.0.2",
     "@silverhand/essentials": "^2.9.0",
-    "@silverhand/ts-config": "5.0.0",
-    "@silverhand/ts-config-react": "5.0.0",
+    "@silverhand/ts-config": "6.0.0",
+    "@silverhand/ts-config-react": "6.0.0",
     "@swc/core": "^1.3.52",
     "@swc/jest": "^0.2.26",
-    "@testing-library/react": "^14.0.0",
+    "@testing-library/react": "^15.0.0",
     "@types/color": "^3.0.3",
+    "@types/debug": "^4.1.7",
     "@types/jest": "^29.4.0",
     "@types/mdx": "^2.0.1",
     "@types/mdx-js__react": "^1.5.5",
@@ -63,7 +63,7 @@
     "@types/react-helmet": "^6.1.6",
     "@types/react-modal": "^3.13.1",
     "@types/react-syntax-highlighter": "^15.5.1",
-    "@withtyped/client": "^0.8.4",
+    "@withtyped/client": "^0.8.7",
     "buffer": "^5.7.1",
     "classnames": "^2.3.1",
     "clean-deep": "^3.4.0",
@@ -71,10 +71,11 @@
     "csstype": "^3.0.11",
     "date-fns": "^2.29.3",
     "dayjs": "^1.10.5",
+    "debug": "^4.3.4",
     "deep-object-diff": "^1.1.9",
     "deepmerge": "^4.2.2",
     "dnd-core": "^16.0.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.56.0",
     "history": "^5.3.0",
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^7.0.1",
@@ -141,44 +142,6 @@
     "@/*": "./src/$1",
     "@cloud/*": "./src/cloud/$1",
     "@mdx/components/*": "./src/mdx-components/$1"
-  },
-  "eslintConfig": {
-    "extends": "@silverhand/react",
-    "parserOptions": {
-      "project": [
-        "./tsconfig.json",
-        "./tsconfig.scripts.gen.json"
-      ]
-    },
-    "rules": {
-      "react/function-component-definition": [
-        "error",
-        {
-          "namedComponents": "function-declaration",
-          "unnamedComponents": "arrow-function"
-        }
-      ],
-      "import/no-unused-modules": [
-        "error",
-        {
-          "unusedExports": true
-        }
-      ]
-    },
-    "overrides": [
-      {
-        "files": [
-          "*.d.ts",
-          "**/assets/docs/guides/types.ts",
-          "**/assets/docs/guides/*/index.ts",
-          "**/assets/docs/guides/*/components/**/*.tsx",
-          "**/mdx-components*/*/index.tsx"
-        ],
-        "rules": {
-          "import/no-unused-modules": "off"
-        }
-      }
-    ]
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"

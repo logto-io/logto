@@ -6,11 +6,11 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: string;
-  subtitle: string;
-  description: string;
-  type: ApplicationType;
-  size?: 'large' | 'small';
+  readonly title: string;
+  readonly subtitle: string;
+  readonly description: string;
+  readonly type: ApplicationType;
+  readonly size?: 'large' | 'small';
 };
 
 function TypeDescription({ title, subtitle, description, type, size = 'large' }: Props) {

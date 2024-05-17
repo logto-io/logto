@@ -9,7 +9,7 @@ import chalk from 'chalk';
 import { got } from 'got';
 import pLimit from 'p-limit';
 import pRetry from 'p-retry';
-import tar from 'tar';
+import { extract } from 'tar';
 import { z } from 'zod';
 
 import { connectorDirectory, coreDirectory } from '../../constants.js';
@@ -102,7 +102,7 @@ export const addConnectorsToPath = async (cwd: string, packageNames: string[]) =
 
           await fs.rm(packageDirectory, { force: true, recursive: true });
           await fs.mkdir(packageDirectory, { recursive: true });
-          await tar.extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
+          await extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
           await fs.unlink(tarPath);
 
           consoleLog.succeed(`Added ${chalk.green(name)} v${version}`);

@@ -18,8 +18,8 @@ import FeaturedPlanContent from './FeaturedPlanContent';
 import * as styles from './index.module.scss';
 
 type Props = {
-  plan: SubscriptionPlan;
-  onSelect: () => void;
+  readonly plan: SubscriptionPlan;
+  readonly onSelect: () => void;
 };
 
 function PlanCardItem({ plan, onSelect }: Props) {

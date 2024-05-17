@@ -28,11 +28,10 @@ const pathname = '/organizations';
 const apiPathname = 'api/organizations';
 
 type Props = {
-  isLoading: boolean;
-  onCreate: () => void;
+  readonly onCreate: () => void;
 };
 
-function OrganizationsTable({ isLoading, onCreate }: Props) {
+function OrganizationsTable({ onCreate }: Props) {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
   const { data: response, error } = useSWR<[OrganizationWithFeatured[], number], RequestError>(
@@ -44,7 +43,7 @@ function OrganizationsTable({ isLoading, onCreate }: Props) {
     })
   );
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const isTableLoading = isLoading || (!response && !error);
+  const isTableLoading = !response && !error;
   const [data, totalCount] = response ?? [[], 0];
   const { navigate } = useTenantPathname();
 

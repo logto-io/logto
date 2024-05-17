@@ -14,7 +14,7 @@ import { type ApplicationForm } from '../../utils';
 import * as styles from './SessionForm.module.scss';
 
 type Props = {
-  data: Application;
+  readonly data: Application;
 };
 
 const maxSessionDuration = 365; // 1 year

@@ -14,9 +14,9 @@ import { type SubscriptionPlan } from '@/types/subscriptions';
 import { parseExceededQuotaLimitError } from '@/utils/subscription';
 
 type Props = {
-  activeUsers: number;
-  currentPlan: SubscriptionPlan;
-  className?: string;
+  readonly activeUsers: number;
+  readonly currentPlan: SubscriptionPlan;
+  readonly className?: string;
 };
 
 function MauLimitExceededNotification({ activeUsers, currentPlan, className }: Props) {

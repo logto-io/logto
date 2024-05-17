@@ -34,16 +34,11 @@ const quota_item = {
     not_eligible: '移除你的機器對機器應用程式',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your third-party apps',
+    name: '第三方應用程式',
+    limited: '{{count, number}} 第三方應用程式',
+    limited_other: '{{count, number}} 第三方應用程式',
+    unlimited: '不限第三方應用程式數',
+    not_eligible: '移除你的第三方應用程式',
   },
   resources_limit: {
     name: 'API 資源',
@@ -143,7 +138,7 @@ const quota_item = {
     name: '多因素認證',
     limited: '多因素認證',
     unlimited: '多因素認證',
-    not_eligible: '移除您的多因素認證',
+    not_eligible: '移除你的多因素認證',
   },
   sso_enabled: {
     name: '企業單一登錄',
@@ -152,16 +147,17 @@ const quota_item = {
     not_eligible: '移除你的 企業單一登錄',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
-    name: 'Tenant members',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your tenant members',
+    name: '租戶成員',
+    limited: '{{count, number}} 租戶成員',
+    limited_other: '{{count, number}} 租戶成員',
+    unlimited: '不限租戶成員數',
+    not_eligible: '移除你的租戶成員',
+  },
+  custom_jwt_enabled: {
+    name: '自訂 JWT',
+    limited: '自訂 JWT',
+    unlimited: '自訂 JWT',
+    not_eligible: '移除你的 JWT 声明自訂器',
   },
 };
 

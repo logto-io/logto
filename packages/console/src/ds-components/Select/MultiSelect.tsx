@@ -20,16 +20,16 @@ export type Option<T> = {
 };
 
 type Props<T> = {
-  className?: string;
-  value: Array<Option<T>>;
-  options: Array<Option<T>>;
-  onSearch: (keyword: string) => void;
-  onChange: (value: Array<Option<T>>) => void;
-  isReadOnly?: boolean;
-  error?: string | boolean;
-  placeholder?: AdminConsoleKey;
-  isOptionsLoading?: boolean;
-  renderOption?: (option: Option<T>) => React.ReactNode;
+  readonly className?: string;
+  readonly value: Array<Option<T>>;
+  readonly options: Array<Option<T>>;
+  readonly onSearch: (keyword: string) => void;
+  readonly onChange: (value: Array<Option<T>>) => void;
+  readonly isReadOnly?: boolean;
+  readonly error?: string | boolean;
+  readonly placeholder?: AdminConsoleKey;
+  readonly isOptionsLoading?: boolean;
+  readonly renderOption?: (option: Option<T>) => React.ReactNode;
 };
 
 function MultiSelect<T extends string>({

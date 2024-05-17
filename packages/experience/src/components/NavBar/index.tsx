@@ -10,11 +10,11 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title?: string;
-  type?: 'back' | 'close';
-  isHidden?: boolean;
-  onClose?: () => void;
-  onSkip?: () => void;
+  readonly title?: string;
+  readonly type?: 'back' | 'close';
+  readonly isHidden?: boolean;
+  readonly onClose?: () => void;
+  readonly onSkip?: () => void;
 };
 
 const NavBar = ({ title, type = 'back', isHidden, onClose, onSkip }: Props) => {

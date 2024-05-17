@@ -1,8 +1,9 @@
 import type router from '@logto/cloud/routes';
 import { cloudConnectionDataGuard, CloudScope } from '@logto/schemas';
+import { formUrlEncodedHeaders } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 import Client from '@withtyped/client';
-import { got } from 'got';
+import ky from 'ky';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -71,20 +72,21 @@ export class CloudConnectionLibrary {
 
     const { tokenEndpoint, appId, appSecret, resource } = await this.getCloudConnectionData();
 
-    const httpResponse = await got.post({
-      url: tokenEndpoint,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${Buffer.from(`${appId}:${appSecret}`).toString('base64')}`,
-      },
-      form: {
-        grant_type: 'client_credentials',
-        resource,
-        scope: scopes.join(' '),
-      },
-    });
+    const text = await ky
+      .post(tokenEndpoint, {
+        headers: {
+          ...formUrlEncodedHeaders,
+          Authorization: `Basic ${Buffer.from(`${appId}:${appSecret}`).toString('base64')}`,
+        },
+        body: new URLSearchParams({
+          grant_type: 'client_credentials',
+          resource,
+          scope: scopes.join(' '),
+        }),
+      })
+      .text();
 
-    const result = accessTokenResponseGuard.safeParse(safeParseJson(httpResponse.body));
+    const result = accessTokenResponseGuard.safeParse(safeParseJson(text));
 
     if (!result.success) {
       throw new Error('Unable to get access token for Cloud service');

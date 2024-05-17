@@ -156,9 +156,9 @@ const application_details = {
     /** UNTRANSLATED */
     user_profile: 'User data',
     /** UNTRANSLATED */
-    api_resource: 'API resource',
+    api_permissions: 'API permissions',
     /** UNTRANSLATED */
-    organization: 'Organization',
+    organization: 'Organization permissions',
     /** UNTRANSLATED */
     user_permissions_assignment_form_title: 'Add the user profile permissions',
     /** UNTRANSLATED */
@@ -171,6 +171,20 @@ const application_details = {
     /** UNTRANSLATED */
     permission_description_tips:
       'When Logto is used as an Identity Provider (IdP) for authentication in third-party apps, and users are asked for authorization, this description appears on the consent screen.',
+    /** UNTRANSLATED */
+    user_title: 'User',
+    /** UNTRANSLATED */
+    user_description:
+      'Select the permissions requested by the third-party app for accessing specific user data.',
+    /** UNTRANSLATED */
+    grant_user_level_permissions: 'Grant permissions of user data',
+    /** UNTRANSLATED */
+    organization_title: 'Organization',
+    /** UNTRANSLATED */
+    organization_description:
+      'Select the permissions requested by the third-party app for accessing specific organization data.',
+    /** UNTRANSLATED */
+    grant_organization_level_permissions: 'Grant permissions of organization data',
   },
   roles: {
     name_column: 'Rôle',

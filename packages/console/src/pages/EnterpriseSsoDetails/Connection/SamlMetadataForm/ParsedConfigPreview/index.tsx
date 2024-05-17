@@ -11,16 +11,16 @@ import { type SamlProviderConfig } from '@/pages/EnterpriseSsoDetails/types/saml
 import * as styles from './index.module.scss';
 
 type Props = {
-  identityProviderConfig: SamlProviderConfig['identityProvider'];
+  readonly identityProviderConfig: SamlProviderConfig['identityProvider'];
 };
 
 type CertificatePreviewProps = {
-  identityProviderConfig: {
+  readonly identityProviderConfig: {
     x509Certificate: string;
     certificateExpiresAt: number;
     isCertificateValid: boolean;
   };
-  className?: string;
+  readonly className?: string;
 };
 
 export function CertificatePreview({
@@ -46,7 +46,7 @@ export function CertificatePreview({
           ),
         }}
       />
-      <CopyToClipboard className={styles.copyToClipboard} variant="icon" value={x509Certificate} />
+      <CopyToClipboard displayType="block" variant="icon" value={x509Certificate} />
     </div>
   );
 }

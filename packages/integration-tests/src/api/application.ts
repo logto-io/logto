@@ -6,6 +6,7 @@ import {
   type Role,
   type ProtectedAppMetadata,
 } from '@logto/schemas';
+import { formUrlEncodedHeaders } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
 import { authedAdminApi, oidcApi } from './api.js';
@@ -99,9 +100,7 @@ export const generateM2mLog = async (applicationId: string) => {
 
   // This is a token request with insufficient parameters and should fail. We make the request to generate a log for the current machine to machine app.
   return oidcApi.post('token', {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
+    headers: formUrlEncodedHeaders,
     body: new URLSearchParams({
       client_id: id,
       client_secret: secret,

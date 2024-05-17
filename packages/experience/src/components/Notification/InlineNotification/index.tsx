@@ -6,8 +6,8 @@ import DynamicT from '@/components/DynamicT';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  message: TFuncKey;
+  readonly className?: string;
+  readonly message: TFuncKey;
 };
 
 const InlineNotification = ({ className, message }: Props) => {

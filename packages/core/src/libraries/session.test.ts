@@ -59,7 +59,7 @@ describe('consent', () => {
 
   it('should update with new grantId if not exist', async () => {
     const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
-    await consent(context, provider, queries, baseInteractionDetails);
+    await consent({ ctx: context, provider, queries, interactionDetails: baseInteractionDetails });
 
     expect(grantSave).toHaveBeenCalled();
 
@@ -85,7 +85,7 @@ describe('consent', () => {
 
     const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
 
-    await consent(context, provider, queries, interactionDetails);
+    await consent({ ctx: context, provider, queries, interactionDetails });
 
     expect(grantSave).toHaveBeenCalled();
 
@@ -109,7 +109,7 @@ describe('consent', () => {
     }));
 
     const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
-    await consent(context, provider, queries, baseInteractionDetails);
+    await consent({ ctx: context, provider, queries, interactionDetails: baseInteractionDetails });
 
     expect(userQueries.updateUserById).toHaveBeenCalledWith(mockUser.id, {
       applicationId: baseInteractionDetails.params.client_id,
@@ -117,21 +117,18 @@ describe('consent', () => {
   });
 
   it('should grant missing scopes', async () => {
-    const interactionDetails = {
-      ...baseInteractionDetails,
-      prompt: {
-        details: {
-          missingOIDCScope: ['openid', 'profile'],
-          missingResourceScopes: {
-            resource1: ['resource1_scope1', 'resource1_scope2'],
-            resource2: ['resource2_scope1'],
-          },
-        },
+    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
+    await consent({
+      ctx: context,
+      provider,
+      queries,
+      interactionDetails: baseInteractionDetails,
+      missingOIDCScopes: ['openid', 'profile'],
+      resourceScopesToGrant: {
+        resource1: ['resource1_scope1', 'resource1_scope2'],
+        resource2: ['resource2_scope1'],
       },
-    } as unknown as Interaction;
-
-    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
-    await consent(context, provider, queries, interactionDetails);
+    });
 
     expect(grantAddOIDCScope).toHaveBeenCalledWith('openid profile');
     expect(grantAddResourceScope).toHaveBeenCalledWith(

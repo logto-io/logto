@@ -1,4 +1,4 @@
-import type { ConnectorMetadata } from '@logto/schemas';
+import { ConnectorPlatform, type ConnectorMetadata } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
@@ -18,12 +18,12 @@ const useSocial = () => {
     const { id: connectorId, platform } = connector;
 
     const redirectUri =
-      platform === 'Universal'
+      platform === ConnectorPlatform.Universal
         ? buildSocialLandingUri(`/social/landing/${connectorId}`, redirectTo).toString()
         : redirectTo;
 
     getLogtoNativeSdk()?.getPostMessage()({
-      callbackUri: `${window.location.origin}/sign-in/social/${connectorId}`,
+      callbackUri: `${window.location.origin}/callback/social/${connectorId}`,
       redirectTo: redirectUri,
     });
   }, []);

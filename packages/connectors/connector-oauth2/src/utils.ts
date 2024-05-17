@@ -1,48 +1,25 @@
-import { assert, pick } from '@silverhand/essentials';
-import type { Response } from 'got';
-import { got, HTTPError } from 'got';
-import snakecaseKeys from 'snakecase-keys';
+import { assert } from '@silverhand/essentials';
 
 import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
+import { type KyResponse } from 'ky';
 import qs from 'query-string';
 
-import { defaultTimeout } from './constant.js';
-import type {
-  OauthConfig,
-  TokenEndpointResponseType,
-  AccessTokenResponse,
-  ProfileMap,
-} from './types.js';
-import { authResponseGuard, accessTokenResponseGuard, userProfileGuard } from './types.js';
-
-export const accessTokenRequester = async (
-  tokenEndpoint: string,
-  queryParameters: Record<string, string>,
-  tokenEndpointResponseType: TokenEndpointResponseType,
-  timeout: number = defaultTimeout
-): Promise<AccessTokenResponse> => {
-  try {
-    const httpResponse = await got.post({
-      url: tokenEndpoint,
-      form: queryParameters,
-      timeout: { request: timeout },
-    });
-
-    return await accessTokenResponseHandler(httpResponse, tokenEndpointResponseType);
-  } catch (error: unknown) {
-    if (error instanceof HTTPError) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));
-    }
-    throw error;
-  }
-};
+import {
+  type Oauth2AccessTokenResponse,
+  oauth2AccessTokenResponseGuard,
+  oauth2AuthResponseGuard,
+} from './oauth2/types.js';
+import { requestTokenEndpoint } from './oauth2/utils.js';
+import type { Oauth2ConnectorConfig, TokenEndpointResponseType, ProfileMap } from './types.js';
+import { userProfileGuard } from './types.js';
 
 const accessTokenResponseHandler = async (
-  response: Response<string>,
+  response: KyResponse,
   tokenEndpointResponseType: TokenEndpointResponseType
-): Promise<AccessTokenResponse> => {
-  const result = accessTokenResponseGuard.safeParse(
-    tokenEndpointResponseType === 'json' ? parseJson(response.body) : qs.parse(response.body)
+): Promise<Oauth2AccessTokenResponse> => {
+  const responseContent = await response.text();
+  const result = oauth2AccessTokenResponseGuard.safeParse(
+    tokenEndpointResponseType === 'json' ? parseJson(responseContent) : qs.parse(responseContent)
   ); // Why it works with qs.parse()
 
   if (!result.success) {
@@ -84,8 +61,12 @@ export const userProfileMapping = (
   return result.data;
 };
 
-export const getAccessToken = async (config: OauthConfig, data: unknown, redirectUri: string) => {
-  const result = authResponseGuard.safeParse(data);
+export const getAccessToken = async (
+  config: Oauth2ConnectorConfig,
+  data: unknown,
+  redirectUri: string
+) => {
+  const result = oauth2AuthResponseGuard.safeParse(data);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.General, data);
@@ -93,18 +74,32 @@ export const getAccessToken = async (config: OauthConfig, data: unknown, redirec
 
   const { code } = result.data;
 
-  const { customConfig, ...rest } = config;
+  const {
+    grantType,
+    tokenEndpoint,
+    tokenEndpointResponseType,
+    clientId,
+    clientSecret,
+    tokenEndpointAuthMethod,
+    clientSecretJwtSigningAlgorithm,
+    customConfig,
+  } = config;
 
-  const parameterObject = snakecaseKeys({
-    ...pick(rest, 'grantType', 'clientId', 'clientSecret'),
-    ...customConfig,
-    code,
-    redirectUri,
+  const tokenResponse = await requestTokenEndpoint({
+    tokenEndpoint,
+    tokenEndpointAuthOptions: {
+      method: tokenEndpointAuthMethod,
+      clientSecretJwtSigningAlgorithm,
+    },
+    tokenRequestBody: {
+      grantType,
+      code,
+      redirectUri,
+      clientId,
+      clientSecret,
+      ...customConfig,
+    },
   });
 
-  return accessTokenRequester(
-    config.tokenEndpoint,
-    parameterObject,
-    config.tokenEndpointResponseType
-  );
+  return accessTokenResponseHandler(tokenResponse, tokenEndpointResponseType);
 };

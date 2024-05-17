@@ -14,7 +14,9 @@ import FurtherReadings from './FurtherReadings';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: Array<ReactElement<StepProps, typeof Step>> | ReactElement<StepProps, typeof Step>;
+  readonly children:
+    | Array<ReactElement<StepProps, typeof Step>>
+    | ReactElement<StepProps, typeof Step>;
 };
 
 /** Find the first scrollable element in the parent chain. */

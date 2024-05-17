@@ -11,11 +11,11 @@ import * as styles from './index.module.scss';
 export type Organization = Exclude<ConsentInfoResponse['organizations'], undefined>[number];
 
 type OrganizationItemProps = {
-  className?: string;
-  organization: Organization;
-  onSelect?: (organization: Organization) => void;
-  isSelected?: boolean;
-  suffixElement?: ReactNode;
+  readonly className?: string;
+  readonly organization: Organization;
+  readonly onSelect?: (organization: Organization) => void;
+  readonly isSelected?: boolean;
+  readonly suffixElement?: ReactNode;
 };
 
 const OrganizationItem = ({

@@ -6,9 +6,9 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: ReactNode;
-  isLoading?: boolean;
-  onClickUpgrade?: () => void;
+  readonly children: ReactNode;
+  readonly isLoading?: boolean;
+  readonly onClickUpgrade?: () => void;
 };
 
 function QuotaGuardFooter({ children, isLoading, onClickUpgrade }: Props) {

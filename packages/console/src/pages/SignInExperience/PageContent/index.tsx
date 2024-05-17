@@ -37,8 +37,8 @@ import { sieFormDataParser } from './utils/parser';
 const PageTab = TabNavItem<`../${SignInExperienceTab}`>;
 
 type Props = {
-  data: SignInExperience;
-  onSignInExperienceUpdated: (data: SignInExperience) => void;
+  readonly data: SignInExperience;
+  readonly onSignInExperienceUpdated: (data: SignInExperience) => void;
 };
 
 function PageContent({ data, onSignInExperienceUpdated }: Props) {

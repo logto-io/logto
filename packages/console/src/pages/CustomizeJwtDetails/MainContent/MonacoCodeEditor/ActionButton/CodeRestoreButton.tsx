@@ -7,8 +7,8 @@ import ActionButton from './index';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
-  onClick: () => void;
+  readonly className?: string;
+  readonly onClick: () => void;
 };
 
 function CodeRestoreButton({ className, onClick }: Props) {

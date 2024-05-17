@@ -27,22 +27,17 @@ const quota_item = {
     not_eligible: 'Supprimez vos applications',
   },
   machine_to_machine_limit: {
-    name: 'Machine to machine',
+    name: 'Machine à machine',
     limited: '{{count, number}} application machine à machine',
     limited_other: '{{count, number}} applications machine à machine',
     unlimited: 'Illimité applications machine à machine',
     not_eligible: 'Supprimez vos applications machine à machine',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
+    name: 'Applications tierces',
+    limited: '{{count, number}} application tierce',
+    limited_other: '{{count, number}} applications tierces',
     unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
     not_eligible: 'Remove your third-party apps',
   },
   resources_limit: {
@@ -99,9 +94,9 @@ const quota_item = {
     not_eligible: 'Supprimez vos rôles',
   },
   machine_to_machine_roles_limit: {
-    name: 'Machine to machine roles',
-    limited: '{{count, number}} machine to machine role',
-    limited_other: '{{count, number}} machine to machine roles',
+    name: 'Roles Machine à machine',
+    limited: '{{count, number}} rôle machine à machine',
+    limited_other: '{{count, number}} rôles machine à machine',
     unlimited: 'Unlimited machine to machine roles',
     not_eligible: 'Remove your machine to machine roles',
   },
@@ -120,9 +115,9 @@ const quota_item = {
     not_eligible: 'Supprimez vos webhooks',
   },
   organizations_enabled: {
-    name: 'Organizations',
-    limited: 'Organizations',
-    unlimited: 'Organizations',
+    name: 'Organisations',
+    limited: 'Organisations',
+    unlimited: 'Organisations',
     not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
@@ -152,16 +147,17 @@ const quota_item = {
     not_eligible: 'Supprimez votre SSO Entreprise',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
-    name: 'Tenant members',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
+    name: 'Membres du locataires',
+    limited: '{{count, number}} membre du locataire',
+    limited_other: '{{count, number}} membres du locataire',
     unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
     not_eligible: 'Remove your tenant members',
+  },
+  custom_jwt_enabled: {
+    name: 'JWT personnalisé',
+    limited: 'Custom JWT',
+    unlimited: 'Custom JWT',
+    not_eligible: 'Remove your JWT claims customizer',
   },
 };
 

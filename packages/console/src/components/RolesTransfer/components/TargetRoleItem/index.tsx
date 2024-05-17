@@ -7,8 +7,8 @@ import IconButton from '@/ds-components/IconButton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  role: RoleResponse;
-  onDelete: () => void;
+  readonly role: RoleResponse;
+  readonly onDelete: () => void;
 };
 
 function TargetRoleItem({ role, onDelete }: Props) {

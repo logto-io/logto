@@ -6,11 +6,11 @@ import DynamicT from '@/components/DynamicT';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: TFuncKey;
-  description: TFuncKey;
-  titleProps?: Record<string, unknown>;
-  descriptionProps?: Record<string, unknown>;
-  children: ReactNode;
+  readonly title: TFuncKey;
+  readonly description: TFuncKey;
+  readonly titleProps?: Record<string, unknown>;
+  readonly descriptionProps?: Record<string, unknown>;
+  readonly children: ReactNode;
 };
 
 const SectionLayout = ({ title, description, titleProps, descriptionProps, children }: Props) => {

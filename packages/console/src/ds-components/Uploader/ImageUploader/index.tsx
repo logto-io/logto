@@ -12,11 +12,11 @@ import type { Props as FileUploaderProps } from '../FileUploader';
 import * as styles from './index.module.scss';
 
 export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
-  allowedMimeTypes?: AllowedUploadMimeType[];
-  name: string;
-  value: string;
-  onDelete: () => void;
-  className?: string;
+  readonly allowedMimeTypes?: AllowedUploadMimeType[];
+  readonly name: string;
+  readonly value: string;
+  readonly onDelete: () => void;
+  readonly className?: string;
 };
 
 function ImageUploader({

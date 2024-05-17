@@ -12,17 +12,21 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import Select, { type Option } from '@/ds-components/Select';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import * as styles from '../index.module.scss';
+
 type Props = {
-  user: TenantMemberResponse;
-  isOpen: boolean;
-  onClose: () => void;
+  readonly user: TenantMemberResponse;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 function EditMemberModal({ user, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
   const { currentTenantId } = useContext(TenantsContext);
+  const { mutate: mutateUserTenantScopes } = useCurrentTenantScopes();
 
   const [isLoading, setIsLoading] = useState(false);
   const [role, setRole] = useState(TenantRole.Collaborator);
@@ -41,7 +45,9 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
     if (role === TenantRole.Admin) {
       const [result] = await show({
         ModalContent: () => (
-          <Trans components={{ ul: <ul />, li: <li /> }}>{t('assign_admin_confirm')}</Trans>
+          <Trans components={{ ul: <ul className={styles.list} />, li: <li /> }}>
+            {t('assign_admin_confirm')}
+          </Trans>
         ),
         confirmButtonText: 'general.confirm',
       });
@@ -57,6 +63,7 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
         params: { tenantId: currentTenantId, userId: user.id },
         body: { roleName: role },
       });
+      void mutateUserTenantScopes();
       onClose();
     } finally {
       setIsLoading(false);

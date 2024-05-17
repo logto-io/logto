@@ -4,6 +4,7 @@ import {
   type Organization,
   type OrganizationRoleWithScopes,
   type OrganizationInvitationEntity,
+  type JsonObject,
 } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
@@ -122,7 +123,11 @@ export class OrganizationApiTest extends OrganizationApi {
     return this.#organizations;
   }
 
-  override async create(data: { name: string; description?: string }): Promise<Organization> {
+  override async create(data: {
+    name: string;
+    description?: string;
+    customData?: JsonObject;
+  }): Promise<Organization> {
     const created = await super.create(data);
     this.organizations.push(created);
     return created;

@@ -10,9 +10,9 @@ import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { attachScopesToResources } from '#src/utils/resource.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function resourceRoutes<T extends AuthedRouter>(
+export default function resourceRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {
@@ -136,13 +136,19 @@ export default function resourceRoutes<T extends AuthedRouter>(
       // Use the dedicated API `PATCH /resources/:id/is-default` to update.
       body: Resources.createGuard.omit({ id: true, indicator: true, isDefault: true }).partial(),
       response: Resources.guard,
-      status: [200, 404],
+      status: [200, 400, 404],
     }),
     async (ctx, next) => {
       const {
         params: { id },
         body,
       } = ctx.guard;
+
+      const { indicator } = await findResourceById(id);
+      assertThat(
+        !isManagementApi(indicator),
+        new RequestError({ code: 'resource.cannot_modify_management_api' })
+      );
 
       const resource = await updateResourceById(id, body);
       ctx.body = resource;

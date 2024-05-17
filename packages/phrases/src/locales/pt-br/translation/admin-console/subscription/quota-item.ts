@@ -34,16 +34,11 @@ const quota_item = {
     not_eligible: 'Remova suas aplicações de máquina a máquina',
   },
   third_party_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'Third-party apps',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} third-party app',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} third-party apps',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited third-party apps',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your third-party apps',
+    name: 'Aplicativos de terceiros',
+    limited: '{{count, number}} aplicativo de terceiros',
+    limited_other: '{{count, number}} aplicativos de terceiros',
+    unlimited: 'Aplicativos de terceiros ilimitados',
+    not_eligible: 'Remova seus aplicativos de terceiros',
   },
   resources_limit: {
     name: 'Recursos da API',
@@ -152,16 +147,17 @@ const quota_item = {
     not_eligible: 'Remova seu Enterprise SSO',
   },
   tenant_members_limit: {
-    /** UNTRANSLATED */
-    name: 'Tenant members',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} tenant member',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tenant members',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tenant members',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your tenant members',
+    name: 'Membros do locatário',
+    limited: '{{count, number}} membro do locatário',
+    limited_other: '{{count, number}} membros do locatário',
+    unlimited: 'Membros do locatário ilimitados',
+    not_eligible: 'Remova seus membros do locatário',
+  },
+  custom_jwt_enabled: {
+    name: 'JWT personalizado',
+    limited: 'JWT personalizado',
+    unlimited: 'JWT personalizado',
+    not_eligible: 'Remova seu personalizador de declarações JWT',
   },
 };
 

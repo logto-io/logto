@@ -23,9 +23,9 @@ import OidcMetadataForm from './OidcMetadataForm';
 import OidcConnectorSpInfo from './ServiceProviderInfo/OidcConnectorSpInfo';
 
 type Props = {
-  isDeleted: boolean;
-  data: OidcSsoConnectorWithProviderConfig;
-  onUpdated: (data: OidcSsoConnectorWithProviderConfig) => void;
+  readonly isDeleted: boolean;
+  readonly data: OidcSsoConnectorWithProviderConfig;
+  readonly onUpdated: (data: OidcSsoConnectorWithProviderConfig) => void;
 };
 
 function OidcConnectorForm({ isDeleted, data, onUpdated }: Props) {

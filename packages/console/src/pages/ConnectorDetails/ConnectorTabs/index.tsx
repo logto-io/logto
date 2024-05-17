@@ -13,8 +13,8 @@ import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import * as styles from './index.module.scss';
 
 type Props = {
-  target: string;
-  connectorId: string;
+  readonly target: string;
+  readonly connectorId: string;
 };
 
 function ConnectorTabs({ target, connectorId }: Props) {

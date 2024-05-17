@@ -6,9 +6,9 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import * as styles from './index.module.scss';
 
 type Props = {
-  scope: ScopeResponse;
-  isSelected: boolean;
-  onSelect: (scope: ScopeResponse) => void;
+  readonly scope: ScopeResponse;
+  readonly isSelected: boolean;
+  readonly onSelect: (scope: ScopeResponse) => void;
 };
 
 function SourceScopeItem({ scope, scope: { name }, isSelected, onSelect }: Props) {

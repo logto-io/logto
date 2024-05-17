@@ -1,98 +1,57 @@
 const jwt_claims = {
-  /** UNTRANSLATED */
-  title: 'Custom JWT',
-  /** UNTRANSLATED */
-  description:
-    'Set up custom JWT claims to include in the access token. These claims can be used to pass additional information to your application.',
+  title: '自定義 JWT',
+  description: '設置自定義 JWT 声明以包含在訪問令牌中。這些聲明可用於向應用程序傳遞附加信息。',
   user_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For user',
-    /** UNTRANSLATED */
-    card_field: 'User access token',
-    /** UNTRANSLATED */
-    card_description: 'Add user-specific data during access token issuance.',
-    /** UNTRANSLATED */
-    for: 'for user',
+    card_title: '針對用戶',
+    card_field: '用戶訪問令牌',
+    card_description: '在發出訪問令牌時添加用戶特定數據。',
+    for: '針對用戶',
   },
   machine_to_machine_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For M2M',
-    /** UNTRANSLATED */
-    card_field: 'Machine-to-machine token',
-    /** UNTRANSLATED */
-    card_description: 'Add extra data during machine-to-machine token issuance.',
-    /** UNTRANSLATED */
-    for: 'for M2M',
+    card_title: '針對 M2M',
+    card_field: '機器對機器令牌',
+    card_description: '在發出機器對機器令牌時添加額外數據。',
+    for: '針對 M2M',
   },
-  /** UNTRANSLATED */
-  code_editor_title: 'Customize the {{token}} claims',
-  /** UNTRANSLATED */
-  custom_jwt_create_button: 'Add custom claims',
-  /** UNTRANSLATED */
-  custom_jwt_item: 'Custom claims {{for}}',
-  /** UNTRANSLATED */
-  delete_modal_title: 'Delete custom claims',
-  /** UNTRANSLATED */
-  delete_modal_content: 'Are you sure you want to delete the custom claims?',
-  /** UNTRANSLATED */
-  clear: 'Clear',
-  /** UNTRANSLATED */
-  cleared: 'Cleared',
-  /** UNTRANSLATED */
-  restore: 'Restore defaults',
-  /** UNTRANSLATED */
-  restored: 'Restored',
-  /** UNTRANSLATED */
-  data_source_tab: 'Data source',
-  /** UNTRANSLATED */
-  test_tab: 'Test context',
-  /** UNTRANSLATED */
-  jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
+  code_editor_title: '自定義 {{token}} 声明',
+  custom_jwt_create_button: '添加自定義声明',
+  custom_jwt_item: '自定義声明 {{for}}',
+  delete_modal_title: '刪除自定義声明',
+  delete_modal_content: '您確定要刪除自定義声明嗎？',
+  clear: '清除',
+  cleared: '已清除',
+  restore: '恢復默認值',
+  restored: '已恢復',
+  data_source_tab: '數據源',
+  test_tab: '測試上下文',
+  jwt_claims_description: '默認声明自動包含在 JWT 中，無法覆蓋。',
   user_data: {
-    /** UNTRANSLATED */
-    title: 'User data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `data.user` input parameter to provide vital user info.',
+    title: '用戶數據',
+    subtitle: '使用 `data.user` 輸入參數提供重要用戶信息。',
   },
   token_data: {
-    /** UNTRANSLATED */
-    title: 'Token data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `token` input parameter for current access token payload. ',
+    title: '令牌數據',
+    subtitle: '使用 `token` 輸入參數獲取當前訪問令牌有效載荷。',
   },
   fetch_external_data: {
-    /** UNTRANSLATED */
-    title: 'Fetch external data',
-    /** UNTRANSLATED */
-    subtitle: 'Incorporate data from your external APIs directly into claims.',
-    /** UNTRANSLATED */
-    description:
-      'Use the `fetch` function to call your external APIs and include the data in your custom claims. Example: ',
+    title: '提取外部數據',
+    subtitle: '直接將來自外部 APIs 的數據合併到声明中。',
+    description: '使用 `fetch` 函數調用外部 APIs 並將數據包含在您的自定義声明中。示例：',
   },
   environment_variables: {
-    /** UNTRANSLATED */
-    title: 'Set environment variables',
-    /** UNTRANSLATED */
-    subtitle: 'Use environment variables to store sensitive information.',
-    /** UNTRANSLATED */
-    input_field_title: 'Add environment variables',
-    /** UNTRANSLATED */
-    sample_code: 'Accessing environment variables in your custom JWT claims handler. Example: ',
+    title: '設置環境變量',
+    subtitle: '使用環境變量存儲敏感信息。',
+    input_field_title: '添加環境變量',
+    sample_code: '在自定義 JWT 声明處理程序中訪問環境變量。示例：',
   },
-  /** UNTRANSLATED */
-  jwt_claims_hint:
-    'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
+  jwt_claims_hint: '將自定義声明限制在 50KB 以下。默認 JWT 声明將自動包含在令牌中，無法覆蓋。',
   tester: {
-    /** UNTRANSLATED */
-    subtitle: 'Adjust mock token and user data for testing.',
-    /** UNTRANSLATED */
-    run_button: 'Run test',
-    /** UNTRANSLATED */
-    result_title: 'Test result',
+    subtitle: '調整測試用的模擬令牌和用戶數據。',
+    run_button: '運行測試',
+    result_title: '測試結果',
   },
   form_error: {
-    /** UNTRANSLATED */
-    invalid_json: 'Invalid JSON format',
+    invalid_json: '無效的 JSON 格式',
   },
 };
 

@@ -19,10 +19,10 @@ import ResourceItem from '../ResourceItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  roleId?: string;
-  roleType: RoleType;
-  selectedScopes: ScopeResponse[];
-  onChange: (value: ScopeResponse[]) => void;
+  readonly roleId?: string;
+  readonly roleType: RoleType;
+  readonly selectedScopes: ScopeResponse[];
+  readonly onChange: (value: ScopeResponse[]) => void;
 };
 
 function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) {

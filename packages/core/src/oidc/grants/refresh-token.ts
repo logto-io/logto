@@ -19,6 +19,8 @@
  * The commit hash of the original file is `cf2069cbb31a6a855876e95157372d25dde2511c`.
  */
 
+import { type X509Certificate } from 'node:crypto';
+
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
 import { type Optional, isKeyInObject, cond } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
@@ -117,7 +119,7 @@ export const buildHandler: (
     throw new InvalidGrant('refresh token is expired');
   }
 
-  let cert: Optional<string>;
+  let cert: Optional<string | X509Certificate>;
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the original code uses `||`
   if (client.tlsClientCertificateBoundAccessTokens || refreshToken['x5t#S256']) {
     cert = getCertificate(ctx);
@@ -138,15 +140,11 @@ export const buildHandler: (
   // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
   // to `Boolean` first.
   const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
-  if (organizationId) {
-    // Validate if the refresh token has the required scope from RFC 0001.
-    if (!refreshToken.scopes.has(UserScope.Organizations)) {
-      throw new InsufficientScope('refresh token missing required scope', UserScope.Organizations);
-    }
-    // Does not allow requesting resource token when requesting organization token (yet).
-    if (params.resource) {
-      throw new InvalidRequest('resource is not allowed when requesting organization token');
-    }
+  if (
+    organizationId && // Validate if the refresh token has the required scope from RFC 0001.
+    !refreshToken.scopes.has(UserScope.Organizations)
+  ) {
+    throw new InsufficientScope('refresh token missing required scope', UserScope.Organizations);
   }
   /* === End RFC 0001 === */
 
@@ -229,7 +227,9 @@ export const buildHandler: (
   if (organizationId) {
     // Check membership
     if (!(await queries.organizations.relations.users.exists(organizationId, account.accountId))) {
-      throw new AccessDenied('user is not a member of the organization');
+      const error = new AccessDenied('user is not a member of the organization');
+      error.statusCode = 403;
+      throw error;
     }
 
     // Check if the organization is granted (third-party application only) by the user
@@ -242,7 +242,9 @@ export const buildHandler: (
         organizationId
       ))
     ) {
-      throw new AccessDenied('organization access is not granted to the application');
+      const error = new AccessDenied('organization access is not granted to the application');
+      error.statusCode = 403;
+      throw error;
     }
   }
   /* === End RFC 0001 === */
@@ -313,8 +315,11 @@ export const buildHandler: (
   /** The scopes requested by the client. If not provided, use the scopes from the refresh token. */
   const scope = params.scope ? requestParamScopes : refreshToken.scopes;
 
-  /* === RFC 0001 === */
-  if (organizationId) {
+  // Note, issue organization token only if `params.resource` is not present.
+  // If resource is set, will issue normal access token with extra claim "organization_id",
+  // the logic is handled in `getResourceServerInfo` and `extraTokenClaims`, see the init file of oidc-provider.
+  if (organizationId && !params.resource) {
+    /* === RFC 0001 === */
     const audience = buildOrganizationUrn(organizationId);
     /** All available scopes for the user in the organization. */
     const availableScopes = await queries.organizations.relations.rolesUsers

@@ -82,11 +82,17 @@ const description = {
   /** UNTRANSLATED */
   grant_organization_access: 'Grant the organization access:',
   /** UNTRANSLATED */
+  authorize_personal_data_usage: 'Authorize the use of your personal data:',
+  /** UNTRANSLATED */
+  authorize_organization_access: 'Authorize access to the specific organization:',
+  /** UNTRANSLATED */
   user_scopes: 'Personal user data',
   /** UNTRANSLATED */
   organization_scopes: 'Organization access',
   /** UNTRANSLATED */
-  authorize_agreement: `By authorize the access, you agree to the {{name}}'s <link></link>.`,
+  authorize_agreement: `By authorizing the access, you agree to the {{name}}'s <link></link>.`,
+  /** UNTRANSLATED */
+  authorize_agreement_with_redirect: `By authorizing the access, you agree to the {{name}}'s <link></link>, and will be redirected to {{uri}}.`,
   /** UNTRANSLATED */
   not_you: 'Not you?',
   /** UNTRANSLATED */

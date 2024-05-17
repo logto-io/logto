@@ -4,6 +4,7 @@ import {
   type OrganizationWithRoles,
   type UserWithOrganizationRoles,
   type OrganizationWithFeatured,
+  type OrganizationScope,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -66,5 +67,11 @@ export class OrganizationApi extends ApiFactory<
 
   async getUserOrganizations(userId: string): Promise<OrganizationWithRoles[]> {
     return authedAdminApi.get(`users/${userId}/organizations`).json<OrganizationWithRoles[]>();
+  }
+
+  async getUserOrganizationScopes(id: string, userId: string): Promise<OrganizationScope[]> {
+    return authedAdminApi
+      .get(`${this.path}/${id}/users/${userId}/scopes`)
+      .json<OrganizationScope[]>();
   }
 }

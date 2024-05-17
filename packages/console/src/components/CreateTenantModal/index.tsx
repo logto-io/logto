@@ -23,8 +23,8 @@ import * as styles from './index.module.scss';
 import { type CreateTenantData } from './type';
 
 type Props = {
-  isOpen: boolean;
-  onClose: (tenant?: TenantResponse) => void;
+  readonly isOpen: boolean;
+  readonly onClose: (tenant?: TenantResponse) => void;
 };
 
 const availableTags = [TenantTag.Development, TenantTag.Production];

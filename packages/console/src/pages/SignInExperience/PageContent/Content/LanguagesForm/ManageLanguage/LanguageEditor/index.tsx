@@ -15,8 +15,8 @@ import * as styles from './index.module.scss';
 import useLanguageEditorContext, { LanguageEditorContext } from './use-language-editor-context';
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
 };
 
 function LanguageEditorModal({ isOpen, onClose }: Props) {

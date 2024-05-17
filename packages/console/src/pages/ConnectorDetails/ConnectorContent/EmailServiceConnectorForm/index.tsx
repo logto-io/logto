@@ -17,7 +17,7 @@ import { uriValidator } from '@/utils/validator';
 import * as styles from './index.module.scss';
 
 type Props = {
-  extraInfo?: Record<string, unknown>;
+  readonly extraInfo?: Record<string, unknown>;
 };
 
 const extraInfoGuard = z.object({

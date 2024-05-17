@@ -12,12 +12,12 @@ import Previous from './Previous';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  page: number;
-  totalCount?: number;
-  pageSize: number;
-  className?: string;
-  mode?: 'normal' | 'pico';
-  onChange?: (pageIndex: number) => void;
+  readonly page: number;
+  readonly totalCount?: number;
+  readonly pageSize: number;
+  readonly className?: string;
+  readonly mode?: 'normal' | 'pico';
+  readonly onChange?: (pageIndex: number) => void;
 };
 
 function Pagination({ page, totalCount, pageSize, className, mode = 'normal', onChange }: Props) {

@@ -9,9 +9,9 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import { type UserConditions } from '#src/queries/user.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function roleUserRoutes<T extends AuthedRouter>(
+export default function roleUserRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {

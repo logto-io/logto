@@ -3,6 +3,7 @@ import assert from 'node:assert';
 import { decodeAccessToken } from '@logto/js';
 import { type LogtoConfig, Prompt, PersistKey } from '@logto/node';
 import { GrantType, InteractionEvent, demoAppApplicationId } from '@logto/schemas';
+import { formUrlEncodedHeaders } from '@logto/shared';
 import { isKeyInObject, removeUndefinedKeys } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import ky, { HTTPError } from 'ky';
@@ -39,7 +40,7 @@ const grantErrorContaining = (code: string, description: string, status = 400) =
 const accessDeniedError = grantErrorContaining(
   'oidc.access_denied',
   'user is not a member of the organization',
-  400
+  403
 );
 
 const issuer = defaultConfig.endpoint + '/oidc';
@@ -51,9 +52,7 @@ class MockOrganizationClient extends MockClient {
     try {
       const json = await ky
         .post(`${this.config.endpoint}/oidc/token`, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
+          headers: formUrlEncodedHeaders,
           body: new URLSearchParams(
             removeUndefinedKeys({
               grant_type: GrantType.RefreshToken,

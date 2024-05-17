@@ -10,8 +10,8 @@ import Button from '@/ds-components/Button';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
 
 type Props = {
-  isCreationLoading: boolean;
-  onClickCreate: () => void;
+  readonly isCreationLoading: boolean;
+  readonly onClickCreate: () => void;
 };
 
 function Footer({ isCreationLoading, onClickCreate }: Props) {

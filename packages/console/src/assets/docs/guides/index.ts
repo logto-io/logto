@@ -15,6 +15,7 @@ import spaAngular from './spa-angular/index';
 import spaReact from './spa-react/index';
 import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
+import spaWebflow from './spa-webflow/index';
 import thirdPartyOidc from './third-party-oidc/index';
 import { type Guide } from './types';
 import webDotnetCore from './web-dotnet-core/index';
@@ -24,6 +25,7 @@ import webDotnetCoreMvc from './web-dotnet-core-mvc/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
 import webGptPlugin from './web-gpt-plugin/index';
+import webJavaSpringBoot from './web-java-spring-boot/index';
 import webNext from './web-next/index';
 import webNextAppRouter from './web-next-app-router/index';
 import webNextServerActions from './web-next-server-actions/index';
@@ -33,6 +35,7 @@ import webPhp from './web-php/index';
 import webPython from './web-python/index';
 import webRemix from './web-remix/index';
 import webSveltekit from './web-sveltekit/index';
+import webWordpress from './web-wordpress/index';
 
 const guides: Readonly<Guide[]> = Object.freeze([
   {
@@ -106,6 +109,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     metadata: webGo,
   },
   {
+    order: 1.4,
+    id: 'web-java-spring-boot',
+    Logo: lazy(async () => import('./web-java-spring-boot/logo.svg')),
+    Component: lazy(async () => import('./web-java-spring-boot/README.mdx')),
+    metadata: webJavaSpringBoot,
+  },
+  {
     order: 1.5,
     id: 'web-gpt-plugin',
     Logo: lazy(async () => import('./web-gpt-plugin/logo.svg')),
@@ -153,6 +163,20 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-php/logo.svg')),
     Component: lazy(async () => import('./web-php/README.mdx')),
     metadata: webPhp,
+  },
+  {
+    order: 2.1,
+    id: 'spa-webflow',
+    Logo: lazy(async () => import('./spa-webflow/logo.svg')),
+    Component: lazy(async () => import('./spa-webflow/README.mdx')),
+    metadata: spaWebflow,
+  },
+  {
+    order: 2.2,
+    id: 'web-wordpress',
+    Logo: lazy(async () => import('./web-wordpress/logo.svg')),
+    Component: lazy(async () => import('./web-wordpress/README.mdx')),
+    metadata: webWordpress,
   },
   {
     order: 3,

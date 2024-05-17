@@ -17,7 +17,11 @@
       "import": "./lib/index.js"
     },
     "./declaration": "./declaration/index.ts",
-    "./scss/*": "./scss/*.scss"
+    "./scss/*": "./scss/*.scss",
+    "./custom-jwt": {
+      "node": "./lib/custom-jwt/index.js",
+      "types": "./lib/custom-jwt/index.d.ts"
+    }
   },
   "types": "./lib/index.d.ts",
   "files": [
@@ -50,14 +54,15 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "5.0.0",
-    "@silverhand/ts-config": "5.0.0",
-    "@silverhand/ts-config-react": "5.0.0",
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/eslint-config-react": "6.0.2",
+    "@silverhand/ts-config": "6.0.0",
+    "@silverhand/ts-config-react": "6.0.0",
     "@types/color": "^3.0.3",
     "@types/node": "^20.9.5",
     "@types/react": "^18.0.31",
     "@vitest/coverage-v8": "^1.4.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.0",

@@ -25,10 +25,8 @@ const general = {
   customize: 'Personalizar',
   enable: 'Ativar',
   reminder: 'Lembrete',
-  /** UNTRANSLATED */
-  edit: 'Edit',
+  edit: 'Editar',
   delete: 'Eliminar',
-  /** UNTRANSLATED */
   deleted: 'Deleted',
   more_options: 'MAIS OPÇÕES',
   close: 'Fechar',
@@ -58,8 +56,7 @@ const general = {
   demo: 'Demonstração',
   unnamed: 'Sem nome',
   view: 'Ver',
-  /** UNTRANSLATED */
-  open: 'Open',
+  open: 'Abrir',
   hide: 'Esconder',
   unknown_error: 'Erro desconhecido, por favor tente novamente mais tarde.',
   select: 'Selecionar',
@@ -71,8 +68,7 @@ const general = {
   edit_field: 'Editar {{field}}',
   delete_field: 'Eliminar {{field}}',
   coming_soon: 'Em breve',
-  /** UNTRANSLATED */
-  or: 'Or',
+  or: 'Ou',
 };
 
 export default Object.freeze(general);

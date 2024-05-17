@@ -15,11 +15,11 @@ import * as styles from './index.module.scss';
 type ThirdPartyBranding = ConsentInfoResponse['application']['branding'];
 
 type Props = {
-  children: ReactNode;
-  className?: string;
-  title: TFuncKey;
-  titleInterpolation?: Record<string, unknown>;
-  thirdPartyBranding?: ThirdPartyBranding;
+  readonly children: ReactNode;
+  readonly className?: string;
+  readonly title: TFuncKey;
+  readonly titleInterpolation?: Record<string, unknown>;
+  readonly thirdPartyBranding?: ThirdPartyBranding;
 };
 
 const LandingPageLayout = ({

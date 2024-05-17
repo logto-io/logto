@@ -13,8 +13,8 @@ import UserAvatar from '../UserAvatar';
 import * as styles from './index.module.scss';
 
 type Props = {
-  userId: string;
-  isLink?: boolean;
+  readonly userId: string;
+  readonly isLink?: boolean;
 };
 
 function UserName({ userId, isLink = false }: Props) {

@@ -5,9 +5,9 @@ import { type MfaFlowState } from '@/types/guard';
 import TextLink from '../TextLink';
 
 type Props = {
-  flow: UserMfaFlow;
-  flowState: MfaFlowState;
-  className?: string;
+  readonly flow: UserMfaFlow;
+  readonly flowState: MfaFlowState;
+  readonly className?: string;
 };
 
 const SwitchMfaFactorsLink = ({ flow, flowState, className }: Props) => {

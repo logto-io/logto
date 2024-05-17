@@ -8,7 +8,7 @@ import { getUserTitle } from '@/utils/user';
 import * as styles from './index.module.scss';
 
 type UserItemProps = {
-  entity: User;
+  readonly entity: User;
 };
 
 export function UserItem({ entity }: UserItemProps) {
@@ -22,7 +22,7 @@ export function UserItem({ entity }: UserItemProps) {
 }
 
 type ApplicationItemProps = {
-  entity: Application;
+  readonly entity: Application;
 };
 
 export function ApplicationItem({ entity }: ApplicationItemProps) {

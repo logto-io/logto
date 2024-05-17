@@ -8,11 +8,11 @@ import { AppDataContext } from '@/contexts/AppDataProvider';
 import useCustomDomain from '@/hooks/use-custom-domain';
 
 type Props = {
-  className?: string;
-  guideId: string;
-  apiResource?: Resource;
-  isCompact?: boolean;
-  onClose: () => void;
+  readonly className?: string;
+  readonly guideId: string;
+  readonly apiResource?: Resource;
+  readonly isCompact?: boolean;
+  readonly onClose: () => void;
 };
 
 function ApiGuide({ className, guideId, apiResource, isCompact, onClose }: Props) {

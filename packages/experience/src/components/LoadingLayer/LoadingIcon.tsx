@@ -5,7 +5,7 @@ import LoadingSvg from '@/assets/icons/loading-icon.svg';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
 };
 
 const LoadingIcon = ({ className }: Props) => (

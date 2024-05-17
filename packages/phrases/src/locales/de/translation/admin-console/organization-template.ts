@@ -1,7 +1,7 @@
 const organization_template = {
   title: 'Organisationsvorlage',
   subtitle:
-    'In Multi-Tenant-SaaS-Anwendungen ist es üblich, dass mehrere Organisationen identische Zugriffskontrollrichtlinien teilen, einschließlich Berechtigungen und Rollen. In Logto wird dieses Konzept als "Organisationsvorlage" bezeichnet. Ihre Verwendung vereinfacht den Prozess des Aufbaus und Entwurfs Ihres Autorisierungsmodells.',
+    'In Multi-Tenant-SaaS-Anwendungen definiert eine Organisationsvorlage gemeinsame Zugriffskontrollrichtlinien (Berechtigungen und Rollen) für mehrere Organisationen.',
   roles: {
     tab_name: 'Org Rollen',
     search_placeholder: 'Nach Rollennamen suchen',
@@ -23,7 +23,7 @@ const organization_template = {
     tab_name: 'Org Berechtigungen',
     search_placeholder: 'Nach Berechtigungsnamen suchen',
     create_org_permission: 'Org Berechtigung erstellen',
-    permission_column: 'Berechtigung',
+    permission_column: 'Organisationsberechtigung',
     description_column: 'Beschreibung',
     placeholder_title: 'Organisationsberechtigung',
     placeholder_description:

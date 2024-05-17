@@ -4,13 +4,13 @@ import SetPasswordLite from './Lite';
 import SetPasswordStandard from './SetPassword';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
-  autoFocus?: boolean;
-  onSubmit: (password: string) => void;
-  errorMessage?: string;
-  clearErrorMessage?: () => void;
-  maxLength?: number;
+  readonly autoFocus?: boolean;
+  readonly onSubmit: (password: string) => void;
+  readonly errorMessage?: string;
+  readonly clearErrorMessage?: () => void;
+  readonly maxLength?: number;
 };
 
 const SetPassword = (props: Props) => {

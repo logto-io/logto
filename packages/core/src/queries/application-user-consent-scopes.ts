@@ -2,6 +2,7 @@ import { type UserScope } from '@logto/core-kit';
 import {
   ApplicationUserConsentOrganizationScopes,
   ApplicationUserConsentResourceScopes,
+  ApplicationUserConsentOrganizationResourceScopes,
   ApplicationUserConsentUserScopes,
   Applications,
   OrganizationScopes,
@@ -29,6 +30,15 @@ export class ApplicationUserConsentResourceScopeQueries extends TwoRelationsQuer
 > {
   constructor(pool: CommonQueryMethods) {
     super(pool, ApplicationUserConsentResourceScopes.table, Applications, Scopes);
+  }
+}
+
+export class ApplicationUserConsentOrganizationResourceScopeQueries extends TwoRelationsQueries<
+  typeof Applications,
+  typeof Scopes
+> {
+  constructor(pool: CommonQueryMethods) {
+    super(pool, ApplicationUserConsentOrganizationResourceScopes.table, Applications, Scopes);
   }
 }
 

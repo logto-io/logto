@@ -15,9 +15,9 @@ type FormData = {
 };
 
 type Props = {
-  className?: string;
-  isReadonly?: boolean;
-  onSubmitCustomDomain: (data: FormData) => Promise<void>;
+  readonly className?: string;
+  readonly isReadonly?: boolean;
+  readonly onSubmitCustomDomain: (data: FormData) => Promise<void>;
 };
 
 function AddDomainForm({ className, isReadonly, onSubmitCustomDomain }: Props) {

@@ -3,11 +3,10 @@ import type { MiddlewareType } from 'koa';
 import Koa from 'koa';
 import compose from 'koa-compose';
 import koaCompress from 'koa-compress';
-import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 import type Provider from 'oidc-provider';
 
-import { type RedisCache } from '#src/caches/index.js';
+import { type CacheStore } from '#src/caches/types.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
 import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
@@ -34,8 +33,18 @@ import Queries from './Queries.js';
 import type TenantContext from './TenantContext.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
+/** Data for creating a tenant instance. */
+type CreateTenant = {
+  /** The unique identifier of the tenant. */
+  id: string;
+  /** The cache store for the tenant. */
+  redisCache: CacheStore;
+  /** The custom domain of the tenant, if applicable. */
+  customDomain?: string;
+};
+
 export default class Tenant implements TenantContext {
-  static async create(id: string, redisCache: RedisCache, customDomain?: string): Promise<Tenant> {
+  static async create({ id, redisCache, customDomain }: CreateTenant): Promise<Tenant> {
     // Treat the default database URL as the management URL
     const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
     // Custom endpoint is used for building OIDC issuer URL when the request is a custom domain
@@ -49,7 +58,7 @@ export default class Tenant implements TenantContext {
 
   private readonly app: Koa;
 
-  #createdAt = Date.now();
+  readonly #createdAt = Date.now();
   #requestCount = 0;
   #onRequestEmpty?: () => Promise<void>;
 
@@ -62,7 +71,13 @@ export default class Tenant implements TenantContext {
     public readonly logtoConfigs = createLogtoConfigLibrary(queries),
     public readonly cloudConnection = createCloudConnectionLibrary(logtoConfigs),
     public readonly connectors = createConnectorLibrary(queries, cloudConnection),
-    public readonly libraries = new Libraries(id, queries, connectors, cloudConnection),
+    public readonly libraries = new Libraries(
+      id,
+      queries,
+      connectors,
+      cloudConnection,
+      logtoConfigs
+    ),
     public readonly sentinel = new BasicSentinel(envSet.pool)
   ) {
     const isAdminTenant = id === adminTenantId;
@@ -76,7 +91,6 @@ export default class Tenant implements TenantContext {
     // Init app
     const app = new Koa();
 
-    app.use(koaLogger());
     app.use(koaErrorHandler());
     app.use(koaOidcErrorHandler());
     app.use(koaSlonikErrorHandler());

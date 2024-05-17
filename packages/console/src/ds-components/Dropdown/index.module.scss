@@ -28,5 +28,5 @@
   background: transparent;
   position: fixed;
   inset: 0;
-  z-index: 102;
+  @include _.z-index(dropdown);
 }

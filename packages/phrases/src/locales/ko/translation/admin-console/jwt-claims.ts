@@ -1,98 +1,60 @@
 const jwt_claims = {
-  /** UNTRANSLATED */
-  title: 'Custom JWT',
-  /** UNTRANSLATED */
+  title: '사용자 정의 JWT',
   description:
-    'Set up custom JWT claims to include in the access token. These claims can be used to pass additional information to your application.',
+    '액세스 토큰에 포함할 사용자 정의 JWT 클레임을 설정하세요. 이러한 클레임은 추가 정보를 응용 프로그램에 전달하는 데 사용될 수 있습니다.',
   user_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For user',
-    /** UNTRANSLATED */
-    card_field: 'User access token',
-    /** UNTRANSLATED */
-    card_description: 'Add user-specific data during access token issuance.',
-    /** UNTRANSLATED */
-    for: 'for user',
+    card_title: '사용자용',
+    card_field: '사용자 액세스 토큰',
+    card_description: '액세스 토큰 발급 시 사용자별 데이터 추가.',
+    for: '사용자용',
   },
   machine_to_machine_jwt: {
-    /** UNTRANSLATED */
-    card_title: 'For M2M',
-    /** UNTRANSLATED */
-    card_field: 'Machine-to-machine token',
-    /** UNTRANSLATED */
-    card_description: 'Add extra data during machine-to-machine token issuance.',
-    /** UNTRANSLATED */
-    for: 'for M2M',
+    card_title: 'M2M용',
+    card_field: '기기 간 토큰',
+    card_description: '기기 간 토큰 발급 시 추가 데이터 추가.',
+    for: 'M2M용',
   },
-  /** UNTRANSLATED */
-  code_editor_title: 'Customize the {{token}} claims',
-  /** UNTRANSLATED */
-  custom_jwt_create_button: 'Add custom claims',
-  /** UNTRANSLATED */
-  custom_jwt_item: 'Custom claims {{for}}',
-  /** UNTRANSLATED */
-  delete_modal_title: 'Delete custom claims',
-  /** UNTRANSLATED */
-  delete_modal_content: 'Are you sure you want to delete the custom claims?',
-  /** UNTRANSLATED */
-  clear: 'Clear',
-  /** UNTRANSLATED */
-  cleared: 'Cleared',
-  /** UNTRANSLATED */
-  restore: 'Restore defaults',
-  /** UNTRANSLATED */
-  restored: 'Restored',
-  /** UNTRANSLATED */
-  data_source_tab: 'Data source',
-  /** UNTRANSLATED */
-  test_tab: 'Test context',
-  /** UNTRANSLATED */
-  jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
+  code_editor_title: '{{$token}} 클레임을 사용자화',
+  custom_jwt_create_button: '사용자 정의 클레임 추가',
+  custom_jwt_item: '사용자 정의 클레임 {{$for}}',
+  delete_modal_title: '사용자 정의 클레임 삭제',
+  delete_modal_content: '사용자 정의 클레임을 삭제하시겠습니까?',
+  clear: '지우기',
+  cleared: '지움',
+  restore: '기본값으로 복원',
+  restored: '복원됨',
+  data_source_tab: '데이터 소스',
+  test_tab: '테스트 컨텍스트',
+  jwt_claims_description: '기본 클레임은 JWT에 자동으로 추가되며 재정의할 수 없습니다.',
   user_data: {
-    /** UNTRANSLATED */
-    title: 'User data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `data.user` input parameter to provide vital user info.',
+    title: '사용자 데이터',
+    subtitle: '`data.user` 입력 매개변수를 사용하여 중요한 사용자 정보 제공.',
   },
   token_data: {
-    /** UNTRANSLATED */
-    title: 'Token data',
-    /** UNTRANSLATED */
-    subtitle: 'Use `token` input parameter for current access token payload. ',
+    title: '토큰 데이터',
+    subtitle: '현재 액세스 토큰 페이로드에 대한 `token` 입력 매개변수 사용.',
   },
   fetch_external_data: {
-    /** UNTRANSLATED */
-    title: 'Fetch external data',
-    /** UNTRANSLATED */
-    subtitle: 'Incorporate data from your external APIs directly into claims.',
-    /** UNTRANSLATED */
+    title: '외부 데이터 가져오기',
+    subtitle: '외부 API에서 데이터 직접 클레임에 통합.',
     description:
-      'Use the `fetch` function to call your external APIs and include the data in your custom claims. Example: ',
+      '`fetch` 함수를 사용하여 외부 API를 호출하고 해당 데이터를 사용자 정의 클레임에 포함시킵니다. 예시: ',
   },
   environment_variables: {
-    /** UNTRANSLATED */
-    title: 'Set environment variables',
-    /** UNTRANSLATED */
-    subtitle: 'Use environment variables to store sensitive information.',
-    /** UNTRANSLATED */
-    input_field_title: 'Add environment variables',
-    /** UNTRANSLATED */
-    sample_code: 'Accessing environment variables in your custom JWT claims handler. Example: ',
+    title: '환경 변수 설정',
+    subtitle: '중요 정보를 저장하기 위해 환경 변수를 사용하세요.',
+    input_field_title: '환경 변수 추가',
+    sample_code: '사용자 정의 JWT 클레임 핸들러에서 환경 변수에 접근하는 방법. 예시: ',
   },
-  /** UNTRANSLATED */
   jwt_claims_hint:
-    'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
+    '사용자 정의 클레임을 50KB 미만으로 제한하세요. 기본 JWT 클레임은 토큰에 자동으로 포함되며 재정의할 수 없습니다.',
   tester: {
-    /** UNTRANSLATED */
-    subtitle: 'Adjust mock token and user data for testing.',
-    /** UNTRANSLATED */
-    run_button: 'Run test',
-    /** UNTRANSLATED */
-    result_title: 'Test result',
+    subtitle: '테스트를 위해 모의 토큰 및 사용자 데이터 조정.',
+    run_button: '테스트 실행',
+    result_title: '테스트 결과',
   },
   form_error: {
-    /** UNTRANSLATED */
-    invalid_json: 'Invalid JSON format',
+    invalid_json: '잘못된 JSON 형식',
   },
 };
 

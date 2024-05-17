@@ -9,7 +9,11 @@ import {
   type OrganizationWithRoles,
   type UserWithOrganizationRoles,
   type FeaturedUser,
-  type OrganizationScopeEntity,
+  type OrganizationScope,
+  type ResourceScopeEntity,
+  Scopes,
+  OrganizationRoleResourceScopeRelations,
+  Resources,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -18,7 +22,7 @@ import RelationQueries, {
   type GetEntitiesOptions,
   TwoRelationsQueries,
 } from '#src/utils/RelationQueries.js';
-import { convertToIdentifiers } from '#src/utils/sql.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 import { type userSearchKeys } from '../user.js';
 
@@ -178,14 +182,14 @@ export class RoleUserRelationQueries extends RelationQueries<
   async getUserScopes(
     organizationId: string,
     userId: string
-  ): Promise<readonly OrganizationScopeEntity[]> {
+  ): Promise<readonly OrganizationScope[]> {
     const { fields } = convertToIdentifiers(OrganizationRoleUserRelations, true);
     const roleScopeRelations = convertToIdentifiers(OrganizationRoleScopeRelations, true);
     const scopes = convertToIdentifiers(OrganizationScopes, true);
 
-    return this.pool.any<OrganizationScopeEntity>(sql`
+    return this.pool.any<OrganizationScope>(sql`
       select distinct on (${scopes.fields.id})
-        ${scopes.fields.id}, ${scopes.fields.name}
+        ${sql.join(Object.values(scopes.fields), sql`, `)}
       from ${this.table}
       join ${roleScopeRelations.table}
         on ${roleScopeRelations.fields.organizationRoleId} = ${fields.organizationRoleId}
@@ -193,6 +197,36 @@ export class RoleUserRelationQueries extends RelationQueries<
         on ${scopes.fields.id} = ${roleScopeRelations.fields.organizationScopeId}
       where ${fields.organizationId} = ${organizationId}
       and ${fields.userId} = ${userId}
+    `);
+  }
+
+  /**
+   * Get the available resource scopes of a user in all organizations.
+   * If `organizationId` is provided, it will only search in that organization.
+   */
+  async getUserResourceScopes(
+    userId: string,
+    resourceIndicator: string,
+    organizationId?: string
+  ): Promise<readonly ResourceScopeEntity[]> {
+    const { fields } = convertToIdentifiers(OrganizationRoleUserRelations, true);
+    const roleScopeRelations = convertToIdentifiers(OrganizationRoleResourceScopeRelations, true);
+    const scopes = convertToIdentifiers(Scopes, true);
+    const resources = convertToIdentifiers(Resources, true);
+
+    return this.pool.any<ResourceScopeEntity>(sql`
+      select distinct on (${scopes.fields.id})
+        ${scopes.fields.id}, ${scopes.fields.name}
+      from ${this.table}
+      join ${roleScopeRelations.table}
+        on ${roleScopeRelations.fields.organizationRoleId} = ${fields.organizationRoleId}
+      join ${scopes.table}
+        on ${scopes.fields.id} = ${roleScopeRelations.fields.scopeId}
+      join ${resources.table}
+        on ${resources.fields.id} = ${scopes.fields.resourceId}
+      where ${fields.userId} = ${userId}
+      and ${resources.fields.indicator} = ${resourceIndicator}
+      ${conditionalSql(organizationId, (value) => sql`and ${fields.organizationId} = ${value}`)}
     `);
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "@logto/shared",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -38,12 +38,11 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@logto/connector-kit": "workspace:^3.0.0",
-    "@silverhand/eslint-config": "5.0.0",
-    "@silverhand/ts-config": "5.0.0",
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.9.5",
     "@vitest/coverage-v8": "^1.4.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",

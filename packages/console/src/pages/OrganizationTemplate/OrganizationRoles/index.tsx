@@ -11,6 +11,7 @@ import RolesEmpty from '@/assets/images/roles-empty.svg';
 import Breakable from '@/components/Breakable';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import OrganizationRolePermissionsAssignmentModal from '@/components/OrganizationRolePermissionsAssignmentModal';
 import ThemedIcon from '@/components/ThemedIcon';
 import { defaultPageSize, organizationRoleLink } from '@/consts';
 import Button from '@/ds-components/Button';
@@ -51,6 +52,7 @@ function OrganizationRoles() {
   const [orgRoles, totalCount] = data ?? [];
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [createdRole, setCreatedRole] = useState<OrganizationRoleWithScopes>();
 
   return (
     <>
@@ -70,12 +72,14 @@ function OrganizationRoles() {
             title: <DynamicT forKey="organization_template.roles.permissions_column" />,
             dataIndex: 'scopes',
             colSpan: 12,
-            render: ({ scopes }) => {
-              return scopes.length === 0 ? (
+            render: ({ scopes, resourceScopes }) => {
+              const roleScopes = [...scopes, ...resourceScopes];
+
+              return roleScopes.length === 0 ? (
                 '-'
               ) : (
                 <div className={styles.permissions}>
-                  {scopes.map(({ id, name }) => (
+                  {roleScopes.map(({ id, name }) => (
                     <Tag key={id} variant="cell">
                       <Breakable>{name}</Breakable>
                     </Tag>
@@ -150,14 +154,24 @@ function OrganizationRoles() {
         errorMessage={error?.body?.message ?? error?.message}
         onRetry={async () => mutate(undefined, true)}
       />
-      {isCreateModalOpen && (
-        <CreateOrganizationRoleModal
-          onClose={(createdRole) => {
-            setIsCreateModalOpen(false);
-            if (createdRole) {
-              void mutate();
-              navigate(createdRole.id);
-            }
+      <CreateOrganizationRoleModal
+        isOpen={isCreateModalOpen}
+        onClose={(createdRole) => {
+          setIsCreateModalOpen(false);
+          if (createdRole) {
+            void mutate();
+            setCreatedRole({ ...createdRole, scopes: [], resourceScopes: [] });
+          }
+        }}
+      />
+      {createdRole && (
+        <OrganizationRolePermissionsAssignmentModal
+          isOpen
+          organizationRoleId={createdRole.id}
+          onClose={() => {
+            setCreatedRole(undefined);
+            navigate(createdRole.id);
+            void mutate();
           }}
         />
       )}

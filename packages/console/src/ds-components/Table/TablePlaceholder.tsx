@@ -12,12 +12,12 @@ import TextLink from '../TextLink';
 import * as styles from './TablePlaceholder.module.scss';
 
 type Props = {
-  image: ReactNode;
-  imageDark: ReactNode;
-  title: AdminConsoleKey;
-  description: AdminConsoleKey;
-  learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'>;
-  action: ReactNode;
+  readonly image: ReactNode;
+  readonly imageDark: ReactNode;
+  readonly title: AdminConsoleKey;
+  readonly description: AdminConsoleKey;
+  readonly learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'>;
+  readonly action: ReactNode;
 };
 
 function TablePlaceholder({ image, imageDark, title, description, learnMoreLink, action }: Props) {

@@ -12,7 +12,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   fullGuide: {
     title: 'Full vanilla JS SDK tutorial',
-    url: 'https://docs.logto.io/sdk/vanilla-js',
+    url: 'https://docs.logto.io/quick-starts/vanilla-js',
   },
 });
 

@@ -6,8 +6,8 @@ import { cloneElement, useCallback, useRef, useState } from 'react';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: JSX.Element; // Limit to one element
-  isVisible: boolean;
+  readonly children: JSX.Element; // Limit to one element
+  readonly isVisible: boolean;
 };
 
 const AnimatedPrefix = ({ children, isVisible }: Props) => {
@@ -34,7 +34,7 @@ const AnimatedPrefix = ({ children, isVisible }: Props) => {
       current &&
       onResize(
         () => {
-          api.start({ width: getTargetWidth() });
+          void api.start({ width: getTargetWidth() });
         },
         { container: current }
       );

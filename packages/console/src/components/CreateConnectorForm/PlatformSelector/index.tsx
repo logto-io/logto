@@ -9,9 +9,9 @@ import type { ConnectorGroup } from '@/types/connector';
 import * as styles from './index.module.scss';
 
 type Props = {
-  connectorGroup: ConnectorGroup<ConnectorFactoryResponse & { added: boolean }>;
-  connectorId?: string;
-  onConnectorIdChange: (value: string) => void;
+  readonly connectorGroup: ConnectorGroup<ConnectorFactoryResponse & { added: boolean }>;
+  readonly connectorId?: string;
+  readonly onConnectorIdChange: (value: string) => void;
 };
 
 function PlatformSelector({ connectorGroup, connectorId, onConnectorIdChange }: Props) {

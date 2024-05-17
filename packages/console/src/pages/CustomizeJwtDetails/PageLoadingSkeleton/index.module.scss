@@ -11,6 +11,11 @@
 
     &:first-child {
       margin-right: _.unit(3);
+      flex: 9;
+    }
+
+    &:last-child {
+      flex: 7;
     }
   }
 }

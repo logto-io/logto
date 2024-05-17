@@ -1,5 +1,5 @@
 import { pick } from '@silverhand/essentials';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
   accessTokenJwtCustomizerGuard,
@@ -7,6 +7,8 @@ import {
 } from './jwt-customizer.js';
 
 const allFields = ['script', 'environmentVariables', 'contextSample', 'tokenSample'] as const;
+const requiredFields = ['script'] as const;
+const optionalFields = ['environmentVariables', 'contextSample', 'tokenSample'] as const;
 
 const testClientCredentialsTokenPayload = {
   script: '',
@@ -39,14 +41,35 @@ const testAccessTokenPayload = {
 };
 
 describe('test token sample guard', () => {
-  it.each(allFields)('should pass guard with any of the field not specified', (droppedField) => {
+  it.each(optionalFields)(
+    'should pass guard with any of the optionalFields not specified',
+    (droppedField) => {
+      const resultAccessToken = accessTokenJwtCustomizerGuard.safeParse(
+        pick(testAccessTokenPayload, ...allFields.filter((field) => field !== droppedField))
+      );
+      if (!resultAccessToken.success) {
+        console.log('resultAccessToken.error', resultAccessToken.error);
+      }
+      expect(resultAccessToken.success).toBe(true);
+
+      const resultClientCredentials = clientCredentialsJwtCustomizerGuard.safeParse(
+        pick(
+          testClientCredentialsTokenPayload,
+          ...allFields.filter((field) => field !== droppedField)
+        )
+      );
+      if (!resultClientCredentials.success) {
+        console.log('resultClientCredentials.error', resultClientCredentials.error);
+      }
+      expect(resultClientCredentials.success).toBe(true);
+    }
+  );
+
+  it.each(requiredFields)('should throw when required field is not specified', (droppedField) => {
     const resultAccessToken = accessTokenJwtCustomizerGuard.safeParse(
       pick(testAccessTokenPayload, ...allFields.filter((field) => field !== droppedField))
     );
-    if (!resultAccessToken.success) {
-      console.log('resultAccessToken.error', resultAccessToken.error);
-    }
-    expect(resultAccessToken.success).toBe(true);
+    expect(resultAccessToken.success).toBe(false);
 
     const resultClientCredentials = clientCredentialsJwtCustomizerGuard.safeParse(
       pick(
@@ -54,10 +77,7 @@ describe('test token sample guard', () => {
         ...allFields.filter((field) => field !== droppedField)
       )
     );
-    if (!resultClientCredentials.success) {
-      console.log('resultClientCredentials.error', resultClientCredentials.error);
-    }
-    expect(resultClientCredentials.success).toBe(true);
+    expect(resultClientCredentials.success).toBe(false);
   });
 
   it.each(allFields)(

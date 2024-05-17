@@ -7,9 +7,9 @@ import { object, string, nativeEnum } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import type { AuthedRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-export default function applicationUserConsentScopeRoutes<T extends AuthedRouter>(
+export default function applicationUserConsentScopeRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {
@@ -24,6 +24,7 @@ export default function applicationUserConsentScopeRoutes<T extends AuthedRouter
           assignApplicationUserConsentScopes,
           getApplicationUserConsentOrganizationScopes,
           getApplicationUserConsentResourceScopes,
+          getApplicationUserConsentOrganizationResourceScopes,
           getApplicationUserConsentScopes,
           deleteApplicationUserConsentScopesByTypeAndScopeId,
         },
@@ -40,6 +41,7 @@ export default function applicationUserConsentScopeRoutes<T extends AuthedRouter
       body: object({
         organizationScopes: string().array().optional(),
         resourceScopes: string().array().optional(),
+        organizationResourceScopes: string().array().optional(),
         userScopes: nativeEnum(UserScope).array().optional(),
       }),
       status: [201, 404, 422],
@@ -77,15 +79,18 @@ export default function applicationUserConsentScopeRoutes<T extends AuthedRouter
       await findApplicationById(applicationId);
 
       // Note: The following queries will return full data schema, we rely on the response guard to filter out the fields we don't need.
-      const [organizationScopes, resourceScopes, userScopes] = await Promise.all([
-        getApplicationUserConsentOrganizationScopes(applicationId),
-        getApplicationUserConsentResourceScopes(applicationId),
-        getApplicationUserConsentScopes(applicationId),
-      ]);
+      const [organizationScopes, resourceScopes, organizationResourceScopes, userScopes] =
+        await Promise.all([
+          getApplicationUserConsentOrganizationScopes(applicationId),
+          getApplicationUserConsentResourceScopes(applicationId),
+          getApplicationUserConsentOrganizationResourceScopes(applicationId),
+          getApplicationUserConsentScopes(applicationId),
+        ]);
 
       ctx.body = {
         organizationScopes,
         resourceScopes,
+        organizationResourceScopes,
         userScopes,
       };
 

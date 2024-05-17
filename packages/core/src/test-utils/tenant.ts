@@ -7,8 +7,7 @@ import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js'
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
-import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
-import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import { createLogtoConfigLibrary, type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -78,13 +77,20 @@ export class MockTenant implements TenantContext {
     logtoConfigsOverride?: Partial<LogtoConfigLibrary>
   ) {
     this.queries = new MockQueries(queriesOverride);
+
     this.logtoConfigs = { ...createLogtoConfigLibrary(this.queries), ...logtoConfigsOverride };
     this.cloudConnection = createCloudConnectionLibrary(this.logtoConfigs);
     this.connectors = {
       ...createConnectorLibrary(this.queries, this.cloudConnection),
       ...connectorsOverride,
     };
-    this.libraries = new Libraries(this.id, this.queries, this.connectors, this.cloudConnection);
+    this.libraries = new Libraries(
+      this.id,
+      this.queries,
+      this.connectors,
+      this.cloudConnection,
+      this.logtoConfigs
+    );
     this.setPartial('libraries', librariesOverride);
     this.sentinel = new MockSentinel();
   }

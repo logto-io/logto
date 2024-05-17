@@ -6,7 +6,7 @@ import useSocialSignInListener from './use-social-sign-in-listener';
  * Social sign in callback page
  */
 type Props = {
-  connectorId: string;
+  readonly connectorId: string;
 };
 
 const SocialSignIn = ({ connectorId }: Props) => {

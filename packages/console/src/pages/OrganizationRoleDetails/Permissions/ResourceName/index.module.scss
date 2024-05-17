@@ -1,0 +1,14 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  margin-left: _.unit(2);
+  color: var(--color-text-secondary);
+
+  .icon {
+    width: 16px;
+    height: 16px;
+    margin-right: _.unit(1);
+    // Align icon with text
+    vertical-align: text-bottom;
+  }
+}

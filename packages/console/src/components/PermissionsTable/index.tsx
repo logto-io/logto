@@ -21,6 +21,7 @@ import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import ActionsButton from '../ActionsButton';
+import EditScopeModal, { type EditScopeData } from '../EditScopeModal';
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 
 import EditPermissionModal from './EditPermissionModal';
@@ -34,39 +35,39 @@ type SearchProps = {
 
 type Props = {
   /** List of permissions to be displayed in the table. */
-  scopes?: ScopeResponse[];
+  readonly scopes?: ScopeResponse[];
   /** Whether the table is loading data or not. */
-  isLoading: boolean;
+  readonly isLoading: boolean;
   /** Error message to be displayed when the table fails to load data. */
-  errorMessage?: string;
+  readonly errorMessage?: string;
   /** The translation key of the create button. */
-  createButtonTitle: AdminConsoleKey;
+  readonly createButtonTitle: AdminConsoleKey;
   /** Whether the table is read-only or not.
    *  If true, the table will not display the create button and action buttons (editing & deletion).
    */
-  isReadOnly?: boolean;
+  readonly isReadOnly?: boolean;
   /** Whether the API column is visible or not.
    * The API column displays the API resource that the permission belongs to.
    */
-  isApiColumnVisible?: boolean;
+  readonly isApiColumnVisible?: boolean;
   /** Whether the create guide is visible or not.
    * If true, the table will display a placeholder guiding the user to create a new permission if no permissions are found.
    */
-  isCreateGuideVisible?: boolean;
+  readonly isCreateGuideVisible?: boolean;
   /** Pagination related props, used to navigate through the permissions in the table. */
-  pagination?: PaginationProps;
+  readonly pagination?: PaginationProps;
   /** Search related props, used to filter the permissions in the table. */
-  search: SearchProps;
+  readonly search: SearchProps;
   /** Function that will be called when the create button is clicked. */
-  createHandler: () => void;
+  readonly createHandler: () => void;
   /** Callback function that will be called when a permission is going to be deleted. */
-  deleteHandler: (scope: ScopeResponse) => void;
+  readonly deleteHandler: (scope: ScopeResponse) => void;
   /** Function that will be called when the retry button is click. */
-  retryHandler: () => void;
+  readonly retryHandler: () => void;
   /** Callback function that will be called when the permission is updated (edited). */
-  onPermissionUpdated: () => void;
+  readonly onPermissionUpdated: () => void;
   /** Specify deletion related text */
-  deletionText: {
+  readonly deletionText: {
     /** Delete button title in the action list */
     actionButton: AdminConsoleKey;
     /** Confirmation content in the deletion confirmation modal */
@@ -98,10 +99,10 @@ function PermissionsTable({
 
   const api = useApi();
 
-  const handleEdit = async (scope: ScopeResponse) => {
+  const handleEdit = async (scope: ScopeResponse, editedData: EditScopeData) => {
     const patchApiEndpoint = `api/resources/${scope.resourceId}/scopes/${scope.id}`;
-    await api.patch(patchApiEndpoint, { json: scope });
-    toast.success(t('permissions.updated'));
+    await api.patch(patchApiEndpoint, { json: editedData });
+    toast.success(t('general.saved'));
     onPermissionUpdated();
   };
 
@@ -236,12 +237,21 @@ function PermissionsTable({
         onRetry={retryHandler}
       />
       {editingScope && (
-        <EditPermissionModal
+        <EditScopeModal
+          scopeName={editingScope.name}
           data={editingScope}
+          text={{
+            title: 'permissions.edit_title',
+            nameField: 'api_resource_details.permission.name',
+            descriptionField: 'api_resource_details.permission.description',
+            descriptionPlaceholder: 'api_resource_details.permission.description_placeholder',
+          }}
+          onSubmit={async (editedData) => {
+            await handleEdit(editingScope, editedData);
+          }}
           onClose={() => {
             setEditingScope(undefined);
           }}
-          onSubmit={handleEdit}
         />
       )}
     </>

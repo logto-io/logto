@@ -1,8 +1,17 @@
 @use '@/scss/underscore' as _;
 
 .container {
+  height: 100%;
+
   > *:not(:first-child) {
     margin-top: _.unit(4);
+  }
+
+  .paywallCard {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

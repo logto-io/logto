@@ -10,6 +10,8 @@ create table organizations (
   name varchar(128) not null,
   /** A brief description of the organization. */
   description varchar(256),
+  /** Additional data associated with the organization. */
+  custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   /** When the organization was created. */
   created_at timestamptz not null default(now()),
   primary key (id)

@@ -23,6 +23,8 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        with:
+          pnpm-version: 9
 
       - name: Prepack
         run: pnpm prepack
@@ -31,9 +33,9 @@ jobs:
         run: pnpm -r --parallel lint:report && node .scripts/merge-eslint-reports.js
 
       - name: Annotate Code Linting Results
-        uses: ataylorme/eslint-annotate-action@2.2.0
+        uses: ataylorme/eslint-annotate-action@3.0.0
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload ESLint report
         uses: actions/upload-artifact@v4

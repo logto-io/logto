@@ -16,12 +16,12 @@ import ProtectedAppModal from '../ProtectedAppModal';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
+  readonly className?: string;
   /** When used in application creation modal, card has a "PROTECTED APP" label on top of it */
-  isInAppCreationPage?: boolean;
-  hasBorder?: boolean;
-  hasCreateButton?: boolean;
-  onCreateSuccess?: (app: Application) => void;
+  readonly isInAppCreationPage?: boolean;
+  readonly hasBorder?: boolean;
+  readonly hasCreateButton?: boolean;
+  readonly onCreateSuccess?: (app: Application) => void;
 };
 
 function ProtectedAppCard({

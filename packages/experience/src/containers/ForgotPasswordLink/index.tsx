@@ -4,9 +4,9 @@ import TextLink from '@/components/TextLink';
 import { UserFlow } from '@/types';
 
 type Props = {
-  identifier?: SignInIdentifier;
-  value?: string;
-  className?: string;
+  readonly identifier?: SignInIdentifier;
+  readonly value?: string;
+  readonly className?: string;
 };
 
 const ForgotPasswordLink = ({ className, ...identifierData }: Props) => (

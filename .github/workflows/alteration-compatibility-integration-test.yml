@@ -46,7 +46,7 @@ jobs:
 
   package:
     needs: check-alteration-changes
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     if: ${{needs.check-alteration-changes.outputs.has-alteration-changes == 'true'}}
     env:
       INTEGRATION_TEST: true
@@ -55,6 +55,7 @@ jobs:
         with:
           artifact-name: alteration-integration-test-${{ github.sha }}
           branch: ${{github.base_ref}}
+          pnpm-version: 9
 
   run-logto:
     strategy:
@@ -68,9 +69,10 @@ jobs:
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
-      - uses: logto-io/actions-run-logto-integration-tests@v2
+      - uses: logto-io/actions-run-logto-integration-tests@v3
         with:
           branch: ${{github.base_ref}}
-          logto_artifact: alteration-integration-test-${{ github.sha }}
-          test_target: ${{ matrix.target }}
-          db_alteration_target: ${{github.head_ref}}
+          logto-artifact: alteration-integration-test-${{ github.sha }}
+          test-target: ${{ matrix.target }}
+          db-alteration-target: ${{github.head_ref}}
+          pnpm-version: 9

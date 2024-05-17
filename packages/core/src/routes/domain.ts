@@ -7,9 +7,9 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-export default function domainRoutes<T extends AuthedRouter>(
+export default function domainRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {

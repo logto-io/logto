@@ -17,7 +17,7 @@ import { jsonValidator } from '@/utils/validator';
 import * as styles from './index.module.scss';
 
 type Props = {
-  formItems: ConnectorConfigFormItem[];
+  readonly formItems: ConnectorConfigFormItem[];
 };
 
 function ConfigFormFields({ formItems }: Props) {

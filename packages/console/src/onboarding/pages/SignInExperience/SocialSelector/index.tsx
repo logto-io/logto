@@ -10,8 +10,8 @@ import type { MultiCardSelectorOption } from '@/onboarding/components/CardSelect
 import { fakeSocialTargetOptions } from '../options';
 
 type Props = {
-  value: string[];
-  onChange: (value: string[]) => void;
+  readonly value: string[];
+  readonly onChange: (value: string[]) => void;
 };
 
 function SocialSelector({ value, onChange }: Props) {

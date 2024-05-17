@@ -21,6 +21,9 @@ import { isCloud } from '@/consts/env';
 export enum GlobalAnonymousRoute {
   Callback = '/callback',
   SocialDemoCallback = '/social-demo-callback',
+  AcceptInvitation = '/accept',
+  Profile = '/profile',
+  HandleSocial = '/handle-social',
 }
 
 /**
@@ -78,7 +81,7 @@ export const TenantsContext = createContext<Tenants>({
 });
 
 type Props = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 /**

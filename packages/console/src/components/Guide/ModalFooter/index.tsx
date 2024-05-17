@@ -7,10 +7,10 @@ import DynamicT from '@/ds-components/DynamicT';
 import * as styles from './index.module.scss';
 
 type Props = {
-  wrapperClassName?: string;
-  content: AdminConsoleKey;
-  buttonText: AdminConsoleKey;
-  onClick: () => void;
+  readonly wrapperClassName?: string;
+  readonly content: AdminConsoleKey;
+  readonly buttonText: AdminConsoleKey;
+  readonly onClick: () => void;
 };
 
 export default function ModalFooter({ wrapperClassName, content, buttonText, onClick }: Props) {

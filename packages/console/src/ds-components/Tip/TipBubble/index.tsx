@@ -10,13 +10,13 @@ import * as styles from './index.module.scss';
 export type TipBubblePlacement = 'top' | 'right' | 'bottom' | 'left';
 
 type Props = HTMLProps<HTMLDivElement> & {
-  children: ReactNode;
-  position?: Position;
-  anchorRef: RefObject<Element>;
-  placement?: TipBubblePlacement;
-  horizontalAlignment?: HorizontalAlignment;
-  className?: string;
-  isSuccessful?: boolean;
+  readonly children: ReactNode;
+  readonly position?: Position;
+  readonly anchorRef: RefObject<Element>;
+  readonly placement?: TipBubblePlacement;
+  readonly horizontalAlignment?: HorizontalAlignment;
+  readonly className?: string;
+  readonly isSuccessful?: boolean;
 };
 
 const supportHorizontalAlignmentPlacements = new Set<TipBubblePlacement>(['top', 'bottom']);

@@ -11,9 +11,9 @@ import ThemedIcon from '../ThemedIcon';
 import * as styles from './index.module.scss';
 
 type RoleOptionProps = {
-  title?: string;
-  value: string;
-  size?: 'small' | 'large';
+  readonly title?: string;
+  readonly value: string;
+  readonly size?: 'small' | 'large';
 };
 
 export function RoleOption({ title, value, size = 'small' }: RoleOptionProps) {
@@ -26,10 +26,10 @@ export function RoleOption({ title, value, size = 'small' }: RoleOptionProps) {
 }
 
 type Props = {
-  value: Array<Option<string>>;
-  onChange: (value: Array<Option<string>>) => void;
-  keyword: string;
-  setKeyword: (keyword: string) => void;
+  readonly value: Array<Option<string>>;
+  readonly onChange: (value: Array<Option<string>>) => void;
+  readonly keyword: string;
+  readonly setKeyword: (keyword: string) => void;
 };
 
 function OrganizationRolesSelect({ value, onChange, keyword, setKeyword }: Props) {

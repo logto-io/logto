@@ -9,18 +9,18 @@ import * as styles from './index.module.scss';
 export type ButtonType = 'primary' | 'secondary';
 
 type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
-  htmlType?: 'button' | 'submit' | 'reset';
-  type?: ButtonType;
-  size?: 'small' | 'large';
-  isDisabled?: boolean;
-  className?: string;
-  onClick?: React.MouseEventHandler;
+  readonly htmlType?: 'button' | 'submit' | 'reset';
+  readonly type?: ButtonType;
+  readonly size?: 'small' | 'large';
+  readonly isDisabled?: boolean;
+  readonly className?: string;
+  readonly onClick?: React.MouseEventHandler;
 };
 
 type Props = BaseProps & {
-  title: TFuncKey;
-  icon?: React.ReactNode;
-  i18nProps?: Record<string, string>;
+  readonly title: TFuncKey;
+  readonly icon?: React.ReactNode;
+  readonly i18nProps?: Record<string, string>;
 };
 
 const Button = ({

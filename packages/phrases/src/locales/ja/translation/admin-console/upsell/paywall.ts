@@ -52,18 +52,19 @@ const paywall = {
   mfa: 'セキュリティを確認するためにMFAを解除して有料プランにアップグレードしてください。ご質問があれば、<a>お問い合わせください</a>。',
   organizations:
     'Unlock organizations by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
-  /** UNTRANSLATED */
   third_party_apps:
     'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
   sso_connectors:
     'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
   tenant_members:
     'Unlock collaboration feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
-  /** UNTRANSLATED */
   tenant_members_dev_plan:
     "You've reached your {{limit}}-member limit. Release a member or revoke a pending invitation to add someone new. Need more seats? Feel free to contact us.",
+  custom_jwt: {
+    title: 'Add custom claims',
+    description:
+      "Upgrade to a paid plan for custom JWT functionality and premium benefits. Don't hesitate to <a>contact us</a> if you have any questions.",
+  },
 };
 
 export default Object.freeze(paywall);

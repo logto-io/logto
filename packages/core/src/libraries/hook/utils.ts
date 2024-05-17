@@ -1,19 +1,25 @@
 import {
-  type HookEvent,
-  type HookEventPayload,
   ApplicationType,
+  managementApiHooksRegistration,
   type HookConfig,
+  type HookEvent,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
-import { got, type Response } from 'got';
+import { type IRouterParamContext } from 'koa-router';
+import ky, { type KyResponse } from 'ky';
 
 import { sign } from '#src/utils/sign.js';
 
-export const parseResponse = ({ statusCode, body }: Response) => ({
-  statusCode,
-  // eslint-disable-next-line no-restricted-syntax
-  body: trySafe(() => JSON.parse(String(body)) as unknown) ?? String(body),
-});
+import { type HookEventPayload } from './type.js';
+
+export const parseResponse = async (response: KyResponse) => {
+  const body = await response.text();
+  return {
+    statusCode: response.status,
+    // eslint-disable-next-line no-restricted-syntax
+    body: trySafe(() => JSON.parse(body) as unknown) ?? String(body),
+  };
+};
 
 type SendWebhookRequest = {
   hookConfig: HookConfig;
@@ -28,7 +34,7 @@ export const sendWebhookRequest = async ({
 }: SendWebhookRequest) => {
   const { url, headers, retries } = hookConfig;
 
-  return got.post(url, {
+  return ky.post(url, {
     headers: {
       'user-agent': 'Logto (https://logto.io/)',
       ...headers,
@@ -36,7 +42,7 @@ export const sendWebhookRequest = async ({
     },
     json: payload,
     retry: { limit: retries ?? 3 },
-    timeout: { request: 10_000 },
+    timeout: 10_000,
   });
 };
 
@@ -80,3 +86,12 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
     },
   };
 };
+
+export const buildManagementApiDataHookRegistrationKey = (
+  method: string,
+  route: IRouterParamContext['_matchedRoute']
+) => `${method} ${route}`;
+
+export const hasRegisteredDataHookEvent = (
+  key: string
+): key is keyof typeof managementApiHooksRegistration => key in managementApiHooksRegistration;

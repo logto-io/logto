@@ -7,7 +7,7 @@ import type { Props as TagProps } from '@/ds-components/Tag';
 import { type InvoiceStatus } from '@/types/subscriptions';
 
 type Props = {
-  status: InvoiceStatus;
+  readonly status: InvoiceStatus;
 };
 
 type TagStatus = TagProps['status'];

@@ -23,7 +23,6 @@ const config: Config.InitialOptions = {
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@logto/app-insights/(.*)$': '<rootDir>/../app-insights/lib/$1',
     '^@logto/shared/(.*)$': '<rootDir>/../shared/lib/$1',
     '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
   },

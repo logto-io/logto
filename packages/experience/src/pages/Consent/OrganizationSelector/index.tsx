@@ -1,7 +1,11 @@
+import { ReservedResource } from '@logto/core-kit';
+import classNames from 'classnames';
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ExpandableIcon from '@/assets/icons/expandable-icon.svg';
+
+import ScopeGroup from '../ScopeGroup';
 
 import OrganizationItem, { type Organization } from './OrganizationItem';
 import OrganizationSelectorModal from './OrganizationSelectorModal';
@@ -10,11 +14,12 @@ import * as styles from './index.module.scss';
 export { type Organization } from './OrganizationItem';
 
 type Props = {
-  organizations: Organization[];
-  selectedOrganization: Organization | undefined;
-  onSelect: (organization: Organization) => void;
-  className?: string;
+  readonly organizations: Organization[];
+  readonly selectedOrganization: Organization | undefined;
+  readonly onSelect: (organization: Organization) => void;
+  readonly className?: string;
 };
+
 const OrganizationSelector = ({
   organizations,
   selectedOrganization,
@@ -29,10 +34,44 @@ const OrganizationSelector = ({
     return null;
   }
 
+  const { missingResourceScopes: resourceScopes } = selectedOrganization;
+
   return (
     <div className={className}>
-      <div className={styles.title}>{t('description.grant_organization_access')}</div>
-      <div ref={parentElementRef} className={styles.cardWrapper} data-active={showDropdown}>
+      <div className={styles.title}>{t(`description.authorize_organization_access`)}</div>
+      {resourceScopes && resourceScopes.length > 0 && (
+        <div className={styles.scopeListWrapper}>
+          {resourceScopes
+            .slice()
+            // Sort the scopes to make sure the organization scope is always on top
+            .sort(({ resource: resourceA }, { resource: resourceB }) => {
+              if (resourceA.id === ReservedResource.Organization) {
+                return -1;
+              }
+              return resourceB.id === ReservedResource.Organization ? 1 : 0;
+            })
+            .map(({ resource, scopes }) => (
+              <ScopeGroup
+                key={resource.id}
+                groupName={
+                  resource.id === ReservedResource.Organization
+                    ? t('description.organization_scopes')
+                    : resource.name
+                }
+                scopes={scopes}
+                isAutoExpand={resourceScopes.length === 1}
+              />
+            ))}
+        </div>
+      )}
+      <div
+        ref={parentElementRef}
+        className={classNames(
+          styles.cardWrapper,
+          Boolean(resourceScopes?.length) && styles.withoutTopRadius
+        )}
+        data-active={showDropdown}
+      >
         <OrganizationItem
           className={styles.selectedOrganization}
           organization={selectedOrganization}
