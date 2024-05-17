@@ -1,10 +1,13 @@
 import {
   LogResult,
   userInfoSelectFields,
+  type DataHookEventPayload,
   type Hook,
   type HookConfig,
   type HookEvent,
+  type HookEventPayload,
   type HookTestErrorResponseData,
+  type InteractionHookEventPayload,
 } from '@logto/schemas';
 import { generateStandardId, normalizeError, type ConsoleLog } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
@@ -19,11 +22,6 @@ import {
   type DataHookContextManager,
   type InteractionHookContextManager,
 } from './context-manager.js';
-import type {
-  DataHookEventPayload,
-  HookEventPayload,
-  InteractionHookEventPayload,
-} from './type.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
 type BetterOmit<T, Ignore> = {
