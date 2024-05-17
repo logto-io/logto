@@ -1,4 +1,4 @@
-import { createTenantMetadata } from '@logto/core-kit';
+import { createTenantDatabaseMetadata } from '@logto/core-kit';
 import {
   type AdminData,
   type UpdateAdminData,
@@ -26,7 +26,7 @@ import { consoleLog } from '../../../utils.js';
 
 export const createTenant = async (pool: CommonQueryMethods, tenantId: string) => {
   const database = await getDatabaseName(pool, true);
-  const { parentRole, role, password } = createTenantMetadata(database, tenantId);
+  const { parentRole, role, password } = createTenantDatabaseMetadata(database, tenantId);
   const createTenant = {
     id: tenantId,
     dbUser: role,
