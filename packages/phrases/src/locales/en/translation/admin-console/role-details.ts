@@ -13,6 +13,9 @@ const role_details = {
     'Roles are a grouping of permissions that can be assigned to users. They also provide a way to aggregate permissions defined for different APIs, making it more efficient to add, remove, or adjust permissions compared to assigning them individually to users.',
   field_name: 'Name',
   field_description: 'Description',
+  field_is_default: 'Default role',
+  field_is_default_description:
+    'Set this role as a default role for new users. Multiple default roles can be set. This will also affect the default roles for users created via Management API.',
   type_m2m_role_tag: 'Machine-to-machine app role',
   type_user_role_tag: 'User role',
   permission: {

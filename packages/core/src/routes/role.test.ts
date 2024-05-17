@@ -18,6 +18,7 @@ const roles = {
   findRoleByRoleName: jest.fn(async (): Promise<Role | null> => null),
   insertRole: jest.fn(async (data) => ({
     type: mockAdminUserRole.type,
+    isDefault: false,
     ...data,
     id: mockAdminUserRole.id,
     tenantId: 'fake_tenant',

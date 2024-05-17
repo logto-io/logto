@@ -355,7 +355,7 @@ const traverseNode = async (
   await traverseObject(baseline, targetObject, 2);
 
   await (isRoot
-    ? fs.appendFile(targetFilePath, '} satisfies LocalePhrase;\n\n')
+    ? fs.appendFile(targetFilePath, '} satisfies DeepPartial<LocalePhrase>;\n\n')
     : fs.appendFile(targetFilePath, '};\n\n'));
   await fs.appendFile(targetFilePath, `export default Object.freeze(${identifier});\n`);
 };

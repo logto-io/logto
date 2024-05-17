@@ -49,7 +49,7 @@
     "@logto/phrases-experience": "workspace:^1.6.1",
     "@logto/schemas": "workspace:1.16.0",
     "@logto/shared": "workspace:^3.1.1",
-    "@silverhand/essentials": "^2.9.0",
+    "@silverhand/essentials": "^2.9.1",
     "@silverhand/slonik": "31.0.0-beta.2",
     "chalk": "^5.0.0",
     "decamelize": "^6.0.0",

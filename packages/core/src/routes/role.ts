@@ -201,7 +201,7 @@ export default function roleRoutes<T extends ManagementApiRouter>(
   router.patch(
     '/roles/:id',
     koaGuard({
-      body: Roles.createGuard.pick({ name: true, description: true }).partial(),
+      body: Roles.createGuard.pick({ name: true, description: true, isDefault: true }).partial(),
       params: object({ id: string().min(1) }),
       response: Roles.guard,
       status: [200, 404, 422],

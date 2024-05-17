@@ -5,7 +5,7 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
     "@logto/connector-kit": "workspace:^3.0.0",
-    "@silverhand/essentials": "^2.9.0",
+    "@silverhand/essentials": "^2.9.1",
     "dayjs": "^1.10.5",
     "got": "^14.0.0",
     "iconv-lite": "^0.6.3",

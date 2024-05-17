@@ -1,6 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { languages, fallback } from '@logto/language-kit';
-import type { NormalizeKeyPaths } from '@silverhand/essentials';
+import type { DeepPartial, NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import de from './locales/de/index.js';
@@ -22,6 +22,7 @@ import type { LocalePhrase } from './types.js';
 
 export type { LocalePhrase } from './types.js';
 
+export type DefaultLocale = 'en';
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 
 export const builtInLanguages = [
@@ -63,7 +64,12 @@ export const getDefaultLanguageTag = (languages: string): LanguageTag =>
 export const isBuiltInLanguageTag = (language: string): language is BuiltInLanguageTag =>
   builtInLanguageTagGuard.safeParse(language).success;
 
-export type Resource = Record<BuiltInLanguageTag, LocalePhrase>;
+export type Resource = Record<
+  Exclude<BuiltInLanguageTag, DefaultLocale>,
+  DeepPartial<LocalePhrase>
+> & {
+  [key in DefaultLocale]: LocalePhrase;
+};
 
 const resource: Resource = {
   de,
