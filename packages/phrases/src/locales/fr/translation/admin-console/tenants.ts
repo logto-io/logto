@@ -77,10 +77,12 @@ const tenants = {
   },
   delete_modal: {
     title: 'Supprimer le locataire',
+    /** UNTRANSLATED */
     description_line1:
-      'Voulez-vous vraiment supprimer votre locataire "<span>{{name}}</span>" avec le tag de suffixe d\'environnement "<span>{{tag}}</span>" ? Cette action est irréversible et entraînera la suppression permanente de toutes vos données et informations de compte.',
+      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
+    /** UNTRANSLATED */
     description_line2:
-      'Avant de supprimer le compte, peut-être pouvons-nous vous aider. <span><a>Contactez-nous par e-mail</a></span>',
+      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3:
       'Si vous souhaitez continuer, veuillez entrer le nom du locataire "<span>{{name}}</span>" pour confirmer.',
     delete_button: 'Supprimer définitivement',

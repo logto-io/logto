@@ -68,9 +68,9 @@ const tenants = {
   delete_modal: {
     title: 'Delete tenant',
     description_line1:
-      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undo, and will result in the permanent deletion of all your data and account information.',
+      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
     description_line2:
-      'Before deleting account, maybe we can help you. <span><a>Contact us via Email</a></span>',
+      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3:
       'If you would like to proceed, please enter the tenant name "<span>{{name}}</span>" to confirm.',
     delete_button: 'Permanently delete',

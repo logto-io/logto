@@ -78,10 +78,12 @@ const tenants = {
   },
   delete_modal: {
     title: 'Elimina inquilino',
+    /** UNTRANSLATED */
     description_line1:
-      "Sei sicuro di voler eliminare il tuo inquilino \"<span>{{name}}</span>\" con l'etichetta di suffisso dell'ambiente \"<span>{{tag}}</span>\"? Quest'azione non può essere annullata e comporterà l'eliminazione permanente di tutti i tuoi dati e le informazioni dell'account.",
+      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
+    /** UNTRANSLATED */
     description_line2:
-      "Prima di eliminare l'account, forse possiamo aiutarti. <span><a>Contattaci via e-mail</a></span>",
+      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3:
       'Se vuoi procedere, inserisci il nome dell\'inquilino "<span>{{name}}</span>" per confermare.',
     delete_button: 'Elimina definitivamente',

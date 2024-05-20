@@ -68,10 +68,12 @@ const tenants = {
   },
   delete_modal: {
     title: '刪除租戶',
+    /** UNTRANSLATED */
     description_line1:
-      '您確定要刪除標有環境標識"<span>{{tag}}</span>"的"<span>{{name}}</span>"租戶嗎？此操作無法撤銷，並會永久刪除您的所有數據和帳戶信息。',
+      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
+    /** UNTRANSLATED */
     description_line2:
-      '在刪除帳戶之前，也許我們可以為您提供幫助。<span><a>通過電子郵件與我們聯繫</a></span>',
+      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3: '如果您確定要繼續，請輸入租戶名稱"<span>{{name}}</span>"以進行確認。',
     delete_button: '永久刪除',
     cannot_delete_title: '無法刪除此租戶',

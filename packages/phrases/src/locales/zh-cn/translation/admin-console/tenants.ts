@@ -68,10 +68,12 @@ const tenants = {
   },
   delete_modal: {
     title: '删除租户',
+    /** UNTRANSLATED */
     description_line1:
-      '您确定要删除 "<span>{{name}}</span>" 的环境标识符为"<span>{{tag}}</span>"的租户吗？ 此操作无法撤消，并将导致永久删除所有数据和帐户信息。',
+      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
+    /** UNTRANSLATED */
     description_line2:
-      '在删除帐户之前，也许我们可以帮助您。<span><a>通过电子邮件联系我们</a></span>',
+      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3: '如果你想继续，请输入租户名 "<span>{{name}}</span>" 确认。',
     delete_button: '永久删除',
     cannot_delete_title: '无法删除此租户',

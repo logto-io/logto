@@ -76,10 +76,12 @@ const tenants = {
   },
   delete_modal: {
     title: 'Kiracıyı Sil',
+    /** UNTRANSLATED */
     description_line1:
-      '"{{name}}" adlı kiracınızı "{{tag}}" ortam etiketiyle silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve tüm verilerinizin ve hesap bilgilerinizin kalıcı olarak silinmesine neden olur.',
+      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
+    /** UNTRANSLATED */
     description_line2:
-      'Hesabınızı silmeden önce size yardımcı olabiliriz. <span><a>E-posta yoluyla bize ulaşın</a></span>',
+      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3: 'Devam etmek isterseniz, "{{name}}" kiracı adını onaylamak için yazın.',
     delete_button: 'Kalıcı olarak sil',
     cannot_delete_title: 'Bu kiracı silinemez',
