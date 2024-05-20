@@ -2,7 +2,6 @@ import { type Hook, type HookConfig, type HookEvent } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import {
   dataHookEventsLabel,
   interactionHookEvents,
@@ -18,15 +17,12 @@ import { uriValidator } from '@/utils/validator';
 import * as styles from './index.module.scss';
 
 const hookEventGroups: Array<CheckboxOptionGroup<HookEvent>> = [
-  // TODO: Remove dev feature guard
-  ...(isDevFeaturesEnabled
-    ? schemaGroupedDataHookEvents.map(([schema, events]) => ({
-        title: dataHookEventsLabel[schema],
-        options: events.map((event) => ({
-          value: event,
-        })),
-      }))
-    : []),
+  ...schemaGroupedDataHookEvents.map(([schema, events]) => ({
+    title: dataHookEventsLabel[schema],
+    options: events.map((event) => ({
+      value: event,
+    })),
+  })),
   {
     title: 'webhooks.schemas.interaction',
     options: interactionHookEvents.map((event) => ({

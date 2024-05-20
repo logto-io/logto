@@ -1,9 +1,8 @@
 import { userInfoSelectFields, type DataHookEvent, type User } from '@logto/schemas';
-import { conditional, conditionalString, noop, pick, trySafe } from '@silverhand/essentials';
+import { conditional, conditionalString, pick, trySafe } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
-import { EnvSet } from '#src/env-set/index.js';
 import {
   DataHookContextManager,
   InteractionHookContextManager,
@@ -41,7 +40,6 @@ export default function koaInteractionHooks<
   hooks: { triggerInteractionHooks, triggerDataHooks },
 }: Libraries): MiddlewareType<StateT, WithInteractionHooksContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
-    const { isDevFeaturesEnabled } = EnvSet.values;
     const { event: interactionEvent } = getInteractionStorage(ctx.interactionDetails.result);
 
     const {
@@ -71,7 +69,7 @@ export default function koaInteractionHooks<
     });
 
     // Assign user and event data to the data hook context
-    const assignDataHookContext: AssignDataHookContext = ({ event, user, data: extraData }) => {
+    ctx.assignDataHookContext = ({ event, user, data: extraData }) => {
       dataHookContext.appendContext({
         event,
         data: {
@@ -82,9 +80,6 @@ export default function koaInteractionHooks<
       });
     };
 
-    // TODO: remove dev features check
-    ctx.assignDataHookContext = isDevFeaturesEnabled ? assignDataHookContext : noop;
-
     await next();
 
     if (interactionHookContext.interactionHookResult) {
@@ -92,8 +87,7 @@ export default function koaInteractionHooks<
       void trySafe(triggerInteractionHooks(getConsoleLogFromContext(ctx), interactionHookContext));
     }
 
-    // TODO: remove dev features check
-    if (isDevFeaturesEnabled && dataHookContext.contextArray.length > 0) {
+    if (dataHookContext.contextArray.length > 0) {
       // Hooks should not crash the app
       void trySafe(triggerDataHooks(getConsoleLogFromContext(ctx), dataHookContext));
     }
