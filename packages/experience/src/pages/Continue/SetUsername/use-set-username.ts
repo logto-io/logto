@@ -1,9 +1,10 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { addProfile } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 
 const useSetUsername = () => {
@@ -15,6 +16,7 @@ const useSetUsername = () => {
 
   const asyncAddProfile = useApi(addProfile);
   const handleError = useErrorHandler();
+  const redirectTo = useGlobalRedirectTo();
 
   const preSignInErrorHandler = usePreSignInErrorHandler();
 
@@ -39,10 +41,10 @@ const useSetUsername = () => {
       }
 
       if (result?.redirectTo) {
-        window.location.replace(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
-    [asyncAddProfile, errorHandlers, handleError]
+    [asyncAddProfile, errorHandlers, handleError, redirectTo]
   );
 
   return { errorMessage, clearErrorMessage, onSubmit };
