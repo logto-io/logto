@@ -33,7 +33,7 @@ const description = {
   social_link_email_or_phone:
     'Vous pouvez lier une autre adresse e-mail ou un autre numéro de téléphone',
   social_bind_with_existing:
-    'Nous avons trouvé une {{method}} connexe qui a été enregistrée, et vous pouvez la lier directement.',
+    'Nous avons trouvé un compte associé, vous pouvez le lier directement.',
   reset_password: 'Mot de passe oublié',
   reset_password_description:
     'Entrez le {{types, list(type: disjunction;)}} associé à votre compte et nous vous enverrons le code de vérification pour réinitialiser votre mot de passe.',
