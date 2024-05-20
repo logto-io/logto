@@ -3,8 +3,7 @@ const tenants = {
   description: 'Skuteczne zarządzanie ustawieniami najemcy i dostosowywanie domeny.',
   tabs: {
     settings: 'Ustawienia',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'Członkowie',
     domains: 'Domeny',
     subscription: 'Plan i rozliczenia',
     billing_history: 'Historia rozliczeń',
@@ -39,10 +38,8 @@ const tenants = {
     tenant_deletion_button: 'Usuń najemcę',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
+    title: 'OPUSZCZENIE',
+    leave_tenant: 'Opuszczenie najemcy',
     /** UNTRANSLATED */
     leave_tenant_description:
       'Any resources in the tenant will remain but you no longer have access to this tenant.',
@@ -77,10 +74,8 @@ const tenants = {
   },
   delete_modal: {
     title: 'Usuń najemcę',
-    /** UNTRANSLATED */
     description_line1:
       'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
-    /** UNTRANSLATED */
     description_line2:
       'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3:
@@ -91,10 +86,8 @@ const tenants = {
       'Przepraszam, nie możesz teraz usunąć tego najemcy. Upewnij się, że korzystasz z planu darmowego i uregulowałeś wszystkie zaległe płatności.',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: 'Czy na pewno chcesz opuścić tego najemcy?',
+    leave_button: 'Opuść',
   },
   tenant_landing_page: {
     title: 'Nie utworzyłeś jeszcze najemcy',

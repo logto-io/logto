@@ -3,8 +3,7 @@ const tenants = {
   description: 'Эффективное управление настройками арендатора и настройка вашего домена.',
   tabs: {
     settings: 'Настройки',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'Участники',
     domains: 'Домены',
     subscription: 'План и выставление счетов',
     billing_history: 'История выставления счетов',
@@ -21,9 +20,9 @@ const tenants = {
     environment_tag_production: 'Прод',
     tenant_type: 'Тип арендатора',
     development_description:
-      'Только для тестирования и не должно использоваться в производстве. Подписка не требуется. Он имеет все профессиональные функции, но с ограничениями, такими как баннер входа.<a>Узнайте больше</a>',
+      'Только для тестирования и не должно использоваться в производстве. Подписка не требуется. Он имеет все профессиональные функции, но с ограничениями, такими как баннер входа. <a>Узнайте больше</a>',
     production_description:
-      'Предназначен для приложений, используемых конечными пользователями и может потребовать платную подписку.<a>Узнайте больше</a>',
+      'Предназначен для приложений, используемых конечными пользователями и может потребовать платную подписку. <a>Узнайте больше</a>',
     tenant_info_saved: 'Информация о квартиросъемщике успешно сохранена.',
   },
   full_env_tag: {
@@ -38,15 +37,12 @@ const tenants = {
     tenant_deletion_button: 'Удалить арендатора',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: 'ПОКИНУТЬ',
+    leave_tenant: 'Покинуть арендатора',
     leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+      'Любые ресурсы арендатора останутся, но у вас больше не будет доступа к этому арендатору.',
+    last_admin_note:
+      'Чтобы покинуть этот квартиросъемщик, убедитесь, что у еще как минимум одного участника есть роль администратора.',
   },
   create_modal: {
     title: 'Создать арендатора',
@@ -76,24 +72,20 @@ const tenants = {
   },
   delete_modal: {
     title: 'Удалить арендатора',
-    /** UNTRANSLATED */
     description_line1:
-      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
-    /** UNTRANSLATED */
+      'Вы уверены, что хотите удалить вашего арендатора "<span>{{name}}</span>" с тегом окружения "<span>{{tag}}</span>"? Это действие нельзя отменить и приведет к окончательному удалению всех ваших данных и информации об арендаторе.',
     description_line2:
-      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
+      'Прежде чем удалять арендатора, возможно, мы можем вам помочь. <span><a>Связаться с нами по электронной почте</a></span>',
     description_line3:
-      'Если вы хотите продолжить, введите название арендатора "<span>{{name}}</span>" для подтверждения.',
+      'If you want to proceed, enter the tenant name "<span>{{name}}</span>" for confirmation.',
     delete_button: 'Навсегда удалить',
     cannot_delete_title: 'Нельзя удалить этого арендатора',
     cannot_delete_description:
       'Извините, вы не можете удалить этого арендатора прямо сейчас. Пожалуйста, убедитесь, что вы используете бесплатный план и оплатили все невыполненные счета.',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: 'Вы уверены, что хотите покинуть этого арендатора?',
+    leave_button: 'Покинуть',
   },
   tenant_landing_page: {
     title: 'Вы еще не создали арендатора',

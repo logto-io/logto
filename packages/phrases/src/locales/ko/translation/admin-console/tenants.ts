@@ -3,8 +3,7 @@ const tenants = {
   description: '테넌트 설정을 효율적으로 관리하고 도메인을 사용자 정의합니다.',
   tabs: {
     settings: '설정',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: '멤버',
     domains: '도메인',
     subscription: '구독 및 청구',
     billing_history: '청구 내역',
@@ -37,15 +36,11 @@ const tenants = {
     tenant_deletion_button: '테넌트 삭제',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: '나가기',
+    leave_tenant: '테넌트 나가기',
     leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+      '테넌트에 속한 모든 리소스는 그대로 유지되지만 해당 테넌트에 더 이상 액세스할 수 없습니다.',
+    last_admin_note: '테넌트에서 나가려면 최소 한 명 이상의 관리자가 있어야 합니다.',
   },
   create_modal: {
     title: '테넌트 만들기',
@@ -72,24 +67,19 @@ const tenants = {
   },
   delete_modal: {
     title: '테넌트 삭제',
-    /** UNTRANSLATED */
     description_line1:
-      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
-    /** UNTRANSLATED */
+      '테넌트 "<span>{{name}}</span>" 을(를) 환경 접미사 태그 "<span>{{tag}}</span>" 와 함께 삭제하시겠습니까? 이 작업은 되돌릴 수 없으며 모든 데이터 및 테넌트 정보가 영구적으로 삭제됩니다.',
     description_line2:
-      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
-    description_line3:
-      '삭제하려는 테넌트 이름 "<span>{{name}}</span>"을(를) 입력하여 확인하십시오.',
+      '테넌트 삭제 전에 도움을 받을 수도 있습니다. <span><a>이메일을 통해 문의하십시오</a></span>',
+    description_line3: '확인하려는 테넌트 이름 "<span>{{name}}</span>" 을(를) 입력하십시오.',
     delete_button: '영구 삭제',
     cannot_delete_title: '이 테넌트를 삭제할 수 없습니다',
     cannot_delete_description:
       '죄송합니다. 현재이 테넌트를 삭제할 수 없습니다. 무료 플랜에 있고 미결제 청구서가 없는지 확인하십시오.',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: '이 테넌트를 나가시겠습니까?',
+    leave_button: '나가기',
   },
   tenant_landing_page: {
     title: '아직 테넌트를 만들지 않았습니다.',

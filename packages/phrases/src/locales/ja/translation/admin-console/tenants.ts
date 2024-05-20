@@ -3,8 +3,7 @@ const tenants = {
   description: 'テナントの設定を効率的に管理し、ドメインをカスタマイズします。',
   tabs: {
     settings: '設定',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'メンバー',
     domains: 'ドメイン',
     subscription: 'プランと請求',
     billing_history: '請求履歴',
@@ -37,15 +36,12 @@ const tenants = {
     tenant_deletion_button: 'テナントを削除する',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: '脱退',
+    leave_tenant: 'テナントを脱退する',
     leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+      'テナント内のリソースは残りますが、このテナントにはもうアクセスできません。',
+    last_admin_note:
+      'このテナントを脱退するには、もう1人以上のメンバーに管理者ロールがあることを確認してください。',
   },
   create_modal: {
     title: 'テナントを作成する',
@@ -73,12 +69,10 @@ const tenants = {
   },
   delete_modal: {
     title: 'テナントを削除します',
-    /** UNTRANSLATED */
     description_line1:
-      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
-    /** UNTRANSLATED */
+      'あなたはテナント "<span>{{name}}</span>" を環境接尾辞タグ "<span>{{tag}}</span>" と共に削除してもよろしいでしょうか？ この操作は取り消すことができず、すべてのデータとテナント情報が永久に削除されます。',
     description_line2:
-      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
+      'テナントを削除する前に、お手伝いできることがあるかもしれません。 <span><a>電子メールでお問い合わせ</a></span>',
     description_line3:
       '続行する場合は、テナント名 "<span>{{name}}</span>" を入力して確認してください。',
     delete_button: '完全に削除する',
@@ -87,10 +81,8 @@ const tenants = {
       '申し訳ありませんが、現時点ではこのテナントを削除できません。無料プランに登録しており、未払いの請求がないことを確認してください。',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: 'このテナントを脱退してもよろしいですか？',
+    leave_button: '脱退',
   },
   tenant_landing_page: {
     title: 'まだテナントを作成していません',

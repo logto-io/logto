@@ -3,8 +3,7 @@ const tenants = {
   description: 'Administre eficientemente la configuración del inquilino y personalice su dominio.',
   tabs: {
     settings: 'Configuraciones',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'Miembros',
     domains: 'Dominios',
     subscription: 'Plan y facturación',
     billing_history: 'Historial de facturación',
@@ -39,15 +38,12 @@ const tenants = {
     tenant_deletion_button: 'Eliminar inquilino',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: 'ABANDONAR',
+    leave_tenant: 'Abandonar inquilino',
     leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+      'Cualquier recurso en el inquilino se mantendrá pero ya no tendrá acceso a este inquilino.',
+    last_admin_note:
+      'Para abandonar este inquilino, asegúrese de que al menos otro miembro tenga el rol de Administrador.',
   },
   create_modal: {
     title: 'Crear inquilino',
@@ -76,12 +72,10 @@ const tenants = {
   },
   delete_modal: {
     title: 'Eliminar inquilino',
-    /** UNTRANSLATED */
     description_line1:
-      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
-    /** UNTRANSLATED */
+      '¿Está seguro de que desea eliminar su inquilino "<span>{{name}}</span>" con la etiqueta de sufijo de entorno "<span>{{tag}}</span>"? Esta acción no se puede deshacer y resultará en la eliminación permanente de todos sus datos e información del inquilino.',
     description_line2:
-      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
+      'Antes de eliminar el inquilino, tal vez podamos ayudarlo. <span><a>Contacte con nosotros por correo electrónico</a></span>',
     description_line3:
       'Si desea continuar, ingrese el nombre del inquilino "<span>{{name}}</span>" para confirmar.',
     delete_button: 'Eliminar permanentemente',
@@ -90,10 +84,8 @@ const tenants = {
       'Lo siento, no puedes eliminar este inquilino en este momento. Asegúrate de estar en el Plan Gratuito y haber pagado todas las facturas pendientes.',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: '¿Está seguro de que desea abandonar este inquilino?',
+    leave_button: 'Abandonar',
   },
   tenant_landing_page: {
     title: 'Todavía no has creado un inquilino',
