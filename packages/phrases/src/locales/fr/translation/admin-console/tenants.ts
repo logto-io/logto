@@ -3,8 +3,7 @@ const tenants = {
   description: 'Gérez efficacement les paramètres du locataire et personnalisez votre domaine.',
   tabs: {
     settings: 'Paramètres',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'Membres',
     domains: 'Domaines',
     subscription: 'Plan et facturation',
     billing_history: 'Historique de facturation',
@@ -39,15 +38,12 @@ const tenants = {
     tenant_deletion_button: 'Supprimer le locataire',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: 'QUITTER',
+    leave_tenant: 'Quitter le locataire',
     leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+      "Toutes les ressources du locataire resteront, mais vous n'aurez plus accès à ce locataire.",
+    last_admin_note:
+      "Pour quitter ce locataire, assurez-vous qu'au moins un autre membre a le rôle Administrateur.",
   },
   create_modal: {
     title: 'Créer un locataire',
@@ -78,9 +74,9 @@ const tenants = {
   delete_modal: {
     title: 'Supprimer le locataire',
     description_line1:
-      'Voulez-vous vraiment supprimer votre locataire "<span>{{name}}</span>" avec le tag de suffixe d\'environnement "<span>{{tag}}</span>" ? Cette action est irréversible et entraînera la suppression permanente de toutes vos données et informations de compte.',
+      'Êtes-vous sûr de vouloir supprimer votre locataire "<span>{{name}}</span>" avec le tag de suffixe d\'environnement "<span>{{tag}}</span>"? Cette action est irréversible et entraînera la suppression permanente de toutes vos données et informations de locataire.',
     description_line2:
-      'Avant de supprimer le compte, peut-être pouvons-nous vous aider. <span><a>Contactez-nous par e-mail</a></span>',
+      'Avant de supprimer le locataire, peut-être pouvons-nous vous aider. <span><a>Contactez-nous par e-mail</a></span>',
     description_line3:
       'Si vous souhaitez continuer, veuillez entrer le nom du locataire "<span>{{name}}</span>" pour confirmer.',
     delete_button: 'Supprimer définitivement',
@@ -89,10 +85,8 @@ const tenants = {
       "Désolé, vous ne pouvez pas supprimer ce locataire pour le moment. Assurez-vous d'être sur le Plan Gratuit et d'avoir payé toutes les factures en cours.",
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: 'Êtes-vous sûr de vouloir quitter ce locataire?',
+    leave_button: 'Partir',
   },
   tenant_landing_page: {
     title: "Vous n'avez pas encore créé de locataire",
