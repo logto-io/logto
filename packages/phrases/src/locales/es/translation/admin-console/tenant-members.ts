@@ -1,102 +1,62 @@
 const tenant_members = {
-  /** UNTRANSLATED */
-  members: 'Members',
-  /** UNTRANSLATED */
-  invitations: 'Invitations',
-  /** UNTRANSLATED */
-  invite_members: 'Invite members',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
+  members: 'Miembros',
+  invitations: 'Invitaciones',
+  invite_members: 'Invitar miembros',
+  user: 'Usuario',
   roles: 'Roles',
-  /** UNTRANSLATED */
-  admin: 'Admin',
-  /** UNTRANSLATED */
-  collaborator: 'Collaborator',
-  /** UNTRANSLATED */
-  invitation_status: 'Invitation status',
-  /** UNTRANSLATED */
-  inviter: 'Inviter',
-  /** UNTRANSLATED */
-  expiration_date: 'Expiration date',
+  admin: 'Administrador',
+  collaborator: 'Colaborador',
+  invitation_status: 'Estado de la invitación',
+  inviter: 'Invitador',
+  expiration_date: 'Fecha de vencimiento',
   invite_modal: {
-    /** UNTRANSLATED */
-    title: 'Invite people to Silverhand',
-    /** UNTRANSLATED */
-    subtitle: 'To invite members to an organization, they must accept the invitation.',
-    /** UNTRANSLATED */
-    to: 'To',
-    /** UNTRANSLATED */
-    added_as: 'Added as roles',
-    /** UNTRANSLATED */
+    title: 'Invitar personas a Silverhand',
+    subtitle: 'Para invitar miembros a una organización, deben aceptar la invitación.',
+    to: 'Para',
+    added_as: 'Añadido como roles',
     email_input_placeholder: 'johndoe@example.com',
   },
   invitation_statuses: {
-    /** UNTRANSLATED */
-    pending: 'Pending',
-    /** UNTRANSLATED */
-    accepted: 'Accepted',
-    /** UNTRANSLATED */
-    expired: 'Expired',
-    /** UNTRANSLATED */
-    revoked: 'Revoked',
+    pending: 'Pendiente',
+    accepted: 'Aceptada',
+    expired: 'Caducada',
+    revoked: 'Revocada',
   },
   invitation_empty_placeholder: {
-    /** UNTRANSLATED */
-    title: 'Invite team members',
-    /** UNTRANSLATED */
+    title: 'Invitar miembros al equipo',
     description:
-      'Your tenant currently has no members invited.\nTo assist with your integration, consider adding more members or admins.',
+      'Tu inquilino actualmente no tiene miembros invitados.\nPara ayudar con tu integración, considera agregar más miembros o administradores.',
   },
   menu_options: {
-    /** UNTRANSLATED */
-    edit: 'Edit tenant role',
-    /** UNTRANSLATED */
-    delete: 'Remove user from tenant',
-    /** UNTRANSLATED */
-    resend_invite: 'Resend invitation',
-    /** UNTRANSLATED */
-    revoke: 'Revoke invitation',
-    /** UNTRANSLATED */
-    delete_invitation_record: 'Delete this invitation record',
+    edit: 'Editar rol del inquilino',
+    delete: 'Eliminar usuario del inquilino',
+    resend_invite: 'Reenviar invitación',
+    revoke: 'Revocar invitación',
+    delete_invitation_record: 'Eliminar este registro de invitación',
   },
   edit_modal: {
-    /** UNTRANSLATED */
-    title: 'Change roles of {{name}}',
+    title: 'Cambiar roles de {{name}}',
   },
-  /** UNTRANSLATED */
-  delete_user_confirm: 'Are you sure you want to remove this user from this tenant?',
-  /** UNTRANSLATED */
+  delete_user_confirm: '¿Estás seguro de que quieres eliminar a este usuario de este inquilino?',
   assign_admin_confirm:
-    'Are you sure you want to make the selected user(s) admin? Granting admin access will give the user(s) the following permissions.<ul><li>Change the tenant billing plan</li><li>Add or remove collaborators</li><li>Delete the tenant</li></ul>',
-  /** UNTRANSLATED */
-  revoke_invitation_confirm: 'Are you sure you want to revoke this invitation?',
-  /** UNTRANSLATED */
-  delete_invitation_confirm: 'Are you sure you want to delete this invitation record?',
+    '¿Estás seguro de que deseas hacer que el/los usuario(s) seleccionado(s) sea(n) administrador(es)? Otorgar acceso de administrador dará al usuario/los usuarios los siguientes permisos.<ul><li>Cambiar el plan de facturación del inquilino</li><li>Agregar o eliminar colaboradores</li><li>Eliminar el inquilino</li></ul>',
+  revoke_invitation_confirm: '¿Estás seguro de que quieres revocar esta invitación?',
+  delete_invitation_confirm: '¿Estás seguro de que quieres eliminar este registro de invitación?',
   messages: {
-    /** UNTRANSLATED */
-    invitation_sent: 'Invitation sent.',
-    /** UNTRANSLATED */
-    invitation_revoked: 'Invitation revoked.',
-    /** UNTRANSLATED */
-    invitation_resend: 'Invitation resent.',
-    /** UNTRANSLATED */
-    invitation_deleted: 'Invitation record deleted.',
+    invitation_sent: 'Invitación enviada.',
+    invitation_revoked: 'Invitación revocada.',
+    invitation_resend: 'Invitación reenviada.',
+    invitation_deleted: 'Registro de invitación eliminado.',
   },
   errors: {
-    /** UNTRANSLATED */
-    email_required: 'Invitee email is required.',
-    /** UNTRANSLATED */
-    email_exists: 'Email address already exists.',
-    /** UNTRANSLATED */
-    member_exists: 'This user is already a member of this organization.',
-    /** UNTRANSLATED */
+    email_required: 'El correo electrónico del invitado es obligatorio.',
+    email_exists: 'La dirección de correo electrónico ya existe.',
+    member_exists: 'Este usuario ya es miembro de esta organización.',
     pending_invitation_exists:
-      'Pending invitation exists. Delete related email or revoke the invitation.',
-    /** UNTRANSLATED */
-    invalid_email: 'Email address is invalid. Please make sure it is in the right format.',
-    /** UNTRANSLATED */
-    max_member_limit: 'You have reached the maximum number of members ({{limit}}) for this tenant.',
+      'Existe una invitación pendiente. Elimina el correo electrónico relacionado o revoca la invitación.',
+    invalid_email:
+      'La dirección de correo electrónico es inválida. Asegúrate de que esté en el formato correcto.',
+    max_member_limit: 'Has alcanzado el número máximo de miembros ({{limit}}) para este inquilino.',
   },
 };
 

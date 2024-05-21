@@ -15,9 +15,8 @@ const domain = {
     custom_domain_field: 'Özel alan adı',
     custom_domain_placeholder: 'alan_adınız.com',
     add_domain: 'Alan Adı Ekle',
-    /** UNTRANSLATED */
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      'Lütfen geçerli bir alan adı URL\'si sağlayın, en az üç parçaya sahip olmalıdır, örneğin "alanınız.com."',
     verify_domain: 'Alan adınızı doğrulayın',
     enable_ssl: 'SSL etkinleştirilsin mi',
     checking_dns_tip:
@@ -52,9 +51,8 @@ const domain = {
     'Bu uç noktaların alan adını özelleştirebilirsiniz. "{{custom}}" veya "{{default}}" seçeneklerinden birini seçin.',
   custom_social_callback_url_note:
     'Bu URI\'nin alan adını uygulamanızın uç noktasıyla eşleştirmek için özelleştirebilirsiniz. "{{custom}}" veya "{{default}}" seçeneklerinden birini seçin.',
-  /** UNTRANSLATED */
   custom_acs_url_note:
-    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+    'Bu URI\'nin alan adını kimlik sağlayıcısı Assertion Consumer Service URL\'inizle eşleştirmek üzere özelleştirebilirsiniz. "{{custom}}" veya "{{default}}" seçeneklerinden birini seçin.',
 };
 
 export default Object.freeze(domain);

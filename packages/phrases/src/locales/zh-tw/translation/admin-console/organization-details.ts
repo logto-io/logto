@@ -20,13 +20,9 @@ const organization_details = {
     '刪除後，用戶將失去在這個組織中的成員資格和角色。此操作無法撤銷。',
   search_user_placeholder: '按名稱、電子郵件、電話或用戶ID搜尋',
   at_least_one_user: '至少需要一個用戶。',
-  /** UNTRANSLATED */
-  custom_data: 'Custom data',
-  /** UNTRANSLATED */
-  custom_data_tip:
-    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
-  /** UNTRANSLATED */
-  invalid_json_object: 'Invalid JSON object.',
+  custom_data: '自訂數據',
+  custom_data_tip: '自訂數據是一個可用於存儲與組織相關的附加數據的 JSON 對象。',
+  invalid_json_object: '無效的 JSON 對象。',
 };
 
 export default Object.freeze(organization_details);

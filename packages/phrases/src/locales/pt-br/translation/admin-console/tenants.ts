@@ -61,7 +61,7 @@ const tenants = {
   },
   dev_tenant_migration: {
     title:
-      'Agora você pode experimentar nossos recursos Pro gratuitamente criando um novo "locatário de desenvolvimento"!',
+      'Agora você pode experimentar nossos recursos Pro gratuitamente criando um novo “locatário de desenvolvimento”!',
     affect_title: 'Como isso afeta você?',
     hint_1:
       'Estamos substituindo as antigas <strong>etiquetas de ambiente</strong> por dois novos tipos de locatário: <strong>“Desenvolvimento”</strong> e <strong>“Produção”</strong>.',

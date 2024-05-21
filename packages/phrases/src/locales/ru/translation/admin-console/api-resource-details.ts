@@ -21,10 +21,8 @@ const api_resource_details = {
     create_title: 'Создать разрешение',
     create_subtitle: 'Определите необходимые разрешения (области) для этого API.',
     confirm_create: 'Создать разрешение',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
-    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
+    edit_title: 'Изменить разрешение API',
+    edit_subtitle: 'Определите необходимые разрешения (области) для API {{resourceName}}.',
     name: 'Название разрешения',
     name_placeholder: 'read:resource',
     forbidden_space_in_name: 'Название разрешения не должно содержать пробелов.',

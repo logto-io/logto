@@ -22,13 +22,10 @@ const organization_details = {
     "Une fois retiré, l'utilisateur perdra son adhésion et ses rôles dans cette organisation. Cette action ne peut pas être annulée.",
   search_user_placeholder: "Rechercher par nom, e-mail, téléphone ou identifiant d'utilisateur",
   at_least_one_user: 'Au moins un utilisateur est requis.',
-  /** UNTRANSLATED */
-  custom_data: 'Custom data',
-  /** UNTRANSLATED */
+  custom_data: 'Données personnalisées',
   custom_data_tip:
-    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
-  /** UNTRANSLATED */
-  invalid_json_object: 'Invalid JSON object.',
+    "Les données personnalisées sont un objet JSON qui peut être utilisé pour stocker des données supplémentaires associées à l'organisation.",
+  invalid_json_object: 'Objet JSON non valide.',
 };
 
 export default Object.freeze(organization_details);

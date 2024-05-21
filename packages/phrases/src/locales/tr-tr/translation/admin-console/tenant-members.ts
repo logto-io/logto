@@ -1,102 +1,61 @@
 const tenant_members = {
-  /** UNTRANSLATED */
-  members: 'Members',
-  /** UNTRANSLATED */
-  invitations: 'Invitations',
-  /** UNTRANSLATED */
-  invite_members: 'Invite members',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  roles: 'Roles',
-  /** UNTRANSLATED */
-  admin: 'Admin',
-  /** UNTRANSLATED */
-  collaborator: 'Collaborator',
-  /** UNTRANSLATED */
-  invitation_status: 'Invitation status',
-  /** UNTRANSLATED */
-  inviter: 'Inviter',
-  /** UNTRANSLATED */
-  expiration_date: 'Expiration date',
+  members: 'Üyeler',
+  invitations: 'Davetiyeler',
+  invite_members: 'Üyeleri davet et',
+  user: 'Kullanıcı',
+  roles: 'Roller',
+  admin: 'Yönetici',
+  collaborator: 'İşbirlikçi',
+  invitation_status: 'Davet durumu',
+  inviter: 'Davet eden',
+  expiration_date: 'Son kullanma tarihi',
   invite_modal: {
-    /** UNTRANSLATED */
-    title: 'Invite people to Silverhand',
-    /** UNTRANSLATED */
-    subtitle: 'To invite members to an organization, they must accept the invitation.',
-    /** UNTRANSLATED */
-    to: 'To',
-    /** UNTRANSLATED */
-    added_as: 'Added as roles',
-    /** UNTRANSLATED */
+    title: "Silverhand'e Kişileri Davet Et",
+    subtitle: 'Bir kuruluşa üye davet etmek için daveti kabul etmeleri gerekmektedir.',
+    to: 'Kime',
+    added_as: 'Şu rollerle eklendi',
     email_input_placeholder: 'johndoe@example.com',
   },
   invitation_statuses: {
-    /** UNTRANSLATED */
-    pending: 'Pending',
-    /** UNTRANSLATED */
-    accepted: 'Accepted',
-    /** UNTRANSLATED */
-    expired: 'Expired',
-    /** UNTRANSLATED */
-    revoked: 'Revoked',
+    pending: 'Beklemede',
+    accepted: 'Kabul edildi',
+    expired: 'Süresi doldu',
+    revoked: 'İptal Edildi',
   },
   invitation_empty_placeholder: {
-    /** UNTRANSLATED */
-    title: 'Invite team members',
-    /** UNTRANSLATED */
+    title: 'Takım üyelerini davet et',
     description:
-      'Your tenant currently has no members invited.\nTo assist with your integration, consider adding more members or admins.',
+      'Kurumunuz şu anda davet edilen üyesi bulunmamaktadır.\nEntegrasyonunuzda yardımcı olmak için daha fazla üye veya yönetici eklemeyi düşünün.',
   },
   menu_options: {
-    /** UNTRANSLATED */
-    edit: 'Edit tenant role',
-    /** UNTRANSLATED */
-    delete: 'Remove user from tenant',
-    /** UNTRANSLATED */
-    resend_invite: 'Resend invitation',
-    /** UNTRANSLATED */
-    revoke: 'Revoke invitation',
-    /** UNTRANSLATED */
-    delete_invitation_record: 'Delete this invitation record',
+    edit: 'Kullanıcı rolünü düzenle',
+    delete: 'Kullanıcıyı kiracıdan kaldır',
+    resend_invite: 'Daveti tekrar gönder',
+    revoke: 'Daveti iptal et',
+    delete_invitation_record: 'Bu davet kaydını sil',
   },
   edit_modal: {
-    /** UNTRANSLATED */
-    title: 'Change roles of {{name}}',
+    title: "{{name}}'in rollerini değiştir",
   },
-  /** UNTRANSLATED */
-  delete_user_confirm: 'Are you sure you want to remove this user from this tenant?',
-  /** UNTRANSLATED */
+  delete_user_confirm: 'Bu kullanıcıyı kiracıdan kaldırmak istediğinizden emin misiniz?',
   assign_admin_confirm:
-    'Are you sure you want to make the selected user(s) admin? Granting admin access will give the user(s) the following permissions.<ul><li>Change the tenant billing plan</li><li>Add or remove collaborators</li><li>Delete the tenant</li></ul>',
-  /** UNTRANSLATED */
-  revoke_invitation_confirm: 'Are you sure you want to revoke this invitation?',
-  /** UNTRANSLATED */
-  delete_invitation_confirm: 'Are you sure you want to delete this invitation record?',
+    'Seçilen kullanıcı(ları) yönetici yapmak istediğinizden emin misiniz? Yönetici erişimi vermek aşağıdaki izinleri verecektir.<ul><li>Kiracı fatura planını değiştirme</li><li>İşbirlikçileri ekleme veya kaldırma</li><li>Kiracıyı silme</li></ul>',
+  revoke_invitation_confirm: 'Bu daveti iptal etmek istediğinizden emin misiniz?',
+  delete_invitation_confirm: 'Bu davet kaydını silmek istediğinizden emin misiniz?',
   messages: {
-    /** UNTRANSLATED */
-    invitation_sent: 'Invitation sent.',
-    /** UNTRANSLATED */
-    invitation_revoked: 'Invitation revoked.',
-    /** UNTRANSLATED */
-    invitation_resend: 'Invitation resent.',
-    /** UNTRANSLATED */
-    invitation_deleted: 'Invitation record deleted.',
+    invitation_sent: 'Davet gönderildi.',
+    invitation_revoked: 'Davet iptal edildi.',
+    invitation_resend: 'Davet tekrar gönderildi.',
+    invitation_deleted: 'Davet kaydı silindi.',
   },
   errors: {
-    /** UNTRANSLATED */
-    email_required: 'Invitee email is required.',
-    /** UNTRANSLATED */
-    email_exists: 'Email address already exists.',
-    /** UNTRANSLATED */
-    member_exists: 'This user is already a member of this organization.',
-    /** UNTRANSLATED */
+    email_required: 'Davet edilen e-posta gerekli.',
+    email_exists: 'E-posta adresi zaten mevcut.',
+    member_exists: 'Bu kullanıcı zaten bu kuruluşun bir üyesidir.',
     pending_invitation_exists:
-      'Pending invitation exists. Delete related email or revoke the invitation.',
-    /** UNTRANSLATED */
-    invalid_email: 'Email address is invalid. Please make sure it is in the right format.',
-    /** UNTRANSLATED */
-    max_member_limit: 'You have reached the maximum number of members ({{limit}}) for this tenant.',
+      'Bekleyen davet mevcut. İlgili e-postayı silin veya daveti iptal edin.',
+    invalid_email: 'E-posta adresi geçersiz. Lütfen doğru formatta olduğundan emin olun.',
+    max_member_limit: 'Bu kiracı için maksimum üye sayısına ulaştınız ({{limit}}).',
   },
 };
 

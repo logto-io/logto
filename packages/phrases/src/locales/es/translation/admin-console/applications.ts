@@ -5,9 +5,8 @@ const applications = {
     'Configura la autenticación de Logto para tu aplicación nativa, de página única, de máquina a máquina o tradicional',
   subtitle_with_app_type: 'Configura la autenticación de Logto para tu aplicación {{name}}',
   create: 'Crear aplicación',
-  /** UNTRANSLATED */
   create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+    'Utiliza Logto como proveedor de identidad (IdP) para integrarte fácilmente con aplicaciones de terceros',
   application_name: 'Nombre de la aplicación',
   application_name_placeholder: 'Mi App',
   application_description: 'Descripción de la aplicación',
@@ -16,12 +15,10 @@ const applications = {
   no_application_type_selected: 'Aún no has seleccionado ningún tipo de aplicación',
   application_created: '¡La aplicación se ha creado correctamente.',
   tab: {
-    /** UNTRANSLATED */
-    my_applications: 'My apps',
-    /** UNTRANSLATED */
-    third_party_applications: 'Third-party apps',
+    my_applications: 'Mis aplicaciones',
+    third_party_applications: 'Aplicaciones de terceros',
   },
-  app_id: 'App ID',
+  app_id: 'ID de la aplicación',
   type: {
     native: {
       title: 'App nativa',
@@ -45,20 +42,14 @@ const applications = {
       description: 'Por ejemplo, servicio backend',
     },
     protected: {
-      /** UNTRANSLATED */
-      title: 'Protected App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is protected by Logto',
-      /** UNTRANSLATED */
+      title: 'App protegida',
+      subtitle: 'Una aplicación protegida por Logto',
       description: 'N/A',
     },
     third_party: {
-      /** UNTRANSLATED */
-      title: 'Third-party App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as a third-party IdP connector',
-      /** UNTRANSLATED */
-      description: 'E.g., OIDC, SAML',
+      title: 'App de terceros',
+      subtitle: 'Una aplicación que se utiliza como conector de proveedor de identidad de terceros',
+      description: 'Ej.: OIDC, SAML',
     },
   },
   placeholder_title: 'Selecciona un tipo de aplicación para continuar',

@@ -7,9 +7,7 @@ const guide = {
     SPA: 'Одностраничное приложение',
     Native: 'Нативное',
     MachineToMachine: 'Машина к машине',
-    /** UNTRANSLATED */
-    Protected: 'Non-SDK Integration',
-    /** UNTRANSLATED */
+    Protected: 'Интеграция без SDK',
     ThirdParty: 'Third-party app',
   },
   filter: {

@@ -1,102 +1,59 @@
 const tenant_members = {
-  /** UNTRANSLATED */
-  members: 'Members',
-  /** UNTRANSLATED */
-  invitations: 'Invitations',
-  /** UNTRANSLATED */
-  invite_members: 'Invite members',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  roles: 'Roles',
-  /** UNTRANSLATED */
-  admin: 'Admin',
-  /** UNTRANSLATED */
-  collaborator: 'Collaborator',
-  /** UNTRANSLATED */
-  invitation_status: 'Invitation status',
-  /** UNTRANSLATED */
-  inviter: 'Inviter',
-  /** UNTRANSLATED */
-  expiration_date: 'Expiration date',
+  members: '成员',
+  invitations: '邀请',
+  invite_members: '邀请成员',
+  user: '用户',
+  roles: '角色',
+  admin: '管理员',
+  collaborator: '合作者',
+  invitation_status: '邀请状态',
+  inviter: '邀请者',
+  expiration_date: '到期日期',
   invite_modal: {
-    /** UNTRANSLATED */
-    title: 'Invite people to Silverhand',
-    /** UNTRANSLATED */
-    subtitle: 'To invite members to an organization, they must accept the invitation.',
-    /** UNTRANSLATED */
-    to: 'To',
-    /** UNTRANSLATED */
-    added_as: 'Added as roles',
-    /** UNTRANSLATED */
+    title: '邀请人员加入Silverhand',
+    subtitle: '要邀请成员加入组织，他们必须接受邀请。',
+    to: '至',
+    added_as: '作为角色添加',
     email_input_placeholder: 'johndoe@example.com',
   },
   invitation_statuses: {
-    /** UNTRANSLATED */
-    pending: 'Pending',
-    /** UNTRANSLATED */
-    accepted: 'Accepted',
-    /** UNTRANSLATED */
-    expired: 'Expired',
-    /** UNTRANSLATED */
-    revoked: 'Revoked',
+    pending: '待处理',
+    accepted: '已接受',
+    expired: '已过期',
+    revoked: '已撤销',
   },
   invitation_empty_placeholder: {
-    /** UNTRANSLATED */
-    title: 'Invite team members',
-    /** UNTRANSLATED */
-    description:
-      'Your tenant currently has no members invited.\nTo assist with your integration, consider adding more members or admins.',
+    title: '邀请团队成员',
+    description: '您的租户当前没有邀请的成员。为了协助您的集成，请考虑添加更多成员或管理员。',
   },
   menu_options: {
-    /** UNTRANSLATED */
-    edit: 'Edit tenant role',
-    /** UNTRANSLATED */
-    delete: 'Remove user from tenant',
-    /** UNTRANSLATED */
-    resend_invite: 'Resend invitation',
-    /** UNTRANSLATED */
-    revoke: 'Revoke invitation',
-    /** UNTRANSLATED */
-    delete_invitation_record: 'Delete this invitation record',
+    edit: '编辑租户角色',
+    delete: '从租户中删除用户',
+    resend_invite: '重新发送邀请',
+    revoke: '撤销邀请',
+    delete_invitation_record: '删除此邀请记录',
   },
   edit_modal: {
-    /** UNTRANSLATED */
-    title: 'Change roles of {{name}}',
+    title: '更改{{name}}的角色',
   },
-  /** UNTRANSLATED */
-  delete_user_confirm: 'Are you sure you want to remove this user from this tenant?',
-  /** UNTRANSLATED */
+  delete_user_confirm: '您确定要从此租户中删除此用户吗？',
   assign_admin_confirm:
-    'Are you sure you want to make the selected user(s) admin? Granting admin access will give the user(s) the following permissions.<ul><li>Change the tenant billing plan</li><li>Add or remove collaborators</li><li>Delete the tenant</li></ul>',
-  /** UNTRANSLATED */
-  revoke_invitation_confirm: 'Are you sure you want to revoke this invitation?',
-  /** UNTRANSLATED */
-  delete_invitation_confirm: 'Are you sure you want to delete this invitation record?',
+    '您确定要将所选用户设为管理员吗？授予管理员访问权限将为用户提供以下权限。<ul><li>更改租户计费计划</li><li>添加或删除合作者</li><li>删除租户</li></ul>',
+  revoke_invitation_confirm: '您确定要撤销此邀请吗？',
+  delete_invitation_confirm: '您确定要删除此邀请记录吗？',
   messages: {
-    /** UNTRANSLATED */
-    invitation_sent: 'Invitation sent.',
-    /** UNTRANSLATED */
-    invitation_revoked: 'Invitation revoked.',
-    /** UNTRANSLATED */
-    invitation_resend: 'Invitation resent.',
-    /** UNTRANSLATED */
-    invitation_deleted: 'Invitation record deleted.',
+    invitation_sent: '已发送邀请。',
+    invitation_revoked: '已撤销邀请。',
+    invitation_resend: '已重新发送邀请。',
+    invitation_deleted: '已删除邀请记录。',
   },
   errors: {
-    /** UNTRANSLATED */
-    email_required: 'Invitee email is required.',
-    /** UNTRANSLATED */
-    email_exists: 'Email address already exists.',
-    /** UNTRANSLATED */
-    member_exists: 'This user is already a member of this organization.',
-    /** UNTRANSLATED */
-    pending_invitation_exists:
-      'Pending invitation exists. Delete related email or revoke the invitation.',
-    /** UNTRANSLATED */
-    invalid_email: 'Email address is invalid. Please make sure it is in the right format.',
-    /** UNTRANSLATED */
-    max_member_limit: 'You have reached the maximum number of members ({{limit}}) for this tenant.',
+    email_required: '邀请人员的电子邮件地址是必需的。',
+    email_exists: '电子邮件地址已存在。',
+    member_exists: '此用户已是此组织的成员。',
+    pending_invitation_exists: '存在待处理的邀请。删除相关电子邮件或撤销邀请。',
+    invalid_email: '电子邮件地址无效。请确保其格式正确。',
+    max_member_limit: '您已达到此租户的最大成员数（{{limit}}）。',
   },
 };
 

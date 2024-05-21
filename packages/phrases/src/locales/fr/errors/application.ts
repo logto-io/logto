@@ -8,27 +8,20 @@ const application = {
   third_party_application_only:
     'La fonctionnalité est uniquement disponible pour les applications tierces.',
   user_consent_scopes_not_found: 'Portées de consentement utilisateur invalides.',
-  /** UNTRANSLATED */
-  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
-  protected_app_metadata_is_required: "Les métadonnées d'application protégée sont requises.",
-  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed:
+    "Les scopes de l'API de gestion ne sont pas autorisés.",
+  protected_app_metadata_is_required: "Les métadonnées de l'application protégée sont requises.",
   protected_app_not_configured:
-    'Protected app provider is not configured. This feature is not available for open source version.',
-  /** UNTRANSLATED */
-  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
-  /** UNTRANSLATED */
-  protected_application_only: 'The feature is only available for protected applications.',
-  /** UNTRANSLATED */
-  protected_application_misconfigured: 'Protected application is misconfigured.',
-  /** UNTRANSLATED */
+    "Le fournisseur d'application protégée n'est pas configuré. Cette fonctionnalité n'est pas disponible dans la version open source.",
+  cloudflare_unknown_error: "Erreur inconnue lors de la requête à l'API Cloudflare",
+  protected_application_only:
+    'La fonctionnalité est uniquement disponible pour les applications protégées.',
+  protected_application_misconfigured: "L'application protégée est mal configurée.",
   protected_application_subdomain_exists:
-    'The subdomain of Protected application is already in use.',
-  /** UNTRANSLATED */
-  invalid_subdomain: 'Invalid subdomain.',
-  /** UNTRANSLATED */
-  custom_domain_not_found: 'Custom domain not found.',
-  /** UNTRANSLATED */
-  should_delete_custom_domains_first: 'Should delete custom domains first.',
+    "Le sous-domaine de l'application protégée est déjà utilisé.",
+  invalid_subdomain: 'Sous-domaine invalide.',
+  custom_domain_not_found: 'Domaine personnalisé non trouvé.',
+  should_delete_custom_domains_first: "Devrait d'abord supprimer les domaines personnalisés.",
 };
 
 export default Object.freeze(application);

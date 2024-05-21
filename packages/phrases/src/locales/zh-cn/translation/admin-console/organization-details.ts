@@ -21,13 +21,9 @@ const organization_details = {
     '一旦移除，用户将失去他们在这个机构中的成员资格和角色。此操作将无法撤销。',
   search_user_placeholder: '按名称、电子邮件、电话或用户ID搜索',
   at_least_one_user: '至少需要一个用户。',
-  /** UNTRANSLATED */
-  custom_data: 'Custom data',
-  /** UNTRANSLATED */
-  custom_data_tip:
-    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
-  /** UNTRANSLATED */
-  invalid_json_object: 'Invalid JSON object.',
+  custom_data: '自定义数据',
+  custom_data_tip: '自定义数据是一个 JSON 对象，可用于存储与机构关联的附加数据。',
+  invalid_json_object: '无效的 JSON 对象。',
 };
 
 export default Object.freeze(organization_details);

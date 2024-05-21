@@ -14,9 +14,8 @@ const domain = {
     custom_domain_field: '사용자 지정 도메인',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '도메인 추가',
-    /** UNTRANSLATED */
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      '유효한 도메인 URL을 제공해야합니다. 최소 세 부분으로 구성되어야 하며 예를 들어 "your.domain.com."이어야 합니다.',
     verify_domain: '도메인 확인',
     enable_ssl: 'SSL 사용',
     checking_dns_tip:
@@ -51,9 +50,8 @@ const domain = {
     '이 엔드포인트의 도메인 이름을 필요에 따라 사용자 정의할 수 있습니다. "{{custom}}" 또는 "{{default}}" 중 하나를 선택하세요.',
   custom_social_callback_url_note:
     '이 URI의 도메인 이름을 애플리케이션 엔드포인트와 일치하도록 사용자 정의할 수 있습니다. "{{custom}}" 또는 "{{default}}" 중 하나를 선택하세요.',
-  /** UNTRANSLATED */
   custom_acs_url_note:
-    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+    '이 URI의 도메인명을 사용자의 ID 공급자 Assertion Consumer 서비스 URL과 일치하도록 사용자 정의할 수 있습니다. "{{custom}}" 또는 "{{default}}" 중 하나를 선택하세요.',
 };
 
 export default Object.freeze(domain);

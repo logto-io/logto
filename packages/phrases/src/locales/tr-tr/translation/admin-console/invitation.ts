@@ -1,22 +1,14 @@
 const invitation = {
-  /** UNTRANSLATED */
-  find_your_tenants: 'Find your tenants',
-  /** UNTRANSLATED */
+  find_your_tenants: 'Kiracılarınızı Bulun',
   find_tenants_description:
-    'Your email address may already be registered with multiple tenants. You can choose to join the existing ones or continue create a new one.',
-  /** UNTRANSLATED */
-  create_new_tenant: 'Create a new tenant',
-  /** UNTRANSLATED */
-  email_not_match_title: 'You are currently signed in as\n{{email}}',
-  /** UNTRANSLATED */
+    'E-posta adresiniz zaten birden fazla kiracı ile kayıtlı olabilir. Var olanlara katılabilir veya devam ederek yeni bir tane oluşturabilirsiniz.',
+  create_new_tenant: 'Yeni Kiracı Oluştur',
+  email_not_match_title: 'Şu anda\n{{email}} olarak oturum açtınız',
   email_not_match_description:
-    'Please sign in with the correct account to accept the invitation and become a member of the organization.',
-  /** UNTRANSLATED */
-  switch_account: 'Sign in to another account',
-  /** UNTRANSLATED */
-  invalid_invitation_status: 'Invalid invitation. Please contact the administrator and try again.',
-  /** UNTRANSLATED */
-  invitation_not_found: 'Invitation not found. Please contact the administrator.',
+    'Daveti kabul etmek ve organizasyonun bir üyesi olmak için doğru hesapla oturum açınız.',
+  switch_account: 'Başka bir hesaba oturum açın',
+  invalid_invitation_status: 'Geçersiz davet. Lütfen yöneticiyle iletişime geçerek tekrar deneyin.',
+  invitation_not_found: 'Davet bulunamadı. Lütfen yöneticiyle iletişime geçin.',
 };
 
 export default Object.freeze(invitation);

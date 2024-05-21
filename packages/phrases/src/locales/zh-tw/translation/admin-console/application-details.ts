@@ -3,29 +3,18 @@ const application_details = {
   back_to_applications: '返回全部應用',
   check_guide: '查看指南',
   settings: '設置',
-  /** UNTRANSLATED */
   settings_description:
-    'An "Application" is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
-  /** UNTRANSLATED */
-  integration: 'Integration',
-  /** UNTRANSLATED */
+    '一個「應用程式」是一個已註冊的軟體或服務，可以存取使用者資訊或代表使用者進行操作。應用程式有助於辨識是誰向 Logto 要求什麼，並處理登入和權限問題。填寫驗證所需的字段。',
+  integration: '整合',
   integration_description:
-    "Deploy with Logto secure workers, powered by Cloudflare's edge network for top-tier performance and 0ms cold starts worldwide.",
-  /** UNTRANSLATED */
-  service_configuration: 'Service configuration',
-  /** UNTRANSLATED */
-  service_configuration_description: 'Complete the necessary configurations in your service.',
-  /** UNTRANSLATED */
-  session: 'Session',
-  /** UNTRANSLATED */
-  endpoints_and_credentials: 'Endpoints & Credentials',
-  /** UNTRANSLATED */
-  endpoints_and_credentials_description:
-    'Use the following endpoints and credentials to set up the OIDC connection in your application.',
-  /** UNTRANSLATED */
-  refresh_token_settings: 'Refresh token',
-  /** UNTRANSLATED */
-  refresh_token_settings_description: 'Manage the refresh token rules for this application.',
+    '使用由 Cloudflare 邊緣網路提供動力的 Logto 安全工作者部署，實現全球頂級性能和 0 毫秒全球冷啟動。',
+  service_configuration: '服務配置',
+  service_configuration_description: '在您的服務中完成必要的配置。',
+  session: '會話',
+  endpoints_and_credentials: '端點與憑證',
+  endpoints_and_credentials_description: '使用以下端點和憑證設置應用程式中的 OIDC 連接。',
+  refresh_token_settings: '刷新令牌',
+  refresh_token_settings_description: '管理此應用程式的刷新令牌規則。',
   application_roles: '角色',
   machine_logs: '機器日誌',
   application_name: '應用程式姓名',
@@ -35,11 +24,9 @@ const application_details = {
   config_endpoint: 'OpenID Provider 配置端點',
   authorization_endpoint: '授權端點',
   authorization_endpoint_tip: '進行驗證與授權的端點。用於 OpenID Connect 中的 <a>驗證</a> 流程。',
-  /** UNTRANSLATED */
-  show_endpoint_details: 'Show endpoint details',
-  /** UNTRANSLATED */
-  hide_endpoint_details: 'Hide endpoint details',
-  logto_endpoint: 'Logto endpoint',
+  show_endpoint_details: '顯示端點詳情',
+  hide_endpoint_details: '隱藏端點詳情',
+  logto_endpoint: 'Logto 端點',
   application_id: '應用程式 ID',
   application_id_tip:
     '應用程式的唯一標識，通常由 Logto 生成。相當於 OpenID Connect 中的 <a>client_id</a>。',
@@ -59,8 +46,8 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     '所有重新導向 URI 的來源都將默認被允許。通常不需要對此欄位進行操作。參見 <a>MDN 文件</a> 以了解更多。',
-  token_endpoint: 'Token Endpoint',
-  user_info_endpoint: '用戶信息端點',
+  token_endpoint: 'Token 端點',
+  user_info_endpoint: '用戶資訊端點',
   enable_admin_access: '啟用管理訪問',
   enable_admin_access_label:
     '啟用或禁用對管理 API 的訪問。啟用後，你可以使用訪問令牌代表該應用程式調用管理 API。',
@@ -72,125 +59,73 @@ const application_details = {
     'Refresh Token 可用來獲取新的訪問令牌，失效日期之前可用。獲取訪問令牌時，該令牌的期限將被延長至此值。',
   rotate_refresh_token: '旋轉 Refresh Token',
   rotate_refresh_token_label:
-    '啟用此配置將使 Logto 当 Refresh Token 的原始有效期剩下 70% 时或当满足某些条件时，授予新的 Refresh Token 以获取新的 Access Token。<a>了解更多</a>',
+    '啟用此配置將使 Logto 当 Refresh Token 的原始有效期剩下 70% 时或当满足某些条件时，授予新的 Refresh Token 以獲取新的 Access Token。<a>了解更多</a>',
   delete_description:
     '本操作會永久性地刪除該應用程式，且不可撤銷。輸入 <span>{{name}}</span> 確認。',
   enter_your_application_name: '輸入你的應用程式姓名',
   application_deleted: '應用 {{name}} 成功刪除。',
   redirect_uri_required: '至少需要輸入一個重定向 URL。',
-  /** UNTRANSLATED */
-  app_domain_description_1:
-    'Feel free to use your domain with {{domain}} powered by Logto, which is permanently valid.',
-  /** UNTRANSLATED */
-  app_domain_description_2:
-    'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
-  /** UNTRANSLATED */
-  custom_rules: 'Custom authentication rules',
-  /** UNTRANSLATED */
+  app_domain_description_1: '隨時使用由 Logto 提供動力的 {{domain}} 域，其永久有效。',
+  app_domain_description_2: '隨時使用您的域 <domain>{{domain}}</domain>，其永久有效。',
+  custom_rules: '自定義身份驗證規則',
   custom_rules_placeholder: '^/(admin|privacy)/.+$',
-  /** UNTRANSLATED */
-  custom_rules_description:
-    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if left blank.',
-  /** UNTRANSLATED */
-  authentication_routes: 'Authentication routes',
-  /** UNTRANSLATED */
+  custom_rules_description: '使用正則表達式設置需要身份驗證的路徑規則。預設: 若留空則全站保護。',
+  authentication_routes: '身份驗證路徑',
   custom_rules_tip:
-    "Here are two case scenarios:<ol><li>To only protect routes '/admin' and '/privacy' with authentication: ^/(admin|privacy)/.*</li><li>To exclude JPG images from authentication: ^(?!.*\\.jpg$).*$</li></ol>",
-  /** UNTRANSLATED */
+    "這裡有兩個案例：<ol><li>僅對 '/admin' 和 '/privacy' 路徑進行身份驗證: ^/(admin|privacy)/.*</li><li>排除 JPG 圖片不進行身份驗證: ^(?!.*\\.jpg$).*$</li></ol>",
   authentication_routes_description:
-    'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
-  /** UNTRANSLATED */
-  protect_origin_server: 'Protect your origin server',
-  /** UNTRANSLATED */
+    '使用指定路徑重新導向您的身份驗證按鈕。注意: 這些路徑不可替代。',
+  protect_origin_server: '保護您的源伺服器',
   protect_origin_server_description:
-    'Ensure to protect your origin server from direct access. Refer to the guide for more <a>detailed instructions</a>.',
-  /** UNTRANSLATED */
-  session_duration: 'Session duration (days)',
-  /** UNTRANSLATED */
-  try_it: 'Try it',
+    '確保保護您的源伺服器免受直接訪問。請參閱指南以獲取更多 <a>詳細說明</a>。',
+  session_duration: '會話持續時間（天數）',
+  try_it: '試試看',
   branding: {
-    /** UNTRANSLATED */
-    name: 'Branding',
-    /** UNTRANSLATED */
-    description: "Customize your application's display name and logo on the consent screen.",
-    /** UNTRANSLATED */
-    more_info: 'More info',
-    /** UNTRANSLATED */
-    more_info_description: 'Offer users more details about your application on the consent screen.',
-    /** UNTRANSLATED */
-    display_name: 'Display name',
-    /** UNTRANSLATED */
-    display_logo: 'Display logo',
-    /** UNTRANSLATED */
-    display_logo_dark: 'Display logo (dark)',
-    /** UNTRANSLATED */
-    terms_of_use_url: 'Application terms of use URL',
-    /** UNTRANSLATED */
-    privacy_policy_url: 'Application privacy policy URL',
+    name: '品牌',
+    description: '在同意畫面上自訂應用程式的顯示名稱和標誌。',
+    more_info: '更多資訊',
+    more_info_description: '在同意畫面上提供有關您的應用程式的更多詳細資訊。',
+    display_name: '顯示名稱',
+    display_logo: '顯示標誌',
+    display_logo_dark: '顯示標誌（深色）',
+    terms_of_use_url: '應用程式使用條款網址',
+    privacy_policy_url: '應用程式隱私政策網址',
   },
   permissions: {
-    /** UNTRANSLATED */
-    name: 'Permissions',
-    /** UNTRANSLATED */
-    description:
-      'Select the permissions that the third-party application requires for user authorization to access specific data types.',
-    /** UNTRANSLATED */
-    user_permissions: 'Personal user data',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization access',
-    /** UNTRANSLATED */
-    table_name: 'Grant permissions',
-    /** UNTRANSLATED */
-    field_name: 'Permission',
-    /** UNTRANSLATED */
-    field_description: 'Displayed in the consent screen',
-    /** UNTRANSLATED */
-    delete_text: 'Remove permission',
-    /** UNTRANSLATED */
+    name: '權限',
+    description: '選擇第三方應用程式需要的許可權，以便用戶授權訪問特定資料類型。',
+    user_permissions: '個人用戶資料',
+    organization_permissions: '組織訪問',
+    table_name: '授予權限',
+    field_name: '權限',
+    field_description: '在同意畫面上顯示',
+    delete_text: '刪除權限',
     permission_delete_confirm:
-      'This action will withdraw the permissions granted to the third-party app, preventing it from requesting user authorization for specific data types. Are you sure you want to continue?',
-    /** UNTRANSLATED */
-    permissions_assignment_description:
-      'Select the permissions the third-party application requests for user authorization to access specific data types.',
-    /** UNTRANSLATED */
-    user_profile: 'User data',
-    /** UNTRANSLATED */
-    api_permissions: 'API permissions',
-    /** UNTRANSLATED */
-    organization: 'Organization permissions',
-    /** UNTRANSLATED */
-    user_permissions_assignment_form_title: 'Add the user profile permissions',
-    /** UNTRANSLATED */
-    organization_permissions_assignment_form_title: 'Add the organization permissions',
-    /** UNTRANSLATED */
-    api_resource_permissions_assignment_form_title: 'Add the API resource permissions',
-    /** UNTRANSLATED */
+      '此操作將撤銷授予第三方應用程式的權限，防止其要求授權訪問特定資料類型。確定要繼續嗎？',
+    permissions_assignment_description: '選擇第三方應用程式請求用戶授權訪問特定資料類型的權限。',
+    user_profile: '用戶資料',
+    api_permissions: 'API 權限',
+    organization: '組織權限',
+    user_permissions_assignment_form_title: '添加用戶資料權限',
+    organization_permissions_assignment_form_title: '添加組織權限',
+    api_resource_permissions_assignment_form_title: '添加 API 资源權限',
     user_data_permission_description_tips:
-      'You can modify the description of the personal user data permissions via "Sign-in Experience > Content > Manage Language"',
-    /** UNTRANSLATED */
+      '您可以通過「登入體驗 > 內容 > 管理語言」修改個人用戶資料權限的描述。',
     permission_description_tips:
-      'When Logto is used as an Identity Provider (IdP) for authentication in third-party apps, and users are asked for authorization, this description appears on the consent screen.',
-    /** UNTRANSLATED */
-    user_title: 'User',
-    /** UNTRANSLATED */
-    user_description:
-      'Select the permissions requested by the third-party app for accessing specific user data.',
-    /** UNTRANSLATED */
-    grant_user_level_permissions: 'Grant permissions of user data',
-    /** UNTRANSLATED */
-    organization_title: 'Organization',
-    /** UNTRANSLATED */
-    organization_description:
-      'Select the permissions requested by the third-party app for accessing specific organization data.',
-    /** UNTRANSLATED */
-    grant_organization_level_permissions: 'Grant permissions of organization data',
+      '當 Logto 作為第三方應用程式中的身份提供者（IdP）用於身份驗證時，用戶被要求授權，此描述將顯示在同意畫面上。',
+    user_title: '用戶',
+    user_description: '選擇由第三方應用程式請求的用於訪問特定用戶資料的權限。',
+    grant_user_level_permissions: '授予用戶資料權限',
+    organization_title: '組織',
+    organization_description: '選擇由第三方應用程式請求的用於訪問特定組織資料的權限。',
+    grant_organization_level_permissions: '授予組織資料權限',
   },
   roles: {
     name_column: '角色',
     description_column: '描述',
     assign_button: '分配角色',
     delete_description:
-      '本操作將從此機器到機器應用程式中刪除此角色。該角色本身仍然存在，但不再與此機器到機器應用程式關聯。',
+      '此操作將從此機器到機器應用程式中刪除該角色。該角色本身仍然存在，但不再與此機器到機器應用程式關聯。',
     deleted: '已成功從此用戶中刪除 {{name}}。',
     assign_title: '將角色分配給 {{name}}',
     assign_subtitle: '授權 {{name}} 一個或多個角色',

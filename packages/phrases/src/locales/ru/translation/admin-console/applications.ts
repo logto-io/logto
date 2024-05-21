@@ -5,9 +5,8 @@ const applications = {
     'Настроить аутентификацию Logto для вашего нативного, одностраничного, машина-машина или традиционного приложения.',
   subtitle_with_app_type: 'Настроить аутентификацию Logto для вашего приложения {{name}}',
   create: 'Создать заявку',
-  /** UNTRANSLATED */
   create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+    'Используйте Logto в качестве поставщика идентификации (IdP) для простой интеграции с приложениями сторонних разработчиков',
   application_name: 'Название приложения',
   application_name_placeholder: 'Мое приложение',
   application_description: 'Описание приложения',
@@ -16,12 +15,10 @@ const applications = {
   no_application_type_selected: 'Вы еще не выбрали тип приложения',
   application_created: 'Приложение успешно создано.',
   tab: {
-    /** UNTRANSLATED */
-    my_applications: 'My apps',
-    /** UNTRANSLATED */
-    third_party_applications: 'Third-party apps',
+    my_applications: 'Мои приложения',
+    third_party_applications: 'Приложения сторонних разработчиков',
   },
-  app_id: 'App ID',
+  app_id: 'Идентификатор приложения',
   type: {
     native: {
       title: 'Нативное приложение',
@@ -34,30 +31,25 @@ const applications = {
       description: 'Например, приложение React DOM, приложение Vue',
     },
     traditional: {
-      title: 'Традиционный веб',
-      subtitle: 'Приложение, которое отображает и обновляет страницы только веб-сервером',
+      title: 'Традиционное веб-приложение',
+      subtitle: 'Приложение, которое отображает и обновляет страницы только через веб-сервер',
       description: 'Например, Next.js, PHP',
     },
     machine_to_machine: {
-      title: 'Machine-to-Machine',
+      title: 'Машина-машина',
       subtitle: 'Приложение (обычно сервис), которое напрямую общается с ресурсами',
-      description: 'Например, backend-сервис',
+      description: 'Например, бэкэнд-сервис',
     },
     protected: {
-      /** UNTRANSLATED */
-      title: 'Protected App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is protected by Logto',
-      /** UNTRANSLATED */
-      description: 'N/A',
+      title: 'Защищенное приложение',
+      subtitle: 'Приложение, защищенное Logto',
+      description: 'N/А',
     },
     third_party: {
-      /** UNTRANSLATED */
-      title: 'Third-party App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as a third-party IdP connector',
-      /** UNTRANSLATED */
-      description: 'E.g., OIDC, SAML',
+      title: 'Приложение сторонних разработчиков',
+      subtitle:
+        'Приложение, используемое в качестве коннектора стороннего поставщика идентификации',
+      description: 'Например, OIDC, SAML',
     },
   },
   placeholder_title: 'Выберите тип приложения, чтобы продолжить',

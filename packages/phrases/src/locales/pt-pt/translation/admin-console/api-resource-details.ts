@@ -3,13 +3,13 @@ const api_resource_details = {
   back_to_api_resources: 'Voltar aos recursos da API',
   general_tab: 'Geral',
   permissions_tab: 'Permissões',
-  settings: 'Configurações',
+  settings: 'Definições',
   settings_description:
     'Os recursos da API, também conhecidos como indicadores de recursos, indicam os serviços ou recursos de destino a serem solicitados, geralmente uma variável no formato URI que representa a identidade do recurso.',
   management_api_settings_description:
-    'A API de Gerenciamento do Logto é uma coleção abrangente de APIs que capacitam os administradores a gerenciar uma ampla gama de tarefas relacionadas à identidade, aplicar políticas de segurança e cumprir regulamentos e padrões.',
+    'A API de Gestão do Logto é uma coleção abrangente de APIs que capacitam os administradores a gerenciar uma ampla gama de tarefas relacionadas à identidade, aplicar políticas de segurança e cumprir regulamentos e padrões.',
   management_api_notice:
-    'Esta API representa a entidade Logto e não pode ser modificada ou eliminada. Você pode usar a API de gerenciamento para uma ampla gama de tarefas relacionadas à identidade. <a>Saiba mais</a>',
+    'Esta API representa a entidade Logto e não pode ser modificada ou eliminada. Você pode usar a API de gestão para uma ampla gama de tarefas relacionadas à identidade. <a>Saiba mais</a>',
   token_expiration_time_in_seconds: 'Tempo de expiração do token (em segundos)',
   token_expiration_time_in_seconds_placeholder: 'Insira o tempo de expiração do token',
   delete_description:
@@ -21,10 +21,8 @@ const api_resource_details = {
     create_title: 'Criar permissão',
     create_subtitle: 'Define as permissões (escopos) necessários para essa API.',
     confirm_create: 'Criar permissão',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
-    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
+    edit_title: 'Editar permissão da API',
+    edit_subtitle: 'Define as permissões (escopos) necessários pela API {{resourceName}}.',
     name: 'Nome da permissão',
     name_placeholder: 'leitura:recurso',
     forbidden_space_in_name: 'O nome da permissão não pode conter espaços.',

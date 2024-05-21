@@ -9,7 +9,7 @@ const connectors = {
   tab_social: '社交連接器',
   connector_name: '連接器名稱',
   demo_tip: '演示連接器僅用於演示且最多只能發送 100 條消息，不建議在生產環境中部署。',
-  social_demo_tip: '演示連接器僅用於演示目的，不建議在生產環境中部署。',
+  social_demo_tip: '演示連接器僅用於演示目的，不建議在生產璃廠中部署。',
   connector_type: '類型',
   connector_status: '登錄體驗',
   connector_status_in_use: '使用中',
@@ -45,7 +45,7 @@ const connectors = {
     logo_tip: '該圖片將用於連接器的展示。獲取圖片鏈接後粘貼在此處。',
     logo_dark: '社交登錄按鈕的 Logo 圖片鏈接（深色模式）',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_dark_tip: '在管理控制台的登錄體驗中啟用“深色模式”後，可設置此連接器 Logo 用於深色模式。',
+    logo_dark_tip: '在管理控制臺的登錄體驗中啟用“深色模式”後，可設置此連接器 Logo 用於深色模式。',
     logo_dark_collapse: '收起',
     logo_dark_show: '展開深色模式 Logo 設置',
     target: '身份提供商名稱',
@@ -68,7 +68,6 @@ const connectors = {
     callback_uri: 'Callback URI',
     callback_uri_description:
       '也稱為重定向 URI，在社交授權後，用戶將被發送回 Logto 的 URI，復制並粘貼到社交提供者的配置頁面中。',
-    /** UNTRANSLATED */
     acs_url: 'Assertion consumer service URL',
   },
   platform: {
@@ -76,7 +75,7 @@ const connectors = {
     web: '網頁',
     native: '原生',
   },
-  add_multi_platform: '支持多平台，選擇一個平台繼續',
+  add_multi_platform: '支持多平臺，選擇一個平臺繼續',
   drawer_title: '連接器配置指南',
   drawer_subtitle: '參考以下步驟完善或修改你的連接器設置',
   unknown: '未知連接器',

@@ -3,29 +3,20 @@ const application_details = {
   back_to_applications: 'Вернуться к приложениям',
   check_guide: 'Проверить гид',
   settings: 'Настройки',
-  /** UNTRANSLATED */
   settings_description:
-    'An "Application" is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
-  /** UNTRANSLATED */
-  integration: 'Integration',
-  /** UNTRANSLATED */
+    '«Приложение» — это зарегистрированное программное обеспечение или сервис, которое может получать доступ к информации пользователя либо действовать от его имени. Приложения помогают узнавать, кто запрашивает какие данные у Logto и обрабатывать вход и разрешения. Заполните необходимые поля для аутентификации.',
+  integration: 'Интеграция',
   integration_description:
-    "Deploy with Logto secure workers, powered by Cloudflare's edge network for top-tier performance and 0ms cold starts worldwide.",
-  /** UNTRANSLATED */
-  service_configuration: 'Service configuration',
-  /** UNTRANSLATED */
-  service_configuration_description: 'Complete the necessary configurations in your service.',
-  /** UNTRANSLATED */
-  session: 'Session',
-  /** UNTRANSLATED */
-  endpoints_and_credentials: 'Endpoints & Credentials',
-  /** UNTRANSLATED */
+    'Развертывайте защищенные рабочие процессы Logto, работающие на сети реберного узла Cloudflare, для обеспечения высочайшей производительности и нулевого времени запуска в любой точке мира.',
+  service_configuration: 'Конфигурация службы',
+  service_configuration_description: 'Завершите необходимые настройки в своем сервисе.',
+  session: 'Сессия',
+  endpoints_and_credentials: 'Конечные точки и учетные данные',
   endpoints_and_credentials_description:
-    'Use the following endpoints and credentials to set up the OIDC connection in your application.',
-  /** UNTRANSLATED */
-  refresh_token_settings: 'Refresh token',
-  /** UNTRANSLATED */
-  refresh_token_settings_description: 'Manage the refresh token rules for this application.',
+    'Используйте следующие конечные точки и учетные данные для настройки соединения OIDC в своем приложении.',
+  refresh_token_settings: 'Обновить токен',
+  refresh_token_settings_description:
+    'Управляйте правилами обновления токенов для этого приложения.',
   application_roles: 'Роли',
   machine_logs: 'Машинные журналы',
   application_name: 'Название приложения',
@@ -36,11 +27,9 @@ const application_details = {
   authorization_endpoint: 'Конечная точка авторизации',
   authorization_endpoint_tip:
     'Конечная точка для аутентификации и авторизации. Он используется для аутентификации <a>OpenID Connect</a>.',
-  /** UNTRANSLATED */
-  show_endpoint_details: 'Show endpoint details',
-  /** UNTRANSLATED */
-  hide_endpoint_details: 'Hide endpoint details',
-  logto_endpoint: 'Logto endpoint',
+  show_endpoint_details: 'Показать подробности конечной точки',
+  hide_endpoint_details: 'Скрыть подробности конечной точки',
+  logto_endpoint: 'Конечная точка Logto',
   application_id: 'ID приложения',
   application_id_tip:
     'Уникальный идентификатор приложения, обычно генерируемый Logto. Он также означает «<a>client_id</a>» в OpenID Connect.',
@@ -79,119 +68,75 @@ const application_details = {
   enter_your_application_name: 'Введите название своего приложения',
   application_deleted: 'Приложение {{name}} успешно удалено',
   redirect_uri_required: 'Вы должны ввести по крайней мере один URI перенаправления',
-  /** UNTRANSLATED */
   app_domain_description_1:
-    'Feel free to use your domain with {{domain}} powered by Logto, which is permanently valid.',
-  /** UNTRANSLATED */
+    'Не стесняйтесь использовать ваш домен с {{domain}}, под управлением Logto, который имеет постоянную действительность.',
   app_domain_description_2:
-    'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
-  /** UNTRANSLATED */
-  custom_rules: 'Custom authentication rules',
-  /** UNTRANSLATED */
+    'Смело используйте ваш домен <domain>{{domain}}</domain>, который имеет постоянную действительность.',
+  custom_rules: 'Пользовательские правила аутентификации',
   custom_rules_placeholder: '^/(admin|privacy)/.+$',
-  /** UNTRANSLATED */
   custom_rules_description:
-    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if left blank.',
-  /** UNTRANSLATED */
-  authentication_routes: 'Authentication routes',
-  /** UNTRANSLATED */
+    'Установите правила с использованием регулярных выражений для требуемых маршрутов, требующих аутентификации. По умолчанию: защита всего сайта, если оставить пустым.',
+  authentication_routes: 'Маршруты аутентификации',
   custom_rules_tip:
-    "Here are two case scenarios:<ol><li>To only protect routes '/admin' and '/privacy' with authentication: ^/(admin|privacy)/.*</li><li>To exclude JPG images from authentication: ^(?!.*\\.jpg$).*$</li></ol>",
-  /** UNTRANSLATED */
+    "Вот два варианта сценариев:<ol><li>Для защиты только маршрутов '/admin' и '/privacy' аутентификацией: ^/(admin|privacy)/.*</li><li>Для исключения из аутентификации изображений JPG: ^(?!.*\\.jpg$).*$</li></ol>",
   authentication_routes_description:
-    'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
-  /** UNTRANSLATED */
-  protect_origin_server: 'Protect your origin server',
-  /** UNTRANSLATED */
+    'Перенаправьте вашу кнопку аутентификации, используя указанные маршруты. Примечание: Эти маршруты незаменяемы.',
+  protect_origin_server: 'Защита вашего исходного сервера',
   protect_origin_server_description:
-    'Ensure to protect your origin server from direct access. Refer to the guide for more <a>detailed instructions</a>.',
-  /** UNTRANSLATED */
-  session_duration: 'Session duration (days)',
-  /** UNTRANSLATED */
-  try_it: 'Try it',
+    'Обеспечьте защиту вашего исходного сервера от прямого доступа. Обратитесь к руководству для получения более <a>подробных инструкций</a>.',
+  session_duration: 'Продолжительность сеанса (дни)',
+  try_it: 'Попробуйте',
   branding: {
-    /** UNTRANSLATED */
-    name: 'Branding',
-    /** UNTRANSLATED */
-    description: "Customize your application's display name and logo on the consent screen.",
-    /** UNTRANSLATED */
-    more_info: 'More info',
-    /** UNTRANSLATED */
-    more_info_description: 'Offer users more details about your application on the consent screen.',
-    /** UNTRANSLATED */
-    display_name: 'Display name',
-    /** UNTRANSLATED */
-    display_logo: 'Display logo',
-    /** UNTRANSLATED */
-    display_logo_dark: 'Display logo (dark)',
-    /** UNTRANSLATED */
-    terms_of_use_url: 'Application terms of use URL',
-    /** UNTRANSLATED */
-    privacy_policy_url: 'Application privacy policy URL',
+    name: 'Брендинг',
+    description: 'Настройте отображаемое имя и логотип вашего приложения на экране согласия.',
+    more_info: 'Дополнительная информация',
+    more_info_description:
+      'Предлагайте пользователям больше информации о вашем приложении на экране согласия.',
+    display_name: 'Отображаемое имя',
+    display_logo: 'Отображаемый логотип',
+    display_logo_dark: 'Отображаемый логотип (темный)',
+    terms_of_use_url: 'URL условий использования приложения',
+    privacy_policy_url: 'URL политики конфиденциальности приложения',
   },
   permissions: {
-    /** UNTRANSLATED */
-    name: 'Permissions',
-    /** UNTRANSLATED */
+    name: 'Разрешения',
     description:
-      'Select the permissions that the third-party application requires for user authorization to access specific data types.',
-    /** UNTRANSLATED */
-    user_permissions: 'Personal user data',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization access',
-    /** UNTRANSLATED */
-    table_name: 'Grant permissions',
-    /** UNTRANSLATED */
-    field_name: 'Permission',
-    /** UNTRANSLATED */
-    field_description: 'Displayed in the consent screen',
-    /** UNTRANSLATED */
-    delete_text: 'Remove permission',
-    /** UNTRANSLATED */
+      'Выберите разрешения, которые требуются стороннему приложению для получения авторизации пользователя на доступ к определенным типам данных.',
+    user_permissions: 'Персональные данные пользователя',
+    organization_permissions: 'Доступ организации',
+    table_name: 'Предоставление разрешений',
+    field_name: 'Разрешение',
+    field_description: 'Отображается на экране согласия',
+    delete_text: 'Удалить разрешение',
     permission_delete_confirm:
-      'This action will withdraw the permissions granted to the third-party app, preventing it from requesting user authorization for specific data types. Are you sure you want to continue?',
-    /** UNTRANSLATED */
+      'Это действие отозвет предоставленные разрешения стороннему приложению, препятствуя запросу пользователя на авторизацию к определенным типам данных. Вы уверены, что хотите продолжить?',
     permissions_assignment_description:
-      'Select the permissions the third-party application requests for user authorization to access specific data types.',
-    /** UNTRANSLATED */
-    user_profile: 'User data',
-    /** UNTRANSLATED */
-    api_permissions: 'API permissions',
-    /** UNTRANSLATED */
-    organization: 'Organization permissions',
-    /** UNTRANSLATED */
-    user_permissions_assignment_form_title: 'Add the user profile permissions',
-    /** UNTRANSLATED */
-    organization_permissions_assignment_form_title: 'Add the organization permissions',
-    /** UNTRANSLATED */
-    api_resource_permissions_assignment_form_title: 'Add the API resource permissions',
-    /** UNTRANSLATED */
+      'Выберите разрешения, которые стороннее приложение запрашивает для авторизации пользователя к определенным типам данных.',
+    user_profile: 'Данные пользователя',
+    api_permissions: 'API-разрешения',
+    organization: 'Разрешения организации',
+    user_permissions_assignment_form_title: 'Добавить разрешения на профиль пользователя',
+    organization_permissions_assignment_form_title: 'Добавить разрешения на организацию',
+    api_resource_permissions_assignment_form_title: 'Добавить разрешения на ресурс API',
     user_data_permission_description_tips:
-      'You can modify the description of the personal user data permissions via "Sign-in Experience > Content > Manage Language"',
-    /** UNTRANSLATED */
+      'Вы можете изменить описание персональных данных пользователя через "Опыт входа -> Содержание -> Управление языком".',
     permission_description_tips:
-      'When Logto is used as an Identity Provider (IdP) for authentication in third-party apps, and users are asked for authorization, this description appears on the consent screen.',
-    /** UNTRANSLATED */
-    user_title: 'User',
-    /** UNTRANSLATED */
+      'Когда Logto используется в качестве поставщика идентификации (IdP) для аутентификации в сторонних приложениях, и пользователи запрашивают авторизацию, данное описание отображается на экране согласия.',
+    user_title: 'Пользователь',
     user_description:
-      'Select the permissions requested by the third-party app for accessing specific user data.',
-    /** UNTRANSLATED */
-    grant_user_level_permissions: 'Grant permissions of user data',
-    /** UNTRANSLATED */
-    organization_title: 'Organization',
-    /** UNTRANSLATED */
+      'Выберите разрешения, запрошенные сторонним приложением для доступа к определенным данным пользователя.',
+    grant_user_level_permissions: 'Предоставить разрешения на данные пользователя',
+    organization_title: 'Организация',
     organization_description:
-      'Select the permissions requested by the third-party app for accessing specific organization data.',
-    /** UNTRANSLATED */
-    grant_organization_level_permissions: 'Grant permissions of organization data',
+      'Выберите разрешения, которые запрашиваются сторонним приложением для доступа к определенным данным организации.',
+    grant_organization_level_permissions: 'Предоставить разрешения на данные организации',
   },
   roles: {
     name_column: 'Роль',
     description_column: 'Описание',
     assign_button: 'Назначить роли',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
+      'Это действие удалит эту роль из этого приложения. Сама роль останется, но больше не будет связана с этим приложением.',
     deleted: '{{name}} успешно удалено у этого пользователя.',
     assign_title: 'Назначить роли для {{name}}',
     assign_subtitle: 'Авторизовать {{name}} одну или несколько ролей',

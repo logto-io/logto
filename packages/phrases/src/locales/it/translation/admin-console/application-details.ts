@@ -3,29 +3,20 @@ const application_details = {
   back_to_applications: 'Torna alle applicazioni',
   check_guide: 'Verifica guida',
   settings: 'Impostazioni',
-  /** UNTRANSLATED */
   settings_description:
-    'An "Application" is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
-  /** UNTRANSLATED */
-  integration: 'Integration',
-  /** UNTRANSLATED */
+    "Un \"Applicazione\" è un software o servizio registrato che può accedere alle informazioni dell'utente o agire per conto di un utente. Le applicazioni aiutano a riconoscere chi sta chiedendo cosa da Logto e gestiscono l'accesso e le autorizzazioni. Compila i campi obbligatori per l'autenticazione.",
+  integration: 'Integrazione',
   integration_description:
-    "Deploy with Logto secure workers, powered by Cloudflare's edge network for top-tier performance and 0ms cold starts worldwide.",
-  /** UNTRANSLATED */
-  service_configuration: 'Service configuration',
-  /** UNTRANSLATED */
-  service_configuration_description: 'Complete the necessary configurations in your service.',
-  /** UNTRANSLATED */
-  session: 'Session',
-  /** UNTRANSLATED */
-  endpoints_and_credentials: 'Endpoints & Credentials',
-  /** UNTRANSLATED */
+    "Implementa con i lavoratori sicuri di Logto, supportati dalla rete perimetrale di Cloudflare per prestazioni di prim'ordine e avviamenti istantanei in tutto il mondo a 0 ms.",
+  service_configuration: 'Configurazione del servizio',
+  service_configuration_description: 'Completa le configurazioni necessarie nel tuo servizio.',
+  session: 'Sessione',
+  endpoints_and_credentials: 'Endpoint e Credenziali',
   endpoints_and_credentials_description:
-    'Use the following endpoints and credentials to set up the OIDC connection in your application.',
-  /** UNTRANSLATED */
-  refresh_token_settings: 'Refresh token',
-  /** UNTRANSLATED */
-  refresh_token_settings_description: 'Manage the refresh token rules for this application.',
+    'Usa i seguenti endpoint e credenziali per configurare la connessione OIDC nella tua applicazione.',
+  refresh_token_settings: 'Token di aggiornamento',
+  refresh_token_settings_description:
+    'Gestisci le regole dei token di aggiornamento per questa applicazione.',
   application_roles: 'Ruoli',
   machine_logs: 'Log delle macchine',
   application_name: "Nome dell'applicazione",
@@ -36,10 +27,8 @@ const application_details = {
   authorization_endpoint: 'Endpoint di autorizzazione',
   authorization_endpoint_tip:
     "L'endpoint per effettuare l'autenticazione e l'autorizzazione. Viene utilizzato per la connessione OpenID <a>autenticazione</a>.",
-  /** UNTRANSLATED */
-  show_endpoint_details: 'Show endpoint details',
-  /** UNTRANSLATED */
-  hide_endpoint_details: 'Hide endpoint details',
+  show_endpoint_details: 'Mostra dettagli endpoint',
+  hide_endpoint_details: 'Nascondi dettagli endpoint',
   logto_endpoint: 'Endpoint Logto',
   application_id: 'ID App',
   application_id_tip:
@@ -79,112 +68,69 @@ const application_details = {
   enter_your_application_name: 'Inserisci il nome della tua applicazione',
   application_deleted: "L'applicazione {{name}} è stata eliminata con successo",
   redirect_uri_required: 'Devi inserire almeno un URI di reindirizzamento',
-  /** UNTRANSLATED */
   app_domain_description_1:
-    'Feel free to use your domain with {{domain}} powered by Logto, which is permanently valid.',
-  /** UNTRANSLATED */
+    'Sentiti libero di utilizzare il tuo dominio con {{domain}} alimentato da Logto, che è permanentemente valido.',
   app_domain_description_2:
-    'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
-  /** UNTRANSLATED */
-  custom_rules: 'Custom authentication rules',
-  /** UNTRANSLATED */
+    'Sentiti libero di utilizzare il tuo dominio <domain>{{domain}}</domain> che è permanentemente valido.',
+  custom_rules: 'Regole di autenticazione personalizzate',
   custom_rules_placeholder: '^/(admin|privacy)/.+$',
-  /** UNTRANSLATED */
   custom_rules_description:
-    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if left blank.',
-  /** UNTRANSLATED */
-  authentication_routes: 'Authentication routes',
-  /** UNTRANSLATED */
+    "Imposta le regole con espressioni regolari per percorsi richiesti per l'autenticazione. Predefinito: protezione completa del sito se lasciato vuoto.",
+  authentication_routes: 'Percorsi di autenticazione',
   custom_rules_tip:
-    "Here are two case scenarios:<ol><li>To only protect routes '/admin' and '/privacy' with authentication: ^/(admin|privacy)/.*</li><li>To exclude JPG images from authentication: ^(?!.*\\.jpg$).*$</li></ol>",
-  /** UNTRANSLATED */
+    "Ecco due scenari:<ol><li>Per proteggere solo i percorsi '/admin' e '/privacy' con autenticazione: ^/(admin|privacy)/.*</li><li>Per escludere le immagini JPG dall'autenticazione: ^(?!.*\\.jpg$).*$</li></ol>",
   authentication_routes_description:
-    'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
-  /** UNTRANSLATED */
-  protect_origin_server: 'Protect your origin server',
-  /** UNTRANSLATED */
+    "Reindirizza l'autenticazione del tuo pulsante utilizzando i percorsi specificati. Nota: questi percorsi sono irrimovibili.",
+  protect_origin_server: 'Proteggi il tuo server di origine',
   protect_origin_server_description:
-    'Ensure to protect your origin server from direct access. Refer to the guide for more <a>detailed instructions</a>.',
-  /** UNTRANSLATED */
-  session_duration: 'Session duration (days)',
-  /** UNTRANSLATED */
-  try_it: 'Try it',
+    "Assicurati di proteggere il tuo server di origine dall'accesso diretto. Fai riferimento alla guida per ulteriori <a>istruzioni dettagliate</a>.",
+  session_duration: 'Durata della sessione (giorni)',
+  try_it: 'Provalo',
   branding: {
-    /** UNTRANSLATED */
-    name: 'Branding',
-    /** UNTRANSLATED */
-    description: "Customize your application's display name and logo on the consent screen.",
-    /** UNTRANSLATED */
-    more_info: 'More info',
-    /** UNTRANSLATED */
-    more_info_description: 'Offer users more details about your application on the consent screen.',
-    /** UNTRANSLATED */
-    display_name: 'Display name',
-    /** UNTRANSLATED */
-    display_logo: 'Display logo',
-    /** UNTRANSLATED */
-    display_logo_dark: 'Display logo (dark)',
-    /** UNTRANSLATED */
-    terms_of_use_url: 'Application terms of use URL',
-    /** UNTRANSLATED */
-    privacy_policy_url: 'Application privacy policy URL',
+    name: 'Marchio',
+    description: "Personalizza il nome e il logo dell'applicazione sullo schermo del consenso.",
+    more_info: 'Maggiori informazioni',
+    more_info_description:
+      "Offri agli utenti ulteriori dettagli sull'applicazione sullo schermo del consenso.",
+    display_name: 'Nome visualizzato',
+    display_logo: 'Logo visualizzato',
+    display_logo_dark: 'Logo visualizzato (scuro)',
+    terms_of_use_url: "URL termini d'uso dell'applicazione",
+    privacy_policy_url: "URL politica sulla privacy dell'applicazione",
   },
   permissions: {
-    /** UNTRANSLATED */
-    name: 'Permissions',
-    /** UNTRANSLATED */
+    name: 'Autorizzazioni',
     description:
-      'Select the permissions that the third-party application requires for user authorization to access specific data types.',
-    /** UNTRANSLATED */
-    user_permissions: 'Personal user data',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization access',
-    /** UNTRANSLATED */
-    table_name: 'Grant permissions',
-    /** UNTRANSLATED */
-    field_name: 'Permission',
-    /** UNTRANSLATED */
-    field_description: 'Displayed in the consent screen',
-    /** UNTRANSLATED */
-    delete_text: 'Remove permission',
-    /** UNTRANSLATED */
+      "Seleziona le autorizzazioni che l'applicazione di terze parti richiede per l'autorizzazione dell'utente all'accesso a tipi di dati specifici.",
+    user_permissions: 'Dati utente personali',
+    organization_permissions: 'Accesso organizzazione',
+    table_name: 'Concedi autorizzazioni',
+    field_name: 'Autorizzazione',
+    field_description: 'Visualizzato nello schermo del consenso',
+    delete_text: 'Rimuovi autorizzazione',
     permission_delete_confirm:
-      'This action will withdraw the permissions granted to the third-party app, preventing it from requesting user authorization for specific data types. Are you sure you want to continue?',
-    /** UNTRANSLATED */
+      "Questa azione revocherà le autorizzazioni concesse all'applicazione di terze parti, impedendole di richiedere l'autorizzazione dell'utente per tipi di dati specifici. Sei sicuro di voler continuare?",
     permissions_assignment_description:
-      'Select the permissions the third-party application requests for user authorization to access specific data types.',
-    /** UNTRANSLATED */
-    user_profile: 'User data',
-    /** UNTRANSLATED */
-    api_permissions: 'API permissions',
-    /** UNTRANSLATED */
-    organization: 'Organization permissions',
-    /** UNTRANSLATED */
-    user_permissions_assignment_form_title: 'Add the user profile permissions',
-    /** UNTRANSLATED */
-    organization_permissions_assignment_form_title: 'Add the organization permissions',
-    /** UNTRANSLATED */
-    api_resource_permissions_assignment_form_title: 'Add the API resource permissions',
-    /** UNTRANSLATED */
+      "Seleziona le autorizzazioni richieste dall'applicazione di terze parti per l'autorizzazione dell'utente all'accesso a tipi di dati specifici.",
+    user_profile: 'Dati utente',
+    api_permissions: 'Autorizzazioni API',
+    organization: 'Autorizzazioni organizzazione',
+    user_permissions_assignment_form_title: 'Aggiungi le autorizzazioni del profilo utente',
+    organization_permissions_assignment_form_title:
+      "Aggiungi le autorizzazioni dell'organizzazione",
+    api_resource_permissions_assignment_form_title: 'Aggiungi le autorizzazioni delle risorse API',
     user_data_permission_description_tips:
-      'You can modify the description of the personal user data permissions via "Sign-in Experience > Content > Manage Language"',
-    /** UNTRANSLATED */
+      'Puoi modificare la descrizione delle autorizzazioni dei dati personali degli utenti tramite "Esperienza di accesso > Contenuto > Gestisci lingue".',
     permission_description_tips:
-      'When Logto is used as an Identity Provider (IdP) for authentication in third-party apps, and users are asked for authorization, this description appears on the consent screen.',
-    /** UNTRANSLATED */
-    user_title: 'User',
-    /** UNTRANSLATED */
+      "Quando Logto viene utilizzato come Provider di Identità (IdP) per l'autenticazione nelle app di terze parti e agli utenti viene chiesta l'autorizzazione, questa descrizione appare sullo schermo del consenso.",
+    user_title: 'Utente',
     user_description:
-      'Select the permissions requested by the third-party app for accessing specific user data.',
-    /** UNTRANSLATED */
-    grant_user_level_permissions: 'Grant permissions of user data',
-    /** UNTRANSLATED */
-    organization_title: 'Organization',
-    /** UNTRANSLATED */
+      "Seleziona le autorizzazioni richieste dall'applicazione di terze parti per accedere a tipi specifici di dati utente.",
+    grant_user_level_permissions: 'Concedi autorizzazioni dei dati utente',
+    organization_title: 'Organizzazione',
     organization_description:
-      'Select the permissions requested by the third-party app for accessing specific organization data.',
-    /** UNTRANSLATED */
-    grant_organization_level_permissions: 'Grant permissions of organization data',
+      "Seleziona le autorizzazioni richieste dall'applicazione di terze parti per accedere a tipi specifici di dati organizzazione.",
+    grant_organization_level_permissions: 'Concedi autorizzazioni dei dati organizzazione',
   },
   roles: {
     name_column: 'Ruolo',

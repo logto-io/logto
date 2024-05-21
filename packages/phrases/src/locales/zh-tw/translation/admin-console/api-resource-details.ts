@@ -21,10 +21,8 @@ const api_resource_details = {
     create_title: '建立權限',
     create_subtitle: '定義此 API 所需的權限 (scope)。',
     confirm_create: '建立權限',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
-    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
+    edit_title: '編輯 API 權限',
+    edit_subtitle: '定義 {{resourceName}} API 所需的權限 (scopes)。',
     name: '權限名稱',
     name_placeholder: 'read:resource',
     forbidden_space_in_name: '權限名稱不能包含空格。',

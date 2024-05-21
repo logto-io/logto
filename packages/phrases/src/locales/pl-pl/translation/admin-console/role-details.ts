@@ -13,6 +13,9 @@ const role_details = {
     'Role to grupowanie uprawnień, które mogą być przypisywane do użytkowników. Zapewniają również sposób agregacji uprawnień zdefiniowanych dla różnych interfejsów API, co umożliwia bardziej efektywne dodawanie, usuwanie lub modyfikowanie uprawnień w porównaniu z przypisywaniem ich do użytkowników indywidualnie.',
   field_name: 'Nazwa',
   field_description: 'Opis',
+  field_is_default: 'Domyślna rola',
+  field_is_default_description:
+    'Ustaw tę rolę jako domyślną rolę dla nowych użytkowników. Można ustawić wiele domyślnych ról. To również wpłynie na domyślne role dla użytkowników utworzonych za pomocą interfejsu API zarządzania.',
   type_m2m_role_tag: 'Rola aplikacji maszynowych',
   type_user_role_tag: 'Rola użytkownika',
   m2m_role_notification:

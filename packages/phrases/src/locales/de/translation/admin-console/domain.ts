@@ -15,15 +15,14 @@ const domain = {
     custom_domain_field: 'Benutzerdefinierte Domain',
     custom_domain_placeholder: 'ihre.domain.com',
     add_domain: 'Domain hinzufügen',
-    /** UNTRANSLATED */
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      'Bitte geben Sie eine gültige Domain-URL mit mindestens drei Teilen an, z. B. "ihre.domain.com."',
     verify_domain: 'Domain überprüfen',
     enable_ssl: 'SSL aktivieren',
     checking_dns_tip:
-      'Nachdem Sie die DNS-Einträge konfiguriert haben, wird der Prozess automatisch ausgeführt und kann bis zu 24 Stunden dauern. Sie können diese Oberfläche verlassen während er läuft.',
+      'Nachdem Sie die DNS-Einträge konfiguriert haben, wird der Prozess automatisch ausgeführt und kann bis zu 24 Stunden dauern. Sie können diese Oberfläche verlassen, während er läuft.',
     enable_ssl_tip:
-      'SSL aktivieren wird automatisch ausgeführt und kann bis zu 24 Stunden dauern. Sie können diese Oberfläche verlassen während er läuft.',
+      'SSL aktivieren wird automatisch ausgeführt und kann bis zu 24 Stunden dauern. Sie können diese Oberfläche verlassen, während er läuft.',
     generating_dns_records: 'DNS-Einträge werden generiert...',
     add_dns_records: 'Bitte fügen Sie diese DNS-Einträge Ihrem DNS-Provider hinzu.',
     dns_table: {
@@ -52,9 +51,8 @@ const domain = {
     'Sie können den Domainnamen dieser Endpunkte anpassen, wie Sie möchten. Wählen Sie entweder "{{custom}}" oder "{{default}}".',
   custom_social_callback_url_note:
     'Sie können den Domainnamen dieser URI anpassen, um mit dem Endpunkt Ihrer Anwendung übereinzustimmen. Wählen Sie entweder "{{custom}}" oder "{{default}}".',
-  /** UNTRANSLATED */
   custom_acs_url_note:
-    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+    'Sie können den Domainnamen dieser URI anpassen, um mit der URL Ihres Identitätsanbieters Assertions-Verbraucherdienst übereinzustimmen. Wählen Sie entweder "{{custom}}" oder "{{default}}".',
 };
 
 export default Object.freeze(domain);

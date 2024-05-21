@@ -2,18 +2,16 @@ const organizations = {
   organization: 'Organizacja',
   page_title: 'Organizacje',
   title: 'Organizacje',
-  /** UNTRANSLATED */
   subtitle:
-    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
+    'Organizacje są zazwyczaj używane w aplikacjach typu SaaS lub podobnych dla wielu najemców i reprezentują Twoich klientów, którzy są zespołami, organizacjami lub całymi firmami. Organizacje są podstawowym elementem do uwierzytelniania i autoryzacji B2B.',
   organization_template: 'Szablon organizacji',
   organization_id: 'ID organizacji',
   members: 'Członkowie',
   create_organization: 'Utwórz organizację',
   setup_organization: 'Skonfiguruj swoją organizację',
   organization_list_placeholder_title: 'Organizacja',
-  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
+    'Organizacje są często wykorzystywane w aplikacjach typu SaaS lub podobnych jako praktyka najlepsza. Pozwalają one tworzyć aplikacje, które umożliwiają klientom tworzenie i zarządzanie organizacjami, zapraszanie członków oraz przypisywanie ról.',
   organization_name_placeholder: 'Moja organizacja',
   organization_description_placeholder: 'Krótki opis organizacji',
   organization_permission: 'Uprawnienie organizacji',
@@ -44,7 +42,7 @@ const organizations = {
         description:
           'W wielomandantowych aplikacjach typu SaaS, wiele organizacji często dzieli ten sam szablon kontroli dostępu, który obejmuje uprawnienia i role. W Logto nazywamy to "szablonem organizacji".',
         permission_description:
-          'Uprawnienie organizacji odnosi się do autoryzacji dostępu do zasobu w kontekście organizacji.',
+          'Uprawnienie organizacji odnosi się do autoryzacji dostępu do zasobów w kontekście organizacji.',
         role_description_deprecated:
           'Rola organizacji to grupowanie uprawnień organizacji, które można przypisać członkom.',
         role_description:

@@ -23,13 +23,10 @@ const organization_details = {
   search_user_placeholder:
     'Wyszukaj według nazwy, adresu e-mail, numeru telefonu lub identyfikatora użytkownika',
   at_least_one_user: 'Wymagany jest co najmniej jeden użytkownik.',
-  /** UNTRANSLATED */
-  custom_data: 'Custom data',
-  /** UNTRANSLATED */
+  custom_data: 'Dane niestandardowe',
   custom_data_tip:
-    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
-  /** UNTRANSLATED */
-  invalid_json_object: 'Invalid JSON object.',
+    'Dane niestandardowe to obiekt JSON, który może być wykorzystany do przechowywania dodatkowych danych związanych z organizacją.',
+  invalid_json_object: 'Nieprawidłowy obiekt JSON.',
 };
 
 export default Object.freeze(organization_details);

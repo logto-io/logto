@@ -5,20 +5,13 @@ const webhooks = {
     'Belirli olaylarla ilgili gerçek zamanlı güncellemeler almak için webhooklar oluşturun.',
   create: 'Webhook Oluştur',
   schemas: {
-    /** UNTRANSLATED */
-    interaction: 'User interaction',
-    /** UNTRANSLATED */
-    user: 'User',
-    /** UNTRANSLATED */
-    organization: 'Organization',
-    /** UNTRANSLATED */
-    role: 'Role',
-    /** UNTRANSLATED */
-    scope: 'Permission',
-    /** UNTRANSLATED */
-    organization_role: 'Organization role',
-    /** UNTRANSLATED */
-    organization_scope: 'Organization permission',
+    interaction: 'Kullanıcı etkileşimi',
+    user: 'Kullanıcı',
+    organization: 'Kuruluş',
+    role: 'Rol',
+    scope: 'İzin',
+    organization_role: 'Kuruluş rolü',
+    organization_scope: 'Kuruluş izni',
   },
   table: {
     name: 'Adı',
@@ -29,13 +22,13 @@ const webhooks = {
   placeholder: {
     title: 'Webhook',
     description:
-      'POST istekleri aracılığıyla uç nokta URL\'nize gerçek zamanlı güncellemeler almak için bir webhook oluşturun. "Hesap Oluşturma", "Oturum Açma" ve "Şifre Sıfırlama" gibi olayların etkinliklerini takip edin ve hemen harekete geçin.',
+      'POST istekleri aracılığıyla uç nokta URL\'nıza gerçek zamanlı güncellemeler almak için bir webhook oluşturun. "Hesap Oluşturma", "Oturum Açma" ve "Şifre Sıfırlama" gibi olayların etkinliklerini takip edin ve hemen harekete geçin.',
     create_webhook: 'Webhook Oluştur',
   },
   create_form: {
     title: 'Webhook Oluştur',
     subtitle:
-      'Webhook ekleyerek, Logto’nun kullanıcı eylemlerinin ayrıntılarını POST isteğiyle uç nokta URL’nize göndermesini sağlayabilirsiniz.',
+      'Webhook ekleyerek, Logto’nun kullanıcı eylemlerinin ayrıntılarını POST isteğiyle uç nokta URL’nıza göndermesini sağlayabilirsiniz.',
     events: 'Olaylar',
     events_description: 'Logto’nun POST isteğini göndermesi için tetikleyici olayları seçin.',
     name: 'Adı',

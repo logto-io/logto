@@ -73,7 +73,7 @@ const tenants = {
       '抱歉，您现在无法删除此租户。请确保您处于免费计划并已支付所有未结账单。',
   },
   leave_tenant_modal: {
-    description: '您确定要离开此租户吗？',
+    description: '确定要离开此租户吗?',
     leave_button: '离开',
   },
   tenant_landing_page: {

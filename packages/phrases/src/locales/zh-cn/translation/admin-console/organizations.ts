@@ -2,18 +2,16 @@ const organizations = {
   organization: '组织',
   page_title: '组织',
   title: '组织',
-  /** UNTRANSLATED */
   subtitle:
-    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
+    '组织通常在SaaS或类似的多租户应用程序中使用，代表您的客户，这些客户可以是团队、组织或整个公司。组织作为B2B身份验证和授权的基础元素。',
   organization_template: '组织模板',
   organization_id: '组织 ID',
   members: '成员',
   create_organization: '创建组织',
   setup_organization: '设置您的组织',
   organization_list_placeholder_title: '组织',
-  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
+    '在SaaS或类似的多租户应用程序中，通常作为最佳实践使用组织。它们使您能够开发允许客户创建和管理组织、邀请成员并分配角色的应用程序。',
   organization_name_placeholder: '我的组织',
   organization_description_placeholder: '组织的简要描述',
   organization_permission: '组织权限',
@@ -22,7 +20,7 @@ const organizations = {
   organization_role: '组织角色',
   organization_role_other: '组织角色',
   organization_role_description:
-    '组织角色是可以分配给用户的权限组。这些权限必须来自预定义的组织权限。',
+    '组织角色是可分配给用户的权限组。这些权限必须来自预定义的组织权限。',
   role: '角色',
   search_placeholder: '按组织名称或ID搜索',
   search_role_placeholder: '输入以搜索和选择角色',
@@ -41,9 +39,9 @@ const organizations = {
       section_2: {
         title: '组织模板专为多租户应用程序访问控制而设计',
         description:
-          '在多租户SaaS应用程序中，多个组织通常共享相同的访问控制模板，其中包括权限和角色。在Logto中，我们称之为“组织模板”。',
+          '在多租户SaaS应用程序中，多个组织通常共享相同的访问控制模板，包括权限和角色。在Logto中，我们称之为“组织模板”。',
         permission_description: '组织权限是指在组织上下文中访问资源的授权。',
-        role_description_deprecated: '组织角色是可以分配给成员的组织权限组。',
+        role_description_deprecated: '组织角色是可分配给成员的组织权限组。',
         role_description: '组织角色是可以分配给成员的组织权限或API权限的分组。',
       },
       section_3: {
