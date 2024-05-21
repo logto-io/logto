@@ -48,11 +48,12 @@ const quota_table = {
   organizations: {
     title: 'Organizasyon',
     organizations: 'Organizasyonlar',
-    monthly_active_organization: 'Aylık aktif organizasyon',
-    allowed_users_per_org: 'Organizasyon başına izin verilen kullanıcılar',
-    invitation: 'Davet',
-    org_roles: 'Org rolleri',
-    org_permissions: 'Org izinleri',
+    organization: 'Organizasyon',
+    organization_count: 'Organizasyon sayısı',
+    allowed_users_per_org: 'Organizasyon başına kullanıcılar',
+    invitation: 'Davet (Management API)',
+    org_roles: 'Organizasyon rolleri',
+    org_permissions: 'Organizasyon izinleri',
     just_in_time_provisioning: 'İstisnai olana kadar temin',
   },
   support: {
