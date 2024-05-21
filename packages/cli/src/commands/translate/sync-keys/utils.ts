@@ -259,7 +259,10 @@ const traverseNode = async (
   await fs.writeFile(targetFilePath, '', { flag: 'w+' });
 
   if (isRoot) {
-    await fs.appendFile(targetFilePath, "import type { LocalePhrase } from '../../types.js';\n\n");
+    await fs.appendFile(
+      targetFilePath,
+      "import { type DeepPartial } from '@silverhand/essentials';\n\nimport type { LocalePhrase } from '../../types.js';\n\n"
+    );
   }
 
   // Write imports first
