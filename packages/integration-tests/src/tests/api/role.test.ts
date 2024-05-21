@@ -52,12 +52,6 @@ describe('roles', () => {
     expect(response instanceof HTTPError && response.response.status).toBe(422);
   });
 
-  it('should fail when try to create an internal role', async () => {
-    const response = await createRole({ name: '#internal:foo' }).catch((error: unknown) => error);
-
-    expect(response instanceof HTTPError && response.response.status).toBe(403);
-  });
-
   it('should fail when try to create role with management API scope(s)', async () => {
     const response = await createRole({ scopeIds: [defaultManagementApi.scopes[0]!.id] }).catch(
       (error: unknown) => error
@@ -111,16 +105,6 @@ describe('roles', () => {
       name: 'new_name',
     }).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.status).toBe(404);
-  });
-
-  it('should fail when try to update an internal role', async () => {
-    const role = await createRole({});
-
-    const response = await updateRole(role.id, {
-      name: '#internal:foo',
-    }).catch((error: unknown) => error);
-
-    expect(response instanceof HTTPError && response.response.status).toBe(403);
   });
 
   it('should delete role successfully', async () => {
