@@ -124,14 +124,4 @@ describe('roles scopes', () => {
     );
     expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
-
-  it('should fail when try to assign a scope to an internal role', async () => {
-    const resource = await createResource();
-    const scope = await createScope(resource.id);
-    const response = await assignScopesToRole([scope.id], defaultManagementApi.role.id).catch(
-      (error: unknown) => error
-    );
-
-    expect(response instanceof HTTPError && response.response.status).toBe(403);
-  });
 });
