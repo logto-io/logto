@@ -13,6 +13,7 @@ export const createRoleScopeLibrary = (queries: Queries) => {
   } = queries;
 
   const validateRoleScopeAssignment = async (
+    tenantId: string,
     scopeIds: string[],
     roleId: string,
     options: { skipScopeExistenceCheck?: boolean } = {}
@@ -50,7 +51,7 @@ export const createRoleScopeLibrary = (queries: Queries) => {
         if (role.type === RoleType.User) {
           const { indicator } = await findResourceById(resourceId);
           assertThat(
-            !isManagementApi(indicator),
+            !isManagementApi(tenantId, indicator),
             'role.management_api_scopes_not_assignable_to_user_role'
           );
         }

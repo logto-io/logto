@@ -106,7 +106,11 @@ describe('role scope routes', () => {
       scopeIds: [mockScope.id],
     });
     expect(response.status).toEqual(201);
-    expect(validateRoleScopeAssignment).toHaveBeenCalledWith([mockScope.id], mockAdminUserRole.id);
+    expect(validateRoleScopeAssignment).toHaveBeenCalledWith(
+      tenantContext.id,
+      [mockScope.id],
+      mockAdminUserRole.id
+    );
     expect(insertRolesScopes).toHaveBeenCalledWith([
       { id: mockId, roleId: mockAdminUserRole.id, scopeId: mockScope.id },
     ]);

@@ -12,6 +12,7 @@ import {
   AdminTenantRole,
   getMapiProxyRole,
 } from '../types/index.js';
+import { getManagementApiResourceIndicator } from '../utils/index.js';
 
 import { adminTenantId, defaultTenantId } from './tenant.js';
 
@@ -73,18 +74,6 @@ export const defaultManagementApi = Object.freeze({
     type: RoleType.MachineToMachine,
   },
 }) satisfies AdminData;
-
-export function getManagementApiResourceIndicator<TenantId extends string>(
-  tenantId: TenantId
-): `https://${TenantId}.logto.app/api`;
-export function getManagementApiResourceIndicator<TenantId extends string, Path extends string>(
-  tenantId: TenantId,
-  path: Path
-): `https://${TenantId}.logto.app/${Path}`;
-
-export function getManagementApiResourceIndicator(tenantId: string, path = 'api') {
-  return `https://${tenantId}.logto.app/${path}`;
-}
 
 /**
  * The fixed Management API user role for `default` tenant in the admin tenant. It is used for

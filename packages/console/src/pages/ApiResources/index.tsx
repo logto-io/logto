@@ -1,5 +1,6 @@
 import type { Resource } from '@logto/schemas';
 import { Theme, isManagementApi } from '@logto/schemas';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
@@ -15,6 +16,7 @@ import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
@@ -41,6 +43,7 @@ const icons = {
 function ApiResources() {
   const { search } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { currentTenantId } = useContext(TenantsContext);
   const { hasSurpassedLimit } = useApiResourcesUsage();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
@@ -99,7 +102,9 @@ function ApiResources() {
               dataIndex: 'name',
               colSpan: 6,
               render: ({ id, name, isDefault, indicator }) => {
-                const Icon = isManagementApi(indicator) ? ManagementApiIcon : ApiIcon;
+                const Icon = isManagementApi(currentTenantId, indicator)
+                  ? ManagementApiIcon
+                  : ApiIcon;
                 return (
                   <ItemPreview
                     title={name}

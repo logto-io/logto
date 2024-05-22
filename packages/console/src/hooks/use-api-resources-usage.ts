@@ -5,11 +5,12 @@ import useSWR from 'swr';
 import { type ApiResource } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 
 const useApiResourcesUsage = () => {
   const { currentPlan } = useContext(SubscriptionDataContext);
-
+  const { currentTenantId } = useContext(TenantsContext);
   /**
    * Note: we only need to fetch all resources when the user is in cloud environment.
    * The oss version doesn't have the quota limit.
@@ -17,8 +18,10 @@ const useApiResourcesUsage = () => {
   const { data: allResources } = useSWR<ApiResource[]>(isCloud && 'api/resources');
 
   const resourceCount = useMemo(
-    () => allResources?.filter(({ indicator }) => !isManagementApi(indicator)).length ?? 0,
-    [allResources]
+    () =>
+      allResources?.filter(({ indicator }) => !isManagementApi(currentTenantId, indicator))
+        .length ?? 0,
+    [allResources, currentTenantId]
   );
 
   const hasReachedLimit = useMemo(

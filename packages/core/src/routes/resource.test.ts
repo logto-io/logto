@@ -156,7 +156,7 @@ describe('resource routes', () => {
     const { findResourceById } = resources;
     findResourceById.mockResolvedValueOnce({
       ...mockResource,
-      indicator: getManagementApiResourceIndicator('mock'),
+      indicator: getManagementApiResourceIndicator(tenantContext.id),
     });
     await expect(resourceRequest.patch('/resources/foo')).resolves.toHaveProperty('status', 400);
   });
@@ -169,7 +169,7 @@ describe('resource routes', () => {
     const { findResourceById } = resources;
     findResourceById.mockResolvedValueOnce({
       ...mockResource,
-      indicator: getManagementApiResourceIndicator('mock'),
+      indicator: getManagementApiResourceIndicator(tenantContext.id),
     });
     await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 400);
   });

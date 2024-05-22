@@ -4,9 +4,10 @@ import {
   type ApplicationUserConsentScopesResponse,
 } from '@logto/schemas';
 import { isManagementApi } from '@logto/schemas';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useContext } from 'react';
 import useSWR from 'swr';
 
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import { type RequestError } from '@/hooks/use-api';
 import { buildUrl } from '@/utils/url';
 
@@ -27,6 +28,7 @@ type SelectedDataType = ReturnType<HookType>['selectedData'][number];
 const useResourceScopesAssignment: HookType = (assignedResourceScopes, options) => {
   const [selectedData, setSelectedData] = useState<SelectedDataType[]>([]);
   const { isForOrganization } = options ?? {};
+  const { currentTenantId } = useContext(TenantsContext);
 
   const { data: allResources } = useSWR<ResourceResponse[], RequestError>(
     buildUrl('api/resources', {
@@ -41,7 +43,7 @@ const useResourceScopesAssignment: HookType = (assignedResourceScopes, options) 
 
     const resourcesWithScopes: ReturnType<HookType>['availableDataGroups'] = allResources
       // Filter out the management APIs
-      .filter((resource) => !isManagementApi(resource.indicator))
+      .filter((resource) => !isManagementApi(currentTenantId, resource.indicator))
       .map(({ name, scopes, id }) => {
         const assignedResource = assignedResourceScopes?.find(({ resource }) => resource.id === id);
 
@@ -64,7 +66,7 @@ const useResourceScopesAssignment: HookType = (assignedResourceScopes, options) 
 
     // Filter out the resources that have no scopes
     return resourcesWithScopes.filter(({ dataList }) => dataList.length > 0);
-  }, [allResources, assignedResourceScopes]);
+  }, [allResources, assignedResourceScopes, currentTenantId]);
 
   return {
     scopeType: isForOrganization

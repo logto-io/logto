@@ -11,7 +11,7 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 export default function roleScopeRoutes<T extends ManagementApiRouter>(
-  ...[router, { queries, libraries }]: RouterInitArgs<T>
+  ...[router, { queries, libraries, id: tenantId }]: RouterInitArgs<T>
 ) {
   const {
     rolesScopes: { deleteRolesScope, findRolesScopesByRoleId, insertRolesScopes },
@@ -95,7 +95,7 @@ export default function roleScopeRoutes<T extends ManagementApiRouter>(
 
       await quota.guardKey('scopesPerRoleLimit', id);
 
-      await validateRoleScopeAssignment(scopeIds, id);
+      await validateRoleScopeAssignment(tenantId, scopeIds, id);
       await insertRolesScopes(
         scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: id, scopeId }))
       );

@@ -3,13 +3,14 @@ import { isManagementApi, PredefinedScope, RoleType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Search from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/types';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import * as transferLayout from '@/scss/transfer.module.scss';
@@ -27,6 +28,7 @@ type Props = {
 
 function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { currentTenantId } = useContext(TenantsContext);
 
   const { data: allResources, error: fetchAllResourcesError } = useSWR<
     ResourceResponse[],
@@ -87,7 +89,8 @@ function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) 
       .filter(
         ({ indicator, scopes }) =>
           /** Should show management API scopes for machine-to-machine roles */
-          (roleType === RoleType.MachineToMachine || !isManagementApi(indicator)) &&
+          (roleType === RoleType.MachineToMachine ||
+            !isManagementApi(currentTenantId, indicator)) &&
           scopes.some(({ id }) => !excludeScopeIds.has(id))
       )
       .map(({ scopes, ...resource }) => ({
@@ -99,7 +102,7 @@ function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) 
             resource,
           })),
       }));
-  }, [allResources, roleType, roleId, roleScopes]);
+  }, [allResources, roleId, roleScopes, roleType, currentTenantId]);
 
   const dataSource = useMemo(() => {
     const lowerCasedKeyword = keyword.toLowerCase();

@@ -2,7 +2,7 @@ import type { Resource } from '@logto/schemas';
 import { isManagementApi, Theme } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
@@ -19,6 +19,7 @@ import DetailsPageHeader, { type MenuItem } from '@/components/DetailsPage/Detai
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
@@ -43,6 +44,7 @@ function ApiResourceDetails() {
   const { id, guideId } = useParams();
   const { navigate, match } = useTenantPathname();
   const { getDocumentationUrl } = useDocumentationUrl();
+  const { currentTenantId } = useContext(TenantsContext);
   const isGuideView = !!id && !!guideId && match(`/api-resources/${id}/guide/${guideId}`);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -52,7 +54,7 @@ function ApiResourceDetails() {
   const { ApiIcon, ManagementApiIcon } = icons[theme];
 
   const isOnPermissionPage = pathname.endsWith(ApiResourceDetailsTabs.Permissions);
-  const isLogtoManagementApiResource = isManagementApi(data?.indicator ?? '');
+  const isLogtoManagementApiResource = isManagementApi(currentTenantId, data?.indicator ?? '');
   const Icon = isLogtoManagementApiResource ? ManagementApiIcon : ApiIcon;
 
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);

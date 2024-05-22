@@ -19,7 +19,7 @@ import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 export default function roleRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
-  const { queries, libraries } = tenant;
+  const { queries, libraries, id: tenantId } = tenant;
   const {
     rolesScopes: { insertRolesScopes },
     scopes: { findScopesByIds },
@@ -170,7 +170,9 @@ export default function roleRoutes<T extends ManagementApiRouter>(
 
       if (scopeIds) {
         // Skip scope existence check because the role is newly created.
-        await validateRoleScopeAssignment(scopeIds, role.id, { skipScopeExistenceCheck: true });
+        await validateRoleScopeAssignment(tenantId, scopeIds, role.id, {
+          skipScopeExistenceCheck: true,
+        });
         await insertRolesScopes(
           scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: role.id, scopeId }))
         );

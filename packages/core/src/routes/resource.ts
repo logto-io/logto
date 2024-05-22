@@ -16,6 +16,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {
+      id: tenantId,
       queries,
       libraries: { quota },
     },
@@ -146,7 +147,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
 
       const { indicator } = await findResourceById(id);
       assertThat(
-        !isManagementApi(indicator),
+        !isManagementApi(tenantId, indicator),
         new RequestError({ code: 'resource.cannot_modify_management_api' })
       );
 
@@ -186,7 +187,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
 
       const { indicator } = await findResourceById(id);
       assertThat(
-        !isManagementApi(indicator),
+        !isManagementApi(tenantId, indicator),
         new RequestError({ code: 'resource.cannot_delete_management_api' })
       );
 

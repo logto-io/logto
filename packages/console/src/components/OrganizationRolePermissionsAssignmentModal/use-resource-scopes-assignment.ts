@@ -1,11 +1,13 @@
 import { isManagementApi, type Scope, type ResourceResponse } from '@logto/schemas';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import { type DataGroup } from '@/ds-components/DataTransferBox/type';
 
 function useResourceScopesAssignment(assignedScopes?: Scope[]) {
   const [selectedData, setSelectedData] = useState<Scope[]>([]);
+  const { currentTenantId } = useContext(TenantsContext);
 
   const { data: allResources } = useSWR<ResourceResponse[]>('api/resources?includeScopes=true');
 
@@ -16,7 +18,7 @@ function useResourceScopesAssignment(assignedScopes?: Scope[]) {
 
     const resourcesWithScopes = allResources
       // Filter out the management APIs
-      .filter((resource) => !isManagementApi(resource.indicator))
+      .filter((resource) => !isManagementApi(currentTenantId, resource.indicator))
       .map(({ name, scopes, id: resourceId }) => ({
         groupId: resourceId,
         groupName: name,
@@ -27,7 +29,7 @@ function useResourceScopesAssignment(assignedScopes?: Scope[]) {
 
     // Filter out the resources that have no scopes
     return resourcesWithScopes.filter(({ dataList }) => dataList.length > 0);
-  }, [allResources, assignedScopes]);
+  }, [allResources, assignedScopes, currentTenantId]);
 
   return useMemo(
     () => ({

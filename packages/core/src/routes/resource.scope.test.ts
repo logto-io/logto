@@ -99,7 +99,7 @@ describe('resource scope routes', () => {
     const { findResourceById } = resources;
     findResourceById.mockResolvedValueOnce({
       ...mockResource,
-      indicator: getManagementApiResourceIndicator('mock'),
+      indicator: getManagementApiResourceIndicator(tenantContext.id),
     });
     await expect(
       resourceScopeRequest
@@ -128,7 +128,7 @@ describe('resource scope routes', () => {
     const { findResourceById } = resources;
     findResourceById.mockResolvedValueOnce({
       ...mockResource,
-      indicator: getManagementApiResourceIndicator('mock'),
+      indicator: getManagementApiResourceIndicator(tenantContext.id),
     });
     await expect(
       resourceScopeRequest
@@ -148,7 +148,7 @@ describe('resource scope routes', () => {
     const { findResourceById } = resources;
     findResourceById.mockResolvedValueOnce({
       ...mockResource,
-      indicator: getManagementApiResourceIndicator('mock'),
+      indicator: getManagementApiResourceIndicator(tenantContext.id),
     });
     await expect(resourceScopeRequest.delete('/resources/foo/scopes/foz')).resolves.toHaveProperty(
       'status',
