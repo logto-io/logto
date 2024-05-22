@@ -4,9 +4,9 @@
 "@logto/schemas": minor
 ---
 
-add new DataHook webhook events for Logto
+add new webhook events
 
-New DataHook events have been added to Logto to allow for more granular control over the data that is sent to your webhook:
+We introduce a new event type `DataHook` to unlock a series of events that can be triggered by data updates (mostly Management API):
 
 - User.Created
 - User.Deleted
@@ -35,7 +35,7 @@ DataHook events are triggered when the data associated with the event is updated
 
 ### Management API triggered events
 
-| API Endpoint                                               | Events                                                      |
+| API endpoint                                               | Event                                                       |
 | ---------------------------------------------------------- | ----------------------------------------------------------- |
 | POST /users                                                | User.Created                                                |
 | DELETE /users/:userId                                      | User.Deleted                                                |
@@ -70,10 +70,10 @@ DataHook events are triggered when the data associated with the event is updated
 
 ### User interaction triggered events
 
-| User Interaction Action  | Events            |
+| User interaction action  | Event             |
 | ------------------------ | ----------------- |
-| User email/phone Linking | User.Data.Updated |
-| User MFAs Linking        | User.Data.Updated |
-| User social/SSO Linking  | User.Data.Updated |
-| User Password Reset      | User.Data.Updated |
+| User email/phone linking | User.Data.Updated |
+| User MFAs linking        | User.Data.Updated |
+| User social/SSO linking  | User.Data.Updated |
+| User password reset      | User.Data.Updated |
 | User registration        | User.Created      |
