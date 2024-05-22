@@ -4,7 +4,6 @@ import { generateStandardId } from '@logto/shared';
 import { pickState, trySafe, tryThat } from '@silverhand/essentials';
 import { number, object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -176,23 +175,18 @@ export default function roleRoutes<T extends ManagementApiRouter>(
           scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: role.id, scopeId }))
         );
 
-        const { isDevFeaturesEnabled } = EnvSet.values;
+        // Trigger the `Role.Scopes.Updated` event if scopeIds are provided. Should not break the request
+        await trySafe(async () => {
+          // Align the response type with POST /roles/:id/scopes
+          const newRolesScopes = await findScopesByIds(scopeIds);
 
-        // TODO: Remove dev feature guard
-        if (isDevFeaturesEnabled) {
-          // Trigger the `Role.Scopes.Updated` event if scopeIds are provided. Should not break the request
-          await trySafe(async () => {
-            // Align the response type with POST /roles/:id/scopes
-            const newRolesScopes = await findScopesByIds(scopeIds);
-
-            ctx.appendDataHookContext({
-              event: 'Role.Scopes.Updated',
-              ...buildManagementApiContext(ctx),
-              roleId: role.id,
-              data: newRolesScopes,
-            });
+          ctx.appendDataHookContext({
+            event: 'Role.Scopes.Updated',
+            ...buildManagementApiContext(ctx),
+            roleId: role.id,
+            data: newRolesScopes,
           });
-        }
+        });
       }
 
       ctx.body = role;

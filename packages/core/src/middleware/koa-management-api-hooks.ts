@@ -2,7 +2,6 @@ import { trySafe } from '@silverhand/essentials';
 import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { DataHookContextManager } from '#src/libraries/hook/context-manager.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -22,12 +21,6 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
   hooks: Libraries['hooks']
 ): MiddlewareType<StateT, WithHookContext<ContextT>, ResponseT> => {
   return async (ctx, next) => {
-    // TODO: Remove dev feature guard
-    const { isDevFeaturesEnabled } = EnvSet.values;
-    if (!isDevFeaturesEnabled) {
-      return next();
-    }
-
     const {
       header: { 'user-agent': userAgent },
       ip,
