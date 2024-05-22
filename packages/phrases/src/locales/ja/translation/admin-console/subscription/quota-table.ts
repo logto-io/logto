@@ -48,9 +48,10 @@ const quota_table = {
   organizations: {
     title: '組織',
     organizations: '組織',
-    monthly_active_organization: '月間アクティブ組織',
-    allowed_users_per_org: '組織ごとの許可ユーザー数',
-    invitation: '招待状',
+    organization: '組織',
+    organization_count: '組織数',
+    allowed_users_per_org: '組織ごとのユーザー数',
+    invitation: '招待（管理API）',
     org_roles: '組織ロール',
     org_permissions: '組織権限',
     just_in_time_provisioning: 'ジャストインタイムプロビジョニング',
