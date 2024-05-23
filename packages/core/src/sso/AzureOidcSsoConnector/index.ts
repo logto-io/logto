@@ -44,7 +44,8 @@ export class AzureOidcSsoConnector extends OidcSsoConnector {
     );
 
     // Verify the id token and get the user id
-    const { sub: id } = await getIdTokenClaims(idToken, oidcConfig, nonce);
+    // Skip the issuer check as the issuer may vary depending on the authenticated user`s tenantId
+    const { sub: id } = await getIdTokenClaims(idToken, oidcConfig, nonce, true);
 
     // Fetch user info from the userinfo endpoint
     const { sub, name, picture, email, email_verified, phone, phone_verified, ...rest } =
