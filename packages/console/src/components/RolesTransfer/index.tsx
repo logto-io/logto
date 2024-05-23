@@ -3,8 +3,8 @@ import classNames from 'classnames';
 
 import * as transferLayout from '@/scss/transfer.module.scss';
 
-import SourceRolesBox from './components/SourceRolesBox';
-import TargetRolesBox from './components/TargetRolesBox';
+import SourceRolesBox from './SourceRolesBox';
+import TargetRolesBox from './TargetRolesBox';
 import * as styles from './index.module.scss';
 
 type Props = {
