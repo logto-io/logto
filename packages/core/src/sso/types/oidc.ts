@@ -57,7 +57,8 @@ export const oidcTokenResponseGuard = z.object({
   id_token: z.string(),
   access_token: z.string().optional(),
   token_type: z.string().optional(),
-  expires_in: z.number().optional(),
+  // Microsoft EntraID may return string type for expires_in
+  expires_in: z.number().or(z.string()).optional(),
   refresh_token: z.string().optional(),
   scope: z.string().optional(),
 });
