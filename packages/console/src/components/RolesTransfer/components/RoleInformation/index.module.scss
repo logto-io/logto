@@ -1,0 +1,18 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  align-items: center;
+  font: var(--font-body-2);
+  overflow: hidden;
+
+  .name {
+    @include _.text-ellipsis;
+  }
+
+  .count {
+    flex-shrink: 0;
+    margin-left: _.unit(2);
+    color: var(--color-text-secondary);
+  }
+}

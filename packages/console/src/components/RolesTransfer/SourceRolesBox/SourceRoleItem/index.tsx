@@ -1,8 +1,9 @@
-import { type RoleResponse, RoleType } from '@logto/schemas';
-import { useTranslation } from 'react-i18next';
+import { type RoleResponse } from '@logto/schemas';
 
 import Checkbox from '@/ds-components/Checkbox';
 import { onKeyDownHandler } from '@/utils/a11y';
+
+import RoleInformation from '../../components/RoleInformation';
 
 import * as styles from './index.module.scss';
 
@@ -13,9 +14,6 @@ type Props = {
 };
 
 function SourceRoleItem({ role, isSelected, onSelect }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { name, type, usersCount, applicationsCount } = role;
-
   return (
     <div
       className={styles.item}
@@ -34,14 +32,7 @@ function SourceRoleItem({ role, isSelected, onSelect }: Props) {
           onSelect();
         }}
       />
-      <div className={styles.name}>{name}</div>
-      <div className={styles.count}>
-        (
-        {type === RoleType.User
-          ? t('user_details.roles.assigned_user_count', { value: usersCount })
-          : t('application_details.roles.assigned_app_count', { value: applicationsCount })}
-        )
-      </div>
+      <RoleInformation role={role} />
     </div>
   );
 }
