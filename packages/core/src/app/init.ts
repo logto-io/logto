@@ -32,6 +32,8 @@ export default async function initApp(app: Koa): Promise<void> {
     ctx.requestId = requestId;
     ctx.console = consoleLog;
 
+    consoleLog.plain(`URL = ${ctx.URL.href}`);
+
     await koaLogger({
       transporter: (string) => {
         consoleLog.plain(string);
