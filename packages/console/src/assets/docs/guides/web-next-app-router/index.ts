@@ -4,16 +4,16 @@ import { type GuideMetadata } from '../types';
 
 const metadata: Readonly<GuideMetadata> = Object.freeze({
   name: 'Next.js (App Router)',
-  description:
-    "Next.js App Router is a new paradigm for building applications using React's latest features.",
+  description: 'Next.js integration guide for App Router.',
   target: ApplicationType.Traditional,
   sample: {
     repo: 'js',
-    path: 'packages/next-app-dir-sample',
+    path: 'packages/next-server-actions-sample',
   },
+  isFeatured: true,
   fullGuide: {
-    title: 'Full Next.js App Router SDK tutorial',
-    url: 'https://docs.logto.io/quick-starts/next-app-router',
+    title: 'Full Next.js SDK tutorial',
+    url: 'https://docs.logto.io/sdk/next-app-router/',
   },
 });
 

@@ -9,8 +9,8 @@ import Step from '@/mdx-components/Step';
 <Steps>
 
 <Step
-  title="Installation"
-  subtitle="Install Logto SDK for your project"
+  title="Add Logto SDK as a dependency"
+  subtitle="Please select your favorite package manager"
 >
 <Tabs>
 <TabItem value="npm" label="npm">
@@ -38,115 +38,54 @@ pnpm add @logto/next
 </Step>
 
 <Step
-  title="Init LogtoClient"
+  title="Prepare configs"
 >
 
 <InlineNotification>
   In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
 </InlineNotification>
 
-Import and initialize LogtoClient:
+Prepare configuration for the Logto client. Create a new file `app/logto.ts` and add the following code:
 
 <pre>
   <code className="language-ts">
-    {`// libraries/logto.js
-'use server';
-
-import LogtoClient from '@logto/next/server-actions';
-
-export const logtoClient = new LogtoClient({
+    {`export const logtoConfig = {
   endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
   appSecret: '${props.app.secret}',
   baseUrl: 'http://localhost:3000', // Change to your own base URL
   cookieSecret: '${generateStandardSecret()}', // Auto-generated 32 digit secret
   cookieSecure: process.env.NODE_ENV === 'production',
-});`}
+};
+`}
   </code>
 </pre>
-
 </Step>
 
 <Step
-  title="Implement sign-in"
+  title="Sign in"
 >
 
 ### Configure Redirect URI
 
-First, let’s enter your redirect URI. E.g. `http://localhost:3000/api/logto/sign-in-callback`.
+First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
 <UriInputField name="redirectUris" />
 
-### Prepare helper functions
+### Implement callback page
 
-First, let's prepare helper functions to connect with Logto.
+Add a callback page to your app:
 
-Go back to your IDE/editor, add the following code to `/libraries/logto.ts`:
-
-```ts
-const cookieName = `logto:${config.appId}`;
-
-const setCookies = (value?: string) => {
-  if (value === undefined) {
-    return;
-  }
-
-  cookies().set(cookieName, value, {
-    maxAge: 14 * 3600 * 24,
-    secure: config.cookieSecure,
-  });
-};
-
-const getCookie = () => {
-  return cookies().get(cookieName)?.value ?? '';
-};
-
-export const signIn = async () => {
-  const { url, newCookie } = await logtoClient.handleSignIn(
-    getCookie(),
-    `${config.baseUrl}/callback`
-  );
-
-  setCookies(newCookie);
-
-  return url;
-};
-
-export const handleSignIn = async (searchParams: URLSearchParams) => {
-  const search = searchParams.toString();
-
-  const newCookie = await logtoClient.handleSignInCallback(
-    getCookie(),
-    `${config.baseUrl}/callback?${search}`
-  );
-
-  setCookies(newCookie);
-};
-
-export const signOut = async () => {
-  const url = await logtoClient.handleSignOut(getCookie(), `${config.baseUrl}/callback`);
-
-  setCookies('');
-
-  return url;
-};
-
-export const getLogtoContext = async (config?: GetContextParameters) => {
-  return await logtoClient.getLogtoContext(getCookie(), config);
-};
-```
-### Implement callback route
-
-Create a "callback" route by adding the following code to `/app/callback/route.ts`:
-
-```ts
+```tsx
+// pages/callback/page.tsx
+import { handleSignIn } from '@logto/next/server-actions';
 import { redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
-import { handleSignIn } from '../../libraries/logto';
+import { logtoConfig } from '../logto';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  await handleSignIn(searchParams);
+  await handleSignIn(logtoConfig, searchParams);
 
   redirect('/');
 }
@@ -154,44 +93,128 @@ export async function GET(request: NextRequest) {
 
 ### Implement sign-in button
 
-We're almost there! In the last step, we will create a sign-in button, which will navigate to Logto sign-in page when clicked.
-
-This is a client component, so we will create it in `/app/sign-in.tsx`:
-
-```ts
+The sign-in button will call the method we just created, it is a client component:
+  
+```tsx
+// app/sign-in.tsx
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { signIn } from '../libraries/logto';
+type Props = {
+  onSignIn: () => Promise<void>;
+};
 
-const SignIn = () => {
-  const router = useRouter();
-
-  const handleClick = async () => {
-    const redirectUrl = await signIn();
-
-    router.push(redirectUrl);
-  };
-
-  return <button onClick={handleClick}>Sign In</button>;
+const SignIn = ({ onSignIn }: Props) => {
+  return (
+    <button
+      onClick={() => {
+        onSignIn();
+      }}
+    >
+      Sign In
+    </button>
+  );
 };
 
 export default SignIn;
 ```
 
-Now you will be navigated to Logto sign-in page when you click the button.
+### Add sign in button to home page
 
-Add this button to home page at `/app/page.tsx`:
+We're almost there! Add this button to home page at `/app/page.tsx` and implement the `onSignIn` function:
 
 ```tsx
+import { signIn } from '@logto/next/server-actions';
 import SignIn from './sign-in';
+import { logtoConfig } from './logto';
 
 export default async function Home() {
   return (
     <main>
       <h1>Hello Logto.</h1>
       <div>
-        <SignIn />
+        <SignIn
+          onSignIn={async () => {
+            'use server';
+
+            await signIn(logtoConfig);
+          }}
+        />
+      </div>
+    </main>
+  );
+}
+```
+
+Now you will be navigated to Logto sign-in page when you click the button.
+
+</Step>
+
+<Step
+  title="Sign out"
+>
+
+### Configure URI
+
+After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below.
+
+<UriInputField name="postLogoutRedirectUris" />
+
+### Implement a sign-out button
+
+The sign-out button is also a client component, so we will create it in `/app/sign-out.tsx`:
+
+```tsx
+// app/sign-out.tsx
+'use client';
+
+type Props = {
+  onSignOut: () => Promise<void>;
+};
+
+const SignOut = ({ onSignOut }: Props) => {
+  return (
+    <button
+      onClick={() => {
+        onSignOut();
+      }}
+    >
+      Sign Out
+    </button>
+  );
+};
+
+export default SignOut;
+```
+
+### Add sign out button to home page
+
+Then add the sign-out button to the home page in `/app/page.tsx`:
+
+```tsx
+import { signIn, signOut } from '@logto/next/server-actions';
+import SignIn from './sign-in';
+import SignOut from './sign-out';
+import { logtoConfig } from './logto';
+
+export default async function Home() {
+  return (
+    <main>
+      <h1>Hello Logto.</h1>
+      <div>
+        <SignOut
+          onSignOut={async () => {
+            'use server';
+
+            await signOut(logtoConfig);
+          }}
+        />
+        <SignIn
+          onSignIn={async () => {
+            'use server';
+
+            await signIn(logtoConfig);
+          }}
+        />
       </div>
     </main>
   );
@@ -201,58 +224,42 @@ export default async function Home() {
 </Step>
 
 <Step
-  title="Implement sign-out"
+  title="Handle authentication state"
 >
 
-After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI first.
-
-<UriInputField name="postLogoutRedirectUris" />
-
-### Implement a sign-out button
-
-This is also a client component, so we will create it in `/app/sign-out.tsx`:
+We can call the function `getLogtoContext` to get context as the authentication state in pages, let's modify the home page:
 
 ```tsx
-'use client';
-
-import { useRouter } from 'next/navigation';
-import { signOut } from '../libraries/logto';
-
-const SignOut = () => {
-  const router = useRouter();
-
-  const handleClick = async () => {
-    const redirectUrl = await signOut();
-
-    router.push(redirectUrl);
-  };
-
-  return <button onClick={handleClick}>Sign Out</button>;
-};
-
-export default SignOut;
-```
-
-</Step>
-
-<Step
-  title="Handle authentication status"
->
-
-We can call the function `getLogtoContext` to get context as the authentication state, let's modify the home page:
-
-```tsx
-import { getLogtoContext } from '../libraries/logto';
+import { getLogtoContext, signIn, signOut } from '@logto/next/server-actions';
 import SignIn from './sign-in';
 import SignOut from './sign-out';
+import { logtoConfig } from './logto';
 
 export default async function Home() {
-  const { isAuthenticated } = await getLogtoContext();
+  const { isAuthenticated } = await getLogtoContext(logtoConfig);
 
   return (
     <main>
       <h1>Hello Logto.</h1>
-      <div>{isAuthenticated ? <SignOut /> : <SignIn />}</div>
+      <div>
+        {isAuthenticated ? (
+          <SignOut
+            onSignOut={async () => {
+              'use server';
+
+              await signOut(logtoConfig);
+            }}
+          />
+        ) : (
+          <SignIn
+            onSignIn={async () => {
+              'use server';
+
+              await signIn(logtoConfig);
+            }}
+          />
+        )}
+      </div>
     </main>
   );
 }
