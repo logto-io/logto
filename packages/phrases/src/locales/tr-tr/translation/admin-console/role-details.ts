@@ -15,6 +15,8 @@ const role_details = {
   field_description: 'Açıklama',
   type_m2m_role_tag: 'Makine-makine uygulama rolü',
   type_user_role_tag: 'Kullanıcı rolü',
+  m2m_role_notification:
+    'Bu makineye makine rolünü ilgili API kaynaklarına erişim sağlamak için bir makineye makine uygulamasına atayın. <a>Henüz yapmadıysanız önce bir makineye makine uygulaması oluşturun.</a>',
   permission: {
     assign_button: 'İzinleri Ata',
     assign_title: 'İzinleri Ata',
