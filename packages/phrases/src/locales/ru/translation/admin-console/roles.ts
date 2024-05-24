@@ -31,6 +31,12 @@ const roles = {
   placeholder_title: 'Роли',
   placeholder_description:
     'Роли являются группировкой разрешений, которые могут быть назначены пользователям. Необходимо добавить разрешения, прежде чем создать роли.',
+  assign_user_roles: 'Назначить роли пользователя',
+  assign_m2m_roles: 'Назначить роли от машины к машине',
+  management_api_access_notification:
+    'Для доступа к API управления Logto выберите роли с разрешениями API управления <flag/>.',
+  with_management_api_access_tip:
+    'Эта роль от машины к машине включает разрешения для API управления Logto',
 };
 
 export default Object.freeze(roles);
