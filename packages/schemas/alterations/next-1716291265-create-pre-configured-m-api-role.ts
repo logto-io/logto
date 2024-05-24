@@ -1,4 +1,4 @@
-import { ConsoleLog, generateStandardId } from '@logto/shared';
+import { generateStandardId } from '@logto/shared/universal';
 import { yes } from '@silverhand/essentials';
 import { sql } from '@silverhand/slonik';
 
@@ -18,8 +18,6 @@ enum PredefinedScope {
   All = 'all',
 }
 
-const consoleLog = new ConsoleLog();
-
 /**
  * This script is to create a pre-configured Management API M2M role for new users.
  * This script is **only for CI**, since we won't create this role for existing users, so this script is not applicable for existing db data.
@@ -27,7 +25,7 @@ const consoleLog = new ConsoleLog();
 const alteration: AlterationScript = {
   up: async (pool) => {
     if (!isCi) {
-      consoleLog.info(
+      console.info(
         "Skipping the alteration script `next-1716291265-create-pre-configured-m-api-role.ts` since it's should not be applied to existing db data."
       );
       return;
@@ -73,7 +71,7 @@ const alteration: AlterationScript = {
   },
   down: async (pool) => {
     if (!isCi) {
-      consoleLog.info(
+      console.info(
         "Skipping the down script `next-1716291265-create-pre-configured-m-api-role.ts` since it's should not be applied to production db."
       );
       return;
