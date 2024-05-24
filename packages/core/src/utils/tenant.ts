@@ -1,5 +1,5 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
-import { type UrlSet } from '@logto/shared';
+import { TtlCache, type UrlSet } from '@logto/shared';
 import { conditionalString, trySafe } from '@silverhand/essentials';
 import { type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -78,13 +78,7 @@ const getTenantIdFromCustomDomain = async (
   return domain?.tenantId;
 };
 
-/**
- * Get tenant ID from the current request's URL.
- *
- * @param url The current request's URL
- * @returns The tenant ID and whether the URL is a custom domain
- */
-export const getTenantId = async (
+export const _getTenantId = async (
   url: URL
 ): Promise<[tenantId: string | undefined, isCustomDomain: boolean]> => {
   const {
@@ -126,4 +120,30 @@ export const getTenantId = async (
   }
 
   return [matchDomainBasedTenantId(urlSet.endpoint, url), false];
+};
+
+const tenantIdCache = new TtlCache<string, [string, boolean]>(1000 * 60 * 10); // Ten minutes
+
+/**
+ * Get tenant ID from the current request's URL.
+ *
+ * @param url The current request's URL
+ * @returns The tenant ID and whether the URL is a custom domain
+ */
+export const getTenantId = async (
+  url: URL
+): Promise<[tenantId: string | undefined, isCustomDomain: boolean]> => {
+  const cachedValue = tenantIdCache.get(url.host);
+  if (cachedValue) {
+    return cachedValue;
+  }
+
+  const [tenantId, isCustomDomainEnabled] = await _getTenantId(url);
+
+  // Only set the cache if we can get a tenant ID since we treat undefined as a cache miss
+  if (tenantId) {
+    tenantIdCache.set(url.host, [tenantId, isCustomDomainEnabled]);
+  }
+
+  return [tenantId, isCustomDomainEnabled];
 };

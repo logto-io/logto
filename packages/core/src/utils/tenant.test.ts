@@ -178,4 +178,17 @@ describe('getTenantId()', () => {
     findActiveDomain.mockResolvedValueOnce({ domain: 'logto.mock.com', tenantId: 'mock' });
     await expect(getTenantIdFirstElement(new URL('https://logto.mock.com'))).resolves.toBe('mock');
   });
+
+  it('should cache the result', async () => {
+    process.env = {
+      ...backupEnv,
+      ENDPOINT: 'https://foo.*.logto.mock/app',
+      NODE_ENV: 'production',
+    };
+    findActiveDomain.mockResolvedValueOnce({ domain: 'logto.mock.com', tenantId: 'mock' });
+
+    await expect(getTenantIdFirstElement(new URL('https://logto.mock.com'))).resolves.toBe('mock');
+    await expect(getTenantIdFirstElement(new URL('https://logto.mock.com'))).resolves.toBe('mock');
+    expect(findActiveDomain).toHaveBeenCalledTimes(1);
+  });
 });
