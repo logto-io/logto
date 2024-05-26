@@ -1,8 +1,9 @@
-import { generateStandardId } from '@logto/shared/universal';
 import { yes } from '@silverhand/essentials';
 import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
+
+import { generateStandardId } from './utils/1716643968-id-generation.js';
 
 const isCi = yes(process.env.CI);
 
