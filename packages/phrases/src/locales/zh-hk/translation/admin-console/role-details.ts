@@ -15,6 +15,8 @@ const role_details = {
   field_description: '描述',
   type_m2m_role_tag: '機器對機器應用角色',
   type_user_role_tag: '用戶角色',
+  m2m_role_notification:
+    '將此機器對機器角色分配給機器對機器應用程式，以授予相關API資源的存取權限。如果尚未建立，請<a>先建立機器對機器應用程式</a>。',
   permission: {
     assign_button: '分配權限',
     assign_title: '分配權限',

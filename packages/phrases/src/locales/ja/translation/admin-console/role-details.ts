@@ -15,6 +15,8 @@ const role_details = {
   field_description: '説明',
   type_m2m_role_tag: '機械対機械のアプリのロール',
   type_user_role_tag: 'ユーザーロール',
+  m2m_role_notification:
+    'この機械間ロールを機械間アプリに割り当てて、関連するAPIリソースへのアクセスを許可します。<a>まだ作成していない場合は、まず機械間アプリを作成してください。</a>',
   permission: {
     assign_button: '許可を割り当てる',
     assign_title: '許可の割り当て',

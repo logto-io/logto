@@ -1,3 +1,9 @@
 .rolesTransfer {
   height: 360px;
 }
+
+.flagIcon {
+  color: var(--color-text-secondary);
+  // Align the flag icon with the text bottom to make it look centered visually
+  vertical-align: text-bottom;
+}

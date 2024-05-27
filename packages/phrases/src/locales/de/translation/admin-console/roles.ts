@@ -31,6 +31,12 @@ const roles = {
   placeholder_title: 'Rollen',
   placeholder_description:
     'Rollen sind eine Gruppierung von Berechtigungen, die Benutzern zugewiesen werden können. Stellen Sie sicher, dass Sie zuerst Berechtigungen hinzufügen, bevor Sie Rollen erstellen.',
+  assign_user_roles: 'Benutzerrollen zuweisen',
+  assign_m2m_roles: 'Maschinenrollen zuweisen',
+  management_api_access_notification:
+    'Für den Zugriff auf die Logto-Verwaltungs-API wählen Sie Rollen mit Verwaltungs-API-Berechtigungen <flag/> aus.',
+  with_management_api_access_tip:
+    'Diese Maschinenrollen umfassen Berechtigungen für die Logto-Verwaltungs-API',
 };
 
 export default Object.freeze(roles);

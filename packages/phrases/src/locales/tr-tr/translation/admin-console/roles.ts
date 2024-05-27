@@ -31,6 +31,11 @@ const roles = {
   placeholder_title: 'Roller',
   placeholder_description:
     'Roller, kullanıcılara atanabilecek izinlerin gruplandırmasıdır. Rolleri oluşturmadan önce izin eklediğinizden emin olun.',
+  assign_user_roles: 'Kullanıcı rolleri atayın',
+  assign_m2m_roles: 'Makine ile makine rolleri atayın',
+  management_api_access_notification:
+    'Logto Yönetim API erişimi için yönetim API izinleri olan rolleri seçin <flag/>.',
+  with_management_api_access_tip: 'Bu makine ile makine rolü, Logto yönetim API izinlerini içerir',
 };
 
 export default Object.freeze(roles);

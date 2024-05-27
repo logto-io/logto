@@ -29,6 +29,10 @@ const roles = {
   search: '按角色名稱、描述或 ID 搜尋',
   placeholder_title: '角色',
   placeholder_description: '角色是可以分配給使用者的權限分組。在建立角色之前，請確保先新增權限。',
+  assign_user_roles: '分配使用者角色',
+  assign_m2m_roles: '分配機器對機器角色',
+  management_api_access_notification: '要訪問Logto管理API，請選擇具有管理API權限的角色<flag/>。',
+  with_management_api_access_tip: '此機器對機器角色包含Logto管理API權限',
 };
 
 export default Object.freeze(roles);

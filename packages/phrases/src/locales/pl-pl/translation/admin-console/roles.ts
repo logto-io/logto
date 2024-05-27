@@ -31,6 +31,12 @@ const roles = {
   placeholder_title: 'Role',
   placeholder_description:
     'Role są grupowaniem uprawnień, które mogą być przypisywane użytkownikom. Upewnij się, że najpierw dodasz uprawnienie, zanim utworzysz role.',
+  assign_user_roles: 'Przypisz role użytkownika',
+  assign_m2m_roles: 'Przypisz role od maszyny do maszyny',
+  management_api_access_notification:
+    'Aby uzyskać dostęp do interfejsu API zarządzania Logto, wybierz role z uprawnieniami do interfejsu API zarządzania <flag/>.',
+  with_management_api_access_tip:
+    'Ta rola maszyny do maszyny zawiera uprawnienia do interfejsu API zarządzania Logto',
 };
 
 export default Object.freeze(roles);
