@@ -12,6 +12,7 @@ import MachineToMachineRoleIcon from '@/assets/icons/m2m-role.svg';
 import Plus from '@/assets/icons/plus.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import RoleAssignmentModal from '@/components/RoleAssignmentModal';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
@@ -23,7 +24,6 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
-import AssignToRoleModal from '@/pages/Roles/components/AssignToRoleModal';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import * as styles from './index.module.scss';
@@ -176,7 +176,7 @@ function MachineToMachineApplicationRoles({ application }: Props) {
         </ConfirmModal>
       )}
       {isAssignRolesModalOpen && (
-        <AssignToRoleModal
+        <RoleAssignmentModal
           entity={application}
           type={RoleType.MachineToMachine}
           onClose={(success) => {

@@ -54,6 +54,12 @@ const applications = {
   placeholder_title: '続行するにはアプリケーションタイプを選択してください',
   placeholder_description:
     'LogtoはOIDCのためにアプリケーションエンティティを使用して、アプリケーションの識別、サインインの管理、監査ログの作成などのタスクをサポートします。',
+  m2m_role_assignment: {
+    title: 'アプリを権限付きのマシン間ロールで認可する',
+    subtitle: 'マシン間アプリケーションには承認されたマシン間ロールが必要です。',
+    role_creation_hint:
+      'マシン間ロールがありませんか？ <a>まずマシン間</a> ロールを作成してください',
+  },
 };
 
 export default Object.freeze(applications);
