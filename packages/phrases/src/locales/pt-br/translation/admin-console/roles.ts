@@ -31,6 +31,12 @@ const roles = {
   placeholder_title: 'Funções',
   placeholder_description:
     'As funções são um agrupamento de permissões que podem ser atribuídas a usuários. Certifique-se de adicionar as permissões antes de criar funções.',
+  assign_user_roles: 'Atribuir funções de usuário',
+  assign_m2m_roles: 'Atribuir funções de máquina para máquina',
+  management_api_access_notification:
+    'Para acessar a API de gerenciamento do Logto, selecione funções com permissões de API de gerenciamento <flag/>.',
+  with_management_api_access_tip:
+    'Esta função de máquina para máquina inclui permissões para a API de gerenciamento do Logto',
 };
 
 export default Object.freeze(roles);

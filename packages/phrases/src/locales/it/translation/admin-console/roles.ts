@@ -31,6 +31,12 @@ const roles = {
   placeholder_title: 'Ruoli',
   placeholder_description:
     'I ruoli sono un raggruppamento di autorizzazioni che possono essere assegnati agli utenti. Assicurati di aggiungere le autorizzazioni prima di creare i ruoli.',
+  assign_user_roles: 'Assegna ruoli utente',
+  assign_m2m_roles: 'Assegna ruoli da macchina a macchina',
+  management_api_access_notification:
+    "Per accedere all'API di gestione di Logto, seleziona ruoli con autorizzazioni API di gestione <flag/>.",
+  with_management_api_access_tip:
+    "Questo ruolo da macchina a macchina include autorizzazioni per l'API di gestione di Logto",
 };
 
 export default Object.freeze(roles);

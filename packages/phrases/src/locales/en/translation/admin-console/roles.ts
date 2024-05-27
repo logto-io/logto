@@ -31,6 +31,12 @@ const roles = {
   placeholder_title: 'Roles',
   placeholder_description:
     'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.',
+  assign_user_roles: 'Assign user roles',
+  assign_m2m_roles: 'Assign machine-to-machine roles',
+  management_api_access_notification:
+    'For Logto Management API access, select roles with management API permissions <flag/>.',
+  with_management_api_access_tip:
+    'This machine-to-machine role includes Logto management API permissions',
 };
 
 export default Object.freeze(roles);

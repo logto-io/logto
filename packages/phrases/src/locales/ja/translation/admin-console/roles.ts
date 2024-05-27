@@ -31,6 +31,11 @@ const roles = {
   placeholder_title: 'ロール',
   placeholder_description:
     'ロールは、ユーザーに割り当てられる権限のグループです。ロールを作成する前に、まず権限を追加してください。',
+  assign_user_roles: 'ユーザー役割を割り当てる',
+  assign_m2m_roles: 'マシン間役割を割り当てる',
+  management_api_access_notification:
+    'Logto管理APIへのアクセスには、管理API権限を持つ役割を選択してください<flag/>。',
+  with_management_api_access_tip: 'このマシン間役割には、Logto管理APIのアクセス権が含まれています',
 };
 
 export default Object.freeze(roles);
