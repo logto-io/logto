@@ -60,7 +60,7 @@ describe('Dingtalk connector', () => {
       });
 
       await expect(getAccessToken('code', mockedConfig)).rejects.toStrictEqual(
-        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
+        new ConnectorError(ConnectorErrorCodes.InvalidResponse)
       );
     });
   });
@@ -115,19 +115,11 @@ describe('Dingtalk connector', () => {
       });
     });
 
-    it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
-      nock(userInfoEndpoint).get('').reply(401);
+    it('throws SocialAccessTokenInvalid error if remote response code is 400', async () => {
+      nock(userInfoEndpoint).get('').reply(400);
       const connector = await createConnector({ getConfig });
       await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
         new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
-      );
-    });
-
-    it('throws right accessToken but empty userInfo if remote response code is 404', async () => {
-      nock(userInfoEndpoint).get('').reply(404);
-      const connector = await createConnector({ getConfig });
-      await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
-        new ConnectorError(ConnectorErrorCodes.InvalidResponse, 'user_not_found')
       );
     });
 

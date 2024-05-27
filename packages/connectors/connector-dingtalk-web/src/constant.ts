@@ -1,8 +1,11 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType, ConnectorPlatform } from '@logto/connector-kit';
 
+// https://open.dingtalk.com/document/orgapp-server/use-dingtalk-account-to-log-on-to-third-party-websites-1
 export const authorizationEndpoint = 'https://login.dingtalk.com/oauth2/auth';
+// https://open.dingtalk.com/document/isvapp/obtain-user-token
 export const accessTokenEndpoint = 'https://api.dingtalk.com/v1.0/oauth2/userAccessToken';
+// https://open.dingtalk.com/document/isvapp/dingtalk-retrieve-user-information
 export const userInfoEndpoint = 'https://api.dingtalk.com/v1.0/contact/users/me';
 export const scope = 'openid';
 

@@ -15,15 +15,12 @@ export const accessTokenResponseGuard = z.object({
   corpId: z.string().optional(),
 });
 
-export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
-
-export type GetAccessTokenErrorHandler = (accessToken: Partial<AccessTokenResponse>) => void;
-
+// https://open.dingtalk.com/document/isvapp/dingtalk-retrieve-user-information
 export const userInfoResponseGuard = z.object({
   nick: z.string().optional(),
   avatarUrl: z.string().optional(),
   mobile: z.string().optional(),
-  openId: z.string().optional(),
+  openId: z.string().optional(), // DingTalk no longer recommends using OpenId for integration. Instead, use unionId.
   unionId: z.string(),
   email: z.string().optional(),
   stateCode: z.string().optional(),

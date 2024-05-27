@@ -80,7 +80,7 @@ export const getAccessToken = async (
   }
 
   const { accessToken } = result.data;
-  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+  assert(accessToken, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
 
   return { accessToken };
 };
@@ -111,7 +111,7 @@ const getUserInfo =
       return {
         id,
         avatar,
-        phone: `${stateCode}${mobile}`,
+        phone: stateCode ? (mobile ? `${stateCode}${mobile}` : '') : mobile ?? '',
         email,
         name,
         rawData,
@@ -122,15 +122,12 @@ const getUserInfo =
   };
 
 const getUserInfoErrorHandler = (error: unknown) => {
+  // https://open.dingtalk.com/document/personalapp/error-code-2#title-m5s-krt-vds
   if (error instanceof HTTPError) {
     const { statusCode, body: rawBody } = error.response;
 
-    if (statusCode === 401) {
+    if (statusCode === 400) {
       throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-    }
-
-    if (statusCode === 404) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, 'user_not_found');
     }
 
     throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
