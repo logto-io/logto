@@ -15,6 +15,8 @@ const role_details = {
   field_description: 'Beschreibung',
   type_m2m_role_tag: 'Maschinen-zu-Maschinen-App-Rolle',
   type_user_role_tag: 'Benutzerrolle',
+  m2m_role_notification:
+    'Weisen Sie dieser Maschinen-zu-Maschinen-Rolle eine Maschinen-zu-Maschinen-App zu, um Zugriff auf die entsprechenden API-Ressourcen zu gewähren. <a>Erstellen Sie zuerst eine Maschinen-zu-Maschinen-App</a>, wenn Sie noch keine erstellt haben.',
   permission: {
     assign_button: 'Berechtigungen zuweisen',
     assign_title: 'Berechtigungen zuweisen',

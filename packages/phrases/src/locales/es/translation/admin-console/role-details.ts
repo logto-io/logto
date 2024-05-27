@@ -15,6 +15,8 @@ const role_details = {
   field_description: 'Descripción',
   type_m2m_role_tag: 'Rol de aplicación de máquina a máquina',
   type_user_role_tag: 'Rol de usuario',
+  m2m_role_notification:
+    'Asigne este rol de máquina a máquina a una aplicación de máquina a máquina para otorgar acceso a los recursos de API relativos. <a>Cree primero una aplicación de máquina a máquina</a> si aún no lo ha hecho.',
   permission: {
     assign_button: 'Asignar permisos',
     assign_title: 'Asignar permisos',

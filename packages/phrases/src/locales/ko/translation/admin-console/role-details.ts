@@ -15,6 +15,8 @@ const role_details = {
   field_description: '설명',
   type_m2m_role_tag: '기계 대 기계 앱 역할',
   type_user_role_tag: '사용자 역할',
+  m2m_role_notification:
+    '이 머신 투 머신 역할을 머신 투 머신 앱에 할당하여 관련 API 리소스에 액세스할 수 있습니다. <a>아직 만들지 않은 경우에는 먼저 머신 투 머신 앱을 만드십시오.</a>',
   permission: {
     assign_button: '권한 할당',
     assign_title: '권한 할당',
