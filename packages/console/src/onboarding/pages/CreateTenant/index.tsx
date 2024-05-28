@@ -36,7 +36,6 @@ function CreateTenant() {
 
   const onCreateClick = handleSubmit(
     trySubmitSafe(async ({ name, regionName }: CreateTenantForm) => {
-      // @ts-expect-error will be removed once we bump the `@logto/cloud` version
       const newTenant = await cloudApi.post('/api/tenants', { body: { name, regionName } });
       prependTenant(newTenant);
       navigate(joinPath(OnboardingRoute.Onboarding, newTenant.id, OnboardingPage.SignInExperience));
