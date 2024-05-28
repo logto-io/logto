@@ -6,6 +6,7 @@ export const authorizationEndpoint = 'https://login.dingtalk.com/oauth2/auth';
 // https://open.dingtalk.com/document/isvapp/obtain-user-token
 export const accessTokenEndpoint = 'https://api.dingtalk.com/v1.0/oauth2/userAccessToken';
 // https://open.dingtalk.com/document/isvapp/dingtalk-retrieve-user-information
+// To obtain the current authorized person's information, the unionId parameter can be set to "me".
 export const userInfoEndpoint = 'https://api.dingtalk.com/v1.0/contact/users/me';
 export const scope = 'openid';
 

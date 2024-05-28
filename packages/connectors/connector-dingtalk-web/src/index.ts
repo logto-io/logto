@@ -111,7 +111,7 @@ const getUserInfo =
       return {
         id,
         avatar,
-        phone: stateCode ? (mobile ? `${stateCode}${mobile}` : '') : mobile ?? '',
+        phone: stateCode && mobile ? `${stateCode}${mobile}` : undefined,
         email,
         name,
         rawData,

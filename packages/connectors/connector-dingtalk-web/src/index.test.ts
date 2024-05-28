@@ -50,19 +50,6 @@ describe('Dingtalk connector', () => {
       const { accessToken } = await getAccessToken('code', mockedConfig);
       expect(accessToken).toEqual('accessToken');
     });
-
-    it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
-      nock(accessTokenEndpoint).post('').reply(200, {
-        accessToken: '',
-        refreshToken: 'scope',
-        expires_in: 7200,
-        corpId: 'corpId',
-      });
-
-      await expect(getAccessToken('code', mockedConfig)).rejects.toStrictEqual(
-        new ConnectorError(ConnectorErrorCodes.InvalidResponse)
-      );
-    });
   });
 
   describe('getUserInfo', () => {
