@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
+import { OnboardingApp } from '@/onboarding';
 import AcceptInvitation from '@/pages/AcceptInvitation';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
@@ -21,12 +22,13 @@ function AppRoutes() {
         <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
         <Route element={<ProtectedRoutes />}>
           <Route
-            path={`${GlobalAnonymousRoute.AcceptInvitation}/:invitationId`}
+            path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
             element={<AcceptInvitation />}
           />
-          <Route path={GlobalAnonymousRoute.Profile + '/*'} element={<Profile />} />
-          <Route path={GlobalAnonymousRoute.HandleSocial} element={<HandleSocialCallback />} />
+          <Route path={GlobalRoute.Profile + '/*'} element={<Profile />} />
+          <Route path={GlobalRoute.HandleSocial} element={<HandleSocialCallback />} />
           <Route path={GlobalRoute.CheckoutSuccessCallback} element={<CheckoutSuccessCallback />} />
+          <Route path={GlobalRoute.Onboarding + '/*'} element={<OnboardingApp />} />
           <Route index element={<Main />} />
         </Route>
       </Routes>

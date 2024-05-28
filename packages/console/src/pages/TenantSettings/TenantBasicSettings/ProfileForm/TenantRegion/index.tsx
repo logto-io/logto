@@ -1,5 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next';
 
+import Region, { RegionName } from '@/components/Region';
 import { trustAndSecurityLink } from '@/consts';
 import TextLink from '@/ds-components/TextLink';
 
@@ -10,9 +11,8 @@ function TenantRegion() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.region}>
-        <span className={styles.icon}>🇪🇺</span>EU
-      </div>
+      {/* TODO: Read the value from the tenant */}
+      <Region className={styles.region} regionName={RegionName.EU} />
       <div className={styles.regionTip}>
         <Trans
           components={{

@@ -8,7 +8,7 @@ import AppContent, { RedirectToFirstItem } from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
-import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
+import { GlobalRoute } from '@/contexts/TenantsProvider';
 import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
@@ -43,10 +43,7 @@ export function ConsoleRoutes() {
         <Route path="callback" element={<Callback />} />
         <Route path="welcome" element={<Welcome />} />
         <Route element={<ProtectedRoutes />}>
-          <Route
-            path={dropLeadingSlash(GlobalAnonymousRoute.Profile) + '/*'}
-            element={<Profile />}
-          />
+          <Route path={dropLeadingSlash(GlobalRoute.Profile) + '/*'} element={<Profile />} />
           <Route element={<TenantAccess />}>
             {isCloud && (
               <Route

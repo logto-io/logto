@@ -1,7 +1,7 @@
 import { ConnectorType, ServiceConnector } from '@logto/connector-kit';
 import { SignInIdentifier } from '@logto/schemas';
 import type { SignInExperience as SignInExperienceType, ConnectorResponse } from '@logto/schemas';
-import { useCallback, useEffect, useMemo, useContext } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -10,23 +10,21 @@ import Tools from '@/assets/icons/tools.svg';
 import ActionBar from '@/components/ActionBar';
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import PageMeta from '@/components/PageMeta';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
 import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
-import useApi from '@/hooks/use-api';
 import type { RequestError } from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
+import useTenantApi from '@/onboarding/hooks/use-tenant-api';
+import useTenantSwrOptions from '@/onboarding/hooks/use-tenant-swr-options';
+import useTenantUserAssetsService from '@/onboarding/hooks/use-tenant-user-asset-service';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
-import { OnboardingPage } from '@/onboarding/types';
-import { getOnboardingPage } from '@/onboarding/utils';
 import { trySubmitSafe } from '@/utils/form';
 import { buildUrl } from '@/utils/url';
 import { uriValidator } from '@/utils/validator';
@@ -42,25 +40,23 @@ import { defaultOnboardingSieFormData } from './sie-config-templates';
 import { Authentication, type OnboardingSieFormData } from './types';
 
 function SignInExperience() {
+  const swrOptions = useTenantSwrOptions();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate } = useTenantPathname();
   const {
     data: signInExperience,
     error,
     mutate,
-  } = useSWR<SignInExperienceType, RequestError>('api/sign-in-exp');
+  } = useSWR<SignInExperienceType, RequestError>('api/sign-in-exp', swrOptions);
   const isSignInExperienceDataLoading = !error && !signInExperience;
-  const { isLoading: isUserAssetsServiceLoading } = useUserAssetsService();
+  const { isLoading: isUserAssetsServiceLoading } = useTenantUserAssetsService();
   const isLoading = isSignInExperienceDataLoading || isUserAssetsServiceLoading;
-  const api = useApi();
+  const api = useTenantApi();
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
   const { update } = useUserOnboardingData();
   const { user } = useCurrentUser();
-  const { navigateTenant, currentTenantId } = useContext(TenantsContext);
 
   const enterAdminConsole = async () => {
     await update({ isOnboardingDone: true });
-    navigateTenant(currentTenantId);
   };
 
   const {
@@ -146,7 +142,7 @@ function SignInExperience() {
         <div className={styles.content}>
           <div className={styles.config}>
             <Tools />
-            <div className={styles.title}>{t('cloud.sie.title')}</div>
+            <div className={pageLayout.title}>{t('cloud.sie.title')}</div>
             <InspireMe
               onInspired={(template) => {
                 for (const [key, value] of Object.entries(template)) {
@@ -235,7 +231,7 @@ function SignInExperience() {
           <Preview className={styles.preview} signInExperience={previewSieConfig} />
         </div>
       </OverlayScrollbar>
-      <ActionBar step={2} totalSteps={2}>
+      <ActionBar step={3} totalSteps={3}>
         <div className={styles.continueActions}>
           <Button
             type="primary"
@@ -246,13 +242,6 @@ function SignInExperience() {
             }}
           />
         </div>
-        <Button
-          title="general.back"
-          disabled={isSubmitting}
-          onClick={() => {
-            navigate(getOnboardingPage(OnboardingPage.Welcome));
-          }}
-        />
       </ActionBar>
     </div>
   );
