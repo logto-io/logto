@@ -50,7 +50,6 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
   const cloudApi = useCloudApi();
 
   const createTenant = async ({ name, tag, regionName }: CreateTenantData) => {
-    // @ts-expect-error will be removed once we bump the `@logto/cloud` version
     const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
     onClose(newTenant);
   };
