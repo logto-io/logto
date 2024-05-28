@@ -1,10 +1,15 @@
+import { Theme } from '@logto/schemas';
 import { joinPath } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
+import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
+import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import ActionBar from '@/components/ActionBar';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
+import PageMeta from '@/components/PageMeta';
 import Region, { RegionName } from '@/components/Region';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -15,6 +20,7 @@ import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import useTheme from '@/hooks/use-theme';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import { OnboardingPage, OnboardingRoute } from '@/onboarding/types';
 import { trySubmitSafe } from '@/utils/form';
@@ -31,6 +37,8 @@ function CreateTenant() {
   } = methods;
   const { navigate } = useTenantPathname();
   const { prependTenant } = useContext(TenantsContext);
+  const theme = useTheme();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const cloudApi = useCloudApi();
 
@@ -44,13 +52,12 @@ function CreateTenant() {
 
   return (
     <div className={pageLayout.page}>
+      <PageMeta titleKey={['cloud.create_tenant.page_title', 'cloud.general.onboarding']} />
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={pageLayout.content}>
-          <div className={pageLayout.title}>Create your first tenant</div>
-          <div className={pageLayout.description}>
-            A tenant is an isolated environment where you can manage user identities, applications,
-            and all other Logto resources.
-          </div>
+          {theme === Theme.Light ? <CreateTenantHeaderIcon /> : <CreateTenantHeaderIconDark />}
+          <div className={pageLayout.title}>{t('cloud.create_tenant.title')}</div>
+          <div className={pageLayout.description}>{t('cloud.create_tenant.description')}</div>
           <FormProvider {...methods}>
             <FormField isRequired title="tenants.settings.tenant_name">
               <TextInput
@@ -61,7 +68,10 @@ function CreateTenant() {
                 error={Boolean(errors.name)}
               />
             </FormField>
-            <FormField title="tenants.settings.tenant_region">
+            <FormField
+              title="tenants.settings.tenant_region"
+              description="tenants.settings.tenant_region_description"
+            >
               <Controller
                 control={control}
                 name="regionName"
