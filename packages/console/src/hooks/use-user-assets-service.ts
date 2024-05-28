@@ -4,7 +4,7 @@ import useSWRImmutable from 'swr/immutable';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { isCloud } from '@/consts/env';
-import { GlobalAnonymousRoute } from '@/contexts/TenantsProvider';
+import { GlobalRoute } from '@/contexts/TenantsProvider';
 
 import useApi, { useStaticApi, type RequestError } from './use-api';
 import useSwrFetcher from './use-swr-fetcher';
@@ -17,8 +17,7 @@ const useUserAssetsService = () => {
   const api = useApi();
   const { pathname } = useLocation();
   const isProfilePage =
-    pathname === GlobalAnonymousRoute.Profile ||
-    pathname.startsWith(GlobalAnonymousRoute.Profile + '/');
+    pathname === GlobalRoute.Profile || pathname.startsWith(GlobalRoute.Profile + '/');
   const shouldUseAdminApi = isCloud && isProfilePage;
 
   const fetcher = useSwrFetcher<UserAssetsServiceStatus>(shouldUseAdminApi ? adminApi : api);

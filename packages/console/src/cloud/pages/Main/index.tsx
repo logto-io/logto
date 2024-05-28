@@ -1,13 +1,14 @@
 import { OrganizationInvitationStatus } from '@logto/schemas';
+import { Navigate } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
 import { isCloud } from '@/consts/env';
+import { GlobalRoute } from '@/contexts/TenantsProvider';
 import useCurrentUser from '@/hooks/use-current-user';
 import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 import useUserInvitations from '@/hooks/use-user-invitations';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
-import AutoCreateTenant from './AutoCreateTenant';
 import InvitationList from './InvitationList';
 import Redirect from './Redirect';
 import TenantLandingPage from './TenantLandingPage';
@@ -27,9 +28,9 @@ export default function Main() {
     return <Redirect toTenantId={defaultTenantId} />;
   }
 
-  // A new user has just signed up and has no tenant, needs to create a new tenant.
+  // A new user has just signed up, redirect them to the onboarding flow.
   if (isOnboarding) {
-    return <AutoCreateTenant />;
+    return <Navigate to={GlobalRoute.Onboarding} />;
   }
 
   // If user has pending invitations (onboarding will be skipped), show the invitation list and allow them to quick join.

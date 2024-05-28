@@ -48,7 +48,7 @@ function Welcome() {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getOnboardingPage(OnboardingPage.SignInExperience));
+    navigate(getOnboardingPage(OnboardingPage.CreateTenant));
   };
 
   return (
@@ -57,8 +57,8 @@ function Welcome() {
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={pageLayout.content}>
           <Case />
-          <div className={styles.title}>{t('cloud.welcome.title')}</div>
-          <div className={styles.description}>{t('cloud.welcome.description')}</div>
+          <div className={pageLayout.title}>{t('cloud.welcome.title')}</div>
+          <div className={pageLayout.description}>{t('cloud.welcome.description')}</div>
           <form className={styles.form}>
             <FormField title="cloud.welcome.project_field" headlineSpacing="large">
               <Controller
@@ -122,7 +122,7 @@ function Welcome() {
           </form>
         </div>
       </OverlayScrollbar>
-      <ActionBar step={1} totalSteps={2}>
+      <ActionBar step={1} totalSteps={3}>
         <Button title="general.next" type="primary" onClick={onNext} />
       </ActionBar>
     </div>

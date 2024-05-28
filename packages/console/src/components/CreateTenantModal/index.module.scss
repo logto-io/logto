@@ -6,16 +6,6 @@
   margin-top: _.unit(0.5);
 }
 
-.regionOptions {
-  font: var(--font-label-2);
-
-  .comingSoon {
-    margin-left: _.unit(1);
-    font: var(--font-body-2);
-    color: var(--color-text-secondary);
-  }
-}
-
 .envTagRadioGroup {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
