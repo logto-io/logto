@@ -13,7 +13,6 @@ const api_resources = {
   default_api_label:
     'Mandant başına sadece sıfır veya bir varsayılan API ayarlanabilir. Varsayılan bir API belirlendiğinde, auth isteğindeki kaynak parametresi çıkarılabilir. Sonraki token değişimlerinde varsayılan olarak bu API hedef alınarak JWTler oluşturulur. <a>Daha fazla bilgi edinin</a>',
   api_resource_created: '{{name}} API kaynağı başarıyla oluşturuldu',
-  /** UNTRANSLATED */
   invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 

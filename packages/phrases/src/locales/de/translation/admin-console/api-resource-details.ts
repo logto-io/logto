@@ -21,10 +21,8 @@ const api_resource_details = {
     create_title: 'Berechtigung erstellen',
     create_subtitle: 'Definieren Sie die benötigten Berechtigungen (Bereiche) für diese API.',
     confirm_create: 'Berechtigung erstellen',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
-    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
+    edit_title: 'Berechtigung bearbeiten',
+    edit_subtitle: 'Definieren Sie die Berechtigungen (Scopes) der {{resourceName}} API.',
     name: 'Berechtigungsname',
     name_placeholder: 'read:resource',
     forbidden_space_in_name: 'Der Berechtigungsname darf keine Leerzeichen enthalten.',

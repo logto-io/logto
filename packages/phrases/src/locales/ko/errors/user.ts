@@ -32,9 +32,7 @@ const user = {
   missing_mfa: 'You need to bind additional MFA before signing-in.',
   totp_already_in_use: 'TOTP is already in use.',
   backup_code_already_in_use: 'Backup code is already in use.',
-  /** UNTRANSLATED */
-  password_algorithm_required: 'Password algorithm is required.',
-  /** UNTRANSLATED */
+  password_algorithm_required: '비밀번호 알고리즘이 필요합니다.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
 };
 

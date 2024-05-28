@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
 import SearchIcon from '@/assets/icons/search.svg';
+import ApplicationCreation from '@/components/ApplicationCreation';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
@@ -21,7 +22,6 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { allAppGuideCategories, type AppGuideCategory } from '@/types/applications';
 import { thirdPartyAppCategory } from '@/types/applications';
 
-import CreateForm from '../CreateForm';
 import ProtectedAppCard from '../ProtectedAppCard';
 
 import * as styles from './index.module.scss';
@@ -70,7 +70,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
     setSelectedGuide(data);
   }, []);
 
-  const onCloseCreateForm = useCallback(
+  const onAppCreationCompleted = useCallback(
     (newApp?: Application) => {
       if (newApp && selectedGuide) {
         navigate(
@@ -185,11 +185,11 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
         </div>
       </div>
       {selectedGuide?.target !== 'API' && showCreateForm && (
-        <CreateForm
+        <ApplicationCreation
           defaultCreateType={selectedGuide?.target}
           defaultCreateFrameworkName={selectedGuide?.name}
           isDefaultCreateThirdParty={selectedGuide?.isThirdParty}
-          onClose={onCloseCreateForm}
+          onCompleted={onAppCreationCompleted}
         />
       )}
     </OverlayScrollbar>

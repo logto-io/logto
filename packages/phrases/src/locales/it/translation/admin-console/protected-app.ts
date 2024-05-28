@@ -1,69 +1,45 @@
 const protected_app = {
-  /** UNTRANSLATED */
-  name: 'Protected App',
-  /** UNTRANSLATED */
-  title: 'Create a Protected App: Add authentication with simplicity and epic speed',
-  /** UNTRANSLATED */
+  name: 'Applicazione Protetta',
+  title: "Crea un'App Protetta: Aggiungi autenticazione con semplicità e velocità epica",
   description:
-    'Protected App securely maintains user sessions and proxies your app requests. Powered by Cloudflare Workers, enjoy the top-tier performance and 0ms cold start worldwide. <a>Learn more</a>',
-  /** UNTRANSLATED */
-  fast_create: 'Fast create',
-  /** UNTRANSLATED */
-  modal_title: 'Create Protected App',
-  /** UNTRANSLATED */
+    "L'App protetta mantiene in modo sicuro le sessioni degli utenti e instrada le richieste della tua app. Alimentata da Cloudflare Workers, godi delle prestazioni di alto livello e dell'avvio istantaneo da 0 ms in tutto il mondo. <a>Scopri di più</a>",
+  fast_create: 'Creazione rapida',
+  modal_title: "Crea un'App Protetta",
   modal_subtitle:
-    'Enable secure and fast protection with clicks. Add authentication to your existing web app with ease.',
+    'Abilita una protezione sicura e veloce con pochi clic. Aggiungi facilmente autenticazione alla tua app web esistente.',
   form: {
-    /** UNTRANSLATED */
-    url_field_label: 'Your origin URL',
-    /** UNTRANSLATED */
-    url_field_placeholder: 'https://domain.com/',
-    /** UNTRANSLATED */
-    url_field_description: 'Provide the address of your app requiring authentication protection.',
-    /** UNTRANSLATED */
+    url_field_label: 'URL di origine',
+    url_field_placeholder: 'https://dominio.com/',
+    url_field_description:
+      "Fornisci l'indirizzo della tua app che richiede protezione tramite autenticazione.",
     url_field_modification_notice:
-      'Modifications to the origin URL may take up to 1-2 minutes to become effective across global network locations.',
-    /** UNTRANSLATED */
+      "Le modifiche all'URL di origine possono impiegare da 1 a 2 minuti per diventare effettive in tutte le posizioni della rete globale.",
     url_field_tooltip:
-      "Provide the address of your application, excluding any '/pathname'. After creation, you can customize route authentication rules.\n\nNote: The origin URL itself doesn't necessitate authentication; protection is applied exclusively to accesses via the designated app domain.",
-    /** UNTRANSLATED */
-    domain_field_label: 'App domain',
-    /** UNTRANSLATED */
-    domain_field_placeholder: 'your-domain',
-    /** UNTRANSLATED */
+      "Fornisci l'indirizzo della tua applicazione, escludendo qualsiasi '/percorso'. Dopo la creazione, puoi personalizzare le regole di autenticazione del percorso.\n\nNota: L'URL di origine di per sé non richiede autenticazione; la protezione è applicata esclusivamente agli accessi tramite il dominio dell'app designato.",
+    domain_field_label: "Dominio dell'App",
+    domain_field_placeholder: 'tuo-dominio',
     domain_field_description:
-      'This URL serves as an authentication protection proxy for the original URL. Custom domain can be applied after creation.',
-    /** UNTRANSLATED */
+      "Questo URL funge da proxy di protezione dell'autenticazione per l'URL originale. Il dominio personalizzato può essere applicato dopo la creazione.",
     domain_field_description_short:
-      'This URL serves as an authentication protection proxy for the original URL.',
-    /** UNTRANSLATED */
+      "Questo URL funge da proxy di protezione dell'autenticazione per l'URL originale.",
     domain_field_tooltip:
-      "Apps protected by Logto will be hosted at 'your-domain.{{domain}}' by default. Custom domain can be applied after creation.",
-    /** UNTRANSLATED */
-    create_application: 'Create application',
-    /** UNTRANSLATED */
-    create_protected_app: 'Fast create',
+      "Le app protette da Logto saranno ospitate di default su 'tuo-dominio.{{domain}}'. Il dominio personalizzato può essere applicato dopo la creazione.",
+    create_application: 'Crea applicazione',
+    create_protected_app: 'Creazione rapida',
     errors: {
-      /** UNTRANSLATED */
-      domain_required: 'Your domain is required.',
-      /** UNTRANSLATED */
-      domain_in_use: 'This subdomain name is already in use.',
-      /** UNTRANSLATED */
+      domain_required: 'Il tuo dominio è obbligatorio.',
+      domain_in_use: 'Questo nome sottodominio è già in uso.',
       invalid_domain_format:
-        "Invalid subdomain format: use only lowercase letters, numbers, and hyphens '-'.",
-      /** UNTRANSLATED */
-      url_required: 'Origin URL is required.',
-      /** UNTRANSLATED */
+        "Formato di sottodominio non valido: utilizza solo lettere minuscole, numeri e trattini '-'.",
+      url_required: "L'URL di origine è obbligatorio.",
       invalid_url:
-        "Invalid origin URL format: Use http:// or https://. Note: '/pathname' is not currently supported.",
-      /** UNTRANSLATED */
+        "Formato URL di origine non valido: Usa http:// o https://. Nota: '/percorso' non è attualmente supportato.",
       localhost:
-        'Please expose your local server to the internet first. Learn more about <a>local development</a>.',
+        'Si prega di esporre prima il proprio server locale su Internet. Scopri di più su <a>sviluppo locale</a>.',
     },
   },
-  /** UNTRANSLATED */
   success_message:
-    '🎉 App authentication successfully enabled! Explore the new experience of your website.',
+    "🎉 Autenticazione dell'app abilitata con successo! Esplora la nuova esperienza del tuo sito web.",
 };
 
 export default Object.freeze(protected_app);

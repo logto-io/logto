@@ -2,18 +2,16 @@ const organizations = {
   organization: 'Organização',
   page_title: 'Organizações',
   title: 'Organizações',
-  /** UNTRANSLATED */
   subtitle:
-    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
+    'As organizações são geralmente usadas em aplicações SaaS ou similares de múltiplos inquilinos e representam os seus clientes, que podem ser equipas, organizações ou empresas inteiras. As organizações funcionam como um elemento fundamental para a autenticação e autorização B2B.',
   organization_template: 'Modelo de organização',
   organization_id: 'ID da organização',
   members: 'Membros',
   create_organization: 'Criar organização',
   setup_organization: 'Configurar a sua organização',
   organization_list_placeholder_title: 'Organização',
-  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
+    'As organizações são frequentemente utilizadas em aplicações SaaS ou similares de múltiplos inquilinos como uma prática recomendada. Permitem-lhe desenvolver aplicações que permitem aos clientes criar e gerir organizações, convidar membros e atribuir funções.',
   organization_name_placeholder: 'A minha organização',
   organization_description_placeholder: 'Uma breve descrição da organização',
   organization_permission: 'Permissão da organização',
@@ -26,10 +24,10 @@ const organizations = {
   role: 'Função',
   search_placeholder: 'Pesquisar por nome ou ID da organização',
   search_role_placeholder: 'Digite para pesquisar e selecionar funções',
-  empty_placeholder: '🤔 Você ainda não configurou nenhum {{entity}}.',
+  empty_placeholder: '🤔 Ainda não configurou nenhum {{entity}}.',
   organization_and_member: 'Organização e membro',
   organization_and_member_description:
-    'A organização é um grupo de utilizadores e pode representar as equipas, clientes empresariais e empresas parceiras, sendo que cada utilizador é um "Membro". Estas podem ser entidades fundamentais para lidar com os requisitos de vários inquilinos.',
+    'A organização é um grupo de utilizadores e pode representar as equipas, clientes empresariais e empresas parceiras, sendo que cada utilizador é um "Membro". Estas podem ser entidades fundamentais para lidar com os requisitos de múltiplos inquilinos.',
   guide: {
     title: 'Comece com guias',
     subtitle: 'Inicie as configurações da sua organização com os nossos guias',

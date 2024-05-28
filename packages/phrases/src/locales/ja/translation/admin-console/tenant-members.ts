@@ -1,102 +1,61 @@
 const tenant_members = {
-  /** UNTRANSLATED */
-  members: 'Members',
-  /** UNTRANSLATED */
-  invitations: 'Invitations',
-  /** UNTRANSLATED */
-  invite_members: 'Invite members',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  roles: 'Roles',
-  /** UNTRANSLATED */
-  admin: 'Admin',
-  /** UNTRANSLATED */
-  collaborator: 'Collaborator',
-  /** UNTRANSLATED */
-  invitation_status: 'Invitation status',
-  /** UNTRANSLATED */
-  inviter: 'Inviter',
-  /** UNTRANSLATED */
-  expiration_date: 'Expiration date',
+  members: 'メンバー',
+  invitations: '招待状',
+  invite_members: 'メンバーを招待する',
+  user: 'ユーザー',
+  roles: 'ロール',
+  admin: '管理者',
+  collaborator: '共同作業者',
+  invitation_status: '招待状のステータス',
+  inviter: '招待者',
+  expiration_date: '有効期限',
   invite_modal: {
-    /** UNTRANSLATED */
-    title: 'Invite people to Silverhand',
-    /** UNTRANSLATED */
-    subtitle: 'To invite members to an organization, they must accept the invitation.',
-    /** UNTRANSLATED */
+    title: 'Silverhand への招待',
+    subtitle: '組織にメンバーを招待するには、招待を受け入れる必要があります。',
     to: 'To',
-    /** UNTRANSLATED */
-    added_as: 'Added as roles',
-    /** UNTRANSLATED */
+    added_as: '役割として追加',
     email_input_placeholder: 'johndoe@example.com',
   },
   invitation_statuses: {
-    /** UNTRANSLATED */
-    pending: 'Pending',
-    /** UNTRANSLATED */
-    accepted: 'Accepted',
-    /** UNTRANSLATED */
-    expired: 'Expired',
-    /** UNTRANSLATED */
-    revoked: 'Revoked',
+    pending: '保留中',
+    accepted: '受け入れ済み',
+    expired: '期限切れ',
+    revoked: '取り消された',
   },
   invitation_empty_placeholder: {
-    /** UNTRANSLATED */
-    title: 'Invite team members',
-    /** UNTRANSLATED */
+    title: 'チームメンバーを招待',
     description:
-      'Your tenant currently has no members invited.\nTo assist with your integration, consider adding more members or admins.',
+      '現在、テナントに招待されたメンバーはいません。\n統合の支援のために、メンバーや管理者を追加するかどうか検討してください。',
   },
   menu_options: {
-    /** UNTRANSLATED */
-    edit: 'Edit tenant role',
-    /** UNTRANSLATED */
-    delete: 'Remove user from tenant',
-    /** UNTRANSLATED */
-    resend_invite: 'Resend invitation',
-    /** UNTRANSLATED */
-    revoke: 'Revoke invitation',
-    /** UNTRANSLATED */
-    delete_invitation_record: 'Delete this invitation record',
+    edit: 'テナントロールを編集',
+    delete: 'テナントからユーザーを削除',
+    resend_invite: '招待を再送信',
+    revoke: '招待を取り消す',
+    delete_invitation_record: 'この招待レコードを削除',
   },
   edit_modal: {
-    /** UNTRANSLATED */
-    title: 'Change roles of {{name}}',
+    title: '{{name}} の役割を変更',
   },
-  /** UNTRANSLATED */
-  delete_user_confirm: 'Are you sure you want to remove this user from this tenant?',
-  /** UNTRANSLATED */
+  delete_user_confirm: 'このユーザーをこのテナントから削除してもよろしいですか？',
   assign_admin_confirm:
-    'Are you sure you want to make the selected user(s) admin? Granting admin access will give the user(s) the following permissions.<ul><li>Change the tenant billing plan</li><li>Add or remove collaborators</li><li>Delete the tenant</li></ul>',
-  /** UNTRANSLATED */
-  revoke_invitation_confirm: 'Are you sure you want to revoke this invitation?',
-  /** UNTRANSLATED */
-  delete_invitation_confirm: 'Are you sure you want to delete this invitation record?',
+    '選択したユーザーを管理者にすることを確認しますか？ 管理者アクセスを付与すると、次の権限がユーザーに付与されます。<ul><li>テナントの課金プランを変更</li><li>共同作業者の追加または削除</li><li>テナントの削除</li></ul>',
+  revoke_invitation_confirm: 'この招待を取り消してもよろしいですか？',
+  delete_invitation_confirm: 'この招待レコードを削除してもよろしいですか？',
   messages: {
-    /** UNTRANSLATED */
-    invitation_sent: 'Invitation sent.',
-    /** UNTRANSLATED */
-    invitation_revoked: 'Invitation revoked.',
-    /** UNTRANSLATED */
-    invitation_resend: 'Invitation resent.',
-    /** UNTRANSLATED */
-    invitation_deleted: 'Invitation record deleted.',
+    invitation_sent: '招待が送信されました。',
+    invitation_revoked: '招待が取り消されました。',
+    invitation_resend: '招待が再送信されました。',
+    invitation_deleted: '招待レコードが削除されました。',
   },
   errors: {
-    /** UNTRANSLATED */
-    email_required: 'Invitee email is required.',
-    /** UNTRANSLATED */
-    email_exists: 'Email address already exists.',
-    /** UNTRANSLATED */
-    member_exists: 'This user is already a member of this organization.',
-    /** UNTRANSLATED */
+    email_required: '招待対象のメールアドレスは必須です。',
+    email_exists: '電子メールアドレスは既に存在します。',
+    member_exists: 'このユーザーはすでにこの組織のメンバーです。',
     pending_invitation_exists:
-      'Pending invitation exists. Delete related email or revoke the invitation.',
-    /** UNTRANSLATED */
-    invalid_email: 'Email address is invalid. Please make sure it is in the right format.',
-    /** UNTRANSLATED */
-    max_member_limit: 'You have reached the maximum number of members ({{limit}}) for this tenant.',
+      '保留中の招待が存在します。関連する電子メールを削除するか、招待を取り消してください。',
+    invalid_email: 'メールアドレスが無効です。正しい形式であることを確認してください。',
+    max_member_limit: 'このテナントの最大メンバー数（{{limit}}）に達しました。',
   },
 };
 

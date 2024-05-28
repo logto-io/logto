@@ -30,13 +30,12 @@ const user = {
   missing_profile: 'Musisz podać dodatkowe informacje przed zalogowaniem.',
   role_exists: 'Identyfikator roli {{roleId}} jest już dodany do tego użytkownika',
   invalid_role_type: 'Nieprawidłowy typ roli, nie można przypisać roli maszynowej do użytkownika.',
-  missing_mfa: 'You need to bind additional MFA before signing-in.',
-  totp_already_in_use: 'TOTP is already in use.',
-  backup_code_already_in_use: 'Backup code is already in use.',
-  /** UNTRANSLATED */
-  password_algorithm_required: 'Password algorithm is required.',
-  /** UNTRANSLATED */
-  password_and_digest: 'You cannot set both plain text password and password digest.',
+  missing_mfa: 'Musisz podłączyć dodatkowe MFA przed zalogowaniem.',
+  totp_already_in_use: 'TOTP jest już w użyciu.',
+  backup_code_already_in_use: 'Kod zapasowy jest już w użyciu.',
+  password_algorithm_required: 'Wymagany jest algorytm hasła.',
+  password_and_digest:
+    'Nie możesz ustawić zarówno hasła w postaci tekstu jawnego, jak i skrótu hasła.',
 };
 
 export default Object.freeze(user);

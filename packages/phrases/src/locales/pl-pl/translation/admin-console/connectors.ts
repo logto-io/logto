@@ -77,7 +77,6 @@ const connectors = {
     callback_uri: 'URI zwrotu (Callback)',
     callback_uri_description:
       'Nazywany także URI przekierowania, to URI w Logto, do którego użytkownicy zostaną przesłani po autoryzacji społecznej; skopiuj i wklej na stronie konfiguracyjnej dostawcy usług społecznościowych.',
-    /** UNTRANSLATED */
     acs_url: 'Assertion consumer service URL',
   },
   platform: {

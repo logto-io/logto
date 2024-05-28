@@ -8,27 +8,17 @@ const application = {
   third_party_application_only:
     'Эта функция доступна только для приложений сторонних разработчиков.',
   user_consent_scopes_not_found: 'Недействительные области согласия пользователя.',
-  /** UNTRANSLATED */
-  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
+  consent_management_api_scopes_not_allowed: 'API-области управления не разрешены.',
   protected_app_metadata_is_required: 'Требуется защищенная метаданные приложения.',
-  /** UNTRANSLATED */
   protected_app_not_configured:
-    'Protected app provider is not configured. This feature is not available for open source version.',
-  /** UNTRANSLATED */
-  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
-  /** UNTRANSLATED */
-  protected_application_only: 'The feature is only available for protected applications.',
-  /** UNTRANSLATED */
-  protected_application_misconfigured: 'Protected application is misconfigured.',
-  /** UNTRANSLATED */
-  protected_application_subdomain_exists:
-    'The subdomain of Protected application is already in use.',
-  /** UNTRANSLATED */
-  invalid_subdomain: 'Invalid subdomain.',
-  /** UNTRANSLATED */
-  custom_domain_not_found: 'Custom domain not found.',
-  /** UNTRANSLATED */
-  should_delete_custom_domains_first: 'Should delete custom domains first.',
+    'Поставщик защищенного приложения не настроен. Эта функция недоступна для версии с открытым исходным кодом.',
+  cloudflare_unknown_error: 'Получена неизвестная ошибка при запросе к API Cloudflare',
+  protected_application_only: 'Эта функция доступна только для защищенных приложений.',
+  protected_application_misconfigured: 'Защищенное приложение настроено неверно.',
+  protected_application_subdomain_exists: 'Поддомен защищенного приложения уже используется.',
+  invalid_subdomain: 'Недопустимый поддомен.',
+  custom_domain_not_found: 'Пользовательский домен не найден.',
+  should_delete_custom_domains_first: 'Сначала следует удалить пользоватские домены.',
 };
 
 export default Object.freeze(application);

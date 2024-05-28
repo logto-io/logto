@@ -252,6 +252,27 @@ describe('applications', () => {
 
       await waitForToast(page, { text: 'Application created successfully.' });
 
+      // Expect to assign management API access role for the M2M app
+      if (app.type === ApplicationType.MachineToMachine) {
+        await expectModalWithTitle(
+          page,
+          'Authorize app with machine-to-machine role for permissions'
+        );
+
+        await expect(page).toClick(
+          '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div',
+          {
+            text: 'Logto Management API access',
+          }
+        );
+
+        await expectToClickModalAction(page, 'Assign roles');
+
+        await waitForToast(page, {
+          text: 'Successfully assigned role(s)',
+        });
+      }
+
       await expect(page).toMatchElement('div[class$=main] div[class$=header] div[class$=name]', {
         text: app.name,
       });

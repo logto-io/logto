@@ -22,13 +22,10 @@ const organization_details = {
     'Wenn entfernt, verliert der Benutzer seine Mitgliedschaft und Rollen in dieser Organisation. Diese Aktion kann nicht rückgängig gemacht werden.',
   search_user_placeholder: 'Nach Name, E-Mail, Telefon oder Benutzer-ID suchen',
   at_least_one_user: 'Mindestens ein Benutzer ist erforderlich.',
-  /** UNTRANSLATED */
-  custom_data: 'Custom data',
-  /** UNTRANSLATED */
+  custom_data: 'Benutzerdefinierte Daten',
   custom_data_tip:
-    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
-  /** UNTRANSLATED */
-  invalid_json_object: 'Invalid JSON object.',
+    'Benutzerdefinierte Daten sind ein JSON-Objekt, das verwendet werden kann, um zusätzliche Daten zu speichern, die mit der Organisation verbunden sind.',
+  invalid_json_object: 'Ungültiges JSON-Objekt.',
 };
 
 export default Object.freeze(organization_details);

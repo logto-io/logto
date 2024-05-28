@@ -13,6 +13,9 @@ const role_details = {
     '역할은 사용자에게 할당된 권한들의 모음이에요. 역할은 다양한 API에 정의된 권한들을 통합하는 방법을 제공하기 때문에, 사용자에게 개별적으로 할당하는 것보다 효율적으로 권한을 추가, 제거, 조정할 수 있어요.',
   field_name: '이름',
   field_description: '설명',
+  field_is_default: '기본 역할',
+  field_is_default_description:
+    '새 사용자에게 기본 역할로 설정합니다. 여러 기본 역할을 설정할 수 있습니다. 이는 Management API를 통해 생성된 사용자에 대한 기본 역할에도 영향을 미칩니다.',
   type_m2m_role_tag: '기계 대 기계 앱 역할',
   type_user_role_tag: '사용자 역할',
   m2m_role_notification:

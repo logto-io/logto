@@ -15,9 +15,8 @@ const domain = {
     custom_domain_field: 'Dominio personalizado',
     custom_domain_placeholder: 'tu.dominio.com',
     add_domain: 'Agregar dominio',
-    /** UNTRANSLATED */
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      'Por favor, proporcione una URL de dominio válida con un mínimo de tres partes, por ejemplo, "tu.dominio.com".',
     verify_domain: 'Verificar dominio',
     enable_ssl: 'Habilitar SSL',
     checking_dns_tip:
@@ -36,9 +35,9 @@ const domain = {
       reminder: 'Eliminar dominio personalizado',
       description: '¿Está seguro de que desea eliminar este dominio personalizado?',
       in_used_description:
-        '¿Está seguro de que desea eliminar este dominio personalizado "<span>{{domain}}</span>"?',
+        '¿Está seguro de que desea eliminar el dominio personalizado "{{domain}}"?',
       in_used_tip:
-        'Si había configurado este dominio personalizado en su proveedor de conector social o punto final de aplicación antes, deberá modificar la URI al dominio predeterminado de Logto "<span>{{dominio}}</span>" primero. Esto es necesario para que el botón de inicio de sesión social funcione correctamente.',
+        'Si había configurado este dominio personalizado en su proveedor de conector social o punto final de aplicación antes, necesitará modificar la URI al dominio predeterminado de Logto "{{dominio}}" primero. Esto es necesario para que el botón de inicio de sesión social funcione correctamente.',
       deleted: '¡Dominio personalizado eliminado con éxito!',
     },
   },
@@ -52,9 +51,8 @@ const domain = {
     'Puede personalizar el nombre de dominio de estos puntos finales según sea necesario. Elija "{{custom}}" o "{{default}}".',
   custom_social_callback_url_note:
     'Puede personalizar el nombre de dominio de esta URI para que coincida con el punto final de su aplicación. Elija "{{custom}}" o "{{default}}".',
-  /** UNTRANSLATED */
   custom_acs_url_note:
-    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+    'Puede personalizar el nombre de dominio de esta URI para que coincida con la URL del servicio de consumidor de afirmaciones de su proveedor de identidad. Elija "{{custom}}" o "{{default}}".',
 };
 
 export default Object.freeze(domain);

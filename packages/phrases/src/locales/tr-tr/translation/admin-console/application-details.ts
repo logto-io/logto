@@ -3,54 +3,42 @@ const application_details = {
   back_to_applications: 'Uygulamalara geri dön',
   check_guide: 'Kılavuza Göz At',
   settings: 'Ayarlar',
-  /** UNTRANSLATED */
   settings_description:
-    'An "Application" is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
-  /** UNTRANSLATED */
-  integration: 'Integration',
-  /** UNTRANSLATED */
+    'Bir "Uygulama", kullanıcı bilgilerine erişebilen veya bir kullanıcı adına hareket edebilen kayıtlı bir yazılım veya hizmettir. Uygulamalar, Kimin Logto\'dan ne istediğini tanımaya yardımcı olur ve giriş yapma ve izinleri işlemek için yardımcı olur. Kimlik doğrulaması için gerekli alanları doldurun.',
+  integration: 'Entegrasyon',
   integration_description:
-    "Deploy with Logto secure workers, powered by Cloudflare's edge network for top-tier performance and 0ms cold starts worldwide.",
-  /** UNTRANSLATED */
-  service_configuration: 'Service configuration',
-  /** UNTRANSLATED */
-  service_configuration_description: 'Complete the necessary configurations in your service.',
-  /** UNTRANSLATED */
-  session: 'Session',
-  /** UNTRANSLATED */
-  endpoints_and_credentials: 'Endpoints & Credentials',
-  /** UNTRANSLATED */
+    "Cloudflare'ın kenar ağı tarafından desteklenen ve dünya çapında en üst düzey performans ve 0ms soğuk başlangıçlarla Logto güvenli çalışanlarla dağıtım yapın.",
+  service_configuration: 'Hizmet yapılandırması',
+  service_configuration_description: 'Servisinizde gerekli yapılandırmaları tamamlayın.',
+  session: 'Oturum',
+  endpoints_and_credentials: 'Bitiş Noktaları ve Kimlik Bilgileri',
   endpoints_and_credentials_description:
-    'Use the following endpoints and credentials to set up the OIDC connection in your application.',
-  /** UNTRANSLATED */
-  refresh_token_settings: 'Refresh token',
-  /** UNTRANSLATED */
-  refresh_token_settings_description: 'Manage the refresh token rules for this application.',
+    'Uygulamanızda OIDC bağlantısını kurmak için aşağıdaki bitiş noktalarını ve kimlik bilgilerini kullanın.',
+  refresh_token_settings: 'Yenileme belirteci',
+  refresh_token_settings_description: 'Bu uygulama için yenileme belirteci kurallarını yönetin.',
   application_roles: 'Roller',
   machine_logs: 'Makine günlükleri',
   application_name: 'Uygulama Adı',
   application_name_placeholder: 'Uygulamam',
   description: 'Açıklama',
   description_placeholder: 'Uygulama açıklamasını giriniz',
-  config_endpoint: 'OpenID Provider yapılandırma bitiş noktası',
+  config_endpoint: 'OpenID Sağlayıcı yapılandırma bitiş noktası',
   authorization_endpoint: 'Yetkilendirme bitiş noktası',
   authorization_endpoint_tip:
-    'Kimlik doğrulama ve yetkilendirme gerçekleştirmek için bitiş noktası. OpenID Connect <a>Authentication</a> için kullanılır.',
-  /** UNTRANSLATED */
-  show_endpoint_details: 'Show endpoint details',
-  /** UNTRANSLATED */
-  hide_endpoint_details: 'Hide endpoint details',
+    'Kimlik doğrulama ve yetkilendirme için bir bitiş noktası. OpenID Connect <a>Authentication</a> için kullanılır.',
+  show_endpoint_details: 'Bitiş noktası ayrıntılarını göster',
+  hide_endpoint_details: 'Bitiş noktası ayrıntılarını gizle',
   logto_endpoint: 'Logto bitiş noktası',
   application_id: 'Uygulama IDsi',
   application_id_tip:
-    'Logto tarafından normalde oluşturulan benzersiz uygulama tanımlayıcısıdır. Ayrıca OpenID Connect "client_id" anlamına gelir.',
+    'Genellikle Logto tarafından oluşturulan benzersiz bir uygulama tanımlayıcısıdır. Ayrıca OpenID Connect "client_id" anlamına gelir.',
   application_secret: 'Uygulama Sırrı',
   redirect_uri: 'Yönlendirme URIı',
   redirect_uris: 'Yönlendirme URIları',
   redirect_uri_placeholder: 'https://siteniz.com/uygulama',
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
-    'URI, kullanıcının oturum açma işlemi tamamlandıktan sonra yönlendirir (başarılı olsa da olmasa da). Ayrıntılı bilgi için OpenID Connect <a>AuthRequesta</a> bakınız.',
+    'Kullanıcının oturum açma işlemi tamamlandıktan sonra (başarılı olsa da olmasa da) yönlendirilen bir URI. Daha fazla bilgi için OpenID Connect <a>AuthRequesta</a> bakınız.',
   post_sign_out_redirect_uri: 'Oturumdan Çıkış sonrası yönlendirme URIı',
   post_sign_out_redirect_uris: 'Oturumdan Çıkış sonrası yönlendirme URIları',
   post_sign_out_redirect_uri_placeholder: 'https://siteniz.com/anasayfa',
@@ -60,138 +48,94 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://siteniz.com',
   cors_allowed_origins_tip:
     'Varsayılan olarak, Yönlendirme URIlerinin tüm originlerine izin verilir. Genellikle bu alan için herhangi bir işlem gerekmez. Ayrıntılı bilgi için <a>MDN doc</a> sayfasına bakın.',
-  token_endpoint: 'Token bitiş noktası',
-  user_info_endpoint: 'Userinfo bitiş noktası',
+  token_endpoint: 'Belirteç bitiş noktası',
+  user_info_endpoint: 'Kullanıcı bilgileri bitiş noktası',
   enable_admin_access: 'Yönetici erişimini etkinleştir',
   enable_admin_access_label:
-    "Yönetim API erişimine izin verme veya engelleme. Etkinleştirildikten sonra, bu uygulama adına yönetim API'sini çağırmak için erişim belirteçleri kullanabilirsiniz.",
-  always_issue_refresh_token: 'Her zaman Refresh Token ver',
+    "Yönetim API erişimine izin verme veya engel. Etkinleştirildikten sonra, bu uygulama adına yönetim API'sini çağırmak için erişim belirteçleri kullanabilirsiniz.",
+  always_issue_refresh_token: 'Her zaman Yenileme Belirteci ver',
   always_issue_refresh_token_label:
-    "Bu yapılandırmayı etkinleştirmek, Logto'nun OpenID Connect ile uyumlu olmayan ve olası sorunlara neden olabilecek her zaman Refresh Token çıkarmasına izin verir `prompt=consent` kimlik doğrulama isteğinin sunulup sunulmadığına bakılmaksızın. Ancak, bu uygulama yalnızca zorunlu olduğunda caydırılmayan bir uygulamadır.",
-  refresh_token_ttl: 'Refresh Token süresi (gün cinsinden)',
+    "Bu yapılandırmayı etkinleştirmek, Logto'nun OpenID Connect ile uyumlu olmayan ve olası sorunlara neden olabilecek her zaman Yenileme Belirteği çıkarmasına izin verir `prompt=consent` kimlik doğrulama isteğinin sunulup sunulmadığına bakılmaksızın. Ancak, bu uygulama sadece gerekli olduğunda caydırılmayan bir uygulamadır.",
+  refresh_token_ttl: 'Yenileme Belirteci süresi (gün cinsinden)',
   refresh_token_ttl_tip:
-    'Yeni erişim belirteği istekleri için Refresh Belirteği kullanılabilecek süre. Belirteğin süresi dolmadan önce yapılan talepler belirteğin ömrünü uzatacaktır.',
-  rotate_refresh_token: 'Refresh Tokenı değiştir',
+    'Yeni erişim belirteği talepleri için Yenileme Belirteği kullanılabilecek süre. Belirteğin süresi dolmadan önce yapılan talepler belirteğin ömrünü uzatacaktır.',
+  rotate_refresh_token: 'Yenileme Belirteci değiştir',
   rotate_refresh_token_label:
-    "Bu seçenek etkinleştirildiğinde, Logto Token Bitiş Süresinin %70'i geçildiğinde veya belli koşullar sağlandığında yeni bir Refresh Token verecektir. <a>Daha fazlası için tıklayın</a>",
+    "Bu seçenek etkinleştirildiğinde, Logto Yenileme Belirteği Bitiş Süresinin %70'i geçildiğinde veya belirli koşullar sağlandığında yeni bir Yenileme Belirteği verecektir. <a>Daha fazlası için tıklayın</a>",
   delete_description:
     'Bu eylem geri alınamaz. Uygulama kalıcı olarak silinecektir. Lütfen onaylamak için uygulama adı <span>{{name}}</span> girin.',
   enter_your_application_name: 'Uygulama adı giriniz',
   application_deleted: '{{name}} Uygulaması başarıyla silindi',
   redirect_uri_required: 'En az 1 yönlendirme URIı girmelisiniz',
-  /** UNTRANSLATED */
   app_domain_description_1:
-    'Feel free to use your domain with {{domain}} powered by Logto, which is permanently valid.',
-  /** UNTRANSLATED */
+    '{{domain}} destekli Logto ile alanınızı özgürce kullanın, bu sürekli geçerlidir.',
   app_domain_description_2:
-    'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
-  /** UNTRANSLATED */
-  custom_rules: 'Custom authentication rules',
-  /** UNTRANSLATED */
-  custom_rules_placeholder: '^/(admin|privacy)/.+$',
-  /** UNTRANSLATED */
+    'Kalıcı olarak geçerli olan <domain>{{domain}}</domain> alanınızı özgürce kullanabilirsiniz.',
+  custom_rules: 'Özel kimlik doğrulama kuralları',
+  custom_rules_placeholder: '^/(admin|privacy)/.+',
   custom_rules_description:
-    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if left blank.',
-  /** UNTRANSLATED */
-  authentication_routes: 'Authentication routes',
-  /** UNTRANSLATED */
+    'Kimlik doğrulaması gerektiren rotalar için düzenli ifadelerle kurallar belirleyin. Varsayılan: boş bırakılırsa tüm site koruması.',
+  authentication_routes: 'Kimlik doğrulama rotaları',
   custom_rules_tip:
-    "Here are two case scenarios:<ol><li>To only protect routes '/admin' and '/privacy' with authentication: ^/(admin|privacy)/.*</li><li>To exclude JPG images from authentication: ^(?!.*\\.jpg$).*$</li></ol>",
-  /** UNTRANSLATED */
+    "İki durum senaryosu burada:<ol><li>Sadece '/admin' ve '/privacy' rotalarını kimlik doğrulama ile korumak için: ^/(admin|privacy)/.*</li><li>JPG resimlerini kimlik doğrulamadan hariç tutmak için: ^(?!.*\\.jpg$).*$</li></ol>",
   authentication_routes_description:
-    'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
-  /** UNTRANSLATED */
-  protect_origin_server: 'Protect your origin server',
-  /** UNTRANSLATED */
+    'Belirtilen rotaları kullanarak kimlik doğrulama düğmesinizi yönlendirin. Not: Bu rotalar değiştirilemez.',
+  protect_origin_server: 'Orjın sunucunu koru',
   protect_origin_server_description:
-    'Ensure to protect your origin server from direct access. Refer to the guide for more <a>detailed instructions</a>.',
-  /** UNTRANSLATED */
-  session_duration: 'Session duration (days)',
-  /** UNTRANSLATED */
-  try_it: 'Try it',
+    'Orjın sunucunuzu doğrudan erişimden korumaya emin olun. Daha fazla <a>açıklamalı talimatlar</a> için kılavuza bakın.',
+  session_duration: 'Oturum süresi (gün cinsinden)',
+  try_it: 'Deneyin',
   branding: {
-    /** UNTRANSLATED */
-    name: 'Branding',
-    /** UNTRANSLATED */
-    description: "Customize your application's display name and logo on the consent screen.",
-    /** UNTRANSLATED */
-    more_info: 'More info',
-    /** UNTRANSLATED */
-    more_info_description: 'Offer users more details about your application on the consent screen.',
-    /** UNTRANSLATED */
-    display_name: 'Display name',
-    /** UNTRANSLATED */
-    display_logo: 'Display logo',
-    /** UNTRANSLATED */
-    display_logo_dark: 'Display logo (dark)',
-    /** UNTRANSLATED */
-    terms_of_use_url: 'Application terms of use URL',
-    /** UNTRANSLATED */
-    privacy_policy_url: 'Application privacy policy URL',
+    name: 'Markalama',
+    description: 'Uygulamanızın adını ve logosunu açıklama ekranında özelleştirin.',
+    more_info: 'Daha fazla bilgi',
+    more_info_description:
+      'Uygulamanız hakkında kullanıcılara açıklama ekranında daha fazla bilgi sunun.',
+    display_name: 'Adı göster',
+    display_logo: 'Logoyu göster',
+    display_logo_dark: 'Logoyu göster (koyu)',
+    terms_of_use_url: 'Kullanım Koşulları URLsi',
+    privacy_policy_url: 'Gizlilik Politikası URLsi',
   },
   permissions: {
-    /** UNTRANSLATED */
-    name: 'Permissions',
-    /** UNTRANSLATED */
+    name: 'İzinler',
     description:
-      'Select the permissions that the third-party application requires for user authorization to access specific data types.',
-    /** UNTRANSLATED */
-    user_permissions: 'Personal user data',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization access',
-    /** UNTRANSLATED */
-    table_name: 'Grant permissions',
-    /** UNTRANSLATED */
-    field_name: 'Permission',
-    /** UNTRANSLATED */
-    field_description: 'Displayed in the consent screen',
-    /** UNTRANSLATED */
-    delete_text: 'Remove permission',
-    /** UNTRANSLATED */
+      'Üçüncü taraf uygulamanın belirli veri türlerine erişim için kullanıcı yetkilendirmesi için gereken izinleri seçin.',
+    user_permissions: 'Kişisel kullanıcı verileri',
+    organization_permissions: 'Organizasyon erişimi',
+    table_name: 'İzin ver',
+    field_name: 'İzin',
+    field_description: 'Açıklama ekranında gösterilir',
+    delete_text: 'İzni kaldır',
     permission_delete_confirm:
-      'This action will withdraw the permissions granted to the third-party app, preventing it from requesting user authorization for specific data types. Are you sure you want to continue?',
-    /** UNTRANSLATED */
+      'Bu işlem, üçüncü taraf uygulamaya verilen izinleri geri çekecek ve belirli veri tipleri için kullanıcı yetkilendirmesi istemesini engelleyecektir. Devam etmek istediğinizden emin misiniz?',
     permissions_assignment_description:
-      'Select the permissions the third-party application requests for user authorization to access specific data types.',
-    /** UNTRANSLATED */
-    user_profile: 'User data',
-    /** UNTRANSLATED */
-    api_permissions: 'API permissions',
-    /** UNTRANSLATED */
-    organization: 'Organization permissions',
-    /** UNTRANSLATED */
-    user_permissions_assignment_form_title: 'Add the user profile permissions',
-    /** UNTRANSLATED */
-    organization_permissions_assignment_form_title: 'Add the organization permissions',
-    /** UNTRANSLATED */
-    api_resource_permissions_assignment_form_title: 'Add the API resource permissions',
-    /** UNTRANSLATED */
+      'Üçüncü taraf uygulamanın belirli veri türlerine erişim için kullanıcı yetkilendirme istediği izinleri seçin.',
+    user_profile: 'Kullanıcı verileri',
+    api_permissions: 'API izinleri',
+    organization: 'Organizasyon izinleri',
+    user_permissions_assignment_form_title: 'Kullanıcı profili izinlerini ekleyin',
+    organization_permissions_assignment_form_title: 'Organizasyon izinlerini ekleyin',
+    api_resource_permissions_assignment_form_title: 'API kaynağı izinlerini ekleyin',
     user_data_permission_description_tips:
-      'You can modify the description of the personal user data permissions via "Sign-in Experience > Content > Manage Language"',
-    /** UNTRANSLATED */
+      'Kişisel kullanıcı veri izinlerinin açıklamasını "Oturum Açma Deneyimi > İçerik > Dil Yönetimi" aracılığıyla değiştirebilirsiniz.',
     permission_description_tips:
-      'When Logto is used as an Identity Provider (IdP) for authentication in third-party apps, and users are asked for authorization, this description appears on the consent screen.',
-    /** UNTRANSLATED */
-    user_title: 'User',
-    /** UNTRANSLATED */
+      'Logto, üçüncü taraf uygulamalar için kimlik sağlayıcı (IdP) olarak kullanıldığında ve kullanıcılardan yetkilendirme istendiğinde, bu açıklama açıklama ekranında görünür.',
+    user_title: 'Kullanıcı',
     user_description:
-      'Select the permissions requested by the third-party app for accessing specific user data.',
-    /** UNTRANSLATED */
-    grant_user_level_permissions: 'Grant permissions of user data',
-    /** UNTRANSLATED */
-    organization_title: 'Organization',
-    /** UNTRANSLATED */
+      'Üçüncü taraf uygulamanın belirli kullanıcı verilerine erişmek için istediği izinleri seçin.',
+    grant_user_level_permissions: 'Kullanıcı veri izinlerini ver',
+    organization_title: 'Organizasyon',
     organization_description:
-      'Select the permissions requested by the third-party app for accessing specific organization data.',
-    /** UNTRANSLATED */
-    grant_organization_level_permissions: 'Grant permissions of organization data',
+      'Üçüncü taraf uygulamanın belirli organizasyon verilerine erişmek için istediği izinleri seçin.',
+    grant_organization_level_permissions: 'Organizasyon veri izinlerini ver',
   },
   roles: {
     name_column: 'Rol',
     description_column: 'Açıklama',
     assign_button: 'Rolleri Ata',
     delete_description:
-      'Bu işlem bu role bu makine-makine uygulamasından kaldıracaktır. Rol kendisi hala var olacak, ancak artık makine-makine uygulamasıyla ilişkilendirilmeyecektir.',
+      'Bu işlem bu rolü bu makine günlüğünden kaldıracaktır. Rol kendisi hala var olacak, ancak artık makine-makine uygulamasıyla ilişkilendirilmeyecektir.',
     deleted: '{{name}}, bu kullanıcıdan başarıyla kaldırıldı.',
     assign_title: "{{name}}'a rolleri atayın",
     assign_subtitle: '{{name}} için bir veya daha fazla rol yetkilendirin',

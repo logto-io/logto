@@ -29,13 +29,11 @@ const user = {
   missing_profile: 'Oturum açmadan önce ek bilgi sağlamanız gerekiyor.',
   role_exists: '{{roleId}} rol kimliği bu kullanıcıya zaten eklenmiştir.',
   invalid_role_type: 'Geçersiz rol türü, makine-makine rolü kullanıcıya atanamaz.',
-  missing_mfa: 'You need to bind additional MFA before signing-in.',
-  totp_already_in_use: 'TOTP is already in use.',
-  backup_code_already_in_use: 'Backup code is already in use.',
-  /** UNTRANSLATED */
-  password_algorithm_required: 'Password algorithm is required.',
-  /** UNTRANSLATED */
-  password_and_digest: 'You cannot set both plain text password and password digest.',
+  missing_mfa: 'Oturum açmadan önce ekstra MFA bağlamanız gerekiyor.',
+  totp_already_in_use: 'TOTP zaten kullanımda.',
+  backup_code_already_in_use: 'Yedek kod zaten kullanımda.',
+  password_algorithm_required: 'Şifre algoritması gereklidir.',
+  password_and_digest: 'Düz metin şifresini ve şifre özetini aynı anda belirleyemezsiniz.',
 };
 
 export default Object.freeze(user);

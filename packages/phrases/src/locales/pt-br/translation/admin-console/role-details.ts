@@ -13,6 +13,9 @@ const role_details = {
     'Os papéis são um agrupamento de permissões que podem ser atribuídas a usuários. Eles também fornecem uma maneira de agregar permissões definidas para diferentes APIs, tornando mais eficiente a adição, remoção ou ajuste de permissões em comparação com a atribuição individual a usuários.',
   field_name: 'Nome',
   field_description: 'Descrição',
+  field_is_default: 'Função padrão',
+  field_is_default_description:
+    'Defina este papel como um papel padrão para novos usuários. Vários papéis padrão podem ser definidos. Isso também afetará os papéis padrão para usuários criados via API de Gerenciamento.',
   type_m2m_role_tag: 'Função de aplicativo máquina-a-máquina',
   type_user_role_tag: 'Função de usuário',
   m2m_role_notification:

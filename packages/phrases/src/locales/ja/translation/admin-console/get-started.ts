@@ -3,15 +3,13 @@ const get_started = {
   title: 'あなたの成功を手助けする探索',
   subtitle: 'Logtoの価値を迅速に把握するための数つの方法',
   develop: {
-    title: 'Develop: 5分の時間を使ってアプリを統合してみましょう',
-    /** UNTRANSLATED */
-    title_cloud: 'Develop: Securely integrate your app in minutes',
-    /** UNTRANSLATED */
+    title: '開発: 5分の時間を使ってアプリを統合してみましょう',
+    title_cloud: '開発: 数分でアプリを安全に統合する',
     subtitle_cloud:
-      'Or take 5 minutes to integrate your app with our pre-built SDKs and tutorials.',
+      'または、5分間でアプリを当社の事前構築済みSDKおよびチュートリアルで統合してください。',
   },
   customize: {
-    title: 'Customize: 素晴らしいサインイン体験を提供する',
+    title: 'カスタマイズ: 素晴らしいサインイン体験を提供する',
     preview: {
       title: 'あなたがカスタマイズしたサインイン体験のライブプレビューをチェックしましょう',
       subtitle: 'Logtoのサインイン体験を試して、その使い方を確認してください',
@@ -25,10 +23,10 @@ const get_started = {
     add_more: 'もっと追加する',
   },
   secure: {
-    title: 'Secure: リソースを保護する',
+    title: 'セキュリティ: リソースを保護する',
   },
   manage: {
-    title: 'Manage: 製品とユーザーのアクセス制御を定義する',
+    title: '管理: 製品とユーザーのアクセス制御を定義する',
     rbac: {
       title: 'ロールベースのアクセス制御を追加して、リソースを保護する',
       subtitle: '多様なユースケースに対してスケーラブルなロールの認可によりリソースを制御します',

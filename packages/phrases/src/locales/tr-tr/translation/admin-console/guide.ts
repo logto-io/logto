@@ -7,10 +7,8 @@ const guide = {
     SPA: 'Tek sayfalık uygulama',
     Native: 'Doğal',
     MachineToMachine: 'Makineden makineye',
-    /** UNTRANSLATED */
-    Protected: 'Non-SDK Integration',
-    /** UNTRANSLATED */
-    ThirdParty: 'Third-party app',
+    Protected: 'SDK Entegrasyonu Olmayan',
+    ThirdParty: 'Üçüncü taraf uygulama',
   },
   filter: {
     title: "Framework'ü filtrele",

@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.hint {
+  margin-top: _.unit(2);
+  font: var(--font-body-2);
+}

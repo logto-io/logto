@@ -5,20 +5,13 @@ const webhooks = {
     'Создайте вебхуки, чтобы легко получать обновления в реальном времени относительно определенных событий.',
   create: 'Создать вебхук',
   schemas: {
-    /** UNTRANSLATED */
-    interaction: 'User interaction',
-    /** UNTRANSLATED */
-    user: 'User',
-    /** UNTRANSLATED */
-    organization: 'Organization',
-    /** UNTRANSLATED */
-    role: 'Role',
-    /** UNTRANSLATED */
-    scope: 'Permission',
-    /** UNTRANSLATED */
-    organization_role: 'Organization role',
-    /** UNTRANSLATED */
-    organization_scope: 'Organization permission',
+    interaction: 'Взаимодействие пользователя',
+    user: 'Пользователь',
+    organization: 'Организация',
+    role: 'Роль',
+    scope: 'Разрешение',
+    organization_role: 'Роль организации',
+    organization_scope: 'Разрешение организации',
   },
   table: {
     name: 'Имя',

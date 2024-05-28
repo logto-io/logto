@@ -31,9 +31,7 @@ const user = {
   missing_mfa: '在登錄前需要綁定額外的多因素驗證。',
   totp_already_in_use: 'TOTP 已經在使用中。',
   backup_code_already_in_use: '備份代碼已經在使用中。',
-  /** UNTRANSLATED */
   password_algorithm_required: 'Password algorithm is required.',
-  /** UNTRANSLATED */
   password_and_digest: 'You cannot set both plain text password and password digest.',
 };
 

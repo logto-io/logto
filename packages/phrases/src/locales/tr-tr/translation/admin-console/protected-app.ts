@@ -1,69 +1,44 @@
 const protected_app = {
-  /** UNTRANSLATED */
-  name: 'Protected App',
-  /** UNTRANSLATED */
-  title: 'Create a Protected App: Add authentication with simplicity and epic speed',
-  /** UNTRANSLATED */
+  name: 'Korunaklı Uygulama',
+  title: 'Korunaklı Bir Uygulama Oluştur: Kimlik doğrulamayı basitlik ve epik hızla ekleyin',
   description:
-    'Protected App securely maintains user sessions and proxies your app requests. Powered by Cloudflare Workers, enjoy the top-tier performance and 0ms cold start worldwide. <a>Learn more</a>',
-  /** UNTRANSLATED */
-  fast_create: 'Fast create',
-  /** UNTRANSLATED */
-  modal_title: 'Create Protected App',
-  /** UNTRANSLATED */
+    'Korunaklı Uygulama güvenli bir şekilde kullanıcı oturumlarını korur ve uygulama isteklerinizi proxyler. Cloudflare Workers tarafından desteklenerek, dünya çapında üstün performanstan ve 0 ms soğuk başlatmadan faydalanın. <a>Daha fazlasını öğrenin</a>',
+  fast_create: 'Hızlı oluştur',
+  modal_title: 'Korunaklı Uygulama Oluştur',
   modal_subtitle:
-    'Enable secure and fast protection with clicks. Add authentication to your existing web app with ease.',
+    'Tıklamalarla güvenli ve hızlı koruma etkinleştirin. Mevcut web uygulamanıza kolayca kimlik doğrulama ekleyin.',
   form: {
-    /** UNTRANSLATED */
-    url_field_label: 'Your origin URL',
-    /** UNTRANSLATED */
+    url_field_label: "Orijin URL'iniz",
     url_field_placeholder: 'https://domain.com/',
-    /** UNTRANSLATED */
-    url_field_description: 'Provide the address of your app requiring authentication protection.',
-    /** UNTRANSLATED */
+    url_field_description: 'Kimlik doğrulama koruması gereken uygulamanızın adresini sağlayın.',
     url_field_modification_notice:
-      'Modifications to the origin URL may take up to 1-2 minutes to become effective across global network locations.',
-    /** UNTRANSLATED */
+      "Orijin URL'sinde yapılan değişiklikler, küresel ağ konumlarında etkin olmak için 1-2 dakika sürebilir.",
     url_field_tooltip:
-      "Provide the address of your application, excluding any '/pathname'. After creation, you can customize route authentication rules.\n\nNote: The origin URL itself doesn't necessitate authentication; protection is applied exclusively to accesses via the designated app domain.",
-    /** UNTRANSLATED */
-    domain_field_label: 'App domain',
-    /** UNTRANSLATED */
-    domain_field_placeholder: 'your-domain',
-    /** UNTRANSLATED */
+      "Uygulamanızın adresini sağlayın, '/dizinadı' hariç. Oluşturduktan sonra, rotanızın kimlik doğrulama kurallarını özelleştirebilirsiniz.\n\nNot: Orijinal URL kendisi kimlik doğrulamayı gerektirmiyor; koruma yalnızca belirlenmiş uygulama alanı üzerinden erişimlere uygulanır.",
+    domain_field_label: 'Uygulama alanı',
+    domain_field_placeholder: 'alan-adınız',
     domain_field_description:
-      'This URL serves as an authentication protection proxy for the original URL. Custom domain can be applied after creation.',
-    /** UNTRANSLATED */
+      'Bu URL, orijinal URL için bir kimlik doğrulama koruma proxyi olarak hizmet verir. Özel alan oluşturulduktan sonra uygulanabilir.',
     domain_field_description_short:
-      'This URL serves as an authentication protection proxy for the original URL.',
-    /** UNTRANSLATED */
+      'Bu URL, orijinal URL için bir kimlik doğrulama koruma proxyi olarak hizmet verir.',
     domain_field_tooltip:
-      "Apps protected by Logto will be hosted at 'your-domain.{{domain}}' by default. Custom domain can be applied after creation.",
-    /** UNTRANSLATED */
-    create_application: 'Create application',
-    /** UNTRANSLATED */
-    create_protected_app: 'Fast create',
+      "Logto tarafından korunan uygulamalar varsayılan olarak 'alan-adınız.{{domain}}' şeklinde barındırılacaktır. Özel alan oluşturulduktan sonra uygulanabilir.",
+    create_application: 'Uygulama oluştur',
+    create_protected_app: 'Hızlı oluştur',
     errors: {
-      /** UNTRANSLATED */
-      domain_required: 'Your domain is required.',
-      /** UNTRANSLATED */
-      domain_in_use: 'This subdomain name is already in use.',
-      /** UNTRANSLATED */
+      domain_required: 'Alan adınız gereklidir.',
+      domain_in_use: 'Bu alt alan adı zaten kullanılıyor.',
       invalid_domain_format:
-        "Invalid subdomain format: use only lowercase letters, numbers, and hyphens '-'.",
-      /** UNTRANSLATED */
-      url_required: 'Origin URL is required.',
-      /** UNTRANSLATED */
+        "Geçersiz alt alan adı formatı: sadece küçük harfler, sayılar ve kısa çizgiler '-' kullanın.",
+      url_required: "Orijin URL'si gereklidir.",
       invalid_url:
-        "Invalid origin URL format: Use http:// or https://. Note: '/pathname' is not currently supported.",
-      /** UNTRANSLATED */
+        "Geçersiz orijin URL formatı: http:// veya https:// kullanın. Not: '/dizinadı' şu anda desteklenmiyor.",
       localhost:
-        'Please expose your local server to the internet first. Learn more about <a>local development</a>.',
+        'Lütfen önce yerel sunucunuzu internete açın. <a>Yerel geliştirme</a> hakkında daha fazla bilgi edinin.',
     },
   },
-  /** UNTRANSLATED */
   success_message:
-    '🎉 App authentication successfully enabled! Explore the new experience of your website.',
+    '🎉 Uygulama kimlik doğrulaması başarıyla etkinleştirildi! Web sitenizin yeni deneyimini keşfedin.',
 };
 
 export default Object.freeze(protected_app);

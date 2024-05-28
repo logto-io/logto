@@ -6,12 +6,9 @@ const guide = {
     Traditional: '傳統網頁應用',
     SPA: '單頁應用',
     Native: '原生應用',
-    /** UNTRANSLATED */
-    MachineToMachine: 'Machine-to-machine',
-    /** UNTRANSLATED */
-    Protected: 'Non-SDK Integration',
-    /** UNTRANSLATED */
-    ThirdParty: 'Third-party app',
+    MachineToMachine: '機器對機器',
+    Protected: '非 SDK 整合',
+    ThirdParty: '第三方應用程式',
   },
   filter: {
     title: '篩選框架',

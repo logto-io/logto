@@ -3,34 +3,32 @@ const get_started = {
   title: 'Algo para explorar que te ayudará a tener éxito',
   subtitle: 'Algunas cosas que puedes hacer para obtener rápidamente el valor de Logto',
   develop: {
-    title: 'Develop: Dedica 5 minutos para integrar tu aplicación',
-    /** UNTRANSLATED */
-    title_cloud: 'Develop: Securely integrate your app in minutes',
-    /** UNTRANSLATED */
+    title: 'Desarrollar: Dedica 5 minutos para integrar tu aplicación',
+    title_cloud: 'Desarrollar: Integra tu aplicación de forma segura en minutos',
     subtitle_cloud:
-      'Or take 5 minutes to integrate your app with our pre-built SDKs and tutorials.',
+      'O toma 5 minutos para integrar tu aplicación con nuestros SDKs y tutoriales preconstruidos.',
   },
   customize: {
-    title: 'Customize: Ofrece una excelente experiencia de inicio de sesión',
+    title: 'Personalizar: Ofrece una excelente experiencia de inicio de sesión',
     preview: {
       title:
         'Ver la vista previa en directo de la experiencia de inicio de sesión que acabas de personalizar',
       subtitle: 'Prueba la experiencia de inicio de sesión de Logto ahora y ve cómo funciona',
     },
     connector: {
-      title: 'Agregar más conectores para admitir más métodos de inicio de sesión sociales',
+      title: 'Añadir más conectores para admitir más métodos de inicio de sesión sociales',
       subtitle:
         'Prueba el inicio de sesión sin contraseña y habilita una experiencia segura y sin fricciones para tus clientes',
     },
     continue_customizing: 'Continúa personalizando',
     try_now: 'Pruébalo ahora',
-    add_more: 'Agregar más',
+    add_more: 'Añadir más',
   },
   secure: {
-    title: 'Secure: Protege tus recursos',
+    title: 'Seguro: Protege tus recursos',
   },
   manage: {
-    title: 'Manage: Define control de acceso para tu producto y usuarios',
+    title: 'Gestionar: Define control de acceso para tu producto y usuarios',
     rbac: {
       title: 'Agregar control de acceso basado en roles para proteger tus recursos',
       subtitle:

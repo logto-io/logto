@@ -15,7 +15,6 @@ const domain = {
     custom_domain_field: 'Пользовательский домен',
     custom_domain_placeholder: 'Ваш.домен.com',
     add_domain: 'Добавить домен',
-    /** UNTRANSLATED */
     invalid_domain_format:
       'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
     verify_domain: 'Проверить домен',
@@ -52,7 +51,6 @@ const domain = {
     'Вы можете настроить имя домена этих конечных точек по своему усмотрению. Выберите "{{custom}}" или "{{default}}".',
   custom_social_callback_url_note:
     'Вы можете настроить имя домена этого URI, чтобы соответствовать конечной точке вашего приложения. Выберите "{{custom}}" или "{{default}}".',
-  /** UNTRANSLATED */
   custom_acs_url_note:
     'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
 };
