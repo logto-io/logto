@@ -23,14 +23,14 @@ export default function Main() {
     return <AppLoading />;
   }
 
-  // If current tenant ID is not set, but the defaultTenantId is available.
-  if (defaultTenantId) {
-    return <Redirect toTenantId={defaultTenantId} />;
-  }
-
   // A new user has just signed up, redirect them to the onboarding flow.
   if (isOnboarding) {
     return <Navigate to={GlobalRoute.Onboarding} />;
+  }
+
+  // If current tenant ID is not set, but the defaultTenantId is available.
+  if (defaultTenantId) {
+    return <Redirect toTenantId={defaultTenantId} />;
   }
 
   // If user has pending invitations (onboarding will be skipped), show the invitation list and allow them to quick join.
