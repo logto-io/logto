@@ -68,16 +68,16 @@ If you are using cURL:
 
 <pre>
   <code className="language-bash">
-    {`curl --location
-  --request POST '${appendPath(props.endpoint, '/oidc/token')}'
+    {`curl --location '${appendPath(props.endpoint, '/oidc/token')}' \\
+  --request POST \\
   # Credentials are constructed by "<app-id>:<app-secret>" and encoded in base64
   --header 'Authorization: Basic ${Buffer.from(`${props.app.id}:${props.app.secret}`).toString(
     'base64'
-  )}'
-  --header 'Content-Type: application/x-www-form-urlencoded'
-  --data-urlencode 'grant_type=client_credentials'
-  --data-urlencode 'resource=https://shopping.api'
-  --data-urlencode 'scope=scope_1 scope_2'
+  )}' \\
+  --header 'Content-Type: application/x-www-form-urlencoded' \\
+  --data-urlencode 'grant_type=client_credentials' \\
+  --data-urlencode 'resource=https://shopping.api' \\
+  --data-urlencode 'scope=scope_1 scope_2' # Optional scope(s)
 `}
   </code>
 </pre>
@@ -115,27 +115,31 @@ Here is an example of using cURL to send a GET request to get items in your shop
 </Step>
 <Step title="Enable admin access" subtitle="(optional)">
 
-  ### Accessing Logto Management API
+### Accessing Logto Management API
 
-  If you want to use this m2m app to access Logto [Management API](https://docs.logto.io/docs/references/core/#management-api).
+If you want to use this m2m app to access Logto [Management API](https://docs.logto.io/docs/references/core/#management-api).
 
-  You should go to "Roles" tab and create a new machine-to-machine role with the permission of management API.
+You should go to "Roles" tab and create a new machine-to-machine role with the permission of management API.
 
-  <img
-    alt="Create m2m management API role"
-    src={CreateM2mManagementApiRole}
-    width="600px"
-    style={{ borderRadius: '6px' }}
-  />
+{' '}
 
-  And then go to the "Roles" tab under machine to machine app detail page, and assign the role you just created to the app.
+<img
+  alt="Create m2m management API role"
+  src={CreateM2mManagementApiRole}
+  width="600px"
+  style={{ borderRadius: '6px' }}
+/>
 
-  <img
-    alt="Assign m2m management API role to app"
-    src={AssignManagementApiRole}
-    width="600px"
-    style={{ borderRadius: '6px' }}
-  />
+And then go to the "Roles" tab under machine to machine app detail page, and assign the role you just created to the app.
+
+{' '}
+
+<img
+  alt="Assign m2m management API role to app"
+  src={AssignManagementApiRole}
+  width="600px"
+  style={{ borderRadius: '6px' }}
+/>
 
 </Step>
 </Steps>
