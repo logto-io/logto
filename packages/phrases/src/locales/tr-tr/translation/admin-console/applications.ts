@@ -55,6 +55,12 @@ const applications = {
   placeholder_title: 'Devam etmek için bir uygulama tipi seçin',
   placeholder_description:
     'Logto, uygulamanızı tanımlamaya, oturum açmayı yönetmeye ve denetim kayıtları oluşturmaya yardımcı olmak için OIDC için bir uygulama varlığı kullanır.',
+  m2m_role_assignment: {
+    title: 'İzinler için makineye özel rolle uygulamayı yetkilendir',
+    subtitle: 'Makine-makine uygulamaları yetkilendirilmiş bir makine-makine rolü gerektirir.',
+    role_creation_hint:
+      'Makine-makine rolünüz yok mu? <a>Önce bir makine-makine</a> rolü oluşturun',
+  },
 };
 
 export default Object.freeze(applications);

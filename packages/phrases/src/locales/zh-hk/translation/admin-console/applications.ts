@@ -52,6 +52,11 @@ const applications = {
   placeholder_title: '選擇應用程式類型以繼續',
   placeholder_description:
     'Logto 使用 OIDC 的應用程式實體來幫助識別您的應用程式、管理登錄和創建審核日誌等任務。',
+  m2m_role_assignment: {
+    title: '使用機器到機器角色為應用程式授權權限',
+    subtitle: '機器對機器應用程式需要經過授權的機器對機器角色。',
+    role_creation_hint: '沒有機器對機器角色？先 <a>創建機器對機器</a> 角色',
+  },
 };
 
 export default Object.freeze(applications);

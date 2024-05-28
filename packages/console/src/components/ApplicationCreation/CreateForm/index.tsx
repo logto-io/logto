@@ -15,11 +15,10 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
+import TypeDescription from '@/pages/Applications/components/TypeDescription';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
-
-import TypeDescription from '../TypeDescription';
 
 import Footer from './Footer';
 import * as styles from './index.module.scss';
@@ -31,7 +30,7 @@ type FormData = {
   isThirdParty?: boolean;
 };
 
-type Props = {
+export type Props = {
   readonly isDefaultCreateThirdParty?: boolean;
   readonly defaultCreateType?: ApplicationType;
   readonly defaultCreateFrameworkName?: string;
