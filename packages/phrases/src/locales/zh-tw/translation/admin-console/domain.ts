@@ -13,9 +13,7 @@ const domain = {
     custom_domain_field: '自訂網域',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '新增網域',
-    /** UNTRANSLATED */
-    invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+    invalid_domain_format: '請提供一個有效的域名網址，至少包含三個部分，例如 "your.domain.com."',
     verify_domain: '驗證網域',
     enable_ssl: '啟用 SSL',
     checking_dns_tip:
@@ -47,9 +45,8 @@ const domain = {
   custom_endpoint_note: '您可以根據需要自定義這些端點的域名。選擇“{{custom}}”或“{{default}}”。',
   custom_social_callback_url_note:
     '您可以自定義此 URI 的域名以匹配您的應用程序端點。選擇“{{custom}}”或“{{default}}”。',
-  /** UNTRANSLATED */
   custom_acs_url_note:
-    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+    '您可以自訂此 URI 的域名以匹配您的身份提供者斷言使用者服務 URL。選擇“{{custom}}”或“{{default}}”。',
 };
 
 export default Object.freeze(domain);

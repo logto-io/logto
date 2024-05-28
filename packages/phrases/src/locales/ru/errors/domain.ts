@@ -6,8 +6,7 @@ const domain = {
   limit_to_one_domain: 'Вы можете использовать только один пользовательский домен.',
   hostname_already_exists: 'Этот домен уже существует на нашем сервере.',
   cloudflare_not_found: 'Не удается найти имя хоста в Cloudflare',
-  /** UNTRANSLATED */
-  domain_is_not_allowed: 'This domain is not allowed.',
+  domain_is_not_allowed: 'Этот домен не разрешен.',
 };
 
 export default Object.freeze(domain);

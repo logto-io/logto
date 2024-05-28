@@ -6,27 +6,17 @@ const application = {
     'Sadece geleneksel web uygulamaları üçüncü taraf uygulaması olarak işaretlenebilir.',
   third_party_application_only: 'Bu özellik sadece üçüncü taraf uygulamalar için geçerlidir.',
   user_consent_scopes_not_found: 'Geçersiz kullanıcı onay kapsamları.',
-  /** UNTRANSLATED */
-  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
-  protected_app_metadata_is_required: 'Protected app metadata is required.',
-  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed: 'Yönetim API kapsamları izin verilmiyor.',
+  protected_app_metadata_is_required: 'Korunan uygulama meta verileri gereklidir.',
   protected_app_not_configured:
-    'Protected app provider is not configured. This feature is not available for open source version.',
-  /** UNTRANSLATED */
-  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
-  /** UNTRANSLATED */
-  protected_application_only: 'The feature is only available for protected applications.',
-  /** UNTRANSLATED */
-  protected_application_misconfigured: 'Protected application is misconfigured.',
-  /** UNTRANSLATED */
-  protected_application_subdomain_exists:
-    'The subdomain of Protected application is already in use.',
-  /** UNTRANSLATED */
-  invalid_subdomain: 'Invalid subdomain.',
-  /** UNTRANSLATED */
-  custom_domain_not_found: 'Custom domain not found.',
-  /** UNTRANSLATED */
-  should_delete_custom_domains_first: 'Should delete custom domains first.',
+    'Korunan uygulama sağlayıcısı yapılandırılmamıştır. Bu özellik açık kaynak sürümü için mevcut değil.',
+  cloudflare_unknown_error: 'Cloudflare API isteği sırasında bilinmeyen hata alındı',
+  protected_application_only: 'Özellik sadece korunan uygulamalar için geçerlidir.',
+  protected_application_misconfigured: 'Korunan uygulama yanlış yapılandırılmış.',
+  protected_application_subdomain_exists: 'Korunan uygulama alt alan adı zaten kullanımda.',
+  invalid_subdomain: 'Geçersiz alt alan adı.',
+  custom_domain_not_found: 'Özel domain bulunamadı.',
+  should_delete_custom_domains_first: 'Özel domainleri önce silmelisiniz.',
 };
 
 export default Object.freeze(application);

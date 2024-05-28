@@ -13,6 +13,9 @@ const role_details = {
     "Les rôles sont un regroupement d'autorisations qui peuvent être attribuées aux utilisateurs. Ils fournissent également un moyen d'agréger les autorisations définies pour différentes API, ce qui rend plus efficace l'ajout, la suppression ou l'ajustement des autorisations par rapport à leur attribution individuelle aux utilisateurs.",
   field_name: 'Nom',
   field_description: 'Description',
+  field_is_default: 'Rôle par défaut',
+  field_is_default_description:
+    "Définissez ce rôle comme rôle par défaut pour les nouveaux utilisateurs. Plusieurs rôles par défaut peuvent être définis. Cela affectera également les rôles par défaut des utilisateurs créés via l'API de gestion.",
   type_m2m_role_tag: "Rôle de l'application machine-à-machine",
   type_user_role_tag: "Rôle d'utilisateur",
   m2m_role_notification:

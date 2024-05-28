@@ -13,7 +13,6 @@ const api_resources = {
   default_api_label:
     '一個租戶只能設定零個或一個預設 API。當指定了預設 API 後，可以在授權請求中省略 `resource` 參數。隨後的令牌交換將使用該 API 作為默認的 Audience，從而產生 JWT。<a>了解更多</a>',
   api_resource_created: ' API 資源 {{name}} 已成功創建。',
-  /** UNTRANSLATED */
   invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 

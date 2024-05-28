@@ -4,20 +4,13 @@ const webhooks = {
   subtitle: '특정 이벤트에 대한 실시간 업데이트를 쉽게 수신할 수 있는 웹훅을 생성하세요.',
   create: '웹훅 생성',
   schemas: {
-    /** UNTRANSLATED */
-    interaction: 'User interaction',
-    /** UNTRANSLATED */
-    user: 'User',
-    /** UNTRANSLATED */
-    organization: 'Organization',
-    /** UNTRANSLATED */
-    role: 'Role',
-    /** UNTRANSLATED */
-    scope: 'Permission',
-    /** UNTRANSLATED */
-    organization_role: 'Organization role',
-    /** UNTRANSLATED */
-    organization_scope: 'Organization permission',
+    interaction: '사용자 상호 작용',
+    user: '사용자',
+    organization: '조직',
+    role: '역할',
+    scope: '권한',
+    organization_role: '조직 역할',
+    organization_scope: '조직 권한',
   },
   table: {
     name: '이름',

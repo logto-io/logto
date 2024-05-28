@@ -6,7 +6,7 @@ const connectors = {
   config_sie_notice:
     'Você configurou os conectores. Certifique-se de configurá-lo em <a>{{link}}</a>.',
   config_sie_link_text: 'experiência de login',
-  tab_email_sms: 'Conectores de Email e SMS',
+  tab_email_sms: 'Conectores de E-mail e SMS',
   tab_social: 'Conectores sociais',
   connector_name: 'Nome do conector',
   demo_tip:
@@ -76,13 +76,12 @@ const connectors = {
     callback_uri: 'URI de retorno do chamado',
     callback_uri_description:
       'Também chamado de URI de redirecionamento, é a URI no Logto para a qual os usuários serão enviados de volta após a autorização social; copie e cole na página de configuração do provedor social.',
-    /** UNTRANSLATED */
-    acs_url: 'Assertion consumer service URL',
+    acs_url: 'URL do serviço de consumo de afirmações',
   },
   platform: {
     universal: 'Universal',
     web: 'Web',
-    native: 'Nat',
+    native: 'Nativo',
   },
   add_multi_platform: 'suporta várias plataformas, selecione uma plataforma para continuar',
   drawer_title: 'Guia do Conector',

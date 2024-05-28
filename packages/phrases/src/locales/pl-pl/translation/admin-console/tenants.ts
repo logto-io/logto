@@ -38,13 +38,12 @@ const tenants = {
     tenant_deletion_button: 'Usuń najemcę',
   },
   leave_tenant_card: {
-    title: 'OPUSZCZENIE',
-    leave_tenant: 'Opuszczenie najemcy',
-    /** UNTRANSLATED */
+    title: 'OPUŚĆ',
+    leave_tenant: 'Opuść najemcę',
     leave_tenant_description:
       'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+    last_admin_note:
+      'Aby opuścić tego najemcę, upewnij się, że co najmniej jeszcze jeden członek ma rolę Administrator.',
   },
   create_modal: {
     title: 'Utwórz nowego najemcę',
@@ -86,7 +85,7 @@ const tenants = {
       'Przepraszam, nie możesz teraz usunąć tego najemcy. Upewnij się, że korzystasz z planu darmowego i uregulowałeś wszystkie zaległe płatności.',
   },
   leave_tenant_modal: {
-    description: 'Czy na pewno chcesz opuścić tego najemcy?',
+    description: 'Czy na pewno chcesz opuścić tego najemcę?',
     leave_button: 'Opuść',
   },
   tenant_landing_page: {

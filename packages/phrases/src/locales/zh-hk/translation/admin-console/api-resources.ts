@@ -11,10 +11,9 @@ const api_resources = {
     '對於 API 資源的唯一標識符。它必須是一個絕對 URI 並沒有 fragment (#) 組件。等價於 OAuth 2.0 中的 <a>resource parameter</a>。',
   default_api: '預設的 API',
   default_api_label:
-    '一个租户只能设置零或一个默认 API。当指定默认 API 时，可以在身份验证请求中省略资源参数，还可以使用该 API 作为默认受众方进行令牌交换，从而发放 JWT。<a>了解更多</a>',
+    '一个租户只能设置零或一个默认 API。當指定預設的 API 時，可以在身份驗證請求中省略資源參數，還可以使用該 API 作為預設受眾方進行令牌交換，從而發放 JWT。<a>了解更多</a>',
   api_resource_created: ' API 資源 {{name}} 已成功創建。',
-  /** UNTRANSLATED */
-  invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
+  invalid_resource_indicator_format: 'API 描述符必須是有效的絕對 URI。',
 };
 
 export default Object.freeze(api_resources);

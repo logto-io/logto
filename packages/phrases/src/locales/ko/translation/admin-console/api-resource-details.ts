@@ -21,16 +21,14 @@ const api_resource_details = {
     create_title: '권한 생성',
     create_subtitle: '이 API에 필요한 권한을 정의합니다.',
     confirm_create: '권한 생성',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
+    edit_title: '권한 편집',
     edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
     name: '권한 이름',
     name_placeholder: 'read:resource',
     forbidden_space_in_name: '권한 이름에는 공백을 포함할 수 없습니다.',
     description: '설명',
     description_placeholder: '리소스를 볼 수 있는 권한',
-    permission_created: '권한 {{name}}이 성공적으로 생성되었습니다.',
+    permission_created: '{{name}} 권한이 성공적으로 생성되었습니다.',
     delete_description:
       '이 권한이 삭제되면, 해당 권한을 가진 사용자는 해당 권한으로 인해 부여받은 접근 권한을 상실하게 됩니다.',
     deleted: '권한 "{{name}}"이 성공적으로 삭제되었습니다.',

@@ -7,10 +7,8 @@ const guide = {
     SPA: '單頁應用',
     Native: '原生應用',
     MachineToMachine: '機器對機器',
-    /** UNTRANSLATED */
-    Protected: 'Non-SDK Integration',
-    /** UNTRANSLATED */
-    ThirdParty: 'Third-party app',
+    Protected: '非 SDK 整合',
+    ThirdParty: '第三方應用程式',
   },
   filter: {
     title: '篩選框架',

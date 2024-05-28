@@ -62,7 +62,7 @@ const tenants = {
   },
   dev_tenant_migration: {
     title:
-      'Vous pouvez désormais essayer nos fonctionnalités Pro gratuitement en créant un nouveau "locataire de développement" !',
+      'Vous pouvez désormais essayer nos fonctionnalités Pro gratuitement en créant un nouveau « locataire de développement » !',
     affect_title: 'Comment cela vous affecte-t-il ?',
     hint_1:
       "Nous remplaçons les anciennes <strong>balises d'environnement</strong> par deux nouveaux types de locataires : <strong>« Développement »</strong> et <strong>« Production »</strong>.",

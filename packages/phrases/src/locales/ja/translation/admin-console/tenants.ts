@@ -36,12 +36,12 @@ const tenants = {
     tenant_deletion_button: 'テナントを削除する',
   },
   leave_tenant_card: {
-    title: '脱退',
-    leave_tenant: 'テナントを脱退する',
+    title: '退出',
+    leave_tenant: 'テナントを退出する',
     leave_tenant_description:
-      'テナント内のリソースは残りますが、このテナントにはもうアクセスできません。',
+      'テナント内のリソースは保持されますが、これ以上このテナントにアクセスできません。',
     last_admin_note:
-      'このテナントを脱退するには、もう1人以上のメンバーに管理者ロールがあることを確認してください。',
+      'このテナントを退出するには、少なくとも1人の他のメンバーが管理者の役割を持つことを確認してください。',
   },
   create_modal: {
     title: 'テナントを作成する',
@@ -81,8 +81,8 @@ const tenants = {
       '申し訳ありませんが、現時点ではこのテナントを削除できません。無料プランに登録しており、未払いの請求がないことを確認してください。',
   },
   leave_tenant_modal: {
-    description: 'このテナントを脱退してもよろしいですか？',
-    leave_button: '脱退',
+    description: 'このテナントを退出してもよろしいですか？',
+    leave_button: '退出',
   },
   tenant_landing_page: {
     title: 'まだテナントを作成していません',

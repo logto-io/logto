@@ -13,7 +13,6 @@ const api_resources = {
   default_api_label:
     '테넌트 당 기본 API는 0개 또는 1개만 지정 할 수 있어요. 기본 API가 지정되면 인증 요청에서 리소스 매개 변수를 생략할 수 있어요. 이후 토큰 교환이 기본적으로 대상에 해당하는 API를 사용하여 수행되어 JWT가 발급되어요. <a>자세히 알아보기</a>',
   api_resource_created: '{{name}} API 리소스가 성공적으로 생성되었어요.',
-  /** UNTRANSLATED */
   invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 

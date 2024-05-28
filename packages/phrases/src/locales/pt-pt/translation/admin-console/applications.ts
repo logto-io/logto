@@ -2,12 +2,11 @@ const applications = {
   page_title: 'Aplicações',
   title: 'Aplicações',
   subtitle:
-    'Configure um aplicativo móvel, de página única, machine to machine ou tradicional para usar o Logto para autenticação',
+    'Configure uma aplicação móvel, de página única, máquina a máquina ou tradicional para utilizar o Logto para autenticação',
   subtitle_with_app_type: 'Configurar autenticação Logto para a aplicação {{name}}',
   create: 'Criar aplicação',
-  /** UNTRANSLATED */
   create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+    'Utilize o Logto como seu fornecedor de identidade (IdP) para integrar facilmente com aplicações de terceiros',
   application_name: 'Nome da aplicação',
   application_name_placeholder: 'Ex: Site Empresa',
   application_description: 'Descrição da aplicação',
@@ -16,47 +15,39 @@ const applications = {
   no_application_type_selected: 'Ainda não selecionou nenhum tipo de aplicação',
   application_created: 'A aplicação foi criada com sucesso.',
   tab: {
-    /** UNTRANSLATED */
-    my_applications: 'My apps',
-    /** UNTRANSLATED */
-    third_party_applications: 'Third-party apps',
+    my_applications: 'As minhas apps',
+    third_party_applications: 'Apps de terceiros',
   },
-  app_id: 'App ID',
+  app_id: 'ID da App',
   type: {
     native: {
       title: 'Nativo',
-      subtitle: 'Uma aplicação que é executada em um ambiente nativo',
-      description: 'Ex., App iOS, App Android',
+      subtitle: 'Uma aplicação que é executada num ambiente nativo',
+      description: 'Ex.: App iOS, App Android',
     },
     spa: {
       title: 'Página única (SPAs)',
       subtitle: 'Uma aplicação que é executada num navegador e atualiza dinamicamente os dados',
-      description: 'Ex., App React, App VueJS',
+      description: 'Ex.: App React, App VueJS',
     },
     traditional: {
       title: 'Web tradicional',
       subtitle: 'Uma aplicação que renderiza e atualiza páginas apenas pelo servidor web',
-      description: 'Ex., Next.js, PHP',
+      description: 'Ex.: Next.js, PHP',
     },
     machine_to_machine: {
-      title: 'Machine-to-Machine',
-      subtitle: 'Uma aplicação (normalmente um serviço) que se comunica diretamente com recursos',
-      description: 'Ex., serviço back-end',
+      title: 'Máquina a Máquina',
+      subtitle: 'Uma aplicação (normalmente um serviço) que comunica diretamente com recursos',
+      description: 'Ex.: serviço back-end',
     },
     protected: {
-      /** UNTRANSLATED */
-      title: 'Protected App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is protected by Logto',
-      /** UNTRANSLATED */
+      title: 'App Protegida',
+      subtitle: 'Uma aplicação protegida pelo Logto',
       description: 'N/A',
     },
     third_party: {
-      /** UNTRANSLATED */
-      title: 'Third-party App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as a third-party IdP connector',
-      /** UNTRANSLATED */
+      title: 'App de Terceiros',
+      subtitle: 'Uma aplicação utilizada como conetor de IdP de terceiros',
       description: 'E.g., OIDC, SAML',
     },
   },

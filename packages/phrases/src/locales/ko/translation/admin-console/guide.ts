@@ -7,10 +7,8 @@ const guide = {
     SPA: '싱글 페이지 앱',
     Native: '네이티브',
     MachineToMachine: '기계 간 통신',
-    /** UNTRANSLATED */
-    Protected: 'Non-SDK Integration',
-    /** UNTRANSLATED */
-    ThirdParty: 'Third-party app',
+    Protected: 'SDK 통합이 없는 보호',
+    ThirdParty: '타사 앱',
   },
   filter: {
     title: '프레임워크 필터',

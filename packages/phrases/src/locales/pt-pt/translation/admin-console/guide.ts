@@ -7,10 +7,8 @@ const guide = {
     SPA: 'Aplicação de página única',
     Native: 'Nativo',
     MachineToMachine: 'Máquina-a-máquina',
-    /** UNTRANSLATED */
-    Protected: 'Non-SDK Integration',
-    /** UNTRANSLATED */
-    ThirdParty: 'Third-party app',
+    Protected: 'Integração não-SDK',
+    ThirdParty: 'Aplicação de terceiros',
   },
   filter: {
     title: 'Filtrar framework',

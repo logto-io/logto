@@ -4,9 +4,7 @@ const applications = {
   subtitle: '创建一个移动、单页、machine-to-machine 或传统 web 应用程序，并通过 Logto 进行身份验证',
   subtitle_with_app_type: '为你的 {{name}} 应用程序设置 Logto 身份验证',
   create: '创建应用',
-  /** UNTRANSLATED */
-  create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+  create_subtitle_third_party: '使用 Logto 作为你的身份提供者（IdP）来轻松集成第三方应用程序',
   application_name: '应用名称',
   application_name_placeholder: '我的应用',
   application_description: '应用描述',
@@ -15,22 +13,20 @@ const applications = {
   no_application_type_selected: '你还没有选择应用类型',
   application_created: '创建应用成功。',
   tab: {
-    /** UNTRANSLATED */
-    my_applications: 'My apps',
-    /** UNTRANSLATED */
-    third_party_applications: 'Third-party apps',
+    my_applications: '我的应用',
+    third_party_applications: '第三方应用',
   },
   app_id: 'App ID',
   type: {
     native: {
       title: '原生应用',
       subtitle: '在原生环境中运行的应用程序',
-      description: '例如 iOS app，Android app',
+      description: '例如 iOS 应用程序，Android 应用程序',
     },
     spa: {
       title: '单页应用',
       subtitle: '在浏览器中运行并动态更新数据的应用程序',
-      description: '例如 React DOM app，Vue app',
+      description: '例如 React DOM 应用程序，Vue 应用程序',
     },
     traditional: {
       title: '传统网页应用',
@@ -38,25 +34,19 @@ const applications = {
       description: '例如 Next.js, PHP',
     },
     machine_to_machine: {
-      title: 'Machine-to-Machine',
+      title: '机器对机器',
       subtitle: '直接与资源对话的应用程序（通常是服务）',
-      description: '例如，后端服务',
+      description: '例如后端服务',
     },
     protected: {
-      /** UNTRANSLATED */
-      title: 'Protected App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is protected by Logto',
-      /** UNTRANSLATED */
+      title: '受保护的应用',
+      subtitle: '受 Logto 保护的应用程序',
       description: 'N/A',
     },
     third_party: {
-      /** UNTRANSLATED */
-      title: 'Third-party App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as a third-party IdP connector',
-      /** UNTRANSLATED */
-      description: 'E.g., OIDC, SAML',
+      title: '第三方应用',
+      subtitle: '用作第三方 IdP 连接器的应用程序',
+      description: '例如，OIDC，SAML',
     },
   },
   placeholder_title: '选择应用程序类型以继续',

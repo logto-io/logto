@@ -1,5 +1,5 @@
 const api_resource_details = {
-  page_title: 'APIリソースの詳細 ',
+  page_title: 'APIリソースの詳細',
   back_to_api_resources: 'APIリソースに戻る',
   general_tab: '一般',
   permissions_tab: '権限',
@@ -21,9 +21,7 @@ const api_resource_details = {
     create_title: '権限の作成',
     create_subtitle: 'このAPIで必要な権限（スコープ）を定義します。',
     confirm_create: '権限を作成',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
+    edit_title: 'API権限の編集',
     edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
     name: '権限名',
     name_placeholder: 'read:resource',

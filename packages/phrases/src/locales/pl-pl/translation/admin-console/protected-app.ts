@@ -1,69 +1,45 @@
 const protected_app = {
-  /** UNTRANSLATED */
-  name: 'Protected App',
-  /** UNTRANSLATED */
-  title: 'Create a Protected App: Add authentication with simplicity and epic speed',
-  /** UNTRANSLATED */
+  name: 'Aplikacja chroniona',
+  title:
+    'Stwórz aplikację zabezpieczoną: Dodaj uwierzytelnienie w prosty sposób i z dużą prędkością',
   description:
-    'Protected App securely maintains user sessions and proxies your app requests. Powered by Cloudflare Workers, enjoy the top-tier performance and 0ms cold start worldwide. <a>Learn more</a>',
-  /** UNTRANSLATED */
-  fast_create: 'Fast create',
-  /** UNTRANSLATED */
-  modal_title: 'Create Protected App',
-  /** UNTRANSLATED */
+    'Aplikacja chroniona bezpiecznie zarządza sesjami użytkowników i przekierowuje żądania Twojej aplikacji. Dzięki Cloudflare Workers, ciesz się wydajnością najwyższej klasy i zerowym czasem uruchamiania globalnie. <a>Dowiedz się więcej</a>',
+  fast_create: 'Szybkie tworzenie',
+  modal_title: 'Utwórz aplikację chronioną',
   modal_subtitle:
-    'Enable secure and fast protection with clicks. Add authentication to your existing web app with ease.',
+    'Włącz bezpieczną i szybką ochronę za pomocą kilku kliknięć. Dodaj uwierzytelnienie do istniejącej aplikacji internetowej z łatwością.',
   form: {
-    /** UNTRANSLATED */
-    url_field_label: 'Your origin URL',
-    /** UNTRANSLATED */
-    url_field_placeholder: 'https://domain.com/',
-    /** UNTRANSLATED */
-    url_field_description: 'Provide the address of your app requiring authentication protection.',
-    /** UNTRANSLATED */
+    url_field_label: 'Twój adres URL źródłowy',
+    url_field_placeholder: 'https://domena.com/',
+    url_field_description: 'Podaj adres swojej aplikacji wymagającej ochrony uwierzytelnienia.',
     url_field_modification_notice:
-      'Modifications to the origin URL may take up to 1-2 minutes to become effective across global network locations.',
-    /** UNTRANSLATED */
+      'Modyfikacje w adresie URL źródłowym mogą potrwać od 1 do 2 minut, aby zacząć działać na całym globalnym sieciowym miejscu.',
     url_field_tooltip:
-      "Provide the address of your application, excluding any '/pathname'. After creation, you can customize route authentication rules.\n\nNote: The origin URL itself doesn't necessitate authentication; protection is applied exclusively to accesses via the designated app domain.",
-    /** UNTRANSLATED */
-    domain_field_label: 'App domain',
-    /** UNTRANSLATED */
-    domain_field_placeholder: 'your-domain',
-    /** UNTRANSLATED */
+      "Podaj adres swojej aplikacji, pomijając wszelkie '/ścieżki'. Po utworzeniu możesz dostosować zasady uwierzytelniania trasy.\n\nUwaga: Sam adres URL źródłowy nie wymaga uwierzytelnienia; ochrona jest stosowana wyłącznie do dostępów poprzez wyznaczoną domenę aplikacji.",
+    domain_field_label: 'Domena aplikacji',
+    domain_field_placeholder: 'twoja-domena',
     domain_field_description:
-      'This URL serves as an authentication protection proxy for the original URL. Custom domain can be applied after creation.',
-    /** UNTRANSLATED */
+      'Ten adres URL służy jako proxy ochrony uwierzytelnienia dla oryginalnego URL. Domena niestandardowa może zostać zastosowana po utworzeniu.',
     domain_field_description_short:
-      'This URL serves as an authentication protection proxy for the original URL.',
-    /** UNTRANSLATED */
+      'Ten adres URL służy jako proxy ochrony uwierzytelnienia dla oryginalnego URL.',
     domain_field_tooltip:
-      "Apps protected by Logto will be hosted at 'your-domain.{{domain}}' by default. Custom domain can be applied after creation.",
-    /** UNTRANSLATED */
-    create_application: 'Create application',
-    /** UNTRANSLATED */
-    create_protected_app: 'Fast create',
+      "Aplikacje chronione przez Logto będą hostowane domyślnie pod adresem 'twoja-domena.{{domain}}'. Domena niestandardowa może zostać zastosowana po utworzeniu.",
+    create_application: 'Stwórz aplikację',
+    create_protected_app: 'Szybkie tworzenie',
     errors: {
-      /** UNTRANSLATED */
-      domain_required: 'Your domain is required.',
-      /** UNTRANSLATED */
-      domain_in_use: 'This subdomain name is already in use.',
-      /** UNTRANSLATED */
+      domain_required: 'Twoja domena jest wymagana.',
+      domain_in_use: 'Ta nazwa poddomeny jest już w użyciu.',
       invalid_domain_format:
-        "Invalid subdomain format: use only lowercase letters, numbers, and hyphens '-'.",
-      /** UNTRANSLATED */
-      url_required: 'Origin URL is required.',
-      /** UNTRANSLATED */
+        "Nieprawidłowy format poddomeny: użyj tylko małych liter, liczb i myślników '-'.",
+      url_required: 'Adres URL źródłowy jest wymagany.',
       invalid_url:
-        "Invalid origin URL format: Use http:// or https://. Note: '/pathname' is not currently supported.",
-      /** UNTRANSLATED */
+        "Nieprawidłowy format adresu URL źródłowego: Użyj http:// lub https://. Uwaga: '/ścieżka' nie jest obecnie obsługiwana.",
       localhost:
-        'Please expose your local server to the internet first. Learn more about <a>local development</a>.',
+        'Najpierw wystaw swój lokalny serwer do internetu. Dowiedz się więcej o <a>lokalnym rozwoju</a>.',
     },
   },
-  /** UNTRANSLATED */
   success_message:
-    '🎉 App authentication successfully enabled! Explore the new experience of your website.',
+    '🎉 Uwierzytelnienie aplikacji pomyślnie włączone! Odkryj nowe doświadczenia Twojej strony internetowej.',
 };
 
 export default Object.freeze(protected_app);

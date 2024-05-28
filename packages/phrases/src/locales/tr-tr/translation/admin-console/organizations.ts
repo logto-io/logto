@@ -2,18 +2,16 @@ const organizations = {
   organization: 'Kuruluş',
   page_title: 'Kuruluşlar',
   title: 'Kuruluşlar',
-  /** UNTRANSLATED */
   subtitle:
-    'Organizations are usually used in SaaS or similar multi-tenant apps and represent your clients which are teams, organizations, or entire companies. Organizations work as a foundational element for B2B authentication and authorization.',
+    'Organizasyonlar genellikle SaaS veya benzeri çok kiracılı uygulamalarda kullanılır ve müşterilerinizi, takımları, kuruluşları veya tam şirketleri temsil eder. Kuruluşlar, B2B kimlik doğrulama ve yetkilendirme için temel bir unsur olarak işler.',
   organization_template: 'Kuruluş şablonu',
   organization_id: 'Kuruluş Kimliği',
   members: 'Üyeler',
   create_organization: 'Kuruluş oluştur',
   setup_organization: 'Kuruluşunuzu ayarlayın',
   organization_list_placeholder_title: 'Kuruluş',
-  /** UNTRANSLATED */
   organization_list_placeholder_text:
-    'Organizations are often used in SaaS or similar multi-tenant apps as a best practice. They enable you to develop apps that allow clients to create and manage organizations, invite members, and assign roles.',
+    'Organizasyonlar genellikle SaaS veya benzeri çok kiracılı uygulamalarda iyi bir uygulama olarak kullanılır. Bu, müşterilerin kuruluşlar oluşturmasına ve yönetmesine, üyeleri davet etmesine ve roller atanmasına olanak tanır.',
   organization_name_placeholder: 'Benim kuruluşum',
   organization_description_placeholder: 'Kuruluşun kısa açıklaması',
   organization_permission: 'Kuruluş izni',
@@ -29,7 +27,7 @@ const organizations = {
   empty_placeholder: '\uD83E\uDD14 Herhangi bir {{entity}} henüz ayarlanmamış.',
   organization_and_member: 'Kuruluş ve üye',
   organization_and_member_description:
-    'Kuruluş, kullanıcı gruplarıdır ve ekipleri, iş müşterilerini ve iş ortaklarını temsil edebilir. Her kullanıcı bir "Üye" olabilir. Bunlar, çok kiracılı gereksinimlerinizi ele almak için temel varlıklar olabilir.',
+    'Kuruluşlar, kullanıcı gruplarıdır ve ekipleri, iş müşterilerini ve iş ortaklarını temsil edebilir. Her kullanıcı bir "Üye" olabilir. Bunlar, çok kiracılı gereksinimlerinizi ele almak için temel varlıklar olabilir.',
   guide: {
     title: 'Kılavuzlarla başlayın',
     subtitle: 'Kılavuzlarımızla kuruluş ayarlarınızı hızlandırın',

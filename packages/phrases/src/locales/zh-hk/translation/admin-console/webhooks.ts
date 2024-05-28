@@ -4,20 +4,13 @@ const webhooks = {
   subtitle: '創建 Webhooks，輕鬆地接收有關特定事件的實時更新。',
   create: '創建 Webhook',
   schemas: {
-    /** UNTRANSLATED */
-    interaction: 'User interaction',
-    /** UNTRANSLATED */
-    user: 'User',
-    /** UNTRANSLATED */
-    organization: 'Organization',
-    /** UNTRANSLATED */
-    role: 'Role',
-    /** UNTRANSLATED */
-    scope: 'Permission',
-    /** UNTRANSLATED */
-    organization_role: 'Organization role',
-    /** UNTRANSLATED */
-    organization_scope: 'Organization permission',
+    interaction: '用戶互動',
+    user: '用戶',
+    organization: '組織',
+    role: '角色',
+    scope: '權限',
+    organization_role: '組織角色',
+    organization_scope: '組織權限',
   },
   table: {
     name: '名稱',

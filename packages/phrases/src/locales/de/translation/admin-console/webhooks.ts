@@ -5,20 +5,13 @@ const webhooks = {
     'Erstellen Sie Webhooks, um mühelos Echtzeit-Updates zu bestimmten Ereignissen zu empfangen.',
   create: 'Webhook erstellen',
   schemas: {
-    /** UNTRANSLATED */
-    interaction: 'User interaction',
-    /** UNTRANSLATED */
-    user: 'User',
-    /** UNTRANSLATED */
-    organization: 'Organization',
-    /** UNTRANSLATED */
-    role: 'Role',
-    /** UNTRANSLATED */
-    scope: 'Permission',
-    /** UNTRANSLATED */
-    organization_role: 'Organization role',
-    /** UNTRANSLATED */
-    organization_scope: 'Organization permission',
+    interaction: 'Nutzerinteraktion',
+    user: 'Benutzer',
+    organization: 'Organisation',
+    role: 'Rolle',
+    scope: 'Berechtigung',
+    organization_role: 'Organisationsrolle',
+    organization_scope: 'Organisationsberechtigung',
   },
   table: {
     name: 'Name',

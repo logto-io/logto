@@ -75,8 +75,7 @@ const connectors = {
     callback_uri: 'Callback URI',
     callback_uri_description:
       'Redirect URIもしくはコールバックURIとも呼ばれ、Logtoに戻るURIです。コピーしてソーシャルプロバイダの構成ページに貼り付けてください。',
-    /** UNTRANSLATED */
-    acs_url: 'Assertion consumer service URL',
+    acs_url: 'アサーションコンシューマーサービスURL',
   },
   platform: {
     universal: 'ユニバーサル',

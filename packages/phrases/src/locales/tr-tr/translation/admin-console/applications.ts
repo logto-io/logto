@@ -5,31 +5,28 @@ const applications = {
     'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa, machine to machine veya geleneksel bir uygulama ayarlayınız',
   subtitle_with_app_type: 'Logto Doğrulamasını {{name}} uygulamanız için yapılandırın',
   create: 'Uygulama oluştur',
-  /** UNTRANSLATED */
   create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+    "Logto'yu kimlik sağlayıcısı (IdP) olarak kullanarak üçüncü taraf uygulamalarla kolayca entegre olun",
   application_name: 'Uygulama adı',
   application_name_placeholder: 'Uygulamam',
   application_description: 'Uygulama açıklaması',
   application_description_placeholder: 'Uygulama açıklaması giriniz',
   select_application_type: 'Uygulama tipi seçiniz',
   no_application_type_selected: 'Henüz bir uygulama tipi seçmediniz',
-  application_created: 'Uygulaması başarıyla oluşturuldu.',
+  application_created: 'Uygulama başarıyla oluşturuldu.',
   tab: {
-    /** UNTRANSLATED */
-    my_applications: 'My apps',
-    /** UNTRANSLATED */
-    third_party_applications: 'Third-party apps',
+    my_applications: 'Benim uygulamalarım',
+    third_party_applications: 'Üçüncü taraf uygulamaları',
   },
-  app_id: 'App ID',
+  app_id: "Uygulama ID'si",
   type: {
     native: {
-      title: 'Native Uygulama',
+      title: 'Yerel Uygulama',
       subtitle: 'Nativede çalışan bir uygulama ',
       description: 'Örneğin, iOS uygulaması, Android uygulaması',
     },
     spa: {
-      title: 'Tek sayfalı uygulama',
+      title: 'Tek Sayfalı Uygulama',
       subtitle:
         'Bir web tarayıcısında çalışan ve verileri yerinde dinamik olarak güncelleyen bir uygulama',
       description: 'Örneğin, React DOM uygulaması, Vue uygulaması',
@@ -40,25 +37,19 @@ const applications = {
       description: 'Örneğin, JSP, PHP',
     },
     machine_to_machine: {
-      title: 'Machine-to-Machine',
+      title: 'Makine-Makine',
       subtitle: 'Kaynaklarla doğrudan iletişim kuran bir uygulama (genellikle bir servis)',
       description: 'Örneğin, Backend servisi',
     },
     protected: {
-      /** UNTRANSLATED */
-      title: 'Protected App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is protected by Logto',
-      /** UNTRANSLATED */
+      title: 'Korunan Uygulama',
+      subtitle: 'Logto tarafından korunan bir uygulama',
       description: 'N/A',
     },
     third_party: {
-      /** UNTRANSLATED */
-      title: 'Third-party App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as a third-party IdP connector',
-      /** UNTRANSLATED */
-      description: 'E.g., OIDC, SAML',
+      title: 'Üçüncü Taraf Uygulama',
+      subtitle: 'Üçüncü taraf bir IdP bağlayıcısı olarak kullanılan bir uygulama',
+      description: 'Ör., OIDC, SAML',
     },
   },
   placeholder_title: 'Devam etmek için bir uygulama tipi seçin',

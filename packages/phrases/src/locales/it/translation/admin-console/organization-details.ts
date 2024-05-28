@@ -22,13 +22,10 @@ const organization_details = {
     "Una volta rimosso, l'utente perderà la sua iscrizione e i ruoli in questa organizzazione. Quest'azione non può essere annullata.",
   search_user_placeholder: 'Cerca per nome, email, telefono o ID utente',
   at_least_one_user: 'È richiesto almeno un utente.',
-  /** UNTRANSLATED */
-  custom_data: 'Custom data',
-  /** UNTRANSLATED */
+  custom_data: 'Dati personalizzati',
   custom_data_tip:
-    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
-  /** UNTRANSLATED */
-  invalid_json_object: 'Invalid JSON object.',
+    "I dati personalizzati sono un oggetto JSON che può essere utilizzato per archiviare dati aggiuntivi associati all'organizzazione.",
+  invalid_json_object: 'Oggetto JSON non valido.',
 };
 
 export default Object.freeze(organization_details);

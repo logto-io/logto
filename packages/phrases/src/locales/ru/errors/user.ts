@@ -33,10 +33,8 @@ const user = {
   missing_mfa: 'You need to bind additional MFA before signing-in.',
   totp_already_in_use: 'TOTP is already in use.',
   backup_code_already_in_use: 'Backup code is already in use.',
-  /** UNTRANSLATED */
-  password_algorithm_required: 'Password algorithm is required.',
-  /** UNTRANSLATED */
-  password_and_digest: 'You cannot set both plain text password and password digest.',
+  password_algorithm_required: 'Требуется алгоритм пароля.',
+  password_and_digest: 'Вы не можете установить как обычный пароль, так и дайджест пароля.',
 };
 
 export default Object.freeze(user);

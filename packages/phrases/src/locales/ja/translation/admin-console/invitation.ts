@@ -1,22 +1,14 @@
 const invitation = {
-  /** UNTRANSLATED */
-  find_your_tenants: 'Find your tenants',
-  /** UNTRANSLATED */
+  find_your_tenants: 'テナントを見つける',
   find_tenants_description:
-    'Your email address may already be registered with multiple tenants. You can choose to join the existing ones or continue create a new one.',
-  /** UNTRANSLATED */
-  create_new_tenant: 'Create a new tenant',
-  /** UNTRANSLATED */
-  email_not_match_title: 'You are currently signed in as\n{{email}}',
-  /** UNTRANSLATED */
+    'あなたのメールアドレスはすでに複数のテナントに登録されているかもしれません。既存のものに参加するか、新しいものを作成し続けるか選択できます。',
+  create_new_tenant: '新しいテナントを作成',
+  email_not_match_title: '現在サインインされているメールアドレス\n{{email}}',
   email_not_match_description:
-    'Please sign in with the correct account to accept the invitation and become a member of the organization.',
-  /** UNTRANSLATED */
-  switch_account: 'Sign in to another account',
-  /** UNTRANSLATED */
-  invalid_invitation_status: 'Invalid invitation. Please contact the administrator and try again.',
-  /** UNTRANSLATED */
-  invitation_not_found: 'Invitation not found. Please contact the administrator.',
+    '招待を受け入れ、組織のメンバーになるには、正しいアカウントでサインインしてください。',
+  switch_account: '別のアカウントにサインイン',
+  invalid_invitation_status: '招待状が無効です。管理者に問い合わせて、もう一度お試しください。',
+  invitation_not_found: '招待が見つかりませんでした。管理者に連絡してください。',
 };
 
 export default Object.freeze(invitation);

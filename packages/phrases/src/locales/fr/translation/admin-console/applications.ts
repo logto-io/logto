@@ -5,9 +5,8 @@ const applications = {
     "Configurez une application mobile, une page unique, machine to machine ou une application traditionnelle pour utiliser Logto pour l'authentification.",
   subtitle_with_app_type: "Configurez l'authentification Logto pour votre application {{name}}",
   create: 'Créer une application',
-  /** UNTRANSLATED */
   create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+    "Utilisez Logto en tant que votre fournisseur d'identité (IdP) pour intégrer facilement avec des applications tierces",
   application_name: "Nom de l'application",
   application_name_placeholder: 'Mon app',
   application_description: "Description de l'application",
@@ -16,10 +15,8 @@ const applications = {
   no_application_type_selected: "Vous n'avez pas encore sélectionné de type d'application",
   application_created: "L'application a été créée avec succès.",
   tab: {
-    /** UNTRANSLATED */
-    my_applications: 'My apps',
-    /** UNTRANSLATED */
-    third_party_applications: 'Third-party apps',
+    my_applications: 'Mes applications',
+    third_party_applications: 'Applications tierces',
   },
   app_id: 'App ID',
   type: {
@@ -46,25 +43,19 @@ const applications = {
       description: 'Par exemple, un service backend',
     },
     protected: {
-      /** UNTRANSLATED */
-      title: 'Protected App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is protected by Logto',
-      /** UNTRANSLATED */
+      title: 'Application protégée',
+      subtitle: 'Une application protégée par Logto',
       description: 'N/A',
     },
     third_party: {
-      /** UNTRANSLATED */
-      title: 'Third-party App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as a third-party IdP connector',
-      /** UNTRANSLATED */
-      description: 'E.g., OIDC, SAML',
+      title: 'Application tierce',
+      subtitle: 'Une application utilisée comme connecteur IdP tiers',
+      description: 'Par exemple, OIDC, SAML',
     },
   },
   placeholder_title: "Sélectionnez un type d'application pour continuer",
   placeholder_description:
-    "Logto utilise une entité d'application pour OIDC pour aider aux tâches telles que l'identification de vos applications, la gestion de la connexion et la création de journaux d'audit.",
+    "Logto utilise une entité d'application pour OIDC pour aider aux tâches telles que l'identification de vos applications, la gestion de la connexion et la création de journaux d'audit",
 };
 
 export default Object.freeze(applications);

@@ -4,11 +4,9 @@ const get_started = {
   subtitle: "Logto'nun değerini hızla elde etmek için yapabileceğiniz birkaç şey",
   develop: {
     title: 'Geliştir: Uygulamanızı entegre etmek için 5 dakika ayırın',
-    /** UNTRANSLATED */
-    title_cloud: 'Develop: Securely integrate your app in minutes',
-    /** UNTRANSLATED */
+    title_cloud: 'Geliştir: Uygulamanızı dakikalar içinde güvenli bir şekilde entegre edin',
     subtitle_cloud:
-      'Or take 5 minutes to integrate your app with our pre-built SDKs and tutorials.',
+      "Veya uygulamanızı hazır SDK'larımız ve rehberlerimizle entegre etmek için 5 dakika ayırın.",
   },
   customize: {
     title: 'Özelleştir: Harika bir oturum açma deneyimi sunun',

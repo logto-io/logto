@@ -2,12 +2,11 @@ const applications = {
   page_title: 'Aplicativos',
   title: 'Aplicativos',
   subtitle:
-    'Configure um aplicativo móvel, single page, machine to machine ou tradicional para usar o Logto para autenticação',
+    'Configure um aplicativo móvel, de página única, máquina a máquina ou tradicional para usar o Logto para autenticação',
   subtitle_with_app_type: 'Configure a autenticação Logto para o seu aplicativo {{name}}',
   create: 'Criar aplicativo',
-  /** UNTRANSLATED */
   create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+    'Use o Logto como seu provedor de identidade (IdP) para integrar facilmente com aplicativos de terceiros',
   application_name: 'Nome do Aplicativo',
   application_name_placeholder: 'Meu aplicativo',
   application_description: 'Descrição do aplicativo',
@@ -16,12 +15,10 @@ const applications = {
   no_application_type_selected: 'Você ainda não selecionou nenhum tipo de aplicativo',
   application_created: 'O aplicativo foi criado com sucesso.',
   tab: {
-    /** UNTRANSLATED */
-    my_applications: 'My apps',
-    /** UNTRANSLATED */
-    third_party_applications: 'Third-party apps',
+    my_applications: 'Meus aplicativos',
+    third_party_applications: 'Aplicativos de terceiros',
   },
-  app_id: 'App ID',
+  app_id: 'ID do App',
   type: {
     native: {
       title: 'Aplicativo Nativo',
@@ -40,25 +37,19 @@ const applications = {
       description: 'Ex: aplicativo Next.js, PHP',
     },
     machine_to_machine: {
-      title: 'Machine-to-Machine',
+      title: 'Máquina a Máquina',
       subtitle: 'Um aplicativo (geralmente um serviço) que fala diretamente com os recursos',
       description: 'Ex: serviço de backend',
     },
     protected: {
-      /** UNTRANSLATED */
-      title: 'Protected App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is protected by Logto',
-      /** UNTRANSLATED */
+      title: 'Aplicativo Protegido',
+      subtitle: 'Um aplicativo protegido pelo Logto',
       description: 'N/A',
     },
     third_party: {
-      /** UNTRANSLATED */
-      title: 'Third-party App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as a third-party IdP connector',
-      /** UNTRANSLATED */
-      description: 'E.g., OIDC, SAML',
+      title: 'Aplicativo de Terceiros',
+      subtitle: 'Um aplicativo usado como conector de IdP de terceiros',
+      description: 'Ex.: OIDC, SAML',
     },
   },
   placeholder_title: 'Selecione um tipo de aplicativo para continuar',

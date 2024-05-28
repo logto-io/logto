@@ -73,13 +73,12 @@ const connectors = {
     callback_uri: 'Callback URI',
     callback_uri_description:
       '리다이렉트 URI라고도 불려요. 사용자의 소셜 인증 이후 되돌아올 Logto URI예요. 소셜 공급자의 설정 페이지에 붙여넣으세요.',
-    /** UNTRANSLATED */
-    acs_url: 'Assertion consumer service URL',
+    acs_url: '단언 소비 서비스 URL',
   },
   platform: {
-    universal: 'Universal',
-    web: 'Web',
-    native: 'Native',
+    universal: '일반',
+    web: '웹',
+    native: '네이티브',
   },
   add_multi_platform: ' 다양한 플랫폼 지원, 플랫폼을 선택해주세요.',
   drawer_title: '연동 가이드',

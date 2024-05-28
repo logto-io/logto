@@ -1,9 +1,8 @@
 const role = {
   name_in_use: 'このロール名{{name}}はすでに使用されています',
   scope_exists: 'スコープID {{scopeId}}はすでにこのロールに追加されています',
-  /** UNTRANSLATED */
   management_api_scopes_not_assignable_to_user_role:
-    'Cannot assign management API scopes to a user role.',
+    'ユーザーのロールに管理APIのスコープを割り当てることはできません。',
   user_exists: 'ユーザーID{{userId}}はすでにこのロールに追加されています',
   application_exists: 'アプリケーション ID {{applicationId}} はすでにこのロールに追加されています',
   default_role_missing:
