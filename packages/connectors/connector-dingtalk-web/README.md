@@ -75,6 +75,8 @@ Fill out the `clientId` and `clientSecret` field with _Client ID(formerly AppKey
 
 That's it. The DingTalk connector should be available now. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in).
 
+Once DingTalk web connector is enabled, you can sign in to your app again to see if it works.
+
 > ℹ️ **Note**
 > Please ensure strict compliance with the usage specifications and development guidelines of the DingTalk Open Platform during the development process.
 
@@ -128,11 +130,14 @@ scope 目前支持两种值：openid 和 openid corpid。openid 授权后可以�
 | clientSecret | string |
 | scope        | string |
 
+## 测试钉钉连接器
+
+大功告成。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)。
+
+在钉钉web连接器启用后，你可以构建并运行你的应用看看是否生效。
+
 > ℹ️ **Note**
 > 请确保在开发过程中，严格遵守钉钉开放平台的使用规范和开发指南。
-
-## 测试钉钉连接器
-完成了。钉钉连接器现在应该可以使用了。别忘了在登录体验中启用连接器。
 
 ## 支持
 
