@@ -5,7 +5,7 @@ const subscription = {
   free_plan: 'Ücretsiz Plan',
   free_plan_description:
     'Yan projeler ve başlangıç Logto denemeleri için. Kredi kartı gerektirmez.',
-  pro_plan: 'Pro Plan',
+  pro_plan: 'Pro plan',
   pro_plan_description: "Endişesiz bir şekilde Logto'dan faydalanan işletmeler için.",
   enterprise: 'Kurumsal',
   current_plan: 'Mevcut Plan',
@@ -58,7 +58,7 @@ const subscription = {
     upgrade_title: 'Saygıdeğer erken benimseyenlerimiz için dostane hatırlatma',
     upgrade_description:
       "Şu anda <name /> tarafından izin verilenden daha fazlasını kullanıyorsunuz. Logto artık resmi olarak kullanılabilir durumda ve her plana özel özellikler sunuyor. <name />'e yükseltmeyi düşünmeden önce, yükseltme öncesinde aşağıdaki kriterleri karşıladığınızdan emin olun.",
-    upgrade_pro_tip: " Ya da Pro Plan'a geçmeyi düşünün.",
+    upgrade_pro_tip: " Ya da Pro plan'a geçmeyi düşünün.",
     upgrade_help_tip:
       'Yükseltme konusunda yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
     a_maximum_of: '<item/> için maksimum',

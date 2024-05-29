@@ -78,7 +78,7 @@ const tenants = {
     delete_button: 'Permanently delete',
     cannot_delete_title: 'Cannot delete this tenant',
     cannot_delete_description:
-      "Sorry, you can't delete this tenant right now. Please make sure you're on the Free Plan and have paid all outstanding billings.",
+      "Sorry, you can't delete this tenant right now. Please make sure you're on the Free plan and have paid all outstanding billings.",
   },
   leave_tenant_modal: {
     description: 'Are you sure you want to leave this tenant?',
