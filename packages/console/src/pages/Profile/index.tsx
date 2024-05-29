@@ -34,7 +34,7 @@ function Profile() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
   const childrenRoutes = useRoutes(profile);
-  usePlausiblePageview(profile);
+  usePlausiblePageview(profile, 'profile');
 
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
   const fetcher = useSwrFetcher<ConnectorResponse[]>(api);

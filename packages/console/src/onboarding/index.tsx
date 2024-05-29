@@ -43,7 +43,7 @@ export function OnboardingApp() {
   const matched = useMatch(welcomePathname);
   const routes = useRoutes(routeObjects);
 
-  usePlausiblePageview(routeObjects);
+  usePlausiblePageview(routeObjects, 'onboarding');
 
   useEffect(() => {
     setThemeOverride(Theme.Light);
