@@ -10,7 +10,7 @@ const tenant_members = {
   inviter: '招待者',
   expiration_date: '有効期限',
   invite_modal: {
-    title: 'Silverhand への招待',
+    title: 'Logto Cloud への招待',
     subtitle: '組織にメンバーを招待するには、招待を受け入れる必要があります。',
     to: 'To',
     added_as: '役割として追加',

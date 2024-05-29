@@ -10,7 +10,7 @@ const tenant_members = {
   inviter: 'Zapraszający',
   expiration_date: 'Data wygaśnięcia',
   invite_modal: {
-    title: 'Zaproś ludzi do Silverhand',
+    title: 'Zaproś ludzi do Logto Cloud',
     subtitle: 'Aby zaprosić członków do organizacji, muszą zaakceptować zaproszenie.',
     to: 'Do',
     added_as: 'Dodany jako role',
