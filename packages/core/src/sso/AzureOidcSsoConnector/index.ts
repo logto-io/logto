@@ -1,6 +1,7 @@
 import { SsoProviderName, SsoProviderType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
+import { decodeJwt } from 'jose';
 
 import assertThat from '#src/utils/assert-that.js';
 
@@ -26,6 +27,7 @@ export class AzureOidcSsoConnector extends OidcSsoConnector {
    * It is unsafe to trust the unverified email and phone number in Logto's context. As we are using the verified email and phone number to identify the user.
    * Store extra unverified_email and unverified_phone fields in the user SSO identity profile instead.
    */
+  // eslint-disable-next-line complexity
   override async getUserInfo(
     connectorSession: SingleSignOnConnectorSession,
     data: unknown
@@ -43,8 +45,19 @@ export class AzureOidcSsoConnector extends OidcSsoConnector {
       })
     );
 
+    // Need to decode the id token to get the tenant id
+    const decodeToken = decodeJwt(idToken);
+
+    // For multi-tenancy Azure application, the issuer may contain the tenant id placeholder
+    // Replace the placeholder with the tid retrieved from the id token
+    // @see https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens#validation-of-the-signing-key-issuer
+    const jwtVerifyOptions =
+      oidcConfig.issuer.includes('{tenantid}') && typeof decodeToken.tid === 'string'
+        ? { issuer: oidcConfig.issuer.replace('{tenantid}', decodeToken.tid) }
+        : {};
+
     // Verify the id token and get the user id
-    const { sub: id } = await getIdTokenClaims(idToken, oidcConfig, nonce);
+    const { sub: id } = await getIdTokenClaims(idToken, oidcConfig, nonce, jwtVerifyOptions);
 
     // Fetch user info from the userinfo endpoint
     const { sub, name, picture, email, email_verified, phone, phone_verified, ...rest } =
