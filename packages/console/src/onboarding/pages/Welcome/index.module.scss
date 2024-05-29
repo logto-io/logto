@@ -1,15 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.title {
-  font: var(--font-title-1);
-  margin-top: _.unit(6);
-}
-
-.description {
-  font: var(--font-body-2);
-  margin-top: _.unit(3);
-}
-
 .form {
   width: 100%;
   margin-top: _.unit(6);

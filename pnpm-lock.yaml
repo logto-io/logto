@@ -1369,8 +1369,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-e5d8200
-        version: 0.2.5-e5d8200(zod@3.22.4)
+        specifier: 0.2.5-38aae44
+        version: 0.2.5-38aae44(zod@3.22.4)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.7
         version: 25.0.7(rollup@4.12.0)
@@ -2855,8 +2855,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-e5d8200
-        version: 0.2.5-e5d8200(zod@3.22.4)
+        specifier: 0.2.5-38aae44
+        version: 0.2.5-38aae44(zod@3.22.4)
       '@logto/connector-kit':
         specifier: workspace:^3.0.0
         version: link:../toolkit/connector-kit
@@ -3133,9 +3133,6 @@ importers:
       swr:
         specifier: ^2.2.0
         version: 2.2.0(react@18.2.0)
-      titleize:
-        specifier: ^4.0.0
-        version: 4.0.0
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)
@@ -3354,8 +3351,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-e5d8200
-        version: 0.2.5-e5d8200(zod@3.22.4)
+        specifier: 0.2.5-38aae44
+        version: 0.2.5-38aae44(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -5264,8 +5261,8 @@ packages:
   '@logto/client@2.6.6':
     resolution: {integrity: sha512-QT7jMnzEIWHBNrf9/M8p1OErRBbbNZjoekXGji5aZCyUh975hh8+GEBL21HV71FT3H/5Cq4Gf1GzUbAIW3izMA==}
 
-  '@logto/cloud@0.2.5-e5d8200':
-    resolution: {integrity: sha512-/ZPaiIU7ORfKtNqsopVg4jxDt/sM6CGAGny06ppv/2FNsL7h8rX6JXOUyyKmT6ffCh/K/5s2HZe7v86zx5gENQ==}
+  '@logto/cloud@0.2.5-38aae44':
+    resolution: {integrity: sha512-YvsX4nCxP1vOhLVnaNhDNHYsL9qUPJN+q2f8PtAK/ZzHj92MU590dVaOdqSr47Rd44mERoZ9R2sTlHYciOqxOA==}
     engines: {node: ^20.9.0}
 
   '@logto/js@4.1.1':
@@ -12292,10 +12289,6 @@ packages:
     resolution: {integrity: sha512-KYad6Vy5VDWV4GH3fjpseMQ/XU2BhIYP7Vzd0LG44qRWm/Yt2WCOTicFdvmgo6gWaqooMQCawTtILVQJupKu7A==}
     engines: {node: '>=14.0.0'}
 
-  titleize@4.0.0:
-    resolution: {integrity: sha512-ZgUJ1K83rhdu7uh7EHAC2BgY5DzoX8V5rTvoWI4vFysggi6YjLe5gUXABPWAU7VkvGP7P/0YiWq+dcPeYDsf1g==}
-    engines: {node: '>=18'}
-
   tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
     engines: {node: '>=0.6.0'}
@@ -14787,7 +14780,7 @@ snapshots:
       camelcase-keys: 7.0.2
       jose: 5.2.2
 
-  '@logto/cloud@0.2.5-e5d8200(zod@3.22.4)':
+  '@logto/cloud@0.2.5-38aae44(zod@3.22.4)':
     dependencies:
       '@silverhand/essentials': 2.9.1
       '@withtyped/server': 0.13.6(zod@3.22.4)
@@ -23628,8 +23621,6 @@ snapshots:
   tinypool@0.8.2: {}
 
   tinyspy@2.2.1: {}
-
-  titleize@4.0.0: {}
 
   tmp@0.0.33:
     dependencies:

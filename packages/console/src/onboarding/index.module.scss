@@ -3,4 +3,13 @@
 .app {
   position: absolute;
   inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }

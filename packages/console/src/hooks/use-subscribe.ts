@@ -59,6 +59,7 @@ const useSubscribe = () => {
           tenantId,
           tenantName: tenantData?.name,
           tenantTag: tenantData?.tag,
+          tenantRegionName: tenantData?.regionName,
         },
       });
 

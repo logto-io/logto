@@ -18,11 +18,6 @@
     padding: _.unit(12);
     margin-right: _.unit(6);
 
-    .title {
-      margin-top: _.unit(6);
-      font: var(--font-title-1);
-    }
-
     .authnSelector {
       grid-template-columns: repeat(2, 1fr);
     }

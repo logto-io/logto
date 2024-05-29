@@ -41,8 +41,8 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
     const { id: planId } = plan;
     try {
       if (planId === ReservedPlanId.Free) {
-        const { name, tag } = tenantData;
-        const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
+        const { name, tag, regionName } = tenantData;
+        const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
 
         reportToGoogle(GtagConversionId.CreateProductionTenant, { transactionId: newTenant.id });
         onClose(newTenant);

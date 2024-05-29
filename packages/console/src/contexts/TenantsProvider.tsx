@@ -9,28 +9,24 @@ import { defaultTenantResponse } from '@/consts';
 import { isCloud } from '@/consts/env';
 
 /**
- * The routes don't start with a tenant ID.
- *
- * @remarks
- * It's important to keep this single source of truth for all anonymous routes
- * because we need to check if the current route is anonymous or not to decide
- * if the current tenant ID is available.
- *
- * This should be more clear once we refactor the file structure and the routes.
+ * The reserved routes that don't require authentication.
  */
 export enum GlobalAnonymousRoute {
+  /** The global callback route for OpenID Connect. */
   Callback = '/callback',
   SocialDemoCallback = '/social-demo-callback',
-  AcceptInvitation = '/accept',
-  Profile = '/profile',
-  HandleSocial = '/handle-social',
 }
 
 /**
- * The reserved routes that need tenant access.
+ * The reserved routes that require authentication. Note they may not require the user to be in a
+ * tenant context.
  */
 export enum GlobalRoute {
   CheckoutSuccessCallback = '/checkout-success-callback',
+  Onboarding = '/onboarding',
+  AcceptInvitation = '/accept',
+  Profile = '/profile',
+  HandleSocial = '/handle-social',
 }
 
 const reservedRoutes: Readonly<string[]> = Object.freeze([

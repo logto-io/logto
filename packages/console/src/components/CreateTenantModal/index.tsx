@@ -1,13 +1,14 @@
 import { Theme, TenantTag } from '@logto/schemas';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
+import Region, { RegionName } from '@/components/Region';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -30,11 +31,10 @@ type Props = {
 const availableTags = [TenantTag.Development, TenantTag.Production];
 
 function CreateTenantModal({ isOpen, onClose }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [tenantData, setTenantData] = useState<CreateTenantData>();
   const theme = useTheme();
 
-  const defaultValues = { tag: TenantTag.Development };
+  const defaultValues = { tag: TenantTag.Development, regionName: RegionName.EU };
   const methods = useForm<CreateTenantData>({
     defaultValues,
   });
@@ -49,9 +49,8 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
 
   const cloudApi = useCloudApi();
 
-  const createTenant = async (data: CreateTenantData) => {
-    const { name, tag } = data;
-    const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
+  const createTenant = async ({ name, tag, regionName }: CreateTenantData) => {
+    const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
     onClose(newTenant);
   };
 
@@ -107,29 +106,35 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               error={Boolean(errors.name)}
             />
           </FormField>
-          <FormField title="tenants.settings.tenant_region">
-            <RadioGroup type="small" value="eu" name="region">
-              <Radio
-                title={
-                  <DangerousRaw>
-                    <span className={styles.regionOptions}>🇪🇺 EU</span>
-                  </DangerousRaw>
-                }
-                value="eu"
-              />
-              <Radio
-                isDisabled
-                title={
-                  <DangerousRaw>
-                    <span className={styles.regionOptions}>
-                      🇺🇸 US
-                      <span className={styles.comingSoon}>{`(${t('general.coming_soon')})`}</span>
-                    </span>
-                  </DangerousRaw>
-                }
-                value="us"
-              />
-            </RadioGroup>
+          <FormField
+            title="tenants.settings.tenant_region"
+            description="tenants.settings.tenant_region_description"
+          >
+            <Controller
+              control={control}
+              name="regionName"
+              rules={{ required: true }}
+              render={({ field: { onChange, value, name } }) => (
+                <RadioGroup type="small" name={name} value={value} onChange={onChange}>
+                  {/* Manually maintaining the list of regions to avoid unexpected changes. We may consider using an API in the future. */}
+                  {[RegionName.EU, RegionName.US].map((region) => (
+                    <Radio
+                      key={region}
+                      title={
+                        <DangerousRaw>
+                          <Region
+                            regionName={region}
+                            isComingSoon={!isDevFeaturesEnabled && region !== RegionName.EU}
+                          />
+                        </DangerousRaw>
+                      }
+                      value={region}
+                      isDisabled={!isDevFeaturesEnabled && region !== RegionName.EU}
+                    />
+                  ))}
+                </RadioGroup>
+              )}
+            />
           </FormField>
           <FormField title="tenants.create_modal.tenant_usage_purpose">
             <Controller
