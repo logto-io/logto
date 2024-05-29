@@ -1,4 +1,4 @@
-import { assert, conditional } from '@silverhand/essentials';
+import { assert, conditional, trySafe } from '@silverhand/essentials';
 
 import {
   ConnectorError,
@@ -124,9 +124,16 @@ const getUserInfo =
     });
 
     try {
-      const [userInfo, userEmails] = await Promise.all([
+      /**
+       * If user(s) is using GitHub Apps (instead of OAuth Apps), they can customize
+       * "Account permissions" and restrict the "email addresses" visibility, and GitHub
+       * hence throws error instead of returning an empty array.
+       *
+       * We try catch the error and return an empty array instead.
+       */
+      const [userInfo, userEmails = []] = await Promise.all([
         authedApi.get(userInfoEndpoint).json(),
-        authedApi.get(userEmailsEndpoint).json(),
+        trySafe(authedApi.get(userEmailsEndpoint).json()),
       ]);
 
       const userInfoResult = userInfoResponseGuard.safeParse(userInfo);

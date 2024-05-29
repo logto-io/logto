@@ -162,6 +162,33 @@ describe('getUserInfo', () => {
     });
   });
 
+  it('should fallback to empty array when can not access to GET /users/emails endpoint', async () => {
+    nock(userInfoEndpoint).get('').reply(200, {
+      id: 1,
+      avatar_url: 'https://github.com/images/error/octocat_happy.gif',
+      name: 'monalisa octocat',
+      foo: 'bar',
+    });
+    nock(userEmailsEndpoint).get('').reply(403, []);
+    const connector = await createConnector({ getConfig });
+    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, vi.fn());
+    expect(socialUserInfo).toStrictEqual({
+      id: '1',
+      avatar: 'https://github.com/images/error/octocat_happy.gif',
+      name: 'monalisa octocat',
+      email: undefined,
+      rawData: {
+        userInfo: {
+          id: 1,
+          avatar_url: 'https://github.com/images/error/octocat_happy.gif',
+          name: 'monalisa octocat',
+          foo: 'bar',
+        },
+        userEmails: [],
+      },
+    });
+  });
+
   it('should convert `null` to `undefined` in SocialUserInfo', async () => {
     nock(userInfoEndpoint).get('').reply(200, {
       id: 1,
