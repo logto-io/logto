@@ -13,7 +13,9 @@ const tenants = {
     description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'Tenant ID',
     tenant_name: 'Tenant Name',
-    tenant_region: 'Data hosted region',
+    tenant_region: 'Data region',
+    tenant_region_description:
+      'The physical location where your tenant resources (users, apps, etc.) are hosted. This can’t be changed after creation.',
     tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
     environment_tag_development: 'Dev',
     environment_tag_production: 'Prod',
@@ -45,7 +47,7 @@ const tenants = {
   create_modal: {
     title: 'Create tenant',
     subtitle:
-      'Create a new tenant that has isolated resources and users. Data hosted region and tenant types can’t be modified after creation.',
+      'Create a new tenant that has isolated resources and users. Data region and tenant types can’t be modified after creation.',
     tenant_usage_purpose: 'What do you want to use this tenant for?',
     development_description:
       "For testing only and shouldn't be used in production. No subscription is required.",

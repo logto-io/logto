@@ -106,7 +106,10 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               error={Boolean(errors.name)}
             />
           </FormField>
-          <FormField title="tenants.settings.tenant_region">
+          <FormField
+            title="tenants.settings.tenant_region"
+            description="tenants.settings.tenant_region_description"
+          >
             <Controller
               control={control}
               name="regionName"
