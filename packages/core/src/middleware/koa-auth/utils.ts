@@ -1,21 +1,12 @@
-import crypto from 'node:crypto';
-
-import type { LogtoConfig } from '@logto/schemas';
-import {
-  logtoOidcConfigGuard,
-  adminTenantId,
-  LogtoOidcConfigKey,
-  LogtoConfigs,
-} from '@logto/schemas';
-import { appendPath } from '@silverhand/essentials';
-import { sql } from '@silverhand/slonik';
-import type { JWK } from 'jose';
+import { adminTenantId } from '@logto/schemas';
+import { TtlCache } from '@logto/shared';
+import { appendPath, isKeyInObject } from '@silverhand/essentials';
+import { type JWK } from 'jose';
+import ky from 'ky';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
-import { exportJWK } from '#src/utils/jwks.js';
-import { convertToIdentifiers } from '#src/utils/sql.js';
 
-const { table, fields } = convertToIdentifiers(LogtoConfigs);
+const jwksCache = new TtlCache<string, JWK[]>(60 * 60 * 1000); // 1 hour
 
 /**
  * This function is to fetch OIDC public signing keys and the issuer from the admin tenant
@@ -33,24 +24,37 @@ export const getAdminTenantTokenValidationSet = async (): Promise<{
     return { keys: [], issuer: [] };
   }
 
-  const pool = await EnvSet.sharedPool;
-  const { value } = await pool.one<LogtoConfig>(sql`
-    select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
-      where ${fields.tenantId} = ${adminTenantId}
-      and ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
-  `);
-  const privateKeys = logtoOidcConfigGuard['oidc.privateKeys']
-    .parse(value)
-    .map(({ value }) => crypto.createPrivateKey(value));
-  const publicKeys = privateKeys.map((key) => crypto.createPublicKey(key));
+  const issuer = appendPath(
+    isMultiTenancy ? getTenantEndpoint(adminTenantId, EnvSet.values) : adminUrlSet.endpoint,
+    '/oidc'
+  );
+  const cached = jwksCache.get(issuer.href);
+
+  if (cached) {
+    return {
+      keys: cached,
+      issuer: [issuer.href],
+    };
+  }
+
+  const configuration = await ky
+    .get(appendPath(issuer, '/.well-known/openid-configuration'))
+    .json();
+
+  if (!isKeyInObject(configuration, 'jwks_uri')) {
+    return { keys: [], issuer: [] };
+  }
+
+  const jwks = await ky.get(String(configuration.jwks_uri)).json<{ keys: JWK[] }>();
+
+  if (!isKeyInObject(jwks, 'keys') || !Array.isArray(jwks.keys)) {
+    return { keys: [], issuer: [] };
+  }
+
+  jwksCache.set(issuer.href, jwks.keys);
 
   return {
-    keys: await Promise.all(publicKeys.map(async (key) => exportJWK(key))),
-    issuer: [
-      appendPath(
-        isMultiTenancy ? getTenantEndpoint(adminTenantId, EnvSet.values) : adminUrlSet.endpoint,
-        '/oidc'
-      ).href,
-    ],
+    keys: jwks.keys,
+    issuer: [issuer.href],
   };
 };
