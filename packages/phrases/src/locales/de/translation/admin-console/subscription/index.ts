@@ -4,7 +4,7 @@ import quota_table from './quota-table.js';
 const subscription = {
   free_plan: 'Kostenloser Plan',
   free_plan_description: 'Für Nebenprojekte und erste Logto-Tests. Keine Kreditkarte erforderlich.',
-  pro_plan: 'Pro Plan',
+  pro_plan: 'Pro plan',
   pro_plan_description: 'Für Unternehmen, die sorgenfrei von Logto profitieren möchten.',
   enterprise: 'Unternehmen',
   current_plan: 'Aktueller Plan',
@@ -56,7 +56,7 @@ const subscription = {
     upgrade_title: 'Freundliche Erinnerung für unsere geschätzten Early Adopters',
     upgrade_description:
       'Sie nutzen derzeit mehr als das, was <name /> erlaubt. Logto ist nun offiziell und bietet Funktionen, die auf jeden Tarif zugeschnitten sind. Bevor Sie ein Upgrade auf den <name /> in Betracht ziehen, stellen Sie sicher, dass Sie die folgenden Kriterien für das Upgrade erfüllen.',
-    upgrade_pro_tip: ' Oder erwägen Sie ein Upgrade auf den Pro Plan.',
+    upgrade_pro_tip: ' Oder erwägen Sie ein Upgrade auf den Pro plan.',
     upgrade_help_tip: 'Hilfe beim Upgrade benötigt? <a>Kontaktieren Sie uns</a>.',
     a_maximum_of: 'Maximal <item/>',
   },
