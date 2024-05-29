@@ -14,13 +14,13 @@ export type ApplicationCase = {
 };
 
 export const initialApp: ApplicationCase = {
-  framework: 'Next.js',
+  framework: 'Next.js (App Router)',
   name: 'Next.js App',
   description: 'This is a Next.js app',
   guideFilename: 'web-next',
   sample: {
     repo: 'js',
-    path: 'packages/next-sample',
+    path: 'packages/next-server-actions-sample',
   },
   redirectUri: 'https://my.test.app/sign-in',
   postSignOutRedirectUri: 'https://my.test.app/sign-out',
