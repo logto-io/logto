@@ -14,7 +14,7 @@
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
   font: var(--font-body-2);
-  cursor: pointer;
+  cursor: text;
   position: relative;
 
   .wrapper {
@@ -23,7 +23,6 @@
     justify-content: flex-start;
     flex-wrap: wrap;
     gap: _.unit(2);
-    cursor: text;
 
     .tag {
       cursor: auto;

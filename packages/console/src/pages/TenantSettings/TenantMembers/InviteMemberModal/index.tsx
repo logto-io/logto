@@ -124,7 +124,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
               name="emails"
               control={control}
               rules={{
-                validate: (value) => {
+                validate: (value): string | true => {
                   if (value.length === 0) {
                     return t('errors.email_required');
                   }
@@ -138,6 +138,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
                   values={value}
                   error={errors.emails?.message}
                   placeholder={t('invite_modal.email_input_placeholder')}
+                  parseEmailOptions={parseEmailOptions}
                   onChange={onChange}
                 />
               )}

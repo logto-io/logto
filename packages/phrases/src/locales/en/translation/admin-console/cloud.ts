@@ -38,6 +38,7 @@ const cloud = {
     title: 'Create your first tenant',
     description:
       'A tenant is an isolated environment where you can manage user identities, applications, and all other Logto resources.',
+    invite_collaborators: 'Invite your collaborators by email',
   },
   sie: {
     page_title: 'Customize sign-in experience',

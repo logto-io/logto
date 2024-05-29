@@ -1,6 +1,8 @@
 import { Theme, TenantTag } from '@logto/schemas';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
@@ -53,11 +55,13 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
     onClose(newTenant);
   };
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const onCreateClick = handleSubmit(async (data: CreateTenantData) => {
     const { tag } = data;
     if (tag === TenantTag.Development) {
       await createTenant(data);
+      toast.success(t('tenants.create_modal.tenant_created'));
       return;
     }
 
@@ -168,6 +172,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                * Note: only close the create tenant modal when tenant is created successfully
                */
               onClose(tenant);
+              toast.success(t('tenants.create_modal.tenant_created'));
             }
           }}
         />
