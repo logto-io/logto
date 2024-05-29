@@ -1,12 +1,15 @@
-import { Theme } from '@logto/schemas';
+import { emailRegEx } from '@logto/core-kit';
+import { useLogto } from '@logto/react';
+import { TenantRole, Theme } from '@logto/schemas';
 import { joinPath } from '@silverhand/essentials';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { createTenantApi, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import ActionBar from '@/components/ActionBar';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
 import PageMeta from '@/components/PageMeta';
@@ -23,12 +26,16 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import { OnboardingPage, OnboardingRoute } from '@/onboarding/types';
+import InviteEmailsInput from '@/pages/TenantSettings/TenantMembers/InviteEmailsInput';
+import { type InviteeEmailItem } from '@/pages/TenantSettings/TenantMembers/types';
 import { trySubmitSafe } from '@/utils/form';
 
-type CreateTenantForm = Omit<CreateTenantData, 'tag'>;
+type CreateTenantForm = Omit<CreateTenantData, 'tag'> & { collaboratorEmails: InviteeEmailItem[] };
 
 function CreateTenant() {
-  const methods = useForm<CreateTenantForm>({ defaultValues: { regionName: RegionName.EU } });
+  const methods = useForm<CreateTenantForm>({
+    defaultValues: { regionName: RegionName.EU, collaboratorEmails: [] },
+  });
   const {
     control,
     handleSubmit,
@@ -39,13 +46,51 @@ function CreateTenant() {
   const { prependTenant } = useContext(TenantsContext);
   const theme = useTheme();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const parseEmailOptions = useCallback(
+    (values: InviteeEmailItem[]) => {
+      const validEmails = values.filter(({ value }) => emailRegEx.test(value));
 
+      return {
+        values: validEmails,
+        errorMessage:
+          values.length === validEmails.length
+            ? undefined
+            : t('tenant_members.errors.invalid_email'),
+      };
+    },
+    [t]
+  );
+
+  const { isAuthenticated, getOrganizationToken } = useLogto();
   const cloudApi = useCloudApi();
 
   const onCreateClick = handleSubmit(
-    trySubmitSafe(async ({ name, regionName }: CreateTenantForm) => {
+    trySubmitSafe(async ({ name, regionName, collaboratorEmails }: CreateTenantForm) => {
       const newTenant = await cloudApi.post('/api/tenants', { body: { name, regionName } });
       prependTenant(newTenant);
+      toast.success(t('tenants.create_modal.tenant_created'));
+
+      const tenantCloudApi = createTenantApi({
+        hideErrorToast: true,
+        isAuthenticated,
+        getOrganizationToken,
+        tenantId: newTenant.id,
+      });
+
+      // Should not block the onboarding flow if the invitation fails.
+      try {
+        await Promise.all(
+          collaboratorEmails.map(async (email) =>
+            tenantCloudApi.post('/api/tenants/:tenantId/invitations', {
+              params: { tenantId: newTenant.id },
+              body: { invitee: email.value, roleName: TenantRole.Collaborator },
+            })
+          )
+        );
+        toast.success(t('tenant_members.messages.invitation_sent'));
+      } catch {
+        toast.error(t('tenants.create_modal.invitation_failed', { duration: 5 }));
+      }
       navigate(joinPath(OnboardingRoute.Onboarding, newTenant.id, OnboardingPage.SignInExperience));
     })
   );
@@ -64,6 +109,7 @@ function CreateTenant() {
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
                 placeholder="My project"
+                disabled={isSubmitting}
                 {...register('name', { required: true })}
                 error={Boolean(errors.name)}
               />
@@ -91,10 +137,33 @@ function CreateTenant() {
                           </DangerousRaw>
                         }
                         value={region}
-                        isDisabled={!isDevFeaturesEnabled && region !== RegionName.EU}
+                        isDisabled={
+                          isSubmitting || (!isDevFeaturesEnabled && region !== RegionName.EU)
+                        }
                       />
                     ))}
                   </RadioGroup>
+                )}
+              />
+            </FormField>
+            <FormField title="cloud.create_tenant.invite_collaborators">
+              <Controller
+                name="collaboratorEmails"
+                control={control}
+                rules={{
+                  validate: (value): string | true => {
+                    return parseEmailOptions(value).errorMessage ?? true;
+                  },
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <InviteEmailsInput
+                    formName="collaboratorEmails"
+                    values={value}
+                    error={errors.collaboratorEmails?.message}
+                    placeholder={t('tenant_members.invite_modal.email_input_placeholder')}
+                    parseEmailOptions={parseEmailOptions}
+                    onChange={onChange}
+                  />
                 )}
               />
             </FormField>

@@ -56,6 +56,9 @@ const tenants = {
     available_plan: 'Available plan:',
     create_button: 'Create tenant',
     tenant_name_placeholder: 'My tenant',
+    tenant_created: 'Tenant created successfully.',
+    invitation_failed:
+      'Some invitation failed to send. Please try again in Settings -> Members later.',
   },
   dev_tenant_migration: {
     title: 'You can now try our Pro features for free by creating a new "Development tenant"!',

@@ -61,6 +61,33 @@ export const useCloudApi = ({ hideErrorToast = false }: UseCloudApiProps = {}): 
   return api;
 };
 
+type CreateTenantOptions = UseCloudApiProps &
+  Pick<ReturnType<typeof useLogto>, 'isAuthenticated' | 'getOrganizationToken'> & {
+    tenantId: string;
+  };
+
+export const createTenantApi = ({
+  hideErrorToast = false,
+  isAuthenticated,
+  getOrganizationToken,
+  tenantId,
+}: CreateTenantOptions) =>
+  new Client<typeof tenantAuthRouter>({
+    baseUrl: window.location.origin,
+    headers: async () => {
+      if (isAuthenticated) {
+        return {
+          Authorization: `Bearer ${
+            (await getOrganizationToken(getTenantOrganizationId(tenantId))) ?? ''
+          }`,
+        };
+      }
+    },
+    before: {
+      ...conditional(!hideErrorToast && { error: toastResponseError }),
+    },
+  });
+
 /**
  * This hook is used to request the cloud `tenantAuthRouter` endpoints, with an organization token.
  */
@@ -71,20 +98,11 @@ export const useAuthedCloudApi = ({ hideErrorToast = false }: UseCloudApiProps =
   const { isAuthenticated, getOrganizationToken } = useLogto();
   const api = useMemo(
     () =>
-      new Client<typeof tenantAuthRouter>({
-        baseUrl: window.location.origin,
-        headers: async () => {
-          if (isAuthenticated) {
-            return {
-              Authorization: `Bearer ${
-                (await getOrganizationToken(getTenantOrganizationId(currentTenantId))) ?? ''
-              }`,
-            };
-          }
-        },
-        before: {
-          ...conditional(!hideErrorToast && { error: toastResponseError }),
-        },
+      createTenantApi({
+        hideErrorToast,
+        isAuthenticated,
+        getOrganizationToken,
+        tenantId: currentTenantId,
       }),
     [currentTenantId, getOrganizationToken, hideErrorToast, isAuthenticated]
   );
