@@ -2,22 +2,22 @@ import { parseJson } from '@logto/connector-kit';
 import { assert } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { got, HTTPError } from 'got';
-import { jwtVerify, createRemoteJWKSet } from 'jose';
+import { createRemoteJWKSet, jwtVerify, type JWTVerifyOptions } from 'jose';
 import { z } from 'zod';
 
 import {
+  SsoConnectorConfigErrorCodes,
   SsoConnectorError,
   SsoConnectorErrorCodes,
-  SsoConnectorConfigErrorCodes,
 } from '../types/error.js';
 import {
+  idTokenProfileStandardClaimsGuard,
+  oidcAuthorizationResponseGuard,
+  oidcConfigResponseGuard,
+  oidcTokenResponseGuard,
   type BaseOidcConfig,
   type OidcConfigResponse,
-  oidcConfigResponseGuard,
-  oidcAuthorizationResponseGuard,
-  oidcTokenResponseGuard,
   type OidcTokenResponse,
-  idTokenProfileStandardClaimsGuard,
 } from '../types/oidc.js';
 
 export const fetchOidcConfig = async (
@@ -109,12 +109,15 @@ const issuedAtTimeTolerance = 600; // 10 minutes
 export const getIdTokenClaims = async (
   idToken: string,
   config: BaseOidcConfig,
-  nonceFromSession?: string
+  nonceFromSession?: string,
+  // Allow to pass custom options for jwt.verify
+  jwtVerifyOptions?: JWTVerifyOptions
 ) => {
   try {
     const { payload } = await jwtVerify(idToken, createRemoteJWKSet(new URL(config.jwksUri)), {
       issuer: config.issuer,
       audience: config.clientId,
+      ...jwtVerifyOptions,
     });
 
     if (Math.abs((payload.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
