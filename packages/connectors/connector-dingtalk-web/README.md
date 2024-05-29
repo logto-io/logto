@@ -1,16 +1,47 @@
 # DingTalk Web Connector
 
-An advanced enterprise collaboration and management platform. Seamless office collaboration in one place, aligning team goals from top to bottom, and fully activating the organization and individuals.
+The official Logto connector for DingTalk social sign-in in web apps.
 
-## Getting started
+钉钉 web 应用社交登录官方 Logto 连接器 [中文文档](#钉钉网页连接器)
+
+**Table of contents**
+
+- [DingTalk Web Connector](#dingtalk-web-connector)
+  - [Get Started](#get-started)
+  - [Create a Web App in the DingTalk Open Platform](#create-a-web-app-in-the-dingtalk-open-platform)
+    - [Register a DingTalk Developer Account](#register-a-dingtalk-developer-account)
+    - [Create an Application](#create-an-application)
+    - [Configure Permissions](#configure-permissions)
+  - [Configure Your Connector](#configure-your-connector)
+    - [Config Types](#config-types)
+  - [Test DingTalk Connector](#test-dingtalk-connector)
+  - [Support](#support)
+- [钉钉网页连接器](#钉钉网页连接器)
+  - [开始上手](#开始上手)
+  - [在钉钉开放平台新建一个应用](#在钉钉开放平台新建一个应用)
+    - [注册钉钉开发者账号](#注册钉钉开发者账号)
+    - [创建应用](#创建应用)
+    - [配置权限](#配置权限)
+  - [配置你的连接器](#配置你的连接器)
+    - [配置类型](#配置类型)
+  - [测试钉钉连接器](#测试钉钉连接器)
+  - [支持](#支持)
+
+## Get started
 
 The DingTalk web connector is designed for desktop web applications. It uses the OAuth 2.0 authentication flow.
 
-## Register a DingTalk developer account
+## Create a web app in the DingTalk Open Platform
+
+> 💡 **Tip**
+> 
+> You can skip some sections if you have already finished.
+
+### Register a DingTalk developer account
 
 If you do not have a DingTalk developer account, please register at the [DingTalk Open Platform](https://open.dingtalk.com).
 
-## Create an application
+### Create an application
 
 1. In the [DingTalk Developer Console](https://open-dev.dingtalk.com/console/index), click "Create Application"
 2. Choose "Self-built Application", fill in the application name and basic information, and click "Create"
@@ -19,9 +50,9 @@ If you do not have a DingTalk developer account, please register at the [DingTal
 5. In the left navigation bar, select "Application Release" -> "Version Management and Release", create and release the first version to activate the "Client ID" and "Client Secret"
 
 > ℹ️ **Note**
-> If the application does not release a version, the obtained "AppKey" and "AppSecret" cannot be used, or requests will fail.
+> If the application does not release a version, the obtained "Client ID" and "Client Secret" cannot be used, or requests will fail.
 
-## Configure permissions
+### Configure permissions
 
 1. In "Development Configuration" -> "Permission Management", select `Contact.User.Read` and `Contact.User.mobile` permissions and authorize them
 2. After confirming the permission configuration, click "Save" and publish the application
@@ -53,17 +84,21 @@ If you have any questions or need further assistance, please visit the [DingTalk
 
 # 钉钉网页连接器
 
-先进企业协作与管理平台，一站式无缝办公协作，团队上下对齐目标，全面激活组织和个人。
-
 ## 开始上手
 
 钉钉网页连接器是为桌面网页应用设计的。它采用了 OAuth 2.0 认证流程。
 
-## 注册钉钉开发者账号
+## 在钉钉开放平台新建一个应用
+
+> 💡 **Tip**
+> 
+> 你可以跳过已经完成的部分。
+
+### 注册钉钉开发者账号
 
 如果你还没有钉钉开发者账号，请在 [钉钉开放平台](https://open.dingtalk.com) 注册。
 
-## 创建应用
+### 创建应用
 
 1. 在 [钉钉开发者后台](https://open-dev.dingtalk.com/console/index) 中，点击「创建应用」
 2. 选择「自建应用」，填写应用名称和基本信息，点击「创建」
@@ -72,9 +107,9 @@ If you have any questions or need further assistance, please visit the [DingTalk
 5. 在左侧导航栏选择「应用发布」->「版本管理与发布」，创建并发布第一个版本，以使「Client ID」、「Client Secret」生效
 
 > ℹ️ **Note**
-> 应用不发布版本，所获取的「AppKey」、「AppSecret」 均无法使用，或请求错误。
+> 应用不发布版本，所获取的「Client ID」、「Client Secret」 均无法使用，或请求错误。
 
-## 配置权限
+### 配置权限
 
 1. 在「开发配置」->「权限管理」中，选择`通讯录个人信息读权限`和`个人手机号信息`权限并进行授权
 2. 确认权限配置后，点击「保存」并发布应用
@@ -85,7 +120,7 @@ If you have any questions or need further assistance, please visit the [DingTalk
 
 scope 目前支持两种值：openid 和 openid corpid。openid 授权后可以获取用户的 userid，而 openid corpid 授权后可以获取用户的 id 和登录过程中用户选择的组织 id。这些值应以空格分隔。注意：需要进行 URL 编码。
 
-## 配置类型
+### 配置类型
 
 | Name         | Type   |
 |--------------|--------|
@@ -95,6 +130,9 @@ scope 目前支持两种值：openid 和 openid corpid。openid 授权后可以�
 
 > ℹ️ **Note**
 > 请确保在开发过程中，严格遵守钉钉开放平台的使用规范和开发指南。
+
+## 测试钉钉连接器
+完成了。钉钉连接器现在应该可以使用了。别忘了在登录体验中启用连接器。
 
 ## 支持
 
