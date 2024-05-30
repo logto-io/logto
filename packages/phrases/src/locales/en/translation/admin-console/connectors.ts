@@ -1,7 +1,7 @@
 const connectors = {
   page_title: 'Connectors',
   title: 'Connectors',
-  subtitle: 'Set up connectors to enable passwordless and social sign in experience',
+  subtitle: 'Set up connectors to enable passwordless and social sign-in experience',
   create: 'Add Social Connector',
   config_sie_notice: 'You’ve set up connectors. Make sure to configure it in <a>{{link}}</a>.',
   config_sie_link_text: 'sign in experience',
