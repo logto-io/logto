@@ -14,7 +14,7 @@ import TextLink from '@/ds-components/TextLink';
 import { useStaticApi } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import MainFlowLikeModal from '../../components/MainFlowLikeModal';
+import ExperienceLikeModal from '../../components/ExperienceLikeModal';
 import { handleError, parseLocationState } from '../../utils';
 
 import * as styles from './index.module.scss';
@@ -69,7 +69,7 @@ function VerifyPasswordModal() {
   };
 
   return (
-    <MainFlowLikeModal
+    <ExperienceLikeModal
       title="profile.password.enter_password"
       subtitle="profile.password.enter_password_subtitle"
       onClose={onClose}
@@ -116,7 +116,7 @@ function VerifyPasswordModal() {
           {t('profile.code.verify_via_code')}
         </TextLink>
       )}
-    </MainFlowLikeModal>
+    </ExperienceLikeModal>
   );
 }
 

@@ -72,7 +72,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   };
 
   // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
-  const mainFlowUiSecurityHeaderSettings: HelmetOptions = {
+  const experienceSecurityHeaderSettings: HelmetOptions = {
     ...basicSecurityHeaderSettings,
     // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
     frameguard: false,
@@ -145,7 +145,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     }
 
     // Main flow UI
-    await helmetPromise(mainFlowUiSecurityHeaderSettings, req, res);
+    await helmetPromise(experienceSecurityHeaderSettings, req, res);
 
     return next();
   };

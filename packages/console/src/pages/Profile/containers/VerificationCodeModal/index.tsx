@@ -14,7 +14,7 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentUser from '@/hooks/use-current-user';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import MainFlowLikeModal from '../../components/MainFlowLikeModal';
+import ExperienceLikeModal from '../../components/ExperienceLikeModal';
 import { handleError, parseLocationState } from '../../utils';
 
 import * as styles from './index.module.scss';
@@ -110,7 +110,7 @@ function VerificationCodeModal() {
   }, [code, onSubmit]);
 
   return (
-    <MainFlowLikeModal
+    <ExperienceLikeModal
       title="profile.code.enter_verification_code"
       subtitle="profile.code.enter_verification_code_subtitle"
       subtitleProps={conditional(email && { target: email })}
@@ -153,7 +153,7 @@ function VerificationCodeModal() {
           {t('profile.password.verify_via_password')}
         </TextLink>
       )}
-    </MainFlowLikeModal>
+    </ExperienceLikeModal>
   );
 }
 
