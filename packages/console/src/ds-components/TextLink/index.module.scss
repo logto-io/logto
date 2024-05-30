@@ -4,6 +4,7 @@
   display: inline-flex;
   max-width: fit-content;
   text-decoration: none;
+  user-select: none;
   border-color: transparent;
   font: var(--font-body-2);
   color: var(--color-text-link);

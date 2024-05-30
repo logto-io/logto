@@ -54,11 +54,11 @@ function TenantLandingPageContent({ className }: Props) {
       <CreateTenantModal
         isOpen={isCreateModalOpen}
         onClose={async (tenant?: TenantResponse) => {
+          setIsCreateModalOpen(false);
           if (tenant) {
             prependTenant(tenant);
             navigateTenant(tenant.id);
           }
-          setIsCreateModalOpen(false);
         }}
       />
     </>
