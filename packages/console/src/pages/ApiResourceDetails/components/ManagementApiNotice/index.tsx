@@ -15,7 +15,7 @@ function ManagementApiNotice() {
     return null;
   }
 
-  const learnMoreLink = getDocumentationUrl('/docs/tutorials/get-started/explore-management-api');
+  const learnMoreLink = getDocumentationUrl('/docs/recipes/interact-with-management-api');
 
   return (
     <InlineNotification
