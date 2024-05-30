@@ -105,6 +105,10 @@ const tenants = {
     description_2:
       'If you require further clarification, have any concerns, or wish to restore full functionality and unblock your tenants, please do not hesitate to contact us immediately.',
   },
+  production_tenant_notification: {
+    text: "You're in a dev tenant for free testing. Create a production tenant to go live.",
+    action: 'Create tenant',
+  },
 };
 
 export default Object.freeze(tenants);
