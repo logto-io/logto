@@ -3,7 +3,7 @@ import LoadingLayer from '@/components/LoadingLayer';
 import useSocialSignInListener from './use-social-sign-in-listener';
 
 /**
- * Social sign in callback page
+ * Social sign-in callback page
  */
 type Props = {
   readonly connectorId: string;
