@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     'A API de Gerenciamento do Logto é uma coleção abrangente de APIs que capacitam os administradores a gerenciar uma ampla gama de tarefas relacionadas à identidade, aplicar políticas de segurança e cumprir regulamentos e padrões.',
   management_api_notice:
-    'Esta API representa a entidade Logto e não pode ser modificada ou excluída. Você pode usar a API de gerenciamento para uma ampla gama de tarefas relacionadas à identidade. <a>Aprenda mais</a>',
+    'Esta API representa a entidade Logto e não pode ser modificada ou excluída. Crie um aplicativo de máquina para máquina para chamar a API de gerenciamento do Logto. <a>Saiba mais</a>',
   token_expiration_time_in_seconds: 'Tempo de expiração do token (em segundos)',
   token_expiration_time_in_seconds_placeholder: 'Digite o tempo de expiração do seu token',
   delete_description:
