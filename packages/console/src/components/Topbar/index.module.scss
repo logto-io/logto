@@ -28,3 +28,51 @@
     margin-right: _.unit(4);
   }
 }
+
+.button {
+  display: flex;
+  align-items: center;
+  padding: _.unit(1);
+  border-radius: 6px;
+  border: none;
+  background-color: transparent;
+  transition: background-color 0.2s ease-in-out;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+  margin-left: _.unit(-1);
+  text-decoration: none;
+  gap: _.unit(1);
+  font: var(--font-label-2);
+  color: var(--color-neutral-variant-30);
+
+  &:hover {
+    background-color: var(--color-hover-variant);
+  }
+
+  // Use this selector to override the hover effect in `<TextLink />`
+  &:not(:disabled):hover {
+    text-decoration: none;
+  }
+
+  &.active {
+    background-color: var(--color-focused-variant);
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+
+    > path {
+      fill: var(--color-neutral-variant-50);
+    }
+  }
+}
+
+.newVersionDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-error);
+  margin-left: _.unit(0.5);
+}

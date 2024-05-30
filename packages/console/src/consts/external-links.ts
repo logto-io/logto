@@ -2,6 +2,7 @@ export const discordLink = 'https://discord.gg/UEPaF3j5e6';
 export const githubOrgLink = 'https://github.com/logto-io';
 export const githubLink = 'https://github.com/logto-io/logto';
 export const githubIssuesLink = 'https://github.com/logto-io/logto/issues';
+export const githubReleasesLink = 'https://github.com/logto-io/logto/releases';
 export const contactEmail = 'contact@logto.io';
 export const contactEmailLink = `mailto:${contactEmail}`;
 export const reservationLink = 'https://cal.com/logto/30min';
