@@ -45,7 +45,14 @@ function SourceRolesBox({ entityId, type, selectedRoles, onChange }: Props) {
     ...conditional(keyword && { search: `%${keyword}%` }),
   });
 
-  const { data, error } = useSWR<[RoleResponse[], number], RequestError>(url);
+  const { data, error } = useSWR<[RoleResponse[], number], RequestError>(url, {
+    /**
+     * Always use the latest data to reflect the latest available roles.
+     * Using cached data before new data is loaded can result in roles that have been assigned or deleted being rendered in the list.
+     * If a deleted role is rendered in the list, it will cause the query requests for role scopes in the list items to return a 404 error.
+     */
+    keepPreviousData: false,
+  });
 
   const isLoading = !data && !error;
 
