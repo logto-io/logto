@@ -22,20 +22,17 @@ type AppData = {
 
 export const AppDataContext = createContext<AppData>({});
 
+export const useTenantEndpoint = (tenantId: string) => {
+  return useSWRImmutable(`api/.well-known/endpoints/${tenantId}`, async (pathname) => {
+    const { user } = await ky.get(new URL(pathname, adminTenantEndpoint)).json<{ user: string }>();
+    return new URL(user);
+  });
+};
+
 /** The context provider for the global app data. */
 function AppDataProvider({ children }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
-
-  const { data: tenantEndpoint } = useSWRImmutable(
-    `api/.well-known/endpoints/${currentTenantId}`,
-    async (pathname) => {
-      const { user } = await ky
-        .get(new URL(pathname, adminTenantEndpoint))
-        .json<{ user: string }>();
-      return new URL(user);
-    }
-  );
-
+  const { data: tenantEndpoint } = useTenantEndpoint(currentTenantId);
   const memorizedContext = useMemo(
     () =>
       ({

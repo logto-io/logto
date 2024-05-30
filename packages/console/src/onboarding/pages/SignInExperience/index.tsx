@@ -4,12 +4,14 @@ import type { SignInExperience as SignInExperienceType, ConnectorResponse } from
 import { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
+import { useParams } from 'react-router-dom';
+import useSWR, { SWRConfig } from 'swr';
 
 import Tools from '@/assets/icons/tools.svg';
 import ActionBar from '@/components/ActionBar';
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import PageMeta from '@/components/PageMeta';
+import { useTenantEndpoint } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
@@ -39,6 +41,19 @@ import { authenticationOptions, identifierOptions } from './options';
 import { defaultOnboardingSieFormData } from './sie-config-templates';
 import { Authentication, type OnboardingSieFormData } from './types';
 
+const useCurrentTenantEndpoint = () => {
+  const { tenantId: currentTenantId } = useParams();
+
+  if (!currentTenantId) {
+    throw new Error(
+      'No tenant ID param found in the current route. This hook should be used in a route with a tenant ID param.'
+    );
+  }
+
+  const { data } = useTenantEndpoint(currentTenantId);
+  return data;
+};
+
 function SignInExperience() {
   const swrOptions = useTenantSwrOptions();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -54,6 +69,7 @@ function SignInExperience() {
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
   const { update } = useUserOnboardingData();
   const { user } = useCurrentUser();
+  const endpoint = useCurrentTenantEndpoint();
 
   const enterAdminConsole = async () => {
     await update({ isOnboardingDone: true });
@@ -136,114 +152,122 @@ function SignInExperience() {
   }
 
   return (
-    <div className={pageLayout.page}>
-      <PageMeta titleKey={['cloud.sie.page_title', 'cloud.general.onboarding']} />
-      <OverlayScrollbar className={pageLayout.contentContainer}>
-        <div className={styles.content}>
-          <div className={styles.config}>
-            <Tools />
-            <div className={pageLayout.title}>{t('cloud.sie.title')}</div>
-            <InspireMe
-              onInspired={(template) => {
-                for (const [key, value] of Object.entries(template)) {
-                  // eslint-disable-next-line no-restricted-syntax
-                  setValue(key as keyof OnboardingSieFormData, value, { shouldDirty: true });
-                }
-                updateAuthenticationConfig();
-              }}
-            />
-            <FormField title="cloud.sie.logo_field">
-              {isUserAssetsServiceReady ? (
+    <SWRConfig value={swrOptions}>
+      <div className={pageLayout.page}>
+        <PageMeta titleKey={['cloud.sie.page_title', 'cloud.general.onboarding']} />
+        <OverlayScrollbar className={pageLayout.contentContainer}>
+          <div className={styles.content}>
+            <div className={styles.config}>
+              <Tools />
+              <div className={pageLayout.title}>{t('cloud.sie.title')}</div>
+              <InspireMe
+                onInspired={(template) => {
+                  for (const [key, value] of Object.entries(template)) {
+                    // eslint-disable-next-line no-restricted-syntax
+                    setValue(key as keyof OnboardingSieFormData, value, { shouldDirty: true });
+                  }
+                  updateAuthenticationConfig();
+                }}
+              />
+              <FormField title="cloud.sie.logo_field">
+                {isUserAssetsServiceReady ? (
+                  <Controller
+                    name="logo"
+                    control={control}
+                    render={({ field: { onChange, value, name } }) => (
+                      <ImageUploaderField name={name} value={value ?? ''} onChange={onChange} />
+                    )}
+                  />
+                ) : (
+                  <TextInput
+                    {...register('logo', {
+                      validate: (value) =>
+                        !value || uriValidator(value) || t('errors.invalid_uri_format'),
+                    })}
+                    error={errors.logo?.message}
+                  />
+                )}
+              </FormField>
+              <FormField title="cloud.sie.color_field">
                 <Controller
-                  name="logo"
+                  name="color"
                   control={control}
-                  render={({ field: { onChange, value, name } }) => (
-                    <ImageUploaderField name={name} value={value ?? ''} onChange={onChange} />
+                  render={({ field: { onChange, value } }) => (
+                    <ColorPicker value={value} onChange={onChange} />
                   )}
                 />
-              ) : (
-                <TextInput
-                  {...register('logo', {
-                    validate: (value) =>
-                      !value || uriValidator(value) || t('errors.invalid_uri_format'),
-                  })}
-                  error={errors.logo?.message}
+              </FormField>
+              <FormField title="cloud.sie.identifier_field" headlineSpacing="large">
+                <Controller
+                  name="identifier"
+                  control={control}
+                  render={({ field: { name, value, onChange } }) => (
+                    <CardSelector
+                      name={name}
+                      value={value}
+                      options={identifierOptions}
+                      onChange={(value) => {
+                        onChange(value);
+                        updateAuthenticationConfig();
+                      }}
+                    />
+                  )}
                 />
-              )}
-            </FormField>
-            <FormField title="cloud.sie.color_field">
-              <Controller
-                name="color"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <ColorPicker value={value} onChange={onChange} />
-                )}
+              </FormField>
+              <FormField isMultiple title="cloud.sie.authn_field" headlineSpacing="large">
+                <Controller
+                  name="authentications"
+                  control={control}
+                  defaultValue={defaultOnboardingSieFormData.authentications}
+                  render={({ field: { value, onChange } }) => (
+                    <MultiCardSelector
+                      isNotAllowEmpty
+                      className={styles.authnSelector}
+                      value={value}
+                      options={authenticationOptions.filter(
+                        ({ value }) =>
+                          onboardingSieFormData.identifier !== SignInIdentifier.Username ||
+                          value === Authentication.Password
+                      )}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              </FormField>
+              <FormField isMultiple title="cloud.sie.social_field" headlineSpacing="large">
+                <Controller
+                  name="socialTargets"
+                  control={control}
+                  defaultValue={defaultOnboardingSieFormData.socialTargets}
+                  render={({ field: { value, onChange } }) => (
+                    <SocialSelector value={value ?? []} onChange={onChange} />
+                  )}
+                />
+              </FormField>
+            </div>
+            {endpoint && (
+              <Preview
+                className={styles.preview}
+                signInExperience={previewSieConfig}
+                endpoint={endpoint}
               />
-            </FormField>
-            <FormField title="cloud.sie.identifier_field" headlineSpacing="large">
-              <Controller
-                name="identifier"
-                control={control}
-                render={({ field: { name, value, onChange } }) => (
-                  <CardSelector
-                    name={name}
-                    value={value}
-                    options={identifierOptions}
-                    onChange={(value) => {
-                      onChange(value);
-                      updateAuthenticationConfig();
-                    }}
-                  />
-                )}
-              />
-            </FormField>
-            <FormField isMultiple title="cloud.sie.authn_field" headlineSpacing="large">
-              <Controller
-                name="authentications"
-                control={control}
-                defaultValue={defaultOnboardingSieFormData.authentications}
-                render={({ field: { value, onChange } }) => (
-                  <MultiCardSelector
-                    isNotAllowEmpty
-                    className={styles.authnSelector}
-                    value={value}
-                    options={authenticationOptions.filter(
-                      ({ value }) =>
-                        onboardingSieFormData.identifier !== SignInIdentifier.Username ||
-                        value === Authentication.Password
-                    )}
-                    onChange={onChange}
-                  />
-                )}
-              />
-            </FormField>
-            <FormField isMultiple title="cloud.sie.social_field" headlineSpacing="large">
-              <Controller
-                name="socialTargets"
-                control={control}
-                defaultValue={defaultOnboardingSieFormData.socialTargets}
-                render={({ field: { value, onChange } }) => (
-                  <SocialSelector value={value ?? []} onChange={onChange} />
-                )}
-              />
-            </FormField>
+            )}
           </div>
-          <Preview className={styles.preview} signInExperience={previewSieConfig} />
-        </div>
-      </OverlayScrollbar>
-      <ActionBar step={3} totalSteps={3}>
-        <div className={styles.continueActions}>
-          <Button
-            type="primary"
-            title="cloud.sie.finish_and_done"
-            disabled={isSubmitting}
-            onClick={async () => {
-              await handleSubmit(submit(enterAdminConsole))();
-            }}
-          />
-        </div>
-      </ActionBar>
-    </div>
+        </OverlayScrollbar>
+        <ActionBar step={3} totalSteps={3}>
+          <div className={styles.continueActions}>
+            <Button
+              type="primary"
+              title="cloud.sie.finish_and_done"
+              disabled={isSubmitting}
+              onClick={async () => {
+                await handleSubmit(submit(enterAdminConsole))();
+              }}
+            />
+          </div>
+        </ActionBar>
+      </div>
+    </SWRConfig>
   );
 }
 
