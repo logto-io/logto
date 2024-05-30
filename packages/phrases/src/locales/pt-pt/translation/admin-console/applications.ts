@@ -59,7 +59,7 @@ const applications = {
     subtitle:
       'Aplicações de máquina para máquina requerem uma função de máquina para máquina autorizada.',
     role_creation_hint:
-      'Não tem uma função de máquina para máquina? <a>Crie primeiro uma função de máquina para máquina</a>',
+      'Não consegue encontrar o papel correto de máquina para máquina? <a>Crie um papel de máquina para máquina</a>',
   },
 };
 

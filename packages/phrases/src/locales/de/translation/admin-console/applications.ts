@@ -60,7 +60,7 @@ const applications = {
     subtitle:
       'Maschine-zu-Maschine-Anwendungen erfordern eine autorisierte Maschine-zu-Maschine-Rolle.',
     role_creation_hint:
-      'Hat keine Maschine-zu-Maschine-Rolle? <a>Erstellen Sie zuerst eine Maschine-zu-Maschine</a>-Rolle',
+      'Können Sie die richtige Maschine-zu-Maschine-Rolle nicht finden? <a>Erstellen Sie eine Maschine-zu-Maschine-Rolle</a>',
   },
 };
 

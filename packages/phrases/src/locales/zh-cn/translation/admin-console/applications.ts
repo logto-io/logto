@@ -55,7 +55,7 @@ const applications = {
   m2m_role_assignment: {
     title: '使用机器到机器角色授权应用程序以获取权限',
     subtitle: '机器对机器应用程序需要经过授权的机器对机器角色。',
-    role_creation_hint: '没有机器对机器角色？先 <a>创建机器对机器</a> 角色',
+    role_creation_hint: '找不到合适的机器对机器角色？<a>创建一个机器对机器角色</a>',
   },
 };
 

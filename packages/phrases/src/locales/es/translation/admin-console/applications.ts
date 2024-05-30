@@ -60,7 +60,7 @@ const applications = {
     subtitle:
       'Las aplicaciones de máquina a máquina requieren un rol de máquina a máquina autorizado.',
     role_creation_hint:
-      '¿No tiene un rol de máquina a máquina? <a>Cree primero un rol de máquina a máquina</a>',
+      '¿No puede encontrar el rol adecuado de máquina a máquina? <a>Crear un rol de máquina a máquina</a>',
   },
 };
 
