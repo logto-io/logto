@@ -12,6 +12,7 @@ import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
 import UserRoleIcon from '@/assets/icons/user-role.svg';
 import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
 import RolesEmpty from '@/assets/images/roles-empty.svg';
+import Breakable from '@/components/Breakable';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
@@ -28,7 +29,6 @@ import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import AssignedEntities from './components/AssignedEntities';
 import CreateRoleModal from './components/CreateRoleModal';
-import * as styles from './index.module.scss';
 
 const rolesPathname = '/roles';
 const createRolePathname = `${rolesPathname}/create`;
@@ -107,18 +107,18 @@ function Roles() {
           {
             title: t('roles.col_type'),
             dataIndex: 'type',
-            colSpan: 5,
+            colSpan: 4,
             render: ({ type }) => (
-              <div className={styles.type}>
+              <Breakable>
                 {type === RoleType.User ? t('roles.type_user') : t('roles.type_machine_to_machine')}
-              </div>
+              </Breakable>
             ),
           },
           {
             title: t('roles.col_description'),
             dataIndex: 'description',
-            colSpan: 5,
-            render: ({ description }) => <div className={styles.description}>{description}</div>,
+            colSpan: 6,
+            render: ({ description }) => <Breakable>{description}</Breakable>,
           },
           {
             title: <span>{t('roles.col_assigned_entities')}</span>,
