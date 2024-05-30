@@ -59,7 +59,7 @@ const applications = {
     title: 'Autoryzuj aplikację z rolą maszyny do maszyny dla uprawnień',
     subtitle: 'Aplikacje maszyna-do-maszyna wymagają autoryzowanej roli maszyna-do-maszyna.',
     role_creation_hint:
-      'Nie ma roli maszyna-do-maszyna? <a>Najpierw utwórz rolę maszyna-do-maszyna</a>',
+      'Nie możesz znaleźć odpowiedniej roli maszyna-maszyna? <a>Utwórz rolę maszyna-maszyna</a>',
   },
 };
 

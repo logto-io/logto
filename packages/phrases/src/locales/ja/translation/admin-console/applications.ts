@@ -57,8 +57,7 @@ const applications = {
   m2m_role_assignment: {
     title: 'アプリを権限付きのマシン間ロールで認可する',
     subtitle: 'マシン間アプリケーションには承認されたマシン間ロールが必要です。',
-    role_creation_hint:
-      'マシン間ロールがありませんか？ <a>まずマシン間</a> ロールを作成してください',
+    role_creation_hint: '適切なマシン間ロールが見つかりませんか？ <a>マシン間ロールを作成する</a>',
   },
 };
 

@@ -59,7 +59,7 @@ const applications = {
     title: 'İzinler için makineye özel rolle uygulamayı yetkilendir',
     subtitle: 'Makine-makine uygulamaları yetkilendirilmiş bir makine-makine rolü gerektirir.',
     role_creation_hint:
-      'Makine-makine rolünüz yok mu? <a>Önce bir makine-makine</a> rolü oluşturun',
+      'Doğru makineden makineye rolünü bulamıyor musunuz? <a>Makineden makineye rol oluşturun</a>',
   },
 };
 

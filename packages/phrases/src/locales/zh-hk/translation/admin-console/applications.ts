@@ -55,7 +55,7 @@ const applications = {
   m2m_role_assignment: {
     title: '使用機器到機器角色為應用程式授權權限',
     subtitle: '機器對機器應用程式需要經過授權的機器對機器角色。',
-    role_creation_hint: '沒有機器對機器角色？先 <a>創建機器對機器</a> 角色',
+    role_creation_hint: '找不到合適的機器對機器角色？<a>創建一個機器對機器角色</a>',
   },
 };
 
