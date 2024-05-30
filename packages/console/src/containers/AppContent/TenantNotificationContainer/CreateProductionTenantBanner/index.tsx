@@ -1,5 +1,6 @@
 import { TenantTag } from '@logto/schemas';
 import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { type TenantResponse } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
@@ -11,6 +12,9 @@ import * as styles from './index.module.scss';
 function CreateProductionTenantBanner() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const { tenants, prependTenant, navigateTenant } = useContext(TenantsContext);
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'admin_console.tenants.production_tenant_notification',
+  });
 
   if (tenants.some((tenant) => tenant.tag === TenantTag.Production)) {
     return null;
@@ -28,15 +32,13 @@ function CreateProductionTenantBanner() {
           }
         }}
       />
-      <span>
-        You&apos;re in a dev tenant for free testing. Create a production tenant to go live.{' '}
-      </span>
+      <span>{t('text')}</span>
       <TextLink
         onClick={() => {
           setIsCreateModalOpen(true);
         }}
       >
-        Create tenant
+        {t('action')}
       </TextLink>
     </div>
   );
