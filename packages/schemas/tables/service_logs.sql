@@ -1,7 +1,6 @@
 create table service_logs (
   id varchar(21) not null,
-  tenant_id varchar(21) not null
-    references tenants (id) on update cascade on delete cascade,
+  tenant_id varchar(21) not null,
   type varchar(64) not null,
   payload jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   created_at timestamptz not null default(now()),
