@@ -112,7 +112,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
           </FormField>
           <FormField
             title="tenants.settings.tenant_region"
-            description="tenants.settings.tenant_region_description"
+            tip={t('tenants.settings.tenant_region_description')}
           >
             <Controller
               control={control}

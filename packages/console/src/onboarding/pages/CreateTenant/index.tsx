@@ -66,7 +66,9 @@ function CreateTenant() {
 
   const onCreateClick = handleSubmit(
     trySubmitSafe(async ({ name, regionName, collaboratorEmails }: CreateTenantForm) => {
-      const newTenant = await cloudApi.post('/api/tenants', { body: { name, regionName } });
+      const newTenant = await cloudApi.post('/api/tenants', {
+        body: { name: name || 'My project', regionName },
+      });
       prependTenant(newTenant);
       toast.success(t('tenants.create_modal.tenant_created'));
 
@@ -104,19 +106,19 @@ function CreateTenant() {
           <div className={pageLayout.title}>{t('cloud.create_tenant.title')}</div>
           <div className={pageLayout.description}>{t('cloud.create_tenant.description')}</div>
           <FormProvider {...methods}>
-            <FormField isRequired title="tenants.settings.tenant_name">
+            <FormField title="tenants.settings.tenant_name">
               <TextInput
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
                 placeholder="My project"
                 disabled={isSubmitting}
-                {...register('name', { required: true })}
+                {...register('name')}
                 error={Boolean(errors.name)}
               />
             </FormField>
             <FormField
               title="tenants.settings.tenant_region"
-              description="tenants.settings.tenant_region_description"
+              tip={t('tenants.settings.tenant_region_description')}
             >
               <Controller
                 control={control}

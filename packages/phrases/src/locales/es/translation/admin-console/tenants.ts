@@ -47,8 +47,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Crear inquilino',
-    subtitle:
-      'Cree un nuevo inquilino que tenga recursos y usuarios aislados. La región de datos alojados y los tipos de inquilinos no se pueden modificar después de la creación.',
     tenant_usage_purpose: '¿Para qué desea usar este inquilino?',
     development_description:
       'Solo para pruebas y no debe usarse en producción. No se requiere suscripción.',
