@@ -1,5 +1,6 @@
 import { TenantTag } from '@logto/schemas';
 import { useContext, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 import { type TenantResponse } from '@/cloud/types/router';
@@ -20,7 +21,7 @@ function CreateProductionTenantBanner() {
     return null;
   }
 
-  return (
+  return createPortal(
     <div className={styles.banner}>
       <CreateTenantModal
         isOpen={isCreateModalOpen}
@@ -40,7 +41,8 @@ function CreateProductionTenantBanner() {
       >
         {t('action')}
       </TextLink>
-    </div>
+    </div>,
+    document.body
   );
 }
 

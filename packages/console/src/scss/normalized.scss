@@ -46,3 +46,10 @@ input {
   height: 100%;
   flex: 1;
 }
+
+.ReactModalPortal {
+  position: relative;
+  // Set `z-index` for the portal to ensure it can be placed on the right layer among other
+  // top-level doms.
+  @include _.z-index(modal);
+}
