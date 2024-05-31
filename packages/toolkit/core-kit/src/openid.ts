@@ -81,7 +81,7 @@ export enum UserScope {
    */
   CustomData = 'custom_data',
   /**
-   * Scope for user's social and sso identity details.
+   * Scope for user's social and SSO identity details.
    *
    * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
    */
