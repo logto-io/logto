@@ -20,7 +20,14 @@ type Props = PropsWithChildren<{
   readonly onGoBack?: () => void;
 }>;
 
-function MainFlowLikeModal({ title, subtitle, subtitleProps, children, onClose, onGoBack }: Props) {
+function ExperienceLikeModal({
+  title,
+  subtitle,
+  subtitleProps,
+  children,
+  onClose,
+  onGoBack,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
 
@@ -58,4 +65,4 @@ function MainFlowLikeModal({ title, subtitle, subtitleProps, children, onClose, 
   );
 }
 
-export default MainFlowLikeModal;
+export default ExperienceLikeModal;

@@ -14,7 +14,7 @@ import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import MainFlowLikeModal from '../../components/MainFlowLikeModal';
+import ExperienceLikeModal from '../../components/ExperienceLikeModal';
 import { handleError } from '../../utils';
 
 type FormFields = {
@@ -88,7 +88,7 @@ function ChangePasswordModal() {
   };
 
   return (
-    <MainFlowLikeModal title="profile.password.set_password" onClose={onClose} onGoBack={onClose}>
+    <ExperienceLikeModal title="profile.password.set_password" onClose={onClose} onGoBack={onClose}>
       <TextInput
         placeholder={t('profile.password.password')}
         {...register('newPassword', {
@@ -143,7 +143,7 @@ function ChangePasswordModal() {
         isLoading={isSubmitting}
         onClick={onSubmit}
       />
-    </MainFlowLikeModal>
+    </ExperienceLikeModal>
   );
 }
 
