@@ -45,8 +45,6 @@ const tenants = {
   },
   create_modal: {
     title: 'テナントを作成する',
-    subtitle:
-      '分離されたリソースとユーザーを持つ新しいテナントを作成します。データがホストされる地域とテナントの種類は作成後に変更できません。',
     tenant_usage_purpose: 'このテナントを使用する目的は何ですか？',
     development_description:
       'テスト用であり、本番で使用すべきではありません。サブスクリプションは必要ありません。',
