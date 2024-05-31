@@ -30,7 +30,6 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       hasUserWithEmail,
       hasUserWithPhone,
     },
-    userSsoIdentities,
   } = queries;
   const {
     users: {
@@ -39,6 +38,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       insertUser,
       verifyUserPassword,
       signOutUser,
+      findUserSsoIdentities,
     },
   } = libraries;
 
@@ -63,7 +63,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         ...conditional(
           includeSsoIdentities &&
             yes(includeSsoIdentities) && {
-              ssoIdentities: await userSsoIdentities.findUserSsoIdentitiesByUserId(userId),
+              ssoIdentities: await findUserSsoIdentities(userId),
             }
         ),
       };
