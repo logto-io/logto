@@ -1,15 +1,12 @@
 import {
-  adminTenantId,
-  Project,
   type UserOnboardingData,
   userOnboardingDataGuard,
   userOnboardingDataKey,
 } from '@logto/schemas';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { z } from 'zod';
 
 import { isCloud } from '@/consts/env';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentUser from '@/hooks/use-current-user';
 
 const useUserOnboardingData = (): {
@@ -18,11 +15,9 @@ const useUserOnboardingData = (): {
   isLoading: boolean;
   isLoaded: boolean;
   isOnboarding: boolean;
-  isBusinessPlan: boolean;
   update: (data: Partial<UserOnboardingData>) => Promise<void>;
 } => {
   const { customData, error, isLoading, isLoaded, updateCustomData } = useCurrentUser();
-  const { currentTenantId } = useContext(TenantsContext);
 
   const userOnboardingData = useMemo(() => {
     const parsed = z
@@ -37,24 +32,8 @@ const useUserOnboardingData = (): {
       return false;
     }
 
-    if (currentTenantId === adminTenantId) {
-      return false;
-    }
-
     return !userOnboardingData.isOnboardingDone;
-  }, [currentTenantId, userOnboardingData.isOnboardingDone]);
-
-  const isBusinessPlan = useMemo(() => {
-    if (!isCloud) {
-      return false;
-    }
-
-    if (currentTenantId === adminTenantId) {
-      return true;
-    }
-
-    return userOnboardingData.questionnaire?.project === Project.Company;
-  }, [currentTenantId, userOnboardingData.questionnaire?.project]);
+  }, [userOnboardingData.isOnboardingDone]);
 
   const update = useCallback(
     async (data: Partial<UserOnboardingData>) => {
@@ -74,7 +53,6 @@ const useUserOnboardingData = (): {
     isLoading,
     isLoaded,
     isOnboarding,
-    isBusinessPlan,
     update,
   };
 };
