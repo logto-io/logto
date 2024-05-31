@@ -37,6 +37,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const adminOrigins = isCloud ? cloudUrlSet.origins : adminUrlSet.origins;
   const coreOrigins = urlSet.origins;
   const developmentOrigins = conditionalArray(!isProduction && 'ws:');
+  const logtoOrigin = 'https://*.logto.io';
 
   // We use react-monaco-editor for code editing in the admin console. It loads the monaco editor asynchronously from a CDN.
   // Allow the CDN src in the CSP.
@@ -116,7 +117,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
           ...monacoEditorCDNSource,
         ],
-        connectSrc: ["'self'", ...adminOrigins, ...coreOrigins, ...developmentOrigins],
+        connectSrc: ["'self'", logtoOrigin, ...adminOrigins, ...coreOrigins, ...developmentOrigins],
         // Allow Main Flow origin loaded in preview iframe
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],
       },
