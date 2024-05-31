@@ -1,5 +1,123 @@
 # Change Log
 
+## 1.17.0
+
+### Minor Changes
+
+- b5104d8c1: add new webhook events
+
+  We introduce a new event type `DataHook` to unlock a series of events that can be triggered by data updates (mostly Management API):
+
+  - User.Created
+  - User.Deleted
+  - User.Data.Updated
+  - User.SuspensionStatus.Updated
+  - Role.Created
+  - Role.Deleted
+  - Role.Data.Updated
+  - Role.Scopes.Updated
+  - Scope.Created
+  - Scope.Deleted
+  - Scope.Data.Updated
+  - Organization.Created
+  - Organization.Deleted
+  - Organization.Data.Updated
+  - Organization.Membership.Updated
+  - OrganizationRole.Created
+  - OrganizationRole.Deleted
+  - OrganizationRole.Data.Updated
+  - OrganizationRole.Scopes.Updated
+  - OrganizationScope.Created
+  - OrganizationScope.Deleted
+  - OrganizationScope.Data.Updated
+
+  DataHook events are triggered when the data associated with the event is updated via management API request or user interaction actions.
+
+  ### Management API triggered events
+
+  | API endpoint                                               | Event                                                       |
+  | ---------------------------------------------------------- | ----------------------------------------------------------- |
+  | POST /users                                                | User.Created                                                |
+  | DELETE /users/:userId                                      | User.Deleted                                                |
+  | PATCH /users/:userId                                       | User.Data.Updated                                           |
+  | PATCH /users/:userId/custom-data                           | User.Data.Updated                                           |
+  | PATCH /users/:userId/profile                               | User.Data.Updated                                           |
+  | PATCH /users/:userId/password                              | User.Data.Updated                                           |
+  | PATCH /users/:userId/is-suspended                          | User.SuspensionStatus.Updated                               |
+  | POST /roles                                                | Role.Created, (Role.Scopes.Update)                          |
+  | DELETE /roles/:id                                          | Role.Deleted                                                |
+  | PATCH /roles/:id                                           | Role.Data.Updated                                           |
+  | POST /roles/:id/scopes                                     | Role.Scopes.Updated                                         |
+  | DELETE /roles/:id/scopes/:scopeId                          | Role.Scopes.Updated                                         |
+  | POST /resources/:resourceId/scopes                         | Scope.Created                                               |
+  | DELETE /resources/:resourceId/scopes/:scopeId              | Scope.Deleted                                               |
+  | PATCH /resources/:resourceId/scopes/:scopeId               | Scope.Data.Updated                                          |
+  | POST /organizations                                        | Organization.Created                                        |
+  | DELETE /organizations/:id                                  | Organization.Deleted                                        |
+  | PATCH /organizations/:id                                   | Organization.Data.Updated                                   |
+  | PUT /organizations/:id/users                               | Organization.Membership.Updated                             |
+  | POST /organizations/:id/users                              | Organization.Membership.Updated                             |
+  | DELETE /organizations/:id/users/:userId                    | Organization.Membership.Updated                             |
+  | POST /organization-roles                                   | OrganizationRole.Created, (OrganizationRole.Scopes.Updated) |
+  | DELETE /organization-roles/:id                             | OrganizationRole.Deleted                                    |
+  | PATCH /organization-roles/:id                              | OrganizationRole.Data.Updated                               |
+  | POST /organization-scopes                                  | OrganizationScope.Created                                   |
+  | DELETE /organization-scopes/:id                            | OrganizationScope.Deleted                                   |
+  | PATCH /organization-scopes/:id                             | OrganizationScope.Data.Updated                              |
+  | PUT /organization-roles/:id/scopes                         | OrganizationRole.Scopes.Updated                             |
+  | POST /organization-roles/:id/scopes                        | OrganizationRole.Scopes.Updated                             |
+  | DELETE /organization-roles/:id/scopes/:organizationScopeId | OrganizationRole.Scopes.Updated                             |
+
+  ### User interaction triggered events
+
+  | User interaction action  | Event             |
+  | ------------------------ | ----------------- |
+  | User email/phone linking | User.Data.Updated |
+  | User MFAs linking        | User.Data.Updated |
+  | User social/SSO linking  | User.Data.Updated |
+  | User password reset      | User.Data.Updated |
+  | User registration        | User.Created      |
+
+- 0c70d65c7: define new `sso_identities` user claim to the userinfo endpoint response
+
+  - Define a new `sso_identities` user claim that will be used to store the user's SSO identities. The claim will be an array of objects with the following properties:
+    - `details`: detailed user info returned from the SSO provider.
+    - `issuer`: the issuer of the SSO provider.
+    - `identityId`: the user id of the user in the SSO provider.
+  - The new claims will share the same scope as the social `identities` claim.
+  - When the user `identities` scope is requested, the new `sso_identities` claim will be returned along with the `identities` claim in the userinfo endpoint response.
+
+- 76fd33b7e: support default roles for users
+
+### Patch Changes
+
+- 558986d28: update documentation reference links
+- 458746c9a: fix Microsoft EntraID OIDC SSO connector invalid authorization code response bug
+
+  - For public organizations access EntraID OIDC applications, the token endpoint returns `expires_in` value type in number.
+  - For private organization access only applications, the token endpoint returns `expires_in` value type in string.
+  - Expected `expires_in` value type is number. (See [v2-oauth2-auth-code-flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#successful-response-2) for reference)
+
+  String type `expires_in` value is not supported by the current Microsoft EntraID OIDC connector, a invalid authorization response error will be thrown.
+  Update the token response guard to handle both number and string type `expires_in` value. Make the SSO connector more robust.
+
+- Updated dependencies [25d67f33f]
+- Updated dependencies [e04d9523a]
+- Updated dependencies [cb1a38c40]
+- Updated dependencies [558986d28]
+- Updated dependencies [b5104d8c1]
+- Updated dependencies [0c70d65c7]
+- Updated dependencies [a0b19513b]
+- Updated dependencies [07ac3e87c]
+- Updated dependencies [c558affac]
+- Updated dependencies [76fd33b7e]
+  - @logto/schemas@1.17.0
+  - @logto/cli@1.17.0
+  - @logto/console@1.15.0
+  - @logto/phrases@1.11.0
+  - @logto/experience@1.6.2
+  - @logto/core-kit@2.5.0
+
 ## 1.16.0
 
 ### Minor Changes
