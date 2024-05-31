@@ -2,8 +2,8 @@ import assert from 'node:assert';
 
 import type { UserClaim } from '@logto/core-kit';
 import { idTokenClaims, userinfoClaims, UserScope } from '@logto/core-kit';
-import { type UserProfile, type User, userProfileKeys } from '@logto/schemas';
-import { pick, type Nullable, cond } from '@silverhand/essentials';
+import { userProfileKeys, type User, type UserProfile } from '@logto/schemas';
+import { cond, pick, type Nullable } from '@silverhand/essentials';
 import type { ClaimsParameterMember } from 'oidc-provider';
 import { snakeCase } from 'snake-case';
 import { type SnakeCaseKeys } from 'snakecase-keys';
@@ -24,6 +24,7 @@ const claimToUserKey: Readonly<
       | 'organization_data'
       | 'organization_roles'
       | UserProfileClaimSnakeCase
+      | 'sso_identities'
     >,
     keyof User
   >
@@ -111,6 +112,13 @@ export const getUserClaimsData = async (
           return [
             claim,
             organizations.map((element) => pick(element, 'id', 'name', 'description')),
+          ];
+        }
+        case 'sso_identities': {
+          const ssoIdentities = await userLibrary.findUserSsoIdentities(user.id);
+          return [
+            claim,
+            ssoIdentities.map(({ issuer, identityId, detail }) => ({ issuer, identityId, detail })),
           ];
         }
         default: {

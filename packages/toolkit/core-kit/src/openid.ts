@@ -43,6 +43,7 @@ export type UserClaim =
   | 'organization_roles'
   | 'custom_data'
   | 'identities'
+  | 'sso_identities'
   | 'created_at';
 
 /**
@@ -80,7 +81,7 @@ export enum UserScope {
    */
   CustomData = 'custom_data',
   /**
-   * Scope for user's social identity details.
+   * Scope for user's social and SSO identity details.
    *
    * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
    */
@@ -153,7 +154,7 @@ export const userinfoClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.f
   [UserScope.Organizations]: ['organization_data'],
   [UserScope.OrganizationRoles]: [],
   [UserScope.CustomData]: ['custom_data'],
-  [UserScope.Identities]: ['identities'],
+  [UserScope.Identities]: ['identities', 'sso_identities'],
 });
 
 export const userClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.freeze(

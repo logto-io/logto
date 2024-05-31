@@ -50,7 +50,7 @@ describe('OIDC getUserClaims()', () => {
   it('should return proper Userinfo claims', () => {
     expect(
       getAcceptedUserClaims(use.userinfo, 'openid profile custom_data identities', {}, [])
-    ).toEqual([...profileExpectation, 'custom_data', 'identities']);
+    ).toEqual([...profileExpectation, 'custom_data', 'identities', 'sso_identities']);
   });
 
   // Ignore `_claims` since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled
