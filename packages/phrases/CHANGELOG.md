@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.11.0
+
+### Minor Changes
+
+- 76fd33b7e: support default roles for users
+
+### Patch Changes
+
+- e04d9523a: replace the i18n translated hook event label with the hook event value directly in the console
+
+  - remove all the legacy interaction hook events i18n phrases
+  - replace the translated label with the hook event value directly in the console
+    - `Create new account` -> `PostRegister`
+    - `Sign in` -> `PostSignIn`
+    - `Reset password` -> `PostResetPassword`
+
 ## 1.10.1
 
 ### Patch Changes
