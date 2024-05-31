@@ -34,12 +34,6 @@ const reservedRoutes: Readonly<string[]> = Object.freeze([
   ...Object.values(GlobalRoute),
 ]);
 
-/**
- * The current tenant status of access validation. When it's `validated`, it indicates that a
- * valid Access Token for the current tenant is available.
- */
-type CurrentTenantStatus = 'pending' | 'validating' | 'validated';
-
 /** @see {@link TenantsProvider} for why `useSWR()` is not applicable for this context. */
 type Tenants = {
   tenants: readonly TenantResponse[];
