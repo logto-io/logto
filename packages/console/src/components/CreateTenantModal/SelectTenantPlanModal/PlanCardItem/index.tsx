@@ -20,9 +20,10 @@ import * as styles from './index.module.scss';
 type Props = {
   readonly plan: SubscriptionPlan;
   readonly onSelect: () => void;
+  readonly buttonProps?: Partial<React.ComponentProps<typeof Button>>;
 };
 
-function PlanCardItem({ plan, onSelect }: Props) {
+function PlanCardItem({ plan, onSelect, buttonProps }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.create_tenant' });
   const { tenants } = useContext(TenantsContext);
   const { stripeProducts, id: planId, name: planName } = plan;
@@ -88,6 +89,7 @@ function PlanCardItem({ plan, onSelect }: Props) {
           type={isFreePlan ? 'outline' : 'primary'}
           size="large"
           onClick={onSelect}
+          {...buttonProps}
         />
       </div>
       {planId === ReservedPlanId.Hobby && (

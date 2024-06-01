@@ -10,7 +10,6 @@ import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import Region, { RegionName } from '@/components/Region';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -90,6 +89,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
         }
         footer={
           <Button
+            isLoading={isSubmitting}
             disabled={isSubmitting}
             htmlType="submit"
             title="tenants.create_modal.create_button"
@@ -108,6 +108,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               autoFocus
               {...register('name', { required: true })}
               error={Boolean(errors.name)}
+              disabled={isSubmitting}
             />
           </FormField>
           <FormField
@@ -126,14 +127,11 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                       key={region}
                       title={
                         <DangerousRaw>
-                          <Region
-                            regionName={region}
-                            isComingSoon={!isDevFeaturesEnabled && region !== RegionName.EU}
-                          />
+                          <Region regionName={region} />
                         </DangerousRaw>
                       }
                       value={region}
-                      isDisabled={!isDevFeaturesEnabled && region !== RegionName.EU}
+                      isDisabled={isSubmitting}
                     />
                   ))}
                 </RadioGroup>
