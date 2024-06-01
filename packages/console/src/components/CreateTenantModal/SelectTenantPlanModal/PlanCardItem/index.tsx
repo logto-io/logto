@@ -85,11 +85,11 @@ function PlanCardItem({ plan, onSelect, buttonProps }: Props) {
               <Trans components={{ name: <PlanName name={planName} /> }}>{t('select_plan')}</Trans>
             </DangerousRaw>
           }
-          disabled={isFreePlan && isFreeTenantExceeded}
           type={isFreePlan ? 'outline' : 'primary'}
           size="large"
           onClick={onSelect}
           {...buttonProps}
+          disabled={(isFreePlan && isFreeTenantExceeded) || buttonProps?.disabled}
         />
       </div>
       {planId === ReservedPlanId.Hobby && (
