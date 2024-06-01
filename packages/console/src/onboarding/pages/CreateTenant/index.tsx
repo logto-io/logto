@@ -14,7 +14,6 @@ import ActionBar from '@/components/ActionBar';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
 import PageMeta from '@/components/PageMeta';
 import Region, { RegionName } from '@/components/Region';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -132,16 +131,11 @@ function CreateTenant() {
                         key={region}
                         title={
                           <DangerousRaw>
-                            <Region
-                              regionName={region}
-                              isComingSoon={!isDevFeaturesEnabled && region !== RegionName.EU}
-                            />
+                            <Region regionName={region} />
                           </DangerousRaw>
                         }
                         value={region}
-                        isDisabled={
-                          isSubmitting || (!isDevFeaturesEnabled && region !== RegionName.EU)
-                        }
+                        isDisabled={isSubmitting}
                       />
                     ))}
                   </RadioGroup>
