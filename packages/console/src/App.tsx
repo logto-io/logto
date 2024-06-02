@@ -86,6 +86,7 @@ function Providers() {
       UserScope.Identities,
       UserScope.CustomData,
       UserScope.Organizations,
+      UserScope.OrganizationRoles,
       PredefinedScope.All,
       ...conditionalArray(
         isCloud && [
