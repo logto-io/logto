@@ -16,6 +16,7 @@ export enum GtagConversionId {
 }
 
 export const redditPixelId = 't2_ggt11omdo';
+/** The data domain to aggregate the data for Plausible. */
 export const plausibleDataDomain = 'logto.io';
 
 const logtoProductionHostname = 'logto.io';
