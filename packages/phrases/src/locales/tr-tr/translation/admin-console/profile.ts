@@ -52,12 +52,6 @@ const profile = {
     description:
       'Hesabınızın tüm kişisel bilgileri, kullanıcı verileri ve yapılandırması silinecektir. Bu işlem geri alınamaz.',
     button: 'Hesabı sil',
-    dialog_paragraph_1:
-      'Hesabınızı silmek istediğinize üzgünüz. Hesabınız kalıcı olarak tüm verileri, kullanıcı bilgileri, kayıtlar ve ayarlar dahil olmak üzere silinecektir ve bu işlem geri alınamaz. Bu nedenle, devam etmeden önce önemli verilerinizi yedeklediğinizden emin olun.',
-    dialog_paragraph_2:
-      'Hesap silme işlemine devam etmek için, lütfen destek ekibimize, <a>mail</a> adresine “Hesap Silme İsteği” konulu e-posta gönderin. Size yardımcı olacağız ve tüm verilerinizin sistemimizden uygun şekilde silineceğinden emin olacağız.',
-    dialog_paragraph_3:
-      'Logto Cloud’u tercih ettiğiniz için teşekkür ederiz. Herhangi bir sorunuz veya endişeniz varsa, bizimle iletişime geçmekten çekinmeyin.',
   },
   set: 'Ayarla',
   change: 'Değiştir',

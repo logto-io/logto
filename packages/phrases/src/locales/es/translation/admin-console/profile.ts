@@ -53,12 +53,6 @@ const profile = {
     description:
       'La eliminación de su cuenta eliminará toda su información personal, datos de usuario y configuración. Esta acción no se puede deshacer.',
     button: 'Eliminar cuenta',
-    dialog_paragraph_1:
-      'Lamentamos mucho que quiera eliminar su cuenta. La eliminación de su cuenta eliminará permanentemente todos los datos, incluida la información del usuario, los registros y la configuración, y esta acción no se puede deshacer. Por lo tanto, asegúrese de realizar una copia de seguridad de cualquier dato importante antes de continuar.',
-    dialog_paragraph_2:
-      'Para iniciar el proceso de eliminación de la cuenta, envíe un correo electrónico a nuestro equipo de soporte en <a>{{mail}}</a> con el asunto "Solicitud de eliminación de cuenta". Le ayudaremos y nos aseguraremos de que todos sus datos se eliminen correctamente de nuestro sistema.',
-    dialog_paragraph_3:
-      'Gracias por elegir Logto Cloud. Si tiene más preguntas o inquietudes, no dude en comunicarse con nosotros.',
   },
   set: 'Establecer',
   change: 'Cambiar',
