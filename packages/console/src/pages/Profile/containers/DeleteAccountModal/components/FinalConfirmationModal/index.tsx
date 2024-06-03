@@ -111,7 +111,7 @@ export default function FinalConfirmationModal({
                 disabled={isDeleting}
                 isLoading={isDeleting}
                 type="danger"
-                title="general.delete"
+                title="profile.delete_account.permanently_delete"
                 onClick={deleteAccount}
               />
             </>
