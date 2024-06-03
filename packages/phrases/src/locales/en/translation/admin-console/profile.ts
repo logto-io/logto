@@ -86,6 +86,7 @@ const profile = {
     final_confirmation: 'Final confirmation',
     about_to_start_deletion:
       'You are about to start the deletion process and this action cannot be undone.',
+    permanently_delete: 'Permanently delete',
   },
   set: 'Set',
   change: 'Change',
