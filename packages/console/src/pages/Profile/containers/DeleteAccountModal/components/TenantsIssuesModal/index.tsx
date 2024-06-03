@@ -1,3 +1,6 @@
+import { type LocalePhrase } from '@logto/phrases';
+import { useTranslation } from 'react-i18next';
+
 import { type TenantResponse } from '@/cloud/types/router';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -7,32 +10,33 @@ import TenantsList from '../TenantsList';
 
 type Props = {
   readonly issues: ReadonlyArray<{
-    readonly description: string;
+    readonly description: keyof LocalePhrase['translation']['admin_console']['profile']['delete_account']['issues'];
     readonly tenants: readonly TenantResponse[];
   }>;
+  readonly onClose: () => void;
 };
 
-export default function TenantsIssuesModal({ issues }: Props) {
+export default function TenantsIssuesModal({ issues, onClose }: Props) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.profile.delete_account' });
+
   return (
     <ModalLayout
       title="profile.delete_account.label"
-      footer={<Button size="large" title="general.got_it" />}
+      footer={<Button size="large" title="general.got_it" onClick={onClose} />}
     >
       <div className={styles.container}>
-        <p>
-          We&apos;re sorry to hear that you want to delete your account. Before you can delete your
-          account, you need to resolve the following issues.
-        </p>
+        <p>{t('p.has_issue')}</p>
         {issues.map(
           ({ description, tenants }) =>
             tenants.length > 0 && (
-              <TenantsList key={description} description={description} tenants={tenants} />
+              <TenantsList
+                key={description}
+                description={t(`issues.${description}`, { count: tenants.length })}
+                tenants={tenants}
+              />
             )
         )}
-        <p>
-          Once you have resolved the issues, you can delete your account. Please do not hesitate to
-          contact us if you need any assistance.
-        </p>
+        <p>{t('p.after_resolved')}</p>
       </div>
     </ModalLayout>
   );

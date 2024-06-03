@@ -1,6 +1,7 @@
 import { type IdTokenClaims, useLogto } from '@logto/react';
 import { TenantRole, getTenantIdFromOrganizationId } from '@logto/schemas';
 import { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -33,7 +34,12 @@ const getRoleMap = (organizationRoles: string[]) =>
     };
   }, {});
 
-export default function DeletionConfirmationModal() {
+type Props = {
+  readonly onClose: () => void;
+};
+
+export default function DeletionConfirmationModal({ onClose }: Props) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.profile.delete_account' });
   const [isFinalConfirmationOpen, setIsFinalConfirmationOpen] = useState(false);
   const [claims, setClaims] = useState<IdTokenClaims>();
   const { getIdTokenClaims } = useLogto();
@@ -65,7 +71,7 @@ export default function DeletionConfirmationModal() {
       title="profile.delete_account.label"
       footer={
         <>
-          <Button size="large" title="general.cancel" />
+          <Button size="large" title="general.cancel" onClick={onClose} />
           <Button
             size="large"
             type="danger"
@@ -88,30 +94,21 @@ export default function DeletionConfirmationModal() {
         />
       )}
       <div className={styles.container}>
-        <p>
-          We&apos;re sorry to hear that you want to delete your account. Please check the following
-          information carefully before you proceed.
-        </p>
+        <p>{t('p.check_information')}</p>
         {tenantsToDelete.length > 0 && (
           <TenantsList
-            description="Since you have the admin role in the following tenants, they will be deleted along with your account:"
+            description={t('p.has_admin_role', { count: tenantsToDelete.length })}
             tenants={tenantsToDelete}
           />
         )}
         {tenantsToQuit.length > 0 && (
           <TenantsList
-            description="You are about to quit the following tenants:"
+            description={t('p.quit_tenant', { count: tenantsToQuit.length })}
             tenants={tenantsToQuit}
           />
         )}
-        <p>
-          Deleting your account will permanently remove all data about you in Logto Cloud. So please
-          make sure to backup any important data before proceeding.
-        </p>
-        <p>
-          Please confirm that the information above is what you expected. Once you delete your
-          account, we will not be able to recover it.
-        </p>
+        <p>{t('p.remove_all_data')}</p>
+        <p>{t('p.confirm_information')}</p>
       </div>
     </ModalLayout>
   );

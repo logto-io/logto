@@ -36,20 +36,14 @@ export default function DeleteAccountModal({ isOpen, onClose }: Props) {
       {hasIssues ? (
         <TenantsIssuesModal
           issues={[
-            {
-              description:
-                'The following tenants have paid plans, please cancel the subscription first:',
-              tenants: paidPlans,
-            },
-            {
-              description: 'The following tenants have subscription issues:',
-              tenants: subscriptionStatusIssues,
-            },
-            { description: 'The following tenants have open invoices:', tenants: openInvoices },
+            { description: 'paid_plan', tenants: paidPlans },
+            { description: 'subscription_status', tenants: subscriptionStatusIssues },
+            { description: 'open_invoice', tenants: openInvoices },
           ]}
+          onClose={onClose}
         />
       ) : (
-        <DeletionConfirmationModal />
+        <DeletionConfirmationModal onClose={onClose} />
       )}
     </ReactModal>
   );

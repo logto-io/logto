@@ -1,6 +1,7 @@
 import { useLogto } from '@logto/react';
 import { ResponseError } from '@withtyped/client';
 import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import { useCloudApi, useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -27,6 +28,7 @@ export default function FinalConfirmationModal({
   tenantsToQuit,
   onClose,
 }: Props) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.profile.delete_account' });
   const { signOut } = useLogto();
   const { removeTenant } = useContext(TenantsContext);
   const postSignOutRedirectUri = useRedirectUri('signOut');
@@ -62,6 +64,7 @@ export default function FinalConfirmationModal({
         removeTenant(tenant.id);
       }
 
+      // TODO:
       // @ts-expect-error bump the version of @logto/cloud will fix this
       await cloudApi.delete('/api/me', {});
       await signOut(postSignOutRedirectUri.href);
@@ -82,29 +85,26 @@ export default function FinalConfirmationModal({
     >
       {deletionError ? (
         <ModalLayout
-          title="An error occurred"
+          title="profile.delete_account.error_occurred"
           footer={<Button size="large" title="general.got_it" onClick={onClose} />}
         >
           <div className={styles.container}>
-            <p>Sorry, something went wrong while deleting your account:</p>
+            <p>{t('error_occurred_description')}</p>
             <p>
               <code>{deletionError.message}</code>
               {errorRequestId && (
                 <>
                   <br />
-                  <code>Request ID: {errorRequestId}</code>
+                  <code>{t('request_id', { requestId: errorRequestId })}</code>
                 </>
               )}
             </p>
-            <p>
-              Please try again later. If the problem persists, please contact Logto team with the
-              request ID.
-            </p>
+            <p>{t('try_again_later')}</p>
           </div>
         </ModalLayout>
       ) : (
         <ModalLayout
-          title="Final confirmation"
+          title="profile.delete_account.final_confirmation"
           footer={
             <>
               <Button size="large" disabled={isDeleting} title="general.cancel" onClick={onClose} />
@@ -119,9 +119,7 @@ export default function FinalConfirmationModal({
             </>
           }
         >
-          <div className={styles.container}>
-            You are about to start the deletion process and this action cannot be undone.
-          </div>
+          <div className={styles.container}>{t('about_to_start_deletion')}</div>
         </ModalLayout>
       )}
     </ReactModal>
