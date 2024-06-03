@@ -45,9 +45,9 @@ const role_details = {
     delete_description:
       'Permanecerá no seu conjunto de utilizadores, mas perderá a autorização para esta função.',
     deleted: '{{name}} foi removido com sucesso desta função',
-    assign_title: 'Atribuir utilizadores',
+    assign_title: 'Atribuir utilizadores a {{name}}',
     assign_subtitle:
-      'Atribua utilizadores a esta função. Encontre utilizadores apropriados pesquisando pelo nome, e-mail, telefone ou ID de utilizador.',
+      'Encontre utilizadores apropriados pesquisando por nome, e-mail, telefone ou ID de utilizador.',
     assign_field: 'Atribuir utilizadores',
     confirm_assign: 'Atribuir utilizadores',
     assigned_toast_text: 'Os utilizadores selecionados foram atribuídos com sucesso a esta função',

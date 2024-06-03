@@ -46,9 +46,8 @@ const role_details = {
     delete_description:
       "Resterà nella tua raccolta di utenti ma perderà l'autorizzazione per questo ruolo.",
     deleted: '{{name}} è stato rimosso con successo da questo ruolo',
-    assign_title: 'Assegna utenti',
-    assign_subtitle:
-      'Assegna utenti a questo ruolo. Trova utenti appropriati cercando nome, email, telefono o ID utente.',
+    assign_title: 'Assegna utenti a {{name}}',
+    assign_subtitle: 'Trova utenti appropriati cercando per nome, email, telefono o ID utente.',
     assign_field: 'Assegna utenti',
     confirm_assign: 'Assegna utenti',
     assigned_toast_text: 'Gli utenti selezionati sono stati assegnati con successo a questo ruolo',

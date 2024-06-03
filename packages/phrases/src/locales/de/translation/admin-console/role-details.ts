@@ -46,9 +46,9 @@ const role_details = {
     delete_description:
       'Es bleibt in Ihrer Benutzergruppe, aber verliert die Autorisierung für diese Rolle.',
     deleted: '{{name}} wurde erfolgreich von dieser Rolle entfernt',
-    assign_title: 'Benutzer zuweisen',
+    assign_title: 'Benutzer zu {{name}} zuweisen',
     assign_subtitle:
-      'Weisen Sie Benutzer dieser Rolle zu. Finden Sie geeignete Benutzer, indem Sie nach Name, E-Mail, Telefon oder Benutzer-ID suchen.',
+      'Finden Sie geeignete Benutzer, indem Sie nach Name, E-Mail, Telefon oder Benutzer-ID suchen.',
     assign_field: 'Benutzer zuweisen',
     confirm_assign: 'Benutzer zuweisen',
     assigned_toast_text: 'Die ausgewählten Benutzer wurden erfolgreich dieser Rolle zugewiesen',

@@ -45,9 +45,9 @@ const role_details = {
     delete_description:
       'Ele permanecerá no seu pool de usuários, mas perderá a autorização para este papel.',
     deleted: '{{name}} foi removido com sucesso deste papel',
-    assign_title: 'Atribuir usuários',
+    assign_title: 'Atribuir usuários a {{name}}',
     assign_subtitle:
-      'Atribuir usuários a este papel. Encontre usuários adequados pesquisando nome, e-mail, telefone ou ID do usuário.',
+      'Encontre usuários apropriados procurando por nome, e-mail, telefone ou ID de usuário.',
     assign_field: 'Atribuir usuários',
     confirm_assign: 'Atribuir usuários',
     assigned_toast_text: 'Os usuários selecionados foram atribuídos com sucesso a este papel',

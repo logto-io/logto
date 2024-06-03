@@ -44,9 +44,9 @@ const role_details = {
     latest_sign_in_column: 'Son giriş',
     delete_description: 'Bu rol için yetkilendirme kaybeder ancak kullanıcı havuzunuzda kalır.',
     deleted: '{{name}} bu rolden başarıyla kaldırıldı',
-    assign_title: 'Kullanıcılar Ata',
+    assign_title: '{{name}} için kullanıcıları ata',
     assign_subtitle:
-      'Kullanıcıları bu role atayın. İsim, e-posta, telefon veya kullanıcı kimliği arayarak uygun kullanıcıları bulun.',
+      'Ad, e-posta, telefon veya kullanıcı kimliği arayarak uygun kullanıcıları bulun.',
     assign_field: 'Kullanıcıları Ata',
     confirm_assign: 'Kullanıcıları Ata',
     assigned_toast_text: 'Seçilen kullanıcılar bu role başarıyla atandı',

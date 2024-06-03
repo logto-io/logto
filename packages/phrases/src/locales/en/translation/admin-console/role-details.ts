@@ -45,9 +45,8 @@ const role_details = {
     delete_description:
       'It will remain in your user pool but lose the authorization for this role.',
     deleted: '{{name}} was successfully removed from this role',
-    assign_title: 'Assign users',
-    assign_subtitle:
-      'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.',
+    assign_title: 'Assign users to {{name}}',
+    assign_subtitle: 'Find appropriate users by searching name, email, phone, or user ID.',
     assign_field: 'Assign users',
     confirm_assign: 'Assign users',
     assigned_toast_text: 'The selected users were successfully assigned to this role',

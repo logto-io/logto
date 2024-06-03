@@ -44,9 +44,8 @@ const role_details = {
     latest_sign_in_column: '최근 로그인 시각',
     delete_description: '사용자는 사용자 목록에 남지만 이 역할에 대한 접근 권한을 잃어버릴 거예요.',
     deleted: '{{name}}이 이 역할에서 성공적으로 삭제되었어요.',
-    assign_title: '사용자 할당',
-    assign_subtitle:
-      '사용자를 이 역할에 할당해요. 이름, 이메일, 전화번호, 사용자 ID 등을 이용하여 적절한 사용자를 찾아 보세요.',
+    assign_title: '{{name}}에 사용자 할당',
+    assign_subtitle: '이름, 이메일, 전화 또는 사용자 ID를 검색하여 적절한 사용자를 찾습니다.',
     assign_field: '사용자 할당',
     confirm_assign: '사용자 할당',
     assigned_toast_text: '선택된 사용자가 이 역할에 성공적으로 할당되었어요',

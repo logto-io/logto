@@ -45,9 +45,9 @@ const role_details = {
     delete_description:
       "Il restera dans votre répertoire d'utilisateurs mais perdra l'autorisation pour ce rôle.",
     deleted: '{{name}} a été supprimé avec succès de ce rôle',
-    assign_title: 'Attribuer des utilisateurs',
+    assign_title: 'Attribuer des utilisateurs à {{name}}',
     assign_subtitle:
-      'Attribuez des utilisateurs à ce rôle. Trouvez les utilisateurs appropriés en recherchant leur nom, leur e-mail, leur numéro de téléphone ou leur ID utilisateur.',
+      'Trouvez des utilisateurs appropriés en recherchant par nom, email, téléphone ou ID utilisateur.',
     assign_field: 'Assigner des utilisateurs',
     confirm_assign: 'Attribuer des utilisateurs',
     assigned_toast_text: 'Les utilisateurs sélectionnés ont été attribués avec succès à ce rôle',

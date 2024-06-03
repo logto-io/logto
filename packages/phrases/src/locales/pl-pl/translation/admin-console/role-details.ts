@@ -45,9 +45,9 @@ const role_details = {
     delete_description:
       'Osoba pozostanie w bazie użytkowników, ale straci autoryzację dla tej roli.',
     deleted: '{{name}} został pomyślnie usunięty z tej roli',
-    assign_title: 'Przydziel użytkowników',
+    assign_title: 'Przypisz użytkowników do {{name}}',
     assign_subtitle:
-      'Przydziel użytkowników do tej roli. Znajdź odpowiednich użytkowników, wyszukując po nazwie, adresie e-mail, numerze telefonu lub identyfikatorze użytkownika.',
+      'Znajdź odpowiednich użytkowników, wyszukując imię, e-mail, telefon lub identyfikator użytkownika.',
     assign_field: 'Przydziel użytkowników',
     confirm_assign: 'Przydziel użytkowników',
     assigned_toast_text: 'Wybrani użytkownicy zostali pomyślnie przydzieleni do tej roli',

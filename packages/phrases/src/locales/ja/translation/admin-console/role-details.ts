@@ -44,9 +44,9 @@ const role_details = {
     latest_sign_in_column: '最新サインイン',
     delete_description: 'ユーザープールには残りますが、このロールからのアクセス権は削除されます。',
     deleted: '{{name}} はこのロールから正常に削除されました。',
-    assign_title: 'ユーザーを割り当てる',
+    assign_title: '{{name}} にユーザーを割り当てる',
     assign_subtitle:
-      'ユーザーをこのロールに割り当てます。名前、メール、電話、またはユーザーIDで検索して適切なユーザーを見つけます。',
+      '名前、メール、電話番号、またはユーザーIDで検索して適切なユーザーを見つけます。',
     assign_field: 'ユーザーを割り当てる',
     confirm_assign: 'ユーザーを割り当てる',
     assigned_toast_text: '選択したユーザーがこのロールに正常に割り当てられました。',

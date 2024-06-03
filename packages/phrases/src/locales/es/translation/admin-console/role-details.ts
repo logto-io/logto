@@ -45,9 +45,9 @@ const role_details = {
     delete_description:
       'Permanecerá en su conjunto de usuarios, pero perderá la autorización para este rol.',
     deleted: '{{name}} fue eliminado correctamente de este rol',
-    assign_title: 'Asignar usuarios',
+    assign_title: 'Asignar usuarios a {{name}}',
     assign_subtitle:
-      'Asignar usuarios a este rol. Encuentre usuarios apropiados buscando nombre, correo electrónico, teléfono o ID de usuario.',
+      'Encuentra usuarios apropiados buscando por nombre, correo electrónico, teléfono o ID de usuario.',
     assign_field: 'Asignar usuarios',
     confirm_assign: 'Asignar usuarios',
     assigned_toast_text: 'Los usuarios seleccionados se asignaron correctamente a este rol',
