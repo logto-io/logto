@@ -1,4 +1,4 @@
-import { ApplicationType, type Application, ReservedPlanId } from '@logto/schemas';
+import { ApplicationType, ReservedPlanId } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
 import SearchIcon from '@/assets/icons/search.svg';
-import ApplicationCreation from '@/components/ApplicationCreation';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
@@ -18,7 +17,6 @@ import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { allAppGuideCategories, type AppGuideCategory } from '@/types/applications';
 import { thirdPartyAppCategory } from '@/types/applications';
 
@@ -30,17 +28,15 @@ type Props = {
   readonly className?: string;
   readonly hasCardBorder?: boolean;
   readonly hasCardButton?: boolean;
+  readonly onSelectGuide: (data?: SelectedGuide) => void;
 };
 
-function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
+function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate } = useTenantPathname();
   const { pathname } = useLocation();
   const [keyword, setKeyword] = useState<string>('');
   const [filterCategories, setFilterCategories] = useState<AppGuideCategory[]>([]);
-  const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
   const { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata } = useAppGuideMetadata();
-  const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
   const isApplicationCreateModal = pathname.includes('/applications/create');
   const { currentPlan } = useContext(SubscriptionDataContext);
 
@@ -65,27 +61,11 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
     );
   }, [isApplicationCreateModal]);
 
-  const onClickGuide = useCallback((data: SelectedGuide) => {
-    setShowCreateForm(true);
-    setSelectedGuide(data);
-  }, []);
-
-  const onAppCreationCompleted = useCallback(
-    (newApp?: Application) => {
-      if (newApp && selectedGuide) {
-        navigate(
-          // Third party app directly goes to the app detail page
-          selectedGuide.isThirdParty
-            ? `/applications/${newApp.id}`
-            : `/applications/${newApp.id}/guide/${selectedGuide.id}`,
-          { replace: true }
-        );
-        return;
-      }
-      setShowCreateForm(false);
-      setSelectedGuide(undefined);
+  const onClickGuide = useCallback(
+    (data: SelectedGuide) => {
+      onSelectGuide(data);
     },
-    [navigate, selectedGuide]
+    [onSelectGuide]
   );
 
   return (
@@ -184,14 +164,6 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
           )}
         </div>
       </div>
-      {selectedGuide?.target !== 'API' && showCreateForm && (
-        <ApplicationCreation
-          defaultCreateType={selectedGuide?.target}
-          defaultCreateFrameworkName={selectedGuide?.name}
-          isDefaultCreateThirdParty={selectedGuide?.isThirdParty}
-          onCompleted={onAppCreationCompleted}
-        />
-      )}
     </OverlayScrollbar>
   );
 }
