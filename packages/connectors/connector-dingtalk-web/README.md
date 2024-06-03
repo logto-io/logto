@@ -122,9 +122,9 @@ If you have any questions or need further assistance, please visit the [DingTalk
 
 ## 配置你的连接器
 
-在 `clientId` 和 `clientSecret` 字段中填入你在上一个部分中提到的 OAuth 应用详情页面获取的 _Client ID(原 AppKey 和 SuiteKey)_ 和 _Client Secret(原 AppKey 和 SuiteKey)_ 。
+在 `clientId` 和 `clientSecret` 字段中填入你在上一个部分中提到的 OAuth 应用详情页面获取的 _Client ID_（原 AppKey 和 SuiteKey）和 _Client Secret_（原 AppKey 和 SuiteKey）。
 
-`scope` 目前支持两种值：`openid` 和 `openid corpid`。`openid` 授权后可以获取用户的 `userid`，而 `openid corpid` 授权后可以获取用户的 id 和登录过程中用户选择的组织 `id`。这些值应以空格分隔。注意：需要进行 URL 编码。
+`scope` 目前支持两种值：`openid` 和 `openid corpid`。`openid` 授权后可以获取用户的 `userid`，而 `openid corpid` 授权后可以获取用户的 `id` 和登录过程中用户选择的组织 `id`。这些值应以空格分隔。注意：需要进行 URL 编码。
 
 ### 配置类型
 
