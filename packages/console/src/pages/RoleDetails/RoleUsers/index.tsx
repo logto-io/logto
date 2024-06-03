@@ -1,4 +1,4 @@
-import { RoleType, type User } from '@logto/schemas';
+import { type User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -32,9 +32,9 @@ import * as styles from './index.module.scss';
 const pageSize = defaultPageSize;
 
 function RoleUsers() {
-  const {
-    role: { id: roleId },
-  } = useOutletContext<RoleDetailsOutletContext>();
+  const { role } = useOutletContext<RoleDetailsOutletContext>();
+
+  const { id: roleId } = role;
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -171,8 +171,7 @@ function RoleUsers() {
       )}
       {isAssignModalOpen && (
         <AssignRoleModal
-          roleId={roleId}
-          roleType={RoleType.User}
+          role={role}
           onClose={(success) => {
             if (success) {
               void mutate();

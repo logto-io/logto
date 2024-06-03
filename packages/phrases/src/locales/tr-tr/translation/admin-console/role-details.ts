@@ -16,7 +16,7 @@ const role_details = {
   field_is_default: 'Varsayılan rol',
   field_is_default_description:
     "Bu rolü yeni kullanıcılar için varsayılan rol olarak ayarla. Birden çok varsayılan rol belirlenebilir. Bu ayrıca Yönetim API'si aracılığıyla oluşturulan kullanıcılar için varsayılan rolleri etkiler.",
-  type_m2m_role_tag: 'Makine-makine uygulama rolü',
+  type_m2m_role_tag: 'Makineden makinaya rol',
   type_user_role_tag: 'Kullanıcı rolü',
   m2m_role_notification:
     'Bu makineye makine rolünü ilgili API kaynaklarına erişim sağlamak için bir makineye makine uygulamasına atayın. <a>Henüz yapmadıysanız önce bir makineye makine uygulaması oluşturun.</a>',
@@ -53,18 +53,18 @@ const role_details = {
     empty: 'Mevcut kullanıcı yok',
   },
   applications: {
-    assign_button: 'Uygulamaları Ata',
+    assign_button: 'Makineden makinaya uygulamaları ata',
     name_column: 'Uygulama',
-    app_column: 'Uygulamalar',
+    app_column: 'Makineden makinaya uygulama',
     description_column: 'Açıklama',
     delete_description:
       'Bunu yaparsanız, uygulama havuzunuzda kalır, ancak bu role ait yetkileri kaybeder.',
     deleted: '{{name}} bu rolden başarıyla kaldırıldı',
-    assign_title: 'Uygulamaları Ata',
+    assign_title: '{{name}} için makineden makinaya uygulamaları ata',
     assign_subtitle:
-      'Bu role uygulamaları atayın. İsim, açıklama veya uygulama kimliği arayarak uygun uygulamaları bulun.',
-    assign_field: 'Uygulamaları Ata',
-    confirm_assign: 'Uygulamaları Ata',
+      'İsim, açıklama veya uygulama kimliği arayarak uygun makineden makinaya uygulamaları bulun.',
+    assign_field: 'Makineden makinaya uygulamaları ata',
+    confirm_assign: 'Makineden makinaya uygulamaları ata',
     assigned_toast_text: 'Seçilen uygulamalar bu role başarıyla atandı',
     empty: 'Mevcut uygulama yok',
   },

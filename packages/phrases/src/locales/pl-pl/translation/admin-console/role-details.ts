@@ -16,7 +16,7 @@ const role_details = {
   field_is_default: 'Domyślna rola',
   field_is_default_description:
     'Ustaw tę rolę jako domyślną rolę dla nowych użytkowników. Można ustawić wiele domyślnych ról. To również wpłynie na domyślne role dla użytkowników utworzonych za pomocą interfejsu API zarządzania.',
-  type_m2m_role_tag: 'Rola aplikacji maszynowych',
+  type_m2m_role_tag: '머신 투 머신 역할',
   type_user_role_tag: 'Rola użytkownika',
   m2m_role_notification:
     'Przypisz tę rolę maszyny do maszyny do aplikacji maszyny do maszyny, aby umożliwić dostęp do odpowiednich zasobów API. <a>Najpierw utwórz aplikację maszyny do maszyny</a>, jeśli jeszcze tego nie zrobiłeś.',
