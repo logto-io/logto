@@ -14,6 +14,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import Spacer from '@/ds-components/Spacer';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import ContactModal from './ContactModal';
@@ -32,11 +33,17 @@ type Props = {
 
 function Topbar({ className, hideTenantSelector, hideTitle }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { navigate } = useTenantPathname();
   const LogtoLogo = isCloud ? CloudLogo : Logo;
 
   return (
     <div className={classNames(styles.topbar, className)}>
-      <LogtoLogo className={styles.logo} />
+      <LogtoLogo
+        className={styles.logo}
+        onClick={() => {
+          navigate('/');
+        }}
+      />
       {isCloud && !hideTenantSelector && <TenantSelector />}
       {!isCloud && !hideTitle && (
         <>
