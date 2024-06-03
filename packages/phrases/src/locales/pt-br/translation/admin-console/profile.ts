@@ -51,12 +51,6 @@ const profile = {
     description:
       'Excluir sua conta removerá todas as suas informações pessoais, dados do usuário e configurações. Essa ação não pode ser desfeita.',
     button: 'Excluir conta',
-    dialog_paragraph_1:
-      'Lamentamos saber que você deseja excluir sua conta. A exclusão de sua conta removerá permanentemente todos os dados, incluindo informações do usuário, logs e configurações, e essa ação não pode ser desfeita. Portanto, certifique-se de fazer backup de qualquer dado importante antes de prosseguir.',
-    dialog_paragraph_2:
-      'Para prosseguir com o processo de exclusão de conta, envie um e-mail para nossa equipe de suporte em <a>mail</a> com o assunto "Pedido de exclusão de conta". Nós o ajudaremos e garantiremos que todos os seus dados sejam excluídos corretamente de nosso sistema.',
-    dialog_paragraph_3:
-      'Agradecemos por escolher o Logto Cloud. Se você tiver outras dúvidas ou preocupações, não hesite em nos contatar.',
   },
   set: 'Configurar',
   change: 'Alterar',

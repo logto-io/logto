@@ -51,12 +51,6 @@ const profile = {
     description:
       'Usunięcie twojego konta spowoduje usunięcie wszystkich twoich danych osobistych, danych użytkownika i konfiguracji. Ta operacja nie może być cofnięta.',
     button: 'Usuń konto',
-    dialog_paragraph_1:
-      'Żałujemy, że chcesz usunąć swoje konto. Usunięcie twojego konta spowoduje trwałe usunięcie wszystkich danych, w tym informacji o użytkowniku, logów i ustawień, i ta operacja nie może być cofnięta. Przed dokonaniem tej operacji zalecamy wykonanie kopii zapasowych ważnych danych.',
-    dialog_paragraph_2:
-      'Aby przejść do procesu usuwania konta, wyślij email do naszego zespołu wsparcia na adres <a>{{mail}}</a> z tematem "Żądanie usunięcia konta". Pomożemy Ci i zapewnimy, że wszystkie twoje dane zostaną poprawnie usunięte z naszego systemu.',
-    dialog_paragraph_3:
-      'Dziękujemy za wybranie chmury Logto. Jeśli masz jakieś dodatkowe pytania lub wątpliwości, skontaktuj się z nami.',
   },
   set: 'Ustaw',
   change: 'Zmień',

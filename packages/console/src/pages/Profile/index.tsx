@@ -1,5 +1,5 @@
 import type { ConnectorResponse } from '@logto/schemas';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRoutes } from 'react-router-dom';
 import useSWRImmutable from 'swr/immutable';
@@ -47,6 +47,16 @@ function Profile() {
   const { isLoading: isUserAssetServiceLoading } = useUserAssetsService();
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
+  // Avoid unnecessary re-renders in child components
+  const show = useCallback(() => {
+    setShowDeleteAccountModal(true);
+  }, []);
+
+  // Avoid unnecessary re-renders in child components
+  const hide = useCallback(() => {
+    setShowDeleteAccountModal(false);
+  }, []);
+
   const showLoadingSkeleton = isLoadingUser || isLoadingConnectors || isUserAssetServiceLoading;
 
   return (
@@ -92,19 +102,9 @@ function Profile() {
                     <div className={styles.description}>
                       {t('profile.delete_account.description')}
                     </div>
-                    <Button
-                      title="profile.delete_account.button"
-                      onClick={() => {
-                        setShowDeleteAccountModal(true);
-                      }}
-                    />
+                    <Button title="profile.delete_account.button" onClick={show} />
                   </div>
-                  <DeleteAccountModal
-                    isOpen={showDeleteAccountModal}
-                    onClose={() => {
-                      setShowDeleteAccountModal(false);
-                    }}
-                  />
+                  <DeleteAccountModal isOpen={showDeleteAccountModal} onClose={hide} />
                 </FormCard>
               )}
             </div>

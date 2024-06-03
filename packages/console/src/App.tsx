@@ -31,6 +31,7 @@ import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppDataProvider, { AppDataContext } from './contexts/AppDataProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
+import Toast from './ds-components/Toast';
 import useCurrentUser from './hooks/use-current-user';
 import initI18n from './i18n/init';
 
@@ -86,6 +87,7 @@ function Providers() {
       UserScope.Identities,
       UserScope.CustomData,
       UserScope.Organizations,
+      UserScope.OrganizationRoles,
       PredefinedScope.All,
       ...conditionalArray(
         isCloud && [
@@ -111,6 +113,7 @@ function Providers() {
     >
       <AppThemeProvider>
         <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
+        <Toast />
         <ErrorBoundary>
           <LogtoErrorBoundary>
             {/**

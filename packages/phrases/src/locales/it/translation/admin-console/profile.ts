@@ -51,12 +51,6 @@ const profile = {
     description:
       'Eliminando il tuo account, verranno rimossi tutti i tuoi dati personali, le informazioni utente, la configurazione. Questa operazione non può essere annullata.',
     button: 'Elimina account',
-    dialog_paragraph_1:
-      "Ci dispiace sapere che desideri eliminare il tuo account. L'eliminazione dell'account rimuoverà permanentemente tutti i dati, inclusi le informazioni utente, i log e le impostazioni, e questa azione non può essere annullata. Quindi assicurati di eseguire il backup di eventuali dati importanti prima di procedere.",
-    dialog_paragraph_2:
-      "Per procedere con il processo di eliminazione dell'account, invia un'email al nostro team di supporto all'indirizzo <a>{{mail}}</a> con l'oggetto \"Richiesta di eliminazione account\". Ti assisteremo e ci assicureremo che tutti i tuoi dati siano correttamente eliminati dal nostro sistema.",
-    dialog_paragraph_3:
-      'Grazie per aver scelto Logto Cloud. Se hai ulteriori domande o dubbi, non esitare a contattarci.',
   },
   set: 'Imposta',
   change: 'Cambia',
