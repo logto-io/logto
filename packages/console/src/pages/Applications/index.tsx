@@ -1,10 +1,14 @@
-import { joinPath } from '@silverhand/essentials';
+import { type Application } from '@logto/schemas';
+import { type Nullable, joinPath, cond } from '@silverhand/essentials';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
 import Plus from '@/assets/icons/plus.svg';
+import ApplicationCreation from '@/components/ApplicationCreation';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import ChargeNotification from '@/components/ChargeNotification';
+import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
 import { isCloud } from '@/consts/env';
@@ -52,6 +56,13 @@ function Applications({ tab }: Props) {
 
   const isCreating = match(createApplicationPathname);
   const { hasMachineToMachineAppsSurpassedLimit } = useApplicationsUsage();
+  /**
+   * Selected guide from the guide library
+   * - `undefined`: No guide is selected
+   * - `null`: Create application without a framework guide
+   * - `selectedGuide`: Create application with the selected guide
+   */
+  const [selectedGuide, setSelectedGuide] = useState<Nullable<SelectedGuide>>();
 
   const {
     data,
@@ -65,6 +76,31 @@ function Applications({ tab }: Props) {
 
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];
+
+  const onAppCreationCompleted = useCallback(
+    (newApp?: Application) => {
+      if (newApp) {
+        /**
+         * Navigate to the application details page if no framework guide is selected or the selected guide is third party
+         */
+        if (selectedGuide === null || selectedGuide?.isThirdParty) {
+          navigate(`/applications/${newApp.id}`, { replace: true });
+          setSelectedGuide(undefined);
+          return;
+        }
+
+        // Create application from the framework guide
+        if (selectedGuide) {
+          navigate(`/applications/${newApp.id}/guide/${selectedGuide.id}`, { replace: true });
+          setSelectedGuide(undefined);
+          return;
+        }
+      }
+
+      setSelectedGuide(undefined);
+    },
+    [navigate, selectedGuide]
+  );
 
   return (
     <div className={pageLayout.container}>
@@ -122,7 +158,12 @@ function Applications({ tab }: Props) {
             title="guide.app.select_framework_or_tutorial"
             subtitle="guide.app.modal_subtitle"
           />
-          <GuideLibrary hasCardBorder hasCardButton className={styles.library} />
+          <GuideLibrary
+            hasCardBorder
+            hasCardButton
+            className={styles.library}
+            onSelectGuide={setSelectedGuide}
+          />
         </div>
       )}
       {(isLoading || !!applications?.length) && (
@@ -179,7 +220,16 @@ function Applications({ tab }: Props) {
         onClose={() => {
           navigate(-1);
         }}
+        onSelectGuide={setSelectedGuide}
       />
+      {selectedGuide !== undefined && (
+        <ApplicationCreation
+          defaultCreateType={cond(selectedGuide?.target !== 'API' && selectedGuide?.target)}
+          defaultCreateFrameworkName={selectedGuide?.name ?? undefined}
+          isDefaultCreateThirdParty={selectedGuide?.isThirdParty ?? undefined}
+          onCompleted={onAppCreationCompleted}
+        />
+      )}
     </div>
   );
 }

@@ -16,7 +16,7 @@ const role_details = {
   field_is_default: 'Função predefinida',
   field_is_default_description:
     'Defina esta função como uma função predefinida para novos utilizadores. Podem ser definidas várias funções predefinidas. Isto também afetará as funções predefinidas para utilizadores criados através da API de Gestão.',
-  type_m2m_role_tag: 'Função de aplicação de máquina para máquina',
+  type_m2m_role_tag: 'Função de máquina para máquina',
   type_user_role_tag: 'Função de utilizador',
   m2m_role_notification:
     'Atribua esta função de máquina para máquina a uma aplicação de máquina para máquina para conceder acesso aos recursos de API relativos. <a>Crie primeiro uma aplicação de máquina para máquina</a> se ainda não o fez.',
@@ -45,27 +45,27 @@ const role_details = {
     delete_description:
       'Permanecerá no seu conjunto de utilizadores, mas perderá a autorização para esta função.',
     deleted: '{{name}} foi removido com sucesso desta função',
-    assign_title: 'Atribuir utilizadores',
+    assign_title: 'Atribuir utilizadores a {{name}}',
     assign_subtitle:
-      'Atribua utilizadores a esta função. Encontre utilizadores apropriados pesquisando pelo nome, e-mail, telefone ou ID de utilizador.',
+      'Encontre utilizadores apropriados pesquisando por nome, e-mail, telefone ou ID de utilizador.',
     assign_field: 'Atribuir utilizadores',
     confirm_assign: 'Atribuir utilizadores',
     assigned_toast_text: 'Os utilizadores selecionados foram atribuídos com sucesso a esta função',
     empty: 'Nenhum utilizador disponível',
   },
   applications: {
-    assign_button: 'Atribuir aplicações',
+    assign_button: 'Atribuir aplicações de máquina para máquina',
     name_column: 'Aplicação',
-    app_column: 'Aplicações',
+    app_column: 'Aplicação de máquina para máquina',
     description_column: 'Descrição',
     delete_description:
       'Permanecerá no seu conjunto de aplicações, mas perderá a autorização para esta função.',
     deleted: '{{name}} foi removido com sucesso desta função',
-    assign_title: 'Atribuir aplicações',
+    assign_title: 'Atribuir aplicações de máquina para máquina a {{name}}',
     assign_subtitle:
-      'Atribua aplicações a esta função. Encontre aplicações apropriadas pesquisando pelo nome, descrição ou ID da aplicação.',
-    assign_field: 'Atribuir aplicações',
-    confirm_assign: 'Atribuir aplicações',
+      'Encontre aplicações de máquina para máquina apropriadas pesquisando por nome, descrição ou ID da aplicação.',
+    assign_field: 'Atribuir aplicações de máquina para máquina',
+    confirm_assign: 'Atribuir aplicações de máquina para máquina',
     assigned_toast_text: 'As aplicações selecionadas foram atribuídas com sucesso a esta função',
     empty: 'Nenhuma aplicação disponível',
   },

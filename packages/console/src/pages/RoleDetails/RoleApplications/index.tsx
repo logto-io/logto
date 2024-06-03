@@ -1,4 +1,4 @@
-import { type Application, RoleType, ApplicationType } from '@logto/schemas';
+import { type Application, ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -31,9 +31,9 @@ import * as styles from './index.module.scss';
 const pageSize = defaultPageSize;
 
 function RoleApplications() {
-  const {
-    role: { id: roleId },
-  } = useOutletContext<RoleDetailsOutletContext>();
+  const { role } = useOutletContext<RoleDetailsOutletContext>();
+
+  const { id: roleId } = role;
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -176,8 +176,7 @@ function RoleApplications() {
       )}
       {isAssignModalOpen && (
         <AssignRoleModal
-          roleId={roleId}
-          roleType={RoleType.MachineToMachine}
+          role={role}
           onClose={(success) => {
             if (success) {
               void mutate();

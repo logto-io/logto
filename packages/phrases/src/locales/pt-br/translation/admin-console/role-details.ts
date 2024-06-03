@@ -16,7 +16,7 @@ const role_details = {
   field_is_default: 'Função padrão',
   field_is_default_description:
     'Defina este papel como um papel padrão para novos usuários. Vários papéis padrão podem ser definidos. Isso também afetará os papéis padrão para usuários criados via API de Gerenciamento.',
-  type_m2m_role_tag: 'Função de aplicativo máquina-a-máquina',
+  type_m2m_role_tag: 'Função de máquina para máquina',
   type_user_role_tag: 'Função de usuário',
   m2m_role_notification:
     'Atribua essa função de máquina para máquina a um aplicativo de máquina para máquina para conceder acesso aos recursos de API relativos. <a>Crie primeiro um aplicativo de máquina para máquina</a> se ainda não o fez.',
@@ -45,27 +45,27 @@ const role_details = {
     delete_description:
       'Ele permanecerá no seu pool de usuários, mas perderá a autorização para este papel.',
     deleted: '{{name}} foi removido com sucesso deste papel',
-    assign_title: 'Atribuir usuários',
+    assign_title: 'Atribuir usuários a {{name}}',
     assign_subtitle:
-      'Atribuir usuários a este papel. Encontre usuários adequados pesquisando nome, e-mail, telefone ou ID do usuário.',
+      'Encontre usuários apropriados procurando por nome, e-mail, telefone ou ID de usuário.',
     assign_field: 'Atribuir usuários',
     confirm_assign: 'Atribuir usuários',
     assigned_toast_text: 'Os usuários selecionados foram atribuídos com sucesso a este papel',
     empty: 'Nenhum usuário disponível',
   },
   applications: {
-    assign_button: 'Atribuir aplicativos',
+    assign_button: 'Atribuir aplicativos de máquina para máquina',
     name_column: 'Aplicativo',
-    app_column: 'Aplicativos',
+    app_column: 'Aplicativo de máquina para máquina',
     description_column: 'Descrição',
     delete_description:
       'Ele permanecerá em seu pool de aplicativos, mas perderá a autorização para este papel.',
     deleted: '{{name}} foi removido com sucesso deste papel',
-    assign_title: 'Atribuir aplicativos',
+    assign_title: 'Atribuir aplicativos de máquina para máquina a {{name}}',
     assign_subtitle:
-      'Atribuir aplicativos a este papel. Encontre os aplicativos adequados pesquisando por nome, descrição ou ID do aplicativo.',
-    assign_field: 'Atribuir aplicativos',
-    confirm_assign: 'Atribuir aplicativos',
+      'Encontre aplicativos de máquina para máquina apropriados pesquisando por nome, descrição ou ID do aplicativo.',
+    assign_field: 'Atribuir aplicativos de máquina para máquina',
+    confirm_assign: 'Atribuir aplicativos de máquina para máquina',
     assigned_toast_text: 'Os aplicativos selecionados foram atribuídos com sucesso a este papel',
     empty: 'Nenhum aplicativo disponível',
   },

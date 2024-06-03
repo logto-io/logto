@@ -1,4 +1,4 @@
-import { type Application, RoleType, type User, ApplicationType } from '@logto/schemas';
+import { type Application, RoleType, type User, ApplicationType, type Role } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,8 @@ import ReactModal from 'react-modal';
 import EntitiesTransfer from '@/components/EntitiesTransfer';
 import { ApplicationItem, UserItem } from '@/components/EntitiesTransfer/components/EntityItem';
 import Button from '@/ds-components/Button';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
@@ -16,19 +18,18 @@ const isUserEntity = (entity: User | Application): entity is User =>
   'customData' in entity || 'identities' in entity;
 
 type Props = {
-  readonly roleId: string;
-  readonly roleType: RoleType;
+  readonly role: Role;
   readonly isRemindSkip?: boolean;
   readonly onClose: (success?: boolean) => void;
 };
 
 function AssignRoleModal<T extends Application | User>({
-  roleId,
-  roleType,
+  role,
   isRemindSkip = false,
   onClose,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { id: roleId, type: roleType } = role;
   const [isLoading, setIsLoading] = useState(false);
   const [entities, setEntities] = useState<T[]>([]);
   const phraseKey = roleType === RoleType.User ? 'users' : 'applications';
@@ -64,7 +65,14 @@ function AssignRoleModal<T extends Application | User>({
       }}
     >
       <ModalLayout
-        title={`role_details.${phraseKey}.assign_title`}
+        title={
+          <DangerousRaw>
+            <DynamicT
+              forKey={`role_details.${phraseKey}.assign_title`}
+              interpolation={{ name: role.name }}
+            />
+          </DangerousRaw>
+        }
         subtitle={`role_details.${phraseKey}.assign_subtitle`}
         size="large"
         footer={
