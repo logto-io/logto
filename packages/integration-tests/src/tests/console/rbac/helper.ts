@@ -85,7 +85,7 @@ export const createM2mRoleAndAssignPermissions = async (
     text: `The role ${roleName} has been successfully created.`,
   });
 
-  await expectModalWithTitle(page, 'Assign apps');
+  await expectModalWithTitle(page, `Assign machine-to-machine apps to ${roleName}`);
   await expectToClickModalAction(page, 'Skip for now');
 
   await expect(page).toMatchElement('div[class$=header] div[class$=metadata] div[class$=name]', {
