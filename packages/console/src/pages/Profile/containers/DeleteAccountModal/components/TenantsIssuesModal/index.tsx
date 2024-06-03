@@ -16,6 +16,7 @@ type Props = {
   readonly onClose: () => void;
 };
 
+/** A display component for tenant issues that prevent account deletion. */
 export default function TenantsIssuesModal({ issues, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.profile.delete_account' });
 

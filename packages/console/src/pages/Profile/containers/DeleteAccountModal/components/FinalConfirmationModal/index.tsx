@@ -64,9 +64,7 @@ export default function FinalConfirmationModal({
         removeTenant(tenant.id);
       }
 
-      // TODO:
-      // @ts-expect-error bump the version of @logto/cloud will fix this
-      await cloudApi.delete('/api/me', {});
+      await cloudApi.delete('/api/me');
       await signOut(postSignOutRedirectUri.href);
     } catch (error) {
       setDeletionError(error instanceof Error ? error : new Error(String(error)));

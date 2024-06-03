@@ -1,6 +1,7 @@
 import { type IdTokenClaims, useLogto } from '@logto/react';
 import { TenantRole, getTenantIdFromOrganizationId } from '@logto/schemas';
 import { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import AppLoading from '@/components/AppLoading';
@@ -14,6 +15,10 @@ import TenantsList from '../TenantsList';
 
 type RoleMap = { [key in string]?: string[] };
 
+/**
+ * Given a list of organization roles from the user's claims, returns a tenant ID - role names map.
+ * A user may have multiple roles in the same tenant.
+ */
 const getRoleMap = (organizationRoles: string[]) =>
   organizationRoles.reduce<RoleMap>((accumulator, value) => {
     const [organizationId, roleName] = value.split(':');
@@ -38,6 +43,7 @@ type Props = {
   readonly onClose: () => void;
 };
 
+/** A display component for the account deletion confirmation. */
 export default function DeletionConfirmationModal({ onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.profile.delete_account' });
   const [isFinalConfirmationOpen, setIsFinalConfirmationOpen] = useState(false);
@@ -49,11 +55,18 @@ export default function DeletionConfirmationModal({ onClose }: Props) {
     const fetchRoleMap = async () => {
       setClaims(undefined);
       const claims = await getIdTokenClaims();
+
+      if (!claims) {
+        toast.error(t('error_occurred'));
+        onClose();
+        return;
+      }
+
       setClaims(claims);
     };
 
     void fetchRoleMap();
-  }, [getIdTokenClaims]);
+  }, [getIdTokenClaims, onClose, t]);
 
   const roleMap = claims && getRoleMap(claims.organization_roles ?? []);
   const tenantsToDelete = tenants.filter(({ id }) => roleMap?.[id]?.includes(TenantRole.Admin));
@@ -61,7 +74,6 @@ export default function DeletionConfirmationModal({ onClose }: Props) {
     tenantsToDelete.every(({ id: tenantId }) => tenantId !== id)
   );
 
-  // TODO: consider the claims is undefined even after the useEffect
   if (!claims) {
     return <AppLoading />;
   }
