@@ -1,17 +1,17 @@
-import { runScriptFunctionInLocalVm, buildErrorResponse } from '@logto/core-kit/custom-jwt';
+import { buildErrorResponse, runScriptFunctionInLocalVm } from '@logto/core-kit/custom-jwt';
 import {
-  userInfoSelectFields,
+  LogtoJwtTokenKeyType,
   jwtCustomizerUserContextGuard,
-  type LogtoJwtTokenKey,
+  userInfoSelectFields,
+  type CustomJwtFetcher,
   type JwtCustomizerType,
   type JwtCustomizerUserContext,
-  type CustomJwtFetcher,
-  LogtoJwtTokenKeyType,
+  type LogtoJwtTokenKey,
 } from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
-import { deduplicate, pick, pickState, assert } from '@silverhand/essentials';
+import { assert, deduplicate, pick, pickState } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
-import { z, ZodError } from 'zod';
+import { ZodError, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -20,10 +20,10 @@ import { type ScopeLibrary } from '#src/libraries/scope.js';
 import { type UserLibrary } from '#src/libraries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 import {
+  LocalVmError,
   getJwtCustomizerScripts,
   type CustomJwtDeployRequestBody,
 } from '#src/utils/custom-jwt/index.js';
-import { LocalVmError } from '#src/utils/custom-jwt/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -75,9 +75,7 @@ export class JwtCustomizerLibrary {
    */
   async getUserContext(userId: string): Promise<JwtCustomizerUserContext> {
     const user = await this.queries.users.findUserById(userId);
-    const fullSsoIdentities = await this.queries.userSsoIdentities.findUserSsoIdentitiesByUserId(
-      userId
-    );
+    const fullSsoIdentities = await this.userLibrary.findUserSsoIdentities(userId);
     const roles = await this.userLibrary.findUserRoles(userId);
     const rolesScopes = await this.queries.rolesScopes.findRolesScopesByRoleIds(
       roles.map(({ id }) => id)

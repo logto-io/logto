@@ -49,7 +49,7 @@ const checkAlterationState = async (pool: CommonQueryMethods) => {
       'npm run alteration deploy'
     )} command.\n\n` +
       ` See ${chalk.blue(
-        'https://docs.logto.io/docs/tutorials/using-cli/database-alteration'
+        'https://docs.logto.io/docs/references/using-cli/database-alteration'
       )} for reference.\n`
   );
 

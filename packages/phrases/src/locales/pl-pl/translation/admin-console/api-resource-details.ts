@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     'Logto Management API to kompleksowa kolekcja interfejsów API, które umożliwiają administratorom zarządzanie szerokim zakresem zadań związanych z tożsamością, egzekwowanie polityk bezpieczeństwa oraz przestrzeganie przepisów i standardów.',
   management_api_notice:
-    'To API reprezentuje jednostkę Logto i nie można go modyfikować ani usuwać. Możesz użyć API zarządzania do szerokiego zakresu zadań związanych z tożsamością. <a>Więcej informacji</a>',
+    'Ta API reprezentuje jednostkę Logto i nie może być modyfikowana ani usuwana. Utwórz aplikację maszyna-do-maszyny, aby wywołać Logto Management API. <a>Dowiedz się więcej</a>',
   token_expiration_time_in_seconds: 'Czas wygaśnięcia tokenu (w sekundach)',
   token_expiration_time_in_seconds_placeholder: 'Wprowadź czas wygaśnięcia tokenu',
   delete_description:

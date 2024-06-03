@@ -60,7 +60,7 @@ const applications = {
     title: "Autoriser l'application avec un rôle machine à machine pour les permissions",
     subtitle: 'Les applications machine à machine nécessitent un rôle machine à machine autorisé.',
     role_creation_hint:
-      'N’a pas de rôle machine à machine ? <a>Créez d’abord un rôle machine à machine</a>',
+      'Vous ne trouvez pas le bon rôle machine à machine ? <a>Créer un rôle machine à machine</a>',
   },
 };
 

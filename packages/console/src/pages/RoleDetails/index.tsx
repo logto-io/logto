@@ -61,6 +61,8 @@ function RoleDetails() {
     ? Boolean(m2mRoleNotificationAcknowledged)
     : true;
 
+  const isM2mRole = data?.type === RoleType.MachineToMachine;
+
   const [isDeletionAlertOpen, setIsDeletionAlertOpen] = useState(false);
 
   useEffect(() => {
@@ -98,7 +100,7 @@ function RoleDetails() {
       onRetry={mutate}
     >
       {/* Todo @xiaoyijun remove dev feature flag */}
-      {isDevFeaturesEnabled && !isM2mRoleNotificationAcknowledged && (
+      {isDevFeaturesEnabled && isM2mRole && !isM2mRoleNotificationAcknowledged && (
         <InlineNotification
           action="general.got_it"
           onClick={() => {
@@ -119,12 +121,10 @@ function RoleDetails() {
       {data && (
         <>
           <DetailsPageHeader
-            icon={data.type === RoleType.User ? <UserIcon /> : <MachineToMachineIcon />}
+            icon={isM2mRole ? <MachineToMachineIcon /> : <UserIcon />}
             title={data.name}
             primaryTag={t(
-              data.type === RoleType.User
-                ? 'role_details.type_user_role_tag'
-                : 'role_details.type_m2m_role_tag'
+              isM2mRole ? 'role_details.type_m2m_role_tag' : 'role_details.type_user_role_tag'
             )}
             identifier={{ name: 'ID', value: data.id }}
             actionMenuItems={[
@@ -155,12 +155,10 @@ function RoleDetails() {
             </TabNavItem>
             <TabNavItem
               href={`/roles/${data.id}/${
-                data.type === RoleType.User ? RoleDetailsTabs.Users : RoleDetailsTabs.M2mApps
+                isM2mRole ? RoleDetailsTabs.M2mApps : RoleDetailsTabs.Users
               }`}
             >
-              {t(
-                data.type === RoleType.User ? 'role_details.users_tab' : 'role_details.m2m_apps_tab'
-              )}
+              {t(isM2mRole ? 'role_details.m2m_apps_tab' : 'role_details.users_tab')}
             </TabNavItem>
             <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.General}`}>
               {t('role_details.general_tab')}

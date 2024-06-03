@@ -52,12 +52,6 @@ const profile = {
     description:
       'Apagar a sua conta irá remover todas as suas informações pessoais, dados de usuário e configurações. Esta ação não pode ser desfeita.',
     button: 'Apagar conta',
-    dialog_paragraph_1:
-      'Lamentamos saber que deseja apagar sua conta. A exclusão da sua conta irá remover permanentemente todos os dados, incluindo informações de usuário, logs e configurações, e esta ação não pode ser desfeita. Portanto, por favor, faça backup de qualquer dado importante antes de prosseguir.',
-    dialog_paragraph_2:
-      'Para prosseguir com o processo de exclusão de conta, envie um e-mail para nossa equipe de suporte em <a>mail</a> com o assunto “Solicitação de exclusão de conta”. Vamos ajudá-lo e garantir que todos os seus dados sejam devidamente excluídos do nosso sistema.',
-    dialog_paragraph_3:
-      'Obrigado por escolher o Logto Cloud. Se tiver alguma dúvida ou preocupação, não hesite em entrar em contato connosco.',
   },
   set: 'Definir',
   change: 'Mudar',

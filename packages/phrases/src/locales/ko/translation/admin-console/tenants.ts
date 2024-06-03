@@ -44,8 +44,6 @@ const tenants = {
   },
   create_modal: {
     title: '테넌트 만들기',
-    subtitle:
-      '분리된 리소스와 사용자를 가진 새 테넌트를 만듭니다. 데이터가 호스팅되는 지역 및 테넌트 유형은 생성 후에 수정할 수 없습니다.',
     tenant_usage_purpose: '이 테넌트를 사용하는 목적은 무엇입니까?',
     development_description:
       '테스트 용으로만 사용하고 프로덕션에서 사용하지 마십시오. 구독이 필요하지 않습니다.',

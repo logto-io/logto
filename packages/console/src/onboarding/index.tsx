@@ -5,7 +5,6 @@ import { Navigate, type RouteObject, useMatch, useRoutes } from 'react-router-do
 import AppLoading from '@/components/AppLoading';
 import AppBoundary from '@/containers/AppBoundary';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
-import Toast from '@/ds-components/Toast';
 import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
 
 import Topbar from './components/Topbar';
@@ -74,7 +73,6 @@ export function OnboardingApp() {
   return (
     <div className={styles.app}>
       <AppBoundary>
-        <Toast />
         <Topbar />
         <div className={styles.content}>{routes}</div>
       </AppBoundary>

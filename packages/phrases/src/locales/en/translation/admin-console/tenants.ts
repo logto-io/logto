@@ -12,10 +12,10 @@ const tenants = {
     title: 'SETTINGS',
     description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'Tenant ID',
-    tenant_name: 'Tenant Name',
+    tenant_name: 'Tenant name',
     tenant_region: 'Data region',
     tenant_region_description:
-      'The physical location where your tenant resources (users, apps, etc.) are hosted. This can’t be changed after creation.',
+      'The physical location where your tenant resources (users, apps, etc.) are hosted. This cannot be changed after creation.',
     tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
     environment_tag_development: 'Dev',
     environment_tag_production: 'Prod',
@@ -46,8 +46,7 @@ const tenants = {
   },
   create_modal: {
     title: 'Create tenant',
-    subtitle:
-      'Create a new tenant that has isolated resources and users. Data region and tenant types can’t be modified after creation.',
+    subtitle: 'Create a new tenant that has isolated resources and users.',
     tenant_usage_purpose: 'What do you want to use this tenant for?',
     development_description:
       "For testing only and shouldn't be used in production. No subscription is required.",
@@ -56,6 +55,10 @@ const tenants = {
     available_plan: 'Available plan:',
     create_button: 'Create tenant',
     tenant_name_placeholder: 'My tenant',
+    tenant_created: 'Tenant created successfully.',
+    invitation_failed:
+      'Some invitation failed to send. Please try again in Settings -> Members later.',
+    tenant_type_description: 'This cannot be changed after creation.',
   },
   dev_tenant_migration: {
     title: 'You can now try our Pro features for free by creating a new "Development tenant"!',
@@ -101,6 +104,10 @@ const tenants = {
       'We deeply regret to inform you that your tenant account has been temporarily suspended due to improper use, including exceeding MAU limits, overdue payments, or other unauthorized actions.',
     description_2:
       'If you require further clarification, have any concerns, or wish to restore full functionality and unblock your tenants, please do not hesitate to contact us immediately.',
+  },
+  production_tenant_notification: {
+    text: "You're in a dev tenant for free testing. Create a production tenant to go live.",
+    action: 'Create tenant',
   },
 };
 

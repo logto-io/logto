@@ -24,3 +24,10 @@
     @include _.main-content-width;
   }
 }
+
+.devStatus {
+  color: var(--color-text-secondary);
+  position: absolute;
+  bottom: _.unit(3);
+  left: _.unit(4);
+}

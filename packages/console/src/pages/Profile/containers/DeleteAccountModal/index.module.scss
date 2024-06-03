@@ -9,9 +9,16 @@ p {
 }
 
 p + p {
-  margin-top: _.unit(6);
+  margin-top: _.unit(4);
 }
 
 .mail {
   font-weight: bold;
+}
+
+.tenantList {
+  h3 {
+    font: var(--font-title-3);
+    color: var(--color-text-secondary);
+  }
 }

@@ -1,5 +1,6 @@
 import { ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
@@ -27,6 +28,7 @@ type Props = {
 };
 
 function SelectTenantPlanModal({ tenantData, onClose }: Props) {
+  const [isSubmitting, setIsSubmitting] = useState<string>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: subscriptionPlans } = useSubscriptionPlans();
   const { subscribe } = useSubscribe();
@@ -40,6 +42,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
   const handleSelectPlan = async (plan: SubscriptionPlan) => {
     const { id: planId } = plan;
     try {
+      setIsSubmitting(planId);
       if (planId === ReservedPlanId.Free) {
         const { name, tag, regionName } = tenantData;
         const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
@@ -52,6 +55,8 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
       await subscribe({ planId, tenantData });
     } catch (error: unknown) {
       void toastResponseError(error);
+    } finally {
+      setIsSubmitting(undefined);
     }
   };
 
@@ -82,6 +87,10 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
             <PlanCardItem
               key={plan.id}
               plan={plan}
+              buttonProps={{
+                isLoading: isSubmitting === plan.id,
+                disabled: Boolean(isSubmitting),
+              }}
               onSelect={() => {
                 void handleSelectPlan(plan);
               }}

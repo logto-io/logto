@@ -1,6 +1,6 @@
-import type { User, CreateUser, Scope, BindMfa, MfaVerification } from '@logto/schemas';
+import type { BindMfa, CreateUser, MfaVerification, Scope, User } from '@logto/schemas';
 import { MfaFactor, RoleType, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { generateStandardShortId, generateStandardId } from '@logto/shared';
+import { generateStandardId, generateStandardShortId } from '@logto/shared';
 import { deduplicateByKey, type Nullable } from '@silverhand/essentials';
 import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
 import pRetry from 'p-retry';
@@ -89,6 +89,7 @@ export const createUserLibrary = (queries: Queries) => {
     scopes: { findScopesByIdsAndResourceIndicator },
     organizations,
     oidcModelInstances: { revokeInstanceByUserId },
+    userSsoIdentities,
   } = queries;
 
   const generateUserId = async (retries = 500) =>
@@ -282,6 +283,12 @@ export const createUserLibrary = (queries: Queries) => {
     ]);
   };
 
+  /**
+   * Expose the findUserSsoIdentitiesByUserId query method for the user library.
+   */
+  const findUserSsoIdentities = async (userId: string) =>
+    userSsoIdentities.findUserSsoIdentitiesByUserId(userId);
+
   return {
     generateUserId,
     insertUser,
@@ -292,5 +299,6 @@ export const createUserLibrary = (queries: Queries) => {
     addUserMfaVerification,
     verifyUserPassword,
     signOutUser,
+    findUserSsoIdentities,
   };
 };

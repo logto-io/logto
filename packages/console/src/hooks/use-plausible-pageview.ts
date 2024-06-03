@@ -3,7 +3,6 @@ import debug from 'debug';
 import { useEffect } from 'react';
 import { type RouteObject, useLocation } from 'react-router-dom';
 
-import { plausibleDataDomain } from '@/components/Conversion/utils';
 import { getRoutePattern } from '@/utils/route';
 
 const log = debug('usePlausiblePageview');
@@ -25,7 +24,7 @@ export const usePlausiblePageview = (routes: RouteObject[], prefix: string) => {
     // https://plausible.io/docs/custom-locations#3-specify-a-custom-location
     window.plausible?.('pageview', {
       u:
-        appendPath(new URL('https://' + plausibleDataDomain), prefix, routePattern).href +
+        appendPath(new URL('https://' + window.location.hostname), prefix, routePattern).href +
         window.location.search,
     });
   }, [pathname, prefix, routes]);

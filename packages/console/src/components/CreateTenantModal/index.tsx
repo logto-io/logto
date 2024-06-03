@@ -1,6 +1,8 @@
 import { Theme, TenantTag } from '@logto/schemas';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
@@ -8,7 +10,6 @@ import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import Region, { RegionName } from '@/components/Region';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -53,11 +54,13 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
     onClose(newTenant);
   };
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const onCreateClick = handleSubmit(async (data: CreateTenantData) => {
     const { tag } = data;
     if (tag === TenantTag.Development) {
       await createTenant(data);
+      toast.success(t('tenants.create_modal.tenant_created'));
       return;
     }
 
@@ -86,6 +89,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
         }
         footer={
           <Button
+            isLoading={isSubmitting}
             disabled={isSubmitting}
             htmlType="submit"
             title="tenants.create_modal.create_button"
@@ -104,11 +108,12 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               autoFocus
               {...register('name', { required: true })}
               error={Boolean(errors.name)}
+              disabled={isSubmitting}
             />
           </FormField>
           <FormField
             title="tenants.settings.tenant_region"
-            description="tenants.settings.tenant_region_description"
+            tip={t('tenants.settings.tenant_region_description')}
           >
             <Controller
               control={control}
@@ -122,14 +127,11 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                       key={region}
                       title={
                         <DangerousRaw>
-                          <Region
-                            regionName={region}
-                            isComingSoon={!isDevFeaturesEnabled && region !== RegionName.EU}
-                          />
+                          <Region regionName={region} />
                         </DangerousRaw>
                       }
                       value={region}
-                      isDisabled={!isDevFeaturesEnabled && region !== RegionName.EU}
+                      isDisabled={isSubmitting}
                     />
                   ))}
                 </RadioGroup>
@@ -168,6 +170,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                * Note: only close the create tenant modal when tenant is created successfully
                */
               onClose(tenant);
+              toast.success(t('tenants.create_modal.tenant_created'));
             }
           }}
         />

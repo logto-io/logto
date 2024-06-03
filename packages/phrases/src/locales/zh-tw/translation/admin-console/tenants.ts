@@ -41,7 +41,6 @@ const tenants = {
   },
   create_modal: {
     title: '建立客戶',
-    subtitle: '創建一個具有隔離資源和用戶的新租戶。數據托管的區域和租戶類型在創建後無法修改。',
     tenant_usage_purpose: '您希望將此租戶用於什麼目的？',
     development_description: '僅供測試，不應在生產環境中使用。無需訂閱。',
     development_hint: '它擁有所有專業功能，但存在限制，如登入橫幅。',

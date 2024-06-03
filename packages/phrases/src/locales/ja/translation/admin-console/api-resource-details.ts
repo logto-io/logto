@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     'Logto管理APIは、管理者が幅広いID関連タスクを管理し、セキュリティポリシーを強制し、規制や標準に準拠するための包括的なAPIのコレクションです。',
   management_api_notice:
-    'このAPIはLogtoエンティティを表し、変更または削除することはできません。管理APIを使用して、幅広いID関連タスクを実行できます。 <a>詳細</a>',
+    'この API は Logto エンティティを表しており、変更や削除はできません。Logto 管理 API を呼び出すには、マシン間アプリケーションを作成してください。 <a>詳細はこちら</a>',
   token_expiration_time_in_seconds: 'トークンの有効期限（秒単位）',
   token_expiration_time_in_seconds_placeholder: 'トークンの有効期限を入力してください',
   delete_description:

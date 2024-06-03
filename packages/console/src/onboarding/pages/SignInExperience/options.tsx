@@ -15,7 +15,6 @@ import Facebook from '../../assets/icons/social-facebook.svg';
 import Kakao from '../../assets/icons/social-kakao.svg';
 import Microsoft from '../../assets/icons/social-microsoft.svg';
 import Oidc from '../../assets/icons/social-oidc.svg';
-import Smal from '../../assets/icons/social-smal.svg';
 
 import { Authentication } from './types';
 
@@ -82,14 +81,6 @@ export const fakeSocialTargetOptions: MultiCardSelectorOption[] = [
     icon: <Oidc />,
     title: <DangerousRaw>OIDC</DangerousRaw>,
     value: 'fake-oidc',
-    tag: 'cloud.sie.connectors.unlocked_later',
-    isDisabled: true,
-    disabledTip: 'cloud.sie.connectors.unlocked_later_tip',
-  },
-  {
-    icon: <Smal />,
-    title: <DangerousRaw>SAML</DangerousRaw>,
-    value: 'fake-saml',
     tag: 'cloud.sie.connectors.unlocked_later',
     isDisabled: true,
     disabledTip: 'cloud.sie.connectors.unlocked_later_tip',

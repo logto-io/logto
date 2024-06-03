@@ -9,7 +9,7 @@
     "/api/organization-invitations": {
       "get": {
         "summary": "Get organization invitations",
-        "description": "Get organization invitations with pagination.",
+        "description": "Get organization invitations.",
         "parameters": [],
         "responses": {
           "200": {

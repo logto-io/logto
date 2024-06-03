@@ -57,7 +57,8 @@ const applications = {
   m2m_role_assignment: {
     title: '권한을 위해 기계 간 역할로 앱을 인증합니다',
     subtitle: '기계 간 애플리케이션은 인증된 기계 간 역할이 필요합니다.',
-    role_creation_hint: '기계 간 역할이 없습니까? <a>먼저 기계 간</a> 역할을 만드십시오',
+    role_creation_hint:
+      '적절한 머신 투 머신 역할을 찾을 수 없습니까? <a>머신 투 머신 역할 만들기</a>',
   },
 };
 

@@ -57,7 +57,7 @@ const applications = {
     title: 'Authorize app with machine-to-machine role for permissions',
     subtitle: 'Machine-to-machine applications require authorized machine-to-machine role.',
     role_creation_hint:
-      'Doesn’t have a machine-to-machine role? <a>Create a machine-to-machine</a> role first',
+      'Can’t find the right machine-to-machine role? <a>Create a machine-to-machine role</a>',
   },
 };
 

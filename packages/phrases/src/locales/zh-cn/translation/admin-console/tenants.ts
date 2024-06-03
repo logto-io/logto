@@ -41,7 +41,6 @@ const tenants = {
   },
   create_modal: {
     title: '创建租户',
-    subtitle: '创建一个具有隔离资源和用户的新租户。数据托管的区域和租户类型在创建后无法修改。',
     tenant_usage_purpose: '您想要使用此租户做什么?',
     development_description: '仅用于测试，不应在生产环境中使用。不需要订阅。',
     development_hint: '它具有所有专业功能，但有像登录横幅之类的限制。',

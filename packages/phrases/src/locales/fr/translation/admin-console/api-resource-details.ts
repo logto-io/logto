@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     "La Logto Management API est une collection complète d'API qui permettent aux administrateurs de gérer une large gamme de tâches liées à l'identité, d'appliquer des politiques de sécurité et de se conformer aux réglementations et normes.",
   management_api_notice:
-    "Cette API représente l'entité Logto et ne peut pas être modifiée ou supprimée. Vous pouvez utiliser l'API de gestion pour effectuer une large gamme de tâches liées à l'identité. <a>En savoir plus</a>",
+    "Cette API représente l'entité Logto et ne peut pas être modifiée ou supprimée. Créez une application de machine à machine pour appeler l'API de gestion de Logto. <a>En savoir plus</a>",
   token_expiration_time_in_seconds: "Temps d'expiration du jeton (en secondes)",
   token_expiration_time_in_seconds_placeholder: "Entrez le délai d'expiration de votre jeton",
   delete_description:
