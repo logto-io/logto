@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import { condObject, isObject } from '@silverhand/essentials';
 import i18next from 'i18next';
 import type { Middleware } from 'koa';
@@ -6,6 +7,7 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 /**
  * Supplementary URIs for oidc-provider errors.
@@ -87,6 +89,9 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
       if (!(error instanceof errors.OIDCProviderError)) {
         throw error;
       }
+
+      // Report oidc exceptions to ApplicationInsights
+      void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
 
       // Mimic oidc-provider's error handling, thus we can use the unified logic below.
       // See https://github.com/panva/node-oidc-provider/blob/37d0a6cfb3c618141a44cbb904ce45659438f821/lib/shared/error_handler.js
