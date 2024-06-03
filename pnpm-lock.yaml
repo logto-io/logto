@@ -1369,8 +1369,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-38aae44
-        version: 0.2.5-38aae44(zod@3.22.4)
+        specifier: 0.2.5-a7eedce
+        version: 0.2.5-a7eedce(zod@3.22.4)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.7
         version: 25.0.7(rollup@4.12.0)
@@ -2855,8 +2855,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-38aae44
-        version: 0.2.5-38aae44(zod@3.22.4)
+        specifier: 0.2.5-a7eedce
+        version: 0.2.5-a7eedce(zod@3.22.4)
       '@logto/connector-kit':
         specifier: workspace:^3.0.0
         version: link:../toolkit/connector-kit
@@ -3351,8 +3351,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-38aae44
-        version: 0.2.5-38aae44(zod@3.22.4)
+        specifier: 0.2.5-a7eedce
+        version: 0.2.5-a7eedce(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -5261,8 +5261,8 @@ packages:
   '@logto/client@2.6.6':
     resolution: {integrity: sha512-QT7jMnzEIWHBNrf9/M8p1OErRBbbNZjoekXGji5aZCyUh975hh8+GEBL21HV71FT3H/5Cq4Gf1GzUbAIW3izMA==}
 
-  '@logto/cloud@0.2.5-38aae44':
-    resolution: {integrity: sha512-YvsX4nCxP1vOhLVnaNhDNHYsL9qUPJN+q2f8PtAK/ZzHj92MU590dVaOdqSr47Rd44mERoZ9R2sTlHYciOqxOA==}
+  '@logto/cloud@0.2.5-a7eedce':
+    resolution: {integrity: sha512-FFjkGjqUgn9PCZnSuCODm2FcjqBm4JfPxfHCiXlOkUjeUhTJLrj7C0gjKzSQ/B6IaWri4EXN/meuqi5z/AMIPg==}
     engines: {node: ^20.9.0}
 
   '@logto/js@4.1.1':
@@ -14749,7 +14749,7 @@ snapshots:
       camelcase-keys: 7.0.2
       jose: 5.2.2
 
-  '@logto/cloud@0.2.5-38aae44(zod@3.22.4)':
+  '@logto/cloud@0.2.5-a7eedce(zod@3.22.4)':
     dependencies:
       '@silverhand/essentials': 2.9.1
       '@withtyped/server': 0.13.6(zod@3.22.4)
