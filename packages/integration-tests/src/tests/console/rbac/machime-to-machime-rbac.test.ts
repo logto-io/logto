@@ -251,10 +251,10 @@ describe('M2M RBAC', () => {
       });
 
       await expect(page).toClick('div[class$=filter] button span', {
-        text: 'Assign applications',
+        text: 'Assign machine-to-machine apps',
       });
 
-      await expectModalWithTitle(page, 'Assign apps');
+      await expectModalWithTitle(page, `Assign machine-to-machine apps to ${roleName}`);
 
       await expect(page).toFill('.ReactModalPortal input[type=text]', rbacTestAppname);
       await expect(page).toClick(
@@ -263,7 +263,7 @@ describe('M2M RBAC', () => {
           text: rbacTestAppname,
         }
       );
-      await expectToClickModalAction(page, 'Assign applications');
+      await expectToClickModalAction(page, 'Assign machine-to-machine apps');
 
       await waitForToast(page, {
         text: 'The selected applications were successfully assigned to this role',
@@ -308,14 +308,14 @@ describe('M2M RBAC', () => {
     it('add a role to m2m app on the application details page', async () => {
       // Go to roles tab
       await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-        text: 'Roles',
+        text: 'Machine-to-machine roles',
       });
 
       await expect(page).toClick('div[class$=filter] button span', {
-        text: 'Assign roles',
+        text: 'Assign machine-to-machine roles',
       });
 
-      await expectModalWithTitle(page, `Assign roles to ${rbacTestAppname}`);
+      await expectModalWithTitle(page, `Assign machine-to-machine roles to ${rbacTestAppname}`);
 
       await expect(page).toClick(
         '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div',
@@ -324,7 +324,7 @@ describe('M2M RBAC', () => {
         }
       );
 
-      await expectToClickModalAction(page, 'Assign roles');
+      await expectToClickModalAction(page, 'Assign machine-to-machine roles');
 
       await waitForToast(page, {
         text: 'Successfully assigned role(s)',

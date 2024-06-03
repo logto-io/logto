@@ -16,7 +16,7 @@ const role_details = {
   field_is_default: 'Ruolo predefinito',
   field_is_default_description:
     "Imposta questo ruolo come ruolo predefinito per i nuovi utenti. Possono essere impostati più ruoli predefiniti. Ciò influenzerà anche i ruoli predefiniti per gli utenti creati tramite l'API di gestione.",
-  type_m2m_role_tag: 'Ruolo app macchina-to-macchina',
+  type_m2m_role_tag: 'Ruolo macchina a macchina',
   type_user_role_tag: 'Ruolo utente',
   m2m_role_notification:
     "Assegna questo ruolo di macchina a macchina a un'applicazione di macchina a macchina per concedere l'accesso alle risorse API relative. <a>Crea prima un'applicazione di macchina a macchina</a> se non l'hai ancora fatto.",
@@ -46,27 +46,26 @@ const role_details = {
     delete_description:
       "Resterà nella tua raccolta di utenti ma perderà l'autorizzazione per questo ruolo.",
     deleted: '{{name}} è stato rimosso con successo da questo ruolo',
-    assign_title: 'Assegna utenti',
-    assign_subtitle:
-      'Assegna utenti a questo ruolo. Trova utenti appropriati cercando nome, email, telefono o ID utente.',
+    assign_title: 'Assegna utenti a {{name}}',
+    assign_subtitle: 'Trova utenti appropriati cercando per nome, email, telefono o ID utente.',
     assign_field: 'Assegna utenti',
     confirm_assign: 'Assegna utenti',
     assigned_toast_text: 'Gli utenti selezionati sono stati assegnati con successo a questo ruolo',
     empty: 'Nessun utente disponibile',
   },
   applications: {
-    assign_button: 'Assegna applicazioni',
+    assign_button: 'Assegna applicazioni macchina a macchina',
     name_column: 'Applicazione',
-    app_column: 'App',
+    app_column: 'Applicazione macchina a macchina',
     description_column: 'Descrizione',
     delete_description:
       "Rimarrà nel pool delle tue applicazioni ma perderà l'autorizzazione per questo ruolo.",
     deleted: '{{name}} è stato rimosso con successo da questo ruolo',
-    assign_title: 'Assegna applicazioni',
+    assign_title: 'Assegna applicazioni macchina a macchina a {{name}}',
     assign_subtitle:
-      'Assegna applicazioni a questo ruolo. Trova le applicazioni appropriate cercando nome, descrizione o ID app.',
-    assign_field: 'Assegna applicazioni',
-    confirm_assign: 'Assegna applicazioni',
+      "Trova le applicazioni macchina a macchina appropriate cercando per nome, descrizione o ID dell'app.",
+    assign_field: 'Assegna applicazioni macchina a macchina',
+    confirm_assign: 'Assegna applicazioni macchina a macchina',
     assigned_toast_text:
       'Le applicazioni selezionate sono state assegnate con successo a questo ruolo',
     empty: 'Nessuna applicazione disponibile',

@@ -16,7 +16,7 @@ const role_details = {
   field_is_default: 'Rol por defecto',
   field_is_default_description:
     'Establecer este rol como un rol por defecto para los nuevos usuarios. Se pueden establecer varios roles por defecto. Esto también afectará a los roles por defecto para los usuarios creados a través de la API de gestión.',
-  type_m2m_role_tag: 'Rol de aplicación de máquina a máquina',
+  type_m2m_role_tag: 'Rol de máquina a máquina',
   type_user_role_tag: 'Rol de usuario',
   m2m_role_notification:
     'Asigne este rol de máquina a máquina a una aplicación de máquina a máquina para otorgar acceso a los recursos de API relativos. <a>Cree primero una aplicación de máquina a máquina</a> si aún no lo ha hecho.',
@@ -45,27 +45,27 @@ const role_details = {
     delete_description:
       'Permanecerá en su conjunto de usuarios, pero perderá la autorización para este rol.',
     deleted: '{{name}} fue eliminado correctamente de este rol',
-    assign_title: 'Asignar usuarios',
+    assign_title: 'Asignar usuarios a {{name}}',
     assign_subtitle:
-      'Asignar usuarios a este rol. Encuentre usuarios apropiados buscando nombre, correo electrónico, teléfono o ID de usuario.',
+      'Encuentra usuarios apropiados buscando por nombre, correo electrónico, teléfono o ID de usuario.',
     assign_field: 'Asignar usuarios',
     confirm_assign: 'Asignar usuarios',
     assigned_toast_text: 'Los usuarios seleccionados se asignaron correctamente a este rol',
     empty: 'No hay usuarios disponibles',
   },
   applications: {
-    assign_button: 'Asignar aplicaciones',
+    assign_button: 'Asignar aplicaciones de máquina a máquina',
     name_column: 'Aplicación',
-    app_column: 'Aplicaciones',
+    app_column: 'Aplicación de máquina a máquina',
     description_column: 'Descripción',
     delete_description:
       'Permanecerá en su conjunto de aplicaciones, pero perderá la autorización para este rol.',
     deleted: '{{name}} se eliminó correctamente de este rol',
-    assign_title: 'Asignar aplicaciones',
+    assign_title: 'Asignar aplicaciones de máquina a máquina a {{name}}',
     assign_subtitle:
-      'Asignar aplicaciones a este rol. Encuentre las aplicaciones adecuadas buscando el nombre, la descripción o el ID de la aplicación.',
-    assign_field: 'Asignar aplicaciones',
-    confirm_assign: 'Asignar aplicaciones',
+      'Encuentra aplicaciones de máquina a máquina apropiadas buscando por nombre, descripción o ID de aplicación.',
+    assign_field: 'Asignar aplicaciones de máquina a máquina',
+    confirm_assign: 'Asignar aplicaciones de máquina a máquina',
     assigned_toast_text: 'Las aplicaciones seleccionadas se asignaron correctamente a este rol',
     empty: 'No hay aplicaciones disponibles',
   },

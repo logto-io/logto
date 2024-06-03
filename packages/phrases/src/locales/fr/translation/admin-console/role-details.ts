@@ -16,7 +16,7 @@ const role_details = {
   field_is_default: 'Rôle par défaut',
   field_is_default_description:
     "Définissez ce rôle comme rôle par défaut pour les nouveaux utilisateurs. Plusieurs rôles par défaut peuvent être définis. Cela affectera également les rôles par défaut des utilisateurs créés via l'API de gestion.",
-  type_m2m_role_tag: "Rôle de l'application machine-à-machine",
+  type_m2m_role_tag: 'Rôle machine à machine',
   type_user_role_tag: "Rôle d'utilisateur",
   m2m_role_notification:
     "Attribuez ce rôle machine à machine à une application machine à machine pour accorder l'accès aux ressources d'API relatives. <a>Créez d'abord une application machine à machine</a> si ce n'est pas déjà fait.",
@@ -45,27 +45,27 @@ const role_details = {
     delete_description:
       "Il restera dans votre répertoire d'utilisateurs mais perdra l'autorisation pour ce rôle.",
     deleted: '{{name}} a été supprimé avec succès de ce rôle',
-    assign_title: 'Attribuer des utilisateurs',
+    assign_title: 'Attribuer des utilisateurs à {{name}}',
     assign_subtitle:
-      'Attribuez des utilisateurs à ce rôle. Trouvez les utilisateurs appropriés en recherchant leur nom, leur e-mail, leur numéro de téléphone ou leur ID utilisateur.',
+      'Trouvez des utilisateurs appropriés en recherchant par nom, email, téléphone ou ID utilisateur.',
     assign_field: 'Assigner des utilisateurs',
     confirm_assign: 'Attribuer des utilisateurs',
     assigned_toast_text: 'Les utilisateurs sélectionnés ont été attribués avec succès à ce rôle',
     empty: 'Aucun utilisateur disponible',
   },
   applications: {
-    assign_button: 'Assigner des applications',
+    assign_button: 'Attribuer des applications machine à machine',
     name_column: 'Application',
-    app_column: 'Applications',
+    app_column: 'Application machine à machine',
     description_column: 'Description',
     delete_description:
       "Elle restera dans votre pool d'applications mais perdra l'autorisation pour ce rôle.",
     deleted: '{{name}} a été supprimé avec succès de ce rôle',
-    assign_title: 'Assigner des applications',
+    assign_title: 'Attribuer des applications machine à machine à {{name}}',
     assign_subtitle:
-      "Assignez des applications à ce rôle. Trouvez les applications appropriées en recherchant par nom, description ou ID de l'application.",
-    assign_field: 'Assigner des applications',
-    confirm_assign: 'Assigner des applications',
+      "Trouvez des applications machine à machine appropriées en recherchant par nom, description ou ID d'application.",
+    assign_field: 'Attribuer des applications machine à machine',
+    confirm_assign: 'Attribuer des applications machine à machine',
     assigned_toast_text: 'Les applications sélectionnées ont été attribuées avec succès à ce rôle',
     empty: 'Aucune application disponible',
   },

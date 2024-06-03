@@ -266,7 +266,7 @@ describe('applications', () => {
           }
         );
 
-        await expectToClickModalAction(page, 'Assign roles');
+        await expectToClickModalAction(page, 'Assign machine-to-machine roles');
 
         await waitForToast(page, {
           text: 'Successfully assigned role(s)',

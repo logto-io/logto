@@ -16,7 +16,7 @@ const role_details = {
   field_is_default: 'Domyślna rola',
   field_is_default_description:
     'Ustaw tę rolę jako domyślną rolę dla nowych użytkowników. Można ustawić wiele domyślnych ról. To również wpłynie na domyślne role dla użytkowników utworzonych za pomocą interfejsu API zarządzania.',
-  type_m2m_role_tag: 'Rola aplikacji maszynowych',
+  type_m2m_role_tag: '머신 투 머신 역할',
   type_user_role_tag: 'Rola użytkownika',
   m2m_role_notification:
     'Przypisz tę rolę maszyny do maszyny do aplikacji maszyny do maszyny, aby umożliwić dostęp do odpowiednich zasobów API. <a>Najpierw utwórz aplikację maszyny do maszyny</a>, jeśli jeszcze tego nie zrobiłeś.',
@@ -45,9 +45,9 @@ const role_details = {
     delete_description:
       'Osoba pozostanie w bazie użytkowników, ale straci autoryzację dla tej roli.',
     deleted: '{{name}} został pomyślnie usunięty z tej roli',
-    assign_title: 'Przydziel użytkowników',
+    assign_title: 'Przypisz użytkowników do {{name}}',
     assign_subtitle:
-      'Przydziel użytkowników do tej roli. Znajdź odpowiednich użytkowników, wyszukując po nazwie, adresie e-mail, numerze telefonu lub identyfikatorze użytkownika.',
+      'Znajdź odpowiednich użytkowników, wyszukując imię, e-mail, telefon lub identyfikator użytkownika.',
     assign_field: 'Przydziel użytkowników',
     confirm_assign: 'Przydziel użytkowników',
     assigned_toast_text: 'Wybrani użytkownicy zostali pomyślnie przydzieleni do tej roli',
