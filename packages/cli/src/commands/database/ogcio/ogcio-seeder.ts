@@ -9,6 +9,7 @@ export type OgcioSeeder = {
   organization_roles: OrganizationRoleSeeder[];
   applications: ApplicationSeeder[];
   resources: ResourceSeeder[];
+  connectors: ConnectorSeeder[];
   resource_permissions: ResourcePermissionSeeder[];
   resource_roles: ResourceRoleSeeder[];
 };
@@ -45,6 +46,28 @@ export type ResourceSeeder = {
   id: string;
   name: string;
   indicator: string;
+};
+
+export type ConnectorSeeder = {
+  id: string;
+  sync_profile: boolean;
+  connector_id: string;
+  config: {
+    clientId: string;
+    profileMap: Record<string, string>;
+    clientSecret: string;
+    tokenEndpoint: string;
+    userInfoEndpoint: string;
+    authorizationEndpoint: string;
+    tokenEndpointAuthMethod: string;
+    tokenEndpointResponseType: string;
+    clientSecretJwtSigningAlgorithm: string;
+  };
+  metadata: {
+    logo: string;
+    name: Record<string, string>;
+    target: string;
+  };
 };
 
 export type ResourcePermissionSeeder = {

@@ -5,6 +5,7 @@
 import type { CommonQueryMethods, DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { seedApplications } from './applications.js';
+import { seedConnectors } from './connectors.js';
 import { getTenantSeederData, type OgcioSeeder } from './ogcio-seeder.js';
 import { seedOrganizationRbacData } from './organizations-rbac.js';
 import { createOrganizations } from './organizations.js';
@@ -41,6 +42,11 @@ const createDataForTenant = async (
     transaction,
     toSeed: tenantData,
     seededResources: resources,
+  });
+  const connectors = await seedConnectors({
+    transaction,
+    tenantId,
+    connectors: tenantData.connectors,
   });
 };
 
