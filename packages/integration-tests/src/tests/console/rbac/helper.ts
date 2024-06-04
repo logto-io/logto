@@ -46,7 +46,7 @@ export const createM2mRoleAndAssignPermissions = async (
   await expectModalWithTitle(page, 'Create role');
 
   await expect(page).toClick('div[class*=radioGroup][class$=roleTypes] div[class$=content]', {
-    text: 'Machine-to-machine app role',
+    text: 'Machine-to-machine role',
   });
 
   await expect(page).toFillForm('.ReactModalPortal form', {

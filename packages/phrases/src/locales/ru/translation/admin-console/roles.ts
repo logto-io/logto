@@ -7,7 +7,7 @@ const roles = {
   role_name: 'Имя роли',
   role_type: 'Тип роли',
   type_user: 'Роль пользователя',
-  type_machine_to_machine: 'Роль приложения между машинами',
+  type_machine_to_machine: 'Роль машина-машина',
   role_description: 'Описание',
   role_name_placeholder: 'Введите название роли',
   role_description_placeholder: 'Введите описание роли',

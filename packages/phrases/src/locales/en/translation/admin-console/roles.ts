@@ -7,7 +7,7 @@ const roles = {
   role_name: 'Role name',
   role_type: 'Role type',
   type_user: 'User role',
-  type_machine_to_machine: 'Machine-to-machine app role',
+  type_machine_to_machine: 'Machine-to-machine role',
   role_description: 'Description',
   role_name_placeholder: 'Enter your role name',
   role_description_placeholder: 'Enter your role description',
