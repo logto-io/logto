@@ -53,8 +53,6 @@ const applications = {
   placeholder_description:
     'Logto 使用 OIDC 的应用程序实体来帮助识别你的应用程序、管理登录和创建审计日志等任务。',
   m2m_role_assignment: {
-    title: '使用机器到机器角色授权应用程序以获取权限',
-    subtitle: '机器对机器应用程序需要经过授权的机器对机器角色。',
     role_creation_hint: '找不到合适的机器对机器角色？<a>创建一个机器对机器角色</a>',
   },
 };

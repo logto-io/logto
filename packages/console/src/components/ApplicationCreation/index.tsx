@@ -37,10 +37,6 @@ function ApplicationCreation({ onCompleted, ...reset }: Props) {
         isSkippable
         entity={createdMachineToMachineApplication}
         type={RoleType.MachineToMachine}
-        modalTextOverrides={{
-          title: 'applications.m2m_role_assignment.title',
-          subtitle: 'applications.m2m_role_assignment.subtitle',
-        }}
         onClose={() => {
           onCompleted?.(createdMachineToMachineApplication);
         }}

@@ -254,10 +254,7 @@ describe('applications', () => {
 
       // Expect to assign management API access role for the M2M app
       if (app.type === ApplicationType.MachineToMachine) {
-        await expectModalWithTitle(
-          page,
-          'Authorize app with machine-to-machine role for permissions'
-        );
+        await expectModalWithTitle(page, `Assign machine-to-machine roles to ${app.name}`);
 
         await expect(page).toClick(
           '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div',

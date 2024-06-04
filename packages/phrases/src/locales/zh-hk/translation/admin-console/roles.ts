@@ -7,7 +7,7 @@ const roles = {
   role_name: '角色名稱',
   role_type: '角色類型',
   type_user: '用戶角色',
-  type_machine_to_machine: '機器到機器應用程式角色',
+  type_machine_to_machine: '機器對機器角色',
   role_description: '描述',
   role_name_placeholder: '輸入你的角色名稱',
   role_description_placeholder: '輸入你的角色描述',
