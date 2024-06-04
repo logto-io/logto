@@ -117,7 +117,7 @@ type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
  */
 export const managementApiHooksRegistration = Object.freeze({
   'POST /users': 'User.Created',
-  'DELETE /users/:userId': 'User.Deleted',
+  // `User.Deleted` event is triggered manually in the `DELETE /users/:userId` route for better payload control
   'PATCH /users/:userId': 'User.Data.Updated',
   'PATCH /users/:userId/custom-data': 'User.Data.Updated',
   'PATCH /users/:userId/profile': 'User.Data.Updated',

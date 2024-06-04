@@ -11,6 +11,7 @@ import { conditional, pick, yes } from '@silverhand/essentials';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -373,10 +374,19 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         throw new RequestError('user.cannot_delete_self');
       }
 
+      const user = await findUserById(userId);
+
       await signOutUser(userId);
       await deleteUserById(userId);
 
       ctx.status = 204;
+
+      // Manually trigger the `User.Deleted` hook since we need to send the user data in the payload
+      ctx.appendDataHookContext({
+        event: 'User.Deleted',
+        ...buildManagementApiContext(ctx),
+        data: pick(user, ...userInfoSelectFields),
+      });
 
       return next();
     }

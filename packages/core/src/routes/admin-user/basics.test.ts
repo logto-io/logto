@@ -5,6 +5,7 @@ import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockUser, mockUserResponse } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
@@ -95,7 +96,11 @@ describe('adminUserRoutes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
     users: usersLibraries,
   });
-  const userRequest = createRequester({ authedRoutes: adminUserRoutes, tenantContext });
+  const userRequest = createRequester({
+    middlewares: [koaManagementApiHooks(tenantContext.libraries.hooks)],
+    authedRoutes: adminUserRoutes,
+    tenantContext,
+  });
 
   afterEach(() => {
     jest.clearAllMocks();

@@ -1,5 +1,7 @@
-import { hookEvents } from '@logto/schemas';
+import { hookEvents, userInfoSelectFields } from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 
+import { createUser, deleteUser } from '#src/api/admin-user.js';
 import { OrganizationRoleApi } from '#src/api/organization-role.js';
 import { OrganizationScopeApi } from '#src/api/organization-scope.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
@@ -93,5 +95,19 @@ describe('trigger custom data hook events', () => {
 
     await roleApi.delete(organizationRole.id);
     await organizationScopeApi.delete(scope.id);
+  });
+
+  it('delete user should trigger User.Deleted event with selected user info', async () => {
+    const user = await createUser();
+    const hook = webHookApi.hooks.get(hookName)!;
+
+    await deleteUser(user.id);
+
+    await assertHookLogResult(hook, 'User.Deleted', {
+      hookPayload: {
+        event: 'User.Deleted',
+        data: pick(user, ...userInfoSelectFields),
+      },
+    });
   });
 });
