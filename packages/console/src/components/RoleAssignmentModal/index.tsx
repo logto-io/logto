@@ -39,17 +39,9 @@ type Props = (
     subtitle?: AdminConsoleKey;
   };
   readonly isSkippable?: boolean;
-  readonly isMachineToMachineRoleCreationHintVisible?: boolean;
 };
 
-function RoleAssignmentModal({
-  entity,
-  onClose,
-  type,
-  modalTextOverrides,
-  isSkippable,
-  isMachineToMachineRoleCreationHintVisible,
-}: Props) {
+function RoleAssignmentModal({ entity, onClose, type, modalTextOverrides, isSkippable }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -149,17 +141,19 @@ function RoleAssignmentModal({
             setRoles(value);
           }}
         />
-        {!isForUser && isMachineToMachineRoleCreationHintVisible && (
-          <div className={styles.hint}>
-            <Trans
-              components={{
-                a: <TextLink to="/roles" />,
-              }}
-            >
-              {t('applications.m2m_role_assignment.role_creation_hint')}
-            </Trans>
-          </div>
-        )}
+        <div className={styles.hint}>
+          <Trans
+            components={{
+              a: <TextLink to="/roles/create" />,
+            }}
+          >
+            {t(
+              isForUser
+                ? 'user_details.roles.create_user_role_hint'
+                : 'applications.m2m_role_assignment.role_creation_hint'
+            )}
+          </Trans>
+        </div>
       </ModalLayout>
     </ReactModal>
   );

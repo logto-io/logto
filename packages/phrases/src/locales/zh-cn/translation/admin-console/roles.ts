@@ -6,8 +6,6 @@ const roles = {
   create: '创建角色',
   role_name: '角色名称',
   role_type: '角色类型',
-  show_role_type_button_text: '展示更多选项',
-  hide_role_type_button_text: '隐藏更多选项',
   type_user: '用户角色',
   type_machine_to_machine: '机器对机器应用程序角色',
   role_description: '描述',

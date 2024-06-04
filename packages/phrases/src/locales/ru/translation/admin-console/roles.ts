@@ -6,8 +6,6 @@ const roles = {
   create: 'Создать роль',
   role_name: 'Имя роли',
   role_type: 'Тип роли',
-  show_role_type_button_text: 'Показать дополнительные варианты',
-  hide_role_type_button_text: 'Скрыть дополнительные варианты',
   type_user: 'Роль пользователя',
   type_machine_to_machine: 'Роль приложения между машинами',
   role_description: 'Описание',

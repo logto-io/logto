@@ -2,14 +2,10 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import type { Role, ScopeResponse } from '@logto/schemas';
 import { RoleType, internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
-import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -41,7 +37,6 @@ type CreateRolePayload = Pick<Role, 'name' | 'description' | 'type'> & {
 };
 
 function CreateRoleForm({ onClose }: Props) {
-  const [isTypeSelectorVisible, setIsTypeSelectorVisible] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -106,47 +101,27 @@ function CreateRoleForm({ onClose }: Props) {
             placeholder={t('roles.role_name_placeholder')}
             error={errors.name?.message}
           />
-          <Button
-            type="text"
-            size="small"
-            title={
-              isTypeSelectorVisible
-                ? 'roles.hide_role_type_button_text'
-                : 'roles.show_role_type_button_text'
-            }
-            trailingIcon={
-              <div className={styles.trailingIcon}>
-                {isTypeSelectorVisible ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-              </div>
-            }
-            className={styles.roleTypeSelectionSwitch}
-            onClick={() => {
-              setIsTypeSelectorVisible(!isTypeSelectorVisible);
-            }}
+        </FormField>
+        <FormField title="roles.role_type">
+          <Controller
+            name="type"
+            control={control}
+            render={({ field: { onChange, value, name } }) => (
+              <RadioGroup
+                name={name}
+                className={styles.roleTypes}
+                value={value}
+                onChange={(value) => {
+                  onChange(value);
+                }}
+              >
+                {radioOptions.map(({ key, value }) => (
+                  <Radio key={value} title={<DynamicT forKey={key} />} value={value} />
+                ))}
+              </RadioGroup>
+            )}
           />
         </FormField>
-        {isTypeSelectorVisible && (
-          <FormField title="roles.role_type">
-            <Controller
-              name="type"
-              control={control}
-              render={({ field: { onChange, value, name } }) => (
-                <RadioGroup
-                  name={name}
-                  className={styles.roleTypes}
-                  value={value}
-                  onChange={(value) => {
-                    onChange(value);
-                  }}
-                >
-                  {radioOptions.map(({ key, value }) => (
-                    <Radio key={value} title={<DynamicT forKey={key} />} value={value} />
-                  ))}
-                </RadioGroup>
-              )}
-            />
-          </FormField>
-        )}
         <FormField isRequired title="roles.role_description">
           <TextInput
             {...register('description', { required: true })}

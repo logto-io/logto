@@ -6,8 +6,6 @@ const roles = {
   create: 'ロールを作成する',
   role_name: '役割名',
   role_type: '役割タイプ',
-  show_role_type_button_text: 'さらにオプションを表示',
-  hide_role_type_button_text: 'さらにオプションを非表示',
   type_user: 'ユーザーの役割',
   type_machine_to_machine: 'マシン対マシンアプリの役割',
   role_description: '説明',
