@@ -35,7 +35,6 @@ function ApplicationCreation({ onCompleted, ...reset }: Props) {
     return (
       <RoleAssignmentModal
         isSkippable
-        isMachineToMachineRoleCreationHintVisible
         entity={createdMachineToMachineApplication}
         type={RoleType.MachineToMachine}
         modalTextOverrides={{

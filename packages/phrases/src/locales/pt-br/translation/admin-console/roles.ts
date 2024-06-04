@@ -6,8 +6,6 @@ const roles = {
   create: 'Criar função',
   role_name: 'Nome da função',
   role_type: 'Tipo de função',
-  show_role_type_button_text: 'Mostrar mais opções',
-  hide_role_type_button_text: 'Esconder mais opções',
   type_user: 'Função do usuário',
   type_machine_to_machine: 'Função de aplicativo de máquina para máquina',
   role_description: 'Descrição',

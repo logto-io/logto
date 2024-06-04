@@ -6,8 +6,6 @@ const roles = {
   create: 'Crea Ruolo',
   role_name: 'Nome ruolo',
   role_type: 'Tipo ruolo',
-  show_role_type_button_text: 'Mostra altre opzioni',
-  hide_role_type_button_text: 'Nascondi altre opzioni',
   type_user: 'Ruolo utente',
   type_machine_to_machine: 'Ruolo app M2M',
   role_description: 'Descrizione',

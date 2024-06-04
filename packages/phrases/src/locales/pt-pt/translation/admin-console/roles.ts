@@ -6,8 +6,6 @@ const roles = {
   create: 'Criar papel',
   role_name: 'Nome do papel',
   role_type: 'Tipo de papel',
-  show_role_type_button_text: 'Mostrar mais opções',
-  hide_role_type_button_text: 'Esconder mais opções',
   type_user: 'Função de usuário',
   type_machine_to_machine: 'Função de aplicação máquina-a-máquina',
   role_description: 'Descrição',

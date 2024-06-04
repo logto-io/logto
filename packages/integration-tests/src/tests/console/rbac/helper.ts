@@ -45,11 +45,6 @@ export const createM2mRoleAndAssignPermissions = async (
 
   await expectModalWithTitle(page, 'Create role');
 
-  // Expand role type selection
-  await expect(page).toClick('button[class$=roleTypeSelectionSwitch] span', {
-    text: 'Show more options',
-  });
-
   await expect(page).toClick('div[class*=radioGroup][class$=roleTypes] div[class$=content]', {
     text: 'Machine-to-machine app role',
   });
