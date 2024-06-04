@@ -14,7 +14,6 @@ import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
 import UserRoleIcon from '@/assets/icons/user-role.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { RoleDetailsTabs } from '@/consts/page-tabs';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -99,8 +98,7 @@ function RoleDetails() {
       className={classNames(isPageHasTable && styles.withTable)}
       onRetry={mutate}
     >
-      {/* Todo @xiaoyijun remove dev feature flag */}
-      {isDevFeaturesEnabled && isM2mRole && !isM2mRoleNotificationAcknowledged && (
+      {isM2mRole && !isM2mRoleNotificationAcknowledged && (
         <InlineNotification
           action="general.got_it"
           onClick={() => {
