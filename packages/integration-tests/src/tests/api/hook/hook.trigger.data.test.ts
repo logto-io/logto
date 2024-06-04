@@ -120,6 +120,11 @@ describe('user data hook events', () => {
       expect(hook?.payload.event).toBe(event);
     }
   );
+
+  // Clean up
+  afterAll(async () => {
+    await authedAdminApi.delete(`users/${userId}`);
+  });
 });
 
 describe('role data hook events', () => {

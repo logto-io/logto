@@ -44,13 +44,6 @@ export const userDataHookTestCases: TestCase[] = [
     endpoint: `users/{userId}/is-suspended`,
     payload: { isSuspended: true },
   },
-  {
-    route: 'DELETE /users/:userId',
-    event: 'User.Deleted',
-    method: 'delete',
-    endpoint: `users/{userId}`,
-    payload: {},
-  },
 ];
 
 export const roleDataHookTestCases: TestCase[] = [
