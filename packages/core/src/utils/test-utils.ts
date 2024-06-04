@@ -112,7 +112,7 @@ type RouteLauncher<T extends ManagementApiRouter | AnonymousRouter> = (
   tenant: TenantContext
 ) => void;
 
-export function createRequester({
+export function createRequester<StateT, ContextT extends IRouterParamContext, ResponseT>({
   anonymousRoutes,
   authedRoutes,
   middlewares,
@@ -120,7 +120,7 @@ export function createRequester({
 }: {
   anonymousRoutes?: RouteLauncher<AnonymousRouter> | Array<RouteLauncher<AnonymousRouter>>;
   authedRoutes?: RouteLauncher<ManagementApiRouter> | Array<RouteLauncher<ManagementApiRouter>>;
-  middlewares?: Middleware[];
+  middlewares?: Array<Middleware<StateT, ContextT, ResponseT>>;
   tenantContext?: TenantContext;
 }) {
   const app = new Koa();

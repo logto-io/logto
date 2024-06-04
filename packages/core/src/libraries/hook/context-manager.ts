@@ -16,8 +16,6 @@ import {
   hasRegisteredDataHookEvent,
 } from './utils.js';
 
-type ManagementApiHooksRegistrationKey = keyof typeof managementApiHooksRegistration;
-
 type DataHookMetadata = {
   userAgent?: string;
   ip: string;

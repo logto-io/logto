@@ -381,7 +381,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 204;
 
-      // Manually trigger the User.Deleted hook with the user data payload
+      // Manually trigger the `User.Deleted` hook since we need to send the user data in the payload
       ctx.appendDataHookContext({
         event: 'User.Deleted',
         ...buildManagementApiContext(ctx),

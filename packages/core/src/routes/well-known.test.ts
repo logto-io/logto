@@ -1,4 +1,4 @@
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import {
   mockAliyunDmConnector,
@@ -63,14 +63,6 @@ describe('GET /.well-known/sign-in-exp', () => {
   const sessionRequest = createRequester({
     anonymousRoutes: wellKnownRoutes,
     tenantContext,
-    middlewares: [
-      async (ctx, next) => {
-        ctx.addLogContext = jest.fn();
-        ctx.log = jest.fn();
-
-        return next();
-      },
-    ],
   });
 
   it('should return github and facebook connector instances', async () => {
