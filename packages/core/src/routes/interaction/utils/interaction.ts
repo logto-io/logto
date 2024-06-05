@@ -2,21 +2,21 @@ import type { Profile } from '@logto/schemas';
 import { InteractionEvent } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import type { Context } from 'koa';
-import { errors } from 'oidc-provider';
-import type { InteractionResults } from 'oidc-provider';
 import type Provider from 'oidc-provider';
+import type { InteractionResults } from 'oidc-provider';
+import { errors } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { anonymousInteractionResultGuard } from '../types/guard.js';
 import type {
-  Identifier,
+  AccountVerifiedInteractionResult,
   AnonymousInteractionResult,
+  Identifier,
+  RegisterInteractionResult,
   VerifiedForgotPasswordInteractionResult,
   VerifiedInteractionResult,
-  RegisterInteractionResult,
-  AccountVerifiedInteractionResult,
   VerifiedRegisterInteractionResult,
 } from '../types/index.js';
 
@@ -170,6 +170,7 @@ export const getInteractionFromProviderByJti = async (
   return interaction;
 };
 
+/** Since we don't have the oidc provider context here, can not use provider.interactionResult */
 export const assignResultToInteraction = async (
   interaction: Interaction,
   result: InteractionResults
