@@ -28,7 +28,8 @@ import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
-import { RoleUserRelationQueries, UserRelationQueries } from './relations.js';
+import { RoleUserRelationQueries } from './role-user-relations.js';
+import { UserRelationQueries } from './user-relations.js';
 
 /**
  * The schema field keys that can be used for searching roles.
