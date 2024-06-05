@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import { signInWithSocial } from '@/apis/interaction';
+import useBindSocialRelatedUser from '@/containers/SocialLinkAccount/use-social-link-related-user';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -21,18 +22,16 @@ import { stateValidation } from '@/utils/social-connectors';
 const useSocialSignInListener = (connectorId: string) => {
   const [loading, setLoading] = useState(true);
   const { setToast } = useToast();
-  const { signInMode } = useSieMethods();
+  const { signInMode, socialSignInSettings } = useSieMethods();
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
 
   const navigate = useNavigate();
-
   const handleError = useErrorHandler();
-
+  const bindSocialRelatedUser = useBindSocialRelatedUser();
   const registerWithSocial = useSocialRegister(connectorId, true);
-
   const asyncSignInWithSocial = useApi(signInWithSocial);
 
   const accountNotExistErrorHandler = useCallback(
@@ -41,10 +40,18 @@ const useSocialSignInListener = (connectorId: string) => {
       const { relatedUser } = data ?? {};
 
       if (relatedUser) {
-        navigate(`/social/link/${connectorId}`, {
-          replace: true,
-          state: { relatedUser },
-        });
+        if (socialSignInSettings.automaticAccountLinking) {
+          const { type, value } = relatedUser;
+          await bindSocialRelatedUser({
+            connectorId,
+            ...(type === 'email' ? { email: value } : { phone: value }),
+          });
+        } else {
+          navigate(`/social/link/${connectorId}`, {
+            replace: true,
+            state: { relatedUser },
+          });
+        }
 
         return;
       }
@@ -52,7 +59,13 @@ const useSocialSignInListener = (connectorId: string) => {
       // Register with social
       await registerWithSocial(connectorId);
     },
-    [connectorId, navigate, registerWithSocial]
+    [
+      bindSocialRelatedUser,
+      connectorId,
+      navigate,
+      registerWithSocial,
+      socialSignInSettings.automaticAccountLinking,
+    ]
   );
 
   const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });

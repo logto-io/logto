@@ -40,6 +40,9 @@ const sign_up_and_sign_in = {
       set_up_more: 'Set up',
       go_to: 'other social connectors now.',
     },
+    automatic_account_linking: 'Automatic account linking',
+    automatic_account_linking_label:
+      'When switched on, if a user signs in with a social identity that is new to the system and exactly one existing account is found with the same identifier (e.g., email), the account will automatically be linked with the social identity without any user interaction.',
   },
   tip: {
     set_a_password: 'A unique set of a password to your username is a must.',

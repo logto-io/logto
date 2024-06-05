@@ -97,4 +97,5 @@ export const mockSignInExperience: SignInExperience = {
     factors: [],
   },
   singleSignOnEnabled: true,
+  socialSignIn: {},
 };
