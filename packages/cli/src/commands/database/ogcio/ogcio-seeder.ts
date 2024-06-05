@@ -10,6 +10,7 @@ export type OgcioSeeder = {
   applications: ApplicationSeeder[];
   resources: ResourceSeeder[];
   connectors: ConnectorSeeder[];
+  sign_in_experiences: SignInExperienceSeeder[];
   resource_permissions: ResourcePermissionSeeder[];
   resource_roles: ResourceRoleSeeder[];
 };
@@ -68,6 +69,33 @@ export type ConnectorSeeder = {
     name: Record<string, string>;
     target: string;
   };
+};
+
+export type SignInExperienceSeeder = {
+  id: string;
+  color: {
+    primaryColor: string;
+    darkPrimaryColor: string;
+    isDarkModeEnabled: boolean;
+  };
+  branding: {
+    logoUrl: string;
+    darkLogoUrl: string;
+  };
+  language_info: {
+    autoDetect: boolean;
+    fallbackLanguage: string;
+  };
+  sign_in: {
+    methods: string[];
+  };
+  sign_up: {
+    verify: boolean;
+    password: boolean;
+    identifiers: string[];
+  };
+  social_sign_in_connector_targets: string[];
+  sign_in_mode: string;
 };
 
 export type ResourcePermissionSeeder = {

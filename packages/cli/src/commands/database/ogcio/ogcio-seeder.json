@@ -364,6 +364,32 @@
                 },
                 "target": "MyGovId"
             }
+        }],
+        "sign_in_experiences": [{
+            "id": "default",
+            "color": {
+                "primaryColor": "#FFFFFF",
+                "darkPrimaryColor": "#FFFFFF",
+                "isDarkModeEnabled": false
+            },
+            "branding": {
+                "logoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png",
+                "darkLogoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png"
+            },
+            "language_info": {
+                "autoDetect": true,
+                "fallbackLanguage": "en"
+            },
+            "sign_in": {
+                "methods": []
+            },
+            "sign_up": {
+                "verify": false,
+                "password": false,
+                "identifiers": []
+            },
+            "social_sign_in_connector_targets": ["MyGovId"],
+            "sign_in_mode": "SignIn"
         }]
     }
 }

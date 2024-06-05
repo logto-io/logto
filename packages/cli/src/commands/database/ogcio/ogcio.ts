@@ -11,6 +11,7 @@ import { seedOrganizationRbacData } from './organizations-rbac.js';
 import { createOrganizations } from './organizations.js';
 import { seedResourceRbacData } from './resources-rbac.js';
 import { seedResources } from './resources.js';
+import { seedSignInExperiences } from './sign-in-experiences.js';
 
 const createDataForTenant = async (
   transaction: DatabaseTransactionConnection,
@@ -47,6 +48,11 @@ const createDataForTenant = async (
     transaction,
     tenantId,
     connectors: tenantData.connectors,
+  });
+  const signInExperiences = await seedSignInExperiences({
+    transaction,
+    tenantId,
+    experiences: tenantData.sign_in_experiences,
   });
 };
 
