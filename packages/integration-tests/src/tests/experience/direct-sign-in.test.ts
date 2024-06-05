@@ -1,5 +1,3 @@
-import crypto from 'node:crypto';
-
 import { ConnectorType } from '@logto/connector-kit';
 import { SignInIdentifier, SsoProviderName } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
@@ -10,9 +8,7 @@ import { createSsoConnector } from '#src/api/sso-connector.js';
 import { demoAppUrl, logtoUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { dcls, dmodal } from '#src/utils.js';
-
-const randomString = () => crypto.randomBytes(8).toString('hex');
+import { dcls, dmodal, randomString } from '#src/utils.js';
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
