@@ -10,6 +10,7 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
+import { InteractionEvent, signInPayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -20,7 +21,6 @@ import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 import koaInteractionSession, {
   type WithInteractionSessionContext,
 } from './middleware/koa-interaction-session.js';
-import { signInPayloadGuard } from './type.js';
 import { PasswordVerification } from './verifications/password-verification.js';
 
 const experienceApiRoutesPrefix = '/experience';
@@ -49,6 +49,8 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { identifier, verification } = ctx.guard.body;
 
+      ctx.interactionSession.setInteractionEvent(InteractionEvent.SignIn);
+
       // TODO: Add support for other verification types
       const { password } = verification;
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
@@ -65,9 +67,15 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }
   );
 
-  router.post(`${experienceApiRoutesPrefix}/submit`, async (ctx, next) => {
-    await ctx.interactionSession.submit();
-    ctx.status = 200;
-    return next();
-  });
+  router.post(
+    `${experienceApiRoutesPrefix}/submit`,
+    koaGuard({
+      status: [200],
+    }),
+    async (ctx, next) => {
+      await ctx.interactionSession.submit();
+      ctx.status = 200;
+      return next();
+    }
+  );
 }

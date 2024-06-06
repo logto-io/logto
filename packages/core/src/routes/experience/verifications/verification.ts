@@ -1,11 +1,4 @@
-export enum VerificationType {
-  Password = 'Password',
-  VerificationCode = 'VerificationCode',
-  Social = 'Social',
-  TOTP = 'Totp',
-  WebAuthn = 'WebAuthn',
-  BackupCode = 'BackupCode',
-}
+import type { VerificationType } from '@logto/schemas';
 
 /**
  * Parent class for all verification records
