@@ -1,3 +1,4 @@
+import { VerificationType } from '@logto/schemas';
 import { z } from 'zod';
 
 import type Libraries from '#src/tenants/Libraries.js';
@@ -8,13 +9,8 @@ import {
   passwordVerificationRecordDataGuard,
   type PasswordVerificationRecordData,
 } from './password-verification.js';
-import { VerificationType } from './verification.js';
 
-export { type Verification } from './verification.js';
-
-export { passwordIdentifierGuard } from './password-verification.js';
-
-export { VerificationType } from './verification.js';
+export { Verification } from './verification.js';
 
 type VerificationRecordData = PasswordVerificationRecordData;
 

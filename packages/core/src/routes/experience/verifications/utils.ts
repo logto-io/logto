@@ -1,7 +1,9 @@
+import { type DirectIdentifier } from '@logto/schemas';
+
 import type Queries from '#src/tenants/Queries.js';
 
 type IdentifierPayload = {
-  type: 'username' | 'email' | 'phone';
+  type: DirectIdentifier;
   value: string;
 };
 

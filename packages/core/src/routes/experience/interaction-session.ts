@@ -1,4 +1,4 @@
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, type VerificationType } from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -11,7 +11,6 @@ import {
   buildVerificationRecord,
   verificationRecordDataGuard,
   type Verification,
-  type VerificationType,
 } from './verifications/index.js';
 
 const interactionSessionResultGuard = z.object({
@@ -41,7 +40,7 @@ export default class InteractionSession {
   }
 
   /** The interaction event for the current interaction session */
-  readonly interactionEvent?: InteractionEvent;
+  private interactionEvent?: InteractionEvent;
   /** The user verification record list for the current interaction session */
   private readonly verificationRecords: Set<Verification>;
   /** The accountId of the user for the current interaction session. Only available once the user is identified */
@@ -56,7 +55,7 @@ export default class InteractionSession {
   ) {
     const { libraries, queries } = tenant;
 
-    const result = interactionSessionResultGuard.safeParse(interactionDetails.result);
+    const result = interactionSessionResultGuard.safeParse(interactionDetails.result ?? {});
 
     assertThat(
       result.success,
@@ -74,11 +73,20 @@ export default class InteractionSession {
     );
   }
 
+  /** Set the interaction event for the current interaction session */
+  public setInteractionEvent(event: InteractionEvent) {
+    // TODO: conflict event check (e.g. reset password session can't be used for sign in)
+    this.interactionEvent = event;
+  }
+
   /** Set the verified accountId of the current interaction session from  the verification record */
   public identifyUser(verificationId: string) {
     const verificationRecord = this.getVerificationRecordById(verificationId);
 
-    assertThat(verificationRecord?.verifiedUserId, 'session.identifier_not_found');
+    assertThat(
+      verificationRecord?.verifiedUserId,
+      new RequestError({ code: 'session.identifier_not_found', status: 404 })
+    );
 
     this.accountId = verificationRecord.verifiedUserId;
   }

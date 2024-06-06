@@ -1,3 +1,4 @@
+import { VerificationType, passwordIdentifierGuard, type PasswordIdentifier } from '@logto/schemas';
 import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
@@ -8,13 +9,7 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { findUserByIdentifier } from './utils.js';
-import { VerificationType, type Verification } from './verification.js';
-
-// Password supports all types of direct identifiers
-type PasswordIdentifier = {
-  type: 'username' | 'email' | 'phone';
-  value: string;
-};
+import { type Verification } from './verification.js';
 
 export type PasswordVerificationRecordData = {
   id: string;
@@ -23,11 +18,6 @@ export type PasswordVerificationRecordData = {
   /** The userId of the user that was verified. The password verification is considered verified if this is set */
   userId?: string;
 };
-
-export const passwordIdentifierGuard = z.object({
-  type: z.enum(['username', 'email', 'phone']),
-  value: z.string(),
-}) satisfies ToZodObject<PasswordIdentifier>;
 
 export const passwordVerificationRecordDataGuard = z.object({
   id: z.string(),
