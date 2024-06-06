@@ -8,6 +8,7 @@ import pRetry from 'p-retry';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -128,6 +129,22 @@ export const createUserLibrary = (queries: Queries) => {
         await insertUsersRoles(
           roles.map(({ id }) => ({ id: generateStandardId(), userId: user.id, roleId: id }))
         );
+      }
+
+      // Just-in-time organization provisioning
+      const userEmailDomain = data.primaryEmail?.split('@')[1];
+      // TODO: Remove this check when launching
+      if (EnvSet.values.isDevFeaturesEnabled && userEmailDomain) {
+        const organizationQueries = new OrganizationQueries(connection);
+        const organizationIds = await organizationQueries.emailDomains.getOrganizationIdsByDomain(
+          userEmailDomain
+        );
+
+        if (organizationIds.length > 0) {
+          await organizationQueries.relations.users.insert(
+            ...organizationIds.map<[string, string]>((organizationId) => [organizationId, user.id])
+          );
+        }
       }
 
       return user;
