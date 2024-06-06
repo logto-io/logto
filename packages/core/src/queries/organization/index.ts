@@ -28,6 +28,7 @@ import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
+import { EmailDomainQueries } from './email-domains.js';
 import { RoleUserRelationQueries } from './role-user-relations.js';
 import { UserRelationQueries } from './user-relations.js';
 
@@ -287,6 +288,9 @@ export default class OrganizationQueries extends SchemaQueries<
       OrganizationRoles
     ),
   };
+
+  /** Queries for email domains that will be automatically provisioned. */
+  emailDomains = new EmailDomainQueries(this.pool);
 
   constructor(pool: CommonQueryMethods) {
     super(pool, Organizations);

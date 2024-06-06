@@ -7,6 +7,7 @@ import {
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
@@ -16,6 +17,7 @@ import { parseSearchOptions } from '#src/utils/search.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
+import emailDomainRoutes from './index.email-domains.js';
 import userRoleRelationRoutes from './index.user-role-relations.js';
 import organizationInvitationRoutes from './invitations.js';
 import organizationRoleRoutes from './roles.js';
@@ -133,8 +135,11 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  // MARK: Organization - user - organization role relation routes
   userRoleRelationRoutes(router, organizations);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    emailDomainRoutes(router, organizations);
+  }
 
   // MARK: Mount sub-routes
   organizationRoleRoutes(...args);

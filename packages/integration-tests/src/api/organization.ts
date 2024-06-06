@@ -5,6 +5,7 @@ import {
   type UserWithOrganizationRoles,
   type OrganizationWithFeatured,
   type OrganizationScope,
+  type OrganizationEmailDomain,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -73,5 +74,37 @@ export class OrganizationApi extends ApiFactory<
     return authedAdminApi
       .get(`${this.path}/${id}/users/${userId}/scopes`)
       .json<OrganizationScope[]>();
+  }
+
+  async getEmailDomains(
+    id: string,
+    page?: number,
+    pageSize?: number
+  ): Promise<OrganizationEmailDomain[]> {
+    const searchParams = new URLSearchParams();
+
+    if (page) {
+      searchParams.append('page', String(page));
+    }
+
+    if (pageSize) {
+      searchParams.append('page_size', String(pageSize));
+    }
+
+    return authedAdminApi
+      .get(`${this.path}/${id}/email-domains`, { searchParams })
+      .json<OrganizationEmailDomain[]>();
+  }
+
+  async addEmailDomain(id: string, emailDomain: string): Promise<void> {
+    await authedAdminApi.post(`${this.path}/${id}/email-domains`, { json: { emailDomain } });
+  }
+
+  async deleteEmailDomain(id: string, emailDomain: string): Promise<void> {
+    await authedAdminApi.delete(`${this.path}/${id}/email-domains/${emailDomain}`);
+  }
+
+  async replaceEmailDomains(id: string, emailDomains: string[]): Promise<void> {
+    await authedAdminApi.put(`${this.path}/${id}/email-domains`, { json: { emailDomains } });
   }
 }
