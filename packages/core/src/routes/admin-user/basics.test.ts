@@ -5,6 +5,7 @@ import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockUser, mockUserResponse } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type InsertUserResult } from '#src/libraries/user.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -81,10 +82,13 @@ const signOutUser = jest.fn();
 const usersLibraries = {
   generateUserId: jest.fn(async () => 'fooId'),
   insertUser: jest.fn(
-    async (user: CreateUser): Promise<User> => ({
-      ...mockUser,
-      ...removeUndefinedKeys(user), // No undefined values will be returned from database
-    })
+    async (user: CreateUser): Promise<InsertUserResult> => [
+      {
+        ...mockUser,
+        ...removeUndefinedKeys(user), // No undefined values will be returned from database
+      },
+      { organizationIds: [] },
+    ]
   ),
   verifyUserPassword,
   signOutUser,

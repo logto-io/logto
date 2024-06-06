@@ -198,10 +198,7 @@ describe('triggerDataHooks()', () => {
     const hookData = { path: '/test', method: 'POST', data: { success: true } };
 
     const hooksManager = new DataHookContextManager(metadata);
-    hooksManager.appendContext({
-      event: 'Role.Created',
-      ...hookData,
-    });
+    hooksManager.appendContext('Role.Created', hookData);
 
     await triggerDataHooks(new ConsoleLog(), hooksManager);
 
@@ -257,8 +254,7 @@ describe('triggerDataHooks()', () => {
 
     const hooksManager = new DataHookContextManager(metadata);
 
-    hooksManager.appendContext({
-      event: 'Role.Created',
+    hooksManager.appendContext('Role.Created', {
       data: { id: 'user_id', username: 'user' },
     });
 

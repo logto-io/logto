@@ -1,8 +1,3 @@
-/**
- * @fileoverview
- * Tests for manual-triggered data hook events.
- */
-
 import { SignInIdentifier, hookEvents, userInfoSelectFields } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 
@@ -10,6 +5,7 @@ import { deleteUser } from '#src/api/admin-user.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { createRole } from '#src/api/role.js';
 import { createScope } from '#src/api/scope.js';
+import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import { registerWithEmail } from '#src/helpers/interactions.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
@@ -133,7 +129,11 @@ describe('manual data hook tests', () => {
       await assertOrganizationMembershipUpdated(organization.id);
     });
 
+    // TODO: Add user deletion test case
+
     it('should trigger `Organization.Membership.Updated` event when user is provisioned by experience', async () => {
+      await setEmailConnector();
+      await setSmsConnector();
       await enableAllVerificationCodeSignInMethods({
         identifiers: [SignInIdentifier.Email],
         password: false,

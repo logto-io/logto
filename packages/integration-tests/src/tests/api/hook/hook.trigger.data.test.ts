@@ -1,8 +1,3 @@
-/**
- * @fileoverview
- * Tests for automatic data hook events triggered by the Management API.
- */
-
 import {
   RoleType,
   hookEventGuard,

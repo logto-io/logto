@@ -70,6 +70,14 @@ const converBindMfaToMfaVerification = (bindMfa: BindMfa): MfaVerification => {
   };
 };
 
+export type InsertUserResult = [
+  User,
+  {
+    /** The organization IDs that the user has been provisioned into. */
+    organizationIds: readonly string[];
+  },
+];
+
 export type UserLibrary = ReturnType<typeof createUserLibrary>;
 
 export const createUserLibrary = (queries: Queries) => {
@@ -106,14 +114,6 @@ export const createUserLibrary = (queries: Queries) => {
       },
       { retries, factor: 0 } // No need for exponential backoff
     );
-
-  type InsertUserResult = [
-    User,
-    {
-      /** The organization IDs that the user has been provisioned into. */
-      organizationsIds: readonly string[];
-    },
-  ];
 
   const insertUser = async (
     data: OmitAutoSetFields<CreateUser>,
@@ -166,7 +166,7 @@ export const createUserLibrary = (queries: Queries) => {
         return [];
       };
 
-      return [user, { organizationsIds: await provisionOrganizations() }];
+      return [user, { organizationIds: await provisionOrganizations() }];
     });
   };
 

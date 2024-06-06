@@ -200,7 +200,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       const id = await generateUserId();
 
-      const [user, { organizationsIds }] = await insertUser(
+      const [user, { organizationIds }] = await insertUser(
         {
           id,
           primaryEmail,
@@ -221,7 +221,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         []
       );
 
-      for (const organizationId of organizationsIds) {
+      for (const organizationId of organizationIds) {
         ctx.appendDataHookContext('Organization.Membership.Updated', {
           ...buildManagementApiContext(ctx),
           organizationId,

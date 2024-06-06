@@ -43,6 +43,9 @@ type UserContext = {
   user: User;
 };
 
+/**
+ * A map of data hook event to its context type for better type hinting.
+ */
 export type DataHookContextMap = {
   'Organization.Membership.Updated': { organizationId: string };
   'User.Created': UserContext;

@@ -310,7 +310,7 @@ export const registerWithSsoAuthentication = async (
   };
 
   // Insert new user
-  const [user, { organizationsIds }] = await usersLibrary.insertUser(
+  const [user, { organizationIds }] = await usersLibrary.insertUser(
     {
       id: await usersLibrary.generateUserId(),
       ...syncingProfile,
@@ -318,7 +318,7 @@ export const registerWithSsoAuthentication = async (
     },
     []
   );
-  for (const organizationId of organizationsIds) {
+  for (const organizationId of organizationIds) {
     ctx.appendDataHookContext('Organization.Membership.Updated', {
       organizationId,
     });

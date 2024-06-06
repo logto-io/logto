@@ -135,7 +135,7 @@ async function handleSubmitRegister(
     (invitation) => invitation.status === OrganizationInvitationStatus.Pending
   );
 
-  const [user, { organizationsIds }] = await insertUser(
+  const [user, { organizationIds }] = await insertUser(
     {
       id,
       ...userProfile,
@@ -190,7 +190,7 @@ async function handleSubmitRegister(
   ctx.assignInteractionHookResult({ userId: id });
   ctx.appendDataHookContext('User.Created', { user });
 
-  for (const organizationId of organizationsIds) {
+  for (const organizationId of organizationIds) {
     ctx.appendDataHookContext('Organization.Membership.Updated', {
       organizationId,
     });
