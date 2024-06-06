@@ -9,7 +9,7 @@ const passwordSignInPayload = z.object({
   identifier: passwordIdentifierGuard,
   verification: z.object({
     type: z.literal(VerificationType.Password),
-    value: z.string(),
+    password: z.string(),
   }),
 });
 

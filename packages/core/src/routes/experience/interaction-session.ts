@@ -11,6 +11,7 @@ import {
   buildVerificationRecord,
   verificationRecordDataGuard,
   type Verification,
+  type VerificationType,
 } from './verifications/index.js';
 
 const interactionSessionResultGuard = z.object({
@@ -42,9 +43,9 @@ export default class InteractionSession {
   /** The interaction event for the current interaction session */
   readonly interactionEvent?: InteractionEvent;
   /** The user verification record list for the current interaction session */
-  private readonly verificationRecords: Verification[] = [];
+  private readonly verificationRecords: Set<Verification>;
   /** The accountId of the user for the current interaction session. Only available once the user is identified */
-  private readonly accountId?: string;
+  private accountId?: string;
   /** The user provided profile data in the current interaction session that needs to be stored to user DB */
   private readonly profile?: Record<string, unknown>; // TODO: Fix the type
 
@@ -59,7 +60,7 @@ export default class InteractionSession {
 
     assertThat(
       result.success,
-      new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+      new RequestError({ code: 'session.interaction_not_found', status: 404 })
     );
 
     const { verificationRecords = [], profile, accountId, event } = result.data;
@@ -68,17 +69,42 @@ export default class InteractionSession {
     this.accountId = accountId;
     this.profile = profile;
 
-    this.verificationRecords = verificationRecords.map((record) =>
-      buildVerificationRecord(libraries, queries, record)
+    this.verificationRecords = new Set(
+      verificationRecords.map((record) => buildVerificationRecord(libraries, queries, record))
     );
   }
 
-  public getVerificationRecord(verificationId: string) {
-    return this.verificationRecords.find((record) => record.id === verificationId);
+  /** Set the verified accountId of the current interaction session from  the verification record */
+  public identifyUser(verificationId: string) {
+    const verificationRecord = this.getVerificationRecordById(verificationId);
+
+    assertThat(verificationRecord?.verifiedUserId, 'session.identifier_not_found');
+
+    this.accountId = verificationRecord.verifiedUserId;
+  }
+
+  /**
+   * Append a new verification record to the current interaction session.
+   * @remark If a record with the same type already exists, it will be replaced.
+   */
+  public appendVerificationRecord(record: Verification) {
+    const { type } = record;
+
+    const existingRecord = this.getVerificationRecordByType(type);
+
+    if (existingRecord) {
+      this.verificationRecords.delete(existingRecord);
+    }
+
+    this.verificationRecords.add(record);
+  }
+
+  public getVerificationRecordById(verificationId: string) {
+    return this.verificationRecordsArray.find((record) => record.id === verificationId);
   }
 
   /** Save the current interaction session result */
-  public async storeToResult() {
+  public async save() {
     // The "mergeWithLastSubmission" will only merge current request's interaction results,
     // manually merge with previous interaction results
     // refer to: https://github.com/panva/node-oidc-provider/blob/c243bf6b6663c41ff3e75c09b95fb978eba87381/lib/actions/authorization/interactions.js#L106
@@ -95,7 +121,7 @@ export default class InteractionSession {
   }
 
   /** Submit the current interaction session result to the OIDC provider and clear the session */
-  public async assignResult() {
+  public async submit() {
     // TODO: refine the error code
     assertThat(this.accountId, 'session.verification_session_not_found');
 
@@ -108,13 +134,21 @@ export default class InteractionSession {
     this.ctx.body = { redirectTo };
   }
 
+  private get verificationRecordsArray() {
+    return Array.from(this.verificationRecords);
+  }
+
+  private getVerificationRecordByType(type: VerificationType) {
+    return this.verificationRecordsArray.find((record) => record.type === type);
+  }
+
   /** Convert the current interaction session to JSON, so that it can be stored as the OIDC provider interaction result */
   private toJson() {
     return {
       event: this.interactionEvent,
       accountId: this.accountId,
       profile: this.profile,
-      verificationRecords: this.verificationRecords.map((record) => record.toJson()),
+      verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
     };
   }
 }
