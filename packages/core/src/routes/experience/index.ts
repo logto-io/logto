@@ -21,6 +21,7 @@ import koaInteractionSession, {
   type WithInteractionSessionContext,
 } from './middleware/koa-interaction-session.js';
 import { signInPayloadGuard } from './type.js';
+import { PasswordVerification } from './verifications/password-verification.js';
 
 const experienceApiRoutesPrefix = '/experience';
 
@@ -29,7 +30,7 @@ type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : nev
 export default function experienceApiRoutes<T extends AnonymousRouter>(
   ...[anonymousRouter, tenant]: RouterInitArgs<T>
 ) {
-  const { queries } = tenant;
+  const { queries, libraries } = tenant;
 
   const router =
     // @ts-expect-error for good koa types
@@ -48,12 +49,24 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { identifier, verification } = ctx.guard.body;
 
+      // TODO: Add support for other verification types
+      const { password } = verification;
+      const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
+      await passwordVerification.verify(password);
+      ctx.interactionSession.appendVerificationRecord(passwordVerification);
+
+      ctx.interactionSession.identifyUser(passwordVerification.id);
+
+      await ctx.interactionSession.save();
+
       ctx.status = 204;
+
       return next();
     }
   );
 
   router.post(`${experienceApiRoutesPrefix}/submit`, async (ctx, next) => {
+    await ctx.interactionSession.submit();
     ctx.status = 200;
     return next();
   });

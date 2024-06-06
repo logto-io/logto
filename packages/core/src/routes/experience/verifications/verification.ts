@@ -15,6 +15,7 @@ export abstract class Verification {
   abstract readonly type: VerificationType;
 
   abstract get isVerified(): boolean;
+  abstract get verifiedUserId(): string | undefined;
 
   abstract toJson(): {
     id: string;
