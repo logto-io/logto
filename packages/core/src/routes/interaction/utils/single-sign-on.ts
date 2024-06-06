@@ -18,6 +18,8 @@ import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
+
 import {
   assignSingleSignOnAuthenticationResult,
   getSingleSignOnSessionResult,
@@ -289,7 +291,7 @@ const signInAndLinkWithSsoAuthentication = async (
 };
 
 export const registerWithSsoAuthentication = async (
-  ctx: WithLogContext,
+  ctx: WithInteractionHooksContext<WithLogContext>,
   {
     queries: { userSsoIdentities: userSsoIdentitiesQueries },
     libraries: { users: usersLibrary },
@@ -308,7 +310,7 @@ export const registerWithSsoAuthentication = async (
   };
 
   // Insert new user
-  const user = await usersLibrary.insertUser(
+  const [user, { organizationsIds }] = await usersLibrary.insertUser(
     {
       id: await usersLibrary.generateUserId(),
       ...syncingProfile,
@@ -316,6 +318,11 @@ export const registerWithSsoAuthentication = async (
     },
     []
   );
+  for (const organizationId of organizationsIds) {
+    ctx.appendDataHookContext('Organization.Membership.Updated', {
+      organizationId,
+    });
+  }
 
   const { id: userId } = user;
 

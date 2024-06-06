@@ -200,7 +200,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       const id = await generateUserId();
 
-      const user = await insertUser(
+      const [user, { organizationsIds }] = await insertUser(
         {
           id,
           primaryEmail,
@@ -221,8 +221,14 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         []
       );
 
-      ctx.body = pick(user, ...userInfoSelectFields);
+      for (const organizationId of organizationsIds) {
+        ctx.appendDataHookContext('Organization.Membership.Updated', {
+          ...buildManagementApiContext(ctx),
+          organizationId,
+        });
+      }
 
+      ctx.body = pick(user, ...userInfoSelectFields);
       return next();
     }
   );
@@ -382,10 +388,9 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       ctx.status = 204;
 
       // Manually trigger the `User.Deleted` hook since we need to send the user data in the payload
-      ctx.appendDataHookContext({
-        event: 'User.Deleted',
+      ctx.appendDataHookContext('User.Deleted', {
         ...buildManagementApiContext(ctx),
-        data: pick(user, ...userInfoSelectFields),
+        user,
       });
 
       return next();

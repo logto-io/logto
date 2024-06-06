@@ -1,14 +1,16 @@
-import { type SchemaLike, type GeneratedSchema } from '@logto/schemas';
+import { type SchemaLike, type GeneratedSchema, type DataHookEvent } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type DeepPartial, isPlainObject } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
-import { type MiddlewareType } from 'koa';
+import { type Context, type MiddlewareType } from 'koa';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import { type SearchOptions } from '#src/database/utils.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 
 import { type TwoRelationsQueries } from './RelationQueries.js';
@@ -87,6 +89,8 @@ type SchemaRouterConfig<Key extends string> = {
 };
 
 type RelationRoutesConfig = {
+  /** The event that should be triggered when the relation is modified. */
+  hookEvent?: DataHookEvent;
   /** Disable certain routes for the relation. */
   disabled: {
     /** Disable `GET /:id/[pathname]` route. */
@@ -112,7 +116,7 @@ export default class SchemaRouter<
   CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
   Schema extends SchemaLike<Key> & { id: string },
   StateT = unknown,
-  CustomT extends IRouterParamContext = IRouterParamContext,
+  CustomT extends WithHookContext = WithHookContext,
 > extends Router<StateT, CustomT> {
   public readonly config: SchemaRouterConfig<Key>;
 
@@ -180,7 +184,7 @@ export default class SchemaRouter<
       GeneratedSchema<string, RelationCreateSchema, RelationSchema>
     >,
     pathname = tableToPathname(relationQueries.schemas[1].table),
-    { disabled }: Partial<RelationRoutesConfig> = {}
+    { disabled, hookEvent }: Partial<RelationRoutesConfig> = {}
   ) {
     const relationSchema = relationQueries.schemas[1];
     const relationSchemaId = camelCaseSchemaId(relationSchema);
@@ -188,6 +192,14 @@ export default class SchemaRouter<
       schemaId: camelCaseSchemaId(this.schema),
       relationSchemaId,
       relationSchemaIds: relationSchemaId + 's',
+    };
+    const appendHookContext = (ctx: WithHookContext<IRouterParamContext & Context>, id: string) => {
+      if (hookEvent) {
+        ctx.appendDataHookContext(hookEvent, {
+          ...buildManagementApiContext(ctx),
+          [columns.schemaId]: id,
+        });
+      }
     };
 
     if (!disabled?.get) {
@@ -207,9 +219,7 @@ export default class SchemaRouter<
 
           const [totalCount, entities] = await relationQueries.getEntities(
             relationSchema,
-            {
-              [columns.schemaId]: id,
-            },
+            { [columns.schemaId]: id },
             ctx.pagination
           );
 
@@ -236,7 +246,7 @@ export default class SchemaRouter<
         await relationQueries.insert(
           ...(relationIds?.map<[string, string]>((relationId) => [id, relationId]) ?? [])
         );
-
+        appendHookContext(ctx, id);
         ctx.status = 201;
         return next();
       }
@@ -256,6 +266,7 @@ export default class SchemaRouter<
         } = ctx.guard;
 
         await relationQueries.replace(id, relationIds ?? []);
+        appendHookContext(ctx, id);
         ctx.status = 204;
         return next();
       }
@@ -278,7 +289,8 @@ export default class SchemaRouter<
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- `koaGuard()` ensures the value is not `undefined`
           [columns.relationSchemaId]: relationId!,
         });
-
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        appendHookContext(ctx, id!);
         ctx.status = 204;
         return next();
       }

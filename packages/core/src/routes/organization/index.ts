@@ -83,7 +83,10 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
   );
 
   // MARK: Organization - user relation routes
-  router.addRelationRoutes(organizations.relations.users, undefined, { disabled: { get: true } });
+  router.addRelationRoutes(organizations.relations.users, undefined, {
+    disabled: { get: true },
+    hookEvent: 'Organization.Membership.Updated',
+  });
 
   router.get(
     '/:id/users',

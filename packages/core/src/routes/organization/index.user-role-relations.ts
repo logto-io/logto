@@ -1,16 +1,16 @@
 import { OrganizationRoles, OrganizationScopes } from '@logto/schemas';
 import type Router from 'koa-router';
-import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type OrganizationQueries from '#src/queries/organization/index.js';
 
 // Manually add these routes since I don't want to over-engineer the `SchemaRouter`
 export default function userRoleRelationRoutes(
-  router: Router<unknown, IRouterParamContext>,
+  router: Router<unknown, WithHookContext>,
   organizations: OrganizationQueries
 ) {
   // MARK: Organization - user - organization role relation routes

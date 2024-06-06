@@ -107,7 +107,18 @@ export const createUserLibrary = (queries: Queries) => {
       { retries, factor: 0 } // No need for exponential backoff
     );
 
-  const insertUser = async (data: OmitAutoSetFields<CreateUser>, additionalRoleNames: string[]) => {
+  type InsertUserResult = [
+    User,
+    {
+      /** The organization IDs that the user has been provisioned into. */
+      organizationsIds: readonly string[];
+    },
+  ];
+
+  const insertUser = async (
+    data: OmitAutoSetFields<CreateUser>,
+    additionalRoleNames: string[]
+  ): Promise<InsertUserResult> => {
     const roleNames = [...EnvSet.values.userDefaultRoleNames, ...additionalRoleNames];
     const [parameterRoles, defaultRoles] = await Promise.all([
       findRolesByRoleNames(roleNames),
@@ -131,23 +142,31 @@ export const createUserLibrary = (queries: Queries) => {
         );
       }
 
-      // Just-in-time organization provisioning
-      const userEmailDomain = data.primaryEmail?.split('@')[1];
-      // TODO: Remove this check when launching
-      if (EnvSet.values.isDevFeaturesEnabled && userEmailDomain) {
-        const organizationQueries = new OrganizationQueries(connection);
-        const organizationIds = await organizationQueries.emailDomains.getOrganizationIdsByDomain(
-          userEmailDomain
-        );
-
-        if (organizationIds.length > 0) {
-          await organizationQueries.relations.users.insert(
-            ...organizationIds.map<[string, string]>((organizationId) => [organizationId, user.id])
+      const provisionOrganizations = async (): Promise<readonly string[]> => {
+        // Just-in-time organization provisioning
+        const userEmailDomain = data.primaryEmail?.split('@')[1];
+        // TODO: Remove this check when launching
+        if (EnvSet.values.isDevFeaturesEnabled && userEmailDomain) {
+          const organizationQueries = new OrganizationQueries(connection);
+          const organizationIds = await organizationQueries.emailDomains.getOrganizationIdsByDomain(
+            userEmailDomain
           );
-        }
-      }
 
-      return user;
+          if (organizationIds.length > 0) {
+            await organizationQueries.relations.users.insert(
+              ...organizationIds.map<[string, string]>((organizationId) => [
+                organizationId,
+                user.id,
+              ])
+            );
+            return organizationIds;
+          }
+        }
+
+        return [];
+      };
+
+      return [user, { organizationsIds: await provisionOrganizations() }];
     });
   };
 

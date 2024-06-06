@@ -135,7 +135,7 @@ async function handleSubmitRegister(
     (invitation) => invitation.status === OrganizationInvitationStatus.Pending
   );
 
-  const user = await insertUser(
+  const [user, { organizationsIds }] = await insertUser(
     {
       id,
       ...userProfile,
@@ -188,7 +188,13 @@ async function handleSubmitRegister(
   await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
   ctx.assignInteractionHookResult({ userId: id });
-  ctx.assignDataHookContext({ event: 'User.Created', user });
+  ctx.appendDataHookContext('User.Created', { user });
+
+  for (const organizationId of organizationsIds) {
+    ctx.appendDataHookContext('Organization.Membership.Updated', {
+      organizationId,
+    });
+  }
 
   log?.append({ userId: id });
   appInsights.client?.trackEvent({
@@ -242,10 +248,7 @@ async function handleSubmitSignIn(
   ctx.assignInteractionHookResult({ userId: accountId });
   // Trigger user.updated data hook event if the user profile or mfa data is updated
   if (hasUpdatedProfile(updateUserProfile) || mfaVerifications.length > 0) {
-    ctx.assignDataHookContext({
-      event: 'User.Data.Updated',
-      user: updatedUser,
-    });
+    ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
   }
 
   appInsights.client?.trackEvent({
@@ -284,7 +287,7 @@ export default async function submitInteraction(
     passwordEncryptionMethod,
   });
   ctx.assignInteractionHookResult({ userId: accountId });
-  ctx.assignDataHookContext({ event: 'User.Data.Updated', user });
+  ctx.appendDataHookContext('User.Data.Updated', { user });
 
   await clearInteractionStorage(ctx, provider);
   ctx.status = 204;
