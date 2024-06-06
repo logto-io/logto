@@ -15,7 +15,7 @@ export type PasswordVerificationRecordData = {
   id: string;
   type: VerificationType.Password;
   identifier: PasswordIdentifier;
-  /** The userId of the user that was verified. The password verification is considered verified if this is set */
+  // The userId of the user that has been verified
   userId?: string;
 };
 
