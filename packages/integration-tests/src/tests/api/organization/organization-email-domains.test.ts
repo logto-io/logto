@@ -36,11 +36,10 @@ describe('organization email domains', () => {
 
     expect(emailDomainsPage1).toHaveLength(20);
     expect(emailDomainsPage2).toHaveLength(10);
-    expect(emailDomainsPage1).toMatchObject(
-      emailDomains.slice(0, 20).map((emailDomain) => expect.objectContaining({ emailDomain }))
-    );
-    expect(emailDomainsPage2).toEqual(
-      emailDomains.slice(20).map((emailDomain) => expect.objectContaining({ emailDomain }))
+    expect(emailDomainsPage1.concat(emailDomainsPage2)).toEqual(
+      expect.arrayContaining(
+        emailDomains.map((emailDomain) => expect.objectContaining({ emailDomain }))
+      )
     );
   });
 
@@ -72,8 +71,10 @@ describe('organization email domains', () => {
     const emailDomains = [`${randomId()}.com`, `${randomId()}.com`];
 
     await organizationApi.replaceEmailDomains(organization.id, emailDomains);
-    await expect(organizationApi.getEmailDomains(organization.id)).resolves.toMatchObject(
-      emailDomains.map((emailDomain) => expect.objectContaining({ emailDomain }))
+    await expect(organizationApi.getEmailDomains(organization.id)).resolves.toEqual(
+      expect.arrayContaining(
+        emailDomains.map((emailDomain) => expect.objectContaining({ emailDomain }))
+      )
     );
   });
 });

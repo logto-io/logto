@@ -1,7 +1,9 @@
 {
-  "tags": [{
-    "name": "Organizations"
-  }],
+  "tags": [
+    {
+      "name": "Organizations"
+    }
+  ],
   "paths": {
     "/api/organizations/{id}/email-domains": {
       "get": {
