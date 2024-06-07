@@ -1,0 +1,27 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  align-items: center;
+  font: var(--font-body-2);
+  overflow: hidden;
+
+  .name {
+    @include _.text-ellipsis;
+  }
+
+  // Todo @xiaoyijun Remove this `count` style together with the dev feature flag
+  .count {
+    flex-shrink: 0;
+    margin-left: _.unit(2);
+    color: var(--color-text-secondary);
+  }
+
+  .flag {
+    flex-shrink: 0;
+    margin-left: _.unit(2);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+  }
+}

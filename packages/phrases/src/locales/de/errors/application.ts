@@ -7,27 +7,18 @@ const application = {
     'Nur traditionelle Webanwendungen können als Drittanbieter-App markiert werden.',
   third_party_application_only: 'Das Feature ist nur für Drittanbieter-Anwendungen verfügbar.',
   user_consent_scopes_not_found: 'Ungültige Benutzerzustimmungsbereiche.',
-  /** UNTRANSLATED */
   consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: 'Geschützte App-Metadaten sind erforderlich.',
-  /** UNTRANSLATED */
   protected_app_not_configured:
-    'Protected app provider is not configured. This feature is not available for open source version.',
-  /** UNTRANSLATED */
-  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
-  /** UNTRANSLATED */
-  protected_application_only: 'The feature is only available for protected applications.',
-  /** UNTRANSLATED */
-  protected_application_misconfigured: 'Protected application is misconfigured.',
-  /** UNTRANSLATED */
+    'Geschützter App-Anbieter ist nicht konfiguriert. Dieses Feature ist in der Open-Source-Version nicht verfügbar.',
+  cloudflare_unknown_error: 'Fehler unbekannt beim Abrufen der Cloudflare API',
+  protected_application_only: 'Das Feature ist nur für geschützte Anwendungen verfügbar.',
+  protected_application_misconfigured: 'Geschützte Anwendung falsch konfiguriert.',
   protected_application_subdomain_exists:
-    'The subdomain of Protected application is already in use.',
-  /** UNTRANSLATED */
-  invalid_subdomain: 'Invalid subdomain.',
-  /** UNTRANSLATED */
-  custom_domain_not_found: 'Custom domain not found.',
-  /** UNTRANSLATED */
-  should_delete_custom_domains_first: 'Should delete custom domains first.',
+    'Die Subdomain der geschützten Anwendung wird bereits verwendet.',
+  invalid_subdomain: 'Ungültige Subdomain.',
+  custom_domain_not_found: 'Benutzerdefinierte Domain nicht gefunden.',
+  should_delete_custom_domains_first: 'Benutzerdefinierte Domains sollten zuerst gelöscht werden.',
 };
 
 export default Object.freeze(application);

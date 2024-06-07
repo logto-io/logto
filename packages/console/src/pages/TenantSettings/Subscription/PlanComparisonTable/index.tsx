@@ -100,6 +100,7 @@ function PlanComparisonTable() {
     const sso = t('user_authn.sso');
     const mfa = t('user_authn.mfa');
     const mfaPrice = t('monthly_price', { value: 48 });
+    const orgPrice = t('monthly_price', { value: 48 });
     const adaptiveMfa = t('user_authn.adaptive_mfa');
 
     // User management
@@ -109,10 +110,8 @@ function PlanComparisonTable() {
     const permissionsPerRole = t('user_management.scopes_per_role');
 
     // Organizations
-    const mao = t('organizations.monthly_active_organization');
-    const maoTip = t('mao_tip');
-    const maoLimit = t('included_mao', { value: 100 });
-    const maoPrice = t('extra_mao_price', { value: 0.64 });
+    const organization = t('organizations.organization');
+    const orgCount = t('organizations.organization_count');
     const allowedUsersPerOrg = t('organizations.allowed_users_per_org');
     const invitation = t('organizations.invitation');
     const orgRoles = t('organizations.org_roles');
@@ -219,14 +218,15 @@ function PlanComparisonTable() {
         title: 'organizations.title',
         rows: [
           {
-            name: `${mao}|${maoTip}`,
-            data: ['-', `${maoLimit}|${paidQuotaLimitTip}|${maoPrice}`, contact],
+            name: organization,
+            data: ['-', `${orgPrice}|${paidAddOnFeatureTip}|${addOn}`, contact],
           },
+          { name: orgCount, data: ['-', unlimited, contact] },
           { name: allowedUsersPerOrg, data: ['-', unlimited, contact] },
           { name: invitation, data: ['-', comingSoon, contact] },
           { name: orgRoles, data: ['-', unlimited, contact] },
           { name: orgPermissions, data: ['-', unlimited, contact] },
-          { name: jitProvisioning, data: ['-', comingSoon, contact] },
+          { name: jitProvisioning, data: ['-', comingSoon, comingSoon] },
         ],
       },
       {

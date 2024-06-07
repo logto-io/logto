@@ -13,8 +13,13 @@ const role_details = {
     "Roller, kullanıcılara atanabilen izinlerin bir gruplamasıdır. Ayrıca, farklı API'ler için tanımlanan izinleri biriktirmek için bir yol sağladıkları için, izinleri kullanıcılara bireysel olarak atamaktan daha verimli bir şekilde eklemek, kaldırmak veya ayarlamak için bir yoldur.",
   field_name: 'Adı',
   field_description: 'Açıklama',
+  field_is_default: 'Varsayılan rol',
+  field_is_default_description:
+    "Bu rolü yeni kullanıcılar için varsayılan rol olarak ayarla. Birden çok varsayılan rol belirlenebilir. Bu ayrıca Yönetim API'si aracılığıyla oluşturulan kullanıcılar için varsayılan rolleri etkiler.",
   type_m2m_role_tag: 'Makine-makine uygulama rolü',
   type_user_role_tag: 'Kullanıcı rolü',
+  m2m_role_notification:
+    'Bu makineye makine rolünü ilgili API kaynaklarına erişim sağlamak için bir makineye makine uygulamasına atayın. <a>Henüz yapmadıysanız önce bir makineye makine uygulaması oluşturun.</a>',
   permission: {
     assign_button: 'İzinleri Ata',
     assign_title: 'İzinleri Ata',
@@ -44,7 +49,7 @@ const role_details = {
       'Kullanıcıları bu role atayın. İsim, e-posta, telefon veya kullanıcı kimliği arayarak uygun kullanıcıları bulun.',
     assign_field: 'Kullanıcıları Ata',
     confirm_assign: 'Kullanıcıları Ata',
-    assigned_toast_text: 'The selected users were successfully assigned to this role',
+    assigned_toast_text: 'Seçilen kullanıcılar bu role başarıyla atandı',
     empty: 'Mevcut kullanıcı yok',
   },
   applications: {
@@ -60,7 +65,7 @@ const role_details = {
       'Bu role uygulamaları atayın. İsim, açıklama veya uygulama kimliği arayarak uygun uygulamaları bulun.',
     assign_field: 'Uygulamaları Ata',
     confirm_assign: 'Uygulamaları Ata',
-    assigned_toast_text: 'The selected applications were successfully assigned to this role',
+    assigned_toast_text: 'Seçilen uygulamalar bu role başarıyla atandı',
     empty: 'Mevcut uygulama yok',
   },
 };

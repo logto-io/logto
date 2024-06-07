@@ -14,9 +14,8 @@ const domain = {
     custom_domain_field: 'カスタムドメイン',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: 'ドメインを追加',
-    /** UNTRANSLATED */
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      '有効なドメインURLを指定してください。最低3つの部分を含め、例："your.domain.com."',
     verify_domain: 'ドメインを検証',
     enable_ssl: 'SSLを有効にする',
     checking_dns_tip:
@@ -51,9 +50,8 @@ const domain = {
     'これらのエンドポイントのドメイン名を必要に応じてカスタマイズできます。 "{{custom}}" または "{{default}}" のいずれかを選択してください。',
   custom_social_callback_url_note:
     'このURIのドメイン名をアプリケーションのエンドポイントに合わせてカスタマイズできます。 "{{custom}}" または "{{default}}" のいずれかを選択してください。',
-  /** UNTRANSLATED */
   custom_acs_url_note:
-    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+    'このURIのドメイン名をアイデンティティプロバイダのアサーションコンシューマーサービスURLに合わせてカスタマイズできます。 "{{custom}}" または "{{default}}" のいずれかを選択してください。',
 };
 
 export default Object.freeze(domain);

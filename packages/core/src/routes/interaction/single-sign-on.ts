@@ -79,7 +79,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
         connectorId: z.string(),
       }),
       body: z.record(z.unknown()),
-      status: [200, 404, 422],
+      status: [200, 404, 422, 500],
       response: z.object({
         redirectTo: z.string(),
       }),
@@ -125,7 +125,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       params: z.object({
         connectorId: z.string(),
       }),
-      status: [200, 404, 403],
+      status: [200, 404, 403, 500],
       response: z.object({
         redirectTo: z.string(),
       }),
@@ -135,6 +135,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     async (ctx, next) => {
       const {
         assignInteractionHookResult,
+        assignDataHookContext,
         guard: { params },
       } = ctx;
       const {
@@ -153,10 +154,14 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
         params.connectorId
       );
 
-      const accountId = await registerWithSsoAuthentication(ctx, tenant, authenticationResult);
+      const user = await registerWithSsoAuthentication(ctx, tenant, authenticationResult);
+      const { id: accountId } = user;
 
       await assignInteractionResults(ctx, provider, { login: { accountId } });
+
+      // Trigger webhooks
       assignInteractionHookResult({ userId: accountId });
+      assignDataHookContext({ event: 'User.Created', user });
 
       return next();
     }

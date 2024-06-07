@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     "Logto Yönetim API'si, yöneticilerin kimlikle ilgili birçok görevi yönetmelerine, güvenlik politikalarını uygulamalarına ve yönetmeliklere ve standartlara uyum sağlamalarına olanak tanıyan kapsamlı bir API koleksiyonudur.",
   management_api_notice:
-    "Bu API Logto varlığını temsil eder ve değiştirilemez veya silinemez. Geniş bir kimlikle ilgili görevler yelpazesi için yönetim API'sini kullanabilirsiniz. <a>Daha fazla bilgi</a>",
+    "Bu API, Logto varlığını temsil eder ve değiştirilemez veya silinemez. Logto yönetim API'sini çağırmak için makineden makineye bir uygulama oluşturun. <a>Daha fazla bilgi edinin</a>",
   token_expiration_time_in_seconds: 'Token sona erme süresi (saniye)',
   token_expiration_time_in_seconds_placeholder: 'Token zaman aşım süresini giriniz',
   delete_description:
@@ -21,10 +21,8 @@ const api_resource_details = {
     create_title: 'İzin Oluştur',
     create_subtitle: 'Bu API tarafından gerektirilen izinleri (kapsamları) tanımlayın.',
     confirm_create: 'İzin Oluştur',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
-    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
+    edit_title: 'API iznini düzenle',
+    edit_subtitle: 'API tarafından gereken izinleri (kapsamları) tanımlayın.',
     name: 'İzin adı',
     name_placeholder: 'read:kaynak',
     forbidden_space_in_name: 'İzin adı boşluk içermemelidir.',

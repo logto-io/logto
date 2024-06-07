@@ -13,6 +13,7 @@ import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
 import UserRoleIcon from '@/assets/icons/user-role.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import RoleAssignmentModal from '@/components/RoleAssignmentModal';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
@@ -24,7 +25,6 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
-import AssignToRoleModal from '@/pages/Roles/components/AssignToRoleModal';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import type { UserDetailsOutletContext } from '../types';
@@ -172,7 +172,7 @@ function UserRoles() {
         </ConfirmModal>
       )}
       {isAssignRolesModalOpen && (
-        <AssignToRoleModal
+        <RoleAssignmentModal
           entity={user}
           type={RoleType.User}
           onClose={(success) => {

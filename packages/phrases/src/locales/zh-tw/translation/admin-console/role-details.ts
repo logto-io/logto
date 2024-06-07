@@ -13,8 +13,13 @@ const role_details = {
     '角色是一組權限，可以分配給用戶。它們還提供了一種聚合不同 API 定義的權限的方法，使得添加、刪除或調整權限比將其單獨分配給用戶更有效率。',
   field_name: '名稱',
   field_description: '描述',
+  field_is_default: '默認角色',
+  field_is_default_description:
+    '將此角色設置為新用戶的默認角色。可以設置多個默認角色。這也將影響通過管理 API 創建的用戶的默認角色。',
   type_m2m_role_tag: '機器對機器應用角色',
   type_user_role_tag: '用戶角色',
+  m2m_role_notification:
+    '將此機器對機器角色分配給機器對機器應用程式，以授予相關API資源的存取權限。如果尚未建立，請<a>先建立機器對機器應用程式</a>。',
   permission: {
     assign_button: '分配權限',
     assign_title: '分配權限',
@@ -41,7 +46,7 @@ const role_details = {
     assign_subtitle: '將用戶分配給此角色。通過搜索名稱、電子郵件、電話或用戶 ID 尋找適當的用戶。',
     assign_field: '分配用戶',
     confirm_assign: '分配用戶',
-    assigned_toast_text: 'The selected users were successfully assigned to this role',
+    assigned_toast_text: '所選用戶已成功分配給此角色',
     empty: '無可用用戶',
   },
   applications: {
@@ -55,7 +60,7 @@ const role_details = {
     assign_subtitle: '將應用程式分配給此角色。通過搜索名稱、描述或應用程式 ID 尋找合適的應用程式。',
     assign_field: '分配應用',
     confirm_assign: '分配應用',
-    assigned_toast_text: 'The selected applications were successfully assigned to this role',
+    assigned_toast_text: '所選應用程式已成功分配給此角色',
     empty: '沒有可用的應用程式',
   },
 };

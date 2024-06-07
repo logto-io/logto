@@ -2,9 +2,9 @@ import { ConnectorError, type SocialUserInfo } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
 import {
   InteractionEvent,
+  type SupportedSsoConnector,
   type User,
   type UserSsoIdentity,
-  type SupportedSsoConnector,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -19,8 +19,8 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import {
-  getSingleSignOnSessionResult,
   assignSingleSignOnAuthenticationResult,
+  getSingleSignOnSessionResult,
 } from './single-sign-on-session.js';
 import { assignConnectorSessionResult } from './social-verification.js';
 
@@ -308,7 +308,7 @@ export const registerWithSsoAuthentication = async (
   };
 
   // Insert new user
-  const { id: userId } = await usersLibrary.insertUser(
+  const user = await usersLibrary.insertUser(
     {
       id: await usersLibrary.generateUserId(),
       ...syncingProfile,
@@ -316,6 +316,8 @@ export const registerWithSsoAuthentication = async (
     },
     []
   );
+
+  const { id: userId } = user;
 
   // Insert new user SSO identity
   await userSsoIdentitiesQueries.insert({
@@ -340,5 +342,5 @@ export const registerWithSsoAuthentication = async (
     },
   });
 
-  return userId;
+  return user;
 };

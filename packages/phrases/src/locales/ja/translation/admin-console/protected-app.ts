@@ -1,69 +1,43 @@
 const protected_app = {
-  /** UNTRANSLATED */
-  name: 'Protected App',
-  /** UNTRANSLATED */
-  title: 'Create a Protected App: Add authentication with simplicity and epic speed',
-  /** UNTRANSLATED */
+  name: '保護されたアプリ',
+  title: '保護されたアプリを作成：シンプルさとエピックなスピードで認証を追加',
   description:
-    'Protected App securely maintains user sessions and proxies your app requests. Powered by Cloudflare Workers, enjoy the top-tier performance and 0ms cold start worldwide. <a>Learn more</a>',
-  /** UNTRANSLATED */
-  fast_create: 'Fast create',
-  /** UNTRANSLATED */
-  modal_title: 'Create Protected App',
-  /** UNTRANSLATED */
+    '保護されたアプリはユーザーセッションを安全に維持し、アプリのリクエストをプロキシします。Cloudflare Workersによって強力なパフォーマンスと世界中で0msの起動時間をお楽しみください。<a>さらに詳しく</a>',
+  fast_create: '高速作成',
+  modal_title: '保護されたアプリを作成',
   modal_subtitle:
-    'Enable secure and fast protection with clicks. Add authentication to your existing web app with ease.',
+    'クリックするだけで安全で高速な保護を有効にします。既存のWebアプリに簡単に認証を追加します。',
   form: {
-    /** UNTRANSLATED */
-    url_field_label: 'Your origin URL',
-    /** UNTRANSLATED */
+    url_field_label: '元のURL',
     url_field_placeholder: 'https://domain.com/',
-    /** UNTRANSLATED */
-    url_field_description: 'Provide the address of your app requiring authentication protection.',
-    /** UNTRANSLATED */
+    url_field_description: '認証保護が必要なアプリのアドレスを提供してください。',
     url_field_modification_notice:
-      'Modifications to the origin URL may take up to 1-2 minutes to become effective across global network locations.',
-    /** UNTRANSLATED */
+      '元のURLへの変更は、グローバルネットワークロケーション全体で有効になるまで1〜2分かかる場合があります。',
     url_field_tooltip:
-      "Provide the address of your application, excluding any '/pathname'. After creation, you can customize route authentication rules.\n\nNote: The origin URL itself doesn't necessitate authentication; protection is applied exclusively to accesses via the designated app domain.",
-    /** UNTRANSLATED */
-    domain_field_label: 'App domain',
-    /** UNTRANSLATED */
+      "アプリケーションのアドレスを提供します。'/pathname'を含まないでください。作成後、ルート認証ルールをカスタマイズできます。\n\n注意：元のURLそのものには認証が必要ではありません。指定されたアプリドメイン経由でのアクセスにのみ保護が適用されます。",
+    domain_field_label: 'アプリドメイン',
     domain_field_placeholder: 'your-domain',
-    /** UNTRANSLATED */
     domain_field_description:
-      'This URL serves as an authentication protection proxy for the original URL. Custom domain can be applied after creation.',
-    /** UNTRANSLATED */
-    domain_field_description_short:
-      'This URL serves as an authentication protection proxy for the original URL.',
-    /** UNTRANSLATED */
+      'このURLは元のURLの認証保護プロキシとして機能します。作成後、カスタムドメインを適用できます。',
+    domain_field_description_short: 'このURLは元のURLの認証保護プロキシとして機能します。',
     domain_field_tooltip:
-      "Apps protected by Logto will be hosted at 'your-domain.{{domain}}' by default. Custom domain can be applied after creation.",
-    /** UNTRANSLATED */
-    create_application: 'Create application',
-    /** UNTRANSLATED */
-    create_protected_app: 'Fast create',
+      "Logtoによって保護されたアプリは、デフォルトで 'your-domain.{{domain}}' でホストされます。作成後にカスタムドメインを適用できます。",
+    create_application: 'アプリケーションを作成',
+    create_protected_app: '高速作成',
     errors: {
-      /** UNTRANSLATED */
-      domain_required: 'Your domain is required.',
-      /** UNTRANSLATED */
-      domain_in_use: 'This subdomain name is already in use.',
-      /** UNTRANSLATED */
+      domain_required: 'アプリドメインが必要です。',
+      domain_in_use: 'このサブドメイン名は既に使用されています。',
       invalid_domain_format:
-        "Invalid subdomain format: use only lowercase letters, numbers, and hyphens '-'.",
-      /** UNTRANSLATED */
-      url_required: 'Origin URL is required.',
-      /** UNTRANSLATED */
+        '無効なサブドメイン形式：小文字のアルファベット、数字、ハイフン「-」のみを使用してください。',
+      url_required: '元のURLが必要です。',
       invalid_url:
-        "Invalid origin URL format: Use http:// or https://. Note: '/pathname' is not currently supported.",
-      /** UNTRANSLATED */
+        "無効な元のURL形式：http://またはhttps://を使用してください。注：'/pathname' は現在サポートされていません。",
       localhost:
-        'Please expose your local server to the internet first. Learn more about <a>local development</a>.',
+        'まずローカルサーバーをインターネットに公開してください。<a>ローカル開発についてさらに詳しく</a>。',
     },
   },
-  /** UNTRANSLATED */
   success_message:
-    '🎉 App authentication successfully enabled! Explore the new experience of your website.',
+    '🎉 アプリ認証が正常に有効化されました！Webサイトの新しいエクスペリエンスをご覧ください。',
 };
 
 export default Object.freeze(protected_app);

@@ -3,10 +3,14 @@ const webhooks = {
   title: 'Webhooks',
   subtitle: 'Crie webhooks para receber atualizações em tempo real sobre eventos específicos.',
   create: 'Criar Webhook',
-  events: {
-    post_register: 'Criar nova conta',
-    post_sign_in: 'Entrar',
-    post_reset_password: 'Redefinir senha',
+  schemas: {
+    interaction: 'Interação do utilizador',
+    user: 'Utilizador',
+    organization: 'Organização',
+    role: 'Função',
+    scope: 'Permissão',
+    organization_role: 'Função da organização',
+    organization_scope: 'Permissão da organização',
   },
   table: {
     name: 'Nome',
@@ -23,7 +27,7 @@ const webhooks = {
   create_form: {
     title: 'Criar Webhook',
     subtitle:
-      'Adicione o Webhook para enviar uma solicitação POST para o URL do ponto final com detalhes de quaisquer eventos de usuários.',
+      'Adicione o Webhook para enviar uma solicitação POST para o URL do ponto final com detalhes de quaisquer eventos de utilizadores.',
     events: 'Eventos',
     events_description:
       'Selecione os eventos de gatilho nos quais o Logto enviará a solicitação POST.',

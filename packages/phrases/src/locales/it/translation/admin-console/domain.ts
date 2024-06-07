@@ -15,9 +15,8 @@ const domain = {
     custom_domain_field: 'Dominio personalizzato',
     custom_domain_placeholder: 'il-tuo-dominio.com',
     add_domain: 'Aggiungi dominio',
-    /** UNTRANSLATED */
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      'Si prega di fornire un URL di dominio valido con un minimo di tre parti, ad esempio "tuo.dominio.com".',
     verify_domain: 'Verifica dominio',
     enable_ssl: 'Abilita SSL',
     checking_dns_tip:
@@ -52,9 +51,8 @@ const domain = {
     'Puoi personalizzare il nome di dominio di questi endpoint come richiesto. Scegli "{{custom}}" o "{{default}}".',
   custom_social_callback_url_note:
     'Puoi personalizzare il nome di dominio di questo URI per corrispondere all\'endpoint della tua applicazione. Scegli "{{custom}}" o "{{default}}".',
-  /** UNTRANSLATED */
   custom_acs_url_note:
-    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+    'Puoi personalizzare il nome di dominio di questo URI per corrispondere all\'URL del servizio consumer assertion provider del tuo fornitore di identità. Scegli "{{custom}}" o "{{default}}".',
 };
 
 export default Object.freeze(domain);

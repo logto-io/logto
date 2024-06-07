@@ -3,8 +3,7 @@ const tenants = {
   description: 'Kiracı ayarlarını verimli bir şekilde yönetin ve alan adınızı özelleştirin.',
   tabs: {
     settings: 'Ayarlar',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'Üyeler',
     domains: 'Alan adları',
     subscription: 'Plan ve faturalandırma',
     billing_history: 'Fatura geçmişi',
@@ -38,20 +37,15 @@ const tenants = {
     tenant_deletion_button: 'Kiracıyı Sil',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: 'AYRIL',
+    leave_tenant: 'Kiracıyı Ayrıl',
     leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+      'Kiracıda kalan tüm kaynaklarınız kalır, ancak artık bu kiracıya erişiminiz olmaz.',
+    last_admin_note:
+      'Bu kiracıdan ayrılmak için, en az bir başka üyenin Yönetici rolüne sahip olduğundan emin olun.',
   },
   create_modal: {
     title: 'Kiracı Oluştur',
-    subtitle:
-      'İzole kaynaklara ve kullanıcılara sahip yeni bir kiracı oluşturun. Verilerin barındırıldığı bölge ve kiracı türleri oluşturulduktan sonra değiştirilemez.',
     tenant_usage_purpose: 'Bu kiracıyı ne için kullanmak istiyorsunuz?',
     development_description:
       'Yalnızca test amacıyla ve üretimde kullanılmamalıdır. Abonelik gerekli değildir.',
@@ -77,20 +71,18 @@ const tenants = {
   delete_modal: {
     title: 'Kiracıyı Sil',
     description_line1:
-      '"{{name}}" adlı kiracınızı "{{tag}}" ortam etiketiyle silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve tüm verilerinizin ve hesap bilgilerinizin kalıcı olarak silinmesine neden olur.',
+      'Kiracınız "<span>{{name}}</span>" ve ortam ek etiketi "<span>{{tag}}</span>" ile kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz ve tüm veri ve kiracı bilgilerinizin kalıcı olarak silinmesine neden olacaktır.',
     description_line2:
-      'Hesabınızı silmeden önce size yardımcı olabiliriz. <span><a>E-posta yoluyla bize ulaşın</a></span>',
-    description_line3: 'Devam etmek isterseniz, "{{name}}" kiracı adını onaylamak için yazın.',
+      'Kiracıyı silmeden önce size yardımcı olabiliriz. <span><a>E-posta yoluyla bizimle iletişime geçin</a></span>',
+    description_line3: '"{{name}}" kiracı adını doğrulamak için devam edin',
     delete_button: 'Kalıcı olarak sil',
     cannot_delete_title: 'Bu kiracı silinemez',
     cannot_delete_description:
-      'Üzgünüm, bu kiracıyı şu anda silemezsiniz. Ücretsiz Plan üzerinde olduğunuzdan ve tüm ödenmemiş faturaları ödediğinizden emin olun.',
+      'Üzgünüm, şu anda bu kiracıyı silemezsiniz. Ücretsiz aboneliğinizde olmadığınızdan ve tüm faturalarınızın ödendiğinden emin olun.',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: 'Bu kiracıdan ayrılmak istediğinize emin misiniz?',
+    leave_button: 'Ayrıl',
   },
   tenant_landing_page: {
     title: 'Henüz bir kiracı oluşturmadınız',

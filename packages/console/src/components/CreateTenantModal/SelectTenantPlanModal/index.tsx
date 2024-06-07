@@ -16,7 +16,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { pickupFeaturedPlans } from '@/utils/subscription';
 
-import { type CreateTenantData } from '../type';
+import { type CreateTenantData } from '../types';
 
 import PlanCardItem from './PlanCardItem';
 import * as styles from './index.module.scss';
@@ -41,8 +41,8 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
     const { id: planId } = plan;
     try {
       if (planId === ReservedPlanId.Free) {
-        const { name, tag } = tenantData;
-        const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
+        const { name, tag, regionName } = tenantData;
+        const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
 
         reportToGoogle(GtagConversionId.CreateProductionTenant, { transactionId: newTenant.id });
         onClose(newTenant);

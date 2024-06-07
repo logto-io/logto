@@ -18,8 +18,8 @@ mockEsm('#src/libraries/logto-config.js', () => ({
   createLogtoConfigLibrary: () => ({ getOidcConfigs: () => ({}) }),
 }));
 
-mockEsm('#src/env-set/check-alteration-state.js', () => ({
-  checkAlterationState: () => true,
+mockEsm('#src/env-set/preconditions.js', () => ({
+  checkPreconditions: () => true,
 }));
 
 // eslint-disable-next-line unicorn/consistent-function-scoping

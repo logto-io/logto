@@ -21,7 +21,7 @@ import { koaBody } from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
@@ -67,7 +67,6 @@ export default function initOidc(
     resources: { findDefaultResource },
     users: { findUserById },
     organizations,
-    logs: { insertLog },
   } = queries;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
   const logoutSuccessSource = readFileSync('static/html/post-logout/index.html', 'utf8');

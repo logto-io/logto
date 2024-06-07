@@ -1,22 +1,13 @@
 const invitation = {
-  /** UNTRANSLATED */
-  find_your_tenants: 'Find your tenants',
-  /** UNTRANSLATED */
+  find_your_tenants: '尋找你的租戶',
   find_tenants_description:
-    'Your email address may already be registered with multiple tenants. You can choose to join the existing ones or continue create a new one.',
-  /** UNTRANSLATED */
-  create_new_tenant: 'Create a new tenant',
-  /** UNTRANSLATED */
-  email_not_match_title: 'You are currently signed in as\n{{email}}',
-  /** UNTRANSLATED */
-  email_not_match_description:
-    'Please sign in with the correct account to accept the invitation and become a member of the organization.',
-  /** UNTRANSLATED */
-  switch_account: 'Sign in to another account',
-  /** UNTRANSLATED */
-  invalid_invitation_status: 'Invalid invitation. Please contact the administrator and try again.',
-  /** UNTRANSLATED */
-  invitation_not_found: 'Invitation not found. Please contact the administrator.',
+    '你的電子郵件地址可能已被多個租戶註冊。您可以選擇加入現有的租戶或繼續建立一個新的。',
+  create_new_tenant: '建立新租戶',
+  email_not_match_title: '您目前以\n{{email}}\n登錄',
+  email_not_match_description: '請使用正確的帳戶登入以接受邀請並成為組織成員。',
+  switch_account: '登入到另一個帳戶',
+  invalid_invitation_status: '無效的邀請。請聯繫管理員並重試。',
+  invitation_not_found: '找不到邀請。請聯繫管理員。',
 };
 
 export default Object.freeze(invitation);

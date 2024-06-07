@@ -4,10 +4,14 @@ const webhooks = {
   subtitle:
     'Crea webhook per ricevere facilmente aggiornamenti in tempo reale relativi a eventi specifici.',
   create: 'Crea Webhook',
-  events: {
-    post_register: 'Crea nuovo account',
-    post_sign_in: 'Accedi',
-    post_reset_password: 'Reimposta password',
+  schemas: {
+    interaction: 'Interazione utente',
+    user: 'Utente',
+    organization: 'Organizzazione',
+    role: 'Ruolo',
+    scope: 'Permesso',
+    organization_role: 'Ruolo organizzazione',
+    organization_scope: 'Permesso organizzazione',
   },
   table: {
     name: 'Nome',

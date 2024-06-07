@@ -16,6 +16,7 @@ const database: CommandModule = {
       .command(seed)
       .command(alteration)
       .command(system)
+      // OGCIO
       .command(ogcio)
       .demandCommand(1),
   handler: noop,

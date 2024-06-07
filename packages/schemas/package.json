@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "type": "module",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
-    "@silverhand/essentials": "^2.9.0",
+    "@silverhand/essentials": "^2.9.1",
     "@silverhand/slonik": "31.0.0-beta.2",
     "@silverhand/ts-config": "6.0.0",
     "@types/inquirer": "^9.0.0",
@@ -79,12 +79,13 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@logto/connector-kit": "workspace:^3.0.0",
-    "@logto/core-kit": "workspace:^2.4.0",
+    "@logto/core-kit": "workspace:^2.5.0",
     "@logto/language-kit": "workspace:^1.1.0",
-    "@logto/phrases": "workspace:^1.10.1",
+    "@logto/phrases": "workspace:^1.11.0",
     "@logto/phrases-experience": "workspace:^1.6.1",
     "@logto/shared": "workspace:^3.1.1",
-    "@withtyped/server": "^0.13.6"
+    "@withtyped/server": "^0.13.6",
+    "nanoid": "^5.0.1"
   },
   "peerDependencies": {
     "zod": "^3.22.4"

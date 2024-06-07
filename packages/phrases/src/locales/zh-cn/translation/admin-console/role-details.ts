@@ -13,8 +13,13 @@ const role_details = {
     '角色是一组权限，可以分配给用户。它们还提供了一种聚合不同 API 定义的权限的方法，使得添加、删除或调整权限比将其单独分配给用户更有效率。',
   field_name: '名称',
   field_description: '描述',
+  field_is_default: '默认角色',
+  field_is_default_description:
+    '将此角色设为新用户的默认角色。可以设置多个默认角色。这也会影响通过管理 API 创建的用户的默认角色。',
   type_m2m_role_tag: '机器对机器应用角色',
   type_user_role_tag: '用户角色',
+  m2m_role_notification:
+    '将此机器到机器角色分配给机器到机器应用程序，以授予对相关API资源的访问权限。如果尚未创建，请<a>首先创建机器到机器应用程序</a>。',
   permission: {
     assign_button: '分配权限',
     assign_title: '分配权限',

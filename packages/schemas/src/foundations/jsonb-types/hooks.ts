@@ -15,7 +15,7 @@ export enum InteractionHookEvent {
 }
 
 // DataHookEvent
-enum DataHookSchema {
+export enum DataHookSchema {
   User = 'User',
   Role = 'Role',
   Scope = 'Scope',
@@ -27,6 +27,9 @@ enum DataHookSchema {
 enum DataHookBasicMutationType {
   Created = 'Created',
   Deleted = 'Deleted',
+}
+
+enum DataHookDetailMutationType {
   Updated = 'Updated',
 }
 
@@ -34,13 +37,14 @@ type BasicDataHookEvent = `${DataHookSchema}.${DataHookBasicMutationType}`;
 
 // Custom DataHook mutable schemas
 type CustomDataHookMutableSchema =
+  | `${DataHookSchema}.Data`
   | `${DataHookSchema.User}.SuspensionStatus`
   | `${DataHookSchema.Role}.Scopes`
   | `${DataHookSchema.Organization}.Membership`
   | `${DataHookSchema.OrganizationRole}.Scopes`;
 
 type DataHookPropertyUpdateEvent =
-  `${CustomDataHookMutableSchema}.${DataHookBasicMutationType.Updated}`;
+  `${CustomDataHookMutableSchema}.${DataHookDetailMutationType.Updated}`;
 
 export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
 
@@ -51,26 +55,26 @@ export const hookEvents = Object.freeze([
   InteractionHookEvent.PostResetPassword,
   'User.Created',
   'User.Deleted',
-  'User.Updated',
+  'User.Data.Updated',
   'User.SuspensionStatus.Updated',
   'Role.Created',
   'Role.Deleted',
-  'Role.Updated',
+  'Role.Data.Updated',
   'Role.Scopes.Updated',
   'Scope.Created',
   'Scope.Deleted',
-  'Scope.Updated',
+  'Scope.Data.Updated',
   'Organization.Created',
   'Organization.Deleted',
-  'Organization.Updated',
+  'Organization.Data.Updated',
   'Organization.Membership.Updated',
   'OrganizationRole.Created',
   'OrganizationRole.Deleted',
-  'OrganizationRole.Updated',
+  'OrganizationRole.Data.Updated',
   'OrganizationRole.Scopes.Updated',
   'OrganizationScope.Created',
   'OrganizationScope.Deleted',
-  'OrganizationScope.Updated',
+  'OrganizationScope.Data.Updated',
 ] as const satisfies Array<InteractionHookEvent | DataHookEvent>);
 
 /** The type of hook event values that can be registered. */
@@ -114,31 +118,31 @@ type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 export const managementApiHooksRegistration = Object.freeze({
   'POST /users': 'User.Created',
   'DELETE /users/:userId': 'User.Deleted',
-  'PATCH /users/:userId': 'User.Updated',
-  'PATCH /users/:userId/custom-data': 'User.Updated',
-  'PATCH /users/:userId/profile': 'User.Updated',
-  'PATCH /users/:userId/password': 'User.Updated',
+  'PATCH /users/:userId': 'User.Data.Updated',
+  'PATCH /users/:userId/custom-data': 'User.Data.Updated',
+  'PATCH /users/:userId/profile': 'User.Data.Updated',
+  'PATCH /users/:userId/password': 'User.Data.Updated',
   'PATCH /users/:userId/is-suspended': 'User.SuspensionStatus.Updated',
   'POST /roles': 'Role.Created',
   'DELETE /roles/:id': 'Role.Deleted',
-  'PATCH /roles/:id': 'Role.Updated',
+  'PATCH /roles/:id': 'Role.Data.Updated',
   'POST /roles/:id/scopes': 'Role.Scopes.Updated',
   'DELETE /roles/:id/scopes/:scopeId': 'Role.Scopes.Updated',
   'POST /resources/:resourceId/scopes': 'Scope.Created',
   'DELETE /resources/:resourceId/scopes/:scopeId': 'Scope.Deleted',
-  'PATCH /resources/:resourceId/scopes/:scopeId': 'Scope.Updated',
+  'PATCH /resources/:resourceId/scopes/:scopeId': 'Scope.Data.Updated',
   'POST /organizations': 'Organization.Created',
   'DELETE /organizations/:id': 'Organization.Deleted',
-  'PATCH /organizations/:id': 'Organization.Updated',
+  'PATCH /organizations/:id': 'Organization.Data.Updated',
   'PUT /organizations/:id/users': 'Organization.Membership.Updated',
   'POST /organizations/:id/users': 'Organization.Membership.Updated',
   'DELETE /organizations/:id/users/:userId': 'Organization.Membership.Updated',
   'POST /organization-roles': 'OrganizationRole.Created',
   'DELETE /organization-roles/:id': 'OrganizationRole.Deleted',
-  'PATCH /organization-roles/:id': 'OrganizationRole.Updated',
+  'PATCH /organization-roles/:id': 'OrganizationRole.Data.Updated',
   'POST /organization-scopes': 'OrganizationScope.Created',
   'DELETE /organization-scopes/:id': 'OrganizationScope.Deleted',
-  'PATCH /organization-scopes/:id': 'OrganizationScope.Updated',
+  'PATCH /organization-scopes/:id': 'OrganizationScope.Data.Updated',
   'PUT /organization-roles/:id/scopes': 'OrganizationRole.Scopes.Updated',
   'POST /organization-roles/:id/scopes': 'OrganizationRole.Scopes.Updated',
   'DELETE /organization-roles/:id/scopes/:organizationScopeId': 'OrganizationRole.Scopes.Updated',

@@ -73,6 +73,7 @@ describe('submit action', () => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     interactionDetails: { params: {} } as Awaited<ReturnType<Provider['interactionDetails']>>,
     assignInteractionHookResult: jest.fn(),
+    assignDataHookContext: jest.fn(),
   };
   const profile = {
     username: 'username',

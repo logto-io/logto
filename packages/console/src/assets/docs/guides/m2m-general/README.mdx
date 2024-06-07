@@ -1,141 +1,296 @@
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import ApplicationCredentials from '@/mdx-components/ApplicationCredentials';
-import EnableAdminAccess from './components/EnableAdminAccess';
-import EnableAdminAccessSrc from './assets/enable-admin-access.png';
 import AppIdentifierSrc from './assets/api-identifier.png';
-import { appendPath } from '@silverhand/essentials';
-import { isDevFeaturesEnabled } from '@/consts/env';
-import AssignManagementApiRole from './assets/assign-mgmt-api-role.webp';
-import CreateM2mManagementApiRole from './assets/create-m2m-mgmt-api-role.webp';
+import LogtoManagementApiSrc from './assets/logto-management-api.png';
 
 <Steps>
 <Step title="Intro">
 
-Machine-to-machine (M2M) is a common practice to authenticate if you have an app that needs to directly talk to resources. E.g., an API service that updates users' custom data in Logto, a statistic service that pulls daily orders, etc.
+Machine-to-machine (M2M) is a common practice to authenticate if you have an app (not user) that needs to directly talk to resources (usually, using M2M app doesn't need user interactions, so it has no UI). E.g., an API service that updates users' custom data in Logto, a statistic service that pulls daily orders, etc.
 
-Usually, an M2M app doesn't need user interface.
+Since Logto uses RBAC as its access control policy, assigning M2M roles to M2M apps is necessary for protecting your API which needs direct service talk.
+
+There are two common use cases of using machine-to-machine apps in Logto:
+
+1. **Accessing Logto Management API**: In this case, you need to assign a M2M role that include the `all` permission from the built-in Logto Management API to your M2M app.
+2. **Accessing your API resource**: In this case, you need to assign M2M roles that include permissions from your API resources to your M2M app.
 
 </Step>
-<Step title="Locate the app ID and app secret">
+<Step title="Basics about access token request">
 
-Get your app ID and app secret.
+M2M app makes a `POST` request to the token endpoint to fetch an access token by adding the following parameters using the `application/x-www-form-urlencoded` format in the HTTP request entity-body:
+
+- **grant_type**: Must be set to `client_credentials`
+- **resource**: The resource you want to access
+- **scope**: The scope of the access request
+
+And you also need to include your M2M app's credentials in the request header for the token endpoint to authenticate your M2M app.
+
+This is achieved by including the app's credentials in the [Basic authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization#basic_authentication) form in the request `Authorization` header, where username is the App ID, and password is the App Secret.
+
+You can find the App ID and App Secret from your M2M app's details page:
 
 <ApplicationCredentials />
 
-</Step>
-<Step title="Locate the API resource">
+An example of the access token request is:
 
-### Find the API identifier
+```
+POST /oidc/token HTTP/1.1
+Host: your.logto.endpoint
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+Content-Type: application/x-www-form-urlencoded
 
-In the "API resources" page, find the API identifier that the app needs to access. If you haven't added an API resource in Logto or don't know what API resource is, see [API resource](https://docs.logto.io/docs/references/resources).
-
-<img alt="API identifier" src={AppIdentifierSrc} width="600px" style={{ borderRadius: '6px' }} />
-
-</Step>
-<Step title="Compose and send request">
-
-### Compose them into a request (all mandatory):
-
-<ul>
-  <li>
-    Use Token Endpoint <code>{`${appendPath(props.endpoint, '/oidc/token')}`}</code> as the request
-    endpoint, and use POST as the method.
-  </li>
-  <li>
-    Set header <code>Content-Type: application/x-www-form-urlencoded</code>
-  </li>
-  <li>
-    Use{' '}
-    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization#basic_authentication">
-      Basic authentication
-    </a>
-    , where username is the app ID, and password is the app secret.
-  </li>
-  <li>Carry the body data</li>
-</ul>
-
-```json
-{
-  "grant_type": "client_credentials",
-  "resource": "https://shopping.api", // Replace with your API identifier
-  "scope": "scope_1 scope_2" // Replace with your desired scope(s) if you're using RBAC
-}
+grant_type=client_credentials
+resource=https://shopping.api
+scope=read:products write:products
 ```
 
-If you are using cURL:
+</Step>
+<Step title="Request an access token">
 
-<pre>
-  <code className="language-bash">
-    {`curl --location
-  --request POST '${appendPath(props.endpoint, '/oidc/token')}'
-  # Credentials are constructed by "<app-id>:<app-secret>" and encoded in base64
-  --header 'Authorization: Basic ${Buffer.from(`${props.app.id}:${props.app.secret}`).toString(
-    'base64'
-  )}'
-  --header 'Content-Type: application/x-www-form-urlencoded'
-  --data-urlencode 'grant_type=client_credentials'
-  --data-urlencode 'resource=https://shopping.api'
-  --data-urlencode 'scope=scope_1 scope_2'
-`}
-  </code>
-</pre>
+<InlineNotification>
+In the following demonstration, replace `https://your.logto.endpoint` with the Logto endpoint you are targeting. For Logto Cloud, it will be `https://[your-tenant-id].logto.app`.
+</InlineNotification>
 
-### Token response
+<Tabs>
 
-A successful response body would be like:
+<TabItem value="Logto Management API" label="For Logto Management API">
+
+Logto provides a built-in “Logto Management API” resource, it’s a readonly resource with the `all` permission to access Logto Management API, you can see it from your API resource list.
+The resource API indicator is in the pattern of `https://[your-tenant-id].logto.app/api` , and this will be your resource value used in the access token request body.
+
+<img alt="Logto Management API details" src={LogtoManagementApiSrc} width="600px" style={{ borderRadius: '6px' }}/>
+
+Before accessing Logto Management API, make sure your M2M app has been assigned with M2M roles that include the `all` permission from this built-in “Logto Management API” resource.
+
+Now, compose all we have and send the request:
+
+<Tabs>
+<TabItem value="Node.js" label="Node.js">
+
+```js
+const logtoEndpoint = 'https://your.logto.endpoint'; // Replace with your Logto endpoint
+const tokenEndpoint = `${logtoEndpoint}/oidc/token`;
+const applicationId = 'your-application-id';
+const applicationSecret = 'your-application-secret';
+const tenantId = 'your-tenant-id';
+
+const fetchAccessToken = async () => {
+  return await fetch(tokenEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${Buffer.from(`${applicationId}:${applicationSecret}`).toString(
+        'base64'
+      )}`,
+    },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      resource: `https://${tenantId}.logto.app/api`,
+      scope: 'all',
+    }).toString(),
+  });
+};
+```
+
+</TabItem>
+
+<TabItem value="cURL" label="cURL">
+
+```bash
+curl --location \
+  --request POST 'https://your.logto.endpoint' \ # Replace with your Logto endpoint
+  --header 'Authorization: Basic ${your_auth_string}' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=client_credentials' \
+  --data-urlencode 'resource=https://${tenantId}.logto.app/api' \
+  --data-urlencode 'scope=all'
+```
+
+</TabItem>
+
+</Tabs>
+
+<InlineNotification>
+For Logto Cloud users: when you’re interacting with Logto Management API, you can not use custom domain, use the default Logto endpoint `https://[your_tenant_id].logto.app/oidc/token` to grant access tokens.
+</InlineNotification>
+
+### Access token response
+
+A successful access token response body would be like:
 
 ```json
 {
   "access_token": "<granted-access-token>", // Use this token to access the API resource
   "expires_in": 3600, // Token expiration in seconds
-  "token_type": "Bearer" // Auth type for your request when using the access token
+  "token_type": "Bearer", // Auth type for your request when using the access token
+  "scope": "all" // scope `all` for Logto Management API
 }
 ```
+
+<InlineNotification>
+Logto does not currently support the M2M app to represent a user. The `sub` in the access token payload will be the App ID.
+</InlineNotification>
+
+</TabItem>
+
+<TabItem value="Your API resource" label="For your API resource">
+
+In your API Resource list, find the API identifier that the app needs to access. If you haven't added the API Resource in Logto or don't know what API Resource is, see [API Resource](/docs/references/resources).
+
+<img alt="API identifier" src={AppIdentifierSrc} width="600px" style={{ borderRadius: '6px' }} />
+
+Assume that we have `read:products` and `write:products` permissions under this “Online Shopping” API resource.
+
+Before accessing your API resource, make sure your M2M app has been assigned with M2M roles that include permissions from your API resource.
+
+Now, compose all we have and send the request:
+
+<Tabs>
+
+<TabItem value="Node.js" label="Node.js">
+
+```js
+const logtoEndpoint = 'https://your.logto.endpoint';
+const tokenEndpoint = `${logtoEndpoint}/oidc/token`;
+const applicationId = 'your-application-id';
+const applicationSecret = 'your-application-secret';
+
+const fetchAccessToken = async () => {
+  return await fetch(tokenEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${Buffer.from(`${applicationId}:${applicationSecret}`).toString(
+        'base64'
+      )}`,
+    },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      resource: 'https://shopping.api',
+      scope: 'read:products write:products',
+    }).toString(),
+  });
+};
+```
+
+</TabItem>
+
+<TabItem value="cURL" label="cURL">
+
+```bash
+curl --location \
+  --request POST 'https://your.logto.endpoint/oidc/token' \
+  --header 'Authorization: Basic ${your_auth_string}' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=client_credentials' \
+  --data-urlencode 'resource=https://shopping.api' \
+  --data-urlencode 'scope=read:products write:products'
+```
+
+</TabItem>
+
+</Tabs>
+
+### Access token response
+
+A successful access token response body would be like:
+
+```json
+{
+  "access_token": "<granted-access-token>", // Use this token to access the API resource
+  "expires_in": 3600, // Token expiration in seconds
+  "token_type": "Bearer", // Auth type for your request when using the access token
+  "scope": "read:products write:products" // scopes for the access token
+}
+```
+
+</TabItem>
+  
+</Tabs>
 
 </Step>
 <Step title="Access API resource using access token">
 
 You may notice the token response has a `token_type` field, which it's fixed to `Bearer`. Thus you should put the access token in the `Authorization` field of HTTP headers with the Bearer format (`Bearer <your-access-token>`).
 
-For example, if you have acquired an access token with your "Online Shopping" API resource `https://shopping.api`, then you can send requests to the API resource to achieve some your business logic.
+<Tabs>
+<TabItem value="Logto Management API" label="Interact with Logto Management API">
 
-Here is an example of using cURL to send a GET request to get items in your shopping cart:
+Using the requested access token with the built-in Logto Management API resource `https://[your-tenant-id].logto.app/api` to get all applications in Logto:
 
-<pre>
-  <code className="language-bash">
-    {`curl --location
-  --request GET 'https://shopping.api/my/cart/items'
-  --header 'Authorization: Bearer <granted-access-token>'
-`}
-  </code>
-</pre>
+<Tabs>
+<TabItem value="Node.js" label="Node.js">
 
-</Step>
-<Step title="Enable admin access" subtitle="(optional)">
+```js
+const logtoEndpoint = 'https://your.logto.endpoint'; // Replace with your Logto endpoint
+const accessToken = 'eyJhb...2g'; // Access Token
 
-  ### Accessing Logto Management API
+const fetchLogtoApplications = async () => {
+  return await fetch(`${logtoEndpoint}/api/applications`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+```
 
-  If you want to use this m2m app to access Logto [Management API](https://docs.logto.io/docs/references/core/#management-api).
+</TabItem>
 
-  You should go to "Roles" tab and create a new machine-to-machine role with the permission of management API.
+<TabItem value="cURL" label="cURL">
 
-  <img
-    alt="Create m2m management API role"
-    src={CreateM2mManagementApiRole}
-    width="600px"
-    style={{ borderRadius: '6px' }}
-  />
+```bash
+curl --location \
+  --request GET 'https://your.logto.endpoint/api/applications' \ # Replace with your Logto endpoint
+  --header 'Authorization: Bearer eyJhbG...2g' # Access Token
+```
 
-  And then go to the "Roles" tab under machine to machine app detail page, and assign the role you just created to the app.
+</TabItem>
 
-  <img
-    alt="Assign m2m management API role to app"
-    src={AssignManagementApiRole}
-    width="600px"
-    style={{ borderRadius: '6px' }}
-  />
+</Tabs>
+
+</TabItem>
+
+<TabItem value="Your API resource" label="Interact with your API resource">
+
+Using the requested access token with the API resource `https://shopping.api` to get all products in the shopping API:
+
+<Tabs>
+<TabItem value="Node.js" label="Node.js">
+
+```js
+const apiEndpoint = 'https://your.api.endpoint';
+const accessToken = 'eyJhb...2g'; // Access Token
+
+const fetchProducts = async () => {
+  return await fetch(`${apiEndpoint}/products`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+```
+
+</TabItem>
+
+<TabItem value="cURL" label="cURL">
+
+```bash
+curl --location \
+  --request GET 'https://your.api.endpoint/products' \
+  --header 'Authorization: Bearer eyJhbG...2 # Access Token
+```
+
+</TabItem>
+</Tabs>
+</TabItem>
+</Tabs>
 
 </Step>
 </Steps>

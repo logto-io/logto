@@ -40,6 +40,7 @@ import { consoleLog, getPathInModule } from '../../../utils.js';
 
 import { appendAdminConsoleRedirectUris, seedTenantCloudServiceApplication } from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
+import { seedPreConfiguredManagementApiAccessRole } from './roles.js';
 import { seedTenantOrganizations } from './tenant-organizations.js';
 import {
   assignScopesToRole,
@@ -149,6 +150,14 @@ export const seedTables = async (
   await createTenant(connection, defaultTenantId);
   await seedOidcConfigs(connection, defaultTenantId);
   await seedAdminData(connection, defaultManagementApi);
+
+  /**
+   * Create a pre-configured role for the Logto Management API access
+   * in the default tenant (the default tenant is the only tenant for the OSS version, and the initial tenant for cloud).
+   *
+   * Called after the default tenant's Management API resource and the related all scope have been created.
+   */
+  await seedPreConfiguredManagementApiAccessRole(connection, defaultTenantId);
 
   await createTenant(connection, adminTenantId);
   await seedOidcConfigs(connection, adminTenantId);

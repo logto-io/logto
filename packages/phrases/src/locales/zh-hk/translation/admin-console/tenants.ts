@@ -3,8 +3,7 @@ const tenants = {
   description: '高效管理租戶設置並自訂您的域名。',
   tabs: {
     settings: '設定',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: '成員',
     domains: '網域',
     subscription: '方案與計費',
     billing_history: '帳單記錄',
@@ -17,7 +16,7 @@ const tenants = {
     tenant_region: '數據托管區域',
     tenant_region_tip: '您的租戶資源托管在{{region}}。 <a>了解更多</a>',
     environment_tag_development: '開發',
-    environment_tag_production: '產品',
+    environment_tag_production: '生產',
     tenant_type: '租戶類型',
     development_description:
       '僅供測試使用，不應在生產中使用。無需訂閱。它具有所有專業功能，但存在限制，例如登錄橫幅。<a>了解更多</a>',
@@ -35,19 +34,13 @@ const tenants = {
     tenant_deletion_button: '刪除租戶',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
-    leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+    title: '離開',
+    leave_tenant: '離開租戶',
+    leave_tenant_description: '租戶內的任何資源將保留，但您將無法再訪問此租戶。',
+    last_admin_note: '要離開此租戶，請確保至少還有一個成員具有管理員角色。',
   },
   create_modal: {
     title: '創建租戶',
-    subtitle: '創建一個具有隔離資源和用戶的新租戶。數據托管的區域和租戶類型在創建後無法修改。',
     tenant_usage_purpose: '您希望使用此租戶做什麼？',
     development_description: '僅供測試使用，不應在生產中使用。無需訂閱。',
     development_hint: '它具有所有專業功能，但存在限制，例如登錄橫幅。',
@@ -69,20 +62,18 @@ const tenants = {
   delete_modal: {
     title: '刪除租戶',
     description_line1:
-      '您確定要刪除標有環境標識"<span>{{tag}}</span>"的"<span>{{name}}</span>"租戶嗎？此操作無法撤銷，並會永久刪除您的所有數據和帳戶信息。',
+      '您確定要刪除您的租戶“<span>{{name}}</span>”和環境後綴標記“<span>{{tag}}</span>” 嗎？此操作無法撤銷，將永久刪除所有您的數據和租戶信息。',
     description_line2:
-      '在刪除帳戶之前，也許我們可以為您提供幫助。<span><a>通過電子郵件與我們聯繫</a></span>',
-    description_line3: '如果您確定要繼續，請輸入租戶名稱"<span>{{name}}</span>"以進行確認。',
+      '在刪除租戶之前，也許我們可以幫助您。<span><a>通過電子郵件與我們聯繫</a></span>',
+    description_line3: '如果您確定要繼續，請輸入租戶名“<span>{{name}}</span>” 以進行確認。',
     delete_button: '永久刪除',
     cannot_delete_title: '無法刪除此租戶',
     cannot_delete_description:
       '抱歉，您現在無法刪除此租戶。請確保您處於免費計劃並已支付所有未結賬單。',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: '您確定要離開此租戶？',
+    leave_button: '離開',
   },
   tenant_landing_page: {
     title: '您尚未建立租戶',

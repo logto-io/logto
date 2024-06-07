@@ -152,29 +152,6 @@ describe('get access token', () => {
     ).resolves.toBeTruthy();
   });
 
-  it('sign in and verify jwt', async () => {
-    const client = new MockClient({
-      resources: [testApiResourceInfo.indicator],
-      scopes: testApiScopeNames,
-    });
-    await client.initSession();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username: guestUsername, password },
-    });
-    const { redirectTo } = await client.submitInteraction();
-    await processSession(client, redirectTo);
-    const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
-    await expect(
-      jwtVerify(accessToken, createRemoteJWKSet(new URL('/oidc/jwks', logtoUrl)), {
-        issuer: new URL('/oidc', logtoUrl).href,
-        audience: testApiResourceInfo.indicator,
-        requiredClaims: ['scope', 'client_id'],
-        subject: guestUserId,
-      })
-    ).resolves.toBeTruthy();
-  });
-
   it('can sign in and get multiple Access Tokens by the same Refresh Token within refreshTokenReuseInterval', async () => {
     const client = new MockClient({ resources: [testApiResourceInfo.indicator] });
 

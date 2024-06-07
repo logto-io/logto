@@ -24,7 +24,6 @@ import ActionsButton from '../ActionsButton';
 import EditScopeModal, { type EditScopeData } from '../EditScopeModal';
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 
-import EditPermissionModal from './EditPermissionModal';
 import * as styles from './index.module.scss';
 
 type SearchProps = {

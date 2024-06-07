@@ -4,9 +4,6 @@ export enum OnboardingRoute {
 
 export enum OnboardingPage {
   Welcome = 'welcome',
-  /** @deprecated Merged `about-user` to `welcome` page. */
-  AboutUser = 'about-user',
+  CreateTenant = 'create-tenant',
   SignInExperience = 'sign-in-experience',
-  /** @deprecated Remove this to shorten onboarding process. */
-  Congrats = 'congrats',
 }

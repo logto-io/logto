@@ -1,8 +1,5 @@
-import { ServiceLogs, Systems } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
-import { isKeyInObject } from '@logto/shared';
-import { conditional, conditionalString } from '@silverhand/essentials';
-import type { CommonQueryMethods } from '@silverhand/slonik';
+import { conditional } from '@silverhand/essentials';
 import { parseDsn, sql, stringifyDsn } from '@silverhand/slonik';
 import { z } from 'zod';
 
@@ -45,27 +42,4 @@ export const getTenantDatabaseDsn = async (tenantId: string) => {
     username,
     password: conditional(typeof password === 'string' && password),
   });
-};
-
-export const checkRowLevelSecurity = async (client: CommonQueryMethods) => {
-  const { rows } = await client.query(sql`
-    select tablename
-    from pg_catalog.pg_tables
-    where schemaname = current_schema()
-    and rowsecurity=false
-  `);
-
-  const rlsDisabled = rows.filter(
-    ({ tablename }) => tablename !== Systems.table && tablename !== ServiceLogs.table
-  );
-
-  if (rlsDisabled.length > 0) {
-    throw new Error(
-      'Row-level security has to be enforced on EVERY business table when starting Logto.\n' +
-        `Found following table(s) without RLS: ${rlsDisabled
-          .map((row) => conditionalString(isKeyInObject(row, 'tablename') && String(row.tablename)))
-          .join(', ')}\n\n` +
-        'Did you forget to run `npm cli db alteration deploy`?'
-    );
-  }
 };

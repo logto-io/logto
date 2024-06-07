@@ -12,8 +12,10 @@ const tenants = {
     title: 'SETTINGS',
     description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'Tenant ID',
-    tenant_name: 'Tenant Name',
-    tenant_region: 'Data hosted region',
+    tenant_name: 'Tenant name',
+    tenant_region: 'Data region',
+    tenant_region_description:
+      'The physical location where your tenant resources (users, apps, etc.) are hosted. This cannot be changed after creation.',
     tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
     environment_tag_development: 'Dev',
     environment_tag_production: 'Prod',
@@ -44,8 +46,7 @@ const tenants = {
   },
   create_modal: {
     title: 'Create tenant',
-    subtitle:
-      'Create a new tenant that has isolated resources and users. Data hosted region and tenant types can’t be modified after creation.',
+    subtitle: 'Create a new tenant that has isolated resources and users.',
     tenant_usage_purpose: 'What do you want to use this tenant for?',
     development_description:
       "For testing only and shouldn't be used in production. No subscription is required.",
@@ -54,6 +55,10 @@ const tenants = {
     available_plan: 'Available plan:',
     create_button: 'Create tenant',
     tenant_name_placeholder: 'My tenant',
+    tenant_created: 'Tenant created successfully.',
+    invitation_failed:
+      'Some invitation failed to send. Please try again in Settings -> Members later.',
+    tenant_type_description: 'This cannot be changed after creation.',
   },
   dev_tenant_migration: {
     title: 'You can now try our Pro features for free by creating a new "Development tenant"!',
@@ -68,15 +73,15 @@ const tenants = {
   delete_modal: {
     title: 'Delete tenant',
     description_line1:
-      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undo, and will result in the permanent deletion of all your data and account information.',
+      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
     description_line2:
-      'Before deleting account, maybe we can help you. <span><a>Contact us via Email</a></span>',
+      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3:
       'If you would like to proceed, please enter the tenant name "<span>{{name}}</span>" to confirm.',
     delete_button: 'Permanently delete',
     cannot_delete_title: 'Cannot delete this tenant',
     cannot_delete_description:
-      "Sorry, you can't delete this tenant right now. Please make sure you're on the Free Plan and have paid all outstanding billings.",
+      "Sorry, you can't delete this tenant right now. Please make sure you're on the Free plan and have paid all outstanding billings.",
   },
   leave_tenant_modal: {
     description: 'Are you sure you want to leave this tenant?',
@@ -99,6 +104,10 @@ const tenants = {
       'We deeply regret to inform you that your tenant account has been temporarily suspended due to improper use, including exceeding MAU limits, overdue payments, or other unauthorized actions.',
     description_2:
       'If you require further clarification, have any concerns, or wish to restore full functionality and unblock your tenants, please do not hesitate to contact us immediately.',
+  },
+  production_tenant_notification: {
+    text: "You're in a dev tenant for free testing. Create a production tenant to go live.",
+    action: 'Create tenant',
   },
 };
 

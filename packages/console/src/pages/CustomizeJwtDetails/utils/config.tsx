@@ -149,6 +149,7 @@ export const environmentVariablesCodeExample = `const getCustomJwtClaimsSample =
       Authorization: apiKey,
     }
   });
+
   const data = await response.json();
 
   return {

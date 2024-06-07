@@ -49,11 +49,11 @@ Open https://open.weixin.qq.com/, click the "Sign Up" button in the upper-right 
 
 Sign in with the account you just created. In the "Web Application" (网页应用) tab, click the big green button "Create a web app" (创建网页应用).
 
-![App tabs](/packages/connectors/connector-wechat/docs/app-tabs.png)
+![App tabs](/packages/connectors/connector-wechat-web/docs/app-tabs.png)
 
 Let's fill out the required info in the application form.
 
-![Create a web app](/packages/connectors/connector-wechat/docs/create-web-app.png)
+![Create a web app](/packages/connectors/connector-wechat-web/docs/create-web-app.png)
 
 #### Basic info
 

@@ -1,4 +1,5 @@
-import type { Application, User, Log, Hook } from '@logto/schemas';
+/* eslint-disable complexity */
+import type { Application, Hook, Log, User } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
@@ -10,13 +11,13 @@ import DetailsPage from '@/components/DetailsPage';
 import PageMeta from '@/components/PageMeta';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
-import { hookEventLogKey } from '@/consts/webhooks';
 import Card from '@/ds-components/Card';
 import CodeEditor from '@/ds-components/CodeEditor';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
+import { isWebhookEventLogKey } from '@/pages/WebhookDetails/utils';
 import { getUserTitle } from '@/utils/user';
 
 import EventIcon from './components/EventIcon';
@@ -27,9 +28,6 @@ const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
 
 const getDetailsTabNavLink = (logId: string, userId?: string) =>
   userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
-
-const isWebhookEventLog = (key?: string) =>
-  key && Object.values<string>(hookEventLogKey).includes(key);
 
 function AuditLogDetails() {
   const { appId, userId, hookId, logId } = useParams();
@@ -70,7 +68,7 @@ function AuditLogDetails() {
     return null;
   }
 
-  const isWebHookEvent = isWebhookEventLog(data?.key);
+  const isWebHookEvent = isWebhookEventLogKey(data?.key ?? '');
 
   return (
     <DetailsPage
@@ -161,3 +159,4 @@ function AuditLogDetails() {
 }
 
 export default AuditLogDetails;
+/* eslint-enable complexity */

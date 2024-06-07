@@ -4,10 +4,14 @@ const webhooks = {
   subtitle:
     'Utwórz webhooki, aby bez wysiłku otrzymywać aktualizacje w czasie rzeczywistym dotyczące określonych zdarzeń.',
   create: 'Utwórz webhook',
-  events: {
-    post_register: 'Utwórz nowe konto',
-    post_sign_in: 'Zaloguj się',
-    post_reset_password: 'Zresetuj hasło',
+  schemas: {
+    interaction: 'Interakcja użytkownika',
+    user: 'Użytkownik',
+    organization: 'Organizacja',
+    role: 'Rola',
+    scope: 'Uprawnienie',
+    organization_role: 'Rola w organizacji',
+    organization_scope: 'Uprawnienie w organizacji',
   },
   table: {
     name: 'Nazwa',
@@ -33,7 +37,7 @@ const webhooks = {
     endpoint_url: 'URL punktu końcowego',
     endpoint_url_placeholder: 'https://twoj.webhook.endpoint.url',
     endpoint_url_tip:
-      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
+      'Wprowadź adres URL punktu końcowego, do którego wysyłane będzie obciążenie webhooka, gdy wydarzenie ma miejsce.',
     create_webhook: 'Utwórz webhook',
     missing_event_error: 'Musisz wybrać przynajmniej jedno zdarzenie.',
   },

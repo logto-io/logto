@@ -1,9 +1,7 @@
-import { consoleLog } from '@logto/cli/lib/utils.js';
-import type { User, CreateUser, Scope, BindMfa, MfaVerification } from '@logto/schemas';
-import { MfaFactor, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { generateStandardShortId, generateStandardId } from '@logto/shared';
-import type { Nullable } from '@silverhand/essentials';
-import { deduplicate } from '@silverhand/essentials';
+import type { BindMfa, CreateUser, MfaVerification, Scope, User } from '@logto/schemas';
+import { MfaFactor, RoleType, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { generateStandardId, generateStandardShortId } from '@logto/shared';
+import { deduplicateByKey, type Nullable } from '@silverhand/essentials';
 import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
 import pRetry from 'p-retry';
 
@@ -76,7 +74,7 @@ export type UserLibrary = ReturnType<typeof createUserLibrary>;
 export const createUserLibrary = (queries: Queries) => {
   const {
     pool,
-    roles: { findRolesByRoleNames, findRoleByRoleName, findRolesByRoleIds },
+    roles: { findDefaultRoles, findRolesByRoleNames, findRoleByRoleName, findRolesByRoleIds },
     users: {
       hasUser,
       hasUserWithEmail,
@@ -91,6 +89,7 @@ export const createUserLibrary = (queries: Queries) => {
     scopes: { findScopesByIdsAndResourceIndicator },
     organizations,
     oidcModelInstances: { revokeInstanceByUserId },
+    userSsoIdentities,
   } = queries;
 
   const generateUserId = async (retries = 500) =>
@@ -107,16 +106,14 @@ export const createUserLibrary = (queries: Queries) => {
       { retries, factor: 0 } // No need for exponential backoff
     );
 
-  const insertUser = async (
-    data: OmitAutoSetFields<CreateUser>,
-    additionalRoleNames: string[],
-    tenantId?: string
-  ) => {
-    const defaultRoleNames = tenantId === 'admin' ? [] : EnvSet.values.userDefaultRoleNames;
-    const roleNames = deduplicate([...defaultRoleNames, ...additionalRoleNames]);
-    const roles = await findRolesByRoleNames(roleNames);
-    consoleLog.info({ roleNames, roles });
-    assertThat(roles.length === roleNames.length, 'role.default_role_missing');
+  const insertUser = async (data: OmitAutoSetFields<CreateUser>, additionalRoleNames: string[]) => {
+    const roleNames = [...EnvSet.values.userDefaultRoleNames, ...additionalRoleNames];
+    const [parameterRoles, defaultRoles] = await Promise.all([
+      findRolesByRoleNames(roleNames),
+      findDefaultRoles(RoleType.User),
+    ]);
+
+    assertThat(parameterRoles.length === roleNames.length, 'role.default_role_missing');
 
     return pool.transaction(async (connection) => {
       const insertUserQuery = buildInsertIntoWithPool(connection)(Users, {
@@ -124,6 +121,7 @@ export const createUserLibrary = (queries: Queries) => {
       });
 
       const user = await insertUserQuery(data);
+      const roles = deduplicateByKey([...parameterRoles, ...defaultRoles], 'id');
 
       if (roles.length > 0) {
         const { insertUsersRoles } = createUsersRolesQueries(connection);
@@ -285,6 +283,12 @@ export const createUserLibrary = (queries: Queries) => {
     ]);
   };
 
+  /**
+   * Expose the findUserSsoIdentitiesByUserId query method for the user library.
+   */
+  const findUserSsoIdentities = async (userId: string) =>
+    userSsoIdentities.findUserSsoIdentitiesByUserId(userId);
+
   return {
     generateUserId,
     insertUser,
@@ -295,5 +299,6 @@ export const createUserLibrary = (queries: Queries) => {
     addUserMfaVerification,
     verifyUserPassword,
     signOutUser,
+    findUserSsoIdentities,
   };
 };

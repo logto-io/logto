@@ -3,10 +3,14 @@ const webhooks = {
   title: '웹훅',
   subtitle: '특정 이벤트에 대한 실시간 업데이트를 쉽게 수신할 수 있는 웹훅을 생성하세요.',
   create: '웹훅 생성',
-  events: {
-    post_register: '새 계정 만들기',
-    post_sign_in: '로그인',
-    post_reset_password: '비밀번호 재설정',
+  schemas: {
+    interaction: '사용자 상호 작용',
+    user: '사용자',
+    organization: '조직',
+    role: '역할',
+    scope: '권한',
+    organization_role: '조직 역할',
+    organization_scope: '조직 권한',
   },
   table: {
     name: '이름',

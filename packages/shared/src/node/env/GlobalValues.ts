@@ -94,6 +94,7 @@ export default class GlobalValues {
   // eslint-disable-next-line unicorn/consistent-function-scoping
   public readonly databaseUrl = tryThat(() => assertEnv('DB_URL'), throwErrorWithDsnMessage);
   public readonly developmentTenantId = getEnv('DEVELOPMENT_TENANT_ID');
+  /** @deprecated Use the built-in user default role configuration (`Roles.isDefault`) instead. */
   public readonly userDefaultRoleNames = getEnvAsStringArray('USER_DEFAULT_ROLE_NAMES');
   public readonly developmentUserId = getEnv('DEVELOPMENT_USER_ID');
   public readonly trustProxyHeader = yes(getEnv('TRUST_PROXY_HEADER'));

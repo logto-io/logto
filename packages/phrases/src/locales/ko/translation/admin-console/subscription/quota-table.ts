@@ -48,9 +48,10 @@ const quota_table = {
   organizations: {
     title: '조직',
     organizations: '조직',
-    monthly_active_organization: '월간 활성 조직',
+    organization: '조직',
+    organization_count: '조직 수',
     allowed_users_per_org: '조직 당 허용된 사용자',
-    invitation: '초대장',
+    invitation: '초대 (Management API)',
     org_roles: '조직 역할',
     org_permissions: '조직 권한',
     just_in_time_provisioning: '적시 프로비저닝',

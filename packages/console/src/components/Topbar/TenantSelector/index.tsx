@@ -103,11 +103,11 @@ export default function TenantSelector() {
       <CreateTenantModal
         isOpen={showCreateTenantModal}
         onClose={async (tenant?: TenantResponse) => {
+          setShowCreateTenantModal(false);
           if (tenant) {
             prependTenant(tenant);
             navigateTenant(tenant.id);
           }
-          setShowCreateTenantModal(false);
         }}
       />
     </>

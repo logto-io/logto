@@ -4,14 +4,15 @@ import {
   hookEvents,
   jsonGuard,
   managementApiHooksRegistration,
-  type Hook,
   type Role,
 } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { authedAdminApi } from '#src/api/api.js';
 import { createResource } from '#src/api/resource.js';
 import { createScope } from '#src/api/scope.js';
+import { WebHookApiTest } from '#src/helpers/hook.js';
 import {
   OrganizationApiTest,
   OrganizationRoleApiTest,
@@ -20,7 +21,7 @@ import {
 import { UserApiTest, generateNewUser } from '#src/helpers/user.js';
 import { generateName, waitFor } from '#src/utils.js';
 
-import WebhookMockServer from './WebhookMockServer.js';
+import WebhookMockServer, { verifySignature } from './WebhookMockServer.js';
 import {
   organizationDataHookTestCases,
   organizationRoleDataHookTestCases,
@@ -32,24 +33,28 @@ import {
 
 const mockHookResponseGuard = z.object({
   signature: z.string(),
-  payload: z.object({
-    event: hookEventGuard,
-    createdAt: z.string(),
-    hookId: z.string(),
-    data: jsonGuard.optional(),
-    method: z
-      .string()
-      .optional()
-      .transform((value) => value?.toUpperCase()),
-    matchedRoute: z.string().optional(),
-  }),
+  payload: z
+    .object({
+      event: hookEventGuard,
+      createdAt: z.string(),
+      hookId: z.string(),
+      data: jsonGuard.optional(),
+      method: z
+        .string()
+        .optional()
+        .transform((value) => value?.toUpperCase()),
+      matchedRoute: z.string().optional(),
+    })
+    .catchall(z.any()),
+  // Keep the raw payload for signature verification
+  rawPayload: z.string(),
 });
 
 type MockHookResponse = z.infer<typeof mockHookResponseGuard>;
 
 const hookName = 'management-api-hook';
-const webhooks = new Map<string, Hook>();
 const webhookResults = new Map<string, MockHookResponse>();
+const webHookApi = new WebHookApiTest();
 
 // Record the hook response to the webhookResults map.
 // Compare the webhookResults map with the managementApiHooksRegistration to verify all hook is triggered.
@@ -80,27 +85,17 @@ const webhookServer = new WebhookMockServer(9999, webhookResponseHandler);
 beforeAll(async () => {
   await webhookServer.listen();
 
-  const webhookInstance = await authedAdminApi
-    .post('hooks', {
-      json: {
-        name: hookName,
-        events: [...hookEvents],
-        config: {
-          url: webhookServer.endpoint,
-          headers: { foo: 'bar' },
-        },
-      },
-    })
-    .json<Hook>();
-
-  webhooks.set(hookName, webhookInstance);
+  await webHookApi.create({
+    name: hookName,
+    events: [...hookEvents],
+    config: {
+      url: webhookServer.endpoint,
+    },
+  });
 });
 
 afterAll(async () => {
-  await Promise.all(
-    Array.from(webhooks.values()).map(async (hook) => authedAdminApi.delete(`hooks/${hook.id}`))
-  );
-
+  await webHookApi.cleanUp();
   await webhookServer.close();
 });
 
@@ -332,11 +327,17 @@ describe('organization role data hook events', () => {
   );
 });
 
-describe('data hook events coverage', () => {
+describe('data hook events coverage and signature verification', () => {
   const keys = Object.keys(managementApiHooksRegistration);
+
   it.each(keys)('should have test case for %s', async (key) => {
+    const webhook = webHookApi.hooks.get(hookName)!;
+
     const webhookResult = await getWebhookResult(key);
     expect(webhookResult).toBeDefined();
-    expect(webhookResult?.signature).toBeDefined();
+    assert(webhookResult, new Error('webhookResult is undefined'));
+
+    const { signature, rawPayload } = webhookResult;
+    expect(verifySignature(rawPayload, webhook.signingKey, signature)).toBeTruthy();
   });
 });

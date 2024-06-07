@@ -49,7 +49,11 @@ export const userMfaVerificationResponseGuard = z
 
 export type UserMfaVerificationResponse = z.infer<typeof userMfaVerificationResponseGuard>;
 
-/** Internal read-only roles for user tenants. */
+/**
+ * Internal read-only roles for user tenants.
+ *
+ * @deprecated We don't use internal roles anymore.
+ */
 export enum InternalRole {
   /**
    * Internal admin role for Machine-to-Machine apps in Logto user tenants.

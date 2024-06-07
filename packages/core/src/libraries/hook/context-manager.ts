@@ -1,7 +1,22 @@
-import { InteractionEvent, InteractionHookEvent, type DataHookEvent } from '@logto/schemas';
+import {
+  InteractionEvent,
+  InteractionHookEvent,
+  managementApiHooksRegistration,
+  type DataHookEvent,
+  type InteractionApiMetadata,
+  type ManagementApiContext,
+} from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
+import { type Context } from 'koa';
+import { type IRouterParamContext } from 'koa-router';
 
-import type { InteractionApiMetadata, ManagementApiContext } from './type.js';
+import {
+  buildManagementApiContext,
+  buildManagementApiDataHookRegistrationKey,
+  hasRegisteredDataHookEvent,
+} from './utils.js';
+
+type ManagementApiHooksRegistrationKey = keyof typeof managementApiHooksRegistration;
 
 type DataHookMetadata = {
   userAgent?: string;
@@ -12,12 +27,31 @@ type DataHookContext = {
   event: DataHookEvent;
   /** Data details */
   data?: unknown;
-} & Partial<ManagementApiContext>;
+} & Partial<ManagementApiContext> &
+  Record<string, unknown>;
 
 export class DataHookContextManager {
   contextArray: DataHookContext[] = [];
 
   constructor(public metadata: DataHookMetadata) {}
+
+  getRegisteredDataHookEventContext(
+    ctx: IRouterParamContext & Context
+  ): DataHookContext | undefined {
+    const { method, _matchedRoute: matchedRoute } = ctx;
+
+    const key = buildManagementApiDataHookRegistrationKey(method, matchedRoute);
+
+    if (!hasRegisteredDataHookEvent(key)) {
+      return;
+    }
+
+    return {
+      event: managementApiHooksRegistration[key],
+      ...buildManagementApiContext(ctx),
+      data: ctx.response.body,
+    };
+  }
 
   appendContext(context: DataHookContext) {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
@@ -35,7 +69,7 @@ type InteractionHookMetadata = {
  * In the `koaInteractionHooks` middleware,
  * if we get an interaction hook result after the interaction is processed, related hooks will be triggered.
  */
-export type InteractionHookResult = {
+type InteractionHookResult = {
   userId: string;
 };
 

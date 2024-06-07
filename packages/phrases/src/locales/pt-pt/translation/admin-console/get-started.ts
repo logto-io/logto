@@ -3,15 +3,13 @@ const get_started = {
   title: 'Algo para explorar para o ajudar a ter sucesso',
   subtitle: 'Algumas coisas que você pode fazer para obter rapidamente valor do Logto',
   develop: {
-    title: 'Develop: Dedique 5 minutos para integrar o seu aplicativo',
-    /** UNTRANSLATED */
-    title_cloud: 'Develop: Securely integrate your app in minutes',
-    /** UNTRANSLATED */
+    title: 'Desenvolver: Dedique 5 minutos para integrar o seu aplicativo',
+    title_cloud: 'Desenvolver: Integre o seu aplicativo de forma segura em minutos',
     subtitle_cloud:
-      'Or take 5 minutes to integrate your app with our pre-built SDKs and tutorials.',
+      'Ou leve 5 minutos para integrar o seu aplicativo com os nossos SDKs predefinidos e tutoriais.',
   },
   customize: {
-    title: 'Customize: Ofereça uma ótima experiência de login',
+    title: 'Personalizar: Ofereça uma ótima experiência de login',
     preview: {
       title:
         'Verifique a pré-visualização ao vivo da experiência de login que você acabou de personalizar',
@@ -27,10 +25,10 @@ const get_started = {
     add_more: 'Adicione mais',
   },
   secure: {
-    title: 'Secure: Proteja seus recursos',
+    title: 'Segurança: Proteja seus recursos',
   },
   manage: {
-    title: 'Manage: Defina o controle de acesso para seu produto e usuários',
+    title: 'Gerenciar: Defina o controle de acesso para seu produto e usuários',
     rbac: {
       title: 'Adicione controle de acesso baseado em função para proteger seus recursos',
       subtitle:

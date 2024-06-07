@@ -10,7 +10,7 @@ import { useStaticApi } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
 
-import MainFlowLikeModal from '../../components/MainFlowLikeModal';
+import ExperienceLikeModal from '../../components/ExperienceLikeModal';
 import { parseLocationState } from '../../utils';
 
 type EmailForm = {
@@ -50,7 +50,7 @@ function LinkEmailModal() {
   const { email: currentEmail } = parseLocationState(state);
 
   return (
-    <MainFlowLikeModal
+    <ExperienceLikeModal
       title="profile.link_account.link_email"
       subtitle="profile.link_account.link_email_subtitle"
       onClose={onClose}
@@ -80,7 +80,7 @@ function LinkEmailModal() {
         isLoading={isSubmitting}
         onClick={onSubmit}
       />
-    </MainFlowLikeModal>
+    </ExperienceLikeModal>
   );
 }
 

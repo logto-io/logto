@@ -3,8 +3,7 @@ const tenants = {
   description: 'Effizientes Verwalten von Mandanteneinstellungen und Anpassen Ihrer Domain.',
   tabs: {
     settings: 'Einstellungen',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'Mitglieder',
     domains: 'Domänen',
     subscription: 'Plan und Abrechnung',
     billing_history: 'Abrechnungshistorie',
@@ -39,20 +38,15 @@ const tenants = {
     tenant_deletion_button: 'Mieter löschen',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: 'VERLASSEN',
+    leave_tenant: 'Mieter verlassen',
     leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+      'Alle Ressourcen im Mandanten bleiben erhalten, aber Sie haben keinen Zugriff mehr auf diesen Mandanten.',
+    last_admin_note:
+      'Um diesen Mandanten zu verlassen, stellen Sie sicher, dass mindestens ein weiteres Mitglied die Admin-Rolle hat.',
   },
   create_modal: {
     title: 'Mieter erstellen',
-    subtitle:
-      'Erstellen Sie einen neuen Mandanten mit isolierten Ressourcen und Benutzern. Die gehosteten Datenregionen und Mandantentypen können nach der Erstellung nicht geändert werden.',
     tenant_usage_purpose: 'Wofür möchten Sie diesen Mieter verwenden?',
     development_description:
       'Nur für Tests und sollte nicht in der Produktion verwendet werden. Es ist kein Abonnement erforderlich.',
@@ -78,21 +72,19 @@ const tenants = {
   delete_modal: {
     title: 'Mieter löschen',
     description_line1:
-      'Möchten Sie wirklich Ihren Mandanten "<span>{{name}}</span>" mit Umgebungssuffix-Tag "<span>{{tag}}</span>" löschen? Dieser Vorgang kann nicht rückgängig gemacht werden und führt zur dauerhaften Löschung aller Ihrer Daten und Kontoinformationen.',
+      'Sind Sie sicher, dass Sie Ihren Mandanten "<span>{{name}}</span>" mit dem Umgebungssuffixtag "<span>{{tag}}</span>" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden und führt zur dauerhaften Löschung all Ihrer Daten und Mandanteninformationen.',
     description_line2:
-      'Bevor Sie Ihren Mieter löschen, können wir Ihnen vielleicht helfen.<span><a> Kontaktieren Sie uns per E-Mail </a></span>',
+      'Bevor Sie einen Mandanten löschen, können wir Ihnen vielleicht helfen. <span><a>Kontaktieren Sie uns per E-Mail</a></span>',
     description_line3:
       'Wenn Sie fortfahren möchten, geben Sie bitte den Mieter-Namen "<span>{{name}}</span>" zur Bestätigung ein.',
     delete_button: 'Dauerhaft löschen',
     cannot_delete_title: 'Diesen Mandanten kann nicht gelöscht werden',
     cannot_delete_description:
-      'Entschuldigung, Sie können diesen Mandanten momentan nicht löschen. Stellen Sie sicher, dass Sie sich im kostenlosen Tarif befinden und alle ausstehenden Rechnungen bezahlt haben.',
+      'Entschuldigung, diesen Mandanten können Sie derzeit nicht löschen. Stellen Sie sicher, dass Sie sich im kostenlosen Tarif befinden und alle ausstehenden Rechnungen bezahlt haben.',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: 'Sind Sie sicher, dass Sie diesen Mandanten verlassen möchten?',
+    leave_button: 'Verlassen',
   },
   tenant_landing_page: {
     title: 'Du hast noch keinen Mandanten erstellt',

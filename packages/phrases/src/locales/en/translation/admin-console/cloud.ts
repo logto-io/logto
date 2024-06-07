@@ -33,6 +33,13 @@ const cloud = {
       others: 'None of these above',
     },
   },
+  create_tenant: {
+    page_title: 'Create tenant',
+    title: 'Create your first tenant',
+    description:
+      'A tenant is an isolated environment where you can manage user identities, applications, and all other Logto resources.',
+    invite_collaborators: 'Invite your collaborators by email',
+  },
   sie: {
     page_title: 'Customize sign-in experience',
     title: "Let's first customize your sign-in experience with ease",
@@ -55,7 +62,7 @@ const cloud = {
       password: 'Password',
       verification_code: 'Verification code',
     },
-    social_field: 'Social sign in',
+    social_field: 'Social sign-in',
     finish_and_done: 'Finish and done',
     preview: {
       mobile_tab: 'Mobile',

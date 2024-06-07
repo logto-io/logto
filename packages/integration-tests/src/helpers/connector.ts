@@ -1,14 +1,14 @@
-import type { ConnectorType } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 
 import {
   mockEmailConnectorConfig,
   mockEmailConnectorId,
   mockSmsConnectorConfig,
   mockSmsConnectorId,
-  mockSocialConnectorId,
   mockSocialConnectorConfig,
+  mockSocialConnectorId,
 } from '#src/__mocks__/connectors-mock.js';
-import { listConnectors, deleteConnectorById, postConnector } from '#src/api/index.js';
+import { deleteConnectorById, listConnectors, postConnector } from '#src/api/index.js';
 import { deleteSsoConnectorById, getSsoConnectors } from '#src/api/sso-connector.js';
 
 export const clearConnectorsByTypes = async (types: ConnectorType[]) => {
@@ -41,3 +41,8 @@ export const setSocialConnector = async () =>
     connectorId: mockSocialConnectorId,
     config: mockSocialConnectorConfig,
   });
+
+export const resetPasswordlessConnectors = async () => {
+  await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+  await Promise.all([setEmailConnector(), setSmsConnector()]);
+};

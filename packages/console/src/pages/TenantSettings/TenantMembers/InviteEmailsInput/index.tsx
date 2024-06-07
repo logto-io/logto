@@ -10,17 +10,25 @@ import IconButton from '@/ds-components/IconButton';
 import Tag from '@/ds-components/Tag';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import type { InviteeEmailItem, InviteMemberForm } from '../types';
+import type { InviteeEmailItem } from '../types';
 
-import useEmailInputUtils from './hooks';
 import * as styles from './index.module.scss';
 
 type Props = {
+  readonly formName?: string;
   readonly className?: string;
   readonly values: InviteeEmailItem[];
   readonly onChange: (values: InviteeEmailItem[]) => void;
   readonly error?: string | boolean;
   readonly placeholder?: string;
+  /**
+   * Function to check for duplicated or invalid email addresses. It should return valid email addresses
+   * and an error message if any.
+   */
+  readonly parseEmailOptions: (values: InviteeEmailItem[]) => {
+    values: InviteeEmailItem[];
+    errorMessage?: string;
+  };
 };
 
 /**
@@ -31,17 +39,18 @@ const fontBody2 =
   '400 14px / 20px -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji';
 
 function InviteEmailsInput({
+  formName = 'emails',
   className,
   values,
   onChange: rawOnChange,
   error,
   placeholder,
+  parseEmailOptions,
 }: Props) {
   const ref = useRef<HTMLInputElement>(null);
   const [focusedValueId, setFocusedValueId] = useState<Nullable<string>>(null);
   const [currentValue, setCurrentValue] = useState('');
-  const { setError, clearErrors } = useFormContext<InviteMemberForm>();
-  const { parseEmailOptions } = useEmailInputUtils();
+  const { setError, clearErrors } = useFormContext();
   const [minInputWidth, setMinInputWidth] = useState<number>(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -55,14 +64,17 @@ function InviteEmailsInput({
     setMinInputWidth(ctx.measureText(currentValue).width);
   }, [currentValue]);
 
-  const onChange = (values: InviteeEmailItem[]) => {
+  const onChange = (values: InviteeEmailItem[]): boolean => {
     const { values: parsedValues, errorMessage } = parseEmailOptions(values);
+
     if (errorMessage) {
-      setError('emails', { type: 'custom', message: errorMessage });
-    } else {
-      clearErrors('emails');
+      setError(formName, { type: 'custom', message: errorMessage });
+      return false;
     }
+
+    clearErrors(formName);
     rawOnChange(parsedValues);
+    return true;
   };
 
   const handleAdd = (value: string) => {
@@ -74,9 +86,10 @@ function InviteEmailsInput({
         ...conditional(!emailRegEx.test(value) && { status: 'error' }),
       },
     ];
-    onChange(newValues);
-    setCurrentValue('');
-    ref.current?.focus();
+    if (onChange(newValues)) {
+      setCurrentValue('');
+      ref.current?.focus();
+    }
   };
 
   const handleDelete = (option: InviteeEmailItem) => {

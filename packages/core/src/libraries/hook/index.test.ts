@@ -9,7 +9,7 @@ import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { generateHookTestPayload, parseResponse } from './utils.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 await mockIdGenerators();
 
@@ -18,7 +18,7 @@ mockEsm('#src/utils/sign.js', () => ({
   sign: () => mockSignature,
 }));
 
-const { sendWebhookRequest } = mockEsm('./utils.js', () => ({
+const { sendWebhookRequest } = await mockEsmWithActual('./utils.js', () => ({
   sendWebhookRequest: jest
     .fn()
     .mockResolvedValue({ status: 200, text: async () => '{"message":"ok"}' }),

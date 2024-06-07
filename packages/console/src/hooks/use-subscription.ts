@@ -6,10 +6,13 @@ import { isCloud } from '@/consts/env';
 
 const useSubscription = (tenantId: string) => {
   const cloudApi = useCloudApi();
-  return useSWR<Subscription, Error>(isCloud && `/api/tenants/${tenantId}/subscription`, async () =>
-    cloudApi.get('/api/tenants/:tenantId/subscription', {
-      params: { tenantId },
-    })
+  return useSWR<Subscription, Error>(
+    // `tenantId` could be an empty string which may cause the request to fail
+    isCloud && tenantId && `/api/tenants/${tenantId}/subscription`,
+    async () =>
+      cloudApi.get('/api/tenants/:tenantId/subscription', {
+        params: { tenantId },
+      })
   );
 };
 

@@ -13,7 +13,6 @@ const api_resources = {
   default_api_label:
     'テナントごとにデフォルトのAPIを0または1つだけ設定できます。デフォルトのAPIが指定されている場合、認証リクエストでリソースパラメータを省略できます。その後のトークン交換は、デフォルトのAPIを対象として行われます。それにより、JWTが発行されます。<a>詳細を見る</a>',
   api_resource_created: 'APIリソース{{name}}が正常に作成されました',
-  /** UNTRANSLATED */
   invalid_resource_indicator_format: 'API indicator must be a valid absolute URI.',
 };
 

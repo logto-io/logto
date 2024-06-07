@@ -3,8 +3,7 @@ const tenants = {
   description: 'Skuteczne zarządzanie ustawieniami najemcy i dostosowywanie domeny.',
   tabs: {
     settings: 'Ustawienia',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'Członkowie',
     domains: 'Domeny',
     subscription: 'Plan i rozliczenia',
     billing_history: 'Historia rozliczeń',
@@ -39,20 +38,15 @@ const tenants = {
     tenant_deletion_button: 'Usuń najemcę',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: 'OPUŚĆ',
+    leave_tenant: 'Opuść najemcę',
     leave_tenant_description:
       'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+    last_admin_note:
+      'Aby opuścić tego najemcę, upewnij się, że co najmniej jeszcze jeden członek ma rolę Administrator.',
   },
   create_modal: {
     title: 'Utwórz nowego najemcę',
-    subtitle:
-      'Utwórz nowego najemcę, który ma izolowane zasoby i użytkowników. Dane hostowanej regionu i typy najemców nie mogą być modyfikowane po utworzeniu.',
     tenant_usage_purpose: 'Co chcesz zrobić z tym najemcą?',
     development_description:
       'Wyłącznie do testów i nie powinien być używany w produkcji. Nie jest wymagana subskrypcja.',
@@ -78,9 +72,9 @@ const tenants = {
   delete_modal: {
     title: 'Usuń najemcę',
     description_line1:
-      'Czy na pewno chcesz usunąć najemcę "<span>{{name}}</span>" z tagiem sufiksu środowiska "<span>{{tag}}</span>"? Ta operacja jest nieodwracalna i spowoduje trwałe usunięcie wszystkich twoich danych i informacji konta.',
+      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
     description_line2:
-      'Przed usunięciem konta, może chcemy Ci pomóc. <span><a>Skontaktuj się z nami przez e-mail</a></span>',
+      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3:
       'Jeśli chcesz kontynuować, wprowadź nazwę najemcy "<span>{{name}}</span>" w celu potwierdzenia.',
     delete_button: 'Usuń na stałe',
@@ -89,10 +83,8 @@ const tenants = {
       'Przepraszam, nie możesz teraz usunąć tego najemcy. Upewnij się, że korzystasz z planu darmowego i uregulowałeś wszystkie zaległe płatności.',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: 'Czy na pewno chcesz opuścić tego najemcę?',
+    leave_button: 'Opuść',
   },
   tenant_landing_page: {
     title: 'Nie utworzyłeś jeszcze najemcy',

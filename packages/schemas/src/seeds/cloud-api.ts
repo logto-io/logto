@@ -85,4 +85,5 @@ export const createTenantApplicationRole = (): Readonly<Role> => ({
   description:
     'The role for M2M applications that represent a user tenant and send requests to Logto Cloud.',
   type: RoleType.MachineToMachine,
+  isDefault: false,
 });

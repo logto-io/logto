@@ -48,9 +48,10 @@ const quota_table = {
   organizations: {
     title: '组织',
     organizations: '组织',
-    monthly_active_organization: '每月活跃组织',
-    allowed_users_per_org: '每组织允许的用户数',
-    invitation: '邀请',
+    organization: '组织',
+    organization_count: '组织数量',
+    allowed_users_per_org: '每个组织的用户数',
+    invitation: '邀请（管理 API）',
     org_roles: '组织角色',
     org_permissions: '组织权限',
     just_in_time_provisioning: '即时配置',

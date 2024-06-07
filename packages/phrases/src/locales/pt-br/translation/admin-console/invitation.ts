@@ -1,22 +1,15 @@
 const invitation = {
-  /** UNTRANSLATED */
-  find_your_tenants: 'Find your tenants',
-  /** UNTRANSLATED */
+  find_your_tenants: 'Encontre seus inquilinos',
   find_tenants_description:
-    'Your email address may already be registered with multiple tenants. You can choose to join the existing ones or continue create a new one.',
-  /** UNTRANSLATED */
-  create_new_tenant: 'Create a new tenant',
-  /** UNTRANSLATED */
-  email_not_match_title: 'You are currently signed in as\n{{email}}',
-  /** UNTRANSLATED */
+    'Seu endereço de e-mail pode já estar registrado em vários inquilinos. Você pode escolher se juntar aos existentes ou continuar e criar um novo.',
+  create_new_tenant: 'Criar um novo inquilino',
+  email_not_match_title: 'Você está atualmente conectado como\n{{email}}',
   email_not_match_description:
-    'Please sign in with the correct account to accept the invitation and become a member of the organization.',
-  /** UNTRANSLATED */
-  switch_account: 'Sign in to another account',
-  /** UNTRANSLATED */
-  invalid_invitation_status: 'Invalid invitation. Please contact the administrator and try again.',
-  /** UNTRANSLATED */
-  invitation_not_found: 'Invitation not found. Please contact the administrator.',
+    'Por favor, faça login com a conta correta para aceitar o convite e se tornar um membro da organização.',
+  switch_account: 'Entrar com outra conta',
+  invalid_invitation_status:
+    'Convite inválido. Entre em contato com o administrador e tente novamente.',
+  invitation_not_found: 'Convite não encontrado. Por favor, entre em contato com o administrador.',
 };
 
 export default Object.freeze(invitation);

@@ -37,10 +37,9 @@ const user = {
   missing_mfa: 'Sie müssen zusätzliches MFA verbinden, bevor Sie sich anmelden können.',
   totp_already_in_use: 'TOTP wird bereits verwendet.',
   backup_code_already_in_use: 'Backup-Code wird bereits verwendet.',
-  /** UNTRANSLATED */
-  password_algorithm_required: 'Password algorithm is required.',
-  /** UNTRANSLATED */
-  password_and_digest: 'You cannot set both plain text password and password digest.',
+  password_algorithm_required: 'Password-Algorithmus ist erforderlich.',
+  password_and_digest:
+    'Sie können nicht sowohl das Passwort im Klartext als auch den Passwort-Hash festlegen.',
 };
 
 export default Object.freeze(user);

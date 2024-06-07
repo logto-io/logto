@@ -6,6 +6,7 @@ import { addProfile } from '@/apis/interaction';
 import SetPasswordForm from '@/containers/SetPassword';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
@@ -18,6 +19,7 @@ const SetPassword = () => {
 
   const navigate = useNavigate();
   const { show } = useConfirmModal();
+  const redirectTo = useGlobalRedirectTo();
 
   const preSignInErrorHandler = usePreSignInErrorHandler();
 
@@ -31,11 +33,15 @@ const SetPassword = () => {
     }),
     [navigate, preSignInErrorHandler, show]
   );
-  const successHandler: SuccessHandler<typeof addProfile> = useCallback((result) => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, []);
+  const successHandler: SuccessHandler<typeof addProfile> = useCallback(
+    (result) => {
+      if (result?.redirectTo) {
+        redirectTo(result.redirectTo);
+      }
+    },
+    [redirectTo]
+  );
+
   const [action] = usePasswordAction({
     api: async (password) => addProfile({ password }),
     setErrorMessage,

@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.banner {
+  @include _.z-index(front);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: _.unit(4);
+  font: var(--font-label-2);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: _.unit(2.5);
+  padding: _.unit(1.5) _.unit(4);
+  background: var(--color-neutral-variant-90);
+  border-radius: _.unit(4);
+}

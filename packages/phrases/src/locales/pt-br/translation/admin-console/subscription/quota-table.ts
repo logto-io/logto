@@ -48,11 +48,12 @@ const quota_table = {
   organizations: {
     title: 'Organização',
     organizations: 'Organizações',
-    monthly_active_organization: 'Organização ativa mensal',
-    allowed_users_per_org: 'Usuários permitidos por organização',
-    invitation: 'Convite',
-    org_roles: 'Funções de organização',
-    org_permissions: 'Permissões de organização',
+    organization: 'Organização',
+    organization_count: 'Contagem de organizações',
+    allowed_users_per_org: 'Usuários por organização',
+    invitation: 'Convite (API de Gerenciamento)',
+    org_roles: 'Funções da organização',
+    org_permissions: 'Permissões da organização',
     just_in_time_provisioning: 'Provisionamento just-in-time',
   },
   support: {
@@ -60,7 +61,7 @@ const quota_table = {
     community: 'Comunidade',
     customer_ticket: 'Ticket de suporte',
     premium: 'Premium',
-    email_ticket_support: 'Suporte via e-mail',
+    email_ticket_support: 'Suporte por e-mail',
     soc2_report: 'Relatório SOC2',
     hipaa_or_baa_report: 'Relatório HIPAA/BAA',
   },
@@ -77,7 +78,7 @@ const quota_table = {
   days_one: '${ { count, number } } dia',
   days_other: '${ { count, number } } dias',
   add_on: 'Adicional',
-  tier: 'Nível${ { value, number } }: ',
+  tier: 'Nível${ { value, number } }:',
   paid_token_limit_tip:
     'O Logto adicionará cobranças para recursos que ultrapassem o limite da sua cota. Você pode usá-lo gratuitamente até começarmos a cobrar por volta do segundo trimestre de 2024. Se precisar de mais tokens, entre em contato conosco. Por padrão, cobramos $80 por mês para cada milhão de tokens.',
   paid_quota_limit_tip:

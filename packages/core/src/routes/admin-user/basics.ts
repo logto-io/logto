@@ -1,4 +1,3 @@
-/* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import {
@@ -32,7 +31,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       hasUserWithEmail,
       hasUserWithPhone,
     },
-    userSsoIdentities,
+    // OGCIO
     organizations,
   } = queries;
   const {
@@ -42,6 +41,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       insertUser,
       verifyUserPassword,
       signOutUser,
+      findUserSsoIdentities,
     },
   } = libraries;
 
@@ -66,7 +66,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         ...conditional(
           includeSsoIdentities &&
             yes(includeSsoIdentities) && {
-              ssoIdentities: await userSsoIdentities.findUserSsoIdentitiesByUserId(userId),
+              ssoIdentities: await findUserSsoIdentities(userId),
             }
         ),
       };
@@ -223,6 +223,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         []
       );
 
+      // OGCIO
       await manageDefaultOrganizations({ userId: id, organizationQueries: organizations });
 
       ctx.body = pick(user, ...userInfoSelectFields);

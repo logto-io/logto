@@ -1,5 +1,5 @@
 import { type ExceptionTelemetry } from '@logto/app-insights/node';
-import { type Context } from 'koa';
+import { type ExtendableContext } from 'koa';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const getRequestIdFromContext = (context: object): string | undefined => {
@@ -8,26 +8,22 @@ const getRequestIdFromContext = (context: object): string | undefined => {
   }
 };
 
-const getHostFromContext = (context: Context): string | undefined => {
-  if ('host' in context.headers && typeof context.headers.host === 'string') {
-    return context.headers.host;
-  }
-};
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const buildAppInsightsTelemetry = (context: object): Partial<ExceptionTelemetry> => {
+export const buildAppInsightsTelemetry = (
+  context: ExtendableContext
+): Partial<ExceptionTelemetry> => {
   const requestId = getRequestIdFromContext(context);
-  // eslint-disable-next-line no-restricted-syntax
-  const host = getHostFromContext(context as Context);
-
-  if (!requestId && !host) {
-    return {};
-  }
+  const {
+    host,
+    'x-forwarded-proto': xForwardedProto,
+    'x-forwarded-host': xForwardedHost,
+  } = context.headers;
 
   return {
     properties: {
-      ...(requestId ? { requestId } : {}),
-      ...(host ? { host } : {}),
+      requestId,
+      host,
+      xForwardedProto,
+      xForwardedHost,
     },
   };
 };

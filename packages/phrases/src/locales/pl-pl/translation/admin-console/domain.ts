@@ -15,9 +15,8 @@ const domain = {
     custom_domain_field: 'Niestandardowa domena',
     custom_domain_placeholder: 'twoja.domena.com',
     add_domain: 'Dodaj domenę',
-    /** UNTRANSLATED */
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      'Proszę podać poprawny adres URL domeny z co najmniej trzema częściami, np. "twoja.domena.com."',
     verify_domain: 'Zweryfikuj domenę',
     enable_ssl: 'Włącz SSL',
     checking_dns_tip:
@@ -52,9 +51,8 @@ const domain = {
     'Możesz dostosować nazwę domeny tych punktów końcowych według swoich wymagań. Wybierz "{{custom}}" lub "{{default}}".',
   custom_social_callback_url_note:
     'Możesz dostosować nazwę domeny tego adresu URI, aby dopasować ją do punktu końcowego Twojej aplikacji. Wybierz "{{custom}}" lub "{{default}}".',
-  /** UNTRANSLATED */
   custom_acs_url_note:
-    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+    'Możesz dostosować nazwę domeny tego URI, aby dopasować ją do adresu URL usługi konsumenta oświadczeń Twojego dostawcy tożsamości. Wybierz "{{custom}}" lub "{{default}}".',
 };
 
 export default Object.freeze(domain);

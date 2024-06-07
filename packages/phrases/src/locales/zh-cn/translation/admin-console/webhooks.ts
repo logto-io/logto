@@ -3,10 +3,14 @@ const webhooks = {
   title: 'Webhooks',
   subtitle: '创建 Webhooks 以轻松接收有关特定事件的实时更新。',
   create: '创建 Webhook',
-  events: {
-    post_register: '创建新账户',
-    post_sign_in: '登录',
-    post_reset_password: '重置密码',
+  schemas: {
+    interaction: '用户交互',
+    user: '用户',
+    organization: '组织',
+    role: '角色',
+    scope: '权限',
+    organization_role: '组织角色',
+    organization_scope: '组织权限',
   },
   table: {
     name: '名称',
@@ -27,7 +31,7 @@ const webhooks = {
     events_description: '选择触发事件，Logto 将发送 POST 请求。',
     name: '名称',
     name_placeholder: '输入 Webhook 名称',
-    endpoint_url: 'Endpoint URL',
+    endpoint_url: '端点 URL',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
     endpoint_url_tip: '输入您的端点 URL，在事件发生时 Webhook 的数据将被发送到该 URL。',
     create_webhook: '创建 Webhook',

@@ -93,6 +93,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       if (rows.length === 0) {
         ctx.status = 201;
       }
+
       ctx.body = jwtCustomizer.value;
 
       return next();

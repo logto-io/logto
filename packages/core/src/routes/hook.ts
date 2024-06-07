@@ -6,7 +6,6 @@ import {
   hookEventGuard,
   hookEventsGuard,
   hookResponseGuard,
-  interactionHookEventGuard,
   type Hook,
   type HookResponse,
 } from '@logto/schemas';
@@ -15,7 +14,6 @@ import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -25,12 +23,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-const { isDevFeaturesEnabled } = EnvSet.values;
-// TODO: remove dev features guard
-const webhookEventsGuard = isDevFeaturesEnabled
-  ? hookEventsGuard
-  : interactionHookEventGuard.array();
-const nonemptyUniqueHookEventsGuard = webhookEventsGuard
+const nonemptyUniqueHookEventsGuard = hookEventsGuard
   .nonempty()
   .transform((events) => deduplicate(events));
 
@@ -167,8 +160,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
     koaQuotaGuard({ key: 'hooksLimit', quota }),
     koaGuard({
       body: Hooks.createGuard.omit({ id: true, signingKey: true }).extend({
-        // TODO: remove dev features guard
-        event: (isDevFeaturesEnabled ? hookEventGuard : interactionHookEventGuard).optional(),
+        event: hookEventGuard.optional(),
         events: nonemptyUniqueHookEventsGuard.optional(),
       }),
       response: Hooks.guard,

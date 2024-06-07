@@ -22,13 +22,10 @@ const organization_details = {
     'Kaldırıldığında, kullanıcı bu kuruluşta üyeliğini ve rollerini kaybedecek. Bu işlem geri alınamaz.',
   search_user_placeholder: 'İsim, e-posta, telefon veya kullanıcı kimliği ile ara',
   at_least_one_user: 'En az bir kullanıcı gereklidir.',
-  /** UNTRANSLATED */
-  custom_data: 'Custom data',
-  /** UNTRANSLATED */
+  custom_data: 'Özel veri',
   custom_data_tip:
-    'Custom data is a JSON object that can be used to store additional data associated with the organization.',
-  /** UNTRANSLATED */
-  invalid_json_object: 'Invalid JSON object.',
+    'Özel veri, kuruluşla ilişkili ek verileri depolamak için kullanılabilen bir JSON nesnesidir.',
+  invalid_json_object: 'Geçersiz JSON nesnesi.',
 };
 
 export default Object.freeze(organization_details);

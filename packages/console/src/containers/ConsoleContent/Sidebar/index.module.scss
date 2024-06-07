@@ -1,16 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .sidebar {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 0;
-  flex-shrink: 0;
   width: 248px;
   overflow-y: auto;
   margin-bottom: _.unit(6);
-
-  .spacer {
-    margin: 0;
-    flex: 1 1 0;
-  }
 }

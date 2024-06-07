@@ -6,27 +6,17 @@ const application = {
     'Tylko tradycyjne aplikacje internetowe mogą być oznaczone jako aplikacja zewnętrzna.',
   third_party_application_only: 'Ta funkcja jest dostępna tylko dla aplikacji zewnętrznych.',
   user_consent_scopes_not_found: 'Nieprawidłowe zakresy zgody użytkownika.',
-  /** UNTRANSLATED */
-  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
+  consent_management_api_scopes_not_allowed: 'Nie są dozwolone zakresy API zarządzania.',
   protected_app_metadata_is_required: 'Wymagane jest zabezpieczone metadane aplikacji.',
-  /** UNTRANSLATED */
   protected_app_not_configured:
-    'Protected app provider is not configured. This feature is not available for open source version.',
-  /** UNTRANSLATED */
-  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
-  /** UNTRANSLATED */
-  protected_application_only: 'The feature is only available for protected applications.',
-  /** UNTRANSLATED */
-  protected_application_misconfigured: 'Protected application is misconfigured.',
-  /** UNTRANSLATED */
-  protected_application_subdomain_exists:
-    'The subdomain of Protected application is already in use.',
-  /** UNTRANSLATED */
-  invalid_subdomain: 'Invalid subdomain.',
-  /** UNTRANSLATED */
-  custom_domain_not_found: 'Custom domain not found.',
-  /** UNTRANSLATED */
-  should_delete_custom_domains_first: 'Should delete custom domains first.',
+    'Dostawca aplikacji zabezpieczonej nie jest skonfigurowany. Ta funkcja nie jest dostępna dla wersji open source.',
+  cloudflare_unknown_error: 'Wystąpił nieznany błąd podczas żądania interfejsu API Cloudflare',
+  protected_application_only: 'Ta funkcja jest dostępna tylko dla aplikacji chronionych.',
+  protected_application_misconfigured: 'Aplikacja chroniona jest źle skonfigurowana.',
+  protected_application_subdomain_exists: 'Subdomena aplikacji chronionej jest już w użyciu.',
+  invalid_subdomain: 'Nieprawidłowa subdomena.',
+  custom_domain_not_found: 'Nie znaleziono niestandardowej domeny.',
+  should_delete_custom_domains_first: 'Należy najpierw usunąć niestandardowe domeny.',
 };
 
 export default Object.freeze(application);

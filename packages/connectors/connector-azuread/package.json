@@ -6,7 +6,7 @@
   "dependencies": {
     "@azure/msal-node": "^2.0.0",
     "@logto/connector-kit": "workspace:^3.0.0",
-    "@silverhand/essentials": "^2.9.0",
+    "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
     "snakecase-keys": "^8.0.0",
     "zod": "^3.22.4"

@@ -6,6 +6,7 @@ import { UserMfaFlow } from '@/types';
 
 import useApi from './use-api';
 import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
+import useGlobalRedirectTo from './use-global-redirect-to';
 import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
 
 export type SendMfaPayloadApiOptions =
@@ -29,6 +30,7 @@ const useSendMfaPayload = () => {
   const asyncSendMfaPayload = useApi(sendMfaPayloadApi);
   const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
   const handleError = useErrorHandler();
+  const redirectTo = useGlobalRedirectTo();
 
   return useCallback(
     async (
@@ -48,10 +50,10 @@ const useSendMfaPayload = () => {
       }
 
       if (result) {
-        window.location.replace(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
-    [asyncSendMfaPayload, handleError, preSignInErrorHandler]
+    [asyncSendMfaPayload, handleError, preSignInErrorHandler, redirectTo]
   );
 };
 

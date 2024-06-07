@@ -15,13 +15,12 @@ const domain = {
     custom_domain_field: 'Domaine personnalisé',
     custom_domain_placeholder: 'votre.domaine.com',
     add_domain: 'Ajouter un domaine',
-    /** UNTRANSLATED */
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      'Veuillez fournir une URL de domaine valide avec un minimum de trois parties, par exemple "votre.domaine.com."',
     verify_domain: 'Vérifier le domaine',
     enable_ssl: 'Activer SSL',
     checking_dns_tip:
-      "Après avoir configuré les enregistrements DNS, le processus s'exécutera automatiquement et peut prendre jusqu'à 24 heures. Vous pouvez quitter cette interface pendant son exécution.",
+      'Après avoir configuré les enregistrements DNS, le processus s’exécutera automatiquement et peut prendre jusqu’à 24 heures. Vous pouvez quitter cette interface pendant son exécution.',
     enable_ssl_tip:
       'Activer SSL s’exécutera automatiquement et peut prendre jusqu’à 24 heures. Vous pouvez quitter cette interface pendant son exécution.',
     generating_dns_records: 'Génération des enregistrements DNS...',
@@ -52,9 +51,8 @@ const domain = {
     'Vous pouvez personnaliser le nom de domaine de ces points de terminaison selon vos besoins. Choisissez soit "{{custom}}" ou "{{default}}".',
   custom_social_callback_url_note:
     'Vous pouvez personnaliser le nom de domaine de cette URI pour correspondre au point de terminaison de votre application. Choisissez soit "{{custom}}" ou "{{default}}".',
-  /** UNTRANSLATED */
   custom_acs_url_note:
-    'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+    'Vous pouvez personnaliser le nom de domaine de cette URI pour correspondre à l\'URL du service de consommation d\'assertion de votre fournisseur d\'identité. Choisissez soit "{{custom}}" ou "{{default}}".',
 };
 
 export default Object.freeze(domain);

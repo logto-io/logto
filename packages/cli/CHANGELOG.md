@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.17.0
+
+### Minor Changes
+
+- 25d67f33f: create a pre-configured role with Management API access when seeding the database
+
+### Patch Changes
+
+- 07ac3e87c: fix the translate CLI command by adding the missing import
+- Updated dependencies [25d67f33f]
+- Updated dependencies [e04d9523a]
+- Updated dependencies [b5104d8c1]
+- Updated dependencies [0c70d65c7]
+- Updated dependencies [76fd33b7e]
+  - @logto/schemas@1.17.0
+  - @logto/phrases@1.11.0
+  - @logto/core-kit@2.5.0
+
 ## 1.16.0
 
 ### Patch Changes

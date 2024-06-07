@@ -3,6 +3,7 @@ import { conditional } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import Case from '@/assets/icons/case.svg';
 import ActionBar from '@/components/ActionBar';
@@ -11,7 +12,6 @@ import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import { trySubmitSafe } from '@/utils/form';
@@ -25,7 +25,7 @@ import { stageOptions, additionalFeaturesOptions, projectOptions } from './optio
 
 function Welcome() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate } = useTenantPathname();
+  const navigate = useNavigate();
 
   const {
     data: { questionnaire },
@@ -48,7 +48,7 @@ function Welcome() {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getOnboardingPage(OnboardingPage.SignInExperience));
+    navigate(getOnboardingPage(OnboardingPage.CreateTenant));
   };
 
   return (
@@ -57,8 +57,8 @@ function Welcome() {
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={pageLayout.content}>
           <Case />
-          <div className={styles.title}>{t('cloud.welcome.title')}</div>
-          <div className={styles.description}>{t('cloud.welcome.description')}</div>
+          <div className={pageLayout.title}>{t('cloud.welcome.title')}</div>
+          <div className={pageLayout.description}>{t('cloud.welcome.description')}</div>
           <form className={styles.form}>
             <FormField title="cloud.welcome.project_field" headlineSpacing="large">
               <Controller
@@ -122,7 +122,7 @@ function Welcome() {
           </form>
         </div>
       </OverlayScrollbar>
-      <ActionBar step={1} totalSteps={2}>
+      <ActionBar step={1} totalSteps={3}>
         <Button title="general.next" type="primary" onClick={onNext} />
       </ActionBar>
     </div>

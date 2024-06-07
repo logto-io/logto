@@ -5,9 +5,8 @@ const applications = {
     "Configura l'autenticazione Logto per la tua applicazione nativa, a singola pagina, macchina-to-macchina o tradizionale",
   subtitle_with_app_type: "Configura l'autenticazione Logto per la tua applicazione {{name}}",
   create: 'Crea Applicazione',
-  /** UNTRANSLATED */
   create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+    'Utilizza Logto come tuo provider di identità (IdP) per integrarti facilmente con applicazioni di terze parti',
   application_name: 'Nome applicazione',
   application_name_placeholder: 'La mia App',
   application_description: 'Descrizione applicazione',
@@ -16,10 +15,8 @@ const applications = {
   no_application_type_selected: 'Non hai ancora selezionato alcun tipo di applicazione',
   application_created: "L'applicazione è stata creata con successo.",
   tab: {
-    /** UNTRANSLATED */
-    my_applications: 'My apps',
-    /** UNTRANSLATED */
-    third_party_applications: 'Third-party apps',
+    my_applications: 'Le mie app',
+    third_party_applications: 'App di terze parti',
   },
   app_id: 'App ID',
   type: {
@@ -45,25 +42,26 @@ const applications = {
       description: 'E.g., servizio backend',
     },
     protected: {
-      /** UNTRANSLATED */
-      title: 'Protected App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is protected by Logto',
-      /** UNTRANSLATED */
+      title: 'App Protetta',
+      subtitle: 'Un app protetta da Logto',
       description: 'N/A',
     },
     third_party: {
-      /** UNTRANSLATED */
-      title: 'Third-party App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as a third-party IdP connector',
-      /** UNTRANSLATED */
+      title: 'App di Terze Parti',
+      subtitle: 'Un app utilizzata come connettore IdP di terze parti',
       description: 'E.g., OIDC, SAML',
     },
   },
   placeholder_title: 'Seleziona un tipo di applicazione per continuare',
   placeholder_description:
     "Logto utilizza un'entità applicazione per OIDC per aiutarti in compiti come l'identificazione delle tue app, la gestione dell'accesso e la creazione di registri di audit.",
+  m2m_role_assignment: {
+    title: "Autorizza l'applicazione con ruolo da macchina a macchina per le autorizzazioni",
+    subtitle:
+      'Le applicazioni da macchina a macchina richiedono un ruolo da macchina a macchina autorizzato.',
+    role_creation_hint:
+      'Non riesci a trovare il ruolo giusto per macchina a macchina? <a>Crea un ruolo macchina a macchina</a>',
+  },
 };
 
 export default Object.freeze(applications);

@@ -3,8 +3,8 @@ import { pickDefault } from '@logto/shared/esm';
 
 import {
   mockAdminUserRole,
-  mockScope,
   mockResource,
+  mockScope,
   mockScopeWithResource,
 } from '#src/__mocks__/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
@@ -105,7 +105,7 @@ describe('role scope routes', () => {
     const response = await roleRequester.post(`/roles/${mockAdminUserRole.id}/scopes`).send({
       scopeIds: [mockScope.id],
     });
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(201);
     expect(validateRoleScopeAssignment).toHaveBeenCalledWith([mockScope.id], mockAdminUserRole.id);
     expect(insertRolesScopes).toHaveBeenCalledWith([
       { id: mockId, roleId: mockAdminUserRole.id, scopeId: mockScope.id },

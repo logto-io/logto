@@ -1,16 +1,18 @@
 import {
   ApplicationType,
+  InteractionHookEvent,
   managementApiHooksRegistration,
   type HookConfig,
   type HookEvent,
+  type HookEventPayload,
+  type ManagementApiContext,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
+import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 import ky, { type KyResponse } from 'ky';
 
 import { sign } from '#src/utils/sign.js';
-
-import { type HookEventPayload } from './type.js';
 
 export const parseResponse = async (response: KyResponse) => {
   const body = await response.text();
@@ -47,17 +49,13 @@ export const sendWebhookRequest = async ({
 };
 
 export const generateHookTestPayload = (hookId: string, event: HookEvent): HookEventPayload => {
-  const fakeUserId = 'fake-user-id';
+  const fakeUserId = 'fake-id';
   const now = new Date();
 
-  return {
-    hookId,
-    event,
-    createdAt: now.toISOString(),
+  const interactionHookContext = {
     sessionId: 'fake-session-id',
-    userAgent: 'fake-user-agent',
-    userId: fakeUserId,
     userIp: 'fake-user-ip',
+    userId: fakeUserId,
     user: {
       id: fakeUserId,
       username: 'fake-user',
@@ -85,6 +83,26 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
       description: 'Fake application data for testing',
     },
   };
+
+  const dataHookContext = {
+    path: '/fake-path/:id',
+    method: 'POST',
+    status: 200,
+    params: { id: fakeUserId },
+    data: { result: 'success' },
+  };
+
+  const isInteractionHookEvent = Object.values<string>(InteractionHookEvent).includes(event);
+
+  return {
+    hookId,
+    event,
+    createdAt: now.toISOString(),
+    sessionId: 'fake-session-id',
+    userAgent: 'fake-user-agent',
+    ip: 'fake-user-ip',
+    ...(isInteractionHookEvent ? interactionHookContext : dataHookContext),
+  };
 };
 
 export const buildManagementApiDataHookRegistrationKey = (
@@ -95,3 +113,17 @@ export const buildManagementApiDataHookRegistrationKey = (
 export const hasRegisteredDataHookEvent = (
   key: string
 ): key is keyof typeof managementApiHooksRegistration => key in managementApiHooksRegistration;
+
+export const buildManagementApiContext = (
+  ctx: IRouterParamContext & Context
+): ManagementApiContext => {
+  const { path, method, status, _matchedRoute: matchedRoute, params } = ctx;
+
+  return {
+    path,
+    method,
+    status,
+    params,
+    matchedRoute: matchedRoute && String(matchedRoute),
+  };
+};

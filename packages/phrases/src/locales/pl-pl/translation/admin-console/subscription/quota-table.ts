@@ -48,11 +48,12 @@ const quota_table = {
   organizations: {
     title: 'Organizacja',
     organizations: 'Organizacje',
-    monthly_active_organization: 'Miesięczna liczba aktywnych organizacji',
-    allowed_users_per_org: 'Dozwolona liczba użytkowników na organizację',
-    invitation: 'Zaproszenie',
+    organization: 'Organizacja',
+    organization_count: 'Liczba organizacji',
+    allowed_users_per_org: 'Użytkownicy na organizację',
+    invitation: 'Zaproszenia (API zarządzania)',
     org_roles: 'Role organizacji',
-    org_permissions: 'Uprawnienia organizacji',
+    org_permissions: 'Uprawnienia organizacyjne',
     just_in_time_provisioning: 'Provisioning w trybie just-in-time',
   },
   support: {

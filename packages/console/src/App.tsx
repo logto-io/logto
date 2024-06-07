@@ -22,8 +22,6 @@ import AppLoading from '@/components/AppLoading';
 import { isCloud } from '@/consts/env';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
 import { ConsoleRoutes } from '@/containers/ConsoleRoutes';
-import { OnboardingRoutes } from '@/onboarding';
-import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
 import { GlobalScripts } from './components/Conversion';
 import { adminTenantEndpoint, mainTitle } from './consts';
@@ -139,7 +137,6 @@ function Providers() {
 function AppRoutes() {
   const { tenantEndpoint } = useContext(AppDataContext);
   const { isLoaded } = useCurrentUser();
-  const { isOnboarding } = useUserOnboardingData();
   const { isAuthenticated } = useLogto();
 
   // Authenticated user should load onboarding data before rendering the app.
@@ -152,7 +149,7 @@ function AppRoutes() {
   return (
     <>
       <GlobalScripts />
-      {isAuthenticated && isOnboarding ? <OnboardingRoutes /> : <ConsoleRoutes />}
+      <ConsoleRoutes />
     </>
   );
 }

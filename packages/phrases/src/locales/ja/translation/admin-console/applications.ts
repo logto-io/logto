@@ -5,9 +5,8 @@ const applications = {
     'ネイティブ、シングルページ、マシン・トゥ・マシン、または従来のアプリケーションにLogto認証を設定する',
   subtitle_with_app_type: 'あなたの {{name}} アプリケーションに Logto 認証を設定する',
   create: 'アプリケーションを作成する',
-  /** UNTRANSLATED */
   create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+    'LogtoをIdentity Provider（IdP）として使用し、サードパーティアプリケーションと簡単に統合できます',
   application_name: 'アプリケーション名',
   application_name_placeholder: '私のアプリ',
   application_description: 'アプリケーションの説明',
@@ -16,9 +15,7 @@ const applications = {
   no_application_type_selected: 'まだアプリケーションタイプが選択されていません',
   application_created: 'アプリケーションが正常に作成されました。',
   tab: {
-    /** UNTRANSLATED */
     my_applications: 'My apps',
-    /** UNTRANSLATED */
     third_party_applications: 'Third-party apps',
   },
   app_id: 'App ID',
@@ -44,25 +41,24 @@ const applications = {
       description: '例：バックエンドサービス',
     },
     protected: {
-      /** UNTRANSLATED */
       title: 'Protected App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is protected by Logto',
-      /** UNTRANSLATED */
+      subtitle: 'Logtoによって保護されたアプリ',
       description: 'N/A',
     },
     third_party: {
-      /** UNTRANSLATED */
       title: 'Third-party App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as a third-party IdP connector',
-      /** UNTRANSLATED */
-      description: 'E.g., OIDC, SAML',
+      subtitle: 'サードパーティIdPコネクターとして使用されるアプリ',
+      description: '例：OIDC、SAML',
     },
   },
   placeholder_title: '続行するにはアプリケーションタイプを選択してください',
   placeholder_description:
     'LogtoはOIDCのためにアプリケーションエンティティを使用して、アプリケーションの識別、サインインの管理、監査ログの作成などのタスクをサポートします。',
+  m2m_role_assignment: {
+    title: 'アプリを権限付きのマシン間ロールで認可する',
+    subtitle: 'マシン間アプリケーションには承認されたマシン間ロールが必要です。',
+    role_creation_hint: '適切なマシン間ロールが見つかりませんか？ <a>マシン間ロールを作成する</a>',
+  },
 };
 
 export default Object.freeze(applications);

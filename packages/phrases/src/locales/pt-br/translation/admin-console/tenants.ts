@@ -3,8 +3,7 @@ const tenants = {
   description: 'Gerencie eficientemente as configurações do locatário e personalize seu domínio.',
   tabs: {
     settings: 'Configurações',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'Membros',
     domains: 'Domínios',
     subscription: 'Plano e faturamento',
     billing_history: 'Histórico de faturamento',
@@ -39,20 +38,15 @@ const tenants = {
     tenant_deletion_button: 'Excluir locatário',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: 'SAIR',
+    leave_tenant: 'Sair do locatário',
     leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+      'Quaisquer recursos no locatário permanecerão, mas você não terá mais acesso a este locatário.',
+    last_admin_note:
+      'Para sair deste locatário, certifique-se de que pelo menos mais um membro tenha a função de Administrador.',
   },
   create_modal: {
     title: 'Criar inquilino',
-    subtitle:
-      'Crie um novo locatário que tenha recursos e usuários isolados. As regiões de dados hospedados e os tipos de locatário não podem ser modificados após a criação.',
     tenant_usage_purpose: 'Para que você deseja usar este locatário?',
     development_description:
       'Apenas para testes e não deve ser usado em produção. Nenhuma assinatura é necessária.',
@@ -65,7 +59,7 @@ const tenants = {
   },
   dev_tenant_migration: {
     title:
-      'Agora você pode experimentar nossos recursos Pro gratuitamente criando um novo "locatário de desenvolvimento"!',
+      'Agora você pode experimentar nossos recursos Pro gratuitamente criando um novo “locatário de desenvolvimento”!',
     affect_title: 'Como isso afeta você?',
     hint_1:
       'Estamos substituindo as antigas <strong>etiquetas de ambiente</strong> por dois novos tipos de locatário: <strong>“Desenvolvimento”</strong> e <strong>“Produção”</strong>.',
@@ -77,26 +71,24 @@ const tenants = {
   delete_modal: {
     title: 'Excluir locatário',
     description_line1:
-      'Tem certeza que deseja excluir seu locatário "<span>{{name}}</span>" com a etiqueta de sufixo de ambiente "<span>{{tag}}</span>"? Esta ação não pode ser desfeita e resultará na exclusão permanente de todos os seus dados e informações de conta.',
+      'Tem certeza de que deseja excluir o seu locatário "<span>{{name}}</span>" com a etiqueta de sufixo de ambiente "<span>{{tag}}</span>"? Esta ação não pode ser desfeita e resultará na exclusão permanente de todos os seus dados e informações do locatário.',
     description_line2:
-      'Antes de excluir a conta, podemos ajudá-lo. <span><a>Entre em contato conosco por e-mail</a></span>',
+      'Antes de excluir o locatário, talvez possamos ajudar você. <span><a>Entre em contato conosco por e-mail</a></span>',
     description_line3:
-      'Se você deseja continuar, digite o nome do locatário "<span>{{name}}</span>" para confirmar.',
+      'Se deseja prosseguir, digite o nome do locatário "<span>{{name}}</span>" para confirmar.',
     delete_button: 'Excluir permanentemente',
     cannot_delete_title: 'Não é possível excluir este inquilino',
     cannot_delete_description:
-      'Desculpe, você não pode excluir este locatário no momento. Certifique-se de estar no Plano Gratuito e ter pago todas as faturas pendentes.',
+      'Desculpe, no momento você não pode excluir este locatário. Certifique-se de que está no Plano Gratuito e tenha pago todas as faturas pendentes.',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: 'Tem certeza de que deseja sair deste locatário?',
+    leave_button: 'Sair',
   },
   tenant_landing_page: {
     title: 'Você ainda não criou um inquilino',
     description:
-      'Para começar a configurar seu projeto com o Logto, crie um novo inquilino. Se você precisar fazer logout ou excluir sua conta, basta clicar no botão de avatar no canto superior direito.',
+      'Para começar a configurar seu projeto com o Logto, crie um novo inquilino. Se você precisar fazer logout ou excluir sua conta, basta clicar no botão do avatar no canto superior direito.',
     create_tenant_button: 'Criar inquilino',
   },
   status: {
@@ -107,9 +99,9 @@ const tenants = {
   tenant_suspended_page: {
     title: 'Locatário suspenso. Entre em contato para restaurar o acesso.',
     description_1:
-      'Lamentamos profundamente informar que sua conta de locatário foi temporariamente suspensa devido a uso impróprio, incluindo exceder os limites de MAU, pagamentos atrasados ou outras ações não autorizadas.',
+      'Lamentamos informar que sua conta de locatário foi temporariamente suspensa devido a uso indevido, incluindo exceder os limites de MAU, pagamentos em atraso ou outras ações não autorizadas.',
     description_2:
-      'Se você precisa de mais esclarecimentos, tem alguma preocupação ou deseja restaurar a funcionalidade total e desbloquear seus locatários, não hesite em entrar em contato conosco imediatamente.',
+      'Se precisar de mais esclarecimentos, tiver alguma preocupação ou desejar restaurar a funcionalidade total e desbloquear seus locatários, entre em contato conosco imediatamente.',
   },
 };
 

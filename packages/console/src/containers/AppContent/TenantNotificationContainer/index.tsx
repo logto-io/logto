@@ -5,6 +5,7 @@ import PaymentOverdueModal from '@/components/PaymentOverdueModal';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
+import CreateProductionTenantBanner from './CreateProductionTenantBanner';
 import TenantEnvMigrationModal from './TenantEnvMigrationModal';
 
 function TenantNotificationContainer() {
@@ -24,6 +25,7 @@ function TenantNotificationContainer() {
           <PaymentOverdueModal />
         </>
       )}
+      <CreateProductionTenantBanner />
       <TenantEnvMigrationModal />
     </>
   );

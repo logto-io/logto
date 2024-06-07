@@ -1,69 +1,41 @@
 const protected_app = {
-  /** UNTRANSLATED */
-  name: 'Protected App',
-  /** UNTRANSLATED */
-  title: 'Create a Protected App: Add authentication with simplicity and epic speed',
-  /** UNTRANSLATED */
+  name: '보호된 앱',
+  title: '보호된 앱 생성: 간편한 인증 및 뛰어난 속도로 추가하세요',
   description:
-    'Protected App securely maintains user sessions and proxies your app requests. Powered by Cloudflare Workers, enjoy the top-tier performance and 0ms cold start worldwide. <a>Learn more</a>',
-  /** UNTRANSLATED */
-  fast_create: 'Fast create',
-  /** UNTRANSLATED */
-  modal_title: 'Create Protected App',
-  /** UNTRANSLATED */
+    '보호된 앱은 사용자 세션을 안전하게 유지하고 앱 요청을 프록시로 전달합니다. Cloudflare Workers를 통해 제공되며 전 세계에서 최고 수준의 성능과 0ms의 콜드 스타트를 경험하세요. <a>더 알아보기</a>',
+  fast_create: '빠르게 생성',
+  modal_title: '보호된 앱 생성',
   modal_subtitle:
-    'Enable secure and fast protection with clicks. Add authentication to your existing web app with ease.',
+    '클릭 몇 번으로 보안 및 빠른 보호 기능을 활성화하세요. 기존 웹 앱에 쉽게 인증을 추가하세요.',
   form: {
-    /** UNTRANSLATED */
-    url_field_label: 'Your origin URL',
-    /** UNTRANSLATED */
+    url_field_label: '원본 URL',
     url_field_placeholder: 'https://domain.com/',
-    /** UNTRANSLATED */
-    url_field_description: 'Provide the address of your app requiring authentication protection.',
-    /** UNTRANSLATED */
+    url_field_description: '인증 보호가 필요한 앱의 주소를 제공하세요.',
     url_field_modification_notice:
-      'Modifications to the origin URL may take up to 1-2 minutes to become effective across global network locations.',
-    /** UNTRANSLATED */
+      '원본 URL에 대한 수정 사항은 전 세계 네트워크 위치에서 효과가 발생하기까지 1-2분이 소요될 수 있습니다.',
     url_field_tooltip:
-      "Provide the address of your application, excluding any '/pathname'. After creation, you can customize route authentication rules.\n\nNote: The origin URL itself doesn't necessitate authentication; protection is applied exclusively to accesses via the designated app domain.",
-    /** UNTRANSLATED */
-    domain_field_label: 'App domain',
-    /** UNTRANSLATED */
+      "애플리케이션의 주소를 제공하세요. '/pathname'을 제외한 주소를 제공하세요. 생성 후에는 라우트 인증 규칙을 사용자화할 수 있습니다.\n\n참고: 원본 URL 자체에는 인증이 필요하지 않으며, 보호는 지정된 앱 도메인을 통해 액세스에 배타적으로 적용됩니다.",
+    domain_field_label: '앱 도메인',
     domain_field_placeholder: 'your-domain',
-    /** UNTRANSLATED */
     domain_field_description:
-      'This URL serves as an authentication protection proxy for the original URL. Custom domain can be applied after creation.',
-    /** UNTRANSLATED */
-    domain_field_description_short:
-      'This URL serves as an authentication protection proxy for the original URL.',
-    /** UNTRANSLATED */
+      '이 URL은 원본 URL에 대한 인증 보호 프록시로 작동합니다. 생성 후에 사용자 정의 도메인을 적용할 수 있습니다.',
+    domain_field_description_short: '이 URL은 원본 URL에 대한 인증 보호 프록시로 작동합니다.',
     domain_field_tooltip:
-      "Apps protected by Logto will be hosted at 'your-domain.{{domain}}' by default. Custom domain can be applied after creation.",
-    /** UNTRANSLATED */
-    create_application: 'Create application',
-    /** UNTRANSLATED */
-    create_protected_app: 'Fast create',
+      "Logto로 보호된 앱은 기본적으로 'your-domain.{{domain}}'에서 호스팅됩니다. 생성 후에 사용자 정의 도메인을 적용할 수 있습니다.",
+    create_application: '애플리케이션 생성',
+    create_protected_app: '빠르게 생성',
     errors: {
-      /** UNTRANSLATED */
-      domain_required: 'Your domain is required.',
-      /** UNTRANSLATED */
-      domain_in_use: 'This subdomain name is already in use.',
-      /** UNTRANSLATED */
-      invalid_domain_format:
-        "Invalid subdomain format: use only lowercase letters, numbers, and hyphens '-'.",
-      /** UNTRANSLATED */
-      url_required: 'Origin URL is required.',
-      /** UNTRANSLATED */
+      domain_required: '도메인을 입력하세요.',
+      domain_in_use: '이 서브도메인 이름은 이미 사용 중입니다.',
+      invalid_domain_format: "잘못된 서브도메인 형식: 소문자, 숫자, 하이픈 '-'만 사용하세요.",
+      url_required: '원본 URL을 입력하세요.',
       invalid_url:
-        "Invalid origin URL format: Use http:// or https://. Note: '/pathname' is not currently supported.",
-      /** UNTRANSLATED */
+        "잘못된 원본 URL 형식: http:// 또는 https://를 사용하세요. 참고: '/pathname'은 현재 지원되지 않습니다.",
       localhost:
-        'Please expose your local server to the internet first. Learn more about <a>local development</a>.',
+        '로컬 서버를 먼저 인터넷에 노출시켜야 합니다. <a>로컬 개발</a>에 대해 더 알아보기.',
     },
   },
-  /** UNTRANSLATED */
-  success_message:
-    '🎉 App authentication successfully enabled! Explore the new experience of your website.',
+  success_message: '🎉 앱 인증이 성공적으로 활성화되었습니다! 새로운 웹 사이트 경험을 탐색하세요.',
 };
 
 export default Object.freeze(protected_app);

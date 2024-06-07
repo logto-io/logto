@@ -51,14 +51,14 @@ const useSocial = () => {
         return;
       }
 
-      // Invoke Native Social Sign In flow
+      // Invoke native social sign-in flow
       if (isNativeWebview()) {
         nativeSignInHandler(result.redirectTo, connector);
 
         return;
       }
 
-      // Invoke Web Social Sign In flow
+      // Invoke web social sign-in flow
       window.location.assign(result.redirectTo);
     },
     [asyncInvokeSocialSignIn, handleError, nativeSignInHandler]

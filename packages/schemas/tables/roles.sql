@@ -9,6 +9,8 @@ create table roles (
   name varchar(128) not null,
   description varchar(128) not null,
   type role_type not null default 'User',
+  /** If the role is the default role for a new user. Should be ignored for `MachineToMachine` roles. */
+  is_default boolean not null default false,
   primary key (id),
   constraint roles__name
     unique (tenant_id, name)

@@ -16,11 +16,13 @@ export const createRole = async ({
   name,
   description,
   type,
+  isDefault,
   scopeIds,
 }: {
   name?: string;
   description?: string;
   type?: RoleType;
+  isDefault?: boolean;
   scopeIds?: string[];
 }) =>
   authedAdminApi
@@ -28,6 +30,7 @@ export const createRole = async ({
       json: {
         name: name ?? generateRoleName(),
         description: description ?? generateRoleName(),
+        isDefault,
         type: type ?? RoleType.User,
         scopeIds,
       },

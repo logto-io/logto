@@ -3,10 +3,14 @@ const webhooks = {
   title: 'Webhooks',
   subtitle: '創建 Webhook 以輕鬆收到特定事件的即時更新。',
   create: '創建 Webhook',
-  events: {
-    post_register: '創建新帳戶',
-    post_sign_in: '登錄',
-    post_reset_password: '重置密碼',
+  schemas: {
+    interaction: '使用者互動',
+    user: '使用者',
+    organization: '組織',
+    role: '角色',
+    scope: '權限',
+    organization_role: '組織角色',
+    organization_scope: '組織權限',
   },
   table: {
     name: '名稱',
@@ -22,7 +26,7 @@ const webhooks = {
   },
   create_form: {
     title: '創建 Webhook',
-    subtitle: '添加 Webhook 以發送 POST 請求到端點 URL，包含任何用戶事件的詳細信息。',
+    subtitle: '添加 Webhook 以發送 POST 請求到端點 URL，包含任何使用者事件的詳細資訊。',
     events: '事件',
     events_description: '選擇 Logto 將發送 POST 請求的觸發事件。',
     name: '名稱',

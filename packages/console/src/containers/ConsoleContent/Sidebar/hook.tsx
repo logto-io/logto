@@ -19,7 +19,7 @@ import Role from '@/assets/icons/role.svg';
 import SecurityLock from '@/assets/icons/security-lock.svg';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg';
 import Web from '@/assets/icons/web.svg';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 
 type SidebarItem = {
   Icon: FC;

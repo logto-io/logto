@@ -1,6 +1,6 @@
 {
   "name": "@logto/phrases",
-  "version": "1.10.1",
+  "version": "1.11.0",
   "description": "Logto shared phrases (i18n).",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^1.1.0",
-    "@silverhand/essentials": "^2.9.0"
+    "@silverhand/essentials": "^2.9.1"
   },
   "peerDependencies": {
     "zod": "^3.22.4"

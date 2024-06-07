@@ -122,6 +122,7 @@ export const mockAdminApplicationRole: Role = {
   name: 'admin',
   description: 'admin application',
   type: RoleType.MachineToMachine,
+  isDefault: false,
 };
 
 export const mockAdminUserRole: Role = {
@@ -130,6 +131,7 @@ export const mockAdminUserRole: Role = {
   name: 'admin',
   description: 'admin',
   type: RoleType.User,
+  isDefault: false,
 };
 
 export const mockAdminUserRole2: Role = {
@@ -138,6 +140,7 @@ export const mockAdminUserRole2: Role = {
   name: 'admin2',
   description: 'admin2',
   type: RoleType.User,
+  isDefault: false,
 };
 
 export const mockAdminUserRole3: Role = {
@@ -146,6 +149,7 @@ export const mockAdminUserRole3: Role = {
   name: 'admin3',
   description: 'admin3',
   type: RoleType.MachineToMachine,
+  isDefault: false,
 };
 
 export const mockAdminConsoleData: AdminConsoleData = {

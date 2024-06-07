@@ -36,6 +36,7 @@ export const getMapiProxyRole = (tenantId: string): Readonly<Role> =>
     name: `machine:mapi:${tenantId}`,
     description: `Machine-to-machine role for accessing Management API of tenant '${tenantId}'.`,
     type: RoleType.MachineToMachine,
+    isDefault: false,
   });
 
 /**

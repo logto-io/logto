@@ -1,5 +1,5 @@
 const api_resource_details = {
-  page_title: 'APIリソースの詳細 ',
+  page_title: 'APIリソースの詳細',
   back_to_api_resources: 'APIリソースに戻る',
   general_tab: '一般',
   permissions_tab: '権限',
@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     'Logto管理APIは、管理者が幅広いID関連タスクを管理し、セキュリティポリシーを強制し、規制や標準に準拠するための包括的なAPIのコレクションです。',
   management_api_notice:
-    'このAPIはLogtoエンティティを表し、変更または削除することはできません。管理APIを使用して、幅広いID関連タスクを実行できます。 <a>詳細</a>',
+    'この API は Logto エンティティを表しており、変更や削除はできません。Logto 管理 API を呼び出すには、マシン間アプリケーションを作成してください。 <a>詳細はこちら</a>',
   token_expiration_time_in_seconds: 'トークンの有効期限（秒単位）',
   token_expiration_time_in_seconds_placeholder: 'トークンの有効期限を入力してください',
   delete_description:
@@ -21,9 +21,7 @@ const api_resource_details = {
     create_title: '権限の作成',
     create_subtitle: 'このAPIで必要な権限（スコープ）を定義します。',
     confirm_create: '権限を作成',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
+    edit_title: 'API権限の編集',
     edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
     name: '権限名',
     name_placeholder: 'read:resource',

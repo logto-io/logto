@@ -3,23 +3,24 @@ import { appInsights } from '@logto/app-insights/node';
 import type { User, UserOnboardingData } from '@logto/schemas';
 import {
   AdminTenantRole,
-  SignInMode,
-  defaultTenantId,
-  adminTenantId,
   InteractionEvent,
-  adminConsoleApplicationId,
   MfaFactor,
+  OrganizationInvitationStatus,
+  SignInMode,
+  TenantRole,
+  adminConsoleApplicationId,
+  adminTenantId,
+  defaultManagementApiAdminName,
+  defaultTenantId,
   getTenantOrganizationId,
   getTenantRole,
-  TenantRole,
-  defaultManagementApiAdminName,
-  OrganizationInvitationStatus,
   userOnboardingDataKey,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
+// OGCIO
 import { manageDefaultOrganizations } from '#src/libraries/ogcio-user.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
@@ -33,13 +34,13 @@ import type { WithInteractionDetailsContext } from '../middleware/koa-interactio
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 import type {
   VerifiedInteractionResult,
-  VerifiedSignInInteractionResult,
   VerifiedRegisterInteractionResult,
+  VerifiedSignInInteractionResult,
 } from '../types/index.js';
 import { clearInteractionStorage } from '../utils/interaction.js';
 import { userMfaDataKey } from '../verifications/mfa-verification.js';
 
-import { postAffiliateLogs, parseUserProfile } from './helpers.js';
+import { hasUpdatedProfile, parseUserProfile, postAffiliateLogs } from './helpers.js';
 
 const parseBindMfas = ({
   bindMfas,
@@ -112,7 +113,7 @@ async function handleSubmitRegister(
 
   const { client_id } = ctx.interactionDetails.params;
 
-  const { isCloud } = EnvSet.values;
+  const { isCloud, isIntegrationTest } = EnvSet.values;
   const [currentTenantId] = await getTenantId(ctx.URL);
   const isInAdminTenant = currentTenantId === adminTenantId;
   /**
@@ -120,7 +121,7 @@ async function handleSubmitRegister(
    * security issues.
    */
   const isCreatingFirstAdminUser =
-    (!EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) &&
+    (!isCloud || isIntegrationTest) &&
     isInAdminTenant &&
     String(client_id) === adminConsoleApplicationId &&
     !(await hasActiveUsers());
@@ -128,13 +129,15 @@ async function handleSubmitRegister(
   // If it's Logto Cloud, Check if the new user has any pending invitations, if yes, skip onboarding flow.
   const invitations =
     isCloud && userProfile.primaryEmail
-      ? await organizations.invitations.findEntities({ invitee: userProfile.primaryEmail })
+      ? await organizations.invitations.findEntities({
+          invitee: userProfile.primaryEmail,
+        })
       : [];
   const hasPendingInvitations = invitations.some(
     (invitation) => invitation.status === OrganizationInvitationStatus.Pending
   );
 
-  await insertUser(
+  const user = await insertUser(
     {
       id,
       ...userProfile,
@@ -163,8 +166,7 @@ async function handleSubmitRegister(
         }
       ),
     },
-    getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud),
-    tenantId
+    getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud)
   );
 
   if (isCreatingFirstAdminUser) {
@@ -184,13 +186,19 @@ async function handleSubmitRegister(
       id,
     ]);
   } else {
+    // OGCIO
     await manageDefaultOrganizations({ userId: id, organizationQueries: organizations });
   }
   await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
   ctx.assignInteractionHookResult({ userId: id });
+  ctx.assignDataHookContext({ event: 'User.Created', user });
 
   log?.append({ userId: id });
-  appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.Register) });
+  appInsights.client?.trackEvent({
+    name: getEventName(Component.Core, CoreEvent.Register),
+  });
+
   void trySafe(postAffiliateLogs(ctx, cloudConnection, id, tenantId), (error) => {
     getConsoleLogFromContext(ctx).warn('Failed to post affiliate logs', error);
     void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
@@ -214,7 +222,7 @@ async function handleSubmitSignIn(
   const mfaVerifications = parseBindMfas(interaction);
   const { mfaSkipped } = interaction;
 
-  await updateUserById(accountId, {
+  const updatedUser = await updateUserById(accountId, {
     ...updateUserProfile,
     ...conditional(
       mfaVerifications.length > 0 && {
@@ -232,10 +240,21 @@ async function handleSubmitSignIn(
       }
     ),
   });
-  await assignInteractionResults(ctx, provider, { login: { accountId } });
-  ctx.assignInteractionHookResult({ userId: accountId });
 
-  appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.SignIn) });
+  await assignInteractionResults(ctx, provider, { login: { accountId } });
+
+  ctx.assignInteractionHookResult({ userId: accountId });
+  // Trigger user.updated data hook event if the user profile or mfa data is updated
+  if (hasUpdatedProfile(updateUserProfile) || mfaVerifications.length > 0) {
+    ctx.assignDataHookContext({
+      event: 'User.Data.Updated',
+      user: updatedUser,
+    });
+  }
+
+  appInsights.client?.trackEvent({
+    name: getEventName(Component.Core, CoreEvent.SignIn),
+  });
 }
 
 export default async function submitInteraction(
@@ -264,8 +283,13 @@ export default async function submitInteraction(
     profile.password
   );
 
-  await updateUserById(accountId, { passwordEncrypted, passwordEncryptionMethod });
+  const user = await updateUserById(accountId, {
+    passwordEncrypted,
+    passwordEncryptionMethod,
+  });
   ctx.assignInteractionHookResult({ userId: accountId });
+  ctx.assignDataHookContext({ event: 'User.Data.Updated', user });
+
   await clearInteractionStorage(ctx, provider);
   ctx.status = 204;
 }

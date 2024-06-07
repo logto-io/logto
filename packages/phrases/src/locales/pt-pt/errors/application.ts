@@ -7,27 +7,17 @@ const application = {
     'Apenas aplicações web tradicionais podem ser marcadas como uma aplicação de terceiros.',
   third_party_application_only: 'A funcionalidade só está disponível para aplicações de terceiros.',
   user_consent_scopes_not_found: 'Escopos de consentimento de utilizador inválidos.',
-  /** UNTRANSLATED */
-  consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
-  protected_app_metadata_is_required: 'Protected app metadata is required.',
-  /** UNTRANSLATED */
+  consent_management_api_scopes_not_allowed: 'Os escopos de API de gestão não são permitidos.',
+  protected_app_metadata_is_required: 'Metadados de aplicação protegida são necessários.',
   protected_app_not_configured:
-    'Protected app provider is not configured. This feature is not available for open source version.',
-  /** UNTRANSLATED */
-  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
-  /** UNTRANSLATED */
-  protected_application_only: 'The feature is only available for protected applications.',
-  /** UNTRANSLATED */
-  protected_application_misconfigured: 'Protected application is misconfigured.',
-  /** UNTRANSLATED */
-  protected_application_subdomain_exists:
-    'The subdomain of Protected application is already in use.',
-  /** UNTRANSLATED */
-  invalid_subdomain: 'Invalid subdomain.',
-  /** UNTRANSLATED */
-  custom_domain_not_found: 'Custom domain not found.',
-  /** UNTRANSLATED */
-  should_delete_custom_domains_first: 'Should delete custom domains first.',
+    'O provedor de aplicação protegida não está configurado. Esta funcionalidade não está disponível na versão de código aberto.',
+  cloudflare_unknown_error: 'Erro desconhecido ao solicitar API da Cloudflare',
+  protected_application_only: 'A funcionalidade só está disponível para aplicações protegidas.',
+  protected_application_misconfigured: 'Aplicação protegida está mal configurada.',
+  protected_application_subdomain_exists: 'O subdomínio da aplicação protegida já está em uso.',
+  invalid_subdomain: 'Subdomínio inválido.',
+  custom_domain_not_found: 'Domínio personalizado não encontrado.',
+  should_delete_custom_domains_first: 'Deve eliminar primeiro os domínios personalizados.',
 };
 
 export default Object.freeze(application);

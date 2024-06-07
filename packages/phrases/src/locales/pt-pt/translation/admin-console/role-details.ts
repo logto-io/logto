@@ -13,8 +13,13 @@ const role_details = {
     'As funções são um agrupamento de permissões que podem ser atribuídas aos utilizadores. Elas também proporcionam uma forma de agregar permissões definidas para diferentes APIs, tornando mais eficiente adicionar, remover ou ajustar permissões comparativamente à sua atribuição individual a utilizadores.',
   field_name: 'Nome',
   field_description: 'Descrição',
+  field_is_default: 'Função predefinida',
+  field_is_default_description:
+    'Defina esta função como uma função predefinida para novos utilizadores. Podem ser definidas várias funções predefinidas. Isto também afetará as funções predefinidas para utilizadores criados através da API de Gestão.',
   type_m2m_role_tag: 'Função de aplicação de máquina para máquina',
   type_user_role_tag: 'Função de utilizador',
+  m2m_role_notification:
+    'Atribua esta função de máquina para máquina a uma aplicação de máquina para máquina para conceder acesso aos recursos de API relativos. <a>Crie primeiro uma aplicação de máquina para máquina</a> se ainda não o fez.',
   permission: {
     assign_button: 'Atribuir Permissões',
     assign_title: 'Atribuir permissões',

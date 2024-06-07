@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     'Die Logto Management-API ist eine umfassende Sammlung von APIs, die Administratoren befähigen, eine Vielzahl von Aufgaben im Zusammenhang mit Identitäten zu verwalten, Sicherheitsrichtlinien durchzusetzen und Vorschriften und Standards einzuhalten.',
   management_api_notice:
-    'Diese API repräsentiert die Logto-Entität und kann nicht geändert oder gelöscht werden. Sie können die Management-API für eine Vielzahl von identitätsbezogenen Aufgaben verwenden. <a>Informieren Sie sich</a>',
+    'Diese API repräsentiert die Logto-Entität und kann nicht geändert oder gelöscht werden. Erstellen Sie eine Maschine-zu-Maschine-App, um die Logto-Management-API aufzurufen. <a>Erfahren Sie mehr</a>',
   token_expiration_time_in_seconds: 'Token-Ablaufzeit (in Sekunden)',
   token_expiration_time_in_seconds_placeholder: 'Geben Sie die Ablaufzeit des Tokens ein',
   delete_description:
@@ -21,10 +21,8 @@ const api_resource_details = {
     create_title: 'Berechtigung erstellen',
     create_subtitle: 'Definieren Sie die benötigten Berechtigungen (Bereiche) für diese API.',
     confirm_create: 'Berechtigung erstellen',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
-    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
+    edit_title: 'Berechtigung bearbeiten',
+    edit_subtitle: 'Definieren Sie die Berechtigungen (Scopes) der {{resourceName}} API.',
     name: 'Berechtigungsname',
     name_placeholder: 'read:resource',
     forbidden_space_in_name: 'Der Berechtigungsname darf keine Leerzeichen enthalten.',

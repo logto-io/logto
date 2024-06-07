@@ -1,6 +1,6 @@
 import type { AlterationScript } from '@logto/schemas/lib/types/alteration.js';
 import { conditionalString } from '@silverhand/essentials';
-import type { DatabasePool } from '@silverhand/slonik';
+import type { CommonQueryMethods, DatabasePool } from '@silverhand/slonik';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
@@ -39,7 +39,7 @@ export const getLatestAlterationTimestamp = async () => {
 };
 
 export const getAvailableAlterations = async (
-  pool: DatabasePool,
+  pool: CommonQueryMethods,
   compareMode: 'gt' | 'lte' = 'gt'
 ) => {
   const databaseTimestamp = await getCurrentDatabaseAlterationTimestamp(pool);

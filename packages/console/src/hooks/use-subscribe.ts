@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type CreateTenantData } from '@/components/CreateTenantModal/type';
+import { type CreateTenantData } from '@/components/CreateTenantModal/types';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { GlobalRoute, TenantsContext } from '@/contexts/TenantsProvider';
 import { createLocalCheckoutSession } from '@/utils/checkout';
@@ -59,6 +59,7 @@ const useSubscribe = () => {
           tenantId,
           tenantName: tenantData?.name,
           tenantTag: tenantData?.tag,
+          tenantRegionName: tenantData?.regionName,
         },
       });
 

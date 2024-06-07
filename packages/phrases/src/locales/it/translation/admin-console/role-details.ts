@@ -13,8 +13,13 @@ const role_details = {
     "I ruoli sono un raggruppamento di autorizzazioni che possono essere assegnate agli utenti. Forniscono anche un modo per aggregare le autorizzazioni definite per diverse API, rendendo più efficiente l'aggiunta, la rimozione o la regolazione delle autorizzazioni rispetto all'assegnazione individuale agli utenti.",
   field_name: 'Nome',
   field_description: 'Descrizione',
+  field_is_default: 'Ruolo predefinito',
+  field_is_default_description:
+    "Imposta questo ruolo come ruolo predefinito per i nuovi utenti. Possono essere impostati più ruoli predefiniti. Ciò influenzerà anche i ruoli predefiniti per gli utenti creati tramite l'API di gestione.",
   type_m2m_role_tag: 'Ruolo app macchina-to-macchina',
   type_user_role_tag: 'Ruolo utente',
+  m2m_role_notification:
+    "Assegna questo ruolo di macchina a macchina a un'applicazione di macchina a macchina per concedere l'accesso alle risorse API relative. <a>Crea prima un'applicazione di macchina a macchina</a> se non l'hai ancora fatto.",
   permission: {
     assign_button: 'Assegna permessi',
     assign_title: 'Assegna permessi',

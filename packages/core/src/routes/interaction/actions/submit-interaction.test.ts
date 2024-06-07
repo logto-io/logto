@@ -1,4 +1,11 @@
-import { InteractionEvent, adminConsoleApplicationId, adminTenantId } from '@logto/schemas';
+/* eslint-disable max-lines */
+import {
+  InteractionEvent,
+  adminConsoleApplicationId,
+  adminTenantId,
+  type CreateUser,
+  type User,
+} from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
@@ -8,9 +15,9 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type {
   Identifier,
+  VerifiedForgotPasswordInteractionResult,
   VerifiedRegisterInteractionResult,
   VerifiedSignInInteractionResult,
-  VerifiedForgotPasswordInteractionResult,
 } from '../types/index.js';
 import { userMfaDataKey } from '../verifications/mfa-verification.js';
 
@@ -45,7 +52,7 @@ const userQueries = {
     identities: { google: { userId: 'googleId', details: {} } },
     mfaVerifications: [],
   }),
-  updateUserById: jest.fn(),
+  updateUserById: jest.fn(async (id: string, user: Partial<User>) => user as User),
   hasActiveUsers: jest.fn().mockResolvedValue(true),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
   hasUserWithPhone: jest.fn().mockResolvedValue(false),
@@ -53,7 +60,10 @@ const userQueries = {
 
 const { hasActiveUsers, updateUserById, hasUserWithEmail, hasUserWithPhone } = userQueries;
 
-const userLibraries = { generateUserId: jest.fn().mockResolvedValue('uid'), insertUser: jest.fn() };
+const userLibraries = {
+  generateUserId: jest.fn().mockResolvedValue('uid'),
+  insertUser: jest.fn(async (user: CreateUser) => user as User),
+};
 const { generateUserId, insertUser } = userLibraries;
 
 const submitInteraction = await pickDefault(import('./submit-interaction.js'));
@@ -74,6 +84,7 @@ describe('submit action', () => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     interactionDetails: { params: {} } as Awaited<ReturnType<Provider['interactionDetails']>>,
     assignInteractionHookResult: jest.fn(),
+    assignDataHookContext: jest.fn(),
   };
   const profile = {
     username: 'username',
@@ -141,6 +152,14 @@ describe('submit action', () => {
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'uid' },
     });
+
+    expect(ctx.assignDataHookContext).toBeCalledWith({
+      event: 'User.Created',
+      user: {
+        id: 'uid',
+        ...upsertProfile,
+      },
+    });
   });
 
   it('register and use pendingAccountId', async () => {
@@ -167,6 +186,14 @@ describe('submit action', () => {
     );
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'pending-account-id' },
+    });
+
+    expect(ctx.assignDataHookContext).toBeCalledWith({
+      event: 'User.Created',
+      user: {
+        id: 'pending-account-id',
+        ...upsertProfile,
+      },
     });
   });
 
@@ -294,11 +321,30 @@ describe('submit action', () => {
     });
   });
 
+  it('sign-in without new profile', async () => {
+    const interaction: VerifiedSignInInteractionResult = {
+      event: InteractionEvent.SignIn,
+      accountId: 'foo',
+      identifiers: [{ key: 'accountId', value: 'foo' }],
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+
+    expect(updateUserById).toBeCalledWith('foo', {
+      lastSignInAt: now,
+    });
+    expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
+      login: { accountId: 'foo' },
+    });
+    expect(ctx.assignDataHookContext).not.toBeCalled();
+  });
+
   it('sign-in with new profile', async () => {
     getLogtoConnectorById.mockResolvedValueOnce({
       metadata: { target: 'logto' },
       dbEntry: { syncProfile: false },
     });
+
     const interaction: VerifiedSignInInteractionResult = {
       event: InteractionEvent.SignIn,
       accountId: 'foo',
@@ -311,7 +357,7 @@ describe('submit action', () => {
     expect(encryptUserPassword).toBeCalledWith('password');
     expect(getLogtoConnectorById).toBeCalledWith('logto');
 
-    expect(updateUserById).toBeCalledWith('foo', {
+    const updateProfile = {
       passwordEncrypted: 'passwordEncrypted',
       passwordEncryptionMethod: 'plain',
       identities: {
@@ -319,9 +365,15 @@ describe('submit action', () => {
         google: { userId: 'googleId', details: {} },
       },
       lastSignInAt: now,
-    });
+    };
+
+    expect(updateUserById).toBeCalledWith('foo', updateProfile);
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'foo' },
+    });
+    expect(ctx.assignDataHookContext).toBeCalledWith({
+      event: 'User.Data.Updated',
+      user: updateProfile,
     });
   });
 
@@ -380,6 +432,15 @@ describe('submit action', () => {
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'foo' },
     });
+    expect(ctx.assignDataHookContext).toBeCalledWith({
+      event: 'User.Data.Updated',
+      user: {
+        primaryEmail: 'email',
+        name: userInfo.name,
+        avatar: userInfo.avatar,
+        lastSignInAt: now,
+      },
+    });
   });
 
   it('reset password', async () => {
@@ -392,12 +453,18 @@ describe('submit action', () => {
     await submitInteraction(interaction, ctx, tenant);
 
     expect(encryptUserPassword).toBeCalledWith('password');
-
     expect(updateUserById).toBeCalledWith('foo', {
       passwordEncrypted: 'passwordEncrypted',
       passwordEncryptionMethod: 'plain',
     });
-
     expect(assignInteractionResults).not.toBeCalled();
+    expect(ctx.assignDataHookContext).toBeCalledWith({
+      event: 'User.Data.Updated',
+      user: {
+        passwordEncrypted: 'passwordEncrypted',
+        passwordEncryptionMethod: 'plain',
+      },
+    });
   });
 });
+/* eslint-enable max-lines */

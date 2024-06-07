@@ -28,7 +28,7 @@ import webGptPlugin from './web-gpt-plugin/index';
 import webJavaSpringBoot from './web-java-spring-boot/index';
 import webNext from './web-next/index';
 import webNextAppRouter from './web-next-app-router/index';
-import webNextServerActions from './web-next-server-actions/index';
+import webNextAuth from './web-next-auth/index';
 import webNuxt from './web-nuxt/index';
 import webOutline from './web-outline/index';
 import webPhp from './web-php/index';
@@ -67,13 +67,6 @@ const guides: Readonly<Guide[]> = Object.freeze([
     metadata: webNextAppRouter,
   },
   {
-    order: 1.1,
-    id: 'web-next-server-actions',
-    Logo: lazy(async () => import('./web-next-server-actions/logo.svg')),
-    Component: lazy(async () => import('./web-next-server-actions/README.mdx')),
-    metadata: webNextServerActions,
-  },
-  {
     order: 1.2,
     id: 'm2m-general',
     Logo: lazy(async () => import('./m2m-general/logo.svg')),
@@ -107,6 +100,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-go/logo.svg')),
     Component: lazy(async () => import('./web-go/README.mdx')),
     metadata: webGo,
+  },
+  {
+    order: 1.3,
+    id: 'web-next-auth',
+    Logo: lazy(async () => import('./web-next-auth/logo.svg')),
+    Component: lazy(async () => import('./web-next-auth/README.mdx')),
+    metadata: webNextAuth,
   },
   {
     order: 1.4,

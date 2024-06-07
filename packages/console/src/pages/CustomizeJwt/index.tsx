@@ -1,8 +1,12 @@
-import { LogtoJwtTokenKeyType } from '@logto/schemas';
-import { useCallback, useState } from 'react';
+import { LogtoJwtTokenKeyType, ReservedPlanId } from '@logto/schemas';
+import { cond } from '@silverhand/essentials';
+import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
+import { isCloud } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import FormField from '@/ds-components/FormField';
 
@@ -14,6 +18,10 @@ import useJwtCustomizer from './use-jwt-customizer';
 
 function CustomizeJwt() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  const { isDevTenant } = useContext(TenantsContext);
+  const { currentPlan } = useContext(SubscriptionDataContext);
+  const isCustomJwtEnabled = !isCloud || currentPlan.quota.customJwtEnabled;
 
   const [deleteModalTokenType, setDeleteModalTokenType] = useState<LogtoJwtTokenKeyType>();
 
@@ -27,6 +35,7 @@ function CustomizeJwt() {
   return (
     <main className={styles.mainContent}>
       <CardTitle
+        paywall={cond((!isCustomJwtEnabled || isDevTenant) && ReservedPlanId.Pro)}
         title="jwt_claims.title"
         subtitle="jwt_claims.description"
         className={styles.header}

@@ -135,7 +135,7 @@ describe('roles query', () => {
     const keys = excludeAutoSetFields(Roles.fieldKeys);
 
     const expectSql = `
-      insert into "roles" ("id", "name", "description", "type")
+      insert into "roles" ("id", "name", "description", "type", "is_default")
       values (${keys.map((_, index) => `$${index + 1}`).join(', ')})
       returning *
     `;

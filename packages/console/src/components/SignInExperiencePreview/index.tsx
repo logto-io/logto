@@ -23,13 +23,25 @@ type Props = {
   readonly mode: Theme;
   readonly language?: LanguageTag;
   readonly signInExperience?: SignInExperience;
+  /**
+   * The Logto endpoint to use for the preview. If not provided, the current tenant endpoint from
+   * the `AppDataContext` will be used.
+   */
+  readonly endpoint?: URL;
 };
 
-function SignInExperiencePreview({ platform, mode, language = 'en', signInExperience }: Props) {
+function SignInExperiencePreview({
+  platform,
+  mode,
+  language = 'en',
+  signInExperience,
+  endpoint: endpointInput,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { customPhrases } = useUiLanguages();
   const { tenantEndpoint } = useContext(AppDataContext);
+  const endpoint = endpointInput ?? tenantEndpoint;
   const previewRef = useRef<HTMLIFrameElement>(null);
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
   const [iframeLoaded, setIframeLoaded] = useState(false);
@@ -76,9 +88,9 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
 
     previewRef.current?.contentWindow?.postMessage(
       { sender: 'ac_preview', config: configForUiPage },
-      tenantEndpoint?.origin ?? ''
+      endpoint?.origin ?? ''
     );
-  }, [tenantEndpoint?.origin, configForUiPage, customPhrases]);
+  }, [endpoint?.origin, configForUiPage, customPhrases]);
 
   const iframeOnLoadEventHandler = useCallback(() => {
     setIframeLoaded(true);
@@ -102,7 +114,7 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
     postPreviewMessage();
   }, [iframeLoaded, postPreviewMessage]);
 
-  if (!tenantEndpoint) {
+  if (!endpoint) {
     return null;
   }
 
@@ -131,7 +143,7 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
             ref={previewRef}
             // Allow all sandbox rules
             sandbox={undefined}
-            src={new URL('/sign-in?preview=true', tenantEndpoint).toString()}
+            src={new URL('/sign-in?preview=true', endpoint).toString()}
             tabIndex={-1}
             title={t('sign_in_exp.preview.title')}
           />

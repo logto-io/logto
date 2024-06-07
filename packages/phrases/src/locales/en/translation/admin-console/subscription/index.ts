@@ -7,7 +7,7 @@ const subscription = {
   pro_plan: 'Pro plan',
   pro_plan_description: 'For businesses benefit worry-free with Logto.',
   enterprise: 'Enterprise',
-  current_plan: 'Current Plan',
+  current_plan: 'Current plan',
   current_plan_description:
     'Here’s your current plan. You can easily see your plan usage, check your upcoming bill, and make changes to your plan as needed.',
   plan_usage: 'Plan usage',
@@ -16,7 +16,7 @@ const subscription = {
   next_bill_hint: 'To learn more about the calculation, please refer to this <a>article</a>.',
   next_bill_tip:
     'The prices displayed here are tax-exclusive. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
-  manage_payment: 'Manage Payment',
+  manage_payment: 'Manage payment',
   overfill_quota_warning:
     'You have reached your quota limit. To prevent any issues, upgrade the plan.',
   upgrade_pro: 'Upgrade pro',
@@ -56,7 +56,7 @@ const subscription = {
     upgrade_title: 'Friendly reminder for our honoured early adopters',
     upgrade_description:
       'You’re currently using more than what the <name /> allows. Logto is now official, including features tailored to each plan. Before you consider upgrading to the <name />, make sure you meet the following criteria before upgrading.',
-    upgrade_pro_tip: ' Or considering upgrading to Pro Plan.',
+    upgrade_pro_tip: ' Or considering upgrading to Pro plan.',
     upgrade_help_tip: 'Need help upgrading? <a>Contact us</a>.',
     a_maximum_of: 'A maximum of <item/>',
   },

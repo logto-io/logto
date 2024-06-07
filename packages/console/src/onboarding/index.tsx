@@ -1,28 +1,49 @@
 import { Theme } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
-import { Route, Navigate, Outlet, Routes } from 'react-router-dom';
-import { SWRConfig } from 'swr';
+import { Navigate, type RouteObject, useMatch, useRoutes } from 'react-router-dom';
 
+import AppLoading from '@/components/AppLoading';
 import AppBoundary from '@/containers/AppBoundary';
-import ProtectedRoutes from '@/containers/ProtectedRoutes';
-import TenantAccess from '@/containers/TenantAccess';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import Toast from '@/ds-components/Toast';
-import useSwrOptions from '@/hooks/use-swr-options';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
 
-import AppContent from './containers/AppContent';
+import Topbar from './components/Topbar';
 import useUserOnboardingData from './hooks/use-user-onboarding-data';
 import * as styles from './index.module.scss';
-import { OnboardingPage, OnboardingRoute } from './types';
+import CreateTenant from './pages/CreateTenant';
+import SignInExperience from './pages/SignInExperience';
+import Welcome from './pages/Welcome';
+import { OnboardingPage } from './types';
 import { getOnboardingPage } from './utils';
 
 const welcomePathname = getOnboardingPage(OnboardingPage.Welcome);
 
-function Layout() {
-  const swrOptions = useSwrOptions();
+const routeObjects: RouteObject[] = [
+  {
+    index: true,
+    element: <Navigate replace to={OnboardingPage.Welcome} />,
+  },
+  {
+    path: OnboardingPage.Welcome,
+    element: <Welcome />,
+  },
+  {
+    path: OnboardingPage.CreateTenant,
+    element: <CreateTenant />,
+  },
+  {
+    path: `:tenantId/${OnboardingPage.SignInExperience}`,
+    element: <SignInExperience />,
+  },
+];
+
+export function OnboardingApp() {
   const { setThemeOverride } = useContext(AppThemeContext);
-  const { match, getTo } = useTenantPathname();
+  const matched = useMatch(welcomePathname);
+  const routes = useRoutes(routeObjects);
+
+  usePlausiblePageview(routeObjects, 'onboarding');
 
   useEffect(() => {
     setThemeOverride(Theme.Light);
@@ -33,37 +54,30 @@ function Layout() {
   }, [setThemeOverride]);
 
   const {
-    data: { questionnaire },
+    isLoading,
+    data: { questionnaire, isOnboardingDone },
   } = useUserOnboardingData();
 
+  if (isLoading) {
+    return <AppLoading />;
+  }
+
+  if (isOnboardingDone) {
+    return <Navigate replace to="/" />;
+  }
+
   // Redirect to the welcome page if the user has not started the onboarding process.
-  if (!questionnaire && !match(welcomePathname)) {
-    return <Navigate replace to={getTo(welcomePathname)} />;
+  if (!questionnaire && !matched) {
+    return <Navigate replace to={welcomePathname} />;
   }
 
   return (
     <div className={styles.app}>
-      <SWRConfig value={swrOptions}>
-        <AppBoundary>
-          <Toast />
-          <Outlet />
-        </AppBoundary>
-      </SWRConfig>
+      <AppBoundary>
+        <Toast />
+        <Topbar />
+        <div className={styles.content}>{routes}</div>
+      </AppBoundary>
     </div>
-  );
-}
-
-export function OnboardingRoutes() {
-  return (
-    <Routes>
-      <Route path="/:tenantId" element={<ProtectedRoutes />}>
-        <Route element={<TenantAccess />}>
-          <Route element={<Layout />}>
-            <Route index element={<Navigate replace to={OnboardingRoute.Onboarding} />} />
-            <Route path="*" element={<AppContent />} />
-          </Route>
-        </Route>
-      </Route>
-    </Routes>
   );
 }

@@ -4,10 +4,14 @@ const webhooks = {
   subtitle:
     'Erstellen Sie Webhooks, um mühelos Echtzeit-Updates zu bestimmten Ereignissen zu empfangen.',
   create: 'Webhook erstellen',
-  events: {
-    post_register: 'Neuen Account anlegen',
-    post_sign_in: 'Anmelden',
-    post_reset_password: 'Passwort zurücksetzen',
+  schemas: {
+    interaction: 'Nutzerinteraktion',
+    user: 'Benutzer',
+    organization: 'Organisation',
+    role: 'Rolle',
+    scope: 'Berechtigung',
+    organization_role: 'Organisationsrolle',
+    organization_scope: 'Organisationsberechtigung',
   },
   table: {
     name: 'Name',

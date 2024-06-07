@@ -4,8 +4,7 @@ const tenants = {
     "Gestisci efficacemente le impostazioni dell'inquilino e personalizza il tuo dominio.",
   tabs: {
     settings: 'Impostazioni',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: 'Membri',
     domains: 'Domini',
     subscription: 'Piano e fatturazione',
     billing_history: 'Storico fatturazione',
@@ -23,7 +22,7 @@ const tenants = {
     environment_tag_production: 'Prod',
     tenant_type: 'Tipo inquilino',
     development_description:
-      'Solo per scopi di test e non dovrebbe essere utilizzato in produzione. Non è richiesto alcun abbonamento. Ha tutte le funzionalità professionale ma ha delle limitazioni come un banner di accesso. <a>Per saperne di più</a>',
+      'Solo per scopi di test e non dovrebbe essere utilizzato in produzione. Non è richiesto alcun abbonamento. Ha tutte le funionalità professionali ma ha delle limitazioni come un banner di accesso. <a>Per saperne di più</a>',
     production_description:
       'Destinato alle app utilizzate dagli utenti finali e potrebbe richiedere un abbonamento a pagamento. <a>Per saperne di più</a>',
     tenant_info_saved: "Le informazioni dell'inquilino sono state salvate correttamente.",
@@ -40,25 +39,20 @@ const tenants = {
     tenant_deletion_button: 'Elimina inquilino',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
+    title: 'LASCIARE',
+    leave_tenant: 'Lascia locatario',
     leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+      "Eventuali risorse nell'inquilino rimarranno ma non avrai più accesso a questo inquilino.",
+    last_admin_note:
+      'Per lasciare questo inquilino, assicurati che almeno un altro membro abbia il ruolo di Amministratore.',
   },
   create_modal: {
     title: 'Crea nuovo inquilino',
-    subtitle:
-      'Crea un nuovo inquilino con risorse e utenti isolati. Le regioni dei dati ospitati e i tipi di inquilino non possono essere modificati dopo la creazione.',
     tenant_usage_purpose: 'Per cosa desideri utilizzare questo inquilino?',
     development_description:
       'Solo per scopi di test e non dovrebbe essere utilizzato in produzione. Non è richiesto alcun abbonamento.',
     development_hint:
-      'Ha tutte le funzionalità professionale ma ha delle limitazioni come un banner di accesso.',
+      'Ha tutte le funzionalità professionali ma ha delle limitazioni come un banner di accesso.',
     production_description:
       'Utilizzato dagli utenti finali e potrebbe richiedere un abbonamento a pagamento.',
     available_plan: 'Piano disponibile:',
@@ -77,23 +71,21 @@ const tenants = {
     about_tenant_type: 'Informazioni sul tipo di inquilino',
   },
   delete_modal: {
-    title: 'Elimina inquilino',
+    title: 'Elimina locatario',
     description_line1:
-      "Sei sicuro di voler eliminare il tuo inquilino \"<span>{{name}}</span>\" con l'etichetta di suffisso dell'ambiente \"<span>{{tag}}</span>\"? Quest'azione non può essere annullata e comporterà l'eliminazione permanente di tutti i tuoi dati e le informazioni dell'account.",
+      'Sei sicuro di voler eliminare il tuo inquilino "<span>{{name}}</span>" con etichetta di ambiente "<span>{{tag}}</span>"? Questa azione non può essere annullata e comporterà l\'eliminazione permanente di tutti i tuoi dati e informazioni sull\'inquilino.',
     description_line2:
-      "Prima di eliminare l'account, forse possiamo aiutarti. <span><a>Contattaci via e-mail</a></span>",
+      "Prima di eliminare l'inquilino, forse possiamo aiutarti. <span><a>Contattaci via Email</a></span>",
     description_line3:
-      'Se vuoi procedere, inserisci il nome dell\'inquilino "<span>{{name}}</span>" per confermare.',
+      'Se desideri procedere, inserisci il nome dell\'inquilino "<span>{{name}}</span>" per confermare.',
     delete_button: 'Elimina definitivamente',
     cannot_delete_title: 'Impossibile eliminare questo locatario',
     cannot_delete_description:
       'Spiacente, al momento non è possibile eliminare questo inquilino. Verifica di essere nel Piano Gratuito e di aver saldato tutte le fatture pendenti.',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: 'Sei sicuro di voler lasciare questo inquilino?',
+    leave_button: 'Lasciare',
   },
   tenant_landing_page: {
     title: 'Non hai ancora creato un inquilino',
@@ -107,7 +99,7 @@ const tenants = {
     overdue: 'Scaduto',
   },
   tenant_suspended_page: {
-    title: "Inquilino sospeso. Contattaci per ripristinare l'accesso.",
+    title: "Locatario sospeso. Contattaci per ripristinare l'accesso.",
     description_1:
       'Ci dispiace molto informarti che il tuo account inquilino è stato temporaneamente sospeso a causa di un utilizzo improprio, inclusi superamenti dei limiti di MAU, pagamenti in ritardo o altre azioni non autorizzate.',
     description_2:

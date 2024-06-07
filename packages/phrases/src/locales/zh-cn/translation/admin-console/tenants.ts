@@ -3,8 +3,7 @@ const tenants = {
   description: '高效管理租户设置并自定义您的域名。',
   tabs: {
     settings: '设置',
-    /** UNTRANSLATED */
-    members: 'Members',
+    members: '成员',
     domains: '域名管理',
     subscription: '套餐与计费',
     billing_history: '历史账单',
@@ -35,19 +34,13 @@ const tenants = {
     tenant_deletion_button: '删除租户',
   },
   leave_tenant_card: {
-    /** UNTRANSLATED */
-    title: 'LEAVE',
-    /** UNTRANSLATED */
-    leave_tenant: 'Leave tenant',
-    /** UNTRANSLATED */
-    leave_tenant_description:
-      'Any resources in the tenant will remain but you no longer have access to this tenant.',
-    /** UNTRANSLATED */
-    last_admin_note: 'To leave this tenant, ensure at least one more member has the Admin role.',
+    title: '离开',
+    leave_tenant: '离开租户',
+    leave_tenant_description: '租户中的任何资源将保留，但您将不再能访问此租户。',
+    last_admin_note: '要离开此租户，请确保至少还有一名成员具有管理员角色。',
   },
   create_modal: {
     title: '创建租户',
-    subtitle: '创建一个具有隔离资源和用户的新租户。数据托管的区域和租户类型在创建后无法修改。',
     tenant_usage_purpose: '您想要使用此租户做什么?',
     development_description: '仅用于测试，不应在生产环境中使用。不需要订阅。',
     development_hint: '它具有所有专业功能，但有像登录横幅之类的限制。',
@@ -69,20 +62,18 @@ const tenants = {
   delete_modal: {
     title: '删除租户',
     description_line1:
-      '您确定要删除 "<span>{{name}}</span>" 的环境标识符为"<span>{{tag}}</span>"的租户吗？ 此操作无法撤消，并将导致永久删除所有数据和帐户信息。',
+      '您确定要删除您的租户 "<span>{{name}}</span>" 以及环境后缀标签 "<span>{{tag}}</span>" 吗？此操作无法撤销，将永久删除您的所有数据和租户信息。',
     description_line2:
-      '在删除帐户之前，也许我们可以帮助您。<span><a>通过电子邮件联系我们</a></span>',
-    description_line3: '如果你想继续，请输入租户名 "<span>{{name}}</span>" 确认。',
+      '在删除租户之前，也许我们可以帮助您。<span><a>通过电子邮件与我们联系</a></span>',
+    description_line3: '如果您确定要继续，请输入租户名称 "<span>{{name}}</span>" 确认。',
     delete_button: '永久删除',
     cannot_delete_title: '无法删除此租户',
     cannot_delete_description:
       '抱歉，您现在无法删除此租户。请确保您处于免费计划并已支付所有未结账单。',
   },
   leave_tenant_modal: {
-    /** UNTRANSLATED */
-    description: 'Are you sure you want to leave this tenant?',
-    /** UNTRANSLATED */
-    leave_button: 'Leave',
+    description: '确定要离开此租户吗?',
+    leave_button: '离开',
   },
   tenant_landing_page: {
     title: '您还没有创建租户',

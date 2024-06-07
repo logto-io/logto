@@ -1,16 +1,14 @@
 const guide = {
   start_building: 'Inizia a costruire',
-  get_started: 'Inizia',
+  get_started: 'Comincia',
   categories: {
     featured: 'Popolare e per te',
     Traditional: 'Applicazione Web Tradizionale',
     SPA: 'App a pagina singola',
     Native: 'Nativo',
     MachineToMachine: 'Dalla macchina alla macchina',
-    /** UNTRANSLATED */
-    Protected: 'Non-SDK Integration',
-    /** UNTRANSLATED */
-    ThirdParty: 'Third-party app',
+    Protected: 'Integrazione non-SDK',
+    ThirdParty: 'App di terze parti',
   },
   filter: {
     title: 'Filtra framework',

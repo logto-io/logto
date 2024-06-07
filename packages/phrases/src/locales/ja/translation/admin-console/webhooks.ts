@@ -3,10 +3,14 @@ const webhooks = {
   title: 'Webhooks',
   subtitle: '特定のイベントに関するリアルタイムの更新を手軽に受け取るためにWebhookを作成します。',
   create: 'Webhookを作成する',
-  events: {
-    post_register: '新しいアカウントを作成する',
-    post_sign_in: 'サインインする',
-    post_reset_password: 'パスワードをリセットする',
+  schemas: {
+    interaction: 'ユーザーインタラクション',
+    user: 'ユーザー',
+    organization: '組織',
+    role: 'ロール',
+    scope: '権限',
+    organization_role: '組織の役割',
+    organization_scope: '組織の権限',
   },
   table: {
     name: '名前',

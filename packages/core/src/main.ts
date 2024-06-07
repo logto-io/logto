@@ -6,11 +6,11 @@ import Koa from 'koa';
 
 import initApp from './app/init.js';
 import { redisCache } from './caches/index.js';
-import { checkAlterationState } from './env-set/check-alteration-state.js';
 import { EnvSet } from './env-set/index.js';
+import { checkPreconditions } from './env-set/preconditions.js';
 import initI18n from './i18n/init.js';
 import SystemContext from './tenants/SystemContext.js';
-import { checkRowLevelSecurity, tenantPool } from './tenants/index.js';
+import { tenantPool } from './tenants/index.js';
 import { loadConnectorFactories } from './utils/connectors/index.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('index'));
@@ -29,8 +29,7 @@ try {
     initI18n(),
     redisCache.connect(),
     loadConnectorFactories(),
-    checkRowLevelSecurity(sharedAdminPool),
-    checkAlterationState(sharedAdminPool),
+    checkPreconditions(sharedAdminPool),
     SystemContext.shared.loadProviderConfigs(sharedAdminPool),
   ]);
 

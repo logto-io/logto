@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     "La Logto Management API est une collection complète d'API qui permettent aux administrateurs de gérer une large gamme de tâches liées à l'identité, d'appliquer des politiques de sécurité et de se conformer aux réglementations et normes.",
   management_api_notice:
-    "Cette API représente l'entité Logto et ne peut pas être modifiée ou supprimée. Vous pouvez utiliser l'API de gestion pour effectuer une large gamme de tâches liées à l'identité. <a>En savoir plus</a>",
+    "Cette API représente l'entité Logto et ne peut pas être modifiée ou supprimée. Créez une application de machine à machine pour appeler l'API de gestion de Logto. <a>En savoir plus</a>",
   token_expiration_time_in_seconds: "Temps d'expiration du jeton (en secondes)",
   token_expiration_time_in_seconds_placeholder: "Entrez le délai d'expiration de votre jeton",
   delete_description:
@@ -21,10 +21,8 @@ const api_resource_details = {
     create_title: 'Créer une autorisation',
     create_subtitle: 'Définir les autorisations (scopes) requises pour cette API.',
     confirm_create: 'Créer une autorisation',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
-    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
+    edit_title: "Modifier l'autorisation de l'API",
+    edit_subtitle: "Définir les autorisations (scopes) nécessaires pour l'API {{resourceName}}.",
     name: "Nom de l'autorisation",
     name_placeholder: 'lecture:ressource',
     forbidden_space_in_name: "Le nom de l'autorisation ne doit pas contenir d'espaces.",

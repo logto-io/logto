@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     'A API de Gerenciamento do Logto é uma coleção abrangente de APIs que capacitam os administradores a gerenciar uma ampla gama de tarefas relacionadas à identidade, aplicar políticas de segurança e cumprir regulamentos e padrões.',
   management_api_notice:
-    'Esta API representa a entidade Logto e não pode ser modificada ou excluída. Você pode usar a API de gerenciamento para uma ampla gama de tarefas relacionadas à identidade. <a>Aprenda mais</a>',
+    'Esta API representa a entidade Logto e não pode ser modificada ou excluída. Crie um aplicativo de máquina para máquina para chamar a API de gerenciamento do Logto. <a>Saiba mais</a>',
   token_expiration_time_in_seconds: 'Tempo de expiração do token (em segundos)',
   token_expiration_time_in_seconds_placeholder: 'Digite o tempo de expiração do seu token',
   delete_description:
@@ -21,10 +21,8 @@ const api_resource_details = {
     create_title: 'Criar permissão',
     create_subtitle: 'Define as permissões (escopos) necessárias para esta API.',
     confirm_create: 'Criar permissão',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
-    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
+    edit_title: 'Editar permissão de API',
+    edit_subtitle: 'Define as permissões (escopos) necessárias pela API {{resourceName}}.',
     name: 'Nome da permissão',
     name_placeholder: 'ler:recurso',
     forbidden_space_in_name: 'O nome da permissão não deve conter espaços.',

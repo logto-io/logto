@@ -1,4 +1,4 @@
-import type { Role } from '@logto/schemas';
+import { RoleType, type Role } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import FormField from '@/ds-components/FormField';
+import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
@@ -66,6 +67,14 @@ function RoleSettings() {
               error={Boolean(errors.description)}
             />
           </FormField>
+          {role.type === RoleType.User && (
+            <FormField title="role_details.field_is_default">
+              <Switch
+                label={t('role_details.field_is_default_description')}
+                {...register('isDefault')}
+              />
+            </FormField>
+          )}
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />

@@ -13,15 +13,20 @@ const role_details = {
     'Rollen sind eine Gruppierung von Berechtigungen, die Benutzern zugewiesen werden können. Sie ermöglichen auch eine Zusammenfassung von Berechtigungen, die für verschiedene APIs definiert wurden, was es effizienter macht, Berechtigungen im Vergleich zur individuellen Zuweisung an Benutzer hinzuzufügen, zu entfernen oder zu ändern.',
   field_name: 'Name',
   field_description: 'Beschreibung',
+  field_is_default: 'Standardrolle',
+  field_is_default_description:
+    'Setze diese Rolle als Standardrolle für neue Benutzer. Es können mehrere Standardrollen festgelegt werden. Dies betrifft auch die Standardrollen für Benutzer, die über die Management-API erstellt wurden.',
   type_m2m_role_tag: 'Maschinen-zu-Maschinen-App-Rolle',
   type_user_role_tag: 'Benutzerrolle',
+  m2m_role_notification:
+    'Weisen Sie dieser Maschinen-zu-Maschinen-Rolle eine Maschinen-zu-Maschinen-App zu, um Zugriff auf die entsprechenden API-Ressourcen zu gewähren. <a>Erstellen Sie zuerst eine Maschinen-zu-Maschinen-App</a>, wenn Sie noch keine erstellt haben.',
   permission: {
     assign_button: 'Berechtigungen zuweisen',
     assign_title: 'Berechtigungen zuweisen',
     assign_subtitle:
       'Weisen Sie dieser Rolle Berechtigungen zu. Die Rolle erhält die hinzugefügten Berechtigungen, und Benutzer mit dieser Rolle erben diese Berechtigungen.',
     assign_form_field: 'Berechtigungen zuweisen',
-    added_text_one: '{{count, number}} Berechtigung hinzugefügt',
+    added_text_one: 'Ein Berechtigung hinzugefügt',
     added_text_other: '{{count, number}} Berechtigungen hinzugefügt',
     api_permission_count_one: '{{count, number}} Berechtigung',
     api_permission_count_other: '{{count, number}} Berechtigungen',

@@ -110,7 +110,7 @@ const App = () => {
       config={{
         endpoint: window.location.origin,
         appId: demoAppApplicationId,
-        prompt: Prompt.Login,
+        prompt: [Prompt.Login, Prompt.Consent],
         scopes: [UserScope.Organizations, UserScope.OrganizationRoles],
       }}
     >

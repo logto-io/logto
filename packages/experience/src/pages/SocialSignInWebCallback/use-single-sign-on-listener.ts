@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { singleSignOnAuthorization, singleSignOnRegistration } from '@/apis/single-sign-on';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
@@ -17,6 +18,7 @@ const useSingleSignOnRegister = () => {
   const request = useApi(singleSignOnRegistration);
   const { termsValidation } = useTerms();
   const navigate = useNavigate();
+  const redirectTo = useGlobalRedirectTo();
 
   return useCallback(
     async (connectorId: string) => {
@@ -35,10 +37,10 @@ const useSingleSignOnRegister = () => {
       }
 
       if (result?.redirectTo) {
-        window.location.replace(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
-    [handleError, navigate, request, termsValidation]
+    [handleError, navigate, redirectTo, request, termsValidation]
   );
 };
 
@@ -58,6 +60,7 @@ const useSingleSignOnListener = (connectorId: string) => {
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
   const { setToast } = useToast();
+  const redirectTo = useGlobalRedirectTo();
   const { signInMode } = useSieMethods();
 
   const handleError = useErrorHandler();
@@ -97,12 +100,13 @@ const useSingleSignOnListener = (connectorId: string) => {
       }
 
       if (result?.redirectTo) {
-        window.location.replace(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
     [
       handleError,
       navigate,
+      redirectTo,
       registerSingleSignOnIdentity,
       setToast,
       signInMode,

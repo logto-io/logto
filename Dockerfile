@@ -5,7 +5,10 @@ ENV CI=true
 
 # No need for Docker build
 ENV PUPPETEER_SKIP_DOWNLOAD=true
+
+# OGCIO
 ENV PORT=3301
+# OGCIO
 ENV ADMIN_PORT=3302
 ### Install toolchain ###
 RUN npm add --location=global pnpm@^9.0.0
@@ -40,12 +43,17 @@ RUN rm -rf .scripts .parcel-cache pnpm-*.yaml packages/cloud
 
 ###### [STAGE] Seal ######
 FROM node:20-alpine as app
+# OGCIO
 ENV PORT=3301
+# OGCIO
 ENV ADMIN_PORT=3302
 WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
+# OGCIO
 RUN apk add --no-cache jq
+# OGCIO
 EXPOSE 3301
+# OGCIO
 EXPOSE 3302
-
+# OGCIO
 CMD [ "sh", "-c", "export ENCODED_PASSWORD=$(jq --slurp --raw-input --raw-output @uri <(printf \"%s\" $POSTGRES_PASSWORD)) && export DB_URL=\"postgres://$POSTGRES_USER:$ENCODED_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB_NAME\" && export REDIS_URL=\"redis://$REDIS_HOST:$REDIS_PORT\" && npm run cli db seed -- --swe && npm run cli db alteration deploy latest && npm run ogcio:start"]

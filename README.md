@@ -62,7 +62,7 @@ docker compose -p logto -f - up
 
 #### npm-init
 
-Requires [Node.js](https://nodejs.org/) `^18.12.0` + [PostgreSQL](https://postgresql.org/) `^14.0`.
+Requires [Node.js](https://nodejs.org/) `^20.9.0` + [PostgreSQL](https://postgresql.org/) `^14.0`.
 
 ```bash
 npm init @logto
@@ -87,11 +87,11 @@ Logto uses the [default browserslist config](https://github.com/browserslist/bro
 - Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@logto.io](mailto:security@logto.io).
 - About other bug reports, feature requests, and feedback, you can:
   - Directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub;
-  - 💬 [join our Discord server](https://discord.gg/vRvwuwgpVX) to have a live chat;
+  - 💬 [Join our Discord server](https://discord.gg/vRvwuwgpVX) to have a live chat.
 
 ## Licensing
 
-See the [LICENSE](LICENSE) file for licensing information as it pertains to files in this repository.
+[MPL-2.0](LICENSE).
 
 ## Contributing
 

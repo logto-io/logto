@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     'Logto 管理 API 是一组全面的 API，使管理员能够管理各种与身份相关的任务，执行安全策略并遵守法规和标准。',
   management_api_notice:
-    '该 API 代表 Logto 实体，无法修改或删除。你可以使用管理 API 来执行范围广泛的与身份相关的任务。 <a>了解更多</a>',
+    '此 API 表示 Logto 实体，无法修改或删除。创建机器对机器应用程序以调用 Logto 管理 API。<a>了解更多</a>',
   token_expiration_time_in_seconds: 'Token 过期时间（秒）',
   token_expiration_time_in_seconds_placeholder: '请输入你的 token 过期时间',
   delete_description:
@@ -21,10 +21,8 @@ const api_resource_details = {
     create_title: '创建权限',
     create_subtitle: '定义此 API 所需的权限 (scope)。',
     confirm_create: '创建权限',
-    /** UNTRANSLATED */
-    edit_title: 'Edit API permission',
-    /** UNTRANSLATED */
-    edit_subtitle: 'Define the permissions (scopes) needed by the {{resourceName}} API.',
+    edit_title: '编辑 API 权限',
+    edit_subtitle: '定义 {{resourceName}} API 需要的权限（范围）。',
     name: '权限名称',
     name_placeholder: 'read:resource',
     forbidden_space_in_name: '权限名称不能包含空格。',

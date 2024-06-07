@@ -13,7 +13,7 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'The demo for social sign in',
+    en: 'The demo for social sign-in',
   },
   readme: './README.md',
   isStandard: true,

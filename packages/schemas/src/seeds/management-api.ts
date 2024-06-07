@@ -176,3 +176,14 @@ export const createMeApiInAdminTenant = () => {
     },
   } satisfies AdminData);
 };
+
+/**
+ * Create a pre-configured M2M role for Management API access.
+ */
+export const createPreConfiguredManagementApiAccessRole = (tenantId: string): CreateRole => ({
+  tenantId,
+  id: generateStandardId(),
+  description: 'This default role grants access to the Logto management API.',
+  name: 'Logto Management API access',
+  type: RoleType.MachineToMachine,
+});

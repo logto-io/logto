@@ -4,7 +4,7 @@ import {
   ssoConnectorWithProviderConfigGuard,
 } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
-import { conditional, assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -13,18 +13,18 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { ssoConnectorCreateGuard, ssoConnectorPatchGuard } from '#src/routes/sso-connector/type.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
-import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
+import { isSupportedSsoConnector, isSupportedSsoProvider } from '#src/sso/utils.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import {
-  parseFactoryDetail,
-  parseConnectorConfig,
   fetchConnectorProviderDetails,
-  validateConnectorDomains,
+  parseConnectorConfig,
+  parseFactoryDetail,
   validateConnectorConfigConnectionStatus,
+  validateConnectorDomains,
 } from './utils.js';
 
 export default function singleSignOnConnectorsRoutes<T extends ManagementApiRouter>(
