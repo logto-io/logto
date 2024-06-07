@@ -19,11 +19,11 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
 import { PasswordVerification } from './classes/verifications/index.js';
+import { experienceApiRoutesPrefix } from './const.js';
 import koaInteractionSession, {
   type WithInteractionSessionContext,
 } from './middleware/koa-interaction-session.js';
-
-const experienceApiRoutesPrefix = '/experience';
+import verificationCodeRoutes from './verification-code.js';
 
 type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
 
@@ -65,26 +65,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
           break;
         }
         case VerificationType.VerificationCode: {
-          // // Username is not supported for verification code method now
-          // assertThat(isVerificationCodeIdentifier(identifier), 'guard.invalid_input');
-
-          // const { verificationId, value } = verification;
-
-          // const verificationCodeVerification =
-          //   ctx.interactionSession.getVerificationRecordById(verificationId);
-
-          // assertThat(
-          //   verificationCodeVerification &&
-          //     // Make the Verification type checker happy
-          //     verificationCodeVerification.type === VerificationType.VerificationCode,
-          //   new RequestError({ code: 'session.verification_session_not_found', status: 404 })
-          // );
-
-          // if (!verificationCodeVerification.isVerified) {
-          //   await verificationCodeVerification.verify(identifier, value);
-          // }
-          // ctx.interactionSession.identifyUser(verificationCodeVerification.id);
-
+          // TODO: Implement verification code verification
           break;
         }
       }
@@ -108,4 +89,6 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
+
+  verificationCodeRoutes(router, tenant);
 }

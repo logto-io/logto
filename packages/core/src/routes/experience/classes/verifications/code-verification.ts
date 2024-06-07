@@ -31,7 +31,7 @@ const eventToTemplateTypeMap: Record<InteractionEvent, TemplateType> = {
 const getTemplateTypeByEvent = (event: InteractionEvent): TemplateType =>
   eventToTemplateTypeMap[event];
 
-export type VerificationCodeVerificationRecordData = {
+export type CodeVerificationRecordData = {
   id: string;
   type: VerificationType.VerificationCode;
   identifier: VerificationCodeIdentifier;
@@ -47,25 +47,27 @@ export type VerificationCodeVerificationRecordData = {
   verified: boolean;
 };
 
-export const verificationCodeVerificationRecordDataGuard = z.object({
+export const codeVerificationRecordDataGuard = z.object({
   id: z.string(),
   type: z.literal(VerificationType.VerificationCode),
   identifier: verificationCodeIdentifierGuard,
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
   verified: z.boolean(),
-}) satisfies ToZodObject<VerificationCodeVerificationRecordData>;
+}) satisfies ToZodObject<CodeVerificationRecordData>;
 
 /**
- * VerificationCodeVerification is a verification factor the verifies a given identifier by sending a verification code
+ * CodeVerification is a verification factor the verifies a given identifier by sending a verification code
  * to the user's email or phone number.
  *
  * @remark The verification code is sent to the user's email or phone number and the user is required to enter the code to verify.
  * If the identifier is for a existing user, the userId will be set after the verification.
+ *
+ * To avoid the redundant naming, the `CodeVerification` class is used instead of `VerificationCodeVerification`.
  */
-export class VerificationCodeVerification implements Verification {
+export class CodeVerification implements Verification {
   /**
-   * Factory method to create a new VerificationCodeVerification record using the given identifier.
+   * Factory method to create a new CodeVerification record using the given identifier.
    * The sendVerificationCode method will be automatically triggered on the creation of the record.
    */
   static async create(
@@ -74,7 +76,7 @@ export class VerificationCodeVerification implements Verification {
     identifier: VerificationCodeIdentifier,
     interactionEvent: InteractionEvent
   ) {
-    const record = new VerificationCodeVerification(libraries, queries, {
+    const record = new CodeVerification(libraries, queries, {
       id: generateStandardId(),
       type: VerificationType.VerificationCode,
       identifier,
@@ -97,7 +99,7 @@ export class VerificationCodeVerification implements Verification {
   constructor(
     private readonly libraries: Libraries,
     private readonly queries: Queries,
-    data: VerificationCodeVerificationRecordData
+    data: CodeVerificationRecordData
   ) {
     const { id, identifier, userId, verified, interactionEvent } = data;
 
@@ -124,8 +126,8 @@ export class VerificationCodeVerification implements Verification {
    * @remark The identifier must match the current identifier of the verification record.
    * The code will be verified by checking the passcode record in the DB.
    *
-   * `isVerified` will be set to true if the code is verified successfully.
-   * A `verifiedUserId` will be set if the `identifier` matches an existing user.
+   * - `isVerified` will be set to true if the code is verified successfully.
+   * - `verifiedUserId` will be set if the `identifier` matches any existing user's record.
    */
   async verify(identifier: VerificationCodeIdentifier, code?: string) {
     // Throw code not found error is the input identifier is not match with the verification record
@@ -145,11 +147,12 @@ export class VerificationCodeVerification implements Verification {
 
     this.verified = true;
 
+    // Try to lookup the user by the identifier
     const user = await findUserByIdentifier(this.queries.users, this.identifier);
     this.userId = user?.id;
   }
 
-  toJson(): VerificationCodeVerificationRecordData {
+  toJson(): CodeVerificationRecordData {
     return {
       id: this.id,
       type: this.type,

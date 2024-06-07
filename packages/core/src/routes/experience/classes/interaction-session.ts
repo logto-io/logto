@@ -89,6 +89,7 @@ export default class InteractionSession {
       new RequestError({ code: 'session.identifier_not_found', status: 404 })
     );
 
+    // Throws an 404 error if the user is not found by the given verification record
     assertThat(
       verificationRecord.verifiedUserId,
       new RequestError(

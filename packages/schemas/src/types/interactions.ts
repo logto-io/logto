@@ -48,7 +48,7 @@ export enum VerificationType {
 }
 
 /* Password verification start */
-export const passwordVerifierGuard = z.object({
+export const passwordVerificationPayloadGuard = z.object({
   type: z.literal(VerificationType.Password),
   value: z.string(),
 });
@@ -67,7 +67,7 @@ export const verificationCodeIdentifierGuard = z.object({
   value: z.string(),
 }) satisfies ToZodObject<VerificationCodeIdentifier>;
 
-export type VerificationCodeVerificationPayload = {
+export type VerificationCodePayload = {
   type: VerificationType.VerificationCode;
   /** The verification code send to the identifier. Can be omitted if the identifier has been verified */
   value?: string;
@@ -75,16 +75,16 @@ export type VerificationCodeVerificationPayload = {
   verificationId: string;
 };
 
-export const verificationCodeVerificationPayloadGuard = z.object({
+export const verificationCodePayloadGuard = z.object({
   type: z.literal(VerificationType.VerificationCode),
   value: z.string().optional(),
   verificationId: z.string(),
-}) satisfies ToZodObject<VerificationCodeVerificationPayload>;
+}) satisfies ToZodObject<VerificationCodePayload>;
 /* Verification code verification end */
 
 export const signInPayloadGuard = z.object({
   identifier: directIdentifierGuard,
-  verification: z.union([passwordVerifierGuard, verificationCodeVerificationPayloadGuard]),
+  verification: z.union([passwordVerificationPayloadGuard, verificationCodePayloadGuard]),
 });
 
 export type SignInPayload = z.infer<typeof signInPayloadGuard>;
@@ -95,12 +95,12 @@ export type SignInPayload = z.infer<typeof signInPayloadGuard>;
 
 /**
  * Legacy interaction identifier payload guard
- * @deprecated
  *
  * @remark Following are the types for legacy interaction APIs.
  * Marked as deprecated, can removed after experience APIs (interaction API V2) are fully migrated.
  * =================================================================================================================
  */
+
 /**
  * Detailed interaction identifier payload guard
  */
@@ -108,6 +108,7 @@ const usernamePasswordPayloadGuard = z.object({
   username: z.string().min(1),
   password: z.string().min(1),
 });
+
 export type UsernamePasswordPayload = z.infer<typeof usernamePasswordPayloadGuard>;
 
 export const emailPasswordPayloadGuard = z.object({

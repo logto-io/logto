@@ -16,10 +16,3 @@ export const findUserByIdentifier = async (
 
   return userQuery.findUserByPhone(value);
 };
-
-/** Narrow down the DirectIdentifier input to VerificationCodeIdentifier */
-// export const isVerificationCodeIdentifier = (
-//   identifier: DirectIdentifier
-// ): identifier is VerificationCodeIdentifier => {
-//   return identifier.type !== 'username';
-// };
