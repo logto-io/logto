@@ -55,9 +55,8 @@ export const passwordVerificationPayloadGuard = z.object({
 /* Password verification end */
 
 /* Verification code verification start */
-
-/** Only email and phone are supported as verification code identifiers */
 export type VerificationCodeIdentifier = {
+  /** Only email and phone are supported as verification code identifiers */
   type: 'email' | 'phone';
   value: string;
 };
@@ -82,12 +81,14 @@ export const verificationCodePayloadGuard = z.object({
 }) satisfies ToZodObject<VerificationCodePayload>;
 /* Verification code verification end */
 
+/* API payload guard start */
 export const signInPayloadGuard = z.object({
   identifier: directIdentifierGuard,
   verification: z.union([passwordVerificationPayloadGuard, verificationCodePayloadGuard]),
 });
 
 export type SignInPayload = z.infer<typeof signInPayloadGuard>;
+/* API payload guard end */
 
 // =================================================================================================================
 // Experience API payload guard and types definitions end
@@ -95,6 +96,7 @@ export type SignInPayload = z.infer<typeof signInPayloadGuard>;
 
 /**
  * Legacy interaction identifier payload guard
+ * @deprecated
  *
  * @remark Following are the types for legacy interaction APIs.
  * Marked as deprecated, can removed after experience APIs (interaction API V2) are fully migrated.
