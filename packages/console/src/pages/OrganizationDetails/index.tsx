@@ -1,4 +1,4 @@
-import { type Organization } from '@logto/schemas';
+import { type OrganizationEmailDomain, type Organization } from '@logto/schemas';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useParams } from 'react-router-dom';
@@ -30,8 +30,9 @@ function OrganizationDetails() {
   const { id } = useParams();
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<Organization, RequestError>(
-    id && `api/organizations/${id}`
+  const organization = useSWR<Organization, RequestError>(id && `api/organizations/${id}`);
+  const emailDomains = useSWR<OrganizationEmailDomain[], RequestError>(
+    id && `api/organizations/${id}/email-domains`
   );
   const [isDeleting, setIsDeleting] = useState(false);
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
@@ -52,19 +53,21 @@ function OrganizationDetails() {
     }
   }, [api, id, isDeleting, navigate]);
 
-  const isLoading = !data && !error;
+  const isLoading =
+    (!organization.data && !organization.error) || (!emailDomains.data && !emailDomains.error);
+  const error = organization.error ?? emailDomains.error;
 
   return (
     <DetailsPage backLink={pathname} backLinkTitle="organizations.title" className={styles.page}>
       <PageMeta titleKey="organization_details.page_title" />
       {isLoading && <Skeleton />}
       {error && <AppError errorCode={error.body?.code} errorMessage={error.body?.message} />}
-      {data && (
+      {id && organization.data && emailDomains.data && (
         <>
           <DetailsPageHeader
             icon={<ThemedIcon for={OrganizationIcon} size={60} />}
-            title={data.name}
-            identifier={{ name: t('organization_details.organization_id'), value: data.id }}
+            title={organization.data.name}
+            identifier={{ name: t('organization_details.organization_id'), value: id }}
             additionalActionButton={{
               icon: <File />,
               title: 'application_details.check_guide',
@@ -104,19 +107,20 @@ function OrganizationDetails() {
             {t('organization_details.delete_confirmation')}
           </DeleteConfirmModal>
           <TabNav>
-            <TabNavItem href={`${pathname}/${data.id}/${OrganizationDetailsTabs.Settings}`}>
+            <TabNavItem href={`${pathname}/${id}/${OrganizationDetailsTabs.Settings}`}>
               {t('general.settings_nav')}
             </TabNavItem>
-            <TabNavItem href={`${pathname}/${data.id}/${OrganizationDetailsTabs.Members}`}>
+            <TabNavItem href={`${pathname}/${id}/${OrganizationDetailsTabs.Members}`}>
               {t('organizations.members')}
             </TabNavItem>
           </TabNav>
           <Outlet
             context={
               {
-                data,
+                data: organization.data,
+                emailDomains: emailDomains.data,
                 isDeleting,
-                onUpdated: async (data) => mutate(data),
+                onUpdated: async (data) => organization.mutate(data),
               } satisfies OrganizationDetailsOutletContext
             }
           />

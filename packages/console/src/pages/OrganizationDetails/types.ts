@@ -1,7 +1,8 @@
-import { type Organization } from '@logto/schemas';
+import { type OrganizationEmailDomain, type Organization } from '@logto/schemas';
 
 export type OrganizationDetailsOutletContext = {
   data: Organization;
+  emailDomains: OrganizationEmailDomain[];
   /**
    * Whether the organization is being deleted, this is used to disable the unsaved
    * changes alert modal.

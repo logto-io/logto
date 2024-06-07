@@ -27,6 +27,7 @@ type Props = {
   readonly placeholder?: AdminConsoleKey;
 };
 
+// TODO: @Charles refactor me, use `<MultiOptionInput />` instead.
 function DomainsInput({ className, values, onChange: rawOnChange, error, placeholder }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [focusedValueId, setFocusedValueId] = useState<Nullable<string>>(null);

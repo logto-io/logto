@@ -38,6 +38,7 @@ type Props = {
 const fontBody2 =
   '400 14px / 20px -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji';
 
+// TODO: @Charles refactor me, use `<MultiOptionInput />` instead.
 function InviteEmailsInput({
   formName = 'emails',
   className,

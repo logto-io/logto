@@ -26,6 +26,19 @@ const organization_details = {
   custom_data_tip:
     'Custom data is a JSON object that can be used to store additional data associated with the organization.',
   invalid_json_object: 'Invalid JSON object.',
+  jit: {
+    title: 'Just-in-time (JIT) provisioning',
+    description:
+      'Automatically assign users into this organization when they sign up or are added through the Management API, provided their email addresses match the specified domains.',
+    is_enabled_title: 'Enable just-in-time provisioning',
+    is_enabled_true_description:
+      'New users with verified email domains will automatically join the organization',
+    is_enabled_false_description:
+      'Users can join the organization only if they are invited or added via Management API',
+    email_domains_placeholder: 'Enter email domains for just-in-time provisioning',
+    invalid_domain: 'Invalid domain',
+    domain_already_added: 'Domain already added',
+  },
 };
 
 export default Object.freeze(organization_details);

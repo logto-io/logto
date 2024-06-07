@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.jitContent {
+  margin-top: _.unit(3);
+
+  .emailDomains {
+    margin-top: _.unit(2);
+    margin-left: _.unit(6);
+  }
+}
