@@ -2,7 +2,7 @@
  * @fileoverview This file contains the interaction flow helper functions that use the experience APIs.
  */
 
-import { VerificationType, type PasswordIdentifier } from '@logto/schemas';
+import { VerificationType, type DirectIdentifier } from '@logto/schemas';
 
 import { signIn } from '../api/experience-api.js';
 
@@ -12,7 +12,7 @@ export const signInWithPassword = async ({
   identifier,
   password,
 }: {
-  identifier: PasswordIdentifier;
+  identifier: DirectIdentifier;
   password: string;
 }) => {
   const client = await initClient();
