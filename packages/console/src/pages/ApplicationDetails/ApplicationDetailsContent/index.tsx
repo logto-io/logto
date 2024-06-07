@@ -36,6 +36,7 @@ import RefreshTokenSettings from './RefreshTokenSettings';
 import Settings from './Settings';
 import * as styles from './index.module.scss';
 import { type ApplicationForm, applicationFormDataParser } from './utils';
+import BackchannelLogout from './BackchannelLogout';
 
 type Props = {
   readonly data: ApplicationResponse;
@@ -204,6 +205,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             {![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(data.type) && (
               <RefreshTokenSettings data={data} />
             )}
+            <BackchannelLogout />
           </DetailsForm>
         </FormProvider>
         {tab === ApplicationDetailsTabs.Settings && (
