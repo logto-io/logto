@@ -10,6 +10,7 @@ export type OgcioSeeder = {
   applications: ApplicationSeeder[];
   resources: ResourceSeeder[];
   connectors: ConnectorSeeder[];
+  webhooks: WebhookSeeder[];
   sign_in_experiences: SignInExperienceSeeder[];
   resource_permissions: ResourcePermissionSeeder[];
   resource_roles: ResourceRoleSeeder[];
@@ -117,6 +118,17 @@ export type ScopePerResourceRoleSeeder = {
   specific_permissions?: string[];
   description: string;
 };
+
+export type WebhookSeeder = {
+  id: string;
+  name: string;
+  events: string[];
+  config: {
+    url: string;
+  };
+  signing_key: string;
+  enabled: true;
+}
 
 let inputSeeder: OgcioTenantSeeder | undefined;
 export const getTenantSeederData = (): OgcioTenantSeeder => {

@@ -12,6 +12,7 @@ import { createOrganizations } from './organizations.js';
 import { seedResourceRbacData } from './resources-rbac.js';
 import { seedResources } from './resources.js';
 import { seedSignInExperiences } from './sign-in-experiences.js';
+import { seedWebhooks } from './webhooks.js';
 
 const createDataForTenant = async (
   transaction: DatabaseTransactionConnection,
@@ -53,6 +54,11 @@ const createDataForTenant = async (
     transaction,
     tenantId,
     experiences: tenantData.sign_in_experiences,
+  });
+  const webhooks = await seedWebhooks({
+    transaction,
+    tenantId,
+    hooks: tenantData.webhooks
   });
 };
 

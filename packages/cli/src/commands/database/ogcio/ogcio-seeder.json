@@ -390,6 +390,16 @@
             },
             "social_sign_in_connector_targets": ["MyGovId"],
             "sign_in_mode": "SignIn"
+        }],
+        "webhooks": [{
+            "id": "login_webhook",
+            "name": "User log in",
+            "events": ["PostRegister", "PostSignIn"],
+            "config": {
+                "url": "http://localhost:8003/user-login-wh"
+            },
+            "signing_key": "xpWX3WIkPkSA5A0UzLMfNOuTl1qEnbkg",
+            "enabled": true
         }]
     }
 }
