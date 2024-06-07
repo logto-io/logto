@@ -55,14 +55,15 @@ export type ConnectorSeeder = {
   sync_profile: boolean;
   connector_id: string;
   config: {
+    scope: string;
     clientId: string;
-    profileMap: Record<string, string>;
     clientSecret: string;
     tokenEndpoint: string;
-    userInfoEndpoint: string;
     authorizationEndpoint: string;
     tokenEndpointAuthMethod: string;
-    tokenEndpointResponseType: string;
+    idTokenVerificationConfig: {
+      jwksUri: string;
+    },
     clientSecretJwtSigningAlgorithm: string;
   };
   metadata: {

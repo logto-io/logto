@@ -339,22 +339,17 @@
         "connectors": [{
             "id": "mygovid",
             "sync_profile": false,
-            "connector_id": "oauth2",
+            "connector_id": "mygovid",
             "config": {
+                "scope": "openid profile email client_123",
                 "clientId": "client_123",
-                "profileMap": {
-                    "id": "user_id",
-                    "name": "full_name",
-                    "email": "email_verified",
-                    "phone": "phone_verified",
-                    "avatar": "avatar_url"
-                },
                 "clientSecret": "client_secret_123",
                 "tokenEndpoint": "http://localhost:3005/token",
-                "userInfoEndpoint": "http://localhost:3005/user",
                 "authorizationEndpoint": "http://localhost:3005/auth",
                 "tokenEndpointAuthMethod": "client_secret_post",
-                "tokenEndpointResponseType": "json",
+                "idTokenVerificationConfig": {
+                    "jwksUri": "http://localhost:3005/jws"
+                },
                 "clientSecretJwtSigningAlgorithm": "HS256"
             },
             "metadata": {
@@ -362,7 +357,7 @@
                 "name": {
                     "en": "MyGovId"
                 },
-                "target": "MyGovId"
+                "target": "MyGovId (MyGovId connector)"
             }
         }],
         "sign_in_experiences": [{
@@ -388,7 +383,9 @@
                 "password": false,
                 "identifiers": []
             },
-            "social_sign_in_connector_targets": ["MyGovId"],
+            "social_sign_in_connector_targets": [
+                "MyGovId (MyGovId connector)"
+            ],
             "sign_in_mode": "SignIn"
         }],
         "webhooks": [{
