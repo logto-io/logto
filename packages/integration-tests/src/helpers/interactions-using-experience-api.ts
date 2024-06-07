@@ -21,7 +21,7 @@ export const signInWithPassword = async ({
     identifier,
     verification: {
       type: VerificationType.Password,
-      password,
+      value: password,
     },
   });
 

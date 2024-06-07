@@ -53,7 +53,7 @@ export const passwordSignInPayloadGuard = z.object({
   identifier: passwordIdentifierGuard,
   verification: z.object({
     type: z.literal(VerificationType.Password),
-    password: z.string(),
+    value: z.string(),
   }),
 });
 export type PasswordSignInPayload = z.infer<typeof passwordSignInPayloadGuard>;
