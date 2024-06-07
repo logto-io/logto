@@ -57,13 +57,13 @@ export const codeVerificationRecordDataGuard = z.object({
 }) satisfies ToZodObject<CodeVerificationRecordData>;
 
 /**
- * CodeVerification is a verification factor the verifies a given identifier by sending a verification code
- * to the user's email or phone number.
+ * CodeVerification is a verification type that verifies a given identifier by sending a verification code
+ * to the user's email or phone.
  *
- * @remark The verification code is sent to the user's email or phone number and the user is required to enter the code to verify.
+ * @remark The verification code is sent to the user's email or phone and the user is required to enter the code to verify.
  * If the identifier is for a existing user, the userId will be set after the verification.
  *
- * To avoid the redundant naming, the `CodeVerification` class is used instead of `VerificationCodeVerification`.
+ * To avoid the redundant naming, the `CodeVerification` is used instead of `VerificationCodeVerification`.
  */
 export class CodeVerification implements Verification {
   /**
@@ -110,7 +110,7 @@ export class CodeVerification implements Verification {
     this.verified = verified;
   }
 
-  /** Returns true if a userId is set */
+  /** Returns true if the identifier has been verified by a given code */
   get isVerified() {
     return this.verified;
   }
@@ -130,7 +130,7 @@ export class CodeVerification implements Verification {
    * - `verifiedUserId` will be set if the `identifier` matches any existing user's record.
    */
   async verify(identifier: VerificationCodeIdentifier, code?: string) {
-    // Throw code not found error is the input identifier is not match with the verification record
+    // Throw code not found error if the input identifier does not match the current identifier
     assertThat(identifier === this.identifier, 'verification_code.not_found');
 
     // Throw code not found error if the code is not provided

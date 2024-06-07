@@ -39,6 +39,8 @@ export default function verificationCodeRoutes<T extends WithLogContext>(
 
       ctx.interactionSession.appendVerificationRecord(codeVerification);
 
+      await ctx.interactionSession.save();
+
       ctx.body = {
         verificationId: codeVerification.id,
       };
