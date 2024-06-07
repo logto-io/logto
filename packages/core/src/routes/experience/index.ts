@@ -52,9 +52,9 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       ctx.interactionSession.setInteractionEvent(InteractionEvent.SignIn);
 
       // TODO: Add support for other verification types
-      const { password } = verification;
+      const { value } = verification;
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
-      await passwordVerification.verify(password);
+      await passwordVerification.verify(value);
       ctx.interactionSession.appendVerificationRecord(passwordVerification);
 
       ctx.interactionSession.identifyUser(passwordVerification.id);
