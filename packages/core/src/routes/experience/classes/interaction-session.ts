@@ -6,11 +6,12 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { Interaction } from './type.js';
+import type { Interaction } from '../type.js';
+
 import {
   buildVerificationRecord,
   verificationRecordDataGuard,
-  type Verification,
+  type VerificationRecord,
 } from './verifications/index.js';
 
 const interactionSessionResultGuard = z.object({
@@ -42,7 +43,7 @@ export default class InteractionSession {
   /** The interaction event for the current interaction session */
   private interactionEvent?: InteractionEvent;
   /** The user verification record list for the current interaction session */
-  private readonly verificationRecords: Set<Verification>;
+  private readonly verificationRecords: Set<VerificationRecord>;
   /** The accountId of the user for the current interaction session. Only available once the user is identified */
   private accountId?: string;
   /** The user provided profile data in the current interaction session that needs to be stored to user DB */
@@ -84,8 +85,21 @@ export default class InteractionSession {
     const verificationRecord = this.getVerificationRecordById(verificationId);
 
     assertThat(
-      verificationRecord?.verifiedUserId,
+      verificationRecord,
       new RequestError({ code: 'session.identifier_not_found', status: 404 })
+    );
+
+    assertThat(
+      verificationRecord.verifiedUserId,
+      new RequestError(
+        {
+          code: 'user.user_not_exist',
+          status: 404,
+        },
+        {
+          identifier: verificationRecord.identifier.value,
+        }
+      )
     );
 
     this.accountId = verificationRecord.verifiedUserId;
@@ -95,7 +109,7 @@ export default class InteractionSession {
    * Append a new verification record to the current interaction session.
    * @remark If a record with the same type already exists, it will be replaced.
    */
-  public appendVerificationRecord(record: Verification) {
+  public appendVerificationRecord(record: VerificationRecord) {
     const { type } = record;
 
     const existingRecord = this.getVerificationRecordByType(type);

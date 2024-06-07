@@ -10,7 +10,7 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
-import { InteractionEvent, signInPayloadGuard } from '@logto/schemas';
+import { InteractionEvent, VerificationType, signInPayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -18,10 +18,10 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
+import { PasswordVerification } from './classes/verifications/index.js';
 import koaInteractionSession, {
   type WithInteractionSessionContext,
 } from './middleware/koa-interaction-session.js';
-import { PasswordVerification } from './verifications/password-verification.js';
 
 const experienceApiRoutesPrefix = '/experience';
 
@@ -51,13 +51,43 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       ctx.interactionSession.setInteractionEvent(InteractionEvent.SignIn);
 
-      // TODO: Add support for other verification types
-      const { value } = verification;
-      const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
-      await passwordVerification.verify(value);
-      ctx.interactionSession.appendVerificationRecord(passwordVerification);
+      switch (verification.type) {
+        case VerificationType.Password: {
+          const { value } = verification;
 
-      ctx.interactionSession.identifyUser(passwordVerification.id);
+          const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
+
+          await passwordVerification.verify(value);
+
+          ctx.interactionSession.appendVerificationRecord(passwordVerification);
+          ctx.interactionSession.identifyUser(passwordVerification.id);
+
+          break;
+        }
+        case VerificationType.VerificationCode: {
+          // // Username is not supported for verification code method now
+          // assertThat(isVerificationCodeIdentifier(identifier), 'guard.invalid_input');
+
+          // const { verificationId, value } = verification;
+
+          // const verificationCodeVerification =
+          //   ctx.interactionSession.getVerificationRecordById(verificationId);
+
+          // assertThat(
+          //   verificationCodeVerification &&
+          //     // Make the Verification type checker happy
+          //     verificationCodeVerification.type === VerificationType.VerificationCode,
+          //   new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+          // );
+
+          // if (!verificationCodeVerification.isVerified) {
+          //   await verificationCodeVerification.verify(identifier, value);
+          // }
+          // ctx.interactionSession.identifyUser(verificationCodeVerification.id);
+
+          break;
+        }
+      }
 
       await ctx.interactionSession.save();
 

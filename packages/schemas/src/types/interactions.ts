@@ -27,7 +27,15 @@ export enum InteractionEvent {
 // =================================================================================================================
 
 /** First party identifiers that can be used directly to identify a user */
-export type DirectIdentifier = 'username' | 'email' | 'phone';
+export type DirectIdentifier = {
+  type: 'username' | 'email' | 'phone';
+  value: string;
+};
+
+export const directIdentifierGuard = z.object({
+  type: z.enum(['username', 'email', 'phone']),
+  value: z.string(),
+});
 
 /** Logto supported interaction verification types */
 export enum VerificationType {
@@ -39,27 +47,46 @@ export enum VerificationType {
   BackupCode = 'BackupCode',
 }
 
-export type PasswordIdentifier = {
-  type: DirectIdentifier;
+/* Password verification start */
+export const passwordVerifierGuard = z.object({
+  type: z.literal(VerificationType.Password),
+  value: z.string(),
+});
+/* Password verification end */
+
+/* Verification code verification start */
+
+/** Only email and phone are supported as verification code identifiers */
+export type VerificationCodeIdentifier = {
+  type: 'email' | 'phone';
   value: string;
 };
 
-export const passwordIdentifierGuard = z.object({
-  type: z.enum(['username', 'email', 'phone']),
+export const verificationCodeIdentifierGuard = z.object({
+  type: z.enum(['email', 'phone']),
   value: z.string(),
-}) satisfies ToZodObject<PasswordIdentifier>;
+}) satisfies ToZodObject<VerificationCodeIdentifier>;
 
-export const passwordSignInPayloadGuard = z.object({
-  identifier: passwordIdentifierGuard,
-  verification: z.object({
-    type: z.literal(VerificationType.Password),
-    value: z.string(),
-  }),
+export type VerificationCodeVerificationPayload = {
+  type: VerificationType.VerificationCode;
+  /** The verification code send to the identifier. Can be omitted if the identifier has been verified */
+  value?: string;
+  /** The unique ID of the verification record associated with the identifier */
+  verificationId: string;
+};
+
+export const verificationCodeVerificationPayloadGuard = z.object({
+  type: z.literal(VerificationType.VerificationCode),
+  value: z.string().optional(),
+  verificationId: z.string(),
+}) satisfies ToZodObject<VerificationCodeVerificationPayload>;
+/* Verification code verification end */
+
+export const signInPayloadGuard = z.object({
+  identifier: directIdentifierGuard,
+  verification: z.union([passwordVerifierGuard, verificationCodeVerificationPayloadGuard]),
 });
-export type PasswordSignInPayload = z.infer<typeof passwordSignInPayloadGuard>;
 
-/** Payload guard for the /sign-in endpoint */
-export const signInPayloadGuard = passwordSignInPayloadGuard;
 export type SignInPayload = z.infer<typeof signInPayloadGuard>;
 
 // =================================================================================================================

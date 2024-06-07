@@ -3,7 +3,7 @@ import type { MiddlewareType } from 'koa';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
-import InteractionSession from '../interaction-session.js';
+import InteractionSession from '../classes/interaction-session.js';
 
 export type WithInteractionSessionContext<ContextT extends WithLogContext = WithLogContext> =
   ContextT & {
