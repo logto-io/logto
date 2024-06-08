@@ -26,6 +26,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
+import BackchannelLogout from './BackchannelLogout';
 import Branding from './Branding';
 import EndpointsAndCredentials from './EndpointsAndCredentials';
 import GuideDrawer from './GuideDrawer';
@@ -36,7 +37,6 @@ import RefreshTokenSettings from './RefreshTokenSettings';
 import Settings from './Settings';
 import * as styles from './index.module.scss';
 import { type ApplicationForm, applicationFormDataParser } from './utils';
-import BackchannelLogout from './BackchannelLogout';
 
 type Props = {
   readonly data: ApplicationResponse;

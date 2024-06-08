@@ -27,6 +27,7 @@ function BackchannelLogout() {
           placeholder="https://your.website.com/backchannel_logout"
           {...register('oidcClientMetadata.backchannelLogoutUri', {
             validate: (value) =>
+              !value ||
               z.string().url().optional().safeParse(value).success ||
               t('errors.invalid_uri_format'),
           })}

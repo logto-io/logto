@@ -1,8 +1,5 @@
-import { SignInMode, SignInIdentifier, ConnectorType } from '@logto/schemas';
-
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
-import { clearConnectorsByTypes } from '#src/helpers/connector.js';
+import { setUsernamePasswordOnly } from '#src/helpers/sign-in-experience.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 
 const credentials = {
@@ -19,26 +16,7 @@ const credentials = {
 // for convenient expect methods
 describe('smoke testing on the demo app', () => {
   beforeAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
-    await updateSignInExperience({
-      signInMode: SignInMode.SignInAndRegister,
-      signUp: {
-        identifiers: [SignInIdentifier.Username],
-        password: true,
-        verify: false,
-      },
-      signIn: {
-        methods: [
-          {
-            identifier: SignInIdentifier.Username,
-            password: true,
-            verificationCode: false,
-            isPasswordPrimary: true,
-          },
-        ],
-      },
-      passwordPolicy: {},
-    });
+    await setUsernamePasswordOnly();
   });
 
   it('should be able to create a new account with a credential preset', async () => {

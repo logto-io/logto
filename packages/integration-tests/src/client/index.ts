@@ -157,11 +157,12 @@ export default class MockClient {
   }
 
   public async signOut(postSignOutRedirectUri?: string) {
+    this.navigateUrl = undefined;
+    await this.logto.signOut(postSignOutRedirectUri);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this.navigateUrl) {
       throw new Error('No navigate URL found for sign-out');
     }
-
-    await this.logto.signOut(postSignOutRedirectUri);
     await ky(this.navigateUrl);
   }
 
