@@ -142,11 +142,11 @@ export const createUserLibrary = (queries: Queries) => {
         );
       }
 
+      // TODO: If the user's email is not verified, we should not provision the user into any organization.
       const provisionOrganizations = async (): Promise<readonly string[]> => {
         // Just-in-time organization provisioning
         const userEmailDomain = data.primaryEmail?.split('@')[1];
-        // TODO: Remove this check when launching
-        if (EnvSet.values.isDevFeaturesEnabled && userEmailDomain) {
+        if (userEmailDomain) {
           const organizationQueries = new OrganizationQueries(connection);
           const organizationIds = await organizationQueries.emailDomains.getOrganizationIdsByDomain(
             userEmailDomain
