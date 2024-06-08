@@ -18,6 +18,7 @@ import {
   setSmsConnector,
 } from '#src/helpers/connector.js';
 import { readConnectorMessage, expectRejects } from '#src/helpers/index.js';
+import { registerWithEmail } from '#src/helpers/interactions.js';
 import {
   enableAllVerificationCodeSignInMethods,
   enableAllPasswordSignInMethods,
@@ -75,37 +76,7 @@ describe('register with passwordless identifier', () => {
     });
 
     const { primaryEmail } = generateNewUserProfile({ primaryEmail: true });
-    const client = await initClient();
-
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.Register,
-    });
-
-    await client.successSend(sendVerificationCode, {
-      email: primaryEmail,
-    });
-
-    const verificationCodeRecord = await readConnectorMessage('Email');
-
-    expect(verificationCodeRecord).toMatchObject({
-      address: primaryEmail,
-      type: InteractionEvent.Register,
-    });
-
-    const { code } = verificationCodeRecord;
-
-    await client.successSend(patchInteractionIdentifiers, {
-      email: primaryEmail,
-      verificationCode: code,
-    });
-
-    await client.successSend(putInteractionProfile, {
-      email: primaryEmail,
-    });
-
-    const { redirectTo } = await client.submitInteraction();
-
-    const id = await processSession(client, redirectTo);
+    const { client, id } = await registerWithEmail(primaryEmail);
     await logoutClient(client);
     await deleteUser(id);
   });

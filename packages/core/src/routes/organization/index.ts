@@ -137,6 +137,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
 
   userRoleRelationRoutes(router, organizations);
 
+  // TODO: Remove this check when launching
   if (EnvSet.values.isDevFeaturesEnabled) {
     emailDomainRoutes(router, organizations);
   }

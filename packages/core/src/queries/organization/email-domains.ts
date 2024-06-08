@@ -49,6 +49,15 @@ export class EmailDomainQueries {
     return [Number(count), rows];
   }
 
+  async getOrganizationIdsByDomain(emailDomain: string): Promise<readonly string[]> {
+    const rows = await this.pool.any<Pick<OrganizationEmailDomain, 'organizationId'>>(sql`
+      select ${fields.organizationId}
+      from ${table}
+      where ${fields.emailDomain} = ${emailDomain}
+    `);
+    return rows.map((row) => row.organizationId);
+  }
+
   async insert(organizationId: string, emailDomain: string): Promise<OrganizationEmailDomain> {
     return this.#insert({
       organizationId,
