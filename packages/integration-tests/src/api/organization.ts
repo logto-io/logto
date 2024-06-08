@@ -6,6 +6,7 @@ import {
   type OrganizationWithFeatured,
   type OrganizationScope,
   type OrganizationEmailDomain,
+  type CreateOrganization,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -17,10 +18,7 @@ type Query = {
   page_size?: number;
 };
 
-export class OrganizationApi extends ApiFactory<
-  Organization,
-  { name: string; description?: string }
-> {
+export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganization, 'id'>> {
   constructor() {
     super('organizations');
   }
