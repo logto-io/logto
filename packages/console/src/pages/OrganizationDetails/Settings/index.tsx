@@ -1,19 +1,23 @@
-import { type Organization } from '@logto/schemas';
+import { type SignInExperience, type Organization } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
+import useSWR from 'swr';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
+import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
-import useApi from '@/hooks/use-api';
+import useApi, { type RequestError } from '@/hooks/use-api';
 import { domainRegExp } from '@/pages/EnterpriseSsoDetails/Experience/DomainsInput/consts';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -52,6 +56,7 @@ const assembleData = ({
 function Settings() {
   const { isDeleting, data, emailDomains, onUpdated } =
     useOutletContext<OrganizationDetailsOutletContext>();
+  const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
@@ -61,6 +66,7 @@ function Settings() {
     formState: { isDirty, isSubmitting, errors },
     setError,
     clearErrors,
+    getValues,
   } = useForm<FormData>({
     defaultValues: normalizeData(
       data,
@@ -134,8 +140,8 @@ function Settings() {
         </FormField>
       </FormCard>
       <FormCard
-        title="organization_details.jit.title"
-        description="organization_details.jit.description"
+        title="organization_details.membership_policies"
+        description="organization_details.membership_policies_description"
       >
         <FormField title="organization_details.jit.is_enabled_title">
           <Controller
@@ -160,42 +166,60 @@ function Settings() {
                   />
                 </RadioGroup>
                 {field.value && (
-                  <Controller
-                    name="jitEmailDomains"
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <MultiOptionInput
-                        className={styles.emailDomains}
-                        values={value}
-                        renderValue={(value) => value}
-                        validateInput={(input) => {
-                          if (!domainRegExp.test(input)) {
-                            return t('organization_details.jit.invalid_domain');
-                          }
+                  <>
+                    <p className={styles.description}>
+                      {t('organization_details.jit.description')}
+                    </p>
+                    <Controller
+                      name="jitEmailDomains"
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <MultiOptionInput
+                          className={styles.emailDomains}
+                          values={value}
+                          renderValue={(value) => value}
+                          validateInput={(input) => {
+                            if (!domainRegExp.test(input)) {
+                              return t('organization_details.jit.invalid_domain');
+                            }
 
-                          if (value.includes(input)) {
-                            return t('organization_details.jit.domain_already_added');
-                          }
+                            if (value.includes(input)) {
+                              return t('organization_details.jit.domain_already_added');
+                            }
 
-                          return { value: input };
-                        }}
-                        placeholder={t('organization_details.jit.email_domains_placeholder')}
-                        error={errors.jitEmailDomains?.message}
-                        onChange={onChange}
-                        onError={(error) => {
-                          setError('jitEmailDomains', { type: 'custom', message: error });
-                        }}
-                        onClearError={() => {
-                          clearErrors('jitEmailDomains');
-                        }}
-                      />
-                    )}
-                  />
+                            return { value: input };
+                          }}
+                          placeholder={t('organization_details.jit.email_domains_placeholder')}
+                          error={errors.jitEmailDomains?.message}
+                          onChange={onChange}
+                          onError={(error) => {
+                            setError('jitEmailDomains', { type: 'custom', message: error });
+                          }}
+                          onClearError={() => {
+                            clearErrors('jitEmailDomains');
+                          }}
+                        />
+                      )}
+                    />
+                  </>
                 )}
               </div>
             )}
           />
         </FormField>
+        {isDevFeaturesEnabled && (
+          <FormField title="organization_details.mfa.title" tip={t('organization_details.mfa.tip')}>
+            <Switch
+              label={t('organization_details.mfa.description')}
+              {...register('isMfaRequired')}
+            />
+            {getValues('isMfaRequired') && signInExperience?.mfa.factors.length === 0 && (
+              <InlineNotification severity="alert" className={styles.warning}>
+                {t('organization_details.mfa.no_mfa_warning')}
+              </InlineNotification>
+            )}
+          </FormField>
+        )}
       </FormCard>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </DetailsForm>

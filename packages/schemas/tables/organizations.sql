@@ -12,6 +12,8 @@ create table organizations (
   description varchar(256),
   /** Additional data associated with the organization. */
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
+  /** Whether multi-factor authentication configuration is required for the members of the organization. */
+  is_mfa_required boolean not null default false,
   /** When the organization was created. */
   created_at timestamptz not null default(now()),
   primary key (id)

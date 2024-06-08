@@ -26,8 +26,10 @@ const organization_details = {
   custom_data_tip:
     'Custom data is a JSON object that can be used to store additional data associated with the organization.',
   invalid_json_object: 'Invalid JSON object.',
+  membership_policies: 'Membership policies',
+  membership_policies_description:
+    'Define how users can join this organization and what requirements they must meet for access.',
   jit: {
-    title: 'Just-in-time (JIT) provisioning',
     description:
       'Automatically assign users into this organization when they sign up or are added through the Management API, provided their email addresses match the specified domains.',
     is_enabled_title: 'Enable just-in-time provisioning',
@@ -38,6 +40,14 @@ const organization_details = {
     email_domains_placeholder: 'Enter email domains for just-in-time provisioning',
     invalid_domain: 'Invalid domain',
     domain_already_added: 'Domain already added',
+  },
+  mfa: {
+    title: 'Multi-factor authentication (MFA)',
+    tip: 'When MFA is required, users with no MFA configured will be rejected when trying to exchange an organization token. This setting does not affect user authentication.',
+    description:
+      'Require users to configure multi-factor authentication to access this organization.',
+    no_mfa_warning:
+      'No multi-factor authentication methods are enabled for your tenant. Users will not be able to access this organization until at least one multi-factor authentication method is enabled.',
   },
 };
 

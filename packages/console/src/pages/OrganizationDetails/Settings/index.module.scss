@@ -3,8 +3,20 @@
 .jitContent {
   margin-top: _.unit(3);
 
+
+  .description {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+    margin-top: _.unit(1.5);
+    margin-left: _.unit(6.5);
+  }
+
   .emailDomains {
-    margin-top: _.unit(2);
+    margin-top: _.unit(1);
     margin-left: _.unit(6);
   }
+}
+
+.warning {
+  margin-top: _.unit(3);
 }

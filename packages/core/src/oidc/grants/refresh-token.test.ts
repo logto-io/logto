@@ -130,6 +130,13 @@ const stubAccount = (ctx: KoaContextWithOIDC, overrideAccountId = accountId) => 
   });
 };
 
+const createAccessDeniedError = (message: string, statusCode: number) => {
+  const error = new errors.AccessDenied(message);
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  error.statusCode = statusCode;
+  return error;
+};
+
 const createPreparedContext = () => {
   const ctx = createOidcContext(validOidcContext);
   stubRefreshToken(ctx);
@@ -266,7 +273,9 @@ describe('organization token grant', () => {
     const ctx = createPreparedContext();
     const tenant = new MockTenant();
     Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(false);
-    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(errors.AccessDenied);
+    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+      createAccessDeniedError('user is not a member of the organization', 403)
+    );
   });
 
   it('should throw if the user has not granted the requested organization', async () => {
@@ -278,7 +287,24 @@ describe('organization token grant', () => {
       isThirdParty: true,
     });
     Sinon.stub(tenant.queries.applications.userConsentOrganizations, 'exists').resolves(false);
-    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(errors.AccessDenied);
+    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+      createAccessDeniedError('organization access is not granted to the application', 403)
+    );
+  });
+
+  it('should throw if the organization requires MFA but the user has not configured it', async () => {
+    const ctx = createPreparedContext();
+    const tenant = new MockTenant();
+    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves(mockApplication);
+    Sinon.stub(tenant.queries.applications.userConsentOrganizations, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.organizations, 'getMfaData').resolves({
+      isMfaRequired: true,
+      hasMfaConfigured: false,
+    });
+    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+      createAccessDeniedError('organization requires MFA but user has no MFA configured', 403)
+    );
   });
 
   // The handler returns void so we cannot check the return value, and it's also not
@@ -296,6 +322,10 @@ describe('organization token grant', () => {
       { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
       { tenantId: 'default', id: 'baz', name: 'baz', description: 'baz' },
     ]);
+    Sinon.stub(tenant.queries.organizations, 'getMfaData').resolves({
+      isMfaRequired: false,
+      hasMfaConfigured: false,
+    });
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
     const noopStub = Sinon.stub().resolves();
