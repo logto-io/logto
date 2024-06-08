@@ -116,8 +116,7 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
 
       // Trigger `OrganizationRole.Scope.Updated` event if organizationScopeIds or resourceScopeIds are provided.
       if (organizationScopeIds.length > 0 || resourceScopeIds.length > 0) {
-        ctx.appendDataHookContext({
-          event: 'OrganizationRole.Scopes.Updated',
+        ctx.appendDataHookContext('OrganizationRole.Scopes.Updated', {
           ...buildManagementApiContext(ctx),
           organizationRoleId: role.id,
         });

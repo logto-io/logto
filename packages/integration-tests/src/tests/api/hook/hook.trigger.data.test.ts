@@ -242,13 +242,16 @@ describe('organization data hook events', () => {
 
   it.each(organizationDataHookTestCases)(
     'test case %#: %p',
-    async ({ route, event, method, endpoint, payload }) => {
+    async ({ route, event, method, endpoint, payload, hookPayload }) => {
       await authedAdminApi[method](
         endpoint.replace('{organizationId}', organizationId).replace('{userId}', userId),
         { json: JSON.parse(JSON.stringify(payload).replace('{userId}', userId)) }
       );
       const hook = await getWebhookResult(route);
       expect(hook?.payload.event).toBe(event);
+      if (hookPayload) {
+        expect(hook?.payload).toMatchObject(hookPayload);
+      }
     }
   );
 });

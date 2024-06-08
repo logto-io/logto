@@ -9,6 +9,7 @@ import {
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
+import { type InsertUserResult } from '#src/libraries/user.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
@@ -62,7 +63,9 @@ const { hasActiveUsers, updateUserById, hasUserWithEmail, hasUserWithPhone } = u
 
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
-  insertUser: jest.fn(async (user: CreateUser) => user as User),
+  insertUser: jest.fn(
+    async (user: CreateUser): Promise<InsertUserResult> => [user as User, { organizationIds: [] }]
+  ),
 };
 const { generateUserId, insertUser } = userLibraries;
 
@@ -84,7 +87,7 @@ describe('submit action', () => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     interactionDetails: { params: {} } as Awaited<ReturnType<Provider['interactionDetails']>>,
     assignInteractionHookResult: jest.fn(),
-    assignDataHookContext: jest.fn(),
+    appendDataHookContext: jest.fn(),
   };
   const profile = {
     username: 'username',
@@ -153,8 +156,7 @@ describe('submit action', () => {
       login: { accountId: 'uid' },
     });
 
-    expect(ctx.assignDataHookContext).toBeCalledWith({
-      event: 'User.Created',
+    expect(ctx.appendDataHookContext).toBeCalledWith('User.Created', {
       user: {
         id: 'uid',
         ...upsertProfile,
@@ -188,8 +190,7 @@ describe('submit action', () => {
       login: { accountId: 'pending-account-id' },
     });
 
-    expect(ctx.assignDataHookContext).toBeCalledWith({
-      event: 'User.Created',
+    expect(ctx.appendDataHookContext).toBeCalledWith('User.Created', {
       user: {
         id: 'pending-account-id',
         ...upsertProfile,
@@ -336,7 +337,7 @@ describe('submit action', () => {
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'foo' },
     });
-    expect(ctx.assignDataHookContext).not.toBeCalled();
+    expect(ctx.appendDataHookContext).not.toBeCalled();
   });
 
   it('sign-in with new profile', async () => {
@@ -371,8 +372,7 @@ describe('submit action', () => {
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'foo' },
     });
-    expect(ctx.assignDataHookContext).toBeCalledWith({
-      event: 'User.Data.Updated',
+    expect(ctx.appendDataHookContext).toBeCalledWith('User.Data.Updated', {
       user: updateProfile,
     });
   });
@@ -432,8 +432,7 @@ describe('submit action', () => {
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'foo' },
     });
-    expect(ctx.assignDataHookContext).toBeCalledWith({
-      event: 'User.Data.Updated',
+    expect(ctx.appendDataHookContext).toBeCalledWith('User.Data.Updated', {
       user: {
         primaryEmail: 'email',
         name: userInfo.name,
@@ -458,8 +457,7 @@ describe('submit action', () => {
       passwordEncryptionMethod: 'plain',
     });
     expect(assignInteractionResults).not.toBeCalled();
-    expect(ctx.assignDataHookContext).toBeCalledWith({
-      event: 'User.Data.Updated',
+    expect(ctx.appendDataHookContext).toBeCalledWith('User.Data.Updated', {
       user: {
         passwordEncrypted: 'passwordEncrypted',
         passwordEncryptionMethod: 'plain',

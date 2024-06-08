@@ -38,7 +38,7 @@ describe('koaManagementApiHooks', () => {
       appendDataHookContext: notToBeCalled,
     };
     next.mockImplementation(() => {
-      ctx.appendDataHookContext({ event: 'Role.Created', data: { id: '123' } });
+      ctx.appendDataHookContext('Role.Created', { data: { id: '123' } });
     });
 
     await koaManagementApiHooks(mockHooksLibrary)(ctx, next);

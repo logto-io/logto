@@ -5,7 +5,10 @@ type TestCase = {
   event: string;
   method: 'patch' | 'post' | 'delete' | 'put';
   endpoint: string;
+  /** The payload that should be sent to the route. */
   payload: Record<string, unknown>;
+  /** The payload that should be sent to the webhook. */
+  hookPayload?: Record<string, unknown>;
 };
 
 export const userDataHookTestCases: TestCase[] = [
@@ -108,6 +111,7 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'post',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
+    hookPayload: { organizationId: expect.any(String) },
   },
   {
     route: 'PUT /organizations/:id/users',
@@ -115,6 +119,7 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'put',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
+    hookPayload: { organizationId: expect.any(String) },
   },
   {
     route: 'DELETE /organizations/:id/users/:userId',
@@ -122,6 +127,7 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'delete',
     endpoint: `organizations/{organizationId}/users/{userId}`,
     payload: {},
+    hookPayload: { organizationId: expect.any(String) },
   },
   {
     route: 'DELETE /organizations/:id',

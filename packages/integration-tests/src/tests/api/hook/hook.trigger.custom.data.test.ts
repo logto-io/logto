@@ -1,21 +1,26 @@
-import { hookEvents, userInfoSelectFields } from '@logto/schemas';
+import { SignInIdentifier, hookEvents, userInfoSelectFields } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 
-import { createUser, deleteUser } from '#src/api/admin-user.js';
-import { OrganizationRoleApi } from '#src/api/organization-role.js';
-import { OrganizationScopeApi } from '#src/api/organization-scope.js';
+import { deleteUser } from '#src/api/admin-user.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { createRole } from '#src/api/role.js';
 import { createScope } from '#src/api/scope.js';
+import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
-import { generateName, generateRoleName } from '#src/utils.js';
+import { registerWithEmail } from '#src/helpers/interactions.js';
+import { OrganizationApiTest } from '#src/helpers/organization.js';
+import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { UserApiTest } from '#src/helpers/user.js';
+import { generateName, generateRoleName, randomString } from '#src/utils.js';
 
 import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
 
-describe('trigger custom data hook events', () => {
+describe('manual data hook tests', () => {
   const webbHookMockServer = new WebhookMockServer(9999);
   const webHookApi = new WebHookApiTest();
+  const userApi = new UserApiTest();
+  const organizationApi = new OrganizationApiTest();
   const hookName = 'customDataHookEventListener';
 
   beforeAll(async () => {
@@ -35,7 +40,7 @@ describe('trigger custom data hook events', () => {
   });
 
   afterEach(async () => {
-    await webHookApi.cleanUp();
+    await Promise.all([webHookApi.cleanUp(), userApi.cleanUp(), organizationApi.cleanUp()]);
   });
 
   it('create roles with scopeIds should trigger Roles.Scopes.Updated event', async () => {
@@ -67,12 +72,10 @@ describe('trigger custom data hook events', () => {
   });
 
   it('create organizationRoles with organizationScopeIds should trigger OrganizationRole.Scopes.Updated event', async () => {
-    const roleApi = new OrganizationRoleApi();
-    const organizationScopeApi = new OrganizationScopeApi();
-    const scope = await organizationScopeApi.create({ name: generateName() });
+    const scope = await organizationApi.scopeApi.create({ name: generateName() });
     const hook = webHookApi.hooks.get(hookName)!;
 
-    const organizationRole = await roleApi.create({
+    const organizationRole = await organizationApi.roleApi.create({
       name: generateRoleName(),
       organizationScopeIds: [scope.id],
     });
@@ -92,13 +95,10 @@ describe('trigger custom data hook events', () => {
         organizationRoleId: organizationRole.id,
       },
     });
-
-    await roleApi.delete(organizationRole.id);
-    await organizationScopeApi.delete(scope.id);
   });
 
   it('delete user should trigger User.Deleted event with selected user info', async () => {
-    const user = await createUser();
+    const user = await userApi.create({});
     const hook = webHookApi.hooks.get(hookName)!;
 
     await deleteUser(user.id);
@@ -109,5 +109,45 @@ describe('trigger custom data hook events', () => {
         data: pick(user, ...userInfoSelectFields),
       },
     });
+  });
+
+  const assertOrganizationMembershipUpdated = async (organizationId: string) =>
+    assertHookLogResult(webHookApi.hooks.get(hookName)!, 'Organization.Membership.Updated', {
+      hookPayload: {
+        event: 'Organization.Membership.Updated',
+        organizationId,
+      },
+    });
+
+  describe('organization membership update by just-in-time organization provisioning', () => {
+    it('should trigger `Organization.Membership.Updated` event when user is provisioned by Management API', async () => {
+      const organization = await organizationApi.create({ name: 'foo' });
+      const domain = 'example.com';
+      await organizationApi.addEmailDomain(organization.id, domain);
+
+      await userApi.create({ primaryEmail: `${randomString()}@${domain}` });
+      await assertOrganizationMembershipUpdated(organization.id);
+    });
+
+    // TODO: Add user deletion test case
+
+    it('should trigger `Organization.Membership.Updated` event when user is provisioned by experience', async () => {
+      await setEmailConnector();
+      await setSmsConnector();
+      await enableAllVerificationCodeSignInMethods({
+        identifiers: [SignInIdentifier.Email],
+        password: false,
+        verify: true,
+      });
+
+      const organization = await organizationApi.create({ name: 'foo' });
+      const domain = 'example.com';
+      await organizationApi.addEmailDomain(organization.id, domain);
+
+      await registerWithEmail(`${randomString()}@${domain}`);
+      await assertOrganizationMembershipUpdated(organization.id);
+    });
+
+    // TODO: Add SSO test case
   });
 });

@@ -34,6 +34,10 @@ export class OrganizationApi extends ApiFactory<
     await authedAdminApi.post(`${this.path}/${id}/users`, { json: { userIds } });
   }
 
+  async replaceUsers(id: string, userIds: string[]): Promise<void> {
+    await authedAdminApi.put(`${this.path}/${id}/users`, { json: { userIds } });
+  }
+
   async getUsers(
     id: string,
     query?: Query
