@@ -110,6 +110,7 @@ export const mockSignInExperience: SignInExperience = {
     factors: [],
   },
   singleSignOnEnabled: true,
+  socialSignIn: {},
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -142,6 +143,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   },
   isDevelopmentTenant: false,
   singleSignOnEnabled: true,
+  socialSignIn: {},
 };
 
 const usernameSettings = {

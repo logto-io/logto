@@ -11,6 +11,7 @@ create table sign_in_experiences (
   privacy_policy_url varchar(2048),
   sign_in jsonb /* @use SignIn */ not null,
   sign_up jsonb /* @use SignUp */ not null,
+  social_sign_in jsonb /* @use SocialSignIn */ not null default '{}'::jsonb,
   social_sign_in_connector_targets jsonb /* @use ConnectorTargets */ not null default '[]'::jsonb,
   sign_in_mode sign_in_mode not null default 'SignInAndRegister',
   custom_css text,

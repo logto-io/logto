@@ -9,6 +9,7 @@ import { type VerificationCodeIdentifier } from '@/types';
 
 export const useSieMethods = () => {
   const { experienceSettings } = useContext(PageContext);
+  const socialSignInSettings = experienceSettings?.socialSignIn ?? {};
   const { identifiers, password, verify } = experienceSettings?.signUp ?? {};
 
   return {
@@ -19,6 +20,7 @@ export const useSieMethods = () => {
         // Filter out empty settings
         ({ password, verificationCode }) => password || verificationCode
       ) ?? [],
+    socialSignInSettings,
     socialConnectors: experienceSettings?.socialConnectors ?? [],
     ssoConnectors: experienceSettings?.ssoConnectors ?? [],
     signInMode: experienceSettings?.signInMode,
