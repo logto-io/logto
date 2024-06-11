@@ -369,14 +369,14 @@
             "sync_profile": false,
             "connector_id": "mygovid",
             "config": {
-                "scope": "openid profile email client_123",
-                "clientId": "client_123",
-                "clientSecret": "client_secret_123",
-                "tokenEndpoint": "http://localhost:3005/token",
-                "authorizationEndpoint": "http://localhost:3005/auth",
+                "scope": "openid profile email 2xz6sbi8ch01uhjt1oq8r",
+                "clientId": "2xz6sbi8ch01uhjt1oq8r",
+                "clientSecret": "bgHz4Ouv2lxXCdc6s6s4IUoNpFAklC15",
+                "tokenEndpoint": "http://localhost:3005/mock/token",
+                "authorizationEndpoint": "http://localhost:3005/mock/auth",
                 "tokenEndpointAuthMethod": "client_secret_post",
                 "idTokenVerificationConfig": {
-                    "jwksUri": "http://localhost:3005/jws"
+                    "jwksUri": "http://localhost:3005/mock/keys"
                 },
                 "clientSecretJwtSigningAlgorithm": "HS256"
             },
@@ -414,7 +414,7 @@
             "social_sign_in_connector_targets": [
                 "MyGovId (MyGovId connector)"
             ],
-            "sign_in_mode": "SignIn"
+            "sign_in_mode": "SignInAndRegister"
         }],
         "webhooks": [{
             "id": "login_webhook",

@@ -5,6 +5,7 @@ import {
   type User,
   type Organization,
   type OrganizationRole,
+  adminTenantId,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { deduplicate } from '@silverhand/essentials';
@@ -147,6 +148,10 @@ export const manageDefaultUserRole = async (
   getRoles: (roleName: string, excludeRoleId?: string) => Promise<Role | undefined>,
   insertUsersRoles: (usersRoles: CreateUsersRole[]) => Promise<QueryResult<QueryResultRow>>
 ) => {
+  if (user.tenantId === adminTenantId) {
+    return;
+  }
+
   assertThat(Boolean(user.primaryEmail), 'user.email_not_exist');
 
   if (user.primaryEmail === null) {
