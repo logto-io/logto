@@ -334,6 +334,34 @@
                         ]
                     }
                 ]
+            },
+            {
+                "name": "Public Servant",
+                "description": "Public servant",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "user-profile-api"
+                        ],
+                        "actions": [
+                            "read"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Citizen",
+                "description": "Citizen",
+                "permissions": [
+                    {
+                        "for_resource_ids": [
+                            "user-profile-api"
+                        ],
+                        "actions": [
+                            "read"
+                        ]
+                    }
+                ]
             }
         ],
         "connectors": [{

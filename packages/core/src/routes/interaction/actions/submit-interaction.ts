@@ -21,7 +21,7 @@ import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 // OGCIO
-import { manageDefaultOrganizations } from '#src/libraries/ogcio-user.js';
+import { manageDefaultOrganizations, manageDefaultUserRole } from '#src/libraries/ogcio-user.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -100,6 +100,8 @@ async function handleSubmitRegister(
     users: { hasActiveUsers },
     signInExperiences: { updateDefaultSignInExperience },
     organizations,
+    roles,
+    usersRoles,
   } = queries;
 
   const {
@@ -168,6 +170,10 @@ async function handleSubmitRegister(
     },
     getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud)
   );
+
+  // OGCIO
+  // @ts-expect-error weird error at findRoleByRoleName return type
+  await manageDefaultUserRole(user, roles.findRoleByRoleName, usersRoles.insertUsersRoles);
 
   if (isCreatingFirstAdminUser) {
     // In OSS, we need to limit sign-in experience to "sign-in only" once

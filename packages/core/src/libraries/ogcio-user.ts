@@ -1,6 +1,14 @@
 import { consoleLog } from '@logto/cli/lib/utils.js';
-import { type Organization, type OrganizationRole } from '@logto/schemas';
+import {
+  type CreateUsersRole,
+  type Role,
+  type User,
+  type Organization,
+  type OrganizationRole,
+} from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { deduplicate } from '@silverhand/essentials';
+import { type QueryResult, type QueryResultRow } from '@silverhand/slonik';
 
 import { EnvSet } from '#src/env-set/index.js';
 import type OrganizationQueries from '#src/queries/organization/index.js';
@@ -116,4 +124,57 @@ export const manageDefaultOrganizations = async (params: {
     ...orgRelations,
     organizationQueries: params.organizationQueries,
   });
+};
+
+const PUBLIC_SERVANT_DOMAINS = new Set(['gov.ie']);
+
+const getDomainFromEmail = (email: string): string | undefined => {
+  return email.split('@')[1];
+};
+
+const getUserRoleByDomain = async (
+  domain: string,
+  getRoles: (roleName: string, excludeRoleId?: string) => Promise<Role | undefined>
+) => {
+  if (PUBLIC_SERVANT_DOMAINS.has(domain)) {
+    return getRoles('Public Servant');
+  }
+  return getRoles('Citizen');
+};
+
+export const manageDefaultUserRole = async (
+  user: User,
+  getRoles: (roleName: string, excludeRoleId?: string) => Promise<Role | undefined>,
+  insertUsersRoles: (usersRoles: CreateUsersRole[]) => Promise<QueryResult<QueryResultRow>>
+) => {
+  assertThat(Boolean(user.primaryEmail), 'user.email_not_exist');
+
+  if (user.primaryEmail === null) {
+    return;
+  }
+
+  const domain = getDomainFromEmail(user.primaryEmail);
+
+  assertThat(Boolean(domain), 'user.invalid_email');
+
+  if (domain === undefined) {
+    return;
+  }
+
+  const userRole = await getUserRoleByDomain(domain, getRoles);
+
+  assertThat(Boolean(userRole), 'role.default_role_missing');
+
+  if (userRole === undefined) {
+    return;
+  }
+
+  return insertUsersRoles([
+    {
+      tenantId: user.tenantId,
+      id: generateStandardId(),
+      userId: user.id,
+      roleId: userRole.id,
+    },
+  ]);
 };
