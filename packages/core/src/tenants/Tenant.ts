@@ -51,7 +51,8 @@ export default class Tenant implements TenantContext {
     // Try to avoid unexpected "triggerUncaughtException" by using try-catch block
     try {
       // Treat the default database URL as the management URL
-      const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
+      const tenantDatabaseDsn = await getTenantDatabaseDsn(id);
+      const envSet = new EnvSet(id, tenantDatabaseDsn);
       // Custom endpoint is used for building OIDC issuer URL when the request is a custom domain
       await envSet.load(customDomain);
 
