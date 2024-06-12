@@ -1,5 +1,6 @@
 import type { SignInExperience, SignIn, SsoConnectorMetadata } from '@logto/schemas';
 import {
+  AgreeToTermsPolicy,
   ConnectorPlatform,
   ConnectorType,
   MfaPolicy,
@@ -104,6 +105,7 @@ export const mockSignInExperience: SignInExperience = {
   signInMode: SignInMode.SignInAndRegister,
   customCss: null,
   customContent: {},
+  agreeToTermsPolicy: AgreeToTermsPolicy.Automatic,
   passwordPolicy: {},
   mfa: {
     policy: MfaPolicy.UserControlled,
@@ -136,6 +138,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   },
   customCss: null,
   customContent: {},
+  agreeToTermsPolicy: AgreeToTermsPolicy.Automatic,
   passwordPolicy: {},
   mfa: {
     policy: MfaPolicy.UserControlled,
