@@ -38,8 +38,8 @@ try {
    * The unhandled promise rejection was first observed in the TenantPool class's get method.
    * @see TenantPool
    * If the tenantId is not found, Tenant.create will throw an error.
-   * We use a trySafe block to catch the tenantPool.get error and report it.
-   * However, a unhandled promise rejection error will still be thrown randomly.
+   * We use a try-catch block to catch the error and throw it with logging.
+   * However, if the Tenant.create Promise is read from the cache, somehow the error is not caught.
    * The root cause of this error is still unknown. To avoid the app from crashing, we catch the error here.
    */
   process.on('unhandledRejection', (error) => {
