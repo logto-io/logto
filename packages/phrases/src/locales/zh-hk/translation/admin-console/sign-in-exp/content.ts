@@ -5,6 +5,12 @@ const content = {
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'Privacy policy URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
+    agree_to_terms: '同意條款',
+    agree_policies: {
+      automatic: '繼續自動同意條款',
+      manual_registration_only: '只在註冊時要求勾選同意',
+      manual: '在註冊和登錄時都需要勾選同意',
+    },
   },
   languages: {
     title: 'LANGUAGES',
