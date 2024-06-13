@@ -4,28 +4,46 @@
   width: 100%;
   margin-top: _.unit(3);
 
-  ul {
+  // This 'tabItemList' class name is required or the styles below will be overridden by the default styles in mdx guide pages.
+  ul.tabItemList {
     border-bottom: 1px solid var(--color-divider);
     display: flex;
     margin: _.unit(1) 0;
     padding: 0;
 
     li {
+      position: relative;
       list-style: none;
-      margin-right: _.unit(6);
-      padding-bottom: _.unit(1);
-      font: var(--font-label-2);
-      color: var(--color-text-secondary);
       margin-block-end: unset;
       padding-inline-start: unset;
+      margin: 0 _.unit(6) _.unit(1) 0;
+      padding: _.unit(0.5) _.unit(1.5);
+      font: var(--font-label-2);
+      color: var(--color-text-secondary);
       cursor: pointer;
+      border-radius: 4px;
+
+      &:hover {
+        background-color: var(--color-hover-variant);
+      }
     }
 
     li[aria-selected='true'] {
       color: var(--color-text-link);
-      border-bottom: 2px solid var(--color-text-link);
-      margin-bottom: -1px;
       outline: none;
+
+      // Selected underline
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        // Underline position = item's margin-bottom (_.unit(1)) + tab item list's border-bottom width (1px)
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        border-top: 2px solid var(--color-text-link);
+        border-radius: 8px 8px 0 0;
+      }
     }
   }
 
