@@ -28,7 +28,7 @@ jobs:
           fi
 
           # Get the diff and filter for added lines only
-          git diff origin/main --unified=0 | grep -E '^\+' > added_lines.txt
+          git diff $BASE --unified=0 | grep -E '^\+' > added_lines.txt
 
           # Remove lines that only contain file paths (diff metadata)
           sed -i '/^+++ /d' added_lines.txt
