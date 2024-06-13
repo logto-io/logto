@@ -1,5 +1,4 @@
-name: Integraion test with dev features disabled
-
+name: Dev feature disabled compatibility integration test
 on:
   push:
     branches:
@@ -27,10 +26,8 @@ jobs:
             BASE=${{ github.event.before }}
           fi
 
-          # Get the diff and filter for added lines only
           git diff $BASE --unified=0 | grep -E '^\+' > added_lines.txt
 
-          # Remove lines that only contain file paths (diff metadata)
           sed -i '/^+++ /d' added_lines.txt
 
       - name: Check for isDevFeaturesEnabled in added lines
