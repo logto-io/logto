@@ -369,9 +369,9 @@
             "sync_profile": false,
             "connector_id": "mygovid",
             "config": {
-                "scope": "openid profile email 2xz6sbi8ch01uhjt1oq8r",
-                "clientId": "2xz6sbi8ch01uhjt1oq8r",
-                "clientSecret": "bgHz4Ouv2lxXCdc6s6s4IUoNpFAklC15",
+                "scope": "openid profile email",
+                "clientId": "mock_client_id",
+                "clientSecret": "mock_client_secret",
                 "tokenEndpoint": "http://localhost:3005/mock/token",
                 "authorizationEndpoint": "http://localhost:3005/mock/auth",
                 "tokenEndpointAuthMethod": "client_secret_post",
