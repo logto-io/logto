@@ -9,5 +9,4 @@ export const adminEndpoint = process.env.ADMIN_ENDPOINT;
 export const isDevFeaturesEnabled =
   !isProduction ||
   yes(process.env.DEV_FEATURES_ENABLED) ||
-  yes(process.env.INTEGRATION_TEST) ||
   yes(localStorage.getItem(storageKeys.isDevFeaturesEnabled));
