@@ -26,3 +26,4 @@ export const organizationRoleLink =
   '/docs/recipes/organizations/understand-how-it-works/#organization-role';
 export const organizationPermissionLink =
   '/docs/recipes/organizations/understand-how-it-works/#organization-permission';
+export const profilePropertyReferenceLink = '/docs/references/users/#profile-1';

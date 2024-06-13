@@ -7,6 +7,7 @@ export type UserDetailsForm = {
   name: string;
   avatar: string;
   customData: string;
+  profile: string;
 };
 
 export type UserDetailsOutletContext = {

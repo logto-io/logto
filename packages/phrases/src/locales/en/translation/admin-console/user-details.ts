@@ -34,9 +34,13 @@ const user_details = {
   field_custom_data: 'Custom data',
   field_custom_data_tip:
     'Additional user info not listed in the pre-defined user properties, such as user-preferred color and language.',
+  field_profile: 'Profile',
+  field_profile_tip:
+    "Additional OpenID Connect standard claims that are not included in user's properties. Note that all unknown properties will be stripped. Please refer to <a>profile property reference</a> for more information.",
   field_connectors: 'Social connections',
   field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: 'Custom data must be a valid JSON object',
+  profile_invalid: 'Profile must be a valid JSON object',
   connectors: {
     connectors: 'Connectors',
     user_id: 'User ID',
