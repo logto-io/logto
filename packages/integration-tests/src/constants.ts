@@ -48,4 +48,4 @@ export const newOidcSsoConnectorPayload = {
   },
 } satisfies Partial<CreateSsoConnector>;
 
-export const isDevFeaturesEnabled = yes(process.env.DEV_FEATURES_ENABLED);
+export const isDevFeaturesEnabled = yes(getEnv('DEV_FEATURES_ENABLED'));
