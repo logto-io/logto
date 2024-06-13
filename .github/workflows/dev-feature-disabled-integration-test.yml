@@ -1,0 +1,77 @@
+name: Integraion test with dev features disabled
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  detect-dev-feature-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      has-dev-feature-changes: ${{ steps.changes-detection.outputs.has-dev-feature-changes }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get the diff and filter added lines
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE=$(git merge-base origin/${{github.base_ref}} HEAD)
+          else
+            BASE=${{ github.event.before }}
+          fi
+
+          # Get the diff and filter for added lines only
+          git diff origin/main --unified=0 | grep -E '^\+' > added_lines.txt
+
+          # Remove lines that only contain file paths (diff metadata)
+          sed -i '/^+++ /d' added_lines.txt
+
+      - name: Check for isDevFeaturesEnabled in added lines
+        id: changes-detection
+        run: |
+          if grep -q 'isDevFeaturesEnabled' added_lines.txt; then
+            echo "Dev features enabled changes detected"
+            echo "::set-output name=has-dev-feature-changes::true"
+          else
+            echo "No dev features enabled changes detected"
+            echo "::set-output name=has-dev-feature-changes::false"
+          fi
+
+  package:
+    needs: detect-dev-feature-changes
+    runs-on: ubuntu-latest
+    if: ${{needs.detect-dev-feature-changes.outputs.has-dev-feature-changes == 'true'}}
+    env:
+      INTEGRATION_TEST: true
+      DEV_FEATURES_ENABLED: false
+    steps:
+      - uses: logto-io/actions-package-logto-artifact@v2
+        with:
+          artifact-name: dev-feature-disabled-integration-test-${{ github.sha }}
+          branch: ${{github.base_ref}}
+          pnpm-version: 9
+
+  run-logto:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [api, experience, console]
+    needs: package
+    runs-on: ubuntu-latest
+    env:
+      INTEGRATION_TEST: true
+      DEV_FEATURES_ENABLED: false
+      DB_URL: postgres://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: logto-io/actions-run-logto-integration-tests@v3
+        with:
+          logto-artifact: dev-feature-disabled-integration-test-${{ github.sha }}
+          test-target: ${{ matrix.target }}
+          pnpm-version: 9
