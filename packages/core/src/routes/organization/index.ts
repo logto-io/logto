@@ -7,7 +7,6 @@ import {
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
@@ -139,11 +138,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
   );
 
   userRoleRelationRoutes(router, organizations);
-
-  // TODO: Remove this check when launching
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    emailDomainRoutes(router, organizations);
-  }
+  emailDomainRoutes(router, organizations);
 
   // MARK: Mount sub-routes
   organizationRoleRoutes(...args);

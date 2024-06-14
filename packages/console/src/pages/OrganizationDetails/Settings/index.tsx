@@ -9,7 +9,6 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
@@ -134,72 +133,70 @@ function Settings() {
           />
         </FormField>
       </FormCard>
-      {isDevFeaturesEnabled && (
-        <FormCard
-          title="organization_details.jit.title"
-          description="organization_details.jit.description"
-        >
-          <FormField title="organization_details.jit.is_enabled_title">
-            <Controller
-              name="isJitEnabled"
-              control={control}
-              render={({ field }) => (
-                <div className={styles.jitContent}>
-                  <RadioGroup
-                    name="isJitEnabled"
-                    value={String(field.value)}
-                    onChange={(value) => {
-                      field.onChange(value === 'true');
-                    }}
-                  >
-                    <Radio
-                      value="false"
-                      title="organization_details.jit.is_enabled_false_description"
-                    />
-                    <Radio
-                      value="true"
-                      title="organization_details.jit.is_enabled_true_description"
-                    />
-                  </RadioGroup>
-                  {field.value && (
-                    <Controller
-                      name="jitEmailDomains"
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <MultiOptionInput
-                          className={styles.emailDomains}
-                          values={value}
-                          renderValue={(value) => value}
-                          validateInput={(input) => {
-                            if (!domainRegExp.test(input)) {
-                              return t('organization_details.jit.invalid_domain');
-                            }
+      <FormCard
+        title="organization_details.jit.title"
+        description="organization_details.jit.description"
+      >
+        <FormField title="organization_details.jit.is_enabled_title">
+          <Controller
+            name="isJitEnabled"
+            control={control}
+            render={({ field }) => (
+              <div className={styles.jitContent}>
+                <RadioGroup
+                  name="isJitEnabled"
+                  value={String(field.value)}
+                  onChange={(value) => {
+                    field.onChange(value === 'true');
+                  }}
+                >
+                  <Radio
+                    value="false"
+                    title="organization_details.jit.is_enabled_false_description"
+                  />
+                  <Radio
+                    value="true"
+                    title="organization_details.jit.is_enabled_true_description"
+                  />
+                </RadioGroup>
+                {field.value && (
+                  <Controller
+                    name="jitEmailDomains"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <MultiOptionInput
+                        className={styles.emailDomains}
+                        values={value}
+                        renderValue={(value) => value}
+                        validateInput={(input) => {
+                          if (!domainRegExp.test(input)) {
+                            return t('organization_details.jit.invalid_domain');
+                          }
 
-                            if (value.includes(input)) {
-                              return t('organization_details.jit.domain_already_added');
-                            }
+                          if (value.includes(input)) {
+                            return t('organization_details.jit.domain_already_added');
+                          }
 
-                            return { value: input };
-                          }}
-                          placeholder={t('organization_details.jit.email_domains_placeholder')}
-                          error={errors.jitEmailDomains?.message}
-                          onChange={onChange}
-                          onError={(error) => {
-                            setError('jitEmailDomains', { type: 'custom', message: error });
-                          }}
-                          onClearError={() => {
-                            clearErrors('jitEmailDomains');
-                          }}
-                        />
-                      )}
-                    />
-                  )}
-                </div>
-              )}
-            />
-          </FormField>
-        </FormCard>
-      )}
+                          return { value: input };
+                        }}
+                        placeholder={t('organization_details.jit.email_domains_placeholder')}
+                        error={errors.jitEmailDomains?.message}
+                        onChange={onChange}
+                        onError={(error) => {
+                          setError('jitEmailDomains', { type: 'custom', message: error });
+                        }}
+                        onClearError={() => {
+                          clearErrors('jitEmailDomains');
+                        }}
+                      />
+                    )}
+                  />
+                )}
+              </div>
+            )}
+          />
+        </FormField>
+      </FormCard>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </DetailsForm>
   );
