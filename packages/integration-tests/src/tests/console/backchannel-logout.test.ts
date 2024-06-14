@@ -9,7 +9,7 @@
  * - We cannot update demo app's OIDC client metadata via API, then it'll be tricky to add the
  * backchannel logout URI conditionally (use environment variables looks not right).
  * - To trigger the backchannel logout on other apps, a [shared session](https://github.com/panva/node-oidc-provider/blob/f52140233146e77d0dcc34ee44fd2b95b488c8d9/lib/actions/end_session.js#L135)
- * is required, which requires we to sign in with all the apps in the same browser session. This
+ * is required, which requires us to sign in with all the apps in the same browser session. This
  * sounds tricky. Since we can trust the `oidc-provider` library's implementation, we can just
  * test the backchannel logout feature of the Console application.
  *
