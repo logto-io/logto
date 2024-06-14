@@ -55,7 +55,7 @@ export default function emailDomainRoutes(
     pathname,
     koaGuard({
       params: z.object(params),
-      body: z.object({ emailDomains: z.string().min(1).array().nonempty() }),
+      body: z.object({ emailDomains: z.string().array() }),
       status: [204],
     }),
     async (ctx, next) => {
