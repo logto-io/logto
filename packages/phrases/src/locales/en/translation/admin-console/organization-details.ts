@@ -31,12 +31,11 @@ const organization_details = {
     'Define how users can join this organization and what requirements they must meet for access.',
   jit: {
     description:
-      'Automatically assign users into this organization when they sign up or are added through the Management API, provided their email addresses match the specified domains.',
+      'Enable automatic membership assignment based on verified email domains and default roles assignment.',
+    membership_description:
+      'Automatically assign users into this organization when they sign up or are added through the Management API, provided their verified email addresses match the specified domains.',
     is_enabled_title: 'Enable just-in-time provisioning',
-    is_enabled_true_description:
-      'New users with verified email domains will automatically join the organization',
-    is_enabled_false_description:
-      'Users can join the organization only if they are invited or added via Management API',
+    email_domain_provisioning: 'Email domain provisioning',
     email_domains_placeholder: 'Enter email domains for just-in-time provisioning',
     invalid_domain: 'Invalid domain',
     domain_already_added: 'Domain already added',

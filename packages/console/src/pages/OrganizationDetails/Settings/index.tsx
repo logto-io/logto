@@ -14,7 +14,6 @@ import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
-import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import useApi, { type RequestError } from '@/hooks/use-api';
@@ -66,13 +65,14 @@ function Settings() {
     formState: { isDirty, isSubmitting, errors },
     setError,
     clearErrors,
-    getValues,
+    watch,
   } = useForm<FormData>({
     defaultValues: normalizeData(
       data,
       emailDomains.map(({ emailDomain }) => emailDomain)
     ),
   });
+  const [isJitEnabled, isMfaRequired] = watch(['isJitEnabled', 'isMfaRequired']);
   const api = useApi();
 
   const onSubmit = handleSubmit(
@@ -144,76 +144,58 @@ function Settings() {
         description="organization_details.membership_policies_description"
       >
         <FormField title="organization_details.jit.is_enabled_title">
-          <Controller
-            name="isJitEnabled"
-            control={control}
-            render={({ field }) => (
-              <div className={styles.jitContent}>
-                <RadioGroup
-                  name="isJitEnabled"
-                  value={String(field.value)}
-                  onChange={(value) => {
-                    field.onChange(value === 'true');
-                  }}
-                >
-                  <Radio
-                    value="false"
-                    title="organization_details.jit.is_enabled_false_description"
-                  />
-                  <Radio
-                    value="true"
-                    title="organization_details.jit.is_enabled_true_description"
-                  />
-                </RadioGroup>
-                {field.value && (
-                  <>
-                    <p className={styles.description}>
-                      {t('organization_details.jit.description')}
-                    </p>
-                    <Controller
-                      name="jitEmailDomains"
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <MultiOptionInput
-                          className={styles.emailDomains}
-                          values={value}
-                          renderValue={(value) => value}
-                          validateInput={(input) => {
-                            if (!domainRegExp.test(input)) {
-                              return t('organization_details.jit.invalid_domain');
-                            }
-
-                            if (value.includes(input)) {
-                              return t('organization_details.jit.domain_already_added');
-                            }
-
-                            return { value: input };
-                          }}
-                          placeholder={t('organization_details.jit.email_domains_placeholder')}
-                          error={errors.jitEmailDomains?.message}
-                          onChange={onChange}
-                          onError={(error) => {
-                            setError('jitEmailDomains', { type: 'custom', message: error });
-                          }}
-                          onClearError={() => {
-                            clearErrors('jitEmailDomains');
-                          }}
-                        />
-                      )}
-                    />
-                  </>
-                )}
-              </div>
-            )}
-          />
+          <div className={styles.jitContent}>
+            <Switch
+              label={t('organization_details.jit.description')}
+              {...register('isJitEnabled')}
+            />
+          </div>
         </FormField>
+        {isJitEnabled && (
+          <FormField title="organization_details.jit.email_domain_provisioning">
+            <p className={styles.membershipDescription}>
+              {t('organization_details.jit.membership_description')}
+            </p>
+            <Controller
+              name="jitEmailDomains"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <MultiOptionInput
+                  className={styles.emailDomains}
+                  values={value}
+                  renderValue={(value) => value}
+                  validateInput={(input) => {
+                    if (!domainRegExp.test(input)) {
+                      return t('organization_details.jit.invalid_domain');
+                    }
+
+                    if (value.includes(input)) {
+                      return t('organization_details.jit.domain_already_added');
+                    }
+
+                    return { value: input };
+                  }}
+                  placeholder={t('organization_details.jit.email_domains_placeholder')}
+                  error={errors.jitEmailDomains?.message}
+                  onChange={onChange}
+                  onError={(error) => {
+                    setError('jitEmailDomains', { type: 'custom', message: error });
+                  }}
+                  onClearError={() => {
+                    clearErrors('jitEmailDomains');
+                  }}
+                />
+              )}
+            />
+          </FormField>
+        )}
         {isDevFeaturesEnabled && (
           <FormField title="organization_details.mfa.title" tip={t('organization_details.mfa.tip')}>
             <Switch
               label={t('organization_details.mfa.description')}
               {...register('isMfaRequired')}
             />
-            {getValues('isMfaRequired') && signInExperience?.mfa.factors.length === 0 && (
+            {isMfaRequired && signInExperience?.mfa.factors.length === 0 && (
               <InlineNotification severity="alert" className={styles.warning}>
                 {t('organization_details.mfa.no_mfa_warning')}
               </InlineNotification>
