@@ -123,7 +123,7 @@ describe('manual data hook tests', () => {
     it('should trigger `Organization.Membership.Updated` event when user is provisioned by Management API', async () => {
       const organization = await organizationApi.create({ name: 'foo' });
       const domain = 'example.com';
-      await organizationApi.addEmailDomain(organization.id, domain);
+      await organizationApi.jit.addEmailDomain(organization.id, domain);
 
       await userApi.create({ primaryEmail: `${randomString()}@${domain}` });
       await assertOrganizationMembershipUpdated(organization.id);
@@ -142,7 +142,7 @@ describe('manual data hook tests', () => {
 
       const organization = await organizationApi.create({ name: 'foo' });
       const domain = 'example.com';
-      await organizationApi.addEmailDomain(organization.id, domain);
+      await organizationApi.jit.addEmailDomain(organization.id, domain);
 
       await registerWithEmail(`${randomString()}@${domain}`);
       await assertOrganizationMembershipUpdated(organization.id);

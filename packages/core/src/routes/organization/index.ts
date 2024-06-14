@@ -141,7 +141,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
 
   // MARK: Just-in-time provisioning
   emailDomainRoutes(router, organizations);
-  router.addRelationRoutes(organizations.jit.roles, 'jit/roles');
+  router.addRelationRoutes(organizations.jit.roles, 'jit/roles', { isPaginationOptional: true });
 
   // MARK: Mount sub-routes
   organizationRoleRoutes(...args);

@@ -16,15 +16,15 @@
         }
       },
       "post": {
-        "summary": "Add organization JIT role",
-        "description": "Add a new organization role that will be assigned to users during just-in-time provisioning.",
+        "summary": "Add organization JIT roles",
+        "description": "Add new organization roles that will be assigned to users during just-in-time provisioning.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "properties": {
-                  "organizationRoleId": {
-                    "description": "The organization role ID to add."
+                  "organizationRoleIds": {
+                    "description": "The organization role IDs to add."
                   }
                 }
               }
@@ -33,10 +33,10 @@
         },
         "responses": {
           "201": {
-            "description": "The organization role was added successfully."
+            "description": "The organization roles were added successfully."
           },
           "422": {
-            "description": "The organization role is already in use."
+            "description": "The organization roles could not be added. Some of the organization roles may not exist."
           }
         }
       },
