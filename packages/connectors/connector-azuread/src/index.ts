@@ -37,12 +37,13 @@ const getAuthorizationUri =
     const config = await getConfig(defaultMetadata.id);
 
     validateConfig(config, azureADConfigGuard);
-    const { clientId, clientSecret, cloudInstance, tenantId } = config;
+    const { clientId, clientSecret, cloudInstance, tenantId, prompts } = config;
 
     const defaultAuthCodeUrlParameters: AuthorizationUrlRequest = {
       scopes,
       state,
       redirectUri,
+      ...conditional(prompts && prompts.length > 0 && { prompt: prompts.join(' ') }),
     };
 
     const clientApplication = new ConfidentialClientApplication({

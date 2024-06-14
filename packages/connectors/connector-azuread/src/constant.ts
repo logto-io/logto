@@ -1,5 +1,5 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
-import { ConnectorPlatform, ConnectorConfigFormItemType } from '@logto/connector-kit';
+import { ConnectorPlatform, ConnectorConfigFormItemType, OidcPrompt } from '@logto/connector-kit';
 
 export const graphAPIEndpoint = 'https://graph.microsoft.com/v1.0/me';
 export const scopes = ['User.Read'];
@@ -52,6 +52,15 @@ export const defaultMetadata: ConnectorMetadata = {
       required: true,
       label: 'Tenant ID',
       placeholder: '<tenant-id>',
+    },
+    {
+      key: 'prompts',
+      type: ConnectorConfigFormItemType.MultiSelect,
+      required: false,
+      label: 'Prompts',
+      selectItems: Object.values(OidcPrompt).map((prompt) => ({
+        value: prompt,
+      })),
     },
   ],
 };
