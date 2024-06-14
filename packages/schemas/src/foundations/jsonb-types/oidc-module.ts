@@ -1,6 +1,8 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import { z } from 'zod';
 
+import { type ToZodObject } from '../../utils/zod.js';
+
 export const oidcModelInstancePayloadGuard = z
   .object({
     userCode: z.string().optional(),
@@ -15,6 +17,34 @@ export const oidcModelInstancePayloadGuard = z
 
 export type OidcModelInstancePayload = z.infer<typeof oidcModelInstancePayloadGuard>;
 
+export type OidcClientMetadata = {
+  /**
+   * The redirect URIs that the client is allowed to use.
+   *
+   * @see {@link https://openid.net/specs/openid-connect-registration-1_0.html#ClientMetadata | OpenID Connect Dynamic Client Registration 1.0}
+   */
+  redirectUris: string[];
+  /**
+   * The post-logout redirect URIs that the client is allowed to use.
+   *
+   * @see {@link https://openid.net/specs/openid-connect-rpinitiated-1_0.html#ClientMetadata | OpenID Connect RP-Initiated Logout 1.0}
+   */
+  postLogoutRedirectUris: string[];
+  /**
+   * The URI for backchannel logout.
+   *
+   * @see {@link https://openid.net/specs/openid-connect-backchannel-1_0-final.html#BCRegistration | OpenID Connect Back-Channel Logout 1.0}
+   */
+  backchannelLogoutUri?: string;
+  /**
+   * Whether the RP requires that a `sid` (session ID) Claim be included in the Logout Token.
+   *
+   * @see {@link https://openid.net/specs/openid-connect-backchannel-1_0-final.html#BCRegistration | OpenID Connect Back-Channel Logout 1.0}
+   */
+  backchannelLogoutSessionRequired?: boolean;
+  logoUri?: string;
+};
+
 export const oidcClientMetadataGuard = z.object({
   redirectUris: z
     .string()
@@ -22,10 +52,10 @@ export const oidcClientMetadataGuard = z.object({
     .or(z.string().refine((url) => validateRedirectUrl(url, 'mobile')))
     .array(),
   postLogoutRedirectUris: z.string().url().array(),
+  backchannelLogoutUri: z.string().url().optional(),
+  backchannelLogoutSessionRequired: z.boolean().optional(),
   logoUri: z.string().optional(),
-});
-
-export type OidcClientMetadata = z.infer<typeof oidcClientMetadataGuard>;
+}) satisfies ToZodObject<OidcClientMetadata>;
 
 export enum CustomClientMetadataKey {
   CorsAllowedOrigins = 'corsAllowedOrigins',

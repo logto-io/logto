@@ -75,6 +75,8 @@ export const applicationFormDataParser = {
             postLogoutRedirectUris: mapToUriFormatArrays(
               oidcClientMetadata?.postLogoutRedirectUris
             ),
+            // Empty string is not a valid URL
+            backchannelLogoutUri: cond(oidcClientMetadata?.backchannelLogoutUri),
           },
           customClientMetadata: {
             ...customClientMetadata,

@@ -26,6 +26,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
+import BackchannelLogout from './BackchannelLogout';
 import Branding from './Branding';
 import EndpointsAndCredentials from './EndpointsAndCredentials';
 import GuideDrawer from './GuideDrawer';
@@ -204,6 +205,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             {![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(data.type) && (
               <RefreshTokenSettings data={data} />
             )}
+            <BackchannelLogout />
           </DetailsForm>
         </FormProvider>
         {tab === ApplicationDetailsTabs.Settings && (

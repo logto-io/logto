@@ -54,6 +54,7 @@
     "timestamptz",
     "topbar",
     "upsell",
-    "withtyped"
+    "withtyped",
+    "backchannel"
   ]
 }
