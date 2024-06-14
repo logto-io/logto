@@ -25,7 +25,7 @@ import {
   buildTag,
   findSupplementFiles,
   normalizePath,
-  removeCloudOnlyOperations,
+  removeUnnecessaryOperations,
   validateSupplement,
   validateSwaggerDocument,
 } from './utils/general.js';
@@ -196,7 +196,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     const supplementPaths = await findSupplementFiles(routesDirectory);
     const supplementDocuments = await Promise.all(
       supplementPaths.map(async (path) =>
-        removeCloudOnlyOperations(
+        removeUnnecessaryOperations(
           // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
           JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
         )
