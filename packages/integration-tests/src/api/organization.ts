@@ -5,7 +5,7 @@ import {
   type UserWithOrganizationRoles,
   type OrganizationWithFeatured,
   type OrganizationScope,
-  type OrganizationEmailDomain,
+  type OrganizationJitEmailDomain,
   type CreateOrganization,
 } from '@logto/schemas';
 
@@ -82,7 +82,7 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     id: string,
     page?: number,
     pageSize?: number
-  ): Promise<OrganizationEmailDomain[]> {
+  ): Promise<OrganizationJitEmailDomain[]> {
     const searchParams = new URLSearchParams();
 
     if (page) {
@@ -94,19 +94,19 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     }
 
     return authedAdminApi
-      .get(`${this.path}/${id}/email-domains`, { searchParams })
-      .json<OrganizationEmailDomain[]>();
+      .get(`${this.path}/${id}/jit/email-domains`, { searchParams })
+      .json<OrganizationJitEmailDomain[]>();
   }
 
   async addEmailDomain(id: string, emailDomain: string): Promise<void> {
-    await authedAdminApi.post(`${this.path}/${id}/email-domains`, { json: { emailDomain } });
+    await authedAdminApi.post(`${this.path}/${id}/jit/email-domains`, { json: { emailDomain } });
   }
 
   async deleteEmailDomain(id: string, emailDomain: string): Promise<void> {
-    await authedAdminApi.delete(`${this.path}/${id}/email-domains/${emailDomain}`);
+    await authedAdminApi.delete(`${this.path}/${id}/jit/email-domains/${emailDomain}`);
   }
 
   async replaceEmailDomains(id: string, emailDomains: string[]): Promise<void> {
-    await authedAdminApi.put(`${this.path}/${id}/email-domains`, { json: { emailDomains } });
+    await authedAdminApi.put(`${this.path}/${id}/jit/email-domains`, { json: { emailDomains } });
   }
 }

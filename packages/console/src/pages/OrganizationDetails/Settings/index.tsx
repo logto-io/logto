@@ -1,5 +1,6 @@
 import { type SignInExperience, type Organization } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -9,11 +10,13 @@ import useSWR from 'swr';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
+import OrganizationRolesSelect from '@/components/OrganizationRolesSelect';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
+import { type Option } from '@/ds-components/Select/MultiSelect';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import useApi, { type RequestError } from '@/hooks/use-api';
@@ -27,6 +30,7 @@ import * as styles from './index.module.scss';
 type FormData = Partial<Omit<Organization, 'customData'> & { customData: string }> & {
   isJitEnabled: boolean;
   jitEmailDomains: string[];
+  jitRoles: Array<Option<string>>;
 };
 
 const isJsonObject = (value: string) => {
@@ -34,10 +38,14 @@ const isJsonObject = (value: string) => {
   return Boolean(parsed && typeof parsed === 'object');
 };
 
-const normalizeData = (data: Organization, emailDomains: string[]): FormData => ({
+const normalizeData = (
+  data: Organization,
+  jit: { emailDomains: string[]; roles: Array<Option<string>> }
+): FormData => ({
   ...data,
-  isJitEnabled: emailDomains.length > 0,
-  jitEmailDomains: emailDomains,
+  isJitEnabled: jit.emailDomains.length > 0 || jit.roles.length > 0,
+  jitEmailDomains: jit.emailDomains,
+  jitRoles: jit.roles,
   customData: JSON.stringify(data.customData, undefined, 2),
 });
 
@@ -53,8 +61,7 @@ const assembleData = ({
 });
 
 function Settings() {
-  const { isDeleting, data, emailDomains, onUpdated } =
-    useOutletContext<OrganizationDetailsOutletContext>();
+  const { isDeleting, data, jit, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();
   const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
@@ -67,13 +74,14 @@ function Settings() {
     clearErrors,
     watch,
   } = useForm<FormData>({
-    defaultValues: normalizeData(
-      data,
-      emailDomains.map(({ emailDomain }) => emailDomain)
-    ),
+    defaultValues: normalizeData(data, {
+      emailDomains: jit.emailDomains.map(({ emailDomain }) => emailDomain),
+      roles: jit.roles.map(({ id, name }) => ({ value: id, title: name })),
+    }),
   });
   const [isJitEnabled, isMfaRequired] = watch(['isJitEnabled', 'isMfaRequired']);
   const api = useApi();
+  const [keyword, setKeyword] = useState('');
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -82,17 +90,23 @@ function Settings() {
       }
 
       const emailDomains = data.isJitEnabled ? data.jitEmailDomains : [];
+      const roles = data.isJitEnabled ? data.jitRoles : [];
       const updatedData = await api
         .patch(`api/organizations/${data.id}`, {
           json: assembleData(data),
         })
         .json<Organization>();
 
-      await api.put(`api/organizations/${data.id}/email-domains`, {
-        json: { emailDomains },
-      });
+      await Promise.all([
+        api.put(`api/organizations/${data.id}/jit/email-domains`, {
+          json: { emailDomains },
+        }),
+        api.put(`api/organizations/${data.id}/jit/roles`, {
+          json: { organizationRoleIds: roles.map(({ value }) => value) },
+        }),
+      ]);
 
-      reset(normalizeData(updatedData, emailDomains));
+      reset(normalizeData(updatedData, { emailDomains, roles }));
       toast.success(t('general.saved'));
       onUpdated(updatedData);
     })
@@ -139,57 +153,73 @@ function Settings() {
           />
         </FormField>
       </FormCard>
-      <FormCard
-        title="organization_details.membership_policies"
-        description="organization_details.membership_policies_description"
-      >
-        <FormField title="organization_details.jit.is_enabled_title">
-          <div className={styles.jitContent}>
-            <Switch
-              label={t('organization_details.jit.description')}
-              {...register('isJitEnabled')}
-            />
-          </div>
-        </FormField>
-        {isJitEnabled && (
-          <FormField title="organization_details.jit.email_domain_provisioning">
-            <p className={styles.membershipDescription}>
-              {t('organization_details.jit.membership_description')}
-            </p>
-            <Controller
-              name="jitEmailDomains"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <MultiOptionInput
-                  className={styles.emailDomains}
-                  values={value}
-                  renderValue={(value) => value}
-                  validateInput={(input) => {
-                    if (!domainRegExp.test(input)) {
-                      return t('organization_details.jit.invalid_domain');
-                    }
-
-                    if (value.includes(input)) {
-                      return t('organization_details.jit.domain_already_added');
-                    }
-
-                    return { value: input };
-                  }}
-                  placeholder={t('organization_details.jit.email_domains_placeholder')}
-                  error={errors.jitEmailDomains?.message}
-                  onChange={onChange}
-                  onError={(error) => {
-                    setError('jitEmailDomains', { type: 'custom', message: error });
-                  }}
-                  onClearError={() => {
-                    clearErrors('jitEmailDomains');
-                  }}
-                />
-              )}
-            />
+      {isDevFeaturesEnabled && (
+        <FormCard
+          title="organization_details.membership_policies"
+          description="organization_details.membership_policies_description"
+        >
+          <FormField title="organization_details.jit.title">
+            <div className={styles.jitContent}>
+              <Switch
+                label={t('organization_details.jit.description')}
+                {...register('isJitEnabled')}
+              />
+            </div>
           </FormField>
-        )}
-        {isDevFeaturesEnabled && (
+          {isJitEnabled && (
+            <FormField title="organization_details.jit.email_domains">
+              <Controller
+                name="jitEmailDomains"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <MultiOptionInput
+                    values={value}
+                    renderValue={(value) => value}
+                    validateInput={(input) => {
+                      if (!domainRegExp.test(input)) {
+                        return t('organization_details.jit.invalid_domain');
+                      }
+
+                      if (value.includes(input)) {
+                        return t('organization_details.jit.domain_already_added');
+                      }
+
+                      return { value: input };
+                    }}
+                    placeholder={t('organization_details.jit.email_domains_placeholder')}
+                    error={errors.jitEmailDomains?.message}
+                    onChange={onChange}
+                    onError={(error) => {
+                      setError('jitEmailDomains', { type: 'custom', message: error });
+                    }}
+                    onClearError={() => {
+                      clearErrors('jitEmailDomains');
+                    }}
+                  />
+                )}
+              />
+            </FormField>
+          )}
+          {isJitEnabled && (
+            <FormField
+              title="organization_details.jit.organization_roles"
+              description="organization_details.jit.organization_roles_description"
+              descriptionPosition="top"
+            >
+              <Controller
+                name="jitRoles"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <OrganizationRolesSelect
+                    keyword={keyword}
+                    setKeyword={setKeyword}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormField>
+          )}
           <FormField title="organization_details.mfa.title" tip={t('organization_details.mfa.tip')}>
             <Switch
               label={t('organization_details.mfa.description')}
@@ -201,8 +231,8 @@ function Settings() {
               </InlineNotification>
             )}
           </FormField>
-        )}
-      </FormCard>
+        </FormCard>
+      )}
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </DetailsForm>
   );

@@ -1,4 +1,8 @@
-import { type OrganizationEmailDomain, type Organization } from '@logto/schemas';
+import {
+  type OrganizationJitEmailDomain,
+  type Organization,
+  type OrganizationRole,
+} from '@logto/schemas';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useParams } from 'react-router-dom';
@@ -31,8 +35,11 @@ function OrganizationDetails() {
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const organization = useSWR<Organization, RequestError>(id && `api/organizations/${id}`);
-  const emailDomains = useSWR<OrganizationEmailDomain[], RequestError>(
-    id && `api/organizations/${id}/email-domains`
+  const jitEmailDomains = useSWR<OrganizationJitEmailDomain[], RequestError>(
+    id && `api/organizations/${id}/jit/email-domains`
+  );
+  const jitRoles = useSWR<OrganizationRole[], RequestError>(
+    id && `api/organizations/${id}/jit/roles`
   );
   const [isDeleting, setIsDeleting] = useState(false);
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
@@ -54,15 +61,17 @@ function OrganizationDetails() {
   }, [api, id, isDeleting, navigate]);
 
   const isLoading =
-    (!organization.data && !organization.error) || (!emailDomains.data && !emailDomains.error);
-  const error = organization.error ?? emailDomains.error;
+    (!organization.data && !organization.error) ||
+    (!jitEmailDomains.data && !jitEmailDomains.error) ||
+    (!jitRoles.data && !jitRoles.error);
+  const error = organization.error ?? jitEmailDomains.error ?? jitRoles.error;
 
   return (
     <DetailsPage backLink={pathname} backLinkTitle="organizations.title" className={styles.page}>
       <PageMeta titleKey="organization_details.page_title" />
       {isLoading && <Skeleton />}
       {error && <AppError errorCode={error.body?.code} errorMessage={error.body?.message} />}
-      {id && organization.data && emailDomains.data && (
+      {id && organization.data && jitEmailDomains.data && jitRoles.data && (
         <>
           <DetailsPageHeader
             icon={<ThemedIcon for={OrganizationIcon} size={60} />}
@@ -118,7 +127,10 @@ function OrganizationDetails() {
             context={
               {
                 data: organization.data,
-                emailDomains: emailDomains.data,
+                jit: {
+                  emailDomains: jitEmailDomains.data,
+                  roles: jitRoles.data,
+                },
                 isDeleting,
                 onUpdated: async (data) => organization.mutate(data),
               } satisfies OrganizationDetailsOutletContext

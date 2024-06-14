@@ -1,7 +1,7 @@
 import {
-  type OrganizationEmailDomain,
-  OrganizationEmailDomains,
-  type CreateOrganizationEmailDomain,
+  type OrganizationJitEmailDomain,
+  OrganizationJitEmailDomains,
+  type CreateOrganizationJitEmailDomain,
 } from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
@@ -10,15 +10,15 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { type GetEntitiesOptions } from '#src/utils/RelationQueries.js';
 import { type OmitAutoSetFields, conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
-const { table, fields } = convertToIdentifiers(OrganizationEmailDomains);
+const { table, fields } = convertToIdentifiers(OrganizationJitEmailDomains);
 
 export class EmailDomainQueries {
   readonly #insert: (
-    data: OmitAutoSetFields<CreateOrganizationEmailDomain>
-  ) => Promise<Readonly<OrganizationEmailDomain>>;
+    data: OmitAutoSetFields<CreateOrganizationJitEmailDomain>
+  ) => Promise<Readonly<OrganizationJitEmailDomain>>;
 
   constructor(protected pool: CommonQueryMethods) {
-    this.#insert = buildInsertIntoWithPool(this.pool)(OrganizationEmailDomains, {
+    this.#insert = buildInsertIntoWithPool(this.pool)(OrganizationJitEmailDomains, {
       returning: true,
     });
   }
@@ -26,7 +26,7 @@ export class EmailDomainQueries {
   async getEntities(
     organizationId: string,
     options: GetEntitiesOptions
-  ): Promise<[number, readonly OrganizationEmailDomain[]]> {
+  ): Promise<[number, readonly OrganizationJitEmailDomain[]]> {
     const { limit, offset } = options;
     const mainSql = sql`
       from ${table}
@@ -38,7 +38,7 @@ export class EmailDomainQueries {
         select count(*)
         ${mainSql}
       `),
-      this.pool.any<OrganizationEmailDomain>(sql`
+      this.pool.any<OrganizationJitEmailDomain>(sql`
         select ${sql.join(Object.values(fields), sql`, `)}
         ${mainSql}
         ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
@@ -50,7 +50,7 @@ export class EmailDomainQueries {
   }
 
   async getOrganizationIdsByDomain(emailDomain: string): Promise<readonly string[]> {
-    const rows = await this.pool.any<Pick<OrganizationEmailDomain, 'organizationId'>>(sql`
+    const rows = await this.pool.any<Pick<OrganizationJitEmailDomain, 'organizationId'>>(sql`
       select ${fields.organizationId}
       from ${table}
       where ${fields.emailDomain} = ${emailDomain}
@@ -58,7 +58,7 @@ export class EmailDomainQueries {
     return rows.map((row) => row.organizationId);
   }
 
-  async insert(organizationId: string, emailDomain: string): Promise<OrganizationEmailDomain> {
+  async insert(organizationId: string, emailDomain: string): Promise<OrganizationJitEmailDomain> {
     return this.#insert({
       organizationId,
       emailDomain,
@@ -73,7 +73,7 @@ export class EmailDomainQueries {
     `);
 
     if (rowCount < 1) {
-      throw new DeletionError(OrganizationEmailDomains.table);
+      throw new DeletionError(OrganizationJitEmailDomains.table);
     }
   }
 

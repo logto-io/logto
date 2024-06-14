@@ -1,4 +1,4 @@
-import { OrganizationEmailDomains } from '@logto/schemas';
+import { OrganizationJitEmailDomains } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -12,21 +12,21 @@ export default function emailDomainRoutes(
   organizations: OrganizationQueries
 ) {
   const params = Object.freeze({ id: z.string().min(1) });
-  const pathname = '/:id/email-domains';
+  const pathname = '/:id/jit/email-domains';
 
   router.get(
     pathname,
     koaPagination(),
     koaGuard({
       params: z.object(params),
-      response: OrganizationEmailDomains.guard.array(),
+      response: OrganizationJitEmailDomains.guard.array(),
       status: [200],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       const { limit, offset } = ctx.pagination;
 
-      const [count, rows] = await organizations.emailDomains.getEntities(id, { limit, offset });
+      const [count, rows] = await organizations.jit.emailDomains.getEntities(id, { limit, offset });
       ctx.pagination.totalCount = count;
       ctx.body = rows;
       return next();
@@ -38,14 +38,14 @@ export default function emailDomainRoutes(
     koaGuard({
       params: z.object(params),
       body: z.object({ emailDomain: z.string().min(1) }),
-      response: OrganizationEmailDomains.guard,
+      response: OrganizationJitEmailDomains.guard,
       status: [201],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       const { emailDomain } = ctx.guard.body;
 
-      ctx.body = await organizations.emailDomains.insert(id, emailDomain);
+      ctx.body = await organizations.jit.emailDomains.insert(id, emailDomain);
       ctx.status = 201;
       return next();
     }
@@ -62,7 +62,7 @@ export default function emailDomainRoutes(
       const { id } = ctx.guard.params;
       const { emailDomains } = ctx.guard.body;
 
-      await organizations.emailDomains.replace(id, emailDomains);
+      await organizations.jit.emailDomains.replace(id, emailDomains);
       ctx.status = 204;
       return next();
     }
@@ -77,7 +77,7 @@ export default function emailDomainRoutes(
     async (ctx, next) => {
       const { id, emailDomain } = ctx.guard.params;
 
-      await organizations.emailDomains.delete(id, emailDomain);
+      await organizations.jit.emailDomains.delete(id, emailDomain);
       ctx.status = 204;
       return next();
     }

@@ -21,6 +21,7 @@ import {
   Scopes,
   Resources,
   Users,
+  OrganizationJitRoles,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -290,8 +291,16 @@ export default class OrganizationQueries extends SchemaQueries<
     ),
   };
 
-  /** Queries for email domains that will be automatically provisioned. */
-  emailDomains = new EmailDomainQueries(this.pool);
+  jit = {
+    /** Queries for email domains that are used for just-in-time provisioning. */
+    emailDomains: new EmailDomainQueries(this.pool),
+    roles: new TwoRelationsQueries(
+      this.pool,
+      OrganizationJitRoles.table,
+      Organizations,
+      OrganizationRoles
+    ),
+  };
 
   constructor(pool: CommonQueryMethods) {
     super(pool, Organizations);

@@ -1,7 +1,7 @@
 /* init_order = 2 */
 
-/** The email domains that will be automatically provisioned for an organization. */
-create table organization_email_domains (
+/** The email domains that will automatically assign users into an organization when they sign up or are added through the Management API. */
+create table organization_jit_email_domains (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   /** The ID of the organization. */

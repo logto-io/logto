@@ -16,7 +16,7 @@ import { parseSearchOptions } from '#src/utils/search.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
-import emailDomainRoutes from './index.email-domains.js';
+import emailDomainRoutes from './index.jit.email-domains.js';
 import userRoleRelationRoutes from './index.user-role-relations.js';
 import organizationInvitationRoutes from './invitations.js';
 import organizationRoleRoutes from './roles.js';
@@ -138,7 +138,10 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
   );
 
   userRoleRelationRoutes(router, organizations);
+
+  // MARK: Just-in-time provisioning
   emailDomainRoutes(router, organizations);
+  router.addRelationRoutes(organizations.jit.roles, 'jit/roles');
 
   // MARK: Mount sub-routes
   organizationRoleRoutes(...args);
