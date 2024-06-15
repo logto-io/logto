@@ -298,12 +298,12 @@ export default class OrganizationQueries extends SchemaQueries<
   }
 
   /**
-   * Get the multi-factor authentication (MFA) data for the given organization and user.
+   * Get the multi-factor authentication (MFA) status for the given organization and user.
    *
    * @returns Whether MFA is required for the organization and whether the user has configured MFA.
    * @see {@link MfaData}
    */
-  async getMfaData(organizationId: string, userId: string) {
+  async getMfaStatus(organizationId: string, userId: string) {
     const { table, fields } = convertToIdentifiers(Organizations);
     const users = convertToIdentifiers(Users);
 

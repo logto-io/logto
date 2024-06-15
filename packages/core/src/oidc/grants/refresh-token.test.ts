@@ -298,7 +298,7 @@ describe('organization token grant', () => {
     Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
     Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves(mockApplication);
     Sinon.stub(tenant.queries.applications.userConsentOrganizations, 'exists').resolves(true);
-    Sinon.stub(tenant.queries.organizations, 'getMfaData').resolves({
+    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
       isMfaRequired: true,
       hasMfaConfigured: false,
     });
@@ -322,7 +322,7 @@ describe('organization token grant', () => {
       { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
       { tenantId: 'default', id: 'baz', name: 'baz', description: 'baz' },
     ]);
-    Sinon.stub(tenant.queries.organizations, 'getMfaData').resolves({
+    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
       isMfaRequired: false,
       hasMfaConfigured: false,
     });

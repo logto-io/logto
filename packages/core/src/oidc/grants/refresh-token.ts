@@ -248,7 +248,7 @@ export const buildHandler: (
     }
 
     // Check if the organization requires MFA and the user has MFA enabled
-    const { isMfaRequired, hasMfaConfigured } = await queries.organizations.getMfaData(
+    const { isMfaRequired, hasMfaConfigured } = await queries.organizations.getMfaStatus(
       organizationId,
       account.accountId
     );
