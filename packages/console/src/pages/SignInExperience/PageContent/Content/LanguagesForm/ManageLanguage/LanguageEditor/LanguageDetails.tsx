@@ -47,7 +47,7 @@ function LanguageDetails() {
   const [isDeletionAlertOpen, setIsDeletionAlertOpen] = useState(false);
   const isBuiltIn = isBuiltInLanguageTag(selectedLanguage);
   const isDefaultLanguage = signInExperience?.languageInfo.fallbackLanguage === selectedLanguage;
-  const fetchApi = useApi({ hideErrorToast: true });
+  const fetchApi = useApi({ hideErrorToast: ['entity.not_found'] });
   const fetcher = useSwrFetcher<CustomPhraseResponse>(fetchApi);
 
   const translationData = useMemo(
