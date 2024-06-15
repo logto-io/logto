@@ -6,6 +6,7 @@
  */
 
 import type { Nullable } from '@silverhand/essentials';
+import classNames from 'classnames';
 import { useState, isValidElement, type ReactElement, cloneElement, useRef, Children } from 'react';
 
 import type { Props as TabItemProps } from '../TabItem';
@@ -72,7 +73,11 @@ function Tabs({ className, children }: Props): JSX.Element {
 
   return (
     <div className={styles.container}>
-      <ul role="tablist" aria-orientation="horizontal" className={className}>
+      <ul
+        role="tablist"
+        aria-orientation="horizontal"
+        className={classNames(styles.tabItemList, className)}
+      >
         {values.map(({ value, label }, index) => (
           <li
             key={value}
