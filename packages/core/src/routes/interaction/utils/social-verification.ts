@@ -63,9 +63,13 @@ export const verifySocialIdentity = async (
   const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
-  // Verify Google One Tap CSRF token, if it exists
-  const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
-  if (csrfToken) {
+  // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap
+  // verification)
+  if (
+    connectorId === GoogleConnector.factoryId &&
+    connectorData[GoogleConnector.oneTapParams.credential]
+  ) {
+    const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
     const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
     assertThat(value === csrfToken, 'session.csrf_token_mismatch');
   }

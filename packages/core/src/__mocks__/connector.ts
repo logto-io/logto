@@ -212,10 +212,18 @@ export const mockGoogleConnector: LogtoConnector = {
   dbEntry: {
     ...mockConnector,
     id: 'google',
+    config: {
+      clientId: 'fake_client_id',
+      clientSecret: 'fake_client_secret',
+      oneTap: {
+        isEnabled: true,
+        autoSelect: true,
+      },
+    },
   },
   metadata: {
     ...mockMetadata,
-    id: 'google',
+    id: 'google-universal',
     target: 'google',
     platform: ConnectorPlatform.Web,
   },
@@ -237,16 +245,6 @@ export const mockDemoSocialConnector: LogtoConnector = {
   type: ConnectorType.Social,
   ...mockLogtoConnector,
 };
-
-export const mockLogtoConnectors = [
-  mockAliyunDmConnector,
-  mockAliyunSmsConnector,
-  mockFacebookConnector,
-  mockGithubConnector,
-  mockGoogleConnector,
-  mockWechatConnector,
-  mockWechatNativeConnector,
-];
 
 export const socialTarget01 = 'socialTarget-id01';
 export const socialTarget02 = 'socialTarget-id02';

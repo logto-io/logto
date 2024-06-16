@@ -1,4 +1,4 @@
-import { ConnectorType } from '@logto/connector-kit';
+import { ConnectorType, GoogleConnector } from '@logto/connector-kit';
 import { createMockUtils } from '@logto/shared/esm';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -27,8 +27,8 @@ mockEsm('#src/libraries/connector.js', () => ({
 
 const { verifySocialIdentity } = await import('./social-verification.js');
 
-describe('social-verification', () => {
-  it('verifySocialIdentity', async () => {
+describe('verifySocialIdentity', () => {
+  it('should verify social identity', async () => {
     // @ts-expect-error test mock context
     const ctx: WithLogContext = {
       ...createMockContext(),
@@ -40,5 +40,38 @@ describe('social-verification', () => {
 
     expect(getUserInfo).toBeCalledWith(connectorId, connectorData, expect.anything());
     expect(userInfo).toEqual({ id: 'foo' });
+  });
+
+  it('should throw error if csrf token is not matched for Google One Tap verification', async () => {
+    const ctx: WithLogContext = {
+      ...createMockContext(),
+      ...createMockLogContext(),
+      // @ts-expect-error test mock context
+      cookies: { get: jest.fn().mockReturnValue('token') },
+    };
+    const connectorId = GoogleConnector.factoryId;
+    const connectorData = { credential: 'credential' };
+
+    await expect(verifySocialIdentity({ connectorId, connectorData }, ctx, tenant)).rejects.toThrow(
+      'CSRF token mismatch.'
+    );
+  });
+
+  it('should verify Google One Tap verification', async () => {
+    const ctx: WithLogContext = {
+      ...createMockContext(),
+      ...createMockLogContext(),
+      // @ts-expect-error test mock context
+      cookies: { get: jest.fn().mockReturnValue('token') },
+    };
+    const connectorId = GoogleConnector.factoryId;
+    const connectorData = {
+      [GoogleConnector.oneTapParams.credential]: 'credential',
+      [GoogleConnector.oneTapParams.csrfToken]: 'token',
+    };
+
+    await expect(
+      verifySocialIdentity({ connectorId, connectorData }, ctx, tenant)
+    ).resolves.toEqual({ id: 'foo' });
   });
 });
