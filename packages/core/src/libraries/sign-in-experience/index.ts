@@ -1,5 +1,11 @@
+import { GoogleConnector } from '@logto/connector-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
-import type { ConnectorMetadata, LanguageInfo, SsoConnectorMetadata } from '@logto/schemas';
+import type {
+  ConnectorMetadata,
+  FullSignInExperience,
+  LanguageInfo,
+  SsoConnectorMetadata,
+} from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 
@@ -14,8 +20,6 @@ import { getTenantSubscriptionPlan } from '#src/utils/subscription/index.js';
 import { isKeyOfI18nPhrases } from '#src/utils/translation.js';
 
 import { type CloudConnectionLibrary } from '../cloud-connection.js';
-
-import { type FullSignInExperience } from './types.js';
 
 export * from './sign-up.js';
 export * from './sign-in.js';
@@ -123,7 +127,7 @@ export const createSignInExperienceLibrary = (
     };
 
     const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
-      Array<ConnectorMetadata & { id: string }>
+      ConnectorMetadata[]
     >((previous, connectorTarget) => {
       const connectors = logtoConnectors.filter(
         ({ metadata: { target } }) => target === connectorTarget
@@ -135,12 +139,40 @@ export const createSignInExperienceLibrary = (
       ];
     }, []);
 
+    /**
+     * Get the Google One Tap configuration if the Google connector is enabled and configured.
+     */
+    const getGoogleOneTap = (): FullSignInExperience['googleOneTap'] => {
+      const googleConnector =
+        signInExperience.socialSignInConnectorTargets.includes(GoogleConnector.target) &&
+        logtoConnectors.find(({ metadata }) => metadata.id === GoogleConnector.factoryId);
+
+      if (!googleConnector) {
+        return;
+      }
+
+      const googleConnectorConfig = GoogleConnector.configGuard.safeParse(
+        googleConnector.dbEntry.config
+      );
+
+      if (!googleConnectorConfig.success) {
+        return;
+      }
+
+      return {
+        ...googleConnectorConfig.data.oneTap,
+        clientId: googleConnectorConfig.data.clientId,
+        connectorId: googleConnector.dbEntry.id,
+      };
+    };
+
     return {
       ...signInExperience,
       socialConnectors,
       ssoConnectors,
       forgotPassword,
       isDevelopmentTenant,
+      googleOneTap: getGoogleOneTap(),
     };
   };
 

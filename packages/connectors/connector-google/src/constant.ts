@@ -1,5 +1,9 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
-import { ConnectorConfigFormItemType, ConnectorPlatform } from '@logto/connector-kit';
+import {
+  ConnectorConfigFormItemType,
+  ConnectorPlatform,
+  GoogleConnector,
+} from '@logto/connector-kit';
 
 export const authorizationEndpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
 export const accessTokenEndpoint = 'https://oauth2.googleapis.com/token';
@@ -7,8 +11,8 @@ export const userInfoEndpoint = 'https://openidconnect.googleapis.com/v1/userinf
 export const scope = 'openid profile email';
 
 export const defaultMetadata: ConnectorMetadata = {
-  id: 'google-universal',
-  target: 'google',
+  id: GoogleConnector.factoryId,
+  target: GoogleConnector.target,
   platform: ConnectorPlatform.Universal,
   name: {
     en: 'Google',
@@ -53,3 +57,6 @@ export const defaultMetadata: ConnectorMetadata = {
 };
 
 export const defaultTimeout = 5000;
+
+// https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
+export const jwksUri = 'https://www.googleapis.com/oauth2/v3/certs';

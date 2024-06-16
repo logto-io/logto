@@ -1,4 +1,4 @@
-import { ServiceConnector } from '@logto/connector-kit';
+import { ServiceConnector, GoogleConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import BasicForm from '@/components/ConnectorForm/BasicForm';
 import ConfigForm from '@/components/ConnectorForm/ConfigForm';
+import GoogleOneTapCard from '@/components/ConnectorForm/GoogleOneTapCard';
 import ConnectorTester from '@/components/ConnectorTester';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
@@ -82,8 +83,10 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
       const { formItems, isStandard, id } = connectorData;
-      const config = configParser(data, formItems);
-      const { syncProfile, name, logo, logoDark, target } = data;
+      const { syncProfile, name, logo, logoDark, target, rawConfig } = data;
+      // Apply the raw config first to avoid losing data updated from other forms that are not
+      // included in the form items.
+      const config = { ...rawConfig, ...configParser(data, formItems) };
 
       const payload = isSocialConnector
         ? {
@@ -165,6 +168,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
             />
           </FormCard>
         )}
+        {connectorId === GoogleConnector.factoryId && <GoogleOneTapCard />}
         {!isSocialConnector && (
           <FormCard title="connector_details.test_connection">
             <ConnectorTester

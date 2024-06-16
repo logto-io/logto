@@ -7,6 +7,7 @@ import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import Divider from '@/components/Divider';
+import GoogleOneTap from '@/components/GoogleOneTap';
 import TextLink from '@/components/TextLink';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
@@ -75,6 +76,7 @@ const Register = () => {
 
   return (
     <LandingPageLayout title="description.create_your_account">
+      <GoogleOneTap context="signup" />
       <SingleSignOnFormModeContextProvider>
         {signUpMethods.length > 0 && (
           <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
@@ -88,7 +90,6 @@ const Register = () => {
         )}
         <RegisterFooter />
       </SingleSignOnFormModeContextProvider>
-
       {/* Hide footer elements when showing Single Sign On form */}
     </LandingPageLayout>
   );

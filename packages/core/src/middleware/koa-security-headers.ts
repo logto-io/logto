@@ -38,6 +38,8 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const coreOrigins = urlSet.origins;
   const developmentOrigins = conditionalArray(!isProduction && 'ws:');
   const logtoOrigin = 'https://*.logto.io';
+  /** Google Sign-In (GSI) origin for Google One Tap. */
+  const gsiOrigin = 'https://accounts.google.com/gsi/';
 
   // We use react-monaco-editor for code editing in the admin console. It loads the monaco editor asynchronously from a CDN.
   // Allow the CDN src in the CSP.
@@ -90,13 +92,15 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         scriptSrc: [
           "'self'",
           "'unsafe-inline'",
+          `${gsiOrigin}client`,
           ...conditionalArray(!isProduction && "'unsafe-eval'"),
         ],
-        connectSrc: ["'self'", tenantEndpointOrigin, ...developmentOrigins],
+        connectSrc: ["'self'", gsiOrigin, tenantEndpointOrigin, ...developmentOrigins],
         // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
-        frameSrc: ["'self'", 'https:'],
+        frameSrc: ["'self'", 'https:', gsiOrigin],
         // Alow loaded by console preview iframe
         frameAncestors: ["'self'", ...adminOrigins],
+        defaultSrc: ["'self'", gsiOrigin],
       },
     },
   };
