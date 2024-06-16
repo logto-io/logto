@@ -1,12 +1,6 @@
 import { z } from 'zod';
 
-export const googleConfigGuard = z.object({
-  clientId: z.string(),
-  clientSecret: z.string(),
-  scope: z.string().optional(),
-});
-
-export type GoogleConfig = z.infer<typeof googleConfigGuard>;
+import { GoogleConnector } from '@logto/connector-kit';
 
 export const accessTokenResponseGuard = z.object({
   access_token: z.string(),
@@ -32,4 +26,12 @@ export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
 export const authResponseGuard = z.object({
   code: z.string(),
   redirectUri: z.string(),
+});
+
+/**
+ * Response payload from Google One Tap. Note the CSRF token is not included since it should be
+ * verified by the web server.
+ */
+export const googleOneTapDataGuard = z.object({
+  [GoogleConnector.oneTapParams.credential]: z.string(),
 });

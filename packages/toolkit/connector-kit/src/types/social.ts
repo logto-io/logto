@@ -2,7 +2,7 @@
 import { type Json } from '@withtyped/server';
 import { z } from 'zod';
 
-import { type BaseConnector, type ConnectorType } from './foundation.js';
+import { type ToZodObject, type BaseConnector, type ConnectorType } from './foundation.js';
 
 // This type definition is for SAML connector
 export type ValidateSamlAssertion = (
@@ -79,4 +79,45 @@ export type SocialConnector = BaseConnector<ConnectorType.Social> & {
   getAuthorizationUri: GetAuthorizationUri;
   getUserInfo: GetUserInfo;
   validateSamlAssertion?: ValidateSamlAssertion;
+};
+
+export type GoogleOneTapConfig = {
+  isEnabled?: boolean;
+  autoSelect?: boolean;
+  closeOnTapOutside?: boolean;
+  itpSupport?: boolean;
+};
+
+export const googleOneTapConfigGuard = z.object({
+  isEnabled: z.boolean().optional(),
+  autoSelect: z.boolean().optional(),
+  closeOnTapOutside: z.boolean().optional(),
+  itpSupport: z.boolean().optional(),
+}) satisfies ToZodObject<GoogleOneTapConfig>;
+
+/** An object that contains the configuration for the official Google connector. */
+export const GoogleConnector = Object.freeze({
+  /** The target of Google connectors. */
+  target: 'google',
+  /** The factory ID of the official Google connector. */
+  factoryId: 'google-universal',
+  oneTapParams: Object.freeze({
+    /** The parameter Google One Tap uses to prevent CSRF attacks. */
+    csrfToken: 'g_csrf_token',
+    /** The parameter Google One Tap uses to carry the ID token. */
+    credential: 'credential',
+  }),
+  configGuard: z.object({
+    clientId: z.string(),
+    clientSecret: z.string(),
+    scope: z.string().optional(),
+    oneTap: googleOneTapConfigGuard.optional(),
+  }) satisfies ToZodObject<GoogleConnectorConfig>,
+});
+
+export type GoogleConnectorConfig = {
+  clientId: string;
+  clientSecret: string;
+  scope?: string;
+  oneTap?: GoogleOneTapConfig;
 };
