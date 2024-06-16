@@ -9,10 +9,10 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const getUserInfoByAuthCode = jest.fn().mockResolvedValue({ id: 'foo' });
+const getUserInfo = jest.fn().mockResolvedValue({ id: 'foo' });
 
 const tenant = new MockTenant(undefined, undefined, undefined, {
-  socials: { getUserInfoByAuthCode },
+  socials: { getUserInfo },
 });
 
 mockEsm('#src/libraries/connector.js', () => ({
@@ -38,7 +38,7 @@ describe('social-verification', () => {
     const connectorData = { authCode: 'code' };
     const userInfo = await verifySocialIdentity({ connectorId, connectorData }, ctx, tenant);
 
-    expect(getUserInfoByAuthCode).toBeCalledWith(connectorId, connectorData, expect.anything());
+    expect(getUserInfo).toBeCalledWith(connectorId, connectorData, expect.anything());
     expect(userInfo).toEqual({ id: 'foo' });
   });
 });

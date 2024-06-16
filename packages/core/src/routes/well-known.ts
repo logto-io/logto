@@ -1,11 +1,10 @@
 import { isBuiltInLanguageTag } from '@logto/phrases-experience';
-import { adminTenantId } from '@logto/schemas';
+import { adminTenantId, guardFullSignInExperience } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import detectLanguage from '#src/i18n/detect-language.js';
-import { guardFullSignInExperience } from '#src/libraries/sign-in-experience/types.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';

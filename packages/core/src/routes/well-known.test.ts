@@ -89,7 +89,10 @@ describe('GET /.well-known/sign-in-exp', () => {
           ...mockWechatNativeConnector.metadata,
           id: mockWechatNativeConnector.dbEntry.id,
         },
-      ],
+      ].map(
+        // Omits fields to match the `ExperienceSocialConnector` type
+        ({ description, configTemplate, formItems, readme, customData, ...metadata }) => metadata
+      ),
       ssoConnectors: [],
     });
   });

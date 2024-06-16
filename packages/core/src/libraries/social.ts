@@ -55,7 +55,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     }
   };
 
-  const getUserInfoByAuthCode = async (
+  const getUserInfo = async (
     connectorId: string,
     data: unknown,
     getConnectorSession: GetSession
@@ -105,7 +105,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
 
   return {
     getConnector,
-    getUserInfoByAuthCode,
+    getUserInfo,
     getUserInfoFromInteractionResult,
     findSocialRelatedUser,
   };

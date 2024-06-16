@@ -167,6 +167,7 @@ describe('getFullSignInExperience()', () => {
         },
       ],
       isDevelopmentTenant: false,
+      googleOneTap: undefined,
     });
   });
 });
