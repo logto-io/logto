@@ -1,4 +1,4 @@
-import { ConnectorPlatform, type ConnectorMetadata } from '@logto/schemas';
+import { ConnectorPlatform, type ExperienceSocialConnector } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
@@ -14,22 +14,25 @@ const useSocial = () => {
   const handleError = useErrorHandler();
   const asyncInvokeSocialSignIn = useApi(getSocialAuthorizationUrl);
 
-  const nativeSignInHandler = useCallback((redirectTo: string, connector: ConnectorMetadata) => {
-    const { id: connectorId, platform } = connector;
+  const nativeSignInHandler = useCallback(
+    (redirectTo: string, connector: ExperienceSocialConnector) => {
+      const { id: connectorId, platform } = connector;
 
-    const redirectUri =
-      platform === ConnectorPlatform.Universal
-        ? buildSocialLandingUri(`/social/landing/${connectorId}`, redirectTo).toString()
-        : redirectTo;
+      const redirectUri =
+        platform === ConnectorPlatform.Universal
+          ? buildSocialLandingUri(`/social/landing/${connectorId}`, redirectTo).toString()
+          : redirectTo;
 
-    getLogtoNativeSdk()?.getPostMessage()({
-      callbackUri: `${window.location.origin}/callback/social/${connectorId}`,
-      redirectTo: redirectUri,
-    });
-  }, []);
+      getLogtoNativeSdk()?.getPostMessage()({
+        callbackUri: `${window.location.origin}/callback/social/${connectorId}`,
+        redirectTo: redirectUri,
+      });
+    },
+    []
+  );
 
   const invokeSocialSignInHandler = useCallback(
-    async (connector: ConnectorMetadata) => {
+    async (connector: ExperienceSocialConnector) => {
       const { id: connectorId } = connector;
 
       const state = generateState();

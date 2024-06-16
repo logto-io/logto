@@ -11,7 +11,7 @@ import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
 import { parseQueryParameters } from '@/utils';
-import { stateValidation } from '@/utils/social-connectors';
+import { validateState } from '@/utils/social-connectors';
 
 const useSingleSignOnRegister = () => {
   const handleError = useErrorHandler();
@@ -128,7 +128,7 @@ const useSingleSignOnListener = (connectorId: string) => {
     setSearchParameters({}, { replace: true });
 
     // Validate the state parameter
-    if (!state || !stateValidation(state, connectorId)) {
+    if (!validateState(state, connectorId)) {
       setToast(t('error.invalid_connector_auth'));
       navigate('/' + experience.routes.signIn);
       return;
