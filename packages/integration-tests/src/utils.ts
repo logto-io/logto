@@ -5,6 +5,8 @@ import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import { type Page } from 'puppeteer';
 
+import { isDevFeaturesEnabled } from './constants.js';
+
 export const generateName = () => crypto.randomUUID();
 export const generateUserId = () => crypto.randomUUID();
 export const generateUsername = () => `usr_${crypto.randomUUID().replaceAll('-', '_')}`;
@@ -127,3 +129,8 @@ export const dmodal = () => `div[aria-modal=true]`;
 export const generateTestName = () => `test_${generateStandardId(4)}`;
 
 export const randomString = () => crypto.randomBytes(8).toString('hex');
+
+export const devFeatureTest = Object.freeze({
+  it: isDevFeaturesEnabled ? it : it.skip,
+  describe: isDevFeaturesEnabled ? describe : describe.skip,
+});
