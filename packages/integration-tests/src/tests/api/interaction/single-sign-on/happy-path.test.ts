@@ -1,46 +1,36 @@
-import { InteractionEvent, SsoProviderName, type SsoConnectorMetadata } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 
+import { deleteUser } from '#src/api/admin-user.js';
 import { getSsoAuthorizationUrl, getSsoConnectorsByEmail } from '#src/api/interaction-sso.js';
 import { putInteraction } from '#src/api/interaction.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
+import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { logtoUrl } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
-import { randomString } from '#src/utils.js';
+import { registerNewUserWithSso, signInWithSso } from '#src/helpers/single-sign-on.js';
+import { generateEmail, generateUserId, randomString } from '#src/utils.js';
 
 describe('Single Sign On Happy Path', () => {
-  const connectorIdMap = new Map<string, SsoConnectorMetadata>();
-
-  const state = 'foo_state';
-  const redirectUri = 'http://foo.dev/callback';
+  const ssoConnectorApi = new SsoConnectorApi();
   const domain = `foo${randomString()}.com`;
 
   beforeAll(async () => {
-    const { id, connectorName } = await createSsoConnector({
-      providerName: SsoProviderName.OIDC,
-      connectorName: `test-oidc-${randomString()}`,
-      domains: [domain],
-      config: {
-        clientId: 'foo',
-        clientSecret: 'bar',
-        issuer: `${logtoUrl}/oidc`,
-      },
-    });
+    await ssoConnectorApi.createMockOidcConnector([domain]);
 
     // Make sure single sign on is enabled
     await updateSignInExperience({
       singleSignOnEnabled: true,
     });
-
-    connectorIdMap.set(id, { id, connectorName, logo: '' });
   });
 
   afterAll(async () => {
-    const connectorIds = Array.from(connectorIdMap.keys());
-    await Promise.all(connectorIds.map(async (id) => deleteSsoConnectorById(id)));
+    await ssoConnectorApi.cleanUp();
   });
 
   it('should get sso authorization url properly', async () => {
+    const state = 'foo_state';
+    const redirectUri = 'http://foo.dev/callback';
+
     const client = await initClient();
 
     await client.successSend(putInteraction, {
@@ -48,7 +38,7 @@ describe('Single Sign On Happy Path', () => {
     });
 
     const response = await client.send(getSsoAuthorizationUrl, {
-      connectorId: Array.from(connectorIdMap.keys())[0]!,
+      connectorId: ssoConnectorApi.firstConnectorId!,
       state,
       redirectUri,
     });
@@ -68,7 +58,7 @@ describe('Single Sign On Happy Path', () => {
     expect(response.length).toBeGreaterThan(0);
 
     for (const connectorId of response) {
-      expect(connectorIdMap.has(connectorId)).toBe(true);
+      expect(ssoConnectorApi.connectorInstances.has(connectorId)).toBe(true);
     }
   });
 
@@ -94,5 +84,30 @@ describe('Single Sign On Happy Path', () => {
     });
 
     expect(response.length).toBe(0);
+  });
+
+  describe('single sign-on interaction', () => {
+    const ssoUserId = generateUserId();
+    const ssoEmail = generateEmail();
+
+    it('should register new user with sso identity', async () => {
+      await registerNewUserWithSso(ssoConnectorApi.firstConnectorId!, {
+        authData: {
+          sub: ssoUserId,
+          email: ssoEmail,
+        },
+      });
+    });
+
+    it('should sign-in with sso identity', async () => {
+      const userId = await signInWithSso(ssoConnectorApi.firstConnectorId!, {
+        authData: {
+          sub: ssoUserId,
+          email: ssoEmail,
+        },
+      });
+
+      await deleteUser(userId);
+    });
   });
 });
