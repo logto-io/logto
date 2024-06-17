@@ -104,7 +104,6 @@ class OidcConnector {
   ): Promise<ExtendedSocialUserInfo> {
     const { isIntegrationTest } = EnvSet.values;
 
-    // Mock the getUserInfo method for integration tests
     if (isIntegrationTest) {
       return mockGetUserInfo(connectorSession, data);
     }
