@@ -50,6 +50,7 @@ jobs:
     if: ${{needs.check-alteration-changes.outputs.has-alteration-changes == 'true'}}
     env:
       INTEGRATION_TEST: true
+      DEV_FEATURES_ENABLED: true
     steps:
       - uses: logto-io/actions-package-logto-artifact@v2
         with:
@@ -66,6 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       INTEGRATION_TEST: true
+      DEV_FEATURES_ENABLED: true
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:

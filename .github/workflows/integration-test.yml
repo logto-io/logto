@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       INTEGRATION_TEST: true
+      DEV_FEATURES_ENABLED: true
 
     steps:
       - uses: logto-io/actions-package-logto-artifact@v2
@@ -32,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       INTEGRATION_TEST: true
+      DEV_FEATURES_ENABLED: true
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:

@@ -7,8 +7,7 @@ export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';
   public readonly isIntegrationTest = yes(getEnv('INTEGRATION_TEST'));
   public readonly isUnitTest = getEnv('NODE_ENV') === 'test';
-  public readonly isDevFeaturesEnabled =
-    !this.isProduction || yes(getEnv('DEV_FEATURES_ENABLED')) || this.isIntegrationTest;
+  public readonly isDevFeaturesEnabled = !this.isProduction || yes(getEnv('DEV_FEATURES_ENABLED'));
 
   public readonly httpsCert = process.env.HTTPS_CERT_PATH;
   public readonly httpsKey = process.env.HTTPS_KEY_PATH;
