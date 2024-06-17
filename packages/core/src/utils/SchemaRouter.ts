@@ -96,6 +96,11 @@ type RelationRoutesConfig = {
     /** Disable `GET /:id/[pathname]` route. */
     get: boolean;
   };
+  /**
+   * If the GET route's pagination is optional.
+   * @default false
+   */
+  isPaginationOptional?: boolean;
 };
 
 /**
@@ -184,7 +189,7 @@ export default class SchemaRouter<
       GeneratedSchema<string, RelationCreateSchema, RelationSchema>
     >,
     pathname = tableToPathname(relationQueries.schemas[1].table),
-    { disabled, hookEvent }: Partial<RelationRoutesConfig> = {}
+    { disabled, hookEvent, isPaginationOptional }: Partial<RelationRoutesConfig> = {}
   ) {
     const relationSchema = relationQueries.schemas[1];
     const relationSchemaId = camelCaseSchemaId(relationSchema);
@@ -205,7 +210,7 @@ export default class SchemaRouter<
     if (!disabled?.get) {
       this.get(
         `/:id/${pathname}`,
-        koaPagination(),
+        koaPagination({ isOptional: isPaginationOptional }),
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
           response: relationSchema.guard.array(),
@@ -220,10 +225,12 @@ export default class SchemaRouter<
           const [totalCount, entities] = await relationQueries.getEntities(
             relationSchema,
             { [columns.schemaId]: id },
-            ctx.pagination
+            ctx.pagination.disabled ? undefined : ctx.pagination
           );
 
-          ctx.pagination.totalCount = totalCount;
+          if (!ctx.pagination.disabled) {
+            ctx.pagination.totalCount = totalCount;
+          }
           ctx.body = entities;
           return next();
         }

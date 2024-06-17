@@ -143,7 +143,10 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       const [totalCount, connectors] = paginationDisabled
         ? await getSsoConnectors()
         : await getSsoConnectors(limit, offset);
-      ctx.pagination.totalCount = totalCount;
+
+      if (!paginationDisabled) {
+        ctx.pagination.totalCount = totalCount;
+      }
 
       // Fetch provider details for each connector
       const connectorsWithProviderDetails = await Promise.all(

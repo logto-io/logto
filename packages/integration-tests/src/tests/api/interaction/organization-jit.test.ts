@@ -48,7 +48,7 @@ describe('organization just-in-time provisioning', () => {
     const emailDomain = 'foo.com';
     await Promise.all(
       organizations.map(async (organization) =>
-        organizationApi.addEmailDomain(organization.id, emailDomain)
+        organizationApi.jit.addEmailDomain(organization.id, emailDomain)
       )
     );
 
