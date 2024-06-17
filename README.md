@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://logto.io/?utm_source=github&utm_medium=community_health" target="_blank" align="center" alt="Go to Logto website">
+  <a href="https://logto.io/?utm_source=github&utm_medium=readme" target="_blank" align="center" alt="Go to Logto website">
     <picture>
       <source width="200" media="(prefers-color-scheme: dark)" srcset="https://github.com/logto-io/.github/raw/master/profile/logto-logo-dark.svg">
       <source width="200" media="(prefers-color-scheme: light)" srcset="https://github.com/logto-io/.github/raw/master/profile/logto-logo-light.svg">
