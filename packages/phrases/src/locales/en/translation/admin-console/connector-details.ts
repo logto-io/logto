@@ -59,7 +59,7 @@ const connector_details = {
     description: 'Google One Tap is a secure and easy way for users to sign in to your website.',
     enable_google_one_tap: 'Enable Google One Tap',
     enable_google_one_tap_description:
-      'Enable Google One Tap in your sign-in experience. Users can sign in with their Google account with a single tap.',
+      "Enable Google One Tap in your sign-in experience: Let users quickly sign up or sign in with their Google account if they're already signed in on their device.",
     configure_google_one_tap: 'Configure Google One Tap',
     auto_select: 'Auto-select credential if possible',
     close_on_tap_outside: 'Cancel the prompt if user click/tap outside',

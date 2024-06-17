@@ -1,4 +1,5 @@
 import { type GoogleConnectorConfig } from '@logto/connector-kit';
+import { Theme } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -7,11 +8,18 @@ import Checkbox from '@/ds-components/Checkbox';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextLink from '@/ds-components/TextLink';
+import useTheme from '@/hooks/use-theme';
 
-import figure from './figure.webp';
+import figureDark from './figure-dark.webp';
+import figureLight from './figure-light.webp';
 import * as styles from './index.module.scss';
 
 type FormContext = { rawConfig: { oneTap: GoogleConnectorConfig['oneTap'] } };
+
+const themeToFigure = Object.freeze({
+  [Theme.Light]: figureLight,
+  [Theme.Dark]: figureDark,
+} satisfies Record<Theme, string>);
 
 /**
  * A card for configuring Google One Tap. It requires the `rawConfig.oneTap` field in the form
@@ -23,6 +31,7 @@ function GoogleOneTapCard() {
   });
   const { register, control, watch } = useFormContext<FormContext>();
   const isEnabled = watch('rawConfig.oneTap.isEnabled');
+  const theme = useTheme();
 
   return (
     <FormCard
@@ -33,7 +42,11 @@ function GoogleOneTapCard() {
         <Switch
           description={
             <>
-              <img className={styles.figure} src={figure} alt="Google One Tap figure" />
+              <img
+                className={styles.figure}
+                src={themeToFigure[theme]}
+                alt="Google One Tap figure"
+              />
               {t('enable_google_one_tap_description')}
             </>
           }
