@@ -32,7 +32,7 @@ const organization_details = {
   jit: {
     title: 'Enable just-in-time provisioning',
     description:
-      'Users can automatically join the organization and receive role assignments if their email matches specific domains, either during sign-up or when added via the Management API.',
+      'Users can automatically join the organization and receive role assignments if their verified email matches specific domains, either during sign-up or when added via the Management API.',
     email_domains: 'JIT provisioning email domains',
     email_domains_placeholder: 'Enter email domains for just-in-time provisioning',
     invalid_domain: 'Invalid domain',

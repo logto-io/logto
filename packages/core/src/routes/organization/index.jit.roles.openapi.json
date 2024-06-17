@@ -7,7 +7,7 @@
   "paths": {
     "/api/organizations/{id}/jit/roles": {
       "get": {
-        "summary": "Get organization JIT roles",
+        "summary": "Get organization JIT default roles",
         "description": "Get organization roles that will be assigned to users during just-in-time provisioning.",
         "responses": {
           "200": {
@@ -16,7 +16,7 @@
         }
       },
       "post": {
-        "summary": "Add organization JIT roles",
+        "summary": "Add organization JIT default roles",
         "description": "Add new organization roles that will be assigned to users during just-in-time provisioning.",
         "requestBody": {
           "content": {
@@ -41,7 +41,7 @@
         }
       },
       "put": {
-        "summary": "Replace organization JIT roles",
+        "summary": "Replace organization JIT default roles",
         "description": "Replace all organization roles that will be assigned to users during just-in-time provisioning with the given data.",
         "requestBody": {
           "content": {
@@ -65,7 +65,7 @@
     },
     "/api/organizations/{id}/jit/roles/{organizationRoleId}": {
       "delete": {
-        "summary": "Remove organization JIT role",
+        "summary": "Remove organization JIT default role",
         "description": "Remove an organization role that will be assigned to users during just-in-time provisioning.",
         "responses": {
           "204": {
