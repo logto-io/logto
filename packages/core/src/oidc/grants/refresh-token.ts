@@ -246,6 +246,17 @@ export const buildHandler: (
       error.statusCode = 403;
       throw error;
     }
+
+    // Check if the organization requires MFA and the user has MFA enabled
+    const { isMfaRequired, hasMfaConfigured } = await queries.organizations.getMfaStatus(
+      organizationId,
+      account.accountId
+    );
+    if (isMfaRequired && !hasMfaConfigured) {
+      const error = new AccessDenied('organization requires MFA but user has no MFA configured');
+      error.statusCode = 403;
+      throw error;
+    }
   }
   /* === End RFC 0001 === */
 

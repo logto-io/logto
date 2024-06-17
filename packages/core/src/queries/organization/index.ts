@@ -20,6 +20,7 @@ import {
   OrganizationRoleResourceScopeRelations,
   Scopes,
   Resources,
+  Users,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -294,5 +295,33 @@ export default class OrganizationQueries extends SchemaQueries<
 
   constructor(pool: CommonQueryMethods) {
     super(pool, Organizations);
+  }
+
+  /**
+   * Get the multi-factor authentication (MFA) status for the given organization and user.
+   *
+   * @returns Whether MFA is required for the organization and whether the user has configured MFA.
+   * @see {@link MfaData}
+   */
+  async getMfaStatus(organizationId: string, userId: string) {
+    const { table, fields } = convertToIdentifiers(Organizations);
+    const users = convertToIdentifiers(Users);
+
+    type MfaData = {
+      /** Whether MFA is required for the organization. */
+      isMfaRequired: boolean;
+      /** Whether the user has configured MFA. */
+      hasMfaConfigured: boolean;
+    };
+
+    return this.pool.one<MfaData>(sql`
+      select
+        (select ${fields.isMfaRequired} from ${table} where ${fields.id} = ${organizationId}),
+        exists (
+          select 1 from ${users.table} 
+            where ${users.fields.id} = ${userId}
+            and jsonb_array_length(${users.fields.mfaVerifications}) > 0
+        ) as "hasMfaConfigured";
+    `);
   }
 }

@@ -152,6 +152,14 @@ export default class MockClient {
     return this.logto.getAccessTokenClaims(resource);
   }
 
+  public async getOrganizationTokenClaims(organizationId: string) {
+    return this.logto.getOrganizationTokenClaims(organizationId);
+  }
+
+  public async clearAccessToken() {
+    return this.logto.clearAccessToken();
+  }
+
   public async getRefreshToken(): Promise<Nullable<string>> {
     return this.logto.getRefreshToken();
   }

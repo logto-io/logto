@@ -152,7 +152,7 @@ describe('get access token', () => {
     ).resolves.toBeTruthy();
   });
 
-  it('can sign in and get multiple Access Tokens by the same Refresh Token within refreshTokenReuseInterval', async () => {
+  it('can sign in and get multiple access tokens by the same refresh token within `refreshTokenReuseInterval`', async () => {
     const client = new MockClient({ resources: [testApiResourceInfo.indicator] });
 
     await client.initSession();
