@@ -5,15 +5,17 @@ import { conditionalString, trySafe } from '@silverhand/essentials';
 import { parsePhoneNumberWithError } from 'libphonenumber-js';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { profilePropertyReferenceLink } from '@/consts';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -44,9 +46,8 @@ function UserSettings() {
     formState: { isSubmitting, errors, isDirty },
   } = useForm<UserDetailsForm>({ defaultValues: userFormData });
 
-  const {
-    field: { onChange, value },
-  } = useController({ name: 'customData', control });
+  const { field: customData } = useController({ name: 'customData', control });
+  const { field: profile } = useController({ name: 'profile', control });
 
   const api = useApi();
 
@@ -56,7 +57,7 @@ function UserSettings() {
         return;
       }
       const { identities, id: userId } = user;
-      const { customData: inputCustomData, username, primaryEmail, primaryPhone } = formData;
+      const { customData, profile, username, primaryEmail, primaryPhone } = formData;
 
       if (!username && !primaryEmail && !primaryPhone && Object.keys(identities).length === 0) {
         const [result] = await show({
@@ -69,18 +70,23 @@ function UserSettings() {
         }
       }
 
-      const parseResult = safeParseJsonObject(inputCustomData);
-
-      if (!parseResult.success) {
+      const parsedCustomData = safeParseJsonObject(customData);
+      if (!parsedCustomData.success) {
         toast.error(t('user_details.custom_data_invalid'));
+        return;
+      }
 
+      const parsedProfile = safeParseJsonObject(profile);
+      if (!parsedProfile.success) {
+        toast.error(t('user_details.profile_invalid'));
         return;
       }
 
       const payload: Partial<User> = {
         ...formData,
         primaryPhone: conditionalString(primaryPhone && parsePhoneNumber(primaryPhone)),
-        customData: parseResult.data,
+        customData: parsedCustomData.data,
+        profile: parsedProfile.data,
       };
 
       const updatedUser = await api.patch(`api/users/${userId}`, { json: payload }).json<User>();
@@ -174,11 +180,29 @@ function UserSettings() {
             />
           </FormField>
           <FormField
-            isRequired
             title="user_details.field_custom_data"
             tip={t('user_details.field_custom_data_tip')}
           >
-            <CodeEditor language="json" value={value} onChange={onChange} />
+            <CodeEditor language="json" value={customData.value} onChange={customData.onChange} />
+          </FormField>
+          <FormField
+            title="user_details.field_profile"
+            tip={
+              <Trans
+                components={{
+                  a: (
+                    <TextLink
+                      href={getDocumentationUrl(profilePropertyReferenceLink)}
+                      targetBlank="noopener"
+                    />
+                  ),
+                }}
+              >
+                {t('user_details.field_profile_tip')}
+              </Trans>
+            }
+          >
+            <CodeEditor language="json" value={profile.value} onChange={profile.onChange} />
           </FormField>
         </FormCard>
       </DetailsForm>
