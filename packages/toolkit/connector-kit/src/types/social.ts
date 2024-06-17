@@ -81,6 +81,11 @@ export type SocialConnector = BaseConnector<ConnectorType.Social> & {
   validateSamlAssertion?: ValidateSamlAssertion;
 };
 
+/**
+ * The configuration object for Google One Tap.
+ *
+ * @see {@link https://developers.google.com/identity/gsi/web/reference/html-reference | Sign In With Google HTML API reference}
+ */
 export type GoogleOneTapConfig = {
   isEnabled?: boolean;
   autoSelect?: boolean;
@@ -95,7 +100,16 @@ export const googleOneTapConfigGuard = z.object({
   itpSupport: z.boolean().optional(),
 }) satisfies ToZodObject<GoogleOneTapConfig>;
 
-/** An object that contains the configuration for the official Google connector. */
+/**
+ * An object that contains the configuration for the official Google connector.
+ *
+ * @remarks
+ * Unlike other connectors, the Google connector supports Google One Tap which needs additional
+ * configuration and special handling in our system. So we put the constants and configuration
+ * in this package for reusability, rather than hardcoding them in our system.
+ *
+ * Other connectors should not follow this pattern unless there is a strong reason to do so.
+ */
 export const GoogleConnector = Object.freeze({
   /** The target of Google connectors. */
   target: 'google',

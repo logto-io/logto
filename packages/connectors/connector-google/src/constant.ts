@@ -10,6 +10,9 @@ export const accessTokenEndpoint = 'https://oauth2.googleapis.com/token';
 export const userInfoEndpoint = 'https://openidconnect.googleapis.com/v1/userinfo';
 export const scope = 'openid profile email';
 
+// Instead of defining the metadata in the connector, we reuse the metadata from the connector-kit.
+// This is not the normal practice, but Google One Tap is a special case.
+// @see {@link GoogleConnector} for more information.
 export const defaultMetadata: ConnectorMetadata = {
   id: GoogleConnector.factoryId,
   target: GoogleConnector.target,
