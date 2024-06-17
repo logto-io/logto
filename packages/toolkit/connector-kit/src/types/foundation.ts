@@ -1,4 +1,4 @@
-import type { ZodType } from 'zod';
+import type { ZodType, z } from 'zod';
 
 import { type ConnectorMetadata } from './metadata.js';
 
@@ -17,3 +17,7 @@ export type BaseConnector<Type extends ConnectorType> = {
   metadata: ConnectorMetadata;
   configGuard: ZodType;
 };
+
+export type ToZodObject<T> = z.ZodObject<{
+  [K in keyof T]-?: z.ZodType<T[K]>;
+}>;
