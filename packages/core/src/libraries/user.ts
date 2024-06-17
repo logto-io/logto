@@ -148,9 +148,8 @@ export const createUserLibrary = (queries: Queries) => {
         const userEmailDomain = data.primaryEmail?.split('@')[1];
         if (userEmailDomain) {
           const organizationQueries = new OrganizationQueries(connection);
-          const organizationIds = await organizationQueries.emailDomains.getOrganizationIdsByDomain(
-            userEmailDomain
-          );
+          const organizationIds =
+            await organizationQueries.jit.emailDomains.getOrganizationIdsByDomain(userEmailDomain);
 
           if (organizationIds.length > 0) {
             await organizationQueries.relations.users.insert(

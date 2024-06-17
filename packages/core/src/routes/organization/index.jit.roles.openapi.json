@@ -1,0 +1,78 @@
+{
+  "tags": [
+    {
+      "name": "Organizations"
+    }
+  ],
+  "paths": {
+    "/api/organizations/{id}/jit/roles": {
+      "get": {
+        "summary": "Get organization JIT roles",
+        "description": "Get organization roles that will be assigned to users during just-in-time provisioning.",
+        "responses": {
+          "200": {
+            "description": "A list of organization roles."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add organization JIT role",
+        "description": "Add a new organization role that will be assigned to users during just-in-time provisioning.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationRoleId": {
+                    "description": "The organization role ID to add."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The organization role was added successfully."
+          },
+          "422": {
+            "description": "The organization role is already in use."
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace organization JIT roles",
+        "description": "Replace all organization roles that will be assigned to users during just-in-time provisioning with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationRoleIds": {
+                    "description": "An array of organization role IDs to replace existing organization roles."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The organization roles were replaced successfully."
+          }
+        }
+      }
+    },
+    "/api/organizations/{id}/jit/roles/{organizationRoleId}": {
+      "delete": {
+        "summary": "Remove organization JIT role",
+        "description": "Remove an organization role that will be assigned to users during just-in-time provisioning.",
+        "responses": {
+          "204": {
+            "description": "The organization role was removed successfully."
+          }
+        }
+      }
+    }
+  }
+}

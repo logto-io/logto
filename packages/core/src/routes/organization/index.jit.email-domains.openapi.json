@@ -5,9 +5,9 @@
     }
   ],
   "paths": {
-    "/api/organizations/{id}/email-domains": {
+    "/api/organizations/{id}/jit/email-domains": {
       "get": {
-        "summary": "Get organization email domains",
+        "summary": "Get organization JIT email domains",
         "description": "Get email domains for just-in-time provisioning of users in the organization.",
         "responses": {
           "200": {
@@ -16,7 +16,7 @@
         }
       },
       "post": {
-        "summary": "Add organization email domain",
+        "summary": "Add organization JIT email domain",
         "description": "Add a new email domain for just-in-time provisioning of users in the organization.",
         "requestBody": {
           "content": {
@@ -41,7 +41,7 @@
         }
       },
       "put": {
-        "summary": "Replace organization email domains",
+        "summary": "Replace organization JIT email domains",
         "description": "Replace all just-in-time provisioning email domains for the organization with the given data.",
         "requestBody": {
           "content": {
@@ -63,9 +63,9 @@
         }
       }
     },
-    "/api/organizations/{id}/email-domains/{emailDomain}": {
+    "/api/organizations/{id}/jit/email-domains/{emailDomain}": {
       "delete": {
-        "summary": "Remove organization email domain",
+        "summary": "Remove organization JIT email domain",
         "description": "Remove an email domain for just-in-time provisioning of users in the organization.",
         "parameters": [
           {

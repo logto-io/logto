@@ -30,15 +30,16 @@ const organization_details = {
   membership_policies_description:
     'Define how users can join this organization and what requirements they must meet for access.',
   jit: {
+    title: 'Enable just-in-time provisioning',
     description:
-      'Enable automatic membership assignment based on verified email domains and default roles assignment.',
-    membership_description:
-      'Automatically assign users into this organization when they sign up or are added through the Management API, provided their verified email addresses match the specified domains.',
-    is_enabled_title: 'Enable just-in-time provisioning',
-    email_domain_provisioning: 'Email domain provisioning',
+      'Users can automatically join the organization and receive role assignments if their email matches specific domains, either during sign-up or when added via the Management API.',
+    email_domains: 'JIT provisioning email domains',
     email_domains_placeholder: 'Enter email domains for just-in-time provisioning',
     invalid_domain: 'Invalid domain',
     domain_already_added: 'Domain already added',
+    organization_roles: 'Default organization roles',
+    organization_roles_description:
+      'Assign roles to users upon joining the organization through just-in-time provisioning.',
   },
   mfa: {
     title: 'Multi-factor authentication (MFA)',
