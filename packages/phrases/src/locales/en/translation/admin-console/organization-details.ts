@@ -36,6 +36,8 @@ const organization_details = {
     email_domains: 'JIT provisioning email domains',
     email_domains_placeholder: 'Enter email domains for just-in-time provisioning',
     invalid_domain: 'Invalid domain',
+    sso_email_domain_description:
+      '<Icon /> means the domain is enabled for enterprise SSO. Users who signed in through the configured IdP can automatically join the organization.',
     domain_already_added: 'Domain already added',
     organization_roles: 'Default organization roles',
     organization_roles_description:

@@ -1,12 +1,14 @@
-import { type SignInExperience, type Organization } from '@logto/schemas';
+import { type SignInExperience, type Organization, type SsoConnector } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 
+import SsoIcon from '@/assets/icons/single-sign-on.svg';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
@@ -82,6 +84,21 @@ function Settings() {
   const [isJitEnabled, isMfaRequired] = watch(['isJitEnabled', 'isMfaRequired']);
   const api = useApi();
   const [keyword, setKeyword] = useState('');
+  // Fetch all SSO connector to show if a domain is configured SSO
+  const { data: ssoConnectors } = useSWRInfinite<SsoConnector[]>(
+    (index, previous) => {
+      return previous && previous.length === 0 ? null : `api/sso-connectors?page=${index + 1}`;
+    },
+    { initialSize: Number.POSITIVE_INFINITY }
+  );
+
+  const hasSsoEnabled = useCallback(
+    (domain: string) =>
+      ssoConnectors?.some((connectors) =>
+        connectors.some(({ domains }) => domains.includes(domain))
+      ),
+    [ssoConnectors]
+  );
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -167,14 +184,34 @@ function Settings() {
             </div>
           </FormField>
           {isJitEnabled && (
-            <FormField title="organization_details.jit.email_domains">
+            <FormField
+              title="organization_details.jit.email_domains"
+              description={
+                <Trans
+                  components={{
+                    Icon: <SsoIcon className={styles.ssoEnabled} />,
+                  }}
+                >
+                  {t('organization_details.jit.sso_email_domain_description')}
+                </Trans>
+              }
+            >
               <Controller
                 name="jitEmailDomains"
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <MultiOptionInput
                     values={value}
-                    renderValue={(value) => value}
+                    renderValue={(value) =>
+                      hasSsoEnabled(value) ? (
+                        <>
+                          <SsoIcon className={styles.ssoEnabled} />
+                          {value}
+                        </>
+                      ) : (
+                        value
+                      )
+                    }
                     validateInput={(input) => {
                       if (!domainRegExp.test(input)) {
                         return t('organization_details.jit.invalid_domain');
