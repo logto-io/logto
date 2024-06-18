@@ -5,6 +5,13 @@ const content = {
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'Privacy policy URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
+    agree_to_terms: 'Accettare i termini',
+    agree_policies: {
+      automatic: 'Continuare ad accettare automaticamente i termini',
+      manual_registration_only:
+        "Richiedere l'accordo della casella di controllo solo alla registrazione",
+      manual: "Richiedere l'accordo della casella di controllo sia alla registrazione che al login",
+    },
   },
   languages: {
     title: 'LANGUAGES',

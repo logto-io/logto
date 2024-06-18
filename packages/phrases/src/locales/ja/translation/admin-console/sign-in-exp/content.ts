@@ -5,6 +5,12 @@ const content = {
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'Privacy policy URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
+    agree_to_terms: '利用規約に同意する',
+    agree_policies: {
+      automatic: '自動的に利用規約に同意し続ける',
+      manual_registration_only: '登録時のみチェックボックスで同意を求める',
+      manual: '登録時およびサインイン時の両方でチェックボックスの同意を求める',
+    },
   },
   languages: {
     title: 'LANGUAGES',
