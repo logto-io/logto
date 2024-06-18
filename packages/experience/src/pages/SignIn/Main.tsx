@@ -1,4 +1,4 @@
-import type { SignIn, ConnectorMetadata } from '@logto/schemas';
+import type { SignIn, ExperienceSocialConnector } from '@logto/schemas';
 
 import SocialSignInList from '@/containers/SocialSignInList';
 
@@ -8,7 +8,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   readonly signInMethods: SignIn['methods'];
-  readonly socialConnectors: ConnectorMetadata[];
+  readonly socialConnectors: ExperienceSocialConnector[];
 };
 
 const Main = ({ signInMethods, socialConnectors }: Props) => {

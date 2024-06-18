@@ -1,4 +1,4 @@
-import type { ConnectorMetadata } from '@logto/schemas';
+import type { ExperienceSocialConnector } from '@logto/schemas';
 import classNames from 'classnames';
 
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
@@ -10,7 +10,7 @@ import useSocial from './use-social';
 
 type Props = {
   readonly className?: string;
-  readonly socialConnectors?: ConnectorMetadata[];
+  readonly socialConnectors?: ExperienceSocialConnector[];
 };
 
 const SocialSignInList = ({ className, socialConnectors = [] }: Props) => {

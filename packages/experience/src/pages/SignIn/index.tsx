@@ -7,6 +7,7 @@ import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import Divider from '@/components/Divider';
+import GoogleOneTap from '@/components/GoogleOneTap';
 import TextLink from '@/components/TextLink';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
@@ -76,11 +77,11 @@ const SignIn = () => {
 
   return (
     <LandingPageLayout title="description.sign_in_to_your_account">
+      <GoogleOneTap context="signin" />
       <SingleSignOnFormModeContextProvider>
         <Main signInMethods={signInMethods} socialConnectors={socialConnectors} />
         <SignInFooters />
       </SingleSignOnFormModeContextProvider>
-
       <TermsAndPrivacyLinks className={styles.terms} />
     </LandingPageLayout>
   );

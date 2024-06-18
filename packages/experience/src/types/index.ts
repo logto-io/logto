@@ -1,11 +1,9 @@
 import type {
-  SignInExperience,
-  ConnectorMetadata,
   SignInIdentifier,
   Theme,
   WebAuthnRegistrationOptions,
   WebAuthnAuthenticationOptions,
-  SsoConnectorMetadata,
+  FullSignInExperience,
 } from '@logto/schemas';
 
 export enum UserFlow {
@@ -30,17 +28,7 @@ export type Platform = 'web' | 'mobile';
 
 export type VerificationCodeIdentifier = SignInIdentifier.Email | SignInIdentifier.Phone;
 
-// Omit socialSignInConnectorTargets since it is being translated into socialConnectors
-export type SignInExperienceResponse = Omit<SignInExperience, 'socialSignInConnectorTargets'> & {
-  socialConnectors: ConnectorMetadata[];
-  ssoConnectors: SsoConnectorMetadata[];
-  notification?: string;
-  forgotPassword: {
-    phone: boolean;
-    email: boolean;
-  };
-  isDevelopmentTenant: boolean;
-};
+export type SignInExperienceResponse = Omit<FullSignInExperience, 'socialSignInConnectorTargets'>;
 
 export type PreviewConfig = {
   signInExperience: SignInExperienceResponse;

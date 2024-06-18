@@ -1,8 +1,4 @@
-import {
-  Theme,
-  type ConnectorMetadata as SocialConnectorMetadata,
-  type SsoConnectorMetadata,
-} from '@logto/schemas';
+import { type ExperienceSocialConnector, Theme, type SsoConnectorMetadata } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 import { useCallback, useContext } from 'react';
 
@@ -12,7 +8,7 @@ import { useSieMethods } from './use-sie';
 
 type FindConnectorByIdResult =
   | {
-      connector: SocialConnectorMetadata;
+      connector: ExperienceSocialConnector;
       type: 'social';
     }
   | {

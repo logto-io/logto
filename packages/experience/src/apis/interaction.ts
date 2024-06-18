@@ -153,7 +153,7 @@ export const getSocialAuthorizationUrl = async (
   state: string,
   redirectUri: string
 ) => {
-  await api.put(`${interactionPrefix}`, { json: { event: InteractionEvent.SignIn } });
+  await putInteraction(InteractionEvent.SignIn);
 
   return api
     .post(`${interactionPrefix}/${verificationPath}/social-authorization-uri`, {
