@@ -1,18 +1,38 @@
+import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import type { HTMLProps, ReactNode, Ref } from 'react';
+import type { HTMLProps, ReactElement, ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
+
+import DynamicT from '../DynamicT';
 
 import * as styles from './index.module.scss';
 
-type Props = Omit<HTMLProps<HTMLInputElement>, 'label'> & {
-  readonly label?: ReactNode;
-  readonly hasError?: boolean;
-};
+type Props =
+  | (Omit<HTMLProps<HTMLInputElement>, 'label'> & {
+      /** @deprecated Use `description` instead */
+      readonly label?: ReactNode;
+      readonly hasError?: boolean;
+    })
+  | (HTMLProps<HTMLInputElement> & {
+      readonly description: AdminConsoleKey | ReactElement;
+      readonly hasError?: boolean;
+    });
 
-function Switch({ label, hasError, ...rest }: Props, ref?: Ref<HTMLInputElement>) {
+function Switch(props: Props, ref?: Ref<HTMLInputElement>) {
+  const { label, hasError, ...rest } = props;
+
   return (
     <div className={classNames(styles.wrapper, hasError && styles.error)}>
-      <div className={styles.label}>{label}</div>
+      {'description' in props && (
+        <div className={styles.label}>
+          {typeof props.description === 'string' ? (
+            <DynamicT forKey={props.description} />
+          ) : (
+            props.description
+          )}
+        </div>
+      )}
+      {label && <div className={styles.label}>{label}</div>}
       <label className={styles.switch}>
         <input type="checkbox" {...rest} ref={ref} />
         <span className={styles.slider} />

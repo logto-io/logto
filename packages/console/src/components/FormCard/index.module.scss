@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   gap: _.unit(2);
+  word-break: break-word;
 }
 
 .description {
