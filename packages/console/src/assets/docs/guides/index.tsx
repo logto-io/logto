@@ -118,13 +118,6 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     metadata: webJavaSpringBoot,
   },
   {
-    order: 1.5,
-    id: 'web-gpt-plugin',
-    Logo: lazy(async () => import('./web-gpt-plugin/logo.svg')),
-    Component: lazy(async () => import('./web-gpt-plugin/README.mdx')),
-    metadata: webGptPlugin,
-  },
-  {
     order: 1.6,
     id: 'spa-vue',
     Logo: lazy(async () => import('./spa-vue/logo.svg')),
@@ -251,6 +244,13 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-outline/logo.svg')),
     Component: lazy(async () => import('./web-outline/README.mdx')),
     metadata: webOutline,
+  },
+  {
+    order: 999,
+    id: 'web-gpt-plugin',
+    Logo: lazy(async () => import('./web-gpt-plugin/logo.svg')),
+    Component: lazy(async () => import('./web-gpt-plugin/README.mdx')),
+    metadata: webGptPlugin,
   },
   {
     order: Number.POSITIVE_INFINITY,
