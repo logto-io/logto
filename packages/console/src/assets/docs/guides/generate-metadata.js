@@ -20,8 +20,7 @@ const data = await Promise.all(
       return;
     }
 
-    // Add `.png` later
-    const logo = ['logo.svg'].find((logo) => existsSync(`${directory}/${logo}`));
+    const logo = ['logo.webp', 'logo.svg', 'logo.png'].find((logo) => existsSync(`${directory}/${logo}`));
 
     const config = existsSync(`${directory}/config.json`)
       ? await import(`./${directory}/config.json`, { assert: { type: 'json' } }).then(
