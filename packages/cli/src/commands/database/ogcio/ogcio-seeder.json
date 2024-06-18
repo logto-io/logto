@@ -3,74 +3,29 @@
         "organizations": [
             {
                 "name": "OGCIO Seeded Org",
-                "description": "Organization created through seeder"
+                "description": "Organization created through seeder",
+                "id": "ogcio"
             }
         ],
         "organization_permissions": [
             {
-                "actions": [
-                    "read",
-                    "create",
-                    "update",
-                    "delete"
-                ],
-                "entities": [
-                    "payments",
-                    "payment-requests",
-                    "events",
-                    "messages"
-                ]
-            },
-            {
-                "actions": [
-                    "admin"
-                ],
-                "entities": [
-                    "ogcio"
+                "specific_permissions": [
+                    "payments:create:providers"
                 ]
             }
         ],
         "organization_roles": [
             {
-                "name": "OGCIO Employee",
-                "description": "Employee with only read permissions",
-                "actions": [
-                    "read"
-                ]
-            },
-            {
-                "name": "OGCIO Manager",
-                "description": "Employee that can also write",
-                "actions": [
-                    "read",
-                    "create",
-                    "update",
-                    "delete"
-                ]
-            },
-            {
-                "name": "OGCIO Admin",
-                "description": "Admin power",
-                "actions": [
-                    "read",
-                    "create",
-                    "update",
-                    "delete"
-                ],
-                "entities": [
-                    "payments",
-                    "payment-requests",
-                    "events",
-                    "messages"
-                ],
+                "name": "Public servant",
+                "description": "Building Blocks Public servant",
                 "specific_permissions": [
-                    "ogcio:admin"
+                    "payments:create:providers"
                 ]
             }
         ],
         "applications": [
             {
-                "name": "Life Events Payments App",
+                "name": "Payments Building Block",
                 "description": "Payments App of Life Events",
                 "type": "Traditional",
                 "redirect_uri": "http://localhost:3001/callback",
@@ -79,44 +34,25 @@
                 "id": "2xz6sbi8ch01uhjt1oq8r"
             },
             {
-                "name": "Life Events Messaging App",
+                "name": "Messaging Building Block",
                 "description": "Messaging App of Life Events",
                 "type": "Traditional",
                 "redirect_uri": "http://localhost:3002/callback",
                 "logout_redirect_uri": "http://localhost:3002",
                 "secret": "Y3nBMm8Hs3Ugcl4596w5ewgOosvwX4im",
                 "id": "4695d8onfb9f3bv18phtq"
-            },
-            {
-                "name": "Life Events User Profile App",
-                "description": "User Profile App of Life Events",
-                "type": "Traditional",
-                "redirect_uri": "http://localhost:3003/callback",
-                "logout_redirect_uri": "http://localhost:3003",
-                "secret": "cJIQnTk5txGWWhR9TbCOm9SyiszAd8DP",
-                "id": "cxhrg1h7mu6lqxwc6gl0f"
             }
         ],
         "resources": [
             {
-                "id": "mock-api",
-                "name": "Life Events Mock API",
-                "indicator": "http://localhost:8000/"
-            },
-            {
                 "id": "payments-api",
-                "name": "Life Events Payments API",
+                "name": "Payments Building Block API",
                 "indicator": "http://localhost:8001/"
             },
             {
                 "id": "messaging-api",
-                "name": "Life Events Messaging API",
+                "name": "Messaging Building Block API",
                 "indicator": "http://localhost:8002/"
-            },
-            {
-                "id": "user-profile-api",
-                "name": "Life Events User Profile API",
-                "indicator": "http://localhost:8003/"
             }
         ],
         "resource_permissions": [
@@ -124,307 +60,97 @@
                 "for_resource_ids": [
                     "payments-api"
                 ],
-                "actions": [
-                    "read",
-                    "create",
-                    "update",
-                    "delete",
-                    "admin"
-                ],
-                "entities": [
-                    "payments",
-                    "payment-requests"
-                ]
-            },
-            {
-                "for_resource_ids": [
-                    "messaging-api"
-                ],
-                "actions": [
-                    "read",
-                    "create",
-                    "update",
-                    "delete",
-                    "admin"
-                ],
-                "entities": [
-                    "messages"
-                ]
-            },
-            {
-                "for_resource_ids": [
-                    "user-profile-api"
-                ],
-                "actions": [
-                    "read",
-                    "create",
-                    "update",
-                    "delete",
-                    "admin"
-                ],
-                "entities": [
-                    "user-data"
+                "specific_permissions": [
+                    "payments:create:payment"
                 ]
             }
         ],
         "resource_roles": [
             {
-                "name": "Payments Employee",
-                "description": "Read only stuffs",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "payments-api"
-                        ],
-                        "actions": [
-                            "read"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Payments Manager",
-                "description": "Employee that can also write",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "payments-api"
-                        ],
-                        "actions": [
-                            "read",
-                            "create",
-                            "update",
-                            "delete"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Payments Admin",
-                "description": "Admin power",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "payments-api"
-                        ],
-                        "actions": [
-                            "read",
-                            "create",
-                            "update",
-                            "delete",
-                            "admin"
-                        ],
-                        "entities": [
-                            "payments",
-                            "payment-requests"
-                        ],
-                        "specific_permissions": [
-                            "payments:admin",
-                            "payment-requests:admin"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Messaging Employee",
-                "description": "Read only stuffs",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "messaging-api"
-                        ],
-                        "actions": [
-                            "read"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Messaging Manager",
-                "description": "Employee that can also write",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "messaging-api"
-                        ],
-                        "actions": [
-                            "read",
-                            "create",
-                            "update",
-                            "delete"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Messaging Admin",
-                "description": "Admin power",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "messaging-api"
-                        ],
-                        "actions": [
-                            "read",
-                            "create",
-                            "update",
-                            "delete",
-                            "admin"
-                        ],
-                        "entities": [
-                            "messages"
-                        ],
-                        "specific_permissions": [
-                            "messages:admin"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "User-Profile Employee",
-                "description": "Read only stuffs",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "user-profile-api"
-                        ],
-                        "actions": [
-                            "read"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "User-Profile Manager",
-                "description": "Employee that can also write",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "user-profile-api"
-                        ],
-                        "actions": [
-                            "read",
-                            "create",
-                            "update",
-                            "delete"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "User-Profile Admin",
-                "description": "Admin power",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "user-profile-api"
-                        ],
-                        "actions": [
-                            "read",
-                            "create",
-                            "update",
-                            "delete",
-                            "admin"
-                        ],
-                        "entities": [
-                            "user-data"
-                        ],
-                        "specific_permissions": [
-                            "user-data:admin"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Public Servant",
-                "description": "Public servant",
-                "permissions": [
-                    {
-                        "for_resource_ids": [
-                            "user-profile-api"
-                        ],
-                        "actions": [
-                            "read"
-                        ]
-                    }
-                ]
-            },
-            {
                 "name": "Citizen",
-                "description": "Citizen",
+                "description": "A citizen using Life Events and the Building Blocks ecosystem",
                 "permissions": [
                     {
                         "for_resource_ids": [
-                            "user-profile-api"
+                            "payments-api"
                         ],
-                        "actions": [
-                            "read"
+                        "specific_permissions": [
+                            "payments:create:payment"
                         ]
                     }
                 ]
             }
         ],
-        "connectors": [{
-            "id": "mygovid",
-            "sync_profile": false,
-            "connector_id": "mygovid",
-            "config": {
-                "scope": "openid profile email",
-                "clientId": "mock_client_id",
-                "clientSecret": "mock_client_secret",
-                "tokenEndpoint": "http://localhost:3005/mock/token",
-                "authorizationEndpoint": "http://localhost:3005/mock/auth",
-                "tokenEndpointAuthMethod": "client_secret_post",
-                "idTokenVerificationConfig": {
-                    "jwksUri": "http://localhost:3005/mock/keys"
+        "connectors": [
+            {
+                "id": "mygovid",
+                "sync_profile": false,
+                "connector_id": "mygovid",
+                "config": {
+                    "scope": "openid profile email",
+                    "clientId": "mock_client_id",
+                    "clientSecret": "mock_client_secret",
+                    "tokenEndpoint": "http://localhost:3005/logto/mock/token",
+                    "authorizationEndpoint": "http://localhost:3005/logto/mock/auth",
+                    "tokenEndpointAuthMethod": "client_secret_post",
+                    "idTokenVerificationConfig": {
+                        "jwksUri": "http://localhost:3005/logto/mock/keys"
+                    },
+                    "clientSecretJwtSigningAlgorithm": "HS256"
                 },
-                "clientSecretJwtSigningAlgorithm": "HS256"
-            },
-            "metadata": {
-                "logo": "https://mygovidstatic.blob.core.windows.net/assets/images/favicon_196x196.png",
-                "name": {
-                    "en": "MyGovId"
-                },
-                "target": "MyGovId (MyGovId connector)"
+                "metadata": {
+                    "logo": "https://mygovidstatic.blob.core.windows.net/assets/images/favicon_196x196.png",
+                    "name": {
+                        "en": "MyGovId"
+                    },
+                    "target": "MyGovId (MyGovId connector)"
+                }
             }
-        }],
-        "sign_in_experiences": [{
-            "id": "default",
-            "color": {
-                "primaryColor": "#FFFFFF",
-                "darkPrimaryColor": "#FFFFFF",
-                "isDarkModeEnabled": false
-            },
-            "branding": {
-                "logoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png",
-                "darkLogoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png"
-            },
-            "language_info": {
-                "autoDetect": true,
-                "fallbackLanguage": "en"
-            },
-            "sign_in": {
-                "methods": []
-            },
-            "sign_up": {
-                "verify": false,
-                "password": false,
-                "identifiers": []
-            },
-            "social_sign_in_connector_targets": [
-                "MyGovId (MyGovId connector)"
-            ],
-            "sign_in_mode": "SignInAndRegister"
-        }],
-        "webhooks": [{
-            "id": "login_webhook",
-            "name": "User log in",
-            "events": ["PostRegister", "PostSignIn"],
-            "config": {
-                "url": "http://localhost:8003/user-login-wh"
-            },
-            "signing_key": "xpWX3WIkPkSA5A0UzLMfNOuTl1qEnbkg",
-            "enabled": true
-        }]
+        ],
+        "sign_in_experiences": [
+            {
+                "id": "default",
+                "color": {
+                    "primaryColor": "#FFFFFF",
+                    "darkPrimaryColor": "#FFFFFF",
+                    "isDarkModeEnabled": false
+                },
+                "branding": {
+                    "logoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png",
+                    "darkLogoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png"
+                },
+                "language_info": {
+                    "autoDetect": true,
+                    "fallbackLanguage": "en"
+                },
+                "sign_in": {
+                    "methods": []
+                },
+                "sign_up": {
+                    "verify": false,
+                    "password": false,
+                    "identifiers": []
+                },
+                "social_sign_in_connector_targets": [
+                    "MyGovId (MyGovId connector)"
+                ],
+                "sign_in_mode": "SignInAndRegister"
+            }
+        ],
+        "webhooks": [
+            {
+                "id": "login_webhook",
+                "name": "User log in",
+                "events": [
+                    "PostRegister",
+                    "PostSignIn"
+                ],
+                "config": {
+                    "url": "http://localhost:8003/user-login-wh"
+                },
+                "signing_key": "xpWX3WIkPkSA5A0UzLMfNOuTl1qEnbkg",
+                "enabled": true
+            }
+        ]
     }
 }

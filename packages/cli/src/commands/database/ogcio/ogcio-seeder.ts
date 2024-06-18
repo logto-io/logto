@@ -19,11 +19,13 @@ export type OgcioSeeder = {
 export type OrganizationSeeder = {
   name: string;
   description: string;
+  id?: string;
 };
 
 export type OrganizationPermissionSeeder = {
-  actions: string[];
-  entities: string[];
+  specific_permissions?: string[];
+  actions?: string[];
+  entities?: string[];
 };
 
 export type OrganizationRoleSeeder = {
@@ -63,7 +65,7 @@ export type ConnectorSeeder = {
     tokenEndpointAuthMethod: string;
     idTokenVerificationConfig: {
       jwksUri: string;
-    },
+    };
     clientSecretJwtSigningAlgorithm: string;
   };
   metadata: {
@@ -102,8 +104,9 @@ export type SignInExperienceSeeder = {
 
 export type ResourcePermissionSeeder = {
   for_resource_ids: string[];
-  actions: string[];
-  entities: string[];
+  specific_permissions?: string[];
+  actions?: string[];
+  entities?: string[];
 };
 
 export type ResourceRoleSeeder = {
@@ -129,7 +132,7 @@ export type WebhookSeeder = {
   };
   signing_key: string;
   enabled: true;
-}
+};
 
 let inputSeeder: OgcioTenantSeeder | undefined;
 export const getTenantSeederData = (): OgcioTenantSeeder => {

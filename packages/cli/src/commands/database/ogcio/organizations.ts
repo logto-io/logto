@@ -19,8 +19,6 @@ import { consoleLog } from '../../../utils.js';
 import { type OrganizationSeeder } from './ogcio-seeder.js';
 import { createItem, getInsertedColumnValue, updateQuery } from './queries.js';
 
-type OrganizationSeederWithId = { id: string } & OrganizationSeeder;
-
 const createAdminConsoleConfig = (
   forTenantId: string
 ): Readonly<{
@@ -81,6 +79,7 @@ const createOrganization = async (params: {
     toInsert: {
       name: params.organizationSeeder.name,
       description: params.organizationSeeder.description,
+      id: params.organizationSeeder.id ?? undefined,
     },
     whereClauses: [sql`name = ${params.organizationSeeder.name}`],
     toLogFieldName: 'name',
@@ -94,8 +93,8 @@ export const createOrganizations = async (params: {
   transaction: DatabaseTransactionConnection;
   tenantId: string;
   organizations: OrganizationSeeder[];
-}): Promise<OrganizationSeederWithId[]> => {
-  const promises: Array<Promise<OrganizationSeederWithId>> = [];
+}): Promise<OrganizationSeeder[]> => {
+  const promises: Array<Promise<OrganizationSeeder>> = [];
   for (const organization of params.organizations) {
     promises.push(
       createOrganization({

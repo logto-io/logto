@@ -4,6 +4,8 @@
 /* eslint-disable @silverhand/fp/no-mutating-methods */
 /* eslint-disable @silverhand/fp/no-mutation */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable max-lines */
+/* eslint-disable max-params */
 import { OrganizationRoles, OrganizationScopes, Roles, Scopes } from '@logto/schemas';
 import { sql, type ValueExpression, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
@@ -49,7 +51,8 @@ export type OrganizationScopesLists = ScopesLists<OrganizationSeedingScope>;
 
 export type ResourceScopesLists = Record<string, ScopesLists<ResourceSeedingScope>>;
 
-export const buildScopeFullName = (entity: string, action: string): string => `${entity}:${action}`;
+export const buildScopeFullName = (entity: string, action: string, subject?: string): string =>
+  [entity, action, subject].filter(Boolean).join(':');
 
 export const ensureRoleHasAtLeastOneScope = <T>(roleName: string, scopes: T[]): void => {
   if (scopes.length === 0) {
@@ -104,6 +107,35 @@ export const getScopesBySpecificPermissions = <
   return outputPerms;
 };
 
+const addScopeToLists = (
+  lists: ScopesLists<OrganizationSeedingScope | ResourceSeedingScope>,
+  resource: string,
+  action: string,
+  resourceId?: string,
+  subject?: string
+) => {
+  const { scopesByEntity, scopesList, scopesByAction, scopesByFullName } = lists;
+
+  const scope: { name: string; description: string; resource_id?: string } = {
+    name: buildScopeFullName(resource, action, subject),
+    description: `${action} ${resource} ${subject}`,
+  };
+  if (resourceId) {
+    scope.resource_id = resourceId;
+  }
+  scopesList.push(scope);
+  if (scopesByEntity[resource] === undefined) {
+    scopesByEntity[resource] = [];
+  }
+  scopesByEntity[resource]!.push(scope);
+  if (scopesByAction[action] === undefined) {
+    scopesByAction[action] = [];
+  }
+  scopesByAction[action]!.push(scope);
+
+  scopesByFullName[scope.name] = scope;
+};
+
 export const fillScopesGroup = <
   T extends OrganizationPermissionSeeder | ResourcePermissionSeeder,
   U extends ScopesLists<OrganizationSeedingScope | ResourceSeedingScope>,
@@ -112,28 +144,18 @@ export const fillScopesGroup = <
   fullLists: U,
   resourceId?: string
 ) => {
-  const { scopesByEntity, scopesList, scopesByAction, scopesByFullName } = fullLists;
-  for (const resource of seeder.entities) {
-    scopesByEntity[resource] = [];
-    for (const action of seeder.actions) {
-      const scope: { name: string; description: string; resource_id?: string } = {
-        name: buildScopeFullName(resource, action),
-        description: `${action} ${resource}`,
-      };
-      if (resourceId) {
-        scope.resource_id = resourceId;
-      }
-      scopesList.push(scope);
-      if (scopesByEntity[resource] === undefined) {
-        scopesByEntity[resource] = [];
-      }
-      scopesByEntity[resource]!.push(scope);
-      if (scopesByAction[action] === undefined) {
-        scopesByAction[action] = [];
-      }
-      scopesByAction[action]!.push(scope);
+  for (const permission of seeder.specific_permissions ?? []) {
+    const [resource, action, subject] = permission.split(':');
+    if (!resource || !action) {
+      continue;
+    }
 
-      scopesByFullName[scope.name] = scope;
+    addScopeToLists(fullLists, resource, action, resourceId, subject);
+  }
+
+  for (const resource of seeder.entities ?? []) {
+    for (const action of seeder.actions ?? []) {
+      addScopeToLists(fullLists, resource, action, resourceId);
     }
   }
 
