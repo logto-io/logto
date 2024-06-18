@@ -1,4 +1,5 @@
 import { consoleLog } from '@logto/cli/lib/utils.js';
+import phrases from '@logto/phrases';
 import {
   type CreateUsersRole,
   type Role,
@@ -152,25 +153,22 @@ export const manageDefaultUserRole = async (
     return;
   }
 
-  assertThat(Boolean(user.primaryEmail), 'user.email_not_exist');
-
   if (user.primaryEmail === null) {
+    consoleLog.error(phrases.en.errors.user.email_not_exist);
     return;
   }
 
   const domain = getDomainFromEmail(user.primaryEmail);
 
-  assertThat(Boolean(domain), 'user.invalid_email');
-
   if (domain === undefined) {
+    consoleLog.error(phrases.en.errors.user.invalid_email);
     return;
   }
 
   const userRole = await getUserRoleByDomain(domain, getRoles);
 
-  assertThat(Boolean(userRole), 'role.default_role_missing');
-
   if (userRole === undefined) {
+    consoleLog.error(phrases.en.errors.role.default_role_missing);
     return;
   }
 
