@@ -6,7 +6,8 @@
 
 import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
-import { deleteUser, getUserOrganizations } from '#src/api/index.js';
+import { deleteUser, getUserOrganizations, updateSignInExperience } from '#src/api/index.js';
+import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { logoutClient } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
@@ -19,10 +20,12 @@ import {
   enableAllVerificationCodeSignInMethods,
   resetPasswordPolicy,
 } from '#src/helpers/sign-in-experience.js';
-import { randomString } from '#src/utils.js';
+import { registerNewUserWithSso } from '#src/helpers/single-sign-on.js';
+import { generateEmail, randomString } from '#src/utils.js';
 
 describe('organization just-in-time provisioning', () => {
   const organizationApi = new OrganizationApiTest();
+  const ssoConnectorApi = new SsoConnectorApi();
 
   afterEach(async () => {
     await organizationApi.cleanUp();
@@ -31,8 +34,10 @@ describe('organization just-in-time provisioning', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await Promise.all([setEmailConnector(), setSmsConnector()]);
+
     await resetPasswordPolicy();
     // Run it sequentially to avoid race condition
+
     await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Email],
       password: false,
@@ -64,5 +69,31 @@ describe('organization just-in-time provisioning', () => {
     await deleteUser(id);
   });
 
-  // TODO: Add SSO test case
+  it('should automatically provision a user to the organization with the matched email from a SSO identity', async () => {
+    const organization = await organizationApi.create({ name: 'sso_foo' });
+    const domain = 'sso_example.com';
+    await organizationApi.jit.addEmailDomain(organization.id, domain);
+
+    const connector = await ssoConnectorApi.createMockOidcConnector([domain]);
+    await updateSignInExperience({
+      singleSignOnEnabled: true,
+    });
+
+    const userId = await registerNewUserWithSso(connector.id, {
+      authData: {
+        sub: randomString(),
+        email: generateEmail(domain),
+        email_verified: true,
+      },
+    });
+
+    const userOrganizations = await getUserOrganizations(userId);
+
+    expect(userOrganizations).toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: organization.id })])
+    );
+
+    await deleteUser(userId);
+    await ssoConnectorApi.cleanUp();
+  });
 });

@@ -3,20 +3,22 @@ import { conditional } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
 
+import { EnvSet } from '#src/env-set/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { SsoConnectorError, SsoConnectorErrorCodes } from '../types/error.js';
 import {
+  scopePostProcessor,
   type BaseOidcConfig,
   type BasicOidcConnectorConfig,
-  scopePostProcessor,
 } from '../types/oidc.js';
 import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import {
-  type SingleSignOnConnectorSession,
   type CreateSingleSignOnSession,
+  type SingleSignOnConnectorSession,
 } from '../types/session.js';
 
+import { mockGetUserInfo } from './test-utils.js';
 import { fetchOidcConfig, fetchToken, getIdTokenClaims, getUserInfo } from './utils.js';
 
 /**
@@ -100,6 +102,12 @@ class OidcConnector {
     connectorSession: SingleSignOnConnectorSession,
     data: unknown
   ): Promise<ExtendedSocialUserInfo> {
+    const { isIntegrationTest } = EnvSet.values;
+
+    if (isIntegrationTest) {
+      return mockGetUserInfo(connectorSession, data);
+    }
+
     const oidcConfig = await this.getOidcConfig();
     const { nonce, redirectUri } = connectorSession;
 

@@ -5,13 +5,16 @@ import { deleteUser } from '#src/api/admin-user.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { createRole } from '#src/api/role.js';
 import { createScope } from '#src/api/scope.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import { registerWithEmail } from '#src/helpers/interactions.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { registerNewUserWithSso } from '#src/helpers/single-sign-on.js';
 import { UserApiTest } from '#src/helpers/user.js';
-import { generateName, generateRoleName, randomString } from '#src/utils.js';
+import { generateEmail, generateName, generateRoleName, randomString } from '#src/utils.js';
 
 import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
@@ -22,6 +25,7 @@ describe('manual data hook tests', () => {
   const userApi = new UserApiTest();
   const organizationApi = new OrganizationApiTest();
   const hookName = 'customDataHookEventListener';
+  const ssoConnectorApi = new SsoConnectorApi();
 
   beforeAll(async () => {
     await webbHookMockServer.listen();
@@ -148,6 +152,27 @@ describe('manual data hook tests', () => {
       await assertOrganizationMembershipUpdated(organization.id);
     });
 
-    // TODO: Add SSO test case
+    it('should trigger `Organization.Membership.Updated` event when user is provisioned by SSO', async () => {
+      const organization = await organizationApi.create({ name: 'bar' });
+      const domain = 'sso_example.com';
+      await organizationApi.jit.addEmailDomain(organization.id, domain);
+
+      const connector = await ssoConnectorApi.createMockOidcConnector([domain]);
+      await updateSignInExperience({
+        singleSignOnEnabled: true,
+      });
+
+      await registerNewUserWithSso(connector.id, {
+        authData: {
+          sub: randomString(),
+          email: generateEmail(domain),
+          email_verified: true,
+        },
+      });
+
+      await assertOrganizationMembershipUpdated(organization.id);
+
+      await ssoConnectorApi.cleanUp();
+    });
   });
 });

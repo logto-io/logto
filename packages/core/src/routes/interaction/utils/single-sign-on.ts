@@ -138,8 +138,7 @@ export const handleSsoAuthentication = async (
   connectorData: SupportedSsoConnector,
   ssoAuthentication: SsoAuthenticationResult
 ): Promise<string> => {
-  const { createLog } = ctx;
-  const { provider, queries } = tenant;
+  const { queries } = tenant;
   const { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries } = queries;
   const { issuer, userInfo } = ssoAuthentication;
 
