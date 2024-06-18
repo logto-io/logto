@@ -138,7 +138,7 @@ dependencies {
 
 ### Test Alipay native connector
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 Once Alipay native connector is enabled, you can build and run your app to see if it works.
 
@@ -258,7 +258,7 @@ dependencies {
 
 ## 测试支付宝原生连接器
 
-大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)。
+大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
 
 在支付宝原生连接器启用后，你可以构建并运行你的应用看看是否生效。
 

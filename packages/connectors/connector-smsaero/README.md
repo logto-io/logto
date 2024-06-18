@@ -5,13 +5,12 @@ The official Logto connector for SMSAero short message service.
 **Table of contents**
 
 - [SMSAero short message service connector](#smsaero-short-message-service-connector)
-    - [Register account](#register-account)
-    - [Set up senders' phone numbers](#set-up-senders-phone-numbers)
-    - [Get account credentials](#get-account-credentials)
-    - [Compose the connector JSON](#compose-the-connector-json)
-        - [Test SMSAero connector](#test-smsaero-connector)
-        - [Config types](#config-types)
-    - [Reference](#reference)
+  - [Register account](#register-account)
+  - [Get account credentials](#get-account-credentials)
+  - [Compose the connector JSON](#compose-the-connector-json)
+    - [Test SMSAero connector](#test-smsaero-connector)
+    - [Config types](#config-types)
+  - [Reference](#reference)
 
 ## Register account
 
@@ -43,7 +42,7 @@ You can add multiple SMS connector templates for different cases. Here is an exa
 You can enter a phone number and click on "Send" to see whether the settings can work before "Save and Done".
 
 That's it. Don't forget
-to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in).
+to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/sms-connector/enable-SMS-sign-in/).
 
 ### Config types
 

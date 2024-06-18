@@ -77,7 +77,7 @@ Fill out the `scope` field with either 'snsapi_userinfo' or 'snsapi_base'. You c
 
 ### Test WeChat web connector
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 Once WeChat web connector is enabled, you can sign in to your app again to see if it works.
 
@@ -133,6 +133,6 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 ### 测试微信网页连接器
 
-大功告成。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)。
+大功告成。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
 
 在微信原生连接器启用后，你可以构建并运行你的应用看看是否生效。
