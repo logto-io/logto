@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInIdentifier, SsoProviderName } from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInIdentifier, SsoProviderName } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
 import { mockSocialConnectorTarget } from '#src/__mocks__/connectors-mock.js';
@@ -40,6 +40,7 @@ describe('direct sign-in', () => {
     await updateSignInExperience({
       termsOfUseUrl: 'https://example.com/terms',
       privacyPolicyUrl: 'https://example.com/privacy',
+      agreeToTermsPolicy: AgreeToTermsPolicy.ManualRegistrationOnly,
       signUp: { identifiers: [], password: true, verify: false },
       signIn: {
         methods: [

@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInIdentifier } from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInIdentifier } from '@logto/schemas';
 
 import { createUser, deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -59,6 +59,7 @@ describe('automatic account linking', () => {
     await updateSignInExperience({
       termsOfUseUrl: 'https://example.com/terms',
       privacyPolicyUrl: 'https://example.com/privacy',
+      agreeToTermsPolicy: AgreeToTermsPolicy.ManualRegistrationOnly,
       socialSignIn: { automaticAccountLinking: true },
     });
     const socialUserId = 'foo_' + randomString();

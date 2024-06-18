@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInIdentifier, SignInMode, SsoProviderName } from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInIdentifier, SignInMode, SsoProviderName } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -53,6 +53,7 @@ describe('social sign-in (with email identifier)', () => {
     await updateSignInExperience({
       termsOfUseUrl: 'https://example.com/terms',
       privacyPolicyUrl: 'https://example.com/privacy',
+      agreeToTermsPolicy: AgreeToTermsPolicy.ManualRegistrationOnly,
       signUp: { identifiers: [SignInIdentifier.Email], password: true, verify: true },
       signIn: {
         methods: [

@@ -8,10 +8,18 @@
 
 .terms {
   margin-top: _.unit(4);
+  @include _.text-hint;
   text-align: center;
   font: var(--font-body-3);
 }
 
+.checkbox {
+  margin-bottom: _.unit(4);
+}
+
+.checkboxForSsoOnly {
+  justify-content: center;
+}
 
 .createAccount,
 .singleSignOn {
@@ -22,7 +30,6 @@
 .placeHolder {
   flex: 1;
 }
-
 
 :global(body.desktop) {
   .placeHolder {

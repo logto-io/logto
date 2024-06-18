@@ -8,6 +8,13 @@
 
 .terms {
   margin-bottom: _.unit(4);
+  text-align: center;
+  @include _.text-hint;
+  font: var(--font-body-3);
+}
+
+.checkbox {
+  justify-content: center;
 }
 
 .createAccount,

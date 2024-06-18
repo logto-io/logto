@@ -78,6 +78,7 @@ const description = {
   not_you: '不是你本人吗？',
   user_id: '用户 ID: {{id}}',
   redirect_to: '你将被重定向到 {{name}}。',
+  auto_agreement: '继续即表示您同意<link></link>。',
 };
 
 export default Object.freeze(description);

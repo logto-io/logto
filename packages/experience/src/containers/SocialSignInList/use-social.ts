@@ -1,10 +1,15 @@
-import { ConnectorPlatform, type ExperienceSocialConnector } from '@logto/schemas';
+import {
+  AgreeToTermsPolicy,
+  ConnectorPlatform,
+  type ExperienceSocialConnector,
+} from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { getSocialAuthorizationUrl } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useTerms from '@/hooks/use-terms';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 import { generateState, storeState, buildSocialLandingUri } from '@/utils/social-connectors';
 
@@ -13,6 +18,7 @@ const useSocial = () => {
 
   const handleError = useErrorHandler();
   const asyncInvokeSocialSignIn = useApi(getSocialAuthorizationUrl);
+  const { termsValidation, agreeToTermsPolicy } = useTerms();
 
   const nativeSignInHandler = useCallback(
     (redirectTo: string, connector: ExperienceSocialConnector) => {
@@ -33,6 +39,14 @@ const useSocial = () => {
 
   const invokeSocialSignInHandler = useCallback(
     async (connector: ExperienceSocialConnector) => {
+      /**
+       * Check if the user has agreed to the terms and privacy policy before navigating to the 3rd-party social sign-in page
+       * when the policy is set to `Manual`
+       */
+      if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual && !(await termsValidation())) {
+        return;
+      }
+
       const { id: connectorId } = connector;
 
       const state = generateState();
@@ -64,7 +78,7 @@ const useSocial = () => {
       // Invoke web social sign-in flow
       window.location.assign(result.redirectTo);
     },
-    [asyncInvokeSocialSignIn, handleError, nativeSignInHandler]
+    [agreeToTermsPolicy, asyncInvokeSocialSignIn, handleError, nativeSignInHandler, termsValidation]
   );
 
   return {
