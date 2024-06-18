@@ -40,9 +40,12 @@ export type GuideMetadata = {
 
 /** The guide instance to build in the console. */
 export type Guide = {
+  order: number;
   /** The unique identifier of the guide. */
   id: string;
-  Logo: LazyExoticComponent<SvgComponent>;
+  Logo:
+    | LazyExoticComponent<SvgComponent>
+    | ((props: { readonly className?: string }) => JSX.Element);
   Component: LazyExoticComponent<FunctionComponent<MDXProps>>;
   metadata: Readonly<GuideMetadata>;
 };

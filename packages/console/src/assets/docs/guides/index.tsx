@@ -2,43 +2,44 @@
 
 import { lazy } from 'react';
 
-import { type Guide } from './types';
-import webNextAppRouter from './web-next-app-router/index';
-import nativeExpo from './native-expo/index';
-import spaAngular from './spa-angular/index';
-import spaReact from './spa-react/index';
-import m2mGeneral from './m2m-general/index';
-import webExpress from './web-express/index';
-import webNext from './web-next/index';
-import webSveltekit from './web-sveltekit/index';
-import webGo from './web-go/index';
-import webNextAuth from './web-next-auth/index';
-import webJavaSpringBoot from './web-java-spring-boot/index';
-import webGptPlugin from './web-gpt-plugin/index';
-import spaVue from './spa-vue/index';
-import nativeIosSwift from './native-ios-swift/index';
-import nativeAndroid from './native-android/index';
-import spaVanilla from './spa-vanilla/index';
-import webNuxt from './web-nuxt/index';
-import webPhp from './web-php/index';
-import webRuby from './web-ruby/index';
-import spaWebflow from './spa-webflow/index';
-import webWordpress from './web-wordpress/index';
-import webPython from './web-python/index';
-import nativeCapacitor from './native-capacitor/index';
-import webRemix from './web-remix/index';
-import nativeFlutter from './native-flutter/index';
-import webDotnetCore from './web-dotnet-core/index';
-import webDotnetCoreMvc from './web-dotnet-core-mvc/index';
-import webDotnetCoreBlazorServer from './web-dotnet-core-blazor-server/index';
-import webDotnetCoreBlazorWasm from './web-dotnet-core-blazor-wasm/index';
-import webOutline from './web-outline/index';
 import apiExpress from './api-express/index';
 import apiPython from './api-python/index';
 import apiSpringBoot from './api-spring-boot/index';
+import m2mGeneral from './m2m-general/index';
+import nativeAndroid from './native-android/index';
+import nativeCapacitor from './native-capacitor/index';
+import nativeExpo from './native-expo/index';
+import nativeFlutter from './native-flutter/index';
+import nativeIosSwift from './native-ios-swift/index';
+import spaAngular from './spa-angular/index';
+import spaReact from './spa-react/index';
+import spaVanilla from './spa-vanilla/index';
+import spaVue from './spa-vue/index';
+import spaWebflow from './spa-webflow/index';
 import thirdPartyOidc from './third-party-oidc/index';
+import { type Guide } from './types';
+import webDotnetCore from './web-dotnet-core/index';
+import webDotnetCoreBlazorServer from './web-dotnet-core-blazor-server/index';
+import webDotnetCoreBlazorWasm from './web-dotnet-core-blazor-wasm/index';
+import webDotnetCoreMvc from './web-dotnet-core-mvc/index';
+import webExpress from './web-express/index';
+import webGo from './web-go/index';
+import webGptPlugin from './web-gpt-plugin/index';
+import webJavaSpringBoot from './web-java-spring-boot/index';
+import webNext from './web-next/index';
+import webNextAppRouter from './web-next-app-router/index';
+import webNextAuth from './web-next-auth/index';
+import webNuxt from './web-nuxt/index';
+import webOutline from './web-outline/index';
+import webPhp from './web-php/index';
+import webPython from './web-python/index';
+import webRemix from './web-remix/index';
+import webRuby from './web-ruby/index';
+import webRubyLogo from './web-ruby/logo.webp';
+import webSveltekit from './web-sveltekit/index';
+import webWordpress from './web-wordpress/index';
 
-const guides: Readonly<Guide[]> = Object.freeze([
+export const guides: Readonly<Guide[]> = Object.freeze([
   {
     order: 1,
     id: 'web-next-app-router',
@@ -168,7 +169,9 @@ const guides: Readonly<Guide[]> = Object.freeze([
   {
     order: 2,
     id: 'web-ruby',
-    Logo: lazy(async () => import('./web-ruby/logo.webp')),
+    Logo: ({ className }: { readonly className?: string }) => (
+      <img src={webRubyLogo} alt="web-ruby" className={className} />
+    ),
     Component: lazy(async () => import('./web-ruby/README.mdx')),
     metadata: webRuby,
   },
@@ -250,32 +253,31 @@ const guides: Readonly<Guide[]> = Object.freeze([
     metadata: webOutline,
   },
   {
-    order: Infinity,
+    order: Number.POSITIVE_INFINITY,
     id: 'api-express',
     Logo: lazy(async () => import('./api-express/logo.svg')),
     Component: lazy(async () => import('./api-express/README.mdx')),
     metadata: apiExpress,
   },
   {
-    order: Infinity,
+    order: Number.POSITIVE_INFINITY,
     id: 'api-python',
     Logo: lazy(async () => import('./api-python/logo.svg')),
     Component: lazy(async () => import('./api-python/README.mdx')),
     metadata: apiPython,
   },
   {
-    order: Infinity,
+    order: Number.POSITIVE_INFINITY,
     id: 'api-spring-boot',
     Logo: lazy(async () => import('./api-spring-boot/logo.svg')),
     Component: lazy(async () => import('./api-spring-boot/README.mdx')),
     metadata: apiSpringBoot,
   },
   {
-    order: Infinity,
+    order: Number.POSITIVE_INFINITY,
     id: 'third-party-oidc',
     Logo: lazy(async () => import('./third-party-oidc/logo.svg')),
     Component: lazy(async () => import('./third-party-oidc/README.mdx')),
     metadata: thirdPartyOidc,
-  },]);
-
-export default guides;
+  },
+]);
