@@ -64,7 +64,7 @@ const { hasActiveUsers, updateUserById, hasUserWithEmail, hasUserWithPhone } = u
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
   insertUser: jest.fn(
-    async (user: CreateUser): Promise<InsertUserResult> => [user as User, { organizationIds: [] }]
+    async (user: CreateUser): Promise<InsertUserResult> => [user as User, { organizations: [] }]
   ),
 };
 const { generateUserId, insertUser } = userLibraries;
