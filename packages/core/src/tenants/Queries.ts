@@ -21,6 +21,7 @@ import { createRolesQueries } from '#src/queries/roles.js';
 import { createScopeQueries } from '#src/queries/scope.js';
 import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.js';
 import SsoConnectorQueries from '#src/queries/sso-connectors.js';
+import { createSubjectTokenQueries } from '#src/queries/subject-token.js';
 import createTenantQueries from '#src/queries/tenant.js';
 import UserSsoIdentityQueries from '#src/queries/user-sso-identities.js';
 import { createUserQueries } from '#src/queries/user.js';
@@ -52,6 +53,7 @@ export default class Queries {
   organizations = new OrganizationQueries(this.pool);
   ssoConnectors = new SsoConnectorQueries(this.pool);
   userSsoIdentities = new UserSsoIdentityQueries(this.pool);
+  subjectTokens = createSubjectTokenQueries(this.pool);
   tenants = createTenantQueries(this.pool);
 
   constructor(
