@@ -1,4 +1,4 @@
-import { ConnectorType } from '@logto/connector-kit';
+import { ConnectorType, GoogleConnector } from '@logto/connector-kit';
 import { createMockUtils } from '@logto/shared/esm';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -9,10 +9,10 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const getUserInfoByAuthCode = jest.fn().mockResolvedValue({ id: 'foo' });
+const getUserInfo = jest.fn().mockResolvedValue({ id: 'foo' });
 
 const tenant = new MockTenant(undefined, undefined, undefined, {
-  socials: { getUserInfoByAuthCode },
+  socials: { getUserInfo },
 });
 
 mockEsm('#src/libraries/connector.js', () => ({
@@ -27,8 +27,8 @@ mockEsm('#src/libraries/connector.js', () => ({
 
 const { verifySocialIdentity } = await import('./social-verification.js');
 
-describe('social-verification', () => {
-  it('verifySocialIdentity', async () => {
+describe('verifySocialIdentity', () => {
+  it('should verify social identity', async () => {
     // @ts-expect-error test mock context
     const ctx: WithLogContext = {
       ...createMockContext(),
@@ -38,7 +38,40 @@ describe('social-verification', () => {
     const connectorData = { authCode: 'code' };
     const userInfo = await verifySocialIdentity({ connectorId, connectorData }, ctx, tenant);
 
-    expect(getUserInfoByAuthCode).toBeCalledWith(connectorId, connectorData, expect.anything());
+    expect(getUserInfo).toBeCalledWith(connectorId, connectorData, expect.anything());
     expect(userInfo).toEqual({ id: 'foo' });
+  });
+
+  it('should throw error if csrf token is not matched for Google One Tap verification', async () => {
+    const ctx: WithLogContext = {
+      ...createMockContext(),
+      ...createMockLogContext(),
+      // @ts-expect-error test mock context
+      cookies: { get: jest.fn().mockReturnValue('token') },
+    };
+    const connectorId = GoogleConnector.factoryId;
+    const connectorData = { credential: 'credential' };
+
+    await expect(verifySocialIdentity({ connectorId, connectorData }, ctx, tenant)).rejects.toThrow(
+      'CSRF token mismatch.'
+    );
+  });
+
+  it('should verify Google One Tap verification', async () => {
+    const ctx: WithLogContext = {
+      ...createMockContext(),
+      ...createMockLogContext(),
+      // @ts-expect-error test mock context
+      cookies: { get: jest.fn().mockReturnValue('token') },
+    };
+    const connectorId = GoogleConnector.factoryId;
+    const connectorData = {
+      [GoogleConnector.oneTapParams.credential]: 'credential',
+      [GoogleConnector.oneTapParams.csrfToken]: 'token',
+    };
+
+    await expect(
+      verifySocialIdentity({ connectorId, connectorData }, ctx, tenant)
+    ).resolves.toEqual({ id: 'foo' });
   });
 });

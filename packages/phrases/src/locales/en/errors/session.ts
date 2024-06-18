@@ -18,6 +18,7 @@ const session = {
     'The verification was not successful. Restart the verification flow and try again.',
   connector_validation_session_not_found:
     'The connector session for token validation is not found.',
+  csrf_token_mismatch: 'CSRF token mismatch.',
   identifier_not_found: 'User identifier not found. Please go back and sign in again.',
   interaction_not_found:
     'Interaction session not found. Please go back and start the session again.',
