@@ -2,6 +2,7 @@ import {
   type OrganizationJitEmailDomain,
   OrganizationJitEmailDomains,
   type CreateOrganizationJitEmailDomain,
+  OrganizationJitRoles,
 } from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
@@ -49,13 +50,26 @@ export class EmailDomainQueries {
     return [Number(count), rows];
   }
 
-  async getOrganizationIdsByDomain(emailDomain: string): Promise<readonly string[]> {
-    const rows = await this.pool.any<Pick<OrganizationJitEmailDomain, 'organizationId'>>(sql`
-      select ${fields.organizationId}
+  /**
+   * Given an email domain, return the organizations and organization roles that need to be
+   * provisioned.
+   */
+  async getJitOrganizations(emailDomain: string): Promise<readonly JitOrganization[]> {
+    const { fields } = convertToIdentifiers(OrganizationJitEmailDomains, true);
+    const organizationJitRoles = convertToIdentifiers(OrganizationJitRoles, true);
+    return this.pool.any<JitOrganization>(sql`
+      select
+        ${fields.organizationId},
+        array_remove(
+          array_agg(${organizationJitRoles.fields.organizationRoleId}),
+          null
+        ) as "organizationRoleIds"
       from ${table}
+      left join ${organizationJitRoles.table}
+        on ${fields.organizationId} = ${organizationJitRoles.fields.organizationId}
       where ${fields.emailDomain} = ${emailDomain}
+      group by ${fields.organizationId}
     `);
-    return rows.map((row) => row.organizationId);
   }
 
   async insert(organizationId: string, emailDomain: string): Promise<OrganizationJitEmailDomain> {
@@ -111,3 +125,8 @@ export class EmailDomainQueries {
     });
   }
 }
+
+export type JitOrganization = {
+  organizationId: string;
+  organizationRoleIds: string[];
+};

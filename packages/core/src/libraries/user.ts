@@ -8,6 +8,7 @@ import pRetry from 'p-retry';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type JitOrganization } from '#src/queries/organization/email-domains.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -73,8 +74,8 @@ const converBindMfaToMfaVerification = (bindMfa: BindMfa): MfaVerification => {
 export type InsertUserResult = [
   User,
   {
-    /** The organization IDs that the user has been provisioned into. */
-    organizationIds: readonly string[];
+    /** The organizations and organization roles that the user has been provisioned into. */
+    organizations: readonly JitOrganization[];
   },
 ];
 
@@ -143,29 +144,42 @@ export const createUserLibrary = (queries: Queries) => {
       }
 
       // TODO: If the user's email is not verified, we should not provision the user into any organization.
-      const provisionOrganizations = async (): Promise<readonly string[]> => {
+      const provisionOrganizations = async (): Promise<readonly JitOrganization[]> => {
         // Just-in-time organization provisioning
         const userEmailDomain = data.primaryEmail?.split('@')[1];
         if (userEmailDomain) {
           const organizationQueries = new OrganizationQueries(connection);
-          const organizationIds =
-            await organizationQueries.jit.emailDomains.getOrganizationIdsByDomain(userEmailDomain);
+          const organizations = await organizationQueries.jit.emailDomains.getJitOrganizations(
+            userEmailDomain
+          );
 
-          if (organizationIds.length > 0) {
+          if (organizations.length > 0) {
             await organizationQueries.relations.users.insert(
-              ...organizationIds.map<[string, string]>((organizationId) => [
+              ...organizations.map<[string, string]>(({ organizationId }) => [
                 organizationId,
                 user.id,
               ])
             );
-            return organizationIds;
+
+            const data = organizations.flatMap(({ organizationId, organizationRoleIds }) =>
+              organizationRoleIds.map<[string, string, string]>((organizationRoleId) => [
+                organizationId,
+                organizationRoleId,
+                user.id,
+              ])
+            );
+            if (data.length > 0) {
+              await organizationQueries.relations.rolesUsers.insert(...data);
+            }
+
+            return organizations;
           }
         }
 
         return [];
       };
 
-      return [user, { organizationIds: await provisionOrganizations() }];
+      return [user, { organizations: await provisionOrganizations() }];
     });
   };
 

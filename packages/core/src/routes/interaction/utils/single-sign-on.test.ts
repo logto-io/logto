@@ -26,7 +26,7 @@ const updateUserSsoIdentityMock = jest.fn();
 const insertUserSsoIdentityMock = jest.fn();
 const updateUserMock = jest.fn();
 const findUserByEmailMock = jest.fn();
-const insertUserMock = jest.fn().mockResolvedValue([{ id: 'foo' }, { organizationIds: [] }]);
+const insertUserMock = jest.fn().mockResolvedValue([{ id: 'foo' }, { organizations: [] }]);
 const generateUserIdMock = jest.fn().mockResolvedValue('foo');
 const getAvailableSsoConnectorsMock = jest.fn();
 
@@ -291,7 +291,7 @@ describe('Single sign on util methods tests', () => {
 
   describe('registerWithSsoAuthentication tests', () => {
     it('should register if no related user account found', async () => {
-      insertUserMock.mockResolvedValueOnce([{ id: 'foo' }, { organizationIds: [] }]);
+      insertUserMock.mockResolvedValueOnce([{ id: 'foo' }, { organizations: [] }]);
 
       const { id } = await registerWithSsoAuthentication(mockContext, tenant, {
         connectorId: wellConfiguredSsoConnector.id,
