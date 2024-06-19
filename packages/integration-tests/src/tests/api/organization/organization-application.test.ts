@@ -8,9 +8,10 @@ import {
   deleteApplication,
 } from '#src/api/application.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { generateTestName } from '#src/utils.js';
+import { devFeatureTest, generateTestName } from '#src/utils.js';
 
-describe('organization application APIs', () => {
+// TODO: Remove this prefix
+devFeatureTest.describe('organization application APIs', () => {
   describe('organization - application relations', () => {
     const organizationApi = new OrganizationApiTest();
     const applications: Application[] = [];

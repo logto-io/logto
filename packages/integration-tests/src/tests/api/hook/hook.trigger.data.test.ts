@@ -11,9 +11,10 @@ import { assert } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { authedAdminApi } from '#src/api/api.js';
-import { createApplication } from '#src/api/application.js';
+import { createApplication, deleteApplication } from '#src/api/application.js';
 import { createResource } from '#src/api/resource.js';
 import { createScope } from '#src/api/scope.js';
+import { isDevFeaturesEnabled } from '#src/constants.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import {
   OrganizationApiTest,
@@ -242,12 +243,18 @@ describe('organization data hook events', () => {
   });
 
   afterAll(async () => {
-    await userApi.cleanUp();
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    await Promise.all([userApi.cleanUp(), deleteApplication(applicationId).catch(() => {})]);
   });
 
   it.each(organizationDataHookTestCases)(
     'test case %#: %p',
     async ({ route, event, method, endpoint, payload, hookPayload }) => {
+      // TODO: Remove this check
+      if (route.includes('applications') && !isDevFeaturesEnabled) {
+        return;
+      }
+
       await authedAdminApi[method](
         endpoint
           .replace('{organizationId}', organizationId)
