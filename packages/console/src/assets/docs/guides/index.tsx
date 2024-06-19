@@ -34,10 +34,19 @@ import webOutline from './web-outline/index';
 import webPhp from './web-php/index';
 import webPython from './web-python/index';
 import webRemix from './web-remix/index';
+import webRuby from './web-ruby/index';
+import webRubyLogo from './web-ruby/logo.webp';
 import webSveltekit from './web-sveltekit/index';
 import webWordpress from './web-wordpress/index';
 
-const guides: Readonly<Guide[]> = Object.freeze([
+export const guides: Readonly<Guide[]> = Object.freeze([
+  {
+    order: 1,
+    id: 'web-next-app-router',
+    Logo: lazy(async () => import('./web-next-app-router/logo.svg')),
+    Component: lazy(async () => import('./web-next-app-router/README.mdx')),
+    metadata: webNextAppRouter,
+  },
   {
     order: 1.1,
     id: 'native-expo',
@@ -58,13 +67,6 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./spa-react/logo.svg')),
     Component: lazy(async () => import('./spa-react/README.mdx')),
     metadata: spaReact,
-  },
-  {
-    order: 1.1,
-    id: 'web-next-app-router',
-    Logo: lazy(async () => import('./web-next-app-router/logo.svg')),
-    Component: lazy(async () => import('./web-next-app-router/README.mdx')),
-    metadata: webNextAppRouter,
   },
   {
     order: 1.2,
@@ -163,6 +165,15 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-php/logo.svg')),
     Component: lazy(async () => import('./web-php/README.mdx')),
     metadata: webPhp,
+  },
+  {
+    order: 2,
+    id: 'web-ruby',
+    Logo: ({ className }: { readonly className?: string }) => (
+      <img src={webRubyLogo} alt="web-ruby" className={className} />
+    ),
+    Component: lazy(async () => import('./web-ruby/README.mdx')),
+    metadata: webRuby,
   },
   {
     order: 2.1,
@@ -270,5 +281,3 @@ const guides: Readonly<Guide[]> = Object.freeze([
     metadata: thirdPartyOidc,
   },
 ]);
-
-export default guides;
