@@ -17,9 +17,9 @@ import { parseSearchOptions } from '#src/utils/search.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
-import emailDomainRoutes from './index.jit.email-domains.js';
 import userRoleRelationRoutes from './index.user-role-relations.js';
 import organizationInvitationRoutes from './invitations.js';
+import emailDomainRoutes from './jit.email-domains.js';
 import organizationRoleRoutes from './roles.js';
 import organizationScopeRoutes from './scopes.js';
 import { errorHandler } from './utils.js';
