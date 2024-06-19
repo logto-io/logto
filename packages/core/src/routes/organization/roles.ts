@@ -101,13 +101,19 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
 
       if (organizationScopeIds.length > 0) {
         await rolesScopes.insert(
-          ...organizationScopeIds.map<[string, string]>((id) => [role.id, id])
+          ...organizationScopeIds.map((id) => ({
+            organizationRoleId: role.id,
+            organizationScopeId: id,
+          }))
         );
       }
 
       if (resourceScopeIds.length > 0) {
         await rolesResourceScopes.insert(
-          ...resourceScopeIds.map<[string, string]>((id) => [role.id, id])
+          ...resourceScopeIds.map((id) => ({
+            organizationRoleId: role.id,
+            scopeId: id,
+          }))
         );
       }
 

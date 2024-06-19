@@ -127,8 +127,8 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
       const { userIds, organizationRoleIds } = ctx.guard.body;
 
       await organizations.relations.rolesUsers.insert(
-        ...organizationRoleIds.flatMap<[string, string, string]>((roleId) =>
-          userIds.map<[string, string, string]>((userId) => [id, roleId, userId])
+        ...organizationRoleIds.flatMap((roleId) =>
+          userIds.map((userId) => ({ organizationId: id, organizationRoleId: roleId, userId }))
         )
       );
 

@@ -155,18 +155,18 @@ export const createUserLibrary = (queries: Queries) => {
 
           if (organizations.length > 0) {
             await organizationQueries.relations.users.insert(
-              ...organizations.map<[string, string]>(({ organizationId }) => [
+              ...organizations.map(({ organizationId }) => ({
                 organizationId,
-                user.id,
-              ])
+                userId: user.id,
+              }))
             );
 
             const data = organizations.flatMap(({ organizationId, organizationRoleIds }) =>
-              organizationRoleIds.map<[string, string, string]>((organizationRoleId) => [
+              organizationRoleIds.map((organizationRoleId) => ({
                 organizationId,
                 organizationRoleId,
-                user.id,
-              ])
+                userId: user.id,
+              }))
             );
             if (data.length > 0) {
               await organizationQueries.relations.rolesUsers.insert(...data);
