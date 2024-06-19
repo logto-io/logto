@@ -67,7 +67,10 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const basicSecurityHeaderSettings: HelmetOptions = {
     contentSecurityPolicy: false, // Exclusively set per app
     crossOriginOpenerPolicy: false, // Allow cross origin opener, as some apps rely on popup window for the sign-in flow
-    crossOriginEmbedderPolicy: { policy: 'credentialless' },
+    // Google One Tap iframe request does not respond the proper CORP header (it uses `same-site` instead of `cross-origin`)
+    // and we cannot add the `crossorigin` attribute to the iframe, so the only solution is to disable the COEP header here.
+    // TODO: Re-enable COEP header when Google One Tap supports CORP header.
+    crossOriginEmbedderPolicy: false,
     dnsPrefetchControl: false,
     referrerPolicy: {
       policy: 'strict-origin-when-cross-origin',
