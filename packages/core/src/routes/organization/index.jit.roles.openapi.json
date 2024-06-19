@@ -59,6 +59,9 @@
         "responses": {
           "204": {
             "description": "The organization roles were replaced successfully."
+          },
+          "422": {
+            "description": "The organization roles could not be replaced. Some of the organization roles may not exist."
           }
         }
       }

@@ -1,4 +1,5 @@
 import {
+  ApplicationType,
   RoleType,
   hookEventGuard,
   hookEvents,
@@ -10,6 +11,7 @@ import { assert } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { authedAdminApi } from '#src/api/api.js';
+import { createApplication } from '#src/api/application.js';
 import { createResource } from '#src/api/resource.js';
 import { createScope } from '#src/api/scope.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
@@ -214,6 +216,7 @@ describe('organization data hook events', () => {
   /* eslint-disable @silverhand/fp/no-let */
   let organizationId: string;
   let userId: string;
+  let applicationId: string;
   /* eslint-enable @silverhand/fp/no-let */
 
   const organizationApi = new OrganizationApiTest();
@@ -226,10 +229,12 @@ describe('organization data hook events', () => {
     });
 
     const user = await userApi.create({ name: generateName() });
+    const application = await createApplication(generateName(), ApplicationType.MachineToMachine);
 
     /* eslint-disable @silverhand/fp/no-mutation */
     organizationId = organization.id;
     userId = user.id;
+    applicationId = application.id;
     /* eslint-enable @silverhand/fp/no-mutation */
 
     const organizationCreateHook = await getWebhookResult('POST /organizations');
@@ -244,8 +249,17 @@ describe('organization data hook events', () => {
     'test case %#: %p',
     async ({ route, event, method, endpoint, payload, hookPayload }) => {
       await authedAdminApi[method](
-        endpoint.replace('{organizationId}', organizationId).replace('{userId}', userId),
-        { json: JSON.parse(JSON.stringify(payload).replace('{userId}', userId)) }
+        endpoint
+          .replace('{organizationId}', organizationId)
+          .replace('{userId}', userId)
+          .replace('{applicationId}', applicationId),
+        {
+          json: JSON.parse(
+            JSON.stringify(payload)
+              .replace('{userId}', userId)
+              .replace('{applicationId}', applicationId)
+          ),
+        }
       );
       const hook = await getWebhookResult(route);
       expect(hook?.payload.event).toBe(event);

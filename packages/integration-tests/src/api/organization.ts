@@ -6,10 +6,11 @@ import {
   type OrganizationWithFeatured,
   type OrganizationScope,
   type CreateOrganization,
+  type Application,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
-import { ApiFactory } from './factory.js';
+import { ApiFactory, RelationApiFactory } from './factory.js';
 import { OrganizationJitApi } from './organization-jit.js';
 
 type Query = {
@@ -20,6 +21,11 @@ type Query = {
 
 export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganization, 'id'>> {
   jit = new OrganizationJitApi(this.path);
+  applications = new RelationApiFactory<Application>({
+    basePath: 'organizations',
+    relationPath: 'applications',
+    relationKey: 'applicationIds',
+  });
 
   constructor() {
     super('organizations');

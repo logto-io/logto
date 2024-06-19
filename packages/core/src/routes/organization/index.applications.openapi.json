@@ -1,0 +1,82 @@
+{
+  "tags": [
+    {
+      "name": "Organization applications",
+      "description": "Manage organization - application relationships. An application can be associated with one or more organizations in order to grant organization access to the application.\n\nCurrently, only machine-to-machine applications can be associated with organizations."
+    }
+  ],
+  "paths": {
+    "/api/organizations/{id}/applications": {
+      "get": {
+        "summary": "Get organization applications",
+        "description": "Get applications associated with the organization.",
+        "responses": {
+          "200": {
+            "description": "A list of applications."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add organization application",
+        "description": "Add an application to the organization.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "applicationIds": {
+                    "description": "The application IDs to add."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The application was added successfully."
+          },
+          "422": {
+            "description": "The application could not be added. Some of the applications may not exist."
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace organization applications",
+        "description": "Replace all applications associated with the organization with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "applicationIds": {
+                    "description": "An array of application IDs to replace existing applications."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The applications were replaced successfully."
+          },
+          "422": {
+            "description": "The applications could not be replaced. Some of the applications may not exist."
+          }
+        }
+      }
+    },
+    "/api/organizations/{id}/applications/{applicationId}": {
+      "delete": {
+        "summary": "Remove organization application",
+        "description": "Remove an application from the organization.",
+        "responses": {
+          "204": {
+            "description": "The application was removed from the organization successfully."
+          }
+        }
+      }
+    }
+  }
+}

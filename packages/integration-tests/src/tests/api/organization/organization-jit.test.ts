@@ -88,13 +88,13 @@ describe('organization just-in-time provisioning', () => {
         name: `jit-role:${randomString()}`,
       });
 
-      await organizationApi.jit.addRole(organization.id, [organizationRoleId]);
-      await expect(organizationApi.jit.getRoles(organization.id)).resolves.toMatchObject([
+      await organizationApi.jit.roles.add(organization.id, [organizationRoleId]);
+      await expect(organizationApi.jit.roles.getList(organization.id)).resolves.toMatchObject([
         { id: organizationRoleId },
       ]);
 
-      await organizationApi.jit.deleteRole(organization.id, organizationRoleId);
-      await expect(organizationApi.jit.getRoles(organization.id)).resolves.toEqual([]);
+      await organizationApi.jit.roles.delete(organization.id, organizationRoleId);
+      await expect(organizationApi.jit.roles.getList(organization.id)).resolves.toEqual([]);
     });
 
     it('should have no pagination', async () => {
@@ -107,12 +107,12 @@ describe('organization just-in-time provisioning', () => {
         )
       );
 
-      await organizationApi.jit.replaceRoles(
+      await organizationApi.jit.roles.replace(
         organization.id,
         organizationRoles.map(({ id }) => id)
       );
 
-      await expect(organizationApi.jit.getRoles(organization.id)).resolves.toEqual(
+      await expect(organizationApi.jit.roles.getList(organization.id)).resolves.toEqual(
         expect.arrayContaining(organizationRoles.map(({ id }) => expect.objectContaining({ id })))
       );
     });
@@ -122,7 +122,7 @@ describe('organization just-in-time provisioning', () => {
       const organizationRoleId = randomId();
 
       await expect(
-        organizationApi.jit.deleteRole(organization.id, organizationRoleId)
+        organizationApi.jit.roles.delete(organization.id, organizationRoleId)
       ).rejects.toMatchInlineSnapshot('[HTTPError: Request failed with status code 404 Not Found]');
     });
 
@@ -131,7 +131,7 @@ describe('organization just-in-time provisioning', () => {
       const organizationRoleId = randomId();
 
       await expect(
-        organizationApi.jit.addRole(organization.id, [organizationRoleId])
+        organizationApi.jit.roles.add(organization.id, [organizationRoleId])
       ).rejects.toMatchInlineSnapshot(
         '[HTTPError: Request failed with status code 422 Unprocessable Entity]'
       );
@@ -148,9 +148,9 @@ describe('organization just-in-time provisioning', () => {
         }),
       ]);
 
-      await organizationApi.jit.addRole(organization.id, [organizationRoles[0].id]);
+      await organizationApi.jit.roles.add(organization.id, [organizationRoles[0].id]);
       await expect(
-        organizationApi.jit.addRole(organization.id, [
+        organizationApi.jit.roles.add(organization.id, [
           organizationRoles[0].id,
           organizationRoles[1].id,
         ])
@@ -167,11 +167,11 @@ describe('organization just-in-time provisioning', () => {
         )
       );
 
-      await organizationApi.jit.replaceRoles(
+      await organizationApi.jit.roles.replace(
         organization.id,
         organizationRoles.map(({ id }) => id)
       );
-      await expect(organizationApi.jit.getRoles(organization.id)).resolves.toEqual(
+      await expect(organizationApi.jit.roles.getList(organization.id)).resolves.toEqual(
         expect.arrayContaining(organizationRoles.map(({ id }) => expect.objectContaining({ id })))
       );
     });

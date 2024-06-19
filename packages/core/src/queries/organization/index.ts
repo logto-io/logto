@@ -22,6 +22,8 @@ import {
   Resources,
   Users,
   OrganizationJitRoles,
+  OrganizationApplicationRelations,
+  Applications,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -283,6 +285,13 @@ export default class OrganizationQueries extends SchemaQueries<
     users: new UserRelationQueries(this.pool),
     /** Queries for organization - organization role - user relations. */
     rolesUsers: new RoleUserRelationQueries(this.pool),
+    /** Queries for organization - application relations. */
+    apps: new TwoRelationsQueries(
+      this.pool,
+      OrganizationApplicationRelations.table,
+      Organizations,
+      Applications
+    ),
     invitationsRoles: new TwoRelationsQueries(
       this.pool,
       OrganizationInvitationRoleRelations.table,

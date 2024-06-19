@@ -112,7 +112,7 @@ const isManagementApiRouter = ({ stack }: Router) =>
 
 // Add more components here to cover more ID parameters in paths. For example, if there is a
 // path `/foo/:barBazId`, then add `bar-baz` to the array.
-const identifiableEntityNames = [
+const identifiableEntityNames = Object.freeze([
   'key',
   'connector-factory',
   'factory',
@@ -131,7 +131,10 @@ const identifiableEntityNames = [
   'organization-role',
   'organization-scope',
   'organization-invitation',
-];
+]);
+
+/** Additional tags that cannot be inferred from the path. */
+const additionalTags = Object.freeze(['Organization applications']);
 
 /**
  * Attach the `/swagger.json` route which returns the generated OpenAPI document for the
@@ -229,7 +232,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
           {}
         ),
       },
-      tags: [...tags].map((tag) => ({ name: tag })),
+      tags: [...tags, ...additionalTags].map((tag) => ({ name: tag })),
     };
 
     const data = supplementDocuments.reduce<OpenAPIV3.Document>(

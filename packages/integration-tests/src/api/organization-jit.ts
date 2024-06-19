@@ -1,8 +1,15 @@
 import { type OrganizationRole, type OrganizationJitEmailDomain } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
+import { RelationApiFactory } from './factory.js';
 
 export class OrganizationJitApi {
+  roles = new RelationApiFactory<OrganizationRole>({
+    basePath: 'organizations',
+    relationPath: 'jit/roles',
+    relationKey: 'organizationRoleIds',
+  });
+
   constructor(public path: string) {}
 
   async getEmailDomains(
@@ -35,21 +42,5 @@ export class OrganizationJitApi {
 
   async replaceEmailDomains(id: string, emailDomains: string[]): Promise<void> {
     await authedAdminApi.put(`${this.path}/${id}/jit/email-domains`, { json: { emailDomains } });
-  }
-
-  async getRoles(id: string): Promise<OrganizationRole[]> {
-    return authedAdminApi.get(`${this.path}/${id}/jit/roles`).json<OrganizationRole[]>();
-  }
-
-  async addRole(id: string, organizationRoleIds: string[]): Promise<void> {
-    await authedAdminApi.post(`${this.path}/${id}/jit/roles`, { json: { organizationRoleIds } });
-  }
-
-  async deleteRole(id: string, organizationRoleId: string): Promise<void> {
-    await authedAdminApi.delete(`${this.path}/${id}/jit/roles/${organizationRoleId}`);
-  }
-
-  async replaceRoles(id: string, organizationRoleIds: string[]): Promise<void> {
-    await authedAdminApi.put(`${this.path}/${id}/jit/roles`, { json: { organizationRoleIds } });
   }
 }
