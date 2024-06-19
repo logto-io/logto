@@ -36,7 +36,7 @@
     "@logto/react": "^3.0.8",
     "@logto/schemas": "workspace:^1.17.0",
     "@logto/shared": "workspace:^3.1.1",
-    "@mdx-js/react": "^1.6.22",
+    "@mdx-js/react": "^3.0.0",
     "@monaco-editor/react": "^4.6.0",
     "@parcel/compressor-brotli": "2.9.3",
     "@parcel/compressor-gzip": "2.9.3",
