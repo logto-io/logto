@@ -50,8 +50,8 @@ describe('<SignIn />', () => {
       });
 
       expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
-      expect(queryByText('description.terms_of_use')).not.toBeNull();
-      expect(queryByText('description.privacy_policy')).not.toBeNull();
+      expect(queryAllByText('description.terms_of_use')).not.toBeNull();
+      expect(queryAllByText('description.privacy_policy')).not.toBeNull();
 
       expect(queryByText('action.sign_in')).not.toBeNull();
 
@@ -66,7 +66,7 @@ describe('<SignIn />', () => {
     test.each(mockSignInMethodSettingsTestCases)(
       'renders with [%p %p %p] SignIn Methods only mode',
       async (...methods) => {
-        const { container, queryByText } = renderSignIn({
+        const { container, queryAllByAltText } = renderSignIn({
           signIn: {
             methods,
           },
@@ -74,8 +74,8 @@ describe('<SignIn />', () => {
 
         expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
         expect(container.querySelector('input[name="password"]')).toBeNull();
-        expect(queryByText('description.terms_of_use')).not.toBeNull();
-        expect(queryByText('description.privacy_policy')).not.toBeNull();
+        expect(queryAllByAltText('description.terms_of_use')).not.toBeNull();
+        expect(queryAllByAltText('description.privacy_policy')).not.toBeNull();
       }
     );
   });

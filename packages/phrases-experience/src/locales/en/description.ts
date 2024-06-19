@@ -85,6 +85,7 @@ const description = {
   not_you: 'Not you?',
   user_id: 'User ID: {{id}}',
   redirect_to: 'You will be redirected to {{name}}.',
+  auto_agreement: 'By continuing, you agree to the <link></link>.',
 };
 
 export default Object.freeze(description);

@@ -1,4 +1,4 @@
-import { SignInMode, experience } from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInMode, experience } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -16,14 +16,18 @@ import { validateState } from '@/utils/social-connectors';
 const useSingleSignOnRegister = () => {
   const handleError = useErrorHandler();
   const request = useApi(singleSignOnRegistration);
-  const { termsValidation } = useTerms();
+  const { termsValidation, agreeToTermsPolicy } = useTerms();
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
 
   return useCallback(
     async (connectorId: string) => {
-      // Agree to terms and conditions first before proceeding
-      if (!(await termsValidation())) {
+      /**
+       * Agree to terms and conditions first before proceeding
+       * If the agreement policy is `Manual`, the user must agree to the terms to reach this step.
+       * Therefore, skip the check for `Manual` policy.
+       */
+      if (agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && !(await termsValidation())) {
         navigate('/' + experience.routes.signIn);
         return;
       }

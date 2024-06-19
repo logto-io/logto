@@ -96,6 +96,7 @@ const description = {
   user_id: 'User ID: {{id}}',
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
+  auto_agreement: '続行することで、<link></link>に同意したことになります。',
 };
 
 export default Object.freeze(description);

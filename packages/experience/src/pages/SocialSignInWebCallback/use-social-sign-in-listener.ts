@@ -1,6 +1,6 @@
 import { GoogleConnector } from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
-import { InteractionEvent, SignInMode, experience } from '@logto/schemas';
+import { AgreeToTermsPolicy, InteractionEvent, SignInMode, experience } from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -25,7 +25,7 @@ const useSocialSignInListener = (connectorId: string) => {
   const { setToast } = useToast();
   const { signInMode, socialSignInSettings } = useSieMethods();
   const { t } = useTranslation();
-  const { termsValidation } = useTerms();
+  const { termsValidation, agreeToTermsPolicy } = useTerms();
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
 
@@ -82,8 +82,12 @@ const useSocialSignInListener = (connectorId: string) => {
           return;
         }
 
-        // Agree to terms and conditions first before proceeding
-        if (!(await termsValidation())) {
+        /**
+         * Agree to terms and conditions first before proceeding
+         * If the agreement policy is `Manual`, the user must agree to the terms to reach this step.
+         * Therefore, skip the check for `Manual` policy.
+         */
+        if (agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && !(await termsValidation())) {
           navigate('/' + experience.routes.signIn);
           return;
         }
@@ -100,6 +104,7 @@ const useSocialSignInListener = (connectorId: string) => {
     [
       preSignInErrorHandler,
       signInMode,
+      agreeToTermsPolicy,
       termsValidation,
       accountNotExistErrorHandler,
       setToast,
