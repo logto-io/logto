@@ -49,9 +49,7 @@ ENV PORT=3301
 ENV ADMIN_PORT=3302
 WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
-# OGCIO
 RUN apk add --no-cache jq
-# OGCIO
 EXPOSE 3301
 # OGCIO
 EXPOSE 3302

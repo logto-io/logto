@@ -1,0 +1,77 @@
+trigger:
+  - dev
+  - uat
+  - sta
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - "*"
+
+parameters:
+  - name: buildBranches
+    type: object
+    default: ["dev", "sta", "uat"]
+
+  - name: validEnvironments
+    type: object
+    displayName: List of valid environments to deploy (do not change)
+    default: ['dev','sta', 'uat', 'prd']
+
+variables:
+  - name: pushArtefacts
+    value: ${{ containsValue(parameters.buildBranches, variables['Build.SourceBranchName']) }}
+  - ${{ if containsValue(parameters.validEnvironments ,variables['Build.SourceBranchName']) }}:
+    - template: pipeline-variables/${{ coalesce(variables['Build.SourceBranchName'], 'fallback') }}.yml
+  - ${{ else }}:
+    - template: pipeline-variables/dev.yml
+
+stages:
+  - stage: securityScan
+    displayName: Security Scans
+    jobs:
+      - job: gitLeaksScan
+        #continueOnError: True
+        pool:
+          vmImage: "ubuntu-22.04"
+        displayName: GitLeaks Scan
+        steps:
+          - task: DockerInstaller@0
+            displayName: Docker Installer
+            inputs:
+              dockerVersion: 17.09.0-ce
+              releaseType: stable
+          - script: |
+              docker pull zricethezav/gitleaks:v8.10.3
+              docker run --rm -i -v "$(pwd):/src" zricethezav/gitleaks:v8.10.3 detect --source="/src" -c "src/.gitleaks.toml"  --no-git -v
+            displayName: GitLeaks Scan
+  - stage: Build_Logto
+    displayName: Build Logto
+    dependsOn: 
+      - securityScan
+    jobs:  
+    - template: pipeline-templates/build_service.yml
+      parameters:
+        serviceName: logto
+        pushArtefacts: ${{ variables.pushArtefacts }}
+        buildArguments: $(buildArguments)
+  - stage: Push_Logto
+    displayName: Push logto to ECR
+    dependsOn: Build_Logto
+    condition: ${{ variables.pushArtefacts }}
+    jobs:
+    - template: pipeline-templates/push_image.yml
+      parameters:
+        awsServiceConnection: ${{ variables.awsServiceConnection }}
+        awsRegion: ${{ variables.awsRegion }}
+        serviceName: logto
+  - stage: Deploy_Logto
+    displayName: Deploy to ECS - logto
+    dependsOn: Push_Logto
+    jobs:
+    - template: pipeline-templates/deploy_ecs.yml
+      parameters:
+        awsServiceConnection: ${{ variables.awsServiceConnection }}
+        awsRegion: ${{ variables.awsRegion }}
+        serviceName: logto

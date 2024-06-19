@@ -1,0 +1,27 @@
+parameters:
+  - name: serviceName
+  - name: awsRegion
+  - name: awsServiceConnection
+  
+jobs:
+  - job: Push
+    displayName: Push - ${{ parameters.serviceName }}
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - download: current
+      artifact: 'docker-${{ parameters.serviceName }}-$(Build.BuildId)'
+    - task: Docker@0
+      displayName: 'Retrieve docker image from artifacts'
+      inputs:
+        action: 'Run a Docker command'
+        customCommand: 'load -i $(Pipeline.Workspace)/docker-${{ parameters.serviceName }}-$(Build.BuildId)/image_${{ parameters.serviceName }}_$(Build.BuildId).tar'
+    - task: ECRPushImage@1
+      inputs:
+        awsCredentials: ${{ parameters.awsServiceConnection }}
+        regionName: ${{ parameters.awsRegion }}
+        imageSource: 'imagename'
+        sourceImageName: ${{ parameters.serviceName }}
+        sourceImageTag: $(Build.BuildId)
+        pushTag: $(Build.SourceBranchName)
+        repositoryName: life-events-${{ parameters.serviceName }}

@@ -1,0 +1,31 @@
+parameters:
+  - name: serviceName
+    default: ""
+  - name: pushArtefacts
+    default: false
+  - name: buildArguments
+    default: ""
+
+jobs:
+  - job: Build
+    displayName: Build job - ${{ parameters.serviceName }}
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      displayName: Build - ${{ parameters.serviceName }}
+      inputs:
+        command: build
+        repository: ${{ parameters.serviceName }}
+        dockerfile: ./Dockerfile
+        buildContext: '$(Build.SourcesDirectory)'
+        arguments: ${{ parameters.buildArguments }}
+    - task: Docker@0
+      displayName: 'Run a Docker command'
+      condition: ${{ parameters.pushArtefacts }}
+      inputs:
+        action: 'Run a Docker command'
+        customCommand: 'save -o $(Build.ArtifactStagingDirectory)/image_${{ parameters.serviceName }}_$(Build.BuildId).tar ${{ parameters.serviceName }}:$(Build.BuildId)'
+    - publish:  $(Build.ArtifactStagingDirectory)
+      condition: ${{ parameters.pushArtefacts }}
+      artifact: 'docker-${{ parameters.serviceName }}-$(Build.BuildId)'
