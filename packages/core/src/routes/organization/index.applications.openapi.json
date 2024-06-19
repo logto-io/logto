@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Organization applications",
-      "description": "Manage organization - application relationships. An application can be associated with one or more organizations in order to grant organization access to the application.\n\nCurrently, only machine-to-machine applications can be associated with organizations."
+      "description": "Manage organization - application relationships. An application can be associated with one or more organizations in order to get access to the organization resources.\n\nCurrently, only machine-to-machine applications can be associated with organizations."
     }
   ],
   "paths": {
