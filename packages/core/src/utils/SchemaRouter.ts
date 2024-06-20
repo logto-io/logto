@@ -251,7 +251,10 @@ export default class SchemaRouter<
         } = ctx.guard;
 
         await relationQueries.insert(
-          ...(relationIds?.map<[string, string]>((relationId) => [id, relationId]) ?? [])
+          ...(relationIds?.map((relationId) => ({
+            [columns.schemaId]: id,
+            [columns.relationSchemaId]: relationId,
+          })) ?? [])
         );
         appendHookContext(ctx, id);
         ctx.status = 201;

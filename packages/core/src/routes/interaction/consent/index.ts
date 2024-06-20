@@ -71,11 +71,11 @@ export default function consentRoutes<T extends IRouterParamContext>(
         await validateUserConsentOrganizationMembership(userId, organizationIds);
 
         await queries.applications.userConsentOrganizations.insert(
-          ...organizationIds.map<[string, string, string]>((organizationId) => [
+          ...organizationIds.map((organizationId) => ({
             applicationId,
             userId,
             organizationId,
-          ])
+          }))
         );
       }
 

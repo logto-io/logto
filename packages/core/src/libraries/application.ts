@@ -151,19 +151,28 @@ export const createApplicationLibrary = (queries: Queries) => {
   ) => {
     if (organizationScopes) {
       await userConsentOrganizationScopes.insert(
-        ...organizationScopes.map<[string, string]>((scope) => [applicationId, scope])
+        ...organizationScopes.map((scope) => ({
+          applicationId,
+          organizationScopeId: scope,
+        }))
       );
     }
 
     if (resourceScopes) {
       await userConsentResourceScopes.insert(
-        ...resourceScopes.map<[string, string]>((scope) => [applicationId, scope])
+        ...resourceScopes.map((scope) => ({
+          applicationId,
+          scopeId: scope,
+        }))
       );
     }
 
     if (organizationResourceScopes) {
       await userConsentOrganizationResourceScopes.insert(
-        ...organizationResourceScopes.map<[string, string]>((scope) => [applicationId, scope])
+        ...organizationResourceScopes.map((scope) => ({
+          applicationId,
+          scopeId: scope,
+        }))
       );
     }
 

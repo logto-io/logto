@@ -226,7 +226,12 @@ export const buildHandler: (
 
   if (organizationId) {
     // Check membership
-    if (!(await queries.organizations.relations.users.exists(organizationId, account.accountId))) {
+    if (
+      !(await queries.organizations.relations.users.exists({
+        organizationId,
+        userId: account.accountId,
+      }))
+    ) {
       const error = new AccessDenied('user is not a member of the organization');
       error.statusCode = 403;
       throw error;

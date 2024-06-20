@@ -24,7 +24,7 @@ export default function userRoleRelationRoutes(
     const { id, userId } = ctx.guard.params;
 
     // Ensure membership
-    if (!(await organizations.relations.users.exists(id, userId))) {
+    if (!(await organizations.relations.users.exists({ organizationId: id, userId }))) {
       throw new RequestError({ code: 'organization.require_membership', status: 422 });
     }
 
@@ -87,7 +87,11 @@ export default function userRoleRelationRoutes(
       const { organizationRoleIds } = ctx.guard.body;
 
       await organizations.relations.rolesUsers.insert(
-        ...organizationRoleIds.map<[string, string, string]>((roleId) => [id, roleId, userId])
+        ...organizationRoleIds.map((roleId) => ({
+          organizationId: id,
+          organizationRoleId: roleId,
+          userId,
+        }))
       );
 
       ctx.status = 201;

@@ -195,5 +195,5 @@ export const isOrganizationConsentedToApplication = async (
   accountId: string,
   organizationId: string
 ) => {
-  return userConsentOrganizations.exists(applicationId, accountId, organizationId);
+  return userConsentOrganizations.exists({ applicationId, userId: accountId, organizationId });
 };

@@ -1,5 +1,5 @@
 import { type SchemaLike, type Table } from '@logto/shared';
-import { type KeysToCamelCase } from '@silverhand/essentials';
+import { type CamelCase, type KeysToCamelCase } from '@silverhand/essentials';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 import snakecaseKeys from 'snakecase-keys';
 import { type z } from 'zod';
@@ -8,6 +8,10 @@ import { expandFields } from '#src/database/utils.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 import { conditionalSql } from './sql.js';
+
+const camelCase = <T extends string>(string: T): CamelCase<T> =>
+  // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+  string.replaceAll(/_([a-z])/g, (_, letter) => letter.toUpperCase()) as CamelCase<T>;
 
 type AtLeast2<T extends unknown[]> = `${T['length']}` extends '0' | '1' ? never : T;
 
@@ -56,11 +60,11 @@ export type GetEntitiesOptions = {
  * To insert a new relation, we can use the {@link RelationQueries.insert} method:
  *
  * ```ts
- * await userGroupRelations.insert(['user-id-1', 'group-id-1']);
+ * await userGroupRelations.insert({ userId: 'user-id-1', groupId: 'group-id-1' });
  * // Insert multiple relations at once
  * await userGroupRelations.insert(
- *   ['user-id-1', 'group-id-1'],
- *   ['user-id-2', 'group-id-1']
+ *   { userId: 'user-id-1', groupId: 'group-id-1' },
+ *   { userId: 'user-id-2', groupId: 'group-id-1' }
  * );
  * ```
  *
@@ -111,15 +115,15 @@ export default class RelationQueries<
    * ```ts
    * const userGroupRelations = new RelationQueries(pool, 'user_group_relations', Users, Groups);
    *
-   * userGroupRelations.insert(['user-id-1', 'group-id-1']);
+   * userGroupRelations.insert({ userId: 'user-id-1', groupId: 'group-id-1' });
    * // Insert multiple relations at once
    * userGroupRelations.insert(
-   *   ['user-id-1', 'group-id-1'],
-   *   ['user-id-2', 'group-id-1']
+   *   { userId: 'user-id-1', groupId: 'group-id-1' },
+   *   { userId: 'user-id-2', groupId: 'group-id-1' }
    * );
    * ```
    */
-  async insert(...data: ReadonlyArray<string[] & { length: Length }>) {
+  async insert(...data: ReadonlyArray<CamelCaseIdObject<Schemas[number]['tableSingular']>>) {
     return this.pool.query(sql`
       insert into ${this.table} (${sql.join(
         this.schemas.map(({ tableSingular }) => sql.identifier([tableSingular + '_id'])),
@@ -129,7 +133,10 @@ export default class RelationQueries<
         data.map(
           (relation) =>
             sql`(${sql.join(
-              relation.map((id) => sql`${id}`),
+              this.schemas.map(
+                // @ts-expect-error `tableSingular` loses its type here
+                ({ tableSingular }) => sql`${relation[camelCase(tableSingular + '_id')]}`
+              ),
               sql`, `
             )})`
         ),
@@ -240,17 +247,20 @@ export default class RelationQueries<
    * ```ts
    * const userGroupRelations = new RelationQueries(pool, 'user_group_relations', Users, Groups);
    *
-   * userGroupRelations.exists('user-id-1', 'group-id-1');
+   * userGroupRelations.exists({ userId: 'user-id-1', groupId: 'group-id-1' });
    * ```
    */
-  async exists(...ids: readonly string[] & { length: Length }) {
+  async exists(ids: CamelCaseIdObject<Schemas[number]['tableSingular']>) {
     return this.pool.exists(sql`
       select
       from ${this.table}
       where ${sql.join(
         this.schemas.map(
-          ({ tableSingular }, index) =>
-            sql`${sql.identifier([tableSingular + '_id'])} = ${ids[index] ?? sql`null`}`
+          ({ tableSingular }) =>
+            sql`${sql.identifier([tableSingular + '_id'])} = ${
+              // @ts-expect-error `tableSingular` loses its type here
+              ids[camelCase(tableSingular + '_id')]
+            }`
         ),
         sql` and `
       )}
