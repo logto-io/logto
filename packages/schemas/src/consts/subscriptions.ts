@@ -22,7 +22,7 @@ export enum ReservedPlanId {
    * @deprecated
    * Should not use this plan ID, we only use this tag as a record for the legacy `pro` plan since we will rename the `hobby` plan to be `pro`.
    */
-  LegacyPro = 'legacy-pro',
+  GrandfatheredPro = 'grandfathered-pro',
   Development = 'dev',
   /**
    * This plan ID is reserved for Admin tenant.
