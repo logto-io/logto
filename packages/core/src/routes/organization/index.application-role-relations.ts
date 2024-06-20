@@ -1,4 +1,4 @@
-import { OrganizationRoles, OrganizationScopes } from '@logto/schemas';
+import { OrganizationRoles } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -8,24 +8,25 @@ import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.j
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type OrganizationQueries from '#src/queries/organization/index.js';
 
-// Manually add these routes since I don't want to over-engineer the `SchemaRouter`.
-// Update: Now we also have "organization - organization role - application" relations. Consider
-// extracting the common logic to a class once we have one more relation like this.
-export default function userRoleRelationRoutes(
+// Consider building a class to handle these relations. See `index.user-role-relations.ts` for more information.
+export default function applicationRoleRelationRoutes(
   router: Router<unknown, WithHookContext>,
   organizations: OrganizationQueries
 ) {
-  const params = Object.freeze({ id: z.string().min(1), userId: z.string().min(1) } as const);
-  const pathname = '/:id/users/:userId/roles';
+  const params = Object.freeze({
+    id: z.string().min(1),
+    applicationId: z.string().min(1),
+  } as const);
+  const pathname = '/:id/applications/:applicationId/roles';
 
   // The pathname of `.use()` will not match the end of the path, for example:
   // `.use('/foo', ...)` will match both `/foo` and `/foo/bar`.
   // See https://github.com/koajs/router/blob/02ad6eedf5ced6ec1eab2138380fd67c63e3f1d7/lib/router.js#L330-L333
   router.use(pathname, koaGuard({ params: z.object(params) }), async (ctx, next) => {
-    const { id, userId } = ctx.guard.params;
+    const { id, applicationId } = ctx.guard.params;
 
     // Ensure membership
-    if (!(await organizations.relations.users.exists({ organizationId: id, userId }))) {
+    if (!(await organizations.relations.apps.exists({ organizationId: id, applicationId }))) {
       throw new RequestError({ code: 'organization.require_membership', status: 422 });
     }
 
@@ -41,15 +42,14 @@ export default function userRoleRelationRoutes(
       status: [200, 422],
     }),
     async (ctx, next) => {
-      const { id, userId } = ctx.guard.params;
+      const { id, applicationId } = ctx.guard.params;
 
-      const [totalCount, entities] = await organizations.relations.rolesUsers.getEntities(
+      const [totalCount, entities] = await organizations.relations.rolesApps.getEntities(
         OrganizationRoles,
         {
           organizationId: id,
-          userId,
-        },
-        ctx.pagination
+          applicationId,
+        }
       );
 
       ctx.pagination.totalCount = totalCount;
@@ -62,18 +62,20 @@ export default function userRoleRelationRoutes(
     pathname,
     koaGuard({
       params: z.object(params),
-      body: z.object({ organizationRoleIds: z.string().min(1).array().nonempty() }),
+      body: z.object({
+        organizationRoleIds: z.string().min(1).array().nonempty(),
+      }),
       status: [201, 422],
     }),
     async (ctx, next) => {
-      const { id, userId } = ctx.guard.params;
+      const { id, applicationId } = ctx.guard.params;
       const { organizationRoleIds } = ctx.guard.body;
 
-      await organizations.relations.rolesUsers.insert(
-        ...organizationRoleIds.map((roleId) => ({
+      await organizations.relations.rolesApps.insert(
+        ...organizationRoleIds.map((organizationRoleId) => ({
           organizationId: id,
-          organizationRoleId: roleId,
-          userId,
+          applicationId,
+          organizationRoleId,
         }))
       );
 
@@ -86,14 +88,16 @@ export default function userRoleRelationRoutes(
     pathname,
     koaGuard({
       params: z.object(params),
-      body: z.object({ organizationRoleIds: z.string().min(1).array() }),
+      body: z.object({
+        organizationRoleIds: z.string().min(1).array().nonempty(),
+      }),
       status: [204, 422],
     }),
     async (ctx, next) => {
-      const { id, userId } = ctx.guard.params;
+      const { id, applicationId } = ctx.guard.params;
       const { organizationRoleIds } = ctx.guard.body;
 
-      await organizations.relations.rolesUsers.replace(id, userId, organizationRoleIds);
+      await organizations.relations.rolesApps.replace(id, applicationId, organizationRoleIds);
 
       ctx.status = 204;
       return next();
@@ -101,38 +105,21 @@ export default function userRoleRelationRoutes(
   );
 
   router.delete(
-    `${pathname}/:roleId`,
+    `${pathname}/:organizationRoleId`,
     koaGuard({
-      params: z.object({ ...params, roleId: z.string().min(1) }),
+      params: z.object({ ...params, organizationRoleId: z.string().min(1) }),
       status: [204, 422, 404],
     }),
     async (ctx, next) => {
-      const { id, roleId, userId } = ctx.guard.params;
+      const { id, applicationId, organizationRoleId } = ctx.guard.params;
 
-      await organizations.relations.rolesUsers.delete({
+      await organizations.relations.rolesApps.delete({
         organizationId: id,
-        organizationRoleId: roleId,
-        userId,
+        applicationId,
+        organizationRoleId,
       });
 
       ctx.status = 204;
-      return next();
-    }
-  );
-
-  router.get(
-    '/:id/users/:userId/scopes',
-    koaGuard({
-      params: z.object(params),
-      response: z.array(OrganizationScopes.guard),
-      status: [200, 422],
-    }),
-    async (ctx, next) => {
-      const { id, userId } = ctx.guard.params;
-
-      const scopes = await organizations.relations.rolesUsers.getUserScopes(id, userId);
-
-      ctx.body = scopes;
       return next();
     }
   );

@@ -33,6 +33,7 @@ import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 import { EmailDomainQueries } from './email-domains.js';
+import { RoleApplicationRelationQueries } from './role-application-relations.js';
 import { RoleUserRelationQueries } from './role-user-relations.js';
 import { UserRelationQueries } from './user-relations.js';
 
@@ -283,6 +284,7 @@ export default class OrganizationQueries extends SchemaQueries<
     ),
     /** Queries for organization - user relations. */
     users: new UserRelationQueries(this.pool),
+    // TODO: Rename to `usersRoles`
     /** Queries for organization - organization role - user relations. */
     rolesUsers: new RoleUserRelationQueries(this.pool),
     /** Queries for organization - application relations. */
@@ -292,6 +294,9 @@ export default class OrganizationQueries extends SchemaQueries<
       Organizations,
       Applications
     ),
+    // TODO: Rename to `appsRoles`
+    /** Queries for organization - organization role - application relations. */
+    rolesApps: new RoleApplicationRelationQueries(this.pool),
     invitationsRoles: new TwoRelationsQueries(
       this.pool,
       OrganizationInvitationRoleRelations.table,

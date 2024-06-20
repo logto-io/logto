@@ -1,5 +1,4 @@
 import {
-  type Role,
   type Organization,
   type OrganizationWithRoles,
   type UserWithOrganizationRoles,
@@ -7,6 +6,7 @@ import {
   type OrganizationScope,
   type CreateOrganization,
   type Application,
+  type OrganizationRole,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -68,8 +68,10 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     });
   }
 
-  async getUserRoles(id: string, userId: string): Promise<Role[]> {
-    return authedAdminApi.get(`${this.path}/${id}/users/${userId}/roles`).json<Role[]>();
+  async getUserRoles(id: string, userId: string): Promise<OrganizationRole[]> {
+    return authedAdminApi
+      .get(`${this.path}/${id}/users/${userId}/roles`)
+      .json<OrganizationRole[]>();
   }
 
   async deleteUserRole(id: string, userId: string, roleId: string): Promise<void> {
@@ -84,5 +86,25 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     return authedAdminApi
       .get(`${this.path}/${id}/users/${userId}/scopes`)
       .json<OrganizationScope[]>();
+  }
+
+  async addApplicationRoles(
+    id: string,
+    applicationId: string,
+    organizationRoleIds: string[]
+  ): Promise<void> {
+    await authedAdminApi.post(`${this.path}/${id}/applications/${applicationId}/roles`, {
+      json: { organizationRoleIds },
+    });
+  }
+
+  async getApplicationRoles(id: string, applicationId: string): Promise<OrganizationRole[]> {
+    return authedAdminApi
+      .get(`${this.path}/${id}/applications/${applicationId}/roles`)
+      .json<OrganizationRole[]>();
+  }
+
+  async deleteApplicationRole(id: string, applicationId: string, roleId: string): Promise<void> {
+    await authedAdminApi.delete(`${this.path}/${id}/applications/${applicationId}/roles/${roleId}`);
   }
 }
