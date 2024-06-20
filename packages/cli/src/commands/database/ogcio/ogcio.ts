@@ -19,47 +19,66 @@ const createDataForTenant = async (
   tenantId: string,
   tenantData: OgcioSeeder
 ) => {
-  const organizations = await createOrganizations({
-    transaction,
-    tenantId,
-    organizations: tenantData.organizations,
-  });
+  if (tenantData.organizations.length > 0) {
+    const organizations = await createOrganizations({
+      transaction,
+      tenantId,
+      organizations: tenantData.organizations,
+    });
+  }
+
   const organizationsRbac = await seedOrganizationRbacData({
     transaction,
     tenantId,
     toSeed: tenantData,
   });
-  const applications = await seedApplications({
-    transaction,
-    tenantId,
-    applications: tenantData.applications,
-  });
-  const resources = await seedResources({
-    transaction,
-    tenantId,
-    inputResources: tenantData.resources,
-  });
-  const resourcesRbac = await seedResourceRbacData({
-    tenantId,
-    transaction,
-    toSeed: tenantData,
-    seededResources: resources,
-  });
-  const connectors = await seedConnectors({
-    transaction,
-    tenantId,
-    connectors: tenantData.connectors,
-  });
-  const signInExperiences = await seedSignInExperiences({
-    transaction,
-    tenantId,
-    experiences: tenantData.sign_in_experiences,
-  });
-  const webhooks = await seedWebhooks({
-    transaction,
-    tenantId,
-    hooks: tenantData.webhooks
-  });
+
+  if (tenantData.applications.length > 0) {
+    const applications = await seedApplications({
+      transaction,
+      tenantId,
+      applications: tenantData.applications,
+    });
+  }
+
+  if (tenantData.resources.length > 0) {
+    const resources = await seedResources({
+      transaction,
+      tenantId,
+      inputResources: tenantData.resources,
+    });
+
+    const resourcesRbac = await seedResourceRbacData({
+      tenantId,
+      transaction,
+      toSeed: tenantData,
+      seededResources: resources,
+    });
+  }
+
+  if (tenantData.connectors.length > 0) {
+    const connectors = await seedConnectors({
+      transaction,
+      tenantId,
+      connectors: tenantData.connectors,
+    });
+  }
+
+  if (tenantData.sign_in_experiences.length > 0) {
+    const signInExperiences = await seedSignInExperiences({
+      transaction,
+      tenantId,
+      experiences: tenantData.sign_in_experiences,
+    });
+  }
+
+  if (tenantData.webhooks.length > 0) {
+    const webhooks = await seedWebhooks({
+      transaction,
+      tenantId,
+      hooks: tenantData.webhooks,
+    });
+  }
 };
 
 const transactionMethod = async (transaction: DatabaseTransactionConnection) => {

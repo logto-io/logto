@@ -1,6 +1,9 @@
 import { readFileSync } from 'node:fs';
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable unicorn/import-style */
 import { resolve } from 'node:path';
 
+import { getEnv } from '@silverhand/essentials';
 import type { CommandModule } from 'yargs';
 
 import { createPoolAndDatabaseIfNeeded } from '../../../database.js';
@@ -11,9 +14,25 @@ import { seedOgcio } from './ogcio.js';
 
 const DEFAULT_SEEDER_FILE = './src/commands/database/ogcio/ogcio-seeder.json';
 
-const loadSeederData = (path: string): OgcioTenantSeeder =>
+const interpolateString = (content: string): string => {
+  const regExp = /<\w+>/g;
+
+  return content.replaceAll(regExp, function (match) {
+    const variableName = match.slice(1, -1);
+    if (!getEnv(variableName)) {
+      return match;
+    }
+    return getEnv(variableName);
+  });
+};
+
+const loadSeederData = (path: string): OgcioTenantSeeder => {
+  const content = readFileSync(new URL(path, import.meta.url), 'utf8');
+  const interpolatedContent = interpolateString(content);
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
+  return JSON.parse(interpolatedContent);
+};
 
 const getSeederData = async (seederFilepath: unknown): Promise<OgcioTenantSeeder> => {
   if (typeof seederFilepath !== 'string' || seederFilepath.length === 0) {

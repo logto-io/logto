@@ -276,6 +276,9 @@ export const createScopes = async <
   fillScopesMethod: (scopesToSeed: T[]) => O;
 }): Promise<O> => {
   const scopesToCreate = params.fillScopesMethod(params.scopesToSeed);
+  if (params.scopesToSeed.length === 0) {
+    return scopesToCreate;
+  }
   const queries: Array<
     Promise<Omit<OrganizationSeedingScope | ResourceSeedingScope, 'id'> & { id: string }>
   > = [];

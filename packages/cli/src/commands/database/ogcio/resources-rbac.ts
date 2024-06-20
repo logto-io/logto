@@ -97,30 +97,38 @@ const replaceWithResourceIdFromDatabase = (
   resource_permissions: ResourcePermissionSeeder[];
   resource_roles: ResourceRoleSeeder[];
 } => {
-  for (const permission of toSeed.resource_permissions) {
-    const toSetResourceIds = [];
-    for (const resourceId of permission.for_resource_ids) {
-      if (!seededResources[resourceId]) {
-        throw new Error(`Resource scopes. Referring to a not existent resource id: ${resourceId}!`);
-      }
-      toSetResourceIds.push(seededResources[resourceId]!.id!);
-    }
-    permission.for_resource_ids = toSetResourceIds;
-  }
-  for (const roles of toSeed.resource_roles) {
-    const toSetResourceIds = [];
-    for (const permissionGroup of roles.permissions) {
-      for (const resourceId of permissionGroup.for_resource_ids) {
+  if (toSeed.resource_permissions.length > 0) {
+    for (const permission of toSeed.resource_permissions) {
+      const toSetResourceIds = [];
+      for (const resourceId of permission.for_resource_ids) {
         if (!seededResources[resourceId]) {
           throw new Error(
-            `Resource roles. Referring to a not existent resource id: ${resourceId}!`
+            `Resource scopes. Referring to a not existent resource id: ${resourceId}!`
           );
         }
         toSetResourceIds.push(seededResources[resourceId]!.id!);
       }
-      permissionGroup.for_resource_ids = toSetResourceIds;
+      permission.for_resource_ids = toSetResourceIds;
     }
   }
+
+  if (toSeed.resource_roles.length > 0) {
+    for (const roles of toSeed.resource_roles) {
+      const toSetResourceIds = [];
+      for (const permissionGroup of roles.permissions) {
+        for (const resourceId of permissionGroup.for_resource_ids) {
+          if (!seededResources[resourceId]) {
+            throw new Error(
+              `Resource roles. Referring to a not existent resource id: ${resourceId}!`
+            );
+          }
+          toSetResourceIds.push(seededResources[resourceId]!.id!);
+        }
+        permissionGroup.for_resource_ids = toSetResourceIds;
+      }
+    }
+  }
+
   return toSeed;
 };
 
@@ -138,26 +146,30 @@ export const seedResourceRbacData = async (params: {
   relations: SeedingRelation[];
 }> => {
   params.toSeed = replaceWithResourceIdFromDatabase(params.seededResources, params.toSeed);
-  const createdScopes = await createScopes({
-    transaction: params.transaction,
-    tenantId: params.tenantId,
-    scopesToSeed: params.toSeed.resource_permissions,
-    fillScopesMethod: fillScopes,
-  });
-  const createdRoles = await createRoles({
-    transaction: params.transaction,
-    tenantId: params.tenantId,
-    scopesLists: createdScopes,
-    rolesToSeed: params.toSeed.resource_roles,
-    fillRolesMethod: fillRoles,
-  });
-  const createdRelations = await createRelations({
-    transaction: params.transaction,
-    tenantId: params.tenantId,
-    roles: createdRoles,
-  });
+  if (params.toSeed.resource_permissions.length > 0) {
+    const createdScopes = await createScopes({
+      transaction: params.transaction,
+      tenantId: params.tenantId,
+      scopesToSeed: params.toSeed.resource_permissions,
+      fillScopesMethod: fillScopes,
+    });
+    const createdRoles = await createRoles({
+      transaction: params.transaction,
+      tenantId: params.tenantId,
+      scopesLists: createdScopes,
+      rolesToSeed: params.toSeed.resource_roles,
+      fillRolesMethod: fillRoles,
+    });
+    const createdRelations = await createRelations({
+      transaction: params.transaction,
+      tenantId: params.tenantId,
+      roles: createdRoles,
+    });
 
-  return { scopes: createdScopes, roles: createdRoles, relations: createdRelations };
+    return { scopes: createdScopes, roles: createdRoles, relations: createdRelations };
+  }
+
+  return { scopes: {}, roles: {}, relations: [] };
 };
 
 const getEmptyList = (): ScopesLists<ResourceSeedingScope> => ({

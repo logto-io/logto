@@ -94,20 +94,33 @@ export const seedOrganizationRbacData = async (params: {
   roles: Record<string, OrganizationSeedingRole>;
   relations: SeedingRelation[];
 }> => {
-  const createdScopes = await createScopes({
-    transaction: params.transaction,
-    tenantId: params.tenantId,
-    scopesToSeed: params.toSeed.organization_permissions,
-    fillScopesMethod: fillScopes,
-  });
-  const createdRoles = await createRoles({
-    transaction: params.transaction,
-    tenantId: params.tenantId,
-    scopesLists: createdScopes,
-    rolesToSeed: params.toSeed.organization_roles,
-    fillRolesMethod: fillRoles,
-  });
-  const relations = await createRelations(params.transaction, params.tenantId, createdRoles);
+  if (params.toSeed.organization_permissions.length > 0) {
+    const createdScopes = await createScopes({
+      transaction: params.transaction,
+      tenantId: params.tenantId,
+      scopesToSeed: params.toSeed.organization_permissions,
+      fillScopesMethod: fillScopes,
+    });
+    const createdRoles = await createRoles({
+      transaction: params.transaction,
+      tenantId: params.tenantId,
+      scopesLists: createdScopes,
+      rolesToSeed: params.toSeed.organization_roles,
+      fillRolesMethod: fillRoles,
+    });
+    const relations = await createRelations(params.transaction, params.tenantId, createdRoles);
 
-  return { scopes: createdScopes, roles: createdRoles, relations };
+    return { scopes: createdScopes, roles: createdRoles, relations };
+  }
+
+  return {
+    scopes: {
+      scopesList: [],
+      scopesByEntity: {},
+      scopesByAction: {},
+      scopesByFullName: {},
+    },
+    roles: {},
+    relations: [],
+  };
 };
