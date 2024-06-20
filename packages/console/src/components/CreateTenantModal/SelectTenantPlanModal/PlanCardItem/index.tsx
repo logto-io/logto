@@ -92,7 +92,7 @@ function PlanCardItem({ plan, onSelect, buttonProps }: Props) {
           disabled={(isFreePlan && isFreeTenantExceeded) || buttonProps?.disabled}
         />
       </div>
-      {planId === ReservedPlanId.Hobby && (
+      {planId === ReservedPlanId.Pro && (
         <div className={styles.mostPopularTag}>{t('most_popular')}</div>
       )}
     </div>
