@@ -142,7 +142,9 @@ export const validateSupplement = (
 
     for (const { name } of supplementTags) {
       if (!originalTags.has(name)) {
-        throw new TypeError(`Supplement document contains extra tag \`${name}\`.`);
+        throw new TypeError(
+          `Supplement document contains extra tag \`${name}\`. If you want to add a new tag, please add it to the \`additionalTags\` array in the main swagger route file.`
+        );
       }
     }
   }

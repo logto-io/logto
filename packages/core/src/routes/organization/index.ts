@@ -7,6 +7,7 @@ import {
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
@@ -138,6 +139,13 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
   );
 
   userRoleRelationRoutes(router, organizations);
+
+  // MARK: Organization - application relation routes
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.addRelationRoutes(organizations.relations.apps, undefined, {
+      hookEvent: 'Organization.Membership.Updated',
+    });
+  }
 
   // MARK: Just-in-time provisioning
   emailDomainRoutes(router, organizations);

@@ -62,8 +62,8 @@ describe('organization just-in-time provisioning', () => {
       )
     );
     await Promise.all([
-      organizationApi.jit.addRole(organizations[0].id, [roles[0].id, roles[1].id]),
-      organizationApi.jit.addRole(organizations[1].id, [roles[0].id]),
+      organizationApi.jit.roles.add(organizations[0].id, [roles[0].id, roles[1].id]),
+      organizationApi.jit.roles.add(organizations[1].id, [roles[0].id]),
     ]);
 
     const email = randomString() + '@' + emailDomain;
