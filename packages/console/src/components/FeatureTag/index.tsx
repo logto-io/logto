@@ -43,7 +43,7 @@ type Props = {
  * // both free and paid features
  * {features.map((feature) => (
  *   hasPaywall(feature) &&
- *     <FeatureTag isVisible={hasAccess(feature)} plan={ReservedPlanId.Hobby} />
+ *     <FeatureTag isVisible={hasAccess(feature)} plan={ReservedPlanId.Pro} />
  * ))}
  * ```
  */

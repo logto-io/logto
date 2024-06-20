@@ -7,7 +7,6 @@ import { type SubscriptionPlanQuota } from '@/types/subscriptions';
  */
 export const ticketSupportResponseTimeMap: Record<string, number> = {
   [ReservedPlanId.Free]: 0,
-  [ReservedPlanId.Hobby]: 48,
   [ReservedPlanId.Pro]: 48,
 };
 

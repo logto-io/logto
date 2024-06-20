@@ -8,7 +8,6 @@ const registeredPlanDescriptionPhrasesMap: Record<
   TFuncKey<'translation', 'admin_console.subscription'> | undefined
 > = {
   [ReservedPlanId.Free]: 'free_plan_description',
-  [ReservedPlanId.Hobby]: 'pro_plan_description',
   [ReservedPlanId.Pro]: 'pro_plan_description',
 };
 

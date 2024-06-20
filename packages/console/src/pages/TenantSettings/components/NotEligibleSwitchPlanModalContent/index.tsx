@@ -63,7 +63,7 @@ function NotEligibleSwitchPlanModalContent({
         >
           {t(isDowngrade ? 'downgrade_description' : 'upgrade_description')}
         </Trans>
-        {!isDowngrade && id === ReservedPlanId.Hobby && t('upgrade_pro_tip')}
+        {!isDowngrade && id === ReservedPlanId.Pro && t('upgrade_pro_tip')}
       </div>
       <ul className={styles.list}>
         {orderedEntries.map(([quotaKey, quotaValue]) => {

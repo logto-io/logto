@@ -27,10 +27,7 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
 
   const [isLoading, setIsLoading] = useState(false);
   const proPlan = useMemo(
-    /**
-     * Note: now the hobby plan is treated as the new pro plan
-     */
-    () => subscriptionPlans.find(({ id }) => id === ReservedPlanId.Hobby),
+    () => subscriptionPlans.find(({ id }) => id === ReservedPlanId.Pro),
     [subscriptionPlans]
   );
 
