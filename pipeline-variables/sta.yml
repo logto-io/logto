@@ -1,0 +1,5 @@
+variables:
+  awsServiceConnection: life-events-sta-ecr
+  awsRegion: eu-west-1
+  ecrEndpoint: 975050122570.dkr.ecr.eu-west-1.amazonaws.com
+  buildArguments: ""
