@@ -134,7 +134,7 @@ const identifiableEntityNames = Object.freeze([
 ]);
 
 /** Additional tags that cannot be inferred from the path. */
-const additionalTags = Object.freeze(['Organization applications']);
+const additionalTags = Object.freeze(['Organization applications', 'Organization users']);
 
 /**
  * Attach the `/swagger.json` route which returns the generated OpenAPI document for the
