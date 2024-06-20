@@ -44,7 +44,12 @@ describe('manual data hook tests', () => {
   });
 
   afterEach(async () => {
-    await Promise.all([webHookApi.cleanUp(), userApi.cleanUp(), organizationApi.cleanUp()]);
+    await Promise.all([
+      webHookApi.cleanUp(),
+      userApi.cleanUp(),
+      organizationApi.cleanUp(),
+      ssoConnectorApi.cleanUp(),
+    ]);
   });
 
   it('create roles with scopeIds should trigger Roles.Scopes.Updated event', async () => {
@@ -171,8 +176,6 @@ describe('manual data hook tests', () => {
       });
 
       await assertOrganizationMembershipUpdated(organization.id);
-
-      await ssoConnectorApi.cleanUp();
     });
   });
 });

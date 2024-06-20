@@ -28,7 +28,7 @@ describe('organization just-in-time provisioning', () => {
   const ssoConnectorApi = new SsoConnectorApi();
 
   afterEach(async () => {
-    await organizationApi.cleanUp();
+    await Promise.all([organizationApi.cleanUp(), ssoConnectorApi.cleanUp()]);
   });
 
   beforeAll(async () => {
@@ -120,6 +120,5 @@ describe('organization just-in-time provisioning', () => {
     );
 
     await deleteUser(userId);
-    await ssoConnectorApi.cleanUp();
   });
 });
