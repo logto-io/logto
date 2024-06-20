@@ -113,7 +113,9 @@ const Content = () => {
       {isAuthenticated ? (
         <Button title="Sign out" onPress={async () => signOut()} />
       ) : (
-        <Button title="Sign in" onPress={async () => signIn('${props.redirectUris[0] ?? 'io.logto://callback'}')} />
+        <Button title="Sign in" onPress={async () => signIn('${
+          props.redirectUris[0] ?? 'io.logto://callback'
+        }')} />
       )}
     </div>
   );
@@ -153,7 +155,9 @@ const Content = () => {
           <Button title="Sign out" onPress={async () => signOut()} />
         </>
       ) : (
-        <Button title="Sign in" onPress={async () => signIn('${props.redirectUris[0] ?? 'io.logto://callback'}')} />
+        <Button title="Sign in" onPress={async () => signIn('${
+          props.redirectUris[0] ?? 'io.logto://callback'
+        }')} />
       )}
     </div>
   );
@@ -166,6 +170,30 @@ const Content = () => {
 <Step title="Checkpoint: Test your app">
 
 <Checkpoint />
+
+</Step>
+
+<Step title="Troubleshooting">
+
+For Expo projects, if you encounter the error `Unable to resolve "@logto/client/shim" from "node_modules/@logto/rn/lib/index.js"`, you can resolve it by adding the following to your `metro.config.js` file:
+
+```js
+// metro.config.js
+const config = {
+  // ...
+  resolver: {
+    unstable_enablePackageExports: true,
+  },
+};
+
+module.exports = config;
+```
+
+This error indicates that `@logto/rn` package is not able to resolve the `@logto/client/shim` module.
+
+As the node exports were used in the`@logto/client` package, and package exports are not enabled by default in Metro bundler, you need to enable them manually.
+
+See the [React Native package exports support](https://reactnative.dev/blog/2023/06/21/package-exports-support#enabling-package-exports-beta) for more details.
 
 </Step>
 
