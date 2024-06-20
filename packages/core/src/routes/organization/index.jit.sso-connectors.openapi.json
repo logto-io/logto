@@ -1,0 +1,84 @@
+{
+  "tags": [
+    {
+      "name": "Organizations"
+    }
+  ],
+  "paths": {
+    "/api/organizations/{id}/jit/sso-connectors": {
+      "get": {
+        "summary": "Get organization JIT SSO connectors",
+        "description": "Get enterprise SSO connectors for just-in-time provisioning of users in the organization.",
+        "responses": {
+          "200": {
+            "description": "A list of SSO connectors."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add organization JIT SSO connectors",
+        "description": "Add new enterprise SSO connectors for just-in-time provisioning of users in the organization.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "ssoConnectorIds": {
+                    "description": "The SSO connector IDs to add."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The SSO connectors were added successfully."
+          },
+          "422": {
+            "description": "The SSO connectors could not be added. Some of the SSO connectors may not exist."
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace organization JIT SSO connectors",
+        "description": "Replace all enterprise SSO connectors for just-in-time provisioning of users in the organization with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "ssoConnectorIds": {
+                    "description": "An array of SSO connector IDs to replace existing SSO connectors."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The SSO connectors were replaced successfully."
+          },
+          "422": {
+            "description": "The SSO connectors could not be replaced. Some of the SSO connectors may not exist."
+          }
+        }
+      }
+    },
+    "/api/organizations/{id}/jit/sso-connectors/{ssoConnectorId}": {
+      "delete": {
+        "summary": "Remove organization JIT SSO connector",
+        "description": "Remove an enterprise SSO connector for just-in-time provisioning of users in the organization.",
+        "responses": {
+          "204": {
+            "description": "The SSO connector was removed successfully."
+          },
+          "422": {
+            "description": "The SSO connector could not be removed. The SSO connector may not exist."
+          }
+        }
+      }
+    }
+  }
+}

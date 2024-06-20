@@ -1,5 +1,11 @@
+import { type SsoConnector } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
+import { providerNames } from '#src/__mocks__/sso-connectors-mock.js';
+import {
+  createSsoConnector as createSsoConnectorApi,
+  deleteSsoConnectorById,
+} from '#src/api/sso-connector.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { randomString } from '#src/utils.js';
 
@@ -7,9 +13,20 @@ const randomId = () => generateStandardId(6);
 
 describe('organization just-in-time provisioning', () => {
   const organizationApi = new OrganizationApiTest();
+  const ssoConnectors: SsoConnector[] = [];
+  const createSsoConnector = async (...args: Parameters<typeof createSsoConnectorApi>) => {
+    const ssoConnector = await createSsoConnectorApi(...args);
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    ssoConnectors.push(ssoConnector);
+    return ssoConnector;
+  };
 
   afterEach(async () => {
-    await organizationApi.cleanUp();
+    await Promise.all([
+      organizationApi.cleanUp(),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      ssoConnectors.map(async ({ id }) => deleteSsoConnectorById(id).catch(() => {})),
+    ]);
   });
 
   describe('email domains', () => {
@@ -173,6 +190,109 @@ describe('organization just-in-time provisioning', () => {
       );
       await expect(organizationApi.jit.roles.getList(organization.id)).resolves.toEqual(
         expect.arrayContaining(organizationRoles.map(({ id }) => expect.objectContaining({ id })))
+      );
+    });
+  });
+
+  describe('sso connectors', () => {
+    it('should add and delete sso connectors', async () => {
+      const organization = await organizationApi.create({ name: `jit-sso:${randomString()}` });
+      const ssoConnector = await createSsoConnector({
+        providerName: providerNames[0],
+        connectorName: `My dude:${randomString()}`,
+      });
+
+      await organizationApi.jit.ssoConnectors.add(organization.id, [ssoConnector.id]);
+      await expect(
+        organizationApi.jit.ssoConnectors.getList(organization.id)
+      ).resolves.toMatchObject([{ id: ssoConnector.id }]);
+
+      await organizationApi.jit.ssoConnectors.delete(organization.id, ssoConnector.id);
+      await expect(organizationApi.jit.ssoConnectors.getList(organization.id)).resolves.toEqual([]);
+    });
+
+    it('should have no pagination', async () => {
+      const organization = await organizationApi.create({ name: `jit-sso:${randomString()}` });
+      const ssoConnectors = await Promise.all(
+        Array.from({ length: 30 }, async () =>
+          createSsoConnector({
+            providerName: providerNames[0],
+            connectorName: `My dude:${randomString()}`,
+          })
+        )
+      );
+
+      await organizationApi.jit.ssoConnectors.replace(
+        organization.id,
+        ssoConnectors.map(({ id }) => id)
+      );
+
+      await expect(organizationApi.jit.ssoConnectors.getList(organization.id)).resolves.toEqual(
+        expect.arrayContaining(ssoConnectors.map(({ id }) => expect.objectContaining({ id })))
+      );
+    });
+
+    it('should return 404 when deleting a non-existent sso connector', async () => {
+      const organization = await organizationApi.create({ name: `jit-sso:${randomString()}` });
+      const ssoConnectorId = randomId();
+
+      await expect(
+        organizationApi.jit.ssoConnectors.delete(organization.id, ssoConnectorId)
+      ).rejects.toMatchInlineSnapshot('[HTTPError: Request failed with status code 404 Not Found]');
+    });
+
+    it('should return 422 when adding a non-existent sso connector', async () => {
+      const organization = await organizationApi.create({ name: `jit-sso:${randomString()}` });
+      const ssoConnectorId = randomId();
+
+      await expect(
+        organizationApi.jit.ssoConnectors.add(organization.id, [ssoConnectorId])
+      ).rejects.toMatchInlineSnapshot(
+        '[HTTPError: Request failed with status code 422 Unprocessable Entity]'
+      );
+    });
+
+    it('should do nothing when adding an sso connector that already exists', async () => {
+      const organization = await organizationApi.create({ name: `jit-sso:${randomString()}` });
+      const ssoConnector = await createSsoConnector({
+        providerName: providerNames[0],
+        connectorName: `My dude:${randomString()}`,
+      });
+
+      await organizationApi.jit.ssoConnectors.add(organization.id, [ssoConnector.id]);
+      await expect(
+        organizationApi.jit.ssoConnectors.add(organization.id, [ssoConnector.id])
+      ).resolves.toBeUndefined();
+    });
+
+    it('should be able to replace sso connectors', async () => {
+      const organization = await organizationApi.create({ name: `jit-sso:${randomString()}` });
+      const ssoConnectors = await Promise.all(
+        Array.from({ length: 2 }, async () =>
+          createSsoConnector({
+            providerName: providerNames[0],
+            connectorName: `My dude:${randomString()}`,
+          })
+        )
+      );
+
+      await organizationApi.jit.ssoConnectors.replace(
+        organization.id,
+        ssoConnectors.map(({ id }) => id)
+      );
+      await expect(organizationApi.jit.ssoConnectors.getList(organization.id)).resolves.toEqual(
+        expect.arrayContaining(ssoConnectors.map(({ id }) => expect.objectContaining({ id })))
+      );
+    });
+
+    it('should return 422 when replacing with a non-existent sso connector', async () => {
+      const organization = await organizationApi.create({ name: `jit-sso:${randomString()}` });
+      const ssoConnectorId = randomId();
+
+      await expect(
+        organizationApi.jit.ssoConnectors.replace(organization.id, [ssoConnectorId])
+      ).rejects.toMatchInlineSnapshot(
+        '[HTTPError: Request failed with status code 422 Unprocessable Entity]'
       );
     });
   });

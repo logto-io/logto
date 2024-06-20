@@ -24,6 +24,8 @@ import {
   OrganizationJitRoles,
   OrganizationApplicationRelations,
   Applications,
+  OrganizationJitSsoConnectors,
+  SsoConnectors,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -308,6 +310,12 @@ export default class OrganizationQueries extends SchemaQueries<
       OrganizationJitRoles.table,
       Organizations,
       OrganizationRoles
+    ),
+    ssoConnectors: new TwoRelationsQueries(
+      this.pool,
+      OrganizationJitSsoConnectors.table,
+      Organizations,
+      SsoConnectors
     ),
   };
 
