@@ -54,7 +54,11 @@ export class EmailDomainQueries {
    * Given an email domain, return the organizations and organization roles that need to be
    * provisioned.
    */
-  async getJitOrganizations(emailDomain: string): Promise<readonly JitOrganization[]> {
+  async getJitOrganizations(emailDomain?: string): Promise<readonly JitOrganization[]> {
+    if (!emailDomain) {
+      return [];
+    }
+
     const { fields } = convertToIdentifiers(OrganizationJitEmailDomains, true);
     const organizationJitRoles = convertToIdentifiers(OrganizationJitRoles, true);
     return this.pool.any<JitOrganization>(sql`

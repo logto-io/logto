@@ -21,7 +21,7 @@ import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
-import { encryptUserPassword } from '#src/libraries/user.js';
+import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -135,7 +135,7 @@ async function handleSubmitRegister(
     (invitation) => invitation.status === OrganizationInvitationStatus.Pending
   );
 
-  const [user, { organizations: provisionedOrganizations }] = await insertUser(
+  const [user] = await insertUser(
     {
       id,
       ...userProfile,
@@ -190,10 +190,18 @@ async function handleSubmitRegister(
   ctx.assignInteractionHookResult({ userId: id });
   ctx.appendDataHookContext('User.Created', { user });
 
-  for (const { organizationId } of provisionedOrganizations) {
-    ctx.appendDataHookContext('Organization.Membership.Updated', {
-      organizationId,
+  // JIT provisioning for email domain
+  if (user.primaryEmail) {
+    const provisionedOrganizations = await libraries.users.provisionOrganizations({
+      userId: id,
+      email: user.primaryEmail,
     });
+
+    for (const { organizationId } of provisionedOrganizations) {
+      ctx.appendDataHookContext('Organization.Membership.Updated', {
+        organizationId,
+      });
+    }
   }
 
   log?.append({ userId: id });

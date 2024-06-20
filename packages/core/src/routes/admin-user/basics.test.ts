@@ -70,7 +70,7 @@ const mockHasUserWithPhone = jest.fn(async () => false);
 const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
   mockedQueries.users;
 
-const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
+const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.utils.js', () => ({
   encryptUserPassword: jest.fn(() => ({
     passwordEncrypted: 'password',
     passwordEncryptionMethod: 'Argon2i',
@@ -87,7 +87,6 @@ const usersLibraries = {
         ...mockUser,
         ...removeUndefinedKeys(user), // No undefined values will be returned from database
       },
-      { organizations: [] },
     ]
   ),
   verifyUserPassword,

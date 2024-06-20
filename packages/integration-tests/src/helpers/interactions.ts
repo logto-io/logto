@@ -77,6 +77,28 @@ export const registerWithEmail = async (email: string) => {
   return { client, id };
 };
 
+export const signInWithEmail = async (email: string) => {
+  const client = await initClient();
+
+  await client.successSend(putInteraction, {
+    event: InteractionEvent.SignIn,
+  });
+  await client.successSend(sendVerificationCode, {
+    email,
+  });
+
+  const { code } = await readConnectorMessage('Email');
+
+  await client.successSend(patchInteractionIdentifiers, {
+    email,
+    verificationCode: code,
+  });
+
+  const { redirectTo } = await client.submitInteraction();
+  const id = await processSession(client, redirectTo);
+  return { client, id };
+};
+
 export const signInWithPassword = async (
   payload: UsernamePasswordPayload | EmailPasswordPayload | PhonePasswordPayload
 ) => {

@@ -24,8 +24,6 @@ import {
   OrganizationJitRoles,
   OrganizationApplicationRelations,
   Applications,
-  OrganizationJitSsoConnectors,
-  SsoConnectors,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -36,6 +34,7 @@ import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 import { EmailDomainQueries } from './email-domains.js';
 import { RoleUserRelationQueries } from './role-user-relations.js';
+import { SsoConnectorQueries } from './sso-connectors.js';
 import { UserRelationQueries } from './user-relations.js';
 
 /**
@@ -311,12 +310,7 @@ export default class OrganizationQueries extends SchemaQueries<
       Organizations,
       OrganizationRoles
     ),
-    ssoConnectors: new TwoRelationsQueries(
-      this.pool,
-      OrganizationJitSsoConnectors.table,
-      Organizations,
-      SsoConnectors
-    ),
+    ssoConnectors: new SsoConnectorQueries(this.pool),
   };
 
   constructor(pool: CommonQueryMethods) {
