@@ -10,6 +10,12 @@ export class OrganizationJitApi {
     relationKey: 'organizationRoleIds',
   });
 
+  ssoConnectors = new RelationApiFactory({
+    basePath: 'organizations',
+    relationPath: 'jit/sso-connectors',
+    relationKey: 'ssoConnectorIds',
+  });
+
   constructor(public path: string) {}
 
   async getEmailDomains(

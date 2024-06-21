@@ -73,6 +73,9 @@
         "responses": {
           "204": {
             "description": "The organization role was removed successfully."
+          },
+          "422": {
+            "description": "The organization role could not be removed. The organization role may not exist."
           }
         }
       }
