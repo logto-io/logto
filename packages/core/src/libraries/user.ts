@@ -138,7 +138,7 @@ export const createUserLibrary = (queries: Queries) => {
     const usersRoles = await findUsersRolesByUserId(userId);
     const rolesScopes = await findRolesScopesByRoleIds(usersRoles.map(({ roleId }) => roleId));
     const organizationScopes = findFromOrganizations
-      ? await organizations.relations.rolesUsers.getUserResourceScopes(
+      ? await organizations.relations.usersRoles.getUserResourceScopes(
           userId,
           resourceIndicator,
           organizationId
@@ -295,7 +295,7 @@ export const createUserLibrary = (queries: Queries) => {
       }))
     );
     if (data.length > 0) {
-      await organizations.relations.rolesUsers.insert(...data);
+      await organizations.relations.usersRoles.insert(...data);
     }
 
     return jitOrganizations;

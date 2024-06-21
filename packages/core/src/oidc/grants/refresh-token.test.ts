@@ -317,7 +317,7 @@ describe('organization token grant', () => {
 
     Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
     Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves(mockApplication);
-    Sinon.stub(tenant.queries.organizations.relations.rolesUsers, 'getUserScopes').resolves([
+    Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves([
       { tenantId: 'default', id: 'foo', name: 'foo', description: 'foo' },
       { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
       { tenantId: 'default', id: 'baz', name: 'baz', description: 'baz' },

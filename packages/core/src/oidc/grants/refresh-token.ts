@@ -338,7 +338,7 @@ export const buildHandler: (
     /* === RFC 0001 === */
     const audience = buildOrganizationUrn(organizationId);
     /** All available scopes for the user in the organization. */
-    const availableScopes = await queries.organizations.relations.rolesUsers
+    const availableScopes = await queries.organizations.relations.usersRoles
       .getUserScopes(organizationId, account.accountId)
       .then((scopes) => scopes.map(({ name }) => name));
 

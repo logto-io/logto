@@ -148,7 +148,10 @@
             "description": "The role was removed from the application in the organization successfully."
           },
           "422": {
-            "description": "The role could not be removed. The role may not exist."
+            "description": "The application is not associated with the organization."
+          },
+          "404": {
+            "description": "Cannot find the record to delete."
           }
         }
       }

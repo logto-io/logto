@@ -72,7 +72,7 @@ export default function emailDomainRoutes(
     `${pathname}/:emailDomain`,
     koaGuard({
       params: z.object({ ...params, emailDomain: z.string().min(1) }),
-      status: [204],
+      status: [204, 404],
     }),
     async (ctx, next) => {
       const { id, emailDomain } = ctx.guard.params;

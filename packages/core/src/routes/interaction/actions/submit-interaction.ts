@@ -178,7 +178,7 @@ async function handleSubmitRegister(
     // This is only for Cloud integration tests and data alignment, OSS still uses the legacy Management API user role.
     const organizationId = getTenantOrganizationId(defaultTenantId);
     await organizations.relations.users.insert({ organizationId, userId: id });
-    await organizations.relations.rolesUsers.insert({
+    await organizations.relations.usersRoles.insert({
       organizationId,
       organizationRoleId: getTenantRole(TenantRole.Admin).id,
       userId: id,

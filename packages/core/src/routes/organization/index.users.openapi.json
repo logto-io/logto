@@ -190,8 +190,11 @@
           "204": {
             "description": "The role was removed from the user successfully."
           },
+          "422": {
+            "description": "The user is not a member of the organization."
+          },
           "404": {
-            "description": "The user is not a member of the organization; or the user does not have the role."
+            "description": "Cannot find the record to delete."
           }
         }
       }

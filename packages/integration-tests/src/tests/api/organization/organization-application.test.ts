@@ -112,7 +112,7 @@ devFeatureTest.describe('organization application APIs', () => {
       );
 
       const response = await organizationApi
-        .addApplicationRoles(organization.id, '0', [application.id])
+        .addApplicationRoles(organization.id, application.id, ['0'])
         .catch((error: unknown) => error);
       assert(response instanceof HTTPError);
       expect(response.response.status).toBe(422);
