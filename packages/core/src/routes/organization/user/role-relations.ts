@@ -1,18 +1,23 @@
-import { OrganizationRoles, OrganizationScopes } from '@logto/schemas';
-import type Router from 'koa-router';
+import {
+  type CreateOrganization,
+  type Organization,
+  type OrganizationKeys,
+  OrganizationRoles,
+  OrganizationScopes,
+} from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type OrganizationQueries from '#src/queries/organization/index.js';
+import type SchemaRouter from '#src/utils/SchemaRouter.js';
 
 // Manually add these routes since I don't want to over-engineer the `SchemaRouter`.
 // Update: Now we also have "organization - organization role - application" relations. Consider
 // extracting the common logic to a class once we have one more relation like this.
 export default function userRoleRelationRoutes(
-  router: Router<unknown, WithHookContext>,
+  router: SchemaRouter<OrganizationKeys, CreateOrganization, Organization>,
   organizations: OrganizationQueries
 ) {
   const params = Object.freeze({ id: z.string().min(1), userId: z.string().min(1) } as const);
