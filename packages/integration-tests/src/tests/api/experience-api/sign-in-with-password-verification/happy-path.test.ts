@@ -2,6 +2,7 @@ import { deleteUser } from '#src/api/admin-user.js';
 import { signInWithPassword } from '#src/helpers/experience/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const signInIdentifiersType: readonly ['username', 'email', 'phone'] = Object.freeze([
   'username',
@@ -15,7 +16,7 @@ const identifiersTypeToUserProfile = Object.freeze({
   phone: 'primaryPhone',
 });
 
-describe('Sign-in with password verification happy path', () => {
+devFeatureTest.describe('Sign-in with password verification happy path', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
   });
