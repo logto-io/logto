@@ -1,5 +1,5 @@
 import { deleteUser } from '#src/api/admin-user.js';
-import { signInWithPassword } from '#src/helpers/interactions-using-experience-api.js';
+import { signInWithPassword } from '#src/helpers/experience/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 

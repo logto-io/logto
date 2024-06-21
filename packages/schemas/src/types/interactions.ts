@@ -2,7 +2,6 @@ import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
 import { MfaFactor, jsonObjectGuard, webAuthnTransportGuard } from '../foundations/index.js';
-import { type ToZodObject } from '../utils/zod.js';
 
 import type {
   EmailVerificationCodePayload,
@@ -27,7 +26,15 @@ export enum InteractionEvent {
 // =================================================================================================================
 
 /** First party identifiers that can be used directly to identify a user */
-export type DirectIdentifier = 'username' | 'email' | 'phone';
+export type InteractionIdentifier = {
+  type: 'username' | 'email' | 'phone';
+  value: string;
+};
+
+export const interactionIdentifierGuard = z.object({
+  type: z.enum(['username', 'email', 'phone']),
+  value: z.string(),
+});
 
 /** Logto supported interaction verification types */
 export enum VerificationType {
@@ -39,28 +46,14 @@ export enum VerificationType {
   BackupCode = 'BackupCode',
 }
 
-export type PasswordIdentifier = {
-  type: DirectIdentifier;
-  value: string;
-};
-
-export const passwordIdentifierGuard = z.object({
-  type: z.enum(['username', 'email', 'phone']),
-  value: z.string(),
-}) satisfies ToZodObject<PasswordIdentifier>;
-
+/* API payload guard start */
 export const passwordSignInPayloadGuard = z.object({
-  identifier: passwordIdentifierGuard,
-  verification: z.object({
-    type: z.literal(VerificationType.Password),
-    value: z.string(),
-  }),
+  identifier: interactionIdentifierGuard,
+  password: z.string().min(1),
 });
-export type PasswordSignInPayload = z.infer<typeof passwordSignInPayloadGuard>;
 
-/** Payload guard for the /sign-in endpoint */
-export const signInPayloadGuard = passwordSignInPayloadGuard;
-export type SignInPayload = z.infer<typeof signInPayloadGuard>;
+export type PasswordSignInPayload = z.infer<typeof passwordSignInPayloadGuard>;
+/* API payload guard end */
 
 // =================================================================================================================
 // Experience API payload guard and types definitions end
@@ -74,6 +67,7 @@ export type SignInPayload = z.infer<typeof signInPayloadGuard>;
  * Marked as deprecated, can removed after experience APIs (interaction API V2) are fully migrated.
  * =================================================================================================================
  */
+
 /**
  * Detailed interaction identifier payload guard
  */
@@ -81,6 +75,7 @@ const usernamePasswordPayloadGuard = z.object({
   username: z.string().min(1),
   password: z.string().min(1),
 });
+
 export type UsernamePasswordPayload = z.infer<typeof usernamePasswordPayloadGuard>;
 
 export const emailPasswordPayloadGuard = z.object({

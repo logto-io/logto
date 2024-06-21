@@ -10,13 +10,15 @@ import {
   type PasswordVerificationRecordData,
 } from './password-verification.js';
 
-export { Verification } from './verification.js';
+export { PasswordVerification } from './password-verification.js';
 
 type VerificationRecordData = PasswordVerificationRecordData;
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
 ]);
+
+export type VerificationRecord = PasswordVerification;
 
 export const buildVerificationRecord = (
   libraries: Libraries,

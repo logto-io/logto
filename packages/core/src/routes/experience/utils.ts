@@ -1,15 +1,10 @@
-import { type DirectIdentifier } from '@logto/schemas';
+import { type InteractionIdentifier } from '@logto/schemas';
 
 import type Queries from '#src/tenants/Queries.js';
 
-type IdentifierPayload = {
-  type: DirectIdentifier;
-  value: string;
-};
-
 export const findUserByIdentifier = async (
   userQuery: Queries['users'],
-  { type, value }: IdentifierPayload
+  { type, value }: InteractionIdentifier
 ) => {
   if (type === 'username') {
     return userQuery.findUserByUsername(value);

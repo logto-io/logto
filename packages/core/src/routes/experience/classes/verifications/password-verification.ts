@@ -1,4 +1,8 @@
-import { VerificationType, passwordIdentifierGuard, type PasswordIdentifier } from '@logto/schemas';
+import {
+  VerificationType,
+  interactionIdentifierGuard,
+  type InteractionIdentifier,
+} from '@logto/schemas';
 import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
@@ -8,21 +12,22 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { findUserByIdentifier } from './utils.js';
+import { findUserByIdentifier } from '../../utils.js';
+
 import { type Verification } from './verification.js';
 
 export type PasswordVerificationRecordData = {
   id: string;
   type: VerificationType.Password;
-  identifier: PasswordIdentifier;
-  // The userId of the user that has been verified
+  identifier: InteractionIdentifier;
+  /* The userId of the user that has been verified */
   userId?: string;
 };
 
 export const passwordVerificationRecordDataGuard = z.object({
   id: z.string(),
   type: z.literal(VerificationType.Password),
-  identifier: passwordIdentifierGuard,
+  identifier: interactionIdentifierGuard,
   userId: z.string().optional(),
 }) satisfies ToZodObject<PasswordVerificationRecordData>;
 
@@ -32,7 +37,7 @@ export const passwordVerificationRecordDataGuard = z.object({
  */
 export class PasswordVerification implements Verification {
   /** Factory method to create a new PasswordVerification record using the given identifier */
-  static create(libraries: Libraries, queries: Queries, identifier: PasswordIdentifier) {
+  static create(libraries: Libraries, queries: Queries, identifier: InteractionIdentifier) {
     return new PasswordVerification(libraries, queries, {
       id: generateStandardId(),
       type: VerificationType.Password,
@@ -41,7 +46,7 @@ export class PasswordVerification implements Verification {
   }
 
   readonly type = VerificationType.Password;
-  public readonly identifier: PasswordIdentifier;
+  public readonly identifier: InteractionIdentifier;
   public readonly id: string;
   private userId?: string;
 

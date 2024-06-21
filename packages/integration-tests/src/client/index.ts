@@ -5,7 +5,7 @@ import type { Nullable, Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
 import ky, { type KyInstance } from 'ky';
 
-import { submit } from '#src/api/experience-api.js';
+import { submit } from '#src/api/experience-api/index.js';
 import { submitInteraction } from '#src/api/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 

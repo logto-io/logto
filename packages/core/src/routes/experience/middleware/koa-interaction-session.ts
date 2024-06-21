@@ -3,7 +3,7 @@ import type { MiddlewareType } from 'koa';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
-import InteractionSession from '../interaction-session.js';
+import InteractionSession from '../classes/interaction-session.js';
 
 export type WithInteractionSessionContext<ContextT extends WithLogContext = WithLogContext> =
   ContextT & {
@@ -11,9 +11,9 @@ export type WithInteractionSessionContext<ContextT extends WithLogContext = With
   };
 
 /**
- * @overview This middleware initializes the interaction session for the current request.
- * The interaction session is used to manage all the data related to the current interaction.
- * All the session data is stored using the oidc-provider's interaction session
+ * @overview This middleware initializes the InteractionSession for the current request.
+ * The InteractionSession instance is used to manage all the data related to the current interaction.
+ * All the interaction data is stored using the oidc-provider's interaction session
  * @see {@link https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#user-flows}
  */
 export default function koaInteractionSession<StateT, ContextT extends WithLogContext, ResponseT>(

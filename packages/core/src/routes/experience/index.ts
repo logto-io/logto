@@ -10,7 +10,7 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
-import { InteractionEvent, signInPayloadGuard } from '@logto/schemas';
+import { InteractionEvent, passwordSignInPayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -18,12 +18,11 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
+import { PasswordVerification } from './classes/verifications/index.js';
+import { experienceApiRoutesPrefix } from './const.js';
 import koaInteractionSession, {
   type WithInteractionSessionContext,
 } from './middleware/koa-interaction-session.js';
-import { PasswordVerification } from './verifications/password-verification.js';
-
-const experienceApiRoutesPrefix = '/experience';
 
 type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
 
@@ -41,20 +40,18 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     );
 
   router.post(
-    `${experienceApiRoutesPrefix}/sign-in`,
+    `${experienceApiRoutesPrefix}/sign-in/password`,
     koaGuard({
-      body: signInPayloadGuard,
+      body: passwordSignInPayloadGuard,
       status: [204, 400, 404, 422],
     }),
     async (ctx, next) => {
-      const { identifier, verification } = ctx.guard.body;
+      const { identifier, password } = ctx.guard.body;
 
       ctx.interactionSession.setInteractionEvent(InteractionEvent.SignIn);
 
-      // TODO: Add support for other verification types
-      const { value } = verification;
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
-      await passwordVerification.verify(value);
+      await passwordVerification.verify(password);
       ctx.interactionSession.appendVerificationRecord(passwordVerification);
 
       ctx.interactionSession.identifyUser(passwordVerification.id);
