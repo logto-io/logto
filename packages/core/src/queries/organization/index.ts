@@ -32,11 +32,11 @@ import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
+import { ApplicationRoleRelationQueries } from './application-role-relations.js';
 import { EmailDomainQueries } from './email-domains.js';
-import { RoleApplicationRelationQueries } from './role-application-relations.js';
-import { RoleUserRelationQueries } from './role-user-relations.js';
 import { SsoConnectorQueries } from './sso-connectors.js';
 import { UserRelationQueries } from './user-relations.js';
+import { UserRoleRelationQueries } from './user-role-relations.js';
 
 /**
  * The schema field keys that can be used for searching roles.
@@ -285,9 +285,8 @@ export default class OrganizationQueries extends SchemaQueries<
     ),
     /** Queries for organization - user relations. */
     users: new UserRelationQueries(this.pool),
-    // TODO: Rename to `usersRoles`
     /** Queries for organization - organization role - user relations. */
-    rolesUsers: new RoleUserRelationQueries(this.pool),
+    usersRoles: new UserRoleRelationQueries(this.pool),
     /** Queries for organization - application relations. */
     apps: new TwoRelationsQueries(
       this.pool,
@@ -295,9 +294,8 @@ export default class OrganizationQueries extends SchemaQueries<
       Organizations,
       Applications
     ),
-    // TODO: Rename to `appsRoles`
     /** Queries for organization - organization role - application relations. */
-    rolesApps: new RoleApplicationRelationQueries(this.pool),
+    appsRoles: new ApplicationRoleRelationQueries(this.pool),
     invitationsRoles: new TwoRelationsQueries(
       this.pool,
       OrganizationInvitationRoleRelations.table,

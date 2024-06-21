@@ -44,7 +44,7 @@ export default function applicationRoleRelationRoutes(
     async (ctx, next) => {
       const { id, applicationId } = ctx.guard.params;
 
-      const [totalCount, entities] = await organizations.relations.rolesApps.getEntities(
+      const [totalCount, entities] = await organizations.relations.appsRoles.getEntities(
         OrganizationRoles,
         {
           organizationId: id,
@@ -71,7 +71,7 @@ export default function applicationRoleRelationRoutes(
       const { id, applicationId } = ctx.guard.params;
       const { organizationRoleIds } = ctx.guard.body;
 
-      await organizations.relations.rolesApps.insert(
+      await organizations.relations.appsRoles.insert(
         ...organizationRoleIds.map((organizationRoleId) => ({
           organizationId: id,
           applicationId,
@@ -97,7 +97,7 @@ export default function applicationRoleRelationRoutes(
       const { id, applicationId } = ctx.guard.params;
       const { organizationRoleIds } = ctx.guard.body;
 
-      await organizations.relations.rolesApps.replace(id, applicationId, organizationRoleIds);
+      await organizations.relations.appsRoles.replace(id, applicationId, organizationRoleIds);
 
       ctx.status = 204;
       return next();
@@ -113,7 +113,7 @@ export default function applicationRoleRelationRoutes(
     async (ctx, next) => {
       const { id, applicationId, organizationRoleId } = ctx.guard.params;
 
-      await organizations.relations.rolesApps.delete({
+      await organizations.relations.appsRoles.delete({
         organizationId: id,
         applicationId,
         organizationRoleId,

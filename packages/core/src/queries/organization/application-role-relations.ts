@@ -9,7 +9,7 @@ import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 import RelationQueries from '#src/utils/RelationQueries.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
-export class RoleApplicationRelationQueries extends RelationQueries<
+export class ApplicationRoleRelationQueries extends RelationQueries<
   [typeof Organizations, typeof OrganizationRoles, typeof Applications]
 > {
   constructor(pool: CommonQueryMethods) {

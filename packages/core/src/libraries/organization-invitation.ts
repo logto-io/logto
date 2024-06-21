@@ -174,7 +174,7 @@ export class OrganizationInvitationLibrary {
           });
 
           if (entity.organizationRoles.length > 0) {
-            await organizationQueries.relations.rolesUsers.insert(
+            await organizationQueries.relations.usersRoles.insert(
               ...entity.organizationRoles.map((role) => ({
                 organizationId: entity.organizationId,
                 organizationRoleId: role.id,

@@ -43,7 +43,7 @@ export default function userRoleRelationRoutes(
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
 
-      const [totalCount, entities] = await organizations.relations.rolesUsers.getEntities(
+      const [totalCount, entities] = await organizations.relations.usersRoles.getEntities(
         OrganizationRoles,
         {
           organizationId: id,
@@ -69,7 +69,7 @@ export default function userRoleRelationRoutes(
       const { id, userId } = ctx.guard.params;
       const { organizationRoleIds } = ctx.guard.body;
 
-      await organizations.relations.rolesUsers.insert(
+      await organizations.relations.usersRoles.insert(
         ...organizationRoleIds.map((roleId) => ({
           organizationId: id,
           organizationRoleId: roleId,
@@ -93,7 +93,7 @@ export default function userRoleRelationRoutes(
       const { id, userId } = ctx.guard.params;
       const { organizationRoleIds } = ctx.guard.body;
 
-      await organizations.relations.rolesUsers.replace(id, userId, organizationRoleIds);
+      await organizations.relations.usersRoles.replace(id, userId, organizationRoleIds);
 
       ctx.status = 204;
       return next();
@@ -109,7 +109,7 @@ export default function userRoleRelationRoutes(
     async (ctx, next) => {
       const { id, roleId, userId } = ctx.guard.params;
 
-      await organizations.relations.rolesUsers.delete({
+      await organizations.relations.usersRoles.delete({
         organizationId: id,
         organizationRoleId: roleId,
         userId,
@@ -130,7 +130,7 @@ export default function userRoleRelationRoutes(
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
 
-      const scopes = await organizations.relations.rolesUsers.getUserScopes(id, userId);
+      const scopes = await organizations.relations.usersRoles.getUserScopes(id, userId);
 
       ctx.body = scopes;
       return next();

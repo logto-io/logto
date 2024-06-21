@@ -16,7 +16,7 @@ import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 import RelationQueries from '#src/utils/RelationQueries.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
-export class RoleUserRelationQueries extends RelationQueries<
+export class UserRoleRelationQueries extends RelationQueries<
   [typeof Organizations, typeof OrganizationRoles, typeof Users]
 > {
   constructor(pool: CommonQueryMethods) {
