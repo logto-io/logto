@@ -75,6 +75,10 @@ stages:
         awsServiceConnection: ${{ variables.awsServiceConnection }}
         awsRegion: ${{ variables.awsRegion }}
         serviceName: logto
+  - stage: Deploy_Logto_Admin
+    displayName: Deploy to ECS - logto Admin
+    dependsOn: Push_Logto
+    jobs:
     - template: pipeline-templates/deploy_ecs.yml
       parameters:
         awsServiceConnection: ${{ variables.awsServiceConnection }}
