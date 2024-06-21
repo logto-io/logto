@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import {
   InteractionEvent,
   adminConsoleApplicationId,
@@ -33,7 +32,7 @@ const { assignInteractionResults } = mockEsm('#src/libraries/session.js', () => 
   assignInteractionResults: jest.fn(),
 }));
 
-const { encryptUserPassword } = mockEsm('#src/libraries/user.js', () => ({
+const { encryptUserPassword } = mockEsm('#src/libraries/user.utils.js', () => ({
   encryptUserPassword: jest.fn().mockResolvedValue({
     passwordEncrypted: 'passwordEncrypted',
     passwordEncryptionMethod: 'plain',
@@ -63,9 +62,7 @@ const { hasActiveUsers, updateUserById, hasUserWithEmail, hasUserWithPhone } = u
 
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
-  insertUser: jest.fn(
-    async (user: CreateUser): Promise<InsertUserResult> => [user as User, { organizations: [] }]
-  ),
+  insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]),
 };
 const { generateUserId, insertUser } = userLibraries;
 
@@ -465,4 +462,3 @@ describe('submit action', () => {
     });
   });
 });
-/* eslint-enable max-lines */

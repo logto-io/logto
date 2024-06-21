@@ -129,15 +129,6 @@ describe('manual data hook tests', () => {
     });
 
   describe('organization membership update by just-in-time organization provisioning', () => {
-    it('should trigger `Organization.Membership.Updated` event when user is provisioned by Management API', async () => {
-      const organization = await organizationApi.create({ name: 'foo' });
-      const domain = 'example.com';
-      await organizationApi.jit.addEmailDomain(organization.id, domain);
-
-      await userApi.create({ primaryEmail: `${randomString()}@${domain}` });
-      await assertOrganizationMembershipUpdated(organization.id);
-    });
-
     // TODO: Add user deletion test case
 
     it('should trigger `Organization.Membership.Updated` event when user is provisioned by experience', async () => {
@@ -160,9 +151,9 @@ describe('manual data hook tests', () => {
     it('should trigger `Organization.Membership.Updated` event when user is provisioned by SSO', async () => {
       const organization = await organizationApi.create({ name: 'bar' });
       const domain = 'sso_example.com';
-      await organizationApi.jit.addEmailDomain(organization.id, domain);
-
       const connector = await ssoConnectorApi.createMockOidcConnector([domain]);
+      await organizationApi.jit.ssoConnectors.add(organization.id, [connector.id]);
+
       await updateSignInExperience({
         singleSignOnEnabled: true,
       });

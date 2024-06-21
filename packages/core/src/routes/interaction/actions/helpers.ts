@@ -6,7 +6,7 @@ import { type IRouterContext } from 'koa-router';
 import { EnvSet } from '#src/env-set/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { type ConnectorLibrary } from '#src/libraries/connector.js';
-import { encryptUserPassword } from '#src/libraries/user.js';
+import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';

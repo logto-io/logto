@@ -1,7 +1,7 @@
-import type { BindMfa, CreateUser, MfaVerification, Scope, User } from '@logto/schemas';
-import { MfaFactor, RoleType, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import type { BindMfa, CreateUser, Scope, User } from '@logto/schemas';
+import { RoleType, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { generateStandardId, generateStandardShortId } from '@logto/shared';
-import { deduplicateByKey, type Nullable } from '@silverhand/essentials';
+import { condArray, deduplicateByKey, type Nullable } from '@silverhand/essentials';
 import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
 import pRetry from 'p-retry';
 
@@ -9,75 +9,14 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type JitOrganization } from '#src/queries/organization/email-domains.js';
-import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
-import { encryptPassword } from '#src/utils/password.js';
 import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
-export const encryptUserPassword = async (
-  password: string
-): Promise<{
-  passwordEncrypted: string;
-  passwordEncryptionMethod: UsersPasswordEncryptionMethod;
-}> => {
-  const passwordEncryptionMethod = UsersPasswordEncryptionMethod.Argon2i;
-  const passwordEncrypted = await encryptPassword(password, passwordEncryptionMethod);
+import { convertBindMfaToMfaVerification, encryptUserPassword } from './user.utils.js';
 
-  return { passwordEncrypted, passwordEncryptionMethod };
-};
-
-/**
- * Convert bindMfa to mfaVerification, add common fields like "id" and "createdAt"
- * and transpile formats like "codes" to "code" for backup code
- */
-const converBindMfaToMfaVerification = (bindMfa: BindMfa): MfaVerification => {
-  const { type } = bindMfa;
-  const base = {
-    id: generateStandardId(),
-    createdAt: new Date().toISOString(),
-  };
-
-  if (type === MfaFactor.BackupCode) {
-    const { codes } = bindMfa;
-
-    return {
-      ...base,
-      type,
-      codes: codes.map((code) => ({ code })),
-    };
-  }
-
-  if (type === MfaFactor.TOTP) {
-    const { secret } = bindMfa;
-
-    return {
-      ...base,
-      type,
-      key: secret,
-    };
-  }
-
-  const { credentialId, counter, publicKey, transports, agent } = bindMfa;
-  return {
-    ...base,
-    type,
-    credentialId,
-    counter,
-    publicKey,
-    transports,
-    agent,
-  };
-};
-
-export type InsertUserResult = [
-  User,
-  {
-    /** The organizations and organization roles that the user has been provisioned into. */
-    organizations: readonly JitOrganization[];
-  },
-];
+export type InsertUserResult = [User];
 
 export type UserLibrary = ReturnType<typeof createUserLibrary>;
 
@@ -143,43 +82,7 @@ export const createUserLibrary = (queries: Queries) => {
         );
       }
 
-      // TODO: If the user's email is not verified, we should not provision the user into any organization.
-      const provisionOrganizations = async (): Promise<readonly JitOrganization[]> => {
-        // Just-in-time organization provisioning
-        const userEmailDomain = data.primaryEmail?.split('@')[1];
-        if (userEmailDomain) {
-          const organizationQueries = new OrganizationQueries(connection);
-          const organizations = await organizationQueries.jit.emailDomains.getJitOrganizations(
-            userEmailDomain
-          );
-
-          if (organizations.length > 0) {
-            await organizationQueries.relations.users.insert(
-              ...organizations.map(({ organizationId }) => ({
-                organizationId,
-                userId: user.id,
-              }))
-            );
-
-            const data = organizations.flatMap(({ organizationId, organizationRoleIds }) =>
-              organizationRoleIds.map((organizationRoleId) => ({
-                organizationId,
-                organizationRoleId,
-                userId: user.id,
-              }))
-            );
-            if (data.length > 0) {
-              await organizationQueries.relations.rolesUsers.insert(...data);
-            }
-
-            return organizations;
-          }
-        }
-
-        return [];
-      };
-
-      return [user, { organizations: await provisionOrganizations() }];
+      return [user];
     });
   };
 
@@ -261,7 +164,7 @@ export const createUserLibrary = (queries: Queries) => {
     // TODO @sijie use jsonb array append
     const { mfaVerifications } = await findUserById(userId);
     await updateUserById(userId, {
-      mfaVerifications: [...mfaVerifications, converBindMfaToMfaVerification(payload)],
+      mfaVerifications: [...mfaVerifications, convertBindMfaToMfaVerification(payload)],
     });
   };
 
@@ -338,6 +241,66 @@ export const createUserLibrary = (queries: Queries) => {
   const findUserSsoIdentities = async (userId: string) =>
     userSsoIdentities.findUserSsoIdentitiesByUserId(userId);
 
+  type ProvisionOrganizationsParams =
+    | {
+        /** The user ID to provision organizations for. */
+        userId: string;
+        /** The user's email to determine JIT organizations. */
+        email: string;
+        /** The SSO connector ID to determine JIT organizations. */
+        ssoConnectorId?: undefined;
+      }
+    | {
+        /** The user ID to provision organizations for. */
+        userId: string;
+        /** The user's email to determine JIT organizations. */
+        email?: undefined;
+        /** The SSO connector ID to determine JIT organizations. */
+        ssoConnectorId: string;
+      };
+
+  // TODO: If the user's email is not verified, we should not provision the user into any organization.
+  /**
+   * Provision the user with JIT organizations and roles based on the user's email domain and the
+   * enterprise SSO connector.
+   */
+  const provisionOrganizations = async ({
+    userId,
+    email,
+    ssoConnectorId,
+  }: ProvisionOrganizationsParams): Promise<readonly JitOrganization[]> => {
+    const userEmailDomain = email?.split('@')[1];
+    const jitOrganizations = condArray(
+      userEmailDomain &&
+        (await organizations.jit.emailDomains.getJitOrganizations(userEmailDomain)),
+      ssoConnectorId && (await organizations.jit.ssoConnectors.getJitOrganizations(ssoConnectorId))
+    );
+
+    if (jitOrganizations.length === 0) {
+      return [];
+    }
+
+    await organizations.relations.users.insert(
+      ...jitOrganizations.map(({ organizationId }) => ({
+        organizationId,
+        userId,
+      }))
+    );
+
+    const data = jitOrganizations.flatMap(({ organizationId, organizationRoleIds }) =>
+      organizationRoleIds.map((organizationRoleId) => ({
+        organizationId,
+        organizationRoleId,
+        userId,
+      }))
+    );
+    if (data.length > 0) {
+      await organizations.relations.rolesUsers.insert(...data);
+    }
+
+    return jitOrganizations;
+  };
+
   return {
     generateUserId,
     insertUser,
@@ -349,5 +312,6 @@ export const createUserLibrary = (queries: Queries) => {
     verifyUserPassword,
     signOutUser,
     findUserSsoIdentities,
+    provisionOrganizations,
   };
 };

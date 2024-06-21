@@ -24,7 +24,7 @@ const { assignInteractionResults } = mockEsm('#src/libraries/session.js', () => 
   assignInteractionResults: jest.fn(),
 }));
 
-mockEsm('#src/libraries/user.js', () => ({
+mockEsm('#src/libraries/user.utils.js', () => ({
   encryptUserPassword: jest.fn().mockResolvedValue({
     passwordEncrypted: 'passwordEncrypted',
     passwordEncryptionMethod: 'plain',

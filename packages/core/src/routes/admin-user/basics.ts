@@ -12,7 +12,7 @@ import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
-import { encryptUserPassword } from '#src/libraries/user.js';
+import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -200,7 +200,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       const id = await generateUserId();
 
-      const [user, { organizations }] = await insertUser(
+      const [user] = await insertUser(
         {
           id,
           primaryEmail,
@@ -220,13 +220,6 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         },
         []
       );
-
-      for (const { organizationId } of organizations) {
-        ctx.appendDataHookContext('Organization.Membership.Updated', {
-          ...buildManagementApiContext(ctx),
-          organizationId,
-        });
-      }
 
       ctx.body = pick(user, ...userInfoSelectFields);
       return next();
