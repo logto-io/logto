@@ -124,7 +124,7 @@ describe('organization user APIs', () => {
     });
   });
 
-  describe('organization - user - organization role relation routes', () => {
+  describe('organization - user - organization role relations', () => {
     const organizationApi = new OrganizationApiTest();
     const { roleApi } = organizationApi;
     const userApi = new UserApiTest();
@@ -245,6 +245,50 @@ describe('organization user APIs', () => {
         .getUserRoles(organization.id, user.id)
         .catch((error: unknown) => error);
       expect(response instanceof HTTPError && response.response.status).toBe(422); // Require membership
+    });
+
+    it('should fail when try to add or delete role to a user that does not exist', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const response = await organizationApi
+        .addUserRoles(organization.id, '0', ['0'])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'organization.require_membership' })
+      );
+
+      const response2 = await organizationApi
+        .deleteUserRole(organization.id, '0', '0')
+        .catch((error: unknown) => error);
+      assert(response2 instanceof HTTPError);
+      expect(response2.response.status).toBe(422);
+      expect(await response2.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'organization.require_membership' })
+      );
+    });
+
+    it('should fail when try to add or delete role that does not exist', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      await organizationApi.addUsers(organization.id, [user.id]);
+      const response = await organizationApi
+        .addUserRoles(organization.id, user.id, ['0'])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'entity.relation_foreign_key_not_found' })
+      );
+
+      const response2 = await organizationApi
+        .deleteUserRole(organization.id, user.id, '0')
+        .catch((error: unknown) => error);
+      assert(response2 instanceof HTTPError);
+      expect(response2.response.status).toBe(404);
+      expect(await response2.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'entity.not_found' })
+      );
     });
   });
 

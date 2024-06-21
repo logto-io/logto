@@ -83,7 +83,7 @@ export class RoleUserRelationQueries extends RelationQueries<
     return this.pool.transaction(async (transaction) => {
       // Lock user
       await transaction.query(sql`
-        select id
+        select 1
         from ${users.table}
         where ${users.fields.id} = ${userId}
         for update
@@ -92,8 +92,8 @@ export class RoleUserRelationQueries extends RelationQueries<
       // Delete old relations
       await transaction.query(sql`
         delete from ${relations.table}
-        where ${relations.fields.userId} = ${userId}
-        and ${relations.fields.organizationId} = ${organizationId}
+        where ${relations.fields.organizationId} = ${organizationId}
+        and ${relations.fields.userId} = ${userId}
       `);
 
       // Insert new relations
@@ -103,14 +103,14 @@ export class RoleUserRelationQueries extends RelationQueries<
 
       await transaction.query(sql`
         insert into ${relations.table} (
-          ${relations.fields.userId},
           ${relations.fields.organizationId},
+          ${relations.fields.userId},
           ${relations.fields.organizationRoleId}
         )
-         values ${sql.join(
-           roleIds.map((roleId) => sql`(${userId}, ${organizationId}, ${roleId})`),
-           sql`, `
-         )}
+        values ${sql.join(
+          roleIds.map((roleId) => sql`(${organizationId}, ${userId}, ${roleId})`),
+          sql`, `
+        )}
       `);
     });
   }

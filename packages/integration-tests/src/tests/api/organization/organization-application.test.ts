@@ -85,4 +85,65 @@ devFeatureTest.describe('organization application APIs', () => {
       expect(response instanceof HTTPError && response.response.status).toBe(422);
     });
   });
+
+  describe('organization - application - organization role relations', () => {
+    const organizationApi = new OrganizationApiTest();
+    const applications: Application[] = [];
+    const createApplication = async (...args: Parameters<typeof createApplicationApi>) => {
+      const created = await createApplicationApi(...args);
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      applications.push(created);
+      return created;
+    };
+
+    afterEach(async () => {
+      await Promise.all([
+        organizationApi.cleanUp(),
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        ...applications.map(async ({ id }) => deleteApplication(id).catch(() => {})),
+      ]);
+    });
+
+    it('should fail when try to add application to an organization role that does not exist', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const application = await createApplication(
+        generateTestName(),
+        ApplicationType.MachineToMachine
+      );
+
+      const response = await organizationApi
+        .addApplicationRoles(organization.id, '0', [application.id])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+    });
+
+    it('should be able to add and delete organization application role', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const role = await organizationApi.roleApi.create({ name: `test-${generateTestName()}` });
+      const application = await createApplication(
+        generateTestName(),
+        ApplicationType.MachineToMachine
+      );
+
+      await organizationApi.applications.add(organization.id, [application.id]);
+      await organizationApi.addApplicationRoles(organization.id, application.id, [role.id]);
+      expect(
+        await organizationApi.getApplicationRoles(organization.id, application.id)
+      ).toContainEqual(role);
+
+      await organizationApi.deleteApplicationRole(organization.id, application.id, role.id);
+      expect(
+        await organizationApi.getApplicationRoles(organization.id, application.id)
+      ).not.toContainEqual(role);
+    });
+
+    it('should fail when try to delete application role from an organization that does not exist', async () => {
+      const response = await organizationApi
+        .deleteApplicationRole('0', '0', '0')
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+    });
+  });
 });
