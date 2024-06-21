@@ -13,6 +13,7 @@ type CanBePromise<T> = T | Promise<T>;
 
 type Props<T> = {
   readonly className?: string;
+  readonly valueClassName?: string | ((value: T) => string | undefined);
   readonly values: T[];
   readonly getId?: (value: T) => string;
   readonly onError?: (error: string) => void;
@@ -27,6 +28,7 @@ type Props<T> = {
 
 function MultiOptionInput<T>({
   className,
+  valueClassName,
   values,
   getId: getIdInput,
   onError,
@@ -98,7 +100,11 @@ function MultiOptionInput<T>({
             <Tag
               key={getId(option)}
               variant="cell"
-              className={classNames(styles.tag, getId(option) === focusedValueId && styles.focused)}
+              className={classNames(
+                styles.tag,
+                getId(option) === focusedValueId && styles.focused,
+                typeof valueClassName === 'function' ? valueClassName(option) : valueClassName
+              )}
               onClick={() => {
                 ref.current?.focus();
               }}

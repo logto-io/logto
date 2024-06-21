@@ -29,13 +29,15 @@ const organization_details = {
   jit: {
     title: 'Just-in-time provisioning',
     description:
-      'Users can automatically join the organization and receive role assignments if their verified email matches specific domains, either during sign-up or when added via the Management API.',
+      'Users can automatically join the organization and be assigned roles upon their first sign-in through some authentication methods. You can set requirements to meet for just-in-time provisioning.',
     email_domain: 'Email domain provisioning',
     email_domain_description:
-      'New users signing up with their verified email addresses or through social sign-in with synced verified email addresses will automatically join the organization.',
+      'New users signing up with their verified email addresses or through social sign-in with verified email addresses will automatically join the organization.',
     email_domain_placeholder: 'Enter email domains for just-in-time provisioning',
     invalid_domain: 'Invalid domain',
     domain_already_added: 'Domain already added',
+    sso_enabled_domain_warning:
+      'You have entered one or more email domains associated to enterprise SSO. Users with these emails will follow the standard SSO flow and won’t be provisioned to this organization unless enterprise SSO provisioning is configured.',
     enterprise_sso: 'Enterprise SSO provisioning',
     add_enterprise_connector: 'Add enterprise connector',
     enterprise_sso_description:

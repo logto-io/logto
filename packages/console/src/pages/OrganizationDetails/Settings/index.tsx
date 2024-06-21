@@ -3,7 +3,6 @@ import {
   type Organization,
   type SsoConnectorWithProviderConfig,
 } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
 import { useState, useCallback, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -27,7 +26,6 @@ import { DropdownItem } from '@/ds-components/Dropdown';
 import FormField from '@/ds-components/FormField';
 import IconButton from '@/ds-components/IconButton';
 import InlineNotification from '@/ds-components/InlineNotification';
-import { type Option } from '@/ds-components/Select/MultiSelect';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import useApi, { type RequestError } from '@/hooks/use-api';
@@ -38,40 +36,7 @@ import { trySubmitSafe } from '@/utils/form';
 import { type OrganizationDetailsOutletContext } from '../types';
 
 import * as styles from './index.module.scss';
-
-type FormData = Partial<Omit<Organization, 'customData'> & { customData: string }> & {
-  jitEmailDomains: string[];
-  jitRoles: Array<Option<string>>;
-  jitSsoConnectorIds: string[];
-};
-
-const isJsonObject = (value: string) => {
-  const parsed = trySafe<unknown>(() => JSON.parse(value));
-  return Boolean(parsed && typeof parsed === 'object');
-};
-
-const normalizeData = (
-  data: Organization,
-  jit: { emailDomains: string[]; roles: Array<Option<string>>; ssoConnectorIds: string[] }
-): FormData => ({
-  ...data,
-  jitEmailDomains: jit.emailDomains,
-  jitRoles: jit.roles,
-  jitSsoConnectorIds: jit.ssoConnectorIds,
-  customData: JSON.stringify(data.customData, undefined, 2),
-});
-
-const assembleData = ({
-  jitEmailDomains,
-  jitRoles,
-  jitSsoConnectorIds,
-  customData,
-  ...data
-}: FormData): Partial<Organization> => ({
-  ...data,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  customData: JSON.parse(customData ?? '{}'),
-});
+import { assembleData, isJsonObject, normalizeData, type FormData } from './utils';
 
 function Settings() {
   const { isDeleting, data, jit, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();
@@ -93,7 +58,7 @@ function Settings() {
       ssoConnectorIds: jit.ssoConnectorIds,
     }),
   });
-  const isMfaRequired = watch('isMfaRequired');
+  const [isMfaRequired, emailDomains] = watch(['isMfaRequired', 'jitEmailDomains']);
   const api = useApi();
   const [keyword, setKeyword] = useState('');
   // Fetch all SSO connector to show if a domain is configured SSO
@@ -107,6 +72,11 @@ function Settings() {
   const hasSsoEnabled = useCallback(
     (domain: string) => allSsoConnectors?.some(({ domains }) => domains.includes(domain)),
     [allSsoConnectors]
+  );
+  /** If any of the email domains has SSO enabled. */
+  const hasSsoEnabledEmailDomain = useMemo(
+    () => emailDomains.some((domain) => hasSsoEnabled(domain)),
+    [emailDomains, hasSsoEnabled]
   );
 
   const onSubmit = handleSubmit(
@@ -218,7 +188,9 @@ function Settings() {
                         <div key={connector.id} className={styles.ssoConnector}>
                           <div className={styles.info}>
                             <SsoConnectorLogo className={styles.icon} data={connector} />
-                            <span>{connector.connectorName}</span>
+                            <span>
+                              {connector.connectorName} - {connector.providerName}
+                            </span>
                           </div>
                           <IconButton
                             onClick={() => {
@@ -264,6 +236,7 @@ function Settings() {
             title="organization_details.jit.email_domain"
             description="organization_details.jit.email_domain_description"
             descriptionPosition="top"
+            className={styles.jitEmailDomains}
           >
             <Controller
               name="jitEmailDomains"
@@ -271,10 +244,13 @@ function Settings() {
               render={({ field: { onChange, value } }) => (
                 <MultiOptionInput
                   values={value}
+                  valueClassName={(domain) =>
+                    hasSsoEnabled(domain) ? styles.ssoEnabled : undefined
+                  }
                   renderValue={(value) =>
                     hasSsoEnabled(value) ? (
                       <>
-                        <SsoIcon className={styles.ssoEnabled} />
+                        <SsoIcon />
                         {value}
                       </>
                     ) : (
@@ -304,8 +280,12 @@ function Settings() {
                 />
               )}
             />
+            {hasSsoEnabledEmailDomain && (
+              <InlineNotification severity="alert" className={styles.warning}>
+                {t('organization_details.jit.sso_enabled_domain_warning')}
+              </InlineNotification>
+            )}
           </FormField>
-
           <FormField
             title="organization_details.jit.organization_roles"
             description="organization_details.jit.organization_roles_description"
