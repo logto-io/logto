@@ -10,44 +10,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  detect-dev-feature-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      has-dev-feature-changes: ${{ steps.changes-detection.outputs.has-dev-feature-changes }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # compare the current codebase with HEAD and check if there are any new lines with isDevFeaturesEnabled
-      - name: Get the diff and filter added lines
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            BASE=$(git merge-base origin/${{github.base_ref}} HEAD)
-          else
-            BASE=${{ github.event.before }}
-          fi
-
-          git diff $BASE --unified=0 | grep -E '^\+' > added_lines.txt
-
-          sed -i '/^+++ /d' added_lines.txt
-
-      - name: Check for isDevFeaturesEnabled in added lines
-        id: changes-detection
-        run: |
-          if grep -q 'isDevFeaturesEnabled' added_lines.txt; then
-            echo "Dev features enabled changes detected"
-            echo "::set-output name=has-dev-feature-changes::true"
-          else
-            echo "No dev features enabled changes detected"
-            echo "::set-output name=has-dev-feature-changes::false"
-          fi
-
   package:
-    needs: detect-dev-feature-changes
     runs-on: ubuntu-latest
-    if: ${{needs.detect-dev-feature-changes.outputs.has-dev-feature-changes == 'true'}}
     env:
       INTEGRATION_TEST: true
       DEV_FEATURES_ENABLED: false
@@ -62,7 +26,6 @@ jobs:
       fail-fast: false
       matrix:
         target: [api, experience, console]
-    needs: package
     runs-on: ubuntu-latest
     env:
       INTEGRATION_TEST: true
