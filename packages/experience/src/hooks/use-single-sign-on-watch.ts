@@ -1,4 +1,9 @@
-import { SignInIdentifier, experience, type SsoConnectorMetadata } from '@logto/schemas';
+import {
+  AgreeToTermsPolicy,
+  SignInIdentifier,
+  experience,
+  type SsoConnectorMetadata,
+} from '@logto/schemas';
 import { useEffect, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +16,7 @@ import useSingleSignOn from '@/hooks/use-single-sign-on';
 import { validateEmail } from '@/utils/form';
 
 import { useSieMethods } from './use-sie';
+import useTerms from './use-terms';
 
 const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
   const navigate = useNavigate();
@@ -25,6 +31,8 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
   const request = useApi(getSingleSignOnConnectors, { silent: true });
 
   const singleSignOn = useSingleSignOn();
+
+  const { termsValidation, agreeToTermsPolicy } = useTerms();
 
   // Silently check if the email is registered with any SSO connectors
   const fetchSsoConnectors = useCallback(
@@ -65,6 +73,13 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
       return;
     }
 
+    /**
+     * Check if the user has agreed to the terms and privacy policy before single sign on when the policy is set to `Manual`
+     */
+    if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual && !(await termsValidation())) {
+      return;
+    }
+
     // If there is only one connector, we can directly invoke the SSO flow
     if (ssoConnectors.length === 1 && ssoConnectors[0]?.id) {
       await singleSignOn(ssoConnectors[0].id);
@@ -72,7 +87,14 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
     }
 
     navigate(`/${experience.routes.sso}/connectors`);
-  }, [navigate, showSingleSignOnForm, singleSignOn, ssoConnectors]);
+  }, [
+    agreeToTermsPolicy,
+    navigate,
+    showSingleSignOnForm,
+    singleSignOn,
+    ssoConnectors,
+    termsValidation,
+  ]);
 
   useEffect(() => {
     if (!singleSignOnEnabled) {

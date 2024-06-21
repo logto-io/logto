@@ -137,8 +137,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
         className={classNames(
           styles.terms,
           // For sign in, only show the terms checkbox if the terms policy is manual
-          (showSingleSignOnForm || agreeToTermsPolicy !== AgreeToTermsPolicy.Manual) &&
-            styles.hidden
+          agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && styles.hidden
         )}
       />
 

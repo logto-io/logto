@@ -137,8 +137,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
            * Hide the terms checkbox when the policy is set to `Automatic`.
            * In registration, the terms checkbox is always shown for `Manual` and `ManualRegistrationOnly` policies.
            */
-          (showSingleSignOnForm || agreeToTermsPolicy === AgreeToTermsPolicy.Automatic) &&
-            styles.hidden
+          agreeToTermsPolicy === AgreeToTermsPolicy.Automatic && styles.hidden
         )}
       />
 
