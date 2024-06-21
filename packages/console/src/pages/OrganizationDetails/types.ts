@@ -8,6 +8,7 @@ export type OrganizationDetailsOutletContext = {
   data: Organization;
   jit: {
     emailDomains: OrganizationJitEmailDomain[];
+    ssoConnectorIds: string[];
     roles: OrganizationRole[];
   };
   /**
