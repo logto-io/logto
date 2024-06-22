@@ -91,7 +91,7 @@ export const buildParameters: BuildParameters = (
       if (key === 'id') {
         if (rootComponent) {
           return {
-            $ref: `#/components/parameters/${pluralize(rootComponent, 1)}Id:root`,
+            $ref: `#/components/parameters/${pluralize(rootComponent, 1)}Id-root`,
           };
         }
 
@@ -241,13 +241,31 @@ export const buildPathIdParameters = (
   // Need to duplicate the object because OpenAPI does not support partial reference.
   // See https://github.com/OAI/OpenAPI-Specification/issues/2026
   return {
-    [`${entityId}:root`]: {
+    [`${entityId}-root`]: {
       ...shared,
       name: 'id',
     },
     [entityId]: {
       ...shared,
       name: entityId,
+    },
+  };
+};
+
+/**
+ * Build a parameter object for the `tenantId` parameter.
+ * @returns The parameter object for the `tenantId` parameter.
+ */
+export const customParameters = (): Record<string, OpenAPIV3.ParameterObject> => {
+  return {
+    tenantId: {
+      name: 'tenantId',
+      in: 'path',
+      description: 'The unique identifier of the tenant.',
+      required: true,
+      schema: {
+        type: 'string',
+      },
     },
   };
 };
