@@ -71,8 +71,14 @@ devFeatureTest.describe('organization application APIs', () => {
       const organizationId = organizationApi.organizations[0]!.id;
       const app = applications[0]!;
       const roles = await Promise.all([
-        organizationApi.roleApi.create({ name: generateTestName() }),
-        organizationApi.roleApi.create({ name: generateTestName() }),
+        organizationApi.roleApi.create({
+          name: generateTestName(),
+          type: RoleType.MachineToMachine,
+        }),
+        organizationApi.roleApi.create({
+          name: generateTestName(),
+          type: RoleType.MachineToMachine,
+        }),
       ]);
       const roleIds = roles.map(({ id }) => id);
       await organizationApi.addApplicationRoles(organizationId, app.id, roleIds);
@@ -203,7 +209,10 @@ devFeatureTest.describe('organization application APIs', () => {
 
     it('should be able to add and delete organization application role', async () => {
       const organization = await organizationApi.create({ name: 'test' });
-      const role = await organizationApi.roleApi.create({ name: `test-${generateTestName()}` });
+      const role = await organizationApi.roleApi.create({
+        name: `test-${generateTestName()}`,
+        type: RoleType.MachineToMachine,
+      });
       const application = await createApplication(
         generateTestName(),
         ApplicationType.MachineToMachine

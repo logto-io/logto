@@ -5,7 +5,7 @@ import { HTTPError } from 'ky';
 
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
-import { generateTestName } from '#src/utils.js';
+import { devFeatureTest, generateTestName } from '#src/utils.js';
 
 describe('organization user APIs', () => {
   describe('organization get users', () => {
@@ -289,7 +289,7 @@ describe('organization user APIs', () => {
       );
     });
 
-    it('should fail when try to add role that is not user type', async () => {
+    devFeatureTest.it('should fail when try to add role that is not user type', async () => {
       const organization = await organizationApi.create({ name: 'test' });
       const user = await userApi.create({ username: generateTestName() });
       const role = await roleApi.create({
