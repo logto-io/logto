@@ -86,8 +86,13 @@ export class RelationApiFactory<RelationSchema extends Record<string, unknown>> 
     return this.config.relationKey;
   }
 
-  async getList(id: string, page?: number, pageSize?: number): Promise<RelationSchema[]> {
-    const searchParams = new URLSearchParams();
+  async getList(
+    id: string,
+    page?: number,
+    pageSize?: number,
+    extraParams?: ConstructorParameters<typeof URLSearchParams>[0]
+  ): Promise<RelationSchema[]> {
+    const searchParams = new URLSearchParams(extraParams);
 
     if (page) {
       searchParams.append('page', String(page));

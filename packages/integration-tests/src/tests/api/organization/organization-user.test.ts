@@ -36,14 +36,14 @@ describe('organization user APIs', () => {
         page: 2,
         page_size: 10,
       });
-      expect(users2.length).toBeGreaterThanOrEqual(10);
+      expect(users2.length).toBe(10);
       expect(users2[0]?.id).not.toBeFalsy();
       expect(users2[0]?.id).toBe(users1[10]?.id);
       expect(total1).toBe(30);
       expect(total2).toBe(30);
     });
 
-    it('should be able to get organization users with search keyword', async () => {
+    it('should be able to get organization users with search', async () => {
       const organizationId = organizationApi.organizations[0]!.id;
       const username = generateTestName();
       const createdUser = await userApi.create({ username });
@@ -73,11 +73,8 @@ describe('organization user APIs', () => {
       expect(usersWithRoles).toHaveLength(1);
       expect(usersWithRoles[0]).toMatchObject(user);
       expect(usersWithRoles[0]!.organizationRoles).toHaveLength(2);
-      expect(usersWithRoles[0]!.organizationRoles).toContainEqual(
-        expect.objectContaining({ id: roles[0].id })
-      );
-      expect(usersWithRoles[0]!.organizationRoles).toContainEqual(
-        expect.objectContaining({ id: roles[1].id })
+      expect(usersWithRoles[0]!.organizationRoles).toEqual(
+        expect.arrayContaining(roles.map(({ id }) => expect.objectContaining({ id })))
       );
     });
   });

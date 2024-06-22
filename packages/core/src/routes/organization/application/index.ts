@@ -1,8 +1,18 @@
-import { type OrganizationKeys, type CreateOrganization, type Organization } from '@logto/schemas';
+import {
+  type OrganizationKeys,
+  type CreateOrganization,
+  type Organization,
+  applicationWithOrganizationRolesGuard,
+} from '@logto/schemas';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
+import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
+import { applicationSearchKeys } from '#src/queries/application.js';
 import type OrganizationQueries from '#src/queries/organization/index.js';
 import type SchemaRouter from '#src/utils/SchemaRouter.js';
+import { parseSearchOptions } from '#src/utils/search.js';
 
 import applicationRoleRelationRoutes from './role-relations.js';
 
@@ -14,8 +24,35 @@ export default function applicationRoutes(
   if (EnvSet.values.isDevFeaturesEnabled) {
     // MARK: Organization - application relation routes
     router.addRelationRoutes(organizations.relations.apps, undefined, {
+      disabled: { get: true },
       hookEvent: 'Organization.Membership.Updated',
     });
+
+    router.get(
+      '/:id/applications',
+      koaPagination(),
+      koaGuard({
+        query: z.object({ q: z.string().optional() }),
+        params: z.object({ id: z.string().min(1) }),
+        response: applicationWithOrganizationRolesGuard.array(),
+        status: [200, 404],
+      }),
+      async (ctx, next) => {
+        const search = parseSearchOptions(applicationSearchKeys, ctx.guard.query);
+
+        const [totalCount, entities] =
+          await organizations.relations.apps.getApplicationsByOrganizationId(
+            ctx.guard.params.id,
+            ctx.pagination,
+            search
+          );
+
+        ctx.pagination.totalCount = totalCount;
+        ctx.body = entities;
+
+        return next();
+      }
+    );
 
     // MARK: Organization - application role relation routes
     applicationRoleRelationRoutes(router, organizations);

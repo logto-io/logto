@@ -182,7 +182,7 @@
         }
       }
     },
-    "/api/organizations/{id}/users/{userId}/roles/{roleId}": {
+    "/api/organizations/{id}/users/{userId}/roles/{organizationRoleId}": {
       "delete": {
         "summary": "Remove a role from a user in an organization",
         "description": "Remove a role assignment from a user in the specified organization.",
