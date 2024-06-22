@@ -12,6 +12,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import koaAuth from '../middleware/koa-auth/index.js';
 
 import adminUserRoutes from './admin-user/index.js';
+import applicationOrganizationRoutes from './applications/application-organization.js';
 import applicationProtectedAppMetadataRoutes from './applications/application-protected-app-metadata.js';
 import applicationRoleRoutes from './applications/application-role.js';
 import applicationSignInExperienceRoutes from './applications/application-sign-in-experience.js';
@@ -52,15 +53,16 @@ const createRouters = (tenant: TenantContext) => {
   managementRouter.use(koaTenantGuard(tenant.id, tenant.queries));
   managementRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
 
+  // TODO: FIXME @sijie @darcy mount these routes in `applicationRoutes` instead
   applicationRoutes(managementRouter, tenant);
   applicationRoleRoutes(managementRouter, tenant);
+  applicationProtectedAppMetadataRoutes(managementRouter, tenant);
+  applicationOrganizationRoutes(managementRouter, tenant);
 
   // Third-party application related routes
   applicationUserConsentScopeRoutes(managementRouter, tenant);
   applicationSignInExperienceRoutes(managementRouter, tenant);
   applicationUserConsentOrganizationRoutes(managementRouter, tenant);
-
-  applicationProtectedAppMetadataRoutes(managementRouter, tenant);
 
   logtoConfigRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);
