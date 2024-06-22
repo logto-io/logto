@@ -48,7 +48,7 @@ type BuildParameters = {
    * For path parameters, this function will try to match reusable ID parameters:
    *
    * - If the parameter name is `id`, and the path is `/organizations/{id}/users`, the parameter
-   *   `id` will be a reference to `#/components/parameters/organizationId:root`.
+   *   `id` will be a reference to `#/components/parameters/organizationId-root`.
    * - If the parameter name ends with `Id`, and the path is `/organizations/{id}/users/{userId}`,
    *   the parameter `userId` will be a reference to `#/components/parameters/userId`.
    *
@@ -206,7 +206,7 @@ export const mergeParameters = (destination: unknown[], source: unknown[]) => {
  *       type: 'string',
  *     },
  *   },
- *   'organizationId:root': {
+ *   'organizationId-root': {
  *     name: 'id',
  *     // ... same as above
  *   },
@@ -216,7 +216,7 @@ export const mergeParameters = (destination: unknown[], source: unknown[]) => {
  * @remarks
  * The root path component is the first path component in the path. For example, the root path
  * component of `/organizations/{id}/users` is `organizations`. Since the name of the parameter is
- * same for all root path components, we need to add an additional key with the `:root` suffix to
+ * same for all root path components, we need to add an additional key with the `-root` suffix to
  * distinguish them.
  *
  * @param rootComponent The root path component in kebab case (`foo-bar`).
