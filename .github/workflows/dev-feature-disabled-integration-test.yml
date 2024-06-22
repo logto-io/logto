@@ -55,7 +55,6 @@ jobs:
       - uses: logto-io/actions-package-logto-artifact@v2
         with:
           artifact-name: dev-feature-disabled-integration-test-${{ github.sha }}
-          branch: ${{github.base_ref}}
           pnpm-version: 9
 
   run-logto:

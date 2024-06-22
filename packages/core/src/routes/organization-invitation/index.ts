@@ -11,9 +11,8 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { errorHandler } from '../organization/utils.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
-
-import { errorHandler } from './utils.js';
 
 export default function organizationInvitationRoutes<T extends ManagementApiRouter>(
   ...[
