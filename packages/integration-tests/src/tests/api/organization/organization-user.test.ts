@@ -1,5 +1,6 @@
 import assert from 'node:assert';
 
+import { RoleType } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
 import { OrganizationApiTest } from '#src/helpers/organization.js';
@@ -285,6 +286,25 @@ describe('organization user APIs', () => {
       expect(response2.response.status).toBe(404);
       expect(await response2.response.json()).toMatchObject(
         expect.objectContaining({ code: 'entity.not_found' })
+      );
+    });
+
+    it('should fail when try to add role that is not user type', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      const role = await roleApi.create({
+        name: generateTestName(),
+        type: RoleType.MachineToMachine,
+      });
+
+      await organizationApi.addUsers(organization.id, [user.id]);
+      const response = await organizationApi
+        .addUserRoles(organization.id, user.id, [role.id])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'entity.db_constraint_violated' })
       );
     });
   });

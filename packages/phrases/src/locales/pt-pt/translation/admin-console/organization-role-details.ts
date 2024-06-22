@@ -1,7 +1,6 @@
 const organization_role_details = {
   page_title: 'Detalhes da função da organização',
   back_to_org_roles: 'Voltar aos papéis da organização',
-  org_role: 'Função da organização',
   delete_confirm:
     'Ao fazê-lo, serão removidas as permissões associadas a esta função dos utilizadores afetados e serão eliminadas as relações entre funções da organização, membros na organização e permissões da organização.',
   deleted: 'O papel da organização {{name}} foi eliminado com sucesso.',

@@ -6,8 +6,6 @@ const roles = {
   create: 'Criar função',
   role_name: 'Nome da função',
   role_type: 'Tipo de função',
-  type_user: 'Função do usuário',
-  type_machine_to_machine: 'Função de máquina para máquina',
   role_description: 'Descrição',
   role_name_placeholder: 'Insira o nome da sua função',
   role_description_placeholder: 'Insira a descrição da sua função',

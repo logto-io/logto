@@ -1,7 +1,6 @@
 const organization_role_details = {
   page_title: 'Organization role details',
   back_to_org_roles: 'Back to organization roles',
-  org_role: 'Organization role',
   delete_confirm:
     'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
   deleted: 'Organization role {{name}} was successfully deleted.',

@@ -1,7 +1,6 @@
 const organization_role_details = {
   page_title: '组织角色详情',
   back_to_org_roles: '返回组织角色',
-  org_role: '组织角色',
   delete_confirm:
     '这样做将从受影响的用户中删除与此角色关联的权限，并删除组织角色、组织成员和组织权限之间的关系。',
   deleted: '组织角色 {{name}} 已成功删除。',

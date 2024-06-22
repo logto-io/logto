@@ -1,4 +1,4 @@
-import { RoleType, type RoleResponse } from '@logto/schemas';
+import { RoleType, roleTypeToKey, type RoleResponse } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
@@ -108,11 +108,7 @@ function Roles() {
             title: t('roles.col_type'),
             dataIndex: 'type',
             colSpan: 4,
-            render: ({ type }) => (
-              <Breakable>
-                {type === RoleType.User ? t('roles.type_user') : t('roles.type_machine_to_machine')}
-              </Breakable>
-            ),
+            render: ({ type }) => <Breakable>{t(`roles.type_${roleTypeToKey[type]}`)}</Breakable>,
           },
           {
             title: t('roles.col_description'),
