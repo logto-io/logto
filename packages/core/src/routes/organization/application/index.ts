@@ -54,6 +54,35 @@ export default function applicationRoutes(
       }
     );
 
+    router.post(
+      '/:id/applications/roles',
+      koaGuard({
+        params: z.object({ id: z.string().min(1) }),
+        body: z.object({
+          applicationIds: z.string().min(1).array().nonempty(),
+          organizationRoleIds: z.string().min(1).array().nonempty(),
+        }),
+        status: [201, 422],
+      }),
+      async (ctx, next) => {
+        const { id } = ctx.guard.params;
+        const { applicationIds, organizationRoleIds } = ctx.guard.body;
+
+        await organizations.relations.appsRoles.insert(
+          ...organizationRoleIds.flatMap((organizationRoleId) =>
+            applicationIds.map((applicationId) => ({
+              organizationId: id,
+              applicationId,
+              organizationRoleId,
+            }))
+          )
+        );
+
+        ctx.status = 201;
+        return next();
+      }
+    );
+
     // MARK: Organization - application role relation routes
     applicationRoleRelationRoutes(router, organizations);
   }

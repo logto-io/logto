@@ -259,5 +259,59 @@ devFeatureTest.describe('organization application APIs', () => {
         expect.objectContaining({ code: 'entity.db_constraint_violated' })
       );
     });
+
+    it('should be able to assign multiple roles to multiple applications', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const roles = await Promise.all(
+        Array.from({ length: 30 }).map(async () =>
+          organizationApi.roleApi.create({
+            name: `test-${generateTestName()}`,
+            type: RoleType.MachineToMachine,
+          })
+        )
+      );
+      const applications = await Promise.all(
+        Array.from({ length: 3 }).map(async () =>
+          createApplication(generateTestName(), ApplicationType.MachineToMachine)
+        )
+      );
+
+      await organizationApi.applications.add(
+        organization.id,
+        applications.map(({ id }) => id)
+      );
+      await organizationApi.addApplicationsRoles(
+        organization.id,
+        applications.map(({ id }) => id),
+        roles.map(({ id }) => id)
+      );
+      const fetchedRoles = await Promise.all(
+        applications.map(async ({ id }) => organizationApi.getApplicationRoles(organization.id, id))
+      );
+
+      expect(fetchedRoles).toEqual(
+        Array.from({ length: 3 }).map(() =>
+          expect.arrayContaining(roles.map((role) => expect.objectContaining(role)))
+        )
+      );
+
+      // Test pagination
+      const fetchedRoles1 = await organizationApi.getApplicationRoles(
+        organization.id,
+        applications[0]!.id,
+        1,
+        20
+      );
+      const fetchedRoles2 = await organizationApi.getApplicationRoles(
+        organization.id,
+        applications[0]!.id,
+        2,
+        10
+      );
+      expect(fetchedRoles1).toHaveLength(20);
+      expect(fetchedRoles2).toHaveLength(10);
+      expect(roles).toEqual(expect.arrayContaining(fetchedRoles1));
+      expect(roles).toEqual(expect.arrayContaining(fetchedRoles2));
+    });
   });
 });

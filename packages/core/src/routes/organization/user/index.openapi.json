@@ -91,7 +91,7 @@
     "/api/organizations/{id}/users/roles": {
       "post": {
         "summary": "Assign roles to organization user members",
-        "description": "Assign roles to user members of the specified organization with the given data.",
+        "description": "Assign roles to user members of the specified organization.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -113,7 +113,7 @@
             "description": "Roles were assigned to organization users successfully."
           },
           "422": {
-            "description": "At least one of the IDs provided is not valid. For example, the organization ID, user ID, or organization role ID does not exist; the user is not a member of the organization."
+            "description": "At least one of the IDs provided is not valid. For example, the organization ID, user ID, or organization role ID does not exist; the user is not a member of the organization; or the role type is not assignable to the user."
           }
         }
       }

@@ -35,7 +35,7 @@ export default function applicationRoleRelationRoutes(
 
   router.get(
     pathname,
-    koaPagination(),
+    koaPagination({ isOptional: true }),
     koaGuard({
       params: z.object(params),
       response: OrganizationRoles.guard.array(),
@@ -49,10 +49,14 @@ export default function applicationRoleRelationRoutes(
         {
           organizationId: id,
           applicationId,
-        }
+        },
+        ctx.pagination.disabled ? undefined : ctx.pagination
       );
 
-      ctx.pagination.totalCount = totalCount;
+      if (!ctx.pagination.disabled) {
+        ctx.pagination.totalCount = totalCount;
+      }
+
       ctx.body = entities;
       return next();
     }

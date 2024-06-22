@@ -82,6 +82,37 @@
         }
       }
     },
+    "/api/organizations/{id}/applications/roles": {
+      "post": {
+        "tags": ["Dev feature"],
+        "summary": "Assign roles to applications in an organization",
+        "description": "Assign roles to applications in the specified organization.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "applicationIds": {
+                    "description": "An array of application IDs to assign roles to."
+                  },
+                  "organizationRoleIds": {
+                    "description": "An array of organization role IDs to assign to the applications."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Roles were assigned to the applications successfully."
+          },
+          "422": {
+            "description": "At least one of the IDs provided is not valid. For example, the organization ID, application ID, or organization role ID does not exist; the application is not a member of the organization; or the role type is not assignable to the application."
+          }
+        }
+      }
+    },
     "/api/organizations/{id}/applications/{applicationId}/roles": {
       "get": {
         "tags": ["Dev feature"],

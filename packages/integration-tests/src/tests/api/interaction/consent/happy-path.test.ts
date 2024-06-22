@@ -152,11 +152,9 @@ describe('consent api', () => {
   });
 
   describe('get consent info with organization resource scopes', () => {
-    const roleApi = new OrganizationRoleApiTest();
     const organizationApi = new OrganizationApiTest();
 
     afterEach(async () => {
-      await roleApi.cleanUp();
       await organizationApi.cleanUp();
     });
 
@@ -167,7 +165,7 @@ describe('consent api', () => {
       const resource = await createResource(generateResourceName(), generateResourceIndicator());
       const scope = await createScope(resource.id, generateScopeName());
       const scope2 = await createScope(resource.id, generateScopeName());
-      const role = await roleApi.create({
+      const role = await organizationApi.roleApi.create({
         name: generateRoleName(),
         resourceScopeIds: [scope.id],
       });
@@ -219,7 +217,7 @@ describe('consent api', () => {
 
       const resource = await createResource(generateResourceName(), generateResourceIndicator());
       const scope = await createScope(resource.id, generateScopeName());
-      const role = await roleApi.create({
+      const role = await organizationApi.roleApi.create({
         name: generateRoleName(),
         resourceScopeIds: [scope.id],
       });
@@ -397,10 +395,12 @@ describe('consent api', () => {
       // Scope2 is removed because organization2 is not consented
       expect(getAccessTokenPayload(accessToken)).toHaveProperty('scope', scope.name);
 
-      await roleApi.cleanUp();
-      await organizationApi.cleanUp();
-      await deleteResource(resource.id);
-      await deleteUser(user.id);
+      await Promise.all([
+        roleApi.cleanUp(),
+        organizationApi.cleanUp(),
+        deleteResource(resource.id),
+        deleteUser(user.id),
+      ]);
     });
   });
 
