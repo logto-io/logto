@@ -3,12 +3,12 @@
     {
       "name": "Organization applications",
       "description": "Manage organization - application relationships. An application can be associated with one or more organizations in order to get access to the organization resources.\n\nCurrently, only machine-to-machine applications can be associated with organizations."
-    }
+    },
+    { "name": "Dev feature" }
   ],
   "paths": {
     "/api/organizations/{id}/applications": {
       "get": {
-        "tags": ["Dev feature"],
         "summary": "Get organization applications",
         "description": "Get applications associated with the organization.",
         "responses": {
@@ -18,7 +18,6 @@
         }
       },
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Add organization application",
         "description": "Add an application to the organization.",
         "requestBody": {
@@ -44,7 +43,6 @@
         }
       },
       "put": {
-        "tags": ["Dev feature"],
         "summary": "Replace organization applications",
         "description": "Replace all applications associated with the organization with the given data.",
         "requestBody": {
@@ -72,7 +70,6 @@
     },
     "/api/organizations/{id}/applications/{applicationId}": {
       "delete": {
-        "tags": ["Dev feature"],
         "summary": "Remove organization application",
         "description": "Remove an application from the organization.",
         "responses": {
@@ -84,7 +81,6 @@
     },
     "/api/organizations/{id}/applications/{applicationId}/roles": {
       "get": {
-        "tags": ["Dev feature"],
         "summary": "Get organization application roles",
         "description": "Get roles associated with the application in the organization.",
         "responses": {
@@ -94,7 +90,6 @@
         }
       },
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Add organization application role",
         "description": "Add a role to the application in the organization.",
         "requestBody": {
@@ -120,7 +115,6 @@
         }
       },
       "put": {
-        "tags": ["Dev feature"],
         "summary": "Replace organization application roles",
         "description": "Replace all roles associated with the application in the organization with the given data.",
         "requestBody": {
@@ -148,7 +142,6 @@
     },
     "/api/organizations/{id}/applications/{applicationId}/roles/{organizationRoleId}": {
       "delete": {
-        "tags": ["Dev feature"],
         "summary": "Remove organization application role",
         "description": "Remove a role from the application in the organization.",
         "responses": {

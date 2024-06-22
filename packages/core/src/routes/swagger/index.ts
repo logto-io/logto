@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 import { httpCodeToMessage } from '@logto/core-kit';
-import { condString, conditionalArray, deduplicate } from '@silverhand/essentials';
+import { condArray, condString, conditionalArray, deduplicate } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
@@ -23,6 +23,7 @@ import type { AnonymousRouter } from '../types.js';
 
 import {
   buildTag,
+  devFeatureTag,
   findSupplementFiles,
   normalizePath,
   removeUnnecessaryOperations,
@@ -134,11 +135,13 @@ const identifiableEntityNames = Object.freeze([
 ]);
 
 /** Additional tags that cannot be inferred from the path. */
-const additionalTags = Object.freeze([
-  'Organization applications',
-  'Organization users',
-  'Security',
-]);
+const additionalTags = Object.freeze(
+  condArray<string>(
+    EnvSet.values.isDevFeaturesEnabled && 'Organization applications',
+    EnvSet.values.isDevFeaturesEnabled && 'Security',
+    'Organization users'
+  )
+);
 
 /**
  * Attach the `/swagger.json` route which returns the generated OpenAPI document for the
@@ -201,13 +204,20 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     assertThat(routesDirectory, new Error('Cannot find routes directory.'));
 
     const supplementPaths = await findSupplementFiles(routesDirectory);
-    const supplementDocuments = await Promise.all(
+    const allSupplementDocuments = await Promise.all(
       supplementPaths.map(async (path) =>
         removeUnnecessaryOperations(
           // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
           JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
         )
       )
+    );
+
+    // Filter out supplement documents that are for dev features when dev features are disabled.
+    const supplementDocuments = allSupplementDocuments.filter(
+      (supplement) =>
+        EnvSet.values.isDevFeaturesEnabled ||
+        !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
     );
 
     const baseDocument: OpenAPIV3.Document = {

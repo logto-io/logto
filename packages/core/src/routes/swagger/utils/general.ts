@@ -15,7 +15,9 @@ const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slic
 /** The tag name used in the supplement document to indicate that the operation is cloud only. */
 const cloudOnlyTag = 'Cloud only';
 /** The tag name is used in the supplement document to indicate that the corresponding API operation is a dev feature. */
-const devFeatureTag = 'Dev feature';
+export const devFeatureTag = 'Dev feature';
+
+const reservedTags = new Set([cloudOnlyTag, devFeatureTag]);
 
 /**
  * Get the root component name from the given absolute path.
@@ -145,7 +147,7 @@ export const validateSupplement = (
     const originalTags = new Set(original.tags?.map((tag) => tag.name));
 
     for (const { name } of supplementTags) {
-      if (!originalTags.has(name)) {
+      if (!reservedTags.has(name) && !originalTags.has(name)) {
         throw new TypeError(
           `Supplement document contains extra tag \`${name}\`. If you want to add a new tag, please add it to the \`additionalTags\` array in the main swagger route file.`
         );
@@ -213,7 +215,10 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
     }
 
     for (const tag of document.tags ?? []) {
-      assert(tag.description, `Tag \`${tag.name}\` must have a description.`);
+      assert(
+        reservedTags.has(tag.name) || tag.description,
+        `Tag \`${tag.name}\` must have a description.`
+      );
     }
   }
 };
