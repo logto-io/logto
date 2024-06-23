@@ -127,7 +127,6 @@ const application_details = {
     delete_description: '此操作将会从此应用中移除此角色。角色本身仍然存在，但不再与此应用关联。',
     deleted: '成功从此用户中移除 {{name}}。',
     assign_title: '将机器对机器角色分配给 {{name}}',
-    assign_subtitle: '机器对机器应用必须具有机器对机器角色才能访问相关API资源。',
     assign_role_field: '分配机器对机器角色',
     role_search_placeholder: '按角色名称搜索',
     added_text: '{{value, number}}个已添加',

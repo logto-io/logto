@@ -53,10 +53,6 @@ const applications = {
   placeholder_title: 'Select an application type to continue',
   placeholder_description:
     'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.',
-  m2m_role_assignment: {
-    role_creation_hint:
-      'Can’t find the right machine-to-machine role? <a>Create a machine-to-machine role</a>',
-  },
 };
 
 export default Object.freeze(applications);

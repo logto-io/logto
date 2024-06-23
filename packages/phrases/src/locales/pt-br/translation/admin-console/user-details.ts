@@ -76,23 +76,18 @@ const user_details = {
   roles: {
     name_column: 'Papel de usuário',
     description_column: 'Descrição',
-    assign_button: 'Atribuir papéis de usuário',
     delete_description:
       'Esta ação removerá esta função deste usuário. A função em si ainda existirá, mas não estará mais associada a este usuário.',
     deleted: '{{name}} foi removido com sucesso deste usuário.',
-    assign_title: 'Atribuir papéis de usuário a {{name}}',
     assign_subtitle:
       'Encontre papéis de usuário apropriados buscando pelo nome, descrição ou ID do papel.',
     assign_role_field: 'Atribuir funções',
     role_search_placeholder: 'Pesquisar por nome de função',
     added_text: '{{value, number}} adicionado(s)',
     assigned_user_count: '{{value, number}} usuários',
-    confirm_assign: 'Atribuir papéis de usuário',
     role_assigned: 'Função(ões) atribuída(s) com sucesso',
     search: 'Pesquisar por nome de função, descrição ou ID',
     empty: 'Nenhuma função disponível',
-    create_user_role_hint:
-      'Não consegue encontrar o papel de usuário certo? <a>Criar um papel de usuário</a>',
   },
   warning_no_sign_in_identifier:
     'O usuário precisa ter pelo menos um dos identificadores de login (nome de usuário, e-mail, número de telefone ou social) para fazer login. Tem certeza de que deseja continuar?',

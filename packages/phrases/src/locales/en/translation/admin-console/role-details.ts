@@ -16,8 +16,8 @@ const role_details = {
   field_is_default: 'Default role',
   field_is_default_description:
     'Set this role as a default role for new users. Multiple default roles can be set. This will also affect the default roles for users created via Management API.',
-  type_m2m_role_tag: 'Machine-to-machine role',
-  type_user_role_tag: 'User role',
+  type_m2m_role_tag: 'Machine-to-machine',
+  type_user_role_tag: 'User',
   m2m_role_notification:
     'Assign this machine-to-machine role to a machine-to-machine app to grant access to the relative API resources. <a>Create a machine-to-machine app</a> first if you haven’t already.',
   permission: {

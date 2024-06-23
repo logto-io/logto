@@ -52,9 +52,6 @@ const applications = {
   placeholder_title: '选择应用程序类型以继续',
   placeholder_description:
     'Logto 使用 OIDC 的应用程序实体来帮助识别你的应用程序、管理登录和创建审计日志等任务。',
-  m2m_role_assignment: {
-    role_creation_hint: '找不到合适的机器对机器角色？<a>创建一个机器对机器角色</a>',
-  },
 };
 
 export default Object.freeze(applications);

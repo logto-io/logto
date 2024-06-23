@@ -284,7 +284,7 @@ describe('User RBAC', () => {
 
     // Go to roles tab
     await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-      text: 'User roles',
+      text: 'Roles',
     });
 
     const roleRow = await expect(page).toMatchElement(`table tbody tr:has(td a${cls('title')})`, {
@@ -306,16 +306,16 @@ describe('User RBAC', () => {
 
   it('add a role to a user on the user details page', async () => {
     await expect(page).toClick('div[class$=filter] button span', {
-      text: 'Assign user roles',
+      text: 'Assign roles',
     });
 
-    await expectModalWithTitle(page, `Assign user roles to ${rbacTestUsername}`);
+    await expectModalWithTitle(page, `Assign roles to ${rbacTestUsername}`);
 
     await expect(page).toClick('.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div', {
       text: roleName,
     });
 
-    await expectToClickModalAction(page, 'Assign user roles');
+    await expectToClickModalAction(page, 'Assign roles');
 
     await waitForToast(page, {
       text: 'Successfully assigned role(s)',

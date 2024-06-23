@@ -75,23 +75,18 @@ const user_details = {
   roles: {
     name_column: 'Rola użytkownika',
     description_column: 'Opis',
-    assign_button: 'Przypisz role użytkowników',
     delete_description:
       'Ta akcja usunie tę rolę z tego użytkownika. Rola nadal będzie istnieć, ale nie będzie już przypisana do tego użytkownika.',
     deleted: '{{name}} została usunięta z tego użytkownika.',
-    assign_title: 'Przypisz role użytkowników do {{name}}',
     assign_subtitle:
       'Znajdź odpowiednie role użytkowników, wyszukując według nazwy, opisu lub identyfikatora roli.',
     assign_role_field: 'Przypisz rolę',
     role_search_placeholder: 'Szukaj po nazwie roli',
     added_text: '{{value, number}} dodanych',
     assigned_user_count: '{{value, number}} użytkowników',
-    confirm_assign: 'Przypisz role użytkowników',
     role_assigned: 'Pomyślnie przypisano rolę(y)',
     search: 'Szukaj po nazwie roli, opisie lub ID',
     empty: 'Brak dostępnej roli',
-    create_user_role_hint:
-      'Nie możesz znaleźć odpowiedniej roli użytkownika? <a>Utwórz rolę użytkownika</a>',
   },
   warning_no_sign_in_identifier:
     'Aby się zalogować, użytkownik musi mieć co najmniej jeden identyfikator logowania (nazwa użytkownika, e-mail, numer telefonu lub konto społecznościowe). Czy na pewno chcesz kontynuować?',

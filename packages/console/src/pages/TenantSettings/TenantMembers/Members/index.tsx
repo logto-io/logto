@@ -49,7 +49,7 @@ function Members() {
             dataIndex: 'user',
             title: t('user'),
             colSpan: 4,
-            render: (user) => <UserPreview user={user} hasUserDetailsLink={false} />,
+            render: (user) => <UserPreview user={user} showLink={false} />,
           },
           {
             dataIndex: 'roles',

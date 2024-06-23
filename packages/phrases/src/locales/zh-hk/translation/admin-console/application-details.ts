@@ -127,7 +127,6 @@ const application_details = {
       '該操作將從此機器對機器應用程式中刪除該角色。該角色本身仍然存在，但不再與此機器對機器應用程式相關聯。',
     deleted: '{{name}} 已成功從此使用者中刪除。',
     assign_title: '將機器對機器角色分配給 {{name}}',
-    assign_subtitle: '機器對機器應用必須具有機器對機器角色才能訪問相關API資源。',
     assign_role_field: '分配機器對機器角色',
     role_search_placeholder: '按角色名稱搜索',
     added_text: '{{value, number}} 已添加',

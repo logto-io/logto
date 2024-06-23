@@ -78,23 +78,18 @@ const user_details = {
   roles: {
     name_column: 'Função de usuário',
     description_column: 'Descrição',
-    assign_button: 'Atribuir funções de usuário',
     delete_description:
       'Esta ação irá remover esta função deste utilizador. A função em si ainda existirá, mas não estará mais associada a este utilizador.',
     deleted: '{{name}} foi removido do utilizador com sucesso.',
-    assign_title: 'Atribuir funções de usuário a {{name}}',
     assign_subtitle:
       'Encontre funções de usuário apropriadas pesquisando por nome, descrição ou ID de função.',
     assign_role_field: 'Atribuir funções',
     role_search_placeholder: 'Pesquisar pelo nome da função',
     added_text: '{{value, number}} adicionados',
     assigned_user_count: '{{value, number}} utilizador(es)',
-    confirm_assign: 'Atribuir funções de usuário',
     role_assigned: 'Função(ões) atribuída(s) com sucesso',
     search: 'Pesquisar pelo nome, descrição ou ID da função',
     empty: 'Nenhuma função disponível',
-    create_user_role_hint:
-      'Não consegue encontrar a função de usuário certa? <a>Criar uma função de usuário</a>',
   },
   warning_no_sign_in_identifier:
     'O utilizador precisa de ter pelo menos um dos identificadores de início de sessão (nome de utilizador, e-mail, número de telefone ou redes sociais) para iniciar sessão. Tem a certeza de que quer continuar?',

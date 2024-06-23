@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import OrgRoleIcon from '@/assets/icons/organization-role-feature.svg';
 import Plus from '@/assets/icons/plus.svg';
-import OrgRoleIcon from '@/assets/icons/role-feature.svg';
 import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
 import RolesEmpty from '@/assets/images/roles-empty.svg';
 import Breakable from '@/components/Breakable';
@@ -69,6 +69,14 @@ function OrganizationRoles() {
             },
           },
           {
+            title: <DynamicT forKey="roles.col_type" />,
+            dataIndex: 'type',
+            colSpan: 4,
+            render: ({ type }) => {
+              return <DynamicT forKey={`roles.type_${roleTypeToKey[type]}`} />;
+            },
+          },
+          {
             title: <DynamicT forKey="organization_template.roles.permissions_column" />,
             dataIndex: 'scopes',
             colSpan: 12,
@@ -86,14 +94,6 @@ function OrganizationRoles() {
                   ))}
                 </div>
               );
-            },
-          },
-          {
-            title: <DynamicT forKey="organization_template.roles.type_column" />,
-            dataIndex: 'type',
-            colSpan: 4,
-            render: ({ type }) => {
-              return <DynamicT forKey={`roles.type_${roleTypeToKey[type]}`} />;
             },
           },
         ]}

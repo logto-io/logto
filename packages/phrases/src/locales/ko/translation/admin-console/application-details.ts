@@ -134,7 +134,6 @@ const application_details = {
       '이 작업은 이 장치 간 앱에서이 역할을 제거합니다. 역할 자체는 여전히 존재하지만 이 장치 간 앱과 관련이 없어집니다.',
     deleted: '{{name}} 가 성공적으로 삭제되었습니다.',
     assign_title: '{{name}}에게 머신 간 역할 할당',
-    assign_subtitle: '머신 간 앱은 관련 API 리소스에 액세스하기 위해 머신 간 역할이 필요합니다.',
     assign_role_field: '머신 간 역할 할당',
     role_search_placeholder: '역할 이름으로 검색',
     added_text: '{{value, number}} 추가됨',

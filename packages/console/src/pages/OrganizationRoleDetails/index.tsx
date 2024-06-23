@@ -7,7 +7,7 @@ import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
-import OrgRoleIcon from '@/assets/icons/role-feature.svg';
+import OrgRoleIcon from '@/assets/icons/organization-role-feature.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import PageMeta from '@/components/PageMeta';

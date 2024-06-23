@@ -79,23 +79,18 @@ const user_details = {
   roles: {
     name_column: 'Benutzerrolle',
     description_column: 'Beschreibung',
-    assign_button: 'Benutzerrollen zuweisen',
     delete_description:
       'Diese Aktion entfernt diese Rolle von diesem Benutzer. Die Rolle selbst bleibt erhalten, aber sie wird nicht mehr mit diesem Benutzer verknüpft sein.',
     deleted: '{{name}} wurde erfolgreich von diesem Benutzer entfernt.',
-    assign_title: 'Benutzerrollen an {{name}} zuweisen',
     assign_subtitle:
       'Finden Sie die passenden Benutzerrollen, indem Sie nach Name, Beschreibung oder Rollen-ID suchen.',
     assign_role_field: 'Rollen zuweisen',
     role_search_placeholder: 'Nach Rollennamen suchen',
     added_text: '{{value, number}} hinzugefügt',
     assigned_user_count: '{{value, number}} Benutzer',
-    confirm_assign: 'Benutzerrollen zuweisen',
     role_assigned: 'Rolle(n) erfolgreich zugewiesen',
     search: 'Nach Rollennamen, Beschreibung oder ID suchen',
     empty: 'Keine Rolle verfügbar',
-    create_user_role_hint:
-      'Können Sie die richtige Benutzerrolle nicht finden? <a>Benutzerrolle erstellen</a>',
   },
   warning_no_sign_in_identifier:
     'Der Benutzer muss mindestens einen der Anmelde-Identifikatoren (Benutzername, E-Mail, Telefonnummer oder soziales Konto) haben, um sich anzumelden. Sind Sie sicher, dass Sie fortfahren möchten?',

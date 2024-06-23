@@ -138,8 +138,6 @@ const application_details = {
       'Ta czynność usunie tę rolę z tej aplikacji machine-to-machine. Rola ta nadal istnieje, ale nie będzie już powiązana z tą aplikacją machine-to-machine.',
     deleted: '{{name}} został(a) pomyślnie usunięty(ą) z tego użytkownika.',
     assign_title: 'Przypisz role między maszynami do {{name}}',
-    assign_subtitle:
-      'Aplikacje między maszynami muszą mieć role między maszynami, aby uzyskać dostęp do powiązanych zasobów API.',
     assign_role_field: 'Przypisz role między maszynami',
     role_search_placeholder: 'Wyszukaj według nazwy roli',
     added_text: '{{value, number}} dodane',

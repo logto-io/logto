@@ -139,8 +139,6 @@ const application_details = {
       'Esta acción eliminará este rol de esta aplicación de máquina a máquina. El rol seguirá existiendo, pero ya no estará asociado con esta aplicación de máquina a máquina.',
     deleted: 'Se ha eliminado correctamente {{name}} de este usuario.',
     assign_title: 'Asignar roles de máquina a máquina a {{name}}',
-    assign_subtitle:
-      'Las aplicaciones de máquina a máquina deben tener roles de máquina a máquina para acceder a los recursos de la API relacionados.',
     assign_role_field: 'Asignar roles de máquina a máquina',
     role_search_placeholder: 'Buscar por nombre de rol',
     added_text: '{{value, number}} añadido',

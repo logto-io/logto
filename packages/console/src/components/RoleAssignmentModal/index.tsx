@@ -132,11 +132,7 @@ function RoleAssignmentModal({ entity, onClose, type, isSkippable }: Props) {
               a: <TextLink to="/roles/create" />,
             }}
           >
-            {t(
-              isForUser
-                ? 'user_details.roles.create_user_role_hint'
-                : 'applications.m2m_role_assignment.role_creation_hint'
-            )}
+            {t('roles.role_creation_hint')}
           </Trans>
         </div>
       </ModalLayout>
