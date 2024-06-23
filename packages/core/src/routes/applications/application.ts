@@ -76,6 +76,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
           .or(applicationTypeGuard.transform((type) => [type]))
           .optional(),
         excludeRoleId: string().optional(),
+        excludeOrganizationId: string().optional(),
         isThirdParty: z.union([z.literal('true'), z.literal('false')]).optional(),
       }),
       response: z.array(Applications.guard),
@@ -84,7 +85,21 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { limit, offset, disabled: paginationDisabled } = ctx.pagination;
       const { searchParams } = ctx.URL;
-      const { types, excludeRoleId, isThirdParty: isThirdPartyParam } = ctx.guard.query;
+      const {
+        types,
+        excludeRoleId,
+        excludeOrganizationId,
+        isThirdParty: isThirdPartyParam,
+      } = ctx.guard.query;
+
+      if (excludeRoleId && excludeOrganizationId) {
+        throw new RequestError({
+          code: 'request.invalid_input',
+          status: 400,
+          details:
+            'Parameter `excludeRoleId` and `excludeOrganizationId` cannot be used at the same time.',
+        });
+      }
 
       const isThirdParty = parseIsThirdPartQueryParam(isThirdPartyParam);
 
@@ -100,20 +115,35 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       );
 
       if (paginationDisabled) {
-        ctx.body = await findApplications({ search, excludeApplicationIds, types, isThirdParty });
+        ctx.body = await findApplications({
+          search,
+          excludeApplicationIds,
+          excludeOrganizationId,
+          types,
+          isThirdParty,
+        });
 
         return next();
       }
 
       const [{ count }, applications] = await Promise.all([
-        countApplications(search, excludeApplicationIds, isThirdParty, types),
-        findApplications({
+        countApplications({
           search,
           excludeApplicationIds,
-          types,
+          excludeOrganizationId,
           isThirdParty,
-          pagination: { limit, offset },
+          types,
         }),
+        findApplications(
+          {
+            search,
+            excludeApplicationIds,
+            excludeOrganizationId,
+            types,
+            isThirdParty,
+          },
+          { limit, offset }
+        ),
       ]);
 
       // Return totalCount to pagination middleware

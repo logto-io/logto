@@ -6,6 +6,7 @@ import {
   OrganizationRoles,
   OrganizationRoleApplicationRelations,
   type ApplicationWithOrganizationRoles,
+  type OrganizationWithRoles,
 } from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
@@ -23,6 +24,45 @@ export class ApplicationRelationQueries extends TwoRelationsQueries<
 > {
   constructor(pool: CommonQueryMethods) {
     super(pool, OrganizationApplicationRelations.table, Organizations, Applications);
+  }
+
+  async getOrganizationsByApplicationId(
+    applicationId: string,
+    { limit, offset }: GetEntitiesOptions
+  ): Promise<[totalCount: number, organizations: readonly OrganizationWithRoles[]]> {
+    const organizations = convertToIdentifiers(Organizations, true);
+    const roles = convertToIdentifiers(OrganizationRoles, true);
+    const { fields } = convertToIdentifiers(OrganizationApplicationRelations, true);
+    const relations = convertToIdentifiers(OrganizationRoleApplicationRelations, true);
+
+    const [{ count }, entities] = await Promise.all([
+      this.pool.one<{ count: string }>(sql`
+        select count(*)
+        from ${this.table}
+        left join ${organizations.table}
+          on ${fields.organizationId} = ${organizations.fields.id}
+        where ${fields.applicationId} = ${applicationId}
+      `),
+      this.pool.any<OrganizationWithRoles>(sql`
+        select
+          ${sql.join(Object.values(organizations.fields), sql`, `)},
+          ${aggregateRoles()}
+        from ${this.table}
+        left join ${organizations.table}
+          on ${fields.organizationId} = ${organizations.fields.id}
+        left join ${relations.table}
+          on ${relations.fields.organizationId} = ${organizations.fields.id}
+          and ${relations.fields.applicationId} = ${fields.applicationId}
+        left join ${roles.table}
+          on ${relations.fields.organizationRoleId} = ${roles.fields.id}
+        where ${fields.applicationId} = ${applicationId}
+        group by ${organizations.fields.id}
+        limit ${limit}
+        offset ${offset}
+      `),
+    ]);
+
+    return [Number(count), entities];
   }
 
   /** Get the applications of an organization with their organization roles. */

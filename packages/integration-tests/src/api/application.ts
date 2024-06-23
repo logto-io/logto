@@ -5,6 +5,7 @@ import {
   type OidcClientMetadata,
   type Role,
   type ProtectedAppMetadata,
+  type OrganizationWithRoles,
 } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -108,3 +109,11 @@ export const generateM2mLog = async (applicationId: string) => {
     }),
   });
 };
+
+/** Get organizations that an application is associated with. */
+export const getOrganizations = async (applicationId: string, page: number, pageSize: number) =>
+  authedAdminApi
+    .get(`applications/${applicationId}/organizations`, {
+      searchParams: { page, page_size: pageSize },
+    })
+    .json<OrganizationWithRoles[]>();
