@@ -1,7 +1,6 @@
 const organization_role_details = {
   page_title: '조직 역할 세부 정보',
   back_to_org_roles: '조직 역할로 돌아가기',
-  org_role: '조직 역할',
   delete_confirm:
     '이렇게 하면 해당 역할과 관련된 사용자의 권한이 제거되고 조직 역할, 조직 구성원 및 조직 권한 간의 관계가 삭제됩니다.',
   deleted: '조직 역할 {{name}} 이(가) 성공적으로 삭제되었습니다.',

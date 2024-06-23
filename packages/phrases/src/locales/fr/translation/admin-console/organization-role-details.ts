@@ -1,7 +1,6 @@
 const organization_role_details = {
   page_title: "Détails du rôle de l'organisation",
   back_to_org_roles: "Retour aux rôles de l'organisation",
-  org_role: "Rôle de l'organisation",
   delete_confirm:
     "Cela supprimera les autorisations associées à ce rôle des utilisateurs concernés et supprimera les relations entre les rôles de l'organisation, les membres de l'organisation et les autorisations de l'organisation.",
   deleted: "Le rôle de l'organisation {{name}} a été supprimé avec succès.",

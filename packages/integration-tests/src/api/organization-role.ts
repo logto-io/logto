@@ -3,6 +3,7 @@ import {
   type OrganizationRole,
   type OrganizationRoleWithScopes,
   type Scope,
+  type RoleType,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -11,6 +12,7 @@ import { ApiFactory } from './factory.js';
 export type CreateOrganizationRolePostData = {
   name: string;
   description?: string;
+  type?: RoleType;
   organizationScopeIds?: string[];
   resourceScopeIds?: string[];
 };

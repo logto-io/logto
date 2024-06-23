@@ -1,4 +1,4 @@
-import { type OrganizationRole } from '@logto/schemas';
+import { roleTypeToKey, type OrganizationRole } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -81,7 +81,7 @@ function OrganizationRoleDetails() {
           <DetailsPageHeader
             icon={<ThemedIcon for={OrgRoleIcon} size={60} />}
             title={data.name}
-            primaryTag={t('organization_role_details.org_role')}
+            primaryTag={t(`roles.type_${roleTypeToKey[data.type]}`)}
             identifier={{ name: 'ID', value: data.id }}
             actionMenuItems={[
               {

@@ -4,6 +4,7 @@ import {
   ApplicationType,
   type ApplicationWithOrganizationRoles,
   type Application,
+  RoleType,
 } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
@@ -70,8 +71,14 @@ devFeatureTest.describe('organization application APIs', () => {
       const organizationId = organizationApi.organizations[0]!.id;
       const app = applications[0]!;
       const roles = await Promise.all([
-        organizationApi.roleApi.create({ name: generateTestName() }),
-        organizationApi.roleApi.create({ name: generateTestName() }),
+        organizationApi.roleApi.create({
+          name: generateTestName(),
+          type: RoleType.MachineToMachine,
+        }),
+        organizationApi.roleApi.create({
+          name: generateTestName(),
+          type: RoleType.MachineToMachine,
+        }),
       ]);
       const roleIds = roles.map(({ id }) => id);
       await organizationApi.addApplicationRoles(organizationId, app.id, roleIds);
@@ -202,7 +209,10 @@ devFeatureTest.describe('organization application APIs', () => {
 
     it('should be able to add and delete organization application role', async () => {
       const organization = await organizationApi.create({ name: 'test' });
-      const role = await organizationApi.roleApi.create({ name: `test-${generateTestName()}` });
+      const role = await organizationApi.roleApi.create({
+        name: `test-${generateTestName()}`,
+        type: RoleType.MachineToMachine,
+      });
       const application = await createApplication(
         generateTestName(),
         ApplicationType.MachineToMachine
@@ -226,6 +236,28 @@ devFeatureTest.describe('organization application APIs', () => {
         .catch((error: unknown) => error);
       assert(response instanceof HTTPError);
       expect(response.response.status).toBe(422);
+    });
+
+    it('should fail when try to add role that is not machine-to-machine type', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const role = await organizationApi.roleApi.create({
+        name: `test-${generateTestName()}`,
+        type: RoleType.User,
+      });
+      const application = await createApplication(
+        generateTestName(),
+        ApplicationType.MachineToMachine
+      );
+      await organizationApi.applications.add(organization.id, [application.id]);
+
+      const response = await organizationApi
+        .addApplicationRoles(organization.id, application.id, [role.id])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'entity.db_constraint_violated' })
+      );
     });
   });
 });

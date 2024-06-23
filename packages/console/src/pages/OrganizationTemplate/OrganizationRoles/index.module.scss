@@ -1,5 +1,11 @@
 @use '@/scss/underscore' as _;
 
+.createModal {
+  .roleTypes {
+    margin-top: _.unit(2);
+  }
+}
+
 .permissions {
   display: flex;
   flex-wrap: wrap;

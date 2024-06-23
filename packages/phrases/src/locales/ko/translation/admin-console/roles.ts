@@ -6,8 +6,6 @@ const roles = {
   create: '역할 생성',
   role_name: '역할 이름',
   role_type: '역할 유형',
-  type_user: '사용자 역할',
-  type_machine_to_machine: '기계 간 역할',
   role_description: '설명',
   role_name_placeholder: '역할 이름을 입력하세요',
   role_description_placeholder: '역할 설명을 입력하세요',

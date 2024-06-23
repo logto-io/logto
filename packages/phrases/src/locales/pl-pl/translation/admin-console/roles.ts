@@ -6,8 +6,6 @@ const roles = {
   create: 'Utwórz rolę',
   role_name: 'Nazwa roli',
   role_type: 'Typ roli',
-  type_user: 'Rola użytkownika',
-  type_machine_to_machine: 'Rola maszyny do maszyny',
   role_description: 'Opis',
   role_name_placeholder: 'Wprowadź nazwę swojej roli',
   role_description_placeholder: 'Wprowadź opis swojej roli',

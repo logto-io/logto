@@ -1,4 +1,4 @@
-import { type OrganizationRoleWithScopes } from '@logto/schemas';
+import { roleTypeToKey, type OrganizationRoleWithScopes } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -86,6 +86,14 @@ function OrganizationRoles() {
                   ))}
                 </div>
               );
+            },
+          },
+          {
+            title: <DynamicT forKey="organization_template.roles.type_column" />,
+            dataIndex: 'type',
+            colSpan: 4,
+            render: ({ type }) => {
+              return <DynamicT forKey={`roles.type_${roleTypeToKey[type]}`} />;
             },
           },
         ]}
