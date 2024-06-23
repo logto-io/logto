@@ -236,9 +236,8 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
           (previous, entityName) => ({
             ...previous,
             ...buildPathIdParameters(entityName),
-            ...customParameters(),
           }),
-          {}
+          customParameters()
         ),
       },
       tags: [...tags, ...additionalTags].map((tag) => ({ name: tag })),

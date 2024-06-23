@@ -253,11 +253,10 @@ export const buildPathIdParameters = (
 };
 
 /**
- * Build a parameter object for the `tenantId` parameter.
- * @returns The parameter object for the `tenantId` parameter.
+ * Build a parameter object with additional parameters that are not inferred from the path.
  */
 export const customParameters = (): Record<string, OpenAPIV3.ParameterObject> => {
-  return {
+  return Object.freeze({
     tenantId: {
       name: 'tenantId',
       in: 'path',
@@ -267,5 +266,5 @@ export const customParameters = (): Record<string, OpenAPIV3.ParameterObject> =>
         type: 'string',
       },
     },
-  };
+  });
 };
