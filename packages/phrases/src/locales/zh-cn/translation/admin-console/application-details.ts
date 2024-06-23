@@ -15,7 +15,6 @@ const application_details = {
   endpoints_and_credentials_description: '使用以下端点和凭据在应用程序中设置 OIDC 连接。',
   refresh_token_settings: '刷新令牌设置',
   refresh_token_settings_description: '管理此应用程序的刷新令牌规则。',
-  application_roles: '机器对机器角色',
   machine_logs: '机器日志',
   application_name: '应用名称',
   application_name_placeholder: '我的应用',

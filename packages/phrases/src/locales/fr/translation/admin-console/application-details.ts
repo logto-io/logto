@@ -17,7 +17,6 @@ const application_details = {
   refresh_token_settings: 'Token de rafraîchissement',
   refresh_token_settings_description:
     'Gérez les règles du jeton de rafraîchissement pour cette application.',
-  application_roles: 'Rôles de machine à machine',
   machine_logs: 'Journaux de machine',
   application_name: "Nom de l'application",
   application_name_placeholder: 'Mon App',

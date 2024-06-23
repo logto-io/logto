@@ -16,7 +16,6 @@ const application_details = {
     '이 어플리케이션에서 OIDC 연결 설정을 위해 다음 엔드포인트 및 자격증명을 사용하세요.',
   refresh_token_settings: 'Refresh 토큰',
   refresh_token_settings_description: '이 어플리케이션을 위한 Refresh 토큰 규칙을 관리하세요.',
-  application_roles: '머신 간 역할',
   machine_logs: '기계 로그',
   application_name: '어플리케이션 이름',
   application_name_placeholder: '나의 앱',

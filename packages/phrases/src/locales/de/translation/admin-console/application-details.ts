@@ -18,7 +18,6 @@ const application_details = {
   refresh_token_settings: 'Auffrischungstoken',
   refresh_token_settings_description:
     'Verwalten Sie die Auffrischungstoken-Regeln für diese Anwendung.',
-  application_roles: 'Rollen von Maschine zu Maschine',
   machine_logs: 'Maschinenprotokolle',
   application_name: 'Anwendungsname',
   application_name_placeholder: 'Meine App',

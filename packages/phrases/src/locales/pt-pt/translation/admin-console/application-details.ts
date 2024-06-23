@@ -17,7 +17,6 @@ const application_details = {
   refresh_token_settings: 'Token de atualização',
   refresh_token_settings_description:
     'Gerir as regras de token de atualização para esta aplicação.',
-  application_roles: 'Funções de máquina a máquina',
   machine_logs: 'Registos da máquina',
   application_name: 'Nome da aplicação',
   application_name_placeholder: 'Ex: Site da Empresa',

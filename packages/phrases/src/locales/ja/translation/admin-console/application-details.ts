@@ -17,7 +17,6 @@ const application_details = {
   refresh_token_settings: 'リフレッシュトークン',
   refresh_token_settings_description:
     'このアプリケーションのリフレッシュトークン規則を管理します。',
-  application_roles: 'マシン間の役割',
   machine_logs: 'マシンログ',
   application_name: 'アプリケーション名',
   application_name_placeholder: '私のアプリ',

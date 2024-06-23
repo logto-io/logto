@@ -53,7 +53,7 @@ function EditOrganizationRolesModal({ organizationId, user, isOpen, onClose }: P
       <ModalLayout
         title={
           <>
-            {t('organization_details.edit_organization_roles_of_user', {
+            {t('organization_details.edit_organization_roles_title', {
               name,
             })}
           </>

@@ -16,7 +16,6 @@ const application_details = {
     'Uygulamanızda OIDC bağlantısını kurmak için aşağıdaki bitiş noktalarını ve kimlik bilgilerini kullanın.',
   refresh_token_settings: 'Yenileme belirteci',
   refresh_token_settings_description: 'Bu uygulama için yenileme belirteci kurallarını yönetin.',
-  application_roles: 'Makineden makineye roller',
   machine_logs: 'Makine günlükleri',
   application_name: 'Uygulama Adı',
   application_name_placeholder: 'Uygulamam',
