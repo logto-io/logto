@@ -35,6 +35,7 @@ import {
   paginationParameters,
   buildPathIdParameters,
   mergeParameters,
+  customParameters,
 } from './utils/parameters.js';
 
 type RouteObject = {
@@ -242,8 +243,11 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       components: {
         schemas: translationSchemas,
         parameters: identifiableEntityNames.reduce(
-          (previous, entityName) => ({ ...previous, ...buildPathIdParameters(entityName) }),
-          {}
+          (previous, entityName) => ({
+            ...previous,
+            ...buildPathIdParameters(entityName),
+          }),
+          customParameters()
         ),
       },
       tags: [...tags, ...additionalTags].map((tag) => ({ name: tag })),

@@ -120,7 +120,7 @@ describe('GET /swagger.json', () => {
         get: {
           parameters: [
             {
-              $ref: '#/components/parameters/mockId:root',
+              $ref: '#/components/parameters/mockId-root',
             },
             {
               name: 'field',
@@ -135,7 +135,7 @@ describe('GET /swagger.json', () => {
         get: {
           parameters: [
             {
-              $ref: '#/components/parameters/mockId:root',
+              $ref: '#/components/parameters/mockId-root',
             },
             {
               name: 'field',
