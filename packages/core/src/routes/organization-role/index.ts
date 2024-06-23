@@ -60,9 +60,7 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
-
       const search = parseSearchOptions(organizationRoleSearchKeys, ctx.guard.query);
-
       const [count, entities] = await roles.findAll(limit, offset, search);
 
       ctx.pagination.totalCount = count;

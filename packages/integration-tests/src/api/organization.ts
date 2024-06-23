@@ -36,6 +36,16 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     return super.getList(query) as Promise<OrganizationWithFeatured[]>;
   }
 
+  async addApplicationsRoles(
+    id: string,
+    applicationIds: string[],
+    organizationRoleIds: string[]
+  ): Promise<void> {
+    await authedAdminApi.post(`${this.path}/${id}/applications/roles`, {
+      json: { applicationIds, organizationRoleIds },
+    });
+  }
+
   async addUsers(id: string, userIds: string[]): Promise<void> {
     await authedAdminApi.post(`${this.path}/${id}/users`, { json: { userIds } });
   }
@@ -68,9 +78,9 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     });
   }
 
-  async getUserRoles(id: string, userId: string): Promise<OrganizationRole[]> {
+  async getUserRoles(id: string, userId: string, query?: Query): Promise<OrganizationRole[]> {
     return authedAdminApi
-      .get(`${this.path}/${id}/users/${userId}/roles`)
+      .get(`${this.path}/${id}/users/${userId}/roles`, { searchParams: query })
       .json<OrganizationRole[]>();
   }
 
@@ -98,9 +108,24 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     });
   }
 
-  async getApplicationRoles(id: string, applicationId: string): Promise<OrganizationRole[]> {
+  async getApplicationRoles(
+    id: string,
+    applicationId: string,
+    page?: number,
+    pageSize?: number
+  ): Promise<OrganizationRole[]> {
+    const search = new URLSearchParams();
+
+    if (page) {
+      search.set('page', String(page));
+    }
+
+    if (pageSize) {
+      search.set('page_size', String(pageSize));
+    }
+
     return authedAdminApi
-      .get(`${this.path}/${id}/applications/${applicationId}/roles`)
+      .get(`${this.path}/${id}/applications/${applicationId}/roles`, { searchParams: search })
       .json<OrganizationRole[]>();
   }
 

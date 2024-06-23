@@ -340,7 +340,7 @@ describe('organization role data hook events', () => {
   });
 
   afterAll(async () => {
-    await organizationScopeApi.cleanUp();
+    await Promise.all([organizationScopeApi.cleanUp(), roleApi.cleanUp()]);
   });
 
   it.each(organizationRoleDataHookTestCases)(

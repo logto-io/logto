@@ -137,10 +137,12 @@ export class OrganizationApiTest extends OrganizationApi {
    * when they are deleted by other tests.
    */
   async cleanUp(): Promise<void> {
-    await Promise.all(
+    await Promise.all([
       // Use `trySafe` to avoid error when organization is deleted by other tests.
-      this.organizations.map(async (organization) => trySafe(this.delete(organization.id)))
-    );
+      ...this.organizations.map(async (organization) => trySafe(this.delete(organization.id))),
+      this.roleApi.cleanUp(),
+      this.scopeApi.cleanUp(),
+    ]);
     this.#organizations = [];
   }
 }

@@ -307,6 +307,40 @@ describe('organization user APIs', () => {
         expect.objectContaining({ code: 'entity.db_constraint_violated' })
       );
     });
+
+    it('should be able to get organization roles for a user with or without pagination', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      const roles = await Promise.all(
+        Array.from({ length: 30 }).map(async () => roleApi.create({ name: generateTestName() }))
+      );
+
+      await organizationApi.addUsers(organization.id, [user.id]);
+      await organizationApi.addUserRoles(
+        organization.id,
+        user.id,
+        roles.map(({ id }) => id)
+      );
+
+      const roles1 = await organizationApi.getUserRoles(organization.id, user.id, {
+        page: 1,
+        page_size: 20,
+      });
+      const roles2 = await organizationApi.getUserRoles(organization.id, user.id, {
+        page: 2,
+        page_size: 10,
+      });
+
+      expect(roles1).toHaveLength(20);
+      expect(roles2).toHaveLength(10);
+      expect(roles2[0]?.id).toBe(roles1[10]?.id);
+      expect(roles).toEqual(expect.arrayContaining(roles1));
+      expect(roles).toEqual(expect.arrayContaining(roles2));
+
+      const allRoles = await organizationApi.getUserRoles(organization.id, user.id);
+      expect(allRoles).toHaveLength(30);
+      expect(allRoles).toEqual(expect.arrayContaining(roles));
+    });
   });
 
   describe('organization - user - organization role - organization scopes relation', () => {
