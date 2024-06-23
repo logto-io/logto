@@ -256,8 +256,18 @@ export const buildPathIdParameters = (
  * Build a parameter object with additional parameters that are not inferred from the path.
  */
 export const customParameters = (): Record<string, OpenAPIV3.ParameterObject> => {
+  const entityId = 'tenantId';
   return Object.freeze({
-    tenantId: {
+    [`${entityId}-root`]: {
+      name: 'id',
+      in: 'path',
+      description: 'The unique identifier of the tenant.',
+      required: true,
+      schema: {
+        type: 'string',
+      },
+    },
+    [entityId]: {
       name: 'tenantId',
       in: 'path',
       description: 'The unique identifier of the tenant.',
