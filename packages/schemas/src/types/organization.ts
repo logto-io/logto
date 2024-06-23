@@ -7,6 +7,8 @@ import {
   Organizations,
   type OrganizationInvitation,
   OrganizationInvitations,
+  type Application,
+  Applications,
 } from '../db-entries/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
@@ -87,10 +89,10 @@ export const organizationWithOrganizationRolesGuard: ToZodObject<OrganizationWit
 
 /**
  * The user entity with the `organizationRoles` field that contains the roles of
- * the user in a specific organization.
+ * the user in the organization.
  */
 export type UserWithOrganizationRoles = UserInfo & {
-  /** The roles of the user in a specific organization. */
+  /** The roles of the user in the organization. */
   organizationRoles: OrganizationRoleEntity[];
 };
 
@@ -107,6 +109,20 @@ export type OrganizationWithFeatured = Organization & {
   usersCount?: number;
   featuredUsers?: FeaturedUser[];
 };
+
+/**
+ * The application entity with the `organizationRoles` field that contains the roles
+ * of the application in the organization.
+ */
+export type ApplicationWithOrganizationRoles = Application & {
+  /** The roles of the application in the organization. */
+  organizationRoles: OrganizationRoleEntity[];
+};
+
+export const applicationWithOrganizationRolesGuard: ToZodObject<ApplicationWithOrganizationRoles> =
+  Applications.guard.extend({
+    organizationRoles: organizationRoleEntityGuard.array(),
+  });
 
 /**
  * The organization invitation with additional fields:

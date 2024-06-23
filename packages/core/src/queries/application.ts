@@ -1,5 +1,6 @@
 import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType, Applications, SearchJointMode } from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 import type { CommonQueryMethods, SqlSqlToken } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -23,22 +24,31 @@ import {
 
 const { table, fields } = convertToIdentifiers(Applications);
 
-const buildApplicationConditions = (search: Search) => {
-  const hasSearch = search.matches.length > 0;
-  const searchFields = [
-    Applications.fields.id,
-    Applications.fields.name,
-    Applications.fields.description,
-  ];
+/**
+ * The schema field keys that can be used for searching apps. For the actual field names,
+ * see {@link Applications.fields} and {@link applicationSearchFields}.
+ */
+export const applicationSearchKeys = Object.freeze(['id', 'name', 'description'] satisfies Array<
+  keyof Application
+>);
 
+/**
+ * The actual database field names that can be used for searching apps. For the schema field
+ * keys, see {@link userSearchKeys}.
+ */
+const applicationSearchFields = Object.freeze(
+  Object.values(pick(Applications.fields, ...applicationSearchKeys))
+);
+
+const buildApplicationConditions = (search: Search) => {
   return conditionalSql(
-    hasSearch,
+    search.matches.length > 0,
     () =>
       /**
        * Avoid specifying the DB column type when calling the API (which is meaningless).
        * Should specify the DB column type of enum type.
        */
-      sql`${buildConditionsFromSearch(search, searchFields)}`
+      sql`${buildConditionsFromSearch(search, applicationSearchFields)}`
   );
 };
 

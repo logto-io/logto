@@ -1,6 +1,10 @@
 import assert from 'node:assert';
 
-import { ApplicationType, type Application } from '@logto/schemas';
+import {
+  ApplicationType,
+  type ApplicationWithOrganizationRoles,
+  type Application,
+} from '@logto/schemas';
 import { HTTPError } from 'ky';
 
 import {
@@ -12,6 +16,82 @@ import { devFeatureTest, generateTestName } from '#src/utils.js';
 
 // TODO: Remove this prefix
 devFeatureTest.describe('organization application APIs', () => {
+  describe('organization get applications', () => {
+    const organizationApi = new OrganizationApiTest();
+    const applications: Application[] = [];
+    const createApplication = async (...args: Parameters<typeof createApplicationApi>) => {
+      const created = await createApplicationApi(...args);
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      applications.push(created);
+      return created;
+    };
+
+    beforeAll(async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const createdApplications = await Promise.all(
+        Array.from({ length: 30 }).map(async () =>
+          createApplication(generateTestName(), ApplicationType.MachineToMachine)
+        )
+      );
+      await organizationApi.applications.add(
+        organization.id,
+        createdApplications.map(({ id }) => id)
+      );
+    });
+
+    afterAll(async () => {
+      await Promise.all([
+        organizationApi.cleanUp(),
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        ...applications.map(async ({ id }) => deleteApplication(id).catch(() => {})),
+      ]);
+    });
+
+    it('should be able to get organization applications with pagination', async () => {
+      const organizationId = organizationApi.organizations[0]!.id;
+      const fetchedApps1 = await organizationApi.applications.getList(organizationId, 1, 20);
+      const fetchedApps2 = await organizationApi.applications.getList(organizationId, 2, 10);
+      expect(fetchedApps2.length).toBe(10);
+      expect(fetchedApps2[0]?.id).not.toBeFalsy();
+      expect(fetchedApps2[0]?.id).toBe(fetchedApps1[10]?.id);
+    });
+
+    it('should be able to get organization applications with search', async () => {
+      const organizationId = organizationApi.organizations[0]!.id;
+      const fetchedApps = await organizationApi.applications.getList(organizationId, 1, 20, {
+        q: applications[0]!.name,
+      });
+      expect(fetchedApps.length).toBe(1);
+      expect(fetchedApps[0]!.id).toBe(applications[0]!.id);
+      expect(fetchedApps[0]).toMatchObject(applications[0]!);
+    });
+
+    it('should be able to get organization applications with their roles', async () => {
+      const organizationId = organizationApi.organizations[0]!.id;
+      const app = applications[0]!;
+      const roles = await Promise.all([
+        organizationApi.roleApi.create({ name: generateTestName() }),
+        organizationApi.roleApi.create({ name: generateTestName() }),
+      ]);
+      const roleIds = roles.map(({ id }) => id);
+      await organizationApi.addApplicationRoles(organizationId, app.id, roleIds);
+
+      const [fetchedApp] = await organizationApi.applications.getList(
+        organizationId,
+        undefined,
+        undefined,
+        {
+          q: app.name,
+        }
+      );
+      expect(fetchedApp).toMatchObject(app);
+      expect((fetchedApp as ApplicationWithOrganizationRoles).organizationRoles).toHaveLength(2);
+      expect((fetchedApp as ApplicationWithOrganizationRoles).organizationRoles).toEqual(
+        expect.arrayContaining(roles.map(({ id }) => expect.objectContaining({ id })))
+      );
+    });
+  });
+
   describe('organization - application relations', () => {
     const organizationApi = new OrganizationApiTest();
     const applications: Application[] = [];
@@ -57,14 +137,16 @@ devFeatureTest.describe('organization application APIs', () => {
       );
 
       await organizationApi.applications.add(organization.id, [application.id]);
-      expect(await organizationApi.applications.getList(organization.id)).toContainEqual(
-        application
-      );
+      expect(await organizationApi.applications.getList(organization.id)).toContainEqual({
+        ...application,
+        organizationRoles: [],
+      });
 
       await organizationApi.applications.delete(organization.id, application.id);
-      expect(await organizationApi.applications.getList(organization.id)).not.toContainEqual(
-        application
-      );
+      expect(await organizationApi.applications.getList(organization.id)).not.toContainEqual({
+        ...application,
+        organizationRoles: [],
+      });
     });
 
     it('should fail when try to delete application from an organization that does not exist', async () => {

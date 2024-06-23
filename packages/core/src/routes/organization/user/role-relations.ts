@@ -106,17 +106,17 @@ export default function userRoleRelationRoutes(
   );
 
   router.delete(
-    `${pathname}/:roleId`,
+    `${pathname}/:organizationRoleId`,
     koaGuard({
-      params: z.object({ ...params, roleId: z.string().min(1) }),
+      params: z.object({ ...params, organizationRoleId: z.string().min(1) }),
       status: [204, 422, 404],
     }),
     async (ctx, next) => {
-      const { id, roleId, userId } = ctx.guard.params;
+      const { id, organizationRoleId, userId } = ctx.guard.params;
 
       await organizations.relations.usersRoles.delete({
         organizationId: id,
-        organizationRoleId: roleId,
+        organizationRoleId,
         userId,
       });
 

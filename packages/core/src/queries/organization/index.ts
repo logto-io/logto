@@ -22,8 +22,6 @@ import {
   Resources,
   Users,
   OrganizationJitRoles,
-  OrganizationApplicationRelations,
-  Applications,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -32,6 +30,7 @@ import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
+import { ApplicationRelationQueries } from './application-relations.js';
 import { ApplicationRoleRelationQueries } from './application-role-relations.js';
 import { EmailDomainQueries } from './email-domains.js';
 import { SsoConnectorQueries } from './sso-connectors.js';
@@ -288,12 +287,7 @@ export default class OrganizationQueries extends SchemaQueries<
     /** Queries for organization - organization role - user relations. */
     usersRoles: new UserRoleRelationQueries(this.pool),
     /** Queries for organization - application relations. */
-    apps: new TwoRelationsQueries(
-      this.pool,
-      OrganizationApplicationRelations.table,
-      Organizations,
-      Applications
-    ),
+    apps: new ApplicationRelationQueries(this.pool),
     /** Queries for organization - organization role - application relations. */
     appsRoles: new ApplicationRoleRelationQueries(this.pool),
     invitationsRoles: new TwoRelationsQueries(

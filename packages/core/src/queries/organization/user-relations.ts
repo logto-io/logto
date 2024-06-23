@@ -7,6 +7,7 @@ import {
   type OrganizationWithRoles,
   type UserWithOrganizationRoles,
   type FeaturedUser,
+  userInfoSelectFields,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -15,6 +16,8 @@ import { type GetEntitiesOptions, TwoRelationsQueries } from '#src/utils/Relatio
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 import { type userSearchKeys } from '../user.js';
+
+import { aggregateRoles } from './utils.js';
 
 /** The query class for the organization - user relation. */
 export class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, typeof Users> {
@@ -81,7 +84,7 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
     return this.pool.any<OrganizationWithRoles>(sql`
       select
         ${expandFields(Organizations, true)},
-        ${this.#aggregateRoles()}
+        ${aggregateRoles()}
       from ${this.table}
       left join ${organizations.table}
         on ${fields.organizationId} = ${organizations.fields.id}
@@ -95,7 +98,7 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
     `);
   }
 
-  /** Get the users in an organization and their roles. */
+  /** Get the users in an organization with their organization roles. */
   async getUsersByOrganizationId(
     organizationId: string,
     { limit, offset }: GetEntitiesOptions,
@@ -117,46 +120,27 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
       `),
       this.pool.any<UserWithOrganizationRoles>(sql`
         select
-          ${users.table}.*,
-          ${this.#aggregateRoles()}
+          ${sql.join(
+            userInfoSelectFields.map((field) => users.fields[field]),
+            sql`, `
+          )},
+          ${aggregateRoles()}
         from ${this.table}
         left join ${users.table}
           on ${fields.userId} = ${users.fields.id}
         left join ${relations.table}
-          on ${fields.userId} = ${relations.fields.userId}
+          on ${relations.fields.userId} = ${users.fields.id}
           and ${fields.organizationId} = ${relations.fields.organizationId}
         left join ${roles.table}
           on ${relations.fields.organizationRoleId} = ${roles.fields.id}
         where ${fields.organizationId} = ${organizationId}
         ${buildSearchSql(Users, search, sql`and `)}
-        group by ${users.table}.id
+        group by ${users.fields.id}
         limit ${limit}
         offset ${offset}
       `),
     ]);
 
     return [Number(count), entities];
-  }
-
-  /**
-   * Build the SQL for aggregating the organization roles with basic information (id and name)
-   * into a JSON array.
-   *
-   * @param as The alias of the aggregated roles. Defaults to `organizationRoles`.
-   */
-  #aggregateRoles(as = 'organizationRoles') {
-    const roles = convertToIdentifiers(OrganizationRoles, true);
-
-    return sql`
-      coalesce(
-        json_agg(
-          json_build_object(
-            'id', ${roles.fields.id},
-            'name', ${roles.fields.name}
-          ) order by ${roles.fields.name}
-        ) filter (where ${roles.fields.id} is not null), -- left join could produce nulls as roles
-        '[]'
-      ) as ${sql.identifier([as])}
-    `;
   }
 }
