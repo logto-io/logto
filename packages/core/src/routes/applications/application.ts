@@ -95,7 +95,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       if (excludeRoleId && excludeOrganizationId) {
         throw new RequestError({
           code: 'request.invalid_input',
-          status: 422,
+          status: 400,
           details:
             'Parameter `excludeRoleId` and `excludeOrganizationId` cannot be used at the same time.',
         });
