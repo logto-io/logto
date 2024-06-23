@@ -3,12 +3,12 @@
     {
       "name": "Security",
       "description": "Security related endpoints."
-    }
+    },
+    { "name": "Dev feature" }
   ],
   "paths": {
     "/api/security/subject-tokens": {
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Create a new subject token.",
         "description": "Create a new subject token for the use of impersonating the user.",
         "requestBody": {
