@@ -98,7 +98,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'O utilizador precisa de ter pelo menos um dos identificadores de início de sessão (nome de utilizador, e-mail, número de telefone ou redes sociais) para iniciar sessão. Tem a certeza de que quer continuar?',
-  organization_roles_tooltip: 'As funções atribuídas ao utilizador dentro desta organização.',
 };
 
 export default Object.freeze(user_details);

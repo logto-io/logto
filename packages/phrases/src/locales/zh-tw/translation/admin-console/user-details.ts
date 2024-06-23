@@ -87,7 +87,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     '使用者需要至少擁有一個登入標識（使用者名稱、電子郵件、電話號碼或社交帳號）才能登入。確定要繼續嗎？',
-  organization_roles_tooltip: '該組織中分配給該用戶的角色。',
 };
 
 export default Object.freeze(user_details);

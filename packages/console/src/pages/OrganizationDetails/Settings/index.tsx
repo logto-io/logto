@@ -2,6 +2,7 @@ import {
   type SignInExperience,
   type Organization,
   type SsoConnectorWithProviderConfig,
+  RoleType,
 } from '@logto/schemas';
 import { useState, useCallback, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -296,6 +297,7 @@ function Settings() {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <OrganizationRolesSelect
+                  roleType={RoleType.User}
                   keyword={keyword}
                   setKeyword={setKeyword}
                   value={value}
@@ -309,6 +311,8 @@ function Settings() {
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </DetailsForm>
   );
+
+  // eslint-disable-next-line max-lines -- Should be ok once dev features flag is removed
 }
 
 export default Settings;

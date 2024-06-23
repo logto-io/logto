@@ -17,7 +17,7 @@ export default function applicationOrganizationRoutes<T extends ManagementApiRou
 
   router.get(
     '/applications/:id/organizations',
-    koaPagination(),
+    koaPagination({ isOptional: true }),
     koaGuard({
       params: z.object({ id: z.string() }),
       response: organizationWithOrganizationRolesGuard.array(),
@@ -32,10 +32,12 @@ export default function applicationOrganizationRoutes<T extends ManagementApiRou
       const [count, entities] =
         await queries.organizations.relations.apps.getOrganizationsByApplicationId(
           id,
-          ctx.pagination
+          ctx.pagination.disabled ? undefined : ctx.pagination
         );
 
-      ctx.pagination.totalCount = count;
+      if (!ctx.pagination.disabled) {
+        ctx.pagination.totalCount = count;
+      }
       ctx.body = entities;
 
       return next();

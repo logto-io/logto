@@ -99,7 +99,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Der Benutzer muss mindestens einen der Anmelde-Identifikatoren (Benutzername, E-Mail, Telefonnummer oder soziales Konto) haben, um sich anzumelden. Sind Sie sicher, dass Sie fortfahren möchten?',
-  organization_roles_tooltip: 'Die dem Benutzer innerhalb dieser Organisation zugewiesenen Rollen.',
 };
 
 export default Object.freeze(user_details);

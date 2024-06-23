@@ -98,7 +98,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     "L'utente deve avere almeno uno degli identificatori di accesso (nome utente, email, numero di telefono, o social) per accedere. Sei sicuro di voler continuare?",
-  organization_roles_tooltip: "I ruoli assegnati all'utente all'interno di questa organizzazione.",
 };
 
 export default Object.freeze(user_details);

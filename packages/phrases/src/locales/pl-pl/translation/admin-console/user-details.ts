@@ -95,7 +95,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Aby się zalogować, użytkownik musi mieć co najmniej jeden identyfikator logowania (nazwa użytkownika, e-mail, numer telefonu lub konto społecznościowe). Czy na pewno chcesz kontynuować?',
-  organization_roles_tooltip: 'Role przypisane użytkownikowi w ramach tej organizacji.',
 };
 
 export default Object.freeze(user_details);

@@ -1,4 +1,4 @@
-import { type UserWithOrganizationRoles } from '@logto/schemas';
+import { type ApplicationWithOrganizationRoles } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
@@ -6,9 +6,8 @@ import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
 import ActionsButton from '@/components/ActionsButton';
-import DateTime from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
-import UserPreview from '@/components/ItemPreview/UserPreview';
+import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
@@ -23,12 +22,12 @@ import { buildUrl } from '@/utils/url';
 import EditOrganizationRolesModal from '../EditOrganizationRolesModal';
 import { type OrganizationDetailsOutletContext } from '../types';
 
-import AddMembersToOrganization from './AddMembersToOrganization';
+import AddAppsToOrganization from './AddAppsToOrganization';
 import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 
-function Members() {
+function MachineToMachine() {
   const { data: organization } = useOutletContext<OrganizationDetailsOutletContext>();
   const api = useApi();
   const [keyword, setKeyword] = useState('');
@@ -37,8 +36,8 @@ function Members() {
     data: response,
     error,
     mutate,
-  } = useSWR<[UserWithOrganizationRoles[], number], RequestError>(
-    buildUrl(`api/organizations/${organization.id}/users`, {
+  } = useSWR<[ApplicationWithOrganizationRoles[], number], RequestError>(
+    buildUrl(`api/organizations/${organization.id}/applications`, {
       q: keyword,
       page: String(page),
       page_size: String(pageSize),
@@ -47,7 +46,7 @@ function Members() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userToBeEdited, setUserToBeEdited] = useState<UserWithOrganizationRoles>();
+  const [appToBeEdited, setAppToBeEdited] = useState<ApplicationWithOrganizationRoles>();
   const isLoading = !response && !error;
   const [data, totalCount] = response ?? [];
 
@@ -67,10 +66,10 @@ function Members() {
         rowGroups={[{ key: 'data', data }]}
         columns={[
           {
-            dataIndex: 'user',
-            title: t('organization_details.user'),
+            dataIndex: 'application',
+            title: t('applications.application_name'),
             colSpan: 4,
-            render: (user) => <UserPreview user={user} />,
+            render: (data) => <ApplicationPreview data={data} />,
           },
           {
             dataIndex: 'roles',
@@ -93,29 +92,23 @@ function Members() {
             },
           },
           {
-            dataIndex: 'lastSignInAt',
-            title: t('users.latest_sign_in'),
-            colSpan: 5,
-            render: ({ lastSignInAt }) => <DateTime>{lastSignInAt}</DateTime>,
-          },
-          {
             dataIndex: 'actions',
             title: null,
             colSpan: 1,
-            render: (user) => (
+            render: (data) => (
               <ActionsButton
-                deleteConfirmation="organization_details.remove_user_from_organization_description"
-                fieldName="organization_details.user"
+                deleteConfirmation="organization_details.remove_application_from_organization_description"
+                fieldName="organization_details.application"
                 textOverrides={{
                   edit: 'organization_details.edit_organization_roles',
-                  delete: 'organization_details.remove_user_from_organization',
+                  delete: 'organization_details.remove_application_from_organization',
                   deleteConfirmation: 'general.remove',
                 }}
                 onEdit={() => {
-                  setUserToBeEdited(user);
+                  setAppToBeEdited(data);
                 }}
                 onDelete={async () => {
-                  await api.delete(`api/organizations/${organization.id}/users/${user.id}`);
+                  await api.delete(`api/organizations/${organization.id}/applications/${data.id}`);
                   void mutate();
                 }}
               />
@@ -128,7 +121,7 @@ function Members() {
             <Search
               defaultValue={keyword}
               isClearable={Boolean(keyword)}
-              placeholder={t('organization_details.search_user_placeholder')}
+              placeholder={t('organization_details.search_application_placeholder')}
               onSearch={(value) => {
                 setKeyword(value);
                 setPage(1);
@@ -140,7 +133,9 @@ function Members() {
             />
             <Button
               size="large"
-              title={<DangerousRaw>{tAction('add', 'organization_details.member')}</DangerousRaw>}
+              title={
+                <DangerousRaw>{tAction('add', 'organizations.machine_to_machine')}</DangerousRaw>
+              }
               type="primary"
               icon={<Plus />}
               onClick={() => {
@@ -150,19 +145,19 @@ function Members() {
           </div>
         }
       />
-      {userToBeEdited && (
+      {appToBeEdited && (
         <EditOrganizationRolesModal
           isOpen
-          type="user"
+          type="application"
           organizationId={organization.id}
-          data={userToBeEdited}
+          data={appToBeEdited}
           onClose={() => {
-            setUserToBeEdited(undefined);
+            setAppToBeEdited(undefined);
             void mutate();
           }}
         />
       )}
-      <AddMembersToOrganization
+      <AddAppsToOrganization
         organization={organization}
         isOpen={isModalOpen}
         onClose={() => {
@@ -174,4 +169,4 @@ function Members() {
   );
 }
 
-export default Members;
+export default MachineToMachine;

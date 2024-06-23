@@ -97,7 +97,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Kullanıcının giriş yapmak için en az bir oturum açma kimliği (kullanıcı adı, e-posta, telefon numarası, veya sosyal) olması gerekiyor. Devam etmek istediğinizden emin misiniz?',
-  organization_roles_tooltip: 'Bu organizasyon içinde kullanıcıya atanan roller.',
 };
 
 export default Object.freeze(user_details);

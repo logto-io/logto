@@ -96,7 +96,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'O usuário precisa ter pelo menos um dos identificadores de login (nome de usuário, e-mail, número de telefone ou social) para fazer login. Tem certeza de que deseja continuar?',
-  organization_roles_tooltip: 'As funções atribuídas ao usuário dentro desta organização.',
 };
 
 export default Object.freeze(user_details);

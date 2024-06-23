@@ -12,7 +12,7 @@ import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 import { type SearchOptions, buildSearchSql } from '#src/database/utils.js';
 import { TwoRelationsQueries, type GetEntitiesOptions } from '#src/utils/RelationQueries.js';
-import { convertToIdentifiers } from '#src/utils/sql.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 import { type applicationSearchKeys } from '../application.js';
 
@@ -28,7 +28,7 @@ export class ApplicationRelationQueries extends TwoRelationsQueries<
 
   async getOrganizationsByApplicationId(
     applicationId: string,
-    { limit, offset }: GetEntitiesOptions
+    options?: GetEntitiesOptions
   ): Promise<[totalCount: number, organizations: readonly OrganizationWithRoles[]]> {
     const organizations = convertToIdentifiers(Organizations, true);
     const roles = convertToIdentifiers(OrganizationRoles, true);
@@ -57,8 +57,7 @@ export class ApplicationRelationQueries extends TwoRelationsQueries<
           on ${relations.fields.organizationRoleId} = ${roles.fields.id}
         where ${fields.applicationId} = ${applicationId}
         group by ${organizations.fields.id}
-        limit ${limit}
-        offset ${offset}
+        ${conditionalSql(options, ({ limit, offset }) => sql`limit ${limit} offset ${offset}`)}
       `),
     ]);
 
