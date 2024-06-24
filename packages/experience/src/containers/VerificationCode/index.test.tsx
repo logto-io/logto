@@ -1,3 +1,4 @@
+import resource from '@logto/phrases-experience';
 import { SignInIdentifier } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 
@@ -8,6 +9,7 @@ import {
   addProfileWithVerificationCodeIdentifier,
 } from '@/apis/interaction';
 import { sendVerificationCodeApi } from '@/apis/utils';
+import { setupI18nForTesting } from '@/jest.setup';
 import { UserFlow } from '@/types';
 
 import VerificationCode from '.';
@@ -69,19 +71,37 @@ describe('<VerificationCode />', () => {
   });
 
   it('fire resend event', async () => {
+    /**
+     * Apply the resource with resend_passcode for testing nested translation
+     * Since the 'resend_passcode' phrase need be rendered into the following structure for testing:
+     * ```
+     * <div>Not received yet? <a>Resend verification code</a></div>
+     * ```
+     * otherwise this phrase will be rendered as 'description.resend_passcode'.
+     * That will cause the resend button cannot be clicked.
+     */
+    await setupI18nForTesting({
+      translation: {
+        description: { resend_passcode: resource.en.translation.description.resend_passcode },
+      },
+    });
+
     const { getByText } = renderWithPageContext(
       <VerificationCode flow={UserFlow.SignIn} identifier={SignInIdentifier.Email} target={email} />
     );
     act(() => {
       jest.advanceTimersByTime(1e3 * 60);
     });
-    const resendButton = getByText('description.resend_passcode');
+    const resendButton = getByText('Resend verification code');
 
     await waitFor(() => {
       fireEvent.click(resendButton);
     });
 
     expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.SignIn, { email });
+
+    // Reset i18n
+    await setupI18nForTesting();
   });
 
   describe('sign-in', () => {

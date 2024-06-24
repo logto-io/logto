@@ -14,8 +14,8 @@ const description = {
   and: '及び',
   enter_passcode: '確認コードが{{address}} {{target}}に送信されました',
   passcode_sent: '確認コードを再送します',
-  resend_after_seconds: '<span>{{seconds}}</span>秒後に再送信',
-  resend_passcode: '確認コードを再送信します',
+  resend_after_seconds: 'まだ届いていませんか？ <span>{{seconds}}</span> 秒後に再送',
+  resend_passcode: 'まだ届いていませんか？ <a>認証コードを再送</a>',
   create_account_id_exists:
     '{{type}} {{value}}でアカウントが既に存在しています。ログインしますか？',
   link_account_id_exists: '{{type}} {{value}}でアカウントが既に存在しています。リンクしますか？',

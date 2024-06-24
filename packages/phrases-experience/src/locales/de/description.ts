@@ -14,8 +14,8 @@ const description = {
   and: 'und',
   enter_passcode: 'Der Bestätigungscode wurde an deine {{address}} gesendet',
   passcode_sent: 'Der Bestätigungscode wurde erneut gesendet',
-  resend_after_seconds: 'Nach <span>{{seconds}}</span> Sekunden erneut senden',
-  resend_passcode: 'Bestätigungscode erneut senden',
+  resend_after_seconds: 'Noch nicht erhalten? Erneut senden nach <span>{{seconds}}</span> Sekunden',
+  resend_passcode: 'Noch nicht erhalten? <a>Bestätigungscode erneut senden</a>',
   create_account_id_exists:
     'Das Konto mit {{type}} {{value}} existiert bereits, möchtest du dich anmelden?',
   link_account_id_exists:
