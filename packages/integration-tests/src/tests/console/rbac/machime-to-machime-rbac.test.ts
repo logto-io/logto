@@ -308,7 +308,7 @@ describe('M2M RBAC', () => {
     it('add a role to m2m app on the application details page', async () => {
       // Go to roles tab
       await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-        text: 'Machine-to-machine roles',
+        text: 'Roles',
       });
 
       await expect(page).toClick('div[class$=filter] button span', {

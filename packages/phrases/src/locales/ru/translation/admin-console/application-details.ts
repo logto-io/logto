@@ -17,7 +17,6 @@ const application_details = {
   refresh_token_settings: 'Обновить токен',
   refresh_token_settings_description:
     'Управляйте правилами обновления токенов для этого приложения.',
-  application_roles: 'Роли между машинами',
   machine_logs: 'Машинные журналы',
   application_name: 'Название приложения',
   application_name_placeholder: 'Мое приложение',

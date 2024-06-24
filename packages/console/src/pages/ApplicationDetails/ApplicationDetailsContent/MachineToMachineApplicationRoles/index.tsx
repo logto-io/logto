@@ -1,5 +1,5 @@
 import type { Application, Role } from '@logto/schemas';
-import { RoleType, Theme } from '@logto/schemas';
+import { RoleType, Theme, roleTypeToKey } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -86,7 +86,7 @@ function MachineToMachineApplicationRoles({ application }: Props) {
         rowIndexKey="id"
         columns={[
           {
-            title: t('application_details.roles.name_column'),
+            title: t('roles.role_name'),
             dataIndex: 'name',
             colSpan: 6,
             render: ({ id, name }) => (
@@ -104,7 +104,13 @@ function MachineToMachineApplicationRoles({ application }: Props) {
             ),
           },
           {
-            title: t('application_details.roles.description_column'),
+            title: t('roles.col_type'),
+            dataIndex: 'type',
+            colSpan: 4,
+            render: ({ type }) => <div>{t(`roles.type_${roleTypeToKey[type]}`)}</div>,
+          },
+          {
+            title: t('roles.col_description'),
             dataIndex: 'description',
             colSpan: 9,
             render: ({ description }) => <div className={styles.description}>{description}</div>,

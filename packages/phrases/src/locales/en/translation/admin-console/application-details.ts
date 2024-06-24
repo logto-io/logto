@@ -16,7 +16,6 @@ const application_details = {
     'Use the following endpoints and credentials to set up the OIDC connection in your application.',
   refresh_token_settings: 'Refresh token',
   refresh_token_settings_description: 'Manage the refresh token rules for this application.',
-  application_roles: 'Machine-to-machine roles',
   machine_logs: 'Machine logs',
   application_name: 'Application name',
   application_name_placeholder: 'My App',

@@ -15,8 +15,10 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import DetailsForm from '@/components/DetailsForm';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
+import OrganizationList from '@/components/OrganizationList';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedAppLink } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -168,11 +170,16 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
         {data.type === ApplicationType.MachineToMachine && (
           <>
             <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Roles}`}>
-              {t('application_details.application_roles')}
+              {t('roles.col_roles')}
             </TabNavItem>
             <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Logs}`}>
               {t('application_details.machine_logs')}
             </TabNavItem>
+            {isDevFeaturesEnabled && (
+              <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Organizations}`}>
+                {t('organizations.title')}
+              </TabNavItem>
+            )}
           </>
         )}
         {data.isThirdParty && (
@@ -212,7 +219,6 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
           <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} onConfirm={reset} />
         )}
       </TabWrapper>
-
       {data.type === ApplicationType.MachineToMachine && (
         <>
           <TabWrapper
@@ -226,6 +232,12 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             className={styles.tabContainer}
           >
             <MachineLogs applicationId={data.id} />
+          </TabWrapper>
+          <TabWrapper
+            isActive={tab === ApplicationDetailsTabs.Organizations}
+            className={styles.tabContainer}
+          >
+            <OrganizationList type="application" data={data} />
           </TabWrapper>
         </>
       )}

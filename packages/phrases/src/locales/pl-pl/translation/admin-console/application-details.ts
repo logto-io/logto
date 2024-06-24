@@ -17,7 +17,6 @@ const application_details = {
   refresh_token_settings: 'Token odświeżania',
   refresh_token_settings_description:
     'Zarządzaj zasadami dotyczącymi tokena odświeżania dla tej aplikacji.',
-  application_roles: 'Role między maszynami',
   machine_logs: 'Dzienniki maszynowe',
   application_name: 'Nazwa aplikacji',
   application_name_placeholder: 'Moja aplikacja',

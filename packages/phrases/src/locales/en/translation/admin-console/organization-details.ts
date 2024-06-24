@@ -14,14 +14,26 @@ const organization_details = {
     'Find appropriate users by searching name, email, phone, or user ID. Existing members are not shown in the search results.',
   add_with_organization_role: 'Add with organization role(s)',
   user: 'User',
+  application: 'Application',
+  application_other: 'Applications',
+  add_applications_to_organization: 'Add applications to organization {{name}}',
+  add_applications_to_organization_description:
+    'Find appropriate applications by searching app ID, name, or description. Existing applications are not shown in the search results.',
+  at_least_one_application: 'At least one application is required.',
+  remove_application_from_organization: 'Remove application from organization',
+  remove_application_from_organization_description:
+    'Once removed, the application will lose its association and roles in this organization. This action cannot be undone.',
+  search_application_placeholder: 'Search by app ID, name, or description',
+  roles: 'Organization roles',
   authorize_to_roles: 'Authorize {{name}} to access the following roles:',
   edit_organization_roles: 'Edit organization roles',
-  edit_organization_roles_of_user: 'Edit organization roles of {{name}}',
+  edit_organization_roles_title: 'Edit organization roles of {{name}}',
   remove_user_from_organization: 'Remove user from organization',
   remove_user_from_organization_description:
     'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
   search_user_placeholder: 'Search by name, email, phone or user ID',
   at_least_one_user: 'At least one user is required.',
+  organization_roles_tooltip: 'The roles assigned to the {{type}} within this organization.',
   custom_data: 'Custom data',
   custom_data_tip:
     'Custom data is a JSON object that can be used to store additional data associated with the organization.',
