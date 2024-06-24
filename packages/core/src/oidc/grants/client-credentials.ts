@@ -94,6 +94,12 @@ export const buildHandler: (
     await checkResource(ctx, async () => {});
   }
 
+  const { 0: resourceServer, length } = Object.values(ctx.oidc.resourceServers ?? {});
+
+  if (!organizationId && length === 0) {
+    throw new InvalidTarget('both `resource` and `organization_id` are not provided');
+  }
+
   const scopes = ctx.oidc.params?.scope
     ? [...new Set(String(ctx.oidc.params.scope).split(' '))]
     : [];
@@ -112,8 +118,6 @@ export const buildHandler: (
     client,
     scope: scopes.join(' ') || undefined!,
   });
-
-  const { 0: resourceServer, length } = Object.values(ctx.oidc.resourceServers ?? {});
 
   if (resourceServer) {
     if (length !== 1) {

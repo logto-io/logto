@@ -1,7 +1,14 @@
 import assert from 'node:assert';
 
 import { buildOrganizationUrn } from '@logto/core-kit';
-import { type Application, ApplicationType, RoleType } from '@logto/schemas';
+import {
+  type Application,
+  ApplicationType,
+  RoleType,
+  type Resource,
+  type Role,
+  type Scope,
+} from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { HTTPError } from 'ky';
@@ -12,9 +19,13 @@ import {
   createApplication,
   deleteApplication,
 } from '#src/api/application.js';
-import { createResource, setDefaultResource } from '#src/api/resource.js';
-import { assignScopesToRole, createRole } from '#src/api/role.js';
-import { createScope } from '#src/api/scope.js';
+import {
+  createResource as createResourceApi,
+  deleteResource,
+  setDefaultResource,
+} from '#src/api/resource.js';
+import { assignScopesToRole, createRole as createRoleApi, deleteRole } from '#src/api/role.js';
+import { createScope as createScopeApi } from '#src/api/scope.js';
 import { isDevFeaturesEnabled, logtoUrl } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { devFeatureTest, randomString } from '#src/utils.js';
@@ -26,11 +37,30 @@ type TokenResponse = {
   scope: string;
 };
 
+const createApi = <R, Args extends unknown[]>(
+  run: (...args: Args) => Promise<R>,
+  storage: R[]
+): ((...args: Args) => Promise<R>) => {
+  return async (...args) => {
+    const result = await run(...args);
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    storage.push(result);
+    return result;
+  };
+};
+
 describe('client credentials grant', () => {
   const jwkSet = createRemoteJWKSet(appendPath(new URL(logtoUrl), 'oidc/jwks'));
   const organizationApi = new OrganizationApiTest();
   // eslint-disable-next-line @silverhand/fp/no-let
   let client: Application;
+  const currentResources: Resource[] = [];
+  const currentRoles: Role[] = [];
+  const currentScopes: Scope[] = [];
+
+  const createResource = createApi(createResourceApi, currentResources);
+  const createRole = createApi(createRoleApi, currentRoles);
+  const createScope = createApi(createScopeApi, currentScopes);
 
   const post = async (additionalParams: Record<string, string> = {}) =>
     oidcApi
@@ -64,7 +94,17 @@ describe('client credentials grant', () => {
   });
 
   afterAll(async () => {
-    await Promise.all([deleteApplication(client.id), organizationApi.cleanUp()]);
+    await deleteApplication(client.id);
+  });
+
+  afterEach(async () => {
+    await Promise.all([
+      organizationApi.cleanUp(),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      ...currentResources.map(async ({ id }) => deleteResource(id).catch(() => {})),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      ...currentRoles.map(async ({ id }) => deleteRole(`roles/${id}`).catch(() => {})),
+    ]);
   });
 
   describe('general failed cases', () => {
@@ -72,6 +112,13 @@ describe('client credentials grant', () => {
       await expectError({ client_id: 'not-found', client_secret: 'not-found' }, 400, {
         error: 'invalid_client',
         error_description: 'invalid client not-found',
+      });
+    });
+
+    it('should fail if parameters are missing', async () => {
+      await expectError({}, 400, {
+        error: 'invalid_target',
+        error_description: 'both `resource` and `organization_id` are not provided',
       });
     });
   });

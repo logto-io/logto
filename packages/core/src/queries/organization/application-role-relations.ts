@@ -29,6 +29,10 @@ export class ApplicationRoleRelationQueries extends RelationQueries<
     );
   }
 
+  /**
+   * Get all the organization scopes of an application in an organization. Scopes are unique by
+   * their IDs.
+   */
   async getApplicationScopes(
     organizationId: string,
     applicationId: string
@@ -50,6 +54,10 @@ export class ApplicationRoleRelationQueries extends RelationQueries<
     `);
   }
 
+  /**
+   * Get all the resource scopes of an application in an organization. Scopes are unique by their
+   * IDs.
+   */
   async getApplicationResourceScopes(
     organizationId: string,
     applicationId: string,

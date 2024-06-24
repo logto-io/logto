@@ -99,7 +99,20 @@ describe('client credentials grant', () => {
       ...validOidcContext,
       client: createValidClient({ scope: 'baz' }),
     });
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidScope);
+    await expect(
+      mockHandler(
+        new MockTenant(undefined, {
+          organizations: {
+            relations: {
+              // @ts-expect-error
+              apps: {
+                exists: jest.fn().mockResolvedValue(true),
+              },
+            },
+          },
+        })
+      )(ctx, noop)
+    ).rejects.toThrow(errors.InvalidScope);
   });
 
   it('should throw an error if the app has not associated with the organization', async () => {
