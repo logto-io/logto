@@ -257,24 +257,15 @@ export const buildPathIdParameters = (
  */
 export const customParameters = (): Record<string, OpenAPIV3.ParameterObject> => {
   const entityId = 'tenantId';
+  const shared = Object.freeze({
+    in: 'path',
+    description: 'The unique identifier of the tenant.',
+    required: true,
+    schema: { type: 'string' },
+  } as const);
+
   return Object.freeze({
-    [`${entityId}-root`]: {
-      name: 'id',
-      in: 'path',
-      description: 'The unique identifier of the tenant.',
-      required: true,
-      schema: {
-        type: 'string',
-      },
-    },
-    [entityId]: {
-      name: 'tenantId',
-      in: 'path',
-      description: 'The unique identifier of the tenant.',
-      required: true,
-      schema: {
-        type: 'string',
-      },
-    },
+    [`${entityId}-root`]: { name: 'id', ...shared },
+    [entityId]: { name: 'tenantId', ...shared },
   });
 };
