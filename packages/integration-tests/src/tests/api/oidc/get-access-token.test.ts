@@ -125,6 +125,8 @@ describe('get access token', () => {
       testApiScopeNames.join(' ')
     );
     expect(getAccessTokenPayload(accessToken)).toHaveProperty('user_id', guestUserId);
+    // The guest user has password.
+    expect(getAccessTokenPayload(accessToken)).toHaveProperty('hasPassword', true);
 
     await deleteJwtCustomizer('access-token');
   });

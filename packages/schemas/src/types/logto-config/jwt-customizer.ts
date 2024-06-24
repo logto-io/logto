@@ -1,10 +1,17 @@
 import { jsonObjectGuard } from '@logto/connector-kit';
-import { z } from 'zod';
+import { type ZodType, z } from 'zod';
 
-import { Organizations, Roles, UserSsoIdentities } from '../../db-entries/index.js';
-import { mfaFactorsGuard } from '../../foundations/index.js';
-import { scopeResponseGuard } from '../scope.js';
-import { userInfoGuard } from '../user.js';
+import {
+  Organizations,
+  type Organization,
+  type Role,
+  Roles,
+  UserSsoIdentities,
+  type UserSsoIdentity,
+} from '../../db-entries/index.js';
+import { mfaFactorsGuard, type MfaFactors } from '../../foundations/index.js';
+import { scopeResponseGuard, type ScopeResponse } from '../scope.js';
+import { userInfoGuard, type UserInfo } from '../user.js';
 
 import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
 
@@ -19,7 +26,25 @@ export enum LogtoJwtTokenKeyType {
   ClientCredentials = 'client-credentials',
 }
 
+export type JwtCustomizerUserContext = UserInfo & {
+  hasPassword: boolean;
+  ssoIdentities: Array<Pick<UserSsoIdentity, 'issuer' | 'identityId' | 'detail'>>;
+  mfaVerificationFactors: MfaFactors;
+  roles: Array<
+    Pick<Role, 'id' | 'name' | 'description'> & {
+      scopes: Array<Pick<ScopeResponse, 'id' | 'name' | 'description' | 'resourceId' | 'resource'>>;
+    }
+  >;
+  organizations: Array<Pick<Organization, 'id' | 'name' | 'description'>>;
+  organizationRoles: Array<{
+    organizationId: string;
+    roleId: string;
+    roleName: string;
+  }>;
+};
+
 export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
+  hasPassword: z.boolean(),
   ssoIdentities: UserSsoIdentities.guard
     .pick({ issuer: true, identityId: true, detail: true })
     .array(),
@@ -40,9 +65,7 @@ export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
       roleName: z.string(),
     })
     .array(),
-});
-
-export type JwtCustomizerUserContext = z.infer<typeof jwtCustomizerUserContextGuard>;
+}) satisfies ZodType<JwtCustomizerUserContext>;
 
 export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
   .extend({

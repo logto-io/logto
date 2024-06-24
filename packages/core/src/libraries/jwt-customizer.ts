@@ -87,6 +87,7 @@ export class JwtCustomizerLibrary {
       await this.queries.organizations.relations.users.getOrganizationsByUserId(userId);
     const userContext = {
       ...pick(user, ...userInfoSelectFields),
+      hasPassword: Boolean(user.passwordEncrypted),
       ssoIdentities: fullSsoIdentities.map(pickState('issuer', 'identityId', 'detail')),
       mfaVerificationFactors: deduplicate(user.mfaVerifications.map(({ type }) => type)),
       roles: roles.map((role) => {
