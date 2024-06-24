@@ -55,10 +55,6 @@ const applications = {
   placeholder_title: 'Выберите тип приложения, чтобы продолжить',
   placeholder_description:
     'Logto использует сущность приложения для OIDC для выполнения задач, таких как идентификация ваших приложений, управление входом в систему и создание журналов аудита.',
-  m2m_role_assignment: {
-    role_creation_hint:
-      'Не можете найти подходящую роль машина-машина? <a>Создайте роль машина-машина</a>',
-  },
 };
 
 export default Object.freeze(applications);

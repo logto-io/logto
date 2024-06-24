@@ -79,23 +79,18 @@ const user_details = {
   roles: {
     name_column: 'Rôle utilisateur',
     description_column: 'Description',
-    assign_button: 'Attribuer des rôles utilisateur',
     delete_description:
       'Cette action supprimera ce rôle de cet utilisateur. Le rôle lui-même existera toujours, mais il ne sera plus associé à cet utilisateur.',
     deleted: '{{name}} a été retiré de cet utilisateur.',
-    assign_title: 'Attribuer des rôles utilisateur à {{name}}',
     assign_subtitle:
       'Trouvez les rôles utilisateur appropriés en recherchant par nom, description ou ID de rôle.',
     assign_role_field: 'Attribuer des rôles',
     role_search_placeholder: 'Recherche par nom de rôle',
     added_text: '{{value, number}} ajouté',
     assigned_user_count: '{{value, number}} utilisateurs',
-    confirm_assign: 'Attribuer des rôles utilisateur',
     role_assigned: 'Rôle(s) attribué(s) avec succès',
     search: 'Recherche par nom de rôle, description ou ID',
     empty: 'Aucun rôle disponible',
-    create_user_role_hint:
-      'Vous ne trouvez pas le bon rôle utilisateur ? <a>Créer un rôle utilisateur</a>',
   },
   warning_no_sign_in_identifier:
     "L'utilisateur doit avoir au moins l'un des identifiants de connexion (nom d'utilisateur, e-mail, numéro de téléphone ou compte social) pour se connecter. Êtes-vous sûr(e) de vouloir continuer?",

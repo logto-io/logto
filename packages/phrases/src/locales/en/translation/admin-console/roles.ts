@@ -21,20 +21,19 @@ const roles = {
   application_count: '{{count}} app',
   assign_permissions: 'Assign permissions',
   create_role_title: 'Create role',
-  create_role_description:
-    'Create and manage roles for your applications. Roles contain collections of permissions and can be assigned to users.',
+  create_role_description: 'Use roles to organize permissions and assign them to users.',
   create_role_button: 'Create role',
   role_created: 'The role {{name}} has been successfully created.',
   search: 'Search by role name, description or ID',
   placeholder_title: 'Roles',
   placeholder_description:
     'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.',
-  assign_user_roles: 'Assign user roles',
-  assign_m2m_roles: 'Assign machine-to-machine roles',
+  assign_roles: 'Assign roles',
   management_api_access_notification:
-    'For Logto Management API access, select roles with management API permissions <flag/>.',
+    'For Logto Management API access, select roles with Management API permissions <flag/>.',
   with_management_api_access_tip:
-    'This machine-to-machine role includes Logto management API permissions',
+    'This machine-to-machine role includes Logto Management API permissions',
+  role_creation_hint: 'Can’t find the right role? <a>Create a role</a>',
 };
 
 export default Object.freeze(roles);

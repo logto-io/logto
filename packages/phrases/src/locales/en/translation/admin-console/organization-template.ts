@@ -8,7 +8,6 @@ const organization_template = {
     create_title: 'Create organization role',
     role_column: 'Organization role',
     permissions_column: 'Permissions',
-    type_column: 'Role type',
     placeholder_title: 'Organization role',
     placeholder_description:
       'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',

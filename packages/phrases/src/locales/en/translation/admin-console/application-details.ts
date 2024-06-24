@@ -137,18 +137,18 @@ const application_details = {
     grant_organization_level_permissions: 'Grant permissions of organization data',
   },
   roles: {
-    assign_button: 'Assign machine-to-machine roles',
+    assign_button: 'Assign roles',
     delete_description:
       'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
     deleted: '{{name}} was successfully removed from this user.',
-    assign_title: 'Assign machine-to-machine roles to {{name}}',
+    assign_title: 'Assign roles to {{name}}',
     assign_subtitle:
-      'Machine-to-machine apps must have machine-to-machine roles to access related API resources.',
-    assign_role_field: 'Assign machine-to-machine roles',
+      'Machine-to-machine apps must have machine-to-machine type of roles to access related API resources.',
+    assign_role_field: 'Assign roles',
     role_search_placeholder: 'Search by role name',
     added_text: '{{value, number}} added',
     assigned_app_count: '{{value, number}} applications',
-    confirm_assign: 'Assign machine-to-machine roles',
+    confirm_assign: 'Assign roles',
     role_assigned: 'Successfully assigned role(s)',
     search: 'Search by role name, description or ID',
     empty: 'No role available',

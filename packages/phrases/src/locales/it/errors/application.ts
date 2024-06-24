@@ -8,7 +8,7 @@ const application = {
   third_party_application_only:
     'La funzionalità è disponibile solo per le applicazioni di terze parti.',
   user_consent_scopes_not_found: 'Scopi di consenso utente non validi.',
-  consent_management_api_scopes_not_allowed: 'I management API scopes non sono consentiti.',
+  consent_management_api_scopes_not_allowed: 'I Management API scopes non sono consentiti.',
   protected_app_metadata_is_required: "I metadati dell'applicazione protetta sono obbligatori.",
   protected_app_not_configured:
     "Il provider dell'applicazione protetta non è configurato. Questa funzionalità non è disponibile nella versione open source.",

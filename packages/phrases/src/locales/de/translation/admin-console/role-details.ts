@@ -62,7 +62,6 @@ const role_details = {
     delete_description:
       'Es bleibt in Ihrem Anwendungspool, verliert jedoch die Autorisierung für diese Rolle.',
     deleted: '{{name}} wurde erfolgreich aus dieser Rolle entfernt',
-    assign_title: 'Maschine-zu-Maschine-Anwendungen zu {{name}} zuweisen',
     assign_subtitle:
       'Finden Sie geeignete Maschine-zu-Maschine-Anwendungen, indem Sie nach Name, Beschreibung oder App-ID suchen.',
     assign_field: 'Maschine-zu-Maschine-Anwendungen zuweisen',

@@ -137,8 +137,6 @@ const application_details = {
       'この操作は、このマシン対マシンアプリからこの役割を削除します。役割自体はまだ存在しますが、もはやマシン対マシンアプリに関連付けられていません。',
     deleted: '{{name}} がこのユーザーから正常に削除されました。',
     assign_title: '{{name}}にマシン間の役割を割り当てる',
-    assign_subtitle:
-      'マシン間のアプリは、関連するAPIリソースにアクセスするためにマシン間の役割を持つ必要があります。',
     assign_role_field: 'マシン間の役割を割り当てる',
     role_search_placeholder: '役割名で検索',
     added_text: '{{value, number}} 件追加',

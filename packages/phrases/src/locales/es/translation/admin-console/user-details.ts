@@ -78,23 +78,18 @@ const user_details = {
   roles: {
     name_column: 'Rol de usuario',
     description_column: 'Descripción',
-    assign_button: 'Asignar roles de usuario',
     delete_description:
       'Esta acción eliminará este rol de este usuario. El rol en sí seguirá existiendo, pero ya no estará asociado con este usuario.',
     deleted: 'Se eliminó "{{name}}" correctamente de este usuario.',
-    assign_title: 'Asignar roles de usuario a {{name}}',
     assign_subtitle:
       'Encuentra roles de usuario apropiados buscando por nombre, descripción o ID de rol.',
     assign_role_field: 'Asignar roles',
     role_search_placeholder: 'Buscar por nombre de rol',
     added_text: '{{value, number}} agregados',
     assigned_user_count: '{{value, number}} usuarios',
-    confirm_assign: 'Asignar roles de usuario',
     role_assigned: 'Rol(es) asignado(s) con éxito',
     search: 'Buscar por nombre de rol, descripción o ID',
     empty: 'No hay roles disponibles',
-    create_user_role_hint:
-      '¿No puedes encontrar el rol de usuario adecuado? <a>Crear un rol de usuario</a>',
   },
   warning_no_sign_in_identifier:
     'El usuario necesita tener al menos uno de los identificadores de inicio de sesión (nombre de usuario, correo electrónico, número de teléfono o red social) para iniciar sesión. ¿Estás seguro/a de que quieres continuar?',

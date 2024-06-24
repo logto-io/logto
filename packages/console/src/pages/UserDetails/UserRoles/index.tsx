@@ -1,5 +1,5 @@
 import type { Role } from '@logto/schemas';
-import { RoleType, Theme } from '@logto/schemas';
+import { RoleType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -9,11 +9,10 @@ import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
 import Plus from '@/assets/icons/plus.svg';
-import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
-import UserRoleIcon from '@/assets/icons/user-role.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import RoleAssignmentModal from '@/components/RoleAssignmentModal';
+import RoleIcon from '@/components/RoleIcon';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
@@ -92,11 +91,7 @@ function UserRoles() {
             dataIndex: 'name',
             colSpan: 6,
             render: ({ id, name }) => (
-              <ItemPreview
-                title={name}
-                to={`/roles/${id}`}
-                icon={theme === Theme.Dark ? <UserRoleIconDark /> : <UserRoleIcon />}
-              />
+              <ItemPreview title={name} to={`/roles/${id}`} icon={<RoleIcon />} />
             ),
           },
           {

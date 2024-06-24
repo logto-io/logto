@@ -138,8 +138,6 @@ const application_details = {
       'Esta ação irá remover esta função desta aplicação entre máquinas. A função em si ainda existirá, mas não será mais associada a esta aplicação entre as máquinas.',
     deleted: '{{name}} foi removido com sucesso deste utilizador.',
     assign_title: 'Atribuir funções de máquina a máquina a {{name}}',
-    assign_subtitle:
-      'As aplicações de máquina a máquina devem ter funções de máquina a máquina para aceder aos recursos de API relacionados.',
     assign_role_field: 'Atribuir funções de máquina a máquina',
     role_search_placeholder: 'Pesquisar por nome de função',
     added_text: '{{value, number}} adicionado',

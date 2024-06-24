@@ -77,23 +77,18 @@ const user_details = {
   roles: {
     name_column: 'Kullanıcı rolü',
     description_column: 'Açıklama',
-    assign_button: 'Kullanıcı rolleri ata',
     delete_description:
       'Bu işlem, bu rolü bu kullanıcıdan kaldıracaktır. Rol kendisi hala var olacaktır, ancak artık bu kullanıcıyla ilişkili olmayacaktır.',
     deleted: '{{name}} bu kullanıcıdan başarıyla kaldırıldı.',
-    assign_title: '{{name}} için kullanıcı rolleri ata',
     assign_subtitle:
       'İsim, açıklama veya rol kimliği ile arama yaparak uygun kullanıcı rollerini bulun.',
     assign_role_field: 'Rolleri ata',
     role_search_placeholder: 'Rol adına göre arama yapın',
     added_text: '{{value, number}} eklendi',
     assigned_user_count: '{{value, number}} kullanıcı',
-    confirm_assign: 'Kullanıcı rolleri ata',
     role_assigned: 'Rol(ler) başarıyla atandı',
     search: 'Rol adına, açıklamasına veya Kimliğine göre arama yapın',
     empty: 'Uygun rol yok',
-    create_user_role_hint:
-      'Doğru kullanıcı rolünü bulamıyor musunuz? <a>Kullanıcı rolü oluştur</a>',
   },
   warning_no_sign_in_identifier:
     'Kullanıcının giriş yapmak için en az bir oturum açma kimliği (kullanıcı adı, e-posta, telefon numarası, veya sosyal) olması gerekiyor. Devam etmek istediğinizden emin misiniz?',

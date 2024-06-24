@@ -139,8 +139,6 @@ const application_details = {
       'Questa azione rimuoverà questo ruolo da questa applicazione tra macchine. Il ruolo stesso esisterà ancora, ma non sarà più associato a questa applicazione tra macchine.',
     deleted: '{{name}} è stato rimosso con successo da questo utente.',
     assign_title: 'Assegna ruoli da macchina a macchina a {{name}}',
-    assign_subtitle:
-      'Le app da macchina a macchina devono avere ruoli da macchina a macchina per accedere alle risorse API correlate.',
     assign_role_field: 'Assegna ruoli da macchina a macchina',
     role_search_placeholder: 'Cerca per nome ruolo',
     added_text: '{{value, number}} aggiunti',

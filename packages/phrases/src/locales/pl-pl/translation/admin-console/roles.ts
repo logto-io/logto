@@ -19,16 +19,12 @@ const roles = {
   application_count: '{{count}} aplikacja',
   assign_permissions: 'Przypisz uprawnienia',
   create_role_title: 'Utwórz rolę',
-  create_role_description:
-    'Utwórz i zarządzaj rolami dla swoich aplikacji. Role zawierają zbiory uprawnień i mogą być przypisywane użytkownikom.',
   create_role_button: 'Utwórz rolę',
   role_created: 'Rola {{name}} została pomyślnie utworzona.',
   search: 'Wyszukaj po nazwie roli, opisie lub identyfikatorze',
   placeholder_title: 'Role',
   placeholder_description:
     'Role są grupowaniem uprawnień, które mogą być przypisywane użytkownikom. Upewnij się, że najpierw dodasz uprawnienie, zanim utworzysz role.',
-  assign_user_roles: 'Przypisz role użytkownika',
-  assign_m2m_roles: 'Przypisz role od maszyny do maszyny',
   management_api_access_notification:
     'Aby uzyskać dostęp do interfejsu API zarządzania Logto, wybierz role z uprawnieniami do interfejsu API zarządzania <flag/>.',
   with_management_api_access_tip:

@@ -55,10 +55,6 @@ const applications = {
   placeholder_title: 'Seleziona un tipo di applicazione per continuare',
   placeholder_description:
     "Logto utilizza un'entità applicazione per OIDC per aiutarti in compiti come l'identificazione delle tue app, la gestione dell'accesso e la creazione di registri di audit.",
-  m2m_role_assignment: {
-    role_creation_hint:
-      'Non riesci a trovare il ruolo giusto per macchina a macchina? <a>Crea un ruolo macchina a macchina</a>',
-  },
 };
 
 export default Object.freeze(applications);

@@ -137,8 +137,6 @@ const application_details = {
       'Bu işlem bu rolü bu makine günlüğünden kaldıracaktır. Rol kendisi hala var olacak, ancak artık makine-makine uygulamasıyla ilişkilendirilmeyecektir.',
     deleted: '{{name}}, bu kullanıcıdan başarıyla kaldırıldı.',
     assign_title: '{{name}} için makineden makineye rolleri atayın',
-    assign_subtitle:
-      'Makineden makineye uygulamaların ilgili API kaynaklarına erişebilmesi için makineden makineye rolleri olması gerekir.',
     assign_role_field: 'Makineden makineye rolleri atayın',
     role_search_placeholder: 'Rol adıyla arama yapın',
     added_text: '{{value, number}} eklendi',

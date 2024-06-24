@@ -137,8 +137,6 @@ const application_details = {
       'Cette action supprimera ce rôle de cette application machine-to-machine. Le rôle lui-même existera toujours, mais il ne sera plus associé à cette application machine-to-machine.',
     deleted: '{{name}} a été supprimé(e) avec succès de cet utilisateur.',
     assign_title: 'Attribuer des rôles de machine à machine à {{name}}',
-    assign_subtitle:
-      'Les applications de machine à machine doivent avoir des rôles de machine à machine pour accéder aux ressources API associées.',
     assign_role_field: 'Attribuer des rôles de machine à machine',
     role_search_placeholder: 'Rechercher par nom de rôle',
     added_text: '{{value, number}} ajouté(s)',

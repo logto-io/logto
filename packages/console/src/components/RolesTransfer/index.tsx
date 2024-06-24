@@ -53,7 +53,7 @@ function RolesTransfer({ entityId, type, value, onChange }: Props) {
           </Trans>
         </InlineNotification>
       )}
-      <FormField title={isM2mRole ? 'roles.assign_m2m_roles' : 'roles.assign_user_roles'}>
+      <FormField title="roles.assign_roles">
         <div className={classNames(transferLayout.container, styles.rolesTransfer)}>
           <SourceRolesBox
             entityId={entityId}

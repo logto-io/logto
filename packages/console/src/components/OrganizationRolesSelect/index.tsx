@@ -1,7 +1,7 @@
 import { type OrganizationRole, type RoleType } from '@logto/schemas';
 import classNames from 'classnames';
 
-import RoleIcon from '@/assets/icons/role-feature.svg';
+import RoleIcon from '@/assets/icons/organization-role-feature.svg';
 import MultiSelect, { type Option } from '@/ds-components/Select/MultiSelect';
 import useSearchValues from '@/hooks/use-search-values';
 
