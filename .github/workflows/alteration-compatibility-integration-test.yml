@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   check-alteration-changes:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-lates
     outputs:
       has-alteration-changes: ${{ steps.changes-detection.outputs.has-alteration-changes }}
 
@@ -37,20 +37,20 @@ jobs:
 
           if [ -n "$CHANGE_FILES" ]; then
             echo "$CHANGE_FILES"
-            echo "::set-output name=has-alteration-changes::true"
+            echo "has-alteration-changes=true" >> $GITHUB_OUTPUT
             echo "Alteration changes detected"
           else
-            echo "::set-output name=has-alteration-changes::false"
+            echo "has-alteration-changes=false" >> $GITHUB_OUTPUT
             echo "No alteration changes detected"
           fi
 
   package:
     needs: check-alteration-changes
     runs-on: ubuntu-latest
-    if: ${{needs.check-alteration-changes.outputs.has-alteration-changes == 'true'}}
+    if:
     env:
       INTEGRATION_TEST: true
-      DEV_FEATURES_ENABLED: true
+      DEV_FEATURES_ENABLED: false
     steps:
       - uses: logto-io/actions-package-logto-artifact@v2
         with:
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       INTEGRATION_TEST: true
-      DEV_FEATURES_ENABLED: true
+      DEV_FEATURES_ENABLED: false
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
