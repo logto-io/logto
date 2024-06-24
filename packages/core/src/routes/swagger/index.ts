@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 import { httpCodeToMessage } from '@logto/core-kit';
-import { condArray, condString, conditionalArray, deduplicate } from '@silverhand/essentials';
+import { cond, condArray, condString, conditionalArray, deduplicate } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
@@ -21,6 +21,7 @@ import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from '../types.js';
 
+import { managementApiDescription } from './consts.js';
 import {
   buildTag,
   devFeatureTag,
@@ -37,6 +38,14 @@ import {
   mergeParameters,
   customParameters,
 } from './utils/parameters.js';
+
+const anonymousPaths = new Set<string>([
+  'interaction',
+  '.well-known',
+  'authn',
+  'swagger.json',
+  'status',
+]);
 
 type RouteObject = {
   path: string;
@@ -99,11 +108,14 @@ const buildOperation = (
     })
   );
 
+  const [firstSegment] = path.split('/').slice(1);
+
   return {
     tags: [buildTag(path)],
     parameters: [...pathParameters, ...queryParameters],
     requestBody,
     responses,
+    security: cond(firstSegment && anonymousPaths.has(firstSegment) && []),
   };
 };
 
@@ -232,7 +244,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       info: {
         title: 'Logto API references',
         description:
-          'API references for Logto services. To learn more about how to interact with Logto APIs, see [Interact with Management API](https://docs.logto.io/docs/recipes/interact-with-management-api/).' +
+          'API references for Logto services.' +
           condString(
             EnvSet.values.isCloud &&
               '\n\nNote: The documentation is for Logto Cloud. If you are using Logto OSS, please refer to the response of `/api/swagger.json` endpoint on your Logto instance.'
@@ -240,7 +252,16 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         version: 'Cloud',
       },
       paths: Object.fromEntries(pathMap),
+      security: [{ ManagementApi: [] }],
       components: {
+        securitySchemes: {
+          ManagementApi: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            description: managementApiDescription,
+          },
+        },
         schemas: translationSchemas,
         parameters: identifiableEntityNames.reduce(
           (previous, entityName) => ({
