@@ -66,13 +66,20 @@ Fill out the `clientId` and `clientSecret` field with _Client ID_ and _Client Se
 
 `scope` is a space-delimited list of [scopes](https://developers.google.com/identity/protocols/oauth2/scopes). If not provided, scope defaults to be `openid profile email`.
 
+`prompts` is an array of strings that specifies the type of user interaction that is required. The string can be one of the following values:
+
+- `none`: The authorization server does not display any authentication or user consent screens; it will return an error if the user is not already authenticated and has not pre-configured consent for the requested scopes. You can use none to check for existing authentication and/or consent.
+- `consent`: The authorization server prompts the user for consent before returning information to the client.
+- `select_account`: The authorization server prompts the user to select a user account. This allows a user who has multiple accounts at the authorization server to select amongst the multiple accounts that they may have current sessions for.
+
 ### Config types
 
-| Name         | Type   |
-|--------------|--------|
-| clientId     | string |
-| clientSecret | string |
-| scope        | string |
+| Name         | Type     |
+|--------------|----------|
+| clientId     | string   |
+| clientSecret | string   |
+| scope        | string   |
+| prompts      | string[] |
 
 ## References
 * [Google Identity: Setting up OAuth 2.0](https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup)

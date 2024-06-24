@@ -45,12 +45,15 @@ const getAuthorizationUri =
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, GoogleConnector.configGuard);
 
+    const { clientId, scope, prompts } = config;
+
     const queryParameters = new URLSearchParams({
-      client_id: config.clientId,
+      client_id: clientId,
       redirect_uri: redirectUri,
       response_type: 'code',
       state,
-      scope: config.scope ?? defaultScope,
+      scope: scope ?? defaultScope,
+      ...conditional(prompts && prompts.length > 0 && { prompt: prompts.join(' ') }),
     });
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;

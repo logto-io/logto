@@ -6,9 +6,12 @@ The Microsoft Azure AD connector provides a succinct way for your application to
 
 - [Microsoft Azure AD connector](#microsoft-azure-ad-connector)
   - [Set up Microsoft Azure AD in the Azure Portal](#set-up-microsoft-azure-ad-in-the-azure-portal)
-  - [Fill in the configuration](#fill-in-the-configuration)
-  - [Configure your client secret](#configure-your-client-secret)
-  - [Config types](#config-types)
+  - [Fill in the configuration in Logto](#fill-in-the-configuration-in-logto)
+    - [Client ID](#client-id)
+    - [Client Secret](#client-secret)
+    - [Cloud Instance](#cloud-instance)
+    - [Tenant ID](#tenant-id)
+    - [Prompts](#prompts)
   - [References](#references)
 
 ## Set up Microsoft Azure AD in the Azure Portal
@@ -21,12 +24,13 @@ The Microsoft Azure AD connector provides a succinct way for your application to
 
 ## Fill in the configuration in Logto
 
-| Name          | Type   |
-| ------------- | ------ |
-| clientId      | string |
-| clientSecret  | string |
-| tenantId      | string |
-| cloudInstance | string |
+| Name          | Type     |
+| ------------- | -------- |
+| clientId      | string   |
+| clientSecret  | string   |
+| tenantId      | string   |
+| cloudInstance | string   |
+| prompts       | string[] |
 
 ### Client ID
 
@@ -50,6 +54,17 @@ Logto will use this field to construct the authorization endpoints. This value i
 - If you select **Accounts in any organizational directory** for access type then you need to enter **organizations**.
 - If you select **Accounts in any organizational directory or personal Microsoft accounts** for access type then you need to enter **common**.
 - If you select **Personal Microsoft accounts only** for access type then you need to enter **consumers**.
+
+### Prompts
+
+The `prompts` field is an array of strings that specifies the type of user interaction that is required. The string can be one of the following values:
+
+- `prompt=login` forces the user to enter their credentials on that request, negating single-sign on.
+- `prompt=none` is the opposite. It ensures that the user isn't presented with any interactive prompt. If the request can't be completed silently by using single-sign on, the Microsoft identity platform returns an `interaction_required` error.
+- `prompt=consent` triggers the OAuth consent dialog after the user signs in, asking the user to grant permissions to the app.
+- `prompt=select_account` interrupts single sign-on providing account selection experience listing all the accounts either in session or any remembered account or an option to choose to use a different account altogether.
+
+Logto will concatenate the prompts with a space as the value of `prompt` in the authorization URL.
 
 ## References
 

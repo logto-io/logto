@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { CheckboxGroup } from '@/ds-components/Checkbox';
 import CodeEditor from '@/ds-components/CodeEditor';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -115,6 +116,22 @@ function ConfigFormFields({ formItems }: Props) {
                 options={item.selectItems}
                 value={typeof value === 'string' ? value : undefined}
                 error={error}
+                onChange={onChange}
+              />
+            );
+          }
+
+          if (item.type === ConnectorConfigFormItemType.MultiSelect) {
+            return (
+              <CheckboxGroup
+                options={item.selectItems}
+                value={
+                  Array.isArray(value) &&
+                  value.every((item): item is string => typeof item === 'string')
+                    ? value
+                    : []
+                }
+                className={styles.multiSelect}
                 onChange={onChange}
               />
             );

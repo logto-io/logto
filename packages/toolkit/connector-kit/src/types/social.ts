@@ -1,8 +1,24 @@
 // MARK: Social connector
+import { type Optional } from '@silverhand/essentials';
 import { type Json } from '@withtyped/server';
 import { z } from 'zod';
 
 import { type ToZodObject, type BaseConnector, type ConnectorType } from './foundation.js';
+
+// Ref: `prompt` in https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+export enum OidcPrompt {
+  None = 'none',
+  Login = 'login',
+  Consent = 'consent',
+  SelectAccount = 'select_account',
+}
+
+export type OidcPrompts = OidcPrompt[];
+
+export const oidcPromptsGuard: z.ZodType<Optional<OidcPrompts>> = z
+  .nativeEnum(OidcPrompt)
+  .array()
+  .optional();
 
 // This type definition is for SAML connector
 export type ValidateSamlAssertion = (
@@ -125,6 +141,7 @@ export const GoogleConnector = Object.freeze({
     clientId: z.string(),
     clientSecret: z.string(),
     scope: z.string().optional(),
+    prompts: oidcPromptsGuard,
     oneTap: googleOneTapConfigGuard.optional(),
   }) satisfies ToZodObject<GoogleConnectorConfig>,
 });

@@ -3,6 +3,7 @@ import {
   ConnectorConfigFormItemType,
   ConnectorPlatform,
   GoogleConnector,
+  OidcPrompt,
 } from '@logto/connector-kit';
 
 export const authorizationEndpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -55,6 +56,19 @@ export const defaultMetadata: ConnectorMetadata = {
       placeholder: '<scope>',
       description:
         "The `scope` determines permissions granted by the user's authorization. If you are not sure what to enter, do not worry, just leave it blank.",
+    },
+    {
+      key: 'prompts',
+      type: ConnectorConfigFormItemType.MultiSelect,
+      required: false,
+      label: 'Prompts',
+      // Google does not support `login` prompt.
+      // Ref: https://developers.google.com/identity/openid-connect/openid-connect#authenticationuriparameters
+      selectItems: Object.values(OidcPrompt)
+        .filter((prompt) => prompt !== OidcPrompt.Login)
+        .map((prompt) => ({
+          value: prompt,
+        })),
     },
   ],
 };
