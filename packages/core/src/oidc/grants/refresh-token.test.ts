@@ -154,7 +154,11 @@ afterAll(() => {
   Sinon.restore();
 });
 
-describe('organization token grant', () => {
+// The handler returns void so we cannot check the return value, and it's also not
+// straightforward to assert the token is issued correctly. Here we just do the sanity
+// check and basic token validation. Comprehensive token validation should be done in
+// integration tests.
+describe('refresh token grant', () => {
   it('should throw when client is not available', async () => {
     const ctx = createOidcContext({ ...validOidcContext, client: undefined });
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
@@ -307,10 +311,6 @@ describe('organization token grant', () => {
     );
   });
 
-  // The handler returns void so we cannot check the return value, and it's also not
-  // straightforward to assert the token is issued correctly. Here we just do the sanity
-  // check and basic token validation. Comprehensive token validation should be done in
-  // integration tests.
   it('should not explode when everything looks fine', async () => {
     const ctx = createPreparedContext();
     const tenant = new MockTenant();

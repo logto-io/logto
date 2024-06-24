@@ -20,6 +20,8 @@
  * The commit hash of the original file is `0c52469f08b0a4a1854d90a96546a3f7aa090e5e`.
  */
 
+import { buildOrganizationUrn } from '@logto/core-kit';
+import { cond } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import epochTime from 'oidc-provider/lib/helpers/epoch_time.js';
@@ -27,17 +29,19 @@ import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 import checkResource from 'oidc-provider/lib/shared/check_resource.js';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-const { InvalidClient, InvalidGrant, InvalidScope, InvalidTarget } = errors;
+import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../resource.js';
+
+const { AccessDenied, InvalidClient, InvalidGrant, InvalidScope, InvalidTarget } = errors;
 
 /**
  * The valid parameters for the `client_credentials` grant type. Note the `resource` parameter is
  * not included here since it should be handled per configuration when registering the grant type.
  */
-export const parameters = Object.freeze(['scope']);
+export const parameters = Object.freeze(['scope', 'organization_id']);
 
 // We have to disable the rules because the original implementation is written in JavaScript and
 // uses mutable variables.
@@ -45,9 +49,9 @@ export const parameters = Object.freeze(['scope']);
 export const buildHandler: (
   envSet: EnvSet,
   queries: Queries
-  // eslint-disable-next-line complexity, unicorn/consistent-function-scoping
-) => Parameters<Provider['registerGrantType']>[1] = (_envSet, _queries) => async (ctx, next) => {
-  const { client } = ctx.oidc;
+  // eslint-disable-next-line complexity
+) => Parameters<Provider['registerGrantType']>[1] = (envSet, queries) => async (ctx, next) => {
+  const { client, params } = ctx.oidc;
   const { ClientCredentials, ReplayDetection } = ctx.oidc.provider;
 
   assertThat(client, new InvalidClient('client must be available'));
@@ -61,8 +65,34 @@ export const buildHandler: (
 
   const dPoP = await dpopValidate(ctx);
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  await checkResource(ctx, async () => {});
+  /* === RFC 0001 === */
+  // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
+  // to `Boolean` first.
+  const organizationId = cond(Boolean(params?.organization_id) && String(params?.organization_id));
+  // TODO: Remove
+  if (!EnvSet.values.isDevFeaturesEnabled && organizationId) {
+    throw new InvalidTarget('organization tokens are not supported yet');
+  }
+
+  if (
+    organizationId &&
+    !(await queries.organizations.relations.apps.exists({
+      organizationId,
+      applicationId: client.clientId,
+    }))
+  ) {
+    const error = new AccessDenied('app has not associated with the organization');
+    error.statusCode = 403;
+    throw error;
+  }
+  /* === End RFC 0001 === */
+
+  // Do not check the resource if the organization ID is provided and the resource is not. In this
+  // case, the default resource server will be ignored, and an organization token will be issued.
+  if (!(organizationId && !params?.resource)) {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    await checkResource(ctx, async () => {});
+  }
 
   const scopes = ctx.oidc.params?.scope
     ? [...new Set(String(ctx.oidc.params.scope).split(' '))]
@@ -84,6 +114,7 @@ export const buildHandler: (
   });
 
   const { 0: resourceServer, length } = Object.values(ctx.oidc.resourceServers ?? {});
+
   if (resourceServer) {
     if (length !== 1) {
       throw new InvalidTarget(
@@ -94,6 +125,33 @@ export const buildHandler: (
     token.scope =
       scopes.filter(Set.prototype.has.bind(new Set(resourceServer.scope.split(' ')))).join(' ') ||
       undefined;
+  }
+
+  // Issue organization token only if resource server is not present.
+  // If it's present, the flow falls into the `checkResource` and `if (resourceServer)` block above.
+  if (organizationId && !resourceServer) {
+    /* === RFC 0001 === */
+    const audience = buildOrganizationUrn(organizationId);
+    const availableScopes = await queries.organizations.relations.appsRoles
+      .getApplicationScopes(organizationId, client.clientId)
+      .then((scope) => scope.map(({ name }) => name));
+
+    /** The intersection of the available scopes and the requested scopes. */
+    const issuedScopes = availableScopes.filter((scope) => scopes.includes(scope)).join(' ');
+
+    token.aud = audience;
+    // Note: the original implementation uses `new provider.ResourceServer` to create the resource
+    // server. But it's not available in the typings. The class is actually very simple and holds
+    // no provider-specific context. So we just create the object manually.
+    // See https://github.com/panva/node-oidc-provider/blob/cf2069cbb31a6a855876e95157372d25dde2511c/lib/helpers/resource_server.js
+    token.resourceServer = {
+      ...getSharedResourceServerData(envSet),
+      accessTokenTTL: reversedResourceAccessTokenTtl,
+      audience,
+      scope: availableScopes.join(' '),
+    };
+    token.scope = issuedScopes;
+    /* === End RFC 0001 === */
   }
 
   if (client.tlsClientCertificateBoundAccessTokens) {
