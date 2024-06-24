@@ -23,6 +23,7 @@ const application_details = {
   description: 'Description',
   description_placeholder: 'Enter your application description',
   config_endpoint: 'OpenID provider configuration endpoint',
+  issuer_endpoint: 'Issuer endpoint',
   authorization_endpoint: 'Authorization endpoint',
   authorization_endpoint_tip:
     "The endpoint to perform authentication and authorization. It's used for OpenID Connect <a>Authentication</a>.",

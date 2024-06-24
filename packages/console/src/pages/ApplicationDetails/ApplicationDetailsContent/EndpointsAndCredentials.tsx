@@ -1,7 +1,7 @@
 import {
-  type Application,
   ApplicationType,
   DomainStatus,
+  type Application,
   type SnakeCaseOidcConfig,
 } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
@@ -11,7 +11,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import CaretDown from '@/assets/icons/caret-down.svg';
 import CaretUp from '@/assets/icons/caret-up.svg';
 import FormCard from '@/components/FormCard';
-import { openIdProviderConfigPath } from '@/consts/oidc';
+import { openIdProviderConfigPath, openIdProviderPath } from '@/consts/oidc';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -61,16 +61,25 @@ function EndpointsAndCredentials({ app: { type, secret, id, isThirdParty }, oidc
         </FormField>
       )}
       {tenantEndpoint && (
-        <FormField title="application_details.config_endpoint">
+        <FormField title="application_details.issuer_endpoint">
           <CopyToClipboard
             displayType="block"
-            value={applyCustomDomain(appendPath(tenantEndpoint, openIdProviderConfigPath).href)}
+            value={applyCustomDomain(appendPath(tenantEndpoint, openIdProviderPath).href)}
             variant="border"
           />
         </FormField>
       )}
       {showMoreEndpoints && (
         <>
+          {tenantEndpoint && (
+            <FormField title="application_details.config_endpoint">
+              <CopyToClipboard
+                displayType="block"
+                value={applyCustomDomain(appendPath(tenantEndpoint, openIdProviderConfigPath).href)}
+                variant="border"
+              />
+            </FormField>
+          )}
           <FormField
             title="application_details.authorization_endpoint"
             tip={(closeTipHandler) => (
