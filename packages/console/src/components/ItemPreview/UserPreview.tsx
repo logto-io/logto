@@ -12,15 +12,10 @@ type Props = {
   /**
    * A subset of User schema type that is used in the preview component.
    */
-  readonly user: {
-    id: UserInfo['id'];
-    avatar?: UserInfo['avatar'];
-    name?: UserInfo['name'];
-    primaryEmail?: UserInfo['primaryEmail'];
-    primaryPhone?: UserInfo['primaryPhone'];
-    username?: UserInfo['username'];
-    isSuspended?: UserInfo['isSuspended'];
-  };
+  readonly user: Partial<
+    Pick<UserInfo, 'avatar' | 'name' | 'primaryEmail' | 'primaryPhone' | 'username' | 'isSuspended'>
+  > &
+    Pick<UserInfo, 'id'>;
   /**
    * Whether to provide a link to user details page. Explicitly set to `false` to hide it.
    */

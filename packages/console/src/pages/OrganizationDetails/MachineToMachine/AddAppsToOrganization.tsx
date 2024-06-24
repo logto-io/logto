@@ -1,11 +1,11 @@
-import { type User, type Organization, RoleType } from '@logto/schemas';
+import { type Organization, type Application, ApplicationType, RoleType } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import EntitiesTransfer from '@/components/EntitiesTransfer';
-import { UserItem } from '@/components/EntitiesTransfer/components/EntityItem';
+import { ApplicationItem } from '@/components/EntitiesTransfer/components/EntityItem';
 import OrganizationRolesSelect from '@/components/OrganizationRolesSelect';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -23,7 +23,7 @@ type Props = {
   readonly onClose: () => void;
 };
 
-function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
+function AddAppsToOrganization({ organization, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
   const api = useApi();
@@ -33,25 +33,25 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<{
-    users: User[];
+    applications: Application[];
     roles: Array<Option<string>>;
   }>({
-    defaultValues: { users: [], roles: [] },
+    defaultValues: { applications: [], roles: [] },
   });
   const [keyword, setKeyword] = useState('');
 
   const onSubmit = handleSubmit(
-    trySubmitSafe(async ({ users, roles }) => {
-      await api.post(`api/organizations/${organization.id}/users`, {
+    trySubmitSafe(async ({ applications, roles }) => {
+      await api.post(`api/organizations/${organization.id}/applications`, {
         json: {
-          userIds: users.map(({ id }) => id),
+          applicationIds: applications.map(({ id }) => id),
         },
       });
 
       if (roles.length > 0) {
-        await api.post(`api/organizations/${organization.id}/users/roles`, {
+        await api.post(`api/organizations/${organization.id}/applications/roles`, {
           json: {
-            userIds: users.map(({ id }) => id),
+            applicationIds: applications.map(({ id }) => id),
             organizationRoleIds: roles.map(({ value }) => value),
           },
         });
@@ -78,31 +78,31 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
         size="large"
         title={
           <DangerousRaw>
-            {t('organization_details.add_members_to_organization', {
+            {t('organization_details.add_applications_to_organization', {
               name: organization.name,
             })}
           </DangerousRaw>
         }
-        subtitle="organization_details.add_members_to_organization_description"
+        subtitle="organization_details.add_applications_to_organization_description"
         footer={
           <Button
             isLoading={isSubmitting}
             size="large"
             type="primary"
-            title={<>{tAction('add', 'organization_details.member_other')}</>}
+            title={<>{tAction('add', 'organization_details.application_other')}</>}
             onClick={onSubmit}
           />
         }
         onClose={onClose}
       >
-        <FormField title="organization_details.member_other">
+        <FormField title="organization_details.application_other">
           <Controller
-            name="users"
+            name="applications"
             control={control}
             rules={{
               validate: (value) => {
                 if (value.length === 0) {
-                  return t('organization_details.at_least_one_user');
+                  return t('organization_details.at_least_one_application');
                 }
                 return true;
               },
@@ -111,14 +111,15 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
               <EntitiesTransfer
                 errorMessage={error?.message}
                 searchProps={{
-                  pathname: 'api/users',
+                  pathname: 'api/applications',
                   parameters: {
                     excludeOrganizationId: organization.id,
+                    types: ApplicationType.MachineToMachine,
                   },
                 }}
                 selectedEntities={value}
                 emptyPlaceholder="errors.empty"
-                renderEntity={(entity) => <UserItem entity={entity} />}
+                renderEntity={(entity) => <ApplicationItem entity={entity} />}
                 onChange={onChange}
               />
             )}
@@ -130,10 +131,10 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
             control={control}
             render={({ field: { onChange, value } }) => (
               <OrganizationRolesSelect
-                roleType={RoleType.User}
                 keyword={keyword}
                 setKeyword={setKeyword}
                 value={value}
+                roleType={RoleType.MachineToMachine}
                 onChange={onChange}
               />
             )}
@@ -144,4 +145,4 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
   );
 }
 
-export default AddMembersToOrganization;
+export default AddAppsToOrganization;

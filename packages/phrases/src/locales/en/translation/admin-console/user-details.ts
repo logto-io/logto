@@ -98,7 +98,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'User needs to have at least one of the sign-in identifiers (username, email, phone number or social) to sign in. Are you sure you want to continue?',
-  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
 };
 
 export default Object.freeze(user_details);

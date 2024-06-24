@@ -111,9 +111,20 @@ export const generateM2mLog = async (applicationId: string) => {
 };
 
 /** Get organizations that an application is associated with. */
-export const getOrganizations = async (applicationId: string, page: number, pageSize: number) =>
-  authedAdminApi
+export const getOrganizations = async (applicationId: string, page?: number, pageSize?: number) => {
+  const searchParams = new URLSearchParams();
+
+  if (page) {
+    searchParams.append('page', String(page));
+  }
+
+  if (pageSize) {
+    searchParams.append('page_size', String(pageSize));
+  }
+
+  return authedAdminApi
     .get(`applications/${applicationId}/organizations`, {
-      searchParams: { page, page_size: pageSize },
+      searchParams,
     })
     .json<OrganizationWithRoles[]>();
+};

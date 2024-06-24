@@ -99,7 +99,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     "L'utilisateur doit avoir au moins l'un des identifiants de connexion (nom d'utilisateur, e-mail, numéro de téléphone ou compte social) pour se connecter. Êtes-vous sûr(e) de vouloir continuer?",
-  organization_roles_tooltip: "Les rôles attribués à l'utilisateur au sein de cette organisation.",
 };
 
 export default Object.freeze(user_details);

@@ -1,4 +1,5 @@
-import { type UserWithOrganizationRoles } from '@logto/schemas';
+import { RoleType, type OrganizationRoleEntity } from '@logto/schemas';
+import { type Nullable } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -12,27 +13,39 @@ import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { decapitalize } from '@/utils/string';
 
+type WithOrganizationRoles = {
+  id: string;
+  name?: Nullable<string>;
+  organizationRoles: OrganizationRoleEntity[];
+};
+
 type Props = {
+  readonly type: 'user' | 'application';
   readonly organizationId: string;
-  readonly user: UserWithOrganizationRoles;
+  readonly data: WithOrganizationRoles;
   readonly isOpen: boolean;
   readonly onClose: () => void;
 };
 
-function EditOrganizationRolesModal({ organizationId, user, isOpen, onClose }: Props) {
+const keyToRoleType = Object.freeze({
+  user: RoleType.User,
+  application: RoleType.MachineToMachine,
+} satisfies Record<Props['type'], RoleType>);
+
+function EditOrganizationRolesModal({ organizationId, data, isOpen, onClose, type }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [keyword, setKeyword] = useState('');
   const [roles, setRoles] = useState<Array<Option<string>>>(
-    user.organizationRoles.map(({ id, name }) => ({ value: id, title: name }))
+    data.organizationRoles.map(({ id, name }) => ({ value: id, title: name }))
   );
-  const name = user.name ?? decapitalize(t('organization_details.user'));
+  const name = data.name ?? decapitalize(t(`organization_details.${type}`));
   const [isLoading, setIsLoading] = useState(false);
   const api = useApi();
 
   const onSubmit = async () => {
     setIsLoading(true);
     try {
-      await api.put(`api/organizations/${organizationId}/users/${user.id}/roles`, {
+      await api.put(`api/organizations/${organizationId}/${type}s/${data.id}/roles`, {
         json: {
           organizationRoleIds: roles.map(({ value }) => value),
         },
@@ -72,6 +85,7 @@ function EditOrganizationRolesModal({ organizationId, user, isOpen, onClose }: P
       >
         <FormField title="organizations.organization_role_other">
           <OrganizationRolesSelect
+            roleType={keyToRoleType[type]}
             value={roles}
             keyword={keyword}
             setKeyword={setKeyword}

@@ -41,10 +41,11 @@ devFeatureTest.describe('application organizations', () => {
     ]);
   });
 
-  it('should get organizations by application id with pagination', async () => {
+  it('should get organizations by application id with or without pagination', async () => {
     const organizations1 = await getOrganizations(applications[0]!.id, 1, 30);
     const organizations2 = await getOrganizations(applications[0]!.id, 2, 10);
     const organizations3 = await getOrganizations(applications[0]!.id, 2, 20);
+    const organizations4 = await getOrganizations(applications[0]!.id);
 
     expect(organizations1).toEqual(
       expect.arrayContaining(
@@ -56,6 +57,12 @@ devFeatureTest.describe('application organizations', () => {
     expect(organizations3).toHaveLength(10);
     expect(organizations2[0]?.id).toBe(organizations1[10]?.id);
     expect(organizations3[0]?.id).toBe(organizations1[20]?.id);
+    expect(organizations4).toHaveLength(30);
+    expect(organizations4).toEqual(
+      expect.arrayContaining(
+        organizationApi.organizations.map((object) => expect.objectContaining(object))
+      )
+    );
   });
 
   it('should be able to fetch applications by excluding an organization', async () => {

@@ -137,8 +137,6 @@ const application_details = {
     grant_organization_level_permissions: 'Grant permissions of organization data',
   },
   roles: {
-    name_column: 'Machine-to-machine role',
-    description_column: 'Description',
     assign_button: 'Assign machine-to-machine roles',
     delete_description:
       'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',

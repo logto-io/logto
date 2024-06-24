@@ -6,10 +6,9 @@ import { useLocation } from 'react-router-dom';
 
 import Plus from '@/assets/icons/plus.svg';
 import ApplicationCreation from '@/components/ApplicationCreation';
-import ApplicationIcon from '@/components/ApplicationIcon';
 import ChargeNotification from '@/components/ChargeNotification';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
-import ItemPreview from '@/components/ItemPreview';
+import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
 import PageMeta from '@/components/PageMeta';
 import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
@@ -20,7 +19,6 @@ import Table from '@/ds-components/Table';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
-import { applicationTypeI18nKey } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
 
 import GuideLibrary from './components/GuideLibrary';
@@ -178,24 +176,7 @@ function Applications({ tab }: Props) {
               title: t('applications.application_name'),
               dataIndex: 'name',
               colSpan: 6,
-              render: ({ id, name, type, isThirdParty }) => (
-                <ItemPreview
-                  title={name}
-                  subtitle={
-                    isThirdParty
-                      ? t(`${applicationTypeI18nKey.thirdParty}.title`)
-                      : t(`${applicationTypeI18nKey[type]}.title`)
-                  }
-                  icon={
-                    <ApplicationIcon
-                      className={styles.icon}
-                      type={type}
-                      isThirdParty={isThirdParty}
-                    />
-                  }
-                  to={buildDetailsPathname(id)}
-                />
-              ),
+              render: (data) => <ApplicationPreview data={data} />,
             },
             {
               title: t('applications.app_id'),

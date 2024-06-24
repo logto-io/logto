@@ -92,7 +92,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'ユーザーは、サインインに少なくとも1つの識別子（ユーザー名、メールアドレス、電話番号、またはソーシャル）を持っている必要があります。続行してよろしいですか？',
-  organization_roles_tooltip: 'この組織内のユーザーに割り当てられた役割。',
 };
 
 export default Object.freeze(user_details);

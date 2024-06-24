@@ -91,7 +91,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     '사용자는 로그인 식별자(사용자 이름, 이메일, 전화 번호 또는 소셜) 중 적어도 하나를 갖고 로그인해야 합니다. 계속 하시겠습니까?',
-  organization_roles_tooltip: '조직 내에서 사용자에게 할당된 역할.',
 };
 
 export default Object.freeze(user_details);
