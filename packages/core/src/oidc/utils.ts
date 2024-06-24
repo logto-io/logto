@@ -39,7 +39,7 @@ export const getConstantClientMetadata = (
     grant_types:
       type === ApplicationType.MachineToMachine
         ? [GrantType.ClientCredentials]
-        : [GrantType.AuthorizationCode, GrantType.RefreshToken],
+        : [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
     token_endpoint_auth_method: getTokenEndpointAuthMethod(),
     response_types: conditional(type === ApplicationType.MachineToMachine && []),
     // https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use
