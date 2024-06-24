@@ -6,7 +6,7 @@ import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { createSubjectToken } from '#src/api/subject-token.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
+import { devFeatureTest, generateName } from '#src/utils.js';
 
 const { describe, it } = devFeatureTest;
 
@@ -108,6 +108,31 @@ describe('Token Exchange', () => {
           }),
         })
       ).rejects.toThrow();
+    });
+
+    it('should fail with a third-party application', async () => {
+      const { subjectToken } = await createSubjectToken(userId);
+      const thirdPartyApplication = await createApplication(
+        generateName(),
+        ApplicationType.Traditional,
+        {
+          isThirdParty: true,
+        }
+      );
+
+      await expect(
+        oidcApi.post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: thirdPartyApplication.id,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+          }),
+        })
+      ).rejects.toThrow();
+
+      await deleteApplication(thirdPartyApplication.id);
     });
   });
 });

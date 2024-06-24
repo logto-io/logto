@@ -16,6 +16,8 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { isThirdPartyApplication } from '../resource.js';
+
 const { InvalidClient, InvalidGrant } = errors;
 
 /**
@@ -51,6 +53,11 @@ export const buildHandler: (
 
   assertThat(params, new InvalidGrant('parameters must be available'));
   assertThat(client, new InvalidClient('client must be available'));
+  // We don't allow third-party applications to perform token exchange
+  assertThat(
+    !(await isThirdPartyApplication(queries, client.clientId)),
+    new InvalidClient('third-party applications are not allowed for this grant type')
+  );
   assertThat(
     params.subject_token_type === 'urn:ietf:params:oauth:token-type:access_token',
     new InvalidGrant('unsupported subject token type')

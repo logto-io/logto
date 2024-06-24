@@ -39,15 +39,4 @@ export const registerGrants = (oidc: Provider, envSet: EnvSet, queries: Queries)
     tokenExchange.buildHandler(envSet, queries),
     ...getParameterConfig(tokenExchange.parameters)
   );
-
-  // Token exchange grant
-  const tokenExchangeParameterConfig: [parameters: string[], duplicates: string[]] =
-    resourceIndicators.enabled
-      ? [[...tokenExchange.parameters, 'resource'], ['resource']]
-      : [[...tokenExchange.parameters], []];
-  oidc.registerGrantType(
-    GrantType.TokenExchange,
-    tokenExchange.buildHandler(envSet, queries),
-    ...tokenExchangeParameterConfig
-  );
 };
