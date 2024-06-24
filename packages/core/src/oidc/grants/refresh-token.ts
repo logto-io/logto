@@ -9,7 +9,7 @@
  * `=== End RFC 0001 ===` to indicate the changes.
  *
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0001.
- * @see {@link https://github.com/panva/node-oidc-provider/blob/cf2069cbb31a6a855876e95157372d25dde2511c/lib/actions/grants/refresh_token.js | oidc-provider/lib/actions/grants/refresh_token.js} for the original code.
+ * @see {@link https://github.com/panva/node-oidc-provider/blob/cf2069cbb31a6a855876e95157372d25dde2511c/lib/actions/grants/refresh_token.js | Original file}.
  *
  * @remarks
  * Since the original code is not exported, we have to copy the code here. This file should be
@@ -46,30 +46,23 @@ import {
   isOrganizationConsentedToApplication,
 } from '../resource.js';
 
-const {
-  InvalidClient,
-  InvalidGrant,
-  InvalidScope,
-  InsufficientScope,
-  AccessDenied,
-  InvalidRequest,
-} = errors;
+const { InvalidClient, InvalidGrant, InvalidScope, InsufficientScope, AccessDenied } = errors;
 
 /** The grant type name. `gty` follows the name in oidc-provider. */
 const gty = 'refresh_token';
 
 /**
- * The valid parameters for the `organization_token` grant type. Note the `resource` parameter is
+ * The valid parameters for the `refresh_token` grant type. Note the `resource` parameter is
  * not included here since it should be handled per configuration when registering the grant type.
  */
-export const parameters = Object.freeze(['refresh_token', 'organization_id', 'scope'] as const);
+export const parameters = Object.freeze(['refresh_token', 'scope', 'organization_id']);
 
 /**
  * The required parameters for the grant type.
  *
  * @see {@link parameters} for the full list of valid parameters.
  */
-const requiredParameters = Object.freeze(['refresh_token'] as const) satisfies ReadonlyArray<
+const requiredParameters = Object.freeze(['refresh_token']) satisfies ReadonlyArray<
   (typeof parameters)[number]
 >;
 
@@ -80,7 +73,7 @@ export const buildHandler: (
   envSet: EnvSet,
   queries: Queries
   // eslint-disable-next-line complexity
-) => Parameters<Provider['registerGrantType']>['1'] = (envSet, queries) => async (ctx, next) => {
+) => Parameters<Provider['registerGrantType']>[1] = (envSet, queries) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
   const { RefreshToken, Account, AccessToken, Grant, ReplayDetection, IdToken } = provider;
 
