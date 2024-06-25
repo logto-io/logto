@@ -90,14 +90,14 @@ const createRelations = async (params: {
 const replaceWithResourceIdFromDatabase = (
   seededResources: Record<string, SeedingResource>,
   toSeed: {
-    resource_permissions: ResourcePermissionSeeder[];
-    resource_roles: ResourceRoleSeeder[];
+    resource_permissions?: ResourcePermissionSeeder[];
+    resource_roles?: ResourceRoleSeeder[];
   }
 ): {
-  resource_permissions: ResourcePermissionSeeder[];
-  resource_roles: ResourceRoleSeeder[];
+  resource_permissions?: ResourcePermissionSeeder[];
+  resource_roles?: ResourceRoleSeeder[];
 } => {
-  if (toSeed.resource_permissions.length > 0) {
+  if (toSeed.resource_permissions?.length) {
     for (const permission of toSeed.resource_permissions) {
       const toSetResourceIds = [];
       for (const resourceId of permission.for_resource_ids) {
@@ -112,7 +112,7 @@ const replaceWithResourceIdFromDatabase = (
     }
   }
 
-  if (toSeed.resource_roles.length > 0) {
+  if (toSeed.resource_roles?.length) {
     for (const roles of toSeed.resource_roles) {
       const toSetResourceIds = [];
       for (const permissionGroup of roles.permissions) {
@@ -137,8 +137,8 @@ export const seedResourceRbacData = async (params: {
   tenantId: string;
   seededResources: Record<string, SeedingResource>;
   toSeed: {
-    resource_permissions: ResourcePermissionSeeder[];
-    resource_roles: ResourceRoleSeeder[];
+    resource_permissions?: ResourcePermissionSeeder[];
+    resource_roles?: ResourceRoleSeeder[];
   };
 }): Promise<{
   scopes: ResourceScopesLists;
@@ -146,7 +146,7 @@ export const seedResourceRbacData = async (params: {
   relations: SeedingRelation[];
 }> => {
   params.toSeed = replaceWithResourceIdFromDatabase(params.seededResources, params.toSeed);
-  if (params.toSeed.resource_permissions.length > 0) {
+  if (params.toSeed.resource_permissions?.length && params.toSeed.resource_roles?.length) {
     const createdScopes = await createScopes({
       transaction: params.transaction,
       tenantId: params.tenantId,

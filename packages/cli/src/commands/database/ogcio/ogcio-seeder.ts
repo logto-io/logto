@@ -4,16 +4,16 @@
 export type OgcioTenantSeeder = Record<string, OgcioSeeder>;
 
 export type OgcioSeeder = {
-  organizations: OrganizationSeeder[];
-  organization_permissions: OrganizationPermissionSeeder[];
-  organization_roles: OrganizationRoleSeeder[];
-  applications: ApplicationSeeder[];
-  resources: ResourceSeeder[];
-  connectors: ConnectorSeeder[];
-  webhooks: WebhookSeeder[];
-  sign_in_experiences: SignInExperienceSeeder[];
-  resource_permissions: ResourcePermissionSeeder[];
-  resource_roles: ResourceRoleSeeder[];
+  organizations?: OrganizationSeeder[];
+  organization_permissions?: OrganizationPermissionSeeder[];
+  organization_roles?: OrganizationRoleSeeder[];
+  applications?: ApplicationSeeder[];
+  resources?: ResourceSeeder[];
+  connectors?: ConnectorSeeder[];
+  webhooks?: WebhookSeeder[];
+  sign_in_experiences?: SignInExperienceSeeder[];
+  resource_permissions?: ResourcePermissionSeeder[];
+  resource_roles?: ResourceRoleSeeder[];
 };
 
 export type OrganizationSeeder = {

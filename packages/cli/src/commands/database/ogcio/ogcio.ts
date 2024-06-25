@@ -19,7 +19,7 @@ const createDataForTenant = async (
   tenantId: string,
   tenantData: OgcioSeeder
 ) => {
-  if (tenantData.organizations.length > 0) {
+  if (tenantData.organizations?.length) {
     const organizations = await createOrganizations({
       transaction,
       tenantId,
@@ -33,7 +33,7 @@ const createDataForTenant = async (
     toSeed: tenantData,
   });
 
-  if (tenantData.applications.length > 0) {
+  if (tenantData.applications?.length) {
     const applications = await seedApplications({
       transaction,
       tenantId,
@@ -41,7 +41,7 @@ const createDataForTenant = async (
     });
   }
 
-  if (tenantData.resources.length > 0) {
+  if (tenantData.resources?.length) {
     const resources = await seedResources({
       transaction,
       tenantId,
@@ -56,7 +56,7 @@ const createDataForTenant = async (
     });
   }
 
-  if (tenantData.connectors.length > 0) {
+  if (tenantData.connectors?.length) {
     const connectors = await seedConnectors({
       transaction,
       tenantId,
@@ -64,7 +64,7 @@ const createDataForTenant = async (
     });
   }
 
-  if (tenantData.sign_in_experiences.length > 0) {
+  if (tenantData.sign_in_experiences?.length) {
     const signInExperiences = await seedSignInExperiences({
       transaction,
       tenantId,
@@ -72,7 +72,7 @@ const createDataForTenant = async (
     });
   }
 
-  if (tenantData.webhooks.length > 0) {
+  if (tenantData.webhooks?.length) {
     const webhooks = await seedWebhooks({
       transaction,
       tenantId,
