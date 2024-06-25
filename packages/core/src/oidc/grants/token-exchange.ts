@@ -4,8 +4,9 @@
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0005.
  */
 
+import { buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
+import { cond, trySafe } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
@@ -16,9 +17,13 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { isThirdPartyApplication } from '../resource.js';
+import {
+  isThirdPartyApplication,
+  getSharedResourceServerData,
+  reversedResourceAccessTokenTtl,
+} from '../resource.js';
 
-const { InvalidClient, InvalidGrant } = errors;
+const { InvalidClient, InvalidGrant, AccessDenied } = errors;
 
 /**
  * The valid parameters for the `urn:ietf:params:oauth:grant-type:token-exchange` grant type. Note the `resource` parameter is
@@ -84,7 +89,38 @@ export const buildHandler: (
   // TODO: (LOG-9501) Implement general security checks like dPop
   ctx.oidc.entity('Account', account);
 
-  // TODO: (LOG-9140) Check organization permissions
+  /* eslint-disable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
+
+  /* === RFC 0001 === */
+  // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
+  // to `Boolean` first.
+  const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
+
+  if (organizationId) {
+    // Check membership
+    if (
+      !(await queries.organizations.relations.users.exists({
+        organizationId,
+        userId: account.accountId,
+      }))
+    ) {
+      const error = new AccessDenied('user is not a member of the organization');
+      error.statusCode = 403;
+      throw error;
+    }
+
+    // Check if the organization requires MFA and the user has MFA enabled
+    const { isMfaRequired, hasMfaConfigured } = await queries.organizations.getMfaStatus(
+      organizationId,
+      account.accountId
+    );
+    if (isMfaRequired && !hasMfaConfigured) {
+      const error = new AccessDenied('organization requires MFA but user has no MFA configured');
+      error.statusCode = 403;
+      throw error;
+    }
+  }
+  /* === End RFC 0001 === */
 
   const accessToken = new AccessToken({
     accountId: account.accountId,
@@ -95,8 +131,6 @@ export const buildHandler: (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     scope: undefined!,
   });
-
-  /* eslint-disable @silverhand/fp/no-mutation */
 
   /** The scopes requested by the client. If not provided, use the scopes from the refresh token. */
   const scope = requestParamScopes;
@@ -112,14 +146,38 @@ export const buildHandler: (
     scope
   );
 
-  if (resource) {
+  if (organizationId && !resource) {
+    /* === RFC 0001 === */
+    const audience = buildOrganizationUrn(organizationId);
+    /** All available scopes for the user in the organization. */
+    const availableScopes = await queries.organizations.relations.usersRoles
+      .getUserScopes(organizationId, account.accountId)
+      .then((scopes) => scopes.map(({ name }) => name));
+
+    /** The intersection of the available scopes and the requested scopes. */
+    const issuedScopes = availableScopes.filter((name) => scope.has(name)).join(' ');
+
+    accessToken.aud = audience;
+    // Note: the original implementation uses `new provider.ResourceServer` to create the resource
+    // server. But it's not available in the typings. The class is actually very simple and holds
+    // no provider-specific context. So we just create the object manually.
+    // See https://github.com/panva/node-oidc-provider/blob/cf2069cbb31a6a855876e95157372d25dde2511c/lib/helpers/resource_server.js
+    accessToken.resourceServer = {
+      ...getSharedResourceServerData(envSet),
+      accessTokenTTL: reversedResourceAccessTokenTtl,
+      audience,
+      scope: availableScopes.join(' '),
+    };
+    accessToken.scope = issuedScopes;
+    /* === End RFC 0001 === */
+  } else if (resource) {
     const resourceServerInfo = await resourceIndicators.getResourceServerInfo(
       ctx,
       resource,
       client
     );
     // @ts-expect-error -- code from oidc-provider
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     accessToken.resourceServer = new provider.ResourceServer(resource, resourceServerInfo);
     // For access token scopes, there is no "grant" to check,
     // filter the scopes based on the resource server's scopes
@@ -132,9 +190,7 @@ export const buildHandler: (
     accessToken.claims = ctx.oidc.claims;
     accessToken.scope = Array.from(scope).join(' ');
   }
-  // TODO: (LOG-9140) Handle organization token
-
-  /* eslint-enable @silverhand/fp/no-mutation */
+  /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
 
   ctx.oidc.entity('AccessToken', accessToken);
   const accessTokenString = await accessToken.save();

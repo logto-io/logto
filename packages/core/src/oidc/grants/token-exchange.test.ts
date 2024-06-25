@@ -16,7 +16,7 @@ const findSubjectToken = jest.fn();
 const updateSubjectTokenById = jest.fn();
 const findApplicationById = jest.fn().mockResolvedValue(mockApplication);
 
-const mockTenant = new MockTenant(undefined, {
+const mockQueries = {
   subjectTokens: {
     findSubjectToken,
     updateSubjectTokenById,
@@ -24,7 +24,8 @@ const mockTenant = new MockTenant(undefined, {
   applications: {
     findApplicationById,
   },
-});
+};
+const mockTenant = new MockTenant(undefined, mockQueries);
 const mockHandler = (tenant = mockTenant) => {
   return buildHandler(tenant.envSet, tenant.queries);
 };
@@ -67,6 +68,21 @@ const validOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
 const createPreparedContext = () => {
   const ctx = createOidcContext(validOidcContext);
   return ctx;
+};
+
+const createPreparedOrganizationContext = () => {
+  const ctx = createOidcContext({
+    ...validOidcContext,
+    params: { ...validOidcContext.params, organization_id: 'some_org_id' },
+  });
+  return ctx;
+};
+
+const createAccessDeniedError = (message: string, statusCode: number) => {
+  const error = new errors.AccessDenied(message);
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  error.statusCode = statusCode;
+  return error;
 };
 
 beforeAll(() => {
@@ -158,6 +174,71 @@ describe('token exchange', () => {
       clientId,
       grantId: subjectTokenId,
       gty: 'urn:ietf:params:oauth:grant-type:token-exchange',
+    });
+  });
+
+  describe('RFC 0001 organization token', () => {
+    it('should throw if the user is not a member of the organization', async () => {
+      const ctx = createPreparedOrganizationContext();
+      findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+
+      const tenant = new MockTenant(undefined, mockQueries);
+      Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(false);
+      await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+        createAccessDeniedError('user is not a member of the organization', 403)
+      );
+    });
+
+    it('should throw if the organization requires MFA but the user has not configured it', async () => {
+      const ctx = createPreparedOrganizationContext();
+      findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+
+      const tenant = new MockTenant(undefined, mockQueries);
+      Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+      Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
+        isMfaRequired: true,
+        hasMfaConfigured: false,
+      });
+      await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+        createAccessDeniedError('organization requires MFA but user has no MFA configured', 403)
+      );
+    });
+
+    it('should not explode when everything looks fine', async () => {
+      const ctx = createPreparedOrganizationContext();
+      findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+
+      const tenant = new MockTenant(undefined, mockQueries);
+      Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+      Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves([
+        { tenantId: 'default', id: 'foo', name: 'foo', description: 'foo' },
+        { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
+        { tenantId: 'default', id: 'baz', name: 'baz', description: 'baz' },
+      ]);
+      Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
+        isMfaRequired: false,
+        hasMfaConfigured: false,
+      });
+
+      const entityStub = Sinon.stub(ctx.oidc, 'entity');
+      const noopStub = Sinon.stub().resolves();
+
+      await expect(mockHandler(tenant)(ctx, noopStub)).resolves.toBeUndefined();
+      expect(noopStub.callCount).toBe(1);
+      expect(updateSubjectTokenById).toHaveBeenCalled();
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const [key, value] = entityStub.lastCall.args;
+      expect(key).toBe('AccessToken');
+      expect(value).toMatchObject({
+        accountId,
+        clientId,
+        grantId: subjectTokenId,
+        aud: 'urn:logto:organization:some_org_id',
+      });
     });
   });
 });
