@@ -14,8 +14,8 @@ const description = {
   and: 'et',
   enter_passcode: 'Le code a été envoyé à {{address}} {{target}}',
   passcode_sent: 'Le code a été renvoyé',
-  resend_after_seconds: 'Renvoyer après <span>{{seconds}}</span> secondes',
-  resend_passcode: 'Renvoyer le code',
+  resend_after_seconds: 'Pas encore reçu ? Renvoyer après <span>{{seconds}}</span> secondes',
+  resend_passcode: 'Pas encore reçu ? <a>Renvoyer le code de vérification</a>',
   create_account_id_exists:
     'Le compte avec {{type}} {{value}} existe déjà, voulez-vous vous connecter?',
   link_account_id_exists: 'Le compte avec {{type}} {{value}} existe déjà, voulez-vous le lier?',

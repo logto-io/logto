@@ -61,24 +61,30 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
         error={errorMessage}
         onChange={setCode}
       />
-      {isRunning ? (
-        <div className={styles.message}>
+      <div className={styles.message}>
+        {isRunning ? (
           <Trans components={{ span: <span key="counter" /> }}>
             {t('description.resend_after_seconds', { seconds })}
           </Trans>
-        </div>
-      ) : (
-        <TextLink
-          className={styles.link}
-          text="description.resend_passcode"
-          onClick={async () => {
-            clearErrorMessage();
-            await onResendVerificationCode();
-            setCode([]);
-          }}
-        />
-      )}
-
+        ) : (
+          <Trans
+            components={{
+              a: (
+                <TextLink
+                  className={styles.link}
+                  onClick={async () => {
+                    clearErrorMessage();
+                    await onResendVerificationCode();
+                    setCode([]);
+                  }}
+                />
+              ),
+            }}
+          >
+            {t('description.resend_passcode')}
+          </Trans>
+        )}
+      </div>
       {flow === UserFlow.SignIn && hasPasswordButton && (
         <PasswordSignInLink method={identifier} target={target} className={styles.switch} />
       )}
