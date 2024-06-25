@@ -2,7 +2,7 @@ const action = {
   sign_in: 'Giriş Yap',
   continue: 'İlerle',
   create_account: 'Hesap Oluştur',
-  create_account_without_linking: 'Bağlamadan hesap oluştur',
+  create_account_without_linking: 'Bunun yerine yenisini oluştur',
   create: 'Oluştur',
   enter_passcode: 'Doğrulama kodunu girin',
   confirm: 'Onayla',

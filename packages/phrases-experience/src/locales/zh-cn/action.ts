@@ -2,7 +2,7 @@ const action = {
   sign_in: '登录',
   continue: '继续',
   create_account: '注册',
-  create_account_without_linking: '注册新的账号',
+  create_account_without_linking: '创建新帐户',
   create: '注册',
   enter_passcode: '输入验证码',
   confirm: '确认',

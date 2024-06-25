@@ -2,7 +2,7 @@ const action = {
   sign_in: '登錄',
   continue: '繼續',
   create_account: '註冊',
-  create_account_without_linking: '註冊新的帳號',
+  create_account_without_linking: '創建新的帳戶',
   create: '註冊',
   enter_passcode: '輸入驗證碼',
   confirm: '確認',
