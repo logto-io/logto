@@ -1,6 +1,5 @@
 const demo_app = {
   title: 'Live Preview에 성공적으로 로그인했습니다!',
-  subtitle: '여기 로그인 정보가 있어요:',
   username: '사용자 이름: ',
   user_id: '사용자 ID: ',
   sign_out: 'Live Preview에서 로그아웃',

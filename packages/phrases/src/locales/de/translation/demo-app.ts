@@ -1,6 +1,5 @@
 const demo_app = {
   title: 'Sie haben sich erfolgreich bei der Live-Vorschau angemeldet!',
-  subtitle: 'Hier sind Ihre Anmeldeinformationen:',
   username: 'Benutzername: ',
   user_id: 'Benutzer ID: ',
   sign_out: 'Abmeldung von der Live-Vorschau',
