@@ -2,7 +2,7 @@ import { type PasswordSignInPayload } from '@logto/schemas';
 
 import api from '../api.js';
 
-import { experienceApiPrefix } from './const.js';
+import { experienceApiPrefix, experienceIdentificationApiRoutesPrefix } from './const.js';
 
 type RedirectResponse = {
   redirectTo: string;
@@ -10,7 +10,10 @@ type RedirectResponse = {
 
 export const signInWithPassword = async (cookie: string, payload: PasswordSignInPayload) =>
   api
-    .post(`${experienceApiPrefix}/sign-in/password`, { headers: { cookie }, json: payload })
+    .post(`${experienceIdentificationApiRoutesPrefix}/sign-in/password`, {
+      headers: { cookie },
+      json: payload,
+    })
     .json();
 
 export const submit = async (cookie: string) =>

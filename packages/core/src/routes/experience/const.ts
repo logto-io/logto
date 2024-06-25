@@ -1,1 +1,1 @@
-export const experienceApiRoutesPrefix = '/experience';
+export const experienceApiRoutesPrefix = '/experience/auth';
