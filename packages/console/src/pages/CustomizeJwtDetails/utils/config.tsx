@@ -182,6 +182,7 @@ export const defaultClientCredentialsPayload: ClientCredentialsPayload = {
 
 const defaultUserContext: Partial<JwtCustomizerUserContext> = {
   id: '123',
+  hasPassword: false,
   username: 'foo',
   primaryEmail: 'foo@logto.io',
   primaryPhone: '+1234567890',

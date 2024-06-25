@@ -55,8 +55,8 @@ export const accessTokenJwtCustomizerPayload = {
 };
 
 export const accessTokenSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
-  return { user_id: context?.user?.id ?? 'unknown' };
-}`;
+  return { user_id: context?.user?.id ?? 'unknown', hasPassword: context?.user?.hasPassword };
+};`;
 
 export const clientCredentialsSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
   return { ...environmentVariables };
