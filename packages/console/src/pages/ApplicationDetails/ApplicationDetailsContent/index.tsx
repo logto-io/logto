@@ -212,7 +212,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             {![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(data.type) && (
               <RefreshTokenSettings data={data} />
             )}
-            <BackchannelLogout />
+            {data.type !== ApplicationType.MachineToMachine && <BackchannelLogout />}
           </DetailsForm>
         </FormProvider>
         {tab === ApplicationDetailsTabs.Settings && (
