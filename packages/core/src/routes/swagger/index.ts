@@ -3,11 +3,13 @@ import { fileURLToPath } from 'node:url';
 
 import { httpCodeToMessage } from '@logto/core-kit';
 import { cond, condArray, condString, conditionalArray, deduplicate } from '@silverhand/essentials';
+import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
 import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
-import { type OpenAPIV3 } from 'openapi-types';
+import { OpenAPIV3 } from 'openapi-types';
+import pluralize from 'pluralize';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { isKoaAuthMiddleware } from '#src/middleware/koa-auth/index.js';
@@ -53,7 +55,56 @@ type RouteObject = {
   operation: OpenAPIV3.OperationObject;
 };
 
+const methodMap = new Map([
+  [OpenAPIV3.HttpMethods.GET, 'Get'],
+  [OpenAPIV3.HttpMethods.POST, 'Create'],
+  [OpenAPIV3.HttpMethods.PUT, 'Replace'],
+  [OpenAPIV3.HttpMethods.PATCH, 'Update'],
+  [OpenAPIV3.HttpMethods.DELETE, 'Delete'],
+]);
+
+const customRoutes = new Map([
+  ['post:/organizations/:id/users/roles', 'AssignRolesToUsers'],
+  ['post:/organizations/:id/users/:userId/roles', 'AssignRolesToSpecificUser'],
+  ['get:/configs/jwt-customizer', 'ListJwtCustomizers'],
+  ['get:/organizations/:id/users/:userId/roles', 'ListRolesForSpecificUser'],
+  [
+    'delete:/organizations/:id/users/:userId/roles/:organizationRoleId',
+    'RemoveRolesFromSpecificUser',
+  ],
+  ['put:/organizations/:id/users/:userId/roles', 'ReplaceRolesForSpecificUser'],
+]);
+
+export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) => {
+  const customAction = customRoutes.get(`${method}:${path}`);
+  if (customAction) {
+    return customAction;
+  }
+
+  const singleItem =
+    path
+      .split('/')
+      .slice(-1)
+      .filter((segment) => segment.startsWith(':') || segment.startsWith('{')).length === 1;
+  const action = path
+    .split('/')
+    .filter((segment) => !segment.startsWith('{') && !segment.startsWith(':'))
+    .slice(-2)
+    .map((segment) => camelcase(segment, { pascalCase: true }))
+    .join('');
+  const verb =
+    !singleItem && method === OpenAPIV3.HttpMethods.GET && !pluralize.isSingular(action)
+      ? 'List'
+      : methodMap.get(method);
+
+  return (
+    verb +
+    (method === OpenAPIV3.HttpMethods.POST || singleItem ? pluralize.singular(action) : action)
+  );
+};
+
 const buildOperation = (
+  method: OpenAPIV3.HttpMethods,
   stack: IMiddleware[],
   path: string,
   isAuthGuarded: boolean
@@ -111,6 +162,7 @@ const buildOperation = (
   const [firstSegment] = path.split('/').slice(1);
 
   return {
+    operationId: buildOperationId(method, path),
     tags: [buildTag(path)],
     parameters: [...pathParameters, ...queryParameters],
     requestBody,
@@ -184,7 +236,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
               .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
               .map((httpMethod) => {
                 const path = normalizePath(routerPath);
-                const operation = buildOperation(stack, routerPath, isAuthGuarded);
+                const operation = buildOperation(httpMethod, stack, routerPath, isAuthGuarded);
 
                 return {
                   path,
