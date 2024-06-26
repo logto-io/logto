@@ -16,7 +16,7 @@ import {
 } from './connector-setup-helpers.js';
 import {
   expectToSelectSignUpIdentifier,
-  expectNotificationInFiled,
+  expectNotificationInField,
   expectSignUpIdentifierSelectorError,
   expectToAddSignInMethod,
   expectSignInMethodError,
@@ -62,7 +62,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         // Disable password settings for sign-up settings
         await expectToClickSignUpAuthnOption(page, 'Create your password');
 
-        await expectNotificationInFiled(page, {
+        await expectNotificationInField(page, {
           field: 'Sign-up identifier',
           content: /No email connector set-up yet./,
         });
@@ -79,7 +79,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
       it('should fail to add phone number sign-in method', async () => {
         await expectToAddSignInMethod(page, 'Phone number');
-        await expectNotificationInFiled(page, {
+        await expectNotificationInField(page, {
           field: 'Identifier and authentication settings for sign-in',
           content: /No SMS connector set-up yet./,
         });
@@ -118,7 +118,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         // Disable password settings for sign-up settings
         await expectToClickSignUpAuthnOption(page, 'Create your password');
 
-        await expectNotificationInFiled(page, {
+        await expectNotificationInField(page, {
           field: 'Sign-up identifier',
           content: /No SMS connector set-up yet./,
         });
@@ -135,7 +135,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
       it('should fail to add email address sign-in method', async () => {
         await expectToAddSignInMethod(page, 'Email address');
-        await expectNotificationInFiled(page, {
+        await expectNotificationInField(page, {
           field: 'Identifier and authentication settings for sign-in',
           content: /No email connector set-up yet./,
         });
@@ -166,7 +166,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
     describe('social sign-in', () => {
       it('should display no social connector notification in social sign-in field', async () => {
-        await expectNotificationInFiled(page, {
+        await expectNotificationInField(page, {
           field: 'Social sign-in',
           content: /You haven’t set up any social connector yet./,
         });
@@ -210,7 +210,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
       it('should fail to add phone number sign-in method', async () => {
         await expectToAddSignInMethod(page, 'Phone number');
-        await expectNotificationInFiled(page, {
+        await expectNotificationInField(page, {
           field: 'Identifier and authentication settings for sign-in',
           content: /No SMS connector set-up yet./,
         });
@@ -275,7 +275,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
       it('should fail to add email sign-in method', async () => {
         await expectToAddSignInMethod(page, 'Email address');
-        await expectNotificationInFiled(page, {
+        await expectNotificationInField(page, {
           field: 'Identifier and authentication settings for sign-in',
           content: /No email connector set-up yet./,
         });

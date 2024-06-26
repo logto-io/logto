@@ -108,7 +108,7 @@ function LanguageDetails() {
     setIsDirty(isFormStateDirty && Object.keys(dirtyFields).length > 0);
   }, [
     /**
-     * Note: `isDirty` is used to trigger this `useEffect`; for `dirtyFields` object only marks filed dirty at field level.
+     * Note: `isDirty` is used to trigger this `useEffect`; for `dirtyFields` object only marks field dirty at field level.
      * When `dirtyFields` is changed from `{keyA: false}` to `{keyA: true}`, this `useEffect` won't be triggered.
      */
     isFormStateDirty,
