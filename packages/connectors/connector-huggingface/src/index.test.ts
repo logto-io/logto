@@ -91,7 +91,7 @@ describe('Hugging Face connector', () => {
     nock.cleanAll();
 
     nock(tokenEndpoint).post('').reply(200, {
-      invalid_filed: true,
+      invalid_field: true,
     });
 
     const connector = await createConnector({ getConfig });

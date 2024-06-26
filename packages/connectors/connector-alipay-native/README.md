@@ -68,7 +68,7 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
 3. Fill out the Logto connector settings:
     - Fill out the `appId` field with APPID you've got from step 1.
     - Fill out the `privateKey` field with contents from the private key file mentioned in step 2. Please MAKE SURE to use '\n' to replace all newline characters. You don't need to remove header and footer in private key file.
-    - Fill out the `signType` filed with 'RSA2' due to the `Public key` signing mode we chose in step 7 of "Create And Configure Alipay Apps".
+    - Fill out the `signType` field with 'RSA2' due to the `Public key` signing mode we chose in step 7 of "Create And Configure Alipay Apps".
 
 ### Config types
 

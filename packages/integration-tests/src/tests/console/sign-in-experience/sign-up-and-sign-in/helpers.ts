@@ -31,14 +31,14 @@ export const expectToSelectSignUpIdentifier = async (page: Page, identifier: str
 };
 
 export const expectToClickSignUpAuthnOption = async (page: Page, option: string) => {
-  const signUpAuthnSettingsFiled = await expect(page).toMatchElement(
+  const signUpAuthnSettingsField = await expect(page).toMatchElement(
     'div[class$=field]:has(div[class$=headline] > div[class$=title])',
     {
       text: 'Authentication setting for sign-up',
     }
   );
 
-  await expect(signUpAuthnSettingsFiled).toClick('div[class$=selections] span[class$=label]', {
+  await expect(signUpAuthnSettingsField).toClick('div[class$=selections] span[class$=label]', {
     text: option,
   });
 };
@@ -126,14 +126,14 @@ export const expectSignInMethodError = async (page: Page, method: string) => {
   );
 };
 
-type ExpectNotificationOnFiledOptions = {
+type ExpectNotificationOnFieldOptions = {
   field: string;
   content?: RegExp | string;
 };
 
-export const expectNotificationInFiled = async (
+export const expectNotificationInField = async (
   page: Page,
-  { field, content }: ExpectNotificationOnFiledOptions
+  { field, content }: ExpectNotificationOnFieldOptions
 ) => {
   const signInMethodsField = await expect(page).toMatchElement(
     'div[class$=field]:has(div[class$=headline] > div[class$=title])',
