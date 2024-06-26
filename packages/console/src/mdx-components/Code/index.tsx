@@ -2,7 +2,7 @@ import CodeEditor from '@/ds-components/CodeEditor';
 
 import Mermaid from '../Mermaid';
 
-export default function Code({ className, children }: JSX.IntrinsicElements['code']) {
+export default function Code({ className, children, title }: JSX.IntrinsicElements['code']) {
   const [, language] = /language-(\w+)/.exec(String(className ?? '')) ?? [];
 
   if (language === 'mermaid') {
@@ -17,6 +17,7 @@ export default function Code({ className, children }: JSX.IntrinsicElements['cod
       // To be investigated.
       language={language === 'ts' ? 'typescript' : language}
       value={String(children).trimEnd()}
+      title={title}
     />
   ) : (
     <code>{String(children).trimEnd()}</code>
