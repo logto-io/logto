@@ -10,8 +10,6 @@ import {
   type PasswordVerificationRecordData,
 } from './password-verification.js';
 
-export { PasswordVerification } from './password-verification.js';
-
 type VerificationRecordData = PasswordVerificationRecordData;
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
