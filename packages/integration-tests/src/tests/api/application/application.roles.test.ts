@@ -1,5 +1,5 @@
 import { ApplicationType, RoleType } from '@logto/schemas';
-import { generateStandardId, formUrlEncodedHeaders } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import { HTTPError } from 'ky';
 
 import {
@@ -175,7 +175,6 @@ describe('admin console application management (roles)', () => {
 
     const { access_token: accessToken } = await oidcApi
       .post('token', {
-        headers: formUrlEncodedHeaders,
         body: new URLSearchParams({
           client_id: m2mApp.id,
           client_secret: m2mApp.secret,

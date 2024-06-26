@@ -216,7 +216,6 @@ export const buildHandler: (
   }
 
   /* === RFC 0001 === */
-
   if (organizationId) {
     // Check membership
     if (
@@ -325,7 +324,7 @@ export const buildHandler: (
   const scope = params.scope ? requestParamScopes : refreshToken.scopes;
 
   // Note, issue organization token only if `params.resource` is not present.
-  // If resource is set, will issue normal access token with extra claim "organization_id",
+  // If resource is set, we will issue normal access token with extra claim "organization_id",
   // the logic is handled in `getResourceServerInfo` and `extraTokenClaims`, see the init file of oidc-provider.
   if (organizationId && !params.resource) {
     /* === RFC 0001 === */

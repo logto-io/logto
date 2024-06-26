@@ -3,6 +3,13 @@ import {
   OrganizationRoles,
   Applications,
   OrganizationRoleApplicationRelations,
+  type OrganizationScope,
+  OrganizationRoleScopeRelations,
+  OrganizationScopes,
+  OrganizationRoleResourceScopeRelations,
+  Scopes,
+  Resources,
+  type Scope,
 } from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
@@ -20,6 +27,61 @@ export class ApplicationRoleRelationQueries extends RelationQueries<
       OrganizationRoles,
       Applications
     );
+  }
+
+  /**
+   * Get all the organization scopes of an application in an organization. Scopes are unique by
+   * their IDs.
+   */
+  async getApplicationScopes(
+    organizationId: string,
+    applicationId: string
+  ): Promise<readonly OrganizationScope[]> {
+    const { fields } = convertToIdentifiers(OrganizationRoleApplicationRelations, true);
+    const roleScopeRelations = convertToIdentifiers(OrganizationRoleScopeRelations, true);
+    const scopes = convertToIdentifiers(OrganizationScopes, true);
+
+    return this.pool.any<OrganizationScope>(sql`
+      select distinct on (${scopes.fields.id})
+        ${sql.join(Object.values(scopes.fields), sql`, `)}
+      from ${this.table}
+      join ${roleScopeRelations.table}
+        on ${roleScopeRelations.fields.organizationRoleId} = ${fields.organizationRoleId}
+      join ${scopes.table}
+        on ${scopes.fields.id} = ${roleScopeRelations.fields.organizationScopeId}
+      where ${fields.organizationId} = ${organizationId}
+      and ${fields.applicationId} = ${applicationId}
+    `);
+  }
+
+  /**
+   * Get all the resource scopes of an application in an organization. Scopes are unique by their
+   * IDs.
+   */
+  async getApplicationResourceScopes(
+    organizationId: string,
+    applicationId: string,
+    resourceIndicator: string
+  ): Promise<readonly Scope[]> {
+    const { fields } = convertToIdentifiers(OrganizationRoleApplicationRelations, true);
+    const roleScopeRelations = convertToIdentifiers(OrganizationRoleResourceScopeRelations, true);
+    const resources = convertToIdentifiers(Resources, true);
+    const scopes = convertToIdentifiers(Scopes, true);
+
+    return this.pool.any<Scope>(sql`
+      select distinct on (${scopes.fields.id})
+        ${sql.join(Object.values(scopes.fields), sql`, `)}
+      from ${this.table}
+      join ${roleScopeRelations.table}
+        on ${roleScopeRelations.fields.organizationRoleId} = ${fields.organizationRoleId}
+      join ${scopes.table}
+        on ${scopes.fields.id} = ${roleScopeRelations.fields.scopeId}
+      join ${resources.table}
+        on ${resources.fields.id} = ${scopes.fields.resourceId}
+      where ${fields.organizationId} = ${organizationId}
+      and ${fields.applicationId} = ${applicationId}
+      and ${resources.fields.indicator} = ${resourceIndicator}
+    `);
   }
 
   /** Replace the roles of an application in an organization. */
