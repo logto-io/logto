@@ -2,6 +2,7 @@ import { deleteUser } from '#src/api/admin-user.js';
 import { createPasswordVerification } from '#src/api/experience-api/password-verification.js';
 import { initClient } from '#src/helpers/client.js';
 import { generateNewUser } from '#src/helpers/user.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const signInIdentifiersType: readonly ['username', 'email', 'phone'] = Object.freeze([
   'username',
@@ -15,7 +16,7 @@ const identifiersTypeToUserProfile = Object.freeze({
   phone: 'primaryPhone',
 });
 
-describe('password verifications', () => {
+devFeatureTest.describe('password verifications', () => {
   it.each(signInIdentifiersType)(
     'should verify with password successfully using %p',
     async (identifier) => {
