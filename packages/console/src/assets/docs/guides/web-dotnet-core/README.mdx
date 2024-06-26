@@ -24,8 +24,7 @@ dotnet add package Logto.AspNetCore.Authentication
 
 Open `Startup.cs` (or `Program.cs`) and add the following code to register Logto authentication middleware:
 
-<pre>
-  <code className="language-csharp">
+<Code className="language-csharp">
 {`using Logto.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,8 +37,7 @@ builder.Services.AddLogtoAuthentication(options =>
 });
 
 app.UseAuthentication();`}
-  </code>
-</pre>
+</Code>
 
 The `AddLogtoAuthentication` method will do the following things:
 

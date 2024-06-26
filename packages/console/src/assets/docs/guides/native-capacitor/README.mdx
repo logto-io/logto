@@ -27,16 +27,14 @@ npm install @capacitor/browser @capacitor/app @capacitor/preferences
 
 Add the following code to your Capacitor project:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`import LogtoClient from '@logto/capacitor';
 
 const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
 });`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -50,15 +48,13 @@ Ensure that the URI redirects to the Capacitor app, for example, `com.example.ap
 
 Remember to click on **Save changes** after updating the redirect URI. Then, add the following code to the `onClick` handler of the sign-in button:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`const onClick = async () => {
   await logtoClient.signIn('${props.redirectUris[0] || 'com.example.app://callback'}');
   console.log(await logtoClient.isAuthenticated()); // true
   console.log(await logtoClient.getIdTokenClaims()); // { sub: '...', ... }
 };`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -108,13 +104,11 @@ The user needs to click "Done" to close the web view and return to the Capacitor
 
 Ensure that the post sign-out redirect URI redirects to the Capacitor app. Then add the following code to the `onClick` handler of the sign-out button:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`const onClick = async () => {
   await logtoClient.signOut('${props.postLogoutRedirectUris[0] || 'com.example.app://callback/sign-out'}');
 };`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

@@ -24,8 +24,7 @@ pip install logto # or `poetry add logto` or whatever you use
 
 Insert the following code into your Python file:
 
-<pre>
-  <code className="language-python">
+<Code className="language-python">
 {`from logto import LogtoClient, LogtoConfig
 
 client = LogtoClient(
@@ -35,8 +34,7 @@ client = LogtoClient(
         appSecret="${props.app.secret}",
     )
 )`}
-  </code>
-</pre>
+</Code>
 
 Also replace the default memory storage with a persistent storage, for example:
 
@@ -71,21 +69,18 @@ First, let’s enter your redirect URI. E.g. <code>{props.sampleUrls.callback}</
 
 <UriInputField name="redirectUris" />
 
-<pre>
-  <code className="language-python">
+<Code className="language-python">
 {`@app.route("/sign-in")
 async def sign_in():
     # Get the sign-in URL and redirect the user to it
     return redirect(await client.signIn(
         redirectUri="${props.redirectUris[0] || props.sampleUrls.callback}",
     ))`}
-  </code>
-</pre>
+</Code>
 
 If you want to show the sign-up page on the first screen, you can set `interactionMode` to `signUp`:
 
-<pre>
-  <code className="language-python">
+<Code className="language-python">
 {`@app.route("/sign-in")
 async def sign_in():
     # Get the sign-in URL and redirect the user to it
@@ -93,8 +88,7 @@ async def sign_in():
         redirectUri="${props.redirectUris[0] || props.sampleUrls.callback}",
         interactionMode="signUp", # Show the sign-up page on the first screen
     ))`}
-  </code>
-</pre>
+</Code>
 
 Now, whenever your users visit `/sign-in`, it will start a new sign-in attempt and redirect the user to the Logto sign-in page.
 
@@ -104,8 +98,7 @@ Now, whenever your users visit `/sign-in`, it will start a new sign-in attempt a
 
 After the user signs in, Logto will redirect the user to the callback URL you set in the Logto Console. In this example, we use `/callback` as the callback URL:
 
-<pre>
-  <code className="language-python">
+<Code className="language-python">
 {`@app.route("/callback")
 async def callback():
     try:
@@ -115,8 +108,7 @@ async def callback():
         # Change this to your error handling logic
         return "Error: " + str(e)
 `}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -128,8 +120,7 @@ To clean up the Python session and Logto session, we can designate a post sign-o
 
 And a sign-out route can be implemented as follows:
 
-<pre>
-  <code className="language-python">
+<Code className="language-python">
 {`@app.route("/sign-out")
 async def sign_out():
     return redirect(
@@ -137,8 +128,7 @@ async def sign_out():
         await client.signOut(postLogoutRedirectUri="${props.postLogoutRedirectUris[0] || props.sampleUrls.origin}")
     )
 `}
-  </code>
-</pre>
+</Code>
 
 `postLogoutRedirectUri` is optional, and if not provided, the user will be redirected to a Logto default page after a successful sign-out (without redirecting back to your application).
 

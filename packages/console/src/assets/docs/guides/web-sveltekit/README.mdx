@@ -46,8 +46,7 @@ Create a `hooks.server.ts` file in your project `src` root if you don't have one
 
 In your `hooks.server.ts` file, add the following code to inject the Logto hook into your server:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx">
     {`import { handleLogto } from '@logto/sveltekit';
 
 export const handle = handleLogto(
@@ -60,13 +59,11 @@ export const handle = handleLogto(
     encryptionKey: '${cookieEncryptionKey}', // Random-generated
   }
 );`}
-  </code>
-</pre>
+</Code>
 
 Since these information are sensitive, it's recommended to use environment variables:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`import { handleLogto } from '@logto/sveltekit';
 import { env } from '$env/dynamic/private';
 
@@ -80,8 +77,7 @@ export const handle = handleLogto(
     encryptionKey: env.LOGTO_COOKIE_ENCRYPTION_KEY,
   }
 );`}
-  </code>
-</pre>
+</Code>
 
 If you have multiple hooks, you can use [the sequence() helper function](https://kit.svelte.dev/docs/modules#sveltejs-kit-hooks) to chain them:
 
@@ -126,8 +122,7 @@ After signing out, it'll be great to redirect user back to your website. For exa
 
 In the page where you want to implement sign-in and sign-out, define the following actions:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`// +page.server.ts
 import type { Actions } from './$types';
 
@@ -142,8 +137,7 @@ export const actions: Actions = {
   },
 };
 `}
-  </code>
-</pre>
+</Code>
 
 Then use these actions in your Svelte component:
 

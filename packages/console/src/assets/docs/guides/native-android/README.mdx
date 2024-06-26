@@ -55,8 +55,7 @@ Since the SDK needs internet access, you need to add the following permission to
 
 Create a `LogtoViewModel.kt` and init `LogtoClient` in this view model:
 
-<pre>
-  <code className="language-kotlin">
+<Code className="language-kotlin">
     {`//...with other imports
 import io.logto.sdk.android.LogtoClient
 import io.logto.sdk.android.type.LogtoConfig
@@ -86,8 +85,7 @@ class LogtoViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }`}
-  </code>
-</pre>
+</Code>
 
 then, create a `LogtoViewModel` for your `MainActivity.kt`:
 
@@ -121,8 +119,7 @@ You can add the redirect URI in the following input field:
 
 After the redirect URI is configured, we add a `signIn` method to your `LogtoViewModel.kt`, which will call `logtoClient.signIn` API to invoke the Logto sign-in page:
 
-<pre>
-  <code className="language-kotlin">
+<Code className="language-kotlin">
     {`//...with other imports
 class LogtoViewModel(application: Application) : AndroidViewModel(application) {
     // ...other codes
@@ -132,8 +129,7 @@ class LogtoViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }`}
-  </code>
-</pre>
+</Code>
 
 Now setup on-click listener for the sign-in button in your `MainActivity.kt` to call the `signIn` method:
 
@@ -205,8 +201,7 @@ In Logto SDK, we can use `logtoClient.isAuthenticated` to check the authenticati
 
 Now, let's add a live data to `LogtoViewModel.kt` to observe the authentication status, and update the status when the user signed in or signed out:
 
-<pre>
-  <code className="language-kotlin">
+<Code className="language-kotlin">
     {`//...with other imports
 class LogtoViewModel(application: Application) : AndroidViewModel(application) {
     // ...other codes
@@ -232,8 +227,7 @@ class LogtoViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }`}
-  </code>
-</pre>
+</Code>
 
 Then, we observe the `authenticated` live data in `MainActivity.kt`, when the user is signed in, we hide the sign-in button and show the sign-out button and vice versa:
 

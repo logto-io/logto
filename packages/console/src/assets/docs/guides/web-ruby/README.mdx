@@ -32,8 +32,7 @@ The following demonstration is for Ruby on Rails. However, you can apply the sam
 
 In the file where you want to initialize the Logto client (e.g. a base controller or a middleware), add the following code:
 
-<pre>
-  <code className="language-ruby">
+<Code className="language-ruby">
     {`require "logto/client"
 
 @client = LogtoClient.new(
@@ -46,13 +45,11 @@ In the file where you want to initialize the Logto client (e.g. a base controlle
   storage: LogtoClient::SessionStorage.new(the_session_object)
 )
 end`}
-  </code>
-</pre>
+</Code>
 
 For instance, in a Rails controller, the code might look like this:
 
-<pre>
-  <code className="language-ruby">
+<Code className="language-ruby">
     {`# app/controllers/sample_controller.rb
 require "logto/client"
 
@@ -75,8 +72,7 @@ class SampleController < ApplicationController
     )
   end
 end`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -104,26 +100,22 @@ After signing out, it'll be great to redirect user back to your website. For exa
   Since the redirect URI has been set to <code>{props.redirectUris[0] || 'http://localhost:3000/callback'}</code>, it needs to be handled it in our application. In a Rails controller, you can add the following code:
 </p>
 
-<pre>
-  <code className="language-ruby">
+<Code className="language-ruby">
     {`# app/controllers/sample_controller.rb
 class SampleController < ApplicationController
   def ${props.redirectUris[0]?.split('/').pop() || 'callback'}
     @client.handle_sign_in_callback(url: request.original_url)
   end
 end`}
-  </code>
-</pre>
+</Code>
 
 And configure the route in `config/routes.rb`:
 
-<pre>
-  <code className="language-ruby">
+<Code className="language-ruby">
     {`Rails.application.routes.draw do
   get "${new URL(props.redirectUris[0] || 'http://localhost:3000/callback').pathname}", to: "sample#${props.redirectUris[0]?.split('/').pop() || 'callback'}"
 end`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -133,8 +125,7 @@ end`}
 
 There are various ways to invoke sign-in and sign-out in your application. For example, you can implement two routes in your Rails application:
 
-<pre>
-  <code className="language-ruby">
+<Code className="language-ruby">
     {`# app/controllers/sample_controller.rb
 class SampleController < ApplicationController
   def sign_in
@@ -147,8 +138,7 @@ class SampleController < ApplicationController
 
   # ...
 end`}
-  </code>
-</pre>
+</Code>
 
 ```ruby
 # config/routes.rb
