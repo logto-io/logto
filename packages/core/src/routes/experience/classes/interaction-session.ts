@@ -66,7 +66,7 @@ export default class InteractionSession {
     const { verificationRecords = [], profile, accountId, event } = result.data;
 
     this.interactionEvent = event;
-    this.accountId = accountId;
+    this.accountId = accountId; // TODO: @simeng-li replace with userId
     this.profile = profile;
 
     this.verificationRecords = new Set(
@@ -81,14 +81,7 @@ export default class InteractionSession {
   }
 
   /** Set the verified accountId of the current interaction session from  the verification record */
-  public identifyUser(verificationId: string) {
-    const verificationRecord = this.getVerificationRecordById(verificationId);
-
-    assertThat(
-      verificationRecord,
-      new RequestError({ code: 'session.identifier_not_found', status: 404 })
-    );
-
+  public identifyUser(verificationRecord: VerificationRecord) {
     // Throws an 404 error if the user is not found by the given verification record
     assertThat(
       verificationRecord.verifiedUserId,

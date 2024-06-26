@@ -21,9 +21,7 @@ export enum InteractionEvent {
   ForgotPassword = 'ForgotPassword',
 }
 
-// =================================================================================================================
-// Experience API payload guard and types definitions start
-// =================================================================================================================
+// ====== Experience API payload guard and types definitions start ======
 
 /** First party identifiers that can be used directly to identify a user */
 export type InteractionIdentifier = {
@@ -47,17 +45,20 @@ export enum VerificationType {
 }
 
 /* API payload guard start */
-export const passwordSignInPayloadGuard = z.object({
+export const passwordVerificationPayloadGuard = z.object({
   identifier: interactionIdentifierGuard,
   password: z.string().min(1),
 });
+export type PasswordVerificationPayload = z.infer<typeof passwordVerificationPayloadGuard>;
 
-export type PasswordSignInPayload = z.infer<typeof passwordSignInPayloadGuard>;
+export const identificationApiPayloadGuard = z.object({
+  interactionEvent: z.nativeEnum(InteractionEvent),
+  verificationId: z.string(),
+});
+export type IdentificationApiPayload = z.infer<typeof identificationApiPayloadGuard>;
 /* API payload guard end */
 
-// =================================================================================================================
-// Experience API payload guard and types definitions end
-// =================================================================================================================
+// ====== Experience API payload guard and types definitions end ======
 
 /**
  * Legacy interaction identifier payload guard

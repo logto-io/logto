@@ -10,19 +10,21 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
-import { InteractionEvent, passwordSignInPayloadGuard } from '@logto/schemas';
+import { identificationApiPayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
-import { PasswordVerification } from './classes/verifications/index.js';
-import { experienceApiRoutesPrefix } from './const.js';
+import { experienceApiRoutesPrefix, experienceIdentificationApiRoutesPrefix } from './const.js';
 import koaInteractionSession, {
   type WithInteractionSessionContext,
 } from './middleware/koa-interaction-session.js';
+import passwordVerificationRoutes from './verification-routes/password-verification.js';
 
 type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
 
@@ -40,21 +42,24 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     );
 
   router.post(
-    `${experienceApiRoutesPrefix}/sign-in/password`,
+    experienceIdentificationApiRoutesPrefix,
     koaGuard({
-      body: passwordSignInPayloadGuard,
-      status: [204, 400, 404, 422],
+      body: identificationApiPayloadGuard,
+      status: [204, 400, 404],
     }),
     async (ctx, next) => {
-      const { identifier, password } = ctx.guard.body;
+      const { interactionEvent, verificationId } = ctx.guard.body;
 
-      ctx.interactionSession.setInteractionEvent(InteractionEvent.SignIn);
+      ctx.interactionSession.setInteractionEvent(interactionEvent);
 
-      const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
-      await passwordVerification.verify(password);
-      ctx.interactionSession.appendVerificationRecord(passwordVerification);
+      const verificationRecord = ctx.interactionSession.getVerificationRecordById(verificationId);
 
-      ctx.interactionSession.identifyUser(passwordVerification.id);
+      assertThat(
+        verificationRecord,
+        new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+      );
+
+      ctx.interactionSession.identifyUser(verificationRecord);
 
       await ctx.interactionSession.save();
 
@@ -75,4 +80,5 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
+  passwordVerificationRoutes(router, tenant);
 }

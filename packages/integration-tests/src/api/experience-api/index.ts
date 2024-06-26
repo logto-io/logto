@@ -1,4 +1,4 @@
-import { type PasswordSignInPayload } from '@logto/schemas';
+import { type IdentificationApiPayload } from '@logto/schemas';
 
 import api from '../api.js';
 
@@ -8,9 +8,9 @@ type RedirectResponse = {
   redirectTo: string;
 };
 
-export const signInWithPassword = async (cookie: string, payload: PasswordSignInPayload) =>
+export const identifyUser = async (cookie: string, payload: IdentificationApiPayload) =>
   api
-    .post(`${experienceIdentificationApiRoutesPrefix}/sign-in/password`, {
+    .post(experienceIdentificationApiRoutesPrefix, {
       headers: { cookie },
       json: payload,
     })

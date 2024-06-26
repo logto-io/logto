@@ -2,9 +2,10 @@
  * @fileoverview This file contains the successful interaction flow helper functions that use the experience APIs.
  */
 
-import { type InteractionIdentifier } from '@logto/schemas';
+import { InteractionEvent, type InteractionIdentifier } from '@logto/schemas';
 
-import { signInWithPassword as signInWithPasswordApi } from '#src/api/experience-api/index.js';
+import { identifyUser } from '#src/api/experience-api/index.js';
+import { createPasswordVerification } from '#src/api/experience-api/password-verification.js';
 
 import { initClient, logoutClient, processSession } from '../client.js';
 
@@ -17,9 +18,14 @@ export const signInWithPassword = async ({
 }) => {
   const client = await initClient();
 
-  await client.successSend(signInWithPasswordApi, {
+  const { verificationId } = await client.send(createPasswordVerification, {
     identifier,
     password,
+  });
+
+  await client.successSend(identifyUser, {
+    interactionEvent: InteractionEvent.SignIn,
+    verificationId,
   });
 
   const { redirectTo } = await client.submitInteraction('v2');
