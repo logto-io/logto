@@ -135,7 +135,7 @@ After signing out, it'll be great to redirect your user back to your website. Le
 
 In Logto SDK, you can use the `withLogto` middleware to get `req.user.isAuthenticated` to check the authentication status, if the user is signed in, the value will be `true`, otherwise, the value will be `false`.
 
-``ts
+```ts
 import { withLogto } from '@logto/express';
 
 app.use(withLogto(config));
