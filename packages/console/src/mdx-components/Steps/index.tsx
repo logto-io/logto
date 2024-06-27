@@ -43,8 +43,14 @@ export default function Steps({ children: reactChildren }: Props) {
   const isApiResourceGuide = metadata.target === 'API';
 
   const furtherReadings = useMemo(
-    () => <FurtherReadings title="Further readings" fullGuide={metadata.fullGuide} />,
-    [metadata.fullGuide]
+    () => (
+      <FurtherReadings
+        title="Further readings"
+        fullGuide={metadata.fullGuide}
+        furtherReadings={metadata.furtherReadings}
+      />
+    ),
+    [metadata.fullGuide, metadata.furtherReadings]
   );
   const children: Array<ReactElement<StepProps, typeof Step>> = useMemo(() => {
     const steps = (Array.isArray(reactChildren) ? reactChildren : [reactChildren]).filter(
