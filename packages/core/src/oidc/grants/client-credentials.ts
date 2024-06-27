@@ -1,15 +1,14 @@
 /**
  * @overview This file implements the custom `client_credentials` grant which extends the original
- * `client_credentials` grant with the issuing of organization tokens (based on RFC 0001, but for
- * machine-to-machine apps).
+ * `client_credentials` grant with the issuing of organization tokens (RFC 0006).
  *
  * Note the code is edited from oidc-provider, most parts are kept the same unless it requires
- * changes for TypeScript or RFC 0001.
+ * changes for TypeScript or RFC 0006.
  *
- * For "RFC 0001"-related edited parts, we added comments with `=== RFC 0001 ===` and
- * `=== End RFC 0001 ===` to indicate the changes.
+ * For "RFC 0006"-related edited parts, we added comments with `=== RFC 0006 ===` and
+ * `=== End RFC 0006 ===` to indicate the changes.
  *
- * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0001.
+ * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0006.
  * @see {@link https://github.com/panva/node-oidc-provider/blob/0c52469f08b0a4a1854d90a96546a3f7aa090e5e/lib/actions/grants/client_credentials.js | Original file}.
  *
  * @remarks
@@ -65,7 +64,7 @@ export const buildHandler: (
 
   const dPoP = await dpopValidate(ctx);
 
-  /* === RFC 0001 === */
+  /* === RFC 0006 === */
   // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
   // to `Boolean` first.
   const organizationId = cond(Boolean(params?.organization_id) && String(params?.organization_id));
@@ -85,11 +84,13 @@ export const buildHandler: (
     error.statusCode = 403;
     throw error;
   }
-  /* === End RFC 0001 === */
+  /* === End RFC 0006 === */
 
   // Do not check the resource if the organization ID is provided and the resource is not. In this
   // case, the default resource server will be ignored, and an organization token will be issued.
   if (!(organizationId && !params?.resource)) {
+    // This line is copied from the original file. It checks the resource server according to the
+    // configuration and parameters, then saves them in `ctx.oidc.resourceServers`.
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     await checkResource(ctx, async () => {});
   }
@@ -134,7 +135,7 @@ export const buildHandler: (
   // Issue organization token only if resource server is not present.
   // If it's present, the flow falls into the `checkResource` and `if (resourceServer)` block above.
   if (organizationId && !resourceServer) {
-    /* === RFC 0001 === */
+    /* === RFC 0006 === */
     const audience = buildOrganizationUrn(organizationId);
     const availableScopes = await queries.organizations.relations.appsRoles
       .getApplicationScopes(organizationId, client.clientId)
@@ -155,7 +156,7 @@ export const buildHandler: (
       scope: availableScopes.join(' '),
     };
     token.scope = issuedScopes;
-    /* === End RFC 0001 === */
+    /* === End RFC 0006 === */
   }
 
   if (client.tlsClientCertificateBoundAccessTokens) {
