@@ -8,7 +8,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import Sample from '../Sample';
 import { type Props as StepProps } from '../Step';
-import type Step from '../Step';
+import Step from '../Step';
 
 import FurtherReadings from './FurtherReadings';
 import * as styles from './index.module.scss';
@@ -47,7 +47,10 @@ export default function Steps({ children: reactChildren }: Props) {
     [metadata.fullGuide]
   );
   const children: Array<ReactElement<StepProps, typeof Step>> = useMemo(() => {
-    const steps = Array.isArray(reactChildren) ? reactChildren : [reactChildren];
+    const steps = (Array.isArray(reactChildren) ? reactChildren : [reactChildren]).filter(
+      (child) => child.type === Step
+    );
+
     return isApiResourceGuide ? steps : steps.concat(furtherReadings);
   }, [isApiResourceGuide, furtherReadings, reactChildren]);
 

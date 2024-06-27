@@ -3,6 +3,7 @@
 import { compile } from '@mdx-js/mdx';
 import { default as ThrowableDiagnostic } from '@parcel/diagnostic';
 import { Transformer } from '@parcel/plugin';
+import rehypeMdxCodeProps from 'rehype-mdx-code-props';
 
 export default new Transformer({
   async transform({ asset }) {
@@ -15,6 +16,7 @@ export default new Transformer({
         development: true,
         jsx: true,
         providerImportSource: '@mdx-js/react',
+        rehypePlugins: [[rehypeMdxCodeProps, { tagName: 'code' }]],
       });
     } catch (error) {
       const { start, end } = error.position;
