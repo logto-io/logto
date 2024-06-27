@@ -1,6 +1,8 @@
 import UriInputField from '@/mdx-components/UriInputField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import { generateStandardSecret } from '@logto/shared/universal';
+import RedirectUris from '../../fragments/_redirect_uris.mdx';
+import Checkpoint from '../../fragments/_checkpoint.md';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 
@@ -49,9 +51,8 @@ end`}
 
 For instance, in a Rails controller, the code might look like this:
 
-<Code className="language-ruby">
-    {`# app/controllers/sample_controller.rb
-require "logto/client"
+<Code title="app/controllers/sample_controller.rb" className="language-ruby">
+    {`require "logto/client"
 
 class SampleController < ApplicationController
   before_action :initialize_logto_client
@@ -81,13 +82,7 @@ end`}
   subtitle="2 URIs"
 >
 
-First, let's enter your redirect URI. E.g. `http://localhost:3000/callback`. [Redirect URI](https://www.oauth.com/oauth2-servers/redirect-uris/) is an OAuth 2.0 concept which implies the location should redirect after authentication.
-
-<UriInputField name="redirectUris" />
-
-After signing out, it'll be great to redirect user back to your website. For example, add `http://localhost:3000` as the post sign-out redirect URI below.
-
-<UriInputField name="postLogoutRedirectUris" />
+<RedirectUris />
 
 </Step>
 
@@ -100,18 +95,17 @@ After signing out, it'll be great to redirect user back to your website. For exa
   Since the redirect URI has been set to <code>{props.redirectUris[0] || 'http://localhost:3000/callback'}</code>, it needs to be handled it in our application. In a Rails controller, you can add the following code:
 </p>
 
-<Code className="language-ruby">
-    {`# app/controllers/sample_controller.rb
-class SampleController < ApplicationController
+<Code title="app/controllers/sample_controller.rb" className="language-ruby">
+    {`class SampleController < ApplicationController
   def ${props.redirectUris[0]?.split('/').pop() || 'callback'}
     @client.handle_sign_in_callback(url: request.original_url)
   end
 end`}
 </Code>
 
-And configure the route in `config/routes.rb`:
+And configure the route:
 
-<Code className="language-ruby">
+<Code title="config/routes.rb" className="language-ruby">
     {`Rails.application.routes.draw do
   get "${new URL(props.redirectUris[0] || 'http://localhost:3000/callback').pathname}", to: "sample#${props.redirectUris[0]?.split('/').pop() || 'callback'}"
 end`}
@@ -125,9 +119,8 @@ end`}
 
 There are various ways to invoke sign-in and sign-out in your application. For example, you can implement two routes in your Rails application:
 
-<Code className="language-ruby">
-    {`# app/controllers/sample_controller.rb
-class SampleController < ApplicationController
+<Code title="app/controllers/sample_controller.rb" className="language-ruby">
+    {`class SampleController < ApplicationController
   def sign_in
     @client.sign_in(redirect_uri: request.base_url + "${new URL(props.redirectUris[0] || 'http://localhost:3000/callback').pathname}")
   end
@@ -140,8 +133,7 @@ class SampleController < ApplicationController
 end`}
 </Code>
 
-```ruby
-# config/routes.rb
+```ruby title="config/routes.rb"
 Rails.application.routes.draw do
   get "/sign_in", to: "sample#sign_in"
   get "/sign_out", to: "sample#sign_out"
@@ -152,8 +144,7 @@ end
 
 Then you can create buttons or links in your views to trigger these actions. For example:
 
-```erb
-<!-- app/views/sample/index.html.erb -->
+```erb title="app/views/sample/index.html.erb"
 <% if @client.is_authenticated? %>
   <a href="<%= sign_out_path %>">Sign out</a>
 <% else %>
@@ -163,12 +154,17 @@ Then you can create buttons or links in your views to trigger these actions. For
 
 </Step>
 
+<Step title="Checkpoint: Test your app">
+
+<Checkpoint />
+
+</Step>
+
 <Step title="Display user information">
 
 To display the user's information, you can use the `@client.id_token_claims` method. For example, in a view:
 
-```erb
-<!-- app/views/sample/index.html.erb -->
+```erb title="app/views/sample/index.html.erb"
 <% if @client.is_authenticated? %>
   <p>Welcome, <%= @client.id_token_claims["name"] %></p>
 <% else %>

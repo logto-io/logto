@@ -1,3 +1,4 @@
+import { appendPath } from '@silverhand/essentials';
 import { type Ref, forwardRef } from 'react';
 
 import { type GuideMetadata } from '@/assets/docs/guides/types';
@@ -9,6 +10,8 @@ type Props = Omit<StepProps, 'children'> & {
   readonly fullGuide: GuideMetadata['fullGuide'];
 };
 
+const quickStartsUrl = new URL('https://docs.logto.io/quick-starts/');
+
 function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
   const { fullGuide, ...stepProps } = props;
   return (
@@ -16,8 +19,8 @@ function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
       <ul>
         {fullGuide && (
           <li>
-            <TextLink href={fullGuide.url} targetBlank="noopener">
-              {fullGuide.title}
+            <TextLink href={appendPath(quickStartsUrl, fullGuide).href} targetBlank="noopener">
+              Complete guide
             </TextLink>
           </li>
         )}

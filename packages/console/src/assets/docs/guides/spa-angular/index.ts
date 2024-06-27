@@ -10,10 +10,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'js',
     path: 'packages/angular-sample',
   },
-  fullGuide: {
-    title: 'Full Angular guide',
-    url: 'https://docs.logto.io/quick-starts/angular',
-  },
+  fullGuide: 'angular',
 });
 
 export default metadata;

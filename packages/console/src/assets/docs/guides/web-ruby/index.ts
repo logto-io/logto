@@ -8,6 +8,10 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     'Ruby is a dynamic, open-source programming language with a focus on simplicity and productivity.',
   target: ApplicationType.Traditional,
   isFeatured: true,
+  sample: {
+    repo: 'ruby',
+    path: 'logto-sample',
+  },
 });
 
 export default metadata;

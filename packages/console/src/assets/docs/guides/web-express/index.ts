@@ -11,10 +11,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'js',
     path: 'packages/express-sample',
   },
-  fullGuide: {
-    title: 'Full Express SDK tutorial',
-    url: 'https://docs.logto.io/quick-starts/express',
-  },
+  fullGuide: 'express',
 });
 
 export default metadata;

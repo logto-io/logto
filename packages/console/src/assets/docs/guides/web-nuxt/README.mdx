@@ -5,7 +5,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
-import SignInExplanation from '../../fragments/_sign_in_explanation.md';
+import RedirectUris from '../../fragments/_redirect_uris.mdx';
 import { generateStandardSecret } from '@logto/shared/universal';
 
 export const cookieEncryptionKey = generateStandardSecret();
@@ -79,21 +79,12 @@ See [runtime config](https://nuxt.com/docs/guide/going-further/runtime-config) f
 
 </Step>
 
-<Step title="Configure your app">
+<Step 
+  title="Configure redirect URIs"
+  subtitle="2 URIs"
+>
 
-<SignInExplanation />
-
-<InlineNotification>
-  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
-</InlineNotification>
-
-Now, let's enter your redirect URI. E.g. `http://localhost:3000/callback`.
-
-<UriInputField name="redirectUris" />
-
-Just like signing in, users should be redirected to Logto for signing out of the shared session. Once finished, it would be great to redirect the user back to your website. For example, add `http://localhost:3000` as the post sign-out redirect URI below.
-
-<UriInputField name="postLogoutRedirectUris" />
+<RedirectUris />
 
 When registering `@logto/nuxt` module, it will do the following:
 
