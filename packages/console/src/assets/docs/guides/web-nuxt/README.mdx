@@ -46,7 +46,7 @@ pnpm add @logto/nuxt
 
 <Step title="Register Logto module">
 
-In your Nuxt config file (`next.config.ts`), add the Logto module:
+In your Nuxt config file (`nuxt.config.ts`), add the Logto module:
 
 ```ts
 export default defineNuxtConfig({
@@ -57,9 +57,8 @@ export default defineNuxtConfig({
 
 The minimal configuration for the module is as follows:
 
-<pre>
-  <code className="language-tsx">
-    {`export default defineNuxtConfig({
+<Code className="language-tsx">
+{`export default defineNuxtConfig({
   modules: ['@logto/nuxt'],
   runtimeConfig: {
     logto: {
@@ -71,20 +70,17 @@ The minimal configuration for the module is as follows:
   },
   // ...other configurations
 });`}
-  </code>
-</pre>
+</Code>
 
 Since these information are sensitive, it's recommended to use environment variables (`.env`):
 
-<pre>
-  <code className="language-bash">
+<Code className="language-bash">
     {`NUXT_LOGTO_ENDPOINT=${props.endpoint}
 NUXT_LOGTO_APP_ID=${props.app.id}
 NUXT_LOGTO_APP_SECRET=${props.app.secret}
 NUXT_LOGTO_COOKIE_ENCRYPTION_KEY=${cookieEncryptionKey} # Random-generated
 `}
-  </code>
-</pre>
+</Code>
 
 See [runtime config](https://nuxt.com/docs/guide/going-further/runtime-config) for more information.
 

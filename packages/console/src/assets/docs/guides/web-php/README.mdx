@@ -26,8 +26,7 @@ composer require logto/sdk
 
 Insert the following code into your PHP file:
 
-<pre>
-  <code className="language-php">
+<Code className="language-php">
 {`use logto\sdk\LogtoClient;
 use Logto\Sdk\LogtoConfig;
 
@@ -38,8 +37,7 @@ $client = new LogtoClient(
     appSecret: "${props.app.secret}",
   ),
 );`}
-  </code>
-</pre>
+</Code>
 
 By default, the SDK uses the built-in PHP session to store the Logto data. If you want to use other storage, you can pass a custom storage object as the second parameter:
 
@@ -62,23 +60,19 @@ First, let’s enter your redirect URI. E.g. <code>{props.sampleUrls.callback}</
 
 <UriInputField name="redirectUris" />
 
-<pre>
-  <code className="language-php">
+<Code className="language-php">
 {`Route::get('/sign-in', function () {
   return redirect($client->signIn('${props.redirectUris[0] || props.sampleUrls.callback}'));
 });`}
-  </code>
-</pre>
+</Code>
 
 If you want to show the sign-up page on the first screen, you can set `interactionMode` to `signUp`:
 
-<pre>
-  <code className="language-php">
+<Code className="language-php">
 {`Route::get('/sign-in', function () {
   return redirect($client->signIn('${props.redirectUris[0] || props.sampleUrls.callback}', InteractionMode::signUp));
 });`}
-  </code>
-</pre>
+</Code>
 
 Now, whenever your users visit `/sign-in`, it will start a new sign-in attempt and redirect the user to the Logto sign-in page.
 
@@ -112,16 +106,14 @@ To clean up the Python session and Logto session, we can designate a post sign-o
 
 And a sign-out route can be implemented as follows:
 
-<pre>
-  <code className="language-php">
+<Code className="language-php">
 {`Route::get('/sign-out', function () {
   return redirect(
     // Redirect the user to the home page after a successful sign-out
     $client->signOut('${props.postLogoutRedirectUris[0] || props.sampleUrls.origin}')
   );
 });`}
-  </code>
-</pre>
+</Code>
 
 The post sign-out redierct URI is optional, and if not provided, the user will be redirected to a Logto default page after a successful sign-out (without redirecting back to your application).
 

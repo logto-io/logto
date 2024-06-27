@@ -144,8 +144,7 @@ sessionStorage := &SessionStorage{session: session}
 
 First, create a Logto config:
 
-<pre>
-  <code className="language-go">
+<Code className="language-go">
     {`// main.go
 func main() {
     // ...
@@ -158,8 +157,7 @@ func main() {
 
     // ...
 }`}
-  </code>
-</pre>
+</Code>
 
 Then, you can create a `LogtoClient` for each user request with the Logto config above:
 
@@ -209,8 +207,7 @@ For example, if you add `http://localhost:8080/sign-in-callback` to your Redirec
 
 After the redirect URI is configured, we add a `sign-in` route to handle the sign-in request and also add an sign-in link on the home page:
 
-<pre>
-  <code className="language-go">
+<Code className="language-go">
     {`//main.go
 func main() {
     // ...
@@ -248,8 +245,7 @@ func main() {
 
     // ...
 }`}
-  </code>
-</pre>
+</Code>
 
 Now, when your user visit `http://localhost:8080/sign-in`, the user will be redirected to the Logto sign-in page.
 
@@ -306,8 +302,7 @@ Assuming that you add `http://localhost:8080` to the Post Sign-out Redirect URI 
 
 Now, let's add the `sign-out` route to handle the sign-out request and also add a sign-out link on the home page:
 
-<pre>
-  <code className="language-go">
+<Code className="language-go">
     {`//main.go
 func main() {
     // ...
@@ -346,8 +341,7 @@ func main() {
 
     // ...
 }`}
-  </code>
-</pre>
+</Code>
 
 After the user makes a signing-out request, Logto will clear all user authentication information in the session.
 

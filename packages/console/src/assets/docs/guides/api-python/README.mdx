@@ -48,19 +48,16 @@ All the latest public Logto Authorization Configurations can be found at <code>{
 e.g. You can locate the following two fields in the response body if you request the above endpoint.
 </p>
 
-<pre>
-  <code className="language-json">
+<Code className="language-json">
 {`{
   "issuer": "${appendPath(props.endpoint, '/oidc')}",
   "jwks_uri": "${appendPath(props.endpoint, '/oidc/jwks')}"
 }`}
-  </code>
-</pre>
+</Code>
 
 ### Create the authorization validation decorator
 
-<pre>
-  <code className="language-python">
+<Code className="language-python">
 {`"""requires-auth.py
 """
 
@@ -105,8 +102,7 @@ def requires_auth(f):
 
     return f(*args, **kwargs)
   return decorated`}
-  </code>
-</pre>
+</Code>
 
 <InlineNotification>
   For <a href="https://docs.logto.io/docs/recipes/rbac/" target="_blank" rel="noopener">🔐 RBAC</a>, scope validation is also required.

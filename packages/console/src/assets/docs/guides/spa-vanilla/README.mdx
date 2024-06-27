@@ -40,16 +40,14 @@ pnpm add @logto/browser
 
 Import and init `LogtoClient` with configs:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`import LogtoClient from '@logto/browser';
 
 const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
 });`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -72,15 +70,13 @@ First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
 Go back to your IDE/editor, use the following code to implement the sign-in button:
 
-<pre>
-  <code className="language-html">
+<Code className="language-html">
     {`<button onclick="logtoClient.signIn('${
       props.redirectUris[0] ?? 'http://localhost:3000/callback'
     }')">
   Sign In
 </button>`}
-  </code>
-</pre>
+</Code>
 
 ### Handle redirect
 
@@ -119,15 +115,13 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 
 ### Implement a sign-out button
 
-<pre>
-  <code className="language-html">
+<Code className="language-html">
     {`<button onclick="logtoClient.signOut('${
       props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'
     }')">
   Sign Out
 </button>`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

@@ -47,8 +47,7 @@ pnpm add @logto/next
 
 Import and initialize LogtoClient:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`// libraries/logto.js
 import LogtoClient from '@logto/next';
 
@@ -60,8 +59,7 @@ export const logtoClient = new LogtoClient({
   cookieSecret: '${generateStandardSecret()}', // Auto-generated 32 digit secret
   cookieSecure: process.env.NODE_ENV === 'production',
 });`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

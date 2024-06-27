@@ -44,8 +44,7 @@ CocoaPods [does not support local dependency](https://github.com/CocoaPods/Cocoa
   subtitle="1 step"
 >
 
-<pre>
-  <code className="language-swift">
+<Code className="language-swift">
     {`import Logto
 import LogtoClient
 
@@ -54,8 +53,7 @@ let config = try? LogtoConfig(
   appId: "${props.app.id}"
 )
 let logtoClient = LogtoClient(useConfig: config)`}
-  </code>
-</pre>
+</Code>
 
 By default, we store credentials like ID Token and Refresh Token in Keychain. Thus the user doesn't need to sign in again when he returns.
 
@@ -91,8 +89,7 @@ First, let’s configure your redirect URI scheme. E.g. `io.logto://callback`
 
 Go back to Xcode, use the following code to implement sign-in:
 
-<pre>
-  <code className="language-swift">
+<Code className="language-swift">
     {`do {
   try await client.signInWithBrowser(redirectUri: "${
     props.redirectUris[0] ?? 'io.logto://callback'
@@ -101,8 +98,7 @@ Go back to Xcode, use the following code to implement sign-in:
 } catch let error as LogtoClientErrors.SignIn {
   // error occured during sign in
 }`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

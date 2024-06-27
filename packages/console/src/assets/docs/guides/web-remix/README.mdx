@@ -45,8 +45,7 @@ pnpm add @logto/remix
 Before initializing the SDK, we have to create a `SessionStorage` instance which takes care of the session persistence. In our case, we want to use a cookie-based session:
 
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`
 // services/authentication.ts
 import { createCookieSessionStorage } from "@remix-run/node";
@@ -58,8 +57,7 @@ const sessionStorage = createCookieSessionStorage({
     secrets: '${generateStandardSecret()}', // Auto-generated secret
   },
 });`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -70,8 +68,7 @@ const sessionStorage = createCookieSessionStorage({
 
 Use the `sessionStorage` created in the previous step to initialize LogtoClient:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`// app/services/authentication.ts
 
 import { makeLogtoRemix } from "@logto/remix";
@@ -85,8 +82,7 @@ export const logto = makeLogtoRemix(
   },
   { sessionStorage }
 );`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

@@ -67,8 +67,7 @@ For maven, include the following dependencies in your `pom.xml` file:
 Register your application with Logto to get the client credentials and IdP configurations.
 Add the following configuration to your `application.properties` file:
 
-<pre>
-  <code className="language-properties">
+<Code className="language-properties">
     {`spring.security.oauth2.client.registration.logto.client-name=logto
 spring.security.oauth2.client.registration.logto.client-id=${props.app.id}
 spring.security.oauth2.client.registration.logto.client-secret=${props.app.secret}
@@ -81,8 +80,7 @@ spring.security.oauth2.client.provider.logto.issuer-uri=${props.endpoint}oidc
 spring.security.oauth2.client.provider.logto.authorization-uri=${props.endpoint}oidc/auth
 spring.security.oauth2.client.provider.logto.jwk-set-uri=${props.endpoint}oidc/jwks
   `}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

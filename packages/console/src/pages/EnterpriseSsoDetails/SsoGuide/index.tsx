@@ -1,12 +1,11 @@
 import { type SsoConnectorWithProviderConfig } from '@logto/schemas';
-import { MDXProvider } from '@mdx-js/react';
 import classNames from 'classnames';
 import { Suspense } from 'react';
 
 import ssoConnectorGuides from '@/assets/docs/single-sign-on';
 import SsoConnectorContextProvider from '@/contexts/SsoConnectorContextProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
-import TextLink from '@/ds-components/TextLink';
+import MdxProvider from '@/mdx-components/MdxProvider';
 import NotFound from '@/pages/NotFound';
 
 import * as styles from './index.module.scss';
@@ -32,19 +31,11 @@ function SsoGuide({ ssoConnector, className }: Props) {
   return (
     <SsoConnectorContextProvider ssoConnector={ssoConnector}>
       <OverlayScrollbar className={classNames(styles.content, className)}>
-        <MDXProvider
-          components={{
-            a: ({ children, ...props }) => (
-              <TextLink {...props} targetBlank>
-                {children}
-              </TextLink>
-            ),
-          }}
-        >
+        <MdxProvider>
           <Suspense>
             <Guide />
           </Suspense>
-        </MDXProvider>
+        </MdxProvider>
       </OverlayScrollbar>
     </SsoConnectorContextProvider>
   );

@@ -40,8 +40,7 @@ pnpm add @logto/react
 
 Import and use `LogtoProvider` to provide a Logto context:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx">
     {`import { LogtoProvider, LogtoConfig } from '@logto/react';
 
 const config: LogtoConfig = {
@@ -54,8 +53,7 @@ const App = () => (
     <YourAppContent />
   </LogtoProvider>
 );`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -80,8 +78,7 @@ We provide two hooks `useHandleSignInCallback()` and `useLogto()` which can help
 
 Go back to your IDE/editor, use the following code to implement the sign-in button:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx">
     {`import { useLogto } from '@logto/react';
 
 const SignIn = () => {
@@ -97,8 +94,7 @@ const SignIn = () => {
     </button>
   );
 };`}
-  </code>
-</pre>
+</Code>
 
 ### Handle redirect
 
@@ -140,8 +136,7 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 
 ### Implement a sign-out button
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx">
     {`const SignOut = () => {
   const { signOut } = useLogto();
 
@@ -153,8 +148,7 @@ After signing out, it'll be great to redirect user back to your website. Let's a
     </button>
   );
 };`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

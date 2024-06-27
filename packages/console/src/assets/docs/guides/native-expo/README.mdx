@@ -56,8 +56,7 @@ If you're installing this in a [bare React Native app](https://docs.expo.dev/bar
 
 Import and use `LogtoProvider` to provide a Logto context:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx">
     {`import { LogtoProvider, LogtoConfig } from '@logto/rn';
 
 const config: LogtoConfig = {
@@ -70,8 +69,7 @@ const App = () => (
     <YourAppContent />
   </LogtoProvider>
 );`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -100,8 +98,7 @@ The redirect URI is used to redirect the user back to your app after they sign i
 
 You can use `useLogto` hook to sign in and sign out:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx">
     {`import { useLogto } from '@logto/rn';
 import { Button } from 'react-native';
 
@@ -120,8 +117,7 @@ const Content = () => {
     </div>
   );
 };`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -129,8 +125,7 @@ const Content = () => {
 
 To display the user's information, you can use the `getIdTokenClaims()` method:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx">
     {`import { useLogto } from '@logto/rn';
 import { Button, Text } from 'react-native';
 
@@ -162,8 +157,7 @@ const Content = () => {
     </div>
   );
 };`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

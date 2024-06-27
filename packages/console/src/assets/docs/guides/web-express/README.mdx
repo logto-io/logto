@@ -48,8 +48,7 @@ pnpm add @logto/express cookie-parser express-session
 
 Import and initialize LogtoClient:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`import LogtoClient from '@logto/express';
 
 export const logtoClient = new LogtoClient({
@@ -58,8 +57,7 @@ export const logtoClient = new LogtoClient({
   appSecret: '${props.app.secret}',
   baseUrl: 'http://localhost:3000', // Change to your own base URL
 });`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -70,15 +68,13 @@ export const logtoClient = new LogtoClient({
 
 The SDK requires [express-session](https://www.npmjs.com/package/express-session) to be configured in prior.
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`import cookieParser from 'cookie-parser';
 import session from 'express-session';
 
 app.use(cookieParser());
 app.use(session({ secret: '${generateStandardSecret()}', cookie: { maxAge: 14 * 24 * 60 * 60 } }));`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

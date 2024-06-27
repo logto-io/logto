@@ -154,8 +154,7 @@ In order to capture the callback url from Logto's sign-in web page, you will nee
 
 Import the `logto_dart_sdk` package and initialize the `LogtoClient` instance at the root of your application.
 
-<pre>
-  <code className="language-dart">
+<Code className="language-dart">
     {`
 import 'package:logto_dart_sdk/logto_dart_sdk.dart';
 import 'package:http/http.dart' as http;
@@ -175,8 +174,7 @@ void init() async {
   );
 }
 `}
-  </code>
-</pre>
+</Code>
 
 </Step>
 <Step title="Sign In" subtitle="2 steps">
@@ -193,14 +191,12 @@ Let's switch to the Application details page of Logto Admin Console. Add a Redir
 
 ### Implement a sign-in method
 
-<pre>
-  <code className="language-dart">
+<Code className="language-dart">
     {`void signIn() async {
   await logtoClient.signIn('${props.redirectUris[0] ?? 'io.logto://callback'}');
 }
   `}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -235,8 +231,7 @@ user is signed in, the value will be `true`, otherwise, the value will be `false
 
 Now let's wrap up the implementation and test your application.
 
-<pre>
-  <code className="language-dart">
+<Code className="language-dart">
     {`import 'package:logto_dart_sdk/logto_dart_sdk.dart';
 import 'package:http/http.dart' as http;
 
@@ -330,8 +325,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 `}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

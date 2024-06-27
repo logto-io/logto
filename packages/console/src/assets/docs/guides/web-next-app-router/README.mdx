@@ -47,8 +47,7 @@ pnpm add @logto/next
 
 Prepare configuration for the Logto client. Create a new file `app/logto.ts` and add the following code:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`export const logtoConfig = {
   endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
@@ -58,8 +57,7 @@ Prepare configuration for the Logto client. Create a new file `app/logto.ts` and
   cookieSecure: process.env.NODE_ENV === 'production',
 };
 `}
-  </code>
-</pre>
+</Code>
 </Step>
 
 <Step

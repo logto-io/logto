@@ -59,16 +59,14 @@ Before moving on, you will need to get an issuer and a JWKS URI to verify the is
 
 An example of the response:
 
-<pre>
-  <code className="language-json">
+<Code className="language-json">
     {`{
   // ...
   "issuer": "${appendPath(props.endpoint, '/oidc')}",
   "jwks_uri": "${appendPath(props.endpoint, '/oidc/jwks')}"
   // ...
 }`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -76,8 +74,7 @@ An example of the response:
 
 Use an `application.yml` file (instead of the default `application.properties`) to configure the server port, audience, and OAuth2 resource server.
 
-<pre>
-  <code className="language-yaml">
+<Code className="language-yaml">
     {`# path/to/project/src/main/resources/application.yaml
 server:
   port: 3000
@@ -92,8 +89,7 @@ spring:
         jwt:
           issuer-uri: ${appendPath(props.endpoint, '/oidc')}
           jwk-set-uri: ${appendPath(props.endpoint, '/oidc/jwks')}`}
-  </code>
-</pre>
+</Code>
 
 - `audience`: The unique API identifier of your protected API resource.
 - `spring.security.oauth2.resourceserver.jwt.issuer-uri`: The iss claim value and the issuer URI in the JWT issued by Logto.
@@ -277,12 +273,10 @@ gradlew.bat bootRun
 
 Request your protected API with the Access Token as the Bearer token in the Authorization header, e.g. execute the `curl` command.
 
-<pre>
-  <code className="language-bash">
+<Code className="language-bash">
     {`curl --include '${appendPath(props.endpoint, '/api/profile')}' \\
 --header 'Authorization: Bearer <your-access-token>'`}
-  </code>
-</pre>
+</Code>
 
 If successful, you will get a response with 200 status:
 
