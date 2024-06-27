@@ -4,7 +4,7 @@ import { generateStandardSecret } from '@logto/shared/universal';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUris from '../../fragments/_redirect_uris.mdx';
+import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -85,7 +85,7 @@ This will create 4 routes automatically:
   subtitle="2 URIs"
 >
 
-<RedirectUris callbackUri="http://localhost:3000/api/logto/sign-in-callback" />
+<RedirectUrisWeb defaultUri="http://localhost:3000/api/logto/sign-in-callback" />
 
 </Step>
 

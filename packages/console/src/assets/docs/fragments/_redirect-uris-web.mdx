@@ -1,0 +1,18 @@
+import InlineNotification from '@/ds-components/InlineNotification';
+import UriInputField from '@/mdx-components/UriInputField';
+
+import ExperienceOverview from './_experience-overview.md';
+
+<ExperienceOverview />
+
+<InlineNotification>
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
+</InlineNotification>
+
+Now, let's configure your redirect URI. E.g. {`${props.defaultUri ?? 'http://localhost:3000/callback'}`}.
+
+<UriInputField name="redirectUris" />
+
+Just like signing in, users should be redirected to Logto for signing out of the shared session. Once finished, it would be great to redirect the user back to your website. For example, add `http://localhost:3000` as the post sign-out redirect URI below.
+
+<UriInputField name="postLogoutRedirectUris" />
