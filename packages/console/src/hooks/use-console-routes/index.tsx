@@ -5,7 +5,6 @@ import { type RouteObject } from 'react-router-dom';
 import { isCloud } from '@/consts/env';
 import Dashboard from '@/pages/Dashboard';
 import GetStarted from '@/pages/GetStarted';
-import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import SigningKeys from '@/pages/SigningKeys';
 
@@ -15,6 +14,7 @@ import { auditLogs } from './routes/audit-logs';
 import { connectors } from './routes/connectors';
 import { customizeJwt } from './routes/customize-jwt';
 import { enterpriseSso } from './routes/enterprise-sso';
+import { mfa } from './routes/mfa';
 import { organizationTemplate } from './routes/organization-template';
 import { organizations } from './routes/organizations';
 import { roles } from './routes/roles';
@@ -35,7 +35,7 @@ export const useConsoleRoutes = () => {
         applications,
         apiResources,
         signInExperience,
-        { path: 'mfa', element: <Mfa /> },
+        mfa,
         connectors,
         enterpriseSso,
         webhooks,
