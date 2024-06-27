@@ -11,10 +11,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'js',
     path: 'packages/sveltekit-sample',
   },
-  fullGuide: {
-    title: 'Full SvelteKit guide',
-    url: 'https://docs.logto.io/quick-starts/sveltekit',
-  },
+  fullGuide: 'sveltekit',
 });
 
 export default metadata;

@@ -10,10 +10,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'csharp',
     path: '/',
   },
-  fullGuide: {
-    title: 'Full .NET Core (Blazor Server) integration tutorial',
-    url: 'https://docs.logto.io/quick-starts/dotnet-core/blazor-server',
-  },
+  fullGuide: 'dotnet-core/blazor-server',
 });
 
 export default metadata;

@@ -10,10 +10,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'react-native',
     path: 'packages/rn-sample',
   },
-  fullGuide: {
-    title: 'Full Expo (React Native) guide',
-    url: 'https://docs.logto.io/quick-starts/expo',
-  },
+  fullGuide: 'expo',
 });
 
 export default metadata;

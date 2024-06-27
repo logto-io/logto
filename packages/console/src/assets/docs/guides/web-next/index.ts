@@ -11,10 +11,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'js',
     path: 'packages/next-sample',
   },
-  fullGuide: {
-    title: 'Full Next.js SDK tutorial',
-    url: 'https://docs.logto.io/quick-starts/next',
-  },
+  fullGuide: 'next',
 });
 
 export default metadata;

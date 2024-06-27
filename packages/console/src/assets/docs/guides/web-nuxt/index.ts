@@ -11,10 +11,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'js',
     path: 'packages/nuxt',
   },
-  fullGuide: {
-    title: 'Full Nuxt guide',
-    url: 'https://docs.logto.io/quick-starts/nuxt',
-  },
+  fullGuide: 'nuxt',
 });
 
 export default metadata;

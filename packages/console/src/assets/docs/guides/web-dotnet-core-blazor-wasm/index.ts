@@ -10,10 +10,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'csharp',
     path: '/',
   },
-  fullGuide: {
-    title: 'Full .NET Core (Blazor WASM) integration tutorial',
-    url: 'https://docs.logto.io/quick-starts/dotnet-core/blazor-wasm',
-  },
+  fullGuide: 'dotnet-core/blazor-wasm',
 });
 
 export default metadata;

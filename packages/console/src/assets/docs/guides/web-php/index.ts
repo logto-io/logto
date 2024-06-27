@@ -10,10 +10,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'php',
     path: 'samples',
   },
-  fullGuide: {
-    title: 'Full PHP SDK tutorial',
-    url: 'https://docs.logto.io/quick-starts/php',
-  },
+  fullGuide: 'php',
 });
 
 export default metadata;
