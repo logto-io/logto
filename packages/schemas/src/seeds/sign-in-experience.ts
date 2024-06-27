@@ -49,7 +49,7 @@ export const createDefaultSignInExperience = (
     signInMode: SignInMode.SignInAndRegister,
     customCss: null,
     customContent: {},
-    customUiAssetId: null,
+    customUiAssets: null,
     passwordPolicy: {},
     mfa: {
       factors: [],

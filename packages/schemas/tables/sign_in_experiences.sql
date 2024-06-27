@@ -19,7 +19,7 @@ create table sign_in_experiences (
   sign_in_mode sign_in_mode not null default 'SignInAndRegister',
   custom_css text,
   custom_content jsonb /* @use CustomContent */ not null default '{}'::jsonb,
-  custom_ui_asset_id varchar(21),
+  custom_ui_assets jsonb /* @use CustomUiAssets */,
   password_policy jsonb /* @use PartialPasswordPolicy */ not null default '{}'::jsonb,
   mfa jsonb /* @use Mfa */ not null default '{}'::jsonb,
   single_sign_on_enabled boolean not null default false,

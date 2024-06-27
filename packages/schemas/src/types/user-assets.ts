@@ -32,3 +32,10 @@ export const userAssetsGuard = z.object({
 });
 
 export type UserAssets = z.infer<typeof userAssetsGuard>;
+
+export const uploadFileGuard = z.object({
+  filepath: z.string(),
+  mimetype: z.string(),
+  originalFilename: z.string(),
+  size: z.number(),
+});
