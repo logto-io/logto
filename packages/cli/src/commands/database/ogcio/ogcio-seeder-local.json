@@ -2,8 +2,8 @@
     "default": {
         "organizations": [
             {
-                "name": "OGCIO",
-                "description": "OGCIO Organization",
+                "name": "OGCIO Seeded Org",
+                "description": "Organization created through seeder",
                 "id": "ogcio"
             }
         ],
@@ -32,31 +32,31 @@
                 "name": "Payments Building Block",
                 "description": "Payments App of Life Events",
                 "type": "Traditional",
-                "redirect_uri": "<SEEDER_PAYMENTS_APP_REDIRECT_URI>",
-                "logout_redirect_uri": "<SEEDER_PAYMENTS_APP_LOGOUT_REDIRECT_URI>",
-                "secret": "<SEEDER_PAYMENTS_APP_SECRET>",
-                "id": "r5f56tpkytpqyyshiutd2"
+                "redirect_uri": "http://localhost:3001/callback",
+                "logout_redirect_uri": "http://localhost:3001",
+                "secret": "bgHz4Ouv2lxXCdc6s6s4IUoNpFAklC15",
+                "id": "2xz6sbi8ch01uhjt1oq8r"
             },
             {
                 "name": "Messaging Building Block",
                 "description": "Messaging App of Life Events",
                 "type": "Traditional",
-                "redirect_uri": "<SEEDER_MESSAGING_APP_REDIRECT_URI>",
-                "logout_redirect_uri": "<SEEDER_MESSAGING_APP_LOGOUT_REDIRECT_URI>",
-                "secret": "<SEEDER_MESSAGING_APP_SECRET>",
-                "id": "1lvmteh2ao3xrswyq7j3e"
+                "redirect_uri": "http://localhost:3002/callback",
+                "logout_redirect_uri": "http://localhost:3002",
+                "secret": "Y3nBMm8Hs3Ugcl4596w5ewgOosvwX4im",
+                "id": "4695d8onfb9f3bv18phtq"
             }
         ],
         "resources": [
             {
                 "id": "payments-api",
                 "name": "Payments Building Block API",
-                "indicator": "<SEEDER_PAYMENTS_API_INDICATOR>"
+                "indicator": "http://localhost:8001/"
             },
             {
                 "id": "messaging-api",
                 "name": "Messaging Building Block API",
-                "indicator": "<SEEDER_MESSAGING_API_INDICATOR>"
+                "indicator": "http://localhost:8002/"
             }
         ],
         "resource_permissions": [
@@ -94,13 +94,13 @@
                 "connector_id": "mygovid",
                 "config": {
                     "scope": "openid profile email",
-                    "clientId": "<SEEDER_MYGOVID_CONNECTOR_CLIENT_ID>",
-                    "clientSecret": "<SEEDER_MYGOVID_CONNECTOR_CLIENT_SECRET>",
-                    "tokenEndpoint": "<SEEDER_MYGOVID_CONNECTOR_TOKEN_ENDPOINT>",
-                    "authorizationEndpoint": "<SEEDER_MYGOVID_CONNECTOR_AUTHORIZATION_ENDPOINT>",
+                    "clientId": "mock_client_id",
+                    "clientSecret": "mock_client_secret",
+                    "tokenEndpoint": "http://localhost:3005/logto/mock/token",
+                    "authorizationEndpoint": "http://localhost:3005/logto/mock/auth",
                     "tokenEndpointAuthMethod": "client_secret_post",
                     "idTokenVerificationConfig": {
-                        "jwksUri": "<SEEDER_MYGOVID_CONNECTOR_JWS_URI>"
+                        "jwksUri": "http://localhost:3005/logto/mock/keys"
                     },
                     "clientSecretJwtSigningAlgorithm": "HS256"
                 },
@@ -152,9 +152,9 @@
                     "PostSignIn"
                 ],
                 "config": {
-                    "url": "<SEEDER_WEBHOOK_LOGIN_URL>"
+                    "url": "http://localhost:8003/user-login-wh"
                 },
-                "signing_key": "<SEEDER_WEBHOOK_SIGNING_KEY>",
+                "signing_key": "xpWX3WIkPkSA5A0UzLMfNOuTl1qEnbkg",
                 "enabled": true
             }
         ]

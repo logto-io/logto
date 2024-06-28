@@ -68,7 +68,7 @@ USER_DEFAULT_ORGANIZATION_ROLE_NAMES=OGCIO Employee, OGCIO Manager
 
 3. After the installation, you can start seeding the database. You have to seed in two steps:
 - seed Logto's database: `pnpm cli db seed`
-- seed custom OGCIO data: `npm run cli db ogcio -- --seeder-filepath="./packages/cli/src/commands/database/ogcio/ogcio-seeder.json"`
+- seed custom OGCIO data: `npm run cli db ogcio -- --seeder-filepath="./packages/cli/src/commands/database/ogcio/ogcio-seeder-local.json"`
 
     3.5. Database alteration
 
@@ -98,7 +98,7 @@ After installing and seeding the database, you must create a default admin user.
 
 ## Custom seeder
 
-We made a custom seeder to ensure the required configuration for OGCIO Building Block integration exists right after the installation. The seeder also makes configuring the deployed Logto instance easy via a CI pipeline. The seeder is located in `packages/cli/src/commands/database/ogcio/`. The configuration for the local dev environment is inside `packages/cli/src/commands/database/ogcio/ogcio-seeder.json`.
+We made a custom seeder to ensure the required configuration for OGCIO Building Block integration exists right after the installation. The seeder also makes configuring the deployed Logto instance easy via a CI pipeline. The seeder is located in `packages/cli/src/commands/database/ogcio/`. The configuration for the local dev environment is inside `packages/cli/src/commands/database/ogcio/ogcio-seeder-local.json`.
 
 Each type of configuration has its own dedicated file, which serves as a repository of knowledge about the structure of the configuration and how it should be inserted into the database. This approach ensures a systematic and organized management of the database configuration.
 
@@ -112,4 +112,4 @@ This command can take a parameter to specify the input data file, called `seeder
 
 Usage: `npm run cli db ogcio -- --seeder-filepath="DATA_FILE_PATH"`
 
-To seed the default data for local dev environments, run `npm run cli db ogcio -- --seeder-filepath="./packages/cli/src/commands/database/ogcio/ogcio-seeder.json"`.
+To seed the default data for local dev environments, run `npm run cli db ogcio -- --seeder-filepath="./packages/cli/src/commands/database/ogcio/ogcio-seeder-local.json"`.

@@ -12,7 +12,7 @@ import { consoleLog } from '../../../utils.js';
 import { setTenantSeederData, type OgcioTenantSeeder } from './ogcio-seeder.js';
 import { seedOgcio } from './ogcio.js';
 
-const DEFAULT_SEEDER_FILE = './src/commands/database/ogcio/ogcio-seeder.json';
+const DEFAULT_SEEDER_FILE = './src/commands/database/ogcio/ogcio-seeder-local.json';
 
 const interpolateString = (content: string): string => {
   const regExp = /<\w+>/g;
