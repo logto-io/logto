@@ -163,9 +163,9 @@ void init() async {
 
 <RedirectUrisNative />
 
-### Register the Redirect URI on Android
+- For iOS, the redirect URI scheme does not really matter since the iOS will listen to the redirect URI regardless of if it's registered.
 
-In order to capture the callback url from Logto's sign-in web page, you will need to register your sign-in redirectUri to the `AndroidManifest.xml`.
+- For Android, in order to capture the callback url from Logto's sign-in web page, you will need to register your sign-in redirectUri to the `AndroidManifest.xml`.
 
 ```xml title="AndroidManifest.xml"
 <activity android:name="com.linusu.flutter_web_auth.CallbackActivity" android:exported="true">
