@@ -16,12 +16,13 @@
   }
 }
 
-
-.warning {
-  margin-top: _.unit(3);
+.jitFormField {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
 }
 
-.addSsoConnectorButton {
+.mfaWarning {
   margin-top: _.unit(3);
 }
 

@@ -69,6 +69,7 @@ function JitSettings({ form }: Props) {
       description="organization_details.jit.description"
     >
       <FormField
+        className={styles.jitFormField}
         title="organization_details.jit.enterprise_sso"
         description={
           <Trans
@@ -133,7 +134,6 @@ function JitSettings({ form }: Props) {
                     size: 'medium',
                     title: 'organization_details.jit.add_enterprise_connector',
                     icon: <Plus />,
-                    className: styles.addSsoConnectorButton,
                   }}
                   dropdownHorizontalAlign="start"
                 >
@@ -214,7 +214,7 @@ function JitSettings({ form }: Props) {
           )}
         />
         {hasSsoEnabledEmailDomain && (
-          <InlineNotification severity="alert" className={styles.warning}>
+          <InlineNotification severity="alert">
             {t('organization_details.jit.sso_enabled_domain_warning')}
           </InlineNotification>
         )}

@@ -126,7 +126,7 @@ function Settings() {
             {...register('isMfaRequired')}
           />
           {isMfaRequired && signInExperience?.mfa.factors.length === 0 && (
-            <InlineNotification severity="alert" className={styles.warning}>
+            <InlineNotification severity="alert" className={styles.mfaWarning}>
               <Trans
                 i18nKey="admin_console.organization_details.mfa.no_mfa_warning"
                 components={{
