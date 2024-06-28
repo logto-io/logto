@@ -41,14 +41,14 @@ function GoogleOneTapCard() {
       <FormField title="connector_details.google_one_tap.enable_google_one_tap">
         <Switch
           description={
-            <>
+            <div className={styles.oneTapSwitch}>
               <img
                 className={styles.figure}
                 src={themeToFigure[theme]}
                 alt="Google One Tap figure"
               />
               {t('enable_google_one_tap_description')}
-            </>
+            </div>
           }
           {...register('rawConfig.oneTap.isEnabled')}
         />
