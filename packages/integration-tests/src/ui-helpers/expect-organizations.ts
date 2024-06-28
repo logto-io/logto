@@ -72,7 +72,7 @@ export default class ExpectOrganizations extends ExpectConsole {
 
     // Skip permission assignment
     await this.toExpectModal('Assign permissions');
-    await this.toClickButton('Discard');
+    await this.toClickButton('Skip');
 
     this.toMatchUrl(/\/organization-template\/organization-roles\/.+$/);
   }

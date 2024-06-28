@@ -44,16 +44,18 @@ const organization_details = {
       'Users can automatically join the organization and be assigned roles upon their first sign-in through some authentication methods. You can set requirements to meet for just-in-time provisioning.',
     email_domain: 'Email domain provisioning',
     email_domain_description:
-      'New users signing up with their verified email addresses or through social sign-in with verified email addresses will automatically join the organization.',
+      'New users signing up with their verified email addresses or through social sign-in with verified email addresses will automatically join the organization. <a>Learn more</a>',
     email_domain_placeholder: 'Enter email domains for just-in-time provisioning',
     invalid_domain: 'Invalid domain',
     domain_already_added: 'Domain already added',
     sso_enabled_domain_warning:
       'You have entered one or more email domains associated to enterprise SSO. Users with these emails will follow the standard SSO flow and won’t be provisioned to this organization unless enterprise SSO provisioning is configured.',
     enterprise_sso: 'Enterprise SSO provisioning',
+    no_enterprise_connector_set:
+      'You haven’t set up any enterprise SSO connector yet. Add connectors first to enable enterprise SSO provisioning. <a>Set up</a>',
     add_enterprise_connector: 'Add enterprise connector',
     enterprise_sso_description:
-      'New or existing users signing in through enterprise SSO for the first time will automatically join the organization.',
+      'New users or existing users signing in through enterprise SSO for the first time will automatically join the organization. <a>Learn more</a>',
     organization_roles: 'Default organization roles',
     organization_roles_description:
       'Assign roles to users upon joining the organization through just-in-time provisioning.',
@@ -64,7 +66,7 @@ const organization_details = {
     description:
       'Require users to configure multi-factor authentication to access this organization.',
     no_mfa_warning:
-      'No multi-factor authentication methods are enabled for your tenant. Users will not be able to access this organization until at least one multi-factor authentication method is enabled.',
+      'No multi-factor authentication methods are enabled for your tenant. Users will not be able to access this organization until at least one <a>multi-factor authentication method</a> is enabled.',
   },
 };
 

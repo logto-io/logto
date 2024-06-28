@@ -1,5 +1,5 @@
 import { type OrganizationWithRoles } from '@logto/schemas';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -23,9 +23,11 @@ import * as styles from './index.module.scss';
 type Props = {
   readonly type: 'user' | 'application';
   readonly data: { id: string };
+  /** Placeholder to show when there is no data. */
+  readonly placeholder?: ReactNode;
 };
 
-function OrganizationList({ type, data: { id } }: Props) {
+function OrganizationList({ type, data: { id }, placeholder }: Props) {
   const [keyword, setKeyword] = useState('');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getPathname } = useTenantPathname();
@@ -44,7 +46,7 @@ function OrganizationList({ type, data: { id } }: Props) {
       isLoading={isLoading}
       rowIndexKey="id"
       rowGroups={[{ key: 'data', data }]}
-      placeholder={<EmptyDataPlaceholder />}
+      placeholder={placeholder ?? <EmptyDataPlaceholder />}
       columns={[
         {
           title: t('general.name'),

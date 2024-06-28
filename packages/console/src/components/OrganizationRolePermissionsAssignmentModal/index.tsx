@@ -97,7 +97,7 @@ function OrganizationRolePermissionsAssignmentModal({
       subtitle="organization_role_details.permissions.assign_description"
       confirmButtonType="primary"
       confirmButtonText="general.save"
-      cancelButtonText="general.discard"
+      cancelButtonText="general.skip"
       size="large"
       onCancel={onCloseHandler}
       onConfirm={onSubmitHandler}

@@ -92,6 +92,7 @@ const application_details = {
     'Ensure to protect your origin server from direct access. Refer to the guide for more <a>detailed instructions</a>.',
   session_duration: 'Session duration (days)',
   try_it: 'Try it',
+  no_organization_placeholder: 'No organization found. <a>Go to organizations</a>',
   branding: {
     name: 'Branding',
     description: "Customize your application's display name and logo on the consent screen.",
