@@ -48,6 +48,10 @@ function JitSettings({ form }: Props) {
     { initialSize: Number.POSITIVE_INFINITY }
   );
   const allSsoConnectors = useMemo(() => ssoConnectorMatrix?.flat(), [ssoConnectorMatrix]);
+  const filteredSsoConnectors = useMemo(
+    () => allSsoConnectors?.filter(({ id }) => !ssoConnectorIds.includes(id)),
+    [allSsoConnectors, ssoConnectorIds]
+  );
   const hasSsoEnabled = useCallback(
     (domain: string) => allSsoConnectors?.some(({ domains }) => domains.includes(domain)),
     [allSsoConnectors]
@@ -65,6 +69,7 @@ function JitSettings({ form }: Props) {
       description="organization_details.jit.description"
     >
       <FormField
+        className={styles.jitFormField}
         title="organization_details.jit.enterprise_sso"
         description={
           <Trans
@@ -81,7 +86,7 @@ function JitSettings({ form }: Props) {
         }
         descriptionPosition="top"
       >
-        {ssoConnectorIds.length === 0 && (
+        {!allSsoConnectors?.length && (
           <InlineNotification>
             <Trans
               i18nKey="admin_console.organization_details.jit.no_enterprise_connector_set"
@@ -89,65 +94,66 @@ function JitSettings({ form }: Props) {
             />
           </InlineNotification>
         )}
-        {ssoConnectorIds.length > 0 && (
-          <Controller
-            name="jitSsoConnectorIds"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <div className={styles.ssoConnectorList}>
-                {value.map((id) => {
-                  const connector = allSsoConnectors?.find(
-                    ({ id: connectorId }) => id === connectorId
-                  );
-                  return (
-                    connector && (
-                      <div key={connector.id} className={styles.ssoConnector}>
-                        <div className={styles.info}>
-                          <SsoConnectorLogo className={styles.icon} data={connector} />
-                          <span>
-                            {connector.connectorName} - {connector.providerName}
-                          </span>
+        <Controller
+          name="jitSsoConnectorIds"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <>
+              {value.length > 0 && (
+                <div className={styles.ssoConnectorList}>
+                  {value.map((id) => {
+                    const connector = allSsoConnectors?.find(
+                      ({ id: connectorId }) => id === connectorId
+                    );
+                    return (
+                      connector && (
+                        <div key={connector.id} className={styles.ssoConnector}>
+                          <div className={styles.info}>
+                            <SsoConnectorLogo className={styles.icon} data={connector} />
+                            <span>
+                              {connector.connectorName} - {connector.providerName}
+                            </span>
+                          </div>
+                          <IconButton
+                            onClick={() => {
+                              onChange(value.filter((value) => value !== id));
+                            }}
+                          >
+                            <Minus />
+                          </IconButton>
                         </div>
-                        <IconButton
-                          onClick={() => {
-                            onChange(value.filter((value) => value !== id));
-                          }}
-                        >
-                          <Minus />
-                        </IconButton>
-                      </div>
-                    )
-                  );
-                })}
+                      )
+                    );
+                  })}
+                </div>
+              )}
+              {Boolean(filteredSsoConnectors?.length) && (
                 <ActionMenu
                   buttonProps={{
                     type: 'default',
                     size: 'medium',
                     title: 'organization_details.jit.add_enterprise_connector',
                     icon: <Plus />,
-                    className: styles.addSsoConnectorButton,
                   }}
                   dropdownHorizontalAlign="start"
                 >
-                  {allSsoConnectors
-                    ?.filter(({ id }) => !value.includes(id))
-                    .map((connector) => (
-                      <DropdownItem
-                        key={connector.id}
-                        className={styles.dropdownItem}
-                        onClick={() => {
-                          onChange([...value, connector.id]);
-                        }}
-                      >
-                        <SsoConnectorLogo className={styles.icon} data={connector} />
-                        <span>{connector.connectorName}</span>
-                      </DropdownItem>
-                    ))}
+                  {filteredSsoConnectors?.map((connector) => (
+                    <DropdownItem
+                      key={connector.id}
+                      className={styles.dropdownItem}
+                      onClick={() => {
+                        onChange([...value, connector.id]);
+                      }}
+                    >
+                      <SsoConnectorLogo className={styles.icon} data={connector} />
+                      <span>{connector.connectorName}</span>
+                    </DropdownItem>
+                  ))}
                 </ActionMenu>
-              </div>
-            )}
-          />
-        )}
+              )}
+            </>
+          )}
+        />
       </FormField>
       <FormField
         title="organization_details.jit.email_domain"
@@ -208,7 +214,7 @@ function JitSettings({ form }: Props) {
           )}
         />
         {hasSsoEnabledEmailDomain && (
-          <InlineNotification severity="alert" className={styles.warning}>
+          <InlineNotification severity="alert">
             {t('organization_details.jit.sso_enabled_domain_warning')}
           </InlineNotification>
         )}
