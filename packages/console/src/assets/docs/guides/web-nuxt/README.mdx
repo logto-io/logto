@@ -5,7 +5,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUris from '../../fragments/_redirect_uris.mdx';
+import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
 import { generateStandardSecret } from '@logto/shared/universal';
 
 export const cookieEncryptionKey = generateStandardSecret();
@@ -84,7 +84,7 @@ See [runtime config](https://nuxt.com/docs/guide/going-further/runtime-config) f
   subtitle="2 URIs"
 >
 
-<RedirectUris />
+<RedirectUrisWeb />
 
 When registering `@logto/nuxt` module, it will do the following:
 

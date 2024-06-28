@@ -4,7 +4,7 @@ import { generateStandardSecret } from '@logto/shared/universal';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUris from '../../fragments/_redirect_uris.mdx';
+import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
   subtitle="2 URIs"
 >
 
-<RedirectUris />
+<RedirectUrisWeb />
 
 </Step>
 

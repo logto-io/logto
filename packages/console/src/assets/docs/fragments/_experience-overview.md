@@ -1,6 +1,3 @@
-import InlineNotification from '@/ds-components/InlineNotification';
-import UriInputField from '@/mdx-components/UriInputField';
-
 Before we dive into the details, here's a quick overview of the end-user experience. The sign-in process can be simplified as follows:
 
 ```mermaid
@@ -21,15 +18,3 @@ Regarding redirect-based sign-in:
 To learn more about the rationale and benefits of redirect-based sign-in, see [Logto sign-in experience explained](https://docs.logto.io/docs/tutorials/get-started/sign-in-experience).
 
 ---
-
-<InlineNotification>
-  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
-</InlineNotification>
-
-Now, let's enter your redirect URI. E.g. {`${props.callbackUri ?? 'http://localhost:3000/callback'}`}.
-
-<UriInputField name="redirectUris" />
-
-Just like signing in, users should be redirected to Logto for signing out of the shared session. Once finished, it would be great to redirect the user back to your website. For example, add `http://localhost:3000` as the post sign-out redirect URI below.
-
-<UriInputField name="postLogoutRedirectUris" />

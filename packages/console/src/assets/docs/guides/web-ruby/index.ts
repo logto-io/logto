@@ -12,6 +12,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'ruby',
     path: 'logto-sample',
   },
+  fullGuide: 'ruby',
 });
 
 export default metadata;

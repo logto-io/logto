@@ -1,0 +1,10 @@
+import InlineNotification from '@/ds-components/InlineNotification';
+import UriInputField from '@/mdx-components/UriInputField';
+
+import ExperienceOverview from './_experience-overview.md';
+
+<ExperienceOverview />
+
+Now, let's configure your redirect URI. E.g. {`${props.defaultUri ?? 'http://localhost:3000/callback'}`}.
+
+<UriInputField name="redirectUris" />
