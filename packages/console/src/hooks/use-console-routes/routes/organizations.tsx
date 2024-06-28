@@ -1,7 +1,6 @@
 import { condArray } from '@silverhand/essentials';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import OrganizationDetails from '@/pages/OrganizationDetails';
 import MachineToMachine from '@/pages/OrganizationDetails/MachineToMachine';
 import Members from '@/pages/OrganizationDetails/Members';
@@ -17,15 +16,15 @@ export const organizations: RouteObject = {
     {
       path: ':id/*',
       element: <OrganizationDetails />,
-      children: condArray(
+      children: [
         { index: true, element: <Navigate replace to={OrganizationDetailsTabs.Settings} /> },
         { path: OrganizationDetailsTabs.Settings, element: <Settings /> },
         { path: OrganizationDetailsTabs.Members, element: <Members /> },
-        isDevFeaturesEnabled && {
+        {
           path: OrganizationDetailsTabs.MachineToMachine,
           element: <MachineToMachine />,
-        }
-      ),
+        },
+      ],
     }
   ),
 };

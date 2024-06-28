@@ -28,7 +28,7 @@ import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 import checkResource from 'oidc-provider/lib/shared/check_resource.js';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -68,10 +68,6 @@ export const buildHandler: (
   // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
   // to `Boolean` first.
   const organizationId = cond(Boolean(params?.organization_id) && String(params?.organization_id));
-  // TODO: Remove
-  if (!EnvSet.values.isDevFeaturesEnabled && organizationId) {
-    throw new InvalidTarget('organization tokens are not supported yet');
-  }
 
   if (
     organizationId &&

@@ -13,10 +13,9 @@ import {
   deleteApplication,
 } from '#src/api/application.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { devFeatureTest, generateTestName } from '#src/utils.js';
+import { generateTestName } from '#src/utils.js';
 
-// TODO: Remove this prefix
-devFeatureTest.describe('organization application APIs', () => {
+describe('organization application APIs', () => {
   describe('organization get applications', () => {
     const organizationApi = new OrganizationApiTest();
     const applications: Application[] = [];

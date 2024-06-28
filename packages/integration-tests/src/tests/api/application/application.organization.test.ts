@@ -7,9 +7,9 @@ import {
   getOrganizations,
 } from '#src/api/application.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { devFeatureTest, generateTestName } from '#src/utils.js';
+import { generateTestName } from '#src/utils.js';
 
-devFeatureTest.describe('application organizations', () => {
+describe('application organizations', () => {
   const organizationApi = new OrganizationApiTest();
   const applications: Application[] = [];
   const createApplication = async (...args: Parameters<typeof createApplicationApi>) => {

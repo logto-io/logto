@@ -19,7 +19,6 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import OrganizationList from '@/components/OrganizationList';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedAppLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -178,11 +177,9 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Logs}`}>
               {t('application_details.machine_logs')}
             </TabNavItem>
-            {isDevFeaturesEnabled && (
-              <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Organizations}`}>
-                {t('organizations.title')}
-              </TabNavItem>
-            )}
+            <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Organizations}`}>
+              {t('organizations.title')}
+            </TabNavItem>
           </>
         )}
         {data.isThirdParty && (

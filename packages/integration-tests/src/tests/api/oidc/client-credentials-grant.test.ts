@@ -26,9 +26,9 @@ import {
 } from '#src/api/resource.js';
 import { assignScopesToRole, createRole as createRoleApi, deleteRole } from '#src/api/role.js';
 import { createScope as createScopeApi } from '#src/api/scope.js';
-import { isDevFeaturesEnabled, logtoUrl } from '#src/constants.js';
+import { logtoUrl } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { devFeatureTest, randomString } from '#src/utils.js';
+import { randomString } from '#src/utils.js';
 
 type TokenResponse = {
   access_token: string;
@@ -175,19 +175,6 @@ describe('client credentials grant', () => {
   });
 
   describe('organization token', () => {
-    it('should fail if dev feature is not enabled', async () => {
-      if (isDevFeaturesEnabled) {
-        return;
-      }
-
-      await expectError({ organization_id: 'not-found' }, 400, {
-        error: 'invalid_target',
-        error_description: 'organization tokens are not supported yet',
-      });
-    });
-  });
-
-  devFeatureTest.describe('organization token', () => {
     it('should fail if the application is not associated with the organization', async () => {
       await expectError({ organization_id: 'not-found' }, 403, {
         error: 'access_denied',
