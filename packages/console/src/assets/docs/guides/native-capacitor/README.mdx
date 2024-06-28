@@ -5,6 +5,7 @@ import Step from '@/mdx-components/Step';
 import capaticorIos from './assets/capacitor-ios.webp';
 import logtoSignInPage from './assets/logto-sign-in-page.webp';
 import logtoSignOutPage from './assets/logto-sign-out-page.webp';
+import RedirectUrisNative from '../../fragments/_redirect-uris-native.mdx';
 
 <Steps>
 
@@ -40,13 +41,13 @@ const logtoClient = new LogtoClient({
 
 <Step title="Implement the sign-in button">
 
-Now, let's configure the redirect URI. The redirect URI is used to redirect the user back to your application after the authentication flow.
 
-Ensure that the URI redirects to the Capacitor app, for example, `com.example.app://callback`. The value may vary depending on your Capacitor app configuration. For more details, see [Capacitor Deep Links](https://capacitorjs.com/docs/guides/deep-links).
+<RedirectUrisNative defaultUri="com.example.app://callback" />
 
-<UriInputField name="redirectUris" />
+Ensure that the URI redirects to the Capacitor app. The value may vary depending on your Capacitor app configuration. For more details, see [Capacitor Deep Links](https://capacitorjs.com/docs/guides/deep-links).
 
 Remember to click on **Save changes** after updating the redirect URI. Then, add the following code to the `onClick` handler of the sign-in button:
+
 
 <Code className="language-ts">
     {`const onClick = async () => {
