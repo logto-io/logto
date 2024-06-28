@@ -4,6 +4,8 @@ import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -26,7 +28,7 @@ composer require logto/sdk
 
 Insert the following code into your PHP file:
 
-<Code className="language-php">
+<Code title="index.php" className="language-php">
 {`use logto\sdk\LogtoClient;
 use Logto\Sdk\LogtoConfig;
 
@@ -41,36 +43,38 @@ $client = new LogtoClient(
 
 By default, the SDK uses the built-in PHP session to store the Logto data. If you want to use other storage, you can pass a custom storage object as the second parameter:
 
-```php
-$client = new LogtoClient(
+<Code title="index.php" className="language-php">
+{`$client = new LogtoClient(
   new LogtoConfig(
     // ...
   ),
   new YourCustomStorage(),
-);
-```
+);`}
+</Code>
 
 </Step>
 
 <Step title="Implement the sign-in route">
 
+<RedirectUrisWeb />
+
 <p>
-First, let’s enter your redirect URI. E.g. <code>{props.sampleUrls.callback}</code>. This is where Logto will redirect users after they sign in.
+First, let's enter your redirect URI. E.g. <code>{"http://localhost:3000/callback"}</code>. This is where Logto will redirect users after they sign in.
 </p>
 
 <UriInputField name="redirectUris" />
 
-<Code className="language-php">
+<Code title="index.php" className="language-php">
 {`Route::get('/sign-in', function () {
-  return redirect($client->signIn('${props.redirectUris[0] || props.sampleUrls.callback}'));
+  return redirect($client->signIn('${props.redirectUris[0] || "http://localhost:3000/callback"}'));
 });`}
 </Code>
 
 If you want to show the sign-up page on the first screen, you can set `interactionMode` to `signUp`:
 
-<Code className="language-php">
+<Code title="index.php" className="language-php">
 {`Route::get('/sign-in', function () {
-  return redirect($client->signIn('${props.redirectUris[0] || props.sampleUrls.callback}', InteractionMode::signUp));
+  return redirect($client->signIn('${props.redirectUris[0] || "http://localhost:3000/callback"}', InteractionMode::signUp));
 });`}
 </Code>
 
@@ -85,7 +89,7 @@ Now, whenever your users visit `/sign-in`, it will start a new sign-in attempt a
 
 After the user signs in, Logto will redirect the user to the callback URL you set in the Logto Console. In this example, we use `/callback` as the callback URL:
 
-```php
+```php title="index.php"
 Route::get('/callback', function () {
   try {
     $client->handleSignInCallback(); // Handle a lot of stuff
@@ -106,7 +110,7 @@ To clean up the Python session and Logto session, we can designate a post sign-o
 
 And a sign-out route can be implemented as follows:
 
-<Code className="language-php">
+<Code title="index.php" className="language-php">
 {`Route::get('/sign-out', function () {
   return redirect(
     // Redirect the user to the home page after a successful sign-out
@@ -128,7 +132,7 @@ We also need to implement a home page for demonstration:
 - If the user is not signed in, show a sign-in button;
 - If the user is signed in, show some basic information about the user.
 
-```php
+```php title="index.php"
 Route::get('/', function () {
   if ($client->isAuthenticated() === false) {
     return "Not authenticated <a href='/sign-in'>Sign in</a>";
@@ -157,14 +161,30 @@ To learn more about scopes and claims, see [Get user information](https://docs.l
 
 <Step title="Checkpoint: Test your application">
 
-Now, you can test your application:
+<Checkpoint />
 
-<ol>
-  <li>Visit <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
-  <li>Click the "Sign in" button, and you should be redirected to the Logto sign-in page.</li>
-  <li>After you sign in, you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see your user info and a "Sign out" button.</li>
-  <li>Click the "Sign out" button, and you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
-</ol>
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can use either the `getIdTokenClaims` method or `fetchUserInfo` method to get user information. While `getIdTokenClaims` returns the user information contains in the ID token, `fetchUserInfo` fetches the user information from the userinfo endpoint.
+
+```php title="index.php"
+Route::get('/userinfo', function () {
+  if ($client->isAuthenticated() === false) {
+    return "Not authenticated <a href='/sign-in'>Sign in</a>";
+  }
+
+  return (
+    // Get local ID token claims
+    json_decode($client->getIdTokenClaims())
+    . "<br>"
+    // Fetch user info from Logto userinfo endpoint
+    json_decode($client->fetchUserInfo())
+    . "<br>"
+  );
+});
+```
 
 </Step>
 
