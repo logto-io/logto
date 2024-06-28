@@ -38,7 +38,7 @@ function JitSettings({ form }: Props) {
     watch,
   } = form;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [emailDomains] = watch(['jitEmailDomains']);
+  const [emailDomains, ssoConnectorIds] = watch(['jitEmailDomains', 'jitSsoConnectorIds']);
   const [keyword, setKeyword] = useState('');
   // Fetch all SSO connector to show if a domain is configured SSO
   const { data: ssoConnectorMatrix } = useSWRInfinite<SsoConnectorWithProviderConfig[]>(
@@ -48,6 +48,10 @@ function JitSettings({ form }: Props) {
     { initialSize: Number.POSITIVE_INFINITY }
   );
   const allSsoConnectors = useMemo(() => ssoConnectorMatrix?.flat(), [ssoConnectorMatrix]);
+  const filteredSsoConnectors = useMemo(
+    () => allSsoConnectors?.filter(({ id }) => ssoConnectorIds.includes(id)),
+    [allSsoConnectors, ssoConnectorIds]
+  );
   const hasSsoEnabled = useCallback(
     (domain: string) => allSsoConnectors?.some(({ domains }) => domains.includes(domain)),
     [allSsoConnectors]
@@ -119,19 +123,18 @@ function JitSettings({ form }: Props) {
                     )
                   );
                 })}
-                <ActionMenu
-                  buttonProps={{
-                    type: 'default',
-                    size: 'medium',
-                    title: 'organization_details.jit.add_enterprise_connector',
-                    icon: <Plus />,
-                    className: styles.addSsoConnectorButton,
-                  }}
-                  dropdownHorizontalAlign="start"
-                >
-                  {allSsoConnectors
-                    ?.filter(({ id }) => !value.includes(id))
-                    .map((connector) => (
+                {Boolean(filteredSsoConnectors?.length) && (
+                  <ActionMenu
+                    buttonProps={{
+                      type: 'default',
+                      size: 'medium',
+                      title: 'organization_details.jit.add_enterprise_connector',
+                      icon: <Plus />,
+                      className: styles.addSsoConnectorButton,
+                    }}
+                    dropdownHorizontalAlign="start"
+                  >
+                    {filteredSsoConnectors?.map((connector) => (
                       <DropdownItem
                         key={connector.id}
                         className={styles.dropdownItem}
@@ -143,7 +146,8 @@ function JitSettings({ form }: Props) {
                         <span>{connector.connectorName}</span>
                       </DropdownItem>
                     ))}
-                </ActionMenu>
+                  </ActionMenu>
+                )}
               </div>
             )}
           />
