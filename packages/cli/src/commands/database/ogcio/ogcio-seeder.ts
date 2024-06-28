@@ -5,7 +5,7 @@ export type OgcioTenantSeeder = Record<string, OgcioSeeder>;
 
 export type OgcioSeeder = {
   organizations?: OrganizationSeeder[];
-  organization_permissions?: OrganizationPermissionSeeder[];
+  organization_permissions?: OrganizationPermissionSeeder;
   organization_roles?: OrganizationRoleSeeder[];
   applications?: ApplicationSeeder[];
   resources?: ResourceSeeder[];
@@ -23,16 +23,12 @@ export type OrganizationSeeder = {
 };
 
 export type OrganizationPermissionSeeder = {
-  specific_permissions?: string[];
-  actions?: string[];
-  entities?: string[];
+  specific_permissions: string[];
 };
 
 export type OrganizationRoleSeeder = {
   name: string;
-  actions?: string[];
-  entities?: string[];
-  specific_permissions?: string[];
+  specific_permissions: string[];
   description: string;
 };
 
@@ -103,10 +99,8 @@ export type SignInExperienceSeeder = {
 };
 
 export type ResourcePermissionSeeder = {
-  for_resource_ids: string[];
-  specific_permissions?: string[];
-  actions?: string[];
-  entities?: string[];
+  resource_id: string;
+  specific_permissions: string[];
 };
 
 export type ResourceRoleSeeder = {
@@ -116,10 +110,8 @@ export type ResourceRoleSeeder = {
 };
 
 export type ScopePerResourceRoleSeeder = {
-  for_resource_ids: string[];
-  actions?: string[];
-  entities?: string[];
-  specific_permissions?: string[];
+  resource_id: string;
+  specific_permissions: string[];
   description: string;
 };
 

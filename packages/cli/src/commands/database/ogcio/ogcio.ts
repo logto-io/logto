@@ -27,7 +27,7 @@ const createDataForTenant = async (
     });
   }
 
-  const organizationsRbac = await seedOrganizationRbacData({
+  await seedOrganizationRbacData({
     transaction,
     tenantId,
     toSeed: tenantData,
@@ -48,7 +48,7 @@ const createDataForTenant = async (
       inputResources: tenantData.resources,
     });
 
-    const resourcesRbac = await seedResourceRbacData({
+    await seedResourceRbacData({
       tenantId,
       transaction,
       toSeed: tenantData,

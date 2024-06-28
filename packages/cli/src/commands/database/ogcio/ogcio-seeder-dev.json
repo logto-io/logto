@@ -7,6 +7,26 @@
                 "id": "ogcio"
             }
         ],
+        "organization_permissions": {
+            "specific_permissions": [
+                "payments:provider:*",
+                "payments:payment_request:*",
+                "payments:payment_request.public:read",
+                "payments:transaction:*"
+            ]
+        },
+        "organization_roles": [
+            {
+                "name": "Public Servant",
+                "description": "Building Blocks Public servant",
+                "specific_permissions": [
+                    "payments:provider:*",
+                    "payments:payment_request:*",
+                    "payments:payment_request.public:read",
+                    "payments:transaction:*"
+                ]
+            }
+        ],
         "applications": [
             {
                 "name": "Payments Building Block",
@@ -37,6 +57,34 @@
                 "id": "messaging-api",
                 "name": "Messaging Building Block API",
                 "indicator": "<SEEDER_MESSAGING_API_INDICATOR>"
+            }
+        ],
+        "resource_permissions": [
+            {
+                "resource_id": "payments-api",
+                "specific_permissions": [
+                    "payments:transaction.self:read",
+                    "payments:payment_request.public:read",
+                    "payments:transaction.self:write",
+                    "payments:provider.public:read"
+                ]
+            }
+        ],
+        "resource_roles": [
+            {
+                "name": "Citizen",
+                "description": "A citizen using Life Events and the Building Blocks ecosystem",
+                "permissions": [
+                    {
+                        "resource_id": "payments-api",
+                        "specific_permissions": [
+                            "payments:transaction.self:read",
+                            "payments:payment_request.public:read",
+                            "payments:transaction.self:write",
+                            "payments:provider.public:read"
+                        ]
+                    }
+                ]
             }
         ],
         "connectors": [

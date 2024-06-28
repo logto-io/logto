@@ -7,19 +7,23 @@
                 "id": "ogcio"
             }
         ],
-        "organization_permissions": [
-            {
-                "specific_permissions": [
-                    "payments:create:providers"
-                ]
-            }
-        ],
+        "organization_permissions": {
+            "specific_permissions": [
+                "payments:provider:*",
+                "payments:payment_request:*",
+                "payments:payment_request.public:read",
+                "payments:transaction:*"
+            ]
+        },
         "organization_roles": [
             {
-                "name": "Public servant",
+                "name": "Public Servant",
                 "description": "Building Blocks Public servant",
                 "specific_permissions": [
-                    "payments:create:providers"
+                    "payments:provider:*",
+                    "payments:payment_request:*",
+                    "payments:payment_request.public:read",
+                    "payments:transaction:*"
                 ]
             }
         ],
@@ -57,11 +61,12 @@
         ],
         "resource_permissions": [
             {
-                "for_resource_ids": [
-                    "payments-api"
-                ],
+                "resource_id": "payments-api",
                 "specific_permissions": [
-                    "payments:create:payment"
+                    "payments:transaction.self:read",
+                    "payments:payment_request.public:read",
+                    "payments:transaction.self:write",
+                    "payments:provider.public:read"
                 ]
             }
         ],
@@ -71,11 +76,12 @@
                 "description": "A citizen using Life Events and the Building Blocks ecosystem",
                 "permissions": [
                     {
-                        "for_resource_ids": [
-                            "payments-api"
-                        ],
+                        "resource_id": "payments-api",
                         "specific_permissions": [
-                            "payments:create:payment"
+                            "payments:transaction.self:read",
+                            "payments:payment_request.public:read",
+                            "payments:transaction.self:write",
+                            "payments:provider.public:read"
                         ]
                     }
                 ]

@@ -2,48 +2,123 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @silverhand/fp/no-mutating-methods */
 
-import { OrganizationRoleScopeRelations } from '@logto/schemas';
+import { OrganizationRoles, OrganizationRoleScopeRelations, OrganizationScopes } from '@logto/schemas';
 import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
-
-import {
-  type OrganizationSeedingRole,
-  type OrganizationScopesLists,
-  createScopes,
-  fillScopesGroup,
-  getScopesPerRole,
-  createRoles,
-} from './common-rbac.js';
 import { type OrganizationPermissionSeeder, type OrganizationRoleSeeder } from './ogcio-seeder.js';
-import { createItemWithoutId } from './queries.js';
+import { createItem, createItemWithoutId } from './queries.js';
+
+type SeedingScope = {
+  name: string;
+  id?: string;
+  description: string;
+};
+type ScopesByName = Record<string, SeedingScope>;
+
+type SeedingRole = {
+  name: string;
+  id?: string;
+  description: string;
+  scopes: string[];
+};
 
 type SeedingRelation = { organization_role_id: string; organization_scope_id: string };
 
-const fillScopes = (scopesToSeed: OrganizationPermissionSeeder[]): OrganizationScopesLists => {
-  const fullLists: OrganizationScopesLists = {
-    scopesList: [],
-    scopesByEntity: {},
-    scopesByAction: {},
-    scopesByFullName: {},
-  };
+const createScope = async (params: {
+  transaction: DatabaseTransactionConnection;
+  tenantId: string;
+  scopeToSeed: SeedingScope;
+}) =>
+  createItem({
+    transaction: params.transaction,
+    tenantId: params.tenantId,
+    toInsert: params.scopeToSeed,
+    toLogFieldName: 'name',
+    tableName: OrganizationScopes.table,
+    whereClauses: [sql`name = ${params.scopeToSeed.name}`],
+  });
 
-  for (const singleSeeder of scopesToSeed) {
-    fillScopesGroup(singleSeeder, fullLists);
-  }
-
-  return fullLists;
+const buildScopes = (
+  scopes: string[]
+): ScopesByName => {
+  return scopes.reduce<ScopesByName>((acc, scopeName) => {
+    acc[scopeName] = {
+      name: scopeName,
+      description: scopeName
+    };
+    return acc;
+  }, {});
 };
 
-const fillRole = (
-  roleToSeed: OrganizationRoleSeeder,
-  scopesLists: OrganizationScopesLists
-): OrganizationSeedingRole => ({
-  name: roleToSeed.name,
-  description: roleToSeed.description,
-  scopes: getScopesPerRole(roleToSeed, scopesLists),
-});
+export const createScopes = async (params: {
+  transaction: DatabaseTransactionConnection;
+  tenantId: string;
+  scopesToSeed: OrganizationPermissionSeeder;
+}) => {
+  const scopesToCreate = buildScopes(params.scopesToSeed.specific_permissions);
 
-const fillRoles = (rolesToSeed: OrganizationRoleSeeder[], scopesLists: OrganizationScopesLists) =>
-  rolesToSeed.map((role) => fillRole(role, scopesLists));
+  const queries = Object.values(scopesToCreate).map((scope) =>
+    createScope({
+      transaction: params.transaction,
+      tenantId: params.tenantId,
+      scopeToSeed: scope
+    })
+  );
+
+  await Promise.all(queries);
+
+  return scopesToCreate;
+};
+
+const createRole = async (params: {
+  transaction: DatabaseTransactionConnection;
+  tenantId: string;
+  roleToSeed: {
+    name: string;
+    description: string;
+    id?: string;
+  }
+}) => {
+  const created = await createItem({
+    transaction: params.transaction,
+    tenantId: params.tenantId,
+    toLogFieldName: 'name',
+    whereClauses: [sql`name = ${params.roleToSeed.name}`],
+    toInsert: { name: params.roleToSeed.name, description: params.roleToSeed.description },
+    tableName: OrganizationRoles.table,
+  });
+
+  params.roleToSeed.id = created.id;
+
+  return {
+    ...params.roleToSeed,
+    id: created.id,
+  };
+}
+
+const createRoles = async (params: {
+  transaction: DatabaseTransactionConnection;
+  tenantId: string;
+  scopes: ScopesByName,
+  rolesToSeed: OrganizationRoleSeeder[]
+}) => {
+  const rolesToCreate = params.rolesToSeed.map((role) =>({
+    name: role.name,
+    description: role.description,
+    scopes: role.specific_permissions
+  }));
+
+  const queries = rolesToCreate.map((role) => 
+    createRole({
+      transaction: params.transaction,
+      tenantId: params.tenantId,
+      roleToSeed: role
+    })
+  );
+
+  await Promise.all(queries);
+
+  return rolesToCreate;
+}
 
 const createRoleScopeRelation = async (
   transaction: DatabaseTransactionConnection,
@@ -66,19 +141,16 @@ const createRoleScopeRelation = async (
 const createRelations = async (
   transaction: DatabaseTransactionConnection,
   tenantId: string,
-  roles: Record<string, OrganizationSeedingRole>
+  scopes: ScopesByName,
+  roles: SeedingRole[]
 ) => {
-  const queries: Array<Promise<SeedingRelation>> = [];
-  for (const role of Object.values(roles)) {
-    for (const scope of role.scopes) {
-      queries.push(
-        createRoleScopeRelation(transaction, tenantId, {
-          organization_role_id: role.id!,
-          organization_scope_id: scope.id!,
-        })
-      );
-    }
-  }
+  const queries = roles.flatMap((role) =>
+    role.scopes.map((scope) => createRoleScopeRelation(transaction, tenantId, {
+      organization_role_id: role.id!,
+      organization_scope_id: scopes[scope]?.id!
+    }))
+  );
+
   return Promise.all(queries);
 };
 
@@ -86,42 +158,29 @@ export const seedOrganizationRbacData = async (params: {
   transaction: DatabaseTransactionConnection;
   tenantId: string;
   toSeed: {
-    organization_permissions?: OrganizationPermissionSeeder[];
+    organization_permissions?: OrganizationPermissionSeeder;
     organization_roles?: OrganizationRoleSeeder[];
   };
-}): Promise<{
-  scopes: OrganizationScopesLists;
-  roles: Record<string, OrganizationSeedingRole>;
-  relations: SeedingRelation[];
-}> => {
-  if (params.toSeed.organization_permissions?.length && params.toSeed.organization_roles?.length) {
+}) => {
+  if (params.toSeed.organization_permissions && params.toSeed.organization_roles?.length) {
     const createdScopes = await createScopes({
       transaction: params.transaction,
       tenantId: params.tenantId,
       scopesToSeed: params.toSeed.organization_permissions,
-      fillScopesMethod: fillScopes,
     });
 
     const createdRoles = await createRoles({
       transaction: params.transaction,
       tenantId: params.tenantId,
-      scopesLists: createdScopes,
-      rolesToSeed: params.toSeed.organization_roles,
-      fillRolesMethod: fillRoles,
+      scopes: createdScopes,
+      rolesToSeed: params.toSeed.organization_roles
     });
-    const relations = await createRelations(params.transaction, params.tenantId, createdRoles);
 
-    return { scopes: createdScopes, roles: createdRoles, relations };
+    await createRelations(
+      params.transaction,
+      params.tenantId,
+      createdScopes,
+      createdRoles
+    );
   }
-
-  return {
-    scopes: {
-      scopesList: [],
-      scopesByEntity: {},
-      scopesByAction: {},
-      scopesByFullName: {},
-    },
-    roles: {},
-    relations: [],
-  };
 };

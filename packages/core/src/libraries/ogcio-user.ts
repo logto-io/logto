@@ -134,20 +134,73 @@ const getDomainFromEmail = (email: string): string | undefined => {
   return email.split('@')[1];
 };
 
-const getUserRoleByDomain = async (
-  domain: string,
-  getRoles: (roleName: string, excludeRoleId?: string) => Promise<Role | undefined>
+const assignCitizenRole = async (
+  user: User,
+  getRoles: (roleName: string, excludeRoleId?: string) => Promise<Role | undefined>,
+  insertUsersRoles: (usersRoles: CreateUsersRole[]) => Promise<QueryResult<QueryResultRow>>
 ) => {
-  if (PUBLIC_SERVANT_DOMAINS.has(domain)) {
-    return getRoles('Public Servant');
+  const userRole = await getRoles('Citizen');
+
+  if (userRole === undefined) {
+    consoleLog.error(phrases.en.errors.role.default_role_missing);
+    return;
   }
-  return getRoles('Citizen');
+
+  return insertUsersRoles([
+    {
+      tenantId: user.tenantId,
+      id: generateStandardId(),
+      userId: user.id,
+      roleId: userRole.id,
+    },
+  ]);
+};
+
+const assignUserToOrganization = async (user: User, organizationQueries: OrganizationQueries) => {
+  try {
+    const organization = await organizationQueries.findById('ogcio');
+    await organizationQueries.relations.users.insert([organization.id, user.id]);
+    return organization;
+  } catch {
+    consoleLog.error(phrases.en.errors.entity.not_exists_with_id);
+  }
+};
+
+const assignOrganizationRoleToUser = async (
+  user: User,
+  organization: Organization,
+  organizationQueries: OrganizationQueries
+) => {
+  const allOrganizationRoles = await organizationQueries.roles.findAll(100, 0);
+  const publicServantRole = allOrganizationRoles[1].find((role) => role.name === 'Public Servant');
+
+  if (publicServantRole === undefined) {
+    consoleLog.error(phrases.en.errors.role.default_role_missing);
+    return;
+  }
+
+  await organizationQueries.relations.rolesUsers.insert([
+    organization.id,
+    publicServantRole.id,
+    user.id,
+  ]);
+};
+
+const assignPublicServantRole = async (user: User, organizationQueries: OrganizationQueries) => {
+  const organization = await assignUserToOrganization(user, organizationQueries);
+
+  if (!organization) {
+    return;
+  }
+
+  await assignOrganizationRoleToUser(user, organization, organizationQueries);
 };
 
 export const manageDefaultUserRole = async (
   user: User,
   getRoles: (roleName: string, excludeRoleId?: string) => Promise<Role | undefined>,
-  insertUsersRoles: (usersRoles: CreateUsersRole[]) => Promise<QueryResult<QueryResultRow>>
+  insertUsersRoles: (usersRoles: CreateUsersRole[]) => Promise<QueryResult<QueryResultRow>>,
+  organizationQueries: OrganizationQueries
 ) => {
   if (user.tenantId === adminTenantId) {
     return;
@@ -165,19 +218,9 @@ export const manageDefaultUserRole = async (
     return;
   }
 
-  const userRole = await getUserRoleByDomain(domain, getRoles);
-
-  if (userRole === undefined) {
-    consoleLog.error(phrases.en.errors.role.default_role_missing);
-    return;
+  if (PUBLIC_SERVANT_DOMAINS.has(domain)) {
+    return assignPublicServantRole(user, organizationQueries);
   }
 
-  return insertUsersRoles([
-    {
-      tenantId: user.tenantId,
-      id: generateStandardId(),
-      userId: user.id,
-      roleId: userRole.id,
-    },
-  ]);
+  return assignCitizenRole(user, getRoles, insertUsersRoles);
 };
