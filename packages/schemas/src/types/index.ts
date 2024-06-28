@@ -11,7 +11,7 @@ export * from './role.js';
 export * from './verification-code.js';
 export * from './application.js';
 export * from './system.js';
-export * from './user-assets.js';
+export * from './file-assets.js';
 export * from './hook.js';
 export * from './service-log.js';
 export * from './theme.js';

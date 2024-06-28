@@ -17,6 +17,7 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'You have to select at least one authentication factor.',
   backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
   duplicated_mfa_factors: 'Duplicated MFA factors.',
+  index_page_not_found: 'Must contain an index page (index.html) in root directory.',
 };
 
 export default Object.freeze(sign_in_experiences);

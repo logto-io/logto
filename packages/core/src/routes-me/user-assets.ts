@@ -8,6 +8,7 @@ import {
   type UserAssets,
   userAssetsGuard,
   adminTenantId,
+  uploadFileGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { format } from 'date-fns';
@@ -18,7 +19,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
-import { uploadFileGuard } from '#src/utils/storage/consts.js';
 import { buildUploadFile } from '#src/utils/storage/index.js';
 
 import type { AuthedMeRouter } from './types.js';

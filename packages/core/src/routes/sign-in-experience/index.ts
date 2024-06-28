@@ -8,9 +8,12 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
+import customUiAssetsRoutes from './custom-ui-assets/index.js';
+
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
-  ...[router, { queries, libraries, connectors }]: RouterInitArgs<T>
+  ...args: RouterInitArgs<T>
 ) {
+  const [router, { queries, libraries, connectors }] = args;
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
   const { deleteConnectorById } = queries.connectors;
   const {
@@ -118,4 +121,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       return next();
     }
   );
+
+  customUiAssetsRoutes(...args);
 }
