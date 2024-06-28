@@ -49,7 +49,7 @@ function JitSettings({ form }: Props) {
   );
   const allSsoConnectors = useMemo(() => ssoConnectorMatrix?.flat(), [ssoConnectorMatrix]);
   const filteredSsoConnectors = useMemo(
-    () => allSsoConnectors?.filter(({ id }) => ssoConnectorIds.includes(id)),
+    () => allSsoConnectors?.filter(({ id }) => !ssoConnectorIds.includes(id)),
     [allSsoConnectors, ssoConnectorIds]
   );
   const hasSsoEnabled = useCallback(
@@ -93,65 +93,67 @@ function JitSettings({ form }: Props) {
             />
           </InlineNotification>
         )}
-        {Boolean(allSsoConnectors?.length) && (
-          <Controller
-            name="jitSsoConnectorIds"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <div className={styles.ssoConnectorList}>
-                {value.map((id) => {
-                  const connector = allSsoConnectors?.find(
-                    ({ id: connectorId }) => id === connectorId
-                  );
-                  return (
-                    connector && (
-                      <div key={connector.id} className={styles.ssoConnector}>
-                        <div className={styles.info}>
-                          <SsoConnectorLogo className={styles.icon} data={connector} />
-                          <span>
-                            {connector.connectorName} - {connector.providerName}
-                          </span>
+        <Controller
+          name="jitSsoConnectorIds"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <>
+              {value.length > 0 && (
+                <div className={styles.ssoConnectorList}>
+                  {value.map((id) => {
+                    const connector = allSsoConnectors?.find(
+                      ({ id: connectorId }) => id === connectorId
+                    );
+                    return (
+                      connector && (
+                        <div key={connector.id} className={styles.ssoConnector}>
+                          <div className={styles.info}>
+                            <SsoConnectorLogo className={styles.icon} data={connector} />
+                            <span>
+                              {connector.connectorName} - {connector.providerName}
+                            </span>
+                          </div>
+                          <IconButton
+                            onClick={() => {
+                              onChange(value.filter((value) => value !== id));
+                            }}
+                          >
+                            <Minus />
+                          </IconButton>
                         </div>
-                        <IconButton
-                          onClick={() => {
-                            onChange(value.filter((value) => value !== id));
-                          }}
-                        >
-                          <Minus />
-                        </IconButton>
-                      </div>
-                    )
-                  );
-                })}
-                {Boolean(filteredSsoConnectors?.length) && (
-                  <ActionMenu
-                    buttonProps={{
-                      type: 'default',
-                      size: 'medium',
-                      title: 'organization_details.jit.add_enterprise_connector',
-                      icon: <Plus />,
-                      className: styles.addSsoConnectorButton,
-                    }}
-                    dropdownHorizontalAlign="start"
-                  >
-                    {filteredSsoConnectors?.map((connector) => (
-                      <DropdownItem
-                        key={connector.id}
-                        className={styles.dropdownItem}
-                        onClick={() => {
-                          onChange([...value, connector.id]);
-                        }}
-                      >
-                        <SsoConnectorLogo className={styles.icon} data={connector} />
-                        <span>{connector.connectorName}</span>
-                      </DropdownItem>
-                    ))}
-                  </ActionMenu>
-                )}
-              </div>
-            )}
-          />
-        )}
+                      )
+                    );
+                  })}
+                </div>
+              )}
+              {Boolean(filteredSsoConnectors?.length) && (
+                <ActionMenu
+                  buttonProps={{
+                    type: 'default',
+                    size: 'medium',
+                    title: 'organization_details.jit.add_enterprise_connector',
+                    icon: <Plus />,
+                    className: styles.addSsoConnectorButton,
+                  }}
+                  dropdownHorizontalAlign="start"
+                >
+                  {filteredSsoConnectors?.map((connector) => (
+                    <DropdownItem
+                      key={connector.id}
+                      className={styles.dropdownItem}
+                      onClick={() => {
+                        onChange([...value, connector.id]);
+                      }}
+                    >
+                      <SsoConnectorLogo className={styles.icon} data={connector} />
+                      <span>{connector.connectorName}</span>
+                    </DropdownItem>
+                  ))}
+                </ActionMenu>
+              )}
+            </>
+          )}
+        />
       </FormField>
       <FormField
         title="organization_details.jit.email_domain"
