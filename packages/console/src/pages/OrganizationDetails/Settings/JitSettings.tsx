@@ -38,7 +38,7 @@ function JitSettings({ form }: Props) {
     watch,
   } = form;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [emailDomains, ssoConnectorIds] = watch(['jitEmailDomains', 'jitSsoConnectorIds']);
+  const [emailDomains] = watch(['jitEmailDomains']);
   const [keyword, setKeyword] = useState('');
   // Fetch all SSO connector to show if a domain is configured SSO
   const { data: ssoConnectorMatrix } = useSWRInfinite<SsoConnectorWithProviderConfig[]>(
@@ -81,7 +81,7 @@ function JitSettings({ form }: Props) {
         }
         descriptionPosition="top"
       >
-        {ssoConnectorIds.length === 0 && (
+        {!allSsoConnectors?.length && (
           <InlineNotification>
             <Trans
               i18nKey="admin_console.organization_details.jit.no_enterprise_connector_set"
@@ -89,7 +89,7 @@ function JitSettings({ form }: Props) {
             />
           </InlineNotification>
         )}
-        {ssoConnectorIds.length > 0 && (
+        {Boolean(allSsoConnectors?.length) && (
           <Controller
             name="jitSsoConnectorIds"
             control={control}
