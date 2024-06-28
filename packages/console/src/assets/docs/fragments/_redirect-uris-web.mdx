@@ -17,6 +17,6 @@ Now, let's configure your redirect URI. E.g. {`${props.defaultRedirectUri ?? def
 
 <UriInputField name="redirectUris" />
 
-Just like signing in, users should be redirected to Logto for signing out of the shared session. Once finished, it would be great to redirect the user back to your website. For example, add `http://localhost:3000` as the post sign-out redirect URI below.
+Just like signing in, users should be redirected to Logto for signing out of the shared session. Once finished, it would be great to redirect the user back to your website. For example, add {`${props.defaultLogoutUri ?? 'http://localhost:3000'}`} as the post sign-out redirect URI below.
 
 <UriInputField name="postLogoutRedirectUris" />
