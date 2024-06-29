@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import crypto, { randomInt } from 'node:crypto';
 import path from 'node:path';
 
 import { generateStandardId } from '@logto/shared';
@@ -37,10 +37,8 @@ export const generatePhone = (isE164?: boolean) => {
     '232',
   ];
   const centralOfficeCode =
-    validCentralOfficeCodes[Math.floor(Math.random() * validCentralOfficeCodes.length)] ?? '205';
-  const phoneNumber = Math.floor(Math.random() * 10_000)
-    .toString()
-    .padStart(4, '0');
+    validCentralOfficeCodes[randomInt(0, validCentralOfficeCodes.length)] ?? '205';
+  const phoneNumber = randomInt(0, 10_000).toString().padStart(4, '0');
 
   return plus + countryAndAreaCode + centralOfficeCode + phoneNumber;
 };
