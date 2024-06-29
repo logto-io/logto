@@ -28,7 +28,7 @@ jobs:
         id: changes-detection
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            BASE=$(git merge-base origin/${{github.base_ref}} HEAD)
+            BASE=$(git merge-base origin/${{ github.base_ref }} HEAD)
           else
             BASE=${{ github.event.before }}
           fi
@@ -47,7 +47,7 @@ jobs:
   package:
     needs: check-alteration-changes
     runs-on: ubuntu-latest
-    if: ${{needs.check-alteration-changes.outputs.has-alteration-changes == 'true'}}
+    if: ${{ needs.check-alteration-changes.outputs.has-alteration-changes == 'true' }}
     env:
       INTEGRATION_TEST: true
       DEV_FEATURES_ENABLED: false
@@ -55,7 +55,7 @@ jobs:
       - uses: logto-io/actions-package-logto-artifact@v2
         with:
           artifact-name: alteration-integration-test-${{ github.sha }}
-          branch: ${{github.base_ref}}
+          branch: ${{ github.base_ref }}
           pnpm-version: 9
 
   run-logto:
@@ -73,8 +73,8 @@ jobs:
     steps:
       - uses: logto-io/actions-run-logto-integration-tests@v3
         with:
-          branch: ${{github.base_ref}}
+          branch: ${{ github.base_ref }}
           logto-artifact: alteration-integration-test-${{ github.sha }}
           test-target: ${{ matrix.target }}
-          db-alteration-target: ${{github.head_ref}}
+          db-alteration-target: ${{ github.head_ref }}
           pnpm-version: 9
