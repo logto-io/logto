@@ -57,13 +57,22 @@ Prepare configuration for the Logto client:
 </Code>
 </Step>
 
+<Step 
+  title="Configure redirect URIs"
+  subtitle="2 URIs"
+>
+
+<RedirectUrisWeb />
+
+</Step>
+
 <Step
-  title="Implement callback route"
+  title="Handle the callback"
 >
 
 Add a callback route to your app:
 
-```tsx title="/app/callback/route.ts"
+```tsx title="app/callback/route.ts"
 import { handleSignIn } from '@logto/next/server-actions';
 import { redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
@@ -79,15 +88,6 @@ export async function GET(request: NextRequest) {
 
 </Step>
 
-<Step 
-  title="Configure redirect URIs"
-  subtitle="2 URIs"
->
-
-<RedirectUrisWeb />
-
-</Step>
-
 <Step
   title="Implement sign-in and sign-out"
 >
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
 
 In Next.js App Router, events are handled in client components, so we need to create two components first: `SignIn` and `SignOut`.
 
-```tsx title="/app/sign-in.tsx"
+```tsx title="app/sign-in.tsx"
 'use client';
 
 type Props = {
@@ -118,7 +118,7 @@ const SignIn = ({ onSignIn }: Props) => {
 export default SignIn;
 ```
 
-```tsx title="/app/sign-out.tsx"
+```tsx title="app/sign-out.tsx"
 'use client';
 
 type Props = {
@@ -146,7 +146,7 @@ Remember to add `'use client'` to the top of the file to indicate that these com
 
 Now let's add the sign-in and sign-out buttons in your hoem page. We need to call the server actions in SDK when needed. To help with this, use `getLogtoContext` to fetch authentication status.
 
-```tsx title="/app/page.tsx"
+```tsx title="app/page.tsx"
 import { getLogtoContext, signIn, signOut } from '@logto/next/server-actions';
 import SignIn from './sign-in';
 import SignOut from './sign-out';

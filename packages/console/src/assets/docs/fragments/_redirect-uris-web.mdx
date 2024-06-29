@@ -3,17 +3,17 @@ import UriInputField from '@/mdx-components/UriInputField';
 
 import ExperienceOverview from './_experience-overview.md';
 
-export const defaultOrigin = 'http://localhost:3000/';
-export const defaultCallbackUri = `${defaultOrigin}callback`;
-export const defaultPostSignOutUri = defaultOrigin;
+export const defaultBaseUrl = 'http://localhost:3000/';
+export const defaultRedirectUri = `${defaultBaseUrl}callback`;
+export const defaultPostSignOutUri = defaultBaseUrl;
 
 <ExperienceOverview />
 
 <InlineNotification>
-  In the following steps, we assume your app is running on <code>{defaultOrigin}</code>.
+  In the following steps, we assume your app is running on <code>{defaultBaseUrl}</code>.
 </InlineNotification>
 
-Now, let's configure your redirect URI. E.g. {`${props.defaultUri ?? defaultCallbackUri}`}.
+Now, let's configure your redirect URI. E.g. {`${props.defaultRedirectUri ?? defaultRedirectUri}`}.
 
 <UriInputField name="redirectUris" />
 

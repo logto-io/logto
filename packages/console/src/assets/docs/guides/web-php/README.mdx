@@ -5,7 +5,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUrisWeb, { defaultCallbackUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
+import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -82,7 +82,7 @@ There are various ways to invoke sign-in and sign-out in your application. For e
 
 <Code title="index.php" className="language-php">
 {`Route::get('/sign-in', function () {
-  return redirect($client->signIn('${props.redirectUris[0] || defaultCallbackUri}'));
+  return redirect($client->signIn('${props.redirectUris[0] || defaultRedirectUri}'));
 });`}
 </Code>
 
@@ -90,7 +90,7 @@ If you want to show the sign-up page on the first screen, you can set `interacti
 
 <Code title="index.php" className="language-php">
 {`Route::get('/sign-in', function () {
-  return redirect($client->signIn('${props.redirectUris[0] || defaultCallbackUri}', InteractionMode::signUp));
+  return redirect($client->signIn('${props.redirectUris[0] || defaultRedirectUri}', InteractionMode::signUp));
 });`}
 </Code>
 
