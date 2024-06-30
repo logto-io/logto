@@ -79,7 +79,7 @@ spring.security.oauth2.client.provider.logto.jwk-set-uri=${props.endpoint}oidc/j
 
 <Step title="Setup the redirect URI in Logto">
 
-<RedirectUrisWeb defaultUri="http://localhost:8080/login/oauth2/code/logto in Logto sample project" defaultLogoutUri="http://localhost:8080/login/oauth2/code/logto" />
+<RedirectUrisWeb defaultUri="http://localhost:8080/login/oauth2/code/logto in Logto sample project" defaultSignOutUri="http://localhost:8080/login/oauth2/code/logto" />
 
 Make sure the redirect URI in Logto matches the `redirect-uri` set in the `application.properties` file in the previous step.
 
@@ -254,7 +254,7 @@ This controller will redirect the user to the user page if the user is authentic
 
 </Step>
 
-<Step title="Get user info">
+<Step title="Create the user page">
 
 Create a new controller to handle the user page:
 
