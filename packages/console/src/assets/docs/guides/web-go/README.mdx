@@ -2,7 +2,7 @@ import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import InlineNotification from '@/ds-components/InlineNotification';
-import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
+import RedirectUrisWeb, {defaultBaseUrl, defaultRedirectUri} from '../../fragments/_redirect-uris-web.mdx';
 import Checkpoint from '../../fragments/_checkpoint.md';
 
 <Steps>
@@ -13,8 +13,7 @@ import Checkpoint from '../../fragments/_checkpoint.md';
 
 <InlineNotification>
   The following demonstration is built upon the <a href="https://gin-gonic.com">Gin Web Framework</a>.  
-  You may also integrate Logto into other frameworks by taking the same steps.  
-  We assume your app is running on <code>http://localhost:3000</code> in this guide.  
+  You may also integrate Logto into other frameworks by taking the same steps.
 </InlineNotification>
 
 Execute in the project root directory:
@@ -235,7 +234,7 @@ After the redirect URI is configured, we add a `sign-in` route to handle the sig
 }`}
 </Code>
 
-Now, when your user visit `http://localhost:3000/sign-in`, the user will be redirected to the Logto sign-in page.
+Now, when your user visit <code>{defaultBaseUrl}sign-in</code>, the user will be redirected to the Logto sign-in page.
 
 </Step>
 
@@ -243,7 +242,7 @@ Now, when your user visit `http://localhost:3000/sign-in`, the user will be redi
 
 When the user signs in successfully on the Logto sign-in page, Logto will redirect the user to the Redirect URI.
 
-Assuming your Redirect URI is `http://localhost:3000/callback`, then we will add the `/callback` route to handle the callback after signing in.
+Assuming your Redirect URI is <code>{defaultRedirectUri}</code>, then we will add the `/callback` route to handle the callback after signing in.
 
 ```go title="main.go"
 func main() {
