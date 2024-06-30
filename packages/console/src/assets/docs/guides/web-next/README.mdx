@@ -4,7 +4,7 @@ import { generateStandardSecret } from '@logto/shared/universal';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
+import RedirectUrisWeb, { defaultBaseUrl } from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -51,11 +51,20 @@ export const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
   appSecret: '${props.app.secret}',
-  baseUrl: 'http://localhost:3000', // Change to your own base URL
+  baseUrl: '${defaultBaseUrl}', // Change to your own base URL
   cookieSecret: '${generateStandardSecret()}', // Auto-generated 32 digit secret
   cookieSecure: process.env.NODE_ENV === 'production',
 });`}
 </Code>
+
+</Step>
+
+<Step 
+  title="Configure redirect URIs"
+  subtitle="2 URIs"
+>
+
+<RedirectUrisWeb defaultRedirectUri={`${defaultBaseUrl}api/logto/sign-in-callback`} />
 
 </Step>
 
@@ -74,18 +83,9 @@ export default logtoClient.handleAuthRoutes();
 This will create 4 routes automatically:
 
 1. `/api/logto/sign-in`: Sign in with Logto.
-2. `/api/logto/sign-in-callback`: Handle sign-in callback.
+2. `/api/logto/sign-in-callback`: Handle sign-in callback (redirect URI).
 3. `/api/logto/sign-out`: Sign out with Logto.
 4. `/api/logto/user`: Check if user is authenticated with Logto, if yes, return user info.
-
-</Step>
-
-<Step 
-  title="Configure redirect URIs"
-  subtitle="2 URIs"
->
-
-<RedirectUrisWeb defaultUri="http://localhost:3000/api/logto/sign-in-callback" />
 
 </Step>
 

@@ -1,7 +1,7 @@
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
-import RedirectUrisWeb, { defaultCallbackUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
+import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
 import Checkpoint from '../../fragments/_checkpoint.md';
 
 <Steps>
@@ -97,7 +97,7 @@ There are various ways to invoke sign-in and sign-out in your application. For e
 async def sign_in():
     # Get the sign-in URL and redirect the user to it
     return redirect(await client.signIn(
-        redirectUri="${props.redirectUris[0] || defaultCallbackUri}",
+        redirectUri="${props.redirectUris[0] || defaultRedirectUri}",
     ))`}
 </Code>
 
@@ -108,7 +108,7 @@ If you want to show the sign-up page on the first screen, you can set `interacti
 async def sign_in():
     # Get the sign-in URL and redirect the user to it
     return redirect(await client.signIn(
-        redirectUri="${props.redirectUris[0] || defaultCallbackUri}",
+        redirectUri="${props.redirectUris[0] || defaultRedirectUri}",
         interactionMode="signUp", # Show the sign-up page on the first screen
     ))`}
 </Code>
