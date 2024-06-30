@@ -13,8 +13,7 @@ export const cookieEncryptionKey = generateStandardSecret();
 <Steps>
 
 <Step
-  title="Installation"
-  subtitle="Install Logto SDK"
+  title="Install Logto SDK"
 >
 <Tabs>
 <TabItem value="npm" label="npm">
@@ -41,7 +40,7 @@ pnpm add @logto/sveltekit
 </Tabs>
 </Step>
 
-<Step title="Add Logto hook">
+<Step title="Add Logto hook" subtitle="Init Logto client">
 
 Create a `hooks.server.ts` file in your project `src` root if you don't have one. This file is used to define server hooks for your SvelteKit app.
 
@@ -142,6 +141,12 @@ Then use these actions in your Svelte component:
 
 </Step>
 
+<Step title="Checkpoint" subtitle="Test your app">
+
+<Checkpoint />
+
+</Step>
+
 <Step title="Display user information">
 
 To display the user's information, you can inject the `locals.user` object into the layout, thus making it available to all pages:
@@ -170,12 +175,6 @@ In your Svelte component:
 </ul>
 {/if}
 ```
-
-</Step>
-
-<Step title="Checkpoint: Test your app">
-
-<Checkpoint />
 
 </Step>
 
