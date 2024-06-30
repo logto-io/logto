@@ -8,7 +8,7 @@ import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUrisNative from '../../fragments/_redirect-uris-native.mdx';
 
 <Steps>
-<Step title="Install Logto SDK">
+<Step title="Install SDK">
 
 <InlineNotification severity="alert">
 
@@ -133,7 +133,7 @@ This plugin uses `ASWebAuthenticationSession` on iOS 12+ and macOS 10.15+, `SFAu
 
 </Step>
 
-<Step title="Init LogtoClient" subtitle="1 step">
+<Step title="Init Client" subtitle="1 step">
 
 Import the `logto_dart_sdk` package and initialize the `LogtoClient` instance at the root of your application.
 
@@ -202,7 +202,7 @@ void signOut() async {
 
 </Step>
 
-<Step title="Handle authentication state" subtitle="1 step">
+<Step title="Handle authentication status" subtitle="1 step">
 
 In Logto SDK, you can use `logtoClient.isAuthenticated` to check the authentication status, if the
 user is signed in, the value will be `true`, otherwise, the value will be `false`.
