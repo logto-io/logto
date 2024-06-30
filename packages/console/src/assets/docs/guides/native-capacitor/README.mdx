@@ -39,15 +39,17 @@ const logtoClient = new LogtoClient({
 
 </Step>
 
-<Step title="Implement the sign-in button">
-
+<Step title="Configure redirect URIs" >
 
 <RedirectUrisNative defaultUri="com.example.app://callback" />
 
 Ensure that the URI redirects to the Capacitor app. The value may vary depending on your Capacitor app configuration. For more details, see [Capacitor Deep Links](https://capacitorjs.com/docs/guides/deep-links).
 
-Remember to click on **Save changes** after updating the redirect URI. Then, add the following code to the `onClick` handler of the sign-in button:
+Remember to click on **Save changes** after updating the redirect URI.
 
+</Step>
+
+<Step title="Implement sign-in">
 
 <Code className="language-ts">
     {`const onClick = async () => {
@@ -56,10 +58,6 @@ Remember to click on **Save changes** after updating the redirect URI. Then, add
   console.log(await logtoClient.getIdTokenClaims()); // { sub: '...', ... }
 };`}
 </Code>
-
-</Step>
-
-<Step title="Checkpoint: Trigger the authentication flow">
 
 Run the Capacitor app and click the sign-in button. A browser window will open, redirecting to the Logto sign-in page.
 
@@ -77,7 +75,7 @@ Run the Capacitor app and click the sign-in button. A browser window will open, 
 
 </Step>
 
-<Step title="Sign-out">
+<Step title="Implement sign-out">
 
 Since Capacitor leverages the Safari View Controller on iOS and Chrome Custom Tabs on Android, the authentication state can be persisted for a while. However, sometimes the user may want to sign out of the application immediately. In this case, we can use the `signOut` method to sign out the user:
 
@@ -115,7 +113,7 @@ Ensure that the post sign-out redirect URI redirects to the Capacitor app. Then 
 
 <Step title="Checkpoint: Complete the authentication flow">
 
-Run the Capacitor app again and click the sign-in button. If everything goes well, when the authentication flow is completed, the Capacitor app will receive the sign-in result and print the user claims in the console.
+Run the Capacitor app click the sign-in button. If everything goes well, when the authentication flow is completed, the Capacitor app will receive the sign-in result and print the user claims in the console.
 
 <center>
   <img src={capaticorIos} alt="Capacitor iOS app" width="800" />
