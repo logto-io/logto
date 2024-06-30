@@ -33,7 +33,6 @@ import webNuxt from './web-nuxt/index';
 import webOutline from './web-outline/index';
 import webPhp from './web-php/index';
 import webPython from './web-python/index';
-import webRemix from './web-remix/index';
 import webRuby from './web-ruby/index';
 import webRubyLogo from './web-ruby/logo.webp';
 import webSveltekit from './web-sveltekit/index';
@@ -195,13 +194,6 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./native-capacitor/logo.svg')),
     Component: lazy(async () => import('./native-capacitor/README.mdx')),
     metadata: nativeCapacitor,
-  },
-  {
-    order: 4,
-    id: 'web-remix',
-    Logo: lazy(async () => import('./web-remix/logo.svg')),
-    Component: lazy(async () => import('./web-remix/README.mdx')),
-    metadata: webRemix,
   },
   {
     order: 5,
