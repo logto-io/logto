@@ -3,8 +3,10 @@ import UriInputField from '@/mdx-components/UriInputField';
 
 import ExperienceOverview from './_experience-overview.md';
 
+export const defaultRedirectUri = 'io.logto://callback';
+
 <ExperienceOverview />
 
-Now, let's configure your redirect URI. E.g. {`${props.defaultUri ?? 'http://localhost:3000/callback'}`}.
+Now, let's configure your redirect URI. E.g. {`${props.defaultUri ?? defaultRedirectUri}`}.
 
 <UriInputField name="redirectUris" />

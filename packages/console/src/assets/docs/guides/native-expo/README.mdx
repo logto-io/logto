@@ -5,7 +5,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUrisNative from '../../fragments/_redirect-uris-native.mdx';
+import RedirectUrisNative, { defaultRedirectUri } from '../../fragments/_redirect-uris-native.mdx';
 
 <Steps>
 
@@ -110,7 +110,7 @@ const Content = () => {
         <Button title="Sign out" onPress={async () => signOut()} />
       ) : (
         <Button title="Sign in" onPress={async () => signIn('${
-          props.redirectUris[0] ?? 'io.logto://callback'
+          props.redirectUris[0] || defaultRedirectUri
         }')} />
       )}
     </div>
@@ -141,26 +141,12 @@ const Content = () => {
   useEffect(() => {
     if (isAuthenticated) {
       getIdTokenClaims().then((claims) => {
-        setUser(claims);
+        setUser(claims); // { sub: '...', ... }
       });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, getIdTokenClaims]);
 
-  return (
-    <div>
-      {isAuthenticated ? (
-        <>
-          <Text>{user?.name}</Text>
-          <Text>{user?.email}</Text>
-          <Button title="Sign out" onPress={async () => signOut()} />
-        </>
-      ) : (
-        <Button title="Sign in" onPress={async () => signIn('${
-          props.redirectUris[0] ?? 'io.logto://callback'
-        }')} />
-      )}
-    </div>
-  );
+ // ...
 };`}
 </Code>
 
