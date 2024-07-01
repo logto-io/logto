@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - "push-action/**"
   pull_request:
 
 concurrency:
@@ -13,15 +12,19 @@ concurrency:
 
 jobs:
   package:
+    strategy:
+      matrix:
+        # Run the integration tests with and without dev features enabled
+        dev-features-enabled: [true, false]
     runs-on: ubuntu-latest
     env:
       INTEGRATION_TEST: true
-      DEV_FEATURES_ENABLED: true
+      DEV_FEATURES_ENABLED: ${{ matrix.dev-features-enabled }}
 
     steps:
       - uses: logto-io/actions-package-logto-artifact@v2
         with:
-          artifact-name: integration-test-${{ github.sha }}
+          artifact-name: integration-test-${{ github.sha }}-dev-features-${{ matrix.dev-features-enabled }}
           pnpm-version: 9
 
   run-logto:
@@ -29,16 +32,18 @@ jobs:
       fail-fast: false
       matrix:
         target: [api, experience, console]
+        # Run the integration tests with and without dev features enabled
+        dev-features-enabled: [true, false]
     needs: package
     runs-on: ubuntu-latest
     env:
       INTEGRATION_TEST: true
-      DEV_FEATURES_ENABLED: true
+      DEV_FEATURES_ENABLED: ${{ matrix.dev-features-enabled }}
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
       - uses: logto-io/actions-run-logto-integration-tests@v3
         with:
-          logto-artifact: integration-test-${{ github.sha }}
+          logto-artifact: integration-test-${{ github.sha }}-dev-features-${{ env.DEV_FEATURES_ENABLED }}
           test-target: ${{ matrix.target }}
           pnpm-version: 9
