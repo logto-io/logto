@@ -2876,8 +2876,8 @@ importers:
         specifier: workspace:^1.6.1
         version: link:../phrases-experience
       '@logto/react':
-        specifier: ^3.0.8
-        version: 3.0.8(react@18.2.0)
+        specifier: ^3.0.11
+        version: 3.0.11(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.17.0
         version: link:../schemas
@@ -3471,8 +3471,8 @@ importers:
         specifier: workspace:^1.10.0
         version: link:../phrases
       '@logto/react':
-        specifier: ^3.0.8
-        version: 3.0.8(react@18.2.0)
+        specifier: ^3.0.11
+        version: 3.0.11(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.15.0
         version: link:../schemas
@@ -3515,6 +3515,9 @@ importers:
       i18next-browser-languagedetector:
         specifier: ^8.0.0
         version: 8.0.0
+      jose:
+        specifier: ^5.0.0
+        version: 5.2.4
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -5242,11 +5245,14 @@ packages:
     resolution: {integrity: sha512-yDWSZMI2Qo/xoYU92tnwSP/gnSvq8+CLK5DqD/4brO42QJa7xjt7eA+HSyuMmSUrKffY2nP3riU81gs+nR8DkA==}
     engines: {node: ^18.12.0}
 
-  '@logto/browser@2.2.10':
-    resolution: {integrity: sha512-y6NauaxctqpfApccP6uFVmpg/vG1OhsDVLD4Pdpzbmj3whl63Nb17yxSTQHt4eYNKmSZJ2SzudAnMnVEYD91iQ==}
+  '@logto/browser@2.2.13':
+    resolution: {integrity: sha512-7fyenm6f2xSzZc8GHFpAL38rxAXf1hQH/ySSow8QHjgypF0pz9zy9bRSG1oVFgsMrFWYf73dPk7V2ACQ5Tujww==}
 
   '@logto/client@2.6.6':
     resolution: {integrity: sha512-QT7jMnzEIWHBNrf9/M8p1OErRBbbNZjoekXGji5aZCyUh975hh8+GEBL21HV71FT3H/5Cq4Gf1GzUbAIW3izMA==}
+
+  '@logto/client@2.7.0':
+    resolution: {integrity: sha512-8mj+757befwQJ4M0h4f3fQwUB1lruDkyLNTyRFOQxFfDMN1QeD70B4nMnz6iTX/Gi09HnIskmj9MHWrbvH6LSQ==}
 
   '@logto/cloud@0.2.5-a7eedce':
     resolution: {integrity: sha512-FFjkGjqUgn9PCZnSuCODm2FcjqBm4JfPxfHCiXlOkUjeUhTJLrj7C0gjKzSQ/B6IaWri4EXN/meuqi5z/AMIPg==}
@@ -5255,11 +5261,14 @@ packages:
   '@logto/js@4.1.1':
     resolution: {integrity: sha512-+RgthBvDw30UojirtAjZeHNfOwDQVURmpjcIBYTIf6afx5F5jJq8b1D/eaFbrCFrmXmatkT2iN7X8kYHui86WQ==}
 
+  '@logto/js@4.1.3':
+    resolution: {integrity: sha512-TIYrVSyD0c1mEt3fU9NKbWRTblujs3Ct/DYgNzBLzE/tmSVvwM6Z4JxnwZZ3xyfnL8dC4UfSQRlc2gjSMzKUGw==}
+
   '@logto/node@2.4.7':
     resolution: {integrity: sha512-AlANeqY1NIt93EBcRzrTmyAVHXOHpszTJK+qe1ok50rmZlTmX2p7yQvrg0/Ehwf/+4Rla5vooAR+HIFMaOmPpQ==}
 
-  '@logto/react@3.0.8':
-    resolution: {integrity: sha512-p3pV4rX4g8ZwHQ159mxI+pP3Bwome47dNEmP1hI8/10WqdIPXGYTnfYn5c2l4Y2DyslYyK3ur2Sy4i4K6ept9A==}
+  '@logto/react@3.0.11':
+    resolution: {integrity: sha512-JyOOf7zZOEg7fTRldfi9SGwwbuk3qJTlIKld+GQ1yGWIXilI2JyyY2XQraZWpHQLW8KtQFgRWQ/fUKV0bideFQ==}
     peerDependencies:
       react: '>=16.8.0'
 
@@ -14951,15 +14960,22 @@ snapshots:
       '@silverhand/essentials': 2.9.1
       tiny-cookie: 2.4.1
 
-  '@logto/browser@2.2.10':
+  '@logto/browser@2.2.13':
     dependencies:
-      '@logto/client': 2.6.6
+      '@logto/client': 2.7.0
       '@silverhand/essentials': 2.9.1
       js-base64: 3.7.5
 
   '@logto/client@2.6.6':
     dependencies:
       '@logto/js': 4.1.1
+      '@silverhand/essentials': 2.9.1
+      camelcase-keys: 7.0.2
+      jose: 5.2.4
+
+  '@logto/client@2.7.0':
+    dependencies:
+      '@logto/js': 4.1.3
       '@silverhand/essentials': 2.9.1
       camelcase-keys: 7.0.2
       jose: 5.2.4
@@ -14976,15 +14992,20 @@ snapshots:
       '@silverhand/essentials': 2.9.1
       camelcase-keys: 7.0.2
 
+  '@logto/js@4.1.3':
+    dependencies:
+      '@silverhand/essentials': 2.9.1
+      camelcase-keys: 7.0.2
+
   '@logto/node@2.4.7':
     dependencies:
       '@logto/client': 2.6.6
       '@silverhand/essentials': 2.9.1
       js-base64: 3.7.5
 
-  '@logto/react@3.0.8(react@18.2.0)':
+  '@logto/react@3.0.11(react@18.2.0)':
     dependencies:
-      '@logto/browser': 2.2.10
+      '@logto/browser': 2.2.13
       '@silverhand/essentials': 2.9.1
       react: 18.2.0
 

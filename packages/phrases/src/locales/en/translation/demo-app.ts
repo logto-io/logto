@@ -1,6 +1,6 @@
 const demo_app = {
   title: "You've successfully signed in the live preview!",
-  subtitle: 'Here is your log in information:',
+  subtitle: 'Here is your user information:',
   username: 'Username: ',
   user_id: 'User ID: ',
   sign_out: 'Sign out the live preview',

@@ -1,6 +1,5 @@
 const demo_app = {
   title: 'ライブプレビューへのサインインに成功しました！',
-  subtitle: 'あなたのログイン情報は以下の通りです：',
   username: 'ユーザー名：',
   user_id: 'ユーザーID：',
   sign_out: 'ライブプレビューからサインアウトする',
