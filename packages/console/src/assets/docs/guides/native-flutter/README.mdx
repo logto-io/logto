@@ -135,7 +135,7 @@ This plugin uses `ASWebAuthenticationSession` on iOS 12+ and macOS 10.15+, `SFAu
 
 <Step title="Init Client" subtitle="1 step">
 
-Import the `logto_dart_sdk` package and initialize the `LogtoClient` instance at the root of your application.
+Import the `logto_dart_sdk` package and initialize the `LogtoClient` instance at the root widget of your application.
 
 <Code className="language-dart" title="lib/main.dart">
     {`import 'package:logto_dart_sdk/logto_dart_sdk.dart';
@@ -216,102 +216,6 @@ user is signed in, the value will be `true`, otherwise, the value will be `false
 <Step title="Checkpoint: Test your application">
 
 <Checkpoint />
-
-<Code className="language-dart" title="lib/main.dart">
-{`import 'package:flutter/material.dart';
-import 'package:logto_dart_sdk/logto_dart_sdk.dart';
-import 'package:http/http.dart' as http;
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter Demo',
-      home: MyHomePage(title: 'Logto Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  late LogtoClient logtoClient;
-  bool? isAuthenticated = false;
-
-  // Update the authentication state
-  void render() {
-    setState(() async {
-      isAuthenticated = await logtoClient.isAuthenticated;
-    });
-  }
-
-  // LogtoConfig
-  final logtoConfig = const LogtoConfig(
-    endpoint: '${props.endpoint}',
-    appId: '${props.app.id}',
-  );
-
-  void _init() {
-    logtoClient = LogtoClient(
-      config: logtoConfig,
-      httpClient: http.Client(), // Optional http client
-    );
-    render();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _init();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Widget signInButton = TextButton(
-      onPressed: () async {
-        await logtoClient.signIn('${props.redirectUris[0] ?? 'io.logto://callback'}');
-        render();
-      },
-      child: const Text('Sign In'),
-    );
-
-    Widget signOutButton = TextButton(
-      onPressed: () async {
-        await logtoClient.signOut();
-        render();
-      },
-      child: const Text('Sign Out'),
-    );
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const SelectableText('My Demo App'),
-            isAuthenticated ?? false ? signOutButton : signInButton,
-          ],
-        ),
-      ),
-    );
-  }
-}`}
-</Code>
 
 </Step>
 
