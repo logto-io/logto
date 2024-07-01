@@ -5,7 +5,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUrisNative from '../../fragments/_redirect-uris-native.mdx';
+import RedirectUrisNative, { defaultRedirectUri } from '../../fragments/_redirect-uris-native.mdx';
 
 <Steps>
 
@@ -110,7 +110,7 @@ For example, in a SwiftUI app:
           Task { [self] in
             do {
               try await client.signInWithBrowser(redirectUri: "${
-                props.redirectUris[0] ?? 'io.logto://callback'
+                props.redirectUris[0] ?? defaultRedirectUri
               }")
               isAuthenticated = true
             } catch let error as LogtoClientErrors.SignIn {
