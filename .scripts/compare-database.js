@@ -104,6 +104,11 @@ const queryDatabaseManifest = async (database) => {
       return { ...rest, grantee: 'logto_tenant' };
     }
 
+    // Removes the last segment of region grantee since Logto will use 'logto_region_xxx' for the role name for different regions.
+    if (grantee.startsWith('logto_region_')) {
+      return { ...rest, grantee: 'logto_region' };
+    }
+
     return { grantee, ...rest };
   };
 
