@@ -28,8 +28,8 @@ composer require logto/sdk
 Insert the following code into your PHP file:
 
 <Code title="index.php" className="language-php">
-{`use logto\sdk\LogtoClient;
-use Logto\Sdk\LogtoConfig;
+{`use Logto\\Sdk\\LogtoClient;
+use Logto\\Sdk\\LogtoConfig;
 
 $client = new LogtoClient(
   new LogtoConfig(
@@ -53,7 +53,7 @@ By default, the SDK uses the built-in PHP session to store the Logto data. If yo
 
 </Step>
 
-<Step title="Implement the sign-in route">
+<Step title="Configure redirect URIs">
 
 <RedirectUrisWeb />
 
