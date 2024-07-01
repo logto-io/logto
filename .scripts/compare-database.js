@@ -99,24 +99,42 @@ const queryDatabaseManifest = async (database) => {
   `);
 
   // This function removes the last segment of grantee since Logto will use 'logto_tenant_fresh/alteration' for the role name.
-  const normalizeGrantee = ({ grantee, ...rest }) => {
-    if (grantee.startsWith('logto_tenant_')) {
-      return { ...rest, grantee: 'logto_tenant' };
+  const normalizeRoleName = (roleName) => {
+    if (roleName.startsWith('logto_tenant_')) {
+      return 'logto_tenant';
     }
 
     // Removes the last segment of region grantee since Logto will use 'logto_region_xxx' for the role name for different regions.
-    if (grantee.startsWith('logto_region_')) {
-      return { ...rest, grantee: 'logto_region' };
+    if (roleName.startsWith('logto_region_')) {
+      return 'logto_region';
     }
 
-    return { grantee, ...rest };
+    return roleName;
   };
+
+  const normalizeGrantee = ({ grantee, ...rest }) => ({
+    ...rest,
+    grantee: normalizeRoleName(grantee),
+  });
 
   // Ditto.
   const normalizeRoles = ({ roles: raw, ...rest }) => {
-    const roles = raw.slice(1, -1).split(',').map((name) => name.startsWith('logto_tenant_') ? 'logto_tenant' : name);
+    const roles = raw
+      .slice(1, -1)
+      .split(',')
+      .map((name) => normalizeRoleName(name));
 
     return { roles, ...rest };
+  };
+
+  const normalizePolicyname = ({ policyname, ...rest }) => {
+    const prefix = 'allow_';
+    const suffix = '_access';
+    if (policyname && policyname.startsWith(prefix) && policyname.endsWith(suffix)) {
+      return { policyname: `${prefix}${normalizeRoleName(policyname.slice(prefix.length, -suffix.length))}${suffix}`, ...rest };
+    }
+
+    return { policyname, ...rest };
   };
 
   // Omit generated ids and values
@@ -149,7 +167,7 @@ const queryDatabaseManifest = async (database) => {
     indexes,
     funcs,
     triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog'),
-    policies: policies.map(normalizeRoles),
+    policies: policies.map(normalizeRoles).map(normalizePolicyname),
     columnGrants: omitArray(columnGrants, 'table_catalog').map(normalizeGrantee),
     tableGrants: omitArray(tableGrants, 'table_catalog').map(normalizeGrantee),
   };
