@@ -41,13 +41,16 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';
 
-  // We use react-monaco-editor for code editing in the admin console. It loads the monaco editor asynchronously from a CDN.
+  // We have the following use cases:
+  //
+  // 1. We use `react-monaco-editor` for code editing in the admin console. It loads the monaco
+  // editor asynchronously from jsDelivr.
+  // 2. We use `mermaid` for rendering diagrams in the admin console. It loads the mermaid library
+  // asynchronously from jsDelivr since Parcel has issues with loading it directly in production.
+  //
   // Allow the CDN src in the CSP.
   // Allow blob: for monaco editor to load worker scripts
-  const monacoEditorCDNSource = [
-    'https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs/',
-    'blob:',
-  ];
+  const cdnSources = ['https://cdn.jsdelivr.net/', 'blob:'];
 
   /**
    * Default Applied rules:
@@ -122,7 +125,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         scriptSrc: [
           "'self'",
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
-          ...monacoEditorCDNSource,
+          ...cdnSources,
         ],
         connectSrc: ["'self'", logtoOrigin, ...adminOrigins, ...coreOrigins, ...developmentOrigins],
         // Allow Main Flow origin loaded in preview iframe
