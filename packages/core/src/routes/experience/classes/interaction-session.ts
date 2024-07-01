@@ -1,4 +1,4 @@
-import { InteractionEvent, type VerificationType } from '@logto/schemas';
+import { InteractionEvent, VerificationType } from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -81,24 +81,17 @@ export default class InteractionSession {
   }
 
   /** Set the verified accountId of the current interaction session from  the verification record */
-  public identifyUser(verificationRecord: VerificationRecord) {
-    // Throws an 404 error if the user is not found by the given verification record
-    // TODO: refactor using real-time user verification. Static verifiedUserId will be removed.
-    assertThat(
-      verificationRecord.verifiedUserId,
-      new RequestError(
-        {
-          code: 'user.user_not_exist',
-          status: 404,
-        },
-        {
-          identifier:
-            'identifier' in verificationRecord ? verificationRecord.identifier : undefined,
-        }
-      )
-    );
-
-    this.accountId = verificationRecord.verifiedUserId;
+  public async identifyUser(verificationRecord: VerificationRecord) {
+    switch (verificationRecord.type) {
+      case VerificationType.Password:
+      case VerificationType.VerificationCode:
+      case VerificationType.Social: {
+        const { id, isSuspended } = await verificationRecord.identifyUser();
+        assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+        this.accountId = id;
+        break;
+      }
+    }
   }
 
   /**

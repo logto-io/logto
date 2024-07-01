@@ -2,6 +2,7 @@ import {
   VerificationType,
   interactionIdentifierGuard,
   type InteractionIdentifier,
+  type User,
 } from '@logto/schemas';
 import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
 import { generateStandardId } from '@logto/shared';
@@ -20,14 +21,14 @@ export type PasswordVerificationRecordData = {
   id: string;
   type: VerificationType.Password;
   identifier: InteractionIdentifier;
-  userId?: string;
+  verified: boolean;
 };
 
 export const passwordVerificationRecordDataGuard = z.object({
   id: z.string(),
   type: z.literal(VerificationType.Password),
   identifier: interactionIdentifierGuard,
-  userId: z.string().optional(),
+  verified: z.boolean(),
 }) satisfies ToZodObject<PasswordVerificationRecordData>;
 
 /**
@@ -41,34 +42,30 @@ export class PasswordVerification implements Verification {
       id: generateStandardId(),
       type: VerificationType.Password,
       identifier,
+      verified: false,
     });
   }
 
   readonly type = VerificationType.Password;
   public readonly identifier: InteractionIdentifier;
   public readonly id: string;
-  /* The userId of the user that has been identifier by the given identifier and password */
-  private userId?: string;
+  private verified: boolean;
 
   constructor(
     private readonly libraries: Libraries,
     private readonly queries: Queries,
     data: PasswordVerificationRecordData
   ) {
-    const { id, identifier, userId } = data;
+    const { id, identifier, verified } = data;
 
     this.id = id;
     this.identifier = identifier;
-    this.userId = userId;
+    this.verified = verified;
   }
 
   /** Returns true if a userId is set */
   get isVerified() {
-    return this.userId !== undefined;
-  }
-
-  get verifiedUserId() {
-    return this.userId;
+    return this.verified;
   }
 
   /** Verifies the password and sets the userId */
@@ -76,11 +73,26 @@ export class PasswordVerification implements Verification {
     const user = await findUserByIdentifier(this.queries.users, this.identifier);
 
     // Throws an 422 error if the user is not found or the password is incorrect
-    const { isSuspended, id } = await this.libraries.users.verifyUserPassword(user, password);
-
+    const { isSuspended } = await this.libraries.users.verifyUserPassword(user, password);
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-    this.userId = id;
+    this.verified = true;
+
+    return user;
+  }
+
+  /** Identifies the user using the username */
+  async identifyUser(): Promise<User> {
+    assertThat(
+      this.verified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const user = await findUserByIdentifier(this.queries.users, this.identifier);
+
+    assertThat(user, new RequestError({ code: 'user.user_not_exist', status: 404 }));
+
+    return user;
   }
 
   toJson(): PasswordVerificationRecordData {
@@ -88,7 +100,7 @@ export class PasswordVerification implements Verification {
       id: this.id,
       type: this.type,
       identifier: this.identifier,
-      userId: this.userId,
+      verified: this.verified,
     };
   }
 }

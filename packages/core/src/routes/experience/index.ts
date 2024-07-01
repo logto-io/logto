@@ -10,7 +10,7 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
-import { identificationApiPayloadGuard } from '@logto/schemas';
+import { InteractionEvent, VerificationType, identificationApiPayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -47,7 +47,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     experienceIdentificationApiRoutesPrefix,
     koaGuard({
       body: identificationApiPayloadGuard,
-      status: [204, 400, 404],
+      status: [204, 400, 401, 404],
     }),
     async (ctx, next) => {
       const { interactionEvent, verificationId } = ctx.guard.body;
@@ -62,10 +62,28 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       );
 
       // TODO: SIE verification method check
-      // TODO: forgot password verification method check, only allow email and phone verification code
-      // TODO: user suspension check
+      switch (interactionEvent) {
+        case InteractionEvent.SignIn: {
+          await ctx.interactionSession.identifyUser(verificationRecord);
+          break;
+        }
+        case InteractionEvent.ForgotPassword: {
+          // Forgot password only supports verification code type verification
+          // The verification record's interaction event must be ForgotPassword
+          assertThat(
+            verificationRecord.type === VerificationType.VerificationCode &&
+              verificationRecord.interactionEvent === InteractionEvent.ForgotPassword,
+            new RequestError({ code: 'session.verification_session_not_found', status: 400 })
+          );
 
-      ctx.interactionSession.identifyUser(verificationRecord);
+          await ctx.interactionSession.identifyUser(verificationRecord);
+          break;
+        }
+        case InteractionEvent.Register: {
+          // TODO: Register flow
+          break;
+        }
+      }
 
       await ctx.interactionSession.save();
 
