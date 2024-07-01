@@ -25,6 +25,7 @@ import koaInteractionSession, {
   type WithInteractionSessionContext,
 } from './middleware/koa-interaction-session.js';
 import passwordVerificationRoutes from './verification-routes/password-verification.js';
+import verificationCodeRoutes from './verification-routes/verification-code.js';
 
 type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
 
@@ -80,5 +81,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
+
   passwordVerificationRoutes(router, tenant);
+  verificationCodeRoutes(router, tenant);
 }

@@ -5,18 +5,24 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import {
+  CodeVerification,
+  codeVerificationRecordDataGuard,
+  type CodeVerificationRecordData,
+} from './code-verification.js';
+import {
   PasswordVerification,
   passwordVerificationRecordDataGuard,
   type PasswordVerificationRecordData,
 } from './password-verification.js';
 
-type VerificationRecordData = PasswordVerificationRecordData;
+type VerificationRecordData = PasswordVerificationRecordData | CodeVerificationRecordData;
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
+  codeVerificationRecordDataGuard,
 ]);
 
-export type VerificationRecord = PasswordVerification;
+export type VerificationRecord = PasswordVerification | CodeVerification;
 
 export const buildVerificationRecord = (
   libraries: Libraries,
@@ -26,6 +32,9 @@ export const buildVerificationRecord = (
   switch (data.type) {
     case VerificationType.Password: {
       return new PasswordVerification(libraries, queries, data);
+    }
+    case VerificationType.VerificationCode: {
+      return new CodeVerification(libraries, queries, data);
     }
   }
 };

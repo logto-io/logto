@@ -2,6 +2,7 @@ import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
 import { MfaFactor, jsonObjectGuard, webAuthnTransportGuard } from '../foundations/index.js';
+import { type ToZodObject } from '../utils/zod.js';
 
 import type {
   EmailVerificationCodePayload,
@@ -32,7 +33,18 @@ export type InteractionIdentifier = {
 export const interactionIdentifierGuard = z.object({
   type: z.enum(['username', 'email', 'phone']),
   value: z.string(),
-});
+}) satisfies ToZodObject<InteractionIdentifier>;
+
+/** Currently only email and phone are supported for verification code validation */
+export type VerificationCodeIdentifier = {
+  type: 'email' | 'phone';
+  value: string;
+};
+
+export const verificationCodeIdentifierGuard = z.object({
+  type: z.enum(['email', 'phone']),
+  value: z.string(),
+}) satisfies ToZodObject<VerificationCodeIdentifier>;
 
 /** Logto supported interaction verification types */
 export enum VerificationType {
@@ -55,6 +67,7 @@ export const identificationApiPayloadGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   verificationId: z.string(),
 });
+
 export type IdentificationApiPayload = z.infer<typeof identificationApiPayloadGuard>;
 /* API payload guard end */
 

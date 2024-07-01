@@ -20,7 +20,6 @@ export type PasswordVerificationRecordData = {
   id: string;
   type: VerificationType.Password;
   identifier: InteractionIdentifier;
-  /* The userId of the user that has been verified */
   userId?: string;
 };
 
@@ -48,6 +47,7 @@ export class PasswordVerification implements Verification {
   readonly type = VerificationType.Password;
   public readonly identifier: InteractionIdentifier;
   public readonly id: string;
+  /* The userId of the user that has been identifier by the given identifier and password */
   private userId?: string;
 
   constructor(
