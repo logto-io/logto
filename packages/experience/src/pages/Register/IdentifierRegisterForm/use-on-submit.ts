@@ -1,6 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -11,6 +12,7 @@ import useRegisterWithUsername from './use-register-with-username';
 const useOnSubmit = () => {
   const { ssoConnectors } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
+  const { setCurrentIdentifier } = useContext(UserInteractionContext);
 
   const {
     errorMessage: usernameRegisterErrorMessage,
@@ -31,6 +33,8 @@ const useOnSubmit = () => {
 
   const onSubmit = useCallback(
     async (identifier: SignInIdentifier, value: string) => {
+      setCurrentIdentifier({ type: identifier, value });
+
       if (identifier === SignInIdentifier.Username) {
         await registerWithUsername(value);
 
@@ -48,7 +52,13 @@ const useOnSubmit = () => {
 
       await sendVerificationCode({ identifier, value });
     },
-    [checkSingleSignOn, registerWithUsername, sendVerificationCode, ssoConnectors.length]
+    [
+      checkSingleSignOn,
+      registerWithUsername,
+      sendVerificationCode,
+      setCurrentIdentifier,
+      ssoConnectors.length,
+    ]
   );
 
   return {

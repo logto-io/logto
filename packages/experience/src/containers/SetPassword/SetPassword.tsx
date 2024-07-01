@@ -7,6 +7,7 @@ import ClearIcon from '@/assets/icons/clear-icon.svg';
 import Button from '@/components/Button';
 import IconButton from '@/components/Button/IconButton';
 import ErrorMessage from '@/components/ErrorMessage';
+import HiddenIdentifierInput from '@/components/HiddenIdentifierInput';
 import { InputField } from '@/components/InputFields';
 
 import TogglePassword from './TogglePassword';
@@ -67,6 +68,7 @@ const SetPassword = ({
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
+      <HiddenIdentifierInput />
       <InputField
         className={styles.inputField}
         type={showPassword ? 'text' : 'password'}

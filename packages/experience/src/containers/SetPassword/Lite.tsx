@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
+import HiddenIdentifierInput from '@/components/HiddenIdentifierInput';
 import { PasswordInputField } from '@/components/InputFields';
 
 import * as styles from './index.module.scss';
@@ -53,6 +54,7 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
+      <HiddenIdentifierInput />
       <PasswordInputField
         className={styles.inputField}
         autoComplete="new-password"

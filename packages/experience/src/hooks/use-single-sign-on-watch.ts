@@ -7,8 +7,8 @@ import {
 import { useEffect, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { getSingleSignOnConnectors } from '@/apis/single-sign-on';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import useApi from '@/hooks/use-api';
@@ -23,8 +23,8 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
 
   const { singleSignOnEnabled } = useSieMethods();
 
-  const { setEmail, setSsoConnectors, ssoConnectors, availableSsoConnectorsMap } =
-    useContext(SingleSignOnContext);
+  const { setSsoEmail, setSsoConnectors, ssoConnectors, availableSsoConnectorsMap } =
+    useContext(UserInteractionContext);
 
   const { showSingleSignOnForm, setShowSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
 
@@ -53,10 +53,10 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
       }
 
       setSsoConnectors(connectors);
-      setEmail(email);
+      setSsoEmail(email);
       return true;
     },
-    [availableSsoConnectorsMap, request, setEmail, setSsoConnectors]
+    [availableSsoConnectorsMap, request, setSsoEmail, setSsoConnectors]
   );
 
   // Reset the ssoContext
@@ -64,9 +64,9 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
     if (!showSingleSignOnForm) {
       setSsoConnectors([]);
 
-      setEmail(undefined);
+      setSsoEmail(undefined);
     }
-  }, [setEmail, setSsoConnectors, showSingleSignOnForm]);
+  }, [setSsoEmail, setSsoConnectors, showSingleSignOnForm]);
 
   const navigateToSingleSignOn = useCallback(async () => {
     if (!showSingleSignOnForm) {

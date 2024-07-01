@@ -1,9 +1,10 @@
 import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -33,6 +34,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
   const { termsValidation, agreeToTermsPolicy } = useTerms();
 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
+
+  const { currentIdentifier } = useContext(UserInteractionContext);
 
   const {
     watch,
@@ -114,6 +117,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             isDanger={!!errors.id || !!errorMessage}
             errorMessage={errors.id?.message}
             enabledTypes={signUpMethods}
+            defaultType={currentIdentifier?.type}
+            defaultValue={currentIdentifier?.value}
           />
         )}
       />

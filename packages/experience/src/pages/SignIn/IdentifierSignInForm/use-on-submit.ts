@@ -1,8 +1,9 @@
 import type { SignIn } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -12,6 +13,7 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const navigate = useNavigate();
   const { ssoConnectors } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
+  const { setCurrentIdentifier } = useContext(UserInteractionContext);
 
   const signInWithPassword = useCallback(
     (identifier: SignInIdentifier, value: string) => {
@@ -38,6 +40,8 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       if (!method) {
         throw new Error(`Cannot find method with identifier type ${identifier}`);
       }
+
+      setCurrentIdentifier({ type: identifier, value });
 
       const { password, isPasswordPrimary, verificationCode } = method;
 
@@ -69,6 +73,7 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
     [
       checkSingleSignOn,
       sendVerificationCode,
+      setCurrentIdentifier,
       signInMethods,
       signInWithPassword,
       ssoConnectors.length,
