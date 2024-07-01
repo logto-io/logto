@@ -44,7 +44,7 @@ const useSingleSignOnRegister = () => {
         redirectTo(result.redirectTo);
       }
     },
-    [handleError, navigate, redirectTo, request, termsValidation]
+    [agreeToTermsPolicy, handleError, navigate, redirectTo, request, termsValidation]
   );
 };
 
