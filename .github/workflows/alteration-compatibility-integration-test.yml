@@ -78,3 +78,16 @@ jobs:
           test-target: ${{ matrix.target }}
           db-alteration-target: ${{ github.head_ref }}
           pnpm-version: 9
+
+  # Automatically rerun the workflow since the integration tests are moody
+  # From this genius: https://github.com/orgs/community/discussions/67654#discussioncomment-8038649
+  rerun-on-failure:
+    needs: run-logto
+    if: failure() && fromJSON(github.run_attempt) < 3
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: api
+        run: gh workflow run rerun.yml -F run_id=${{ github.run_id }}
