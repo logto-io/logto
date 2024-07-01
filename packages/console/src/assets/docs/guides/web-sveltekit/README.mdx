@@ -15,6 +15,9 @@ export const cookieEncryptionKey = generateStandardSecret();
 <Step
   title="Install Logto SDK"
 >
+
+Use your favorite package manager to install the Logto SDK:
+
 <Tabs>
 <TabItem value="npm" label="npm">
 
@@ -40,7 +43,13 @@ pnpm add @logto/sveltekit
 </Tabs>
 </Step>
 
-<Step title="Add Logto hook" subtitle="Init Logto client">
+<Step title="Configure redirect URIs" subtitle="2 URIs">
+
+<RedirectUrisWeb />
+
+</Step>
+
+<Step title="Add Logto hook">
 
 Create a `hooks.server.ts` file in your project `src` root if you don't have one. This file is used to define server hooks for your SvelteKit app.
 
@@ -55,13 +64,11 @@ export const handle = handleLogto(
     appId: '${props.app.id}',
     appSecret: '${props.app.secret}',
   },
-  {
-    encryptionKey: '${cookieEncryptionKey}', // Random-generated
-  }
+  { encryptionKey: '${cookieEncryptionKey}' } // Random-generated key
 );`}
 </Code>
 
-Since these information are sensitive, it's recommended to use environment variables:
+Since these information are sensitive, it's recommended to use environment variables. For example:
 
 <Code className="language-ts" title="src/hooks.server.ts">
     {`import { handleLogto } from '@logto/sveltekit';
@@ -73,9 +80,7 @@ export const handle = handleLogto(
     appId: env.LOGTO_APP_ID,
     appSecret: env.LOGTO_APP_SECRET,
   },
-  {
-    encryptionKey: env.LOGTO_COOKIE_ENCRYPTION_KEY,
-  }
+  { encryptionKey: env.LOGTO_COOKIE_ENCRYPTION_KEY }
 );`}
 </Code>
 
@@ -103,12 +108,6 @@ declare global {
 ```
 
 We'll discuss the `user` object later.
-
-</Step>
-
-<Step title="Configure redirect URIs" subtitle="2 URIs">
-
-  <RedirectUrisWeb />
 
 </Step>
 
