@@ -201,25 +201,29 @@ class _MyHomePageState extends State<MyHomePage> {
 Let's implement the `signIn` and `signOut` buttons in your application.
 
 <Code className="language-dart" title="lib/main.dart">
-  {`final redirectUri = 'io.logto://callback';
-
-@override
-Widget build(BuildContext context) {
-  Widget signInButton = TextButton(
-    onPressed: () async {
-      await logtoClient.signIn(redirectUri);
-    },
-    child: const Text('Sign In'),
-  );
-
-  Widget signOutButton = TextButton(
-    onPressed: () async {
-      await logtoClient.signOut();
-    },
-    child: const Text('Sign Out'),
-  );
-
+{`class _MyHomePageState extends State<MyHomePage> {
   // ...
+
+  final redirectUri = 'io.logto://callback';
+
+  @override
+  Widget build(BuildContext context) {
+    Widget signInButton = TextButton(
+      onPressed: () async {
+        await logtoClient.signIn(redirectUri);
+      },
+      child: const Text('Sign In'),
+    );
+
+    Widget signOutButton = TextButton(
+      onPressed: () async {
+        await logtoClient.signOut();
+      },
+      child: const Text('Sign Out'),
+    );
+
+    // ...
+  }
 }`}
 </Code>
 
@@ -236,27 +240,62 @@ Widget build(BuildContext context) {
 In Logto SDK, you can use `logtoClient.isAuthenticated` to check the authentication status, if the
 user is signed in, the value will be `true`, otherwise, the value will be `false`.
 
+Define a boolean variable `isAuthenticated` in the state of your application to keep track of the authentication status.
+
 ```dart title="lib/main.dart"
-bool isAuthenticated = await logtoClient.isAuthenticated;
+class _MyHomePageState extends State<MyHomePage>{
+  bool isAuthenticated = false;
 
-
-@overwrite
-Widget build(BuildContext context) {
   // ...
+  
+  void render() async {
+    if (await logtoClient.isAuthenticated()) {
+      setState(() {
+        isAuthenticated = true;
+      });
 
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(widget.title),
-    ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          isAuthenticated ? signOutButton : signInButton,
-        ],
+      return;
+    }
+
+    setState(() {
+      isAuthenticated = false;
+    });
+  }
+
+  @overwrite
+  Widget build(BuildContext context) {
+    // ...
+
+     Widget signInButton = TextButton(
+      onPressed: () async {
+        await logtoClient.signIn(redirectUri);
+        render();
+      },
+      child: const Text('Sign In'),
+    );
+
+    Widget signOutButton = TextButton(
+      onPressed: () async {
+        await logtoClient.signOut();
+        render();
+      },
+      child: const Text('Sign Out'),
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
-    ),
-  );
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            isAuthenticated ? signOutButton : signInButton,
+          ],
+        ),
+      ),
+    );
+  }
 }
 ```
 
