@@ -135,25 +135,42 @@ This plugin uses `ASWebAuthenticationSession` on iOS 12+ and macOS 10.15+, `SFAu
 
 <Step title="Init Client" subtitle="1 step">
 
-Import the `logto_dart_sdk` package and initialize the `LogtoClient` instance at the root widget of your application.
+Import the `logto_dart_sdk` package and initialize the `LogtoClient` instance at the root state of your application.
 
 <Code className="language-dart" title="lib/main.dart">
     {`import 'package:logto_dart_sdk/logto_dart_sdk.dart';
 import 'package:http/http.dart' as http;
 
-late LogtoClient logtoClient;
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+  final String title;
 
-// Initialize LogtoClient with configuration
-void init() async {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   final logtoConfig = LogtoConfig(
     endpoint: 'your_logto_endpoint', // Replace with your Logto endpoint
     appId: 'your_app_id', // Replace with your App ID
   );
 
-  logtoClient = LogtoClient(
-    config: logtoConfig,
-    httpClient: http.Client(), // Optional: Custom HTTP client
-  );
+  late LogtoClient logtoClient;
+
+  void _init() async {
+    logtoClient = LogtoClient(
+      config: logtoConfig,
+      httpClient: http.Client(), // Optional: Custom HTTP client
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  // ...
 }`}
 </Code>
 
@@ -181,17 +198,29 @@ void init() async {
 
 <Step title="Implement sign-in and sign-out" subtitle="2 steps">
 
-Let's implement the `signIn` and `signOut` methods in your application.
+Let's implement the `signIn` and `signOut` buttons in your application.
 
 <Code className="language-dart" title="lib/main.dart">
-  {`void signIn() async {
-  await logtoClient.signIn('${props.redirectUris[0] ?? 'io.logto://callback'}');
-}
+  {`final redirectUri = 'io.logto://callback';
 
-void signOut() async {
-  await logtoClient.signOut();
-}
-  `}
+@override
+Widget build(BuildContext context) {
+  Widget signInButton = TextButton(
+    onPressed: () async {
+      await logtoClient.signIn(redirectUri);
+    },
+    child: const Text('Sign In'),
+  );
+
+  Widget signOutButton = TextButton(
+    onPressed: () async {
+      await logtoClient.signOut();
+    },
+    child: const Text('Sign Out'),
+  );
+
+  // ...
+}`}
 </Code>
 
 <br />
@@ -208,7 +237,27 @@ In Logto SDK, you can use `logtoClient.isAuthenticated` to check the authenticat
 user is signed in, the value will be `true`, otherwise, the value will be `false`.
 
 ```dart title="lib/main.dart"
- bool isAuthenticated = await logtoClient.isAuthenticated;
+bool isAuthenticated = await logtoClient.isAuthenticated;
+
+
+@overwrite
+Widget build(BuildContext context) {
+  // ...
+
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(widget.title),
+    ),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          isAuthenticated ? signOutButton : signInButton,
+        ],
+      ),
+    ),
+  );
+}
 ```
 
 </Step>
