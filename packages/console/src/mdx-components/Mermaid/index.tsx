@@ -4,12 +4,16 @@ import { useEffect } from 'react';
 
 import useTheme from '@/hooks/use-theme';
 
+/** Load Mermaid asynchronously from jsDelivr to avoid Parcel issues. */
 const loadMermaid = async () => {
   // Define this variable to "outsmart" the detection of the dynamic import by Parcel:
   // https://github.com/parcel-bundler/parcel/issues/7064#issuecomment-942441649
   const uri = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const imported: { default: MermaidType } = await import(uri);
+  const imported: { default: MermaidType } = await (process.env.NODE_ENV === 'development'
+    ? // eslint-disable-next-line no-eval -- https://github.com/parcel-bundler/parcel/issues/8316
+      eval(`import('${uri}')`)
+    : import(uri));
   return imported.default;
 };
 
