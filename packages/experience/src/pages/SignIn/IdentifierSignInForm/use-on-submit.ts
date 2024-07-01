@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
+import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { useSieMethods } from '@/hooks/use-sie';
 import { UserFlow } from '@/types';
 
@@ -12,6 +13,7 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const navigate = useNavigate();
   const { ssoConnectors } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
+  const { set } = useSessionStorage();
 
   const signInWithPassword = useCallback(
     (identifier: SignInIdentifier, value: string) => {
@@ -38,6 +40,12 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       if (!method) {
         throw new Error(`Cannot find method with identifier type ${identifier}`);
       }
+
+      // Set the current identifier to the session storage
+      set(StorageKeys.CurrentIdentifier, {
+        type: identifier,
+        value,
+      });
 
       const { password, isPasswordPrimary, verificationCode } = method;
 
@@ -69,6 +77,7 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
     [
       checkSingleSignOn,
       sendVerificationCode,
+      set,
       signInMethods,
       signInWithPassword,
       ssoConnectors.length,

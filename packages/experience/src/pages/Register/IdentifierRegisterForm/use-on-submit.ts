@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
+import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { useSieMethods } from '@/hooks/use-sie';
 import { UserFlow } from '@/types';
 
@@ -11,6 +12,7 @@ import useRegisterWithUsername from './use-register-with-username';
 const useOnSubmit = () => {
   const { ssoConnectors } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
+  const { set } = useSessionStorage();
 
   const {
     errorMessage: usernameRegisterErrorMessage,
@@ -31,6 +33,12 @@ const useOnSubmit = () => {
 
   const onSubmit = useCallback(
     async (identifier: SignInIdentifier, value: string) => {
+      // Set the current identifier to the session storage
+      set(StorageKeys.CurrentIdentifier, {
+        type: identifier,
+        value,
+      });
+
       if (identifier === SignInIdentifier.Username) {
         await registerWithUsername(value);
 

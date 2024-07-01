@@ -119,3 +119,13 @@ export const ssoConnectorMetadataGuard: s.Describe<SsoConnectorMetadata> = s.obj
   darkLogo: s.optional(s.string()),
   connectorName: s.string(),
 });
+
+/**
+ * Defines the structure for caching the current user's identifier.
+ * Used in conjunction with the HiddenIdentifierInput component to assist
+ * password managers in associating the correct identifier with passwords.
+ */
+export const identifierSessionGuard = s.object({
+  type: s.enums([SignInIdentifier.Email, SignInIdentifier.Phone, SignInIdentifier.Username]),
+  value: s.string(),
+});
