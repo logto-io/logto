@@ -14,15 +14,24 @@ import {
   passwordVerificationRecordDataGuard,
   type PasswordVerificationRecordData,
 } from './password-verification.js';
+import {
+  SocialVerification,
+  socialVerificationRecordDataGuard,
+  type SocialVerificationRecordData,
+} from './social-verification.js';
 
-type VerificationRecordData = PasswordVerificationRecordData | CodeVerificationRecordData;
+type VerificationRecordData =
+  | PasswordVerificationRecordData
+  | CodeVerificationRecordData
+  | SocialVerificationRecordData;
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
   codeVerificationRecordDataGuard,
+  socialVerificationRecordDataGuard,
 ]);
 
-export type VerificationRecord = PasswordVerification | CodeVerification;
+export type VerificationRecord = PasswordVerification | CodeVerification | SocialVerification;
 
 export const buildVerificationRecord = (
   libraries: Libraries,
@@ -35,6 +44,9 @@ export const buildVerificationRecord = (
     }
     case VerificationType.VerificationCode: {
       return new CodeVerification(libraries, queries, data);
+    }
+    case VerificationType.Social: {
+      return new SocialVerification(libraries, queries, data);
     }
   }
 };

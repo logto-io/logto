@@ -8,6 +8,10 @@ export abstract class Verification {
   abstract readonly type: VerificationType;
 
   abstract get isVerified(): boolean;
+  /**
+   * @deprecated
+   * TODO: Remove this @simeng-li, should get the userId asynchronously in real-time
+   */
   abstract get verifiedUserId(): string | undefined;
 
   abstract toJson(): {

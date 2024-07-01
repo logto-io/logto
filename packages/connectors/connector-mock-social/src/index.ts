@@ -2,9 +2,9 @@ import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 
 import type {
+  CreateConnector,
   GetAuthorizationUri,
   GetUserInfo,
-  CreateConnector,
   SocialConnector,
 } from '@logto/connector-kit';
 import {
@@ -17,11 +17,23 @@ import {
 import { defaultMetadata } from './constant.js';
 import { mockSocialConfigGuard } from './types.js';
 
-const getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
+const getAuthorizationUri: GetAuthorizationUri = async (
+  { state, redirectUri, connectorId },
+  setSession
+) => {
+  try {
+    await setSession({ state, redirectUri, connectorId });
+  } catch (error: unknown) {
+    // Ignore the error if the method is not implemented
+    if (!(error instanceof ConnectorError && error.code === ConnectorErrorCodes.NotImplemented)) {
+      throw error;
+    }
+  }
+
   return `http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`;
 };
 
-const getUserInfo: GetUserInfo = async (data) => {
+const getUserInfo: GetUserInfo = async (data, getSession) => {
   const dataGuard = z.object({
     code: z.string(),
     userId: z.optional(z.string()),
@@ -32,6 +44,19 @@ const getUserInfo: GetUserInfo = async (data) => {
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(data));
+  }
+
+  try {
+    const connectorSession = await getSession();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!connectorSession) {
+      throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed);
+    }
+  } catch (error: unknown) {
+    // Ignore the error if the method is not implemented
+    if (!(error instanceof ConnectorError && error.code === ConnectorErrorCodes.NotImplemented)) {
+      throw error;
+    }
   }
 
   const { code, userId, ...rest } = result.data;

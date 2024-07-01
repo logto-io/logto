@@ -51,12 +51,29 @@ export enum VerificationType {
   Password = 'Password',
   VerificationCode = 'VerificationCode',
   Social = 'Social',
+  EnterpriseSso = 'EnterpriseSso',
   TOTP = 'Totp',
   WebAuthn = 'WebAuthn',
   BackupCode = 'BackupCode',
 }
 
 /* API payload guard start */
+export const socialAuthorizationUrlPayloadGuard = z.object({
+  state: z.string(),
+  redirectUri: z.string(),
+});
+
+export type SocialAuthorizationUrlPayload = z.infer<typeof socialAuthorizationUrlPayloadGuard>;
+
+export const socialVerificationCallbackPayloadGuard = z.object({
+  connectorData: jsonObjectGuard,
+  verificationId: z.string(),
+});
+
+export type SocialVerificationCallbackPayload = z.infer<
+  typeof socialVerificationCallbackPayloadGuard
+>;
+
 export const passwordVerificationPayloadGuard = z.object({
   identifier: interactionIdentifierGuard,
   password: z.string().min(1),
@@ -69,6 +86,7 @@ export const identificationApiPayloadGuard = z.object({
 });
 
 export type IdentificationApiPayload = z.infer<typeof identificationApiPayloadGuard>;
+
 /* API payload guard end */
 
 // ====== Experience API payload guard and types definitions end ======

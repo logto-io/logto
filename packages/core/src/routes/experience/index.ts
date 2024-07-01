@@ -25,6 +25,7 @@ import koaInteractionSession, {
   type WithInteractionSessionContext,
 } from './middleware/koa-interaction-session.js';
 import passwordVerificationRoutes from './verification-routes/password-verification.js';
+import socialVerificationRoutes from './verification-routes/social-verification.js';
 import verificationCodeRoutes from './verification-routes/verification-code.js';
 
 type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
@@ -60,6 +61,10 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 
+      // TODO: SIE verification method check
+      // TODO: forgot password verification method check, only allow email and phone verification code
+      // TODO: user suspension check
+
       ctx.interactionSession.identifyUser(verificationRecord);
 
       await ctx.interactionSession.save();
@@ -84,4 +89,5 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
   passwordVerificationRoutes(router, tenant);
   verificationCodeRoutes(router, tenant);
+  socialVerificationRoutes(router, tenant);
 }

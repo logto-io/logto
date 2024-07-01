@@ -18,9 +18,9 @@ import {
 import { initClient, logoutClient, processSession } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
-  setSocialConnector,
   setEmailConnector,
   setSmsConnector,
+  setSocialConnector,
 } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';

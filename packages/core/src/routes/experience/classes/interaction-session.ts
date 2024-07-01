@@ -83,6 +83,7 @@ export default class InteractionSession {
   /** Set the verified accountId of the current interaction session from  the verification record */
   public identifyUser(verificationRecord: VerificationRecord) {
     // Throws an 404 error if the user is not found by the given verification record
+    // TODO: refactor using real-time user verification. Static verifiedUserId will be removed.
     assertThat(
       verificationRecord.verifiedUserId,
       new RequestError(
@@ -91,7 +92,8 @@ export default class InteractionSession {
           status: 404,
         },
         {
-          identifier: verificationRecord.identifier.value,
+          identifier:
+            'identifier' in verificationRecord ? verificationRecord.identifier : undefined,
         }
       )
     );
