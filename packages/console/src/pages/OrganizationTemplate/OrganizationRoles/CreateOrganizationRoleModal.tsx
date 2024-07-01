@@ -6,7 +6,6 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -105,29 +104,26 @@ function CreateOrganizationRoleModal({ isOpen, onClose }: Props) {
             {...register('description')}
           />
         </FormField>
-        {/* TODO: Remove */}
-        {isDevFeaturesEnabled && (
-          <FormField title="organization_template.roles.create_modal.type">
-            <Controller
-              name="type"
-              control={control}
-              render={({ field: { onChange, value, name } }) => (
-                <RadioGroup
-                  name={name}
-                  className={styles.roleTypes}
-                  value={value}
-                  onChange={(value) => {
-                    onChange(value);
-                  }}
-                >
-                  {radioOptions.map(({ key, value }) => (
-                    <Radio key={value} title={<DynamicT forKey={key} />} value={value} />
-                  ))}
-                </RadioGroup>
-              )}
-            />
-          </FormField>
-        )}
+        <FormField title="organization_template.roles.create_modal.type">
+          <Controller
+            name="type"
+            control={control}
+            render={({ field: { onChange, value, name } }) => (
+              <RadioGroup
+                name={name}
+                className={styles.roleTypes}
+                value={value}
+                onChange={(value) => {
+                  onChange(value);
+                }}
+              >
+                {radioOptions.map(({ key, value }) => (
+                  <Radio key={value} title={<DynamicT forKey={key} />} value={value} />
+                ))}
+              </RadioGroup>
+            )}
+          />
+        </FormField>
       </ModalLayout>
     </ReactModal>
   );

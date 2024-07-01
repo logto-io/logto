@@ -150,7 +150,7 @@ const identifiableEntityNames = Object.freeze([
 /** Additional tags that cannot be inferred from the path. */
 const additionalTags = Object.freeze(
   condArray<string>(
-    EnvSet.values.isDevFeaturesEnabled && 'Organization applications',
+    'Organization applications',
     EnvSet.values.isDevFeaturesEnabled && 'Security',
     'Organization users'
   )
