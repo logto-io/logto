@@ -5,11 +5,12 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisNative, { defaultRedirectUri } from '../../fragments/_redirect-uris-native.mdx';
 
 <Steps>
 
 <Step
-  title="Installation"
+  title="Install SDK"
   subtitle="Install Logto SDK and peer dependencies"
 >
 
@@ -56,7 +57,7 @@ If you're installing this in a [bare React Native app](https://docs.expo.dev/bar
 
 Import and use `LogtoProvider` to provide a Logto context:
 
-<Code className="language-tsx">
+<Code className="language-tsx" title="App.tsx">
     {`import { LogtoProvider, LogtoConfig } from '@logto/rn';
 
 const config: LogtoConfig = {
@@ -73,16 +74,14 @@ const App = () => (
 
 </Step>
 
-<Step title="Implement sign-in and sign-out">
+<Step title="Configure redirect URIs">
 
-Add a native redirect URI (for example, `io.logto://callback`), then click "Save".
-
-<UriInputField name="redirectUris" />
+<RedirectUrisNative />
 
 - For iOS, the redirect URI scheme does not really matter since the `ASWebAuthenticationSession` class will listen to the redirect URI regardless of if it's registered.
 - For Android, the redirect URI scheme must be filled in Expo's `app.json` file, for example:
 
-  ```json
+  ```json title="app.json"
   {
     "expo": {
       "scheme": "io.logto"
@@ -98,7 +97,7 @@ The redirect URI is used to redirect the user back to your app after they sign i
 
 You can use `useLogto` hook to sign in and sign out:
 
-<Code className="language-tsx">
+<Code className="language-tsx" title="App.tsx">
     {`import { useLogto } from '@logto/rn';
 import { Button } from 'react-native';
 
@@ -111,47 +110,7 @@ const Content = () => {
         <Button title="Sign out" onPress={async () => signOut()} />
       ) : (
         <Button title="Sign in" onPress={async () => signIn('${
-          props.redirectUris[0] ?? 'io.logto://callback'
-        }')} />
-      )}
-    </div>
-  );
-};`}
-</Code>
-
-</Step>
-
-<Step title="Display user information">
-
-To display the user's information, you can use the `getIdTokenClaims()` method:
-
-<Code className="language-tsx">
-    {`import { useLogto } from '@logto/rn';
-import { Button, Text } from 'react-native';
-
-const Content = () => {
-  const { getIdTokenClaims, isAuthenticated } = useLogto();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      getIdTokenClaims().then((claims) => {
-        setUser(claims);
-      });
-    }
-  }, [isAuthenticated]);
-
-  return (
-    <div>
-      {isAuthenticated ? (
-        <>
-          <Text>{user?.name}</Text>
-          <Text>{user?.email}</Text>
-          <Button title="Sign out" onPress={async () => signOut()} />
-        </>
-      ) : (
-        <Button title="Sign in" onPress={async () => signIn('${
-          props.redirectUris[0] ?? 'io.logto://callback'
+          props.redirectUris[0] || defaultRedirectUri
         }')} />
       )}
     </div>
@@ -167,12 +126,37 @@ const Content = () => {
 
 </Step>
 
+<Step title="Display user information">
+
+To display the user's information, you can use the `getIdTokenClaims()` method:
+
+<Code className="language-tsx" title="App.tsx">
+    {`import { useLogto } from '@logto/rn';
+import { Button, Text } from 'react-native';
+
+const Content = () => {
+  const { getIdTokenClaims, isAuthenticated } = useLogto();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getIdTokenClaims().then((claims) => {
+        setUser(claims); // { sub: '...', ... }
+      });
+    }
+  }, [isAuthenticated, getIdTokenClaims]);
+
+ // ...
+};`}
+</Code>
+
+</Step>
+
 <Step title="Troubleshooting">
 
 For Expo projects, if you encounter the error `Unable to resolve "@logto/client/shim" from "node_modules/@logto/rn/lib/index.js"`, you can resolve it by adding the following to your `metro.config.js` file:
 
-```js
-// metro.config.js
+```js title="metro.config.js"
 const config = {
   // ...
   resolver: {
