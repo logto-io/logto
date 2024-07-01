@@ -8,7 +8,6 @@ import useSWR from 'swr';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -137,7 +136,7 @@ function Settings() {
           )}
         </FormField>
       </FormCard>
-      {isDevFeaturesEnabled && <JitSettings form={form} />}
+      <JitSettings form={form} />
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </DetailsForm>
   );
