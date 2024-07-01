@@ -5,7 +5,7 @@ import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUrisNative from '../../fragments/_redirect-uris-native.mdx';
+import RedirectUrisNative, { defaultRedirectUri } from '../../fragments/_redirect-uris-native.mdx';
 
 <Steps>
 <Step title="Install SDK">
@@ -26,26 +26,24 @@ You can install the `logto_dart_sdk package` directly using the pub package mana
 Run the following command under your project root:
 
 ```sh
-  flutter pub get logto_dart_sdk
+flutter pub get logto_dart_sdk
 ```
 
 </TabItem>
 
-<TabItem value="github" label="github">
+<TabItem value="github" label="GitHub">
 
 If you prefer to fork your own version of the SDK, you can clone the repository directly from GitHub.
 
 ```sh
-  git clone https://github.com/logto-io/dart
+git clone https://github.com/logto-io/dart
 ```
 
 </TabItem>
 
 </Tabs>
 
-</Step>
-
-<Step title="Dependencies and android settings">
+### Dependencies and Android settings
 
 <details>
 
@@ -60,60 +58,62 @@ We use [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
 
 Set the `android:minSdkVersion` to 18 in your project's `android/app/build.gradle` file.
 
-```gradle title="android/app/build.gradle"
+```kotlin title="android/app/build.gradle"
 android {
-    ...
-    defaultConfig {
-        ...
-        minSdkVersion 18
-        ...
-    }
+  {/* ... */}
+  defaultConfig {
+      {/* ... */}
+      minSdkVersion 18
   }
+}
 ```
-
 **Disable autobackup**
 
-By default Android may backup data on Google Drive automatically. It can cause exception `java.security.InvalidKeyException:Failed to unwrap key`.
+By default Android may backup data on Google Drive automatically. It can cause the exception `java.security.InvalidKeyException: Failed to unwrap key`.
 
 To avoid this, you can disable auto backup for your app or exclude `sharedprefs` from the `FlutterSecureStorage`.
 
 1. To disable auto backup, go to your app manifest file and set the `android:allowBackup` and `android:fullBackupContent` attributes to `false`.
 
-   ```xml title="AndroidManifest.xml"
-   <manifest ... >
-        ...
-        <application
-          android:allowBackup="false"
-          android:fullBackupContent="false"
-          ...
-        >
-            ...
-        </application>
-    </manifest>
-   ```
+  ```xml title="AndroidManifest.xml"
+  <manifest>
+    <!-- ...other attributes -->
+    <application
+      android:allowBackup="false"
+      android:fullBackupContent="false"
+    >
+      <!-- ... -->
+    </application>
+  </manifest>
+  ```
 
 2. Exclude `sharedprefs` from `FlutterSecureStorage`.
 
-   If you need to keep the `android:fullBackupContent` for your app rather than disabling it, you can exclude the `sharedprefs` directory from the backup.
+  If you need to keep the `android:fullBackupContent` for your app rather than disabling it, you can exclude the `sharedprefs` directory from the backup.
 
-   See more details in the [Android documentation](https://developer.android.com/identity/data/autobackup#IncludingFiles).
+  See more details in the [Android documentation](https://developer.android.com/identity/data/autobackup#IncludingFiles).
 
-   In your AndroidManifest.xml file, add the android:fullBackupContent attribute to the `<application>` element, as shown in the following example. This attribute points to an XML file that contains backup rules.
+  In your `AndroidManifest.xml` file, add the `android:fullBackupContent` attribute to the `<application>` element, as shown in the following example. This attribute points to an XML file that contains backup rules.
 
-   ```xml title="AndroidManifest.xml"
-   <application ...
-     android:fullBackupContent="@xml/backup_rules">
-   </application>
-   ```
+  ```xml title="AndroidManifest.xml"
+  <manifest>
+    <!-- ...other attributes -->
+    <application
+      android:fullBackupContent="@xml/backup_rules"
+    >
+      <!-- ... -->
+    </application>
+  </manifest>
+  ```
 
-   Create an XML file called `@xml/backup_rules` in the `res/xml/` directory. In this file, add rules with the `<include>` and `<exclude>` elements. The following sample backs up all shared preferences except device.xml:
+  Create an XML file called `@xml/backup_rules` in the `res/xml/` directory. In this file, add rules with the `<include>` and `<exclude>` elements. The following sample backs up all shared preferences except device.xml:
 
-   ```xml title="res/xml/backup_rules.xml"
-   <?xml version="1.0" encoding="utf-8"?>
-   <full-backup-content>
-     <exclude domain="sharedpref" path="FlutterSecureStorage"/>
-   </full-backup-content>
-   ```
+  ```xml title="res/xml/backup_rules.xml"
+  <?xml version="1.0" encoding="utf-8"?>
+  <full-backup-content>
+    <exclude domain="sharedpref" path="FlutterSecureStorage"/>
+  </full-backup-content>
+  ```
 
 Please check [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage#configure-android-version) for more details.
 
@@ -204,7 +204,7 @@ Let's implement the `signIn` and `signOut` buttons in your application.
 {`class _MyHomePageState extends State<MyHomePage> {
   // ...
 
-  final redirectUri = 'io.logto://callback';
+  final redirectUri = '${props.redirectUris[0] ?? defaultRedirectUri}';
 
   @override
   Widget build(BuildContext context) {
@@ -237,8 +237,7 @@ Let's implement the `signIn` and `signOut` buttons in your application.
 
 <Step title="Handle authentication status" subtitle="1 step">
 
-In Logto SDK, you can use `logtoClient.isAuthenticated` to check the authentication status, if the
-user is signed in, the value will be `true`, otherwise, the value will be `false`.
+In Logto SDK, you can use `logtoClient.isAuthenticated` to check the authentication status, if the user is signed in, the value will be `true`, otherwise, the value will be `false`.
 
 Define a boolean variable `isAuthenticated` in the state of your application to keep track of the authentication status.
 
