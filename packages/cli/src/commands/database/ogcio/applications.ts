@@ -41,6 +41,14 @@ const setApplicationId = async (
   element = await createApplication(transaction, tenantId, element);
 };
 
+const createArrayString = (values: string | string[]): string => {
+  const valuesString = (Array.isArray(values) ? values : [values])
+    .map((uri) => `"${uri}"`)
+    .join(',');
+
+  return `[${valuesString}]`;
+};
+
 const fillApplications = (
   inputApplications: ApplicationSeeder[]
 ): Record<string, SeedingApplication> => {
@@ -52,7 +60,7 @@ const fillApplications = (
       secret: inputApp.secret,
       description: inputApp.description,
       type: inputApp.type,
-      oidc_client_metadata: `{"redirectUris": ["${inputApp.redirect_uri}"], "postLogoutRedirectUris": ["${inputApp.logout_redirect_uri}"]}`,
+      oidc_client_metadata: `{"redirectUris": ${createArrayString(inputApp.redirect_uri)}, "postLogoutRedirectUris": ${createArrayString(inputApp.logout_redirect_uri)}}`,
       custom_client_metadata:
         '{"idTokenTtl": 3600, "corsAllowedOrigins": [], "rotateRefreshToken": true, "refreshTokenTtlInDays": 14, "alwaysIssueRefreshToken": false}',
       is_third_party: inputApp.is_third_party ?? false,
