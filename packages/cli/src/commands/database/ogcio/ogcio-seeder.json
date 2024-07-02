@@ -12,7 +12,11 @@
                 "payments:provider:*",
                 "payments:payment_request:*",
                 "payments:payment_request.public:read",
-                "payments:transaction:*"
+                "payments:transaction:*",
+                "messaging:message:*",
+                "messaging:provider:*",
+                "messaging:template:*",
+                "messaging:citizen:*"
             ]
         },
         "organization_roles": [
@@ -24,6 +28,16 @@
                     "payments:payment_request:*",
                     "payments:payment_request.public:read",
                     "payments:transaction:*"
+                ]
+            },
+            {
+                "name": "Messaging Public Servant",
+                "description": "Messaging Public servant",
+                "specific_permissions": [
+                    "messaging:message:*",
+                    "messaging:provider:*",
+                    "messaging:template:*",
+                    "messaging:citizen:*"
                 ]
             }
         ],
@@ -68,6 +82,12 @@
                     "payments:transaction.self:write",
                     "payments:provider.public:read"
                 ]
+            },
+            {
+                "resource_id": "messaging-api",
+                "specific_permissions": [
+                    "messaging:message.self:read"
+                ]
             }
         ],
         "resource_roles": [
@@ -82,6 +102,12 @@
                             "payments:payment_request.public:read",
                             "payments:transaction.self:write",
                             "payments:provider.public:read"
+                        ]
+                    },
+                    {
+                        "resource_id": "messaging-api",
+                        "specific_permissions": [
+                            "messaging:message.self:read"
                         ]
                     }
                 ]
