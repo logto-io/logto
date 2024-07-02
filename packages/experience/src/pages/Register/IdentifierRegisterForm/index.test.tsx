@@ -3,8 +3,8 @@ import { assert } from '@silverhand/essentials';
 import { fireEvent, act, waitFor } from '@testing-library/react';
 
 import ConfirmModalProvider from '@/Providers/ConfirmModalProvider';
-import SingleSignOnContextProvider from '@/Providers/SingleSignOnContextProvider';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
+import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
@@ -53,11 +53,11 @@ const renderForm = (
       }}
     >
       <ConfirmModalProvider>
-        <SingleSignOnContextProvider>
+        <UserInteractionContextProvider>
           <SingleSignOnFormModeContextProvider>
             <IdentifierRegisterForm signUpMethods={signUpMethods} />
           </SingleSignOnFormModeContextProvider>
-        </SingleSignOnContextProvider>
+        </UserInteractionContextProvider>
       </ConfirmModalProvider>
     </SettingsProvider>
   );

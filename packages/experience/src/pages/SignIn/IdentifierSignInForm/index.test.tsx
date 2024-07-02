@@ -3,8 +3,8 @@ import { SignInIdentifier, experience } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, act, waitFor } from '@testing-library/react';
 
-import SingleSignOnContextProvider from '@/Providers/SingleSignOnContextProvider';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
+import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import {
@@ -52,11 +52,11 @@ const renderForm = (signInMethods: SignIn['methods'], ssoConnectors: SsoConnecto
         ssoConnectors,
       }}
     >
-      <SingleSignOnContextProvider>
+      <UserInteractionContextProvider>
         <SingleSignOnFormModeContextProvider>
           <IdentifierSignInForm signInMethods={signInMethods} />
         </SingleSignOnFormModeContextProvider>
-      </SingleSignOnContextProvider>
+      </UserInteractionContextProvider>
     </SettingsProvider>
   );
 
