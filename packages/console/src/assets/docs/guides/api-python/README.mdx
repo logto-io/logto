@@ -41,12 +41,10 @@ pip install python-jose[ecdsa]
 
 ### Retrieve Logto's OIDC configurations
 
-<p>
 You will need a JWK public key set and the token issuer to verify the signature and source of the received JWS token.
-All the latest public Logto Authorization Configurations can be found at <code>{appendPath(props.endpoint, '/oidc/.well-known/openid-configuration')}</code>.
+All the latest public Logto Authorization Configurations can be found at <Code>{appendPath(props.endpoint, '/oidc/.well-known/openid-configuration')}</Code>.
 
 e.g. You can locate the following two fields in the response body if you request the above endpoint.
-</p>
 
 <Code className="language-json">
 {`{

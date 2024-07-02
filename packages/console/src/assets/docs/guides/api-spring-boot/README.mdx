@@ -51,11 +51,9 @@ and signed with [JWK](https://datatracker.ietf.org/doc/html/rfc7517)
 
 Before moving on, you will need to get an issuer and a JWKS URI to verify the issuer and the signature of the Bearer Token (`access_token`).
 
-<p>
-  All the Logto Authorization server configurations can be found by requesting{' '}
-  <code>{appendPath(props.endpoint, '/oidc/.well-known/openid-configuration')}</code>, including the{' '}
-  <strong>issuer</strong>, <strong>jwks_uri</strong> and other authorization configs.
-</p>
+All the Logto Authorization server configurations can be found by requesting{' '}
+<Code>{appendPath(props.endpoint, '/oidc/.well-known/openid-configuration')}</Code>, including the{' '}
+<strong>issuer</strong>, <strong>jwks_uri</strong> and other authorization configs.
 
 An example of the response:
 
