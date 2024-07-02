@@ -262,3 +262,5 @@ export const removeUnnecessaryOperations = (
 
   return document;
 };
+
+export const shouldThrow = () => !EnvSet.values.isProduction || EnvSet.values.isIntegrationTest;
