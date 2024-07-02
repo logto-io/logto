@@ -113,7 +113,7 @@
     "@types/semver": "^7.3.12",
     "@types/sinon": "^17.0.0",
     "@types/supertest": "^6.0.2",
-    "eslint": "^8.56.0",
+    "eslint": "^9.0.0",
     "jest": "^29.7.0",
     "jest-matcher-specific-error": "^1.0.0",
     "jsonc-eslint-parser": "^2.4.0",

@@ -62,7 +62,7 @@
     "@types/node": "^20.9.5",
     "@types/react": "^18.0.31",
     "@vitest/coverage-v8": "^1.4.0",
-    "eslint": "^8.56.0",
+    "eslint": "^9.0.0",
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.0",
