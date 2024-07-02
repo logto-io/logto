@@ -1,9 +1,10 @@
 import { AgreeToTermsPolicy, type SignIn } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -32,6 +33,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
+  const { identifierInputValue, setIdentifierInputValue } = useContext(UserInteractionContext);
 
   const enabledSignInMethods = useMemo(
     () => signInMethods.map(({ identifier }) => identifier),
@@ -67,6 +69,8 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
           return;
         }
 
+        setIdentifierInputValue({ type, value });
+
         if (showSingleSignOnForm) {
           await navigateToSingleSignOn();
           return;
@@ -86,6 +90,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
       handleSubmit,
       navigateToSingleSignOn,
       onSubmit,
+      setIdentifierInputValue,
       showSingleSignOnForm,
       termsValidation,
     ]
@@ -117,6 +122,8 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledSignInMethods}
+            defaultType={identifierInputValue?.type}
+            defaultValue={identifierInputValue?.value}
           />
         )}
       />

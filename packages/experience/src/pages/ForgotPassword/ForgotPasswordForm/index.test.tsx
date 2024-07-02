@@ -2,6 +2,7 @@ import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 
+import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { putInteraction, sendVerificationCode } from '@/apis/interaction';
 import { UserFlow, type VerificationCodeIdentifier } from '@/types';
@@ -32,11 +33,13 @@ describe('ForgotPasswordForm', () => {
 
   const renderForm = (defaultType: VerificationCodeIdentifier, defaultValue?: string) =>
     renderWithPageContext(
-      <ForgotPasswordForm
-        enabledTypes={[SignInIdentifier.Email, SignInIdentifier.Phone]}
-        defaultType={defaultType}
-        defaultValue={defaultValue}
-      />
+      <UserInteractionContextProvider>
+        <ForgotPasswordForm
+          enabledTypes={[SignInIdentifier.Email, SignInIdentifier.Phone]}
+          defaultType={defaultType}
+          defaultValue={defaultValue}
+        />
+      </UserInteractionContextProvider>
     );
 
   describe.each([
@@ -81,7 +84,7 @@ describe('ForgotPasswordForm', () => {
               pathname: `/${UserFlow.ForgotPassword}/verification-code`,
               search: '',
             },
-            { state: { identifier, value }, replace: undefined }
+            { replace: undefined }
           );
         });
       });

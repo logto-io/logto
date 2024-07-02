@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { setUserPassword } from '@/apis/interaction';
 import SetPassword from '@/containers/SetPassword';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -20,6 +21,7 @@ const ResetPassword = () => {
   const { setToast } = useToast();
   const navigate = useNavigate();
   const { show } = useConfirmModal();
+  const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.verification_session_not_found': async (error) => {
@@ -35,11 +37,14 @@ const ResetPassword = () => {
   const successHandler: SuccessHandler<typeof setUserPassword> = useCallback(
     (result) => {
       if (result) {
+        // Clear the forgot password identifier input value
+        setForgotPasswordIdentifierInputValue(undefined);
+
         setToast(t('description.password_changed'));
         navigate('/sign-in', { replace: true });
       }
     },
-    [navigate, setToast, t]
+    [navigate, setForgotPasswordIdentifierInputValue, setToast, t]
   );
 
   const [action] = usePasswordAction({
@@ -48,6 +53,7 @@ const ResetPassword = () => {
     errorHandlers,
     successHandler,
   });
+
   const {
     policy: {
       length: { min, max },

@@ -94,7 +94,6 @@ describe('PasswordSignInForm', () => {
             search: '',
           },
           {
-            state: { identifier, value },
             replace: true,
           }
         );

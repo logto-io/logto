@@ -1,8 +1,9 @@
 import classNames from 'classnames';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
@@ -41,6 +42,8 @@ const ForgotPasswordForm = ({
     UserFlow.ForgotPassword
   );
 
+  const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
+
   const {
     handleSubmit,
     control,
@@ -70,10 +73,13 @@ const ForgotPasswordForm = ({
           return;
         }
 
+        // Cache or update the forgot password identifier input value
+        setForgotPasswordIdentifierInputValue({ type, value });
+
         await onSubmit({ identifier: type, value });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit]
+    [clearErrorMessage, handleSubmit, onSubmit, setForgotPasswordIdentifierInputValue]
   );
 
   return (

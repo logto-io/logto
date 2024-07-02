@@ -1,9 +1,10 @@
 import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInputField } from '@/components/InputFields';
@@ -39,6 +40,7 @@ const PasswordForm = ({
 }: Props) => {
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
+  const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
 
   const {
@@ -72,13 +74,15 @@ const PasswordForm = ({
           return;
         }
 
+        setIdentifierInputValue({ type, value });
+
         await onSubmit({
           [type]: value,
           password,
         });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit]
+    [clearErrorMessage, handleSubmit, onSubmit, setIdentifierInputValue]
   );
 
   return (

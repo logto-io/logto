@@ -1,9 +1,10 @@
 import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -34,6 +35,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
+  const { identifierInputValue, setIdentifierInputValue } = useContext(UserInteractionContext);
+
   const {
     watch,
     handleSubmit,
@@ -61,6 +64,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
           return;
         }
 
+        setIdentifierInputValue({ type, value });
+
         if (showSingleSignOnForm) {
           await navigateToSingleSignOn();
           return;
@@ -78,6 +83,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
       handleSubmit,
       navigateToSingleSignOn,
       onSubmit,
+      setIdentifierInputValue,
       showSingleSignOnForm,
       termsValidation,
     ]
@@ -111,6 +117,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
+            defaultValue={identifierInputValue?.value}
+            defaultType={identifierInputValue?.type}
             isDanger={!!errors.id || !!errorMessage}
             errorMessage={errors.id?.message}
             enabledTypes={signUpMethods}

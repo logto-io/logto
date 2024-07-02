@@ -1,6 +1,6 @@
 import { SignInIdentifier, experience, type SsoConnectorMetadata } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
-import { fireEvent, act, waitFor } from '@testing-library/react';
+import { fireEvent, act, waitFor, renderHook } from '@testing-library/react';
 
 import ConfirmModalProvider from '@/Providers/ConfirmModalProvider';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
@@ -10,6 +10,7 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import { registerWithUsernamePassword } from '@/apis/interaction';
 import { sendVerificationCodeApi } from '@/apis/utils';
+import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { UserFlow } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -65,6 +66,14 @@ const renderForm = (
 
 describe('<IdentifierRegisterForm />', () => {
   afterEach(() => {
+    /**
+     * Clear the session storage for each test to avoid test pollution
+     * since the registration follow will  store the current identifier
+     */
+    const { result } = renderHook(() => useSessionStorage());
+    const { remove } = result.current;
+
+    remove(StorageKeys.IdentifierInputValue);
     jest.clearAllMocks();
   });
 
@@ -305,6 +314,14 @@ describe('<IdentifierRegisterForm />', () => {
 
   describe('single sign on register form', () => {
     const email = 'foo@email.com';
+
+    const { result } = renderHook(() => useSessionStorage());
+
+    const { remove } = result.current;
+
+    afterEach(() => {
+      remove(StorageKeys.IdentifierInputValue);
+    });
 
     it('should not call check single sign-on connector when no single sign-on connector is enabled', async () => {
       const { getByText, container, queryByText } = renderForm([SignInIdentifier.Email]);

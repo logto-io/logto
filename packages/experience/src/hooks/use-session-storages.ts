@@ -4,18 +4,22 @@
 import { useCallback } from 'react';
 import * as s from 'superstruct';
 
-import { ssoConnectorMetadataGuard } from '@/types/guard';
+import { identifierInputValueGuard, ssoConnectorMetadataGuard } from '@/types/guard';
 
 const logtoStorageKeyPrefix = `logto:${window.location.origin}`;
 
 export enum StorageKeys {
   SsoEmail = 'sso-email',
   SsoConnectors = 'sso-connectors',
+  IdentifierInputValue = 'identifier-input-value',
+  ForgotPasswordIdentifierInputValue = 'forgot-password-identifier-input-value',
 }
 
 const valueGuard = Object.freeze({
   [StorageKeys.SsoEmail]: s.string(),
   [StorageKeys.SsoConnectors]: s.array(ssoConnectorMetadataGuard),
+  [StorageKeys.IdentifierInputValue]: identifierInputValueGuard,
+  [StorageKeys.ForgotPasswordIdentifierInputValue]: identifierInputValueGuard,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- we  don't care about the superstruct details
 } satisfies { [key in StorageKeys]: s.Struct<any> });
 
