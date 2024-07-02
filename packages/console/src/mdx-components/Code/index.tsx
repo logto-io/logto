@@ -2,7 +2,12 @@ import CodeEditor from '@/ds-components/CodeEditor';
 
 import Mermaid from '../Mermaid';
 
-export default function Code({ className, children, title }: JSX.IntrinsicElements['code']) {
+type Props = JSX.IntrinsicElements['code'] & {
+  // eslint-disable-next-line react/boolean-prop-naming -- following the naming convention of the underlying library
+  readonly showLineNumbers?: boolean;
+};
+
+export default function Code({ className, children, title, showLineNumbers = true }: Props) {
   const [, language] = /language-(\w+)/.exec(String(className ?? '')) ?? [];
 
   if (language === 'mermaid') {
@@ -18,6 +23,7 @@ export default function Code({ className, children, title }: JSX.IntrinsicElemen
       language={language === 'ts' ? 'typescript' : language}
       value={String(children).trimEnd()}
       title={title}
+      showLineNumbers={showLineNumbers}
     />
   ) : (
     <code>{String(children).trimEnd()}</code>

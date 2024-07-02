@@ -1,6 +1,4 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
@@ -14,29 +12,9 @@ import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../.
   title="Installation"
   subtitle="Install Logto SDK for your project"
 >
-<Tabs>
-<TabItem value="npm" label="npm">
 
-```bash
-npm i @logto/react
-```
+<NpmLikeInstallation packageName="@logto/react" />
 
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/react
-```
-
-</TabItem>
-<TabItem value="yarn" label="yarn">
-
-```bash
-yarn add @logto/react
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
 <Step title="Init Logto provider">

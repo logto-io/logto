@@ -1,5 +1,4 @@
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 import { generateStandardSecret } from '@logto/shared/universal';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
@@ -13,29 +12,8 @@ import RedirectUrisWeb, { defaultBaseUrl } from '../../fragments/_redirect-uris-
   subtitle="Install Logto SDK"
 >
 
-<Tabs>
-<TabItem value="npm" label="npm">
+<NpmLikeInstallation packageName="@logto/next" />
 
-```bash
-npm i @logto/next
-```
-
-</TabItem>
-<TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @logto/next
-```
-
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/next
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
 <Step

@@ -1,6 +1,5 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
@@ -14,34 +13,7 @@ import RedirectUrisNative, { defaultRedirectUri } from '../../fragments/_redirec
   subtitle="Install Logto SDK and peer dependencies"
 >
 
-<Tabs>
-
-  <TabItem value="npm" label="npm">
-
-```bash
-npm i @logto/rn
-npm i expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage
-```
-
-  </TabItem>
-  <TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @logto/rn
-yarn add expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage
-```
-
-  </TabItem>
-  <TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/rn
-pnpm add expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage
-```
-
-  </TabItem>
-
-</Tabs>
+<NpmLikeInstallation packageName="@logto/rn expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage" />
 
 The `@logto/rn` package is the SDK for Logto. The remaining packages are its peer dependencies. They couldn't be listed as direct dependencies because the Expo CLI requires that all dependencies for native modules be installed directly within the root project's `package.json`.
 

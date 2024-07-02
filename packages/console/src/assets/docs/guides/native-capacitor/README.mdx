@@ -1,6 +1,7 @@
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 
 import capaticorIos from './assets/capacitor-ios.webp';
 import logtoSignInPage from './assets/logto-sign-in-page.webp';
@@ -18,12 +19,9 @@ To get started, you need to create a Capacitor project. You can follow the [offi
 
 This tutorial is framework-agnostic, so you can use any UI framework you prefer and update the code accordingly.
 
-```bash
-# or yarn, pnpm
-npm install @logto/capacitor
-# Install peer dependencies
-npm install @capacitor/browser @capacitor/app @capacitor/preferences
-```
+First, install Logto Capacitor SDK and its peer dependencies:
+
+<NpmLikeInstallation packageName="@logto/capacitor @capacitor/browser @capacitor/app @capacitor/preferences" />
 
 </Step>
 

@@ -1,6 +1,5 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
@@ -21,29 +20,8 @@ export const cookieEncryptionKey = generateStandardSecret();
   Logto Nuxt SDK only works with Nuxt 3.
 </InlineNotification>
 
-<Tabs>
-<TabItem value="npm" label="npm">
+<NpmLikeInstallation packageName="@logto/nuxt" />
 
-```bash
-npm i @logto/nuxt
-```
-
-</TabItem>
-<TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @logto/nuxt
-```
-
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/nuxt
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
 <Step title="Register Logto module">

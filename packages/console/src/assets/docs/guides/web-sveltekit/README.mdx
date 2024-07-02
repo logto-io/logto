@@ -1,6 +1,5 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
@@ -18,29 +17,8 @@ export const cookieEncryptionKey = generateStandardSecret();
 
 Use your favorite package manager to install the Logto SDK:
 
-<Tabs>
-<TabItem value="npm" label="npm">
+<NpmLikeInstallation packageName="@logto/sveltekit" />
 
-```bash
-npm i @logto/sveltekit
-```
-
-</TabItem>
-<TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @logto/sveltekit
-```
-
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/sveltekit
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
 <Step title="Configure redirect URIs" subtitle="2 URIs">
