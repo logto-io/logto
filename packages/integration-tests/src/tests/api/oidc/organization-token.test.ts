@@ -1,4 +1,7 @@
+import assert from 'node:assert';
+
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
+import { LogtoError } from '@logto/js';
 import { InteractionEvent, MfaFactor } from '@logto/schemas';
 
 import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
@@ -92,18 +95,33 @@ describe('get access token for organization', () => {
 
     await organizationApi.deleteUser(newOrganization.id, testUserId);
     await client.clearAccessToken();
-    await expect(
-      client.getOrganizationTokenClaims(newOrganization.id)
-    ).rejects.toMatchInlineSnapshot('[Error: Access denied.]');
+
+    const error = await client
+      .getOrganizationTokenClaims(newOrganization.id)
+      .catch((error: unknown) => error);
+
+    assert(error instanceof LogtoError);
+    expect(error.code).toBe('unexpected_response_error');
+    expect(error.data).toMatchObject({
+      code: 'oidc.access_denied',
+      error: 'access_denied',
+    });
   });
 
   it('should throw when organization requires mfa but user has not configured', async () => {
     await organizationApi.update(testOrganizationId, { isMfaRequired: true });
     await client.clearAccessToken();
 
-    await expect(
-      client.getOrganizationTokenClaims(testOrganizationId)
-    ).rejects.toMatchInlineSnapshot('[Error: Access denied.]');
+    const error = await client
+      .getOrganizationTokenClaims(testOrganizationId)
+      .catch((error: unknown) => error);
+
+    assert(error instanceof LogtoError);
+    expect(error.code).toBe('unexpected_response_error');
+    expect(error.data).toMatchObject({
+      code: 'oidc.access_denied',
+      error: 'access_denied',
+    });
   });
 
   it('should be able to get access token for organization when user has mfa configured', async () => {
