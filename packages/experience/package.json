@@ -10,7 +10,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
-    "dev": "cross-env PORT=5001 parcel src/index.html --no-cache --hmr-port 6001",
+    "dev": "cross-env PORT=7001 parcel src/index.html --no-cache --hmr-port 6001",
     "check": "tsc --noEmit",
     "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --detailed-report",
     "lint": "eslint --ext .ts --ext .tsx src",

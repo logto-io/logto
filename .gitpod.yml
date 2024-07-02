@@ -38,7 +38,8 @@ ports:
     port: 5432
     visibility: public
     onOpen: ignore
-  - port: 5001
+    # OGCIO - formsie port collision fixed
+  - port: 7001
     onOpen: ignore
   - port: 5002
     onOpen: ignore

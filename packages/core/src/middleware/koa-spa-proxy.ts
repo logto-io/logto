@@ -11,7 +11,8 @@ import serveStatic from '#src/middleware/koa-serve-static.js';
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
   mountedApps: string[],
   packagePath = 'experience',
-  port = 5001,
+  // OGCIO - formsie port collision fixed
+  port = 7001,
   prefix = ''
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
