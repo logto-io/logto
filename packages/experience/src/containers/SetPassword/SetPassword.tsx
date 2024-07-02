@@ -9,6 +9,7 @@ import IconButton from '@/components/Button/IconButton';
 import ErrorMessage from '@/components/ErrorMessage';
 import { InputField } from '@/components/InputFields';
 
+import HiddenIdentifierInput from './HiddenIdentifierInput';
 import TogglePassword from './TogglePassword';
 import * as styles from './index.module.scss';
 
@@ -67,6 +68,7 @@ const SetPassword = ({
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
+      <HiddenIdentifierInput />
       <InputField
         className={styles.inputField}
         type={showPassword ? 'text' : 'password'}
