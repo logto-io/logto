@@ -6,7 +6,7 @@ import AppBoundary from './Providers/AppBoundary';
 import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
-import SingleSignOnContextProvider from './Providers/SingleSignOnContextProvider';
+import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -45,7 +45,7 @@ const App = () => {
     <BrowserRouter>
       <PageContextProvider>
         <SettingsProvider>
-          <SingleSignOnContextProvider>
+          <UserInteractionContextProvider>
             <AppBoundary>
               <Routes>
                 <Route element={<LoadingLayerProvider />}>
@@ -125,7 +125,7 @@ const App = () => {
                 </Route>
               </Routes>
             </AppBoundary>
-          </SingleSignOnContextProvider>
+          </UserInteractionContextProvider>
         </SettingsProvider>
       </PageContextProvider>
     </BrowserRouter>

@@ -3,7 +3,7 @@ import { useCallback, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { getSingleSignOnConnectors } from '@/apis/single-sign-on';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -15,7 +15,8 @@ const useCheckSingleSignOn = () => {
   const navigate = useNavigate();
   const request = useApi(getSingleSignOnConnectors);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const { setEmail, setSsoConnectors, availableSsoConnectorsMap } = useContext(SingleSignOnContext);
+  const { setSsoEmail, setSsoConnectors, availableSsoConnectorsMap } =
+    useContext(UserInteractionContext);
   const singleSignOn = useSingleSignOn();
 
   const handleError = useErrorHandler();
@@ -26,9 +27,9 @@ const useCheckSingleSignOn = () => {
 
   // Should clear the context and storage if the user trying to resubmit the form
   const clearContext = useCallback(() => {
-    setEmail(undefined);
+    setSsoEmail(undefined);
     setSsoConnectors([]);
-  }, [setEmail, setSsoConnectors]);
+  }, [setSsoEmail, setSsoConnectors]);
 
   /**
    * Check if the email is registered with any SSO connectors
@@ -66,7 +67,7 @@ const useCheckSingleSignOn = () => {
       }
 
       setSsoConnectors(connectors);
-      setEmail(email);
+      setSsoEmail(email);
 
       if (!continueSignIn) {
         return true;
@@ -87,7 +88,7 @@ const useCheckSingleSignOn = () => {
       handleError,
       navigate,
       request,
-      setEmail,
+      setSsoEmail,
       setSsoConnectors,
       singleSignOn,
       t,
