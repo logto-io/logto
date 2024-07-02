@@ -20,6 +20,8 @@ type Props = {
   readonly tabSize?: number;
   readonly error?: string | boolean;
   readonly placeholder?: string;
+  // eslint-disable-next-line react/boolean-prop-naming -- following the naming convention of the underlying library
+  readonly showLineNumbers?: boolean;
 };
 
 function CodeEditor({
@@ -32,6 +34,7 @@ function CodeEditor({
   tabSize = 2,
   error,
   placeholder,
+  showLineNumbers = true,
 }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -119,7 +122,7 @@ function CodeEditor({
       Some styles have to be applied multiple times to each of them for the sake of consistency. */}
           <SyntaxHighlighter
             showInlineLineNumbers
-            showLineNumbers={!isShowingPlaceholder}
+            showLineNumbers={!isShowingPlaceholder && showLineNumbers}
             width={textareaRef.current?.scrollWidth ?? 0}
             lineNumberContainerStyle={lineNumberContainerStyle()}
             lineNumberStyle={lineNumberStyle(maxLineNumberDigits)}

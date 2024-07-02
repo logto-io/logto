@@ -1,10 +1,10 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import { generateStandardSecret } from '@logto/shared/universal';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
+
 import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUris from '../../fragments/_redirect-uris-web.mdx';
 
@@ -15,29 +15,8 @@ import RedirectUris from '../../fragments/_redirect-uris-web.mdx';
   subtitle="Install Logto SDK and required dependencies"
 >
 
-<Tabs>
-<TabItem value="npm" label="npm">
+<NpmLikeInstallation packageName="@logto/express cookie-parser express-session" />
 
-```bash
-npm i @logto/express cookie-parser express-session
-```
-
-</TabItem>
-<TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @logto/express cookie-parser express-session
-```
-
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/express cookie-parser express-session
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
 <Step
@@ -125,4 +104,3 @@ app.get('/', withLogto(config), (req, res) => {
 </Step>
 
 </Steps>
-

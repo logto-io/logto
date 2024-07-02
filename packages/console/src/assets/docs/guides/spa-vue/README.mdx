@@ -1,9 +1,8 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
@@ -15,30 +14,9 @@ import { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redi
   title="Installation"
   subtitle="Install Logto SDK for your project"
 >
-<Tabs>
-<TabItem value="npm" label="npm">
 
-```bash
-npm i @logto/vue
-```
+<NpmLikeInstallation packageName="@logto/vue" />
 
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/vue
-```
-
-</TabItem>
-<TabItem value="yarn" label="yarn">
-
-```bash
-yarn add @logto/vue
-```
-
-</TabItem>
-
-</Tabs>
 </Step>
 
 <Step

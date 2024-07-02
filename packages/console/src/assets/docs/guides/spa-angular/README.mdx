@@ -1,9 +1,8 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUrisWeb, {defaultRedirectUri, defaultPostSignOutUri} from '../../fragments/_redirect-uris-web.mdx';
@@ -14,29 +13,9 @@ import RedirectUrisWeb, {defaultRedirectUri, defaultPostSignOutUri} from '../../
   title="Installation"
   subtitle="Install Logto JS core SDK and `angular-auth-oidc-client`"
 >
-<Tabs>
-<TabItem value="npm" label="npm">
 
-```bash
-npm i @logto/js angular-auth-oidc-client
-```
+<NpmLikeInstallation packageName="@logto/js angular-auth-oidc-client" />
 
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/js angular-auth-oidc-client
-```
-
-</TabItem>
-<TabItem value="yarn" label="yarn">
-
-```bash
-yarn add @logto/js angular-auth-oidc-client
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
 <Step title="Configure redirect URIs">

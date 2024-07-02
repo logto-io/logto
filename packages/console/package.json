@@ -140,8 +140,7 @@
   },
   "alias": {
     "@/*": "./src/$1",
-    "@cloud/*": "./src/cloud/$1",
-    "@mdx/components/*": "./src/mdx-components/$1"
+    "@cloud/*": "./src/cloud/$1"
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"

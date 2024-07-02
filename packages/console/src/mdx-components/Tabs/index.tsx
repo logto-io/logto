@@ -13,9 +13,11 @@ import type { Props as TabItemProps } from '../TabItem';
 
 import * as styles from './index.module.scss';
 
+type MaybeArray<T> = T | T[];
+
 type Props = {
   readonly className?: string;
-  readonly children: ReactElement<TabItemProps>;
+  readonly children: MaybeArray<ReactElement<TabItemProps>>;
 };
 
 // A very rough duck type, but good enough to guard against mistakes while
