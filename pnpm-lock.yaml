@@ -83,7 +83,7 @@ importers:
   packages/cli:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
         specifier: workspace:^2.5.0
@@ -92,13 +92,13 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.6.1
+        specifier: workspace:^1.7.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:1.17.0
+        specifier: workspace:1.18.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.1.1
@@ -213,7 +213,7 @@ importers:
   packages/connectors/connector-alipay-native:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -295,7 +295,7 @@ importers:
   packages/connectors/connector-alipay-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -377,7 +377,7 @@ importers:
   packages/connectors/connector-aliyun-dm:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -450,7 +450,7 @@ importers:
   packages/connectors/connector-aliyun-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -523,7 +523,7 @@ importers:
   packages/connectors/connector-apple:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@logto/shared':
         specifier: workspace:^3.1.0
@@ -608,7 +608,7 @@ importers:
         specifier: ^3.535.0
         version: 3.535.0
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -684,7 +684,7 @@ importers:
         specifier: ^2.0.0
         version: 2.6.4
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -757,7 +757,7 @@ importers:
   packages/connectors/connector-dingtalk-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -839,7 +839,7 @@ importers:
   packages/connectors/connector-discord:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -912,7 +912,7 @@ importers:
   packages/connectors/connector-facebook:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -985,7 +985,7 @@ importers:
   packages/connectors/connector-feishu-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1058,7 +1058,7 @@ importers:
   packages/connectors/connector-github:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1134,7 +1134,7 @@ importers:
   packages/connectors/connector-google:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1210,10 +1210,10 @@ importers:
   packages/connectors/connector-huggingface:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@logto/connector-oauth':
-        specifier: workspace:^1.3.0
+        specifier: workspace:^1.3.1
         version: link:../connector-oauth2
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1283,7 +1283,7 @@ importers:
   packages/connectors/connector-kakao:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1356,7 +1356,7 @@ importers:
   packages/connectors/connector-logto-email:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1432,7 +1432,7 @@ importers:
   packages/connectors/connector-logto-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1505,7 +1505,7 @@ importers:
   packages/connectors/connector-logto-social-demo:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1578,7 +1578,7 @@ importers:
   packages/connectors/connector-mailgun:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1651,7 +1651,7 @@ importers:
   packages/connectors/connector-mock-email:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1724,7 +1724,7 @@ importers:
   packages/connectors/connector-mock-email-alternative:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1797,7 +1797,7 @@ importers:
   packages/connectors/connector-mock-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1870,7 +1870,7 @@ importers:
   packages/connectors/connector-mock-social:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -1943,7 +1943,7 @@ importers:
   packages/connectors/connector-naver:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2016,7 +2016,7 @@ importers:
   packages/connectors/connector-oauth2:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@logto/shared':
         specifier: workspace:^3.1.1
@@ -2098,10 +2098,10 @@ importers:
   packages/connectors/connector-oidc:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@logto/connector-oauth':
-        specifier: workspace:^1.3.0
+        specifier: workspace:^1.3.1
         version: link:../connector-oauth2
       '@logto/shared':
         specifier: workspace:^3.1.1
@@ -2183,7 +2183,7 @@ importers:
   packages/connectors/connector-saml:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2262,7 +2262,7 @@ importers:
   packages/connectors/connector-sendgrid-email:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2335,7 +2335,7 @@ importers:
   packages/connectors/connector-smsaero:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2408,7 +2408,7 @@ importers:
   packages/connectors/connector-smtp:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2487,7 +2487,7 @@ importers:
   packages/connectors/connector-tencent-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2560,7 +2560,7 @@ importers:
   packages/connectors/connector-twilio-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2633,7 +2633,7 @@ importers:
   packages/connectors/connector-wechat-native:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2706,7 +2706,7 @@ importers:
   packages/connectors/connector-wechat-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2779,7 +2779,7 @@ importers:
   packages/connectors/connector-wecom:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2861,7 +2861,7 @@ importers:
         specifier: 0.2.5-a7eedce
         version: 0.2.5-a7eedce(zod@3.22.4)
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
         specifier: workspace:^2.5.0
@@ -2870,16 +2870,16 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.6.1
+        specifier: workspace:^1.7.0
         version: link:../phrases-experience
       '@logto/react':
         specifier: ^3.0.12
         version: 3.0.13(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.17.0
+        specifier: workspace:^1.18.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.1.1
@@ -3179,10 +3179,10 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.17.0
+        specifier: workspace:^1.18.0
         version: link:../cli
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
       '@logto/console':
         specifier: workspace:*
@@ -3200,13 +3200,13 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.6.1
+        specifier: workspace:^1.7.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.17.0
+        specifier: workspace:^1.18.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.1.1
@@ -3421,7 +3421,7 @@ importers:
         version: 8.57.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+        version: 29.7.0(@types/node@20.10.4)
       jest-matcher-specific-error:
         specifier: ^1.0.0
         version: 1.0.0
@@ -3456,7 +3456,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.17.0
+        specifier: workspace:^1.18.0
         version: link:../cli
 
   packages/demo-app:
@@ -3468,13 +3468,13 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.10.0
+        specifier: workspace:^1.12.0
         version: link:../phrases
       '@logto/react':
         specifier: ^3.0.12
         version: 3.0.13(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.15.0
+        specifier: workspace:^1.18.0
         version: link:../schemas
       '@parcel/core':
         specifier: 2.9.3
@@ -3555,7 +3555,7 @@ importers:
         specifier: ^29.5.0
         version: 29.6.3
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
         specifier: workspace:^2.5.0
@@ -3564,13 +3564,13 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.6.1
+        specifier: workspace:^1.7.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.17.0
+        specifier: workspace:^1.18.0
         version: link:../schemas
       '@parcel/compressor-brotli':
         specifier: 2.9.3
@@ -3676,7 +3676,7 @@ importers:
         version: 3.0.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+        version: 29.7.0(@types/node@20.12.7)
       jest-environment-jsdom:
         specifier: ^29.0.0
         version: 29.2.2
@@ -3685,7 +3685,7 @@ importers:
         version: 2.0.0
       jest-transformer-svg:
         specifier: ^2.0.0
-        version: 2.0.0(jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)))(react@18.2.0)
+        version: 2.0.0(jest@29.7.0(@types/node@20.12.7))(react@18.2.0)
       js-base64:
         specifier: ^3.7.5
         version: 3.7.5
@@ -3781,7 +3781,7 @@ importers:
         specifier: ^29.1.2
         version: 29.1.2
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
         specifier: workspace:^
@@ -3793,7 +3793,7 @@ importers:
         specifier: ^2.4.7
         version: 2.4.7
       '@logto/schemas':
-        specifier: workspace:^1.17.0
+        specifier: workspace:^1.18.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.1.1
@@ -3824,7 +3824,7 @@ importers:
         version: 10.0.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+        version: 29.7.0(@types/node@20.10.4)
       jest-matcher-specific-error:
         specifier: ^1.0.0
         version: 1.0.0
@@ -3930,7 +3930,7 @@ importers:
   packages/schemas:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
         specifier: workspace:^2.5.0
@@ -3939,10 +3939,10 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.6.1
+        specifier: workspace:^1.7.0
         version: link:../phrases-experience
       '@logto/shared':
         specifier: workspace:^3.1.1
@@ -14660,41 +14660,6 @@ snapshots:
       - supports-color
       - ts-node
 
-  '@jest/core@29.7.0(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))':
-    dependencies:
-      '@jest/console': 29.7.0
-      '@jest/reporters': 29.7.0
-      '@jest/test-result': 29.7.0
-      '@jest/transform': 29.7.0
-      '@jest/types': 29.6.3
-      '@types/node': 20.12.7
-      ansi-escapes: 4.3.2
-      chalk: 4.1.2
-      ci-info: 3.8.0
-      exit: 0.1.2
-      graceful-fs: 4.2.11
-      jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
-      jest-haste-map: 29.7.0
-      jest-message-util: 29.7.0
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-resolve-dependencies: 29.7.0
-      jest-runner: 29.7.0
-      jest-runtime: 29.7.0
-      jest-snapshot: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      jest-watcher: 29.7.0
-      micromatch: 4.0.5
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-ansi: 6.0.1
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
-
   '@jest/create-cache-key-function@27.5.1':
     dependencies:
       '@jest/types': 27.5.1
@@ -16039,10 +16004,10 @@ snapshots:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
       eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0)
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.0.0)
@@ -18071,13 +18036,13 @@ snapshots:
     dependencies:
       lodash.get: 4.4.2
 
-  create-jest@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
+  create-jest@29.7.0(@types/node@20.10.4):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      jest-config: 29.7.0(@types/node@20.10.4)
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -18890,13 +18855,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -18907,14 +18872,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7(supports-color@5.5.0)
     optionalDependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -18936,7 +18901,7 @@ snapshots:
       eslint: 8.57.0
       ignore: 5.3.1
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -18946,7 +18911,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -20407,16 +20372,35 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
+  jest-cli@29.7.0(@types/node@20.10.4):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      create-jest: 29.7.0(@types/node@20.10.4)
       exit: 0.1.2
       import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      jest-config: 29.7.0(@types/node@20.10.4)
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
+  jest-cli@29.7.0(@types/node@20.12.7):
+    dependencies:
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/test-result': 29.7.0
+      '@jest/types': 29.6.3
+      chalk: 4.1.2
+      create-jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      exit: 0.1.2
+      import-local: 3.1.0
+      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -20445,7 +20429,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
+  jest-config@29.7.0(@types/node@20.10.4):
     dependencies:
       '@babel/core': 7.24.4
       '@jest/test-sequencer': 29.7.0
@@ -20471,7 +20455,6 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 20.10.4
-      ts-node: 10.9.2(@types/node@20.10.4)(typescript@5.3.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -20503,37 +20486,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.12.7
       ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-
-  jest-config@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
-    dependencies:
-      '@babel/core': 7.24.4
-      '@jest/test-sequencer': 29.7.0
-      '@jest/types': 29.6.3
-      babel-jest: 29.7.0(@babel/core@7.24.4)
-      chalk: 4.1.2
-      ci-info: 3.8.0
-      deepmerge: 4.3.1
-      glob: 7.2.3
-      graceful-fs: 4.2.11
-      jest-circus: 29.7.0
-      jest-environment-node: 29.7.0
-      jest-get-type: 29.6.3
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-runner: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      micromatch: 4.0.5
-      parse-json: 5.2.0
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-json-comments: 3.1.1
-    optionalDependencies:
-      '@types/node': 20.12.7
-      ts-node: 10.9.2(@types/node@20.10.4)(typescript@5.3.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -20812,6 +20764,11 @@ snapshots:
       jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
       react: 18.2.0
 
+  jest-transformer-svg@2.0.0(jest@29.7.0(@types/node@20.12.7))(react@18.2.0):
+    dependencies:
+      jest: 29.7.0(@types/node@20.12.7)
+      react: 18.2.0
+
   jest-util@29.5.0:
     dependencies:
       '@jest/types': 29.6.3
@@ -20864,12 +20821,24 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
+  jest@29.7.0(@types/node@20.10.4):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
       '@jest/types': 29.6.3
       import-local: 3.1.0
-      jest-cli: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      jest-cli: 29.7.0(@types/node@20.10.4)
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
+  jest@29.7.0(@types/node@20.12.7):
+    dependencies:
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/types': 29.6.3
+      import-local: 3.1.0
+      jest-cli: 29.7.0(@types/node@20.12.7)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -24388,25 +24357,6 @@ snapshots:
       yn: 3.1.1
     optionalDependencies:
       '@swc/core': 1.3.52(@swc/helpers@0.5.1)
-
-  ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.9
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.10.4
-      acorn: 8.10.0
-      acorn-walk: 8.2.0
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.3.3
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optional: true
 
   tsconfig-paths@3.15.0:
     dependencies:

@@ -1,5 +1,27 @@
 # Change Log
 
+## 1.18.0
+
+### Patch Changes
+
+- Updated dependencies [6308ee185]
+- Updated dependencies [15953609b]
+- Updated dependencies [6308ee185]
+- Updated dependencies [942780fcf]
+- Updated dependencies [87615d58c]
+- Updated dependencies [9f33d997b]
+- Updated dependencies [061a30a87]
+- Updated dependencies [ef21c7a99]
+- Updated dependencies [136320584]
+- Updated dependencies [b52609a1e]
+- Updated dependencies [efa884c40]
+- Updated dependencies [b50ba0b7e]
+- Updated dependencies [d81e13d21]
+  - @logto/connector-kit@4.0.0
+  - @logto/phrases@1.12.0
+  - @logto/schemas@1.18.0
+  - @logto/phrases-experience@1.7.0
+
 ## 1.17.0
 
 ### Minor Changes
