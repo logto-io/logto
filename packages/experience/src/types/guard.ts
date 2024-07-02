@@ -119,3 +119,17 @@ export const ssoConnectorMetadataGuard: s.Describe<SsoConnectorMetadata> = s.obj
   darkLogo: s.optional(s.string()),
   connectorName: s.string(),
 });
+
+/**
+ * Defines the structure for caching the current user-inputted identifier.
+ *
+ * Purpose: cache the identifier so that when the user returns from the verification
+ * page or the password page, the identifier they entered will not be cleared.
+ *
+ */
+export const currentIdentifierSessionGuard = s.object({
+  type: s.enums([SignInIdentifier.Email, SignInIdentifier.Phone, SignInIdentifier.Username]),
+  value: s.string(),
+});
+
+export type CurrentIdentifierSession = s.Infer<typeof currentIdentifierSessionGuard>;
