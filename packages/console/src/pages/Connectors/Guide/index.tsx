@@ -33,6 +33,7 @@ import { trySubmitSafe } from '@/utils/form';
 
 import { splitMarkdownByTitle } from '../utils';
 
+import Steps, { Step } from './Steps';
 import * as styles from './index.module.scss';
 
 const targetErrorCode = 'connector.multiple_target_with_same_platform';
@@ -187,44 +188,34 @@ function Guide({ connector, onClose }: Props) {
           <div className={styles.setup}>
             <FormProvider {...methods}>
               <form autoComplete="off" onSubmit={onSubmit}>
-                {isSocialConnector && (
-                  <div className={styles.block}>
-                    <div className={styles.blockTitle}>
-                      <div className={styles.number}>1</div>
-                      <div>{t('connectors.guide.general_setting')}</div>
-                    </div>
-                    <BasicForm
-                      isAllowEditTarget={isStandard}
-                      isStandard={isStandard}
-                      conflictConnectorName={conflictConnectorName}
-                    />
-                  </div>
-                )}
-                <div className={styles.block}>
-                  <div className={styles.blockTitle}>
-                    <div className={styles.number}>{isSocialConnector ? 2 : 1}</div>
-                    <div>{t('connectors.guide.parameter_configuration')}</div>
-                  </div>
-                  <ConfigForm
-                    connectorId={callbackConnectorId.current}
-                    connectorFactoryId={connectorFactoryId}
-                    connectorType={connectorType}
-                    formItems={formItems}
-                  />
-                </div>
-                {!isSocialConnector && (
-                  <div className={styles.block}>
-                    <div className={styles.blockTitle}>
-                      <div className={styles.number}>2</div>
-                      <div>{t('connectors.guide.test_connection')}</div>
-                    </div>
-                    <ConnectorTester
-                      connectorFactoryId={connectorId}
+                <Steps>
+                  {isSocialConnector && (
+                    <Step tKey="general_setting">
+                      <BasicForm
+                        isAllowEditTarget={isStandard}
+                        isStandard={isStandard}
+                        conflictConnectorName={conflictConnectorName}
+                      />
+                    </Step>
+                  )}
+                  <Step tKey="parameter_configuration">
+                    <ConfigForm
+                      connectorId={callbackConnectorId.current}
+                      connectorFactoryId={connectorFactoryId}
                       connectorType={connectorType}
-                      parse={() => configParser(watch(), formItems)}
+                      formItems={formItems}
                     />
-                  </div>
-                )}
+                  </Step>
+                  {!isSocialConnector && (
+                    <Step tKey="test_connection">
+                      <ConnectorTester
+                        connectorFactoryId={connectorId}
+                        connectorType={connectorType}
+                        parse={() => configParser(watch(), formItems)}
+                      />
+                    </Step>
+                  )}
+                </Steps>
                 <div className={styles.footer}>
                   <Button
                     title="connectors.save_and_done"
