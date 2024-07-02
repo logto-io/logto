@@ -24,20 +24,20 @@ Since Xcode 11, you can [directly import a swift package](https://developer.appl
 
 We do not support **Carthage** and **CocoaPods** at the time due to some technical issues.
 
-<details>
+<Details>
   <summary>Carthage</summary>
 
 Carthage [needs a `xcodeproj` file to build](https://github.com/Carthage/Carthage/issues/1226#issuecomment-290931385), but `swift package generate-xcodeproj` will report a failure since we are using binary targets
 for native social plugins. We will try to find a workaround later.
 
-</details>
+</Details>
 
-<details>
+<Details>
   <summary>CocoaPods</summary>
 
 CocoaPods [does not support local dependency](https://github.com/CocoaPods/CocoaPods/issues/3276) and monorepo, thus it's hard to create a `.podspec` for this repo.
 
-</details>
+</Details>
 
 </Step>
 

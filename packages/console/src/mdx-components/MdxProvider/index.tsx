@@ -1,8 +1,7 @@
 import { MDXProvider } from '@mdx-js/react';
 import type React from 'react';
 
-import TextLink from '@/ds-components/TextLink';
-
+import Anchor from '../Anchor';
 import Code from '../Code';
 import DetailsSummary from '../DetailsSummary';
 
@@ -19,12 +18,10 @@ export default function MdxProvider({ children }: Props) {
         // custom component now.
         // See: https://github.com/orgs/mdx-js/discussions/2231#discussioncomment-4729474
         Code,
-        a: ({ children, ...props }) => (
-          <TextLink {...props} targetBlank>
-            {children}
-          </TextLink>
-        ),
+        a: Anchor,
+        Anchor,
         details: DetailsSummary,
+        Details: DetailsSummary,
       }}
     >
       {children}
