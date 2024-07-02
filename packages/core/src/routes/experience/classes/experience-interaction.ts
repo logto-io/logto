@@ -6,7 +6,7 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { Interaction } from '../type.js';
+import type { Interaction } from '../types.js';
 
 import {
   buildVerificationRecord,
@@ -14,7 +14,7 @@ import {
   type VerificationRecord,
 } from './verifications/index.js';
 
-const interactionSessionResultGuard = z.object({
+const interactionStorageGuard = z.object({
   event: z.nativeEnum(InteractionEvent).optional(),
   accountId: z.string().optional(),
   profile: z.object({}).optional(),
@@ -22,31 +22,31 @@ const interactionSessionResultGuard = z.object({
 });
 
 /**
- * InteractionSession
+ * ExperienceInteraction
  *
  * @overview
- * Interaction is a session that is initiated when a user starts an interaction flow with the Logto platform.
+ * Interaction is a short-lived session session that is initiated when a user starts an interaction flow with the Logto platform.
  * This class is used to manage all the interaction data and status.
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0004.
  *
  */
-export default class InteractionSession {
+export default class ExperienceInteraction {
   /**
-   * Factory method to create a new InteractionSession using context
+   * Factory method to create a new ExperienceInteraction using context
    */
   static async create(ctx: WithLogContext, tenant: TenantContext) {
     const { provider } = tenant;
     const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
-    return new InteractionSession(ctx, tenant, interactionDetails);
+    return new ExperienceInteraction(ctx, tenant, interactionDetails);
   }
 
-  /** The interaction event for the current interaction session */
+  /** The interaction event for the current interaction */
   private interactionEvent?: InteractionEvent;
-  /** The user verification record list for the current interaction session */
+  /** The user verification record list for the current interaction */
   private readonly verificationRecords: Set<VerificationRecord>;
-  /** The accountId of the user for the current interaction session. Only available once the user is identified */
+  /** The accountId of the user for the current interaction. Only available once the user is identified */
   private accountId?: string;
-  /** The user provided profile data in the current interaction session that needs to be stored to user DB */
+  /** The user provided profile data in the current interaction that needs to be stored to user DB */
   private readonly profile?: Record<string, unknown>; // TODO: Fix the type
 
   constructor(
@@ -56,7 +56,7 @@ export default class InteractionSession {
   ) {
     const { libraries, queries } = tenant;
 
-    const result = interactionSessionResultGuard.safeParse(interactionDetails.result ?? {});
+    const result = interactionStorageGuard.safeParse(interactionDetails.result ?? {});
 
     assertThat(
       result.success,
@@ -74,33 +74,28 @@ export default class InteractionSession {
     );
   }
 
-  /** Set the interaction event for the current interaction session */
+  /** Set the interaction event for the current interaction */
   public setInteractionEvent(event: InteractionEvent) {
     // TODO: conflict event check (e.g. reset password session can't be used for sign in)
     this.interactionEvent = event;
   }
 
-  /** Set the verified accountId of the current interaction session from  the verification record */
+  /** Set the verified accountId of the current interaction from  the verification record */
   public identifyUser(verificationRecord: VerificationRecord) {
     // Throws an 404 error if the user is not found by the given verification record
     assertThat(
       verificationRecord.verifiedUserId,
-      new RequestError(
-        {
-          code: 'user.user_not_exist',
-          status: 404,
-        },
-        {
-          identifier: verificationRecord.identifier.value,
-        }
-      )
+      new RequestError({
+        code: 'user.user_not_exist',
+        status: 404,
+      })
     );
 
     this.accountId = verificationRecord.verifiedUserId;
   }
 
   /**
-   * Append a new verification record to the current interaction session.
+   * Append a new verification record to the current interaction.
    * @remark If a record with the same type already exists, it will be replaced.
    */
   public appendVerificationRecord(record: VerificationRecord) {
@@ -119,7 +114,7 @@ export default class InteractionSession {
     return this.verificationRecordsArray.find((record) => record.id === verificationId);
   }
 
-  /** Save the current interaction session result */
+  /** Save the current interaction result */
   public async save() {
     // The "mergeWithLastSubmission" will only merge current request's interaction results,
     // manually merge with previous interaction results
@@ -136,7 +131,7 @@ export default class InteractionSession {
     );
   }
 
-  /** Submit the current interaction session result to the OIDC provider and clear the session */
+  /** Submit the current interaction result to the OIDC provider and clear the session */
   public async submit() {
     // TODO: refine the error code
     assertThat(this.accountId, 'session.verification_session_not_found');
@@ -158,7 +153,7 @@ export default class InteractionSession {
     return this.verificationRecordsArray.find((record) => record.type === type);
   }
 
-  /** Convert the current interaction session to JSON, so that it can be stored as the OIDC provider interaction result */
+  /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   private toJson() {
     return {
       event: this.interactionEvent,

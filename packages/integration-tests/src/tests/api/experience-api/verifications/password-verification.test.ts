@@ -1,14 +1,9 @@
+import { InteractionIdentifierType } from '@logto/schemas';
+
 import { deleteUser } from '#src/api/admin-user.js';
-import { createPasswordVerification } from '#src/api/experience-api/password-verification.js';
-import { initClient } from '#src/helpers/client.js';
+import { initExperienceClient } from '#src/helpers/client.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import { devFeatureTest } from '#src/utils.js';
-
-const signInIdentifiersType: readonly ['username', 'email', 'phone'] = Object.freeze([
-  'username',
-  'email',
-  'phone',
-]);
 
 const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
@@ -17,7 +12,7 @@ const identifiersTypeToUserProfile = Object.freeze({
 });
 
 devFeatureTest.describe('password verifications', () => {
-  it.each(signInIdentifiersType)(
+  it.each(Object.values(InteractionIdentifierType))(
     'should verify with password successfully using %p',
     async (identifier) => {
       const { userProfile, user } = await generateNewUser({
@@ -25,9 +20,9 @@ devFeatureTest.describe('password verifications', () => {
         password: true,
       });
 
-      const client = await initClient();
+      const client = await initExperienceClient();
 
-      const { verificationId } = await client.send(createPasswordVerification, {
+      const { verificationId } = await client.verifyPassword({
         identifier: {
           type: identifier,
           value: userProfile[identifiersTypeToUserProfile[identifier]]!,

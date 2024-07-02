@@ -7,15 +7,15 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import { PasswordVerification } from '../classes/verifications/password-verification.js';
-import { experienceVerificationApiRoutesPrefix } from '../const.js';
-import { type WithInteractionSessionContext } from '../middleware/koa-interaction-session.js';
+import { experienceRoutes } from '../const.js';
+import { type WithExperienceInteractionContext } from '../middleware/koa-experience-interaction.js';
 
 export default function passwordVerificationRoutes<T extends WithLogContext>(
-  router: Router<unknown, WithInteractionSessionContext<T>>,
+  router: Router<unknown, WithExperienceInteractionContext<T>>,
   { libraries, queries }: TenantContext
 ) {
   router.post(
-    `${experienceVerificationApiRoutesPrefix}/password`,
+    `${experienceRoutes.verification}/password`,
     koaGuard({
       body: passwordVerificationPayloadGuard,
       status: [200, 400, 422],
@@ -28,8 +28,8 @@ export default function passwordVerificationRoutes<T extends WithLogContext>(
 
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
       await passwordVerification.verify(password);
-      ctx.interactionSession.appendVerificationRecord(passwordVerification);
-      await ctx.interactionSession.save();
+      ctx.experienceInteraction.appendVerificationRecord(passwordVerification);
+      await ctx.experienceInteraction.save();
 
       ctx.body = { verificationId: passwordVerification.id };
 

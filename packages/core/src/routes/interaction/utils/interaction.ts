@@ -170,7 +170,11 @@ export const getInteractionFromProviderByJti = async (
   return interaction;
 };
 
-/** Since we don't have the oidc provider context here, can not use provider.interactionResult */
+/**
+ * Since we don't have the OIDC provider context here, `provider.interactionResult` cannot be used.
+ * This method is forked from the original implementation in `provide.interactionResult` in oidc-provider.
+ * Assign the result to the interaction and save it.
+ */
 export const assignResultToInteraction = async (
   interaction: Interaction,
   result: InteractionResults

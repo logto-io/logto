@@ -1,3 +1,7 @@
-export const experienceApiRoutesPrefix = '/experience';
-export const experienceIdentificationApiRoutesPrefix = `${experienceApiRoutesPrefix}/identification`;
-export const experienceVerificationApiRoutesPrefix = `${experienceApiRoutesPrefix}/verification`;
+const prefix = '/experience';
+
+export const experienceRoutes = Object.freeze({
+  prefix,
+  identification: `${prefix}/identification`,
+  verification: `${prefix}/verification`,
+});
