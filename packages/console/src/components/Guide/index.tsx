@@ -55,7 +55,6 @@ export const GuideContext = createContext<GuideContextType>({
 function Guide({ className, guideId, isEmpty, isLoading, onClose }: Props) {
   const guide = guides.find(({ id }) => id === guideId);
   const GuideComponent = guide?.Component;
-  const isApiResourceGuide = guide?.metadata.target === 'API';
   const context = useContext(GuideContext);
 
   return (
@@ -69,13 +68,11 @@ function Guide({ className, guideId, isEmpty, isLoading, onClose }: Props) {
           </Suspense>
         </MdxProvider>
       </OverlayScrollbar>
-      {!isApiResourceGuide && (
-        <nav className={styles.actionBar}>
-          <div className={styles.layout}>
-            <Button size="large" title="guide.finish_and_done" type="primary" onClick={onClose} />
-          </div>
-        </nav>
-      )}
+      <nav className={styles.actionBar}>
+        <div className={styles.layout}>
+          <Button size="large" title="guide.finish_and_done" type="primary" onClick={onClose} />
+        </div>
+      </nav>
     </>
   );
 }
