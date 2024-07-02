@@ -1,5 +1,118 @@
 # Change Log
 
+## 1.12.0
+
+### Minor Changes
+
+- 87615d58c: support machine-to-machine apps for organizations
+
+  This feature allows machine-to-machine apps to be associated with organizations, and be assigned with organization roles.
+
+  ### Console
+
+  - Add a new "machine-to-machine" type to organization roles. All existing roles are now "user" type.
+  - You can manage machine-to-machine apps in the organization details page -> Machine-to-machine apps section.
+  - You can view the associated organizations in the machine-to-machine app details page.
+
+  ### OpenID Connect grant
+
+  The `client_credentials` grant type is now supported for organizations. You can use this grant type to obtain an access token for an organization.
+
+  ### Management API
+
+  A set of new endpoints are added to the Management API:
+
+  - `/api/organizations/{id}/applications` to manage machine-to-machine apps.
+  - `/api/organizations/{id}/applications/{applicationId}` to manage a specific machine-to-machine app in an organization.
+  - `/api/applications/{id}/organizations` to view the associated organizations of a machine-to-machine app.
+
+- 061a30a87: support agree to terms polices for Logto’s sign-in experiences
+
+  - Automatic: Users automatically agree to terms by continuing to use the service
+  - ManualRegistrationOnly: Users must agree to terms by checking a box during registration, and don't need to agree when signing in
+  - Manual: Users must agree to terms by checking a box during registration or signing in
+
+- efa884c40: feature: just-in-time user provisioning for organizations
+
+  This feature allows users to automatically join the organization and be assigned roles upon their first sign-in through some authentication methods. You can set requirements to meet for just-in-time provisioning.
+
+  ### Email domains
+
+  New users will automatically join organizations with just-in-time provisioning if they:
+
+  - Sign up with verified email addresses, or;
+  - Use social sign-in with verified email addresses.
+
+  This applies to organizations that have the same email domain configured.
+
+  To enable this feature, you can add email domain via the Management API or the Logto Console:
+
+  - We added the following new endpoints to the Management API:
+    - `GET /organizations/{organizationId}/jit/email-domains`
+    - `POST /organizations/{organizationId}/jit/email-domains`
+    - `PUT /organizations/{organizationId}/jit/email-domains`
+    - `DELETE /organizations/{organizationId}/jit/email-domains/{emailDomain}`
+  - In the Logto Console, you can manage email domains in the organization details page -> "Just-in-time provisioning" section.
+
+  ### SSO connectors
+
+  New or existing users signing in through enterprise SSO for the first time will automatically join organizations that have just-in-time provisioning configured for the SSO connector.
+
+  To enable this feature, you can add SSO connectors via the Management API or the Logto Console:
+
+  - We added the following new endpoints to the Management API:
+    - `GET /organizations/{organizationId}/jit/sso-connectors`
+    - `POST /organizations/{organizationId}/jit/sso-connectors`
+    - `PUT /organizations/{organizationId}/jit/sso-connectors`
+    - `DELETE /organizations/{organizationId}/jit/sso-connectors/{ssoConnectorId}`
+  - In the Logto Console, you can manage SSO connectors in the organization details page -> "Just-in-time provisioning" section.
+
+  ### Default organization roles
+
+  You can also configure the default roles for users provisioned via this feature. The default roles will be assigned to the user when they are provisioned.
+
+  To enable this feature, you can set the default roles via the Management API or the Logto Console:
+
+  - We added the following new endpoints to the Management API:
+    - `GET /organizations/{organizationId}/jit/roles`
+    - `POST /organizations/{organizationId}/jit/roles`
+    - `PUT /organizations/{organizationId}/jit/roles`
+    - `DELETE /organizations/{organizationId}/jit/roles/{organizationRoleId}`
+  - In the Logto Console, you can manage default roles in the organization details page -> "Just-in-time provisioning" section.
+
+### Patch Changes
+
+- 942780fcf: support Google One Tap
+
+  - core: `GET /api/.well-known/sign-in-exp` now returns `googleOneTap` field with the configuration when available
+  - core: add Google Sign-In (GSI) url to the security headers
+  - core: verify Google One Tap CSRF token in `verifySocialIdentity()`
+  - phrases: add Google One Tap phrases
+  - schemas: migrate sign-in experience types from core to schemas
+
+- 9f33d997b: view and update user's `profile` property in the user settings page
+- ef21c7a99: support per-organization multi-factor authentication requirement
+
+  An organization can now require its member to have multi-factor authentication (MFA) configured. If an organization has this requirement and a member does not have MFA configured, the member will not be able to fetch the organization access token.
+
+- 136320584: allow skipping manual account linking during sign-in
+
+  You can find this configuration in Console -> Sign-in experience -> Sign-up and sign-in -> Social sign-in -> Automatic account linking.
+
+  When switched on, if a user signs in with a social identity that is new to the system, and there is exactly one existing account with the same identifier (e.g., email), Logto will automatically link the account with the social identity instead of prompting the user for account linking.
+
+- b50ba0b7e: enable backchannel logout support
+
+  Enable the support of [OpenID Connect Back-Channel Logout 1.0](https://openid.net/specs/openid-connect-backchannel-1_0.html).
+
+  To register for backchannel logout, navigate to the application details page in the Logto Console and locate the "Backchannel logout" section. Enter the backchannel logout URL of your RP and click "Save".
+
+  You can also enable session requirements for backchannel logout. When enabled, Logto will include the `sid` claim in the logout token.
+
+  For programmatic registration, you can set the `backchannelLogoutUri` and `backchannelLogoutSessionRequired` properties in the application `oidcClientMetadata` object.
+
+- d81e13d21: display OIDC issuer endpoint in the application details form
+
 ## 1.11.0
 
 ### Minor Changes
