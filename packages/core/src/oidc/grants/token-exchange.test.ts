@@ -14,6 +14,7 @@ const { jest } = import.meta;
 const noop = async () => {};
 const findSubjectToken = jest.fn();
 const updateSubjectTokenById = jest.fn();
+const findApplicationById = jest.fn().mockResolvedValue(mockApplication);
 
 const mockTenant = new MockTenant(undefined, {
   subjectTokens: {
@@ -21,7 +22,7 @@ const mockTenant = new MockTenant(undefined, {
     updateSubjectTokenById,
   },
   applications: {
-    findApplicationById: jest.fn().mockResolvedValue(mockApplication),
+    findApplicationById,
   },
 });
 const mockHandler = (tenant = mockTenant) => {
@@ -78,8 +79,18 @@ afterAll(() => {
 });
 
 describe('token exchange', () => {
+  afterEach(() => {
+    findApplicationById.mockClear();
+  });
+
   it('should throw when client is not available', async () => {
     const ctx = createOidcContext({ ...validOidcContext, client: undefined });
+    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
+  });
+
+  it('should throw when client is third-party application', async () => {
+    findApplicationById.mockResolvedValueOnce({ ...mockApplication, isThirdParty: true });
+    const ctx = createOidcContext(validOidcContext);
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
   });
 
