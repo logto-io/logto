@@ -35,7 +35,8 @@
                 "redirect_uri": "http://localhost:3001/callback",
                 "logout_redirect_uri": "http://localhost:3001",
                 "secret": "payments_app_local_secret",
-                "id": "2xz6sbi8ch01uhjt1oq8r"
+                "id": "2xz6sbi8ch01uhjt1oq8r",
+                "is_third_party": false
             },
             {
                 "name": "Messaging Building Block",
@@ -44,7 +45,8 @@
                 "redirect_uri": "http://localhost:3002/callback",
                 "logout_redirect_uri": "http://localhost:3002",
                 "secret": "messaging_app_local_secret",
-                "id": "4695d8onfb9f3bv18phtq"
+                "id": "4695d8onfb9f3bv18phtq",
+                "is_third_party": false
             }
         ],
         "resources": [

@@ -40,6 +40,7 @@ export type ApplicationSeeder = {
   logout_redirect_uri: string;
   id: string;
   secret: string;
+  is_third_party?: boolean;
 };
 
 export type ResourceSeeder = {

@@ -16,7 +16,7 @@ type SeedingApplication = {
   oidc_client_metadata: string;
   custom_client_metadata: string;
   protected_app_metadata?: string;
-  is_third_party?: boolean;
+  is_third_party: boolean;
 };
 
 const createApplication = async (
@@ -55,6 +55,7 @@ const fillApplications = (
       oidc_client_metadata: `{"redirectUris": ["${inputApp.redirect_uri}"], "postLogoutRedirectUris": ["${inputApp.logout_redirect_uri}"]}`,
       custom_client_metadata:
         '{"idTokenTtl": 3600, "corsAllowedOrigins": [], "rotateRefreshToken": true, "refreshTokenTtlInDays": 14, "alwaysIssueRefreshToken": false}',
+      is_third_party: inputApp.is_third_party ?? false,
     };
   }
 
