@@ -6,7 +6,7 @@ import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
+import RedirectUrisWeb, {defaultRedirectUri, defaultPostSignOutUri} from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -39,9 +39,13 @@ yarn add @logto/js angular-auth-oidc-client
 </Tabs>
 </Step>
 
-<Step title="Configure application">
+<Step title="Configure redirect URIs">
 
-### Configure application
+<RedirectUrisWeb />
+
+</Step>
+
+<Step title="Configure application">
 
 In your Angular project, add the auth provider your `app.config.ts`:
 
@@ -56,20 +60,14 @@ export const appConfig: ApplicationConfig = {
       config: buildAngularAuthConfig({
         endpoint: '${props.endpoint}',
         appId: '${props.app.id}',
-        redirectUri: '${props.redirectUris[0] ?? 'http://localhost:3000/callback'}',
-        postLogoutRedirectUri: '${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}',
+        redirectUri: '${props.redirectUris[0] || defaultRedirectUri}',
+        postLogoutRedirectUri: '${props.postLogoutRedirectUris[0] || defaultPostSignOutUri}',
       }),
     }),
     // ...other providers
   ],
 };`}
 </Code>
-
-</Step>
-
-<Step title="Configure redirect URIs">
-
-<RedirectUrisWeb defaultUri="http://localhost:3000/callback"/>
 
 </Step>
 
