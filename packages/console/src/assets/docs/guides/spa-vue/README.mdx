@@ -70,7 +70,7 @@ app.mount("#app");`}
 
 <Step title="Configure redirect URIs">
 
-<RedirectUrisWeb defaultUri="http://localhost:3000/callback"/>
+<RedirectUrisWeb />
 
 </Step>
 
@@ -115,7 +115,7 @@ const router = createRouter({
 
 <Step title="Implement sign-in and sign-out">
 
-We provide two composables `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow.
+We provide a composable `useLogto()` which can help you easily manage the authentication flow.
 
 <Code className="language-ts" title="views/HomeView.vue">
     {`import { useLogto } from '@logto/vue';
