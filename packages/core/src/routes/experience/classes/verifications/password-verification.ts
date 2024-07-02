@@ -14,7 +14,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { findUserByIdentifier } from '../../utils.js';
 
-import { type Verification } from './verification.js';
+import { type VerificationRecord } from './verification-record.js';
 
 export type PasswordVerificationRecordData = {
   id: string;
@@ -31,11 +31,7 @@ export const passwordVerificationRecordDataGuard = z.object({
   userId: z.string().optional(),
 }) satisfies ToZodObject<PasswordVerificationRecordData>;
 
-/**
- * PasswordVerification is a verification record that verifies a user's identity
- * using identifier and password
- */
-export class PasswordVerification implements Verification {
+export class PasswordVerification implements VerificationRecord<VerificationType.Password> {
   /** Factory method to create a new PasswordVerification record using the given identifier */
   static create(libraries: Libraries, queries: Queries, identifier: InteractionIdentifier) {
     return new PasswordVerification(libraries, queries, {
@@ -50,6 +46,12 @@ export class PasswordVerification implements Verification {
   public readonly id: string;
   private userId?: string;
 
+  /**
+   * The constructor method is intended to be used internally by the interaction class
+   * to instantiate a VerificationRecord object from existing PasswordVerificationRecordData.
+   * It directly sets the instance properties based on the provided data.
+   * For creating a new verification record, use the static create method instead.
+   */
   constructor(
     private readonly libraries: Libraries,
     private readonly queries: Queries,
@@ -71,11 +73,16 @@ export class PasswordVerification implements Verification {
     return this.userId;
   }
 
-  /** Verifies the password and sets the userId */
+  /**
+   * Verifies if the password matches the record in database with the current identifier.
+   *
+   * - userId is set if the password is verified.
+   *
+   * @throws RequestError with 401 status if user id suspended.
+   * @throws RequestError with 422 status if the user is not found or the password is incorrect.
+   */
   async verify(password: string) {
     const user = await findUserByIdentifier(this.queries.users, this.identifier);
-
-    // Throws an 422 error if the user is not found or the password is incorrect
     const { isSuspended, id } = await this.libraries.users.verifyUserPassword(user, password);
 
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
