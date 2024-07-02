@@ -1,4 +1,6 @@
 # From this genius: https://github.com/orgs/community/discussions/67654#discussioncomment-8038649
+name: Rerun workflow
+
 on:
   workflow_dispatch:
     inputs:

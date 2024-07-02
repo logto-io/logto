@@ -3790,8 +3790,8 @@ importers:
         specifier: ^4.1.4
         version: 4.1.4
       '@logto/node':
-        specifier: ^2.4.7
-        version: 2.4.7
+        specifier: ^2.5.4
+        version: 2.5.4
       '@logto/schemas':
         specifier: workspace:^1.17.0
         version: link:../schemas
@@ -5248,9 +5248,6 @@ packages:
   '@logto/browser@2.2.15':
     resolution: {integrity: sha512-sQf2jYTHMuU8tVqkgaoWrKy3mhuyuLqsUDmDr6TBRv6jjFQMnniI6/5jHlqnllCs6B5x8qsjctcqcYiqKQmc5g==}
 
-  '@logto/client@2.6.6':
-    resolution: {integrity: sha512-QT7jMnzEIWHBNrf9/M8p1OErRBbbNZjoekXGji5aZCyUh975hh8+GEBL21HV71FT3H/5Cq4Gf1GzUbAIW3izMA==}
-
   '@logto/client@2.7.2':
     resolution: {integrity: sha512-jsmuDl9QpXfR3uLEMPE67tvYoL5XcjJi+4yGqucYPjd4GH6SUHp3N9skk8C/OyygnKDPLY+ttwD0LaIbpGvn+Q==}
 
@@ -5261,8 +5258,8 @@ packages:
   '@logto/js@4.1.4':
     resolution: {integrity: sha512-6twud1nFBQmj89/aflzej6yD1QwXfPiYmRtyYuN4a7O9OaaW3X/kJBVwjKUn5NC9IUt+rd+jXsI3QJXENfaLAw==}
 
-  '@logto/node@2.4.7':
-    resolution: {integrity: sha512-AlANeqY1NIt93EBcRzrTmyAVHXOHpszTJK+qe1ok50rmZlTmX2p7yQvrg0/Ehwf/+4Rla5vooAR+HIFMaOmPpQ==}
+  '@logto/node@2.5.4':
+    resolution: {integrity: sha512-bhcvaTjGEdDoNroiLHiKacX9G8lP43xGWou/0UiH97Ukar70JRymF4fWqX8zyVM6V4ChW1j9lohErVvLCtQYgw==}
 
   '@logto/react@3.0.13':
     resolution: {integrity: sha512-t3aHYtgJLocawGtL5hVO05/At6qa5WUAxqTj7FhxI4BDpewD2KZCVfbQyr9YXrPg60mTzkk0r00oEEO3oZqSVA==}
@@ -14963,13 +14960,6 @@ snapshots:
       '@silverhand/essentials': 2.9.1
       js-base64: 3.7.5
 
-  '@logto/client@2.6.6':
-    dependencies:
-      '@logto/js': 4.1.4
-      '@silverhand/essentials': 2.9.1
-      camelcase-keys: 7.0.2
-      jose: 5.2.4
-
   '@logto/client@2.7.2':
     dependencies:
       '@logto/js': 4.1.4
@@ -14989,9 +14979,9 @@ snapshots:
       '@silverhand/essentials': 2.9.1
       camelcase-keys: 7.0.2
 
-  '@logto/node@2.4.7':
+  '@logto/node@2.5.4':
     dependencies:
-      '@logto/client': 2.6.6
+      '@logto/client': 2.7.2
       '@silverhand/essentials': 2.9.1
       js-base64: 3.7.5
 
