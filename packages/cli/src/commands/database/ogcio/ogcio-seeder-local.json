@@ -34,7 +34,7 @@
                 "type": "Traditional",
                 "redirect_uri": "http://localhost:3001/callback",
                 "logout_redirect_uri": "http://localhost:3001",
-                "secret": "bgHz4Ouv2lxXCdc6s6s4IUoNpFAklC15",
+                "secret": "payments_app_local_secret",
                 "id": "2xz6sbi8ch01uhjt1oq8r"
             },
             {
@@ -43,7 +43,7 @@
                 "type": "Traditional",
                 "redirect_uri": "http://localhost:3002/callback",
                 "logout_redirect_uri": "http://localhost:3002",
-                "secret": "Y3nBMm8Hs3Ugcl4596w5ewgOosvwX4im",
+                "secret": "messaging_app_local_secret",
                 "id": "4695d8onfb9f3bv18phtq"
             }
         ],
@@ -154,7 +154,7 @@
                 "config": {
                     "url": "http://localhost:8003/user-login-wh"
                 },
-                "signing_key": "xpWX3WIkPkSA5A0UzLMfNOuTl1qEnbkg",
+                "signing_key": "webhooks_local_signing_key",
                 "enabled": true
             }
         ]
