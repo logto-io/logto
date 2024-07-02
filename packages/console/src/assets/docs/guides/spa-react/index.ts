@@ -12,6 +12,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   isFeatured: true,
   fullGuide: 'react',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/react/#get-user-information'),
+    },
+    {
+      title: 'API resources',
+      url: new URL('https://docs.logto.io/quick-starts/react/#api-resources'),
+    },
+  ],
 });
 
 export default metadata;

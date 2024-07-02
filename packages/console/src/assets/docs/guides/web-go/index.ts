@@ -12,6 +12,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'gin-sample',
   },
   fullGuide: 'go',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/go/#get-user-information'),
+    },
+    {
+      title: 'API resources and organizations',
+      url: new URL('https://docs.logto.io/quick-starts/go/#api-resources-and-organizations'),
+    },
+  ],
 });
 
 export default metadata;

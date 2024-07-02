@@ -13,6 +13,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   isFeatured: true,
   fullGuide: 'vue',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/vue/#get-user-information'),
+    },
+    {
+      title: 'API resources',
+      url: new URL('https://docs.logto.io/quick-starts/vue/#api-resources'),
+    },
+  ],
 });
 
 export default metadata;
