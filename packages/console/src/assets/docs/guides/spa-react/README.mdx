@@ -62,13 +62,13 @@ const App = () => (
 
 <Step title="Configure redirect URIs">
 
-<RedirectUrisWeb defaultUri="http://localhost:3000/callback"/>
+<RedirectUrisWeb />
 
 </Step>
 
 <Step title="Handle redirect">
 
-Since we use `http://localhost:3000/callback` as the Redirect URI, now we need to handle it properly.
+After the user signs in, Logto will redirect the user back to the redirect URI configured above. However, there are still things to do to make your application work properly.
 
 First let's create a callback page:
 
@@ -89,7 +89,7 @@ const Callback = () => {
 };
 ```
 
-Finally insert the code below to create a `/callback` route which does NOT require authentication:
+Then, insert the code below to create a `/callback` route which does NOT require authentication:
 
 ```tsx title="App.tsx"
 // Assuming react-router
@@ -100,7 +100,7 @@ Finally insert the code below to create a `/callback` route which does NOT requi
 
 <Step title="Implement sign-in and sign-out">
 
-We provide two hooks `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow.
+We provide a hook `useLogto()` which can help you easily manage the authentication flow.
 
 <InlineNotification>
   Before calling `.signIn()`, make sure you have correctly configured Redirect URI in Admin Console.
