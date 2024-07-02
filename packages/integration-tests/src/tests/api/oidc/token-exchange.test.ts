@@ -1,4 +1,4 @@
-import { buildOrganizationUrn } from '@logto/core-kit';
+import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
 import { decodeAccessToken } from '@logto/js';
 import { ApplicationType, GrantType, MfaFactor } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
@@ -136,6 +136,28 @@ describe('Token Exchange', () => {
       ).rejects.toThrow();
 
       await deleteApplication(thirdPartyApplication.id);
+    });
+
+    it('should filter out non-oidc scopes', async () => {
+      const { subjectToken } = await createSubjectToken(userId);
+
+      const body = await oidcApi
+        .post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: applicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            scope: [UserScope.Profile, 'non-oidc-scope'].join(' '),
+          }),
+        })
+        .json();
+
+      expect(body).toHaveProperty('access_token');
+      expect(body).toHaveProperty('token_type', 'Bearer');
+      expect(body).toHaveProperty('expires_in');
+      expect(body).toHaveProperty('scope', UserScope.Profile);
     });
   });
 

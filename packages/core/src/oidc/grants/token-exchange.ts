@@ -73,6 +73,7 @@ export const buildHandler: (
   const providerInstance = instance(provider);
   const {
     features: { userinfo, resourceIndicators },
+    scopes: oidcScopes,
   } = providerInstance.configuration();
 
   const subjectToken = await trySafe(async () => findSubjectToken(String(params.subject_token)));
@@ -186,9 +187,15 @@ export const buildHandler: (
       .filter(Set.prototype.has.bind(accessToken.resourceServer.scopes))
       .join(' ');
   } else {
-    // TODO: (LOG-9166) Check claims and scopes
     accessToken.claims = ctx.oidc.claims;
-    accessToken.scope = Array.from(scope).join(' ');
+    // Filter scopes from oidcScopes,
+    // in other grants, this is done by `Grant` class
+    // See https://github.com/panva/node-oidc-provider/blob/0c569cf5c36dd5faa105fb931a43b2e587530def/lib/helpers/oidc_context.js#L159
+    accessToken.scope = Array.from(scope)
+      // Wrong typing for oidc-provider, `oidcScopes` is actully a Set,
+      // wrap it with `new Set` to make it work
+      .filter((name) => new Set(oidcScopes).has(name))
+      .join(' ');
   }
   /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
 
