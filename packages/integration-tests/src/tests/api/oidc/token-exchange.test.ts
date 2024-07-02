@@ -1,12 +1,15 @@
-import { ApplicationType, GrantType } from '@logto/schemas';
+import { buildOrganizationUrn } from '@logto/core-kit';
+import { decodeAccessToken } from '@logto/js';
+import { ApplicationType, GrantType, MfaFactor } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
 
-import { deleteUser } from '#src/api/admin-user.js';
+import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
 import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { createSubjectToken } from '#src/api/subject-token.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
-import { devFeatureTest, generateName } from '#src/utils.js';
+import { OrganizationApiTest } from '#src/helpers/organization.js';
+import { devFeatureTest, getAccessTokenPayload, randomString, generateName } from '#src/utils.js';
 
 const { describe, it } = devFeatureTest;
 
@@ -133,6 +136,98 @@ describe('Token Exchange', () => {
       ).rejects.toThrow();
 
       await deleteApplication(thirdPartyApplication.id);
+    });
+  });
+
+  describe('get access token for organization', () => {
+    const scopeName = `read:${randomString()}`;
+
+    /* eslint-disable @silverhand/fp/no-let */
+    let testApiScopeId: string;
+    let testOrganizationId: string;
+    /* eslint-enable @silverhand/fp/no-let */
+
+    const organizationApi = new OrganizationApiTest();
+
+    /* eslint-disable @silverhand/fp/no-mutation */
+    beforeAll(async () => {
+      const organization = await organizationApi.create({ name: 'org1' });
+      testOrganizationId = organization.id;
+      await organizationApi.addUsers(testOrganizationId, [userId]);
+
+      const scope = await organizationApi.scopeApi.create({ name: scopeName });
+      testApiScopeId = scope.id;
+
+      const role = await organizationApi.roleApi.create({ name: `role1:${randomString()}` });
+      await organizationApi.roleApi.addScopes(role.id, [scope.id]);
+      await organizationApi.addUserRoles(testOrganizationId, userId, [role.id]);
+    });
+    /* eslint-enable @silverhand/fp/no-mutation */
+
+    afterAll(async () => {
+      await organizationApi.cleanUp();
+    });
+
+    it('should be able to get access token for organization with correct scopes', async () => {
+      const { subjectToken } = await createSubjectToken(userId);
+
+      const { access_token } = await oidcApi
+        .post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: applicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            organization_id: testOrganizationId,
+            scope: scopeName,
+          }),
+        })
+        .json<{ access_token: string }>();
+
+      expect(getAccessTokenPayload(access_token)).toMatchObject({
+        aud: buildOrganizationUrn(testOrganizationId),
+        scope: scopeName,
+      });
+    });
+
+    it('should throw when organization requires mfa but user has not configured', async () => {
+      const { subjectToken } = await createSubjectToken(userId);
+      await organizationApi.update(testOrganizationId, { isMfaRequired: true });
+
+      await expect(
+        oidcApi.post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: applicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            organization_id: testOrganizationId,
+          }),
+        })
+      ).rejects.toThrow();
+    });
+
+    it('should be able to get access token for organization when user has mfa configured', async () => {
+      const { subjectToken } = await createSubjectToken(userId);
+      await createUserMfaVerification(userId, MfaFactor.TOTP);
+      const { access_token } = await oidcApi
+        .post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: applicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            organization_id: testOrganizationId,
+          }),
+        })
+        .json<{ access_token: string }>();
+
+      expect(decodeAccessToken(access_token)).toMatchObject({
+        aud: buildOrganizationUrn(testOrganizationId),
+      });
     });
   });
 });
