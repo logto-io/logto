@@ -6,7 +6,7 @@ import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
+import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -113,9 +113,9 @@ const Home = () => {
   const { signIn, signOut, isAuthenticated } = useLogto();
 
   return isAuthenticated ? (
-    <button onClick={() => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}')}>Sign Out</button>
+    <button onClick={() => signOut('${props.postLogoutRedirectUris[0] || defaultRedirectUri}')}>Sign Out</button>
   ) : (
-    <button onClick={() => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}')}>Sign In</button>
+    <button onClick={() => signIn('${props.redirectUris[0] || defaultPostSignOutUri}')}>Sign In</button>
   );
 };`}
 </Code>
