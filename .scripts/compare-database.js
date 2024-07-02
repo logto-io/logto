@@ -131,6 +131,8 @@ const queryDatabaseManifest = async (database) => {
     const prefix = 'allow_';
     const suffix = '_access';
     if (policyname && policyname.startsWith(prefix) && policyname.endsWith(suffix)) {
+      // This is a naming convention in Logto cloud, it is formatted as `allow_{role_name}_access`, we need to normalize the role name part for the convenience of comparing DB updates.
+      // Ref: https://github.com/logto-io/cloud/pull/738
       return { policyname: `${prefix}${normalizeRoleName(policyname.slice(prefix.length, -suffix.length))}${suffix}`, ...rest };
     }
 
