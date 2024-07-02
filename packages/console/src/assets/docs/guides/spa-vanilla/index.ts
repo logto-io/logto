@@ -11,6 +11,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'packages/browser-sample',
   },
   fullGuide: 'vanilla-js',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/vanilla-js/#get-user-information'),
+    },
+    {
+      title: 'API resources',
+      url: new URL('https://docs.logto.io/quick-starts/vanilla-js/#api-resources'),
+    },
+  ],
 });
 
 export default metadata;

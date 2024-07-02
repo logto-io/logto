@@ -11,6 +11,18 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: '/',
   },
   fullGuide: 'dotnet-core/blazor-wasm',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL(
+        'https://docs.logto.io/quick-starts/dotnet-core/blazor-wasm/#get-user-information'
+      ),
+    },
+    {
+      title: 'API resources',
+      url: new URL('https://docs.logto.io/quick-starts/dotnet-core/blazor-wasm/#api-resources'),
+    },
+  ],
 });
 
 export default metadata;

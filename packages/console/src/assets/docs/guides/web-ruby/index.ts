@@ -13,6 +13,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'logto-sample',
   },
   fullGuide: 'ruby',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/ruby/#get-user-information'),
+    },
+    {
+      title: 'API resources and organizations',
+      url: new URL('https://docs.logto.io/quick-starts/ruby/#api-resources-and-organizations'),
+    },
+  ],
 });
 
 export default metadata;

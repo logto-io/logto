@@ -12,6 +12,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   },
   isFeatured: true,
   fullGuide: 'next-app-router',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/next-app-router/#get-user-information'),
+    },
+    {
+      title: 'API resources',
+      url: new URL('https://docs.logto.io/quick-starts/next-app-router/#api-resources'),
+    },
+  ],
 });
 
 export default metadata;
