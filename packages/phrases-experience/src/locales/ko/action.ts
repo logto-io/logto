@@ -2,7 +2,7 @@ const action = {
   sign_in: '로그인',
   continue: '계속',
   create_account: '계정 생성',
-  create_account_without_linking: '연동 없이 계정 생성하기',
+  create_account_without_linking: '대신 새로 만들기',
   create: '생성',
   enter_passcode: '비밀번호 입력',
   confirm: '확인',

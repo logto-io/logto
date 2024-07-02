@@ -2,7 +2,7 @@ const action = {
   sign_in: 'Войти',
   continue: 'Продолжить',
   create_account: 'Создать аккаунт',
-  create_account_without_linking: 'Создать аккаунт без связывания',
+  create_account_without_linking: 'Создать новый вместо этого',
   create: 'Создать',
   enter_passcode: 'Введите код подтверждения',
   confirm: 'Подтвердить',

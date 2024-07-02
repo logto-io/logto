@@ -100,7 +100,7 @@ describe('automatic account linking', () => {
       socialEmail: user.primaryEmail!,
     });
 
-    await experience.toClick('button', /create account without linking/i);
+    await experience.toClick('a', 'Create new one instead');
     experience.toMatchUrl(demoAppUrl);
     try {
       await experience.toMatchElement('div', { text: `User ID: ${user.id}`, timeout: 100 });

@@ -77,7 +77,7 @@ describe('MFA - TOTP', () => {
         socialUserId,
         socialEmail: userProfile.primaryEmail,
       });
-      await experience.toClick('button', 'Create account without linking');
+      await experience.toClick('a', 'Create new one instead');
       await experience.toBindTotp();
       await experience.verifyThenEnd();
       await deleteUser(user.id);
