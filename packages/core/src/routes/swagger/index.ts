@@ -3,13 +3,11 @@ import { fileURLToPath } from 'node:url';
 
 import { httpCodeToMessage } from '@logto/core-kit';
 import { cond, condArray, condString, conditionalArray, deduplicate } from '@silverhand/essentials';
-import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
 import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
-import { OpenAPIV3 } from 'openapi-types';
-import pluralize from 'pluralize';
+import { type OpenAPIV3 } from 'openapi-types';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { isKoaAuthMiddleware } from '#src/middleware/koa-auth/index.js';
@@ -30,9 +28,11 @@ import {
   findSupplementFiles,
   normalizePath,
   removeUnnecessaryOperations,
+  shouldThrow,
   validateSupplement,
   validateSwaggerDocument,
 } from './utils/general.js';
+import { buildOperationId, customRoutes, throwByDifference } from './utils/operation-id.js';
 import {
   buildParameters,
   paginationParameters,
@@ -53,54 +53,6 @@ type RouteObject = {
   path: string;
   method: OpenAPIV3.HttpMethods;
   operation: OpenAPIV3.OperationObject;
-};
-
-const methodMap = new Map([
-  [OpenAPIV3.HttpMethods.GET, 'Get'],
-  [OpenAPIV3.HttpMethods.POST, 'Create'],
-  [OpenAPIV3.HttpMethods.PUT, 'Replace'],
-  [OpenAPIV3.HttpMethods.PATCH, 'Update'],
-  [OpenAPIV3.HttpMethods.DELETE, 'Delete'],
-]);
-
-const customRoutes = new Map([
-  ['post:/organizations/:id/users/roles', 'AssignRolesToUsers'],
-  ['post:/organizations/:id/users/:userId/roles', 'AssignRolesToSpecificUser'],
-  ['get:/configs/jwt-customizer', 'ListJwtCustomizers'],
-  ['get:/organizations/:id/users/:userId/roles', 'ListRolesForSpecificUser'],
-  [
-    'delete:/organizations/:id/users/:userId/roles/:organizationRoleId',
-    'RemoveRolesFromSpecificUser',
-  ],
-  ['put:/organizations/:id/users/:userId/roles', 'ReplaceRolesForSpecificUser'],
-]);
-
-export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) => {
-  const customAction = customRoutes.get(`${method}:${path}`);
-  if (customAction) {
-    return customAction;
-  }
-
-  const singleItem =
-    path
-      .split('/')
-      .slice(-1)
-      .filter((segment) => segment.startsWith(':') || segment.startsWith('{')).length === 1;
-  const action = path
-    .split('/')
-    .filter((segment) => !segment.startsWith('{') && !segment.startsWith(':'))
-    .slice(-2)
-    .map((segment) => camelcase(segment, { pascalCase: true }))
-    .join('');
-  const verb =
-    !singleItem && method === OpenAPIV3.HttpMethods.GET && !pluralize.isSingular(action)
-      ? 'List'
-      : methodMap.get(method);
-
-  return (
-    verb +
-    (method === OpenAPIV3.HttpMethods.POST || singleItem ? pluralize.singular(action) : action)
-  );
 };
 
 const buildOperation = (
@@ -222,6 +174,12 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   allRouters: R[]
 ) {
   router.get('/swagger.json', async (ctx, next) => {
+    /**
+     * A set to store all custom routes that have been built.
+     * @see {@link customRoutes}
+     */
+    const builtCustomRoutes = new Set<string>();
+
     const routes = allRouters.flatMap<RouteObject>((router) => {
       const isAuthGuarded = isManagementApiRouter(router);
 
@@ -238,6 +196,10 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
                 const path = normalizePath(routerPath);
                 const operation = buildOperation(httpMethod, stack, routerPath, isAuthGuarded);
 
+                if (customRoutes[`${httpMethod} ${routerPath}`]) {
+                  builtCustomRoutes.add(`${httpMethod} ${routerPath}`);
+                }
+
                 return {
                   path,
                   method: httpMethod,
@@ -247,6 +209,9 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
           )
       );
     });
+
+    // Ensure all custom routes are built.
+    throwByDifference(builtCustomRoutes);
 
     const pathMap = new Map<string, OpenAPIV3.PathItemObject>();
     const tags = new Set<string>();
@@ -338,7 +303,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       getConsoleLogFromContext(ctx).warn('Skip validating swagger document in unit test.');
     }
     // Don't throw for integrity check in production as it has no benefit.
-    else if (!EnvSet.values.isProduction || EnvSet.values.isIntegrationTest) {
+    else if (shouldThrow()) {
       for (const document of supplementDocuments) {
         validateSupplement(baseDocument, document);
       }
