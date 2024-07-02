@@ -6,7 +6,7 @@ import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
+import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -38,7 +38,7 @@ yarn add @logto/browser
 </TabItem>
 <TabItem value="cdn" label="CDN">
 
-```bash
+```html
 <!-- Special thanks to jsdelivr -->
 <script type="module">
   import LogtoClient from 'https://cdn.jsdelivr.net/npm/@logto/browser@latest/+esm';
@@ -65,7 +65,7 @@ const logtoClient = new LogtoClient({
 
 <Step title="Configure redirect URIs">
 
-<RedirectUrisWeb defaultUri="http://localhost:3000/callback"/>
+<RedirectUrisWeb />
 
 </Step>
 
@@ -92,16 +92,16 @@ const callbackHandler = async (logtoClient) => {
 
 <Step title="Implement sign-in and sign-out">
 
-### Configure redirect URIs
+`logtoClient` provides `signIn` and `signOut` methods to help you easily manage the authentication flow.
 
 <Code className="language-js" title="pages/Home.js">
     {`const isAuthenticated = await logtoClient.isAuthenticated();
 
 const onClickSignIn = () => {
-  logtoClient.signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}');
+  logtoClient.signIn('${props.redirectUris[0] ?? defaultRedirectUri}');
 };
 const onClickSignOut = () => {
-  logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}');
+  logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? defaultPostSignOutUri}');
 };
 
 const button = document.createElement('button');
@@ -111,7 +111,7 @@ button.addEventListener('click', isAuthenticated ? onClickSignOut : onClickSignI
 document.body.appendChild(button);`}
 </Code>
 
-Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
+Calling `.signOut()` will clear all the Logto data in memory and `localStorage` if they exist.
 
 </Step>
 
