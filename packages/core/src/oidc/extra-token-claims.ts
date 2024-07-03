@@ -34,7 +34,9 @@ export const getExtraTokenClaimsForOrganizationApiResource = async (
     return;
   }
 
-  const isAccessToken = token instanceof ctx.oidc.provider.AccessToken;
+  const isAccessToken =
+    token instanceof ctx.oidc.provider.AccessToken ||
+    token instanceof ctx.oidc.provider.ClientCredentials;
 
   // Only handle access tokens
   if (!isAccessToken) {

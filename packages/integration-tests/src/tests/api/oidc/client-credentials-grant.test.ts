@@ -244,6 +244,7 @@ describe('client credentials grant', () => {
       expect(returnedScope).toBe(`${scope1.name} ${scope2.name}`);
 
       const verified = await jwtVerify(accessToken, jwkSet, { audience: resource.indicator });
+      expect(verified.payload.organization_id).toBe(organization.id);
       expect(verified.payload.scope).toBe(`${scope1.name} ${scope2.name}`);
     });
 
@@ -271,6 +272,7 @@ describe('client credentials grant', () => {
       expect(returnedScope1).toBe(scope1.name);
 
       const verified1 = await jwtVerify(accessToken1, jwkSet, { audience: resource.indicator });
+      expect(verified1.payload.organization_id).toBe(organization.id);
       expect(verified1.payload.scope).toBe(scope1.name);
 
       const { access_token: accessToken2, scope: returnedScope2 } = await post({
@@ -281,6 +283,7 @@ describe('client credentials grant', () => {
       expect(returnedScope2).toBe(undefined);
 
       const verified2 = await jwtVerify(accessToken2, jwkSet, { audience: resource.indicator });
+      expect(verified1.payload.organization_id).toBe(organization.id);
       expect(verified2.payload.scope).toBe(undefined);
     });
   });
