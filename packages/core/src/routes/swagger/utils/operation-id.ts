@@ -79,7 +79,6 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // User assets
   'get /user-assets/service-status': 'GetUserAssetServiceStatus',
   // Well-known
-  'get /.well-known/endpoints/:tenantId': 'GetTenantEndpoint',
   'get /.well-known/phrases': 'GetSignInExperiencePhrases',
   'get /.well-known/sign-in-exp': 'GetSignInExperienceConfig',
   ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
@@ -90,6 +89,11 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
  * built routes and the routes defined in `customRoutes`.
  */
 export const throwByDifference = (builtCustomRoutes: Set<string>) => {
+  // Unit tests are hard to cover the full list of custom routes, skip the check.
+  if (EnvSet.values.isUnitTest) {
+    return;
+  }
+
   if (shouldThrow() && builtCustomRoutes.size !== Object.keys(customRoutes).length) {
     const missingRoutes = Object.entries(customRoutes).filter(
       ([path]) => !builtCustomRoutes.has(path)
@@ -115,6 +119,9 @@ export const throwByDifference = (builtCustomRoutes: Set<string>) => {
   }
 };
 
+/** Path segments that are treated as namespace prefixes. */
+const namespacePrefixes = Object.freeze(['jit', '.well-known']);
+
 const isPathParameter = (segment?: string) =>
   Boolean(segment && (segment.startsWith(':') || segment.startsWith('{')));
 
@@ -128,18 +135,22 @@ const throwIfNeeded = (method: OpenAPIV3.HttpMethods, path: string) => {
  * Given a method and a path, generates an operation ID that is friendly for creating client SDKs.
  *
  * The generated operation ID is in the format of `VerbNounNoun...` where `Verb` is translated from
- * the HTTP method and `Noun` is the path segment in PascalCase. If the HTTP method is `GET` and the
- * path does not end with a path parameter, the verb will be `List`.
+ * the HTTP method and `Noun` is the path segment in PascalCase. Some exceptions:
  *
- * If an override is found in `customRoutes`, it will be used instead.
+ * 1. If an override is found in `customRoutes`, it will be used instead.
+ * 2. If the HTTP method is `GET` and the path does not end with a path parameter, the verb will be
+ * `List`.
+ * 3. If the path segment is a namespace prefix, the trailing `/` will be replaced with `-`.
  *
  * @example
  * buildOperationId('get', '/foo/:fooId/bar/:barId') // GetFooBar
  * buildOperationId('post', '/foo/:fooId/bar') // CreateFooBar
  * buildOperationId('get', '/foo/:fooId/bar') // ListFooBars
+ * buildOperationId('get', '/jit/foo') // GetJitFoo
  *
  * @see {@link customRoutes} for the full list of overrides.
  * @see {@link methodToVerb} for the mapping of HTTP methods to verbs.
+ * @see {@link namespacePrefixes} for the list of namespace prefixes.
  */
 export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) => {
   const customOperationId = customRoutes[`${method} ${path}`];
@@ -153,8 +164,10 @@ export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) =>
     return;
   }
 
-  // Special case for JIT APIs since `jit/` is more like a namespace.
-  const splitted = path.replace('jit/', 'jit-').split('/');
+  const splitted = namespacePrefixes
+    .reduce((accumulator, prefix) => accumulator.replace(prefix + '/', prefix + '-'), path)
+    .split('/');
+
   const lastItem = splitted.at(-1);
 
   if (!lastItem) {

@@ -17,5 +17,5 @@ This greatly simplifies the creation of client SDKs in different languages, beca
 
 ```diff
 - users, _, err := s.Client.OrganizationsAPI.ApiOrganizationsIdUsersGet(ctx, req.GetId()).Execute()
-+ users, _, err := s.Client.OrganizationsAPI.ListOrganizationsUsers(ctx, req.GetId()).Execute()
++ users, _, err := s.Client.OrganizationsAPI.ListOrganizationUsers(ctx, req.GetId()).Execute()
 ```
