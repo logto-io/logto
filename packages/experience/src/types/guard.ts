@@ -109,9 +109,12 @@ export const ssoConnectorMetadataGuard: s.Describe<SsoConnectorMetadata> = s.obj
 /**
  * Defines the type guard for user identifier input value caching.
  *
- * Purpose: cache the identifier so that when the user returns from the verification
- * page or the password page, the identifier they entered will not be cleared.
+ * Purpose:
+ * - Used in conjunction with the HiddenIdentifierInput component to assist
+ * password managers in associating the correct identifier with passwords.
  *
+ * - Cache the identifier so that when the user returns from the verification
+ *  page or the password page, the identifier they entered will not be cleared.
  */
 export const identifierInputValueGuard: s.Describe<IdentifierInputValue> = s.object({
   type: s.optional(

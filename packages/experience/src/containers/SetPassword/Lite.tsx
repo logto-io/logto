@@ -7,6 +7,7 @@ import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInputField } from '@/components/InputFields';
 
+import HiddenIdentifierInput from './HiddenIdentifierInput';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -53,6 +54,7 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
+      <HiddenIdentifierInput />
       <PasswordInputField
         className={styles.inputField}
         autoComplete="new-password"
