@@ -1,0 +1,14 @@
+color: true
+coverage-report:
+  - text
+exclude:
+  - "**/@(fixture*(s)|dist)/**"
+include:
+  - "**/@(test?(s)|__test?(s)__)/**/*.test.@(js|cjs|mjs|tap|cts|jsx|mts|ts|tsx)"
+  - "**/*.@(test?(s)|spec).@(js|cjs|mjs|tap|cts|jsx|mts|ts|tsx)"
+  - "**/test?(s).@(js|cjs|mjs|tap|cts|jsx|mts|ts|tsx)"
+jobs: 8
+reporter: base
+snapshot-clean-cwd: true
+timeout: 30
+allow-incomplete-coverage: true

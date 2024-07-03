@@ -124,11 +124,11 @@
                     "scope": "openid profile email",
                     "clientId": "mock_client_id",
                     "clientSecret": "mock_client_secret",
-                    "tokenEndpoint": "http://localhost:3005/logto/mock/token",
-                    "authorizationEndpoint": "http://localhost:3005/logto/mock/auth",
+                    "tokenEndpoint": "http://localhost:4005/logto/mock/token",
+                    "authorizationEndpoint": "http://localhost:4005/logto/mock/auth",
                     "tokenEndpointAuthMethod": "client_secret_post",
                     "idTokenVerificationConfig": {
-                        "jwksUri": "http://localhost:3005/logto/mock/keys"
+                        "jwksUri": "http://localhost:4005/logto/mock/keys"
                     },
                     "clientSecretJwtSigningAlgorithm": "HS256"
                 },

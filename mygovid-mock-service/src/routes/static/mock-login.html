@@ -1,0 +1,269 @@
+<html lang="en-IE">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="csrf-token"
+      content="7Wb8EJrcwtLmnFBwx84DQWPrlHMaKUVd0Bo1soYTuDodrnxrPvA4vEBWFOYsbyr8MOWSOWqavzDaGWOebUsELb6WK7wnZwOEp-2dNVXXkLfosiaZHYlYPmkfkuotPOLq4w7V4m1cGANxdxw1JZc1TA2:hBlKcknWuO4WV5oj83Cfz8wxhsn55InrWlg2fkeJxG-vqGFSlxWysNd2eI0tgQoj59MpPnVor1uRHJh79X6gF6Z0LH4kgDGztIpANSK1jVNKmvfxyEA2ZtWvDiATUf5J3pacRd9aannWXSMqEqsP-Q2"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyGovID - Login</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://mygovidstatic.blob.core.windows.net/assets/images/favicon.ico"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://mygovidstatic.blob.core.windows.net/assets/Content/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://mygovidstatic.blob.core.windows.net/assets/Content/static-styles.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://mygovidstatic.blob.core.windows.net/assets/Content/signin-styles.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://mygovidstatic.blob.core.windows.net/assets/Content/loader-styles.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://mygovidstatic.blob.core.windows.net/assets/Content/visual-clue-style.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <div
+    style="
+      max-width: 600px;
+      box-shadow:
+        0 4px 4px -2px rgba(0, 0, 0, 0.1),
+        0 10px 20px -5px rgba(0, 0, 0, 0.1);
+      padding: 25px 142.5px 25px;
+      margin: 50 auto;
+      background: white;
+      display: flex;
+      flex-direction: column;
+    "
+  >
+    <span
+      style="margin: 0 auto"
+      id="mygovid-logo"
+      class="icon-mygovid_logo"
+    ></span>
+
+    <form id="login-form" method="POST" action="/logto/mock/login">
+
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+          margin-top: 30px;
+        "
+      >
+        <input
+          id="firstName"
+          type="hidden"
+          name="firstName"
+          value=""
+          readonly
+        />
+        <input id="lastName" type="hidden" name="lastName" value="" readonly />
+        <input id="email" type="hidden" name="email" value="" readonly />
+        <input
+          id="redirect_url"
+          type="hidden"
+          name="redirect_url"
+          value="%REDIRECT_URL%"
+          readonly
+        />
+        <input
+          id="state"
+          type="hidden"
+          name="state"
+          value="%STATE%"
+          readonly
+        />
+
+        <div>
+          <div class="password-label">
+            <label
+              style="
+                margin-bottom: 10px;
+                text-align: left;
+                font-size: 14px;
+                font-weight: 900;
+                line-height: 1.1;
+              "
+              for="user_select"
+              >Select user</label
+            >
+          </div>
+          <select
+            style="
+              height: 60px;
+              width: 100%;
+              border: none;
+              border-right: 16px solid transparent;
+            "
+            id="user_select"
+            value=""
+          >
+            <option value="">Create random user</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="password-label">
+            <label
+              style="
+                margin-bottom: 10px;
+                text-align: left;
+                font-size: 14px;
+                font-weight: 900;
+                line-height: 1.1;
+              "
+              for="password"
+              >Password</label
+            >
+          </div>
+          <input
+            required
+            style="height: 60px; width: 100%"
+            class="form-signin"
+            type="password"
+            name="password"
+          />
+        </div>
+        <div>
+          <button
+            style="
+              width: 100%;
+              height: 60px;
+              color: #ffffff;
+              background-color: #007da6;
+              min-width: 200px;
+              min-height: 70px;
+              border: none;
+              font-size: 20px;
+              font-weight: bold;
+              text-align: center;
+              font-family: &quot;Helvetica&quot;, &quot;Open Sans&quot;, Arial,
+                sans-serif;
+              margin-top: 5px;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+            "
+            id="submit_btn"
+            type="submit"
+          >
+            <div style="margin-top: 5px">
+              Login
+              <span
+                style="
+                  padding-left: 0.2em;
+                  font-size: 1.9em;
+                  margin-top: -5px;
+                  display: inline-block;
+                  vertical-align: middle;
+                "
+                class="icon-signin_id_logo"
+              ></span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</html>
+
+<script type="module">
+  import { faker } from "https://esm.sh/@faker-js/faker";
+  let isCurrentUserSet = false;
+  const returnUrl = new URLSearchParams(window.location.search).get(
+    "return_url",
+  );
+
+  if (returnUrl) {
+    document.querySelector("#login-form").action = returnUrl;
+  }
+
+
+  // Mock users
+  const apiUsers = {
+    users: [
+      {
+        user_name: "Peter Parker",
+        govid_email: "peter.parker@mail.ie"
+      },
+      {
+        user_name: "Tony Stark",
+        govid_email: "tony.stark@mail.ie"
+      },
+    ]
+  }
+
+  const usersSelectElement = document.querySelector("#user_select");
+  
+  for (const u of apiUsers.users) {
+    var option = document.createElement("option");
+    option.text = `${u.user_name} ${
+      u.is_public_servant ? "(public servant)" : ""
+    }`.trim();
+    option.value = u.govid_email;
+    usersSelectElement.add(option);
+  }
+
+  usersSelectElement.addEventListener("change", (e) => {
+    const user = apiUsers.users.find(
+      (user) => user.govid_email === e.target.value,
+    );
+
+    let firstName, lastName, email;
+
+    if (user) {
+      const nameSplit = user.user_name.split(" ");
+      firstName = nameSplit.at(0);
+      lastName = nameSplit.slice(1).join(" ");
+      email = user.govid_email;
+      isCurrentUserSet = true;
+    } else {
+      firstName = faker.person.firstName();
+      lastName = faker.person.lastName();
+      email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@mail.ie`;
+      isCurrentUserSet = false;
+    }
+
+    document.querySelector("#firstName").value = firstName;
+    document.querySelector("#lastName").value = lastName;
+    document.querySelector("#email").value = email;
+    document.querySelector("#submit_btn").innerHTML =
+      `<div style="margin-top: 5px">Login ${firstName} ${lastName} <span class="icon-signin_id_logo"></span></div>`;
+  });
+
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+  const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@mail.ie`;
+
+  document.querySelector("#firstName").value = firstName;
+  document.querySelector("#lastName").value = lastName;
+  document.querySelector("#email").value = email;
+
+  document.querySelector("#submit_btn").innerHTML =
+    `<div style="margin-top: 5px">Login ${firstName} ${lastName} <span class="icon-signin_id_logo"></span></div>`;
+</script>
