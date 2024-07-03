@@ -21,7 +21,10 @@ import {
   isThirdPartyApplication,
   getSharedResourceServerData,
   reversedResourceAccessTokenTtl,
-} from '../resource.js';
+} from '../../resource.js';
+
+import { handleActorToken } from './actor-token.js';
+import { TokenExchangeTokenType, type TokenExchangeAct } from './types.js';
 
 const { InvalidClient, InvalidGrant, AccessDenied } = errors;
 
@@ -32,6 +35,8 @@ const { InvalidClient, InvalidGrant, AccessDenied } = errors;
 export const parameters = Object.freeze([
   'subject_token',
   'subject_token_type',
+  'actor_token',
+  'actor_token_type',
   'organization_id',
   'scope',
 ] as const);
@@ -46,6 +51,7 @@ const requiredParameters = Object.freeze([
   'subject_token_type',
 ] as const) satisfies ReadonlyArray<(typeof parameters)[number]>;
 
+/* eslint-disable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
 export const buildHandler: (
   envSet: EnvSet,
   queries: Queries
@@ -64,7 +70,7 @@ export const buildHandler: (
     new InvalidClient('third-party applications are not allowed for this grant type')
   );
   assertThat(
-    params.subject_token_type === 'urn:ietf:params:oauth:token-type:access_token',
+    params.subject_token_type === TokenExchangeTokenType.AccessToken,
     new InvalidGrant('unsupported subject token type')
   );
 
@@ -89,8 +95,6 @@ export const buildHandler: (
 
   // TODO: (LOG-9501) Implement general security checks like dPop
   ctx.oidc.entity('Account', account);
-
-  /* eslint-disable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
 
   /* === RFC 0001 === */
   // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
@@ -197,7 +201,17 @@ export const buildHandler: (
       .filter((name) => new Set(oidcScopes).has(name))
       .join(' ');
   }
-  /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
+
+  // Handle the actor token
+  const { actorId } = await handleActorToken(ctx);
+  if (actorId) {
+    // The JWT generator in node-oidc-provider only recognizes a fixed list of claims,
+    // to add other claims to JWT, the only way is to return them in `extraTokenClaims` function.
+    // @see https://github.com/panva/node-oidc-provider/blob/main/lib/models/formats/jwt.js#L118
+    // We save the `act` data in the `extra` field temporarily,
+    // so that we can get this context it in the `extraTokenClaims` function and add it to the JWT.
+    accessToken.extra = { act: { sub: actorId } } satisfies TokenExchangeAct;
+  }
 
   ctx.oidc.entity('AccessToken', accessToken);
   const accessTokenString = await accessToken.save();
@@ -216,3 +230,4 @@ export const buildHandler: (
 
   await next();
 };
+/* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
