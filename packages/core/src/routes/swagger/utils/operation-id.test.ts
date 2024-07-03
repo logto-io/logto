@@ -38,4 +38,16 @@ describe('buildOperationId', () => {
       'DeleteFootball'
     );
   });
+
+  it('should use "Get" if the last item is singular', () => {
+    expect(buildOperationId(OpenAPIV3.HttpMethods.GET, '/footballs/:footballId/bar')).toBe(
+      'GetFootballBar'
+    );
+  });
+
+  it('should use "List" if the last item is plural', () => {
+    expect(buildOperationId(OpenAPIV3.HttpMethods.GET, '/footballs/:footballId/bars')).toBe(
+      'ListFootballBars'
+    );
+  });
 });

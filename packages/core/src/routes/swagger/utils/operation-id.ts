@@ -193,7 +193,9 @@ export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) =>
   );
 
   const verb =
-    !isForSingleItem && method === OpenAPIV3.HttpMethods.GET ? 'List' : methodToVerb[method];
+    !isForSingleItem && method === OpenAPIV3.HttpMethods.GET && pluralize.isPlural(lastItem)
+      ? 'List'
+      : methodToVerb[method];
 
   if (isForSingleItem) {
     return verb + itemTypes.join('');
