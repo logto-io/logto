@@ -14,7 +14,7 @@ import {
 } from './verification-code.js';
 
 /**
- * User interaction events defined in Logto RFC 0004
+ * User interaction events defined in Logto RFC 0004.
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information.
  */
 export enum InteractionEvent {
@@ -23,14 +23,14 @@ export enum InteractionEvent {
   ForgotPassword = 'ForgotPassword',
 }
 
-// ====== Experience API payload guards and types definitions start ======
+// ====== Experience API payload guards and type definitions start ======
 export enum InteractionIdentifierType {
   Username = 'username',
   Email = 'email',
   Phone = 'phone',
 }
 
-/** Identifiers that can be used to uniquely identify a user */
+/** Identifiers that can be used to uniquely identify a user. */
 export type InteractionIdentifier = {
   type: InteractionIdentifierType;
   value: string;
@@ -41,7 +41,7 @@ export const interactionIdentifierGuard = z.object({
   value: z.string(),
 }) satisfies ToZodObject<InteractionIdentifier>;
 
-/** Logto supported interaction verification types */
+/** Logto supported interaction verification types. */
 export enum VerificationType {
   Password = 'Password',
   VerificationCode = 'VerificationCode',
@@ -53,7 +53,7 @@ export enum VerificationType {
 
 // REMARK: API payload guard
 
-/** Payload type for: /experience/verification/password */
+/** Payload type for `POST /api/experience/verification/password`. */
 export type PasswordVerificationPayload = {
   identifier: InteractionIdentifier;
   password: string;
@@ -63,7 +63,7 @@ export const passwordVerificationPayloadGuard = z.object({
   password: z.string().min(1),
 }) satisfies ToZodObject<PasswordVerificationPayload>;
 
-/** Payload type for: /experience/identification */
+/** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {
   interactionEvent: InteractionEvent;
   verificationId: string;
@@ -73,8 +73,6 @@ export const identificationApiPayloadGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   verificationId: z.string(),
 }) satisfies ToZodObject<IdentificationApiPayload>;
-
-/* API payload guard end */
 
 // ====== Experience API payload guards and type definitions end ======
 

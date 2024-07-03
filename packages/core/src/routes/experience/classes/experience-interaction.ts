@@ -22,17 +22,14 @@ const interactionStorageGuard = z.object({
 });
 
 /**
- * ExperienceInteraction
- *
- * @overview
  * Interaction is a short-lived session session that is initiated when a user starts an interaction flow with the Logto platform.
  * This class is used to manage all the interaction data and status.
- * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0004.
  *
+ * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0004.
  */
 export default class ExperienceInteraction {
   /**
-   * Factory method to create a new ExperienceInteraction using context
+   * Factory method to create a new `ExperienceInteraction` using the current context.
    */
   static async create(ctx: WithLogContext, tenant: TenantContext) {
     const { provider } = tenant;
@@ -40,13 +37,13 @@ export default class ExperienceInteraction {
     return new ExperienceInteraction(ctx, tenant, interactionDetails);
   }
 
-  /** The interaction event for the current interaction */
+  /** The interaction event for the current interaction. */
   private interactionEvent?: InteractionEvent;
-  /** The user verification record list for the current interaction */
+  /** The user verification record list for the current interaction. */
   private readonly verificationRecords: Set<VerificationRecord>;
-  /** The accountId of the user for the current interaction. Only available once the user is identified */
+  /** The accountId of the user for the current interaction. Only available once the user is identified. */
   private accountId?: string;
-  /** The user provided profile data in the current interaction that needs to be stored to user DB */
+  /** The user provided profile data in the current interaction that needs to be stored to database. */
   private readonly profile?: Record<string, unknown>; // TODO: Fix the type
 
   constructor(
@@ -80,7 +77,7 @@ export default class ExperienceInteraction {
     this.interactionEvent = event;
   }
 
-  /** Set the verified accountId of the current interaction from  the verification record */
+  /** Set the verified `accountId` of the current interaction from the verification record */
   public identifyUser(verificationRecord: VerificationRecord) {
     // Throws an 404 error if the user is not found by the given verification record
     assertThat(
@@ -96,7 +93,7 @@ export default class ExperienceInteraction {
 
   /**
    * Append a new verification record to the current interaction.
-   * @remark If a record with the same type already exists, it will be replaced.
+   * If a record with the same type already exists, it will be replaced.
    */
   public appendVerificationRecord(record: VerificationRecord) {
     const { type } = record;
@@ -114,11 +111,11 @@ export default class ExperienceInteraction {
     return this.verificationRecordsArray.find((record) => record.id === verificationId);
   }
 
-  /** Save the current interaction result */
+  /** Save the current interaction result. */
   public async save() {
-    // The "mergeWithLastSubmission" will only merge current request's interaction results,
-    // manually merge with previous interaction results
-    // refer to: https://github.com/panva/node-oidc-provider/blob/c243bf6b6663c41ff3e75c09b95fb978eba87381/lib/actions/authorization/interactions.js#L106
+    // `mergeWithLastSubmission` will only merge current request's interaction results.
+    // Manually merge with previous interaction results here.
+    // @see {@link https://github.com/panva/node-oidc-provider/blob/c243bf6b6663c41ff3e75c09b95fb978eba87381/lib/actions/authorization/interactions.js#L106}
 
     const { provider } = this.tenant;
     const details = await provider.interactionDetails(this.ctx.req, this.ctx.res);

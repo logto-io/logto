@@ -11,9 +11,10 @@ export type WithExperienceInteractionContext<ContextT extends WithLogContext = W
   };
 
 /**
- * @overview This middleware initializes the ExperienceInteraction for the current request.
- * The ExperienceInteraction instance is used to manage all the data related to the current interaction.
- * All the interaction data is stored using the oidc-provider's interaction session
+ * @overview This middleware initializes the `ExperienceInteraction` for the current request.
+ * The `ExperienceInteraction` instance is used to manage all the data related to the current interaction.
+ * All the interaction data is stored using oidc-provider's interaction session.
+ *
  * @see {@link https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#user-flows}
  */
 export default function koaExperienceInteraction<

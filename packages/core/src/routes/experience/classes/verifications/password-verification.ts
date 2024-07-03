@@ -20,7 +20,7 @@ export type PasswordVerificationRecordData = {
   id: string;
   type: VerificationType.Password;
   identifier: InteractionIdentifier;
-  /* The userId of the user that has been verified */
+  /** The userId of the user that has been verified. */
   userId?: string;
 };
 
@@ -48,9 +48,9 @@ export class PasswordVerification implements VerificationRecord<VerificationType
 
   /**
    * The constructor method is intended to be used internally by the interaction class
-   * to instantiate a VerificationRecord object from existing PasswordVerificationRecordData.
+   * to instantiate a `VerificationRecord` object from existing `PasswordVerificationRecordData`.
    * It directly sets the instance properties based on the provided data.
-   * For creating a new verification record, use the static create method instead.
+   * For creating a new verification record from context, use the static `create` method instead.
    */
   constructor(
     private readonly libraries: Libraries,
@@ -75,8 +75,7 @@ export class PasswordVerification implements VerificationRecord<VerificationType
 
   /**
    * Verifies if the password matches the record in database with the current identifier.
-   *
-   * - userId is set if the password is verified.
+   * `userId` will be set if the password can be verified.
    *
    * @throws RequestError with 401 status if user id suspended.
    * @throws RequestError with 422 status if the user is not found or the password is incorrect.
