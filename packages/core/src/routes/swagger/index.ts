@@ -28,9 +28,11 @@ import {
   findSupplementFiles,
   normalizePath,
   removeUnnecessaryOperations,
+  shouldThrow,
   validateSupplement,
   validateSwaggerDocument,
 } from './utils/general.js';
+import { buildOperationId, customRoutes, throwByDifference } from './utils/operation-id.js';
 import {
   buildParameters,
   paginationParameters,
@@ -54,6 +56,7 @@ type RouteObject = {
 };
 
 const buildOperation = (
+  method: OpenAPIV3.HttpMethods,
   stack: IMiddleware[],
   path: string,
   isAuthGuarded: boolean
@@ -111,6 +114,7 @@ const buildOperation = (
   const [firstSegment] = path.split('/').slice(1);
 
   return {
+    operationId: buildOperationId(method, path),
     tags: [buildTag(path)],
     parameters: [...pathParameters, ...queryParameters],
     requestBody,
@@ -170,6 +174,12 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   allRouters: R[]
 ) {
   router.get('/swagger.json', async (ctx, next) => {
+    /**
+     * A set to store all custom routes that have been built.
+     * @see {@link customRoutes}
+     */
+    const builtCustomRoutes = new Set<string>();
+
     const routes = allRouters.flatMap<RouteObject>((router) => {
       const isAuthGuarded = isManagementApiRouter(router);
 
@@ -184,7 +194,11 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
               .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
               .map((httpMethod) => {
                 const path = normalizePath(routerPath);
-                const operation = buildOperation(stack, routerPath, isAuthGuarded);
+                const operation = buildOperation(httpMethod, stack, routerPath, isAuthGuarded);
+
+                if (customRoutes[`${httpMethod} ${routerPath}`]) {
+                  builtCustomRoutes.add(`${httpMethod} ${routerPath}`);
+                }
 
                 return {
                   path,
@@ -195,6 +209,9 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
           )
       );
     });
+
+    // Ensure all custom routes are built.
+    throwByDifference(builtCustomRoutes);
 
     const pathMap = new Map<string, OpenAPIV3.PathItemObject>();
     const tags = new Set<string>();
@@ -286,7 +303,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       getConsoleLogFromContext(ctx).warn('Skip validating swagger document in unit test.');
     }
     // Don't throw for integrity check in production as it has no benefit.
-    else if (!EnvSet.values.isProduction || EnvSet.values.isIntegrationTest) {
+    else if (shouldThrow()) {
       for (const document of supplementDocuments) {
         validateSupplement(baseDocument, document);
       }

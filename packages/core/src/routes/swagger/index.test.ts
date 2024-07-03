@@ -92,7 +92,7 @@ describe('GET /swagger.json', () => {
   it('should parse the path parameters', async () => {
     const queryParametersRouter = new Router();
     queryParametersRouter.get(
-      '/mock/:id/:field',
+      '/mock/:id/fields/:field',
       koaGuard({
         params: object({
           id: number(),
@@ -103,7 +103,7 @@ describe('GET /swagger.json', () => {
     );
     // Test plural
     queryParametersRouter.get(
-      '/mocks/:id/:field',
+      '/mocks/:id/fields/:field',
       koaGuard({
         params: object({
           id: number(),
@@ -116,7 +116,7 @@ describe('GET /swagger.json', () => {
 
     const response = await swaggerRequest.get('/swagger.json');
     expect(response.body.paths).toMatchObject({
-      '/api/mock/{id}/{field}': {
+      '/api/mock/{id}/fields/{field}': {
         get: {
           parameters: [
             {
@@ -131,7 +131,7 @@ describe('GET /swagger.json', () => {
           ],
         },
       },
-      '/api/mocks/{id}/{field}': {
+      '/api/mocks/{id}/fields/{field}': {
         get: {
           parameters: [
             {

@@ -9,4 +9,4 @@ export * from './interaction.js';
 export * from './logto-config.js';
 export * from './domain.js';
 
-export { default as api, authedAdminApi } from './api.js';
+export { default as api, authedAdminApi, adminTenantApi } from './api.js';
