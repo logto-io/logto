@@ -1,10 +1,14 @@
 import { Theme } from '@logto/schemas';
+import { noop } from '@silverhand/essentials';
 import { type Mermaid as MermaidType } from 'mermaid';
 import { useEffect } from 'react';
 
 import useTheme from '@/hooks/use-theme';
 
-/** Load Mermaid asynchronously from jsDelivr to avoid Parcel issues. */
+/**
+ * Load Mermaid asynchronously from jsDelivr to avoid Parcel bundling issues. Parcel does not
+ * bundle Mermaid correctly for production builds, so we need to load it dynamically from a CDN.
+ */
 const loadMermaid = async () => {
   // Define this variable to "outsmart" the detection of the dynamic import by Parcel:
   // https://github.com/parcel-bundler/parcel/issues/7064#issuecomment-942441649
@@ -17,7 +21,13 @@ const loadMermaid = async () => {
   return imported.default;
 };
 
-const mermaidPromise = loadMermaid();
+const mermaidPromise = process.env.CI
+  ? // Mock Mermaid in CI to avoid issues with network requests and testing environment.
+    Promise.resolve({
+      initialize: noop,
+      run: noop,
+    })
+  : loadMermaid();
 
 type Props = {
   readonly children: string;
