@@ -71,7 +71,7 @@ jobs:
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
-      - uses: logto-io/actions-run-logto-integration-tests@v3
+      - uses: logto-io/actions-run-logto-integration-tests@v4
         with:
           branch: ${{ github.base_ref }}
           logto-artifact: alteration-integration-test-${{ github.sha }}
