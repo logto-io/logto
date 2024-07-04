@@ -41,6 +41,17 @@ export const interactionIdentifierGuard = z.object({
   value: z.string(),
 }) satisfies ToZodObject<InteractionIdentifier>;
 
+/** Currently only email and phone are supported for verification code validation. */
+export type VerificationCodeIdentifier = {
+  type: InteractionIdentifierType.Email | InteractionIdentifierType.Phone;
+  value: string;
+};
+
+export const verificationCodeIdentifierGuard = z.object({
+  type: z.enum([InteractionIdentifierType.Email, InteractionIdentifierType.Phone]),
+  value: z.string(),
+}) satisfies ToZodObject<VerificationCodeIdentifier>;
+
 /** Logto supported interaction verification types. */
 export enum VerificationType {
   Password = 'Password',
