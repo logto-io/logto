@@ -17,19 +17,41 @@ import {
 } from '@/ds-components/MultiTextInput/utils';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import type { GuideForm } from '@/types/guide';
+import type {
+  CustomClientMetadataKey,
+  GuideForm,
+  Name,
+  OidcClientMetadataKey,
+} from '@/types/guide';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
 import * as styles from './index.module.scss';
 
-type Props = {
-  readonly name: 'redirectUris' | 'postLogoutRedirectUris';
-  /** The default value of the input field when there's no data. */
-  readonly defaultValue?: string;
-};
+const nameToKey: Record<Name, AdminConsoleKey> = Object.freeze({
+  redirectUris: 'application_details.redirect_uri',
+  postLogoutRedirectUris: 'application_details.post_sign_out_redirect_uri',
+  corsAllowedOrigins: 'application_details.cors_allowed_origins',
+});
 
-function UriInputField({ name, defaultValue }: Props) {
+type Props =
+  | {
+      readonly name: OidcClientMetadataKey;
+      readonly type?: 'oidcClientMetadata';
+      /** The default value of the input field when there's no data. */
+      readonly defaultValue?: string;
+    }
+  | {
+      readonly name: CustomClientMetadataKey;
+      readonly type: 'customClientMetadata';
+      /** The default value of the input field when there's no data. */
+      readonly defaultValue?: string;
+    };
+
+function UriInputField(props: Props) {
+  const { name, defaultValue } = props;
+  const type = props.type ?? 'oidcClientMetadata';
+
   const methods = useForm<Partial<GuideForm>>();
   const {
     control,
@@ -45,10 +67,7 @@ function UriInputField({ name, defaultValue }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
-  const title: AdminConsoleKey =
-    name === 'redirectUris'
-      ? 'application_details.redirect_uri'
-      : 'application_details.post_sign_out_redirect_uri';
+  const title: AdminConsoleKey = nameToKey[name];
 
   const onSubmit = trySubmitSafe(async (value: string[]) => {
     if (!appId) {
@@ -57,7 +76,7 @@ function UriInputField({ name, defaultValue }: Props) {
     const updatedApp = await api
       .patch(`api/applications/${appId}`, {
         json: {
-          oidcClientMetadata: {
+          [type]: {
             [name]: value.filter(Boolean),
           },
         },
@@ -77,9 +96,13 @@ function UriInputField({ name, defaultValue }: Props) {
     }
   };
 
-  const clientMetadata = data?.oidcClientMetadata[name];
-  const defaultValueArray = clientMetadata?.length
-    ? clientMetadata
+  const dataValue =
+    props.type === 'customClientMetadata'
+      ? data?.customClientMetadata[props.name]
+      : data?.oidcClientMetadata[props.name];
+
+  const defaultValueArray = dataValue?.length
+    ? dataValue
     : conditional(defaultValue && [defaultValue]);
 
   return (

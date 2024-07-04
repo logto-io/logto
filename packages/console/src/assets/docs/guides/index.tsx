@@ -12,6 +12,7 @@ import nativeExpo from './native-expo/index';
 import nativeFlutter from './native-flutter/index';
 import nativeIosSwift from './native-ios-swift/index';
 import spaAngular from './spa-angular/index';
+import spaChromeExtension from './spa-chrome-extension/index';
 import spaReact from './spa-react/index';
 import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
@@ -59,6 +60,13 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./spa-angular/logo.svg')),
     Component: lazy(async () => import('./spa-angular/README.mdx')),
     metadata: spaAngular,
+  },
+  {
+    order: 1.1,
+    id: 'spa-chrome-extension',
+    Logo: lazy(async () => import('./spa-chrome-extension/logo.svg')),
+    Component: lazy(async () => import('./spa-chrome-extension/README.mdx')),
+    metadata: spaChromeExtension,
   },
   {
     order: 1.1,
