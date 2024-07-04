@@ -52,7 +52,7 @@ jobs:
       INTEGRATION_TEST: true
       DEV_FEATURES_ENABLED: false
     steps:
-      - uses: logto-io/actions-package-logto-artifact@v2
+      - uses: logto-io/actions-package-logto-artifact@v3
         with:
           artifact-name: alteration-integration-test-${{ github.sha }}
           branch: ${{ github.base_ref }}

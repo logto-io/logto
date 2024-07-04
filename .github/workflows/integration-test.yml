@@ -22,7 +22,7 @@ jobs:
       DEV_FEATURES_ENABLED: ${{ matrix.dev-features-enabled }}
 
     steps:
-      - uses: logto-io/actions-package-logto-artifact@v2
+      - uses: logto-io/actions-package-logto-artifact@v3
         with:
           artifact-name: integration-test-${{ github.sha }}-dev-features-${{ matrix.dev-features-enabled }}
           pnpm-version: 9
