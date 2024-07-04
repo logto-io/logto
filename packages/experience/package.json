@@ -86,7 +86,7 @@
     "react-timer-hook": "^3.0.5",
     "react-top-loading-bar": "^2.3.1",
     "stylelint": "^15.0.0",
-    "superstruct": "^1.0.3",
+    "superstruct": "^2.0.0",
     "tiny-cookie": "^2.4.1",
     "typescript": "^5.3.3",
     "use-debounced-loader": "^0.1.1",
