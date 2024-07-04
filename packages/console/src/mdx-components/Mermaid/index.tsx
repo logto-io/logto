@@ -1,5 +1,5 @@
 import { Theme } from '@logto/schemas';
-import { noop } from '@silverhand/essentials';
+import { noop, yes } from '@silverhand/essentials';
 import { type Mermaid as MermaidType } from 'mermaid';
 import { useEffect } from 'react';
 
@@ -21,8 +21,8 @@ const loadMermaid = async () => {
   return imported.default;
 };
 
-const mermaidPromise = process.env.CI
-  ? // Mock Mermaid in CI to avoid issues with network requests and testing environment.
+const mermaidPromise = yes(process.env.INTEGRATION_TEST)
+  ? // Mock Mermaid in integration tests to avoid issues with network requests and testing environment.
     Promise.resolve({
       initialize: noop,
       run: noop,
