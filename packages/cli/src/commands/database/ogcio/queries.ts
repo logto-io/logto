@@ -22,7 +22,7 @@ export const getColumnValueByQueryResult = <T extends Record<string, string>>(
   columnToGet: string
 ): string | undefined => {
   const camelColumn = snakeToCamel(columnToGet);
-  if (result.rows[0] === undefined || result.rows[0][camelColumn] === undefined) {
+  if (result.rows[0]?.[camelColumn] === undefined) {
     return undefined;
   }
 
@@ -63,8 +63,23 @@ export const getInsertedId = async (
 ): Promise<string | undefined> =>
   getInsertedColumnValue({ transaction, tenantId, whereClauses, tableName, columnToGet: 'id' });
 
-export const createItem = async <
-  T extends { id?: string } & Record<string, number | string | undefined | unknown[] | boolean>,
+const updateItem = async (params: {
+  transaction: DatabaseTransactionConnection;
+  toUpdate: Record<string, number | string | undefined | boolean>;
+  whereClauses: ValueExpression[];
+  tableName: string;
+}) => {
+  const toUpdate = Object.entries(params.toUpdate).map(
+    ([key, value]) => sql`${sql.identifier([key])} = ${value ?? ''}`
+  );
+
+  const updateQueryString = updateQuery(toUpdate, params.whereClauses, params.tableName);
+
+  return params.transaction.query(updateQueryString);
+};
+
+export const createOrUpdateItem = async <
+  T extends { id?: string } & Record<string, number | string | undefined | boolean>,
 >(params: {
   transaction: DatabaseTransactionConnection;
   tenantId?: string;
@@ -84,7 +99,16 @@ export const createItem = async <
       params.tableName
     );
     if (scopeIdBefore !== undefined) {
-      consoleLog.info(`${prefixConsoleEntry}. Already exists.`);
+      consoleLog.info(`${prefixConsoleEntry}. Already exists. Updating entry.`);
+
+      await updateItem({
+        transaction: params.transaction,
+        toUpdate: params.toInsert,
+        whereClauses: params.whereClauses,
+        tableName: params.tableName,
+      });
+
+      consoleLog.info(`${prefixConsoleEntry}. Entry updated successfully.`);
       params.toInsert.id = scopeIdBefore;
       return { ...params.toInsert, id: scopeIdBefore };
     }
@@ -94,9 +118,7 @@ export const createItem = async <
       tenant_id: params.tenantId,
     };
 
-    if (!toInsertData.id) {
-      toInsertData.id = generateStandardId();
-    }
+    toInsertData.id ||= generateStandardId();
 
     await params.transaction.query(insertInto(toInsertData, params.tableName));
     params.toInsert.id = await getInsertedId(
@@ -117,8 +139,8 @@ export const createItem = async <
   }
 };
 
-export const createItemWithoutId = async <
-  T extends Record<string, number | string | undefined | unknown[] | boolean>,
+export const createOrUpdateItemWithoutId = async <
+  T extends Record<string, number | string | undefined | boolean>,
 >(params: {
   transaction: DatabaseTransactionConnection;
   tenantId: string | undefined;
@@ -134,7 +156,16 @@ export const createItemWithoutId = async <
   consoleLog.info(prefixConsoleEntry);
   const scopeIdBefore = await getInsertedColumnValue(params);
   if (scopeIdBefore !== undefined) {
-    consoleLog.info(`${prefixConsoleEntry}. Already exists.`);
+    consoleLog.info(`${prefixConsoleEntry}. Already exists. Updating entry.`);
+
+    await updateItem({
+      transaction: params.transaction,
+      toUpdate: params.toInsert,
+      whereClauses: params.whereClauses,
+      tableName: params.tableName,
+    });
+
+    consoleLog.info(`${prefixConsoleEntry}. Entry updated successfully.`);
     return { ...params.toInsert, [params.columnToGet]: scopeIdBefore };
   }
 
@@ -160,6 +191,13 @@ export const updateQuery = (
   return sql`
     update ${sql.identifier([table])}
     set ${sql.join(toSetValues, sql`, `)}
+    where ${sql.join(whereClauses, sql` AND `)}
+  `;
+};
+
+export const deleteQuery = (whereClauses: ValueExpression[], table: string) => {
+  return sql`
+    delete from ${sql.identifier([table])}
     where ${sql.join(whereClauses, sql` AND `)}
   `;
 };

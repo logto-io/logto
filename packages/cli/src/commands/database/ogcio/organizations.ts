@@ -17,7 +17,7 @@ import { insertInto } from '../../../database.js';
 import { consoleLog } from '../../../utils.js';
 
 import { type OrganizationSeeder } from './ogcio-seeder.js';
-import { createItem, getInsertedColumnValue, updateQuery } from './queries.js';
+import { createOrUpdateItem, getInsertedColumnValue, updateQuery } from './queries.js';
 
 const createAdminConsoleConfig = (
   forTenantId: string
@@ -43,7 +43,7 @@ const updateTenantConfigs = async (
   const currentValue = await getInsertedColumnValue({
     transaction,
     tenantId,
-    whereClauses: [sql`key = ${LogtoTenantConfigKey.AdminConsole}`],
+    whereClauses: [sql`key = ${LogtoTenantConfigKey.AdminConsole}`, sql`tenant_id = ${tenantId}`],
     tableName: LogtoConfigs.table,
     columnToGet: 'value',
   });
@@ -73,15 +73,15 @@ const createOrganization = async (params: {
   tenantId: string;
   organizationSeeder: OrganizationSeeder;
 }) => {
-  const organization = createItem({
+  const organization = createOrUpdateItem({
     transaction: params.transaction,
     tenantId: params.tenantId,
     toInsert: {
       name: params.organizationSeeder.name,
       description: params.organizationSeeder.description,
-      id: params.organizationSeeder.id ?? undefined,
+      id: params.organizationSeeder.id,
     },
-    whereClauses: [sql`name = ${params.organizationSeeder.name}`],
+    whereClauses: [sql`tenant_id = ${params.tenantId}`, sql`id = ${params.organizationSeeder.id}`],
     toLogFieldName: 'name',
     tableName: Organizations.table,
   });

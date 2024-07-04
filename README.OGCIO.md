@@ -113,3 +113,17 @@ This command can take a parameter to specify the input data file, called `seeder
 Usage: `npm run cli db ogcio -- --seeder-filepath="DATA_FILE_PATH"`
 
 To seed the default data for local dev environments, run `npm run cli db ogcio -- --seeder-filepath="./packages/cli/src/commands/database/ogcio/ogcio-seeder-local.json"`.
+
+### Limitations
+
+In most cases, we have predefined IDs in our seeder to ensure the same database structure, even if the database was cleared and re-seeded. Logto IDs are simple text fields (no UUID or other validations are applied) with a maximum length of 21 characters. Do not use IDs longer than 21 characters; otherwise, the seeder will fail with a database error!
+
+Be careful when defining a new ID because data duplication is avoided based on this field. If you later want to change the ID of any of your entries, the seeder won't be able to detect the existence of the affected entry, and it will try to create a new one. Creating a duplicate entry with a different ID can cause a database error if some other fields have a unique constraint. If this is not the case, a duplicate entry will be created, which is also a mistake, and we want to avoid any of these situations. Once you have defined an ID, do not change it if unnecessary.
+
+Using resources other than those declared in the seeder's data file is also impossible because referencing any resource outside of the seeder's scope is not supported. The seeder is supposed to create all the required resources and use them to seed the custom configuration into the database.
+
+### Edge cases
+
+Some changes might affect other entries from the database, like the user entities. In this case, a custom migration script is required to resolve the changes necessary to the affected entries. Before any change in the seeder data, analyse the situation to determine if it is safe to perform. The seeder is not intended to resolve conflicts or update other data than the configuration it seeds.
+
+Deletion of existing seeded data via the seeder is not yet possible. Only the permissions (scopes) will be removed and recreated every time the seeder is executed because that is safe and does not cause conflicts with other entries. A custom script or manual action is required for any other data that must be eliminated.

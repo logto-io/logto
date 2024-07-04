@@ -5,7 +5,7 @@ import { Hooks } from '@logto/schemas';
 import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { type WebhookSeeder } from './ogcio-seeder.js';
-import { createItemWithoutId } from './queries.js';
+import { createOrUpdateItemWithoutId } from './queries.js';
 
 type SeedingWebhook = {
   tenant_id: string;
@@ -22,20 +22,17 @@ const createWebhook = async (
   tenantId: string,
   webhookToSeed: SeedingWebhook
 ) =>
-  createItemWithoutId({
+  createOrUpdateItemWithoutId({
     transaction,
     tenantId,
     toInsert: webhookToSeed,
     toLogFieldName: 'id',
-    whereClauses: [sql`id = ${webhookToSeed.id}`],
+    whereClauses: [sql`tenant_id = ${tenantId}`, sql`id = ${webhookToSeed.id}`],
     tableName: Hooks.table,
     columnToGet: 'id',
   });
 
-const fillWebhooks = (
-  inputHooks: WebhookSeeder[],
-  tenantId: string
-): SeedingWebhook[] => {
+const fillWebhooks = (inputHooks: WebhookSeeder[], tenantId: string): SeedingWebhook[] => {
   return inputHooks.map((hook) => ({
     tenant_id: tenantId,
     id: hook.id,
@@ -43,7 +40,7 @@ const fillWebhooks = (
     events: JSON.stringify(hook.events),
     config: JSON.stringify(hook.config),
     signing_key: hook.signing_key,
-    enabled: hook.enabled
+    enabled: hook.enabled,
   }));
 };
 

@@ -5,7 +5,7 @@ import { Applications } from '@logto/schemas';
 import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { type ApplicationSeeder } from './ogcio-seeder.js';
-import { createItem } from './queries.js';
+import { createOrUpdateItem } from './queries.js';
 
 type SeedingApplication = {
   id: string;
@@ -24,12 +24,12 @@ const createApplication = async (
   tenantId: string,
   appToSeed: SeedingApplication
 ) =>
-  createItem({
+  createOrUpdateItem({
     transaction,
     tenantId,
     toInsert: appToSeed,
     toLogFieldName: 'name',
-    whereClauses: [sql`name = ${appToSeed.name}`],
+    whereClauses: [sql`tenant_id = ${tenantId}`, sql`id = ${appToSeed.id}`],
     tableName: Applications.table,
   });
 

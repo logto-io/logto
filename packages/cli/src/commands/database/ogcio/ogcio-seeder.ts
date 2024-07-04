@@ -19,7 +19,7 @@ export type OgcioSeeder = {
 export type OrganizationSeeder = {
   name: string;
   description: string;
-  id?: string;
+  id: string;
 };
 
 export type OrganizationPermissionSeeder = {
@@ -27,18 +27,19 @@ export type OrganizationPermissionSeeder = {
 };
 
 export type OrganizationRoleSeeder = {
+  id: string;
   name: string;
   specific_permissions: string[];
   description: string;
 };
 
 export type ApplicationSeeder = {
+  id: string;
   name: string;
   description: string;
   type: string;
   redirect_uri: string | string[];
   logout_redirect_uri: string | string[];
-  id: string;
   secret: string;
   is_third_party?: boolean;
 };
@@ -105,6 +106,7 @@ export type ResourcePermissionSeeder = {
 };
 
 export type ResourceRoleSeeder = {
+  id: string;
   name: string;
   description: string;
   permissions: ScopePerResourceRoleSeeder[];

@@ -5,7 +5,7 @@ import { Connectors } from '@logto/schemas';
 import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { type ConnectorSeeder } from './ogcio-seeder.js';
-import { createItemWithoutId } from './queries.js';
+import { createOrUpdateItemWithoutId } from './queries.js';
 
 type SeedingConnector = {
   tenant_id: string;
@@ -21,12 +21,12 @@ const createConnector = async (
   tenantId: string,
   connectorToSeed: SeedingConnector
 ) =>
-  createItemWithoutId({
+  createOrUpdateItemWithoutId({
     transaction,
     tenantId,
     toInsert: connectorToSeed,
     toLogFieldName: 'id',
-    whereClauses: [sql`id = ${connectorToSeed.id}`],
+    whereClauses: [sql`tenant_id = ${tenantId}`, sql`id = ${connectorToSeed.id}`],
     tableName: Connectors.table,
     columnToGet: 'id',
   });

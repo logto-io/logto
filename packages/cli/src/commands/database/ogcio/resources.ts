@@ -6,19 +6,19 @@ import { Resources } from '@logto/schemas';
 import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { type ResourceSeeder } from './ogcio-seeder.js';
-import { createItem } from './queries.js';
+import { createOrUpdateItem } from './queries.js';
 
 const createResource = async (
   transaction: DatabaseTransactionConnection,
   tenantId: string,
   appToSeed: SeedingResource
 ) =>
-  createItem({
+  createOrUpdateItem({
     transaction,
     tenantId,
     toInsert: appToSeed,
     toLogFieldName: 'name',
-    whereClauses: [sql`indicator = ${appToSeed.indicator}`],
+    whereClauses: [sql`tenant_id = ${tenantId}`, sql`id = ${appToSeed.id}`],
     tableName: Resources.table,
   });
 
@@ -26,18 +26,14 @@ const setResourceId = async (
   element: SeedingResource,
   transaction: DatabaseTransactionConnection,
   tenantId: string
-): Promise<
-  Omit<SeedingResource, 'id'> & {
-    id: string;
-  }
-> => {
+): Promise<SeedingResource> => {
   const outputValue = await createResource(transaction, tenantId, element);
 
   return outputValue;
 };
 
 export type SeedingResource = {
-  id?: string;
+  id: string;
   name: string;
   indicator: string;
   is_default?: boolean;
@@ -45,6 +41,7 @@ export type SeedingResource = {
 };
 
 const fillResource = (resourceSeeder: ResourceSeeder): SeedingResource => ({
+  id: resourceSeeder.id,
   name: resourceSeeder.name,
   indicator: resourceSeeder.indicator,
   is_default: false,

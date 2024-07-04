@@ -195,8 +195,7 @@ async function handleSubmitRegister(
     // OGCIO
     await manageDefaultUserRole(
       user,
-      // @ts-expect-error: strange error in roles.findRoleByRoleName return type
-      roles.findRoleByRoleName,
+      roles.findRoleById,
       usersRoles.insertUsersRoles,
       organizations
     );
