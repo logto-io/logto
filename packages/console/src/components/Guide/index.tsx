@@ -22,10 +22,6 @@ export type GuideContextType = {
   endpoint?: string;
   redirectUris?: string[];
   postLogoutRedirectUris?: string[];
-  sampleUrls?: {
-    origin: string;
-    callback: string;
-  };
   audience?: string;
 };
 
@@ -48,7 +44,6 @@ export const GuideContext = createContext<GuideContextType>({
   redirectUris: [],
   postLogoutRedirectUris: [],
   isCompact: false,
-  sampleUrls: { origin: '', callback: '' },
   audience: '',
 });
 

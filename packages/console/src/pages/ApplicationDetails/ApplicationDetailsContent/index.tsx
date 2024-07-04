@@ -102,6 +102,8 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
   };
 
   const onCloseDrawer = () => {
+    // The guide drawer may have updated the application data
+    onApplicationUpdated();
     setIsReadmeOpen(false);
   };
 
