@@ -40,7 +40,7 @@ export default class ExperienceInteraction {
   /** The interaction event for the current interaction. */
   private interactionEvent?: InteractionEvent;
   /** The user verification record list for the current interaction. */
-  private readonly verificationRecords: Set<VerificationRecord>;
+  private readonly verificationRecords: Map<VerificationType, VerificationRecord>;
   /** The accountId of the user for the current interaction. Only available once the user is identified. */
   private accountId?: string;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
@@ -66,9 +66,12 @@ export default class ExperienceInteraction {
     this.accountId = accountId; // TODO: @simeng-li replace with userId
     this.profile = profile;
 
-    this.verificationRecords = new Set(
-      verificationRecords.map((record) => buildVerificationRecord(libraries, queries, record))
-    );
+    this.verificationRecords = new Map();
+
+    for (const record of verificationRecords) {
+      const instance = buildVerificationRecord(libraries, queries, record);
+      this.verificationRecords.set(instance.type, instance);
+    }
   }
 
   /** Set the interaction event for the current interaction */
@@ -88,6 +91,15 @@ export default class ExperienceInteraction {
       })
     );
 
+    // Throws an 409 error if the current session has already identified a different user
+    if (this.accountId) {
+      assertThat(
+        this.accountId === verificationRecord.verifiedUserId,
+        new RequestError({ code: 'session.identity_conflict', status: 409 })
+      );
+      return;
+    }
+
     this.accountId = verificationRecord.verifiedUserId;
   }
 
@@ -98,13 +110,7 @@ export default class ExperienceInteraction {
   public appendVerificationRecord(record: VerificationRecord) {
     const { type } = record;
 
-    const existingRecord = this.getVerificationRecordByType(type);
-
-    if (existingRecord) {
-      this.verificationRecords.delete(existingRecord);
-    }
-
-    this.verificationRecords.add(record);
+    this.verificationRecords.set(type, record);
   }
 
   public getVerificationRecordById(verificationId: string) {
@@ -128,7 +134,7 @@ export default class ExperienceInteraction {
     );
   }
 
-  /** Submit the current interaction result to the OIDC provider and clear the session */
+  /** Submit the current interaction result to the OIDC provider and clear the interaction data */
   public async submit() {
     // TODO: refine the error code
     assertThat(this.accountId, 'session.verification_session_not_found');
@@ -143,11 +149,7 @@ export default class ExperienceInteraction {
   }
 
   private get verificationRecordsArray() {
-    return Array.from(this.verificationRecords);
-  }
-
-  private getVerificationRecordByType(type: VerificationType) {
-    return this.verificationRecordsArray.find((record) => record.type === type);
+    return [...this.verificationRecords.values()];
   }
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */

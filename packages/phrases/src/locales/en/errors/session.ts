@@ -23,6 +23,8 @@ const session = {
   interaction_not_found:
     'Interaction session not found. Please go back and start the session again.',
   not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
+  identity_conflict:
+    'Identity mismatch detected. Please initiate a new session to proceed with a different identity.',
   mfa: {
     require_mfa_verification: 'Mfa verification is required to sign in.',
     mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',

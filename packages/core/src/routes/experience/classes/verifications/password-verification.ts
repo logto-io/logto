@@ -90,11 +90,13 @@ export class PasswordVerification implements VerificationRecord<VerificationType
   }
 
   toJson(): PasswordVerificationRecordData {
+    const { id, type, identifier, userId } = this;
+
     return {
-      id: this.id,
-      type: this.type,
-      identifier: this.identifier,
-      userId: this.userId,
+      id,
+      type,
+      identifier,
+      userId,
     };
   }
 }
