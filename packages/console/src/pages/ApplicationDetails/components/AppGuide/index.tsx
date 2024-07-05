@@ -32,10 +32,6 @@ function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
             redirectUris: app.oidcClientMetadata.redirectUris,
             postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
             isCompact: Boolean(isCompact),
-            sampleUrls: {
-              origin: 'http://localhost:3001/',
-              callback: 'http://localhost:3001/callback',
-            },
           }
       ) satisfies GuideContextType | undefined,
     [guide, app, tenantEndpoint?.href, applyCustomDomain, isCompact]
