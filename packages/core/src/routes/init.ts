@@ -24,6 +24,7 @@ import connectorRoutes from './connector/index.js';
 import customPhraseRoutes from './custom-phrase.js';
 import dashboardRoutes from './dashboard.js';
 import domainRoutes from './domain.js';
+import experienceApiRoutes from './experience/index.js';
 import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
@@ -46,7 +47,13 @@ import wellKnownRoutes from './well-known.js';
 
 const createRouters = (tenant: TenantContext) => {
   const interactionRouter: AnonymousRouter = new Router();
+  /** @deprecated */
   interactionRoutes(interactionRouter, tenant);
+
+  const experienceRouter: AnonymousRouter = new Router();
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    experienceApiRoutes(experienceRouter, tenant);
+  }
 
   const managementRouter: ManagementApiRouter = new Router();
   managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
@@ -91,7 +98,7 @@ const createRouters = (tenant: TenantContext) => {
   // The swagger.json should contain all API routers.
   swaggerRoutes(anonymousRouter, [interactionRouter, managementRouter, anonymousRouter]);
 
-  return [interactionRouter, managementRouter, anonymousRouter];
+  return [experienceRouter, interactionRouter, managementRouter, anonymousRouter];
 };
 
 export default function initApis(tenant: TenantContext): Koa {
