@@ -43,7 +43,7 @@ export default function verificationCodeRoutes<T extends WithLogContext>(
         interactionEvent
       );
 
-      ctx.experienceInteraction.appendVerificationRecord(codeVerification);
+      ctx.experienceInteraction.setVerificationRecord(codeVerification);
 
       await ctx.experienceInteraction.save();
 
