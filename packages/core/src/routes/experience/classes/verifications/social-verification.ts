@@ -8,6 +8,7 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
   createSocialAuthorizationUrl,
@@ -16,6 +17,7 @@ import {
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { type VerificationRecord } from './verification-record.js';
 
@@ -28,7 +30,6 @@ export type SocialVerificationRecordData = {
    * The social identity returned by the connector.
    */
   socialUserInfo?: SocialUserInfo;
-  userId?: string;
 };
 
 export const socialVerificationRecordDataGuard = z.object({
@@ -36,7 +37,6 @@ export const socialVerificationRecordDataGuard = z.object({
   connectorId: z.string(),
   type: z.literal(VerificationType.Social),
   socialUserInfo: socialUserInfoGuard.optional(),
-  userId: z.string().optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
 
 export class SocialVerification implements VerificationRecord<VerificationType.Social> {
@@ -56,24 +56,16 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   public readonly connectorId: string;
   public socialUserInfo?: SocialUserInfo;
 
-  /**
-   * The userId of the user that has been verified by the social identity.
-   * @deprecated will be removed in the coming PR
-   */
-  public userId?: string;
-
   constructor(
     private readonly libraries: Libraries,
     private readonly queries: Queries,
     data: SocialVerificationRecordData
   ) {
-    const { id, connectorId, socialUserInfo, userId } =
-      socialVerificationRecordDataGuard.parse(data);
+    const { id, connectorId, socialUserInfo } = socialVerificationRecordDataGuard.parse(data);
 
     this.id = id;
     this.connectorId = connectorId;
     this.socialUserInfo = socialUserInfo;
-    this.userId = userId;
   }
 
   /**
@@ -81,10 +73,6 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
    */
   get isVerified() {
     return Boolean(this.socialUserInfo);
-  }
-
-  get verifiedUserId() {
-    return this.userId;
   }
 
   /**
@@ -136,12 +124,49 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
     );
 
     this.socialUserInfo = socialUserInfo;
-
-    const user = await this.findUserBySocialIdentity();
-    this.userId = user?.id;
   }
 
-  async findUserBySocialIdentity(): Promise<User | undefined> {
+  /**
+   * Identify the user by the social identity.
+   * If the user is not found, find the related user by the social identity and throw an error.
+   */
+  async identifyUser(): Promise<User> {
+    assertThat(
+      this.isVerified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const user = await this.findUserBySocialIdentity();
+
+    if (!user) {
+      const relatedUser = await this.findRelatedUserBySocialIdentity();
+
+      throw new RequestError(
+        {
+          code: 'user.identity_not_exist',
+          status: 422,
+        },
+        {
+          ...(relatedUser && { relatedUser: relatedUser[0] }),
+        }
+      );
+    }
+
+    return user;
+  }
+
+  toJson(): SocialVerificationRecordData {
+    const { id, connectorId, type, socialUserInfo } = this;
+
+    return {
+      id,
+      connectorId,
+      type,
+      socialUserInfo,
+    };
+  }
+
+  private async findUserBySocialIdentity(): Promise<User | undefined> {
     const { socials } = this.libraries;
     const {
       users: { findUserByIdentity },
@@ -163,7 +188,9 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   /**
    * Find the related user using the social identity's verified email or phone number.
    */
-  async findRelatedUserBySocialIdentity(): ReturnType<typeof socials.findSocialRelatedUser> {
+  private async findRelatedUserBySocialIdentity(): ReturnType<
+    typeof socials.findSocialRelatedUser
+  > {
     const { socials } = this.libraries;
 
     if (!this.socialUserInfo) {
@@ -171,16 +198,5 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
     }
 
     return socials.findSocialRelatedUser(this.socialUserInfo);
-  }
-
-  toJson(): SocialVerificationRecordData {
-    const { id, connectorId, socialUserInfo, type } = this;
-
-    return {
-      id,
-      connectorId,
-      type,
-      socialUserInfo,
-    };
   }
 }

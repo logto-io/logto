@@ -14,8 +14,6 @@ export abstract class VerificationRecord<
   abstract readonly type: T;
 
   abstract get isVerified(): boolean;
-  /** @deprecated will be removed in the coming PR */
-  abstract get verifiedUserId(): string | undefined;
 
   abstract toJson(): Json;
 }
