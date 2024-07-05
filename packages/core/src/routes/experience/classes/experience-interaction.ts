@@ -90,6 +90,7 @@ export default class ExperienceInteraction {
     );
 
     // Throws an 404 error if the user is not found by the given verification record
+    // TODO: refactor using real-time user verification. Static verifiedUserId will be removed.
     assertThat(
       verificationRecord.verifiedUserId,
       new RequestError({
