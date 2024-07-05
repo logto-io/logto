@@ -1,4 +1,9 @@
-import { type IdentificationApiPayload, type PasswordVerificationPayload } from '@logto/schemas';
+import {
+  type IdentificationApiPayload,
+  type InteractionEvent,
+  type PasswordVerificationPayload,
+  type VerificationCodeIdentifier,
+} from '@logto/schemas';
 
 import MockClient from '#src/client/index.js';
 
@@ -37,6 +42,31 @@ export class ExperienceClient extends MockClient {
   public async verifyPassword(payload: PasswordVerificationPayload) {
     return api
       .post(`${experienceRoutes.verification}/password`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
+  }
+
+  public async sendVerificationCode(payload: {
+    identifier: VerificationCodeIdentifier;
+    interactionEvent: InteractionEvent;
+  }) {
+    return api
+      .post(`${experienceRoutes.verification}/verification-code`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
+  }
+
+  public async verifyVerificationCode(payload: {
+    identifier: VerificationCodeIdentifier;
+    verificationId: string;
+    code: string;
+  }) {
+    return api
+      .post(`${experienceRoutes.verification}/verification-code/verify`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
       })
