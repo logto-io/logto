@@ -16,6 +16,7 @@ import {
   accessTokenPayloadTypeDefinition,
   clientCredentialsPayloadTypeDefinition,
   jwtCustomizerUserContextTypeDefinition,
+  jwtCustomizerGrantContextTypeDefinition,
 } from '@/pages/CustomizeJwtDetails/utils/type-definitions';
 
 import * as tabContentStyles from '../index.module.scss';
@@ -71,6 +72,24 @@ function InstructionTab({ isActive }: Props) {
             language="typescript"
             className={styles.sampleCode}
             value={jwtCustomizerUserContextTypeDefinition}
+            height="400px"
+            theme="logto-dark"
+            options={typeDefinitionCodeEditorOptions}
+          />
+        </GuideCard>
+      )}
+      {tokenType === LogtoJwtTokenKeyType.AccessToken && (
+        <GuideCard
+          name={CardType.GrantData}
+          isExpanded={expendCard === CardType.GrantData}
+          setExpanded={(expand) => {
+            setExpendCard(expand ? CardType.GrantData : undefined);
+          }}
+        >
+          <Editor
+            language="typescript"
+            className={styles.sampleCode}
+            value={jwtCustomizerGrantContextTypeDefinition}
             height="400px"
             theme="logto-dark"
             options={typeDefinitionCodeEditorOptions}

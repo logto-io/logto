@@ -1,7 +1,9 @@
-import type {
-  AccessTokenPayload,
-  ClientCredentialsPayload,
-  JwtCustomizerUserContext,
+import {
+  GrantType,
+  type AccessTokenPayload,
+  type ClientCredentialsPayload,
+  type JwtCustomizerUserContext,
+  type JwtCustomizerGrantContext,
 } from '@logto/schemas';
 import { type EditorProps } from '@monaco-editor/react';
 
@@ -27,6 +29,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
  */
 declare type Context = {
   user: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext};
+  grant?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext};
 }
 
 declare type Payload = {
@@ -199,8 +202,16 @@ const defaultUserContext: Partial<JwtCustomizerUserContext> = {
   organizationRoles: [],
 };
 
+const defaultGrantContext: Partial<JwtCustomizerGrantContext> = {
+  type: GrantType.TokenExchange,
+  subjectTokenContext: {
+    foo: 'bar',
+  },
+};
+
 export const defaultUserTokenContextData = {
   user: defaultUserContext,
+  grant: defaultGrantContext,
 };
 
 export const accessTokenPayloadTestModel: ModelSettings = {
@@ -223,6 +234,6 @@ export const userContextTestModel: ModelSettings = {
   language: 'json',
   icon: <UserFileIcon />,
   name: 'user-token-context.json',
-  title: 'User data',
+  title: 'Context data',
   defaultValue: JSON.stringify(defaultUserTokenContextData, null, 2),
 };
