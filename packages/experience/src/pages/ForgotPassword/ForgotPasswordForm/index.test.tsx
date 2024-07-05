@@ -29,6 +29,7 @@ describe('ForgotPasswordForm', () => {
   const email = 'foo@logto.io';
   const countryCode = '86';
   const phone = '13911111111';
+  const originalLocation = window.location;
 
   const renderForm = (defaultType: VerificationCodeIdentifier, defaultValue?: string) =>
     renderWithPageContext(
@@ -38,6 +39,13 @@ describe('ForgotPasswordForm', () => {
         defaultValue={defaultValue}
       />
     );
+
+  afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    Object.defineProperty(window, 'location', {
+      value: originalLocation,
+    });
+  });
 
   describe.each([
     { identifier: SignInIdentifier.Email, value: email },
