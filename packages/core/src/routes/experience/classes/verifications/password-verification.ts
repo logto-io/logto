@@ -20,7 +20,7 @@ export type PasswordVerificationRecordData = {
   id: string;
   type: VerificationType.Password;
   identifier: InteractionIdentifier;
-  /** The userId of the user that has been verified. */
+  /** The unique identifier of the user that has been verified. */
   userId?: string;
 };
 
@@ -32,7 +32,7 @@ export const passwordVerificationRecordDataGuard = z.object({
 }) satisfies ToZodObject<PasswordVerificationRecordData>;
 
 export class PasswordVerification implements VerificationRecord<VerificationType.Password> {
-  /** Factory method to create a new PasswordVerification record using the given identifier */
+  /** Factory method to create a new `PasswordVerification` record using an identifier */
   static create(libraries: Libraries, queries: Queries, identifier: InteractionIdentifier) {
     return new PasswordVerification(libraries, queries, {
       id: generateStandardId(),

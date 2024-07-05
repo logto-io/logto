@@ -28,7 +28,7 @@ export default function passwordVerificationRoutes<T extends WithLogContext>(
 
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
       await passwordVerification.verify(password);
-      ctx.experienceInteraction.appendVerificationRecord(passwordVerification);
+      ctx.experienceInteraction.setVerificationRecord(passwordVerification);
       await ctx.experienceInteraction.save();
 
       ctx.body = { verificationId: passwordVerification.id };

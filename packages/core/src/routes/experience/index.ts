@@ -14,10 +14,8 @@ import { identificationApiPayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import assertThat from '#src/utils/assert-that.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
@@ -53,15 +51,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       ctx.experienceInteraction.setInteractionEvent(interactionEvent);
 
-      const verificationRecord =
-        ctx.experienceInteraction.getVerificationRecordById(verificationId);
-
-      assertThat(
-        verificationRecord,
-        new RequestError({ code: 'session.verification_session_not_found', status: 404 })
-      );
-
-      ctx.experienceInteraction.identifyUser(verificationRecord);
+      ctx.experienceInteraction.identifyUser(verificationId);
 
       await ctx.experienceInteraction.save();
 

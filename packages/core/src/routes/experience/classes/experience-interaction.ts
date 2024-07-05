@@ -81,7 +81,14 @@ export default class ExperienceInteraction {
   }
 
   /** Set the verified `accountId` of the current interaction from the verification record */
-  public identifyUser(verificationRecord: VerificationRecord) {
+  public identifyUser(verificationId: string) {
+    const verificationRecord = this.getVerificationRecordById(verificationId);
+
+    assertThat(
+      verificationRecord,
+      new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+    );
+
     // Throws an 404 error if the user is not found by the given verification record
     assertThat(
       verificationRecord.verifiedUserId,
@@ -107,7 +114,7 @@ export default class ExperienceInteraction {
    * Append a new verification record to the current interaction.
    * If a record with the same type already exists, it will be replaced.
    */
-  public appendVerificationRecord(record: VerificationRecord) {
+  public setVerificationRecord(record: VerificationRecord) {
     const { type } = record;
 
     this.verificationRecords.set(type, record);
@@ -153,7 +160,7 @@ export default class ExperienceInteraction {
   }
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
-  private toJson() {
+  public toJson() {
     return {
       event: this.interactionEvent,
       accountId: this.accountId,

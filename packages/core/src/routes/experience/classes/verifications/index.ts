@@ -20,7 +20,7 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
 ]);
 
 /**
- * The factory method to build a new VerificationRecord instance based on the provided VerificationRecordData.
+ * The factory method to build a new `VerificationRecord` instance based on the provided `VerificationRecordData`.
  */
 export const buildVerificationRecord = <T extends VerificationRecordData>(
   libraries: Libraries,
