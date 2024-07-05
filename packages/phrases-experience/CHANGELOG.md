@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.7.0
+
+### Minor Changes
+
+- 061a30a87: support agree to terms polices for Logto’s sign-in experiences
+
+  - Automatic: Users automatically agree to terms by continuing to use the service
+  - ManualRegistrationOnly: Users must agree to terms by checking a box during registration, and don't need to agree when signing in
+  - Manual: Users must agree to terms by checking a box during registration or signing in
+
 ## 1.6.1
 
 ### Patch Changes

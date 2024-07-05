@@ -1,5 +1,28 @@
 # Change Log
 
+## 1.7.0
+
+### Minor Changes
+
+- 061a30a87: support agree to terms polices for Logto’s sign-in experiences
+
+  - Automatic: Users automatically agree to terms by continuing to use the service
+  - ManualRegistrationOnly: Users must agree to terms by checking a box during registration, and don't need to agree when signing in
+  - Manual: Users must agree to terms by checking a box during registration or signing in
+
+- 50c35a214: support Google One Tap
+
+  - Conditionally load Google One Tap script if it's enabled in the config.
+  - Support callback from Google One Tap.
+
+### Patch Changes
+
+- 136320584: allow skipping manual account linking during sign-in
+
+  You can find this configuration in Console -> Sign-in experience -> Sign-up and sign-in -> Social sign-in -> Automatic account linking.
+
+  When switched on, if a user signs in with a social identity that is new to the system, and there is exactly one existing account with the same identifier (e.g., email), Logto will automatically link the account with the social identity instead of prompting the user for account linking.
+
 ## 1.6.2
 
 ### Patch Changes
