@@ -12,7 +12,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
  */
 function useGlobalRedirectTo() {
   const { setLoading } = useContext(PageContext);
-  const { clearAllIdentifierInputValuesSilently } = useContext(UserInteractionContext);
+  const { clearInteractionContextSessionStorage } = useContext(UserInteractionContext);
 
   const redirectTo = useCallback(
     (url: string | URL) => {
@@ -21,10 +21,10 @@ function useGlobalRedirectTo() {
        * Clear all identifier input values silently otherwise pages relying on the identifier input values
        * will render an error page before the redirection.
        */
-      clearAllIdentifierInputValuesSilently();
+      clearInteractionContextSessionStorage();
       window.location.replace(url);
     },
-    [clearAllIdentifierInputValuesSilently, setLoading]
+    [clearInteractionContextSessionStorage, setLoading]
   );
 
   return redirectTo;

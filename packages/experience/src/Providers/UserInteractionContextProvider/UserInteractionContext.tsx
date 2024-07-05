@@ -28,7 +28,7 @@ export type UserInteractionContextType = {
    * the application page to avoid triggering any side effects that depends on the
    * identifier input values.
    */
-  clearAllIdentifierInputValuesSilently: () => void;
+  clearInteractionContextSessionStorage: () => void;
 };
 
 export default createContext<UserInteractionContextType>({
@@ -41,5 +41,5 @@ export default createContext<UserInteractionContextType>({
   setIdentifierInputValue: noop,
   forgotPasswordIdentifierInputValue: undefined,
   setForgotPasswordIdentifierInputValue: noop,
-  clearAllIdentifierInputValuesSilently: noop,
+  clearInteractionContextSessionStorage: noop,
 });

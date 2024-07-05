@@ -76,7 +76,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
     [ssoConnectors]
   );
 
-  const clearAllIdentifierInputValuesSilently = useCallback(() => {
+  const clearInteractionContextSessionStorage = useCallback(() => {
     remove(StorageKeys.IdentifierInputValue);
     remove(StorageKeys.ForgotPasswordIdentifierInputValue);
   }, [remove]);
@@ -92,7 +92,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       setIdentifierInputValue,
       forgotPasswordIdentifierInputValue,
       setForgotPasswordIdentifierInputValue,
-      clearAllIdentifierInputValuesSilently,
+      clearInteractionContextSessionStorage,
     }),
     [
       ssoEmail,
@@ -100,7 +100,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       domainFilteredConnectors,
       identifierInputValue,
       forgotPasswordIdentifierInputValue,
-      clearAllIdentifierInputValuesSilently,
+      clearInteractionContextSessionStorage,
     ]
   );
 
