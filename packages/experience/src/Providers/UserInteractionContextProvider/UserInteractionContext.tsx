@@ -12,9 +12,23 @@ export type UserInteractionContextType = {
   // The sso connectors that are enabled for the current domain
   ssoConnectors: SsoConnectorMetadata[];
   setSsoConnectors: React.Dispatch<React.SetStateAction<SsoConnectorMetadata[]>>;
+  /**
+   * The cached identifier input value that the user has inputted when signing in.
+   * The value will be used to pre-fill the identifier input field in sign-in pages.
+   */
   identifierInputValue?: IdentifierInputValue;
+  /**
+   * This method is used to cache the identifier input value when signing in.
+   */
   setIdentifierInputValue: React.Dispatch<React.SetStateAction<IdentifierInputValue | undefined>>;
+  /**
+   * The cached identifier input value that used in the 'ForgotPassword' flow.
+   * The value will be used to pre-fill the identifier input field in the `ForgotPassword` page.
+   */
   forgotPasswordIdentifierInputValue?: IdentifierInputValue;
+  /**
+   * This method is used to cache the identifier input values for the 'ForgotPassword' flow.
+   */
   setForgotPasswordIdentifierInputValue: React.Dispatch<
     React.SetStateAction<IdentifierInputValue | undefined>
   >;

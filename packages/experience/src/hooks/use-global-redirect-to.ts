@@ -7,7 +7,6 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
  * This hook provides a function that process the app redirection after user successfully signs in.
  * Use window.location.replace to handle the redirection.
  * Set the global loading state to true before redirecting.
- * Clear the user identifier user input value from session storage before redirecting.
  * This is to prevent the user from interacting with the app while the redirection is in progress.
  */
 function useGlobalRedirectTo() {
@@ -18,8 +17,8 @@ function useGlobalRedirectTo() {
     (url: string | URL) => {
       setLoading(true);
       /**
-       * Clear all identifier input values silently otherwise pages relying on the identifier input values
-       * will render an error page before the redirection.
+       * Clear all identifier input values from the storage once the interaction is submitted.
+       * The Identifier cache should be session-isolated, so it should be cleared after the interaction is completed.
        */
       clearInteractionContextSessionStorage();
       window.location.replace(url);
