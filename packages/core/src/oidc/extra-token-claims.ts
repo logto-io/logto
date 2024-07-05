@@ -142,6 +142,11 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         (await libraries.jwtCustomizers.getUserContext(token.accountId))
     );
 
+    const subjectToken =
+      isTokenClientCredentials || token.gty !== GrantType.TokenExchange
+        ? undefined
+        : await trySafe(async () => queries.subjectTokens.findSubjectToken(token.grantId));
+
     const payload: CustomJwtFetcher = {
       script,
       environmentVariables,
@@ -152,8 +157,18 @@ export const getExtraTokenClaimsForJwtCustomization = async (
             tokenType: LogtoJwtTokenKeyType.AccessToken,
             // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
             // `context` parameter is only eligible for user's access token for now.
-            // eslint-disable-next-line no-restricted-syntax
-            context: { user: logtoUserInfo as Record<string, Json> },
+            context: {
+              // eslint-disable-next-line no-restricted-syntax
+              user: logtoUserInfo as Record<string, Json>,
+              ...conditional(
+                subjectToken && {
+                  grant: {
+                    type: GrantType.TokenExchange,
+                    subjectTokenContext: subjectToken.context,
+                  },
+                }
+              ),
+            },
           }),
     };
 
