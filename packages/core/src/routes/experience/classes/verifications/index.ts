@@ -14,8 +14,16 @@ import {
   passwordVerificationRecordDataGuard,
   type PasswordVerificationRecordData,
 } from './password-verification.js';
+import {
+  SocialVerification,
+  socialVerificationRecordDataGuard,
+  type SocialVerificationRecordData,
+} from './social-verification.js';
 
-type VerificationRecordData = PasswordVerificationRecordData | CodeVerificationRecordData;
+type VerificationRecordData =
+  | PasswordVerificationRecordData
+  | CodeVerificationRecordData
+  | SocialVerificationRecordData;
 
 /**
  * Union type for all verification record types
@@ -25,11 +33,12 @@ type VerificationRecordData = PasswordVerificationRecordData | CodeVerificationR
  * This union type is used to narrow down the type of the verification record.
  * Used in the ExperienceInteraction class to store and manage all the verification records. With a given verification type, we can narrow down the type of the verification record.
  */
-export type VerificationRecord = PasswordVerification | CodeVerification;
+export type VerificationRecord = PasswordVerification | CodeVerification | SocialVerification;
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
   codeVerificationRecordDataGuard,
+  socialVerificationRecordDataGuard,
 ]);
 
 /**
@@ -46,6 +55,9 @@ export const buildVerificationRecord = (
     }
     case VerificationType.VerificationCode: {
       return new CodeVerification(libraries, queries, data);
+    }
+    case VerificationType.Social: {
+      return new SocialVerification(libraries, queries, data);
     }
   }
 };

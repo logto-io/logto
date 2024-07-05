@@ -72,4 +72,34 @@ export class ExperienceClient extends MockClient {
       })
       .json<{ verificationId: string }>();
   }
+
+  public async getSocialAuthorizationUri(
+    connectorId: string,
+    payload: {
+      redirectUri: string;
+      state: string;
+    }
+  ) {
+    return api
+      .post(`${experienceRoutes.verification}/social/${connectorId}/authorization-uri`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ authorizationUri: string; verificationId: string }>();
+  }
+
+  public async verifySocialAuthorization(
+    connectorId: string,
+    payload: {
+      verificationId: string;
+      connectorData: Record<string, unknown>;
+    }
+  ) {
+    return api
+      .post(`${experienceRoutes.verification}/social/${connectorId}/verify`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
+  }
 }

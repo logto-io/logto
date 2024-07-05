@@ -57,6 +57,7 @@ export enum VerificationType {
   Password = 'Password',
   VerificationCode = 'VerificationCode',
   Social = 'Social',
+  EnterpriseSso = 'EnterpriseSso',
   TOTP = 'Totp',
   WebAuthn = 'WebAuthn',
   BackupCode = 'BackupCode',
@@ -64,11 +65,34 @@ export enum VerificationType {
 
 // REMARK: API payload guard
 
+/** Payload type for `POST /api/experience/verification/social/:connectorId/authorization-uri`. */
+export type SocialAuthorizationUrlPayload = {
+  state: string;
+  redirectUri: string;
+};
+export const socialAuthorizationUrlPayloadGuard = z.object({
+  state: z.string(),
+  redirectUri: z.string(),
+}) satisfies ToZodObject<SocialAuthorizationUrlPayload>;
+
+/** Payload type for `POST /api/experience/verification/social/:connectorId/verify`. */
+export type SocialVerificationCallbackPayload = {
+  /** The callback data from the social connector. */
+  connectorData: Record<string, unknown>;
+  /**  The verification ID returned from the authorization URI. */
+  verificationId: string;
+};
+export const socialVerificationCallbackPayloadGuard = z.object({
+  connectorData: jsonObjectGuard,
+  verificationId: z.string(),
+}) satisfies ToZodObject<SocialVerificationCallbackPayload>;
+
 /** Payload type for `POST /api/experience/verification/password`. */
 export type PasswordVerificationPayload = {
   identifier: InteractionIdentifier;
   password: string;
 };
+
 export const passwordVerificationPayloadGuard = z.object({
   identifier: interactionIdentifierGuard,
   password: z.string().min(1),
@@ -85,7 +109,7 @@ export const identificationApiPayloadGuard = z.object({
   verificationId: z.string(),
 }) satisfies ToZodObject<IdentificationApiPayload>;
 
-// ====== Experience API payload guards and type definitions end ======
+// ====== Experience API payload guard and types definitions end ======
 
 /**
  * Legacy interaction identifier payload guard
