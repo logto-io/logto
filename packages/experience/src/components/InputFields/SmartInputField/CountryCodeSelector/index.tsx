@@ -40,7 +40,7 @@ const CountryCodeSelector = (
   return (
     <div
       ref={ref}
-      className={classNames(styles.countryCodeSelector, className)}
+      className={classNames(styles.countryCodeSelector, isVisible && styles.visible, className)}
       role="button"
       tabIndex={isVisible ? 0 : -1}
       onClick={showDropDown}

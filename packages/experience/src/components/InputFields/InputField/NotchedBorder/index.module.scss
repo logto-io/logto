@@ -1,0 +1,156 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  .border,
+  .outline {
+    text-align: left;
+    position: absolute;
+    inset: -8px 0 0;
+    border: _.border(var(--color-line-border));
+    border-radius: var(--radius);
+    pointer-events: none;
+    display: block;
+
+    legend {
+      display: inline-block;
+      visibility: hidden;
+      padding: 0;
+      // fix to the label font height to keep space for the input container
+      height: 20px;
+      // Set to 0 to avoid the empty space in the top border
+      width: 0;
+
+      span {
+        padding: 0 _.unit(1);
+        opacity: 0%;
+        visibility: hidden;
+        display: inline-block;
+        font: var(--font-body-3);
+      }
+    }
+  }
+
+  .outline {
+    display: none;
+    inset: -9px -2px -2px;
+    border-radius: 10px;
+
+    legend {
+      // Adjust to let the top border notched to fit the floating label
+      margin-left: -0.5px;
+    }
+  }
+
+  .label {
+    position: absolute;
+    left: _.unit(4);
+    font: var(--font-body-1);
+    color: var(--color-type-secondary);
+    pointer-events: none;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: 0.2s ease-out;
+    transition-property: position, font, top;
+    background-color: transparent;
+    z-index: 1;
+  }
+
+  &.active {
+    .border {
+      border: _.border(var(--color-brand-default));
+
+      legend {
+        visibility: visible;
+        width: auto;
+      }
+    }
+
+    .label {
+      top: 0;
+      left: _.unit(3);
+      font: var(--font-body-3);
+      color: var(--color-brand-default);
+      padding: 0 _.unit(1);
+    }
+  }
+
+
+  &.danger {
+    .border {
+      border: _.border(var(--color-danger-default));
+    }
+
+    .label {
+      color: var(--color-danger-default);
+    }
+  }
+
+  &.danger:not(.active) {
+    .border legend {
+      width: 0;
+    }
+  }
+
+  &.active.noLabel {
+    .border legend {
+      width: 0;
+    }
+  }
+}
+
+:global(body.desktop) {
+  .container {
+    .label {
+      font: var(--font-body-2);
+    }
+
+    &.active {
+      .label {
+        font: var(--font-body-3);
+      }
+    }
+
+    &.focused {
+      .outline {
+        display: block;
+        border: 3px outset var(--color-overlay-brand-focused);
+
+        legend {
+          visibility: visible;
+          width: auto;
+        }
+      }
+
+
+      &.danger {
+        .outline {
+          border-color: var(--color-overlay-danger-focused);
+        }
+      }
+
+      &.danger:not(.active) {
+        .border legend {
+          width: 0;
+        }
+
+        .outline {
+          display: none;
+
+          legend {
+            width: 0;
+          }
+        }
+      }
+
+      &.active.noLabel {
+        .outline legend {
+          width: 0;
+        }
+      }
+    }
+  }
+}

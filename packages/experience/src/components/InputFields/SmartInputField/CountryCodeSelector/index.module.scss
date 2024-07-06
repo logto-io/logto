@@ -14,6 +14,14 @@
   @include _.flex-row;
   overflow: hidden;
   white-space: nowrap;
+  opacity: 0%;
+  // Disable pointer events to avoid the focus on the country code selector when clicking on the input
+  pointer-events: none;
+
+  &.visible {
+    opacity: 100%;
+    pointer-events: auto;
+  }
 
   &:focus-visible {
     border: _.border(var(--color-brand-default));
