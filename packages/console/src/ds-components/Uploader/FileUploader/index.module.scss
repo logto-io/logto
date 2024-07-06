@@ -4,6 +4,9 @@
   border: 1px dashed var(--color-border);
   border-radius: 8px;
   padding: _.unit(3.25);
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
 
   > input {
     display: none;
@@ -18,6 +21,9 @@
       width: 20px;
       height: 20px;
       color: var(--color-text-secondary);
+      transition-property: color;
+      transition-timing-function: ease-in-out;
+      transition-duration: 0.2s;
     }
 
     .uploadingIcon {
@@ -60,4 +66,3 @@
     border-color: var(--color-error);
   }
 }
-
