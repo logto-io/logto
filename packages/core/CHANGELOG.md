@@ -1,5 +1,168 @@
 # Change Log
 
+## 1.18.0
+
+### Minor Changes
+
+- 942780fcf: support Google One Tap
+
+  - core: `GET /api/.well-known/sign-in-exp` now returns `googleOneTap` field with the configuration when available
+  - core: add Google Sign-In (GSI) url to the security headers
+  - core: verify Google One Tap CSRF token in `verifySocialIdentity()`
+  - phrases: add Google One Tap phrases
+  - schemas: migrate sign-in experience types from core to schemas
+
+- 754d0e134: pagination is now optional for `GET /api/organizations/:id/users/:userId/roles`
+
+  The default pagination is now removed. This isn't considered a breaking change, but we marked it as minor to get your attention.
+
+- 87615d58c: support machine-to-machine apps for organizations
+
+  This feature allows machine-to-machine apps to be associated with organizations, and be assigned with organization roles.
+
+  ### Console
+
+  - Add a new "machine-to-machine" type to organization roles. All existing roles are now "user" type.
+  - You can manage machine-to-machine apps in the organization details page -> Machine-to-machine apps section.
+  - You can view the associated organizations in the machine-to-machine app details page.
+
+  ### OpenID Connect grant
+
+  The `client_credentials` grant type is now supported for organizations. You can use this grant type to obtain an access token for an organization.
+
+  ### Management API
+
+  A set of new endpoints are added to the Management API:
+
+  - `/api/organizations/{id}/applications` to manage machine-to-machine apps.
+  - `/api/organizations/{id}/applications/{applicationId}` to manage a specific machine-to-machine app in an organization.
+  - `/api/applications/{id}/organizations` to view the associated organizations of a machine-to-machine app.
+
+- 061a30a87: support agree to terms polices for Logto’s sign-in experiences
+
+  - Automatic: Users automatically agree to terms by continuing to use the service
+  - ManualRegistrationOnly: Users must agree to terms by checking a box during registration, and don't need to agree when signing in
+  - Manual: Users must agree to terms by checking a box during registration or signing in
+
+- ef21c7a99: support per-organization multi-factor authentication requirement
+
+  An organization can now require its member to have multi-factor authentication (MFA) configured. If an organization has this requirement and a member does not have MFA configured, the member will not be able to fetch the organization access token.
+
+- b52609a1e: add `hasPassword` to custom JWT user context
+- efa884c40: feature: just-in-time user provisioning for organizations
+
+  This feature allows users to automatically join the organization and be assigned roles upon their first sign-in through some authentication methods. You can set requirements to meet for just-in-time provisioning.
+
+  ### Email domains
+
+  New users will automatically join organizations with just-in-time provisioning if they:
+
+  - Sign up with verified email addresses, or;
+  - Use social sign-in with verified email addresses.
+
+  This applies to organizations that have the same email domain configured.
+
+  To enable this feature, you can add email domain via the Management API or the Logto Console:
+
+  - We added the following new endpoints to the Management API:
+    - `GET /organizations/{organizationId}/jit/email-domains`
+    - `POST /organizations/{organizationId}/jit/email-domains`
+    - `PUT /organizations/{organizationId}/jit/email-domains`
+    - `DELETE /organizations/{organizationId}/jit/email-domains/{emailDomain}`
+  - In the Logto Console, you can manage email domains in the organization details page -> "Just-in-time provisioning" section.
+
+  ### SSO connectors
+
+  New or existing users signing in through enterprise SSO for the first time will automatically join organizations that have just-in-time provisioning configured for the SSO connector.
+
+  To enable this feature, you can add SSO connectors via the Management API or the Logto Console:
+
+  - We added the following new endpoints to the Management API:
+    - `GET /organizations/{organizationId}/jit/sso-connectors`
+    - `POST /organizations/{organizationId}/jit/sso-connectors`
+    - `PUT /organizations/{organizationId}/jit/sso-connectors`
+    - `DELETE /organizations/{organizationId}/jit/sso-connectors/{ssoConnectorId}`
+  - In the Logto Console, you can manage SSO connectors in the organization details page -> "Just-in-time provisioning" section.
+
+  ### Default organization roles
+
+  You can also configure the default roles for users provisioned via this feature. The default roles will be assigned to the user when they are provisioned.
+
+  To enable this feature, you can set the default roles via the Management API or the Logto Console:
+
+  - We added the following new endpoints to the Management API:
+    - `GET /organizations/{organizationId}/jit/roles`
+    - `POST /organizations/{organizationId}/jit/roles`
+    - `PUT /organizations/{organizationId}/jit/roles`
+    - `DELETE /organizations/{organizationId}/jit/roles/{organizationRoleId}`
+  - In the Logto Console, you can manage default roles in the organization details page -> "Just-in-time provisioning" section.
+
+- b50ba0b7e: enable backchannel logout support
+
+  Enable the support of [OpenID Connect Back-Channel Logout 1.0](https://openid.net/specs/openid-connect-backchannel-1_0.html).
+
+  To register for backchannel logout, navigate to the application details page in the Logto Console and locate the "Backchannel logout" section. Enter the backchannel logout URL of your RP and click "Save".
+
+  You can also enable session requirements for backchannel logout. When enabled, Logto will include the `sid` claim in the logout token.
+
+  For programmatic registration, you can set the `backchannelLogoutUri` and `backchannelLogoutSessionRequired` properties in the application `oidcClientMetadata` object.
+
+### Patch Changes
+
+- d60f6ce48: build `operationId` for Management API in OpenAPI response (credit to @mostafa)
+
+  As per [the specification](https://swagger.io/docs/specification/paths-and-operations/):
+
+  > `operationId` is an optional unique string used to identify an operation. If provided, these IDs must be unique among all operations described in your API.
+
+  This greatly simplifies the creation of client SDKs in different languages, because it generates more meaningful function names instead of auto-generated ones, like the following examples:
+
+  ```diff
+  - org, _, err := s.Client.OrganizationsAPI.ApiOrganizationsIdGet(ctx, req.GetId()).Execute()
+  + org, _, err := s.Client.OrganizationsAPI.GetOrganization(ctx, req.GetId()).Execute()
+  ```
+
+  ```diff
+  - users, _, err := s.Client.OrganizationsAPI.ApiOrganizationsIdUsersGet(ctx, req.GetId()).Execute()
+  + users, _, err := s.Client.OrganizationsAPI.ListOrganizationUsers(ctx, req.GetId()).Execute()
+  ```
+
+- 7a279be1f: add user detail data payload to the `User.Deleted` webhook event
+- d51e839cd: fix OpenAPI schema returned by the `GET /api/swagger.json` endpoint
+
+  1. The `:` character is invalid in parameter names, such as `organizationId:root`. These characters have been replaced with `-`.
+  2. The `tenantId` parameter of the `/api/.well-known/endpoints/{tenantId}` route was missing from the generated OpenAPI spec document, resulting in validation errors. This has been fixed.
+
+- Updated dependencies [6308ee185]
+- Updated dependencies [15953609b]
+- Updated dependencies [6308ee185]
+- Updated dependencies [eacec10ac]
+- Updated dependencies [942780fcf]
+- Updated dependencies [f78b1768e]
+- Updated dependencies [87615d58c]
+- Updated dependencies [9f33d997b]
+- Updated dependencies [06ef19905]
+- Updated dependencies [061a30a87]
+- Updated dependencies [ead51e555]
+- Updated dependencies [af44e87eb]
+- Updated dependencies [ef21c7a99]
+- Updated dependencies [136320584]
+- Updated dependencies [0ef712e4e]
+- Updated dependencies [50c35a214]
+- Updated dependencies [15953609b]
+- Updated dependencies [b52609a1e]
+- Updated dependencies [efa884c40]
+- Updated dependencies [b50ba0b7e]
+- Updated dependencies [d81e13d21]
+  - @logto/connector-kit@4.0.0
+  - @logto/console@1.16.0
+  - @logto/phrases@1.12.0
+  - @logto/schemas@1.18.0
+  - @logto/demo-app@1.3.0
+  - @logto/phrases-experience@1.7.0
+  - @logto/experience@1.7.0
+  - @logto/cli@1.18.0
+
 ## 1.17.0
 
 ### Minor Changes

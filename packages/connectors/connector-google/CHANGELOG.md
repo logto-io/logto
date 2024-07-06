@@ -1,5 +1,23 @@
 # @logto/connector-google
 
+## 1.4.0
+
+### Minor Changes
+
+- 6308ee185: support Google One Tap
+
+  - support parsing and validating Google One Tap data in `connector-google`
+  - add Google connector constants in `connector-kit` for reuse
+
+- 15953609b: support config of `prompt`
+
+### Patch Changes
+
+- Updated dependencies [6308ee185]
+- Updated dependencies [15953609b]
+- Updated dependencies [6308ee185]
+  - @logto/connector-kit@4.0.0
+
 ## 1.3.0
 
 ### Minor Changes
