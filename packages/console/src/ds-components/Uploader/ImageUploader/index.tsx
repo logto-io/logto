@@ -14,7 +14,7 @@ import * as styles from './index.module.scss';
 export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
   readonly allowedMimeTypes?: AllowedUploadMimeType[];
   readonly name: string;
-  readonly value: string;
+  readonly value?: string;
   readonly onDelete: () => void;
   readonly className?: string;
 };

@@ -139,7 +139,7 @@ function BrandingForm() {
                 render={({ field: { onChange, value, name } }) => (
                   <ImageUploaderField
                     name={name}
-                    value={value ?? ''}
+                    value={value}
                     actionDescription={t('sign_in_exp.branding.dark_logo_image')}
                     onChange={onChange}
                   />

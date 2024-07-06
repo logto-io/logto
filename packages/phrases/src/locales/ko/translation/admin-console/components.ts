@@ -2,8 +2,6 @@ const components = {
   uploader: {
     action_description: '드래그 앤 드롭 또는 탐색하기',
     uploading: '업로드 중...',
-    image_limit:
-      '{{size, number}}KB 미만의 {{extensions, list(style: narrow; type: conjunction;)}} 파일만 업로드하세요.',
     error_upload: '오류가 발생했습니다. 파일 업로드에 실패하였습니다.',
     error_file_size: '파일 크기가 너무 커요. {{size, number}}KB 미만의 파일을 업로드해 주세요.',
     error_file_type:

@@ -10,7 +10,7 @@ import type { Props as ImageUploaderProps } from '../ImageUploader';
 import * as styles from './index.module.scss';
 
 type Props = Omit<ImageUploaderProps, 'onDelete' | 'onCompleted' | 'onUploadErrorChange'> & {
-  readonly onChange: (value: string) => void;
+  readonly onChange: (value?: string) => void;
   readonly allowedMimeTypes?: UserAssetsServiceStatus['allowUploadMimeTypes'];
 };
 
@@ -26,7 +26,7 @@ function ImageUploaderField({ onChange, allowedMimeTypes: mimeTypes, ...rest }: 
         onCompleted={onChange}
         onUploadErrorChange={setUploadError}
         onDelete={() => {
-          onChange('');
+          onChange();
         }}
         {...rest}
       />

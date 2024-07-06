@@ -37,7 +37,7 @@ function LogosUploader({ isDarkModeEnabled }: Props) {
                   isDarkModeEnabled && styles.frame,
                   isDarkModeEnabled && value && styles.frameBackground
                 )}
-                value={value ?? ''}
+                value={value}
                 actionDescription={t(
                   isDarkModeEnabled
                     ? 'enterprise_sso_details.branding_light_logo_context'
@@ -47,7 +47,7 @@ function LogosUploader({ isDarkModeEnabled }: Props) {
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadLogoError}
                 onDelete={() => {
-                  onChange('');
+                  onChange();
                 }}
               />
             )}
@@ -62,13 +62,13 @@ function LogosUploader({ isDarkModeEnabled }: Props) {
                 <ImageUploader
                   name={name}
                   className={classNames(styles.frameDark, value && styles.frameDarkBackground)}
-                  value={value ?? ''}
+                  value={value}
                   actionDescription={t('enterprise_sso_details.branding_dark_logo_context')}
                   allowedMimeTypes={allowedMimeTypes}
                   onCompleted={onChange}
                   onUploadErrorChange={setUploadDarkLogoError}
                   onDelete={() => {
-                    onChange('');
+                    onChange();
                   }}
                 />
               )}

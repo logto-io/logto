@@ -30,12 +30,12 @@ function LogoUploader({ isDarkModeEnabled }: Props) {
             <ImageUploader
               className={isDarkModeEnabled ? styles.multiColumn : undefined}
               name={name}
-              value={value ?? ''}
+              value={value}
               actionDescription={t('sign_in_exp.branding.logo_image_url')}
               onCompleted={onChange}
               onUploadErrorChange={setUploadLogoError}
               onDelete={() => {
-                onChange('');
+                onChange();
               }}
             />
           )}
@@ -48,13 +48,13 @@ function LogoUploader({ isDarkModeEnabled }: Props) {
             render={({ field: { onChange, value, name } }) => (
               <ImageUploader
                 name={name}
-                value={value ?? ''}
+                value={value}
                 className={value ? styles.darkMode : undefined}
                 actionDescription={t('sign_in_exp.branding.dark_logo_image_url')}
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadDarkLogoError}
                 onDelete={() => {
-                  onChange('');
+                  onChange();
                 }}
               />
             )}

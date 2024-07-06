@@ -27,12 +27,12 @@ function LogoAndFaviconUploader() {
             render={({ field: { onChange, value, name } }) => (
               <ImageUploader
                 name={name}
-                value={value ?? ''}
+                value={value}
                 actionDescription={t('sign_in_exp.branding.logo_image')}
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadLogoError}
                 onDelete={() => {
-                  onChange('');
+                  onChange();
                 }}
               />
             )}
@@ -45,12 +45,12 @@ function LogoAndFaviconUploader() {
             render={({ field: { onChange, value, name } }) => (
               <ImageUploader
                 name={name}
-                value={value ?? ''}
+                value={value}
                 actionDescription={t('sign_in_exp.branding.favicon')}
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadFaviconError}
                 onDelete={() => {
-                  onChange('');
+                  onChange();
                 }}
               />
             )}

@@ -69,6 +69,7 @@ const general = {
   delete_field: 'Delete {{field}}',
   coming_soon: 'Coming soon',
   or: 'Or',
+  select_a_color: 'Select a color',
 };
 
 export default Object.freeze(general);
