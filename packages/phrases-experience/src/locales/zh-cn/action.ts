@@ -29,10 +29,8 @@ const action = {
   verify_via_passkey: '通过 Passkey 验证',
   download: '下载',
   single_sign_on: '单点登录',
-  /** UNTRANSLATED */
-  authorize: 'Authorize',
-  /** UNTRANSLATED */
-  use_another_account: 'Use another account',
+  authorize: '授权',
+  use_another_account: '使用另一个账号',
 };
 
 export default Object.freeze(action);
