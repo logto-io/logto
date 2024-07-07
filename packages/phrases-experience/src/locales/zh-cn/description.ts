@@ -53,10 +53,10 @@ const description = {
   verify_phone: '验证你的手机号',
   password_requirements: '密码 {{items, list}}。',
   password_requirement: {
-    length_one: '应至少有 {{count}} 个字符',
-    length_other: '应至少有 {{count}} 个字符',
-    character_types_one: '应包含至少 {{count}} 种大写字母、小写字母、数字和符号',
-    character_types_other: '应包含至少 {{count}} 种大写字母、小写字母、数字和符号',
+    length_one: '至少应有 {{count}} 个字符',
+    length_other: '至少应有 {{count}} 个字符',
+    character_types_one: '至少应包含大写字母、小写字母、数字和符号中的 {{count}} 种',
+    character_types_other: '至少应包含大写字母、小写字母、数字和符号中的 {{count}} 种',
   },
   use: '使用',
   single_sign_on_email_form: '输入你的企业电子邮件地址',
@@ -66,14 +66,11 @@ const description = {
   authorize_title: '授权给 {{name}}',
   request_permission: '{{name}} 需要权限：',
   grant_organization_access: '授予组织访问权限：',
-  /** UNTRANSLATED */
-  authorize_personal_data_usage: 'Authorize the use of your personal data:',
-  /** UNTRANSLATED */
+  authorize_personal_data_usage: '你将授权该应用使用你的以下个人数据：',
   authorize_organization_access: 'Authorize access to the specific organization:',
   user_scopes: '用户个人信息',
   organization_scopes: '组织权限',
   authorize_agreement: `你将同意授权给 {{name}} <link></link>.`,
-  /** UNTRANSLATED */
   authorize_agreement_with_redirect: `你将同意授权给 {{name}} <link></link>，然后你将被重定向到 {{uri}}。`,
   not_you: '不是你本人吗？',
   user_id: '用户 ID: {{id}}',
