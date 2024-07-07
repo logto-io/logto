@@ -30,7 +30,7 @@ const getAuthorizationUri: GetAuthorizationUri = async (
     }
   }
 
-  return `http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`;
+  return `http://mock-social/?state=${state}&redirect_uri=${redirectUri}`;
 };
 
 const getUserInfo: GetUserInfo = async (data, getSession) => {

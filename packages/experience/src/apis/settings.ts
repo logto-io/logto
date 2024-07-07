@@ -23,6 +23,7 @@ export const getSignInExperience = async <T extends SignInExperienceResponse>():
     .get('/api/.well-known/sign-in-exp', {
       searchParams: buildSearchParameters({
         [searchKeys.noCache]: sessionStorage.getItem(searchKeys.noCache),
+        [searchKeys.organizationId]: sessionStorage.getItem(searchKeys.organizationId),
       }),
     })
     .json<T>();

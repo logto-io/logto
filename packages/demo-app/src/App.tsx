@@ -16,6 +16,7 @@ import { getLocalData, setLocalData } from './utils';
 void initI18n();
 
 const Main = () => {
+  const config = getLocalData('config');
   const params = new URL(window.location.href).searchParams;
   const { isAuthenticated, isLoading, getIdTokenClaims, signIn, signOut } = useLogto();
   const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username'>>();
@@ -53,10 +54,24 @@ const Main = () => {
     if (!isAuthenticated) {
       void signIn({
         redirectUri: window.location.origin + window.location.pathname,
-        extraParams: Object.fromEntries(new URLSearchParams(window.location.search).entries()),
+        extraParams: Object.fromEntries(
+          new URLSearchParams([
+            ...new URLSearchParams(config.signInExtraParams).entries(),
+            ...new URLSearchParams(window.location.search).entries(),
+          ]).entries()
+        ),
       });
     }
-  }, [error, getIdTokenClaims, isAuthenticated, isInCallback, isLoading, signIn, user]);
+  }, [
+    config.signInExtraParams,
+    error,
+    getIdTokenClaims,
+    isAuthenticated,
+    isInCallback,
+    isLoading,
+    signIn,
+    user,
+  ]);
 
   useEffect(() => {
     const onThemeChange = (event: MediaQueryListEvent) => {

@@ -101,5 +101,11 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
     return path.join('direct', method ?? '', target ?? '') + getSearchParamString();
   }
 
+  // Append other valid params as-is
+  const { first_screen: _, interaction_mode: __, direct_sign_in: ___, ...rest } = params;
+  for (const [key, value] of Object.entries(rest)) {
+    searchParams.append(key, value);
+  }
+
   return firstScreen + getSearchParamString();
 };

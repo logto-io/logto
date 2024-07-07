@@ -23,7 +23,7 @@ const sign_in_exp = {
   color: {
     title: 'COLOR',
     primary_color: 'Brand color',
-    dark_primary_color: 'Brand color (Dark)',
+    dark_primary_color: 'Brand color (dark)',
     dark_mode: 'Enable dark mode',
     dark_mode_description:
       'Your app will have an auto-generated dark mode theme based on your brand color and Logto algorithm. You are free to customize.',
@@ -36,7 +36,7 @@ const sign_in_exp = {
     favicon: 'Favicon',
     logo_image_url: 'App logo image URL',
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
-    dark_logo_image_url: 'App logo image URL (Dark)',
+    dark_logo_image_url: 'App logo image URL (dark)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
     logo_image: 'App logo',
     dark_logo_image: 'App logo (Dark)',

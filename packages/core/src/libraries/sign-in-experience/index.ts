@@ -4,10 +4,12 @@ import type {
   ConnectorMetadata,
   FullSignInExperience,
   LanguageInfo,
+  SignInExperience,
   SsoConnectorMetadata,
 } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { deduplicate } from '@silverhand/essentials';
+import { deduplicate, trySafe } from '@silverhand/essentials';
+import deepmerge from 'deepmerge';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -37,6 +39,7 @@ export const createSignInExperienceLibrary = (
   const {
     customPhrases: { findAllCustomLanguageTags },
     signInExperiences: { findDefaultSignInExperience, updateDefaultSignInExperience },
+    organizations,
   } = queries;
 
   const validateLanguageInfo = async (languageInfo: LanguageInfo) => {
@@ -109,12 +112,38 @@ export const createSignInExperienceLibrary = (
     return plan.id === developmentTenantPlanId;
   };
 
-  const getFullSignInExperience = async (locale: string): Promise<FullSignInExperience> => {
-    const [signInExperience, logtoConnectors, isDevelopmentTenant] = await Promise.all([
-      findDefaultSignInExperience(),
-      getLogtoConnectors(),
-      getIsDevelopmentTenant(),
-    ]);
+  /**
+   * Get the override data for the sign-in experience by reading from organization data. If the
+   * entity is not found, return `undefined`.
+   */
+  const getOrganizationOverride = async (
+    organizationId?: string
+  ): Promise<Partial<SignInExperience> | undefined> => {
+    if (!organizationId) {
+      return;
+    }
+    const organization = await trySafe(organizations.findById(organizationId));
+    if (!organization?.branding) {
+      return;
+    }
+
+    return { branding: organization.branding };
+  };
+
+  const getFullSignInExperience = async ({
+    locale,
+    organizationId,
+  }: {
+    locale: string;
+    organizationId?: string;
+  }): Promise<FullSignInExperience> => {
+    const [signInExperience, logtoConnectors, isDevelopmentTenant, organizationOverride] =
+      await Promise.all([
+        findDefaultSignInExperience(),
+        getLogtoConnectors(),
+        getIsDevelopmentTenant(),
+        getOrganizationOverride(organizationId),
+      ]);
 
     // Always return empty array if single-sign-on is disabled
     const ssoConnectors = signInExperience.singleSignOnEnabled
@@ -167,7 +196,7 @@ export const createSignInExperienceLibrary = (
     };
 
     return {
-      ...signInExperience,
+      ...deepmerge(signInExperience, organizationOverride ?? {}),
       socialConnectors,
       ssoConnectors,
       forgotPassword,

@@ -149,7 +149,7 @@ describe('getFullSignInExperience()', () => {
       wellConfiguredSsoConnector,
     ]);
 
-    const fullSignInExperience = await getFullSignInExperience('en');
+    const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
     expect(fullSignInExperience).toStrictEqual({
@@ -183,7 +183,7 @@ describe('getFullSignInExperience()', () => {
       wellConfiguredSsoConnector,
     ]);
 
-    const fullSignInExperience = await getFullSignInExperience('en');
+    const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
     expect(fullSignInExperience).toStrictEqual({
@@ -224,7 +224,7 @@ describe('get sso connectors', () => {
       singleSignOnEnabled: false,
     });
 
-    const { ssoConnectors } = await getFullSignInExperience('en');
+    const { ssoConnectors } = await getFullSignInExperience({ locale: 'en' });
 
     expect(ssoConnectorLibrary.getAvailableSsoConnectors).not.toBeCalled();
 
@@ -239,7 +239,7 @@ describe('get sso connectors', () => {
       wellConfiguredSsoConnector,
     ]);
 
-    const { ssoConnectors } = await getFullSignInExperience('jp');
+    const { ssoConnectors } = await getFullSignInExperience({ locale: 'jp' });
 
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
@@ -270,7 +270,7 @@ describe('get sso connectors', () => {
 
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
-    const { ssoConnectors } = await getFullSignInExperience('en');
+    const { ssoConnectors } = await getFullSignInExperience({ locale: 'en' });
 
     expect(ssoConnectors).toEqual([
       {
