@@ -23,6 +23,7 @@ import { experienceRoutes } from './const.js';
 import koaExperienceInteraction, {
   type WithExperienceInteractionContext,
 } from './middleware/koa-experience-interaction.js';
+import enterpriseSsoVerificationRoutes from './verification-routes/enterprise-sso-verification.js';
 import passwordVerificationRoutes from './verification-routes/password-verification.js';
 import socialVerificationRoutes from './verification-routes/social-verification.js';
 import verificationCodeRoutes from './verification-routes/verification-code.js';
@@ -82,4 +83,5 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   passwordVerificationRoutes(router, tenant);
   verificationCodeRoutes(router, tenant);
   socialVerificationRoutes(router, tenant);
+  enterpriseSsoVerificationRoutes(router, tenant);
 }
