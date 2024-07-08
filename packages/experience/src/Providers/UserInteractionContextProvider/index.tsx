@@ -1,6 +1,7 @@
 import { type SsoConnectorMetadata } from '@logto/schemas';
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState, useCallback } from 'react';
 
+import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { useSieMethods } from '@/hooks/use-sie';
 
@@ -26,6 +27,13 @@ const UserInteractionContextProvider = ({ children }: Props) => {
   const [domainFilteredConnectors, setDomainFilteredConnectors] = useState<SsoConnectorMetadata[]>(
     get(StorageKeys.SsoConnectors) ?? []
   );
+  const [identifierInputValue, setIdentifierInputValue] = useState<
+    IdentifierInputValue | undefined
+  >(get(StorageKeys.IdentifierInputValue));
+
+  const [forgotPasswordIdentifierInputValue, setForgotPasswordIdentifierInputValue] = useState<
+    IdentifierInputValue | undefined
+  >(get(StorageKeys.ForgotPasswordIdentifierInputValue));
 
   useEffect(() => {
     if (!ssoEmail) {
@@ -45,10 +53,33 @@ const UserInteractionContextProvider = ({ children }: Props) => {
     set(StorageKeys.SsoConnectors, domainFilteredConnectors);
   }, [domainFilteredConnectors, remove, set]);
 
+  useEffect(() => {
+    if (!identifierInputValue) {
+      remove(StorageKeys.IdentifierInputValue);
+      return;
+    }
+
+    set(StorageKeys.IdentifierInputValue, identifierInputValue);
+  }, [identifierInputValue, remove, set]);
+
+  useEffect(() => {
+    if (!forgotPasswordIdentifierInputValue) {
+      remove(StorageKeys.ForgotPasswordIdentifierInputValue);
+      return;
+    }
+
+    set(StorageKeys.ForgotPasswordIdentifierInputValue, forgotPasswordIdentifierInputValue);
+  }, [forgotPasswordIdentifierInputValue, remove, set]);
+
   const ssoConnectorsMap = useMemo(
     () => new Map(ssoConnectors.map((connector) => [connector.id, connector])),
     [ssoConnectors]
   );
+
+  const clearInteractionContextSessionStorage = useCallback(() => {
+    remove(StorageKeys.IdentifierInputValue);
+    remove(StorageKeys.ForgotPasswordIdentifierInputValue);
+  }, [remove]);
 
   const userInteractionContext = useMemo<UserInteractionContextType>(
     () => ({
@@ -57,8 +88,20 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       availableSsoConnectorsMap: ssoConnectorsMap,
       ssoConnectors: domainFilteredConnectors,
       setSsoConnectors: setDomainFilteredConnectors,
+      identifierInputValue,
+      setIdentifierInputValue,
+      forgotPasswordIdentifierInputValue,
+      setForgotPasswordIdentifierInputValue,
+      clearInteractionContextSessionStorage,
     }),
-    [ssoEmail, ssoConnectorsMap, domainFilteredConnectors]
+    [
+      ssoEmail,
+      ssoConnectorsMap,
+      domainFilteredConnectors,
+      identifierInputValue,
+      forgotPasswordIdentifierInputValue,
+      clearInteractionContextSessionStorage,
+    ]
   );
 
   return (

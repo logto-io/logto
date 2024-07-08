@@ -1,8 +1,9 @@
 import type { SignIn } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -12,18 +13,13 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const navigate = useNavigate();
   const { ssoConnectors } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
+  const { setIdentifierInputValue } = useContext(UserInteractionContext);
 
-  const signInWithPassword = useCallback(
-    (identifier: SignInIdentifier, value: string) => {
-      navigate(
-        {
-          pathname: `/${UserFlow.SignIn}/password`,
-        },
-        { state: { identifier, value } }
-      );
-    },
-    [navigate]
-  );
+  const navigateToPasswordPage = useCallback(() => {
+    navigate({
+      pathname: `/${UserFlow.SignIn}/password`,
+    });
+  }, [navigate]);
 
   const {
     errorMessage,
@@ -39,10 +35,12 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
         throw new Error(`Cannot find method with identifier type ${identifier}`);
       }
 
+      setIdentifierInputValue({ type: identifier, value });
+
       const { password, isPasswordPrimary, verificationCode } = method;
 
       if (identifier === SignInIdentifier.Username) {
-        signInWithPassword(identifier, value);
+        navigateToPasswordPage();
 
         return;
       }
@@ -57,7 +55,7 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       }
 
       if (password && (isPasswordPrimary || !verificationCode)) {
-        signInWithPassword(identifier, value);
+        navigateToPasswordPage();
 
         return;
       }
@@ -67,11 +65,12 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       }
     },
     [
+      signInMethods,
+      setIdentifierInputValue,
+      ssoConnectors.length,
+      navigateToPasswordPage,
       checkSingleSignOn,
       sendVerificationCode,
-      signInMethods,
-      signInWithPassword,
-      ssoConnectors.length,
     ]
   );
 

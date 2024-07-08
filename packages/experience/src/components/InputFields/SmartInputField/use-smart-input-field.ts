@@ -13,7 +13,14 @@ export type IdentifierInputType =
   | SignInIdentifier.Username;
 
 export type IdentifierInputValue = {
-  type: IdentifierInputType | undefined;
+  /**
+   * The type of the identifier input.
+   * `undefined` value is for the case when the user has inputted an identifier but the type is not yet determined in the `SmartInputField`.
+   */
+  type?: IdentifierInputType;
+  /**
+   * The value of the identifier input.
+   */
   value: string;
 };
 
