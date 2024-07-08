@@ -47,7 +47,7 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
         navigate(
           {
             pathname: `/${flow}/verification-code`,
-            search: location.search,
+            search: window.location.search,
           },
           {
             replace: replaceCurrentPage,

@@ -38,19 +38,30 @@ const useParams = useParamsMock as jest.Mock;
 const assign = jest.fn();
 const replace = jest.fn();
 const search = jest.fn();
+const originalLocation = window.location;
+const originalSearch = window.location.search;
 
-// eslint-disable-next-line @silverhand/fp/no-mutating-methods
-Object.defineProperty(window, 'location', {
-  value: {
-    assign,
-    replace,
-  },
-  writable: true,
+beforeAll(() => {
+  // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+  Object.defineProperty(window, 'location', {
+    value: {
+      assign,
+      replace,
+    },
+    writable: true,
+  });
+
+  // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+  Object.defineProperty(window.location, 'search', {
+    get: search,
+  });
 });
 
-// eslint-disable-next-line @silverhand/fp/no-mutating-methods
-Object.defineProperty(window.location, 'search', {
-  get: search,
+afterAll(() => {
+  // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+  Object.defineProperty(window, 'location', {
+    value: originalLocation,
+  });
 });
 
 describe('DirectSignIn', () => {

@@ -80,7 +80,7 @@
     "i18next-browser-languagedetector": "^8.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.0.0",
+    "jest-environment-jsdom": "^29.7.0",
     "jest-transform-stub": "^2.0.0",
     "jest-transformer-svg": "^2.0.0",
     "just-kebab-case": "^4.2.0",
