@@ -8,7 +8,6 @@
   <!--Preload well-known settings API-->
   <script>
     const { search } = window.location;
-    const noCache = search.includes('no_cache');
     const isPreview = search.includes('preview');
     // Preview mode does not query sign-in-exp and phrases
     const preLoadLinks = isPreview ? [] : ['/api/.well-known/sign-in-exp', '/api/.well-known/phrases'];
@@ -17,7 +16,7 @@
     preLoadLinks.forEach((linkUrl) => {
       const link = document.createElement('link');
       link.rel = 'preload';
-      link.href = `${linkUrl}${noCache ? '?no_cache=true' : ''}`;
+      link.href = linkUrl
       link.as = 'fetch';
       link.crossOrigin = 'anonymous';
       document.head.appendChild(link);
