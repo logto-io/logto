@@ -150,7 +150,7 @@ export default class ExperienceInteraction {
         break;
       }
       default: {
-        // Not supported verification type for identification. e.g MFA verification
+        // Unsupported verification type for identification, such as MFA verification.
         throw new RequestError({ code: 'session.verification_failed', status: 400 });
       }
     }
