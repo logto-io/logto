@@ -132,4 +132,21 @@ export class ExperienceClient extends MockClient {
       })
       .json<{ verificationId: string }>();
   }
+
+  public async createTotpSecret() {
+    return api
+      .post(`${experienceRoutes.verification}/totp/secret`, {
+        headers: { cookie: this.interactionCookie },
+      })
+      .json<{ verificationId: string; secret: string; secretQrCode: string }>();
+  }
+
+  public async verifyTotp(payload: { verificationId?: string; code: string }) {
+    return api
+      .post(`${experienceRoutes.verification}/totp/verify`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
+  }
 }

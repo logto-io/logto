@@ -65,7 +65,7 @@ export enum VerificationType {
 
 // REMARK: API payload guard
 
-/** Payload type for `POST /api/experience/verification/social/:connectorId/authorization-uri`. */
+/** Payload type for `POST /api/experience/verification/{social|sso}/:connectorId/authorization-uri`. */
 export type SocialAuthorizationUrlPayload = {
   state: string;
   redirectUri: string;
@@ -75,7 +75,7 @@ export const socialAuthorizationUrlPayloadGuard = z.object({
   redirectUri: z.string(),
 }) satisfies ToZodObject<SocialAuthorizationUrlPayload>;
 
-/** Payload type for `POST /api/experience/verification/social/:connectorId/verify`. */
+/** Payload type for `POST /api/experience/verification/{social|sso}/:connectorId/verify`. */
 export type SocialVerificationCallbackPayload = {
   /** The callback data from the social connector. */
   connectorData: Record<string, unknown>;
@@ -92,11 +92,20 @@ export type PasswordVerificationPayload = {
   identifier: InteractionIdentifier;
   password: string;
 };
-
 export const passwordVerificationPayloadGuard = z.object({
   identifier: interactionIdentifierGuard,
   password: z.string().min(1),
 }) satisfies ToZodObject<PasswordVerificationPayload>;
+
+/** Payload type for `POST /api/experience/verification/totp/verify`. */
+export type TotpVerificationVerifyPayload = {
+  code: string;
+  verificationId?: string;
+};
+export const totpVerificationVerifyPayloadGuard = z.object({
+  code: z.string().min(1),
+  verificationId: z.string().optional(),
+}) satisfies ToZodObject<TotpVerificationVerifyPayload>;
 
 /** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {
@@ -257,8 +266,10 @@ export const bindMfaPayloadGuard = z.discriminatedUnion('type', [
 
 export type BindMfaPayload = z.infer<typeof bindMfaPayloadGuard>;
 
+/** @deprecated  Legacy interaction API use only */
 export const totpVerificationPayloadGuard = bindTotpPayloadGuard;
 
+/** @deprecated Legacy interaction API use only */
 export type TotpVerificationPayload = z.infer<typeof totpVerificationPayloadGuard>;
 
 export const webAuthnVerificationPayloadGuard = bindWebAuthnPayloadGuard

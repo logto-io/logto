@@ -2,8 +2,8 @@ import {
   InteractionEvent,
   MfaFactor,
   requestVerificationCodePayloadGuard,
-  webAuthnRegistrationOptionsGuard,
   webAuthnAuthenticationOptionsGuard,
+  webAuthnRegistrationOptionsGuard,
 } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared';
 import type Router from 'koa-router';

@@ -84,6 +84,10 @@ export default class ExperienceInteraction {
     }
   }
 
+  get identifiedUserId() {
+    return this.userId;
+  }
+
   /** Set the interaction event for the current interaction */
   public setInteractionEvent(interactionEvent: InteractionEvent) {
     // TODO: conflict event check (e.g. reset password session can't be used for sign in)
@@ -144,6 +148,10 @@ export default class ExperienceInteraction {
 
         this.userId = id;
         break;
+      }
+      default: {
+        // Not supported verification type for identification. e.g MFA verification
+        throw new RequestError({ code: 'session.verification_failed', status: 400 });
       }
     }
   }
