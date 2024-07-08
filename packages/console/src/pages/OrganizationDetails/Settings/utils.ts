@@ -25,14 +25,24 @@ export const normalizeData = (
   customData: JSON.stringify(data.customData, undefined, 2),
 });
 
+const assembleBranding = (branding?: Organization['branding']) => {
+  if (!branding) {
+    return {};
+  }
+
+  return Object.fromEntries(Object.entries(branding).filter(([, value]) => Boolean(value)));
+};
+
 export const assembleData = ({
   jitEmailDomains,
   jitRoles,
   jitSsoConnectorIds,
   customData,
+  branding,
   ...data
 }: FormData): Partial<Organization> => ({
   ...data,
+  branding: assembleBranding(branding),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   customData: JSON.parse(customData ?? '{}'),
 });

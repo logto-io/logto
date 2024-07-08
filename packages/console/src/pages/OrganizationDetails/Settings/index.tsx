@@ -20,6 +20,7 @@ import { trySubmitSafe } from '@/utils/form';
 
 import { type OrganizationDetailsOutletContext } from '../types';
 
+import Branding from './Branding';
 import JitSettings from './JitSettings';
 import * as styles from './index.module.scss';
 import { assembleData, isJsonObject, normalizeData, type FormData } from './utils';
@@ -136,6 +137,7 @@ function Settings() {
           )}
         </FormField>
       </FormCard>
+      <Branding form={form} />
       <JitSettings form={form} />
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </DetailsForm>
