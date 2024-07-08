@@ -22,7 +22,6 @@ export const getSignInExperience = async <T extends SignInExperienceResponse>():
   return ky
     .get('/api/.well-known/sign-in-exp', {
       searchParams: buildSearchParameters({
-        [searchKeys.noCache]: sessionStorage.getItem(searchKeys.noCache),
         [searchKeys.organizationId]: sessionStorage.getItem(searchKeys.organizationId),
       }),
     })
@@ -50,7 +49,6 @@ export const getPhrases = async ({
     })
     .get('/api/.well-known/phrases', {
       searchParams: buildSearchParameters({
-        [searchKeys.noCache]: sessionStorage.getItem(searchKeys.noCache),
         lng: language,
       }),
     });

@@ -6,7 +6,6 @@ import {
   customClientMetadataGuard,
   GrantType,
   ExtraParamsKey,
-  demoAppApplicationId,
   FirstScreen,
   experience,
 } from '@logto/schemas';
@@ -90,10 +89,6 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
   const directSignIn = params[ExtraParamsKey.DirectSignIn];
   const searchParams = new URLSearchParams();
   const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
-
-  if (appId === demoAppApplicationId) {
-    searchParams.append('no_cache', '');
-  }
 
   if (directSignIn) {
     searchParams.append('fallback', firstScreen);

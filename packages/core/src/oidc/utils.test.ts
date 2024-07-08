@@ -134,14 +134,14 @@ describe('buildLoginPromptUrl', () => {
   it('should return the correct url for empty parameters', () => {
     expect(buildLoginPromptUrl({})).toBe('sign-in');
     expect(buildLoginPromptUrl({}, 'foo')).toBe('sign-in');
-    expect(buildLoginPromptUrl({}, demoAppApplicationId)).toBe('sign-in?no_cache=');
+    expect(buildLoginPromptUrl({}, demoAppApplicationId)).toBe('sign-in');
   });
 
   it('should return the correct url for firstScreen', () => {
     expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register })).toBe('register');
     expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register }, 'foo')).toBe('register');
     expect(buildLoginPromptUrl({ first_screen: FirstScreen.SignIn }, demoAppApplicationId)).toBe(
-      'sign-in?no_cache='
+      'sign-in'
     );
     // Legacy interactionMode support
     expect(buildLoginPromptUrl({ interaction_mode: InteractionMode.SignUp })).toBe('register');
@@ -155,7 +155,7 @@ describe('buildLoginPromptUrl', () => {
       'direct/method/target?fallback=sign-in'
     );
     expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' }, demoAppApplicationId)).toBe(
-      'direct/method/target?no_cache=&fallback=sign-in'
+      'direct/method/target?fallback=sign-in'
     );
     expect(buildLoginPromptUrl({ direct_sign_in: 'method' })).toBe(
       'direct/method?fallback=sign-in'
@@ -172,6 +172,6 @@ describe('buildLoginPromptUrl', () => {
         { first_screen: FirstScreen.Register, direct_sign_in: 'method:target' },
         demoAppApplicationId
       )
-    ).toBe('direct/method/target?no_cache=&fallback=register');
+    ).toBe('direct/method/target?fallback=register');
   });
 });
