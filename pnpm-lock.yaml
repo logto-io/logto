@@ -3750,8 +3750,8 @@ importers:
         specifier: ^15.0.0
         version: 15.11.0(typescript@5.3.3)
       superstruct:
-        specifier: ^1.0.3
-        version: 1.0.3
+        specifier: ^2.0.0
+        version: 2.0.0
       tiny-cookie:
         specifier: ^2.4.1
         version: 2.4.1
@@ -12431,8 +12431,8 @@ packages:
     resolution: {integrity: sha512-CcRSdb/P2oUVaEpQ87w9Obsl+E9FruRd6b2b7LdiBtJoyMr2DQt7a89anAfiX/EL59j9b2CbRFvf2S91DhuCww==}
     engines: {node: '>=14.18.0'}
 
-  superstruct@1.0.3:
-    resolution: {integrity: sha512-8iTn3oSS8nRGn+C2pgXSKPI3jmpm6FExNazNpjvqS6ZUJQCej3PUXEKM8NjHBOs54ExM+LPW/FBRhymrdcCiSg==}
+  superstruct@2.0.0:
+    resolution: {integrity: sha512-l9HkF2HGmEc4cm0Mc3E08o/lhminlAdDDekqc+m1urG+SK6CL3e0TL0EJ8QyXkDwfS69rgI94GOXLD4qCD+1WA==}
     engines: {node: '>=14.0.0'}
 
   supertest@7.0.0:
@@ -24091,7 +24091,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  superstruct@1.0.3: {}
+  superstruct@2.0.0: {}
 
   supertest@7.0.0:
     dependencies:
