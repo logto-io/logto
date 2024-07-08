@@ -23,8 +23,6 @@ import { buildOrganizationUrn } from '@logto/core-kit';
 import { cond } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
-import epochTime from 'oidc-provider/lib/helpers/epoch_time.js';
-import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 import checkResource from 'oidc-provider/lib/shared/check_resource.js';
 
@@ -33,6 +31,8 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../resource.js';
+
+import { handleClientCertificate, handleDPoP } from './utils.js';
 
 const { AccessDenied, InvalidClient, InvalidGrant, InvalidScope, InvalidTarget } = errors;
 
@@ -51,7 +51,7 @@ export const buildHandler: (
   // eslint-disable-next-line complexity
 ) => Parameters<Provider['registerGrantType']>[1] = (envSet, queries) => async (ctx, next) => {
   const { client, params } = ctx.oidc;
-  const { ClientCredentials, ReplayDetection } = ctx.oidc.provider;
+  const { ClientCredentials } = ctx.oidc.provider;
 
   assertThat(client, new InvalidClient('client must be available'));
 
@@ -61,8 +61,6 @@ export const buildHandler: (
     },
     scopes: statics,
   } = instance(ctx.oidc.provider).configuration();
-
-  const dPoP = await dpopValidate(ctx);
 
   /* === RFC 0006 === */
   // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
@@ -166,23 +164,8 @@ export const buildHandler: (
     token.setThumbprint('x5t', cert);
   }
 
-  if (dPoP) {
-    // @ts-expect-error -- code from oidc-provider
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const unique: unknown = await ReplayDetection.unique(
-      client.clientId,
-      dPoP.jti,
-      epochTime() + 300
-    );
-
-    assertThat(unique, new InvalidGrant('DPoP proof JWT Replay detected'));
-
-    // @ts-expect-error -- code from oidc-provider
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    token.setThumbprint('jkt', dPoP.thumbprint);
-  } else if (ctx.oidc.client?.dpopBoundAccessTokens) {
-    throw new InvalidGrant('DPoP proof JWT not provided');
-  }
+  await handleDPoP(ctx, token);
+  await handleClientCertificate(ctx, token);
 
   ctx.oidc.entity('ClientCredentials', token);
   const value = await token.save();
