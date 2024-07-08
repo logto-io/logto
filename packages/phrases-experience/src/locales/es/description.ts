@@ -32,7 +32,8 @@ const description = {
   social_link_phone: 'Puede vincular otro teléfono',
   social_link_email_or_phone: 'Puede vincular otro correo electrónico o teléfono',
   social_bind_with_existing:
-    'Hemos encontrado una cuenta relacionada, puede vincularla directamente.',
+    'Hemos encontrado una cuenta relacionada que ya ha sido registrada, y puede vincularla directamente.',
+  skip_social_linking: '¿Omitir vinculación a la cuenta existente?',
   reset_password: 'Restablecer contraseña',
   reset_password_description:
     'Ingrese los {{types, lista(type: disyunción;)}} asociados a su cuenta, y le enviaremos el código de verificación para restablecer su contraseña.',

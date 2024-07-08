@@ -30,7 +30,8 @@ const description = {
   social_link_email: 'Başka bir e-posta bağlayabilirsiniz',
   social_link_phone: 'Başka bir telefon bağlayabilirsiniz',
   social_link_email_or_phone: 'Başka bir e-posta veya telefon bağlayabilirsiniz',
-  social_bind_with_existing: 'Kayıtlı ilgili bir hesap bulduk ve onu doğrudan bağlayabilirsiniz.',
+  social_bind_with_existing: 'Kayıtlı bir ilgili hesap bulduk ve doğrudan bağlayabilirsiniz.',
+  skip_social_linking: 'Mevcut hesabın bağlantısını atla?',
   reset_password: 'Parolanızı mı unuttunuz',
   reset_password_description:
     'Hesabınızla ilişkili {{types, list(type: disjunction;)}} girin, şifrenizi sıfırlamanız için size doğrulama kodunu göndereceğiz.',
