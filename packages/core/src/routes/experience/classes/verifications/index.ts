@@ -20,7 +20,7 @@ import {
   type SocialVerificationRecordData,
 } from './social-verification.js';
 
-type VerificationRecordData =
+export type VerificationRecordData =
   | PasswordVerificationRecordData
   | CodeVerificationRecordData
   | SocialVerificationRecordData;

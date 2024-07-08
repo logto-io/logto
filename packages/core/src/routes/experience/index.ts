@@ -32,7 +32,7 @@ type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : nev
 export default function experienceApiRoutes<T extends AnonymousRouter>(
   ...[anonymousRouter, tenant]: RouterInitArgs<T>
 ) {
-  const { queries, libraries } = tenant;
+  const { queries } = tenant;
 
   const router =
     // @ts-expect-error for good koa types
@@ -46,18 +46,15 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     experienceRoutes.identification,
     koaGuard({
       body: identificationApiPayloadGuard,
-      status: [204, 400, 404],
+      status: [204, 400, 401, 404],
     }),
     async (ctx, next) => {
       const { interactionEvent, verificationId } = ctx.guard.body;
 
+      // TODO: implement a separate POST interaction route to handle the initiation of the interaction event
       ctx.experienceInteraction.setInteractionEvent(interactionEvent);
 
-      // TODO: SIE verification method check
-      // TODO: forgot password verification method check, only allow email and phone verification code
-      // TODO: user suspension check
-
-      ctx.experienceInteraction.identifyUser(verificationId);
+      await ctx.experienceInteraction.identifyUser(verificationId);
 
       await ctx.experienceInteraction.save();
 

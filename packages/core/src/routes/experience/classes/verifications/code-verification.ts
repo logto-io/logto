@@ -3,18 +3,20 @@ import {
   InteractionEvent,
   VerificationType,
   verificationCodeIdentifierGuard,
+  type User,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
 import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { type createPasscodeLibrary } from '#src/libraries/passcode.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { findUserByIdentifier } from '../../utils.js';
+import { findUserByIdentifier } from '../utils.js';
 
 import { type VerificationRecord } from './verification-record.js';
 
@@ -39,7 +41,6 @@ export type CodeVerificationRecordData = {
   type: VerificationType.VerificationCode;
   identifier: VerificationCodeIdentifier;
   interactionEvent: InteractionEvent;
-  userId?: string;
   verified: boolean;
 };
 
@@ -48,7 +49,6 @@ export const codeVerificationRecordDataGuard = z.object({
   type: z.literal(VerificationType.VerificationCode),
   identifier: verificationCodeIdentifierGuard,
   interactionEvent: z.nativeEnum(InteractionEvent),
-  userId: z.string().optional(),
   verified: z.boolean(),
 }) satisfies ToZodObject<CodeVerificationRecordData>;
 
@@ -102,9 +102,7 @@ export class CodeVerification implements VerificationRecord<VerificationType.Ver
    * @remark
    * `InteractionEvent.ForgotPassword` triggered verification results can not used as a verification record for other events.
    */
-  private readonly interactionEvent: InteractionEvent;
-  /** The userId  will be set after the verification if the identifier matches any existing user's record */
-  private userId?: string;
+  public readonly interactionEvent: InteractionEvent;
   private verified: boolean;
 
   constructor(
@@ -112,26 +110,17 @@ export class CodeVerification implements VerificationRecord<VerificationType.Ver
     private readonly queries: Queries,
     data: CodeVerificationRecordData
   ) {
-    const { id, identifier, userId, verified, interactionEvent } = data;
+    const { id, identifier, verified, interactionEvent } = data;
 
     this.id = id;
     this.identifier = identifier;
     this.interactionEvent = interactionEvent;
-    this.userId = userId;
     this.verified = verified;
   }
 
   /** Returns true if the identifier has been verified by a given code */
   get isVerified() {
     return this.verified;
-  }
-
-  /**
-   * Returns the userId if it is set
-   * @deprecated this will be removed in the upcoming PR
-   */
-  get verifiedUserId() {
-    return this.userId;
   }
 
   /**
@@ -157,20 +146,42 @@ export class CodeVerification implements VerificationRecord<VerificationType.Ver
     );
 
     this.verified = true;
+  }
 
-    // Try to lookup the user by the identifier
+  /**
+   * Identify the user by the current `identifier`.
+   * Return undefined if the verification record is not verified or no user is found by the identifier.
+   */
+  async identifyUser(): Promise<User> {
+    assertThat(
+      this.verified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
     const user = await findUserByIdentifier(this.queries.users, this.identifier);
-    this.userId = user?.id;
+
+    assertThat(
+      user,
+      new RequestError(
+        { code: 'user.user_not_exist', status: 404 },
+        {
+          identifier: this.identifier.value,
+        }
+      )
+    );
+
+    return user;
   }
 
   toJson(): CodeVerificationRecordData {
+    const { id, type, identifier, interactionEvent, verified } = this;
+
     return {
-      id: this.id,
-      type: this.type,
-      identifier: this.identifier,
-      interactionEvent: this.interactionEvent,
-      userId: this.userId,
-      verified: this.verified,
+      id,
+      type,
+      identifier,
+      interactionEvent,
+      verified,
     };
   }
 
