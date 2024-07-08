@@ -16,7 +16,7 @@ import { type WithInteractionDetailsContext } from '../middleware/koa-interactio
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const getAuthorizationUrlMock = jest.fn();
 const getIssuerMock = jest.fn();
@@ -43,7 +43,7 @@ mockEsm('./interaction.js', () => ({
 const {
   getSingleSignOnSessionResult: getSingleSignOnSessionResultMock,
   assignSingleSignOnAuthenticationResult: assignSingleSignOnAuthenticationResultMock,
-} = mockEsm('./single-sign-on-session.js', () => ({
+} = await mockEsmWithActual('./single-sign-on-session.js', () => ({
   getSingleSignOnSessionResult: jest.fn(),
   assignSingleSignOnAuthenticationResult: jest.fn(),
 }));
