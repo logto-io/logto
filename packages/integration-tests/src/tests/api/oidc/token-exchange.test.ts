@@ -1,15 +1,33 @@
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
 import { decodeAccessToken } from '@logto/js';
-import { ApplicationType, GrantType, MfaFactor } from '@logto/schemas';
+import {
+  ApplicationType,
+  GrantType,
+  InteractionEvent,
+  MfaFactor,
+  type Resource,
+} from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
 
 import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
 import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
+import { putInteraction } from '#src/api/interaction.js';
+import { createResource, deleteResource } from '#src/api/resource.js';
 import { createSubjectToken } from '#src/api/subject-token.js';
+import type MockClient from '#src/client/index.js';
+import { initClient, processSession } from '#src/helpers/client.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { devFeatureTest, getAccessTokenPayload, randomString, generateName } from '#src/utils.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import {
+  devFeatureTest,
+  getAccessTokenPayload,
+  randomString,
+  generateName,
+  generatePassword,
+  generateUsername,
+} from '#src/utils.js';
 
 const { describe, it } = devFeatureTest;
 
@@ -250,6 +268,133 @@ describe('Token Exchange', () => {
       expect(decodeAccessToken(access_token)).toMatchObject({
         aud: buildOrganizationUrn(testOrganizationId),
       });
+    });
+  });
+
+  describe('with actor token', () => {
+    const username = generateUsername();
+    const password = generatePassword();
+    // Add test resource to ensure that the access token is JWT,
+    // make it easy to check claims.
+    const testApiResourceInfo: Pick<Resource, 'name' | 'indicator'> = {
+      name: 'test-api-resource',
+      indicator: 'https://foo.logto.io/api',
+    };
+
+    /* eslint-disable @silverhand/fp/no-let */
+    let testApiResourceId: string;
+    let testUserId: string;
+    let testAccessToken: string;
+    let client: MockClient;
+    /* eslint-enable @silverhand/fp/no-let */
+
+    beforeAll(async () => {
+      await enableAllPasswordSignInMethods();
+
+      /* eslint-disable @silverhand/fp/no-mutation */
+      const resource = await createResource(
+        testApiResourceInfo.name,
+        testApiResourceInfo.indicator
+      );
+      testApiResourceId = resource.id;
+      const { id } = await createUserByAdmin({ username, password });
+      testUserId = id;
+      client = await initClient({
+        resources: [testApiResourceInfo.indicator],
+      });
+      await client.successSend(putInteraction, {
+        event: InteractionEvent.SignIn,
+        identifier: { username, password },
+      });
+      const { redirectTo } = await client.submitInteraction();
+      await processSession(client, redirectTo);
+      testAccessToken = await client.getAccessToken();
+      /* eslint-enable @silverhand/fp/no-mutation */
+    });
+
+    afterAll(async () => {
+      await deleteUser(testUserId);
+      await deleteResource(testApiResourceId);
+    });
+
+    it('should exchange an access token with `act` claim', async () => {
+      const { subjectToken } = await createSubjectToken(userId);
+
+      const { access_token } = await oidcApi
+        .post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: applicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            actor_token: testAccessToken,
+            actor_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            resource: testApiResourceInfo.indicator,
+          }),
+        })
+        .json<{ access_token: string }>();
+
+      expect(getAccessTokenPayload(access_token)).toHaveProperty('act', { sub: testUserId });
+    });
+
+    it('should fail with invalid actor_token_type', async () => {
+      const { subjectToken } = await createSubjectToken(userId);
+
+      await expect(
+        oidcApi.post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: applicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            actor_token: testAccessToken,
+            actor_token_type: 'invalid_actor_token_type',
+            resource: testApiResourceInfo.indicator,
+          }),
+        })
+      ).rejects.toThrow();
+    });
+
+    it('should fail with invalid actor_token', async () => {
+      const { subjectToken } = await createSubjectToken(userId);
+
+      await expect(
+        oidcApi.post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: applicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            actor_token: 'invalid_actor_token',
+            actor_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            resource: testApiResourceInfo.indicator,
+          }),
+        })
+      ).rejects.toThrow();
+    });
+
+    it('should fail when the actor token do not have `openid` scope', async () => {
+      const { subjectToken } = await createSubjectToken(userId);
+      // Set `resource` to ensure that the access token is JWT, and then it won't have `openid` scope.
+      const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
+
+      await expect(
+        oidcApi.post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: applicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            actor_token: accessToken,
+            actor_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            resource: testApiResourceInfo.indicator,
+          }),
+        })
+      ).rejects.toThrow();
     });
   });
 });
