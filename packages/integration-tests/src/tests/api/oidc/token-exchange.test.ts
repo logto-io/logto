@@ -13,6 +13,7 @@ import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
 import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { putInteraction } from '#src/api/interaction.js';
+import { deleteJwtCustomizer, upsertJwtCustomizer } from '#src/api/logto-config.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { createSubjectToken } from '#src/api/subject-token.js';
 import type MockClient from '#src/client/index.js';
@@ -32,38 +33,65 @@ import {
 const { describe, it } = devFeatureTest;
 
 describe('Token Exchange', () => {
+  const username = generateUsername();
+  const password = generatePassword();
+  // Add test resource to ensure that the access token is JWT,
+  // make it easy to check claims.
+  const testApiResourceInfo: Pick<Resource, 'name' | 'indicator'> = {
+    name: 'test-api-resource',
+    indicator: 'https://foo.logto.io/api',
+  };
+
   /* eslint-disable @silverhand/fp/no-let */
-  let userId: string;
-  let applicationId: string;
+  let testApiResourceId: string;
+  let testApplicationId: string;
+  let testUserId: string;
+  let testAccessToken: string;
+  let client: MockClient;
   /* eslint-enable @silverhand/fp/no-let */
 
-  /* eslint-disable @silverhand/fp/no-mutation */
   beforeAll(async () => {
-    const user = await createUserByAdmin();
-    userId = user.id;
+    await enableAllPasswordSignInMethods();
+
+    /* eslint-disable @silverhand/fp/no-mutation */
+    const resource = await createResource(testApiResourceInfo.name, testApiResourceInfo.indicator);
+    testApiResourceId = resource.id;
     const applicationName = 'test-token-exchange-app';
     const applicationType = ApplicationType.SPA;
     const application = await createApplication(applicationName, applicationType, {
       oidcClientMetadata: { redirectUris: ['http://localhost:3000'], postLogoutRedirectUris: [] },
     });
-    applicationId = application.id;
+    testApplicationId = application.id;
+    const { id } = await createUserByAdmin({ username, password });
+    testUserId = id;
+    client = await initClient({
+      resources: [testApiResourceInfo.indicator],
+    });
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: { username, password },
+    });
+    const { redirectTo } = await client.submitInteraction();
+    await processSession(client, redirectTo);
+    testAccessToken = await client.getAccessToken();
+    /* eslint-enable @silverhand/fp/no-mutation */
   });
-  /* eslint-enable @silverhand/fp/no-mutation */
 
   afterAll(async () => {
-    await deleteUser(userId);
-    await deleteApplication(applicationId);
+    await deleteUser(testUserId);
+    await deleteResource(testApiResourceId);
+    await deleteApplication(testApplicationId);
   });
 
   describe('Basic flow', () => {
     it('should exchange an access token by a subject token', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
 
       const body = await oidcApi
         .post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -78,7 +106,7 @@ describe('Token Exchange', () => {
     });
 
     it('should fail without valid client_id', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
 
       await expect(
         oidcApi.post('token', {
@@ -97,7 +125,7 @@ describe('Token Exchange', () => {
         oidcApi.post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: 'invalid_subject_token',
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -107,12 +135,12 @@ describe('Token Exchange', () => {
     });
 
     it('should failed with consumed subject token', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
 
       await oidcApi.post('token', {
         headers: formUrlEncodedHeaders,
         body: new URLSearchParams({
-          client_id: applicationId,
+          client_id: testApplicationId,
           grant_type: GrantType.TokenExchange,
           subject_token: subjectToken,
           subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -122,7 +150,7 @@ describe('Token Exchange', () => {
         oidcApi.post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -132,7 +160,7 @@ describe('Token Exchange', () => {
     });
 
     it('should fail with a third-party application', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
       const thirdPartyApplication = await createApplication(
         generateName(),
         ApplicationType.Traditional,
@@ -157,13 +185,13 @@ describe('Token Exchange', () => {
     });
 
     it('should filter out non-oidc scopes', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
 
       const body = await oidcApi
         .post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -193,14 +221,14 @@ describe('Token Exchange', () => {
     beforeAll(async () => {
       const organization = await organizationApi.create({ name: 'org1' });
       testOrganizationId = organization.id;
-      await organizationApi.addUsers(testOrganizationId, [userId]);
+      await organizationApi.addUsers(testOrganizationId, [testUserId]);
 
       const scope = await organizationApi.scopeApi.create({ name: scopeName });
       testApiScopeId = scope.id;
 
       const role = await organizationApi.roleApi.create({ name: `role1:${randomString()}` });
       await organizationApi.roleApi.addScopes(role.id, [scope.id]);
-      await organizationApi.addUserRoles(testOrganizationId, userId, [role.id]);
+      await organizationApi.addUserRoles(testOrganizationId, testUserId, [role.id]);
     });
     /* eslint-enable @silverhand/fp/no-mutation */
 
@@ -209,13 +237,13 @@ describe('Token Exchange', () => {
     });
 
     it('should be able to get access token for organization with correct scopes', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
 
       const { access_token } = await oidcApi
         .post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -232,14 +260,14 @@ describe('Token Exchange', () => {
     });
 
     it('should throw when organization requires mfa but user has not configured', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
       await organizationApi.update(testOrganizationId, { isMfaRequired: true });
 
       await expect(
         oidcApi.post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -250,13 +278,13 @@ describe('Token Exchange', () => {
     });
 
     it('should be able to get access token for organization when user has mfa configured', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
-      await createUserMfaVerification(userId, MfaFactor.TOTP);
+      const { subjectToken } = await createSubjectToken(testUserId);
+      await createUserMfaVerification(testUserId, MfaFactor.TOTP);
       const { access_token } = await oidcApi
         .post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -272,59 +300,14 @@ describe('Token Exchange', () => {
   });
 
   describe('with actor token', () => {
-    const username = generateUsername();
-    const password = generatePassword();
-    // Add test resource to ensure that the access token is JWT,
-    // make it easy to check claims.
-    const testApiResourceInfo: Pick<Resource, 'name' | 'indicator'> = {
-      name: 'test-api-resource',
-      indicator: 'https://foo.logto.io/api',
-    };
-
-    /* eslint-disable @silverhand/fp/no-let */
-    let testApiResourceId: string;
-    let testUserId: string;
-    let testAccessToken: string;
-    let client: MockClient;
-    /* eslint-enable @silverhand/fp/no-let */
-
-    beforeAll(async () => {
-      await enableAllPasswordSignInMethods();
-
-      /* eslint-disable @silverhand/fp/no-mutation */
-      const resource = await createResource(
-        testApiResourceInfo.name,
-        testApiResourceInfo.indicator
-      );
-      testApiResourceId = resource.id;
-      const { id } = await createUserByAdmin({ username, password });
-      testUserId = id;
-      client = await initClient({
-        resources: [testApiResourceInfo.indicator],
-      });
-      await client.successSend(putInteraction, {
-        event: InteractionEvent.SignIn,
-        identifier: { username, password },
-      });
-      const { redirectTo } = await client.submitInteraction();
-      await processSession(client, redirectTo);
-      testAccessToken = await client.getAccessToken();
-      /* eslint-enable @silverhand/fp/no-mutation */
-    });
-
-    afterAll(async () => {
-      await deleteUser(testUserId);
-      await deleteResource(testApiResourceId);
-    });
-
     it('should exchange an access token with `act` claim', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
 
       const { access_token } = await oidcApi
         .post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -339,13 +322,13 @@ describe('Token Exchange', () => {
     });
 
     it('should fail with invalid actor_token_type', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
 
       await expect(
         oidcApi.post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -358,13 +341,13 @@ describe('Token Exchange', () => {
     });
 
     it('should fail with invalid actor_token', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
 
       await expect(
         oidcApi.post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -377,7 +360,7 @@ describe('Token Exchange', () => {
     });
 
     it('should fail when the actor token do not have `openid` scope', async () => {
-      const { subjectToken } = await createSubjectToken(userId);
+      const { subjectToken } = await createSubjectToken(testUserId);
       // Set `resource` to ensure that the access token is JWT, and then it won't have `openid` scope.
       const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
 
@@ -385,7 +368,7 @@ describe('Token Exchange', () => {
         oidcApi.post('token', {
           headers: formUrlEncodedHeaders,
           body: new URLSearchParams({
-            client_id: applicationId,
+            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
@@ -395,6 +378,33 @@ describe('Token Exchange', () => {
           }),
         })
       ).rejects.toThrow();
+    });
+  });
+
+  describe('custom jwt', () => {
+    it('should get context from subject token', async () => {
+      const { subjectToken } = await createSubjectToken(testUserId, { foo: 'bar' });
+      await upsertJwtCustomizer('access-token', {
+        script: `const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
+  return { foo: context?.grant?.subjectTokenContext?.foo };
+};`,
+      });
+
+      const { access_token } = await oidcApi
+        .post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: testApplicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            resource: testApiResourceInfo.indicator,
+          }),
+        })
+        .json<{ access_token: string }>();
+
+      expect(getAccessTokenPayload(access_token)).toHaveProperty('foo', 'bar');
+      await deleteJwtCustomizer('access-token');
     });
   });
 });
