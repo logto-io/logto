@@ -31,7 +31,7 @@ function LogoUploader({ isDarkModeEnabled }: Props) {
               className={isDarkModeEnabled ? styles.multiColumn : undefined}
               name={name}
               value={value ?? ''}
-              actionDescription={t('sign_in_exp.branding.logo_image_url')}
+              actionDescription={t('sign_in_exp.branding.logo_image')}
               onCompleted={onChange}
               onUploadErrorChange={setUploadLogoError}
               onDelete={() => {
@@ -50,7 +50,7 @@ function LogoUploader({ isDarkModeEnabled }: Props) {
                 name={name}
                 value={value ?? ''}
                 className={value ? styles.darkMode : undefined}
-                actionDescription={t('sign_in_exp.branding.dark_logo_image_url')}
+                actionDescription={t('sign_in_exp.branding.dark_logo_image')}
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadDarkLogoError}
                 onDelete={() => {

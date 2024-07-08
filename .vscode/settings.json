@@ -55,6 +55,7 @@
     "topbar",
     "upsell",
     "withtyped",
-    "backchannel"
+    "backchannel",
+    "deepmerge"
   ]
 }

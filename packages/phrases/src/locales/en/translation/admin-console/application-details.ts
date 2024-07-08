@@ -95,12 +95,18 @@ const application_details = {
   no_organization_placeholder: 'No organization found. <a>Go to organizations</a>',
   branding: {
     name: 'Branding',
-    description: "Customize your application's display name and logo on the consent screen.",
+    description:
+      'Customize the logos and brand colors of this application. The settings here will override the global sign-in experience settings.',
+    description_third_party:
+      "Customize your application's display name and logo on the consent screen.",
     more_info: 'More info',
     more_info_description: 'Offer users more details about your application on the consent screen.',
     display_name: 'Display name',
-    display_logo: 'Display logo',
-    display_logo_dark: 'Display logo (dark)',
+    application_logo: 'Application logo',
+    application_logo_dark: 'Application logo (dark)',
+    use_different_brand_color: 'Use a different brand color for the app-level sign-in experience',
+    brand_color: 'Brand color',
+    brand_color_dark: 'Brand color (dark)',
     terms_of_use_url: 'Application terms of use URL',
     privacy_policy_url: 'Application privacy policy URL',
   },

@@ -56,19 +56,6 @@ describe('application sign in experience', () => {
     );
   });
 
-  it('should throw if application is not third-party', async () => {
-    await expectRejects(
-      setApplicationSignInExperience(
-        applications.get('firstPartyApp')!.id,
-        applicationSignInExperiences
-      ),
-      {
-        code: 'application.third_party_application_only',
-        status: 422,
-      }
-    );
-  });
-
   it('should set new application sign in experience', async () => {
     const application = applications.get('thirdPartyApp')!;
 

@@ -1,5 +1,5 @@
 import { isBuiltInLanguageTag } from '@logto/phrases-experience';
-import { ExtraParamsKey, adminTenantId, guardFullSignInExperience } from '@logto/schemas';
+import { adminTenantId, guardFullSignInExperience } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -42,13 +42,13 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   router.get(
     '/.well-known/sign-in-exp',
     koaGuard({
-      query: z.object({ [ExtraParamsKey.OrganizationId]: z.string().optional() }),
+      query: z.object({ organizationId: z.string(), appId: z.string() }).partial(),
       response: guardFullSignInExperience,
       status: 200,
     }),
     async (ctx, next) => {
-      const { [ExtraParamsKey.OrganizationId]: organizationId } = ctx.guard.query;
-      ctx.body = await getFullSignInExperience({ locale: ctx.locale, organizationId });
+      const { organizationId, appId } = ctx.guard.query;
+      ctx.body = await getFullSignInExperience({ locale: ctx.locale, organizationId, appId });
 
       return next();
     }

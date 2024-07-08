@@ -5,6 +5,8 @@ export const searchKeys = Object.freeze({
    * The key for specifying the organization ID that may be used to override the default settings.
    */
   organizationId: 'organization_id',
+  /** The current application ID. */
+  appId: 'app_id',
 });
 
 export const handleSearchParametersData = () => {

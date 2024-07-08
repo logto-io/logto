@@ -8,9 +8,10 @@ import type {
   SsoConnectorMetadata,
 } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { deduplicate, trySafe } from '@silverhand/essentials';
+import { deduplicate, pick, trySafe } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
+import { type WellKnownCache } from '#src/caches/well-known.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
@@ -34,11 +35,13 @@ export const createSignInExperienceLibrary = (
   queries: Queries,
   { getLogtoConnectors }: ConnectorLibrary,
   { getAvailableSsoConnectors }: SsoConnectorLibrary,
-  cloudConnection: CloudConnectionLibrary
+  cloudConnection: CloudConnectionLibrary,
+  wellKnownCache: WellKnownCache
 ) => {
   const {
     customPhrases: { findAllCustomLanguageTags },
     signInExperiences: { findDefaultSignInExperience, updateDefaultSignInExperience },
+    applicationSignInExperiences: { safeFindSignInExperienceByApplicationId },
     organizations,
   } = queries;
 
@@ -93,8 +96,11 @@ export const createSignInExperienceLibrary = (
 
   /**
    * Query the tenant subscription plan to determine if the tenant is a development tenant.
+   *
+   * **Caveats**: The result will be cached without updating mechanism since the tenant type is
+   * not editable at the moment.
    */
-  const getIsDevelopmentTenant = async (): Promise<boolean> => {
+  const getIsDevelopmentTenant = wellKnownCache.memoize(async (): Promise<boolean> => {
     const { isCloud, isIntegrationTest } = EnvSet.values;
 
     // Cloud only feature, return false in non-cloud environments
@@ -110,7 +116,7 @@ export const createSignInExperienceLibrary = (
     const plan = await getTenantSubscriptionPlan(cloudConnection);
 
     return plan.id === developmentTenantPlanId;
-  };
+  }, ['is-developer-tenant']);
 
   /**
    * Get the override data for the sign-in experience by reading from organization data. If the
@@ -130,20 +136,42 @@ export const createSignInExperienceLibrary = (
     return { branding: organization.branding };
   };
 
+  const findApplicationSignInExperience = async (appId?: string) => {
+    if (!appId) {
+      return;
+    }
+
+    const found = await safeFindSignInExperienceByApplicationId(appId);
+
+    if (!found) {
+      return;
+    }
+
+    return pick(found, 'branding', 'color');
+  };
+
   const getFullSignInExperience = async ({
     locale,
     organizationId,
+    appId,
   }: {
     locale: string;
     organizationId?: string;
+    appId?: string;
   }): Promise<FullSignInExperience> => {
-    const [signInExperience, logtoConnectors, isDevelopmentTenant, organizationOverride] =
-      await Promise.all([
-        findDefaultSignInExperience(),
-        getLogtoConnectors(),
-        getIsDevelopmentTenant(),
-        getOrganizationOverride(organizationId),
-      ]);
+    const [
+      signInExperience,
+      logtoConnectors,
+      isDevelopmentTenant,
+      organizationOverride,
+      appSignInExperience,
+    ] = await Promise.all([
+      findDefaultSignInExperience(),
+      getLogtoConnectors(),
+      getIsDevelopmentTenant(),
+      getOrganizationOverride(organizationId),
+      findApplicationSignInExperience(appId),
+    ]);
 
     // Always return empty array if single-sign-on is disabled
     const ssoConnectors = signInExperience.singleSignOnEnabled
@@ -196,7 +224,10 @@ export const createSignInExperienceLibrary = (
     };
 
     return {
-      ...deepmerge(signInExperience, organizationOverride ?? {}),
+      ...deepmerge(
+        deepmerge(signInExperience, appSignInExperience ?? {}),
+        organizationOverride ?? {}
+      ),
       socialConnectors,
       ssoConnectors,
       forgotPassword,

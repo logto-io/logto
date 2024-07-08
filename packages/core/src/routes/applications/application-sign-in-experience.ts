@@ -21,9 +21,6 @@ function applicationSignInExperienceRoutes<T extends ManagementApiRouter>(
           updateByApplicationId,
         },
       },
-      libraries: {
-        applications: { validateThirdPartyApplicationById },
-      },
     },
   ]: RouterInitArgs<T>
 ) {
@@ -31,7 +28,6 @@ function applicationSignInExperienceRoutes<T extends ManagementApiRouter>(
    * Customize the branding of an application.
    *
    * - Only branding and terms links customization is supported for now. e.g. per app level sign-in method customization is not supported.
-   * - Only third-party applications can be customized for now.
    * - Application level sign-in experience customization is optional, if provided, it will override the default branding and terms links.
    * - We use application ID as the unique identifier of the application level sign-in experience ID.
    */
@@ -51,7 +47,7 @@ function applicationSignInExperienceRoutes<T extends ManagementApiRouter>(
         body,
       } = ctx.guard;
 
-      await validateThirdPartyApplicationById(applicationId);
+      await findApplicationById(applicationId);
 
       const applicationSignInExperience = await safeFindSignInExperienceByApplicationId(
         applicationId

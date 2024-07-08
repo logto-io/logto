@@ -10,6 +10,7 @@ type LocalLogtoConfig = {
   prompt?: string;
   scope?: string;
   resource?: string;
+  appId?: string;
 };
 
 const localLogtoConfigGuard = z
@@ -18,6 +19,7 @@ const localLogtoConfigGuard = z
     prompt: z.string(),
     scope: z.string(),
     resource: z.string(),
+    appId: z.string(),
   })
   .partial() satisfies ToZodObject<LocalLogtoConfig>;
 

@@ -197,6 +197,7 @@ export default function initOidc(
     },
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
+        // @deprecated use search params instead
         ctx.cookies.set(
           logtoCookieKey,
           JSON.stringify({
