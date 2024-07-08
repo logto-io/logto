@@ -30,6 +30,11 @@ const jwt_claims = {
     title: 'User data',
     subtitle: 'Use `data.user` input parameter to provide vital user info.',
   },
+  grant_data: {
+    title: 'Grant data',
+    subtitle:
+      'Use `data.grant` input parameter to provide vital grant info, only available for token exchange.',
+  },
   token_data: {
     title: 'Token data',
     subtitle: 'Use `token` input parameter for current access token payload. ',

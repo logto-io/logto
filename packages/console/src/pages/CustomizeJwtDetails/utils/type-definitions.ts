@@ -3,6 +3,7 @@ import {
   accessTokenPayloadTypeDefinition,
   clientCredentialsPayloadTypeDefinition,
   jwtCustomizerUserContextTypeDefinition,
+  jwtCustomizerGrantContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 
 import { type JwtCustomizerForm } from '../type';
@@ -12,10 +13,13 @@ export {
   accessTokenPayloadTypeDefinition,
   clientCredentialsPayloadTypeDefinition,
   jwtCustomizerUserContextTypeDefinition,
+  jwtCustomizerGrantContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 
 export const buildAccessTokenJwtCustomizerContextTsDefinition = () => {
   return `declare ${jwtCustomizerUserContextTypeDefinition}
+
+  declare ${jwtCustomizerGrantContextTypeDefinition}
 
   declare ${accessTokenPayloadTypeDefinition}`;
 };
