@@ -11,7 +11,7 @@ down:
 		docker-compose -f docker-compose-local.yml down
 run-native:
 		@echo "${GREEN}Starting db...${NC}"
-		docker compose -f docker-compose-db.yml up --detach
+		docker compose -f docker-compose-local.yml up --detach postgres
 		@echo "${GREEN}Db started!${NC}"
 		@echo "${GREEN}Installing stuffs...${NC}"
 		pnpm pnpm:devPreinstall && pnpm i && pnpm prepack

@@ -5,6 +5,8 @@ parameters:
     default: false
   - name: buildArguments
     default: ""
+  - name: dockerfile
+    default: "./Dockerfile"
 
 jobs:
   - job: Build
@@ -17,7 +19,7 @@ jobs:
       inputs:
         command: build
         repository: ${{ parameters.serviceName }}
-        dockerfile: ./Dockerfile
+        dockerfile: ${{ parameters.dockerfile }}
         buildContext: '$(Build.SourcesDirectory)'
         arguments: ${{ parameters.buildArguments }}
     - task: Docker@0

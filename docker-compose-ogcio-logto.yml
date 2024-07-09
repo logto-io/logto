@@ -1,0 +1,61 @@
+# This file has been added on OGCIO fork
+services:
+  app:
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mygovid-mock-service:
+        condition: service_started
+    image: 730335224023.dkr.ecr.eu-west-1.amazonaws.com/life-events-logto:dev
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "npm run cli db seed -- --swe && npm run cli db alteration deploy latest && npm run cli db ogcio -- --seeder-filepath=\"/etc/logto/packages/cli/src/commands/database/ogcio/ogcio-seeder-local.json\" && npm start"
+      ]
+    ports:
+      - 3301:3301
+      - 3302:3302
+    environment:
+      - TRUST_PROXY_HEADER=1
+      - DB_URL=postgres://postgres:p0stgr3s@postgres:5433/logto
+      # Mandatory for GitPod to map host env to the container, thus GitPod can dynamically configure the public URL of Logto;
+      # Or, you can leverage it for local testing.
+      - ENDPOINT
+      - ADMIN_ENDPOINT
+      - PORT=3301
+      - ADMIN_PORT=3302
+      - MOCK_TOKEN_ENDPOINT=http://mygovid-mock-service:4005/logto/mock/token
+      - MOCK_KEYS_ENDPOINT=http://mygovid-mock-service:4005/logto/mock/keys
+      
+  postgres:
+    image: postgres:14-alpine
+    user: postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p0stgr3s
+      PGPORT: 5433
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 5433:5433
+
+  mygovid-mock-service:
+    image: mygovid-mock-service:latest
+    build:
+      dockerfile: ./mygovid-mock-service/Dockerfile
+    ports:
+      - 4005:4005
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  logto_network:
+    external: true

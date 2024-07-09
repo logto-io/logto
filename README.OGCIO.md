@@ -38,11 +38,11 @@ You can also run Logto natively on your machine outside the docker container.
 
 If you start Logto natively, the database won't be available, and you will have to start it separately. The database is still dockerized and has its own Docker Compose configuration. Use the following command to start the database container:
 
-`docker compose -f docker-compose-db.yml up -d`
+`docker compose -f docker-compose-local.yml up -d postgres`
 
 With the following command, you can shut down the database container:
 
-`docker compose -f docker-compose-db.yml down`
+`docker compose -f docker-compose-local.yml down postgres`
 
 ### Configuration and installation
 
@@ -58,8 +58,8 @@ ADMIN_PORT=3302
 PORT=3301
 
 # OGCIO Config
-USER_DEFAULT_ORGANIZATION_NAMES=OGCIO Seeded Org
-USER_DEFAULT_ORGANIZATION_ROLE_NAMES=OGCIO Employee, OGCIO Manager
+MOCK_TOKEN_ENDPOINT=http://localhost:4005/logto/mock/token
+MOCK_KEYS_ENDPOINT=http://localhost:4005/logto/mock/keys
 ```
 2. Run the makefile command
 ```

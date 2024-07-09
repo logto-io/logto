@@ -8,7 +8,7 @@
     "start": "node dist/index.js",
     "dev": "nodemon | pino-pretty",
     "lint": "eslint . --ext .ts",
-    "build": "echo Build script for the MyGovId mock service not needed so far"
+    "build": "rm -rf dist && tsc -p tsconfig.json && cp -r src/routes/static dist/routes/static"
   },
   "nodemonConfig": {
     "ext": "ts,json",

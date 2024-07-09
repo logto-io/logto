@@ -1,6 +1,6 @@
 import { build } from "./app.js";
 
-const app = await build();
+const app = await build({logger: true});
 
 app.listen({ host: "0.0.0.0", port: 4005 }, (err, address) => {
   if (err) {

@@ -84,3 +84,25 @@ stages:
         awsServiceConnection: ${{ variables.awsServiceConnection }}
         awsRegion: ${{ variables.awsRegion }}
         serviceName: logto-admin
+  - stage: Build_MyGovId_Mock
+    displayName: Build MyGovId Mock
+    dependsOn: 
+      - securityScan
+    condition: or(eq(variables['Build.SourceBranchName'], 'dev'),eq(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+    - template: pipeline-templates/build_service.yml
+      parameters:
+        serviceName: mygovid-mock-service
+        pushArtefacts: true
+        buildArguments: $(buildArguments)
+        dockerfile: ./mygovid-mock-service/Dockerfile
+  - stage: Push_MyGovId_Mock
+    displayName: Push MyGovId Mock to ECR
+    dependsOn: Build_MyGovId_Mock
+    condition: eq(variables['Build.SourceBranchName'], 'dev')
+    jobs:
+    - template: pipeline-templates/push_image.yml
+      parameters:
+        awsServiceConnection: ${{ variables.awsServiceConnection }}
+        awsRegion: ${{ variables.awsRegion }}
+        serviceName: mygovid-mock-service
