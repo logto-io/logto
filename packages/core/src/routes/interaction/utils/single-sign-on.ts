@@ -88,7 +88,7 @@ type SsoAuthenticationResult = {
  *
  * @returns The SSO authentication result
  */
-const verifySsoIdentity = async (
+export const verifySsoIdentity = async (
   ctx: WithLogContext,
   { provider, id: tenantId }: TenantContext,
   connectorData: SupportedSsoConnector,

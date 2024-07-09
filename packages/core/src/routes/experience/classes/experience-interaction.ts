@@ -59,7 +59,7 @@ export default class ExperienceInteraction {
   constructor(
     private readonly ctx: WithLogContext,
     private readonly tenant: TenantContext,
-    interactionDetails: Interaction
+    public interactionDetails: Interaction
   ) {
     const { libraries, queries } = tenant;
 
@@ -125,8 +125,12 @@ export default class ExperienceInteraction {
     switch (verificationRecord.type) {
       case VerificationType.Password:
       case VerificationType.VerificationCode:
-      case VerificationType.Social: {
+      case VerificationType.Social:
+      case VerificationType.EnterpriseSso: {
+        // TODO: social sign-in with verified email
+
         const { id, isSuspended } = await verificationRecord.identifyUser();
+
         assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
         // Throws an 409 error if the current session has already identified a different user

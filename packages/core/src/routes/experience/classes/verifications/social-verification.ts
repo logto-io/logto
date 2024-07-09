@@ -106,9 +106,6 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   /**
    * Verify the social identity and store the social identity in the verification record.
    *
-   * - Store the social identity in the verification record.
-   * - Find the user by the social identity and store the userId in the verification record if the user exists.
-   *
    * @remarks
    * Refer to the {@link verifySocialIdentity} method in the interaction/utils/social-verification.ts file.
    * For compatibility reasons, we keep using the old {@link verifySocialIdentity} method here as a single source of truth.
@@ -133,8 +130,10 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   async identifyUser(): Promise<User> {
     assertThat(
       this.isVerified,
-      new RequestError({ code: 'session.verification_failed', status: 400 })
+      new RequestError({ code: 'session.verification_failed', status: 422 })
     );
+
+    // TODO: sync userInfo and link social identity
 
     const user = await this.findUserBySocialIdentity();
 
