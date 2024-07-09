@@ -179,8 +179,10 @@
                 "id": "login-webhook",
                 "name": "User log in",
                 "events": [
-                    "PostRegister",
-                    "PostSignIn"
+                    "User.Created",
+                    "User.Deleted",
+                    "User.Data.Updated",
+                    "User.SuspensionStatus.Updated"
                 ],
                 "config": {
                     "url": "http://localhost:8003/user-login-wh"

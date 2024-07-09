@@ -100,8 +100,10 @@
                 "id": "login_webhook",
                 "name": "User log in",
                 "events": [
-                    "PostRegister",
-                    "PostSignIn"
+                    "User.Created",
+                    "User.Deleted",
+                    "User.Data.Updated",
+                    "User.SuspensionStatus.Updated"
                 ],
                 "config": {
                     "url": "<SEEDER_WEBHOOK_LOGIN_URL>"

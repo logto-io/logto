@@ -33,15 +33,17 @@ export const createMockSignedJwt = async (
     firstName: string;
     lastName: string;
     email: string;
+    sub: string;
+    oid: string;
   },
   origin: string,
 ) => {
   const body = {
     ver: "1.0",
-    sub: getRandomString(),
+    sub: user.sub,
     auth_time: Date.now(),
     email: user.email,
-    oid: getRandomString(),
+    oid: user.oid,
     AlternateIds: "",
     BirthDate: "13/06/1941",
     PublicServiceNumber: "0111019P",

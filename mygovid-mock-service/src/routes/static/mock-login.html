@@ -84,6 +84,8 @@
         />
         <input id="lastName" type="hidden" name="lastName" value="" readonly />
         <input id="email" type="hidden" name="email" value="" readonly />
+        <input id="oid" type="hidden" name="oid" value="" readonly />
+        <input id="sub" type="hidden" name="sub" value="" readonly />
         <input
           id="redirect_url"
           type="hidden"
@@ -209,12 +211,16 @@
     users: [
       {
         user_name: "Peter Parker",
-        govid_email: "peter.parker@mail.ie"
+        govid_email: "peter.parker@mail.ie",
+        oid: "4cfa878a4fd9892a64ac",
+        sub: "932d94fc69be147f6fcb",
       },
       {
         user_name: "Tony Stark",
-        govid_email: "tony.stark@gov.ie",
-        is_public_servant: true
+        govid_email: "tony.stark@mail.ie",
+        oid: "71848ec91433bc4222d0",
+        sub: "7ffe40ff7d558de01c54",
+        is_public_servant: true,
       },
     ]
   }
@@ -235,7 +241,7 @@
       (user) => user.govid_email === e.target.value,
     );
 
-    let firstName, lastName, email;
+    let firstName, lastName, email, oid, sub;
 
     if (user) {
       const nameSplit = user.user_name.split(" ");
@@ -243,16 +249,22 @@
       lastName = nameSplit.slice(1).join(" ");
       email = user.govid_email;
       isCurrentUserSet = true;
+      oid = user.oid;
+      sub = user.sub;
     } else {
       firstName = faker.person.firstName();
       lastName = faker.person.lastName();
       email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@mail.ie`;
       isCurrentUserSet = false;
+      oid = crypto.randomBytes(20).toString("hex");
+      sub = crypto.randomBytes(20).toString("hex");
     }
 
     document.querySelector("#firstName").value = firstName;
     document.querySelector("#lastName").value = lastName;
     document.querySelector("#email").value = email;
+    document.querySelector("#oid").value = oid;
+    document.querySelector("#sub").value = sub;
     document.querySelector("#submit_btn").innerHTML =
       `<div style="margin-top: 5px">Login ${firstName} ${lastName} <span class="icon-signin_id_logo"></span></div>`;
   });

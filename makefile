@@ -10,6 +10,9 @@ run:
 down:
 		docker-compose -f docker-compose-local.yml down
 run-native:
+		@echo "${GREEN}Copying .env file...${NC}"
+		cp -- ".env.sample" ".env"
+		@echo "${GREEN}Copied!${NC}"
 		@echo "${GREEN}Starting db...${NC}"
 		docker compose -f docker-compose-local.yml up --detach postgres
 		@echo "${GREEN}Db started!${NC}"
