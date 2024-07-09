@@ -82,7 +82,6 @@ const InputField = (
           styles.container,
           isDanger && styles.danger,
           isActive && styles.active,
-          isFocused && styles.focus,
           !label && styles.noLabel
         )}
       >

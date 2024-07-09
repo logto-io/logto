@@ -30,8 +30,8 @@ const NotchedBorder = ({ label, isActive, isDanger, isFocused }: Props) => {
     <div
       className={classNames(
         styles.container,
-        isActive && styles.active,
         isDanger && styles.danger,
+        isActive && styles.active,
         isFocused && styles.focused,
         !label && styles.noLabel
       )}
