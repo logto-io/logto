@@ -49,7 +49,7 @@ const BackupCodeVerification = () => {
         <form onSubmit={onSubmitHandler}>
           <InputField
             autoComplete="off"
-            placeholder={t('input.backup_code')}
+            label={t('input.backup_code')}
             className={styles.backupCodeInput}
             {...register('code')}
           />

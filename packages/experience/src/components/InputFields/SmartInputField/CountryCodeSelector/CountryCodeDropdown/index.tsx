@@ -228,6 +228,7 @@ const CountryCodeDropdown = ({
           prefix={<SearchIcon />}
           value={searchValue}
           className={styles.searchInputField}
+          inputFieldClassName={styles.innerInputFiled}
           placeholder={t('input.search_region_code')}
           onChange={onSearchChange}
           onKeyDown={onInputKeyDown}

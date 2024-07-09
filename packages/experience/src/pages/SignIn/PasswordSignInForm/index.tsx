@@ -138,7 +138,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         <PasswordInputField
           className={styles.inputField}
           autoComplete="current-password"
-          placeholder={t('input.password')}
+          label={t('input.password')}
           isDanger={!!errors.password}
           errorMessage={errors.password?.message}
           {...register('password', { required: t('error.password_required') })}

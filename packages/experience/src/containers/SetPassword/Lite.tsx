@@ -58,7 +58,7 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
       <PasswordInputField
         className={styles.inputField}
         autoComplete="new-password"
-        placeholder={t('input.password')}
+        label={t('input.password')}
         autoFocus={autoFocus}
         isDanger={!!errors.newPassword}
         errorMessage={errors.newPassword?.message}

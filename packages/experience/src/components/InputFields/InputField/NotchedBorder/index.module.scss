@@ -1,0 +1,127 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  .border,
+  .outline {
+    text-align: left;
+    position: absolute;
+    inset: -8px 0 0;
+    border: _.border(var(--color-line-border));
+    border-radius: var(--radius);
+    pointer-events: none;
+    display: block;
+
+    legend {
+      display: inline-block;
+      visibility: hidden;
+      padding: 0;
+      // fix to the label font height to keep space for the input container
+      height: 20px;
+      // Set to 0 to avoid the empty space in the top border
+      width: 0;
+
+      span {
+        padding: 0 _.unit(1);
+        opacity: 0%;
+        visibility: hidden;
+        display: inline-block;
+        font: var(--font-body-3);
+      }
+    }
+  }
+
+  .outline {
+    display: none;
+    inset: -9px -2px -2px;
+    border-radius: 10px;
+    border: 3px outset var(--color-overlay-brand-focused);
+  }
+
+  .label {
+    position: absolute;
+    left: _.unit(4);
+    font: var(--font-body-1);
+    color: var(--color-type-secondary);
+    pointer-events: none;
+    top: 50%;
+    transform: translateY(-46%);
+    transition: 0.2s ease-out;
+    transition-property: position, font, top;
+    background-color: transparent;
+    z-index: 1;
+  }
+
+  &.active {
+    .border,
+    .outline {
+      legend {
+        visibility: visible;
+        width: auto;
+      }
+    }
+
+    .label {
+      top: 0;
+      left: _.unit(3);
+      font: var(--font-body-3);
+      color: var(--color-type-secondary);
+      padding: 0 _.unit(1);
+    }
+  }
+
+  &.focused {
+    .border {
+      border-color: var(--color-brand-default);
+    }
+
+    .label {
+      color: var(--color-brand-default);
+    }
+  }
+}
+
+
+.container.danger {
+  .border {
+    border-color: var(--color-danger-default);
+  }
+
+  .outline {
+    border-color: var(--color-overlay-danger-focused);
+  }
+
+  &.active {
+    .label {
+      color: var(--color-danger-default);
+    }
+  }
+}
+
+.container.noLabel {
+  .border,
+  .outline {
+    legend {
+      width: 0;
+    }
+  }
+}
+
+:global(body.desktop) {
+  .container {
+    &:not(.active) {
+      .label {
+        font: var(--font-body-2);
+      }
+    }
+
+    &.focused {
+      .outline {
+        display: block;
+      }
+    }
+  }
+}

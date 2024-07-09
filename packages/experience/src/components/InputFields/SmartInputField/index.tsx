@@ -70,8 +70,9 @@ const SmartInputField = (
       {...rest}
       ref={innerRef}
       isSuffixFocusVisible={Boolean(inputValue)}
-      style={{ zIndex: 1, paddingLeft }} // Give <input /> z-index to override country selector
+      style={{ paddingLeft }}
       value={inputValue}
+      isPrefixVisible={isPrefixVisible}
       prefix={
         <AnimatedPrefix isVisible={isPrefixVisible}>
           <CountryCodeSelector

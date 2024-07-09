@@ -73,7 +73,7 @@ const SetPassword = ({
         className={styles.inputField}
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
-        placeholder={t('input.password')}
+        label={t('input.password')}
         autoFocus={autoFocus}
         isDanger={!!errors.newPassword}
         errorMessage={errors.newPassword?.message}
@@ -97,7 +97,7 @@ const SetPassword = ({
         className={styles.inputField}
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
-        placeholder={t('input.confirm_password')}
+        label={t('input.confirm_password')}
         errorMessage={errors.confirmPassword?.message}
         aria-invalid={!!errors.confirmPassword}
         {...register('confirmPassword', {
