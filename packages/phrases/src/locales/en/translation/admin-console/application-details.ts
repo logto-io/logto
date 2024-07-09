@@ -104,7 +104,6 @@ const application_details = {
     display_name: 'Display name',
     application_logo: 'Application logo',
     application_logo_dark: 'Application logo (dark)',
-    use_different_brand_color: 'Use a different brand color for the app-level sign-in experience',
     brand_color: 'Brand color',
     brand_color_dark: 'Brand color (dark)',
     terms_of_use_url: 'Application terms of use URL',

@@ -35,15 +35,6 @@ const sign_in_exp = {
   branding: {
     title: 'ZONE DE MARQUE',
     ui_style: 'Style',
-    favicon: 'Favicon',
-    logo_image_url: "URL de l'image du logo de l'application",
-    logo_image_url_placeholder: 'https://votre.domaine.cdn/logo.png',
-    dark_logo_image_url: "URL de l'image du logo de l'application (Sombre)",
-    dark_logo_image_url_placeholder: 'https://votre.domaine.cdn/logo-dark.png',
-    logo_image: "Logo de l'application",
-    dark_logo_image: "Logo de l'application (sombre)",
-    logo_image_error: "Logo de l'application : {{error}}",
-    favicon_error: 'Favicon : {{error}}',
   },
   custom_css: {
     title: 'CSS personnalisé',

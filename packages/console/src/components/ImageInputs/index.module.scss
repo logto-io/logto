@@ -6,20 +6,27 @@
   > * {
     flex: 1;
 
-    // remove the left side of the border-radius on the second column when dark mode logo uploader is active
-    &:not(:first-child) {
+    &:first-child {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &:last-child {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
 
-    &.darkMode {
-      background-color: #000;
+    &:not(:first-child):not(:last-child) {
+      border-radius: 0;
+    }
+
+    &.dark {
+      background-color: #111;
     }
   }
 
-  .multiColumn {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  .logo {
+    flex: 3;
   }
 }
 

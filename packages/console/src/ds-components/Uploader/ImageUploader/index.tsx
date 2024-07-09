@@ -17,6 +17,7 @@ export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
   readonly value: string;
   readonly onDelete: () => void;
   readonly className?: string;
+  readonly uploadedClassName?: string;
 };
 
 function ImageUploader({
@@ -25,11 +26,12 @@ function ImageUploader({
   onDelete,
   allowedMimeTypes: imageMimeTypes,
   className,
+  uploadedClassName,
   ...rest
 }: Props) {
   const { allowedMimeTypes } = useImageMimeTypes(imageMimeTypes);
   return value ? (
-    <div className={classNames(styles.imageUploader, className)}>
+    <div className={classNames(styles.imageUploader, className, uploadedClassName)}>
       <ImageWithErrorFallback
         containerClassName={styles.container}
         src={value}

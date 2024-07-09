@@ -23,11 +23,14 @@ export const themeToLogoKey = Object.freeze({
   [Theme.Dark]: 'darkLogoUrl',
 } satisfies Record<Theme, keyof Branding>);
 
-export const brandingGuard = z.object({
-  logoUrl: z.string().url().optional(),
-  darkLogoUrl: z.string().url().optional(),
-  favicon: z.string().url().optional(),
-});
+export const brandingGuard = z
+  .object({
+    logoUrl: z.string().url(),
+    darkLogoUrl: z.string().url(),
+    favicon: z.string().url(),
+    darkFavicon: z.string().url(),
+  })
+  .partial();
 
 export type Branding = z.infer<typeof brandingGuard>;
 

@@ -1,4 +1,4 @@
-import { type SignInExperience, type Organization } from '@logto/schemas';
+import { type SignInExperience, type Organization, Theme } from '@logto/schemas';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import useSWR from 'swr';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
+import LogoInputs from '@/components/ImageInputs';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
@@ -20,10 +21,14 @@ import { trySubmitSafe } from '@/utils/form';
 
 import { type OrganizationDetailsOutletContext } from '../types';
 
-import Branding from './Branding';
 import JitSettings from './JitSettings';
 import * as styles from './index.module.scss';
 import { assembleData, isJsonObject, normalizeData, type FormData } from './utils';
+
+const themeToLogoName = Object.freeze({
+  [Theme.Light]: 'logoUrl',
+  [Theme.Dark]: 'darkLogoUrl',
+} as const satisfies Record<Theme, string>);
 
 function Settings() {
   const { isDeleting, data, jit, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();
@@ -104,6 +109,17 @@ function Settings() {
             {...register('description')}
           />
         </FormField>
+        <LogoInputs
+          uploadTitle="organization_details.branding.logo"
+          control={control}
+          register={register}
+          fields={Object.values(Theme).map((theme) => ({
+            name: `branding.${themeToLogoName[theme]}`,
+            error: errors.branding?.[themeToLogoName[theme]],
+            type: 'organization_logo',
+            theme,
+          }))}
+        />
         <FormField
           title="organization_details.custom_data"
           tip={t('organization_details.custom_data_tip')}
@@ -137,7 +153,6 @@ function Settings() {
           )}
         </FormField>
       </FormCard>
-      <Branding form={form} />
       <JitSettings form={form} />
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </DetailsForm>

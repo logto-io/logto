@@ -34,15 +34,6 @@ const sign_in_exp = {
   branding: {
     title: 'BRANDING',
     ui_style: 'Stil',
-    favicon: 'Favicon',
-    logo_image_url: 'App Logo-URL',
-    logo_image_url_placeholder: 'https://dein.cdn.domain/logo.png',
-    dark_logo_image_url: 'App Logo-URL (Dunkler Modus)',
-    dark_logo_image_url_placeholder: 'https://dein.cdn.domain/logo-dark.png',
-    logo_image: 'App-Logo',
-    dark_logo_image: 'App-Logo (Dunkler Modus)',
-    logo_image_error: 'App-Logo: {{error}}',
-    favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
     title: 'Benutzerdefiniertes CSS',

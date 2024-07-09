@@ -31,15 +31,6 @@ const sign_in_exp = {
   branding: {
     title: '品牌定制區',
     ui_style: '樣式',
-    favicon: '瀏覽器地址欄圖標',
-    logo_image_url: 'Logo 圖片 URL',
-    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
-    dark_logo_image_url: 'Logo 圖片 URL (深色)',
-    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'Logo 圖片',
-    dark_logo_image: 'Logo 圖片(深色)',
-    logo_image_error: '應用 Logo：{{error}}',
-    favicon_error: 'Favicon：{{error}}',
   },
   custom_css: {
     title: '自定義 CSS',

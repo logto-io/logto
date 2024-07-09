@@ -1,4 +1,4 @@
-import { type Application, type ApplicationSignInExperience } from '@logto/schemas';
+import { Theme, type Application, type ApplicationSignInExperience } from '@logto/schemas';
 import { useCallback, useEffect } from 'react';
 import { useForm, FormProvider, Controller } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -6,24 +6,22 @@ import { useTranslation } from 'react-i18next';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
+import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
 import RequestDataError from '@/components/RequestDataError';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { logtoThirdPartyAppBrandingLink } from '@/consts';
-import Checkbox from '@/ds-components/Checkbox';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
-import LogoUploader from './LogoUploader';
 import * as styles from './index.module.scss';
 import useApplicationSignInExperienceSWR from './use-application-sign-in-experience-swr';
 import useSignInExperienceSWR from './use-sign-in-experience-swr';
-import { formatFormToSubmitData, formatResponseDataToForm } from './utils';
+import { formatFormToSubmitData } from './utils';
 
 type Props = {
   readonly application: Application;
@@ -47,8 +45,6 @@ function Branding({ application, isActive }: Props) {
     handleSubmit,
     register,
     reset,
-    setValue,
-    watch,
     control,
     formState: { isDirty, isSubmitting, errors },
   } = formMethods;
@@ -57,14 +53,10 @@ function Branding({ application, isActive }: Props) {
 
   const { data, error, mutate } = useApplicationSignInExperienceSWR(application.id);
   const { data: sieData, error: sieError, mutate: sieMutate } = useSignInExperienceSWR();
-  const { isReady: isUserAssetsServiceReady, isLoading: isUserAssetsServiceLoading } =
-    useUserAssetsService();
 
   const isApplicationSieLoading = !data && !error;
   const isSieLoading = !sieData && !sieError;
-  const isLoading = isApplicationSieLoading || isSieLoading || isUserAssetsServiceLoading;
-  const color = watch('color');
-  const isColorEmpty = !color.primaryColor && !color.darkPrimaryColor;
+  const isLoading = isApplicationSieLoading || isSieLoading;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -93,7 +85,7 @@ function Branding({ application, isActive }: Props) {
       return;
     }
 
-    reset(formatResponseDataToForm(data));
+    reset(data);
   }, [data, reset]);
 
   if (isLoading) {
@@ -103,8 +95,6 @@ function Branding({ application, isActive }: Props) {
   if (error && error.status !== 404) {
     return <RequestDataError error={error} onRetry={onRetryFetch} />;
   }
-
-  const isDarkModeEnabled = sieData?.color.isDarkModeEnabled;
 
   return (
     <>
@@ -134,77 +124,48 @@ function Branding({ application, isActive }: Props) {
                 <TextInput {...register('displayName')} placeholder={application.name} />
               </FormField>
             )}
-            {isUserAssetsServiceReady && (
-              <FormField title="application_details.branding.application_logo">
-                <LogoUploader isDarkModeEnabled={isDarkModeEnabled} />
-              </FormField>
-            )}
-            {/* Display the TextInput field if image upload service is not available */}
-            {!isUserAssetsServiceReady && (
-              <FormField title="application_details.branding.application_logo">
-                <TextInput
-                  {...register('branding.logoUrl', {
-                    validate: (value) =>
-                      !value || uriValidator(value) || t('errors.invalid_uri_format'),
-                  })}
-                  placeholder={t('sign_in_exp.branding.logo_image_url_placeholder')}
-                  error={errors.branding?.logoUrl?.message}
-                />
-              </FormField>
-            )}
-            {/* Display the Dark logo field only if the dark mode is enabled in the global sign-in-experience */}
-            {!isUserAssetsServiceReady && isDarkModeEnabled && (
-              <FormField title="application_details.branding.application_logo_dark">
-                <TextInput
-                  {...register('branding.darkLogoUrl', {
-                    validate: (value) =>
-                      !value || uriValidator(value) || t('errors.invalid_uri_format'),
-                  })}
-                  placeholder={t('sign_in_exp.branding.dark_logo_image_url_placeholder')}
-                  error={errors.branding?.darkLogoUrl?.message}
-                />
-              </FormField>
-            )}
+            <LogoAndFavicon
+              control={control}
+              register={register}
+              theme={Theme.Light}
+              type="app_logo"
+              logo={{ name: 'branding.logoUrl', error: errors.branding?.logoUrl }}
+              favicon={{
+                name: 'branding.favicon',
+                error: errors.branding?.favicon,
+              }}
+            />
+            <LogoAndFavicon
+              control={control}
+              register={register}
+              theme={Theme.Dark}
+              type="app_logo"
+              logo={{ name: 'branding.darkLogoUrl', error: errors.branding?.darkLogoUrl }}
+              favicon={{
+                name: 'branding.darkFavicon',
+                error: errors.branding?.darkFavicon,
+              }}
+            />
             {!application.isThirdParty && (
               <div className={styles.colors}>
-                <Checkbox
-                  label={t('application_details.branding.use_different_brand_color')}
-                  checked={!isColorEmpty}
-                  onChange={(value) => {
-                    setValue(
-                      'color',
-                      value
-                        ? {
-                            primaryColor: '#ffffff',
-                            darkPrimaryColor: '#000000',
-                          }
-                        : {},
-                      { shouldDirty: true }
-                    );
-                  }}
+                <Controller
+                  control={control}
+                  name="color.primaryColor"
+                  render={({ field: { name, value, onChange } }) => (
+                    <FormField title="application_details.branding.brand_color">
+                      <ColorPicker name={name} value={value} onChange={onChange} />
+                    </FormField>
+                  )}
                 />
-                {!isColorEmpty && (
-                  <>
-                    <Controller
-                      control={control}
-                      name="color.primaryColor"
-                      render={({ field: { name, value, onChange } }) => (
-                        <FormField title="application_details.branding.brand_color">
-                          <ColorPicker name={name} value={value} onChange={onChange} />
-                        </FormField>
-                      )}
-                    />
-                    <Controller
-                      control={control}
-                      name="color.darkPrimaryColor"
-                      render={({ field: { name, value, onChange } }) => (
-                        <FormField title="application_details.branding.brand_color_dark">
-                          <ColorPicker name={name} value={value} onChange={onChange} />
-                        </FormField>
-                      )}
-                    />
-                  </>
-                )}
+                <Controller
+                  control={control}
+                  name="color.darkPrimaryColor"
+                  render={({ field: { name, value, onChange } }) => (
+                    <FormField title="application_details.branding.brand_color_dark">
+                      <ColorPicker name={name} value={value} onChange={onChange} />
+                    </FormField>
+                  )}
+                />
               </div>
             )}
           </FormCard>

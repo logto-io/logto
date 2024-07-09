@@ -34,15 +34,6 @@ const sign_in_exp = {
   branding: {
     title: 'ЗОНА БРЕНДИНГА',
     ui_style: 'Стиль',
-    favicon: 'Фавикон',
-    logo_image_url: 'URL изображения логотипа приложения',
-    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
-    dark_logo_image_url: 'URL изображения логотипа приложения (темный)',
-    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'Логотип приложения',
-    dark_logo_image: 'Логотип приложения (темный)',
-    logo_image_error: 'Ошибка логотипа приложения: {{error}}',
-    favicon_error: 'Ошибка фавикона: {{error}}',
   },
   custom_css: {
     title: 'Пользовательский CSS',

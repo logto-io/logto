@@ -33,15 +33,6 @@ const sign_in_exp = {
   branding: {
     title: 'ÁREA DE MARCA',
     ui_style: 'Estilo',
-    favicon: 'Favicon',
-    logo_image_url: 'URL do logotipo da app',
-    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
-    dark_logo_image_url: 'URL do logotipo da app (tema escuro)',
-    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'Logótipo da aplicação',
-    dark_logo_image: 'Logótipo da aplicação (escuro)',
-    logo_image_error: 'Logótipo da aplicação: {{error}}',
-    favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
     title: 'CSS Personalizado',

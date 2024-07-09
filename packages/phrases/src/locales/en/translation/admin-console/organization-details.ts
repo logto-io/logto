@@ -39,12 +39,7 @@ const organization_details = {
     'Custom data is a JSON object that can be used to store additional data associated with the organization.',
   invalid_json_object: 'Invalid JSON object.',
   branding: {
-    title: 'Branding',
-    description:
-      'Customize the branding of the organization. The branding can be used in the sign-in experience or for your own reference.',
-    light_logo: 'Organization logo',
-    dark_logo: 'Organization logo (dark)',
-    logo_upload_description: 'Click or drop an image to upload',
+    logo: 'Organization logos',
   },
   jit: {
     title: 'Just-in-time provisioning',
