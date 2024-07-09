@@ -19,7 +19,6 @@
  * The commit hash of the original file is `0c52469f08b0a4a1854d90a96546a3f7aa090e5e`.
  */
 
-import { buildOrganizationUrn } from '@logto/core-kit';
 import { cond } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
@@ -30,9 +29,7 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../resource.js';
-
-import { handleClientCertificate, handleDPoP } from './utils.js';
+import { handleClientCertificate, handleDPoP, handleOrganizationToken } from './utils.js';
 
 const { AccessDenied, InvalidClient, InvalidGrant, InvalidScope, InvalidTarget } = errors;
 
@@ -130,26 +127,17 @@ export const buildHandler: (
   // If it's present, the flow falls into the `checkResource` and `if (resourceServer)` block above.
   if (organizationId && !resourceServer) {
     /* === RFC 0006 === */
-    const audience = buildOrganizationUrn(organizationId);
     const availableScopes = await queries.organizations.relations.appsRoles
       .getApplicationScopes(organizationId, client.clientId)
       .then((scope) => scope.map(({ name }) => name));
 
-    /** The intersection of the available scopes and the requested scopes. */
-    const issuedScopes = availableScopes.filter((scope) => scopes.includes(scope)).join(' ');
-
-    token.aud = audience;
-    // Note: the original implementation uses `new provider.ResourceServer` to create the resource
-    // server. But it's not available in the typings. The class is actually very simple and holds
-    // no provider-specific context. So we just create the object manually.
-    // See https://github.com/panva/node-oidc-provider/blob/cf2069cbb31a6a855876e95157372d25dde2511c/lib/helpers/resource_server.js
-    token.resourceServer = {
-      ...getSharedResourceServerData(envSet),
-      accessTokenTTL: reversedResourceAccessTokenTtl,
-      audience,
-      scope: availableScopes.join(' '),
-    };
-    token.scope = issuedScopes;
+    await handleOrganizationToken({
+      envSet,
+      availableScopes,
+      accessToken: token,
+      organizationId,
+      scope: new Set(scopes),
+    });
     /* === End RFC 0006 === */
   }
 
