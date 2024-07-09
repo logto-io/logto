@@ -74,7 +74,7 @@
     "koa-router": "^12.0.0",
     "koa-send": "^5.0.1",
     "ky": "^1.2.3",
-    "lru-cache": "^10.0.0",
+    "lru-cache": "^11.0.0",
     "nanoid": "^5.0.1",
     "oidc-provider": "^8.4.6",
     "openapi-types": "^12.1.3",
