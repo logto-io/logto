@@ -107,12 +107,19 @@ export const totpVerificationVerifyPayloadGuard = z.object({
   verificationId: z.string().optional(),
 }) satisfies ToZodObject<TotpVerificationVerifyPayload>;
 
+/** Payload type for `POST /api/experience/verification/backup-code/verify */
+export type BackupCodeVerificationVerifyPayload = {
+  code: string;
+};
+export const backupCodeVerificationVerifyPayloadGuard = z.object({
+  code: z.string().min(1),
+}) satisfies ToZodObject<BackupCodeVerificationVerifyPayload>;
+
 /** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {
   interactionEvent: InteractionEvent;
   verificationId: string;
 };
-
 export const identificationApiPayloadGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   verificationId: z.string(),

@@ -5,6 +5,11 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import {
+  BackupCodeVerification,
+  backupCodeVerificationRecordDataGuard,
+  type BackupCodeVerificationRecordData,
+} from './backup-code-verification.js';
+import {
   CodeVerification,
   codeVerificationRecordDataGuard,
   type CodeVerificationRecordData,
@@ -35,7 +40,8 @@ export type VerificationRecordData =
   | CodeVerificationRecordData
   | SocialVerificationRecordData
   | EnterpriseSsoVerificationRecordData
-  | TotpVerificationRecordData;
+  | TotpVerificationRecordData
+  | BackupCodeVerificationRecordData;
 
 /**
  * Union type for all verification record types
@@ -50,7 +56,8 @@ export type VerificationRecord =
   | CodeVerification
   | SocialVerification
   | EnterpriseSsoVerification
-  | TotpVerification;
+  | TotpVerification
+  | BackupCodeVerification;
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
@@ -58,6 +65,7 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   socialVerificationRecordDataGuard,
   enterPriseSsoVerificationRecordDataGuard,
   totpVerificationRecordDataGuard,
+  backupCodeVerificationRecordDataGuard,
 ]);
 
 /**
@@ -83,6 +91,9 @@ export const buildVerificationRecord = (
     }
     case VerificationType.TOTP: {
       return new TotpVerification(libraries, queries, data);
+    }
+    case VerificationType.BackupCode: {
+      return new BackupCodeVerification(libraries, queries, data);
     }
   }
 };
