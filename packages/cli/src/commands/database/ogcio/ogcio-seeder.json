@@ -21,9 +21,9 @@
         },
         "organization_roles": [
             {
-                "id": "bb-public-servant",
-                "name": "Public Servant",
-                "description": "Building Blocks Public servant",
+                "id": "pay-public-servant",
+                "name": "Payments Public Servant",
+                "description": "Payments Public servant",
                 "specific_permissions": [
                     "payments:provider:*",
                     "payments:payment_request:*",

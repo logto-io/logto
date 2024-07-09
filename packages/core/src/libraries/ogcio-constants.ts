@@ -3,7 +3,7 @@ export const OGCIO_ORGANIZATIONS = {
 };
 
 export const OGCIO_ORGANIZATION_ROLES = {
-  BB_PUBLIC_SERVANT: 'bb-public-servant',
+  BB_PUBLIC_SERVANT: 'pay-public-servant',
   MSG_PUBLIC_SERVANT: 'msg-public-servant',
 };
 
