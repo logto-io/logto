@@ -117,13 +117,20 @@ export const backupCodeVerificationVerifyPayloadGuard = z.object({
 
 /** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {
-  interactionEvent: InteractionEvent;
+  /** The ID of the verification record that is used to identify the user. */
   verificationId: string;
 };
 export const identificationApiPayloadGuard = z.object({
-  interactionEvent: z.nativeEnum(InteractionEvent),
   verificationId: z.string(),
 }) satisfies ToZodObject<IdentificationApiPayload>;
+
+/** Payload type for `POST /api/experience`. */
+export type CreateExperienceApiPayload = {
+  interactionEvent: InteractionEvent;
+};
+export const CreateExperienceApiPayloadGuard = z.object({
+  interactionEvent: z.nativeEnum(InteractionEvent),
+}) satisfies ToZodObject<CreateExperienceApiPayload>;
 
 // ====== Experience API payload guard and types definitions end ======
 

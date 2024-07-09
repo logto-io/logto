@@ -38,30 +38,31 @@ const interactionStorageGuard = z.object({
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0004.
  */
 export default class ExperienceInteraction {
-  /**
-   * Factory method to create a new `ExperienceInteraction` using the current context.
-   */
-  static async create(ctx: WithLogContext, tenant: TenantContext) {
-    const { provider } = tenant;
-    const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
-    return new ExperienceInteraction(ctx, tenant, interactionDetails);
-  }
-
   /** The interaction event for the current interaction. */
-  private interactionEvent?: InteractionEvent;
+  private _interactionEvent?: InteractionEvent;
   /** The user verification record list for the current interaction. */
-  private readonly verificationRecords: Map<VerificationType, VerificationRecord>;
+  private readonly verificationRecords = new Map<VerificationType, VerificationRecord>();
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
   private readonly profile?: Record<string, unknown>; // TODO: Fix the type
 
+  /**
+   * Create a new `ExperienceInteraction` instance.
+   *
+   * If the `interactionDetails` is provided, the instance will be initialized with the data from the `interactionDetails` storage.
+   * Otherwise, a brand new instance will be created.
+   */
   constructor(
     private readonly ctx: WithLogContext,
     private readonly tenant: TenantContext,
-    public interactionDetails: Interaction
+    public interactionDetails?: Interaction
   ) {
     const { libraries, queries } = tenant;
+
+    if (!interactionDetails) {
+      return;
+    }
 
     const result = interactionStorageGuard.safeParse(interactionDetails.result ?? {});
 
@@ -72,11 +73,9 @@ export default class ExperienceInteraction {
 
     const { verificationRecords = [], profile, userId, interactionEvent } = result.data;
 
-    this.interactionEvent = interactionEvent;
+    this._interactionEvent = interactionEvent;
     this.userId = userId;
     this.profile = profile;
-
-    this.verificationRecords = new Map();
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -88,10 +87,14 @@ export default class ExperienceInteraction {
     return this.userId;
   }
 
+  get interactionEvent() {
+    return this._interactionEvent;
+  }
+
   /** Set the interaction event for the current interaction */
   public setInteractionEvent(interactionEvent: InteractionEvent) {
     // TODO: conflict event check (e.g. reset password session can't be used for sign in)
-    this.interactionEvent = interactionEvent;
+    this._interactionEvent = interactionEvent;
   }
 
   /**
@@ -172,19 +175,22 @@ export default class ExperienceInteraction {
 
   /** Save the current interaction result. */
   public async save() {
+    const { provider } = this.tenant;
+    const details = await provider.interactionDetails(this.ctx.req, this.ctx.res);
+    const interactionData = this.toJson();
+
     // `mergeWithLastSubmission` will only merge current request's interaction results.
     // Manually merge with previous interaction results here.
     // @see {@link https://github.com/panva/node-oidc-provider/blob/c243bf6b6663c41ff3e75c09b95fb978eba87381/lib/actions/authorization/interactions.js#L106}
-
-    const { provider } = this.tenant;
-    const details = await provider.interactionDetails(this.ctx.req, this.ctx.res);
-
     await provider.interactionResult(
       this.ctx.req,
       this.ctx.res,
-      { ...details.result, ...this.toJson() },
+      { ...details.result, ...interactionData },
       { mergeWithLastSubmission: true }
     );
+
+    // Prepend the interaction data to all log entries
+    this.ctx.prependAllLogEntries({ interaction: interactionData });
   }
 
   /** Submit the current interaction result to the OIDC provider and clear the interaction data */

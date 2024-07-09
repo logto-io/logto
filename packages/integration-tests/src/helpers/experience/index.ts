@@ -27,13 +27,14 @@ export const signInWithPassword = async ({
 }) => {
   const client = await initExperienceClient();
 
+  await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+
   const { verificationId } = await client.verifyPassword({
     identifier,
     password,
   });
 
   await client.identifyUser({
-    interactionEvent: InteractionEvent.SignIn,
     verificationId,
   });
 
@@ -45,6 +46,8 @@ export const signInWithPassword = async ({
 
 export const signInWithVerificationCode = async (identifier: VerificationCodeIdentifier) => {
   const client = await initExperienceClient();
+
+  await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 
   const { verificationId, code } = await successfullySendVerificationCode(client, {
     identifier,
@@ -58,7 +61,6 @@ export const signInWithVerificationCode = async (identifier: VerificationCodeIde
   });
 
   await client.identifyUser({
-    interactionEvent: InteractionEvent.SignIn,
     verificationId: verifiedVerificationId,
   });
 
@@ -80,6 +82,8 @@ export const identifyUserWithUsernamePassword = async (
   username: string,
   password: string
 ) => {
+  await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+
   const { verificationId } = await client.verifyPassword({
     identifier: {
       type: InteractionIdentifierType.Username,
@@ -88,7 +92,7 @@ export const identifyUserWithUsernamePassword = async (
     password,
   });
 
-  await client.identifyUser({ interactionEvent: InteractionEvent.SignIn, verificationId });
+  await client.identifyUser({ verificationId });
 
   return { verificationId };
 };
