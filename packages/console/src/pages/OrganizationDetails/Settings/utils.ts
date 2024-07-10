@@ -2,7 +2,7 @@ import { type Organization } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import { type Option } from '@/ds-components/Select/MultiSelect';
-import { removeFalsyValues } from '@/utils/string';
+import { removeFalsyValues } from '@/utils/object';
 
 export type FormData = Partial<Omit<Organization, 'customData'> & { customData: string }> & {
   jitEmailDomains: string[];

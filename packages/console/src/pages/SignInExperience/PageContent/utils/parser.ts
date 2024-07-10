@@ -7,7 +7,7 @@ import {
 } from '@logto/schemas';
 import { isSameArray } from '@silverhand/essentials';
 
-import { removeFalsyValues } from '@/utils/string';
+import { removeFalsyValues } from '@/utils/object';
 
 import {
   type UpdateSignInExperienceData,

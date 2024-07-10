@@ -1,6 +1,6 @@
 import { type ApplicationSignInExperience } from '@logto/schemas';
 
-import { removeFalsyValues } from '@/utils/string';
+import { removeFalsyValues } from '@/utils/object';
 
 /**
  * Format the form data to match the API request body
