@@ -1,4 +1,5 @@
 import { useLogto } from '@logto/react';
+import { demoAppApplicationId } from '@logto/schemas';
 import { decodeJwt } from 'jose';
 import { useCallback, useState, type FormEventHandler } from 'react';
 
@@ -48,6 +49,15 @@ const DevPanel = () => {
     <div className={[styles.card, styles.devPanel].join(' ')}>
       <form onSubmit={submitConfig}>
         <div className={styles.title}>Logto config</div>
+        <div className={styles.item}>
+          <div className={styles.text}>App ID</div>
+          <input
+            name="appId"
+            defaultValue={config.appId}
+            type="text"
+            placeholder={demoAppApplicationId}
+          />
+        </div>
         <div className={styles.item}>
           <div className={styles.text}>Sign-in extra params</div>
           <input

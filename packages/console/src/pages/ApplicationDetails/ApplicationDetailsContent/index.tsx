@@ -185,14 +185,16 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
           </>
         )}
         {data.isThirdParty && (
-          <>
-            <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Permissions}`}>
-              {t('application_details.permissions.name')}
-            </TabNavItem>
-            <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
-              {t('application_details.branding.name')}
-            </TabNavItem>
-          </>
+          <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Permissions}`}>
+            {t('application_details.permissions.name')}
+          </TabNavItem>
+        )}
+        {[ApplicationType.Native, ApplicationType.SPA, ApplicationType.Traditional].includes(
+          data.type
+        ) && (
+          <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
+            {t('application_details.branding.name')}
+          </TabNavItem>
         )}
       </TabNav>
       <TabWrapper
@@ -257,21 +259,23 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
         </>
       )}
       {data.isThirdParty && (
-        <>
-          <TabWrapper
-            isActive={tab === ApplicationDetailsTabs.Permissions}
-            className={styles.tabContainer}
-          >
-            <Permissions application={data} />
-          </TabWrapper>
-          <TabWrapper
-            isActive={tab === ApplicationDetailsTabs.Branding}
-            className={styles.tabContainer}
-          >
-            {/* isActive is needed to support conditional render UnsavedChangesAlertModal */}
-            <Branding application={data} isActive={tab === ApplicationDetailsTabs.Branding} />
-          </TabWrapper>
-        </>
+        <TabWrapper
+          isActive={tab === ApplicationDetailsTabs.Permissions}
+          className={styles.tabContainer}
+        >
+          <Permissions application={data} />
+        </TabWrapper>
+      )}
+      {[ApplicationType.Native, ApplicationType.SPA, ApplicationType.Traditional].includes(
+        data.type
+      ) && (
+        <TabWrapper
+          isActive={tab === ApplicationDetailsTabs.Branding}
+          className={styles.tabContainer}
+        >
+          {/* isActive is needed to support conditional render UnsavedChangesAlertModal */}
+          <Branding application={data} isActive={tab === ApplicationDetailsTabs.Branding} />
+        </TabWrapper>
       )}
     </>
   );

@@ -170,13 +170,15 @@ const Main = () => {
 };
 
 const App = () => {
+  const params = new URL(window.location.href).searchParams;
   const config = getLocalData('config');
 
   return (
     <LogtoProvider
       config={{
         endpoint: window.location.origin,
-        appId: demoAppApplicationId,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- We need to fall back for empty string
+        appId: params.get('app_id') || config.appId || demoAppApplicationId,
         // eslint-disable-next-line no-restricted-syntax
         prompt: config.prompt ? (config.prompt.split(' ') as Prompt[]) : [],
         scopes: config.scope ? config.scope.split(' ') : [],

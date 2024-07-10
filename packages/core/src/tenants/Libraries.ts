@@ -46,7 +46,8 @@ export default class Libraries {
     this.queries,
     this.connectors,
     this.ssoConnectors,
-    this.cloudConnection
+    this.cloudConnection,
+    this.queries.wellKnownCache
   );
 
   organizationInvitations = new OrganizationInvitationLibrary(

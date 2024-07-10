@@ -39,7 +39,7 @@ const sign_in_exp = {
     dark_logo_image_url: 'App logo image URL (dark)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
     logo_image: 'App logo',
-    dark_logo_image: 'App logo (Dark)',
+    dark_logo_image: 'App logo (dark)',
     logo_image_error: 'App logo: {{error}}',
     favicon_error: 'Favicon: {{error}}',
   },

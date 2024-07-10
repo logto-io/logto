@@ -1,6 +1,7 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import { TtlCache } from '@logto/shared';
 
 import {
   mockGithubConnector,
@@ -11,6 +12,7 @@ import {
   socialTarget02,
   wellConfiguredSsoConnector,
 } from '#src/__mocks__/index.js';
+import { WellKnownCache } from '#src/caches/well-known.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
@@ -66,7 +68,13 @@ const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
 const { createSignInExperienceLibrary } = await import('./index.js');
 const { validateLanguageInfo, removeUnavailableSocialConnectorTargets, getFullSignInExperience } =
-  createSignInExperienceLibrary(queries, connectorLibrary, ssoConnectorLibrary, cloudConnection);
+  createSignInExperienceLibrary(
+    queries,
+    connectorLibrary,
+    ssoConnectorLibrary,
+    cloudConnection,
+    new WellKnownCache('foo', new TtlCache())
+  );
 
 beforeEach(() => {
   jest.clearAllMocks();

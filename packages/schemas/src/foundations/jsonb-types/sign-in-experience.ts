@@ -13,6 +13,10 @@ export const colorGuard = z.object({
 
 export type Color = z.infer<typeof colorGuard>;
 
+export const partialColorGuard = colorGuard.partial();
+
+export type PartialColor = Partial<Color>;
+
 /** Maps a theme to the key of the logo URL in the {@link Branding} object. */
 export const themeToLogoKey = Object.freeze({
   [Theme.Light]: 'logoUrl',
