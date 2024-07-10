@@ -196,6 +196,7 @@
 
 <script type="module">
   import { faker } from "https://esm.sh/@faker-js/faker";
+
   let isCurrentUserSet = false;
   const returnUrl = new URLSearchParams(window.location.search).get(
     "return_url",
@@ -227,6 +228,8 @@
 
   const usersSelectElement = document.querySelector("#user_select");
   
+  const getRandomString = (size = 20) => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+
   for (const u of apiUsers.users) {
     var option = document.createElement("option");
     option.text = `${u.user_name} ${
@@ -256,8 +259,8 @@
       lastName = faker.person.lastName();
       email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@mail.ie`;
       isCurrentUserSet = false;
-      oid = crypto.randomBytes(20).toString("hex");
-      sub = crypto.randomBytes(20).toString("hex");
+      oid = getRandomString();
+      sub = getRandomString();
     }
 
     document.querySelector("#firstName").value = firstName;
@@ -276,6 +279,8 @@
   document.querySelector("#firstName").value = firstName;
   document.querySelector("#lastName").value = lastName;
   document.querySelector("#email").value = email;
+  document.querySelector("#oid").value = getRandomString();
+  document.querySelector("#sub").value = getRandomString();
 
   document.querySelector("#submit_btn").innerHTML =
     `<div style="margin-top: 5px">Login ${firstName} ${lastName} <span class="icon-signin_id_logo"></span></div>`;
