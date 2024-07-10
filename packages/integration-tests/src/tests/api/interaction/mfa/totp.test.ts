@@ -2,14 +2,14 @@ import { InteractionEvent, MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { authenticator } from 'otplib';
 
 import {
-  putInteraction,
   deleteUser,
   initTotp,
   postInteractionBindMfa,
+  putInteraction,
   putInteractionMfa,
   skipMfaBinding,
 } from '#src/api/index.js';
-import { initClient, processSession, logoutClient } from '#src/helpers/client.js';
+import { initClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,

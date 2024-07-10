@@ -24,12 +24,18 @@ import {
   socialVerificationRecordDataGuard,
   type SocialVerificationRecordData,
 } from './social-verification.js';
+import {
+  TotpVerification,
+  totpVerificationRecordDataGuard,
+  type TotpVerificationRecordData,
+} from './totp-verification.js';
 
 export type VerificationRecordData =
   | PasswordVerificationRecordData
   | CodeVerificationRecordData
   | SocialVerificationRecordData
-  | EnterpriseSsoVerificationRecordData;
+  | EnterpriseSsoVerificationRecordData
+  | TotpVerificationRecordData;
 
 /**
  * Union type for all verification record types
@@ -43,13 +49,15 @@ export type VerificationRecord =
   | PasswordVerification
   | CodeVerification
   | SocialVerification
-  | EnterpriseSsoVerification;
+  | EnterpriseSsoVerification
+  | TotpVerification;
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
   codeVerificationRecordDataGuard,
   socialVerificationRecordDataGuard,
   enterPriseSsoVerificationRecordDataGuard,
+  totpVerificationRecordDataGuard,
 ]);
 
 /**
@@ -72,6 +80,9 @@ export const buildVerificationRecord = (
     }
     case VerificationType.EnterpriseSso: {
       return new EnterpriseSsoVerification(libraries, queries, data);
+    }
+    case VerificationType.TOTP: {
+      return new TotpVerification(libraries, queries, data);
     }
   }
 };
