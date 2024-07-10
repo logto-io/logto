@@ -15,6 +15,12 @@ import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 
 describe('override', () => {
   const organizationApi = new OrganizationApiTest();
+  const logoUrl = 'mock://fake-url-for-omni/logo.png';
+  const darkLogoUrl = 'mock://fake-url-for-omni/dark-logo.png';
+  const primaryColor = '#000';
+  const darkPrimaryColor = '#fff';
+  const favicon = 'mock://fake-url-for-omni/favicon.ico';
+  const darkFavicon = 'mock://fake-url-for-omni/dark-favicon.ico';
 
   afterEach(async () => {
     await organizationApi.cleanUp();
@@ -25,7 +31,8 @@ describe('override', () => {
     await updateSignInExperience({
       termsOfUseUrl: null,
       privacyPolicyUrl: null,
-      color: { primaryColor: '#000', darkPrimaryColor: '#fff', isDarkModeEnabled: true },
+      color: { primaryColor, darkPrimaryColor, isDarkModeEnabled: true },
+      branding: { logoUrl, darkLogoUrl, favicon, darkFavicon },
       signUp: { identifiers: [], password: true, verify: false },
       signIn: {
         methods: [
@@ -40,7 +47,31 @@ describe('override', () => {
     });
   });
 
-  it('should show the overridden organization logos', async () => {
+  it('should show dark mode branding elements when dark mode is enabled', async () => {
+    const experience = new ExpectExperience(await browser.newPage());
+    await experience.page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }]);
+    await experience.navigateTo(demoAppUrl.href);
+    await experience.toMatchElement('body[class$="dark"]');
+    await experience.toMatchElement(`img[src="${darkLogoUrl}"]`);
+
+    const button = await experience.toMatchElement('button[name="submit"]');
+    expect(
+      await button.evaluate((element) => window.getComputedStyle(element).backgroundColor)
+    ).toBe('rgb(255, 255, 255)');
+
+    const foundFavicon = await experience.page.evaluate(() => {
+      return document.querySelector('link[rel="shortcut icon"]')?.getAttribute('href');
+    });
+    expect(foundFavicon).toBe(darkFavicon);
+
+    const faviconAppleTouch = await experience.page.evaluate(() => {
+      return document.querySelector('link[rel="apple-touch-icon"]')?.getAttribute('href');
+    });
+    expect(faviconAppleTouch).toBe(darkFavicon);
+    await experience.page.close();
+  });
+
+  it('should show the overridden organization logos and favicons', async () => {
     const logoUrl = 'mock://fake-url-for-organization/logo.png';
     const darkLogoUrl = 'mock://fake-url-for-organization/dark-logo.png';
 
@@ -60,13 +91,17 @@ describe('override', () => {
     await experience.page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }]);
     await experience.navigateTo(demoAppUrl.href + `?organization_id=${organization.id}`);
     await experience.toMatchElement(`img[src="${darkLogoUrl}"]`);
+
+    await experience.page.close();
   });
 
-  it('should show app-level logo and color', async () => {
+  it('should show app-level logo, favicon, and color', async () => {
     const logoUrl = 'mock://fake-url-for-app/logo.png';
     const darkLogoUrl = 'mock://fake-url-for-app/dark-logo.png';
     const primaryColor = '#f00';
     const darkPrimaryColor = '#0f0';
+    const favicon = 'mock://fake-url-for-organization/favicon.ico';
+    const darkFavicon = 'mock://fake-url-for-organization/dark-favicon.ico';
 
     const application = await createApplication(
       'Sign-in experience override',
@@ -80,31 +115,41 @@ describe('override', () => {
     );
 
     await setApplicationSignInExperience(application.id, {
-      color: {
-        primaryColor,
-        darkPrimaryColor,
-      },
-      branding: {
-        logoUrl,
-        darkLogoUrl,
-      },
+      color: { primaryColor, darkPrimaryColor },
+      branding: { logoUrl, darkLogoUrl, favicon, darkFavicon },
     });
 
     const experience = new ExpectExperience(await browser.newPage());
-    const expectMatchBranding = async (theme: string, logoUrl: string, primaryColor: string) => {
+    const expectMatchBranding = async (
+      theme: string,
+      logoUrl: string,
+      primaryColor: string,
+      favicon: string
+    ) => {
       await experience.page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: theme }]);
       await experience.navigateTo(demoAppUrl.href + `?app_id=${application.id}`);
       await experience.toMatchElement(`img[src="${logoUrl}"]`);
-      const button1 = await experience.toMatchElement('button[name="submit"]');
+      const button = await experience.toMatchElement('button[name="submit"]');
       expect(
-        await button1.evaluate((element) => window.getComputedStyle(element).backgroundColor)
+        await button.evaluate((element) => window.getComputedStyle(element).backgroundColor)
       ).toBe(primaryColor);
+
+      const foundFavicon = await experience.page.evaluate(() => {
+        return document.querySelector('link[rel="shortcut icon"]')?.getAttribute('href');
+      });
+      expect(foundFavicon).toBe(favicon);
+
+      const faviconAppleTouch = await experience.page.evaluate(() => {
+        return document.querySelector('link[rel="apple-touch-icon"]')?.getAttribute('href');
+      });
+      expect(faviconAppleTouch).toBe(favicon);
     };
 
-    await expectMatchBranding('light', logoUrl, 'rgb(255, 0, 0)');
-    await expectMatchBranding('dark', darkLogoUrl, 'rgb(0, 255, 0)');
+    await expectMatchBranding('light', logoUrl, 'rgb(255, 0, 0)', favicon);
+    await expectMatchBranding('dark', darkLogoUrl, 'rgb(0, 255, 0)', darkFavicon);
 
     await deleteApplication(application.id);
+    await experience.page.close();
   });
 
   it('should combine app-level and organization-level branding', async () => {
@@ -161,5 +206,6 @@ describe('override', () => {
 
     await expectMatchBranding('light', organizationLogoUrl, 'rgb(0, 0, 255)');
     await expectMatchBranding('dark', organizationDarkLogoUrl, 'rgb(255, 0, 255)');
+    await experience.page.close();
   });
 });
