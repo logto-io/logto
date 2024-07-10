@@ -9,7 +9,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { Interaction } from '../types.js';
 
-import { validateSieVerificationMethod } from './utils.js';
+import { SignInExperienceSettings } from './sign-in-experience-settings.js';
 import {
   buildVerificationRecord,
   verificationRecordDataGuard,
@@ -38,12 +38,15 @@ const interactionStorageGuard = z.object({
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0004.
  */
 export default class ExperienceInteraction {
+  public readonly signInExperienceSettings: SignInExperienceSettings;
+
   /** The user verification record list for the current interaction. */
   private readonly verificationRecords = new Map<VerificationType, VerificationRecord>();
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
   private readonly profile?: Record<string, unknown>; // TODO: Fix the type
+
   /** The interaction event for the current interaction. */
   #interactionEvent?: InteractionEvent;
 
@@ -60,12 +63,15 @@ export default class ExperienceInteraction {
   ) {
     const { libraries, queries } = tenant;
 
+    this.signInExperienceSettings = new SignInExperienceSettings(libraries, queries);
+
     if (!interactionDetails) {
       return;
     }
 
     const result = interactionStorageGuard.safeParse(interactionDetails.result ?? {});
 
+    // `interactionDetails.result` is not a valid experience interaction storage
     assertThat(
       result.success,
       new RequestError({ code: 'session.interaction_not_found', status: 404 })
@@ -101,13 +107,13 @@ export default class ExperienceInteraction {
    * Identify the user using the verification record.
    *
    * - Check if the verification record exists.
-   * - Check if the verification record is valid for the current interaction event.
+   * - Verify the verification record with `SignInExperienceSettings`.
    * - Create a new user using the verification record if the current interaction event is `Register`.
    * - Identify the user using the verification record if the current interaction event is `SignIn` or `ForgotPassword`.
    * - Set the user id to the current interaction.
    *
-   * @throws RequestError with 404 if the verification record is not found
    * @throws RequestError with 404 if the interaction event is not set
+   * @throws RequestError with 404 if the verification record is not found
    * @throws RequestError with 400 if the verification record is not valid for the current interaction event
    * @throws RequestError with 401 if the user is suspended
    * @throws RequestError with 409 if the current session has already identified a different user
@@ -116,47 +122,26 @@ export default class ExperienceInteraction {
     const verificationRecord = this.getVerificationRecordById(verificationId);
 
     assertThat(
-      verificationRecord && this.interactionEvent,
+      this.interactionEvent,
+      new RequestError({ code: 'session.interaction_not_found', status: 404 })
+    );
+
+    assertThat(
+      verificationRecord,
       new RequestError({ code: 'session.verification_session_not_found', status: 404 })
     );
 
-    // Existing user identification flow
-    validateSieVerificationMethod(this.interactionEvent, verificationRecord);
+    await this.signInExperienceSettings.verifyIdentificationMethod(
+      this.interactionEvent,
+      verificationRecord
+    );
 
-    // User creation flow
     if (this.interactionEvent === InteractionEvent.Register) {
-      this.createNewUser(verificationRecord);
+      await this.createNewUser(verificationRecord);
       return;
     }
 
-    switch (verificationRecord.type) {
-      case VerificationType.Password:
-      case VerificationType.VerificationCode:
-      case VerificationType.Social:
-      case VerificationType.EnterpriseSso: {
-        // TODO: social sign-in with verified email
-
-        const { id, isSuspended } = await verificationRecord.identifyUser();
-
-        assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
-
-        // Throws an 409 error if the current session has already identified a different user
-        if (this.userId) {
-          assertThat(
-            this.userId === id,
-            new RequestError({ code: 'session.identity_conflict', status: 409 })
-          );
-          return;
-        }
-
-        this.userId = id;
-        break;
-      }
-      default: {
-        // Unsupported verification type for identification, such as MFA verification.
-        throw new RequestError({ code: 'session.verification_failed', status: 400 });
-      }
-    }
+    await this.identifyExistingUser(verificationRecord);
   }
 
   /**
@@ -223,7 +208,45 @@ export default class ExperienceInteraction {
     return [...this.verificationRecords.values()];
   }
 
-  private createNewUser(verificationRecord: VerificationRecord) {
-    // TODO: create new user for the Register event
+  private async identifyExistingUser(verificationRecord: VerificationRecord) {
+    switch (verificationRecord.type) {
+      case VerificationType.Password:
+      case VerificationType.VerificationCode:
+      case VerificationType.Social:
+      case VerificationType.EnterpriseSso: {
+        // TODO: social sign-in with verified email
+        const { id, isSuspended } = await verificationRecord.identifyUser();
+
+        assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+
+        // Throws an 409 error if the current session has already identified a different user
+        if (this.userId) {
+          assertThat(
+            this.userId === id,
+            new RequestError({ code: 'session.identity_conflict', status: 409 })
+          );
+          return;
+        }
+
+        this.userId = id;
+        break;
+      }
+      default: {
+        // Unsupported verification type for identification, such as MFA verification.
+        throw new RequestError({ code: 'session.verification_failed', status: 400 });
+      }
+    }
+  }
+
+  private async createNewUser(verificationRecord: VerificationRecord) {
+    switch (verificationRecord.type) {
+      case VerificationType.VerificationCode: {
+        break;
+      }
+      default: {
+        // Unsupported verification type for user creation, such as MFA verification.
+        throw new RequestError({ code: 'session.verification_failed', status: 400 });
+      }
+    }
   }
 }

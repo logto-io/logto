@@ -106,16 +106,18 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     experienceRoutes.identification,
     koaGuard({
       body: identificationApiPayloadGuard,
-      status: [204, 400, 401, 404],
+      status: [204, 400, 401, 404, 409],
     }),
     async (ctx, next) => {
       const { verificationId } = ctx.guard.body;
+      const { experienceInteraction } = ctx;
 
-      await ctx.experienceInteraction.identifyUser(verificationId);
+      await experienceInteraction.identifyUser(verificationId);
 
-      await ctx.experienceInteraction.save();
+      await experienceInteraction.save();
 
-      ctx.status = 204;
+      // Return 201 if a new user is created
+      ctx.status = experienceInteraction.interactionEvent === InteractionEvent.Register ? 201 : 204;
 
       return next();
     }

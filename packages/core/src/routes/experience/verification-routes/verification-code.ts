@@ -36,12 +36,14 @@ export default function verificationCodeRoutes<T extends WithLogContext>(
     async (ctx, next) => {
       const { identifier, interactionEvent } = ctx.guard.body;
 
-      const codeVerification = await CodeVerification.create(
+      const codeVerification = CodeVerification.create(
         libraries,
         queries,
         identifier,
         interactionEvent
       );
+
+      await codeVerification.sendVerificationCode();
 
       ctx.experienceInteraction.setVerificationRecord(codeVerification);
 
