@@ -2,6 +2,7 @@ import { type Organization } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import { type Option } from '@/ds-components/Select/MultiSelect';
+import { removeFalsyValues } from '@/utils/object';
 
 export type FormData = Partial<Omit<Organization, 'customData'> & { customData: string }> & {
   jitEmailDomains: string[];
@@ -25,14 +26,6 @@ export const normalizeData = (
   customData: JSON.stringify(data.customData, undefined, 2),
 });
 
-const assembleBranding = (branding?: Organization['branding']) => {
-  if (!branding) {
-    return {};
-  }
-
-  return Object.fromEntries(Object.entries(branding).filter(([, value]) => Boolean(value)));
-};
-
 export const assembleData = ({
   jitEmailDomains,
   jitRoles,
@@ -42,7 +35,7 @@ export const assembleData = ({
   ...data
 }: FormData): Partial<Organization> => ({
   ...data,
-  branding: assembleBranding(branding),
+  branding: branding && removeFalsyValues(branding),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   customData: JSON.parse(customData ?? '{}'),
 });

@@ -1,5 +1,6 @@
 import { type ApplicationSignInExperience } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+
+import { removeFalsyValues } from '@/utils/object';
 
 /**
  * Format the form data to match the API request body
@@ -13,29 +14,6 @@ export const formatFormToSubmitData = (
 
   return {
     ...rest,
-    branding: {
-      ...conditional(branding.logoUrl && { logoUrl: branding.logoUrl }),
-      ...conditional(branding.darkLogoUrl && { darkLogoUrl: branding.darkLogoUrl }),
-    },
-  };
-};
-
-/**
- * Format the response data to match the form data
- *
- * Fulfill the branding object with empty string if the `logoUrl` or `darkLogoUrl` is not set.
- * Otherwise, the RHF won't update the branding fields properly with the undefined value.
- */
-export const formatResponseDataToForm = (
-  data: ApplicationSignInExperience
-): ApplicationSignInExperience => {
-  const { branding, ...rest } = data;
-
-  return {
-    ...rest,
-    branding: {
-      logoUrl: branding.logoUrl ?? '',
-      darkLogoUrl: branding.darkLogoUrl ?? '',
-    },
+    branding: removeFalsyValues(branding),
   };
 };

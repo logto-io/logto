@@ -31,15 +31,6 @@ const sign_in_exp = {
   branding: {
     title: '브랜딩 영역',
     ui_style: '스타일',
-    favicon: '파비콘',
-    logo_image_url: '앱 로고 이미지 URL',
-    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
-    dark_logo_image_url: '앱 로고 이미지 URL (다크 모드)',
-    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: '앱 로고',
-    dark_logo_image: '앱 로고 (다크 모드)',
-    logo_image_error: '앱 로고: {{error}}',
-    favicon_error: '파비콘: {{error}}',
   },
   custom_css: {
     title: '사용자 정의 CSS',

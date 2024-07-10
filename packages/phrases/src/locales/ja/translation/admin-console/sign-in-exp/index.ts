@@ -33,15 +33,6 @@ const sign_in_exp = {
   branding: {
     title: 'ブランディングエリア',
     ui_style: 'スタイル',
-    favicon: 'ファビコン',
-    logo_image_url: 'アプリのロゴ画像URL',
-    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
-    dark_logo_image_url: 'アプリのロゴ画像URL（ダーク）',
-    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'アプリのロゴ',
-    dark_logo_image: 'アプリのロゴ（ダーク）',
-    logo_image_error: 'アプリのロゴ：{{error}}',
-    favicon_error: 'ファビコン：{{error}}',
   },
   custom_css: {
     title: 'カスタムCSS',

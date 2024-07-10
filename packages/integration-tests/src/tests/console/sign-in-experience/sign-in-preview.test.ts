@@ -5,7 +5,11 @@ import { logtoConsoleUrl as logtoConsoleUrlString, logtoUrl } from '#src/constan
 import { goToAdminConsole } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
-import { expectToSelectPreviewLanguage, waitForFormCard } from './helpers.js';
+import {
+  expectToSaveSignInExperience,
+  expectToSelectPreviewLanguage,
+  waitForFormCard,
+} from './helpers.js';
 
 await page.setViewport({ width: 1920, height: 1080 });
 
@@ -82,6 +86,9 @@ describe('sign-in experience: sign-in preview', () => {
     await expect(page).toClick(
       'form div[class$=field] label[class$=switch]:has(input[name="color.isDarkModeEnabled"])'
     );
+
+    // Save since the switch will lead a dirty form
+    await expectToSaveSignInExperience(page);
   });
 
   it('switch between preview languages', async () => {

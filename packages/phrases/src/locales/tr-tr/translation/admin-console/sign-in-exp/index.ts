@@ -34,15 +34,6 @@ const sign_in_exp = {
   branding: {
     title: 'MARKA ALANI',
     ui_style: 'Stil',
-    favicon: 'Favicon',
-    logo_image_url: 'Uygulama logosu resim URLi',
-    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
-    dark_logo_image_url: 'Uygulama logosu resim URLi (Koyu)',
-    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'Uygulama logosu',
-    dark_logo_image: 'Uygulama logosu (Koyu)',
-    logo_image_error: 'Uygulama logosu: {{error}}',
-    favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
     title: 'Özel CSS',

@@ -15,13 +15,3 @@
 .text + .text {
   margin-top: _.unit(2);
 }
-
-.field {
-  @include _.shimmering-animation;
-  width: 100%;
-  height: 44px;
-}
-
-.field + .field {
-  margin-top: _.unit(6);
-}

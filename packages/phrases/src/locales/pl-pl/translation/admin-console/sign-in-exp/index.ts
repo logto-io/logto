@@ -34,15 +34,6 @@ const sign_in_exp = {
   branding: {
     title: 'OPCJE BRANDINGU',
     ui_style: 'Styl',
-    favicon: 'Favicon',
-    logo_image_url: 'Adres URL obrazka logo aplikacji',
-    logo_image_url_placeholder: 'https://twoja.domena.cdn/logo.png',
-    dark_logo_image_url: 'Adres URL obrazka logo aplikacji (Ciemny)',
-    dark_logo_image_url_placeholder: 'https://twoja.domena.cdn/logo-ciemny.png',
-    logo_image: 'Logo aplikacji',
-    dark_logo_image: 'Logo aplikacji (Ciemny)',
-    logo_image_error: 'Logo aplikacji: {{error}}',
-    favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
     title: 'Niestandardowe CSS',
