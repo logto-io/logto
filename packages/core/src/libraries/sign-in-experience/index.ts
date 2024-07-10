@@ -116,7 +116,7 @@ export const createSignInExperienceLibrary = (
     const plan = await getTenantSubscriptionPlan(cloudConnection);
 
     return plan.id === developmentTenantPlanId;
-  }, ['is-developer-tenant']);
+  }, ['is-development-tenant']);
 
   /**
    * Get the override data for the sign-in experience by reading from organization data. If the

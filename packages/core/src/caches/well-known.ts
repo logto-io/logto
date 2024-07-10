@@ -14,7 +14,7 @@ type WellKnownMap = {
   'custom-phrases-tags': string[];
   'tenant-cache-expires-at': number;
   // Currently, tenant type cannot be updated once created. So it's safe to cache.
-  'is-developer-tenant': boolean;
+  'is-development-tenant': boolean;
 };
 
 type WellKnownCacheType = keyof WellKnownMap;
@@ -58,7 +58,7 @@ function getValueGuard(type: WellKnownCacheType): ZodType<WellKnownMap[typeof ty
     case 'tenant-cache-expires-at': {
       return z.number();
     }
-    case 'is-developer-tenant': {
+    case 'is-development-tenant': {
       return z.boolean();
     }
   }
