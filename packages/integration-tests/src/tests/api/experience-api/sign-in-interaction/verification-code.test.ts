@@ -1,4 +1,4 @@
-import { InteractionIdentifierType } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
@@ -7,10 +7,8 @@ import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-exp
 import { generateNewUser } from '#src/helpers/user.js';
 import { devFeatureTest } from '#src/utils.js';
 
-const verificationIdentifierType: readonly [
-  InteractionIdentifierType.Email,
-  InteractionIdentifierType.Phone,
-] = Object.freeze([InteractionIdentifierType.Email, InteractionIdentifierType.Phone]);
+const verificationIdentifierType: readonly [SignInIdentifier.Email, SignInIdentifier.Phone] =
+  Object.freeze([SignInIdentifier.Email, SignInIdentifier.Phone]);
 
 const identifiersTypeToUserProfile = Object.freeze({
   email: 'primaryEmail',

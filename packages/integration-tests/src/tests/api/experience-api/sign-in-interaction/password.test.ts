@@ -1,4 +1,4 @@
-import { InteractionIdentifierType } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { signInWithPassword } from '#src/helpers/experience/index.js';
@@ -17,7 +17,7 @@ devFeatureTest.describe('sign-in with password verification happy path', () => {
     await enableAllPasswordSignInMethods();
   });
 
-  it.each(Object.values(InteractionIdentifierType))(
+  it.each(Object.values(SignInIdentifier))(
     'should sign-in with password using %p',
     async (identifier) => {
       const { userProfile, user } = await generateNewUser({

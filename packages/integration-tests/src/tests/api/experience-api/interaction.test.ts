@@ -1,4 +1,4 @@
-import { InteractionEvent, InteractionIdentifierType } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -19,7 +19,7 @@ devFeatureTest.describe('PUT /experience API', () => {
     const client = await initExperienceClient();
     await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
     const { verificationId } = await client.verifyPassword({
-      identifier: { type: InteractionIdentifierType.Username, value: username },
+      identifier: { type: SignInIdentifier.Username, value: username },
       password,
     });
 
