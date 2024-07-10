@@ -24,4 +24,4 @@ jobs:
         sourceImageName: ${{ parameters.serviceName }}
         sourceImageTag: $(Build.BuildId)
         pushTag: $(Build.SourceBranchName)
-        repositoryName: life-events-${{ parameters.serviceName }}
+        repositoryName: life-events-logto
