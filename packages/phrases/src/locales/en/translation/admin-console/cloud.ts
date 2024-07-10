@@ -49,7 +49,7 @@ const cloud = {
         'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen!',
       inspire_me: 'Inspire me',
     },
-    logo_field: 'App Logo',
+    logo_field: 'App logo',
     color_field: 'Brand color',
     identifier_field: 'Identifier',
     identifier_options: {

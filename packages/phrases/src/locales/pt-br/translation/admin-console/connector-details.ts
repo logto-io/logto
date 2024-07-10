@@ -48,9 +48,6 @@ const connector_details = {
     company_information_description:
       'Exiba o nome da sua empresa, endereço ou código postal no final dos e-mails para melhorar a autenticidade.',
     company_information_placeholder: 'Informações básicas da sua empresa',
-    app_logo_field: 'Logotipo do aplicativo',
-    app_logo_tip:
-      'Exiba o logotipo da sua marca no topo dos e-mails. Use a mesma imagem para o modo claro e escuro.',
     urls_not_allowed: 'URLs não permitidas',
     test_notes: 'Logto utiliza o modelo "Genérico" para testes.',
   },

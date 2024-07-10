@@ -48,9 +48,6 @@ const connector_details = {
     company_information_description:
       'E-postaların alt kısmında şirket adınızı, adresinizi veya posta kodunuzu görüntüleyin.',
     company_information_placeholder: 'Şirketinizin temel bilgileri',
-    app_logo_field: 'Uygulama Logosu',
-    app_logo_tip:
-      'E-postaların üstünde marka logosunu görüntüleyin. Aynı görüntüyü açık mod ve karanlık mod için kullanın.',
     urls_not_allowed: 'URLler izin verilmez',
     test_notes: 'Logto testler için "Generic" şablonunu kullanır.',
   },

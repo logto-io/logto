@@ -1,5 +1,5 @@
 import { type LocalePhrase } from '@logto/phrases';
-import { type Theme } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import { cond, noop } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type React from 'react';
@@ -24,6 +24,11 @@ import { uriValidator } from '@/utils/validator';
 
 import * as styles from './index.module.scss';
 
+export const themeToLogoName = Object.freeze({
+  [Theme.Light]: 'logoUrl',
+  [Theme.Dark]: 'darkLogoUrl',
+} as const satisfies Record<Theme, string>);
+
 export type ImageField<FormContext extends FieldValues> = {
   /** The name (field path) of the field in the form. */
   name: FieldPath<FormContext>;
@@ -40,6 +45,8 @@ export type ImageField<FormContext extends FieldValues> = {
 type Props<FormContext extends FieldValues> = {
   /** The condensed title when user assets service is available. */
   readonly uploadTitle: React.ComponentProps<typeof FormField>['title'];
+  /** The tooltip to show for all the fields. */
+  readonly tip?: React.ComponentProps<typeof FormField>['tip'];
   readonly control: Control<FormContext>;
   readonly register: UseFormRegister<FormContext>;
   readonly fields: Array<ImageField<FormContext>>;
@@ -53,6 +60,7 @@ type Props<FormContext extends FieldValues> = {
  */
 function ImageInputs<FormContext extends FieldValues>({
   uploadTitle,
+  tip,
   control,
   register,
   fields,
@@ -84,6 +92,7 @@ function ImageInputs<FormContext extends FieldValues>({
         {fields.map((field) => (
           <FormField
             key={field.name}
+            tip={tip}
             title={
               <>
                 {t(`sign_in_exp.branding.with_${field.theme}`, {
@@ -109,7 +118,7 @@ function ImageInputs<FormContext extends FieldValues>({
   }
 
   return (
-    <FormField title={uploadTitle}>
+    <FormField title={uploadTitle} tip={tip}>
       <div className={styles.container}>
         {fields.map((field) => (
           <Controller

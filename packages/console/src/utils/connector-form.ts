@@ -68,8 +68,8 @@ export const convertResponseToForm = (connector: ConnectorResponse): ConnectorFo
 
   return {
     name: name?.en,
-    logo,
-    logoDark,
+    logo: logo ?? '',
+    logoDark: logoDark ?? '',
     target: conditional(
       type === ConnectorType.Social && (isStandard ? target : metadata.target ?? target)
     ),

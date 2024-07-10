@@ -48,9 +48,6 @@ const connector_details = {
     company_information_description:
       '이메일 하단에 회사 이름, 주소 또는 우편번호를 표시하여 신뢰성을 높입니다.',
     company_information_placeholder: '회사의 기본 정보',
-    app_logo_field: '앱 로고',
-    app_logo_tip:
-      '이메일 상단에 브랜드 로고를 표시합니다. 라이트 모드와 다크 모드에 모두 동일한 이미지를 사용합니다.',
     urls_not_allowed: 'URL은 허용되지 않습니다.',
     test_notes: 'Logto는 "Generic" 템플릿을 사용하여 테스트합니다.',
   },

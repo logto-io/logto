@@ -7,8 +7,9 @@ import useSWR from 'swr';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
-import LogoInputs from '@/components/ImageInputs';
+import LogoInputs, { themeToLogoName } from '@/components/ImageInputs';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { organizationLogosForExperienceLink } from '@/consts';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -17,6 +18,7 @@ import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { mfa } from '@/hooks/use-console-routes/routes/mfa';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
 
 import { type OrganizationDetailsOutletContext } from '../types';
@@ -24,11 +26,6 @@ import { type OrganizationDetailsOutletContext } from '../types';
 import JitSettings from './JitSettings';
 import * as styles from './index.module.scss';
 import { assembleData, isJsonObject, normalizeData, type FormData } from './utils';
-
-const themeToLogoName = Object.freeze({
-  [Theme.Light]: 'logoUrl',
-  [Theme.Dark]: 'darkLogoUrl',
-} as const satisfies Record<Theme, string>);
 
 function Settings() {
   const { isDeleting, data, jit, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();
@@ -51,6 +48,7 @@ function Settings() {
   } = form;
   const [isMfaRequired] = watch(['isMfaRequired']);
   const api = useApi();
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -111,6 +109,19 @@ function Settings() {
         </FormField>
         <LogoInputs
           uploadTitle="organization_details.branding.logo"
+          tip={
+            <Trans
+              i18nKey="admin_console.organization_details.branding.logo_tooltip"
+              components={{
+                a: (
+                  <TextLink
+                    targetBlank="noopener"
+                    href={getDocumentationUrl(organizationLogosForExperienceLink)}
+                  />
+                ),
+              }}
+            />
+          }
           control={control}
           register={register}
           fields={Object.values(Theme).map((theme) => ({

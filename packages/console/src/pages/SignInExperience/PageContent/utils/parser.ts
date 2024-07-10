@@ -7,6 +7,7 @@ import {
 } from '@logto/schemas';
 import { isSameArray } from '@silverhand/essentials';
 
+import { emptyBranding } from '@/types/sign-in-experience';
 import { removeFalsyValues } from '@/utils/object';
 
 import {
@@ -56,10 +57,8 @@ export const sieFormDataParser = {
       createAccountEnabled: signInMode !== SignInMode.SignIn,
       customCss: customCss ?? undefined,
       branding: {
+        ...emptyBranding,
         ...branding,
-        logoUrl: branding.logoUrl ?? '',
-        darkLogoUrl: branding.darkLogoUrl ?? '',
-        favicon: branding.favicon ?? '',
       },
       /** Parse password policy with default values. */
       passwordPolicy: {

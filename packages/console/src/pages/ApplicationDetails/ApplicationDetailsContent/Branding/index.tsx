@@ -6,22 +6,25 @@ import { useTranslation } from 'react-i18next';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
+import LogoInputs, { themeToLogoName } from '@/components/ImageInputs';
 import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
 import RequestDataError from '@/components/RequestDataError';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { logtoThirdPartyAppBrandingLink } from '@/consts';
+import { appSpecificBrandingLink, logtoThirdPartyAppBrandingLink } from '@/consts';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
+import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import { emptyBranding } from '@/types/sign-in-experience';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
 import * as styles from './index.module.scss';
 import useApplicationSignInExperienceSWR from './use-application-sign-in-experience-swr';
 import useSignInExperienceSWR from './use-sign-in-experience-swr';
-import { formatFormToSubmitData } from './utils';
+import { type ApplicationSignInExperienceForm, formatFormToSubmitData } from './utils';
 
 type Props = {
   readonly application: Application;
@@ -32,11 +35,12 @@ function Branding({ application, isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
 
-  const formMethods = useForm<ApplicationSignInExperience>({
+  const formMethods = useForm<ApplicationSignInExperienceForm>({
     defaultValues: {
       tenantId: application.tenantId,
       applicationId: application.id,
-      branding: {},
+      isBrandingEnabled: application.isThirdParty,
+      branding: emptyBranding,
       color: {},
     },
   });
@@ -46,6 +50,8 @@ function Branding({ application, isActive }: Props) {
     register,
     reset,
     control,
+    watch,
+    setValue,
     formState: { isDirty, isSubmitting, errors },
   } = formMethods;
 
@@ -57,6 +63,7 @@ function Branding({ application, isActive }: Props) {
   const isApplicationSieLoading = !data && !error;
   const isSieLoading = !sieData && !sieError;
   const isLoading = isApplicationSieLoading || isSieLoading;
+  const [isBrandingEnabled, color] = watch(['isBrandingEnabled', 'color']);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -85,8 +92,72 @@ function Branding({ application, isActive }: Props) {
       return;
     }
 
-    reset(data);
-  }, [data, reset]);
+    reset({
+      ...data,
+      branding: { ...emptyBranding, ...data.branding },
+      isBrandingEnabled: application.isThirdParty
+        ? true
+        : Object.keys(data.branding).length > 0 || Object.keys(data.color).length > 0,
+    });
+  }, [application.isThirdParty, data, reset]);
+
+  // When enabling branding for the first time, fill the default color values to ensure the form
+  // is valid; otherwise, directly save the form will be a no-op.
+  useEffect(() => {
+    if (isBrandingEnabled && Object.values(color).filter(Boolean).length === 0) {
+      setValue('color', { primaryColor: '#000000', darkPrimaryColor: '#000000' });
+    }
+  }, [color, isBrandingEnabled, setValue]);
+
+  const NonThirdPartyBrandingForm = useCallback(
+    () => (
+      <>
+        <LogoAndFavicon
+          control={control}
+          register={register}
+          theme={Theme.Light}
+          type="app_logo"
+          logo={{ name: 'branding.logoUrl', error: errors.branding?.logoUrl }}
+          favicon={{
+            name: 'branding.favicon',
+            error: errors.branding?.favicon,
+          }}
+        />
+        <LogoAndFavicon
+          control={control}
+          register={register}
+          theme={Theme.Dark}
+          type="app_logo"
+          logo={{ name: 'branding.darkLogoUrl', error: errors.branding?.darkLogoUrl }}
+          favicon={{
+            name: 'branding.darkFavicon',
+            error: errors.branding?.darkFavicon,
+          }}
+        />
+        <div className={styles.colors}>
+          <Controller
+            control={control}
+            name="color.primaryColor"
+            render={({ field: { name, value, onChange } }) => (
+              <FormField title="application_details.branding.brand_color">
+                <ColorPicker name={name} value={value} onChange={onChange} />
+              </FormField>
+            )}
+          />
+          <Controller
+            control={control}
+            name="color.darkPrimaryColor"
+            render={({ field: { name, value, onChange } }) => (
+              <FormField title="application_details.branding.brand_color_dark">
+                <ColorPicker name={name} value={value} onChange={onChange} />
+              </FormField>
+            )}
+          />
+        </div>
+      </>
+    ),
+    [control, errors.branding, register]
+  );
 
   if (isLoading) {
     return <FormCardSkeleton />;
@@ -110,63 +181,41 @@ function Branding({ application, isActive }: Props) {
             description={`application_details.branding.${
               application.isThirdParty ? 'description_third_party' : 'description'
             }`}
-            learnMoreLink={
-              application.isThirdParty
-                ? {
-                    href: getDocumentationUrl(logtoThirdPartyAppBrandingLink),
-                    targetBlank: 'noopener',
-                  }
-                : undefined
-            }
+            learnMoreLink={{
+              href: getDocumentationUrl(
+                application.isThirdParty ? logtoThirdPartyAppBrandingLink : appSpecificBrandingLink
+              ),
+              targetBlank: 'noopener',
+            }}
           >
             {application.isThirdParty && (
-              <FormField title="application_details.branding.display_name">
-                <TextInput {...register('displayName')} placeholder={application.name} />
-              </FormField>
+              <>
+                <FormField title="application_details.branding.display_name">
+                  <TextInput {...register('displayName')} placeholder={application.name} />
+                </FormField>
+                <LogoInputs
+                  uploadTitle="application_details.branding.app_logo"
+                  control={control}
+                  register={register}
+                  fields={Object.values(Theme).map((theme) => ({
+                    name: `branding.${themeToLogoName[theme]}`,
+                    error: errors.branding?.[themeToLogoName[theme]],
+                    type: 'app_logo',
+                    theme,
+                  }))}
+                />
+              </>
             )}
-            <LogoAndFavicon
-              control={control}
-              register={register}
-              theme={Theme.Light}
-              type="app_logo"
-              logo={{ name: 'branding.logoUrl', error: errors.branding?.logoUrl }}
-              favicon={{
-                name: 'branding.favicon',
-                error: errors.branding?.favicon,
-              }}
-            />
-            <LogoAndFavicon
-              control={control}
-              register={register}
-              theme={Theme.Dark}
-              type="app_logo"
-              logo={{ name: 'branding.darkLogoUrl', error: errors.branding?.darkLogoUrl }}
-              favicon={{
-                name: 'branding.darkFavicon',
-                error: errors.branding?.darkFavicon,
-              }}
-            />
             {!application.isThirdParty && (
-              <div className={styles.colors}>
-                <Controller
-                  control={control}
-                  name="color.primaryColor"
-                  render={({ field: { name, value, onChange } }) => (
-                    <FormField title="application_details.branding.brand_color">
-                      <ColorPicker name={name} value={value} onChange={onChange} />
-                    </FormField>
-                  )}
-                />
-                <Controller
-                  control={control}
-                  name="color.darkPrimaryColor"
-                  render={({ field: { name, value, onChange } }) => (
-                    <FormField title="application_details.branding.brand_color_dark">
-                      <ColorPicker name={name} value={value} onChange={onChange} />
-                    </FormField>
-                  )}
-                />
-              </div>
+              <>
+                <FormField title="application_details.branding.app_level_sie">
+                  <Switch
+                    description="application_details.branding.app_level_sie_switch"
+                    {...register('isBrandingEnabled')}
+                  />
+                </FormField>
+                {isBrandingEnabled && <NonThirdPartyBrandingForm />}
+              </>
             )}
           </FormCard>
           {application.isThirdParty && (
