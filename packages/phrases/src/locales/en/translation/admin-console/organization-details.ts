@@ -40,6 +40,8 @@ const organization_details = {
   invalid_json_object: 'Invalid JSON object.',
   branding: {
     logo: 'Organization logos',
+    logo_tooltip:
+      'You can pass the organization ID to display this logo in the sign-in experience; the dark version of the logo is needed if dark mode is enabled in the omni sign-in experience settings. <a>Learn more</a>',
   },
   jit: {
     title: 'Just-in-time provisioning',

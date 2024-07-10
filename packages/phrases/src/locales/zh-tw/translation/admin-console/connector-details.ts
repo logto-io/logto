@@ -45,8 +45,6 @@ const connector_details = {
     company_information_field: '公司信息',
     company_information_description: '在郵件底部顯示您的公司名稱、地址或郵編，以提高真實性。',
     company_information_placeholder: '您的公司基本信息',
-    app_logo_field: '應用程式標誌',
-    app_logo_tip: '在郵件頂部顯示您的品牌標誌。在淺色模式和深色模式下使用相同的圖像。',
     urls_not_allowed: '不允許使用 URL',
     test_notes: 'Logto 使用「通用」模板進行測試。',
   },

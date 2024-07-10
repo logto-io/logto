@@ -48,9 +48,6 @@ const connector_details = {
     company_information_description:
       'Wyświetlaj nazwę firmy, adres lub kod pocztowy na dole wiadomości e-mail, aby zwiększyć autentyczność.',
     company_information_placeholder: 'Podstawowe informacje o Twojej firmie',
-    app_logo_field: 'Logo aplikacji',
-    app_logo_tip:
-      'Wyświetlaj logo marki na górze wiadomości e-mail. Użyj tego samego obrazu zarówno dla trybu jasnego, jak i ciemnego.',
     urls_not_allowed: 'Nie dozwolone adresy URL',
     test_notes: 'Logto używa szablonu "Ogólny" do testów.',
   },

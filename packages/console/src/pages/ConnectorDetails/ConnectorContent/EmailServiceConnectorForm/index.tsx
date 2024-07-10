@@ -92,8 +92,8 @@ function EmailServiceConnectorForm({ extraInfo }: Props) {
         </div>
       </FormField>
       <FormField
-        title="connector_details.logto_email.app_logo_field"
-        tip={<DynamicT forKey="connector_details.logto_email.app_logo_tip" />}
+        title="connector_details.logto_email.email_logo_field"
+        tip={<DynamicT forKey="connector_details.logto_email.email_logo_tip" />}
         headlineSpacing={isUserAssetsServiceReady ? 'large' : 'default'}
       >
         {isUserAssetsServiceReady ? (

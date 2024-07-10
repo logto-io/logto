@@ -48,9 +48,6 @@ const connector_details = {
     company_information_description:
       'Zeigen Sie den Firmennamen, die Adresse oder die Postleitzahl am Ende der E-Mails an, um die Authentizität zu erhöhen.',
     company_information_placeholder: 'Die grundlegenden Informationen Ihres Unternehmens',
-    app_logo_field: 'App-Logo',
-    app_logo_tip:
-      'Zeigen Sie Ihr Markenlogo oben in E-Mails an. Verwenden Sie dasselbe Bild für den hellen und den dunklen Modus.',
     urls_not_allowed: 'URLs sind nicht erlaubt',
     test_notes: 'Logto verwendet die "Generic"-Vorlage zum Testen.',
   },

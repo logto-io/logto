@@ -44,15 +44,6 @@ const connectors = {
     name_placeholder: 'ソーシャルサインインボタンの名前を入力',
     name_tip:
       'コネクタボタンの名前は「{{name}}で続ける」で表示されます。名前が長くなりすぎないように注意してください。',
-    logo: 'ソーシャルサインインボタンのロゴURL',
-    logo_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_tip:
-      'ロゴ画像はコネクタに表示されます。一般的にアバターやトンマークなどを使用します。公開アクセス可能な画像リンクを取得し、リンクをここに挿入してください。',
-    logo_dark: 'ソーシャルサインインボタンのロゴURL（ダークモード）',
-    logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_dark_tip: 'ダークモードでコネクタのロゴを設定してください。',
-    logo_dark_collapse: '折りたたむ',
-    logo_dark_show: 'ダークモード用のロゴ設定を表示',
     target: 'Identity Providerの名前',
     target_placeholder: 'コネクタIdentity Providerの名前を入力',
     target_tip: '「IdP名」として、ソーシャルIDを識別するための一意の識別子文字列を指定します。',

@@ -48,9 +48,6 @@ const connector_details = {
     company_information_description:
       'メールの下部に会社名、住所、郵便番号などを表示して、真正性を高めます。',
     company_information_placeholder: '会社の基本情報を入力してください',
-    app_logo_field: 'アプリのロゴ',
-    app_logo_tip:
-      'メールの上部にブランドロゴを表示します。ライトモードとダークモードの両方で同じ画像を使用してください。',
     urls_not_allowed: 'URLは許可されません',
     test_notes: 'Logtoはテストのために「共通」テンプレートを使用しています。',
   },

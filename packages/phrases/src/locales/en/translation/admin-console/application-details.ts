@@ -95,10 +95,13 @@ const application_details = {
   no_organization_placeholder: 'No organization found. <a>Go to organizations</a>',
   branding: {
     name: 'Branding',
-    description:
-      'Customize the logos and brand colors of this application. The settings here will override the global sign-in experience settings.',
+    description: 'Customize your app logo and branding color for the app-level experience.',
     description_third_party:
       "Customize your application's display name and logo on the consent screen.",
+    app_logo: 'App logo',
+    app_level_sie: 'App-level sign-in experience',
+    app_level_sie_switch:
+      'Enable the app-level sign-in experience and set up app-specific branding. If disabled, the omni sign-in experience will be used.',
     more_info: 'More info',
     more_info_description: 'Offer users more details about your application on the consent screen.',
     display_name: 'Display name',
