@@ -173,7 +173,7 @@ export default class Tenant implements TenantContext {
         koaExperienceSsr(libraries, queries),
         koaSpaSessionGuard(provider, queries),
         mount(`/${experience.routes.consent}`, koaAutoConsent(provider, queries)),
-        koaSpaProxy(mountedApps),
+        koaSpaProxy(mountedApps, undefined, undefined, undefined, queries),
       ])
     );
 

@@ -7,12 +7,17 @@ import type { IRouterParamContext } from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
 import serveStatic from '#src/middleware/koa-serve-static.js';
+import type Queries from '#src/tenants/Queries.js';
 
+import serveCustomUiAssets from './koa-serve-custom-ui-assets.js';
+
+// eslint-disable-next-line max-params
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
   mountedApps: string[],
   packagePath = 'experience',
   port = 5001,
-  prefix = ''
+  prefix = '',
+  queries?: Queries
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
@@ -41,6 +46,14 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     // Skip if the request is for another app
     if (!prefix && mountedApps.some((app) => app !== prefix && requestPath.startsWith(`/${app}`))) {
       return next();
+    }
+
+    const { signInExperiences } = queries ?? {};
+    const { customUiAssets } = (await signInExperiences?.findDefaultSignInExperience()) ?? {};
+    // If user has uploaded custom UI assets, serve them instead of native experience UI
+    if (customUiAssets && packagePath === 'experience') {
+      const serve = serveCustomUiAssets(customUiAssets.id);
+      return serve(ctx, next);
     }
 
     if (!EnvSet.values.isProduction) {

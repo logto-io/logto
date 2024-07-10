@@ -10,6 +10,7 @@ const { mockEsmDefault } = createMockUtils(jest);
 
 const mockProxyMiddleware = jest.fn();
 const mockStaticMiddleware = jest.fn();
+const mockCustomUiAssetsMiddleware = jest.fn();
 const mountedApps = Object.values(UserApps);
 
 mockEsmDefault('node:fs/promises', () => ({
@@ -18,6 +19,17 @@ mockEsmDefault('node:fs/promises', () => ({
 
 mockEsmDefault('koa-proxies', () => jest.fn(() => mockProxyMiddleware));
 mockEsmDefault('#src/middleware/koa-serve-static.js', () => jest.fn(() => mockStaticMiddleware));
+mockEsmDefault('#src/middleware/koa-serve-custom-ui-assets.js', () =>
+  jest.fn(() => mockCustomUiAssetsMiddleware)
+);
+
+const mockFindDefaultSignInExperience = jest.fn();
+const { MockQueries } = await import('#src/test-utils/tenant.js');
+const queries = new MockQueries({
+  signInExperiences: {
+    findDefaultSignInExperience: mockFindDefaultSignInExperience,
+  },
+});
 
 const koaSpaProxy = await pickDefault(import('./koa-spa-proxy.js'));
 
@@ -84,5 +96,19 @@ describe('koaSpaProxy middleware', () => {
     await koaSpaProxy(mountedApps)(ctx, next);
     expect(mockStaticMiddleware).toBeCalled();
     stub.restore();
+  });
+
+  it('should serve custom UI assets if user uploaded them', async () => {
+    const customUiAssets = { id: 'custom-ui-assets', createdAt: Date.now() };
+    mockFindDefaultSignInExperience.mockResolvedValue({ customUiAssets });
+
+    const ctx = createContextWithRouteParameters({
+      url: '/sign-in',
+    });
+
+    await koaSpaProxy(mountedApps, undefined, undefined, undefined, queries)(ctx, next);
+    expect(mockCustomUiAssetsMiddleware).toBeCalled();
+    expect(mockStaticMiddleware).not.toBeCalled();
+    expect(mockProxyMiddleware).not.toBeCalled();
   });
 });
