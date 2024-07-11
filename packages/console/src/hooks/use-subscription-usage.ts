@@ -4,6 +4,7 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type SubscriptionUsage } from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
 
+/** @deprecated */
 const useSubscriptionUsage = (tenantId: string) => {
   const cloudApi = useCloudApi();
 

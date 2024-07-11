@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
@@ -16,7 +17,11 @@ type Props = {
 
 function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const {
+    currentPlan,
+    currentSubscriptionUsage: { resourcesLimit },
+    currentSku,
+  } = useContext(SubscriptionDataContext);
   const { hasReachedLimit } = useApiResourcesUsage();
 
   if (
@@ -24,7 +29,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
     /**
      * We don't guard API resources quota limit for paid plan, since it's an add-on feature
      */
-    currentPlan.id === ReservedPlanId.Free
+    (isDevFeaturesEnabled ? currentSku.id : currentPlan.id) === ReservedPlanId.Free
   ) {
     return (
       <QuotaGuardFooter>
@@ -35,7 +40,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
           }}
         >
           {t('upsell.paywall.resources', {
-            count: currentPlan.quota.resourcesLimit ?? 0,
+            count: (isDevFeaturesEnabled ? resourcesLimit : currentPlan.quota.resourcesLimit) ?? 0,
           })}
         </Trans>
       </QuotaGuardFooter>

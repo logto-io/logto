@@ -5,7 +5,7 @@ import { useCallback, useContext, useState } from 'react';
 import Plus from '@/assets/icons/plus.svg?react';
 import PageMeta from '@/components/PageMeta';
 import { organizationsFeatureLink } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -25,13 +25,17 @@ const organizationsPathname = '/organizations';
 
 function Organizations() {
   const { getDocumentationUrl } = useDocumentationUrl();
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
 
   const { navigate } = useTenantPathname();
   const [isCreating, setIsCreating] = useState(false);
 
-  const isOrganizationsDisabled = isCloud && !currentPlan.quota.organizationsEnabled;
+  const isOrganizationsDisabled =
+    isCloud &&
+    !(isDevFeaturesEnabled
+      ? currentSubscriptionQuota.organizationsEnabled
+      : currentPlan.quota.organizationsEnabled);
 
   const upgradePlan = useCallback(() => {
     navigate(subscriptionPage);

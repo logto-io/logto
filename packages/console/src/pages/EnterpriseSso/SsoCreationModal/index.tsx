@@ -14,7 +14,7 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -42,10 +42,15 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const [selectedProviderName, setSelectedProviderName] = useState<string>();
 
-  const isSsoEnabled = !isCloud || currentPlan.quota.ssoEnabled;
+  const isSsoEnabled =
+    !isCloud ||
+    (isDevFeaturesEnabled
+      ? currentSubscriptionQuota.enterpriseSsoLimit === null ||
+        currentSubscriptionQuota.enterpriseSsoLimit > 0
+      : currentPlan.quota.ssoEnabled);
 
   const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
     'api/sso-connector-providers'

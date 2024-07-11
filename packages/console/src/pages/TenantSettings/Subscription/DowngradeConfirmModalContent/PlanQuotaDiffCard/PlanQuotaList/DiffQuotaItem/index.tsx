@@ -8,12 +8,17 @@ import { type SubscriptionPlanQuota } from '@/types/subscriptions';
 import QuotaItemPhrase from './QuotaItemPhrase';
 import styles from './index.module.scss';
 
+import { type LogtoSkuQuota } from '@/types/skus';
+
+import SkuQuotaItemPhrase from './SkuQuotaItemPhrase';
+
 type Props = {
   readonly quotaKey: keyof SubscriptionPlanQuota;
   readonly quotaValue: SubscriptionPlanQuota[keyof SubscriptionPlanQuota];
   readonly hasStatusIcon?: boolean;
 };
 
+/** @deprecated */
 function DiffQuotaItem({ quotaKey, quotaValue, hasStatusIcon }: Props) {
   const isNotCapable = quotaValue === 0 || quotaValue === false;
   const DowngradeStatusIcon = isNotCapable ? Failed : DescendArrow;
@@ -34,6 +39,42 @@ function DiffQuotaItem({ quotaKey, quotaValue, hasStatusIcon }: Props) {
         )}
         <span className={cond(isNotCapable && styles.lineThrough)}>
           <QuotaItemPhrase quotaKey={quotaKey} quotaValue={quotaValue} />
+        </span>
+      </span>
+    </li>
+  );
+}
+
+type DiffSkuQuotaItemProps = {
+  readonly quotaKey: keyof LogtoSkuQuota;
+  readonly quotaValue: LogtoSkuQuota[keyof LogtoSkuQuota];
+  readonly hasStatusIcon?: boolean;
+};
+
+/**
+ * Almost copy/paste from the implementation above, but with different types and constants to fit the use cases of new pricing model.
+ * Old one will be deprecated soon.
+ */
+export function DiffSkuQuotaItem({ quotaKey, quotaValue, hasStatusIcon }: DiffSkuQuotaItemProps) {
+  const isNotCapable = quotaValue === 0 || quotaValue === false;
+  const DowngradeStatusIcon = isNotCapable ? Failed : DescendArrow;
+
+  return (
+    <li className={classNames(styles.quotaListItem, hasStatusIcon && styles.withIcon)}>
+      {/**
+       * Add a `span` as a wrapper to apply the flex layout to the content.
+       * If we apply the flex layout to the `li` directly, the `li` circle bullet will disappear.
+       */}
+      <span className={styles.content}>
+        {cond(
+          hasStatusIcon && (
+            <DowngradeStatusIcon
+              className={classNames(styles.icon, isNotCapable && styles.notCapable)}
+            />
+          )
+        )}
+        <span className={cond(isNotCapable && styles.lineThrough)}>
+          <SkuQuotaItemPhrase skuQuotaKey={quotaKey} skuQuotaValue={quotaValue} />
         </span>
       </span>
     </li>

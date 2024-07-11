@@ -1,3 +1,4 @@
+import { conditional } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
@@ -15,12 +16,17 @@ const registeredPlanNamePhraseMap: Record<
 };
 
 type Props = {
+  /** Temporarily use optional for backward compatibility. */
+  readonly skuId?: string;
+  /** @deprecated */
   readonly name: string;
 };
 
-function PlanName({ name }: Props) {
+// TODO: rename the component once new pricing model is ready, should be `SkuName`.
+function PlanName({ skuId, name }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
-  const planNamePhrase = registeredPlanNamePhraseMap[name];
+  const planNamePhrase =
+    conditional(skuId && registeredPlanNamePhraseMap[skuId]) ?? registeredPlanNamePhraseMap[name];
 
   /**
    * Note: fallback to the plan name if the phrase is not registered.
