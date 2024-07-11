@@ -256,6 +256,7 @@ export default class ExperienceInteraction {
   }
 
   private async createNewUser(verificationRecord: VerificationRecord) {
+    // TODO: To be implemented
     switch (verificationRecord.type) {
       case VerificationType.VerificationCode: {
         break;
