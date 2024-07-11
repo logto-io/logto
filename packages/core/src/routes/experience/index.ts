@@ -52,7 +52,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       body: z.object({
         interactionEvent: z.nativeEnum(InteractionEvent),
       }),
-      status: [204],
+      status: [204, 403],
     }),
     async (ctx, next) => {
       const { interactionEvent } = ctx.guard.body;
@@ -61,7 +61,8 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       createLog(`Interaction.${interactionEvent}.Update`);
 
       const experienceInteraction = new ExperienceInteraction(ctx, tenant);
-      experienceInteraction.setInteractionEvent(interactionEvent);
+
+      await experienceInteraction.setInteractionEvent(interactionEvent);
 
       await experienceInteraction.save();
 
@@ -78,7 +79,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       body: z.object({
         interactionEvent: z.nativeEnum(InteractionEvent),
       }),
-      status: [204],
+      status: [204, 403],
     }),
     async (ctx, next) => {
       const { interactionEvent } = ctx.guard.body;
@@ -88,7 +89,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
         `Interaction.${experienceInteraction.interactionEvent ?? interactionEvent}.Update`
       );
 
-      experienceInteraction.setInteractionEvent(interactionEvent);
+      await experienceInteraction.setInteractionEvent(interactionEvent);
 
       eventLog.append({
         interactionEvent,

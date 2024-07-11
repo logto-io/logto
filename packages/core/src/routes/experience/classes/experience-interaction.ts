@@ -97,9 +97,26 @@ export default class ExperienceInteraction {
     return this.#interactionEvent;
   }
 
-  /** Set the interaction event for the current interaction */
-  public setInteractionEvent(interactionEvent: InteractionEvent) {
-    // TODO: conflict event check (e.g. reset password session can't be used for sign in)
+  /**
+   * Set the interaction event for the current interaction
+   *
+   * @throws RequestError with 403 if the interaction event is not allowed by the `SignInExperienceSettings`
+   * @throws RequestError with 400 if the interaction event is `ForgotPassword` and the current interaction event is not `ForgotPassword`
+   * @throws RequestError with 400 if the interaction event is not `ForgotPassword` and the current interaction event is `ForgotPassword`
+   */
+  public async setInteractionEvent(interactionEvent: InteractionEvent) {
+    await this.signInExperienceSettings.guardInteractionEvent(interactionEvent);
+
+    // `ForgotPassword` interaction event can not interchanged with other events
+    if (this.interactionEvent) {
+      assertThat(
+        interactionEvent === InteractionEvent.ForgotPassword
+          ? this.interactionEvent === InteractionEvent.ForgotPassword
+          : this.interactionEvent !== InteractionEvent.ForgotPassword,
+        new RequestError({ code: 'session.not_supported_for_forgot_password', status: 400 })
+      );
+    }
+
     this.#interactionEvent = interactionEvent;
   }
 

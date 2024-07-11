@@ -25,7 +25,7 @@ devFeatureTest.describe('backup code verification APIs', () => {
     const client = await initExperienceClient();
 
     await expectRejects(client.verifyBackupCode({ code: '1234' }), {
-      code: 'session.not_identified',
+      code: 'session.identifier_not_found',
       status: 400,
     });
   });

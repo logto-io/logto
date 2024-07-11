@@ -30,7 +30,7 @@ export default function backupCodeVerificationRoutes<T extends WithLogContext>(
       const { experienceInteraction } = ctx;
       const { code } = ctx.guard.body;
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.not_identified');
+      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
 
       // TODO: Check if the MFA is enabled
 

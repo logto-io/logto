@@ -12,9 +12,6 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type VerificationRecord } from './verifications/index.js';
 
-const forbiddenMethodError = () =>
-  new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 });
-
 const getEmailIdentifierFromVerificationRecord = (verificationRecord: VerificationRecord) => {
   switch (verificationRecord.type) {
     case VerificationType.Password:
@@ -43,12 +40,34 @@ export class SignInExperienceSettings {
     private readonly queries: Queries
   ) {}
 
+  public async guardInteractionEvent(event: InteractionEvent) {
+    const { signInMode } = await this.getSignInExperienceData();
+
+    switch (event) {
+      case InteractionEvent.SignIn: {
+        assertThat(
+          signInMode !== SignInMode.Register,
+          new RequestError({ code: 'auth.forbidden', status: 403 })
+        );
+        break;
+      }
+      case InteractionEvent.Register: {
+        assertThat(
+          signInMode !== SignInMode.SignIn,
+          new RequestError({ code: 'auth.forbidden', status: 403 })
+        );
+        break;
+      }
+      case InteractionEvent.ForgotPassword: {
+        break;
+      }
+    }
+  }
+
   async verifyIdentificationMethod(
     event: InteractionEvent,
     verificationRecord: VerificationRecord
   ) {
-    await this.guardInteractionEvent(event);
-
     switch (event) {
       case InteractionEvent.SignIn: {
         await this.guardSignInVerificationMethod(verificationRecord);
@@ -119,30 +138,6 @@ export class SignInExperienceSettings {
     );
   }
 
-  private async guardInteractionEvent(event: InteractionEvent) {
-    const { signInMode } = await this.getSignInExperienceData();
-
-    switch (event) {
-      case InteractionEvent.SignIn: {
-        assertThat(
-          signInMode !== SignInMode.Register,
-          new RequestError({ code: 'auth.forbidden', status: 403 })
-        );
-        break;
-      }
-      case InteractionEvent.Register: {
-        assertThat(
-          signInMode !== SignInMode.SignIn,
-          new RequestError({ code: 'auth.forbidden', status: 403 })
-        );
-        break;
-      }
-      case InteractionEvent.ForgotPassword: {
-        break;
-      }
-    }
-  }
-
   private async guardSignInVerificationMethod(verificationRecord: VerificationRecord) {
     const {
       signIn: { methods: signInMethods },
@@ -163,7 +158,7 @@ export class SignInExperienceSettings {
               (verificationRecord.type === VerificationType.Password ? password : verificationCode)
             );
           }),
-          forbiddenMethodError()
+          new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 })
         );
         break;
       }
@@ -173,11 +168,14 @@ export class SignInExperienceSettings {
         break;
       }
       case VerificationType.EnterpriseSso: {
-        assertThat(singleSignOnEnabled, forbiddenMethodError());
+        assertThat(
+          singleSignOnEnabled,
+          new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 })
+        );
         break;
       }
       default: {
-        throw forbiddenMethodError();
+        throw new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 });
       }
     }
   }
@@ -192,7 +190,10 @@ export class SignInExperienceSettings {
           identifier: { type },
         } = verificationRecord;
 
-        assertThat(signUp.identifiers.includes(type) && signUp.verify, forbiddenMethodError());
+        assertThat(
+          signUp.identifiers.includes(type) && signUp.verify,
+          new RequestError({ code: 'user.sign_up_method_not_enabled', status: 422 })
+        );
         break;
       }
       case VerificationType.Social: {
@@ -200,11 +201,14 @@ export class SignInExperienceSettings {
         break;
       }
       case VerificationType.EnterpriseSso: {
-        assertThat(singleSignOnEnabled, forbiddenMethodError());
+        assertThat(
+          singleSignOnEnabled,
+          new RequestError({ code: 'user.sign_up_method_not_enabled', status: 422 })
+        );
         break;
       }
       default: {
-        throw forbiddenMethodError();
+        throw new RequestError({ code: 'user.sign_up_method_not_enabled', status: 422 });
       }
     }
   }
@@ -213,7 +217,7 @@ export class SignInExperienceSettings {
   private guardForgotPasswordVerificationMethod(verificationRecord: VerificationRecord) {
     assertThat(
       verificationRecord.type === VerificationType.VerificationCode,
-      forbiddenMethodError()
+      new RequestError({ code: 'session.not_supported_for_forgot_password', status: 422 })
     );
   }
 }
