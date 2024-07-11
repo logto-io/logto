@@ -70,6 +70,12 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const api = useApi();
+  const hasBranding = [
+    ApplicationType.Native,
+    ApplicationType.SPA,
+    ApplicationType.Traditional,
+    ApplicationType.Protected,
+  ].includes(data.type);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -189,9 +195,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             {t('application_details.permissions.name')}
           </TabNavItem>
         )}
-        {[ApplicationType.Native, ApplicationType.SPA, ApplicationType.Traditional].includes(
-          data.type
-        ) && (
+        {hasBranding && (
           <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
             {t('application_details.branding.name')}
           </TabNavItem>
@@ -266,9 +270,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
           <Permissions application={data} />
         </TabWrapper>
       )}
-      {[ApplicationType.Native, ApplicationType.SPA, ApplicationType.Traditional].includes(
-        data.type
-      ) && (
+      {hasBranding && (
         <TabWrapper
           isActive={tab === ApplicationDetailsTabs.Branding}
           className={styles.tabContainer}

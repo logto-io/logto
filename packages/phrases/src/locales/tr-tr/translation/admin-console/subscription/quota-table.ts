@@ -20,7 +20,6 @@ const quota_table = {
     title: 'Kullanıcı Arayüzü ve Markalama',
     custom_domain: 'Özel alan adı',
     custom_css: 'Özel CSS',
-    app_logo_and_favicon: 'Uygulama logoları ve favicon',
     dark_mode: 'Karanlık mod',
     i18n: 'Uluslararasılaştırma',
   },

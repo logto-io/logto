@@ -20,7 +20,6 @@ const quota_table = {
     title: 'Benutzeroberfläche und Branding',
     custom_domain: 'Benutzerdefinierte Domain',
     custom_css: 'Benutzerdefiniertes CSS',
-    app_logo_and_favicon: 'App-Logo und Favicon',
     dark_mode: 'Dunkler Modus',
     i18n: 'Internationalisierung',
   },

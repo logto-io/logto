@@ -20,7 +20,6 @@ const quota_table = {
     title: 'Интерфейс и брендинг',
     custom_domain: 'Пользовательский домен',
     custom_css: 'Пользовательский CSS',
-    app_logo_and_favicon: 'Логотип и фавикон приложения',
     dark_mode: 'Темный режим',
     i18n: 'Интернационализация',
   },

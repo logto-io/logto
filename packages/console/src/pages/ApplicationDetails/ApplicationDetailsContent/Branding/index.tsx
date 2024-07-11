@@ -1,16 +1,23 @@
-import { Theme, type Application, type ApplicationSignInExperience } from '@logto/schemas';
-import { useCallback, useEffect } from 'react';
+import { generateDarkColor } from '@logto/core-kit';
+import {
+  Theme,
+  defaultPrimaryColor,
+  type Application,
+  type ApplicationSignInExperience,
+} from '@logto/schemas';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, FormProvider, Controller } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
-import LogoInputs, { themeToLogoName } from '@/components/ImageInputs';
+import ImageInputs, { themeToLogoName } from '@/components/ImageInputs';
 import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
 import RequestDataError from '@/components/RequestDataError';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { appSpecificBrandingLink, logtoThirdPartyAppBrandingLink } from '@/consts';
+import Button from '@/ds-components/Button';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
@@ -105,9 +112,21 @@ function Branding({ application, isActive }: Props) {
   // is valid; otherwise, directly save the form will be a no-op.
   useEffect(() => {
     if (isBrandingEnabled && Object.values(color).filter(Boolean).length === 0) {
-      setValue('color', { primaryColor: '#000000', darkPrimaryColor: '#000000' });
+      setValue('color', {
+        primaryColor: defaultPrimaryColor,
+        darkPrimaryColor: generateDarkColor(defaultPrimaryColor),
+      });
     }
   }, [color, isBrandingEnabled, setValue]);
+
+  const [primaryColor, darkPrimaryColor] = watch(['color.primaryColor', 'color.darkPrimaryColor']);
+  const calculatedDarkPrimaryColor = useMemo(() => {
+    return primaryColor && generateDarkColor(primaryColor);
+  }, [primaryColor]);
+
+  const handleResetColor = useCallback(() => {
+    setValue('color.darkPrimaryColor', calculatedDarkPrimaryColor);
+  }, [calculatedDarkPrimaryColor, setValue]);
 
   const NonThirdPartyBrandingForm = useCallback(
     () => (
@@ -153,10 +172,29 @@ function Branding({ application, isActive }: Props) {
               </FormField>
             )}
           />
+          {calculatedDarkPrimaryColor !== darkPrimaryColor && (
+            <div className={styles.darkModeTip}>
+              {t('sign_in_exp.color.dark_mode_reset_tip')}
+              <Button
+                type="text"
+                size="small"
+                title="sign_in_exp.color.reset"
+                onClick={handleResetColor}
+              />
+            </div>
+          )}
         </div>
       </>
     ),
-    [control, errors.branding, register]
+    [
+      control,
+      errors.branding,
+      register,
+      calculatedDarkPrimaryColor,
+      darkPrimaryColor,
+      handleResetColor,
+      t,
+    ]
   );
 
   if (isLoading) {
@@ -193,7 +231,7 @@ function Branding({ application, isActive }: Props) {
                 <FormField title="application_details.branding.display_name">
                   <TextInput {...register('displayName')} placeholder={application.name} />
                 </FormField>
-                <LogoInputs
+                <ImageInputs
                   uploadTitle="application_details.branding.app_logo"
                   control={control}
                   register={register}
