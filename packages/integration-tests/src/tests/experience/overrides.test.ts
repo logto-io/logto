@@ -3,13 +3,20 @@
  */
 
 import { ConnectorType } from '@logto/connector-kit';
-import { ApplicationType, type Branding, type Color, SignInIdentifier } from '@logto/schemas';
-import { pick } from '@silverhand/essentials';
+import {
+  ApplicationType,
+  type Branding,
+  type Color,
+  SignInIdentifier,
+  type FullSignInExperience,
+} from '@logto/schemas';
+import { appendPath, pick } from '@silverhand/essentials';
 
+import api from '#src/api/api.js';
 import { setApplicationSignInExperience } from '#src/api/application-sign-in-experience.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { demoAppRedirectUri, demoAppUrl } from '#src/constants.js';
+import { demoAppRedirectUri, demoAppUrl, logtoUrl } from '#src/constants.js';
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
@@ -194,7 +201,37 @@ describe('overrides', () => {
 
     await expectMatchBranding('light', organizationBranding.logoUrl, 'rgb(0, 0, 255)');
     await expectMatchBranding('dark', organizationBranding.darkLogoUrl, 'rgb(255, 0, 255)');
+    await deleteApplication(application.id);
     await experience.page.close();
+  });
+
+  it('should not use app-level branding when the app is an third-party app', async () => {
+    const application = await createApplication(
+      'Sign-in experience override',
+      ApplicationType.Traditional,
+      {
+        isThirdParty: true,
+        oidcClientMetadata: {
+          redirectUris: [demoAppRedirectUri],
+          postLogoutRedirectUris: [demoAppRedirectUri],
+        },
+      }
+    );
+
+    await setApplicationSignInExperience(application.id, {
+      color: appColor,
+      branding: appBranding,
+    });
+
+    // It's hard to simulate third-party apps because their type is "Traditional" while our demo
+    // app is an SPA. Only test the API response here.
+    const experience = await api
+      .get(appendPath(new URL(logtoUrl), 'api/.well-known/sign-in-exp'))
+      .json<FullSignInExperience>();
+
+    expect(experience.branding).toEqual(omniBranding);
+
+    await deleteApplication(application.id);
   });
 
   describe('override fallback', () => {
@@ -261,6 +298,7 @@ describe('overrides', () => {
     expect(faviconElement).toBe(appBranding.favicon);
     expect(appleFavicon).toBe(appBranding.favicon);
 
+    await deleteApplication(application.id);
     await experience.page.close();
   });
 });

@@ -45,7 +45,10 @@ export type ImageField<FormContext extends FieldValues> = {
 type Props<FormContext extends FieldValues> = {
   /** The condensed title when user assets service is available. */
   readonly uploadTitle: React.ComponentProps<typeof FormField>['title'];
-  /** The tooltip to show for all the fields. */
+  /**
+   * When user assets service is available, the tip will be displayed for the `uploadTitle`;
+   * otherwise, it will be displayed for each text input.
+   */
   readonly tip?: React.ComponentProps<typeof FormField>['tip'];
   readonly control: Control<FormContext>;
   readonly register: UseFormRegister<FormContext>;
