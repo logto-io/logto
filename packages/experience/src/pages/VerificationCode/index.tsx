@@ -21,15 +21,19 @@ const VerificationCode = () => {
   const { flow } = useParams<Parameters>();
   const { signInMethods } = useSieMethods();
 
-  const { identifierInputValue } = useContext(UserInteractionContext);
+  const { identifierInputValue, forgotPasswordIdentifierInputValue } =
+    useContext(UserInteractionContext);
 
-  const [, useFlow] = validate(flow, userFlowGuard);
+  const [, userFlow] = validate(flow, userFlowGuard);
 
-  if (!useFlow) {
+  if (!userFlow) {
     return <ErrorPage />;
   }
 
-  const { type, value } = identifierInputValue ?? {};
+  const cachedIdentifierInputValue =
+    flow === UserFlow.ForgotPassword ? forgotPasswordIdentifierInputValue : identifierInputValue;
+
+  const { type, value } = cachedIdentifierInputValue ?? {};
 
   if (!type || type === SignInIdentifier.Username || !value) {
     return <ErrorPage title="error.invalid_session" />;
@@ -53,10 +57,10 @@ const VerificationCode = () => {
       }}
     >
       <VerificationCodeContainer
-        flow={useFlow}
+        flow={userFlow}
         identifier={type}
         target={value}
-        hasPasswordButton={useFlow === UserFlow.SignIn && methodSettings?.password}
+        hasPasswordButton={userFlow === UserFlow.SignIn && methodSettings?.password}
       />
     </SecondaryPageLayout>
   );
