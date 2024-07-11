@@ -149,4 +149,13 @@ export class ExperienceClient extends MockClient {
       })
       .json<{ verificationId: string }>();
   }
+
+  public async verifyBackupCode(payload: { code: string }) {
+    return api
+      .post(`${experienceRoutes.verification}/backup-code/verify`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
+  }
 }

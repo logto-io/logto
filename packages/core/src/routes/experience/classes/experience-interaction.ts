@@ -73,7 +73,7 @@ export default class ExperienceInteraction {
     const { verificationRecords = [], profile, userId, interactionEvent } = result.data;
 
     this.interactionEvent = interactionEvent;
-    this.userId = userId; // TODO: @simeng-li replace with userId
+    this.userId = userId;
     this.profile = profile;
 
     this.verificationRecords = new Map();

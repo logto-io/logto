@@ -4,9 +4,12 @@
 
 import {
   InteractionEvent,
+  InteractionIdentifierType,
   type InteractionIdentifier,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
+
+import { type ExperienceClient } from '#src/client/experience/index.js';
 
 import { initExperienceClient, logoutClient, processSession } from '../client.js';
 
@@ -63,4 +66,29 @@ export const signInWithVerificationCode = async (identifier: VerificationCodeIde
 
   await processSession(client, redirectTo);
   await logoutClient(client);
+};
+
+/**
+ * This helper function will create a password verification record and identify the user using the verification record.
+ *
+ * @remarks
+ * - This function uses username as the identifier.
+ * - This function is used for prebuild an identified interaction flow. E.g for MFA verification use
+ */
+export const identifyUserWithUsernamePassword = async (
+  client: ExperienceClient,
+  username: string,
+  password: string
+) => {
+  const { verificationId } = await client.verifyPassword({
+    identifier: {
+      type: InteractionIdentifierType.Username,
+      value: username,
+    },
+    password,
+  });
+
+  await client.identifyUser({ interactionEvent: InteractionEvent.SignIn, verificationId });
+
+  return { verificationId };
 };

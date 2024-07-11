@@ -1,9 +1,9 @@
-import { InteractionEvent, InteractionIdentifierType, MfaFactor } from '@logto/schemas';
+import { MfaFactor } from '@logto/schemas';
 import { authenticator } from 'otplib';
 
 import { createUserMfaVerification } from '#src/api/admin-user.js';
-import { type ExperienceClient } from '#src/client/experience/index.js';
 import { initExperienceClient } from '#src/helpers/client.js';
+import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
   successFullyCreateNewTotpSecret,
   successFullyVerifyTotp,
@@ -12,24 +12,6 @@ import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest, generateNewUserProfile } from '#src/helpers/user.js';
 import { devFeatureTest } from '#src/utils.js';
-
-const identifyUserWithPassword = async (
-  client: ExperienceClient,
-  username: string,
-  password: string
-) => {
-  const { verificationId } = await client.verifyPassword({
-    identifier: {
-      type: InteractionIdentifierType.Username,
-      value: username,
-    },
-    password,
-  });
-
-  await client.identifyUser({ interactionEvent: InteractionEvent.SignIn, verificationId });
-
-  return { verificationId };
-};
 
 devFeatureTest.describe('TOTP verification APIs', () => {
   const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -57,7 +39,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
     it('should create a new TOTP secret successfully', async () => {
       const client = await initExperienceClient();
 
-      await identifyUserWithPassword(client, username, password);
+      await identifyUserWithUsernamePassword(client, username, password);
 
       await successFullyCreateNewTotpSecret(client);
     });
@@ -76,7 +58,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
     it('should throw 400 if the verification record is not found', async () => {
       const client = await initExperienceClient();
 
-      await identifyUserWithPassword(client, username, password);
+      await identifyUserWithUsernamePassword(client, username, password);
 
       await expectRejects(client.verifyTotp({ code: '1234', verificationId: 'invalid_id' }), {
         code: 'session.verification_session_not_found',
@@ -87,7 +69,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
     it('should throw 400 if the verification record is not a TOTP verification', async () => {
       const client = await initExperienceClient();
 
-      const { verificationId } = await identifyUserWithPassword(client, username, password);
+      const { verificationId } = await identifyUserWithUsernamePassword(client, username, password);
 
       await expectRejects(client.verifyTotp({ code: '1234', verificationId }), {
         code: 'session.verification_session_not_found',
@@ -98,7 +80,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
     it('should throw 400 if the code is invalid', async () => {
       const client = await initExperienceClient();
 
-      await identifyUserWithPassword(client, username, password);
+      await identifyUserWithUsernamePassword(client, username, password);
 
       const { verificationId } = await successFullyCreateNewTotpSecret(client);
 
@@ -111,7 +93,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
     it('should verify the new TOTP secret successfully', async () => {
       const client = await initExperienceClient();
 
-      await identifyUserWithPassword(client, username, password);
+      await identifyUserWithUsernamePassword(client, username, password);
 
       const { verificationId, secret } = await successFullyCreateNewTotpSecret(client);
       const code = authenticator.generate(secret);
@@ -133,7 +115,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
     it('should throw 400 if the user does not have TOTP verification', async () => {
       const client = await initExperienceClient();
 
-      await identifyUserWithPassword(client, username, password);
+      await identifyUserWithUsernamePassword(client, username, password);
 
       await expectRejects(client.verifyTotp({ code: '1234' }), {
         code: 'session.mfa.invalid_totp_code',
@@ -149,7 +131,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
 
       const client = await initExperienceClient();
 
-      await identifyUserWithPassword(client, username, password);
+      await identifyUserWithUsernamePassword(client, username, password);
 
       await expectRejects(client.verifyTotp({ code: '1234' }), {
         code: 'session.mfa.invalid_totp_code',
@@ -171,7 +153,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
 
       const client = await initExperienceClient();
 
-      await identifyUserWithPassword(client, username, password);
+      await identifyUserWithUsernamePassword(client, username, password);
 
       const code = authenticator.generate(secret);
 
