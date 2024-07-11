@@ -5,7 +5,10 @@
 "@logto/integration-tests": patch
 "@logto/phrases": patch
 "@logto/schemas": patch
+"@logto/connector-kook": minor
 ---
+
+add KOOK social connector
 
 support organization logo and sign-in experience override
 
