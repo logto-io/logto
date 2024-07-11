@@ -46,7 +46,7 @@ services:
       - 5433:5433
 
   mygovid-mock-service:
-    image: mygovid-mock-service:latest
+    image: 730335224023.dkr.ecr.eu-west-1.amazonaws.com/life-events-logto@sha256:46fbb0c0bbaa43285554aac09962f9a5bb77c1b98dff1c3374c2c158b978c7f4
     build:
       dockerfile: ./mygovid-mock-service/Dockerfile
     ports:

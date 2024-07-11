@@ -26,6 +26,46 @@ e.g. `git merge v1.17.0 --strategy-option theirs`
 - commit the changes with `git commit -a` to end the merge and let git write the correct message
 - push and open your PR!
 
+## Run with Docker Compose
+It is possible to run Logto, its database and our MyGovId mock service in a dockerized solution, with local or remote images.
+
+### With local images
+If you have the repository on your machine and want to use images built locally for both services you can run:
+```
+make build run
+```
+
+### With remote images
+If you want to run Logto on your machine without cloning the repo, you need to have access to aws to pull our images as a prerequisite. If you haven't already, install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html).
+If not yet configured, run
+```
+aws sso configure
+```
+And follow the prompts. If you don't know what your SSO start URL is, you can find it on your AWS access portal. Click on your AWS account and then on the `Access keys` option.
+
+A script is available to login with AWS and Docker, create the custom network and run the containers. This is useful when launching it for the first time, or more in general when the image needs to be pulled.
+The script expects an environment variable for the aws profile that you need to be logged in:
+```
+AWS_PROFILE=awsProfile-accountId
+```
+
+To execute the script, run:
+```
+[ ! -f docker-compose-ogcio-logto.yml ] && curl -fsSL https://raw.githubusercontent.com/ogcio/logto/HEAD/docker-compose-ogcio-logto.yml > /tmp/docker-compose-ogcio-logto.yml && curl -fsSL https://raw.githubusercontent.com/ogcio/logto/18938/automate-with-script/run-logto-remote.sh | bash -s /tmp/docker-compose-ogcio-logto.yml
+```
+The command downloads the Docker Compose file from Github to a temporary location if it doesn't exist already, then fetches and executes the script from GitHub, passing the temporary Docker Compose file.
+
+If you are already authenticated and just want to run the docker compose:
+
+```
+curl -fsSL https://raw.githubusercontent.com/ogcio/logto/HEAD/docker-compose-ogcio-logto.yml | docker compose -f - up -d
+```
+
+If you already have the repo cloned locally there is a Make command available:
+```
+make build run-remote
+```
+
 ## Setup and run Logto natively
 
 You can also run Logto natively on your machine outside the docker container.

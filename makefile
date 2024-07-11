@@ -27,3 +27,5 @@ run-native:
 		@echo "${GREEN}Connectors ready!${NC}"
 		@echo "${GREEN}Starting Logto...${NC}"
 		pnpm dev
+run-remote:
+		./run-logto-remote.sh

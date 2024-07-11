@@ -23,6 +23,9 @@ services:
       - ADMIN_ENDPOINT
       - PORT=3301
       - ADMIN_PORT=3302
+      - MOCK_TOKEN_ENDPOINT=http://mygovid-mock-service:4005/logto/mock/token
+      - MOCK_KEYS_ENDPOINT=http://mygovid-mock-service:4005/logto/mock/keys
+      
   postgres:
     extends:
       file: docker-compose-db.yaml
@@ -31,3 +34,7 @@ services:
 volumes:
   db:
     driver: local
+
+networks:
+  logto_network:
+    external: true
