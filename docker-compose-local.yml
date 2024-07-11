@@ -28,7 +28,7 @@ services:
       
   postgres:
     extends:
-      file: docker-compose-db.yaml
+      file: docker-compose-db.yml
       service: postgres
 
 volumes:
