@@ -26,7 +26,7 @@ const SingleSignOnEmail = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
   });
@@ -82,7 +82,12 @@ const SingleSignOnEmail = () => {
 
         {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-        <Button title="action.single_sign_on" htmlType="submit" icon={<LockIcon />} />
+        <Button
+          title="action.single_sign_on"
+          htmlType="submit"
+          icon={<LockIcon />}
+          isLoading={isSubmitting}
+        />
 
         <input hidden type="submit" />
       </form>

@@ -7,7 +7,7 @@ type Props = {
   readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   readonly autoFocus?: boolean;
-  readonly onSubmit: (password: string) => void;
+  readonly onSubmit: (password: string) => Promise<void>;
   readonly errorMessage?: string;
   readonly clearErrorMessage?: () => void;
   readonly maxLength?: number;

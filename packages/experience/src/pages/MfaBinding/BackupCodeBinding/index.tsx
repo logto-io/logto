@@ -1,5 +1,6 @@
 import { MfaFactor } from '@logto/schemas';
 import { t } from 'i18next';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
@@ -18,6 +19,7 @@ import * as styles from './index.module.scss';
 const BackupCodeBinding = () => {
   const { copyText, downloadText } = useTextHandler();
   const sendMfaPayload = useSendMfaPayload();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { state } = useLocation();
   const [, backupCodeBindingState] = validate(state, backupCodeBindingStateGuard);
@@ -46,7 +48,7 @@ const BackupCodeBinding = () => {
             <Button
               title="action.download"
               type="secondary"
-              onClick={() => {
+              onClick={async () => {
                 downloadText(backupCodeTextContent, 'backup_code.txt');
               }}
             />
@@ -54,7 +56,7 @@ const BackupCodeBinding = () => {
           <Button
             title="action.copy"
             type="secondary"
-            onClick={() => {
+            onClick={async () => {
               void copyText(backupCodeTextContent, t('mfa.backup_code_copied'));
             }}
           />
@@ -64,11 +66,14 @@ const BackupCodeBinding = () => {
         </div>
         <Button
           title="action.continue"
-          onClick={() => {
-            void sendMfaPayload({
+          isLoading={isSubmitting}
+          onClick={async () => {
+            setIsSubmitting(true);
+            await sendMfaPayload({
               flow: UserMfaFlow.MfaBinding,
               payload: { type: MfaFactor.BackupCode },
             });
+            setIsSubmitting(false);
           }}
         />
       </div>

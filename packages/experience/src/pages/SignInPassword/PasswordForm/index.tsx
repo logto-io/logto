@@ -47,7 +47,7 @@ const PasswordForm = ({
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -69,7 +69,7 @@ const PasswordForm = ({
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ identifier: { type, value }, password }) => {
+      await handleSubmit(async ({ identifier: { type, value }, password }) => {
         if (!type) {
           return;
         }
@@ -114,7 +114,7 @@ const PasswordForm = ({
         <ForgotPasswordLink className={styles.link} identifier={identifier} value={value} />
       )}
 
-      <Button title="action.continue" name="submit" htmlType="submit" />
+      <Button title="action.continue" name="submit" htmlType="submit" isLoading={isSubmitting} />
 
       {identifier !== SignInIdentifier.Username && isVerificationCodeEnabled && (
         <VerificationCodeLink className={styles.switch} identifier={identifier} value={value} />

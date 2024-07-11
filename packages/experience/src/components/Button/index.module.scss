@@ -21,6 +21,11 @@
     line-height: normal;
     margin-right: _.unit(2);
   }
+
+  .loadingIcon {
+    color: var(--color-white);
+    animation: rotating 1s steps(60, end) infinite;
+  }
 }
 
 .large {
@@ -40,10 +45,15 @@
   &:disabled {
     background: var(--color-bg-state-disabled);
     color: var(--color-type-disable);
+    pointer-events: none;
   }
 
   &:active {
     background: var(--color-brand-pressed);
+  }
+
+  &.loading {
+    background: var(--color-brand-70);
   }
 }
 
@@ -74,7 +84,7 @@
       outline: 3px solid var(--color-overlay-brand-focused);
     }
 
-    &:not(:disabled):not(:active):hover {
+    &:not(:disabled):not(:active):not(.loading):hover {
       background: var(--color-brand-hover);
     }
   }
@@ -84,8 +94,18 @@
       outline: 3px solid var(--color-overlay-neutral-focused);
     }
 
-    &:not(:disabled):not(:active):hover {
+    &:not(:disabled):not(:active):not(.loading):hover {
       background: var(--color-overlay-neutral-hover);
     }
+  }
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }

@@ -42,12 +42,13 @@ const ForgotPasswordForm = ({
     UserFlow.ForgotPassword
   );
 
-  const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
+  const { setForgotPasswordIdentifierInputValue, setIdentifierInputValue } =
+    useContext(UserInteractionContext);
 
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -76,10 +77,19 @@ const ForgotPasswordForm = ({
         // Cache or update the forgot password identifier input value
         setForgotPasswordIdentifierInputValue({ type, value });
 
+        // Set current identifier input value for code verification
+        setIdentifierInputValue({ type, value });
+
         await onSubmit({ identifier: type, value });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit, setForgotPasswordIdentifierInputValue]
+    [
+      clearErrorMessage,
+      handleSubmit,
+      onSubmit,
+      setForgotPasswordIdentifierInputValue,
+      setIdentifierInputValue,
+    ]
   );
 
   return (
@@ -122,7 +132,7 @@ const ForgotPasswordForm = ({
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <Button title="action.continue" htmlType="submit" />
+      <Button title="action.continue" htmlType="submit" isLoading={isSubmitting} />
 
       <input hidden type="submit" />
     </form>

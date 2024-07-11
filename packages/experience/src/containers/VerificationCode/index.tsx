@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
+import Button from '@/components/Button';
 import TextLink from '@/components/TextLink';
 import VerificationCodeInput, { defaultLength } from '@/components/VerificationCode';
 import { UserFlow } from '@/types';
@@ -24,6 +25,8 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
   const [code, setCode] = useState<string[]>([]);
   const { t } = useTranslation();
 
+  const isCodeReady = code.length === defaultLength && code.every(Boolean);
+
   const useVerificationCode = getCodeVerificationHookByFlow(flow);
 
   const errorCallback = useCallback(() => {
@@ -42,15 +45,27 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
     target
   );
 
-  useEffect(() => {
-    if (code.length === defaultLength && code.every(Boolean)) {
-      const payload =
-        identifier === SignInIdentifier.Email
-          ? { email: target, verificationCode: code.join('') }
-          : { phone: target, verificationCode: code.join('') };
-      void onSubmit(payload);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = useCallback(async () => {
+    if (!isCodeReady) {
+      return;
     }
-  }, [code, identifier, onSubmit, target]);
+
+    setIsSubmitting(true);
+
+    await onSubmit(
+      identifier === SignInIdentifier.Email
+        ? { email: target, verificationCode: code.join('') }
+        : { phone: target, verificationCode: code.join('') }
+    );
+
+    setIsSubmitting(false);
+  }, [code, identifier, isCodeReady, onSubmit, target]);
+
+  useEffect(() => {
+    void handleSubmit();
+  }, [handleSubmit]);
 
   return (
     <form className={classNames(styles.form, className)}>
@@ -88,6 +103,14 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
       {flow === UserFlow.SignIn && hasPasswordButton && (
         <PasswordSignInLink className={styles.switch} />
       )}
+      <Button
+        title="action.continue"
+        type="primary"
+        isDisabled={!isCodeReady}
+        isLoading={isSubmitting}
+        className={styles.continueButton}
+        onClick={handleSubmit}
+      />
     </form>
   );
 };

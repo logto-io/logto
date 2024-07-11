@@ -27,10 +27,14 @@ const Consent = () => {
   const [consentData, setConsentData] = useState<ConsentInfoResponse>();
   const [selectedOrganization, setSelectedOrganization] = useState<Organization>();
 
+  const [isConsentLoading, setIsConsentLoading] = useState(false);
+
   const asyncGetConsentInfo = useApi(getConsentInfo);
 
   const consentHandler = useCallback(async () => {
+    setIsConsentLoading(true);
     const [error, result] = await asyncConsent(selectedOrganization?.id);
+    setIsConsentLoading(false);
 
     if (error) {
       await handleError(error);
@@ -113,7 +117,7 @@ const Consent = () => {
             window.location.replace(consentData.redirectUri);
           }}
         />
-        <Button title="action.authorize" onClick={consentHandler} />
+        <Button title="action.authorize" isLoading={isConsentLoading} onClick={consentHandler} />
       </div>
       {!showTerms && (
         <div className={styles.redirectUri}>
