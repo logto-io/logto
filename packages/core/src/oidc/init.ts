@@ -15,7 +15,7 @@ import {
   type LogtoUiCookie,
   ExtraParamsKey,
 } from '@logto/schemas';
-import { trySafe, tryThat } from '@silverhand/essentials';
+import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { koaBody } from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
@@ -203,10 +203,12 @@ export default function initOidc(
         // Cookies are required to apply the correct server-side rendering
         ctx.cookies.set(
           logtoCookieKey,
-          JSON.stringify({
-            appId: typeof appId === 'string' ? appId : undefined,
-            organizationId: params.organization_id,
-          } satisfies LogtoUiCookie),
+          JSON.stringify(
+            removeUndefinedKeys({
+              appId: typeof appId === 'string' ? appId : undefined,
+              organizationId: params.organization_id,
+            }) satisfies LogtoUiCookie
+          ),
           { sameSite: 'lax', overwrite: true, httpOnly: false }
         );
 
