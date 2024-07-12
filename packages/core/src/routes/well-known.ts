@@ -1,11 +1,9 @@
-import { isBuiltInLanguageTag } from '@logto/phrases-experience';
-import { adminTenantId, guardFullSignInExperience } from '@logto/schemas';
-import { conditionalArray } from '@silverhand/essentials';
+import { adminTenantId, fullSignInExperienceGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
-import detectLanguage from '#src/i18n/detect-language.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { getExperienceLanguage } from '#src/utils/i18n.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
@@ -43,7 +41,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     '/.well-known/sign-in-exp',
     koaGuard({
       query: z.object({ organizationId: z.string(), appId: z.string() }).partial(),
-      response: guardFullSignInExperience,
+      response: fullSignInExperienceGuard,
       status: 200,
     }),
     async (ctx, next) => {
@@ -68,20 +66,9 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
         query: { lng },
       } = ctx.guard;
 
-      const {
-        languageInfo: { autoDetect, fallbackLanguage },
-      } = await findDefaultSignInExperience();
-
-      const acceptableLanguages = conditionalArray<string | string[]>(
-        lng,
-        autoDetect && detectLanguage(ctx),
-        fallbackLanguage
-      );
+      const { languageInfo } = await findDefaultSignInExperience();
       const customLanguages = await findAllCustomLanguageTags();
-      const language =
-        acceptableLanguages.find(
-          (tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)
-        ) ?? 'en';
+      const language = getExperienceLanguage({ ctx, languageInfo, customLanguages, lng });
 
       ctx.set('Content-Language', language);
       ctx.body = await getPhrases(language);

@@ -5,21 +5,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title></title>
-  <!-- Preload well-known APIs -->
   <script>
-    const searchParams = new URLSearchParams(window.location.search);
-    const isPreview = searchParams.has('preview');
-    // Preview mode does not query phrases
-    const preLoadLinks = isPreview ? [] : ['/api/.well-known/phrases'];
-
-    preLoadLinks.forEach((linkUrl) => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.href = linkUrl;
-      link.as = 'fetch';
-      link.crossOrigin = 'anonymous';
-      document.head.appendChild(link);
-    });
+    /* See {@link packages/schemas/src/types/ssr.ts} */
+    window.logtoSsr = "__LOGTO_SSR__";
   </script>
 </head>
 

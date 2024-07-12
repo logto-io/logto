@@ -15,7 +15,7 @@ import {
   type LogtoUiCookie,
   ExtraParamsKey,
 } from '@logto/schemas';
-import { conditional, trySafe, tryThat } from '@silverhand/essentials';
+import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { koaBody } from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
@@ -198,16 +198,19 @@ export default function initOidc(
     },
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
-        // @deprecated use search params instead
+        const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
+
+        // Cookies are required to apply the correct server-side rendering
         ctx.cookies.set(
           logtoCookieKey,
-          JSON.stringify({
-            appId: conditional(Boolean(appId) && String(appId)),
-          } satisfies LogtoUiCookie),
+          JSON.stringify(
+            removeUndefinedKeys({
+              appId: typeof appId === 'string' ? appId : undefined,
+              organizationId: params.organization_id,
+            }) satisfies LogtoUiCookie
+          ),
           { sameSite: 'lax', overwrite: true, httpOnly: false }
         );
-
-        const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
 
         switch (prompt.name) {
           case 'login': {

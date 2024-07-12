@@ -94,16 +94,14 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
     searchParams.append('app_id', String(appId));
   }
 
+  if (params[ExtraParamsKey.OrganizationId]) {
+    searchParams.append(ExtraParamsKey.OrganizationId, params[ExtraParamsKey.OrganizationId]);
+  }
+
   if (directSignIn) {
     searchParams.append('fallback', firstScreen);
     const [method, target] = directSignIn.split(':');
     return path.join('direct', method ?? '', target ?? '') + getSearchParamString();
-  }
-
-  // Append other valid params as-is
-  const { first_screen: _, interaction_mode: __, direct_sign_in: ___, ...rest } = params;
-  for (const [key, value] of Object.entries(rest)) {
-    searchParams.append(key, value);
   }
 
   return firstScreen + getSearchParamString();
