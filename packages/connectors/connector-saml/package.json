@@ -9,7 +9,7 @@
     "fast-xml-parser": "^4.3.6",
     "got": "^14.0.0",
     "samlify": "2.8.11",
-    "snakecase-keys": "^8.0.0",
+    "snakecase-keys": "^8.0.1",
     "zod": "^3.22.4"
   },
   "main": "./lib/index.js",
