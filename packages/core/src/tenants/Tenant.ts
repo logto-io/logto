@@ -17,6 +17,7 @@ import koaAutoConsent from '#src/middleware/koa-auto-consent.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaExperienceSsr from '#src/middleware/koa-experience-ssr.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import koaOidcErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
 import koaSecurityHeaders from '#src/middleware/koa-security-headers.js';
@@ -166,9 +167,10 @@ export default class Tenant implements TenantContext {
       );
     }
 
-    // Mount UI
+    // Mount experience app
     app.use(
       compose([
+        koaExperienceSsr(libraries, queries),
         koaSpaSessionGuard(provider, queries),
         mount(`/${experience.routes.consent}`, koaAutoConsent(provider, queries)),
         koaSpaProxy(mountedApps),
