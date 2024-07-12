@@ -33,7 +33,8 @@ const themeToFavicon = Object.freeze({
 
 const AppMeta = () => {
   const { experienceSettings, theme, platform, isPreview } = useContext(PageContext);
-  const favicon = experienceSettings?.branding[themeToFavicon[theme]];
+  const favicon =
+    experienceSettings?.branding[themeToFavicon[theme]] ?? experienceSettings?.branding.favicon;
 
   return (
     <Helmet>
