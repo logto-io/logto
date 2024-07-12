@@ -16,7 +16,8 @@
                 "messaging:message:*",
                 "messaging:provider:*",
                 "messaging:template:*",
-                "messaging:citizen:*"
+                "messaging:citizen:*",
+                "messaging:event:read"
             ]
         },
         "organization_roles": [
@@ -39,7 +40,8 @@
                     "messaging:message:*",
                     "messaging:provider:*",
                     "messaging:template:*",
-                    "messaging:citizen:*"
+                    "messaging:citizen:*",
+                    "messaging:event:read"
                 ]
             }
         ],
@@ -90,7 +92,9 @@
             {
                 "resource_id": "messaging-api",
                 "specific_permissions": [
-                    "messaging:message.self:read"
+                    "messaging:message.self:read",
+                    "messaging:citizen.self:read",
+                    "messaging:citizen.self:write"
                 ]
             }
         ],
@@ -112,7 +116,9 @@
                     {
                         "resource_id": "messaging-api",
                         "specific_permissions": [
-                            "messaging:message.self:read"
+                            "messaging:message.self:read",
+                            "messaging:citizen.self:read",
+                            "messaging:citizen.self:write"
                         ]
                     }
                 ]
