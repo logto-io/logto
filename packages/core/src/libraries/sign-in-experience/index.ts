@@ -147,7 +147,7 @@ export const createSignInExperienceLibrary = (
       return;
     }
 
-    return pick(found, 'branding', 'color');
+    return pick(found, 'branding', 'color', 'type', 'isThirdParty');
   };
 
   const getFullSignInExperience = async ({
@@ -223,9 +223,17 @@ export const createSignInExperienceLibrary = (
       };
     };
 
+    /** Get the branding and color from the app sign-in experience if it is not a third-party app. */
+    const getAppSignInExperience = () => {
+      if (!appSignInExperience || appSignInExperience.isThirdParty) {
+        return {};
+      }
+      return pick(appSignInExperience, 'branding', 'color');
+    };
+
     return {
       ...deepmerge(
-        deepmerge(signInExperience, appSignInExperience ?? {}),
+        deepmerge(signInExperience, getAppSignInExperience()),
         organizationOverride ?? {}
       ),
       socialConnectors,
