@@ -155,7 +155,7 @@ const identifiableEntityNames = Object.freeze([
 const additionalTags = Object.freeze(
   condArray<string>(
     'Organization applications',
-    EnvSet.values.isDevFeaturesEnabled && 'Security',
+    EnvSet.values.isDevFeaturesEnabled && 'Subject tokens',
     'Organization users'
   )
 );

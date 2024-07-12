@@ -34,10 +34,10 @@ import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
 import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
-import securityRoutes from './security/index.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import ssoConnectors from './sso-connector/index.js';
 import statusRoutes from './status.js';
+import subjectTokenRoutes from './subject-token.js';
 import swaggerRoutes from './swagger/index.js';
 import systemRoutes from './system.js';
 import type { AnonymousRouter, ManagementApiRouter } from './types.js';
@@ -89,7 +89,7 @@ const createRouters = (tenant: TenantContext) => {
   organizationRoutes(managementRouter, tenant);
   ssoConnectors(managementRouter, tenant);
   systemRoutes(managementRouter, tenant);
-  securityRoutes(managementRouter, tenant);
+  subjectTokenRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
   wellKnownRoutes(anonymousRouter, tenant);

@@ -8,9 +8,11 @@ import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 
-import { type RouterInitArgs, type ManagementApiRouter } from '../types.js';
+import { type RouterInitArgs, type ManagementApiRouter } from './types.js';
 
-export default function securityRoutes<T extends ManagementApiRouter>(...args: RouterInitArgs<T>) {
+export default function subjectTokenRoutes<T extends ManagementApiRouter>(
+  ...args: RouterInitArgs<T>
+) {
   const [
     router,
     {
@@ -27,7 +29,7 @@ export default function securityRoutes<T extends ManagementApiRouter>(...args: R
   }
 
   router.post(
-    '/security/subject-tokens',
+    '/subject-tokens',
     koaQuotaGuard({ key: 'subjectTokenEnabled', quota }),
     koaGuard({
       body: object({
