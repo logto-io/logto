@@ -20,7 +20,6 @@ const quota_table = {
     title: '用戶界面與品牌',
     custom_domain: '自訂網域',
     custom_css: '自訂 CSS',
-    app_logo_and_favicon: '應用程式徽標和網站圖示',
     dark_mode: '深色模式',
     i18n: '國際化',
   },

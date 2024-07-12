@@ -36,6 +36,7 @@ const sign_in_exp = {
     with_light: '{{value}}',
     with_dark: '{{value}} (dark)',
     app_logo_and_favicon: 'App logo and favicon',
+    company_logo_and_favicon: 'Company logo and favicon',
   },
   branding_uploads: {
     app_logo: {
@@ -55,6 +56,12 @@ const sign_in_exp = {
       url: 'Organization logo URL',
       url_placeholder: 'https://your.cdn.domain/logo.png',
       error: 'Organization logo: {{error}}',
+    },
+    connector_logo: {
+      title: 'Upload image',
+      url: 'Connector logo URL',
+      url_placeholder: 'https://your.cdn.domain/logo.png',
+      error: 'Connector logo: {{error}}',
     },
     favicon: {
       title: 'Favicon',

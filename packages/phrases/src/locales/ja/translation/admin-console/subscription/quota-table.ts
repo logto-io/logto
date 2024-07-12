@@ -20,7 +20,6 @@ const quota_table = {
     title: 'UIとブランディング',
     custom_domain: 'カスタムドメイン',
     custom_css: 'カスタムCSS',
-    app_logo_and_favicon: 'アプリロゴとFavicon',
     dark_mode: 'ダークモード',
     i18n: '国際化',
   },

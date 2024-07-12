@@ -7,7 +7,7 @@ import useSWR from 'swr';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
-import LogoInputs, { themeToLogoName } from '@/components/ImageInputs';
+import ImageInputs, { themeToLogoName } from '@/components/ImageInputs';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { organizationLogosForExperienceLink } from '@/consts';
 import CodeEditor from '@/ds-components/CodeEditor';
@@ -107,7 +107,7 @@ function Settings() {
             {...register('description')}
           />
         </FormField>
-        <LogoInputs
+        <ImageInputs
           uploadTitle="organization_details.branding.logo"
           tip={
             <Trans

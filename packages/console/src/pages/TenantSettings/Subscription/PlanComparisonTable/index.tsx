@@ -85,7 +85,7 @@ function PlanComparisonTable() {
     // UI and branding
     const customDomain = t('branding.custom_domain');
     const customCss = t('branding.custom_css');
-    const appLogoAndFavicon = t('branding.app_logo_and_favicon');
+    const appLogoAndFavicon = t('branding.logo_and_favicon');
     const darkMode = t('branding.dark_mode');
     const i18n = t('branding.i18n');
 

@@ -2,23 +2,10 @@
 
 .container {
   display: flex;
+  gap: _.unit(2);
 
   > * {
     flex: 1;
-
-    &:first-child {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    &:last-child {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    &:not(:first-child):not(:last-child) {
-      border-radius: 0;
-    }
 
     &.dark {
       background-color: #111;
