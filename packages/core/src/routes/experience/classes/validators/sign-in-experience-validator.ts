@@ -71,7 +71,7 @@ export class SignInExperienceValidator {
     }
   }
 
-  async verifyIdentificationMethod(
+  public async verifyIdentificationMethod(
     event: InteractionEvent,
     verificationRecord: VerificationRecord
   ) {
@@ -93,7 +93,21 @@ export class SignInExperienceValidator {
     await this.guardSsoOnlyEmailIdentifier(verificationRecord);
   }
 
-  private async getSignInExperienceData() {
+  public async getEnabledSsoConnectorsByEmail(email: string) {
+    const domain = email.split('@')[1];
+    const { singleSignOnEnabled } = await this.getSignInExperienceData();
+
+    if (!singleSignOnEnabled || !domain) {
+      return [];
+    }
+
+    const { getAvailableSsoConnectors } = this.libraries.ssoConnectors;
+    const availableSsoConnectors = await getAvailableSsoConnectors();
+
+    return availableSsoConnectors.filter(({ domains }) => domains.includes(domain));
+  }
+
+  public async getSignInExperienceData() {
     this.signInExperienceDataCache ||=
       await this.queries.signInExperiences.findDefaultSignInExperience();
 
@@ -117,29 +131,17 @@ export class SignInExperienceValidator {
       return;
     }
 
-    const domain = emailIdentifier.split('@')[1];
-    const { singleSignOnEnabled } = await this.getSignInExperienceData();
-
-    if (!singleSignOnEnabled || !domain) {
-      return;
-    }
-
-    const { getAvailableSsoConnectors } = this.libraries.ssoConnectors;
-    const availableSsoConnectors = await getAvailableSsoConnectors();
-
-    const domainEnabledConnectors = availableSsoConnectors.filter(({ domains }) =>
-      domains.includes(domain)
-    );
+    const enabledSsoConnectors = await this.getEnabledSsoConnectorsByEmail(emailIdentifier);
 
     assertThat(
-      domainEnabledConnectors.length === 0,
+      enabledSsoConnectors.length === 0,
       new RequestError(
         {
           code: 'session.sso_enabled',
           status: 422,
         },
         {
-          ssoConnectors: domainEnabledConnectors,
+          ssoConnectors: enabledSsoConnectors,
         }
       )
     );
