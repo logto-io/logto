@@ -6,7 +6,7 @@
 
 import { buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
-import { cond, trySafe } from '@silverhand/essentials';
+import { trySafe } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
@@ -22,7 +22,7 @@ import {
   getSharedResourceServerData,
   reversedResourceAccessTokenTtl,
 } from '../../resource.js';
-import { handleClientCertificate, handleDPoP } from '../utils.js';
+import { handleClientCertificate, handleDPoP, checkOrganizationAccess } from '../utils.js';
 
 import { handleActorToken } from './actor-token.js';
 import { TokenExchangeTokenType, type TokenExchangeAct } from './types.js';
@@ -96,36 +96,7 @@ export const buildHandler: (
 
   ctx.oidc.entity('Account', account);
 
-  /* === RFC 0001 === */
-  // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
-  // to `Boolean` first.
-  const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
-
-  if (organizationId) {
-    // Check membership
-    if (
-      !(await queries.organizations.relations.users.exists({
-        organizationId,
-        userId: account.accountId,
-      }))
-    ) {
-      const error = new AccessDenied('user is not a member of the organization');
-      error.statusCode = 403;
-      throw error;
-    }
-
-    // Check if the organization requires MFA and the user has MFA enabled
-    const { isMfaRequired, hasMfaConfigured } = await queries.organizations.getMfaStatus(
-      organizationId,
-      account.accountId
-    );
-    if (isMfaRequired && !hasMfaConfigured) {
-      const error = new AccessDenied('organization requires MFA but user has no MFA configured');
-      error.statusCode = 403;
-      throw error;
-    }
-  }
-  /* === End RFC 0001 === */
+  const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
 
   const accessToken = new AccessToken({
     accountId: account.accountId,
