@@ -161,8 +161,8 @@ importers:
         specifier: ^17.6.0
         version: 17.6.0
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -193,7 +193,7 @@ importers:
         version: 1.4.0(vitest@1.4.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1))
       '@withtyped/server':
         specifier: ^0.13.6
-        version: 0.13.6(zod@3.22.4)
+        version: 0.13.6(zod@3.23.8)
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -231,8 +231,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -313,8 +313,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -389,8 +389,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -462,8 +462,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -541,8 +541,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -620,8 +620,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -696,8 +696,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -775,8 +775,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -851,8 +851,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -924,8 +924,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -997,8 +997,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1073,8 +1073,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1149,8 +1149,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1222,8 +1222,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1295,8 +1295,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1368,12 +1368,12 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@logto/cloud':
         specifier: 0.2.5-a7eedce
-        version: 0.2.5-a7eedce(zod@3.22.4)
+        version: 0.2.5-a7eedce(zod@3.23.8)
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
         version: 26.0.1(rollup@4.12.0)
@@ -1444,8 +1444,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1517,8 +1517,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1590,8 +1590,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1663,8 +1663,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1736,8 +1736,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1809,8 +1809,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1882,8 +1882,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -1955,8 +1955,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2037,8 +2037,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2122,8 +2122,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2201,8 +2201,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2274,8 +2274,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2347,8 +2347,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2423,8 +2423,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2499,8 +2499,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2572,8 +2572,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2645,8 +2645,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2718,8 +2718,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2791,8 +2791,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^26.0.0
@@ -2859,7 +2859,7 @@ importers:
         version: 29.5.0
       '@logto/cloud':
         specifier: 0.2.5-a7eedce
-        version: 0.2.5-a7eedce(zod@3.22.4)
+        version: 0.2.5-a7eedce(zod@3.23.8)
       '@logto/connector-kit':
         specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
@@ -2964,7 +2964,7 @@ importers:
         version: 15.5.1
       '@withtyped/client':
         specifier: ^0.8.7
-        version: 0.8.7(zod@3.22.4)
+        version: 0.8.7(zod@3.23.8)
       buffer:
         specifier: ^6.0.0
         version: 6.0.3
@@ -3149,11 +3149,11 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
       zod-to-ts:
         specifier: ^1.2.0
-        version: 1.2.0(typescript@5.3.3)(zod@3.22.4)
+        version: 1.2.0(typescript@5.3.3)(zod@3.23.8)
 
   packages/core:
     dependencies:
@@ -3222,7 +3222,7 @@ importers:
         version: 10.0.0
       '@withtyped/client':
         specifier: ^0.8.7
-        version: 0.8.7(zod@3.22.4)
+        version: 0.8.7(zod@3.23.8)
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -3353,12 +3353,12 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@logto/cloud':
         specifier: 0.2.5-3046fa6
-        version: 0.2.5-3046fa6(zod@3.22.4)
+        version: 0.2.5-3046fa6(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -3546,8 +3546,8 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
 
   packages/experience:
     devDependencies:
@@ -3762,8 +3762,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(react@18.2.0)
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
 
   packages/integration-tests:
     dependencies:
@@ -3853,8 +3853,8 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
 
   packages/phrases:
     dependencies:
@@ -3865,8 +3865,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3899,8 +3899,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3946,13 +3946,13 @@ importers:
         version: link:../shared
       '@withtyped/server':
         specifier: ^0.13.6
-        version: 0.13.6(zod@3.22.4)
+        version: 0.13.6(zod@3.23.8)
       nanoid:
         specifier: ^5.0.1
         version: 5.0.7
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4065,14 +4065,14 @@ importers:
         version: 2.9.1
       '@withtyped/client':
         specifier: ^0.8.7
-        version: 0.8.7(zod@3.22.4)
+        version: 0.8.7(zod@3.23.8)
       '@withtyped/server':
         specifier: ^0.13.6
-        version: 0.13.6(zod@3.22.4)
+        version: 0.13.6(zod@3.23.8)
     optionalDependencies:
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4118,8 +4118,8 @@ importers:
         version: 4.2.3
     optionalDependencies:
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4170,8 +4170,8 @@ importers:
   packages/toolkit/language-kit:
     optionalDependencies:
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -13165,6 +13165,9 @@ packages:
   zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
 
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+
   zwitch@2.0.2:
     resolution: {integrity: sha512-JZxotl7SxAJH0j7dN4pxsTV6ZLXoLdGME+PsjkL/DaBrVryK9kTGq06GfKrwcSOqypP+fdXGoCHE36b99fWVoA==}
 
@@ -14882,17 +14885,17 @@ snapshots:
       camelcase-keys: 7.0.2
       jose: 5.6.3
 
-  '@logto/cloud@0.2.5-3046fa6(zod@3.22.4)':
+  '@logto/cloud@0.2.5-3046fa6(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.1
-      '@withtyped/server': 0.13.6(zod@3.22.4)
+      '@withtyped/server': 0.13.6(zod@3.23.8)
     transitivePeerDependencies:
       - zod
 
-  '@logto/cloud@0.2.5-a7eedce(zod@3.22.4)':
+  '@logto/cloud@0.2.5-a7eedce(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.1
-      '@withtyped/server': 0.13.6(zod@3.22.4)
+      '@withtyped/server': 0.13.6(zod@3.23.8)
     transitivePeerDependencies:
       - zod
 
@@ -15951,10 +15954,10 @@ snapshots:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
       eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0)
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.0.0)
@@ -17134,19 +17137,19 @@ snapshots:
       loupe: 2.3.7
       pretty-format: 29.7.0
 
-  '@withtyped/client@0.8.7(zod@3.22.4)':
+  '@withtyped/client@0.8.7(zod@3.23.8)':
     dependencies:
-      '@withtyped/server': 0.13.6(zod@3.22.4)
+      '@withtyped/server': 0.13.6(zod@3.23.8)
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
 
-  '@withtyped/server@0.13.6(zod@3.22.4)':
+  '@withtyped/server@0.13.6(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.1
       '@withtyped/shared': 0.2.2
       nanoid: 4.0.2
-      zod: 3.22.4
+      zod: 3.23.8
 
   '@withtyped/shared@0.2.2': {}
 
@@ -18782,13 +18785,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -18799,14 +18802,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7(supports-color@5.5.0)
     optionalDependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -18828,7 +18831,7 @@ snapshots:
       eslint: 8.57.0
       ignore: 5.3.1
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -18838,7 +18841,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -20960,7 +20963,7 @@ snapshots:
       '@types/koa': 2.15.0
       co-body: 6.1.0
       formidable: 3.5.1
-      zod: 3.22.4
+      zod: 3.23.8
 
   koa-compose@4.1.0: {}
 
@@ -24954,11 +24957,13 @@ snapshots:
 
   yocto-queue@1.1.1: {}
 
-  zod-to-ts@1.2.0(typescript@5.3.3)(zod@3.22.4):
+  zod-to-ts@1.2.0(typescript@5.3.3)(zod@3.23.8):
     dependencies:
       typescript: 5.3.3
-      zod: 3.22.4
+      zod: 3.23.8
 
   zod@3.22.4: {}
+
+  zod@3.23.8: {}
 
   zwitch@2.0.2: {}

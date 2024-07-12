@@ -48,7 +48,7 @@
     "prettier": "^3.0.0",
     "puppeteer": "^22.6.5",
     "typescript": "^5.3.3",
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   },
   "engines": {
     "node": "^20.9.0"

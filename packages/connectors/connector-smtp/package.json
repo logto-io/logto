@@ -9,7 +9,7 @@
     "got": "^14.0.0",
     "nodemailer": "^6.9.9",
     "snakecase-keys": "^8.0.1",
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^26.0.0",
