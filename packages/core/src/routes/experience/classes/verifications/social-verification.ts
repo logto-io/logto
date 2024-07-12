@@ -1,7 +1,6 @@
 import { socialUserInfoGuard, type SocialUserInfo, type ToZodObject } from '@logto/connector-kit';
 import {
   VerificationType,
-  type InteractionProfile,
   type JsonObject,
   type SocialAuthorizationUrlPayload,
   type User,
@@ -20,6 +19,8 @@ import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { type LogtoConnector } from '#src/utils/connectors/types.js';
+
+import type { InteractionProfile } from '../../types.js';
 
 import { type IdentifierVerificationRecord } from './verification-record.js';
 

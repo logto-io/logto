@@ -1,9 +1,9 @@
-import type { InteractionProfile } from '@logto/schemas';
-
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+
+import type { InteractionProfile } from '../../types.js';
 
 export class ProfileValidator {
   constructor(

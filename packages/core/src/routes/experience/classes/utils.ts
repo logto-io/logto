@@ -2,12 +2,13 @@ import {
   SignInIdentifier,
   VerificationType,
   type InteractionIdentifier,
-  type InteractionProfile,
   type User,
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
+
+import type { InteractionProfile } from '../types.js';
 
 import { type VerificationRecord } from './verifications/index.js';
 

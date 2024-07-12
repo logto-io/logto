@@ -2,7 +2,6 @@ import { socialUserInfoGuard, type SocialUserInfo, type ToZodObject } from '@log
 import {
   VerificationType,
   type CreateUserSsoIdentity,
-  type InteractionProfile,
   type JsonObject,
   type SocialAuthorizationUrlPayload,
   type SupportedSsoConnector,
@@ -22,6 +21,8 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+
+import type { InteractionProfile } from '../../types.js';
 
 import { type IdentifierVerificationRecord } from './verification-record.js';
 

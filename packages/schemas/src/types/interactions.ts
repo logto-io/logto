@@ -1,10 +1,6 @@
-/* eslint-disable max-lines */
-import { socialUserInfoGuard, type SocialUserInfo } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
-import { UserSsoIdentities, type UserSsoIdentity } from '../db-entries/user-sso-identity.js';
-import { Users, type CreateUser } from '../db-entries/user.js';
 import {
   MfaFactor,
   SignInIdentifier,
@@ -66,53 +62,6 @@ export enum VerificationType {
   WebAuthn = 'WebAuthn',
   BackupCode = 'BackupCode',
 }
-
-export type InteractionProfile = {
-  socialIdentity?: {
-    target: string;
-    userInfo: SocialUserInfo;
-  };
-  enterpriseSsoIdentity?: Pick<
-    UserSsoIdentity,
-    'identityId' | 'ssoConnectorId' | 'issuer' | 'detail'
-  >;
-} & Pick<
-  CreateUser,
-  | 'avatar'
-  | 'name'
-  | 'username'
-  | 'primaryEmail'
-  | 'primaryPhone'
-  | 'passwordEncrypted'
-  | 'passwordEncryptionMethod'
->;
-
-export const interactionProfileGuard = Users.createGuard
-  .pick({
-    avatar: true,
-    name: true,
-    username: true,
-    primaryEmail: true,
-    primaryPhone: true,
-    passwordEncrypted: true,
-    passwordEncryptionMethod: true,
-  })
-  .extend({
-    socialIdentity: z
-      .object({
-        target: z.string(),
-        userInfo: socialUserInfoGuard,
-      })
-      .optional(),
-    enterpriseSsoIdentity: UserSsoIdentities.guard
-      .pick({
-        identityId: true,
-        ssoConnectorId: true,
-        issuer: true,
-        detail: true,
-      })
-      .optional(),
-  }) satisfies ToZodObject<InteractionProfile>;
 
 // REMARK: API payload guard
 
@@ -430,4 +379,3 @@ export const verifyMfaResultGuard = z.object({
 });
 
 export type VerifyMfaResult = z.infer<typeof verifyMfaResultGuard>;
-/* eslint-enable max-lines */

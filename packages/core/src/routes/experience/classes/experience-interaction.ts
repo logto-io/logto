@@ -9,7 +9,7 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { Interaction } from '../types.js';
+import { interactionProfileGuard, type Interaction, type InteractionProfile } from '../types.js';
 
 import { getNewUserProfileFromVerificationRecord, toUserSocialIdentityData } from './utils.js';
 import { ProfileValidator } from './validators/profile-validator.js';
@@ -24,14 +24,14 @@ import {
 type InteractionStorage = {
   interactionEvent?: InteractionEvent;
   userId?: string;
-  profile?: Record<string, unknown>;
+  profile?: InteractionProfile;
   verificationRecords?: VerificationRecordData[];
 };
 
 const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent).optional(),
   userId: z.string().optional(),
-  profile: z.object({}).optional(),
+  profile: interactionProfileGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
 }) satisfies ToZodObject<InteractionStorage>;
 
