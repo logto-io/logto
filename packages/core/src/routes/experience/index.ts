@@ -46,9 +46,6 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       koaExperienceInteraction(tenant)
     );
 
-  /**
-   * @api {post} /experience Create a new interaction
-   */
   router.put(
     experienceRoutes.prefix,
     koaGuard({
@@ -68,6 +65,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       await experienceInteraction.save();
 
+      ctx.experienceInteraction = experienceInteraction;
       ctx.status = 204;
 
       return next();

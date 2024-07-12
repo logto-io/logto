@@ -38,14 +38,14 @@ const interactionStorageGuard = z.object({
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0004.
  */
 export default class ExperienceInteraction {
-  /** The interaction event for the current interaction. */
-  private _interactionEvent?: InteractionEvent;
   /** The user verification record list for the current interaction. */
   private readonly verificationRecords = new Map<VerificationType, VerificationRecord>();
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
   private readonly profile?: Record<string, unknown>; // TODO: Fix the type
+  /** The interaction event for the current interaction. */
+  #interactionEvent?: InteractionEvent;
 
   /**
    * Create a new `ExperienceInteraction` instance.
@@ -73,7 +73,7 @@ export default class ExperienceInteraction {
 
     const { verificationRecords = [], profile, userId, interactionEvent } = result.data;
 
-    this._interactionEvent = interactionEvent;
+    this.#interactionEvent = interactionEvent;
     this.userId = userId;
     this.profile = profile;
 
@@ -88,13 +88,13 @@ export default class ExperienceInteraction {
   }
 
   get interactionEvent() {
-    return this._interactionEvent;
+    return this.#interactionEvent;
   }
 
   /** Set the interaction event for the current interaction */
   public setInteractionEvent(interactionEvent: InteractionEvent) {
     // TODO: conflict event check (e.g. reset password session can't be used for sign in)
-    this._interactionEvent = interactionEvent;
+    this.#interactionEvent = interactionEvent;
   }
 
   /**
