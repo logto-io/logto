@@ -19,19 +19,14 @@
  * The commit hash of the original file is `cf2069cbb31a6a855876e95157372d25dde2511c`.
  */
 
-import { type X509Certificate } from 'node:crypto';
-
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
-import { type Optional, isKeyInObject, cond } from '@silverhand/essentials';
+import { isKeyInObject, cond } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import difference from 'oidc-provider/lib/helpers/_/difference.js';
-import certificateThumbprint from 'oidc-provider/lib/helpers/certificate_thumbprint.js';
-import epochTime from 'oidc-provider/lib/helpers/epoch_time.js';
 import filterClaims from 'oidc-provider/lib/helpers/filter_claims.js';
 import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
 import revoke from 'oidc-provider/lib/helpers/revoke.js';
-import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
 import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
@@ -45,6 +40,8 @@ import {
   reversedResourceAccessTokenTtl,
   isOrganizationConsentedToApplication,
 } from '../resource.js';
+
+import { handleClientCertificate, handleDPoP } from './utils.js';
 
 const { InvalidClient, InvalidGrant, InvalidScope, InsufficientScope, AccessDenied } = errors;
 
@@ -93,8 +90,6 @@ export const buildHandler: (
     },
   } = providerInstance.configuration();
 
-  const dPoP = await dpopValidate(ctx);
-
   // @gao: I believe the presence of the param is validated by required parameters of this grant.
   // Add `String` to make TS happy.
   let refreshTokenValue = String(params.refresh_token);
@@ -110,23 +105,6 @@ export const buildHandler: (
 
   if (refreshToken.isExpired) {
     throw new InvalidGrant('refresh token is expired');
-  }
-
-  let cert: Optional<string | X509Certificate>;
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the original code uses `||`
-  if (client.tlsClientCertificateBoundAccessTokens || refreshToken['x5t#S256']) {
-    cert = getCertificate(ctx);
-    if (!cert) {
-      throw new InvalidGrant('mutual TLS client certificate not provided');
-    }
-  }
-
-  if (!dPoP && client.dpopBoundAccessTokens) {
-    throw new InvalidGrant('DPoP proof JWT not provided');
-  }
-
-  if (refreshToken['x5t#S256'] && refreshToken['x5t#S256'] !== certificateThumbprint(cert!)) {
-    throw new InvalidGrant('failed x5t#S256 verification');
   }
 
   /* === RFC 0001 === */
@@ -175,22 +153,6 @@ export const buildHandler: (
         missing.join(' ')
       );
     }
-  }
-
-  if (dPoP) {
-    // @ts-expect-error -- code from oidc-provider
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const unique: unknown = await ReplayDetection.unique(
-      client.clientId,
-      dPoP.jti,
-      epochTime() + 300
-    );
-
-    assertThat(unique, new errors.InvalidGrant('DPoP proof JWT Replay detected'));
-  }
-
-  if (refreshToken.jkt && (!dPoP || refreshToken.jkt !== dPoP.thumbprint)) {
-    throw new InvalidGrant('failed jkt verification');
   }
 
   ctx.oidc.entity('RefreshToken', refreshToken);
@@ -304,17 +266,8 @@ export const buildHandler: (
     scope: undefined!,
   });
 
-  if (client.tlsClientCertificateBoundAccessTokens) {
-    // @ts-expect-error -- code from oidc-provider
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    at.setThumbprint('x5t', cert);
-  }
-
-  if (dPoP) {
-    // @ts-expect-error -- code from oidc-provider
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    at.setThumbprint('jkt', dPoP.thumbprint);
-  }
+  await handleDPoP(ctx, at, refreshToken);
+  await handleClientCertificate(ctx, at, refreshToken);
 
   if (at.gty && !at.gty.endsWith(gty)) {
     at.gty = `${at.gty} ${gty}`;

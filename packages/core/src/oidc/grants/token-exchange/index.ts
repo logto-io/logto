@@ -22,6 +22,7 @@ import {
   getSharedResourceServerData,
   reversedResourceAccessTokenTtl,
 } from '../../resource.js';
+import { handleClientCertificate, handleDPoP } from '../utils.js';
 
 import { handleActorToken } from './actor-token.js';
 import { TokenExchangeTokenType, type TokenExchangeAct } from './types.js';
@@ -93,7 +94,6 @@ export const buildHandler: (
     throw new InvalidGrant('refresh token invalid (referenced account not found)');
   }
 
-  // TODO: (LOG-9501) Implement general security checks like dPop
   ctx.oidc.entity('Account', account);
 
   /* === RFC 0001 === */
@@ -136,6 +136,9 @@ export const buildHandler: (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     scope: undefined!,
   });
+
+  await handleDPoP(ctx, accessToken);
+  await handleClientCertificate(ctx, accessToken);
 
   /** The scopes requested by the client. If not provided, use the scopes from the refresh token. */
   const scope = requestParamScopes;
