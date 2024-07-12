@@ -1,4 +1,5 @@
 import {
+  type CreateExperienceApiPayload,
   type IdentificationApiPayload,
   type InteractionEvent,
   type PasswordVerificationPayload,
@@ -27,6 +28,24 @@ export class ExperienceClient extends MockClient {
   public async identifyUser(payload: IdentificationApiPayload) {
     return api
       .post(experienceRoutes.identification, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json();
+  }
+
+  public async updateInteractionEvent(payload: { interactionEvent: InteractionEvent }) {
+    return api
+      .put(`${experienceRoutes.prefix}/interaction-event`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json();
+  }
+
+  public async initInteraction(payload: CreateExperienceApiPayload) {
+    return api
+      .put(experienceRoutes.prefix, {
         headers: { cookie: this.interactionCookie },
         json: payload,
       })

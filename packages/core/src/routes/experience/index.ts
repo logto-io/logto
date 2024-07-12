@@ -10,7 +10,7 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
-import { identificationApiPayloadGuard } from '@logto/schemas';
+import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -19,6 +19,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
+import ExperienceInteraction from './classes/experience-interaction.js';
 import { experienceRoutes } from './const.js';
 import koaExperienceInteraction, {
   type WithExperienceInteractionContext,
@@ -45,6 +46,62 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       koaExperienceInteraction(tenant)
     );
 
+  router.put(
+    experienceRoutes.prefix,
+    koaGuard({
+      body: z.object({
+        interactionEvent: z.nativeEnum(InteractionEvent),
+      }),
+      status: [204],
+    }),
+    async (ctx, next) => {
+      const { interactionEvent } = ctx.guard.body;
+      const { createLog } = ctx;
+
+      createLog(`Interaction.${interactionEvent}.Update`);
+
+      const experienceInteraction = new ExperienceInteraction(ctx, tenant);
+      experienceInteraction.setInteractionEvent(interactionEvent);
+
+      await experienceInteraction.save();
+
+      ctx.experienceInteraction = experienceInteraction;
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.put(
+    `${experienceRoutes.prefix}/interaction-event`,
+    koaGuard({
+      body: z.object({
+        interactionEvent: z.nativeEnum(InteractionEvent),
+      }),
+      status: [204],
+    }),
+    async (ctx, next) => {
+      const { interactionEvent } = ctx.guard.body;
+      const { createLog, experienceInteraction } = ctx;
+
+      const eventLog = createLog(
+        `Interaction.${experienceInteraction.interactionEvent ?? interactionEvent}.Update`
+      );
+
+      experienceInteraction.setInteractionEvent(interactionEvent);
+
+      eventLog.append({
+        interactionEvent,
+      });
+
+      await experienceInteraction.save();
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
   router.post(
     experienceRoutes.identification,
     koaGuard({
@@ -52,10 +109,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       status: [204, 400, 401, 404],
     }),
     async (ctx, next) => {
-      const { interactionEvent, verificationId } = ctx.guard.body;
-
-      // TODO: implement a separate POST interaction route to handle the initiation of the interaction event
-      ctx.experienceInteraction.setInteractionEvent(interactionEvent);
+      const { verificationId } = ctx.guard.body;
 
       await ctx.experienceInteraction.identifyUser(verificationId);
 
