@@ -1,0 +1,8 @@
+@use '@/scss/underscore' as _;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  @include _.flex-column;
+  z-index: 300;
+}

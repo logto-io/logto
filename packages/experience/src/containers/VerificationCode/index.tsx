@@ -1,8 +1,9 @@
 import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
+import Button from '@/components/Button';
 import TextLink from '@/components/TextLink';
 import VerificationCodeInput, { defaultLength } from '@/components/VerificationCode';
 import { UserFlow } from '@/types';
@@ -21,13 +22,18 @@ type Props = {
 };
 
 const VerificationCode = ({ flow, identifier, className, hasPasswordButton, target }: Props) => {
-  const [code, setCode] = useState<string[]>([]);
+  const [codeInput, setCodeInput] = useState<string[]>([]);
   const { t } = useTranslation();
+
+  const isCodeInputReady = useMemo(
+    () => codeInput.length === defaultLength && codeInput.every(Boolean),
+    [codeInput]
+  );
 
   const useVerificationCode = getCodeVerificationHookByFlow(flow);
 
   const errorCallback = useCallback(() => {
-    setCode([]);
+    setCodeInput([]);
   }, []);
 
   const { errorMessage, clearErrorMessage, onSubmit } = useVerificationCode(
@@ -42,24 +48,37 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
     target
   );
 
-  useEffect(() => {
-    if (code.length === defaultLength && code.every(Boolean)) {
-      const payload =
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = useCallback(
+    async (code: string[]) => {
+      setIsSubmitting(true);
+
+      await onSubmit(
         identifier === SignInIdentifier.Email
           ? { email: target, verificationCode: code.join('') }
-          : { phone: target, verificationCode: code.join('') };
-      void onSubmit(payload);
+          : { phone: target, verificationCode: code.join('') }
+      );
+
+      setIsSubmitting(false);
+    },
+    [identifier, onSubmit, target]
+  );
+
+  useEffect(() => {
+    if (isCodeInputReady) {
+      void handleSubmit(codeInput);
     }
-  }, [code, identifier, onSubmit, target]);
+  }, [codeInput, handleSubmit, isCodeInputReady]);
 
   return (
     <form className={classNames(styles.form, className)}>
       <VerificationCodeInput
         name="passcode"
         className={classNames(styles.inputField, errorMessage && styles.withError)}
-        value={code}
+        value={codeInput}
         error={errorMessage}
-        onChange={setCode}
+        onChange={setCodeInput}
       />
       <div className={styles.message}>
         {isRunning ? (
@@ -75,7 +94,7 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
                   onClick={async () => {
                     clearErrorMessage();
                     await onResendVerificationCode();
-                    setCode([]);
+                    setCodeInput([]);
                   }}
                 />
               ),
@@ -88,6 +107,16 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
       {flow === UserFlow.SignIn && hasPasswordButton && (
         <PasswordSignInLink className={styles.switch} />
       )}
+      <Button
+        title="action.continue"
+        type="primary"
+        isDisabled={!isCodeInputReady}
+        isLoading={isSubmitting}
+        className={styles.continueButton}
+        onClick={() => {
+          void handleSubmit(codeInput);
+        }}
+      />
     </form>
   );
 };

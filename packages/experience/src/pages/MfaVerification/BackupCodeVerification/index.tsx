@@ -22,12 +22,16 @@ type FormState = {
 const BackupCodeVerification = () => {
   const flowState = useMfaFlowState();
   const sendMfaPayload = useSendMfaPayload();
-  const { register, handleSubmit } = useForm<FormState>({ defaultValues: { code: '' } });
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<FormState>({ defaultValues: { code: '' } });
 
   const onSubmitHandler = useCallback(
     (event?: FormEvent<HTMLFormElement>) => {
       void handleSubmit(async ({ code }) => {
-        void sendMfaPayload({
+        await sendMfaPayload({
           flow: UserMfaFlow.MfaVerification,
           payload: { type: MfaFactor.BackupCode, code },
         });
@@ -53,7 +57,7 @@ const BackupCodeVerification = () => {
             className={styles.backupCodeInput}
             {...register('code')}
           />
-          <Button title="action.continue" htmlType="submit" />
+          <Button title="action.continue" htmlType="submit" isLoading={isSubmitting} />
         </form>
       </SectionLayout>
       <SwitchMfaFactorsLink

@@ -45,7 +45,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -174,6 +174,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in'}
         icon={showSingleSignOnForm ? <LockIcon /> : undefined}
         htmlType="submit"
+        isLoading={isSubmitting}
       />
 
       <input hidden type="submit" />

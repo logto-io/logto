@@ -14,7 +14,7 @@ type Props = {
   readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   readonly autoFocus?: boolean;
-  readonly onSubmit: (password: string) => void;
+  readonly onSubmit: (password: string) => Promise<void>;
   readonly errorMessage?: string;
   readonly clearErrorMessage?: () => void;
 };
@@ -29,7 +29,7 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FieldState>({
     reValidateMode: 'onBlur',
     defaultValues: { newPassword: '' },
@@ -45,8 +45,8 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
     (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage?.();
 
-      void handleSubmit((data, event) => {
-        onSubmit(data.newPassword);
+      void handleSubmit(async (data) => {
+        await onSubmit(data.newPassword);
       })(event);
     },
     [clearErrorMessage, handleSubmit, onSubmit]
@@ -70,7 +70,12 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <Button name="submit" title="action.save_password" htmlType="submit" />
+      <Button
+        name="submit"
+        title="action.save_password"
+        htmlType="submit"
+        isLoading={isSubmitting}
+      />
 
       <input hidden type="submit" />
     </form>

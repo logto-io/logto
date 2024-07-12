@@ -43,7 +43,7 @@ const IdentifierProfileForm = ({
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -61,7 +61,7 @@ const IdentifierProfileForm = ({
   }, [clearErrorMessage, isValid]);
 
   const onSubmitHandler = useCallback(
-    async (event?: React.FormEvent<HTMLFormElement>) => {
+    (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage?.();
 
       void handleSubmit(async ({ identifier: { type, value } }) => {
@@ -115,7 +115,7 @@ const IdentifierProfileForm = ({
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <Button title="action.continue" htmlType="submit" />
+      <Button title="action.continue" htmlType="submit" isLoading={isSubmitting} />
 
       <input hidden type="submit" />
     </form>
