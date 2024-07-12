@@ -1,201 +1,216 @@
 {
-    "default": {
-        "organizations": [
-            {
-                "name": "OGCIO Seeded Org",
-                "description": "Organization created through seeder",
-                "id": "ogcio"
-            }
-        ],
-        "organization_permissions": {
-            "specific_permissions": [
-                "payments:provider:*",
-                "payments:payment_request:*",
-                "payments:payment_request.public:read",
-                "payments:transaction:*",
-                "messaging:message:*",
-                "messaging:provider:*",
-                "messaging:template:*",
-                "messaging:citizen:*",
-                "messaging:event:read"
-            ]
-        },
-        "organization_roles": [
-            {
-                "id": "pay-public-servant",
-                "name": "Payments Public Servant",
-                "description": "Payments Public servant",
-                "specific_permissions": [
-                    "payments:provider:*",
-                    "payments:payment_request:*",
-                    "payments:payment_request.public:read",
-                    "payments:transaction:*"
-                ]
-            },
-            {
-                "id": "msg-public-servant",
-                "name": "Messaging Public Servant",
-                "description": "Messaging Public servant",
-                "specific_permissions": [
-                    "messaging:message:*",
-                    "messaging:provider:*",
-                    "messaging:template:*",
-                    "messaging:citizen:*",
-                    "messaging:event:read"
-                ]
-            }
-        ],
-        "applications": [
-            {
-                "name": "Payments Building Block",
-                "description": "Payments App of Life Events",
-                "type": "Traditional",
-                "redirect_uri": "http://localhost:3001/callback",
-                "logout_redirect_uri": "http://localhost:3001",
-                "secret": "payments_app_local_secret",
-                "id": "2xz6sbi8ch01uhjt1oq8r",
-                "is_third_party": false
-            },
-            {
-                "name": "Messaging Building Block",
-                "description": "Messaging App of Life Events",
-                "type": "Traditional",
-                "redirect_uri": "http://localhost:3002/callback",
-                "logout_redirect_uri": "http://localhost:3002",
-                "secret": "messaging_app_local_secret",
-                "id": "4695d8onfb9f3bv18phtq",
-                "is_third_party": false
-            }
-        ],
-        "resources": [
-            {
-                "id": "payments-api",
-                "name": "Payments Building Block API",
-                "indicator": "http://localhost:8001/"
-            },
-            {
-                "id": "messaging-api",
-                "name": "Messaging Building Block API",
-                "indicator": "http://localhost:8002/"
-            }
-        ],
-        "resource_permissions": [
-            {
-                "resource_id": "payments-api",
-                "specific_permissions": [
-                    "payments:transaction.self:read",
-                    "payments:payment_request.public:read",
-                    "payments:transaction.self:write",
-                    "payments:provider.public:read"
-                ]
-            },
-            {
-                "resource_id": "messaging-api",
-                "specific_permissions": [
-                    "messaging:message.self:read",
-                    "messaging:citizen.self:read",
-                    "messaging:citizen.self:write"
-                ]
-            }
-        ],
-        "resource_roles": [
-            {
-                "id": "bb-citizen",
-                "name": "Citizen",
-                "description": "A citizen using Life Events and the Building Blocks ecosystem",
-                "permissions": [
-                    {
-                        "resource_id": "payments-api",
-                        "specific_permissions": [
-                            "payments:transaction.self:read",
-                            "payments:payment_request.public:read",
-                            "payments:transaction.self:write",
-                            "payments:provider.public:read"
-                        ]
-                    },
-                    {
-                        "resource_id": "messaging-api",
-                        "specific_permissions": [
-                            "messaging:message.self:read",
-                            "messaging:citizen.self:read",
-                            "messaging:citizen.self:write"
-                        ]
-                    }
-                ]
-            }
-        ],
-        "connectors": [
-            {
-                "id": "mygovid",
-                "sync_profile": false,
-                "connector_id": "mygovid",
-                "config": {
-                    "scope": "openid profile email",
-                    "clientId": "mock_client_id",
-                    "clientSecret": "mock_client_secret",
-                    "tokenEndpoint": "<MOCK_TOKEN_ENDPOINT>",
-                    "authorizationEndpoint": "http://localhost:4005/logto/mock/auth",
-                    "tokenEndpointAuthMethod": "client_secret_post",
-                    "idTokenVerificationConfig": {
-                        "jwksUri": "<MOCK_KEYS_ENDPOINT>"
-                    },
-                    "clientSecretJwtSigningAlgorithm": "HS256"
-                },
-                "metadata": {
-                    "logo": "https://mygovidstatic.blob.core.windows.net/assets/images/favicon_196x196.png",
-                    "name": {
-                        "en": "MyGovId"
-                    },
-                    "target": "MyGovId (MyGovId connector)"
-                }
-            }
-        ],
-        "sign_in_experiences": [
-            {
-                "id": "default",
-                "color": {
-                    "primaryColor": "#007DA6",
-                    "darkPrimaryColor": "#007DA6",
-                    "isDarkModeEnabled": false
-                },
-                "branding": {
-                    "logoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png",
-                    "darkLogoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png"
-                },
-                "language_info": {
-                    "autoDetect": true,
-                    "fallbackLanguage": "en"
-                },
-                "sign_in": {
-                    "methods": []
-                },
-                "sign_up": {
-                    "verify": false,
-                    "password": false,
-                    "identifiers": []
-                },
-                "social_sign_in_connector_targets": [
-                    "MyGovId (MyGovId connector)"
-                ],
-                "sign_in_mode": "SignInAndRegister"
-            }
-        ],
-        "webhooks": [
-            {
-                "id": "login-webhook",
-                "name": "User log in",
-                "events": [
-                    "User.Created",
-                    "User.Deleted",
-                    "User.Data.Updated",
-                    "User.SuspensionStatus.Updated"
-                ],
-                "config": {
-                    "url": "http://localhost:8003/user-login-wh"
-                },
-                "signing_key": "webhooks_local_signing_key",
-                "enabled": true
-            }
+  "default": {
+    "organizations": [
+      {
+        "name": "OGCIO Seeded Org",
+        "description": "Organization created through seeder",
+        "id": "ogcio"
+      }
+    ],
+    "organization_permissions": {
+      "specific_permissions": [
+        "payments:provider:*",
+        "payments:payment_request:*",
+        "payments:payment_request.public:read",
+        "payments:transaction:*",
+        "messaging:message:*",
+        "messaging:provider:*",
+        "messaging:template:*",
+        "messaging:citizen:*",
+        "messaging:event:read",
+        "life-events:digital-wallet-flow:*"
+      ]
+    },
+    "organization_roles": [
+      {
+        "id": "pay-public-servant",
+        "name": "Payments Public Servant",
+        "description": "Payments Public servant",
+        "specific_permissions": [
+          "payments:provider:*",
+          "payments:payment_request:*",
+          "payments:payment_request.public:read",
+          "payments:transaction:*"
         ]
-    }
+      },
+      {
+        "id": "msg-public-servant",
+        "name": "Messaging Public Servant",
+        "description": "Messaging Public servant",
+        "specific_permissions": [
+          "messaging:message:*",
+          "messaging:provider:*",
+          "messaging:template:*",
+          "messaging:citizen:*",
+          "messaging:event:read"
+        ]
+      },
+      {
+        "id": "le-public-servant",
+        "name": "Life Events Public Servant",
+        "description": "Life Events Public servant",
+        "specific_permissions": ["life-events:digital-wallet-flow:*"]
+      }
+    ],
+    "applications": [
+      {
+        "name": "Payments Building Block",
+        "description": "Payments App of Life Events",
+        "type": "Traditional",
+        "redirect_uri": "http://localhost:3001/callback",
+        "logout_redirect_uri": "http://localhost:3001",
+        "secret": "payments_app_local_secret",
+        "id": "2xz6sbi8ch01uhjt1oq8r",
+        "is_third_party": false
+      },
+      {
+        "name": "Messaging Building Block",
+        "description": "Messaging App of Life Events",
+        "type": "Traditional",
+        "redirect_uri": "http://localhost:3002/callback",
+        "logout_redirect_uri": "http://localhost:3002",
+        "secret": "messaging_app_local_secret",
+        "id": "4695d8onfb9f3bv18phtq",
+        "is_third_party": false
+      },
+      {
+        "name": "Life Events",
+        "description": "Life Events App",
+        "type": "Traditional",
+        "redirect_uri": "http://localhost:3000/callback",
+        "logout_redirect_uri": "http://localhost:3000",
+        "secret": "life_events_app_local_secret",
+        "id": "nfg61tuyfsgizsx8c4p3t",
+        "is_third_party": false
+      }
+    ],
+    "resources": [
+      {
+        "id": "payments-api",
+        "name": "Payments Building Block API",
+        "indicator": "http://localhost:8001/"
+      },
+      {
+        "id": "messaging-api",
+        "name": "Messaging Building Block API",
+        "indicator": "http://localhost:8002/"
+      }
+    ],
+    "resource_permissions": [
+      {
+        "resource_id": "payments-api",
+        "specific_permissions": [
+          "payments:transaction.self:read",
+          "payments:payment_request.public:read",
+          "payments:transaction.self:write",
+          "payments:provider.public:read"
+        ]
+      },
+      {
+        "resource_id": "messaging-api",
+        "specific_permissions": [
+          "messaging:message.self:read",
+          "messaging:citizen.self:read",
+          "messaging:citizen.self:write"
+        ]
+      }
+    ],
+    "resource_roles": [
+      {
+        "id": "bb-citizen",
+        "name": "Citizen",
+        "description": "A citizen using Life Events and the Building Blocks ecosystem",
+        "permissions": [
+          {
+            "resource_id": "payments-api",
+            "specific_permissions": [
+              "payments:transaction.self:read",
+              "payments:payment_request.public:read",
+              "payments:transaction.self:write",
+              "payments:provider.public:read"
+            ]
+          },
+          {
+            "resource_id": "messaging-api",
+            "specific_permissions": [
+              "messaging:message.self:read",
+              "messaging:citizen.self:read",
+              "messaging:citizen.self:write"
+            ]
+          }
+        ]
+      }
+    ],
+    "connectors": [
+      {
+        "id": "mygovid",
+        "sync_profile": false,
+        "connector_id": "mygovid",
+        "config": {
+          "scope": "openid profile email",
+          "clientId": "mock_client_id",
+          "clientSecret": "mock_client_secret",
+          "tokenEndpoint": "<MOCK_TOKEN_ENDPOINT>",
+          "authorizationEndpoint": "http://localhost:4005/logto/mock/auth",
+          "tokenEndpointAuthMethod": "client_secret_post",
+          "idTokenVerificationConfig": {
+            "jwksUri": "<MOCK_KEYS_ENDPOINT>"
+          },
+          "clientSecretJwtSigningAlgorithm": "HS256"
+        },
+        "metadata": {
+          "logo": "https://mygovidstatic.blob.core.windows.net/assets/images/favicon_196x196.png",
+          "name": {
+            "en": "MyGovId"
+          },
+          "target": "MyGovId (MyGovId connector)"
+        }
+      }
+    ],
+    "sign_in_experiences": [
+      {
+        "id": "default",
+        "color": {
+          "primaryColor": "#007DA6",
+          "darkPrimaryColor": "#007DA6",
+          "isDarkModeEnabled": false
+        },
+        "branding": {
+          "logoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png",
+          "darkLogoUrl": "https://mygovidstatic.blob.core.windows.net/assets/images/helpchat-logo.png"
+        },
+        "language_info": {
+          "autoDetect": true,
+          "fallbackLanguage": "en"
+        },
+        "sign_in": {
+          "methods": []
+        },
+        "sign_up": {
+          "verify": false,
+          "password": false,
+          "identifiers": []
+        },
+        "social_sign_in_connector_targets": ["MyGovId (MyGovId connector)"],
+        "sign_in_mode": "SignInAndRegister"
+      }
+    ],
+    "webhooks": [
+      {
+        "id": "login-webhook",
+        "name": "User log in",
+        "events": [
+          "User.Created",
+          "User.Deleted",
+          "User.Data.Updated",
+          "User.SuspensionStatus.Updated"
+        ],
+        "config": {
+          "url": "http://localhost:8003/user-login-wh"
+        },
+        "signing_key": "webhooks_local_signing_key",
+        "enabled": true
+      }
+    ]
+  }
 }
