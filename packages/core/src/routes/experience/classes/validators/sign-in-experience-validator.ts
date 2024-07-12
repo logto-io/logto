@@ -10,7 +10,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type VerificationRecord } from './verifications/index.js';
+import { type VerificationRecord } from '../verifications/index.js';
 
 const getEmailIdentifierFromVerificationRecord = (verificationRecord: VerificationRecord) => {
   switch (verificationRecord.type) {
@@ -32,7 +32,14 @@ const getEmailIdentifierFromVerificationRecord = (verificationRecord: Verificati
   }
 };
 
-export class SignInExperienceSettings {
+/**
+ *  SignInExperienceValidator class provides all the sign-in experience settings validation logic.
+ *
+ * - Guard the interaction event based on the sign-in experience settings
+ * - Guard the identification method based on the sign-in experience settings
+ * - Guard the email identifier with SSO enabled domains
+ */
+export class SignInExperienceValidator {
   private signInExperienceDataCache?: SignInExperience;
 
   constructor(

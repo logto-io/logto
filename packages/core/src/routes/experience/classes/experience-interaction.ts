@@ -9,7 +9,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { Interaction } from '../types.js';
 
-import { SignInExperienceSettings } from './sign-in-experience-settings.js';
+import { SignInExperienceValidator } from './validators/sign-in-experience-validator.js';
 import {
   buildVerificationRecord,
   verificationRecordDataGuard,
@@ -38,7 +38,7 @@ const interactionStorageGuard = z.object({
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0004.
  */
 export default class ExperienceInteraction {
-  public readonly signInExperienceSettings: SignInExperienceSettings;
+  public readonly signInExperienceValidator: SignInExperienceValidator;
 
   /** The user verification record list for the current interaction. */
   private readonly verificationRecords = new Map<VerificationType, VerificationRecord>();
@@ -46,7 +46,6 @@ export default class ExperienceInteraction {
   private userId?: string;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
   private readonly profile?: Record<string, unknown>; // TODO: Fix the type
-
   /** The interaction event for the current interaction. */
   #interactionEvent?: InteractionEvent;
 
@@ -63,7 +62,7 @@ export default class ExperienceInteraction {
   ) {
     const { libraries, queries } = tenant;
 
-    this.signInExperienceSettings = new SignInExperienceSettings(libraries, queries);
+    this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
 
     if (!interactionDetails) {
       return;
@@ -100,12 +99,12 @@ export default class ExperienceInteraction {
   /**
    * Set the interaction event for the current interaction
    *
-   * @throws RequestError with 403 if the interaction event is not allowed by the `SignInExperienceSettings`
+   * @throws RequestError with 403 if the interaction event is not allowed by the `SignInExperienceValidator`
    * @throws RequestError with 400 if the interaction event is `ForgotPassword` and the current interaction event is not `ForgotPassword`
    * @throws RequestError with 400 if the interaction event is not `ForgotPassword` and the current interaction event is `ForgotPassword`
    */
   public async setInteractionEvent(interactionEvent: InteractionEvent) {
-    await this.signInExperienceSettings.guardInteractionEvent(interactionEvent);
+    await this.signInExperienceValidator.guardInteractionEvent(interactionEvent);
 
     // `ForgotPassword` interaction event can not interchanged with other events
     if (this.interactionEvent) {
@@ -124,7 +123,7 @@ export default class ExperienceInteraction {
    * Identify the user using the verification record.
    *
    * - Check if the verification record exists.
-   * - Verify the verification record with `SignInExperienceSettings`.
+   * - Verify the verification record with `SignInExperienceValidator`.
    * - Create a new user using the verification record if the current interaction event is `Register`.
    * - Identify the user using the verification record if the current interaction event is `SignIn` or `ForgotPassword`.
    * - Set the user id to the current interaction.
@@ -148,7 +147,7 @@ export default class ExperienceInteraction {
       new RequestError({ code: 'session.verification_session_not_found', status: 404 })
     );
 
-    await this.signInExperienceSettings.verifyIdentificationMethod(
+    await this.signInExperienceValidator.verifyIdentificationMethod(
       this.interactionEvent,
       verificationRecord
     );

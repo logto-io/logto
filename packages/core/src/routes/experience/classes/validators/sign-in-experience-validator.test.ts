@@ -11,12 +11,13 @@ import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
-import { SignInExperienceSettings } from './sign-in-experience-settings.js';
-import { CodeVerification } from './verifications/code-verification.js';
-import { EnterpriseSsoVerification } from './verifications/enterprise-sso-verification.js';
-import { type VerificationRecord } from './verifications/index.js';
-import { PasswordVerification } from './verifications/password-verification.js';
-import { SocialVerification } from './verifications/social-verification.js';
+import { CodeVerification } from '../verifications/code-verification.js';
+import { EnterpriseSsoVerification } from '../verifications/enterprise-sso-verification.js';
+import { type VerificationRecord } from '../verifications/index.js';
+import { PasswordVerification } from '../verifications/password-verification.js';
+import { SocialVerification } from '../verifications/social-verification.js';
+
+import { SignInExperienceValidator } from './sign-in-experience-validator.js';
 
 const { jest } = import.meta;
 
@@ -78,7 +79,7 @@ const socialVerificationRecord = new SocialVerification(mockTenant.libraries, mo
   },
 });
 
-describe('SignInExperienceSettings', () => {
+describe('SignInExperienceValidator', () => {
   describe('guardInteractionEvent', () => {
     it('SignInMode.Register', async () => {
       const signInExperience = {
@@ -86,7 +87,7 @@ describe('SignInExperienceSettings', () => {
       };
       signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce(signInExperience);
 
-      const signInExperienceSettings = new SignInExperienceSettings(
+      const signInExperienceSettings = new SignInExperienceValidator(
         mockTenant.libraries,
         mockTenant.queries
       );
@@ -110,7 +111,7 @@ describe('SignInExperienceSettings', () => {
       };
       signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce(signInExperience);
 
-      const signInExperienceSettings = new SignInExperienceSettings(
+      const signInExperienceSettings = new SignInExperienceValidator(
         mockTenant.libraries,
         mockTenant.queries
       );
@@ -133,7 +134,7 @@ describe('SignInExperienceSettings', () => {
       };
       signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce(signInExperience);
 
-      const signInExperienceSettings = new SignInExperienceSettings(
+      const signInExperienceSettings = new SignInExperienceValidator(
         mockTenant.libraries,
         mockTenant.queries
       );
@@ -290,7 +291,7 @@ describe('SignInExperienceSettings', () => {
       it.each(cases)('guard verification record %p', async ({ verificationRecord, accepted }) => {
         signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce(signInExperience);
 
-        const signInExperienceSettings = new SignInExperienceSettings(
+        const signInExperienceSettings = new SignInExperienceValidator(
           mockTenant.libraries,
           mockTenant.queries
         );
@@ -408,7 +409,7 @@ describe('SignInExperienceSettings', () => {
       it.each(cases)('guard verification record %p', async ({ verificationRecord, accepted }) => {
         signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce(signInExperience);
 
-        const signInExperienceSettings = new SignInExperienceSettings(
+        const signInExperienceSettings = new SignInExperienceValidator(
           mockTenant.libraries,
           mockTenant.queries
         );
@@ -450,7 +451,7 @@ describe('SignInExperienceSettings', () => {
     it('email password verification record', async () => {
       ssoConnectors.getAvailableSsoConnectors.mockResolvedValueOnce([mockSsoConnector]);
 
-      const signInExperienceSettings = new SignInExperienceSettings(
+      const signInExperienceSettings = new SignInExperienceValidator(
         mockTenant.libraries,
         mockTenant.queries
       );
@@ -466,7 +467,7 @@ describe('SignInExperienceSettings', () => {
     it('email verification code verification record', async () => {
       ssoConnectors.getAvailableSsoConnectors.mockResolvedValueOnce([mockSsoConnector]);
 
-      const signInExperienceSettings = new SignInExperienceSettings(
+      const signInExperienceSettings = new SignInExperienceValidator(
         mockTenant.libraries,
         mockTenant.queries
       );
@@ -482,7 +483,7 @@ describe('SignInExperienceSettings', () => {
     it('social verification record', async () => {
       ssoConnectors.getAvailableSsoConnectors.mockResolvedValueOnce([mockSsoConnector]);
 
-      const signInExperienceSettings = new SignInExperienceSettings(
+      const signInExperienceSettings = new SignInExperienceValidator(
         mockTenant.libraries,
         mockTenant.queries
       );
