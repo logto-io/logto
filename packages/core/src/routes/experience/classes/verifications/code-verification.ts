@@ -18,7 +18,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { findUserByIdentifier } from '../utils.js';
 
-import { type VerificationRecord } from './verification-record.js';
+import { type IdentifierVerificationRecord } from './verification-record.js';
 
 const eventToTemplateTypeMap: Record<InteractionEvent, TemplateType> = {
   SignIn: TemplateType.SignIn,
@@ -67,7 +67,9 @@ const getPasscodeIdentifierPayload = (
  *
  * To avoid the redundant naming, the `CodeVerification` is used instead of `VerificationCodeVerification`.
  */
-export class CodeVerification implements VerificationRecord<VerificationType.VerificationCode> {
+export class CodeVerification
+  implements IdentifierVerificationRecord<VerificationType.VerificationCode>
+{
   /**
    * Factory method to create a new CodeVerification record using the given identifier.
    */
@@ -164,10 +166,6 @@ export class CodeVerification implements VerificationRecord<VerificationType.Ver
     this.verified = true;
   }
 
-  /**
-   * Identify the user by the current `identifier`.
-   * Return undefined if the verification record is not verified or no user is found by the identifier.
-   */
   async identifyUser(): Promise<User> {
     assertThat(
       this.verified,
@@ -187,6 +185,17 @@ export class CodeVerification implements VerificationRecord<VerificationType.Ver
     );
 
     return user;
+  }
+
+  async toUserProfile(): Promise<{ primaryEmail: string } | { primaryPhone: string }> {
+    assertThat(
+      this.verified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const { type, value } = this.identifier;
+
+    return type === 'email' ? { primaryEmail: value } : { primaryPhone: value };
   }
 
   toJson(): CodeVerificationRecordData {

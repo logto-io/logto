@@ -79,7 +79,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       body: z.object({
         interactionEvent: z.nativeEnum(InteractionEvent),
       }),
-      status: [204, 403],
+      status: [204, 400, 403],
     }),
     async (ctx, next) => {
       const { interactionEvent } = ctx.guard.body;
@@ -107,7 +107,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     experienceRoutes.identification,
     koaGuard({
       body: identificationApiPayloadGuard,
-      status: [204, 400, 401, 404, 409],
+      status: [201, 204, 400, 401, 404, 409, 422],
     }),
     async (ctx, next) => {
       const { verificationId } = ctx.guard.body;
