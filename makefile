@@ -1,10 +1,12 @@
 # This file has been added on OGCIO fork
 TAG = local-logto:latest
+MOCK_SERVICE_TAG = local-mygovid-mock-service:latest
 GREEN=\033[0;32m
 NC=\033[0m
 
 build:
 		docker build -t ${TAG} .
+		docker build -f ./mygovid-mock-service/Dockerfile -t ${MOCK_SERVICE_TAG} .
 run:
 		docker-compose -f docker-compose-local.yml up --detach
 down:

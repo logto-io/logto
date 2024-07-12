@@ -25,6 +25,13 @@ services:
       - ADMIN_PORT=3302
       - MOCK_TOKEN_ENDPOINT=http://mygovid-mock-service:4005/logto/mock/token
       - MOCK_KEYS_ENDPOINT=http://mygovid-mock-service:4005/logto/mock/keys
+  
+  mygovid-mock-service:
+    image: local-mygovid-mock-service:latest
+    build:
+      dockerfile: ./mygovid-mock-service/Dockerfile
+    ports:
+      - 4005:4005
       
   postgres:
     extends:
