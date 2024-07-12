@@ -51,7 +51,7 @@ AWS_PROFILE=awsProfile-accountId
 
 To execute the script, run:
 ```
-[ ! -f docker-compose-ogcio-logto.yml ] && curl -fsSL https://raw.githubusercontent.com/ogcio/logto/HEAD/docker-compose-ogcio-logto.yml > /tmp/docker-compose-ogcio-logto.yml && curl -fsSL https://raw.githubusercontent.com/ogcio/logto/18938/automate-with-script/run-logto-remote.sh | bash -s /tmp/docker-compose-ogcio-logto.yml
+[ ! -f docker-compose-ogcio-logto.yml ] && curl -fsSL https://raw.githubusercontent.com/ogcio/logto/HEAD/docker-compose-ogcio-logto.yml > /tmp/docker-compose-ogcio-logto.yml && curl -fsSL https://raw.githubusercontent.com/ogcio/logto/HEAD/run-logto-remote.sh | bash -s /tmp/docker-compose-ogcio-logto.yml
 ```
 The command downloads the Docker Compose file from Github to a temporary location if it doesn't exist already, then fetches and executes the script from GitHub, passing the temporary Docker Compose file.
 
