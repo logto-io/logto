@@ -55,12 +55,19 @@ export const buildOidcClientMetadata = (metadata?: OidcClientMetadata): OidcClie
   ...metadata,
 });
 
-export const validateCustomClientMetadata = (key: string, value: unknown) => {
-  const result = customClientMetadataGuard.pick({ [key]: true }).safeParse({ [key]: value });
+// eslint-disable-next-line @typescript-eslint/ban-types
+const isKeyOf = <T extends object>(object: T, key: string | number | symbol): key is keyof T =>
+  key in object;
 
-  if (!result.success) {
-    throw new errors.InvalidClientMetadata(key);
+export const validateCustomClientMetadata = (key: string, value: unknown) => {
+  if (isKeyOf(customClientMetadataGuard.shape, key)) {
+    const result = customClientMetadataGuard.shape[key].safeParse(value);
+    if (result.success) {
+      return;
+    }
   }
+
+  throw new errors.InvalidClientMetadata(key);
 };
 
 export const isOriginAllowed = (

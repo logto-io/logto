@@ -286,7 +286,9 @@ export default class SchemaRouter<
     this.delete(
       `/:id/${pathname}/:${camelCaseSchemaId(relationSchema)}`,
       koaGuard({
-        params: z.object({ id: z.string().min(1), [relationSchemaId]: z.string().min(1) }),
+        params: z
+          .object({ id: z.string().min(1) })
+          .extend({ [relationSchemaId]: z.string().min(1) }),
         status: [204, 422],
       }),
       async (ctx, next) => {
@@ -337,6 +339,7 @@ export default class SchemaRouter<
       this.post(
         '/',
         koaGuard({
+          // @ts-expect-error -- `.omit()` doesn't play well with generics
           body: schema.createGuard.omit({ id: true }),
           response: entityGuard ?? schema.guard,
           status: [201], // TODO: 409/422 for conflict?
