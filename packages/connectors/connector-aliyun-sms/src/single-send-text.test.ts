@@ -20,7 +20,6 @@ describe('sendSms', () => {
       },
       '<access-key-secret>'
     );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const calledData = request.mock.calls[0];
     expect(calledData).not.toBeUndefined();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
