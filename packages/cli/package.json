@@ -68,7 +68,7 @@
     "tar": "^7.0.0",
     "typescript": "^5.3.3",
     "yargs": "^17.6.0",
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",

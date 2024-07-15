@@ -8,6 +8,7 @@ import {
   jwtCustomizerConfigsGuard,
   jwtCustomizerTestRequestBodyGuard,
 } from '@logto/schemas';
+import { removeUndefinedKeys } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
 import { ZodError, z } from 'zod';
 
@@ -236,7 +237,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
             search: { isTest: 'true' },
           });
         } else {
-          ctx.body = await JwtCustomizerLibrary.runScriptInLocalVm(body);
+          ctx.body = removeUndefinedKeys(await JwtCustomizerLibrary.runScriptInLocalVm(body));
         }
       } catch (error: unknown) {
         /**

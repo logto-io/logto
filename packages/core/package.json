@@ -90,7 +90,7 @@
     "semver": "^7.3.8",
     "snake-case": "^4.0.0",
     "snakecase-keys": "^8.0.1",
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@logto/cloud": "0.2.5-3046fa6",
