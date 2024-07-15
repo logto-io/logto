@@ -15,7 +15,7 @@ export class ProfileValidator {
 
   public async guardProfileUniquenessAcrossUsers(profile: InteractionProfile) {
     const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } = this.queries.users;
-    const { findUserSsoIdentityBySsoIdentityId } = this.queries.userSsoIdentities;
+    const { userSsoIdentities } = this.queries;
 
     const { username, primaryEmail, primaryPhone, socialIdentity, enterpriseSsoIdentity } = profile;
 
@@ -66,7 +66,10 @@ export class ProfileValidator {
 
     if (enterpriseSsoIdentity) {
       const { issuer, identityId } = enterpriseSsoIdentity;
-      const userSsoIdentity = await findUserSsoIdentityBySsoIdentityId(issuer, identityId);
+      const userSsoIdentity = await userSsoIdentities.findUserSsoIdentityBySsoIdentityId(
+        issuer,
+        identityId
+      );
 
       assertThat(
         !userSsoIdentity,
