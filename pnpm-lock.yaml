@@ -110,14 +110,14 @@ importers:
         specifier: 31.0.0-beta.2
         version: 31.0.0-beta.2
       chalk:
-        specifier: ^5.0.0
-        version: 5.1.2
+        specifier: ^5.3.0
+        version: 5.3.0
       decamelize:
         specifier: ^6.0.0
         version: 6.0.0
       dotenv:
-        specifier: ^16.0.0
-        version: 16.0.0
+        specifier: ^16.4.5
+        version: 16.4.5
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -228,8 +228,8 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -310,8 +310,8 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -386,8 +386,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -459,8 +459,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -535,11 +535,11 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       jose:
-        specifier: ^5.0.0
-        version: 5.0.1
+        specifier: ^5.6.3
+        version: 5.6.3
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -617,8 +617,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -693,8 +693,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -772,8 +772,8 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -848,8 +848,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -921,8 +921,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -994,8 +994,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1070,8 +1070,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1143,11 +1143,11 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       jose:
-        specifier: ^5.0.0
-        version: 5.2.4
+        specifier: ^5.6.3
+        version: 5.6.3
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1292,8 +1292,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1365,8 +1365,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1441,8 +1441,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1514,8 +1514,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1587,8 +1587,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1660,8 +1660,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1733,8 +1733,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1806,8 +1806,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1879,8 +1879,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1952,8 +1952,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2025,8 +2025,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       jose:
-        specifier: ^5.0.0
-        version: 5.2.2
+        specifier: ^5.6.3
+        version: 5.6.3
       ky:
         specifier: ^1.2.3
         version: 1.2.3
@@ -2034,8 +2034,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2110,8 +2110,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       jose:
-        specifier: ^5.0.0
-        version: 5.0.1
+        specifier: ^5.6.3
+        version: 5.6.3
       ky:
         specifier: ^1.2.3
         version: 1.2.3
@@ -2119,8 +2119,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2198,8 +2198,8 @@ importers:
         specifier: 2.8.11
         version: 2.8.11
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2271,8 +2271,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2344,8 +2344,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2420,8 +2420,8 @@ importers:
         specifier: ^6.9.9
         version: 6.9.9
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2496,8 +2496,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2569,8 +2569,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2642,8 +2642,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2715,8 +2715,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2788,8 +2788,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3227,11 +3227,11 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       camelcase-keys:
-        specifier: ^9.0.0
-        version: 9.0.0
+        specifier: ^9.1.3
+        version: 9.1.3
       chalk:
-        specifier: ^5.0.0
-        version: 5.1.2
+        specifier: ^5.3.0
+        version: 5.3.0
       clean-deep:
         specifier: ^3.4.0
         version: 3.4.0
@@ -3245,8 +3245,8 @@ importers:
         specifier: ^4.2.2
         version: 4.2.2
       dotenv:
-        specifier: ^16.0.0
-        version: 16.0.0
+        specifier: ^16.4.5
+        version: 16.4.5
       etag:
         specifier: ^1.8.1
         version: 1.8.1
@@ -3260,11 +3260,11 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       hash-wasm:
-        specifier: ^4.9.0
-        version: 4.9.0
+        specifier: ^4.11.0
+        version: 4.11.0
       helmet:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.1.0
+        version: 7.1.0
       i18next:
         specifier: ^22.4.15
         version: 22.4.15
@@ -3272,11 +3272,11 @@ importers:
         specifier: 0.6.3
         version: 0.6.3
       jose:
-        specifier: ^5.0.0
-        version: 5.0.1
+        specifier: ^5.6.3
+        version: 5.6.3
       koa:
-        specifier: ^2.13.1
-        version: 2.13.4
+        specifier: ^2.15.3
+        version: 2.15.3
       koa-body:
         specifier: ^6.0.1
         version: 6.0.1
@@ -3284,8 +3284,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       koa-compress:
-        specifier: ^5.1.0
-        version: 5.1.0
+        specifier: ^5.1.1
+        version: 5.1.1
       koa-logger:
         specifier: ^3.2.1
         version: 3.2.1
@@ -3294,10 +3294,10 @@ importers:
         version: 4.0.0
       koa-proxies:
         specifier: ^0.12.4
-        version: 0.12.4(koa@2.13.4)
+        version: 0.12.4(koa@2.15.3)
       koa-router:
-        specifier: ^12.0.0
-        version: 12.0.0
+        specifier: ^12.0.1
+        version: 12.0.1
       koa-send:
         specifier: ^5.0.1
         version: 5.0.1
@@ -3350,8 +3350,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       snakecase-keys:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^8.0.1
+        version: 8.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3375,8 +3375,8 @@ importers:
         specifier: ^29.4.0
         version: 29.4.0
       '@types/koa':
-        specifier: ^2.13.3
-        version: 2.13.4
+        specifier: ^2.15.0
+        version: 2.15.0
       '@types/koa-compose':
         specifier: ^3.2.5
         version: 3.2.5
@@ -3421,7 +3421,7 @@ importers:
         version: 8.57.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+        version: 29.7.0(@types/node@20.10.4)
       jest-matcher-specific-error:
         specifier: ^1.0.0
         version: 1.0.0
@@ -3516,8 +3516,8 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       jose:
-        specifier: ^5.0.0
-        version: 5.2.4
+        specifier: ^5.6.3
+        version: 5.6.3
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -3648,8 +3648,8 @@ importers:
         specifier: ^5.3.2
         version: 5.3.2
       camelcase-keys:
-        specifier: ^9.0.0
-        version: 9.0.0
+        specifier: ^9.1.3
+        version: 9.1.3
       classnames:
         specifier: ^2.3.1
         version: 2.3.1
@@ -3676,7 +3676,7 @@ importers:
         version: 3.0.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+        version: 29.7.0(@types/node@20.12.7)
       jest-environment-jsdom:
         specifier: ^29.7.0
         version: 29.7.0
@@ -3685,7 +3685,7 @@ importers:
         version: 2.0.0
       jest-transformer-svg:
         specifier: ^2.0.0
-        version: 2.0.0(jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)))(react@18.2.0)
+        version: 2.0.0(jest@29.7.0(@types/node@20.12.7))(react@18.2.0)
       js-base64:
         specifier: ^3.7.5
         version: 3.7.5
@@ -3814,8 +3814,8 @@ importers:
         specifier: ^20.9.5
         version: 20.10.4
       dotenv:
-        specifier: ^16.0.0
-        version: 16.0.0
+        specifier: ^16.4.5
+        version: 16.4.5
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -3824,7 +3824,7 @@ importers:
         version: 10.0.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+        version: 29.7.0(@types/node@20.10.4)
       jest-matcher-specific-error:
         specifier: ^1.0.0
         version: 1.0.0
@@ -3832,8 +3832,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(puppeteer@22.6.5(typescript@5.3.3))(typescript@5.3.3)
       jose:
-        specifier: ^5.0.0
-        version: 5.0.1
+        specifier: ^5.6.3
+        version: 5.6.3
       ky:
         specifier: ^1.2.3
         version: 1.2.3
@@ -3982,8 +3982,8 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       chalk:
-        specifier: ^5.0.0
-        version: 5.1.2
+        specifier: ^5.3.0
+        version: 5.3.0
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4012,8 +4012,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       chalk:
-        specifier: ^5.0.0
-        version: 5.1.2
+        specifier: ^5.3.0
+        version: 5.3.0
       find-up:
         specifier: ^7.0.0
         version: 7.0.0
@@ -6547,9 +6547,6 @@ packages:
   '@types/koa-send@4.1.3':
     resolution: {integrity: sha512-daaTqPZlgjIJycSTNjKpHYuKhXYP30atFc1pBcy6HHqB9+vcymDgYTguPdx9tO4HMOqNyz6bz/zqpxt5eLR+VA==}
 
-  '@types/koa@2.13.4':
-    resolution: {integrity: sha512-dfHYMfU+z/vKtQB7NUrthdAEiSvnLebvBjwHtfFmpZmB7em2N3WVQdHgnFq+xvyVgxW5jKDmjWfLD3lw4g4uTw==}
-
   '@types/koa@2.15.0':
     resolution: {integrity: sha512-7QFsywoE5URbuVnG3loe03QXuGajrnotr3gQkXcEBShORai23MePfFYdhz90FEtBBpkyIYQbVD+evKtloCgX3g==}
 
@@ -7263,8 +7260,8 @@ packages:
     resolution: {integrity: sha512-Rjs1H+A9R+Ig+4E/9oyB66UC5Mj9Xq3N//vcLf2WzgdTi/3gUu3Z9KoqmlrEG4VuuLK8wJHofxzdQXz/knhiYg==}
     engines: {node: '>=12'}
 
-  camelcase-keys@9.0.0:
-    resolution: {integrity: sha512-GdZ92DNXdcfFB/5Kq4O82EL6UW5neiRBhfNP5M3mGw7CX2sPDbVA04ZPLsqbp7oMi2l3m2I0AZ/kFP5Nk5kopA==}
+  camelcase-keys@9.1.3:
+    resolution: {integrity: sha512-Rircqi9ch8AnZscQcsA1C47NFdaO3wukpmIRzYcDOrmvgt78hM/sj5pZhZNec2NM12uk5vTwRHZ4anGcrC4ZTg==}
     engines: {node: '>=16'}
 
   camelcase@5.3.1:
@@ -7296,10 +7293,6 @@ packages:
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
-
-  chalk@5.1.2:
-    resolution: {integrity: sha512-E5CkT4jWURs1Vy5qGJye+XwCkNj7Od3Af7CP6SujMetSMkLs8Do2RWJK5yx1wamHV/op8Rz+9rltjaTQWDnEFQ==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
   chalk@5.3.0:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
@@ -8112,8 +8105,8 @@ packages:
   dotenv-expand@5.1.0:
     resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
 
-  dotenv@16.0.0:
-    resolution: {integrity: sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==}
+  dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
   dotenv@7.0.0:
@@ -9018,8 +9011,8 @@ packages:
     resolution: {integrity: sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==}
     engines: {node: '>= 0.4.0'}
 
-  hash-wasm@4.9.0:
-    resolution: {integrity: sha512-7SW7ejyfnRxuOc7ptQHSf4LDoZaWOivfzqw+5rpcQku0nHfmicPKE51ra9BiRLAmT8+gGLestr1XroUkqdjL6w==}
+  hash-wasm@4.11.0:
+    resolution: {integrity: sha512-HVusNXlVqHe0fzIzdQOGolnFN6mX/fqcrSAOcTBXdvzrXVHwTz11vXeKRmkR5gTuwVpvHZEIyKoePDvuAR+XwQ==}
 
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
@@ -9043,8 +9036,8 @@ packages:
   hastscript@6.0.0:
     resolution: {integrity: sha512-nDM6bvd7lIqDUiYEiu5Sl/+6ReP0BMk/2f4U/Rooccxkj0P5nm+acM5PrGJ/t5I8qPGiqZSE6hVAwZEdZIvP4w==}
 
-  helmet@7.0.0:
-    resolution: {integrity: sha512-MsIgYmdBh460ZZ8cJC81q4XJknjG567wzEmv46WOBblDb6TUd3z8/GhgmsM9pn8g2B80tAJ4m5/d3Bi1KrSUBQ==}
+  helmet@7.1.0:
+    resolution: {integrity: sha512-g+HZqgfbpXdCkme/Cd/mZkV0aV3BZZZSugecH03kl38m/Kmdx8jKjBikpDj2cr+Iynv4KpYEviojNdTJActJAg==}
     engines: {node: '>=16.0.0'}
 
   hexoid@1.0.0:
@@ -9797,14 +9790,8 @@ packages:
   joi@17.12.2:
     resolution: {integrity: sha512-RonXAIzCiHLc8ss3Ibuz45u28GOsWE1UpfDXLbN/9NKbL4tCJf8TWYVKsoYuuh+sAUt7fsSNpA+r2+TBA6Wjmw==}
 
-  jose@5.0.1:
-    resolution: {integrity: sha512-gRVzy7s3RRdGbXmcTdlOswJOjhwPLx1ijIgAqLY6ktzFpOJxxYn4l0fC2vHaHHi4YBX/5FOL3aY+6W0cvQgpug==}
-
-  jose@5.2.2:
-    resolution: {integrity: sha512-/WByRr4jDcsKlvMd1dRJnPfS1GVO3WuKyaurJ/vvXcOaUQO8rnNObCQMlv/5uCceVQIq5Q4WLF44ohsdiTohdg==}
-
-  jose@5.2.4:
-    resolution: {integrity: sha512-6ScbIk2WWCeXkmzF6bRPmEuaqy1m8SbsRFMa/FLrSCkGIhj8OLVG/IH+XHVmNMx/KUo8cVWEE6oKR4dJ+S0Rkg==}
+  jose@5.6.3:
+    resolution: {integrity: sha512-1Jh//hEEwMhNYPDDLwXHa2ePWgWiFNNUadVmguAAw2IJ6sj9mNxV5tGXJNqlMkJAybF6Lgw1mISDxTePP/187g==}
 
   js-base64@3.7.5:
     resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
@@ -9955,9 +9942,9 @@ packages:
   koa-compose@4.1.0:
     resolution: {integrity: sha512-8ODW8TrDuMYvXRwra/Kh7/rJo9BtOfPc6qO8eAfC80CnCvSjSl0bkRM24X6/XBBEyj0v1nRUQ1LyOy3dbqOWXw==}
 
-  koa-compress@5.1.0:
-    resolution: {integrity: sha512-G3Ppo9jrUwlchp6qdoRgQNMiGZtM0TAHkxRZQ7EoVvIG8E47J4nAsMJxXHAUQ+0oc7t0MDxSdONWTFcbzX7/Bg==}
-    engines: {node: '>= 8.0.0'}
+  koa-compress@5.1.1:
+    resolution: {integrity: sha512-UgMIN7ZoEP2DuoSQmD6CYvFSLt0NReGlc2qSY4bO4Oq0L56OiD9pDG41Kj/zFmVY/A3Wvmn4BqKcfq5H30LGIg==}
+    engines: {node: '>= 12'}
 
   koa-convert@2.0.0:
     resolution: {integrity: sha512-asOvN6bFlSnxewce2e/DK3p4tltyfC4VM7ZwuTuepI7dEQVcvpyFuBcEARu1+Hxg8DIwytce2n7jrZtRlPrARA==}
@@ -9979,10 +9966,9 @@ packages:
     peerDependencies:
       koa: '>=2'
 
-  koa-router@12.0.0:
-    resolution: {integrity: sha512-zGrdiXygGYW8WvrzeGsHZvKnHs4DzyGoqJ9a8iHlRkiwuEAOAPyI27//OlhoWdgFAEIM3qbUgr0KCuRaP/TCag==}
+  koa-router@12.0.1:
+    resolution: {integrity: sha512-gaDdj3GtzoLoeosacd50kBBTnnh3B9AYxDThQUo4sfUyXdOhY6ku1qyZKW88tQCRgc3Sw6ChXYXWZwwgjOxE0w==}
     engines: {node: '>= 12'}
-    deprecated: '**IMPORTANT 10x+ PERFORMANCE UPGRADE**: Please upgrade to v12.0.1+ as we have fixed an issue with debuglog causing 10x slower router benchmark performance, see https://github.com/koajs/router/pull/173'
 
   koa-send@5.0.1:
     resolution: {integrity: sha512-tmcyQ/wXXuxpDxyNXv5yNNkdAMdFRqwtegBXUaowiQzUKqJehttS0x2j0eOZDQAyloAth5w6wwBImnFzkUz3pQ==}
@@ -12127,8 +12113,8 @@ packages:
     resolution: {integrity: sha512-slvG6efKZ3GYUUZdhPOq/lLIqutwQ4TdPViD1VKqsbf0u76U/aPRswPKjOaAS9T7fAPmRmXuN6C/nM0xsMaFLQ==}
     deprecated: Use `change-case`
 
-  snakecase-keys@8.0.0:
-    resolution: {integrity: sha512-qS7XvESuFxskrmD8/O9tOMdLdV9YTuPfNLdRJIvNJKNEZtH9XVPwmZioROwl4TsVDbOFqlQ/o7pURuF8MnjYsg==}
+  snakecase-keys@8.0.1:
+    resolution: {integrity: sha512-Sj51kE1zC7zh6TDlNNz0/Jn1n5HiHdoQErxO8jLtnyrkJW/M5PrI7x05uDgY3BO7OUQYKCvmeMurW6BPUdwEOw==}
     engines: {node: '>=18'}
 
   socks-proxy-agent@8.0.2:
@@ -12677,10 +12663,6 @@ packages:
 
   type-fest@4.15.0:
     resolution: {integrity: sha512-tB9lu0pQpX5KJq54g+oHOLumOx+pMep4RaM6liXh2PKmVRFF+/vAtUP0ZaJ0kOySfVNjF6doBWPHhBhISKdlIA==}
-    engines: {node: '>=16'}
-
-  type-fest@4.2.0:
-    resolution: {integrity: sha512-5zknd7Dss75pMSED270A1RQS3KloqRJA9XbXLe0eCxyw7xXFb3rd+9B0UQ/0E+LQT6lnrLviEolYORlRWamn4w==}
     engines: {node: '>=16'}
 
   type-is@1.6.18:
@@ -14596,41 +14578,6 @@ snapshots:
       - supports-color
       - ts-node
 
-  '@jest/core@29.7.0(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))':
-    dependencies:
-      '@jest/console': 29.7.0
-      '@jest/reporters': 29.7.0
-      '@jest/test-result': 29.7.0
-      '@jest/transform': 29.7.0
-      '@jest/types': 29.6.3
-      '@types/node': 20.12.7
-      ansi-escapes: 4.3.2
-      chalk: 4.1.2
-      ci-info: 3.8.0
-      exit: 0.1.2
-      graceful-fs: 4.2.11
-      jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
-      jest-haste-map: 29.7.0
-      jest-message-util: 29.7.0
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-resolve-dependencies: 29.7.0
-      jest-runner: 29.7.0
-      jest-runtime: 29.7.0
-      jest-snapshot: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      jest-watcher: 29.7.0
-      micromatch: 4.0.5
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-ansi: 6.0.1
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
-
   '@jest/create-cache-key-function@27.5.1':
     dependencies:
       '@jest/types': 27.5.1
@@ -14881,7 +14828,7 @@ snapshots:
       '@logto/js': 4.1.4
       '@silverhand/essentials': 2.9.1
       camelcase-keys: 7.0.2
-      jose: 5.2.4
+      jose: 5.6.3
 
   '@logto/cloud@0.2.5-3046fa6(zod@3.22.4)':
     dependencies:
@@ -15952,10 +15899,10 @@ snapshots:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
       eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0)
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.0.0)
@@ -16729,35 +16676,24 @@ snapshots:
 
   '@types/koa-compose@3.2.5':
     dependencies:
-      '@types/koa': 2.13.4
+      '@types/koa': 2.15.0
 
   '@types/koa-compress@4.0.3':
     dependencies:
-      '@types/koa': 2.13.4
+      '@types/koa': 2.15.0
       '@types/node': 20.12.7
 
   '@types/koa-logger@3.1.2':
     dependencies:
-      '@types/koa': 2.13.4
+      '@types/koa': 2.15.0
 
   '@types/koa-mount@4.0.1':
     dependencies:
-      '@types/koa': 2.13.4
+      '@types/koa': 2.15.0
 
   '@types/koa-send@4.1.3':
     dependencies:
-      '@types/koa': 2.13.4
-
-  '@types/koa@2.13.4':
-    dependencies:
-      '@types/accepts': 1.3.5
-      '@types/content-disposition': 0.5.4
-      '@types/cookies': 0.7.7
-      '@types/http-assert': 1.5.3
-      '@types/http-errors': 1.8.2
-      '@types/keygrip': 1.0.2
-      '@types/koa-compose': 3.2.5
-      '@types/node': 20.12.7
+      '@types/koa': 2.15.0
 
   '@types/koa@2.15.0':
     dependencies:
@@ -16772,7 +16708,7 @@ snapshots:
 
   '@types/koa__cors@5.0.0':
     dependencies:
-      '@types/koa': 2.13.4
+      '@types/koa': 2.15.0
 
   '@types/mdast@3.0.15':
     dependencies:
@@ -16819,7 +16755,7 @@ snapshots:
 
   '@types/oidc-provider@8.4.4':
     dependencies:
-      '@types/koa': 2.13.4
+      '@types/koa': 2.15.0
       '@types/node': 20.12.7
 
   '@types/parse-json@4.0.0': {}
@@ -17666,12 +17602,12 @@ snapshots:
       quick-lru: 5.1.1
       type-fest: 1.4.0
 
-  camelcase-keys@9.0.0:
+  camelcase-keys@9.1.3:
     dependencies:
       camelcase: 8.0.0
       map-obj: 5.0.0
       quick-lru: 6.1.1
-      type-fest: 4.2.0
+      type-fest: 4.15.0
 
   camelcase@5.3.1: {}
 
@@ -17701,8 +17637,6 @@ snapshots:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
-
-  chalk@5.1.2: {}
 
   chalk@5.3.0: {}
 
@@ -17976,13 +17910,13 @@ snapshots:
     dependencies:
       lodash.get: 4.4.2
 
-  create-jest@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
+  create-jest@29.7.0(@types/node@20.10.4):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      jest-config: 29.7.0(@types/node@20.10.4)
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -18509,7 +18443,7 @@ snapshots:
 
   dotenv-expand@5.1.0: {}
 
-  dotenv@16.0.0: {}
+  dotenv@16.4.5: {}
 
   dotenv@7.0.0: {}
 
@@ -18790,13 +18724,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -18807,14 +18741,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7(supports-color@5.5.0)
     optionalDependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -18836,7 +18770,7 @@ snapshots:
       eslint: 8.57.0
       ignore: 5.3.1
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -18846,7 +18780,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -19663,7 +19597,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.1
 
-  hash-wasm@4.9.0: {}
+  hash-wasm@4.11.0: {}
 
   hasown@2.0.2:
     dependencies:
@@ -19729,7 +19663,7 @@ snapshots:
       property-information: 5.6.0
       space-separated-tokens: 1.1.5
 
-  helmet@7.0.0: {}
+  helmet@7.1.0: {}
 
   hexoid@1.0.0: {}
 
@@ -19960,7 +19894,7 @@ snapshots:
   inquirer@9.1.4:
     dependencies:
       ansi-escapes: 6.0.0
-      chalk: 5.1.2
+      chalk: 5.3.0
       cli-cursor: 4.0.0
       cli-width: 4.0.0
       external-editor: 3.1.0
@@ -20307,16 +20241,35 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
+  jest-cli@29.7.0(@types/node@20.10.4):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      create-jest: 29.7.0(@types/node@20.10.4)
       exit: 0.1.2
       import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      jest-config: 29.7.0(@types/node@20.10.4)
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
+  jest-cli@29.7.0(@types/node@20.12.7):
+    dependencies:
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/test-result': 29.7.0
+      '@jest/types': 29.6.3
+      chalk: 4.1.2
+      create-jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      exit: 0.1.2
+      import-local: 3.1.0
+      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -20345,7 +20298,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
+  jest-config@29.7.0(@types/node@20.10.4):
     dependencies:
       '@babel/core': 7.24.4
       '@jest/test-sequencer': 29.7.0
@@ -20371,7 +20324,6 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 20.10.4
-      ts-node: 10.9.2(@types/node@20.10.4)(typescript@5.3.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -20403,37 +20355,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.12.7
       ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-
-  jest-config@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
-    dependencies:
-      '@babel/core': 7.24.4
-      '@jest/test-sequencer': 29.7.0
-      '@jest/types': 29.6.3
-      babel-jest: 29.7.0(@babel/core@7.24.4)
-      chalk: 4.1.2
-      ci-info: 3.8.0
-      deepmerge: 4.3.1
-      glob: 7.2.3
-      graceful-fs: 4.2.11
-      jest-circus: 29.7.0
-      jest-environment-node: 29.7.0
-      jest-get-type: 29.6.3
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-runner: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      micromatch: 4.0.5
-      parse-json: 5.2.0
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-json-comments: 3.1.1
-    optionalDependencies:
-      '@types/node': 20.12.7
-      ts-node: 10.9.2(@types/node@20.10.4)(typescript@5.3.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -20694,6 +20615,11 @@ snapshots:
       jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
       react: 18.2.0
 
+  jest-transformer-svg@2.0.0(jest@29.7.0(@types/node@20.12.7))(react@18.2.0):
+    dependencies:
+      jest: 29.7.0(@types/node@20.12.7)
+      react: 18.2.0
+
   jest-util@29.5.0:
     dependencies:
       '@jest/types': 29.6.3
@@ -20746,12 +20672,24 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3)):
+  jest@29.7.0(@types/node@20.10.4):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
       '@jest/types': 29.6.3
       import-local: 3.1.0
-      jest-cli: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3))
+      jest-cli: 29.7.0(@types/node@20.10.4)
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
+  jest@29.7.0(@types/node@20.12.7):
+    dependencies:
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/types': 29.6.3
+      import-local: 3.1.0
+      jest-cli: 29.7.0(@types/node@20.12.7)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -20780,11 +20718,7 @@ snapshots:
       '@sideway/formula': 3.0.1
       '@sideway/pinpoint': 2.0.0
 
-  jose@5.0.1: {}
-
-  jose@5.2.2: {}
-
-  jose@5.2.4: {}
+  jose@5.6.3: {}
 
   js-base64@3.7.5: {}
 
@@ -20958,13 +20892,12 @@ snapshots:
 
   koa-compose@4.1.0: {}
 
-  koa-compress@5.1.0:
+  koa-compress@5.1.1:
     dependencies:
       bytes: 3.1.2
       compressible: 2.0.18
       http-errors: 1.8.1
       koa-is-json: 1.0.0
-      statuses: 2.0.1
 
   koa-convert@2.0.0:
     dependencies:
@@ -20987,21 +20920,24 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  koa-proxies@0.12.4(koa@2.13.4):
+  koa-proxies@0.12.4(koa@2.15.3):
     dependencies:
       http-proxy: 1.18.1
-      koa: 2.13.4
+      koa: 2.15.3
       path-match: 1.2.4
       uuid: 8.3.2
     transitivePeerDependencies:
       - debug
 
-  koa-router@12.0.0:
+  koa-router@12.0.1:
     dependencies:
+      debug: 4.3.4
       http-errors: 2.0.0
       koa-compose: 4.1.0
       methods: 1.1.2
       path-to-regexp: 6.2.1
+    transitivePeerDependencies:
+      - supports-color
 
   koa-send@5.0.1:
     dependencies:
@@ -22284,7 +22220,7 @@ snapshots:
       debug: 4.3.4
       eta: 3.4.0
       got: 13.0.0
-      jose: 5.2.4
+      jose: 5.6.3
       jsesc: 3.0.2
       koa: 2.15.3
       nanoid: 5.0.7
@@ -23703,7 +23639,7 @@ snapshots:
     dependencies:
       no-case: 4.0.0
 
-  snakecase-keys@8.0.0:
+  snakecase-keys@8.0.1:
     dependencies:
       map-obj: 4.3.0
       snake-case: 3.0.4
@@ -24247,25 +24183,6 @@ snapshots:
     optionalDependencies:
       '@swc/core': 1.3.52(@swc/helpers@0.5.1)
 
-  ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.9
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.10.4
-      acorn: 8.10.0
-      acorn-walk: 8.2.0
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.3.3
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optional: true
-
   tsconfig-paths@3.15.0:
     dependencies:
       '@types/json5': 0.0.29
@@ -24320,8 +24237,6 @@ snapshots:
   type-fest@3.13.1: {}
 
   type-fest@4.15.0: {}
-
-  type-fest@4.2.0: {}
 
   type-is@1.6.18:
     dependencies:

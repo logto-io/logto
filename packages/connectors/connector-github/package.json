@@ -8,7 +8,7 @@
     "@silverhand/essentials": "^2.9.1",
     "ky": "^1.2.3",
     "query-string": "^9.0.0",
-    "snakecase-keys": "^8.0.0",
+    "snakecase-keys": "^8.0.1",
     "zod": "^3.22.4"
   },
   "main": "./lib/index.js",
