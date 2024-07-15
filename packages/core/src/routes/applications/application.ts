@@ -1,3 +1,5 @@
+// TODO: @darcyYe refactor this file later to remove disable max line comment
+/* eslint-disable max-lines */
 import type { Role } from '@logto/schemas';
 import {
   Applications,
@@ -146,13 +148,26 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       response: Applications.guard,
       status: [200, 400, 422, 500],
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
 
+      const {
+        values: { isDevFeaturesEnabled },
+      } = EnvSet;
+
       await Promise.all([
-        rest.type === ApplicationType.MachineToMachine && quota.guardKey('machineToMachineLimit'),
-        rest.isThirdParty && quota.guardKey('thirdPartyApplicationsLimit'),
-        quota.guardKey('applicationsLimit'),
+        rest.type === ApplicationType.MachineToMachine &&
+          (isDevFeaturesEnabled
+            ? quota.newGuardKey('machineToMachineLimit')
+            : quota.guardKey('machineToMachineLimit')),
+        rest.isThirdParty &&
+          (isDevFeaturesEnabled
+            ? quota.newGuardKey('thirdPartyApplicationsLimit')
+            : quota.guardKey('thirdPartyApplicationsLimit')),
+        isDevFeaturesEnabled
+          ? quota.newGuardKey('applicationsLimit')
+          : quota.guardKey('applicationsLimit'),
       ]);
 
       assertThat(
@@ -349,3 +364,4 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
   applicationCustomDataRoutes(router, tenant);
 }
+/* eslint-enable max-lines */

@@ -15,3 +15,23 @@ export type FeatureQuota = Omit<
   SubscriptionPlan['quota'],
   'tenantLimit' | 'mauLimit' | 'auditLogsRetentionDays' | 'standardConnectorsLimit' | 'tokenLimit'
 >;
+
+/**
+ * The type of the response of the `GET /api/tenants/:tenantId/subscription/quota` endpoint.
+ * It is the same as the response type of `GET /api/tenants/my/subscription/quota` endpoint.
+ *
+ * @remarks
+ * The `auditLogsRetentionDays` will be handled by cron job in Azure Functions, outdated audit logs will be removed automatically.
+ */
+export type SubscriptionQuota = Omit<
+  RouteResponseType<GetRoutes['/api/tenants/:tenantId/subscription/quota']>,
+  'auditLogsRetentionDays'
+>;
+
+/**
+ * The type of the response of the `GET /api/tenants/:tenantId/subscription/usage` endpoint.
+ * It is the same as the response type of `GET /api/tenants/my/subscription/usage` endpoint.
+ */
+export type SubscriptionUsage = RouteResponseType<
+  GetRoutes['/api/tenants/:tenantId/subscription/usage']
+>;

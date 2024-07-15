@@ -2,6 +2,7 @@ import { DemoConnector } from '@logto/connector-kit';
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
 import { literal, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experience/index.js';
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -18,7 +19,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const { deleteConnectorById } = queries.connectors;
   const {
     signInExperiences: { validateLanguageInfo },
-    quota: { guardKey },
+    quota: { guardKey, newGuardKey },
   } = libraries;
   const { getLogtoConnectors } = connectors;
 
@@ -55,6 +56,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       response: SignInExperiences.guard,
       status: [200, 400, 404, 422],
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
@@ -89,7 +91,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       if (mfa) {
         if (mfa.factors.length > 0) {
-          await guardKey('mfaEnabled');
+          await (EnvSet.values.isDevFeaturesEnabled
+            ? newGuardKey('mfaEnabled')
+            : guardKey('mfaEnabled'));
         }
         validateMfa(mfa);
       }

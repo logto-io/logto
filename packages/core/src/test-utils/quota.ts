@@ -5,5 +5,7 @@ const { jest } = import.meta;
 export const createMockQuotaLibrary = (): QuotaLibrary => {
   return {
     guardKey: jest.fn(),
+    newGuardKey: jest.fn(),
+    scopesGuardKey: jest.fn(),
   };
 };
