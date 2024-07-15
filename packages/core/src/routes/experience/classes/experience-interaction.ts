@@ -276,6 +276,12 @@ export default class ExperienceInteraction {
     this.userId = id;
   }
 
+  /**
+   * Create a new user using the verification record.
+   *
+   * @throws {RequestError} with 422 if the profile data is not unique across users
+   * @throws {RequestError} with 400 if the verification record is invalid for creating a new user or not verified
+   */
   private async createNewUser(verificationRecord: VerificationRecord) {
     const {
       libraries: {

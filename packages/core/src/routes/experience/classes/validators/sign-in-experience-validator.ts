@@ -1,3 +1,6 @@
+import crypto from 'node:crypto';
+
+import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
   InteractionEvent,
   type SignInExperience,
@@ -41,6 +44,7 @@ const getEmailIdentifierFromVerificationRecord = (verificationRecord: Verificati
  */
 export class SignInExperienceValidator {
   private signInExperienceDataCache?: SignInExperience;
+  #passwordPolicyChecker?: PasswordPolicyChecker;
 
   constructor(
     private readonly libraries: Libraries,
@@ -112,6 +116,15 @@ export class SignInExperienceValidator {
       await this.queries.signInExperiences.findDefaultSignInExperience();
 
     return this.signInExperienceDataCache;
+  }
+
+  public async getPasswordPolicyChecker() {
+    if (!this.#passwordPolicyChecker) {
+      const { passwordPolicy } = await this.getSignInExperienceData();
+      this.#passwordPolicyChecker = new PasswordPolicyChecker(passwordPolicy, crypto.subtle);
+    }
+
+    return this.#passwordPolicyChecker;
   }
 
   /**
@@ -193,7 +206,18 @@ export class SignInExperienceValidator {
     const { signUp, singleSignOnEnabled } = await this.getSignInExperienceData();
 
     switch (verificationRecord.type) {
-      // TODO: username password registration
+      // Username and password registration
+      case VerificationType.NewPasswordIdentity: {
+        const {
+          identifier: { type },
+        } = verificationRecord;
+
+        assertThat(
+          signUp.identifiers.includes(type) && signUp.password,
+          new RequestError({ code: 'user.sign_up_method_not_enabled', status: 422 })
+        );
+        break;
+      }
       case VerificationType.VerificationCode: {
         const {
           identifier: { type },

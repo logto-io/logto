@@ -1,3 +1,4 @@
+import { type UserInfo } from '@logto/core-kit';
 import {
   SignInIdentifier,
   VerificationType,
@@ -37,6 +38,7 @@ export const getNewUserProfileFromVerificationRecord = async (
   verificationRecord: VerificationRecord
 ): Promise<InteractionProfile> => {
   switch (verificationRecord.type) {
+    case VerificationType.NewPasswordIdentity:
     case VerificationType.VerificationCode: {
       return verificationRecord.toUserProfile();
     }
@@ -68,3 +70,37 @@ export const toUserSocialIdentityData = (
     },
   };
 };
+
+export function interactionIdentifierToUserProfile(
+  identifier: InteractionIdentifier
+): { username: string } | { primaryEmail: string } | { primaryPhone: string } {
+  const { type, value } = identifier;
+  switch (type) {
+    case SignInIdentifier.Username: {
+      return { username: value };
+    }
+    case SignInIdentifier.Email: {
+      return { primaryEmail: value };
+    }
+    case SignInIdentifier.Phone: {
+      return { primaryPhone: value };
+    }
+  }
+}
+
+/**
+ * This function is used to convert the interaction profile to the UserInfo format.
+ * It will be used by the PasswordPolicyChecker to check the password policy against the user profile.
+ */
+export function profileToUserInfo(
+  profile: Pick<InteractionProfile, 'name' | 'username' | 'primaryEmail' | 'primaryPhone'>
+): UserInfo {
+  const { name, username, primaryEmail, primaryPhone } = profile;
+
+  return {
+    name: name ?? undefined,
+    username: username ?? undefined,
+    email: primaryEmail ?? undefined,
+    phoneNumber: primaryPhone ?? undefined,
+  };
+}

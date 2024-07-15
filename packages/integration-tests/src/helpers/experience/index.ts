@@ -227,3 +227,24 @@ export const signInWithEnterpriseSso = async (
 
   return userId;
 };
+
+export const registerNewUserUsernamePassword = async (username: string, password: string) => {
+  const client = await initExperienceClient();
+  await client.initInteraction({ interactionEvent: InteractionEvent.Register });
+
+  const { verificationId } = await client.createNewPasswordIdentityVerification({
+    identifier: {
+      type: SignInIdentifier.Username,
+      value: username,
+    },
+    password,
+  });
+
+  await client.identifyUser({ verificationId });
+
+  const { redirectTo } = await client.submitInteraction();
+  const userId = await processSession(client, redirectTo);
+  await logoutClient(client);
+
+  return userId;
+};
