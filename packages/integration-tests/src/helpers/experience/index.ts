@@ -4,7 +4,7 @@
 
 import {
   InteractionEvent,
-  InteractionIdentifierType,
+  SignInIdentifier,
   type InteractionIdentifier,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
@@ -86,7 +86,7 @@ export const identifyUserWithUsernamePassword = async (
 
   const { verificationId } = await client.verifyPassword({
     identifier: {
-      type: InteractionIdentifierType.Username,
+      type: SignInIdentifier.Username,
       value: username,
     },
     password,

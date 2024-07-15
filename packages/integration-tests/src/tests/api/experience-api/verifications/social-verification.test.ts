@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { InteractionEvent, InteractionIdentifierType } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import { mockEmailConnectorId, mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import { initExperienceClient } from '#src/helpers/client.js';
@@ -134,7 +134,7 @@ devFeatureTest.describe('social verification', () => {
 
       const { verificationId } = await client.sendVerificationCode({
         identifier: {
-          type: InteractionIdentifierType.Email,
+          type: SignInIdentifier.Email,
           value: 'foo',
         },
         interactionEvent: InteractionEvent.SignIn,

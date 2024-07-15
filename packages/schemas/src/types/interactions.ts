@@ -1,7 +1,12 @@
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
-import { MfaFactor, jsonObjectGuard, webAuthnTransportGuard } from '../foundations/index.js';
+import {
+  MfaFactor,
+  SignInIdentifier,
+  jsonObjectGuard,
+  webAuthnTransportGuard,
+} from '../foundations/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
 import type {
@@ -24,31 +29,26 @@ export enum InteractionEvent {
 }
 
 // ====== Experience API payload guards and type definitions start ======
-export enum InteractionIdentifierType {
-  Username = 'username',
-  Email = 'email',
-  Phone = 'phone',
-}
 
 /** Identifiers that can be used to uniquely identify a user. */
 export type InteractionIdentifier = {
-  type: InteractionIdentifierType;
+  type: SignInIdentifier;
   value: string;
 };
 
 export const interactionIdentifierGuard = z.object({
-  type: z.nativeEnum(InteractionIdentifierType),
+  type: z.nativeEnum(SignInIdentifier),
   value: z.string(),
 }) satisfies ToZodObject<InteractionIdentifier>;
 
 /** Currently only email and phone are supported for verification code validation. */
 export type VerificationCodeIdentifier = {
-  type: InteractionIdentifierType.Email | InteractionIdentifierType.Phone;
+  type: SignInIdentifier.Email | SignInIdentifier.Phone;
   value: string;
 };
 
 export const verificationCodeIdentifierGuard = z.object({
-  type: z.enum([InteractionIdentifierType.Email, InteractionIdentifierType.Phone]),
+  type: z.enum([SignInIdentifier.Email, SignInIdentifier.Phone]),
   value: z.string(),
 }) satisfies ToZodObject<VerificationCodeIdentifier>;
 

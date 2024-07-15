@@ -31,7 +31,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
       const client = await initExperienceClient();
 
       await expectRejects(client.createTotpSecret(), {
-        code: 'session.not_identified',
+        code: 'session.identifier_not_found',
         status: 400,
       });
     });
@@ -50,7 +50,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
       const client = await initExperienceClient();
 
       await expectRejects(client.verifyTotp({ code: '1234' }), {
-        code: 'session.not_identified',
+        code: 'session.identifier_not_found',
         status: 400,
       });
     });
@@ -107,7 +107,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
       const client = await initExperienceClient();
 
       await expectRejects(client.verifyTotp({ code: '1234' }), {
-        code: 'session.not_identified',
+        code: 'session.identifier_not_found',
         status: 400,
       });
     });

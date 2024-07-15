@@ -70,9 +70,8 @@ const getPasscodeIdentifierPayload = (
 export class CodeVerification implements VerificationRecord<VerificationType.VerificationCode> {
   /**
    * Factory method to create a new CodeVerification record using the given identifier.
-   * The sendVerificationCode method will be automatically triggered.
    */
-  static async create(
+  static create(
     libraries: Libraries,
     queries: Queries,
     identifier: VerificationCodeIdentifier,
@@ -85,8 +84,6 @@ export class CodeVerification implements VerificationRecord<VerificationType.Ver
       interactionEvent,
       verified: false,
     });
-
-    await record.sendVerificationCode();
 
     return record;
   }
@@ -121,6 +118,25 @@ export class CodeVerification implements VerificationRecord<VerificationType.Ver
   /** Returns true if the identifier has been verified by a given code */
   get isVerified() {
     return this.verified;
+  }
+
+  /**
+   * Send the verification code to the current `identifier`
+   *
+   * @remark Instead of session jti,
+   * the verification id is used as `interaction_jti` to uniquely identify the passcode record in DB
+   * for the current interaction.
+   */
+  async sendVerificationCode() {
+    const { createPasscode, sendPasscode } = this.libraries.passcodes;
+
+    const verificationCode = await createPasscode(
+      this.id,
+      getTemplateTypeByEvent(this.interactionEvent),
+      getPasscodeIdentifierPayload(this.identifier)
+    );
+
+    await sendPasscode(verificationCode);
   }
 
   /**
@@ -183,24 +199,5 @@ export class CodeVerification implements VerificationRecord<VerificationType.Ver
       interactionEvent,
       verified,
     };
-  }
-
-  /**
-   * Send the verification code to the current `identifier`
-   *
-   * @remark Instead of session jti,
-   * the verification id is used as `interaction_jti` to uniquely identify the passcode record in DB
-   * for the current interaction.
-   */
-  private async sendVerificationCode() {
-    const { createPasscode, sendPasscode } = this.libraries.passcodes;
-
-    const verificationCode = await createPasscode(
-      this.id,
-      getTemplateTypeByEvent(this.interactionEvent),
-      getPasscodeIdentifierPayload(this.identifier)
-    );
-
-    await sendPasscode(verificationCode);
   }
 }
