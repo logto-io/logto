@@ -296,7 +296,7 @@ export default class ExperienceInteraction {
       {
         id: await generateUserId(),
         ...rest,
-        ...conditional(socialIdentity && toUserSocialIdentityData(socialIdentity)),
+        ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
       },
       []
     );
