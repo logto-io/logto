@@ -26,12 +26,10 @@ export const identifyUser = async (cookie: string, payload: IdentificationApiPay
 
 export class ExperienceClient extends MockClient {
   public async identifyUser(payload: IdentificationApiPayload) {
-    return api
-      .post(experienceRoutes.identification, {
-        headers: { cookie: this.interactionCookie },
-        json: payload,
-      })
-      .json();
+    return api.post(experienceRoutes.identification, {
+      headers: { cookie: this.interactionCookie },
+      json: payload,
+    });
   }
 
   public async updateInteractionEvent(payload: { interactionEvent: InteractionEvent }) {
