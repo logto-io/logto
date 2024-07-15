@@ -3,8 +3,7 @@
     {
       "name": "Subject tokens",
       "description": "The subject token API provides the ability to create a new subject token for the use of impersonating the user."
-    },
-    { "name": "Dev feature" }
+    }
   ],
   "paths": {
     "/api/subject-tokens": {
