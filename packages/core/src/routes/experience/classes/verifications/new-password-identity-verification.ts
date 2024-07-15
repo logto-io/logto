@@ -40,6 +40,14 @@ export const newPasswordIdentityVerificationRecordDataGuard = z.object({
   passwordEncryptionMethod: z.literal(UsersPasswordEncryptionMethod.Argon2i).optional(),
 }) satisfies ToZodObject<NewPasswordIdentityVerificationRecordData>;
 
+/**
+ * NewPasswordIdentityVerification class is used for creating a new user using password + identifier.
+ *
+ * @remarks This verification record can only be used for new user registration.
+ * By default this verification record allows all types of identifiers, username, email, and phone.
+ * But in our current product design, only username + password registration is supported. The identifier type
+ * will be guarded at the API level.
+ */
 export class NewPasswordIdentityVerification
   implements VerificationRecord<VerificationType.NewPasswordIdentity>
 {
