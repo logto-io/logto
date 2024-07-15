@@ -1,5 +1,7 @@
 import { type ToZodObject } from '@logto/connector-kit';
-import { InteractionEvent, VerificationType } from '@logto/schemas';
+import { InteractionEvent, type VerificationType } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -7,8 +9,10 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { Interaction } from '../types.js';
+import { interactionProfileGuard, type Interaction, type InteractionProfile } from '../types.js';
 
+import { getNewUserProfileFromVerificationRecord, toUserSocialIdentityData } from './utils.js';
+import { ProfileValidator } from './validators/profile-validator.js';
 import { SignInExperienceValidator } from './validators/sign-in-experience-validator.js';
 import {
   buildVerificationRecord,
@@ -20,14 +24,14 @@ import {
 type InteractionStorage = {
   interactionEvent?: InteractionEvent;
   userId?: string;
-  profile?: Record<string, unknown>;
+  profile?: InteractionProfile;
   verificationRecords?: VerificationRecordData[];
 };
 
 const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent).optional(),
   userId: z.string().optional(),
-  profile: z.object({}).optional(),
+  profile: interactionProfileGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
 }) satisfies ToZodObject<InteractionStorage>;
 
@@ -39,6 +43,7 @@ const interactionStorageGuard = z.object({
  */
 export default class ExperienceInteraction {
   public readonly signInExperienceValidator: SignInExperienceValidator;
+  public readonly profileValidator: ProfileValidator;
 
   /** The user verification record list for the current interaction. */
   private readonly verificationRecords = new Map<VerificationType, VerificationRecord>();
@@ -65,6 +70,7 @@ export default class ExperienceInteraction {
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
 
     if (!interactionDetails) {
+      this.profileValidator = new ProfileValidator(libraries, queries);
       return;
     }
 
@@ -81,6 +87,9 @@ export default class ExperienceInteraction {
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
     this.profile = profile;
+
+    // Profile validator requires the userId for existing user profile update validation
+    this.profileValidator = new ProfileValidator(libraries, queries, userId);
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -123,16 +132,16 @@ export default class ExperienceInteraction {
    * Identify the user using the verification record.
    *
    * - Check if the verification record exists.
-   * - Verify the verification record with `SignInExperienceValidator`.
+   * - Verify the verification record with {@link SignInExperienceValidator}.
    * - Create a new user using the verification record if the current interaction event is `Register`.
    * - Identify the user using the verification record if the current interaction event is `SignIn` or `ForgotPassword`.
    * - Set the user id to the current interaction.
    *
-   * @throws RequestError with 404 if the interaction event is not set
-   * @throws RequestError with 404 if the verification record is not found
-   * @throws RequestError with 400 if the verification record is not valid for the current interaction event
-   * @throws RequestError with 401 if the user is suspended
-   * @throws RequestError with 409 if the current session has already identified a different user
+   * @throws RequestError with 404 if the interaction event is not set.
+   * @throws RequestError with 404 if the verification record is not found.
+   * @throws RequestError with 422 if the verification record is not enabled in the SIE settings.
+   * @see {@link identifyExistingUser} for more exceptions that can be thrown in the SignIn and ForgotPassword events.
+   * @see {@link createNewUser} for more exceptions that can be thrown in the Register event.
    **/
   public async identifyUser(verificationId: string) {
     const verificationRecord = this.getVerificationRecordById(verificationId);
@@ -196,8 +205,19 @@ export default class ExperienceInteraction {
 
   /** Submit the current interaction result to the OIDC provider and clear the interaction data */
   public async submit() {
-    // TODO: refine the error code
     assertThat(this.userId, 'session.verification_session_not_found');
+
+    // TODO: mfa validation
+    // TODO: missing profile fields validation
+
+    const {
+      queries: { users: userQueries },
+    } = this.tenant;
+
+    // Update user profile
+    await userQueries.updateUserById(this.userId, {
+      lastSignInAt: Date.now(),
+    });
 
     const { provider } = this.tenant;
 
@@ -224,46 +244,71 @@ export default class ExperienceInteraction {
     return [...this.verificationRecords.values()];
   }
 
+  /**
+   * Identify the existing user using the verification record.
+   *
+   * @throws RequestError with 400 if the verification record is not verified or not valid for identifying a user
+   * @throws RequestError with 404 if the user is not found
+   * @throws RequestError with 401 if the user is suspended
+   * @throws RequestError with 409 if the current session has already identified a different user
+   */
   private async identifyExistingUser(verificationRecord: VerificationRecord) {
-    switch (verificationRecord.type) {
-      case VerificationType.Password:
-      case VerificationType.VerificationCode:
-      case VerificationType.Social:
-      case VerificationType.EnterpriseSso: {
-        // TODO: social sign-in with verified email
-        const { id, isSuspended } = await verificationRecord.identifyUser();
+    // Check verification record can be used to identify a user using the `identifyUser` method.
+    // E.g. MFA verification record does not have the `identifyUser` method, cannot be used to identify a user.
+    assertThat(
+      'identifyUser' in verificationRecord,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
 
-        assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+    const { id, isSuspended } = await verificationRecord.identifyUser();
 
-        // Throws an 409 error if the current session has already identified a different user
-        if (this.userId) {
-          assertThat(
-            this.userId === id,
-            new RequestError({ code: 'session.identity_conflict', status: 409 })
-          );
-          return;
-        }
+    assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-        this.userId = id;
-        break;
-      }
-      default: {
-        // Unsupported verification type for identification, such as MFA verification.
-        throw new RequestError({ code: 'session.verification_failed', status: 400 });
-      }
+    // Throws an 409 error if the current session has already identified a different user
+    if (this.userId) {
+      assertThat(
+        this.userId === id,
+        new RequestError({ code: 'session.identity_conflict', status: 409 })
+      );
+      return;
     }
+
+    this.userId = id;
   }
 
   private async createNewUser(verificationRecord: VerificationRecord) {
-    // TODO: To be implemented
-    switch (verificationRecord.type) {
-      case VerificationType.VerificationCode: {
-        break;
-      }
-      default: {
-        // Unsupported verification type for user creation, such as MFA verification.
-        throw new RequestError({ code: 'session.verification_failed', status: 400 });
-      }
+    const {
+      libraries: {
+        users: { generateUserId, insertUser },
+      },
+      queries: { userSsoIdentities: userSsoIdentitiesQueries },
+    } = this.tenant;
+
+    const newProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
+
+    await this.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
+
+    // TODO: new user provisioning and hooks
+
+    const { socialIdentity, enterpriseSsoIdentity, ...rest } = newProfile;
+
+    const [user] = await insertUser(
+      {
+        id: await generateUserId(),
+        ...rest,
+        ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
+      },
+      []
+    );
+
+    if (enterpriseSsoIdentity) {
+      await userSsoIdentitiesQueries.insert({
+        id: generateStandardId(),
+        userId: user.id,
+        ...enterpriseSsoIdentity,
+      });
     }
+
+    this.userId = user.id;
   }
 }

@@ -15,7 +15,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { findUserByIdentifier } from '../utils.js';
 
-import { type VerificationRecord } from './verification-record.js';
+import { type IdentifierVerificationRecord } from './verification-record.js';
 
 export type PasswordVerificationRecordData = {
   id: string;
@@ -31,7 +31,9 @@ export const passwordVerificationRecordDataGuard = z.object({
   verified: z.boolean(),
 }) satisfies ToZodObject<PasswordVerificationRecordData>;
 
-export class PasswordVerification implements VerificationRecord<VerificationType.Password> {
+export class PasswordVerification
+  implements IdentifierVerificationRecord<VerificationType.Password>
+{
   /** Factory method to create a new `PasswordVerification` record using an identifier */
   static create(libraries: Libraries, queries: Queries, identifier: InteractionIdentifier) {
     return new PasswordVerification(libraries, queries, {
@@ -89,7 +91,6 @@ export class PasswordVerification implements VerificationRecord<VerificationType
     return user;
   }
 
-  /** Identifies the user using the username */
   async identifyUser(): Promise<User> {
     assertThat(
       this.verified,
@@ -98,7 +99,15 @@ export class PasswordVerification implements VerificationRecord<VerificationType
 
     const user = await findUserByIdentifier(this.queries.users, this.identifier);
 
-    assertThat(user, new RequestError({ code: 'user.user_not_exist', status: 404 }));
+    assertThat(
+      user,
+      new RequestError(
+        { code: 'user.user_not_exist', status: 404 },
+        {
+          identifier: this.identifier.value,
+        }
+      )
+    );
 
     return user;
   }

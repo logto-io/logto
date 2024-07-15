@@ -18,8 +18,11 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { type LogtoConnector } from '#src/utils/connectors/types.js';
 
-import { type VerificationRecord } from './verification-record.js';
+import type { InteractionProfile } from '../../types.js';
+
+import { type IdentifierVerificationRecord } from './verification-record.js';
 
 /** The JSON data type for the SocialVerification record stored in the interaction storage */
 export type SocialVerificationRecordData = {
@@ -39,7 +42,7 @@ export const socialVerificationRecordDataGuard = z.object({
   socialUserInfo: socialUserInfoGuard.optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
 
-export class SocialVerification implements VerificationRecord<VerificationType.Social> {
+export class SocialVerification implements IdentifierVerificationRecord<VerificationType.Social> {
   /**
    * Factory method to create a new SocialVerification instance
    */
@@ -55,6 +58,8 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   public readonly type = VerificationType.Social;
   public readonly connectorId: string;
   public socialUserInfo?: SocialUserInfo;
+
+  private connectorDataCache?: LogtoConnector;
 
   constructor(
     private readonly libraries: Libraries,
@@ -130,7 +135,7 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   async identifyUser(): Promise<User> {
     assertThat(
       this.isVerified,
-      new RequestError({ code: 'session.verification_failed', status: 422 })
+      new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
     // TODO: sync userInfo and link social identity
@@ -143,7 +148,7 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
       throw new RequestError(
         {
           code: 'user.identity_not_exist',
-          status: 422,
+          status: 404,
         },
         {
           ...(relatedUser && { relatedUser: relatedUser[0] }),
@@ -152,6 +157,53 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
     }
 
     return user;
+  }
+
+  /**
+   * Returns the social identity as a new user profile.
+   */
+  async toUserProfile(): Promise<Required<Pick<InteractionProfile, 'socialIdentity'>>> {
+    assertThat(
+      this.socialUserInfo,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const {
+      metadata: { target },
+    } = await this.getConnectorData();
+
+    return {
+      socialIdentity: {
+        target,
+        userInfo: this.socialUserInfo,
+      },
+    };
+  }
+
+  /**
+   * Returns the synced profile from the social identity.
+   *
+   * @param isNewUser - Whether the profile is for a new user. If set to true, the primary email will be included in the profile.
+   */
+  async toSyncedProfile(
+    isNewUser = false
+  ): Promise<Pick<InteractionProfile, 'avatar' | 'name' | 'primaryEmail'>> {
+    assertThat(
+      this.socialUserInfo,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const { name, avatar, email: primaryEmail } = this.socialUserInfo;
+
+    if (isNewUser) {
+      return { name, avatar, primaryEmail };
+    }
+
+    const {
+      dbEntry: { syncProfile },
+    } = await this.getConnectorData();
+
+    return syncProfile ? { name, avatar } : {};
   }
 
   toJson(): SocialVerificationRecordData {
@@ -166,7 +218,6 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   }
 
   private async findUserBySocialIdentity(): Promise<User | undefined> {
-    const { socials } = this.libraries;
     const {
       users: { findUserByIdentity },
     } = this.queries;
@@ -177,7 +228,7 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
 
     const {
       metadata: { target },
-    } = await socials.getConnector(this.connectorId);
+    } = await this.getConnectorData();
 
     const user = await findUserByIdentity(target, this.socialUserInfo.id);
 
@@ -197,5 +248,13 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
     }
 
     return socials.findSocialRelatedUser(this.socialUserInfo);
+  }
+
+  private async getConnectorData() {
+    const { getConnector } = this.libraries.socials;
+
+    this.connectorDataCache ||= await getConnector(this.connectorId);
+
+    return this.connectorDataCache;
   }
 }
