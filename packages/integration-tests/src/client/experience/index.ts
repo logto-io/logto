@@ -152,6 +152,15 @@ export class ExperienceClient extends MockClient {
       .json<{ verificationId: string }>();
   }
 
+  public async getAvailableSsoConnectors(email: string) {
+    return api
+      .get(`${experienceRoutes.verification}/sso/connectors`, {
+        headers: { cookie: this.interactionCookie },
+        searchParams: { email },
+      })
+      .json<{ connectorIds: string[] }>();
+  }
+
   public async createTotpSecret() {
     return api
       .post(`${experienceRoutes.verification}/totp/secret`, {
