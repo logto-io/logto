@@ -46,7 +46,8 @@ await mockEsmWithActual('#src/utils/tenant.js', () => ({
 }));
 
 await mockEsmWithActual('p-retry', () => ({
-  // Mock pRetry but disable the default "exponential backoff"
+  // Stub pRetry by overriding the default "exponential backoff",
+  // in order to make the test run faster.
   default: async (input: <T>(retries: number) => T | PromiseLike<T>) =>
     pRetry(input, { factor: 0 }),
 }));

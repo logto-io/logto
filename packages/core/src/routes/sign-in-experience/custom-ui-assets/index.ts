@@ -94,11 +94,6 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
 
         await pRetry(hasUnzipCompleted, {
           retries: maxRetryCount,
-          onFailedAttempt: (error) => {
-            if (error instanceof AbortError) {
-              throw error;
-            }
-          },
         });
       } catch (error: unknown) {
         getConsoleLogFromContext(ctx).error(error);
