@@ -4,7 +4,7 @@ import { consoleLog } from '@logto/cli/lib/utils.js';
 import {
   userAssetsServiceStatusGuard,
   allowUploadMimeTypes,
-  maxUploadFileSize,
+  maxUploadImageSize,
   type UserAssets,
   userAssetsGuard,
   adminTenantId,
@@ -41,7 +41,7 @@ export default function userAssetsRoutes<T extends AuthedMeRouter>(...[router]: 
         ? {
             status: 'ready',
             allowUploadMimeTypes,
-            maxUploadFileSize,
+            maxUploadFileSize: maxUploadImageSize,
           }
         : {
             status: 'not_configured',
@@ -66,7 +66,7 @@ export default function userAssetsRoutes<T extends AuthedMeRouter>(...[router]: 
 
       const file = bodyFiles[0];
       assertThat(file, 'guard.invalid_input');
-      assertThat(file.size <= maxUploadFileSize, 'guard.file_size_exceeded');
+      assertThat(file.size <= maxUploadImageSize, 'guard.file_size_exceeded');
       assertThat(
         allowUploadMimeTypes.map(String).includes(file.mimetype),
         'guard.mime_type_not_allowed'

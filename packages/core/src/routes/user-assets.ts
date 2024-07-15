@@ -5,7 +5,7 @@ import {
   userAssetsGuard,
   userAssetsServiceStatusGuard,
   allowUploadMimeTypes,
-  maxUploadFileSize,
+  maxUploadImageSize,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { format } from 'date-fns';
@@ -36,7 +36,7 @@ export default function userAssetsRoutes<T extends ManagementApiRouter>(
         ? {
             status: 'ready',
             allowUploadMimeTypes,
-            maxUploadFileSize,
+            maxUploadFileSize: maxUploadImageSize,
           }
         : {
             status: 'not_configured',
@@ -61,7 +61,7 @@ export default function userAssetsRoutes<T extends ManagementApiRouter>(
 
       const file = bodyFiles[0];
       assertThat(file, 'guard.invalid_input');
-      assertThat(file.size <= maxUploadFileSize, 'guard.file_size_exceeded');
+      assertThat(file.size <= maxUploadImageSize, 'guard.file_size_exceeded');
       assertThat(
         allowUploadMimeTypes.map(String).includes(file.mimetype),
         'guard.mime_type_not_allowed'

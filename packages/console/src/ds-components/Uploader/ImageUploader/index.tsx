@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import Delete from '@/assets/icons/delete.svg';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
-import useImageMimeTypes, { maxImageSizeLimit } from '@/hooks/use-image-mime-types';
+import useImageMimeTypes from '@/hooks/use-image-mime-types';
 
 import IconButton from '../../IconButton';
 import FileUploader from '../FileUploader';
@@ -53,12 +53,7 @@ function ImageUploader({
       </IconButton>
     </div>
   ) : (
-    <FileUploader
-      allowedMimeTypes={allowedMimeTypes}
-      maxSize={maxImageSizeLimit}
-      className={className}
-      {...rest}
-    />
+    <FileUploader allowedMimeTypes={allowedMimeTypes} className={className} {...rest} />
   );
 }
 

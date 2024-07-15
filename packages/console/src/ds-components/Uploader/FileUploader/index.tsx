@@ -1,5 +1,5 @@
 import type { AllowedUploadMimeType, UserAssets } from '@logto/schemas';
-import { maxUploadFileSize } from '@logto/schemas';
+import { maxUploadImageSize } from '@logto/schemas';
 import classNames from 'classnames';
 import { type KyInstance } from 'ky';
 import { useCallback, useEffect, useState } from 'react';
@@ -15,7 +15,6 @@ import { Ring } from '../../Spinner';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  readonly maxSize: number; // In bytes
   readonly allowedMimeTypes: AllowedUploadMimeType[];
   readonly actionDescription?: string;
   readonly onCompleted: (fileUrl: string) => void;
@@ -33,7 +32,6 @@ export type Props = {
 };
 
 function FileUploader({
-  maxSize,
   allowedMimeTypes,
   actionDescription,
   onCompleted,
@@ -90,10 +88,10 @@ function FileUploader({
         return;
       }
 
-      const fileSizeLimit = Math.min(maxSize, maxUploadFileSize);
-
-      if (acceptedFile.size > fileSizeLimit) {
-        setUploadError(t('components.uploader.error_file_size', { size: fileSizeLimit / 1024 }));
+      if (acceptedFile.size > maxUploadImageSize) {
+        setUploadError(
+          t('components.uploader.error_file_size', { size: maxUploadImageSize / 1024 })
+        );
 
         return;
       }
@@ -113,7 +111,7 @@ function FileUploader({
         setIsUploading(false);
       }
     },
-    [api, apiInstance, allowedMimeTypes, maxSize, onCompleted, t, uploadUrl]
+    [api, apiInstance, allowedMimeTypes, onCompleted, t, uploadUrl]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
