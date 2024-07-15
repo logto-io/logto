@@ -21,7 +21,7 @@ export class ProfileValidator {
 
     if (username) {
       assertThat(
-        await hasUser(username),
+        !(await hasUser(username)),
         new RequestError({
           code: 'user.username_already_in_use',
           status: 422,
@@ -31,7 +31,7 @@ export class ProfileValidator {
 
     if (primaryEmail) {
       assertThat(
-        await hasUserWithEmail(primaryEmail),
+        !(await hasUserWithEmail(primaryEmail)),
         new RequestError({
           code: 'user.email_already_in_use',
           status: 422,
@@ -41,7 +41,7 @@ export class ProfileValidator {
 
     if (primaryPhone) {
       assertThat(
-        await hasUserWithPhone(primaryPhone),
+        !(await hasUserWithPhone(primaryPhone)),
         new RequestError({
           code: 'user.phone_already_in_use',
           status: 422,
@@ -56,7 +56,7 @@ export class ProfileValidator {
       } = socialIdentity;
 
       assertThat(
-        await hasUserWithIdentity(target, id),
+        !(await hasUserWithIdentity(target, id)),
         new RequestError({
           code: 'user.identity_already_in_use',
           status: 422,
@@ -69,7 +69,7 @@ export class ProfileValidator {
       const userSsoIdentity = await findUserSsoIdentityBySsoIdentityId(issuer, identityId);
 
       assertThat(
-        userSsoIdentity,
+        !userSsoIdentity,
         new RequestError({
           code: 'user.identity_already_in_use',
           status: 422,
