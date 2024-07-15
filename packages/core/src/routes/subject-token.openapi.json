@@ -1,13 +1,13 @@
 {
   "tags": [
     {
-      "name": "Security",
-      "description": "Security related endpoints."
+      "name": "Subject tokens",
+      "description": "The subject token API provides the ability to create a new subject token for the use of impersonating the user."
     },
     { "name": "Dev feature" }
   ],
   "paths": {
-    "/api/security/subject-tokens": {
+    "/api/subject-tokens": {
       "post": {
         "summary": "Create a new subject token.",
         "description": "Create a new subject token for the use of impersonating the user.",
