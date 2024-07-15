@@ -1,4 +1,4 @@
-import { createReactComponents } from '@logto/elements/react';
+import { createReactComponents, initLocalization } from '@logto/elements/react';
 import type { ConnectorResponse } from '@logto/schemas';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,11 @@ import Skeleton from './components/Skeleton';
 import DeleteAccountModal from './containers/DeleteAccountModal';
 import * as styles from './index.module.scss';
 
-const { LogtoFormCard, LogtoThemeProvider } = createReactComponents(React);
+if (isDevFeaturesEnabled) {
+  initLocalization();
+}
+
+const { LogtoProfileCard, LogtoThemeProvider } = createReactComponents(React);
 
 function Profile() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -75,11 +79,7 @@ function Profile() {
                 <CardTitle title="profile.title" subtitle="profile.description" />
               </div>
               {showLoadingSkeleton && <Skeleton />}
-              {isDevFeaturesEnabled && (
-                <LogtoFormCard title="sections.profile">
-                  <p>🚧 This section is a dev feature that is still working in progress.</p>
-                </LogtoFormCard>
-              )}
+              {isDevFeaturesEnabled && <LogtoProfileCard />}
               {user && !showLoadingSkeleton && (
                 <div className={styles.content}>
                   <BasicUserInfoSection user={user} onUpdate={reload} />
