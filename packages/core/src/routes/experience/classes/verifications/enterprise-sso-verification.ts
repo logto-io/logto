@@ -1,7 +1,6 @@
 import { socialUserInfoGuard, type SocialUserInfo, type ToZodObject } from '@logto/connector-kit';
 import {
   VerificationType,
-  type CreateUserSsoIdentity,
   type JsonObject,
   type SocialAuthorizationUrlPayload,
   type SupportedSsoConnector,
@@ -164,19 +163,19 @@ export class EnterpriseSsoVerification
   /**
    * Returns the use SSO identity as a new user profile.
    */
-  async toUserProfile(): Promise<
-    Pick<CreateUserSsoIdentity, 'issuer' | 'ssoConnectorId' | 'identityId' | 'detail'>
-  > {
+  async toUserProfile(): Promise<Required<Pick<InteractionProfile, 'enterpriseSsoIdentity'>>> {
     assertThat(
       this.enterpriseSsoUserInfo && this.issuer,
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
     return {
-      issuer: this.issuer,
-      ssoConnectorId: this.connectorId,
-      identityId: this.enterpriseSsoUserInfo.id,
-      detail: this.enterpriseSsoUserInfo,
+      enterpriseSsoIdentity: {
+        issuer: this.issuer,
+        ssoConnectorId: this.connectorId,
+        identityId: this.enterpriseSsoUserInfo.id,
+        detail: this.enterpriseSsoUserInfo,
+      },
     };
   }
 

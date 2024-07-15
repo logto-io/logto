@@ -162,7 +162,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   /**
    * Returns the social identity as a new user profile.
    */
-  async toUserProfile(): Promise<InteractionProfile['socialIdentity']> {
+  async toUserProfile(): Promise<Required<Pick<InteractionProfile, 'socialIdentity'>>> {
     assertThat(
       this.socialUserInfo,
       new RequestError({ code: 'session.verification_failed', status: 400 })
@@ -173,8 +173,10 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     } = await this.getConnectorData();
 
     return {
-      target,
-      userInfo: this.socialUserInfo,
+      socialIdentity: {
+        target,
+        userInfo: this.socialUserInfo,
+      },
     };
   }
 
