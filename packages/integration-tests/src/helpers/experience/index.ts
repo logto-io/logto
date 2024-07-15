@@ -133,6 +133,11 @@ export const registerNewUserWithVerificationCode = async (
   return userId;
 };
 
+/**
+ *
+ * @param socialUserInfo The social user info that will be returned by the social connector.
+ * @param registerNewUser Optional. If true, the user will be registered if the user does not exist, otherwise a error will be thrown if the user does not exist.
+ */
 export const signInWithSocial = async (
   connectorId: string,
   socialUserInfo: SocialUserInfo,
@@ -158,6 +163,48 @@ export const signInWithSocial = async (
       userId: socialUserInfo.id,
       email: socialUserInfo.email,
     },
+  });
+
+  if (registerNewUser) {
+    await expectRejects(client.identifyUser({ verificationId }), {
+      code: 'user.identity_not_exist',
+      status: 404,
+    });
+
+    await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
+    await client.identifyUser({ verificationId });
+  } else {
+    await client.identifyUser({
+      verificationId,
+    });
+  }
+
+  const { redirectTo } = await client.submitInteraction();
+  const userId = await processSession(client, redirectTo);
+  await logoutClient(client);
+
+  return userId;
+};
+
+export const signInWithEnterpriseSso = async (
+  connectorId: string,
+  enterpriseUserInfo: Record<string, unknown>,
+  registerNewUser = false
+) => {
+  const state = 'state';
+  const redirectUri = 'http://localhost:3000';
+
+  const client = await initExperienceClient();
+  await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+
+  const { verificationId } = await client.getEnterpriseSsoAuthorizationUri(connectorId, {
+    redirectUri,
+    state,
+  });
+
+  await client.verifyEnterpriseSsoAuthorization(connectorId, {
+    verificationId,
+    connectorData: enterpriseUserInfo,
   });
 
   if (registerNewUser) {
