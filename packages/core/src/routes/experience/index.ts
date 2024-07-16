@@ -111,10 +111,10 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       status: [201, 204, 400, 401, 404, 409, 422],
     }),
     async (ctx, next) => {
-      const { verificationId } = ctx.guard.body;
+      const { verificationId, linkSocialIdentity } = ctx.guard.body;
       const { experienceInteraction } = ctx;
 
-      await experienceInteraction.identifyUser(verificationId);
+      await experienceInteraction.identifyUser(verificationId, linkSocialIdentity);
 
       await experienceInteraction.save();
 

@@ -6,6 +6,7 @@ import {
   type User,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -159,6 +160,19 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     return user;
   }
 
+  async identifyRelatedUser(): Promise<User> {
+    assertThat(
+      this.isVerified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const relatedUser = await this.findRelatedUserBySocialIdentity();
+
+    assertThat(relatedUser, new RequestError({ code: 'user.identity_not_exist', status: 404 }));
+
+    return relatedUser[1];
+  }
+
   /**
    * Returns the social identity as a new user profile.
    */
@@ -183,27 +197,37 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   /**
    * Returns the synced profile from the social identity.
    *
-   * @param isNewUser - Whether the profile is for a new user. If set to true, the primary email will be included in the profile.
+   * @param isNewUser - Whether the profile is for a new user. Only return the primary email/phone if it is a new user.
    */
   async toSyncedProfile(
     isNewUser = false
-  ): Promise<Pick<InteractionProfile, 'avatar' | 'name' | 'primaryEmail'>> {
+  ): Promise<Pick<InteractionProfile, 'avatar' | 'name' | 'primaryEmail' | 'primaryPhone'>> {
     assertThat(
       this.socialUserInfo,
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
-    const { name, avatar, email: primaryEmail } = this.socialUserInfo;
+    const { name, avatar, email: primaryEmail, phone: primaryPhone } = this.socialUserInfo;
 
     if (isNewUser) {
-      return { name, avatar, primaryEmail };
+      return {
+        ...conditional(primaryEmail && { primaryEmail }),
+        ...conditional(primaryPhone && { primaryPhone }),
+        ...conditional(name && { name }),
+        ...conditional(avatar && { avatar }),
+      };
     }
 
     const {
       dbEntry: { syncProfile },
     } = await this.getConnectorData();
 
-    return syncProfile ? { name, avatar } : {};
+    return syncProfile
+      ? {
+          ...conditional(name && { name }),
+          ...conditional(avatar && { avatar }),
+        }
+      : {};
   }
 
   toJson(): SocialVerificationRecordData {

@@ -140,9 +140,15 @@ export const newPasswordIdentityVerificationPayloadGuard = z.object({
 export type IdentificationApiPayload = {
   /** The ID of the verification record that is used to identify the user. */
   verificationId: string;
+  /**
+   * Link social identity to a related user account with the same email or phone.
+   * Only applicable for social verification records and a related user account is found.
+   */
+  linkSocialIdentity?: boolean;
 };
 export const identificationApiPayloadGuard = z.object({
   verificationId: z.string(),
+  linkSocialIdentity: z.boolean().optional(),
 }) satisfies ToZodObject<IdentificationApiPayload>;
 
 /** Payload type for `POST /api/experience`. */
