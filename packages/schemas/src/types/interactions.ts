@@ -31,8 +31,8 @@ export enum InteractionEvent {
 // ====== Experience API payload guards and type definitions start ======
 
 /** Identifiers that can be used to uniquely identify a user. */
-export type InteractionIdentifier = {
-  type: SignInIdentifier;
+export type InteractionIdentifier<T extends SignInIdentifier = SignInIdentifier> = {
+  type: T;
   value: string;
 };
 
@@ -61,6 +61,7 @@ export enum VerificationType {
   TOTP = 'Totp',
   WebAuthn = 'WebAuthn',
   BackupCode = 'BackupCode',
+  NewPasswordIdentity = 'NewPasswordIdentity',
 }
 
 // REMARK: API payload guard
@@ -114,6 +115,26 @@ export type BackupCodeVerificationVerifyPayload = {
 export const backupCodeVerificationVerifyPayloadGuard = z.object({
   code: z.string().min(1),
 }) satisfies ToZodObject<BackupCodeVerificationVerifyPayload>;
+
+/**
+ * Payload type for `POST /api/experience/verification/new-password-identity`.
+ * @remarks Currently we only support username identifier for new password identity registration.
+ * For email and phone new identity registration, a `CodeVerification` record is required.
+ */
+export type NewPasswordIdentityVerificationPayload = {
+  identifier: {
+    type: SignInIdentifier.Username;
+    value: string;
+  };
+  password: string;
+};
+export const newPasswordIdentityVerificationPayloadGuard = z.object({
+  identifier: z.object({
+    type: z.literal(SignInIdentifier.Username),
+    value: z.string(),
+  }),
+  password: z.string().min(1),
+}) satisfies ToZodObject<NewPasswordIdentityVerificationPayload>;
 
 /** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {

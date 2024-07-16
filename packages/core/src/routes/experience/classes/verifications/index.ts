@@ -20,6 +20,11 @@ import {
   type EnterpriseSsoVerificationRecordData,
 } from './enterprise-sso-verification.js';
 import {
+  NewPasswordIdentityVerification,
+  newPasswordIdentityVerificationRecordDataGuard,
+  type NewPasswordIdentityVerificationRecordData,
+} from './new-password-identity-verification.js';
+import {
   PasswordVerification,
   passwordVerificationRecordDataGuard,
   type PasswordVerificationRecordData,
@@ -41,7 +46,8 @@ export type VerificationRecordData =
   | SocialVerificationRecordData
   | EnterpriseSsoVerificationRecordData
   | TotpVerificationRecordData
-  | BackupCodeVerificationRecordData;
+  | BackupCodeVerificationRecordData
+  | NewPasswordIdentityVerificationRecordData;
 
 /**
  * Union type for all verification record types
@@ -57,7 +63,8 @@ export type VerificationRecord =
   | SocialVerification
   | EnterpriseSsoVerification
   | TotpVerification
-  | BackupCodeVerification;
+  | BackupCodeVerification
+  | NewPasswordIdentityVerification;
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
@@ -66,6 +73,7 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   enterPriseSsoVerificationRecordDataGuard,
   totpVerificationRecordDataGuard,
   backupCodeVerificationRecordDataGuard,
+  newPasswordIdentityVerificationRecordDataGuard,
 ]);
 
 /**
@@ -94,6 +102,9 @@ export const buildVerificationRecord = (
     }
     case VerificationType.BackupCode: {
       return new BackupCodeVerification(libraries, queries, data);
+    }
+    case VerificationType.NewPasswordIdentity: {
+      return new NewPasswordIdentityVerification(libraries, queries, data);
     }
   }
 };

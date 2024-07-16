@@ -14,6 +14,7 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import { CodeVerification } from '../verifications/code-verification.js';
 import { EnterpriseSsoVerification } from '../verifications/enterprise-sso-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
+import { NewPasswordIdentityVerification } from '../verifications/new-password-identity-verification.js';
 import { PasswordVerification } from '../verifications/password-verification.js';
 import { SocialVerification } from '../verifications/social-verification.js';
 
@@ -31,6 +32,15 @@ const ssoConnectors = {
 };
 
 const mockTenant = new MockTenant(undefined, { signInExperiences }, undefined, { ssoConnectors });
+
+const newPasswordIdentityVerificationRecord = NewPasswordIdentityVerification.create(
+  mockTenant.libraries,
+  mockTenant.queries,
+  {
+    type: SignInIdentifier.Username,
+    value: 'username',
+  }
+);
 
 const passwordVerificationRecords = Object.fromEntries(
   Object.values(SignInIdentifier).map((identifier) => [
@@ -326,7 +336,10 @@ describe('SignInExperienceValidator', () => {
       'only username is enabled for sign-up': {
         signInExperience: mockSignInExperience,
         cases: [
-          // TODO: username password registration
+          {
+            verificationRecord: newPasswordIdentityVerificationRecord,
+            accepted: true,
+          },
           {
             verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Email],
             accepted: false,

@@ -187,7 +187,7 @@ export class CodeVerification
     return user;
   }
 
-  async toUserProfile(): Promise<{ primaryEmail: string } | { primaryPhone: string }> {
+  toUserProfile(): { primaryEmail: string } | { primaryPhone: string } {
     assertThat(
       this.verified,
       new RequestError({ code: 'session.verification_failed', status: 400 })

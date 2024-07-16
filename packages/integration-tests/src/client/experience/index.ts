@@ -2,6 +2,7 @@ import {
   type CreateExperienceApiPayload,
   type IdentificationApiPayload,
   type InteractionEvent,
+  type NewPasswordIdentityVerificationPayload,
   type PasswordVerificationPayload,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
@@ -179,6 +180,17 @@ export class ExperienceClient extends MockClient {
   public async verifyBackupCode(payload: { code: string }) {
     return api
       .post(`${experienceRoutes.verification}/backup-code/verify`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
+  }
+
+  public async createNewPasswordIdentityVerification(
+    payload: NewPasswordIdentityVerificationPayload
+  ) {
+    return api
+      .post(`${experienceRoutes.verification}/new-password-identity`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
       })

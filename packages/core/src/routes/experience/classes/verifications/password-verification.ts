@@ -45,8 +45,8 @@ export class PasswordVerification
   }
 
   readonly type = VerificationType.Password;
-  public readonly identifier: InteractionIdentifier;
-  public readonly id: string;
+  readonly identifier: InteractionIdentifier;
+  readonly id: string;
   private verified: boolean;
 
   /**
