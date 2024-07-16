@@ -27,11 +27,6 @@ export const parseFormConfig = (
   return Object.fromEntries(
     Object.entries(config)
       .map(([key, value]) => {
-        // Filter out empty input
-        if (value === '') {
-          return null;
-        }
-
         const formItem = formItems.find((item) => item.key === key);
 
         if (!formItem) {
