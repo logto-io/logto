@@ -76,6 +76,7 @@ export const convertResponseToForm = (connector: ConnectorResponse): ConnectorFo
     syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
     jsonConfig: JSON.stringify(config, null, 2),
     formConfig,
+    rawConfig: config,
   };
 };
 
@@ -91,5 +92,6 @@ export const convertFactoryResponseToForm = (
     syncProfile: SyncProfileMode.OnlyAtRegister,
     jsonConfig,
     formConfig,
+    rawConfig: {},
   };
 };

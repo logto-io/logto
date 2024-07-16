@@ -11,10 +11,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'packages/next-server-actions-sample',
   },
   isFeatured: true,
-  fullGuide: {
-    title: 'Full Next.js SDK tutorial',
-    url: 'https://docs.logto.io/sdk/next-app-router/',
-  },
+  fullGuide: 'next-app-router',
 });
 
 export default metadata;

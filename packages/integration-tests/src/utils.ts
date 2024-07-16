@@ -1,9 +1,11 @@
-import crypto from 'node:crypto';
+import crypto, { randomInt } from 'node:crypto';
 import path from 'node:path';
 
 import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import { type Page } from 'puppeteer';
+
+import { isDevFeaturesEnabled } from './constants.js';
 
 export const generateName = () => crypto.randomUUID();
 export const generateUserId = () => crypto.randomUUID();
@@ -35,10 +37,8 @@ export const generatePhone = (isE164?: boolean) => {
     '232',
   ];
   const centralOfficeCode =
-    validCentralOfficeCodes[Math.floor(Math.random() * validCentralOfficeCodes.length)] ?? '205';
-  const phoneNumber = Math.floor(Math.random() * 10_000)
-    .toString()
-    .padStart(4, '0');
+    validCentralOfficeCodes[randomInt(0, validCentralOfficeCodes.length)] ?? '205';
+  const phoneNumber = randomInt(0, 10_000).toString().padStart(4, '0');
 
   return plus + countryAndAreaCode + centralOfficeCode + phoneNumber;
 };
@@ -127,3 +127,8 @@ export const dmodal = () => `div[aria-modal=true]`;
 export const generateTestName = () => `test_${generateStandardId(4)}`;
 
 export const randomString = () => crypto.randomBytes(8).toString('hex');
+
+export const devFeatureTest = Object.freeze({
+  it: isDevFeaturesEnabled ? it : it.skip,
+  describe: isDevFeaturesEnabled ? describe : describe.skip,
+});

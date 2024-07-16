@@ -1,6 +1,8 @@
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
+import Checkpoint from '../../fragments/_checkpoint.md';
 
 <Steps>
 
@@ -10,7 +12,6 @@ This tutorial will show you how to integrate Logto into your Python web applicat
 
 <ul>
   <li>The example uses Flask, but the concepts are the same for other frameworks.</li>
-  <li>This tutorial assumes your website is hosted on <code>{props.sampleUrls.origin}</code>.</li>
   <li>Logto SDK leverages coroutines, remember to use <code>await</code> when calling async functions.</li>
 </ul>
 
@@ -24,8 +25,7 @@ pip install logto # or `poetry add logto` or whatever you use
 
 Insert the following code into your Python file:
 
-<pre>
-  <code className="language-python">
+<Code title="main.py" className="language-python">
 {`from logto import LogtoClient, LogtoConfig
 
 client = LogtoClient(
@@ -35,13 +35,12 @@ client = LogtoClient(
         appSecret="${props.app.secret}",
     )
 )`}
-  </code>
-</pre>
+</Code>
 
 Also replace the default memory storage with a persistent storage, for example:
 
-```python
-from logto import LogtoClient, LogtoConfig, Storage
+<Code title="main.py" className="language-python">
+{`from logto import LogtoClient, LogtoConfig, Storage
 from flask import session
 from typing import Union
 
@@ -58,55 +57,26 @@ class SessionStorage(Storage):
 client = LogtoClient(
     LogtoConfig(...),
     storage=SessionStorage(),
-)
-```
+)`}
+</Code>
 
 </Step>
 
-<Step title="Implement the sign-in route">
+<Step
+  title="Configure redirect URIs"
+  subtitle="2 URIs"
+>
 
-<p>
-First, let’s enter your redirect URI. E.g. <code>{props.sampleUrls.callback}</code>. This is where Logto will redirect users after they sign in.
-</p>
-
-<UriInputField name="redirectUris" />
-
-<pre>
-  <code className="language-python">
-{`@app.route("/sign-in")
-async def sign_in():
-    # Get the sign-in URL and redirect the user to it
-    return redirect(await client.signIn(
-        redirectUri="${props.redirectUris[0] || props.sampleUrls.callback}",
-    ))`}
-  </code>
-</pre>
-
-If you want to show the sign-up page on the first screen, you can set `interactionMode` to `signUp`:
-
-<pre>
-  <code className="language-python">
-{`@app.route("/sign-in")
-async def sign_in():
-    # Get the sign-in URL and redirect the user to it
-    return redirect(await client.signIn(
-        redirectUri="${props.redirectUris[0] || props.sampleUrls.callback}",
-        interactionMode="signUp", # Show the sign-up page on the first screen
-    ))`}
-  </code>
-</pre>
-
-Now, whenever your users visit `/sign-in`, it will start a new sign-in attempt and redirect the user to the Logto sign-in page.
+<RedirectUrisWeb />
 
 </Step>
 
-<Step title="Implement the callback route">
+<Step title="Handle the callback">
 
 After the user signs in, Logto will redirect the user to the callback URL you set in the Logto Console. In this example, we use `/callback` as the callback URL:
 
-<pre>
-  <code className="language-python">
-{`@app.route("/callback")
+```python title="main.py"
+@app.route("/callback")
 async def callback():
     try:
         await client.handleSignInCallback(request.url) # Handle a lot of stuff
@@ -114,35 +84,50 @@ async def callback():
     except Exception as e:
         # Change this to your error handling logic
         return "Error: " + str(e)
-`}
-  </code>
-</pre>
+```
 
 </Step>
 
-<Step title="Implement the sign-out route">
+<Step title="Implement sign-in and sign-out">
+
+There are various ways to invoke sign-in and sign-out in your application. For example, you can implement two routes in your Python application:
+
+<Code title="main.py" className="language-python">
+{`@app.route("/sign-in")
+async def sign_in():
+    # Get the sign-in URL and redirect the user to it
+    return redirect(await client.signIn(
+        redirectUri="${props.redirectUris[0] || defaultRedirectUri}",
+    ))`}
+</Code>
+
+If you want to show the sign-up page on the first screen, you can set `interactionMode` to `signUp`:
+
+<Code title="main.py" className="language-python">
+{`@app.route("/sign-in")
+async def sign_in():
+    # Get the sign-in URL and redirect the user to it
+    return redirect(await client.signIn(
+        redirectUri="${props.redirectUris[0] || defaultRedirectUri}",
+        interactionMode="signUp", # Show the sign-up page on the first screen
+    ))`}
+</Code>
+
+Now, whenever your users visit `/sign-in`, it will start a new sign-in attempt and redirect the user to the Logto sign-in page.
 
 To clean up the Python session and Logto session, we can designate a post sign-out redierct URI. This is where Logto will redirect users after they sign out.
 
-<UriInputField name="postLogoutRedirectUris" />
-
 And a sign-out route can be implemented as follows:
 
-<pre>
-  <code className="language-python">
+<Code title="main.py" className="language-python">
 {`@app.route("/sign-out")
 async def sign_out():
     return redirect(
         # Redirect the user to the home page after a successful sign-out
-        await client.signOut(postLogoutRedirectUri="${props.postLogoutRedirectUris[0] || props.sampleUrls.origin}")
+        await client.signOut(postLogoutRedirectUri="${props.postLogoutRedirectUris[0] || defaultPostSignOutUri}")
     )
 `}
-  </code>
-</pre>
-
-`postLogoutRedirectUri` is optional, and if not provided, the user will be redirected to a Logto default page after a successful sign-out (without redirecting back to your application).
-
-> The name `postLogoutRedirectUri` is from the [OpenID Connect RP-Initiated Logout](https://openid.net/specs/openid-connect-rpinitiated-1_0.html) specification. Although Logto uses "sign-out" instead of "logout", the concept is the same.
+</Code>
 
 </Step>
 
@@ -155,42 +140,75 @@ Here we also implement a simple home page for demonstration:
 - If the user is not signed in, show a sign-in button;
 - If the user is signed in, show some basic information about the user.
 
-```python
+```python title="main.py"
 @app.route("/")
 async def home():
     if client.isAuthenticated() is False:
         return "Not authenticated <a href='/sign-in'>Sign in</a>"
 
-    return (
-        # Get local ID token claims
-        client.getIdTokenClaims().model_dump_json(exclude_unset=True)
-        + "<br>"
-        # Fetch user info from Logto userinfo endpoint
-        (await client.fetchUserInfo()).model_dump_json(exclude_unset=True)
-        + "<br><a href='/sign-out'>Sign out</a>"
-    )
+    return "Authenticated <a href='/sign-out'>Sign out</a>"
 ```
-
-Our data models are based on [pydantic](https://docs.pydantic.dev/), so you can use `model_dump_json` to dump the data model to JSON.
-
-Adding `exclude_unset=True` will exclude unset fields from the JSON output, which makes the output more precise.
-
-For example, if we didn't request the `email` scope when signing in, and the `email` field will be excluded from the JSON output. However, if we requested the `email` scope, but the user doesn't have an email address, the `email` field will be included in the JSON output with a `null` value.
-
-To learn more about scopes and claims, see [Get user information](https://docs.logto.io/quick-starts/python/#get-user-information).
 
 </Step>
 
 <Step title="Checkpoint: Test your application">
 
-Now, you can test your application:
+<Checkpoint />
 
-<ol>
-  <li>Visit <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
-  <li>Click the "Sign in" button, and you should be redirected to the Logto sign-in page.</li>
-  <li>After you sign in, you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see your user info and a "Sign out" button.</li>
-  <li>Click the "Sign out" button, and you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
-</ol>
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can use either the `getIdTokenClaims` method or `fetchUserInfo` method to get user information. While `getIdTokenClaims` returns the user information contains in the ID token, `fetchUserInfo` fetches the user information from the userinfo endpoint.
+
+For example, you can implement an `@authenticated` decorator to protect the APIs from unauthorized access and store the user information in the Flask application context:
+
+```python title="authenticated.py"
+from functools import wraps
+from flask import g, jsonify, redirect
+from samples.client import client
+
+def authenticated(shouldRedirect: bool = False, fetchUserInfo: bool = False):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            if client.isAuthenticated() is False:
+                if shouldRedirect:
+                    return redirect("/sign-in")
+                return jsonify({"error": "Not authenticated"}), 401
+
+            # Store user info in Flask application context
+            g.user = (
+                await client.fetchUserInfo()
+                if fetchUserInfo
+                else client.getIdTokenClaims()
+            )
+            return await func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+```
+
+Here's an API to show the user's information:
+
+```python title="main.py"
+@app.route("/protected/userinfo")
+@authenticated(shouldRedirect=True, fetchUserInfo=True)
+async def protectedUserinfo():
+    try:
+        return (
+            "<h2>User info</h2>"
+            + g.user.model_dump_json(indent=2, exclude_unset=True).replace("\n", "<br>")
+            + navigationHtml
+        )
+    except LogtoException as e:
+        return "<h2>Error</h2>" + str(e) + "<br>" + navigationHtml
+```
+
+Our data models are based on [pydantic](https://docs.pydantic.dev/), so you can use `model_dump_json` to dump the data model to JSON.
+
+Adding `exclude_unset=True` will exclude unset fields from the JSON output, which makes the output more precise.
 
 </Step>
 

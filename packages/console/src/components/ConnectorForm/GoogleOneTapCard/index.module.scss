@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.figure {
+  width: 200px;
+}
+
+.oneTapSwitch {
+  display: flex;
+  gap: _.unit(6);
+  align-items: center;
+}
+
+.oneTapConfig {
+  display: flex;
+  gap: _.unit(2);
+  flex-direction: column;
+}

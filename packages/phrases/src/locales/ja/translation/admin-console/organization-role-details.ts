@@ -1,7 +1,6 @@
 const organization_role_details = {
   page_title: '組織の役割の詳細',
   back_to_org_roles: '組織の役割に戻る',
-  org_role: '組織の役割',
   delete_confirm:
     'これにより、関連するユーザーからこのロールに関連付けられた権限が削除され、組織の役割、組織のメンバー、および組織の権限間の関係が削除されます。',
   deleted: '組織の役割{{name}}が正常に削除されました。',

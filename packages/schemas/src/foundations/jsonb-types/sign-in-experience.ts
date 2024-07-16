@@ -2,6 +2,8 @@ import { hexColorRegEx } from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
 import { z } from 'zod';
 
+import { type ToZodObject } from '../../utils/zod.js';
+
 export const colorGuard = z.object({
   primaryColor: z.string().regex(hexColorRegEx),
   isDarkModeEnabled: z.boolean(),
@@ -51,6 +53,18 @@ export const signInGuard = z.object({
 });
 
 export type SignIn = z.infer<typeof signInGuard>;
+
+export type SocialSignIn = {
+  /**
+   * If account linking should be performed when a user signs in with a social identity that is new
+   * to the system and exactly one existing account is found with the same identifier (e.g., email).
+   */
+  automaticAccountLinking?: boolean;
+};
+
+export const socialSignInGuard = z.object({
+  automaticAccountLinking: z.boolean().optional(),
+}) satisfies ToZodObject<SocialSignIn>;
 
 export const connectorTargetsGuard = z.string().array();
 

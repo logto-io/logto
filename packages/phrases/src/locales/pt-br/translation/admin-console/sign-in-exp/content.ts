@@ -5,6 +5,12 @@ const content = {
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'Privacy policy URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
+    agree_to_terms: 'Concordar com os termos',
+    agree_policies: {
+      automatic: 'Continuar concordando automaticamente com os termos',
+      manual_registration_only: 'Requerer concordância da caixa de seleção apenas no registro',
+      manual: 'Requerer concordância da caixa de seleção tanto no registro quanto no login',
+    },
   },
   languages: {
     title: 'LANGUAGES',

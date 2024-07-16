@@ -1,65 +1,35 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
 import { generateStandardSecret } from '@logto/shared/universal';
 
 export const cookieEncryptionKey = generateStandardSecret();
 
 <Steps>
 
-<InlineNotification severity="alert">
-  Logto Nuxt SDK only works with Nuxt 3.
-</InlineNotification>
-
 <Step
   title="Installation"
   subtitle="Install Logto SDK"
 >
-<Tabs>
-<TabItem value="npm" label="npm">
 
-```bash
-npm i @logto/nuxt
-```
+<InlineNotification severity="alert">
+  Logto Nuxt SDK only works with Nuxt 3.
+</InlineNotification>
 
-</TabItem>
-<TabItem value="yarn" label="Yarn">
+<NpmLikeInstallation packageName="@logto/nuxt" />
 
-```bash
-yarn add @logto/nuxt
-```
-
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/nuxt
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
 <Step title="Register Logto module">
 
-In your Nuxt config file (`next.config.ts`), add the Logto module:
+In your Nuxt config file, add the Logto module and configure it:
 
-```ts
-export default defineNuxtConfig({
-  modules: ['@logto/nuxt'],
-  // ...other configurations
-});
-```
-
-The minimal configuration for the module is as follows:
-
-<pre>
-  <code className="language-tsx">
-    {`export default defineNuxtConfig({
+<Code title="nuxt.config.ts" className="language-tsx">
+{`export default defineNuxtConfig({
   modules: ['@logto/nuxt'],
   runtimeConfig: {
     logto: {
@@ -71,38 +41,28 @@ The minimal configuration for the module is as follows:
   },
   // ...other configurations
 });`}
-  </code>
-</pre>
+</Code>
 
 Since these information are sensitive, it's recommended to use environment variables (`.env`):
 
-<pre>
-  <code className="language-bash">
+<Code title=".env" className="language-bash">
     {`NUXT_LOGTO_ENDPOINT=${props.endpoint}
 NUXT_LOGTO_APP_ID=${props.app.id}
 NUXT_LOGTO_APP_SECRET=${props.app.secret}
 NUXT_LOGTO_COOKIE_ENCRYPTION_KEY=${cookieEncryptionKey} # Random-generated
 `}
-  </code>
-</pre>
+</Code>
 
 See [runtime config](https://nuxt.com/docs/guide/going-further/runtime-config) for more information.
 
 </Step>
 
-<Step title="Configure your app">
+<Step 
+  title="Configure redirect URIs"
+  subtitle="2 URIs"
+>
 
-<InlineNotification>
-  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
-</InlineNotification>
-
-First, let's enter your redirect URI. E.g. `http://localhost:3000/callback`. [Redirect URI](https://www.oauth.com/oauth2-servers/redirect-uris/) is an OAuth 2.0 concept which implies the location should redirect after authentication.
-
-<UriInputField name="redirectUris" />
-
-After signing out, it'll be great to redirect user back to your website. For example, add `http://localhost:3000` as the post sign-out redirect URI below.
-
-<UriInputField name="postLogoutRedirectUris" />
+<RedirectUrisWeb />
 
 When registering `@logto/nuxt` module, it will do the following:
 
@@ -111,7 +71,7 @@ When registering `@logto/nuxt` module, it will do the following:
 
 These routes are configurable via `logto.pathnames` in the module options, for example:
 
-```ts
+```ts title="nuxt.config.ts"
 export default defineNuxtConfig({
   logto: {
     pathnames: {
@@ -126,32 +86,24 @@ export default defineNuxtConfig({
 
 Check out the [type definition file](https://github.com/logto-io/js/blob/HEAD/packages/nuxt/src/runtime/utils/types.ts) in the `@logto/nuxt` package for more information.
 
-Note: If you configure the callback route to a different path, you need to update the redirect URI in Logto accordingly.
+<InlineNotification>
+If you configure the callback route to a different path, you need to update the redirect URI in Logto accordingly.
+</InlineNotification>
 
 </Step>
 
 <Step title="Implement sign-in and sign-out">
 
-Since Nuxt pages will be hydrated and become a single-page application (SPA) after the initial load, we need to redirect the user to the sign-in or sign-out route when needed.
+Since Nuxt pages will be hydrated and become a single-page application (SPA) after the initial load, we need to redirect the user to the sign-in or sign-out route when needed. To help with this, our SDK provides the `useLogtoUser()` composable, which can be used in both server and client side.
 
-```html
-<a :href="/sign-in">Sign in</a>
-<br />
-<a :href="/sign-out">Sign out</a>
-```
-
-</Step>
-
-<Step title="Display user information">
-
-To display the user's information, you can use the `useLogtoUser()` composable, which is available on both server and client side:
-
-```html
+```html title="index.vue"
 <script setup lang="ts">
+  import { useLogtoUser } from '#imports'; // Add this line if auto-import is disabled
   const user = useLogtoUser();
 </script>
 <template>
-  <ul v-if="Boolean(user)">
+  <!-- Display user information when signed in -->
+  <ul v-if="Boolean(user)"> 
     <li v-for="(value, key) in user"><b>{{ key }}:</b> {{ value }}</li>
   </ul>
   <!-- Simplified button for sign-in and sign-out -->

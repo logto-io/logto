@@ -5,6 +5,8 @@ import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockUser, mockUserResponse } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type InsertUserResult } from '#src/libraries/user.js';
+import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
@@ -68,7 +70,7 @@ const mockHasUserWithPhone = jest.fn(async () => false);
 const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
   mockedQueries.users;
 
-const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
+const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.utils.js', () => ({
   encryptUserPassword: jest.fn(() => ({
     passwordEncrypted: 'password',
     passwordEncryptionMethod: 'Argon2i',
@@ -80,10 +82,12 @@ const signOutUser = jest.fn();
 const usersLibraries = {
   generateUserId: jest.fn(async () => 'fooId'),
   insertUser: jest.fn(
-    async (user: CreateUser): Promise<User> => ({
-      ...mockUser,
-      ...removeUndefinedKeys(user), // No undefined values will be returned from database
-    })
+    async (user: CreateUser): Promise<InsertUserResult> => [
+      {
+        ...mockUser,
+        ...removeUndefinedKeys(user), // No undefined values will be returned from database
+      },
+    ]
   ),
   verifyUserPassword,
   signOutUser,
@@ -95,7 +99,11 @@ describe('adminUserRoutes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
     users: usersLibraries,
   });
-  const userRequest = createRequester({ authedRoutes: adminUserRoutes, tenantContext });
+  const userRequest = createRequester({
+    middlewares: [koaManagementApiHooks(tenantContext.libraries.hooks)],
+    authedRoutes: adminUserRoutes,
+    tenantContext,
+  });
 
   afterEach(() => {
     jest.clearAllMocks();

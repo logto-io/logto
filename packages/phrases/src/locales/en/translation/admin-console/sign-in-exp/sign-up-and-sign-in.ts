@@ -40,6 +40,9 @@ const sign_up_and_sign_in = {
       set_up_more: 'Set up',
       go_to: 'other social connectors now.',
     },
+    automatic_account_linking: 'Automatic account linking',
+    automatic_account_linking_label:
+      'When switched on, if a user signs in with a social identity that is new to the system, and there is exactly one existing account with the same identifier (e.g., email), Logto will automatically link the account with the social identity instead of prompting the user for account linking.',
   },
   tip: {
     set_a_password: 'A unique set of a password to your username is a must.',

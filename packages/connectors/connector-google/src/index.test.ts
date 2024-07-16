@@ -8,6 +8,25 @@ import { mockedConfig } from './mock.js';
 
 const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
+vi.mock('jose', () => ({
+  createRemoteJWKSet: vi.fn().mockReturnValue({
+    getSigningKey: vi.fn().mockResolvedValue({
+      publicKey: 'publicKey',
+    }),
+  }),
+  jwtVerify: vi.fn().mockResolvedValue({
+    payload: {
+      sub: '1234567890',
+      name: 'John Wick',
+      given_name: 'John',
+      family_name: 'Wick',
+      email: 'john@silverhand.io',
+      email_verified: true,
+      picture: 'https://example.com/image.jpg',
+    },
+  }),
+}));
+
 describe('google connector', () => {
   describe('getAuthorizationUri', () => {
     afterEach(() => {
@@ -102,6 +121,31 @@ describe('google connector', () => {
         name: 'monalisa octocat',
         email: 'octocat@google.com',
         rawData: jsonResponse,
+      });
+    });
+
+    it('should be able to decode ID token from Google One Tap', async () => {
+      const connector = await createConnector({ getConfig });
+      const socialUserInfo = await connector.getUserInfo(
+        {
+          credential: 'credential',
+        },
+        vi.fn()
+      );
+      expect(socialUserInfo).toStrictEqual({
+        id: '1234567890',
+        avatar: 'https://example.com/image.jpg',
+        name: 'John Wick',
+        email: 'john@silverhand.io',
+        rawData: {
+          sub: '1234567890',
+          name: 'John Wick',
+          given_name: 'John',
+          family_name: 'Wick',
+          email: 'john@silverhand.io',
+          email_verified: true,
+          picture: 'https://example.com/image.jpg',
+        },
       });
     });
 

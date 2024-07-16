@@ -125,6 +125,8 @@ describe('get access token', () => {
       testApiScopeNames.join(' ')
     );
     expect(getAccessTokenPayload(accessToken)).toHaveProperty('user_id', guestUserId);
+    // The guest user has password.
+    expect(getAccessTokenPayload(accessToken)).toHaveProperty('hasPassword', true);
 
     await deleteJwtCustomizer('access-token');
   });
@@ -152,7 +154,7 @@ describe('get access token', () => {
     ).resolves.toBeTruthy();
   });
 
-  it('can sign in and get multiple Access Tokens by the same Refresh Token within refreshTokenReuseInterval', async () => {
+  it('can sign in and get multiple access tokens by the same refresh token within `refreshTokenReuseInterval`', async () => {
     const client = new MockClient({ resources: [testApiResourceInfo.indicator] });
 
     await client.initSession();

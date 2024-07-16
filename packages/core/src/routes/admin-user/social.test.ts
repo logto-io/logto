@@ -1,5 +1,6 @@
 import { ConnectorType, type CreateUser, type User } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
+import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import {
   mockConnector0,
@@ -9,6 +10,7 @@ import {
 } from '#src/__mocks__/index.js';
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type InsertUserResult } from '#src/libraries/user.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
@@ -47,10 +49,12 @@ const mockedQueries = {
 const usersLibraries = {
   generateUserId: jest.fn(async () => 'fooId'),
   insertUser: jest.fn(
-    async (user: CreateUser): Promise<User> => ({
-      ...mockUser,
-      ...user,
-    })
+    async (user: CreateUser): Promise<InsertUserResult> => [
+      {
+        ...mockUser,
+        ...removeUndefinedKeys(user), // No undefined values will be returned from database
+      },
+    ]
   ),
 } satisfies Partial<Libraries['users']>;
 

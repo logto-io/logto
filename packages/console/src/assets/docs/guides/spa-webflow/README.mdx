@@ -1,6 +1,6 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
@@ -22,8 +22,7 @@ In this step, we'll add global-level custom code to your Webflow site. Since NPM
 
 Open the "Site settings" page, and navigate to the "Custom code" section. Add the following code to the "Head code" section.
 
-<pre>
-  <code className="language-html">
+<Code className="language-html">
     {`<script type="module">
   // Import \`@logto/browser\` SDK from the jsdelivr CDN
   import LogtoClient from 'https://esm.run/@logto/browser';
@@ -35,8 +34,7 @@ Open the "Site settings" page, and navigate to the "Custom code" section. Add th
     appId: '${props.app.id}',
   });
 </script>`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -59,15 +57,13 @@ First, let’s enter your redirect URI. E.g. `https://your-awesome-site.webflow.
 
 Return to your Webflow designer, drag and drop a "Sign in" button to the home page, and assign it an ID “sign-in” for later reference using `getElementById()`.
 
-<pre>
-  <code className="language-html">
+<Code className="language-html">
     {`<script type="module">
   const signInButton = document.getElementById('sign-in');
   const onClickSignIn = () => logtoClient.signIn('${props.redirectUris[0] ?? 'https://your-awesome-site.webflow.io/callback'}');
   signInButton.addEventListener('click', onClickSignIn);
 </script>`}
-  </code>
-</pre>
+</Code>
 
 ### Handle redirect
 
@@ -99,13 +95,11 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 
 Return to the Webflow designer, and add a “Sign out” button on your home page. Similarly, assign an ID “sign-out” to the button, and add the following code to the page-level custom code.
 
-<pre>
-  <code className="language-js">
+<Code className="language-js">
     {`const signOutButton = document.getElementById('sign-out');
 const onClickSignOut = () => logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? 'https://your-awesome-site.webflow.io'}');
 signOutButton.addEventListener('click', onClickSignOut);`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 

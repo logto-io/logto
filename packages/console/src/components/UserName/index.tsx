@@ -23,7 +23,7 @@ type Props = {
 
 function UserName({ userId, isLink = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const fetchApi = useApi({ hideErrorToast: true });
+  const fetchApi = useApi({ hideErrorToast: ['entity.not_found'] });
   const fetcher = useSwrFetcher<User>(fetchApi);
   const { data, error } = useSWR<User, RequestError>(`api/users/${userId}`, {
     fetcher,

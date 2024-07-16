@@ -9,10 +9,10 @@ const enterprise_sso_details = {
   custom_branding_title: 'Display',
   custom_branding_description:
     "Customize the name and logo displayed in the end users' Single Sign-On flow. When empty, defaults are used.",
-  email_domain_field_name: 'Enterprise email domain',
+  email_domain_field_name: 'Enterprise email domains',
   email_domain_field_description:
-    'Users with this email domain can use SSO for authentication. Please verify the domain belongs to the enterprise.',
-  email_domain_field_placeholder: 'Email domain',
+    'Users with these email domains can use SSO for authentication. Please verify the domain ownership before adding.',
+  email_domain_field_placeholder: 'Enter one or more email domains (e.g. yourcompany.com)',
   sync_profile_field_name: 'Sync profile information from the identity provider',
   sync_profile_option: {
     register_only: 'Only sync at first sign-in',

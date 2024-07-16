@@ -99,7 +99,7 @@ export const expectToProceedSdkGuide = async (
 
     const postSignOutRedirectUriWrapper = await expect(page).toMatchElement(
       'div[class$=wrapper]:has(>div[class$=field]>div[class$=headline]>div[class$=title])',
-      { text: 'Post Sign-out Redirect URI' }
+      { text: 'Post sign-out redirect URI' }
     );
 
     await expect(postSignOutRedirectUriWrapper).toFill('input', postSignOutRedirectUri);

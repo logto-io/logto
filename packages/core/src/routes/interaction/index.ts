@@ -198,11 +198,8 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       );
 
       log.append({ identifier: verifiedIdentifier, interactionStorage });
-
       const identifiers = mergeIdentifiers(verifiedIdentifier, interactionStorage.identifiers);
-
       await storeInteractionResult({ identifiers }, ctx, provider, true);
-
       ctx.status = 204;
 
       return next();

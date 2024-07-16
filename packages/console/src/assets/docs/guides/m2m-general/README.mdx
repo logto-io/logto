@@ -1,10 +1,12 @@
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import ApplicationCredentials from '@/mdx-components/ApplicationCredentials';
 import AppIdentifierSrc from './assets/api-identifier.png';
+import AssignM2mRolesModalSrc from './assets/assign-m2m-roles-modal.png';
+import AssignM2mRolesPageSrc from './assets/assign-m2m-roles-page.png';
 import LogtoManagementApiSrc from './assets/logto-management-api.png';
 
 <Steps>
@@ -18,6 +20,14 @@ There are two common use cases of using machine-to-machine apps in Logto:
 
 1. **Accessing Logto Management API**: In this case, you need to assign a M2M role that include the `all` permission from the built-in Logto Management API to your M2M app.
 2. **Accessing your API resource**: In this case, you need to assign M2M roles that include permissions from your API resources to your M2M app.
+
+During the M2M app creation process, you’ll be directed to a page where you can assign machine-to-machine (M2M) roles to your applications:
+
+<img alt="Assign M2M roles modal" src={AssignM2mRolesModalSrc} width="600px" style={{ borderRadius: '6px' }} />
+
+Or you can also assign these roles on the M2M app detail page.
+
+<img alt="M2M app details page" src={AssignM2mRolesPageSrc} width="600px" style={{ borderRadius: '6px' }} />
 
 </Step>
 <Step title="Basics about access token request">
@@ -66,6 +76,10 @@ The resource API indicator is in the pattern of `https://[your-tenant-id].logto.
 <img alt="Logto Management API details" src={LogtoManagementApiSrc} width="600px" style={{ borderRadius: '6px' }}/>
 
 Before accessing Logto Management API, make sure your M2M app has been assigned with M2M roles that include the `all` permission from this built-in “Logto Management API” resource.
+
+<InlineNotification>
+Logto also provides a pre-configured “Logto Management API access” M2M role for new created tenants, which the Logto Management API resource’s all permission has already assigned to. You can use it directly without manually setting permissions. This pre-configured role can also be edited and deleted as needed.
+</InlineNotification>
 
 Now, compose all we have and send the request:
 

@@ -20,7 +20,7 @@ const user_details = {
     new_password: 'Nueva contraseña:',
   },
   tab_settings: 'Configuración',
-  tab_roles: 'Roles',
+  tab_roles: 'Roles de usuario',
   tab_logs: 'Registros de usuario',
   tab_organizations: 'Organizaciones',
   authentication: 'Autenticación',
@@ -76,26 +76,23 @@ const user_details = {
   reactivate_action: 'Reactivar',
   user_reactivated: 'El usuario ha sido reactivado.',
   roles: {
-    name_column: 'Rol',
+    name_column: 'Rol de usuario',
     description_column: 'Descripción',
-    assign_button: 'Asignar roles',
     delete_description:
       'Esta acción eliminará este rol de este usuario. El rol en sí seguirá existiendo, pero ya no estará asociado con este usuario.',
     deleted: 'Se eliminó "{{name}}" correctamente de este usuario.',
-    assign_title: 'Asigne roles a {{name}}',
-    assign_subtitle: 'Autorice {{name}} uno o más roles',
+    assign_subtitle:
+      'Encuentra roles de usuario apropiados buscando por nombre, descripción o ID de rol.',
     assign_role_field: 'Asignar roles',
     role_search_placeholder: 'Buscar por nombre de rol',
     added_text: '{{value, number}} agregados',
     assigned_user_count: '{{value, number}} usuarios',
-    confirm_assign: 'Asignar roles',
     role_assigned: 'Rol(es) asignado(s) con éxito',
     search: 'Buscar por nombre de rol, descripción o ID',
     empty: 'No hay roles disponibles',
   },
   warning_no_sign_in_identifier:
     'El usuario necesita tener al menos uno de los identificadores de inicio de sesión (nombre de usuario, correo electrónico, número de teléfono o red social) para iniciar sesión. ¿Estás seguro/a de que quieres continuar?',
-  organization_roles_tooltip: 'Los roles asignados al usuario dentro de esta organización.',
 };
 
 export default Object.freeze(user_details);

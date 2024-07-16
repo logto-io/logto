@@ -1,7 +1,6 @@
 const organization_role_details = {
   page_title: 'Szczegóły roli organizacji',
   back_to_org_roles: 'Powrót do ról organizacyjnych',
-  org_role: 'Rola organizacji',
   delete_confirm:
     'W wyniku tego zostaną usunięte uprawnienia związane z tą rolą od dotkniętych użytkowników i zostaną usunięte związki między rolami organizacyjnymi, członkami organizacji a uprawnieniami organizacji.',
   deleted: 'Rola organizacji {{name}} została pomyślnie usunięta.',

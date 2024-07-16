@@ -18,7 +18,7 @@ const user_details = {
     new_password: 'Yeni şifre:',
   },
   tab_settings: 'Ayarlar',
-  tab_roles: 'Roller',
+  tab_roles: 'Kullanıcı rolleri',
   tab_logs: 'Kullanıcı kayıtları',
   tab_organizations: 'Organizasyonlar',
   authentication: 'Kimlik doğrulama',
@@ -75,26 +75,23 @@ const user_details = {
   reactivate_action: 'Yeniden Etkinleştir',
   user_reactivated: 'Kullanıcı yeniden etkinleştirildi.',
   roles: {
-    name_column: 'Rol',
+    name_column: 'Kullanıcı rolü',
     description_column: 'Açıklama',
-    assign_button: 'Rolleri Ata',
     delete_description:
       'Bu işlem, bu rolü bu kullanıcıdan kaldıracaktır. Rol kendisi hala var olacaktır, ancak artık bu kullanıcıyla ilişkili olmayacaktır.',
     deleted: '{{name}} bu kullanıcıdan başarıyla kaldırıldı.',
-    assign_title: '{{name}} kullanıcısına roller atayın',
-    assign_subtitle: '{{name}} bir veya daha fazla rolü yetkilendirin',
+    assign_subtitle:
+      'İsim, açıklama veya rol kimliği ile arama yaparak uygun kullanıcı rollerini bulun.',
     assign_role_field: 'Rolleri ata',
     role_search_placeholder: 'Rol adına göre arama yapın',
     added_text: '{{value, number}} eklendi',
     assigned_user_count: '{{value, number}} kullanıcı',
-    confirm_assign: 'Rolleri ata',
     role_assigned: 'Rol(ler) başarıyla atandı',
     search: 'Rol adına, açıklamasına veya Kimliğine göre arama yapın',
     empty: 'Uygun rol yok',
   },
   warning_no_sign_in_identifier:
     'Kullanıcının giriş yapmak için en az bir oturum açma kimliği (kullanıcı adı, e-posta, telefon numarası, veya sosyal) olması gerekiyor. Devam etmek istediğinizden emin misiniz?',
-  organization_roles_tooltip: 'Bu organizasyon içinde kullanıcıya atanan roller.',
 };
 
 export default Object.freeze(user_details);

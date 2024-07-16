@@ -1,5 +1,5 @@
 import type { ConnectorSession, SocialUserInfo } from '@logto/connector-kit';
-import { connectorSessionGuard } from '@logto/connector-kit';
+import { connectorSessionGuard, GoogleConnector } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import type { Context } from 'koa';
@@ -57,13 +57,24 @@ export const verifySocialIdentity = async (
   { provider, libraries }: TenantContext
 ): Promise<SocialUserInfo> => {
   const {
-    socials: { getUserInfoByAuthCode },
+    socials: { getUserInfo },
   } = libraries;
 
   const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
-  const userInfo = await getUserInfoByAuthCode(connectorId, connectorData, async () =>
+  // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap
+  // verification)
+  if (
+    connectorId === GoogleConnector.factoryId &&
+    connectorData[GoogleConnector.oneTapParams.credential]
+  ) {
+    const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
+    const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
+    assertThat(value === csrfToken, 'session.csrf_token_mismatch');
+  }
+
+  const userInfo = await getUserInfo(connectorId, connectorData, async () =>
     getConnectorSessionResult(ctx, provider)
   );
 

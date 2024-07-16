@@ -1,5 +1,5 @@
 import type { ConnectorResponse } from '@logto/schemas';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRoutes } from 'react-router-dom';
 import useSWRImmutable from 'swr/immutable';
@@ -9,6 +9,7 @@ import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { isCloud } from '@/consts/env';
+import AppBoundary from '@/containers/AppBoundary';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -47,72 +48,74 @@ function Profile() {
   const { isLoading: isUserAssetServiceLoading } = useUserAssetsService();
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
+  // Avoid unnecessary re-renders in child components
+  const show = useCallback(() => {
+    setShowDeleteAccountModal(true);
+  }, []);
+
+  // Avoid unnecessary re-renders in child components
+  const hide = useCallback(() => {
+    setShowDeleteAccountModal(false);
+  }, []);
+
   const showLoadingSkeleton = isLoadingUser || isLoadingConnectors || isUserAssetServiceLoading;
 
   return (
-    <div className={styles.pageContainer}>
-      <Topbar hideTenantSelector hideTitle />
-      <OverlayScrollbar className={styles.scrollable}>
-        <div className={styles.wrapper}>
-          <PageMeta titleKey="profile.page_title" />
-          <div className={pageLayout.headline}>
-            <CardTitle title="profile.title" subtitle="profile.description" />
-          </div>
-          {showLoadingSkeleton && <Skeleton />}
-          {user && !showLoadingSkeleton && (
-            <div className={styles.content}>
-              <BasicUserInfoSection user={user} onUpdate={reload} />
-              {isCloud && (
-                <LinkAccountSection user={user} connectors={connectors} onUpdate={reload} />
-              )}
-              <FormCard title="profile.password.title">
-                <CardContent
-                  title="profile.password.password_setting"
-                  data={[
-                    {
-                      key: 'password',
-                      label: 'profile.password.password',
-                      value: user.hasPassword,
-                      renderer: (value) => (value ? <span>********</span> : <NotSet />),
-                      action: {
-                        name: 'profile.change',
-                        handler: () => {
-                          navigate(user.hasPassword ? 'verify-password' : 'change-password', {
-                            state: { email: user.primaryEmail, action: 'changePassword' },
-                          });
+    <AppBoundary>
+      <div className={styles.pageContainer}>
+        <Topbar hideTenantSelector hideTitle />
+        <OverlayScrollbar className={styles.scrollable}>
+          <div className={styles.wrapper}>
+            <PageMeta titleKey="profile.page_title" />
+            <div className={pageLayout.headline}>
+              <CardTitle title="profile.title" subtitle="profile.description" />
+            </div>
+            {showLoadingSkeleton && <Skeleton />}
+            {user && !showLoadingSkeleton && (
+              <div className={styles.content}>
+                <BasicUserInfoSection user={user} onUpdate={reload} />
+                {isCloud && (
+                  <LinkAccountSection user={user} connectors={connectors} onUpdate={reload} />
+                )}
+                <FormCard title="profile.password.title">
+                  <CardContent
+                    title="profile.password.password_setting"
+                    data={[
+                      {
+                        key: 'password',
+                        label: 'profile.password.password',
+                        value: user.hasPassword,
+                        renderer: (value) => (value ? <span>********</span> : <NotSet />),
+                        action: {
+                          name: 'profile.change',
+                          handler: () => {
+                            navigate(user.hasPassword ? 'verify-password' : 'change-password', {
+                              state: { email: user.primaryEmail, action: 'changePassword' },
+                            });
+                          },
                         },
                       },
-                    },
-                  ]}
-                />
-              </FormCard>
-              {isCloud && (
-                <FormCard title="profile.delete_account.title">
-                  <div className={styles.deleteAccount}>
-                    <div className={styles.description}>
-                      {t('profile.delete_account.description')}
-                    </div>
-                    <Button
-                      title="profile.delete_account.button"
-                      onClick={() => {
-                        setShowDeleteAccountModal(true);
-                      }}
-                    />
-                  </div>
-                  <DeleteAccountModal
-                    isOpen={showDeleteAccountModal}
-                    onClose={() => {
-                      setShowDeleteAccountModal(false);
-                    }}
+                    ]}
                   />
                 </FormCard>
-              )}
-            </div>
-          )}
-        </div>
-      </OverlayScrollbar>
-      {childrenRoutes}
-    </div>
+                {isCloud && (
+                  <FormCard title="profile.delete_account.title">
+                    <div className={styles.deleteAccount}>
+                      <div className={styles.description}>
+                        {t('profile.delete_account.description')}
+                      </div>
+                      <Button title="profile.delete_account.button" onClick={show} />
+                    </div>
+                    <DeleteAccountModal isOpen={showDeleteAccountModal} onClose={hide} />
+                  </FormCard>
+                )}
+              </div>
+            )}
+          </div>
+        </OverlayScrollbar>
+        {childrenRoutes}
+      </div>
+    </AppBoundary>
   );
 }
 

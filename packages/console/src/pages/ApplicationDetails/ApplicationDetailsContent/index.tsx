@@ -15,17 +15,22 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import DetailsForm from '@/components/DetailsForm';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import OrganizationList from '@/components/OrganizationList';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedAppLink } from '@/consts';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
+import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import { organizations } from '@/hooks/use-console-routes/routes/organizations';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
+import BackchannelLogout from './BackchannelLogout';
 import Branding from './Branding';
 import EndpointsAndCredentials from './EndpointsAndCredentials';
 import GuideDrawer from './GuideDrawer';
@@ -97,6 +102,8 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
   };
 
   const onCloseDrawer = () => {
+    // The guide drawer may have updated the application data
+    onApplicationUpdated();
     setIsReadmeOpen(false);
   };
 
@@ -167,10 +174,13 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
         {data.type === ApplicationType.MachineToMachine && (
           <>
             <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Roles}`}>
-              {t('application_details.application_roles')}
+              {t('roles.col_roles')}
             </TabNavItem>
             <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Logs}`}>
               {t('application_details.machine_logs')}
+            </TabNavItem>
+            <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Organizations}`}>
+              {t('organizations.title')}
             </TabNavItem>
           </>
         )}
@@ -204,13 +214,13 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             {![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(data.type) && (
               <RefreshTokenSettings data={data} />
             )}
+            {data.type !== ApplicationType.MachineToMachine && <BackchannelLogout />}
           </DetailsForm>
         </FormProvider>
         {tab === ApplicationDetailsTabs.Settings && (
           <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} onConfirm={reset} />
         )}
       </TabWrapper>
-
       {data.type === ApplicationType.MachineToMachine && (
         <>
           <TabWrapper
@@ -224,6 +234,25 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             className={styles.tabContainer}
           >
             <MachineLogs applicationId={data.id} />
+          </TabWrapper>
+          <TabWrapper
+            isActive={tab === ApplicationDetailsTabs.Organizations}
+            className={styles.tabContainer}
+          >
+            <OrganizationList
+              type="application"
+              data={data}
+              placeholder={
+                <EmptyDataPlaceholder
+                  title={
+                    <Trans
+                      i18nKey="admin_console.application_details.no_organization_placeholder"
+                      components={{ a: <TextLink to={'/' + organizations.path} /> }}
+                    />
+                  }
+                />
+              }
+            />
           </TabWrapper>
         </>
       )}

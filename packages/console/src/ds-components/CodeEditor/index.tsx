@@ -12,6 +12,7 @@ import { lineNumberContainerStyle, lineNumberStyle, customStyle } from './utils'
 
 type Props = {
   readonly className?: string;
+  readonly title?: string;
   readonly language?: string;
   readonly isReadonly?: boolean;
   readonly value?: string;
@@ -19,10 +20,13 @@ type Props = {
   readonly tabSize?: number;
   readonly error?: string | boolean;
   readonly placeholder?: string;
+  // eslint-disable-next-line react/boolean-prop-naming -- following the naming convention of the underlying library
+  readonly showLineNumbers?: boolean;
 };
 
 function CodeEditor({
   className,
+  title,
   language,
   isReadonly = false,
   value,
@@ -30,6 +34,7 @@ function CodeEditor({
   tabSize = 2,
   error,
   placeholder,
+  showLineNumbers = true,
 }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -85,6 +90,7 @@ function CodeEditor({
   return (
     <>
       <div className={classNames(styles.container, className)}>
+        {title && <pre className={styles.title}>{title}</pre>}
         {isShowingPlaceholder && <div className={styles.placeholder}>{placeholder}</div>}
         <CopyToClipboard value={value ?? ''} variant="icon" className={styles.copy} />
         <div ref={editorRef} className={classNames(styles.editor, isReadonly && styles.readonly)}>
@@ -116,7 +122,7 @@ function CodeEditor({
       Some styles have to be applied multiple times to each of them for the sake of consistency. */}
           <SyntaxHighlighter
             showInlineLineNumbers
-            showLineNumbers={!isShowingPlaceholder}
+            showLineNumbers={!isShowingPlaceholder && showLineNumbers}
             width={textareaRef.current?.scrollWidth ?? 0}
             lineNumberContainerStyle={lineNumberContainerStyle()}
             lineNumberStyle={lineNumberStyle(maxLineNumberDigits)}

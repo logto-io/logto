@@ -1,6 +1,0 @@
-@use '@/scss/underscore' as _;
-
-.type,
-.description {
-  @include _.text-ellipsis;
-}

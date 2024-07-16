@@ -20,7 +20,7 @@ const user_details = {
     new_password: 'Neues Passwort:',
   },
   tab_settings: 'Einstellungen',
-  tab_roles: 'Rollen',
+  tab_roles: 'Benutzerrollen',
   tab_logs: 'Benutzer-Logs',
   tab_organizations: 'Organisationen',
   authentication: 'Authentifizierung',
@@ -77,26 +77,23 @@ const user_details = {
   reactivate_action: 'Aktivieren',
   user_reactivated: 'Benutzer wurde aktiviert.',
   roles: {
-    name_column: 'Rolle',
+    name_column: 'Benutzerrolle',
     description_column: 'Beschreibung',
-    assign_button: 'Rollen zuweisen',
     delete_description:
       'Diese Aktion entfernt diese Rolle von diesem Benutzer. Die Rolle selbst bleibt erhalten, aber sie wird nicht mehr mit diesem Benutzer verknüpft sein.',
     deleted: '{{name}} wurde erfolgreich von diesem Benutzer entfernt.',
-    assign_title: 'Rollen an {{name}} zuweisen',
-    assign_subtitle: '{{name}} eine oder mehrere Rollen zuweisen',
+    assign_subtitle:
+      'Finden Sie die passenden Benutzerrollen, indem Sie nach Name, Beschreibung oder Rollen-ID suchen.',
     assign_role_field: 'Rollen zuweisen',
     role_search_placeholder: 'Nach Rollennamen suchen',
     added_text: '{{value, number}} hinzugefügt',
     assigned_user_count: '{{value, number}} Benutzer',
-    confirm_assign: 'Rollen zuweisen',
     role_assigned: 'Rolle(n) erfolgreich zugewiesen',
     search: 'Nach Rollennamen, Beschreibung oder ID suchen',
     empty: 'Keine Rolle verfügbar',
   },
   warning_no_sign_in_identifier:
     'Der Benutzer muss mindestens einen der Anmelde-Identifikatoren (Benutzername, E-Mail, Telefonnummer oder soziales Konto) haben, um sich anzumelden. Sind Sie sicher, dass Sie fortfahren möchten?',
-  organization_roles_tooltip: 'Die dem Benutzer innerhalb dieser Organisation zugewiesenen Rollen.',
 };
 
 export default Object.freeze(user_details);

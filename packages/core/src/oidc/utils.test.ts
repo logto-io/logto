@@ -20,17 +20,17 @@ import {
 describe('getConstantClientMetadata()', () => {
   expect(getConstantClientMetadata(mockEnvSet, ApplicationType.SPA)).toEqual({
     application_type: 'web',
-    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
     token_endpoint_auth_method: 'none',
   });
   expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Native)).toEqual({
     application_type: 'native',
-    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
     token_endpoint_auth_method: 'none',
   });
   expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Traditional)).toEqual({
     application_type: 'web',
-    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
     token_endpoint_auth_method: 'client_secret_basic',
   });
   expect(getConstantClientMetadata(mockEnvSet, ApplicationType.MachineToMachine)).toEqual({

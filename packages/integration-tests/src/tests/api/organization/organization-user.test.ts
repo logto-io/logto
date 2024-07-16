@@ -1,5 +1,6 @@
 import assert from 'node:assert';
 
+import { RoleType } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
 import { OrganizationApiTest } from '#src/helpers/organization.js';
@@ -36,14 +37,14 @@ describe('organization user APIs', () => {
         page: 2,
         page_size: 10,
       });
-      expect(users2.length).toBeGreaterThanOrEqual(10);
+      expect(users2.length).toBe(10);
       expect(users2[0]?.id).not.toBeFalsy();
       expect(users2[0]?.id).toBe(users1[10]?.id);
       expect(total1).toBe(30);
       expect(total2).toBe(30);
     });
 
-    it('should be able to get organization users with search keyword', async () => {
+    it('should be able to get organization users with search', async () => {
       const organizationId = organizationApi.organizations[0]!.id;
       const username = generateTestName();
       const createdUser = await userApi.create({ username });
@@ -73,11 +74,8 @@ describe('organization user APIs', () => {
       expect(usersWithRoles).toHaveLength(1);
       expect(usersWithRoles[0]).toMatchObject(user);
       expect(usersWithRoles[0]!.organizationRoles).toHaveLength(2);
-      expect(usersWithRoles[0]!.organizationRoles).toContainEqual(
-        expect.objectContaining({ id: roles[0].id })
-      );
-      expect(usersWithRoles[0]!.organizationRoles).toContainEqual(
-        expect.objectContaining({ id: roles[1].id })
+      expect(usersWithRoles[0]!.organizationRoles).toEqual(
+        expect.arrayContaining(roles.map(({ id }) => expect.objectContaining({ id })))
       );
     });
   });
@@ -124,7 +122,7 @@ describe('organization user APIs', () => {
     });
   });
 
-  describe('organization - user - organization role relation routes', () => {
+  describe('organization - user - organization role relations', () => {
     const organizationApi = new OrganizationApiTest();
     const { roleApi } = organizationApi;
     const userApi = new UserApiTest();
@@ -245,6 +243,103 @@ describe('organization user APIs', () => {
         .getUserRoles(organization.id, user.id)
         .catch((error: unknown) => error);
       expect(response instanceof HTTPError && response.response.status).toBe(422); // Require membership
+    });
+
+    it('should fail when try to add or delete role to a user that does not exist', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const response = await organizationApi
+        .addUserRoles(organization.id, '0', ['0'])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'organization.require_membership' })
+      );
+
+      const response2 = await organizationApi
+        .deleteUserRole(organization.id, '0', '0')
+        .catch((error: unknown) => error);
+      assert(response2 instanceof HTTPError);
+      expect(response2.response.status).toBe(422);
+      expect(await response2.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'organization.require_membership' })
+      );
+    });
+
+    it('should fail when try to add or delete role that does not exist', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      await organizationApi.addUsers(organization.id, [user.id]);
+      const response = await organizationApi
+        .addUserRoles(organization.id, user.id, ['0'])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'entity.relation_foreign_key_not_found' })
+      );
+
+      const response2 = await organizationApi
+        .deleteUserRole(organization.id, user.id, '0')
+        .catch((error: unknown) => error);
+      assert(response2 instanceof HTTPError);
+      expect(response2.response.status).toBe(404);
+      expect(await response2.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'entity.not_found' })
+      );
+    });
+
+    it('should fail when try to add role that is not user type', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      const role = await roleApi.create({
+        name: generateTestName(),
+        type: RoleType.MachineToMachine,
+      });
+
+      await organizationApi.addUsers(organization.id, [user.id]);
+      const response = await organizationApi
+        .addUserRoles(organization.id, user.id, [role.id])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'entity.db_constraint_violated' })
+      );
+    });
+
+    it('should be able to get organization roles for a user with or without pagination', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      const roles = await Promise.all(
+        Array.from({ length: 30 }).map(async () => roleApi.create({ name: generateTestName() }))
+      );
+
+      await organizationApi.addUsers(organization.id, [user.id]);
+      await organizationApi.addUserRoles(
+        organization.id,
+        user.id,
+        roles.map(({ id }) => id)
+      );
+
+      const roles1 = await organizationApi.getUserRoles(organization.id, user.id, {
+        page: 1,
+        page_size: 20,
+      });
+      const roles2 = await organizationApi.getUserRoles(organization.id, user.id, {
+        page: 2,
+        page_size: 10,
+      });
+
+      expect(roles1).toHaveLength(20);
+      expect(roles2).toHaveLength(10);
+      expect(roles2[0]?.id).toBe(roles1[10]?.id);
+      expect(roles).toEqual(expect.arrayContaining(roles1));
+      expect(roles).toEqual(expect.arrayContaining(roles2));
+
+      const allRoles = await organizationApi.getUserRoles(organization.id, user.id);
+      expect(allRoles).toHaveLength(30);
+      expect(allRoles).toEqual(expect.arrayContaining(roles));
     });
   });
 

@@ -51,12 +51,42 @@ const profile = {
     description:
       'Deleting your account will remove all of your personal information, user data, and configuration. This action cannot be undone.',
     button: 'Delete account',
-    dialog_paragraph_1:
-      "We're sorry to hear that you want to delete your account. Deleting your account will permanently remove all data, including user information, logs, and settings, and this action cannot be undone. So please make sure to backup any important data before proceeding.",
-    dialog_paragraph_2:
-      'To proceed with the account deletion process, please email our support team at <a>{{mail}}</a> with the subject “Account Deletion Request”. We will assist you and ensure that all of your data is properly deleted from our system.',
-    dialog_paragraph_3:
-      'Thank you for choosing Logto Cloud. If you have any further questions or concerns, please do not hesitate to reach out to us.',
+    p: {
+      has_issue:
+        "We're sorry to hear that you want to delete your account. Before you can delete your account, you need to resolve the following issues.",
+      after_resolved:
+        'Once you have resolved the issues, you can delete your account. Please do not hesitate to contact us if you need any assistance.',
+      check_information:
+        "We're sorry to hear that you want to delete your account. Please check the following information carefully before you proceed.",
+      remove_all_data:
+        'Deleting your account will permanently remove all data about you in Logto Cloud. So please make sure to backup any important data before proceeding.',
+      confirm_information:
+        'Please confirm that the information above is what you expected. Once you delete your account, we will not be able to recover it.',
+      has_admin_role:
+        'Since you have the admin role in the following tenant, it will be deleted along with your account:',
+      has_admin_role_other:
+        'Since you have the admin role in the following tenants, they will be deleted along with your account:',
+      quit_tenant: 'You are about to quit the following tenant:',
+      quit_tenant_other: 'You are about to quit the following tenants:',
+    },
+    issues: {
+      paid_plan: 'The following tenant has a paid plan, please cancel the subscription first:',
+      paid_plan_other:
+        'The following tenants have paid plans, please cancel the subscription first:',
+      subscription_status: 'The following tenant has a subscription status issue:',
+      subscription_status_other: 'The following tenants have subscription status issues:',
+      open_invoice: 'The following tenant has an open invoice:',
+      open_invoice_other: 'The following tenants have open invoices:',
+    },
+    error_occurred: 'An error occurred',
+    error_occurred_description: 'Sorry, something went wrong while deleting your account:',
+    request_id: 'Request ID: {{requestId}}',
+    try_again_later:
+      'Please try again later. If the problem persists, please contact Logto team with the request ID.',
+    final_confirmation: 'Final confirmation',
+    about_to_start_deletion:
+      'You are about to start the deletion process and this action cannot be undone.',
+    permanently_delete: 'Permanently delete',
   },
   set: 'Set',
   change: 'Change',

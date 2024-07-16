@@ -11,7 +11,7 @@ export const pricingLink = 'https://logto.io/pricing';
 export const newPlansBlogLink = 'https://blog.logto.io/logto-pricing-v2';
 
 /** Docs link */
-export const envTagsFeatureLink = '/docs/recipes/tenant-type/';
+export const envTagsFeatureLink = '/docs/references/tenants/#tenant-type';
 export const organizationsFeatureLink = '/docs/recipes/organizations/';
 export const organizationConfigGuideLink = '/docs/recipes/organizations/configuration/';
 export const protectedAppLink = '/docs/recipes/protected-app/';
@@ -19,10 +19,16 @@ export const logtoThirdPartyGuideLink = '/docs/recipes/logto-as-idp/';
 export const logtoThirdPartyAppPermissionsLink =
   '/docs/recipes/logto-as-idp/permissions-management/';
 export const logtoThirdPartyAppBrandingLink = '/docs/recipes/logto-as-idp/branding-customization/';
-export const signingKeysLink = '/docs/recipes/openid-connect/signing-keys-rotation/';
+export const signingKeysLink = '/docs/references/openid-connect/signing-keys-rotation/';
 export const organizationTemplateLink =
   '/docs/recipes/organizations/understand-how-it-works/#organization-template';
 export const organizationRoleLink =
   '/docs/recipes/organizations/understand-how-it-works/#organization-role';
 export const organizationPermissionLink =
   '/docs/recipes/organizations/understand-how-it-works/#organization-permission';
+export const profilePropertyReferenceLink = '/docs/references/users/#profile-1';
+export const organizationJit = Object.freeze({
+  enterpriseSso:
+    '/docs/recipes/organizations/just-in-time-provisioning/#enterprise-sso-provisioning',
+  emailDomain: '/docs/recipes/organizations/just-in-time-provisioning/#email-domain-provisioning',
+});

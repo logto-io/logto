@@ -1,5 +1,5 @@
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
@@ -35,9 +35,10 @@ dependencies {
   Since Spring Boot and Spring Security have built-in support for both OAuth2 resource server and JWT validation,
   you DO NOT need to add additional libraries from Logto to integrate.
 
-  See [Spring Security OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html)
-  and [Spring Security Architecture](https://spring.io/guides/topicals/spring-security-architecture)
-  for more details.
+See [Spring Security OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html)
+and [Spring Security Architecture](https://spring.io/guides/topicals/spring-security-architecture)
+for more details.
+
 </InlineNotification>
 
 </Step>
@@ -50,22 +51,20 @@ and signed with [JWK](https://datatracker.ietf.org/doc/html/rfc7517)
 
 Before moving on, you will need to get an issuer and a JWKS URI to verify the issuer and the signature of the Bearer Token (`access_token`).
 
-<p>
-All the Logto Authorization server configurations can be found by requesting <code>{appendPath(props.endpoint, '/oidc/.well-known/openid-configuration')}</code>, including the <strong>issuer</strong>, <strong>jwks_uri</strong> and other authorization configs.
-</p>
+All the Logto Authorization server configurations can be found by requesting{' '}
+<code>{appendPath(props.endpoint, '/oidc/.well-known/openid-configuration').href}</code>, including the{' '}
+<strong>issuer</strong>, <strong>jwks_uri</strong> and other authorization configs.
 
 An example of the response:
 
-<pre>
-  <code className="language-json">
-{`{
+<Code className="language-json">
+    {`{
   // ...
   "issuer": "${appendPath(props.endpoint, '/oidc')}",
   "jwks_uri": "${appendPath(props.endpoint, '/oidc/jwks')}"
   // ...
 }`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -73,10 +72,8 @@ An example of the response:
 
 Use an `application.yml` file (instead of the default `application.properties`) to configure the server port, audience, and OAuth2 resource server.
 
-<pre>
-<code className="language-yaml">
-{`# path/to/project/src/main/resources/application.yaml
-server:
+<Code className="language-yaml" title="resources/application.yaml">
+    {`server:
   port: 3000
 
 logto:
@@ -89,8 +86,7 @@ spring:
         jwt:
           issuer-uri: ${appendPath(props.endpoint, '/oidc')}
           jwk-set-uri: ${appendPath(props.endpoint, '/oidc/jwks')}`}
-</code>
-</pre>
+</Code>
 
 - `audience`: The unique API identifier of your protected API resource.
 - `spring.security.oauth2.resourceserver.jwt.issuer-uri`: The iss claim value and the issuer URI in the JWT issued by Logto.
@@ -102,8 +98,7 @@ spring:
 
 Provide your own `AudienceValidator` class that implements the `OAuth2TokenValidator` interface to validate whether the required audience is present in the JWT.
 
-```java
-// path/to/project/src/main/java/io/logto/springboot/sample/validator/AudienceValidator.java
+```java title="validator/AudienceValidator.java"
 package io.logto.springboot.sample.validator;
 
 import org.springframework.security.oauth2.core.OAuth2Error;
@@ -112,8 +107,6 @@ import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 public class AudienceValidator implements OAuth2TokenValidator<Jwt> {
-
-    private final OAuth2Error oAuth2Error = new OAuth2Error("invalid_token", "Required audience not found", null);
 
     private final String audience;
 
@@ -124,17 +117,20 @@ public class AudienceValidator implements OAuth2TokenValidator<Jwt> {
     @Override
     public OAuth2TokenValidatorResult validate(Jwt jwt) {
         if (!jwt.getAudience().contains(audience)) {
-            return OAuth2TokenValidatorResult.failure(oAuth2Error);
+            return OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token", "Required audience not found", null));
         }
+
+      // Optional: For RBAC validate the scopes of the JWT.
+      String scopes = jwt.getClaimAsString("scope");
+      if (scopes == null || !scopes.contains("read:profile")) {
+          return OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token", "Insufficient permission", null));
+      }
+
 
         return OAuth2TokenValidatorResult.success();
     }
 }
 ```
-
-<InlineNotification>
-  For <a href="https://docs.logto.io/docs/recipes/rbac/" target="_blank" rel="noopener">🔐 RBAC</a>, scope validation is also required.
-</InlineNotification>
 
 </Step>
 
@@ -144,8 +140,7 @@ Spring Security makes it easy to configure your application as a resource server
 
 You need to provide instances of `JwtDecoder` and `SecurityFilterChain` (as Spring beans), and add the `@EnableWebSecurity` annotation.
 
-```java
-// path/to/project/src/main/java/io/logto/springboot/sample/configuration/SecurityConfiguration.java
+```java title="configuration/SecurityConfiguration.java"
 package io.logto.springboot.sample.configuration;
 
 import com.nimbusds.jose.JOSEObjectType;
@@ -154,17 +149,19 @@ import com.nimbusds.jose.proc.SecurityContext;
 import io.logto.springboot.sample.validator.AudienceValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 
+@Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
@@ -180,6 +177,8 @@ public class SecurityConfiguration {
     @Bean
     public JwtDecoder jwtDecoder() {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwksUri)
+                // Logto uses the ES384 algorithm to sign the JWTs by default.
+                .jwsAlgorithm(ES384)
                 // The decoder should support the token type: Access Token + JWT.
                 .jwtProcessorCustomizer(customizer -> customizer.setJWSTypeVerifier(
                         new DefaultJOSEObjectTypeVerifier<SecurityContext>(new JOSEObjectType("at+jwt"))))
@@ -194,14 +193,17 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt).cors().and()
-                .authorizeRequests(customizer -> customizer
-                        // Only authenticated requests can access your protected APIs
-                        .mvcMatchers("/", "/secret").authenticated()
-                        // Anyone can access the public profile.
-                        .mvcMatchers("/profile").permitAll()
-                );
+    public DefaultSecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+         http
+          .securityMatcher("/api/**")
+          .oauth2ResourceServer(oauth2 -> oauth2
+              .jwt(Customizer.withDefaults()))
+          .authorizeHttpRequests(requests -> requests
+              // Allow all requests to the public APIs.
+              .requestMatchers("/api/.wellknown/**").permitAll()
+              // Require jwt token validation for the protected APIs.
+              .anyRequest().authenticated());
+
         return http.build();
     }
 }
@@ -213,8 +215,7 @@ public class SecurityConfiguration {
 
 Add a controller to provide the protected and public APIs:
 
-```java
-// path/to/project/src/main/java/io/logto/springboot/sample/controller/ProtectedController.java
+```java title="controller/ProtectedController.java"
 package io.logto.springboot.sample.controller;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -226,20 +227,14 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 public class ProtectedController {
-
-    @GetMapping("/")
-    public String protectedRoot() {
-        return "Protected root.";
+    @GetMapping("/api/profile")
+    public String protectedProfile() {
+        return "Protected profile.";
     }
 
-    @GetMapping("/secret")
-    public String protectedSecret() {
-        return "Protected secret.";
-    }
-
-    @GetMapping("/profile")
-    public String publicProfile() {
-        return "Public profile.";
+    @GetMapping("/api/.wellknown/config.json")
+    public String publicConfig() {
+        return "Public config.";
     }
 }
 ```
@@ -272,12 +267,10 @@ gradlew.bat bootRun
 
 Request your protected API with the Access Token as the Bearer token in the Authorization header, e.g. execute the `curl` command.
 
-<pre>
-  <code className="language-bash">
-  {`curl --include '${appendPath(props.endpoint, '/secret')}' \\
+<Code className="language-bash">
+    {`curl --include '${appendPath(props.endpoint, '/api/profile')}' \\
 --header 'Authorization: Bearer <your-access-token>'`}
-  </code>
-</pre>
+</Code>
 
 If successful, you will get a response with 200 status:
 
@@ -298,7 +291,7 @@ WWW-Authenticate: Bearer error="invalid_token", error_description="An error occu
 
 </Step>
 
-<Step title="Further readings">
+<Step title="Resources">
 
 - [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api/)
 - [Spring Security OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html)

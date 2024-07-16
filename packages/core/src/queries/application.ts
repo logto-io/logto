@@ -1,5 +1,11 @@
 import type { Application, CreateApplication } from '@logto/schemas';
-import { ApplicationType, Applications, SearchJointMode } from '@logto/schemas';
+import {
+  ApplicationType,
+  Applications,
+  OrganizationApplicationRelations,
+  SearchJointMode,
+} from '@logto/schemas';
+import { condArray, pick } from '@silverhand/essentials';
 import type { CommonQueryMethods, SqlSqlToken } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -22,61 +28,91 @@ import {
 } from './application-user-consent-scopes.js';
 
 const { table, fields } = convertToIdentifiers(Applications);
+const organizationApplicationRelations = convertToIdentifiers(OrganizationApplicationRelations);
 
-const buildApplicationConditions = (search: Search) => {
-  const hasSearch = search.matches.length > 0;
-  const searchFields = [
-    Applications.fields.id,
-    Applications.fields.name,
-    Applications.fields.description,
-  ];
+/**
+ * The schema field keys that can be used for searching apps. For the actual field names,
+ * see {@link Applications.fields} and {@link applicationSearchFields}.
+ */
+export const applicationSearchKeys = Object.freeze(['id', 'name', 'description'] satisfies Array<
+  keyof Application
+>);
 
+/**
+ * The actual database field names that can be used for searching apps. For the schema field
+ * keys, see {@link applicationSearchKeys}.
+ */
+const applicationSearchFields = Object.freeze(
+  Object.values(pick(Applications.fields, ...applicationSearchKeys))
+);
+
+const buildApplicationSearchConditions = (search: Search) => {
   return conditionalSql(
-    hasSearch,
+    search.matches.length > 0,
     () =>
       /**
        * Avoid specifying the DB column type when calling the API (which is meaningless).
        * Should specify the DB column type of enum type.
        */
-      sql`${buildConditionsFromSearch(search, searchFields)}`
+      sql`${buildConditionsFromSearch(search, applicationSearchFields)}`
   );
 };
 
 const buildConditionArray = (conditions: SqlSqlToken[]) => {
-  const filteredConditions = conditions.filter((condition) => condition.sql !== '');
+  const filteredConditions = conditions.filter((condition) => condition.sql.trim() !== '');
   return conditionalArraySql(
     filteredConditions,
     (filteredConditions) => sql`where ${sql.join(filteredConditions, sql` and `)}`
   );
 };
 
+type ApplicationConditions = {
+  /** The search config object, can apply to fields in {@link applicationSearchFields}. */
+  search: Search;
+  /** Exclude applications with these ids. */
+  excludeApplicationIds?: string[];
+  /** Exclude applications associated with an organization. */
+  excludeOrganizationId?: string;
+  /** Filter applications by types, if not provided, all types will be included. */
+  types?: ApplicationType[];
+  /** Filter applications by whether it is a third party application. */
+  isThirdParty?: boolean;
+};
+
+const buildApplicationConditions = ({
+  search,
+  excludeApplicationIds,
+  excludeOrganizationId,
+  types,
+  isThirdParty,
+}: ApplicationConditions) => {
+  return buildConditionArray(
+    condArray(
+      excludeApplicationIds?.length &&
+        sql`${fields.id} not in (${sql.join(excludeApplicationIds, sql`, `)})`,
+      excludeOrganizationId &&
+        sql`
+      not exists (
+        select 1 from ${organizationApplicationRelations.table}
+        where ${organizationApplicationRelations.fields.applicationId} = ${fields.id}
+        and ${organizationApplicationRelations.fields.organizationId}=${excludeOrganizationId}
+      )`,
+      types?.length && sql`${fields.type} in (${sql.join(types, sql`, `)})`,
+      typeof isThirdParty === 'boolean' && sql`${fields.isThirdParty} = ${isThirdParty}`,
+      buildApplicationSearchConditions(search)
+    )
+  );
+};
+
 export const createApplicationQueries = (pool: CommonQueryMethods) => {
   /**
    * Get the number of applications that match the search conditions, conditions are joined in `and` mode.
-   *
-   * @param search The search config object, can apply to `id`, `name` and `description` field for application.
-   * @param excludeApplicationIds Exclude applications with these ids.
-   * @param isThirdParty Optional boolean, filter applications by whether it is a third party application.
-   * @param types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included.
-   * @returns A Promise that resolves the number of applications that match the search conditions.
    */
-  const countApplications = async (
-    search: Search,
-    excludeApplicationIds: string[],
-    isThirdParty?: boolean,
-    types?: ApplicationType[]
-  ) => {
+  const countApplications = async (conditions: ApplicationConditions) => {
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
       from ${table}
-      ${buildConditionArray([
-        excludeApplicationIds.length > 0
-          ? sql`${fields.id} not in (${sql.join(excludeApplicationIds, sql`, `)})`
-          : sql``,
-        types && types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``,
-        typeof isThirdParty === 'boolean' ? sql`${fields.isThirdParty} = ${isThirdParty}` : sql``,
-        buildApplicationConditions(search),
-      ])}
+      ${buildApplicationConditions(conditions)}
     `);
 
     return { count: Number(count) };
@@ -84,47 +120,17 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
 
   /**
    * Get the list of applications that match the search conditions, conditions are joined in `and` mode.
-   *
-   * @param conditions The conditions to filter applications.
-   * @param conditions.search The search config object, can apply to `id`, `name` and `description` field for application
-   * @param conditions.excludeApplicationIds Exclude applications with these ids.
-   * @param conditions.types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included.
-   * @param conditions.isThirdParty Optional boolean, filter applications by whether it is a third party application.
-   * @param conditions.pagination Optional pagination config object.
-   * @param conditions.pagination.limit The number of applications to return.
-   * @param conditions.pagination.offset The offset of applications to return.
-   * @returns A Promise that resolves the list of applications that match the search conditions.
    */
-  const findApplications = async ({
-    search,
-    excludeApplicationIds,
-    types,
-    isThirdParty,
-    pagination,
-  }: {
-    search: Search;
-    excludeApplicationIds: string[];
-    types?: ApplicationType[];
-    isThirdParty?: boolean;
-    pagination?: {
-      limit: number;
-      offset: number;
-    };
-  }) =>
+  const findApplications = async (
+    conditions: ApplicationConditions,
+    pagination?: { limit: number; offset: number }
+  ) =>
     pool.any<Application>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      ${buildConditionArray([
-        excludeApplicationIds.length > 0
-          ? sql`${fields.id} not in (${sql.join(excludeApplicationIds, sql`, `)})`
-          : sql``,
-        types && types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``,
-        typeof isThirdParty === 'boolean' ? sql`${fields.isThirdParty} = ${isThirdParty}` : sql``,
-        buildApplicationConditions(search),
-      ])}
+      ${buildApplicationConditions(conditions)}
       order by ${fields.createdAt} desc
-      ${conditionalSql(pagination?.limit, (value) => sql`limit ${value}`)}
-      ${conditionalSql(pagination?.offset, (value) => sql`offset ${value}`)}
+      ${conditionalSql(pagination, ({ limit, offset }) => sql`limit ${limit} offset ${offset}`)}
     `);
 
   const findTotalNumberOfApplications = async () => getTotalRowCountWithPool(pool)(table);
@@ -143,14 +149,13 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
   ) => updateApplication({ set, where: { id }, jsonbMode: 'merge' });
 
   const countAllApplications = async () =>
-    countApplications(
-      {
+    countApplications({
+      search: {
         matches: [],
         joint: SearchJointMode.And, // Dummy since there is no match
         isCaseSensitive: false, // Dummy since there is no match
       },
-      []
-    );
+    });
 
   const countM2mApplications = async () => {
     const { count } = await pool.one<{ count: string }>(sql`
@@ -183,7 +188,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
       ${buildConditionArray([
         sql`${fields.type} = ${ApplicationType.MachineToMachine}`,
         sql`${fields.id} in (${sql.join(applicationIds, sql`, `)})`,
-        buildApplicationConditions(search),
+        buildApplicationSearchConditions(search),
       ])}
     `);
 
@@ -206,7 +211,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
       ${buildConditionArray([
         sql`${fields.type} = ${ApplicationType.MachineToMachine}`,
         sql`${fields.id} in (${sql.join(applicationIds, sql`, `)})`,
-        buildApplicationConditions(search),
+        buildApplicationSearchConditions(search),
       ])}
       limit ${limit}
       offset ${offset}

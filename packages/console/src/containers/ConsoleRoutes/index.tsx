@@ -9,7 +9,6 @@ import ConsoleContent from '@/containers/ConsoleContent';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
-import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
@@ -23,7 +22,6 @@ function Layout() {
   return (
     <SWRConfig value={swrOptions}>
       <AppBoundary>
-        <Toast />
         <Outlet />
       </AppBoundary>
     </SWRConfig>

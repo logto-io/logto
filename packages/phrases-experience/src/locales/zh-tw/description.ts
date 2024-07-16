@@ -14,8 +14,8 @@ const description = {
   and: '和',
   enter_passcode: '驗證碼已經發送至你的{{address}} {{target}}',
   passcode_sent: '驗證碼已經發送',
-  resend_after_seconds: '在 <span>{{seconds}}</span> 秒後重新發送',
-  resend_passcode: '重新發送驗證碼',
+  resend_after_seconds: '還沒收到？ <span>{{seconds}}</span> 秒後重發',
+  resend_passcode: '還沒收到？ <a>重發驗證碼</a>',
   create_account_id_exists: '{{type}} 為 {{value}} 的帳號已存在，你要登錄嗎？',
   link_account_id_exists: ' {{type}} 為 {{value}} 的帳號已註冊，你要綁定至這個帳號嗎？',
   sign_in_id_does_not_exist: '{{type}} 為 {{value}} 的帳號不存在，你要創建一個新帳號嗎？',
@@ -87,6 +87,7 @@ const description = {
   user_id: 'User ID: {{id}}',
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
+  auto_agreement: '繼續即表示您同意<link></link>。',
 };
 
 export default Object.freeze(description);

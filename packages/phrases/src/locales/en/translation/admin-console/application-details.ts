@@ -16,14 +16,14 @@ const application_details = {
     'Use the following endpoints and credentials to set up the OIDC connection in your application.',
   refresh_token_settings: 'Refresh token',
   refresh_token_settings_description: 'Manage the refresh token rules for this application.',
-  application_roles: 'Roles',
   machine_logs: 'Machine logs',
   application_name: 'Application name',
   application_name_placeholder: 'My App',
   description: 'Description',
   description_placeholder: 'Enter your application description',
-  config_endpoint: 'OpenID Provider configuration endpoint',
-  authorization_endpoint: 'Authorization Endpoint',
+  config_endpoint: 'OpenID provider configuration endpoint',
+  issuer_endpoint: 'Issuer endpoint',
+  authorization_endpoint: 'Authorization endpoint',
   authorization_endpoint_tip:
     "The endpoint to perform authentication and authorization. It's used for OpenID Connect <a>Authentication</a>.",
   show_endpoint_details: 'Show endpoint details',
@@ -39,8 +39,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     'The URI redirects after a user sign-in (whether successful or not). See OpenID Connect <a>AuthRequest</a> for more info.',
-  post_sign_out_redirect_uri: 'Post Sign-out Redirect URI',
-  post_sign_out_redirect_uris: 'Post Sign-out Redirect URIs',
+  post_sign_out_redirect_uri: 'Post sign-out redirect URI',
+  post_sign_out_redirect_uris: 'Post sign-out redirect URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
   post_sign_out_redirect_uri_tip:
     'The URI redirects after a user sign-out (optional). It may have no practical effect in some app types.',
@@ -48,20 +48,27 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     'By default, all the origins of Redirect URIs will be allowed. Usually no action is required for this field. See the <a>MDN doc</a> for detailed info.',
-  token_endpoint: 'Token Endpoint',
-  user_info_endpoint: 'Userinfo Endpoint',
+  token_endpoint: 'Token endpoint',
+  user_info_endpoint: 'Userinfo endpoint',
   enable_admin_access: 'Enable admin access',
   enable_admin_access_label:
     'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.',
-  always_issue_refresh_token: 'Always issue Refresh Token',
+  always_issue_refresh_token: 'Always issue refresh token',
   always_issue_refresh_token_label:
-    'When enabled, Logto will always issue Refresh Tokens, regardless of whether `prompt=consent` is presented in the authentication request. However, this practice is discouraged unless necessary, as it is not compatible with OpenID Connect and may potentially cause issues.',
-  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days',
+    'When enabled, Logto will always issue refresh tokens, regardless of whether `prompt=consent` is presented in the authentication request. However, this practice is discouraged unless necessary, as it is not compatible with OpenID Connect and may potentially cause issues.',
+  refresh_token_ttl: 'Refresh token time to live (TTL) in days',
   refresh_token_ttl_tip:
-    'The duration for which a Refresh Token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the Refresh Token to this value.',
-  rotate_refresh_token: 'Rotate Refresh Token',
+    'The duration for which a refresh token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the refresh token to this value.',
+  rotate_refresh_token: 'Rotate refresh token',
   rotate_refresh_token_label:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed or certain conditions are met. <a>Learn more</a>',
+    'When enabled, Logto will issue a new refresh token for token requests when 70% of the original time to live (TTL) has passed or certain conditions are met. <a>Learn more</a>',
+  backchannel_logout: 'Backchannel Logout',
+  backchannel_logout_description:
+    'Configure the OpenID Connect backchannel logout endpoint and if session is required for this application.',
+  backchannel_logout_uri: 'Backchannel logout URI',
+  backchannel_logout_uri_session_required: 'Is session required?',
+  backchannel_logout_uri_session_required_description:
+    'When enabled, the RP requires that a `sid` (session ID) claim be included in the logout token to identify the RP session with the OP when the `backchannel_logout_uri` is used.',
   delete_description:
     'This action cannot be undone. It will permanently delete the application. Please enter the application name <span>{{name}}</span> to confirm.',
   enter_your_application_name: 'Enter your application name',
@@ -85,6 +92,7 @@ const application_details = {
     'Ensure to protect your origin server from direct access. Refer to the guide for more <a>detailed instructions</a>.',
   session_duration: 'Session duration (days)',
   try_it: 'Try it',
+  no_organization_placeholder: 'No organization found. <a>Go to organizations</a>',
   branding: {
     name: 'Branding',
     description: "Customize your application's display name and logo on the consent screen.",
@@ -130,14 +138,13 @@ const application_details = {
     grant_organization_level_permissions: 'Grant permissions of organization data',
   },
   roles: {
-    name_column: 'Role',
-    description_column: 'Description',
     assign_button: 'Assign roles',
     delete_description:
       'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
     deleted: '{{name}} was successfully removed from this user.',
     assign_title: 'Assign roles to {{name}}',
-    assign_subtitle: 'Authorize {{name}} one or more roles',
+    assign_subtitle:
+      'Machine-to-machine apps must have machine-to-machine type of roles to access related API resources.',
     assign_role_field: 'Assign roles',
     role_search_placeholder: 'Search by role name',
     added_text: '{{value, number}} added',

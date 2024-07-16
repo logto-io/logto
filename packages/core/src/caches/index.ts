@@ -28,12 +28,16 @@ abstract class RedisCacheBase implements CacheStore {
 
   async connect() {
     if (this.client) {
-      await this.client.connect();
-      const pong = await this.ping();
+      try {
+        await this.client.connect();
+        const pong = await this.ping();
 
-      if (pong === 'PONG') {
-        cacheConsole.info('Connected to Redis');
-        return;
+        if (pong === 'PONG') {
+          cacheConsole.info('Connected to Redis');
+          return;
+        }
+      } catch (error: unknown) {
+        cacheConsole.error(error);
       }
     }
     cacheConsole.warn('No Redis client initialized, skipping');
@@ -46,14 +50,14 @@ abstract class RedisCacheBase implements CacheStore {
     }
   }
 
-  protected getSocketOptions(url: URL) {
-    const certFile = url.searchParams.get('cert');
-    const keyFile = url.searchParams.get('key');
-    const caFile = url.searchParams.get('certroot');
+  protected getSocketOptions(url?: URL) {
+    const certFile = url?.searchParams.get('cert');
+    const keyFile = url?.searchParams.get('key');
+    const caFile = url?.searchParams.get('certroot');
 
     return {
-      rejectUnauthorized: yes(url.searchParams.get('reject_unauthorized')),
-      tls: url.protocol === 'rediss',
+      rejectUnauthorized: yes(url?.searchParams.get('reject_unauthorized')),
+      tls: url?.protocol === 'rediss',
       cert: certFile ? fs.readFileSync(certFile).toString() : undefined,
       key: keyFile ? fs.readFileSync(keyFile).toString() : undefined,
       ca: caFile ? fs.readFileSync(caFile).toString() : undefined,
@@ -64,7 +68,11 @@ abstract class RedisCacheBase implements CacheStore {
           return false;
         }
 
-        return Math.min(retries * 50, 500);
+        if (retries > 5) {
+          return new Error('Too many retries');
+        }
+
+        return retries * 500;
       },
     };
   }
@@ -81,11 +89,12 @@ export class RedisCache extends RedisCacheBase {
     if (redisUrl) {
       this.client = createClient({
         url: conditional(!yes(redisUrl) && redisUrl),
-        socket: trySafe(() => this.getSocketOptions(new URL(redisUrl))),
+        socket: this.getSocketOptions(trySafe(() => new URL(redisUrl))),
       });
 
       this.client.on('error', (error) => {
         void appInsights.trackException(error);
+        cacheConsole.error(error);
       });
     }
   }
@@ -127,6 +136,7 @@ export class RedisClusterCache extends RedisCacheBase {
 
     this.client.on('error', (error) => {
       void appInsights.trackException(error);
+      cacheConsole.error(error);
     });
   }
 

@@ -1,0 +1,15 @@
+{
+  "paths": {
+    "/api/applications/{id}/organizations": {
+      "get": {
+        "summary": "Get application organizations",
+        "description": "Get the list of organizations that an application is associated with.",
+        "responses": {
+          "200": {
+            "description": "An array of organizations that the application is associated with."
+          }
+        }
+      }
+    }
+  }
+}

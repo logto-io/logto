@@ -1,9 +1,11 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -11,10 +13,9 @@ import Step from '@/mdx-components/Step';
 
 This tutorial will show you how to integrate Logto into your PHP web application.
 
-<ul>
-  <li>The example uses Laravel, but the concepts are the same for other frameworks.</li>
-  <li>This tutorial assumes your website is hosted on <code>{props.sampleUrls.origin}</code>.</li>
-</ul>
+<InlineNotification>
+  The example uses Laravel, but the concepts are the same for other frameworks.
+</InlineNotification>
 
 ```bash
 composer require logto/sdk
@@ -26,10 +27,9 @@ composer require logto/sdk
 
 Insert the following code into your PHP file:
 
-<pre>
-  <code className="language-php">
-{`use logto\sdk\LogtoClient;
-use Logto\Sdk\LogtoConfig;
+<Code title="index.php" className="language-php">
+{`use Logto\\Sdk\\LogtoClient;
+use Logto\\Sdk\\LogtoConfig;
 
 $client = new LogtoClient(
   new LogtoConfig(
@@ -38,60 +38,32 @@ $client = new LogtoClient(
     appSecret: "${props.app.secret}",
   ),
 );`}
-  </code>
-</pre>
+</Code>
 
 By default, the SDK uses the built-in PHP session to store the Logto data. If you want to use other storage, you can pass a custom storage object as the second parameter:
 
-```php
-$client = new LogtoClient(
+<Code title="index.php" className="language-php">
+{`$client = new LogtoClient(
   new LogtoConfig(
     // ...
   ),
   new YourCustomStorage(),
-);
-```
+);`}
+</Code>
 
 </Step>
 
-<Step title="Implement the sign-in route">
+<Step title="Configure redirect URIs">
 
-<p>
-First, let’s enter your redirect URI. E.g. <code>{props.sampleUrls.callback}</code>. This is where Logto will redirect users after they sign in.
-</p>
-
-<UriInputField name="redirectUris" />
-
-<pre>
-  <code className="language-php">
-{`Route::get('/sign-in', function () {
-  return redirect($client->signIn('${props.redirectUris[0] || props.sampleUrls.callback}'));
-});`}
-  </code>
-</pre>
-
-If you want to show the sign-up page on the first screen, you can set `interactionMode` to `signUp`:
-
-<pre>
-  <code className="language-php">
-{`Route::get('/sign-in', function () {
-  return redirect($client->signIn('${props.redirectUris[0] || props.sampleUrls.callback}', InteractionMode::signUp));
-});`}
-  </code>
-</pre>
-
-Now, whenever your users visit `/sign-in`, it will start a new sign-in attempt and redirect the user to the Logto sign-in page.
-
-> **Note**
-> Creating a sign-in route isn't the only way to start a sign-in attempt. You can always use the `signIn` method to get the sign-in URL and redirect the user to it.
+<RedirectUrisWeb />
 
 </Step>
 
-<Step title="Implement the callback route">
+<Step title="Handle the callback">
 
 After the user signs in, Logto will redirect the user to the callback URL you set in the Logto Console. In this example, we use `/callback` as the callback URL:
 
-```php
+```php title="index.php"
 Route::get('/callback', function () {
   try {
     $client->handleSignInCallback(); // Handle a lot of stuff
@@ -104,24 +76,41 @@ Route::get('/callback', function () {
 
 </Step>
 
-<Step title="Implement the sign-out route">
+<Step title="Implement sign-in and sign-out">
+
+There are various ways to invoke sign-in and sign-out in your application. For example, you can implement two routes in your PHP application:
+
+<Code title="index.php" className="language-php">
+{`Route::get('/sign-in', function () {
+  return redirect($client->signIn('${props.redirectUris[0] || defaultRedirectUri}'));
+});`}
+</Code>
+
+If you want to show the sign-up page on the first screen, you can set `interactionMode` to `signUp`:
+
+<Code title="index.php" className="language-php">
+{`Route::get('/sign-in', function () {
+  return redirect($client->signIn('${props.redirectUris[0] || defaultRedirectUri}', InteractionMode::signUp));
+});`}
+</Code>
+
+Now, whenever your users visit `/sign-in`, it will start a new sign-in attempt and redirect the user to the Logto sign-in page.
+
+> **Note**
+> Creating a sign-in route isn't the only way to start a sign-in attempt. You can always use the `signIn` method to get the sign-in URL and redirect the user to it.
 
 To clean up the Python session and Logto session, we can designate a post sign-out redierct URI. This is where Logto will redirect users after they sign out.
 
-<UriInputField name="postLogoutRedirectUris" />
-
 And a sign-out route can be implemented as follows:
 
-<pre>
-  <code className="language-php">
+<Code title="index.php" className="language-php">
 {`Route::get('/sign-out', function () {
   return redirect(
     // Redirect the user to the home page after a successful sign-out
-    $client->signOut('${props.postLogoutRedirectUris[0] || props.sampleUrls.origin}')
+    $client->signOut('${props.postLogoutRedirectUris[0] || defaultPostSignOutUri}')
   );
 });`}
-  </code>
-</pre>
+</Code>
 
 The post sign-out redierct URI is optional, and if not provided, the user will be redirected to a Logto default page after a successful sign-out (without redirecting back to your application).
 
@@ -134,10 +123,32 @@ In Logto SDK, we can use `$client->isAuthenticated()` to check the authenticatio
 We also need to implement a home page for demonstration:
 
 - If the user is not signed in, show a sign-in button;
-- If the user is signed in, show some basic information about the user.
+- If the user is signed in, show a sign-out button.
 
-```php
+```php title="index.php"
 Route::get('/', function () {
+  if ($client->isAuthenticated() === false) {
+    return "Not authenticated <a href='/sign-in'>Sign in</a>";
+  }
+
+  return "<a href='/sign-out'>Sign out</a>";
+});
+```
+
+</Step>
+
+<Step title="Checkpoint: Test your application">
+
+<Checkpoint />
+
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can use either the `getIdTokenClaims` method or `fetchUserInfo` method to get user information. While `getIdTokenClaims` returns the user information contains in the ID token, `fetchUserInfo` fetches the user information from the userinfo endpoint.
+
+```php title="index.php"
+Route::get('/userinfo', function () {
   if ($client->isAuthenticated() === false) {
     return "Not authenticated <a href='/sign-in'>Sign in</a>";
   }
@@ -148,7 +159,7 @@ Route::get('/', function () {
     . "<br>"
     // Fetch user info from Logto userinfo endpoint
     json_decode($client->fetchUserInfo())
-    . "<br><a href='/sign-out'>Sign out</a>"
+    . "<br>"
   );
 });
 ```
@@ -160,19 +171,6 @@ Note that a field (claim) with `null` value doesn't mean the field is set. The r
 For example, if we didn't request the `email` scope when signing in, and the `email` field will be `null`. However, if we requested the `email` scope, the `email` field will be the user's email address if available.
 
 To learn more about scopes and claims, see [Get user information](https://docs.logto.io/quick-starts/php/#get-user-information).
-
-</Step>
-
-<Step title="Checkpoint: Test your application">
-
-Now, you can test your application:
-
-<ol>
-  <li>Visit <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
-  <li>Click the "Sign in" button, and you should be redirected to the Logto sign-in page.</li>
-  <li>After you sign in, you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see your user info and a "Sign out" button.</li>
-  <li>Click the "Sign out" button, and you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
-</ol>
 
 </Step>
 

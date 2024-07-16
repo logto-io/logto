@@ -1,11 +1,13 @@
+import { GoogleConnector } from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
-import { SignInMode, experience } from '@logto/schemas';
+import { AgreeToTermsPolicy, InteractionEvent, SignInMode, experience } from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { validate } from 'superstruct';
 
-import { signInWithSocial } from '@/apis/interaction';
+import { putInteraction, signInWithSocial } from '@/apis/interaction';
+import useBindSocialRelatedUser from '@/containers/SocialLinkAccount/use-social-link-related-user';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -16,24 +18,23 @@ import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
-import { stateValidation } from '@/utils/social-connectors';
+import { validateGoogleOneTapCsrfToken, validateState } from '@/utils/social-connectors';
 
 const useSocialSignInListener = (connectorId: string) => {
   const [loading, setLoading] = useState(true);
   const { setToast } = useToast();
-  const { signInMode } = useSieMethods();
+  const { signInMode, socialSignInSettings } = useSieMethods();
   const { t } = useTranslation();
-  const { termsValidation } = useTerms();
+  const { termsValidation, agreeToTermsPolicy } = useTerms();
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
 
   const navigate = useNavigate();
-
   const handleError = useErrorHandler();
-
+  const bindSocialRelatedUser = useBindSocialRelatedUser();
   const registerWithSocial = useSocialRegister(connectorId, true);
-
   const asyncSignInWithSocial = useApi(signInWithSocial);
+  const asyncPutInteraction = useApi(putInteraction);
 
   const accountNotExistErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
@@ -41,10 +42,18 @@ const useSocialSignInListener = (connectorId: string) => {
       const { relatedUser } = data ?? {};
 
       if (relatedUser) {
-        navigate(`/social/link/${connectorId}`, {
-          replace: true,
-          state: { relatedUser },
-        });
+        if (socialSignInSettings.automaticAccountLinking) {
+          const { type, value } = relatedUser;
+          await bindSocialRelatedUser({
+            connectorId,
+            ...(type === 'email' ? { email: value } : { phone: value }),
+          });
+        } else {
+          navigate(`/social/link/${connectorId}`, {
+            replace: true,
+            state: { relatedUser },
+          });
+        }
 
         return;
       }
@@ -52,7 +61,13 @@ const useSocialSignInListener = (connectorId: string) => {
       // Register with social
       await registerWithSocial(connectorId);
     },
-    [connectorId, navigate, registerWithSocial]
+    [
+      bindSocialRelatedUser,
+      connectorId,
+      navigate,
+      registerWithSocial,
+      socialSignInSettings.automaticAccountLinking,
+    ]
   );
 
   const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
@@ -67,8 +82,12 @@ const useSocialSignInListener = (connectorId: string) => {
           return;
         }
 
-        // Agree to terms and conditions first before proceeding
-        if (!(await termsValidation())) {
+        /**
+         * Agree to terms and conditions first before proceeding
+         * If the agreement policy is `Manual`, the user must agree to the terms to reach this step.
+         * Therefore, skip the check for `Manual` policy.
+         */
+        if (agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && !(await termsValidation())) {
           navigate('/' + experience.routes.signIn);
           return;
         }
@@ -85,6 +104,7 @@ const useSocialSignInListener = (connectorId: string) => {
     [
       preSignInErrorHandler,
       signInMode,
+      agreeToTermsPolicy,
       termsValidation,
       accountNotExistErrorHandler,
       setToast,
@@ -94,6 +114,11 @@ const useSocialSignInListener = (connectorId: string) => {
 
   const signInWithSocialHandler = useCallback(
     async (connectorId: string, data: Record<string, unknown>) => {
+      // When the callback is called from Google One Tap, the interaction event was not set yet.
+      if (data[GoogleConnector.oneTapParams.csrfToken]) {
+        await asyncPutInteraction(InteractionEvent.SignIn);
+      }
+
       const [error, result] = await asyncSignInWithSocial({
         connectorId,
         connectorData: {
@@ -114,7 +139,7 @@ const useSocialSignInListener = (connectorId: string) => {
         window.location.replace(result.redirectTo);
       }
     },
-    [asyncSignInWithSocial, handleError, signInWithSocialErrorHandlers]
+    [asyncPutInteraction, asyncSignInWithSocial, handleError, signInWithSocialErrorHandlers]
   );
 
   // Social Sign-in Callback Handler
@@ -130,7 +155,10 @@ const useSocialSignInListener = (connectorId: string) => {
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
 
-    if (!state || !stateValidation(state, connectorId)) {
+    if (
+      !validateState(state, connectorId) &&
+      !validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])
+    ) {
       setToast(t('error.invalid_connector_auth'));
       navigate('/' + experience.routes.signIn);
       return;

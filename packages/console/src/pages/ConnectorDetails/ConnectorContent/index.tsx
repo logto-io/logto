@@ -1,14 +1,15 @@
-import { ServiceConnector } from '@logto/connector-kit';
+import { ServiceConnector, GoogleConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import BasicForm from '@/components/ConnectorForm/BasicForm';
 import ConfigForm from '@/components/ConnectorForm/ConfigForm';
+import GoogleOneTapCard from '@/components/ConnectorForm/GoogleOneTapCard';
 import ConnectorTester from '@/components/ConnectorTester';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
@@ -34,18 +35,10 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
   const formData = useMemo(() => convertResponseToForm(connectorData), [connectorData]);
-
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
-    defaultValues: {
-      ...formData,
-      /**
-       * Note:
-       * The `formConfig` will be setup in the `useEffect` hook since react-hook-form's `useForm` hook infers `Record<string, unknown>` to `{ [x: string]: {} | undefined }` incorrectly,
-       * this causes we cannot apply the default value of `formConfig` to the form.
-       */
-      formConfig: {},
-    },
+    // eslint-disable-next-line no-restricted-syntax -- The original type will cause "infinitely deep type" error.
+    defaultValues: formData as Record<string, unknown>,
   });
 
   const {
@@ -67,23 +60,15 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   const isSocialConnector = connectorType === ConnectorType.Social;
   const isEmailServiceConnector = connectorId === ServiceConnector.Email;
 
-  useEffect(() => {
-    /**
-     * Note: should not refresh form data when the form is dirty.
-     */
-    if (isDirty) {
-      return;
-    }
-    reset(formData);
-  }, [formData, isDirty, reset]);
-
   const configParser = useConnectorFormConfigParser();
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
       const { formItems, isStandard, id } = connectorData;
-      const config = configParser(data, formItems);
-      const { syncProfile, name, logo, logoDark, target } = data;
+      const { syncProfile, name, logo, logoDark, target, rawConfig } = data;
+      // Apply the raw config first to avoid losing data updated from other forms that are not
+      // included in the form items.
+      const config = { ...rawConfig, ...configParser(data, formItems) };
 
       const payload = isSocialConnector
         ? {
@@ -165,6 +150,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
             />
           </FormCard>
         )}
+        {connectorId === GoogleConnector.factoryId && <GoogleOneTapCard />}
         {!isSocialConnector && (
           <FormCard title="connector_details.test_connection">
             <ConnectorTester

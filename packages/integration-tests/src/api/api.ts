@@ -1,3 +1,4 @@
+import { formUrlEncodedHeaders } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 import ky from 'ky';
 
@@ -31,5 +32,6 @@ export const cloudApi = ky.extend({
 });
 
 export const oidcApi = ky.extend({
+  headers: formUrlEncodedHeaders,
   prefixUrl: appendPath(new URL(logtoUrl), 'oidc'),
 });

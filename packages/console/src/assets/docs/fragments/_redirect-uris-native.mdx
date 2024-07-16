@@ -1,0 +1,12 @@
+import InlineNotification from '@/ds-components/InlineNotification';
+import UriInputField from '@/mdx-components/UriInputField';
+
+import ExperienceOverview from './_experience-overview.mdx';
+
+export const defaultRedirectUri = 'io.logto://callback';
+
+<ExperienceOverview />
+
+Now, let's configure your redirect URI. E.g. {`${props.defaultUri ?? defaultRedirectUri}`}.
+
+<UriInputField name="redirectUris" />

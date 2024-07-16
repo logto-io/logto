@@ -1,5 +1,5 @@
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
@@ -28,8 +28,7 @@ To proceed, you'll need to integrate the Logto SDK into your client application.
 
 You'll also need to tweak the Logto SDK configuration to inform Logto that you want to request an access token for your API in this grant. Here's an example using React:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
   {`import { LogtoProvider } from '@logto/react';
 
 const App = () => {
@@ -44,13 +43,11 @@ const App = () => {
     </LogtoProvider>
   );
 };`}
-  </code>
-</pre>
+</Code>
 
 Once a user signs in with Logto, `isAuthenticated` within the Logto SDK will become `true`:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
   {`import { useLogto } from '@logto/react';
 
 const Content = () => {
@@ -58,13 +55,11 @@ const Content = () => {
 
   console.log(isAuthenticated); // true
 };`}
-  </code>
-</pre>
+</Code>
 
 Now, you can use the `getAccessToken` method to retrieve an access token for your API:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
   {`const Content = () => {
   const { getAccessToken, isAuthenticated } = useLogto();
 
@@ -75,13 +70,11 @@ Now, you can use the `getAccessToken` method to retrieve an access token for you
     }
   }, [isAuthenticated, getAccessToken]);
 };`}
-  </code>
-</pre>
+</Code>
 
 Lastly, include this access token in the `Authorization` header when making requests to your API:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
   {`const Content = () => {
   const { getAccessToken, isAuthenticated } = useLogto();
 
@@ -97,8 +90,7 @@ Lastly, include this access token in the `Authorization` header when making requ
     }
   }, [isAuthenticated, getAccessToken]);
 };`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
@@ -150,8 +142,7 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
 
 Subsequently, create a middleware to verify the access token:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
   {`import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 // Generate a JWKS using jwks_uri obtained from the Logto server
@@ -181,8 +172,7 @@ export const authMiddleware = async (req, res, next) => {
 
   return next();
 };`}
-  </code>
-</pre>
+</Code>
 
 You can now employ this middleware to protect your API endpoints:
 
@@ -210,8 +200,7 @@ To address this, we can employ role-based access control (RBAC). In Logto, you c
 
 After defining roles and permissions, you can add the `scopes` option to the `LogtoProvider` component:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
   {`<LogtoProvider
   config={{
     // ...other configurations
@@ -219,8 +208,7 @@ After defining roles and permissions, you can add the `scopes` option to the `Lo
     scopes: ['read:products', 'write:products'], // Replace with the actual scope(s)
   }}
 >`}
-  </code>
-</pre>
+</Code>
 
 Logto will then only issue an access token with the appropriate scope(s) to the user. For instance, if a user only has the `read:products` scope, the access token will solely contain that scope:
 

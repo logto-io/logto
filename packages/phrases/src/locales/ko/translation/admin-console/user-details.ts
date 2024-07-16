@@ -18,7 +18,7 @@ const user_details = {
     new_password: '새로운 비밀번호:',
   },
   tab_settings: '설정',
-  tab_roles: '역할',
+  tab_roles: '사용자 역할',
   tab_logs: '사용자 기록',
   tab_organizations: '조직',
   authentication: '인증',
@@ -71,26 +71,22 @@ const user_details = {
   reactivate_action: '재활성화',
   user_reactivated: '사용자가 재활성화되었습니다.',
   roles: {
-    name_column: '역할',
+    name_column: '사용자 역할',
     description_column: '설명',
-    assign_button: '역할 할당',
     delete_description:
       '이 행동은 사용자에게서 이 역할을 삭제할 거예요. 역할은 그대로 존재하지만, 이 사용자에게 더 이상 할당되지 않아요.',
     deleted: '{{name}}이/가 성공적으로 이 사용자에게서 제거되었어요.',
-    assign_title: '{{name}}에게 역할 할당',
-    assign_subtitle: '{{name}}에게 하나 이상의 역할을 할당하세요',
+    assign_subtitle: '이름, 설명 또는 역할 ID로 검색하여 적절한 사용자 역할을 찾으세요.',
     assign_role_field: '역할 할당',
     role_search_placeholder: '역할 이름으로 검색',
     added_text: '{{value, number}}이/가 추가되었어요',
     assigned_user_count: '사용자 {{value, number}}명',
-    confirm_assign: '역할 할당',
     role_assigned: '역할을 성공적으로 할당했어요',
     search: '역할 이름, 설명, ID로 검색',
     empty: '역할 없음',
   },
   warning_no_sign_in_identifier:
     '사용자는 로그인 식별자(사용자 이름, 이메일, 전화 번호 또는 소셜) 중 적어도 하나를 갖고 로그인해야 합니다. 계속 하시겠습니까?',
-  organization_roles_tooltip: '조직 내에서 사용자에게 할당된 역할.',
 };
 
 export default Object.freeze(user_details);

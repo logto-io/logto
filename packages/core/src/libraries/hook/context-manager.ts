@@ -1,12 +1,14 @@
 import {
   InteractionEvent,
   InteractionHookEvent,
+  type User,
   managementApiHooksRegistration,
   type DataHookEvent,
   type InteractionApiMetadata,
   type ManagementApiContext,
+  userInfoSelectFields,
 } from '@logto/schemas';
-import { type Optional } from '@silverhand/essentials';
+import { pick, type Optional } from '@silverhand/essentials';
 import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
@@ -16,28 +18,49 @@ import {
   hasRegisteredDataHookEvent,
 } from './utils.js';
 
-type ManagementApiHooksRegistrationKey = keyof typeof managementApiHooksRegistration;
-
 type DataHookMetadata = {
   userAgent?: string;
   ip: string;
 } & Partial<InteractionApiMetadata>;
 
-type DataHookContext = {
-  event: DataHookEvent;
+export type DataHookContext = {
   /** Data details */
   data?: unknown;
 } & Partial<ManagementApiContext> &
   Record<string, unknown>;
 
+type UserContext = {
+  /**
+   * This user will be picked with {@link userInfoSelectFields} and set to the `data` field. The
+   * original user object will be discarded.
+   *
+   * @example
+   * const context = { user: { ... } };
+   *
+   * // The actual context to send will be:
+   * { data: pick(user, ...userInfoSelectFields) }
+   */
+  user: User;
+};
+
+/**
+ * A map of data hook event to its context type for better type hinting.
+ */
+export type DataHookContextMap = {
+  'Organization.Membership.Updated': { organizationId: string };
+  'User.Created': UserContext;
+  'User.Data.Updated': UserContext;
+  'User.Deleted': UserContext;
+};
+
 export class DataHookContextManager {
-  contextArray: DataHookContext[] = [];
+  contextArray: Array<DataHookContext & { event: DataHookEvent }> = [];
 
   constructor(public metadata: DataHookMetadata) {}
 
   getRegisteredDataHookEventContext(
     ctx: IRouterParamContext & Context
-  ): DataHookContext | undefined {
+  ): Readonly<[DataHookEvent, DataHookContext]> | undefined {
     const { method, _matchedRoute: matchedRoute } = ctx;
 
     const key = buildManagementApiDataHookRegistrationKey(method, matchedRoute);
@@ -46,16 +69,29 @@ export class DataHookContextManager {
       return;
     }
 
-    return {
-      event: managementApiHooksRegistration[key],
-      ...buildManagementApiContext(ctx),
-      data: ctx.response.body,
-    };
+    return Object.freeze([
+      managementApiHooksRegistration[key],
+      {
+        ...buildManagementApiContext(ctx),
+        data: ctx.response.body,
+      },
+    ]);
   }
 
-  appendContext(context: DataHookContext) {
+  appendContext<Event extends DataHookEvent>(
+    event: Event,
+    context: Event extends keyof DataHookContextMap
+      ? DataHookContextMap[Event] & Partial<ManagementApiContext> & Record<string, unknown>
+      : DataHookContext
+  ) {
+    const { user, ...rest } = context;
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    this.contextArray.push(context);
+    this.contextArray.push({
+      event,
+      // eslint-disable-next-line no-restricted-syntax -- trust the input
+      ...(user ? { data: pick(user as User, ...userInfoSelectFields) } : {}),
+      ...rest,
+    });
   }
 }
 

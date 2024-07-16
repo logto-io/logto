@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { ConnectorFormType } from '@/types/connector';
 import { parseFormConfig } from '@/utils/connector-form';
-import { safeParseJson } from '@/utils/json';
+import { safeParseJsonObject } from '@/utils/json';
 
 const useJsonStringConfigParser = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -16,7 +16,7 @@ const useJsonStringConfigParser = () => {
       return;
     }
 
-    const result = safeParseJson(config);
+    const result = safeParseJsonObject(config);
 
     if (!result.success) {
       toast.error(result.error);

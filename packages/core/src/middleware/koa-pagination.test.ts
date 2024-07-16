@@ -16,7 +16,7 @@ const appendHeader = jest.fn((key: string, value: string) => {
   }
 });
 
-const createContext = (query: Record<string, string>): WithPaginationContext<Context> => {
+const createContext = (query: Record<string, string>): WithPaginationContext<Context, false> => {
   const baseContext = createMockContext();
   const context = {
     ...baseContext,

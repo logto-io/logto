@@ -6,15 +6,18 @@
  */
 
 import type { Nullable } from '@silverhand/essentials';
+import classNames from 'classnames';
 import { useState, isValidElement, type ReactElement, cloneElement, useRef, Children } from 'react';
 
 import type { Props as TabItemProps } from '../TabItem';
 
 import * as styles from './index.module.scss';
 
+type MaybeArray<T> = T | T[];
+
 type Props = {
   readonly className?: string;
-  readonly children: ReactElement<TabItemProps>;
+  readonly children: MaybeArray<ReactElement<TabItemProps>>;
 };
 
 // A very rough duck type, but good enough to guard against mistakes while
@@ -72,7 +75,11 @@ function Tabs({ className, children }: Props): JSX.Element {
 
   return (
     <div className={styles.container}>
-      <ul role="tablist" aria-orientation="horizontal" className={className}>
+      <ul
+        role="tablist"
+        aria-orientation="horizontal"
+        className={classNames(styles.tabItemList, className)}
+      >
         {values.map(({ value, label }, index) => (
           <li
             key={value}

@@ -1,4 +1,4 @@
-import { type User, type Organization } from '@logto/schemas';
+import { type User, type Organization, RoleType } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -34,25 +34,25 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
     formState: { isSubmitting },
   } = useForm<{
     users: User[];
-    scopes: Array<Option<string>>;
+    roles: Array<Option<string>>;
   }>({
-    defaultValues: { users: [], scopes: [] },
+    defaultValues: { users: [], roles: [] },
   });
   const [keyword, setKeyword] = useState('');
 
   const onSubmit = handleSubmit(
-    trySubmitSafe(async (data) => {
+    trySubmitSafe(async ({ users, roles }) => {
       await api.post(`api/organizations/${organization.id}/users`, {
         json: {
-          userIds: data.users.map(({ id }) => id),
+          userIds: users.map(({ id }) => id),
         },
       });
 
-      if (data.scopes.length > 0) {
+      if (roles.length > 0) {
         await api.post(`api/organizations/${organization.id}/users/roles`, {
           json: {
-            userIds: data.users.map(({ id }) => id),
-            organizationRoleIds: data.scopes.map(({ value }) => value),
+            userIds: users.map(({ id }) => id),
+            organizationRoleIds: roles.map(({ value }) => value),
           },
         });
       }
@@ -126,10 +126,11 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
         </FormField>
         <FormField title="organization_details.add_with_organization_role">
           <Controller
-            name="scopes"
+            name="roles"
             control={control}
             render={({ field: { onChange, value } }) => (
               <OrganizationRolesSelect
+                roleType={RoleType.User}
                 keyword={keyword}
                 setKeyword={setKeyword}
                 value={value}

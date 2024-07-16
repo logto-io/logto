@@ -1,4 +1,3 @@
-import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import ReactModal from 'react-modal';
@@ -53,7 +52,7 @@ const IframeModal = ({ className, title = '', href = '', onClose }: ModalProps) 
             title={title}
             src={href}
             sandbox="allow-same-origin"
-            className={conditional(isLoaded && styles.loaded)}
+            className={classNames(styles.iframe, isLoaded && styles.loaded)}
             onLoad={() => {
               setIsLoaded(true);
               loadingBarRef.current?.complete();

@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { type Nullable } from '@silverhand/essentials';
 import Modal from 'react-modal';
 
-import ApplicationCreation from '@/components/ApplicationCreation';
+import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import ModalFooter from '@/components/Guide/ModalFooter';
 import ModalHeader from '@/components/Guide/ModalHeader';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import GuideLibrary from '../GuideLibrary';
@@ -14,11 +13,17 @@ import * as styles from './index.module.scss';
 type Props = {
   readonly isOpen: boolean;
   readonly onClose: () => void;
+  /**
+   * The callback function when a guide is selected
+   * For the parameter:
+   * - `undefined`: No guide is selected
+   * - `null`: Create application without a framework
+   * - `selectedGuide`: The selected guide
+   */
+  readonly onSelectGuide: (guide?: Nullable<SelectedGuide>) => void;
 };
 
-function GuideLibraryModal({ isOpen, onClose }: Props) {
-  const { navigate } = useTenantPathname();
-  const [showCreateForm, setShowCreateForm] = useState(false);
+function GuideLibraryModal({ isOpen, onClose, onSelectGuide }: Props) {
   return (
     <Modal
       shouldCloseOnEsc
@@ -36,26 +41,17 @@ function GuideLibraryModal({ isOpen, onClose }: Props) {
           requestSuccessMessage="guide.request_guide_successfully"
           onClose={onClose}
         />
-        <GuideLibrary hasCardButton className={styles.content} />
+        <GuideLibrary hasCardButton className={styles.content} onSelectGuide={onSelectGuide} />
         <ModalFooter
           wrapperClassName={styles.footerInnerWrapper}
           content="guide.do_not_need_tutorial"
           buttonText="guide.app.continue_without_framework"
           onClick={() => {
-            setShowCreateForm(true);
+            // Create application without a framework
+            onSelectGuide(null);
           }}
         />
       </div>
-      {showCreateForm && (
-        <ApplicationCreation
-          onCompleted={(newApp) => {
-            if (newApp) {
-              navigate(`/applications/${newApp.id}`);
-            }
-            setShowCreateForm(false);
-          }}
-        />
-      )}
     </Modal>
   );
 }

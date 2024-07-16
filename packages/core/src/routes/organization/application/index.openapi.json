@@ -1,0 +1,190 @@
+{
+  "tags": [
+    {
+      "name": "Organization applications",
+      "description": "Manage organization - application relationships. An application can be associated with one or more organizations in order to get access to the organization resources.\n\nCurrently, only machine-to-machine applications can be associated with organizations."
+    }
+  ],
+  "paths": {
+    "/api/organizations/{id}/applications": {
+      "get": {
+        "summary": "Get organization applications",
+        "description": "Get applications associated with the organization.",
+        "responses": {
+          "200": {
+            "description": "A list of applications."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add organization application",
+        "description": "Add an application to the organization.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "applicationIds": {
+                    "description": "The application IDs to add."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The application was added successfully."
+          },
+          "422": {
+            "description": "The application could not be added. Some of the applications may not exist."
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace organization applications",
+        "description": "Replace all applications associated with the organization with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "applicationIds": {
+                    "description": "An array of application IDs to replace existing applications."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The applications were replaced successfully."
+          },
+          "422": {
+            "description": "The applications could not be replaced. Some of the applications may not exist."
+          }
+        }
+      }
+    },
+    "/api/organizations/{id}/applications/{applicationId}": {
+      "delete": {
+        "summary": "Remove organization application",
+        "description": "Remove an application from the organization.",
+        "responses": {
+          "204": {
+            "description": "The application was removed from the organization successfully."
+          }
+        }
+      }
+    },
+    "/api/organizations/{id}/applications/roles": {
+      "post": {
+        "summary": "Assign roles to applications in an organization",
+        "description": "Assign roles to applications in the specified organization.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "applicationIds": {
+                    "description": "An array of application IDs to assign roles to."
+                  },
+                  "organizationRoleIds": {
+                    "description": "An array of organization role IDs to assign to the applications."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Roles were assigned to the applications successfully."
+          },
+          "422": {
+            "description": "At least one of the IDs provided is not valid. For example, the organization ID, application ID, or organization role ID does not exist; the application is not a member of the organization; or the role type is not assignable to the application."
+          }
+        }
+      }
+    },
+    "/api/organizations/{id}/applications/{applicationId}/roles": {
+      "get": {
+        "summary": "Get organization application roles",
+        "description": "Get roles associated with the application in the organization.",
+        "responses": {
+          "200": {
+            "description": "A list of roles."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add organization application role",
+        "description": "Add a role to the application in the organization.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationRoleIds": {
+                    "description": "The role ID to add."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The role was added successfully."
+          },
+          "422": {
+            "description": "The role could not be added. Some of the roles may not exist."
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace organization application roles",
+        "description": "Replace all roles associated with the application in the organization with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationRoleIds": {
+                    "description": "An array of role IDs to replace existing roles."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The roles were replaced successfully."
+          },
+          "422": {
+            "description": "The roles could not be replaced. Some of the roles may not exist."
+          }
+        }
+      }
+    },
+    "/api/organizations/{id}/applications/{applicationId}/roles/{organizationRoleId}": {
+      "delete": {
+        "summary": "Remove organization application role",
+        "description": "Remove a role from the application in the organization.",
+        "responses": {
+          "204": {
+            "description": "The role was removed from the application in the organization successfully."
+          },
+          "422": {
+            "description": "The application is not associated with the organization."
+          },
+          "404": {
+            "description": "Cannot find the record to delete."
+          }
+        }
+      }
+    }
+  }
+}

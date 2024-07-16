@@ -1,7 +1,7 @@
-import { type OrganizationScope } from '@logto/schemas';
+import { type OrganizationRole, type RoleType } from '@logto/schemas';
 import classNames from 'classnames';
 
-import RoleIcon from '@/assets/icons/role-feature.svg';
+import RoleIcon from '@/assets/icons/organization-role-feature.svg';
 import MultiSelect, { type Option } from '@/ds-components/Select/MultiSelect';
 import useSearchValues from '@/hooks/use-search-values';
 
@@ -30,10 +30,11 @@ type Props = {
   readonly onChange: (value: Array<Option<string>>) => void;
   readonly keyword: string;
   readonly setKeyword: (keyword: string) => void;
+  readonly roleType: RoleType;
 };
 
-function OrganizationRolesSelect({ value, onChange, keyword, setKeyword }: Props) {
-  const { data: scopes, isLoading } = useSearchValues<OrganizationScope>(
+function OrganizationRolesSelect({ value, onChange, keyword, setKeyword, roleType }: Props) {
+  const { data: roles, isLoading } = useSearchValues<OrganizationRole>(
     'api/organization-roles',
     keyword
   );
@@ -41,7 +42,9 @@ function OrganizationRolesSelect({ value, onChange, keyword, setKeyword }: Props
   return (
     <MultiSelect
       value={value}
-      options={scopes.map(({ id, name }) => ({ value: id, title: name }))}
+      options={roles
+        .filter(({ type }) => type === roleType)
+        .map(({ id, name }) => ({ value: id, title: name }))}
       placeholder="organizations.search_role_placeholder"
       isOptionsLoading={isLoading}
       renderOption={RoleOption}

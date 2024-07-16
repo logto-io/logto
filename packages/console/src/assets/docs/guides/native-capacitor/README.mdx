@@ -1,25 +1,27 @@
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 
 import capaticorIos from './assets/capacitor-ios.webp';
 import logtoSignInPage from './assets/logto-sign-in-page.webp';
 import logtoSignOutPage from './assets/logto-sign-out-page.webp';
+import RedirectUrisNative from '../../fragments/_redirect-uris-native.mdx';
+
+export const defaultRedirectUri = 'com.example.app://callback';
+export const defaultPostSignOutUri = 'com.example.app://callback/sign-out';
 
 <Steps>
 
-<Step title="Add Logto Capacitor SDK">
+<Step title="Install Capacitor SDK">
 
 To get started, you need to create a Capacitor project. You can follow the [official guide](https://capacitorjs.com/docs/getting-started) to create one.
 
 This tutorial is framework-agnostic, so you can use any UI framework you prefer and update the code accordingly.
 
-```bash
-# or yarn, pnpm
-npm install @logto/capacitor
-# Install peer dependencies
-npm install @capacitor/browser @capacitor/app @capacitor/preferences
-```
+First, install Logto Capacitor SDK and its peer dependencies:
+
+<NpmLikeInstallation packageName="@logto/capacitor @capacitor/browser @capacitor/app @capacitor/preferences" />
 
 </Step>
 
@@ -27,42 +29,36 @@ npm install @capacitor/browser @capacitor/app @capacitor/preferences
 
 Add the following code to your Capacitor project:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`import LogtoClient from '@logto/capacitor';
 
 const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
 });`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
-<Step title="Implement the sign-in button">
+<Step title="Configure redirect URIs" >
 
-Now, let's configure the redirect URI. The redirect URI is used to redirect the user back to your application after the authentication flow.
+<RedirectUrisNative defaultUri={defaultRedirectUri} />
 
-Ensure that the URI redirects to the Capacitor app, for example, `com.example.app://callback`. The value may vary depending on your Capacitor app configuration. For more details, see [Capacitor Deep Links](https://capacitorjs.com/docs/guides/deep-links).
+Ensure that the URI redirects to the Capacitor app. The value may vary depending on your Capacitor app configuration. For more details, see [Capacitor Deep Links](https://capacitorjs.com/docs/guides/deep-links).
 
-<UriInputField name="redirectUris" />
+Remember to click on **Save changes** after updating the redirect URI.
 
-Remember to click on **Save changes** after updating the redirect URI. Then, add the following code to the `onClick` handler of the sign-in button:
+</Step>
 
-<pre>
-  <code className="language-ts">
+<Step title="Implement sign-in">
+
+<Code className="language-ts">
     {`const onClick = async () => {
-  await logtoClient.signIn('${props.redirectUris[0] || 'com.example.app://callback'}');
+  await logtoClient.signIn('${props.redirectUris[0] || defaultRedirectUri}');
   console.log(await logtoClient.isAuthenticated()); // true
   console.log(await logtoClient.getIdTokenClaims()); // { sub: '...', ... }
 };`}
-  </code>
-</pre>
-
-</Step>
-
-<Step title="Checkpoint: Trigger the authentication flow">
+</Code>
 
 Run the Capacitor app and click the sign-in button. A browser window will open, redirecting to the Logto sign-in page.
 
@@ -80,7 +76,7 @@ Run the Capacitor app and click the sign-in button. A browser window will open, 
 
 </Step>
 
-<Step title="Sign-out">
+<Step title="Implement sign-out">
 
 Since Capacitor leverages the Safari View Controller on iOS and Chrome Custom Tabs on Android, the authentication state can be persisted for a while. However, sometimes the user may want to sign out of the application immediately. In this case, we can use the `signOut` method to sign out the user:
 
@@ -108,19 +104,17 @@ The user needs to click "Done" to close the web view and return to the Capacitor
 
 Ensure that the post sign-out redirect URI redirects to the Capacitor app. Then add the following code to the `onClick` handler of the sign-out button:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts">
     {`const onClick = async () => {
-  await logtoClient.signOut('${props.postLogoutRedirectUris[0] || 'com.example.app://callback/sign-out'}');
+  await logtoClient.signOut('${props.postLogoutRedirectUris[0] || defaultPostSignOutUri}');
 };`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
 <Step title="Checkpoint: Complete the authentication flow">
 
-Run the Capacitor app again and click the sign-in button. If everything goes well, when the authentication flow is completed, the Capacitor app will receive the sign-in result and print the user claims in the console.
+Run the Capacitor app click the sign-in button. If everything goes well, when the authentication flow is completed, the Capacitor app will receive the sign-in result and print the user claims in the console.
 
 <center>
   <img src={capaticorIos} alt="Capacitor iOS app" width="800" />

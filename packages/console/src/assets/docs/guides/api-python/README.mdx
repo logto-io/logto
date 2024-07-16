@@ -7,9 +7,7 @@ import { appendPath } from '@silverhand/essentials';
 
 <Step title="Extract the Bearer Token from request header">
 
-```python
-"""requires-auth.py
-"""
+```python title="requires-auth.py"
 def get_auth_token():
   auth = request.headers.get("Authorization", None)
 
@@ -41,30 +39,22 @@ pip install python-jose[ecdsa]
 
 ### Retrieve Logto's OIDC configurations
 
-<p>
 You will need a JWK public key set and the token issuer to verify the signature and source of the received JWS token.
-All the latest public Logto Authorization Configurations can be found at <code>{appendPath(props.endpoint, '/oidc/.well-known/openid-configuration')}</code>.
+All the latest public Logto Authorization Configurations can be found at <code>{appendPath(props.endpoint, '/oidc/.well-known/openid-configuration').href}</code>.
 
 e.g. You can locate the following two fields in the response body if you request the above endpoint.
-</p>
 
-<pre>
-  <code className="language-json">
+<Code className="language-json">
 {`{
   "issuer": "${appendPath(props.endpoint, '/oidc')}",
   "jwks_uri": "${appendPath(props.endpoint, '/oidc/jwks')}"
 }`}
-  </code>
-</pre>
+</Code>
 
 ### Create the authorization validation decorator
 
-<pre>
-  <code className="language-python">
-{`"""requires-auth.py
-"""
-
-import json
+<Code className="language-python" title="requires-auth.py">
+{`import json
 from flask import request,  _request_ctx_stack
 from six.moves.urllib.request import urlopen
 from functools import wraps
@@ -105,11 +95,12 @@ def requires_auth(f):
 
     return f(*args, **kwargs)
   return decorated`}
-  </code>
-</pre>
+</Code>
+
+<br/>
 
 <InlineNotification>
-  For <a href="https://docs.logto.io/docs/recipes/rbac/" target="_blank" rel="noopener">🔐 RBAC</a>, scope validation is also required.
+  For <Anchor href="https://docs.logto.io/docs/recipes/rbac/" target="_blank" rel="noopener">🔐 RBAC</Anchor>, scope validation is also required.
 </InlineNotification>
 
 </Step>

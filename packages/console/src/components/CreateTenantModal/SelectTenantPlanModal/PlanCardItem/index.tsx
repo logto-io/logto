@@ -20,9 +20,10 @@ import * as styles from './index.module.scss';
 type Props = {
   readonly plan: SubscriptionPlan;
   readonly onSelect: () => void;
+  readonly buttonProps?: Partial<React.ComponentProps<typeof Button>>;
 };
 
-function PlanCardItem({ plan, onSelect }: Props) {
+function PlanCardItem({ plan, onSelect, buttonProps }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.create_tenant' });
   const { tenants } = useContext(TenantsContext);
   const { stripeProducts, id: planId, name: planName } = plan;
@@ -84,13 +85,14 @@ function PlanCardItem({ plan, onSelect }: Props) {
               <Trans components={{ name: <PlanName name={planName} /> }}>{t('select_plan')}</Trans>
             </DangerousRaw>
           }
-          disabled={isFreePlan && isFreeTenantExceeded}
           type={isFreePlan ? 'outline' : 'primary'}
           size="large"
           onClick={onSelect}
+          {...buttonProps}
+          disabled={(isFreePlan && isFreeTenantExceeded) || buttonProps?.disabled}
         />
       </div>
-      {planId === ReservedPlanId.Hobby && (
+      {planId === ReservedPlanId.Pro && (
         <div className={styles.mostPopularTag}>{t('most_popular')}</div>
       )}
     </div>

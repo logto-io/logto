@@ -13,6 +13,7 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import { type WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
+import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -25,7 +26,7 @@ const updateUserSsoIdentityMock = jest.fn();
 const insertUserSsoIdentityMock = jest.fn();
 const updateUserMock = jest.fn();
 const findUserByEmailMock = jest.fn();
-const insertUserMock = jest.fn();
+const insertUserMock = jest.fn().mockResolvedValue([{ id: 'foo' }, { organizations: [] }]);
 const generateUserIdMock = jest.fn().mockResolvedValue('foo');
 const getAvailableSsoConnectorsMock = jest.fn();
 
@@ -59,12 +60,14 @@ const {
 } = await import('./single-sign-on.js');
 
 describe('Single sign on util methods tests', () => {
-  const mockContext: WithLogContext & WithInteractionDetailsContext = {
+  const mockContext = {
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     interactionDetails: { jti: 'foo' } as Awaited<ReturnType<Provider['interactionDetails']>>,
-  };
+    assignInteractionHookResult: jest.fn(),
+    appendDataHookContext: jest.fn(),
+  } satisfies WithInteractionHooksContext<WithLogContext<WithInteractionDetailsContext>>;
 
   const mockProvider = createMockProvider();
 
@@ -288,7 +291,7 @@ describe('Single sign on util methods tests', () => {
 
   describe('registerWithSsoAuthentication tests', () => {
     it('should register if no related user account found', async () => {
-      insertUserMock.mockResolvedValueOnce({ id: 'foo' });
+      insertUserMock.mockResolvedValueOnce([{ id: 'foo' }, { organizations: [] }]);
 
       const { id } = await registerWithSsoAuthentication(mockContext, tenant, {
         connectorId: wellConfiguredSsoConnector.id,

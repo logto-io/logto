@@ -5,7 +5,10 @@ type TestCase = {
   event: string;
   method: 'patch' | 'post' | 'delete' | 'put';
   endpoint: string;
+  /** The payload that should be sent to the route. */
   payload: Record<string, unknown>;
+  /** The payload that should be sent to the webhook. */
+  hookPayload?: Record<string, unknown>;
 };
 
 export const userDataHookTestCases: TestCase[] = [
@@ -43,13 +46,6 @@ export const userDataHookTestCases: TestCase[] = [
     method: 'patch',
     endpoint: `users/{userId}/is-suspended`,
     payload: { isSuspended: true },
-  },
-  {
-    route: 'DELETE /users/:userId',
-    event: 'User.Deleted',
-    method: 'delete',
-    endpoint: `users/{userId}`,
-    payload: {},
   },
 ];
 
@@ -115,6 +111,7 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'post',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
+    hookPayload: { organizationId: expect.any(String) },
   },
   {
     route: 'PUT /organizations/:id/users',
@@ -122,6 +119,7 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'put',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
+    hookPayload: { organizationId: expect.any(String) },
   },
   {
     route: 'DELETE /organizations/:id/users/:userId',
@@ -129,6 +127,31 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'delete',
     endpoint: `organizations/{organizationId}/users/{userId}`,
     payload: {},
+    hookPayload: { organizationId: expect.any(String) },
+  },
+  {
+    route: 'POST /organizations/:id/applications',
+    event: 'Organization.Membership.Updated',
+    method: 'post',
+    endpoint: `organizations/{organizationId}/applications`,
+    payload: { applicationIds: ['{applicationId}'] },
+    hookPayload: { organizationId: expect.any(String) },
+  },
+  {
+    route: 'PUT /organizations/:id/applications',
+    event: 'Organization.Membership.Updated',
+    method: 'put',
+    endpoint: `organizations/{organizationId}/applications`,
+    payload: { applicationIds: ['{applicationId}'] },
+    hookPayload: { organizationId: expect.any(String) },
+  },
+  {
+    route: 'DELETE /organizations/:id/applications/:applicationId',
+    event: 'Organization.Membership.Updated',
+    method: 'delete',
+    endpoint: `organizations/{organizationId}/applications/{applicationId}`,
+    payload: {},
+    hookPayload: { organizationId: expect.any(String) },
   },
   {
     route: 'DELETE /organizations/:id',

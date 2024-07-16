@@ -1,0 +1,84 @@
+{
+  "tags": [
+    {
+      "name": "Organizations"
+    }
+  ],
+  "paths": {
+    "/api/organizations/{id}/jit/roles": {
+      "get": {
+        "summary": "Get organization JIT default roles",
+        "description": "Get organization roles that will be assigned to users during just-in-time provisioning.",
+        "responses": {
+          "200": {
+            "description": "A list of organization roles."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add organization JIT default roles",
+        "description": "Add new organization roles that will be assigned to users during just-in-time provisioning.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationRoleIds": {
+                    "description": "The organization role IDs to add."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The organization roles were added successfully."
+          },
+          "422": {
+            "description": "The organization roles could not be added. Some of the organization roles may not exist."
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace organization JIT default roles",
+        "description": "Replace all organization roles that will be assigned to users during just-in-time provisioning with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationRoleIds": {
+                    "description": "An array of organization role IDs to replace existing organization roles."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The organization roles were replaced successfully."
+          },
+          "422": {
+            "description": "The organization roles could not be replaced. Some of the organization roles may not exist."
+          }
+        }
+      }
+    },
+    "/api/organizations/{id}/jit/roles/{organizationRoleId}": {
+      "delete": {
+        "summary": "Remove organization JIT default role",
+        "description": "Remove an organization role that will be assigned to users during just-in-time provisioning.",
+        "responses": {
+          "204": {
+            "description": "The organization role was removed successfully."
+          },
+          "422": {
+            "description": "The organization role could not be removed. The organization role may not exist."
+          }
+        }
+      }
+    }
+  }
+}

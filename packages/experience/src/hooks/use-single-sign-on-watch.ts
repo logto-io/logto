@@ -1,9 +1,14 @@
-import { SignInIdentifier, experience, type SsoConnectorMetadata } from '@logto/schemas';
+import {
+  AgreeToTermsPolicy,
+  SignInIdentifier,
+  experience,
+  type SsoConnectorMetadata,
+} from '@logto/schemas';
 import { useEffect, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { getSingleSignOnConnectors } from '@/apis/single-sign-on';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import useApi from '@/hooks/use-api';
@@ -11,20 +16,23 @@ import useSingleSignOn from '@/hooks/use-single-sign-on';
 import { validateEmail } from '@/utils/form';
 
 import { useSieMethods } from './use-sie';
+import useTerms from './use-terms';
 
 const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
   const navigate = useNavigate();
 
   const { singleSignOnEnabled } = useSieMethods();
 
-  const { setEmail, setSsoConnectors, ssoConnectors, availableSsoConnectorsMap } =
-    useContext(SingleSignOnContext);
+  const { setSsoEmail, setSsoConnectors, ssoConnectors, availableSsoConnectorsMap } =
+    useContext(UserInteractionContext);
 
   const { showSingleSignOnForm, setShowSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
 
   const request = useApi(getSingleSignOnConnectors, { silent: true });
 
   const singleSignOn = useSingleSignOn();
+
+  const { termsValidation, agreeToTermsPolicy } = useTerms();
 
   // Silently check if the email is registered with any SSO connectors
   const fetchSsoConnectors = useCallback(
@@ -45,10 +53,10 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
       }
 
       setSsoConnectors(connectors);
-      setEmail(email);
+      setSsoEmail(email);
       return true;
     },
-    [availableSsoConnectorsMap, request, setEmail, setSsoConnectors]
+    [availableSsoConnectorsMap, request, setSsoEmail, setSsoConnectors]
   );
 
   // Reset the ssoContext
@@ -56,12 +64,19 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
     if (!showSingleSignOnForm) {
       setSsoConnectors([]);
 
-      setEmail(undefined);
+      setSsoEmail(undefined);
     }
-  }, [setEmail, setSsoConnectors, showSingleSignOnForm]);
+  }, [setSsoEmail, setSsoConnectors, showSingleSignOnForm]);
 
   const navigateToSingleSignOn = useCallback(async () => {
     if (!showSingleSignOnForm) {
+      return;
+    }
+
+    /**
+     * Check if the user has agreed to the terms and privacy policy before single sign on when the policy is set to `Manual`
+     */
+    if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual && !(await termsValidation())) {
       return;
     }
 
@@ -72,7 +87,14 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
     }
 
     navigate(`/${experience.routes.sso}/connectors`);
-  }, [navigate, showSingleSignOnForm, singleSignOn, ssoConnectors]);
+  }, [
+    agreeToTermsPolicy,
+    navigate,
+    showSingleSignOnForm,
+    singleSignOn,
+    ssoConnectors,
+    termsValidation,
+  ]);
 
   useEffect(() => {
     if (!singleSignOnEnabled) {

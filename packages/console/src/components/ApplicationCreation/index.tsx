@@ -2,7 +2,6 @@ import { ApplicationType, RoleType, type Application } from '@logto/schemas';
 import { useCallback, useState } from 'react';
 
 import RoleAssignmentModal from '@/components/RoleAssignmentModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 
 import CreateForm, { type Props as CreateApplicationFormProps } from './CreateForm';
 
@@ -22,8 +21,7 @@ function ApplicationCreation({ onCompleted, ...reset }: Props) {
 
   const createFormModalCloseHandler = useCallback(
     (createdApp?: Application) => {
-      // Todo @xiaoyijun remove dev feature flag
-      if (isDevFeaturesEnabled && createdApp?.type === ApplicationType.MachineToMachine) {
+      if (createdApp?.type === ApplicationType.MachineToMachine) {
         setCreatedMachineToMachineApplication(createdApp);
         return;
       }
@@ -37,13 +35,8 @@ function ApplicationCreation({ onCompleted, ...reset }: Props) {
     return (
       <RoleAssignmentModal
         isSkippable
-        isMachineToMachineRoleCreationHintVisible
         entity={createdMachineToMachineApplication}
         type={RoleType.MachineToMachine}
-        modalTextOverrides={{
-          title: 'applications.m2m_role_assignment.title',
-          subtitle: 'applications.m2m_role_assignment.subtitle',
-        }}
         onClose={() => {
           onCompleted?.(createdMachineToMachineApplication);
         }}

@@ -47,3 +47,27 @@ export const postSamlAssertion = async (data: {
     })
     .json();
 };
+
+export const postSsoAuthentication = async (
+  cookie: string,
+  payload: {
+    connectorId: string;
+    data: Record<string, unknown>;
+  }
+) => {
+  const { connectorId, data } = payload;
+  return api
+    .post(`interaction/${ssoPath}/${connectorId}/authentication`, {
+      headers: { cookie },
+      json: data,
+    })
+    .json<{ redirectTo: string }>();
+};
+
+export const postSsoRegistration = async (cookie: string, connectorId: string) => {
+  return api
+    .post(`interaction/${ssoPath}/${connectorId}/registration`, {
+      headers: { cookie },
+    })
+    .json<{ redirectTo: string }>();
+};

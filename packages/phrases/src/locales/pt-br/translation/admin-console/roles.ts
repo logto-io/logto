@@ -6,10 +6,6 @@ const roles = {
   create: 'Criar função',
   role_name: 'Nome da função',
   role_type: 'Tipo de função',
-  show_role_type_button_text: 'Mostrar mais opções',
-  hide_role_type_button_text: 'Esconder mais opções',
-  type_user: 'Função do usuário',
-  type_machine_to_machine: 'Função de aplicativo de máquina para máquina',
   role_description: 'Descrição',
   role_name_placeholder: 'Insira o nome da sua função',
   role_description_placeholder: 'Insira a descrição da sua função',
@@ -23,16 +19,12 @@ const roles = {
   application_count: '{{count}} aplicativo',
   assign_permissions: 'Atribuir permissões',
   create_role_title: 'Criar função',
-  create_role_description:
-    'Crie e gerencie funções para suas aplicações. As funções contêm coleções de permissões e podem ser atribuídas a usuários.',
   create_role_button: 'Criar função',
   role_created: 'A função {{name}} foi criada com sucesso.',
   search: 'Pesquisar pelo nome, descrição ou ID da função',
   placeholder_title: 'Funções',
   placeholder_description:
     'As funções são um agrupamento de permissões que podem ser atribuídas a usuários. Certifique-se de adicionar as permissões antes de criar funções.',
-  assign_user_roles: 'Atribuir funções de usuário',
-  assign_m2m_roles: 'Atribuir funções de máquina para máquina',
   management_api_access_notification:
     'Para acessar a API de gerenciamento do Logto, selecione funções com permissões de API de gerenciamento <flag/>.',
   with_management_api_access_tip:

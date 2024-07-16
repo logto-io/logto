@@ -38,14 +38,19 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const coreOrigins = urlSet.origins;
   const developmentOrigins = conditionalArray(!isProduction && 'ws:');
   const logtoOrigin = 'https://*.logto.io';
+  /** Google Sign-In (GSI) origin for Google One Tap. */
+  const gsiOrigin = 'https://accounts.google.com/gsi/';
 
-  // We use react-monaco-editor for code editing in the admin console. It loads the monaco editor asynchronously from a CDN.
+  // We have the following use cases:
+  //
+  // 1. We use `react-monaco-editor` for code editing in the admin console. It loads the monaco
+  // editor asynchronously from jsDelivr.
+  // 2. We use `mermaid` for rendering diagrams in the admin console. It loads the mermaid library
+  // asynchronously from jsDelivr since Parcel has issues with loading it directly in production.
+  //
   // Allow the CDN src in the CSP.
   // Allow blob: for monaco editor to load worker scripts
-  const monacoEditorCDNSource = [
-    'https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs/',
-    'blob:',
-  ];
+  const cdnSources = ['https://cdn.jsdelivr.net/', 'blob:'];
 
   /**
    * Default Applied rules:
@@ -65,7 +70,10 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const basicSecurityHeaderSettings: HelmetOptions = {
     contentSecurityPolicy: false, // Exclusively set per app
     crossOriginOpenerPolicy: false, // Allow cross origin opener, as some apps rely on popup window for the sign-in flow
-    crossOriginEmbedderPolicy: { policy: 'credentialless' },
+    // Google One Tap iframe request does not respond the proper CORP header (it uses `same-site` instead of `cross-origin`)
+    // and we cannot add the `crossorigin` attribute to the iframe, so the only solution is to disable the COEP header here.
+    // TODO: Re-enable COEP header when Google One Tap supports CORP header.
+    crossOriginEmbedderPolicy: false,
     dnsPrefetchControl: false,
     referrerPolicy: {
       policy: 'strict-origin-when-cross-origin',
@@ -90,13 +98,15 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         scriptSrc: [
           "'self'",
           "'unsafe-inline'",
+          `${gsiOrigin}client`,
           ...conditionalArray(!isProduction && "'unsafe-eval'"),
         ],
-        connectSrc: ["'self'", tenantEndpointOrigin, ...developmentOrigins],
+        connectSrc: ["'self'", gsiOrigin, tenantEndpointOrigin, ...developmentOrigins],
         // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
-        frameSrc: ["'self'", 'https:'],
+        frameSrc: ["'self'", 'https:', gsiOrigin],
         // Alow loaded by console preview iframe
         frameAncestors: ["'self'", ...adminOrigins],
+        defaultSrc: ["'self'", gsiOrigin],
       },
     },
   };
@@ -115,7 +125,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         scriptSrc: [
           "'self'",
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
-          ...monacoEditorCDNSource,
+          ...cdnSources,
         ],
         connectSrc: ["'self'", logtoOrigin, ...adminOrigins, ...coreOrigins, ...developmentOrigins],
         // Allow Main Flow origin loaded in preview iframe

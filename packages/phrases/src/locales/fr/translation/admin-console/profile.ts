@@ -52,12 +52,6 @@ const profile = {
     description:
       "La suppression de votre compte supprimera toutes vos informations personnelles, vos données d'utilisateur et votre configuration. Cette action ne peut pas être annulée.",
     button: 'Supprimer le compte',
-    dialog_paragraph_1:
-      "Nous sommes désolés d'entendre que vous souhaitez supprimer votre compte. La suppression de votre compte supprimera définitivement toutes les données, y compris les informations d'utilisateur, les journaux et les paramètres, et cette action ne peut pas être annulée. Veuillez donc vous assurer de sauvegarder toutes les données importantes avant de continuer.",
-    dialog_paragraph_2:
-      "Pour poursuivre le processus de suppression de compte, veuillez envoyer un e-mail à notre équipe de support à l'adresse <a>mail</a> avec l'objet « Demande de suppression de compte ». Nous vous aiderons et nous assurerons que toutes vos données sont correctement supprimées de notre système.",
-    dialog_paragraph_3:
-      "Merci d'avoir choisi Logto Cloud. Si vous avez des questions ou des préoccupations supplémentaires, n'hésitez pas à nous contacter.",
   },
   set: 'Définir',
   change: 'Modifier',

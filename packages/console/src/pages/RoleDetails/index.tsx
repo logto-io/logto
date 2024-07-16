@@ -1,5 +1,5 @@
 import type { Role } from '@logto/schemas';
-import { Theme, RoleType } from '@logto/schemas';
+import { RoleType } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -8,13 +8,9 @@ import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
-import MachineToMachineRoleIconDark from '@/assets/icons/m2m-role-dark.svg';
-import MachineToMachineRoleIcon from '@/assets/icons/m2m-role.svg';
-import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
-import UserRoleIcon from '@/assets/icons/user-role.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import RoleIcon from '@/components/RoleIcon';
 import { RoleDetailsTabs } from '@/consts/page-tabs';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -29,18 +25,12 @@ import useUserPreferences from '@/hooks/use-user-preferences';
 import * as styles from './index.module.scss';
 import { type RoleDetailsOutletContext } from './types';
 
-const icons = {
-  [Theme.Light]: { UserIcon: UserRoleIcon, MachineToMachineIcon: MachineToMachineRoleIcon },
-  [Theme.Dark]: { UserIcon: UserRoleIconDark, MachineToMachineIcon: MachineToMachineRoleIconDark },
-};
-
 function RoleDetails() {
   const { pathname } = useLocation();
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
   const theme = useTheme();
-  const { UserIcon, MachineToMachineIcon } = icons[theme];
 
   const isPageHasTable =
     pathname.endsWith(RoleDetailsTabs.Permissions) ||
@@ -60,6 +50,8 @@ function RoleDetails() {
   const isM2mRoleNotificationAcknowledged = isUserPreferencesLoaded
     ? Boolean(m2mRoleNotificationAcknowledged)
     : true;
+
+  const isM2mRole = data?.type === RoleType.MachineToMachine;
 
   const [isDeletionAlertOpen, setIsDeletionAlertOpen] = useState(false);
 
@@ -97,8 +89,7 @@ function RoleDetails() {
       className={classNames(isPageHasTable && styles.withTable)}
       onRetry={mutate}
     >
-      {/* Todo @xiaoyijun remove dev feature flag */}
-      {isDevFeaturesEnabled && !isM2mRoleNotificationAcknowledged && (
+      {isM2mRole && !isM2mRoleNotificationAcknowledged && (
         <InlineNotification
           action="general.got_it"
           onClick={() => {
@@ -119,12 +110,10 @@ function RoleDetails() {
       {data && (
         <>
           <DetailsPageHeader
-            icon={data.type === RoleType.User ? <UserIcon /> : <MachineToMachineIcon />}
+            icon={<RoleIcon />}
             title={data.name}
             primaryTag={t(
-              data.type === RoleType.User
-                ? 'role_details.type_user_role_tag'
-                : 'role_details.type_m2m_role_tag'
+              isM2mRole ? 'role_details.type_m2m_role_tag' : 'role_details.type_user_role_tag'
             )}
             identifier={{ name: 'ID', value: data.id }}
             actionMenuItems={[
@@ -155,12 +144,10 @@ function RoleDetails() {
             </TabNavItem>
             <TabNavItem
               href={`/roles/${data.id}/${
-                data.type === RoleType.User ? RoleDetailsTabs.Users : RoleDetailsTabs.M2mApps
+                isM2mRole ? RoleDetailsTabs.M2mApps : RoleDetailsTabs.Users
               }`}
             >
-              {t(
-                data.type === RoleType.User ? 'role_details.users_tab' : 'role_details.m2m_apps_tab'
-              )}
+              {t(isM2mRole ? 'role_details.m2m_apps_tab' : 'role_details.users_tab')}
             </TabNavItem>
             <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.General}`}>
               {t('role_details.general_tab')}

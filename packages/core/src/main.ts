@@ -33,6 +33,22 @@ try {
     SystemContext.shared.loadProviderConfigs(sharedAdminPool),
   ]);
 
+  /**
+   * Catch unhandled promise rejections and log them to Application Insights.
+   * The unhandled promise rejection was first observed in the `TenantPool.get()` method.
+   *
+   * In this method, if the `tenantId` is not found, `Tenant.create()` will throw an error.
+   * We use a try-catch block to catch the error and throw it with logging.
+   * However, if the `Tenant.create()` Promise is read from the cache, somehow the error is not caught.
+   * The root cause of this error is still unknown. To avoid the app from crashing, we catch the error here.
+   *
+   * @see TenantPool.get
+   */
+  process.on('unhandledRejection', (error) => {
+    consoleLog.error(error);
+    void appInsights.trackException(error);
+  });
+
   await initApp(app);
 } catch (error: unknown) {
   consoleLog.error('Error while initializing app:');

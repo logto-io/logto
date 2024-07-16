@@ -18,6 +18,8 @@ import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
+
 import {
   assignSingleSignOnAuthenticationResult,
   getSingleSignOnSessionResult,
@@ -33,7 +35,7 @@ type AuthorizationUrlPayload = z.infer<typeof authorizationUrlPayloadGuard>;
 
 // Get the authorization url for the SSO provider
 export const getSsoAuthorizationUrl = async (
-  ctx: WithLogContext & WithInteractionDetailsContext,
+  ctx: WithInteractionDetailsContext<WithLogContext>,
   { provider, id: tenantId }: TenantContext,
   connectorData: SupportedSsoConnector,
   payload: AuthorizationUrlPayload
@@ -82,7 +84,7 @@ type SsoAuthenticationResult = {
 
 // Get the user authentication result from the SSO provider
 export const getSsoAuthentication = async (
-  ctx: WithLogContext,
+  ctx: WithInteractionHooksContext<WithLogContext>,
   { provider, id: tenantId }: TenantContext,
   connectorData: SupportedSsoConnector,
   data: Record<string, unknown>
@@ -131,13 +133,12 @@ export const getSsoAuthentication = async (
 
 // Handle the SSO authentication result and return the user id
 export const handleSsoAuthentication = async (
-  ctx: WithLogContext,
+  ctx: WithInteractionHooksContext<WithLogContext>,
   tenant: TenantContext,
   connectorData: SupportedSsoConnector,
   ssoAuthentication: SsoAuthenticationResult
 ): Promise<string> => {
-  const { createLog } = ctx;
-  const { provider, queries } = tenant;
+  const { queries } = tenant;
   const { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries } = queries;
   const { issuer, userInfo } = ssoAuthentication;
 
@@ -160,7 +161,7 @@ export const handleSsoAuthentication = async (
 
   // SignIn and link with existing user account with a same email
   if (user) {
-    return signInAndLinkWithSsoAuthentication(ctx, queries, {
+    return signInAndLinkWithSsoAuthentication(ctx, tenant, {
       connectorData,
       user,
       ssoAuthentication,
@@ -177,7 +178,7 @@ export const handleSsoAuthentication = async (
 };
 
 const signInWithSsoAuthentication = async (
-  ctx: WithLogContext,
+  ctx: WithInteractionHooksContext<WithLogContext>,
   { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries }: Queries,
   {
     connectorData: { id: connectorId, syncProfile },
@@ -231,8 +232,11 @@ const signInWithSsoAuthentication = async (
 };
 
 const signInAndLinkWithSsoAuthentication = async (
-  ctx: WithLogContext,
-  { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries }: Queries,
+  ctx: WithInteractionHooksContext<WithLogContext>,
+  {
+    queries: { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries },
+    libraries: { users: usersLibrary },
+  }: TenantContext,
   {
     connectorData: { id: connectorId, syncProfile },
     user: { id: userId },
@@ -272,6 +276,18 @@ const signInAndLinkWithSsoAuthentication = async (
     lastSignInAt: Date.now(),
   });
 
+  // JIT provision for existing users signing in with SSO for the first time
+  const provisionedOrganizations = await usersLibrary.provisionOrganizations({
+    userId,
+    ssoConnectorId: connectorId,
+  });
+
+  for (const { organizationId } of provisionedOrganizations) {
+    ctx.appendDataHookContext('Organization.Membership.Updated', {
+      organizationId,
+    });
+  }
+
   log.append({
     userId,
     interaction: {
@@ -289,7 +305,7 @@ const signInAndLinkWithSsoAuthentication = async (
 };
 
 export const registerWithSsoAuthentication = async (
-  ctx: WithLogContext,
+  ctx: WithInteractionHooksContext<WithLogContext>,
   {
     queries: { userSsoIdentities: userSsoIdentitiesQueries },
     libraries: { users: usersLibrary },
@@ -308,7 +324,7 @@ export const registerWithSsoAuthentication = async (
   };
 
   // Insert new user
-  const user = await usersLibrary.insertUser(
+  const [user] = await usersLibrary.insertUser(
     {
       id: await usersLibrary.generateUserId(),
       ...syncingProfile,
@@ -328,6 +344,18 @@ export const registerWithSsoAuthentication = async (
     issuer,
     detail: userInfo,
   });
+
+  // JIT provision for new users signing up with SSO
+  const provisionedOrganizations = await usersLibrary.provisionOrganizations({
+    userId: user.id,
+    ssoConnectorId: connectorId,
+  });
+
+  for (const { organizationId } of provisionedOrganizations) {
+    ctx.appendDataHookContext('Organization.Membership.Updated', {
+      organizationId,
+    });
+  }
 
   log.append({
     userId,

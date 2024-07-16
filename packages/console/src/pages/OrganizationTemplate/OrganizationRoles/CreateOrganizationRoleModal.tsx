@@ -1,19 +1,31 @@
-import { type OrganizationRole } from '@logto/schemas';
+import { type AdminConsoleKey } from '@logto/phrases';
+import { RoleType, type OrganizationRole } from '@logto/schemas';
 import { useCallback } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
+import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
-type FormData = Pick<OrganizationRole, 'name' | 'description'>;
+import * as styles from './index.module.scss';
+
+type FormData = Pick<OrganizationRole, 'name' | 'description' | 'type'>;
+
+type RadioOption = { key: AdminConsoleKey; value: RoleType };
+
+const radioOptions: RadioOption[] = [
+  { key: 'roles.type_user', value: RoleType.User },
+  { key: 'roles.type_machine_to_machine', value: RoleType.MachineToMachine },
+];
 
 type Props = {
   readonly isOpen: boolean;
@@ -25,10 +37,11 @@ function CreateOrganizationRoleModal({ isOpen, onClose }: Props) {
 
   const {
     register,
+    control,
     formState: { errors, isSubmitting },
     handleSubmit,
     reset,
-  } = useForm<FormData>();
+  } = useForm<FormData>({ defaultValues: { type: RoleType.User } });
 
   const onCloseHandler = useCallback(
     (createdData?: OrganizationRole) => {
@@ -72,9 +85,10 @@ function CreateOrganizationRoleModal({ isOpen, onClose }: Props) {
             onClick={submit}
           />
         }
+        className={styles.createModal}
         onClose={onCloseHandler}
       >
-        <FormField isRequired title="organization_template.roles.create_modal.name_field">
+        <FormField isRequired title="organization_template.roles.create_modal.name">
           <TextInput
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
@@ -83,11 +97,31 @@ function CreateOrganizationRoleModal({ isOpen, onClose }: Props) {
             {...register('name', { required: true })}
           />
         </FormField>
-        <FormField title="organization_template.permissions.description_field_name">
+        <FormField title="organization_template.roles.create_modal.description">
           <TextInput
             placeholder={t('organization_role_details.general.description_field_placeholder')}
             error={Boolean(errors.description)}
             {...register('description')}
+          />
+        </FormField>
+        <FormField title="organization_template.roles.create_modal.type">
+          <Controller
+            name="type"
+            control={control}
+            render={({ field: { onChange, value, name } }) => (
+              <RadioGroup
+                name={name}
+                className={styles.roleTypes}
+                value={value}
+                onChange={(value) => {
+                  onChange(value);
+                }}
+              >
+                {radioOptions.map(({ key, value }) => (
+                  <Radio key={value} title={<DynamicT forKey={key} />} value={value} />
+                ))}
+              </RadioGroup>
+            )}
           />
         </FormField>
       </ModalLayout>

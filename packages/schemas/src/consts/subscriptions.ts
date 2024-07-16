@@ -25,5 +25,15 @@ export enum ReservedPlanId {
    * Todo @darcyYe see `Hobby` todo
    */
   Pro = 'pro',
+  /**
+   * @deprecated
+   * Should not use this plan ID, we only use this tag as a record for the legacy `pro` plan since we will rename the `hobby` plan to be `pro`.
+   */
+  GrandfatheredPro = 'grandfathered-pro',
   Development = 'dev',
+  /**
+   * This plan ID is reserved for Admin tenant.
+   * In our new pricing model, we plan to add a special plan for Admin tenant, previously, admin tenant is using the `pro` plan, which is not suitable.
+   */
+  Admin = 'admin',
 }

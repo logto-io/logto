@@ -1,9 +1,12 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -19,19 +22,27 @@ npm i @logto/browser
 ```
 
 </TabItem>
-<TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @logto/browser
-```
-
-</TabItem>
 <TabItem value="pnpm" label="pnpm">
 
 ```bash
 pnpm add @logto/browser
 ```
 
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn add @logto/browser
+```
+
+</TabItem>
+<TabItem value="cdn" label="CDN">
+
+```html
+<script type="module">
+  import LogtoClient from 'https://cdn.jsdelivr.net/npm/@logto/browser@latest/+esm';
+</script>
+```
 </TabItem>
 </Tabs>
 </Step>
@@ -40,133 +51,108 @@ pnpm add @logto/browser
 
 Import and init `LogtoClient` with configs:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts" title="index.js">
     {`import LogtoClient from '@logto/browser';
 
 const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
 });`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
-<Step
-  title="Implement sign-in"
-  subtitle="3 steps"
->
+<Step title="Configure redirect URIs">
 
-<InlineNotification>
-  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
-</InlineNotification>
+<RedirectUrisWeb />
 
-### Configure Redirect URI
+</Step>
 
-First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
+<Step title="Handle redirect">
 
-<UriInputField name="redirectUris" />
+There are still things to do after the user is redirected back to your application from Logto. Let's handle it properly.
 
-### Implement a sign-in button
+```ts title="pages/Callback.js"
+const callbackHandler = async (logtoClient) => {
+  await logtoClient.handleSignInCallback(window.location.href);
 
-Go back to your IDE/editor, use the following code to implement the sign-in button:
+  if (!logtoClient.isAuthenticated) {
+    // Handle failed sign-in
+    alert('Failed to sign in');
+    return;
+  }
 
-<pre>
-  <code className="language-html">
-    {`<button onclick="logtoClient.signIn('${
-      props.redirectUris[0] ?? 'http://localhost:3000/callback'
-    }')">
-  Sign In
-</button>`}
-  </code>
-</pre>
-
-### Handle redirect
-
-We're almost there! In the last step, we use `http://localhost:3000/callback` as the Redirect URI, and now we need to handle it properly.
-
-Insert the code below in your `/callback` route:
-
-```ts
-await logtoClient.handleSignInCallback(window.location.href);
-
-if (!logtoClient.isAuthenticated) {
-  // Handle failed sign-in
-  alert('Failed to sign in');
-  return;
-}
-
-// Handle successful sign-in. E.g. redirect to home page.
-window.location.assign('http://localhost:3000/');
+  // Handle successful sign-in
+  window.location.assign('/');
+};
 ```
 
-Now you can test the sign-in flow.
-
 </Step>
 
-<Step title="Implement sign-out">
+<Step title="Implement sign-in and sign-out">
 
-Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
+`logtoClient` provides `signIn` and `signOut` methods to help you easily manage the authentication flow.
 
-After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
+<Code className="language-js" title="pages/Home.js">
+    {`const isAuthenticated = await logtoClient.isAuthenticated();
 
-<UriInputField
-  appId={props.app.id}
-  name="postLogoutRedirectUris"
-  title="application_details.post_sign_out_redirect_uri"
-/>
-
-### Implement a sign-out button
-
-<pre>
-  <code className="language-html">
-    {`<button onclick="logtoClient.signOut('${
-      props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'
-    }')">
-  Sign Out
-</button>`}
-  </code>
-</pre>
-
-</Step>
-
-<Step title="Handle authentication status">
-
-In Logto SDK, generally we can use `logtoClient.isAuthenticated` to check the authentication status, if the user is signed in, the value will be `true`, otherwise, the value will be `false`.
-
-In your vanilla JS app, you can use the `isAuthenticated` status to programmatically show and hide the sign-in and sign-out buttons. Let's see how to do it.
-
-```ts
-const redirectUrl = 'http://localhost:3000/callback';
-const baseUrl = 'http://localhost:3000';
-
-// Conditional rendering of sign-in and sign-out buttons
-const isAuthenticated = await logtoClient.isAuthenticated();
-
-// Assuming there's a div with id 'container' in your HTML
-const container = document.querySelector('#container');
-
-const onClickSignIn = () => logtoClient.signIn(redirectUrl);
-const onClickSignOut = () => logtoClient.signOut(baseUrl);
+const onClickSignIn = () => {
+  logtoClient.signIn('${props.redirectUris[0] ?? defaultRedirectUri}');
+};
+const onClickSignOut = () => {
+  logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? defaultPostSignOutUri}');
+};
 
 const button = document.createElement('button');
 button.innerHTML = isAuthenticated ? 'Sign Out' : 'Sign In';
 button.addEventListener('click', isAuthenticated ? onClickSignOut : onClickSignIn);
 
-container.append(button);
-```
+document.body.appendChild(button);`}
+</Code>
+
+Calling `.signOut()` will clear all the Logto data in memory and `localStorage` if they exist.
 
 </Step>
 
 <Step title="Checkpoint: Test your application">
 
-Now, you can test your application:
+<Checkpoint />
 
-1. Run your application, you will see the sign-in button.
-2. Click the sign-in button, the SDK will init the sign-in process and redirect you to the Logto sign-in page.
-3. After you signed in, you will be redirected back to your application and see user ID and the sign-out button.
-4. Click the sign-out button to sign-out.
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can use the `logtoClient.getIdTokenClaims()` method. For example, in your Home page:
+
+```js title="pages/Home.js"
+const userInfo = await logtoClient.getIdTokenClaims();
+
+// Generate display table for ID token claims
+const table = document.createElement('table');
+const thead = document.createElement('thead');
+const tr = document.createElement('tr');
+const thName = document.createElement('th');
+const thValue = document.createElement('th');
+thName.innerHTML = 'Name';
+thValue.innerHTML = 'Value';
+tr.append(thName, thValue);
+thead.append(tr);
+table.append(thead);
+
+const tbody = document.createElement('tbody');
+
+for (const [key, value] of Object.entries(userInfo)) {
+  const tr = document.createElement('tr');
+  const tdName = document.createElement('td');
+  const tdValue = document.createElement('td');
+  tdName.innerHTML = key;
+  tdValue.innerHTML = typeof value === 'string' ? value : JSON.stringify(value);
+  tr.append(tdName, tdValue);
+  tbody.append(tr);
+}
+
+table.append(tbody);
+```
 
 </Step>
 

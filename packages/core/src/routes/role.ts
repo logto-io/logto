@@ -180,8 +180,7 @@ export default function roleRoutes<T extends ManagementApiRouter>(
           // Align the response type with POST /roles/:id/scopes
           const newRolesScopes = await findScopesByIds(scopeIds);
 
-          ctx.appendDataHookContext({
-            event: 'Role.Scopes.Updated',
+          ctx.appendDataHookContext('Role.Scopes.Updated', {
             ...buildManagementApiContext(ctx),
             roleId: role.id,
             data: newRolesScopes,

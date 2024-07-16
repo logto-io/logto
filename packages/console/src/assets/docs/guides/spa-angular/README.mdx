@@ -1,65 +1,34 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb, {defaultRedirectUri, defaultPostSignOutUri} from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
 <Step
   title="Installation"
-  subtitle="Install Logto core and `angular-auth-oidc-client`"
+  subtitle="Install Logto JS core SDK and `angular-auth-oidc-client`"
 >
-<Tabs>
-<TabItem value="npm" label="npm">
 
-```bash
-npm i @logto/js angular-auth-oidc-client
-```
+<NpmLikeInstallation packageName="@logto/js angular-auth-oidc-client" />
 
-</TabItem>
-<TabItem value="yarn" label="Yarn">
+</Step>
 
-```bash
-yarn add @logto/js angular-auth-oidc-client
-```
+<Step title="Configure redirect URIs">
 
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
+<RedirectUrisWeb />
 
-```bash
-pnpm add @logto/js angular-auth-oidc-client
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
 <Step title="Configure application">
 
-<InlineNotification>
-  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
-</InlineNotification>
+In your Angular project, add the auth provider your `app.config.ts`:
 
-### Configure redirect URIs
-
-First, let's enter your redirect URI. E.g. `http://localhost:3000/callback`. [Redirect URI](https://www.oauth.com/oauth2-servers/redirect-uris/) is an OAuth 2.0 concept which implies the location should redirect after authentication.
-
-<UriInputField name="redirectUris" />
-
-After signing out, it'll be great to redirect user back to your website. For example, add `http://localhost:3000` as the post sign-out redirect URI below.
-
-<UriInputField name="postLogoutRedirectUris" />
-
-### Configure Angular application
-
-Back to your Angular project, add the auth provider your `app.config.ts`:
-
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx" title="app/app.config.ts">
     {`import { UserScope, buildAngularAuthConfig } from '@logto/js';
 import { provideAuth } from 'angular-auth-oidc-client';
 
@@ -70,23 +39,22 @@ export const appConfig: ApplicationConfig = {
       config: buildAngularAuthConfig({
         endpoint: '${props.endpoint}',
         appId: '${props.app.id}',
-        redirectUri: '${props.redirectUris[0] ?? 'http://localhost:3000/callback'}',
-        postLogoutRedirectUri: '${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}',
+        redirectUri: '${props.redirectUris[0] || defaultRedirectUri}',
+        postLogoutRedirectUri: '${props.postLogoutRedirectUris[0] || defaultPostSignOutUri}',
       }),
     }),
     // ...other providers
   ],
 };`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
 <Step title="Implement sign-in and sign-out">
 
-In the component where you want to implement sign-in and sign-out (for example, `app.component.ts`), inject the `OidcSecurityService` and use it to sign in and sign out.
+In the component where you want to implement sign-in and sign-out, inject the `OidcSecurityService` and use it to sign in and sign out.
 
-```ts
+```ts title="app/app.component.ts"
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 export class AppComponent implements OnInit {
@@ -114,11 +82,17 @@ Then, in the template, add buttons to sign in and sign out:
 
 </Step>
 
-<Step title="Subscribe to authentication state and display user information">
+<Step title="Checkpoint: Test your application">
+
+<Checkpoint />
+
+</Step>
+
+<Step title="Display user information">
 
 The `OidcSecurityService` provides a convenient way to subscribe to the authentication state:
 
-```ts
+```ts title="app/app.component.ts"
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import type { UserInfoResponse } from '@logto/js';
 
@@ -148,23 +122,16 @@ export class AppComponent implements OnInit {
 
 And use it in the template:
 
-```html
+```html title="app/app.component.html"
 <button *ngIf="!isAuthenticated" (click)="signIn()">Sign in</button>
 <ng-container *ngIf="isAuthenticated">
   <pre>{{ userData | json }}</pre>
+  <p>ID token: {{ idToken }}</p>
   <p>Access token: {{ accessToken }}</p>
   <!-- ... -->
   <button (click)="signOut()">Sign out</button>
 </ng-container>
 ```
-
-</Step>
-
-<Step
-  title="Checkpoint: Test your application"
->
-
-<Checkpoint />
 
 </Step>
 

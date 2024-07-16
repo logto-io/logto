@@ -1,4 +1,4 @@
-import type { SignInIdentifier } from '@logto/schemas';
+import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -30,7 +30,7 @@ type FormState = {
 
 const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) => {
   const { t } = useTranslation();
-  const { termsValidation } = useTerms();
+  const { termsValidation, agreeToTermsPolicy } = useTerms();
 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
@@ -131,7 +131,14 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
        * If the autofill value is SSO enabled, it will always show SSO form.
        */}
       <TermsAndPrivacyCheckbox
-        className={classNames(styles.terms, showSingleSignOnForm && styles.hidden)}
+        className={classNames(
+          styles.terms,
+          /**
+           * Hide the terms checkbox when the policy is set to `Automatic`.
+           * In registration, the terms checkbox is always shown for `Manual` and `ManualRegistrationOnly` policies.
+           */
+          agreeToTermsPolicy === AgreeToTermsPolicy.Automatic && styles.hidden
+        )}
       />
 
       <Button

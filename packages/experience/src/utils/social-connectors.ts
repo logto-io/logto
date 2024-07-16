@@ -1,5 +1,7 @@
-import type { ConnectorMetadata } from '@logto/schemas';
+import { GoogleConnector } from '@logto/connector-kit';
+import type { ExperienceSocialConnector } from '@logto/schemas';
 import { ConnectorPlatform } from '@logto/schemas';
+import { getCookie } from 'tiny-cookie';
 
 import { SearchParameters } from '@/types';
 import { generateRandomString } from '@/utils';
@@ -21,13 +23,24 @@ export const storeState = (state: string, connectorId: string) => {
   sessionStorage.setItem(`${storageStateKeyPrefix}:${connectorId}`, state);
 };
 
-export const stateValidation = (state: string, connectorId: string) => {
+/**
+ * Validate the state parameter from the social connector callback. If the state parameter is empty
+ * or invalid, it will return false.
+ */
+export const validateState = (state: string | undefined, connectorId: string): boolean => {
+  if (!state) {
+    return false;
+  }
+
   const storageKey = `${storageStateKeyPrefix}:${connectorId}`;
   const stateStorage = sessionStorage.getItem(storageKey);
   sessionStorage.removeItem(storageKey);
 
   return stateStorage === state;
 };
+
+export const validateGoogleOneTapCsrfToken = (csrfToken?: string): boolean =>
+  Boolean(csrfToken && getCookie(GoogleConnector.oneTapParams.csrfToken) === csrfToken);
 
 /**
  * Native Social Redirect Utility Methods
@@ -63,12 +76,12 @@ export const removeCallbackLinkFromStorage = (connectorId: string) => {
 /**
  * Social Connectors Filter Utility Methods
  */
-export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) => {
+export const filterSocialConnectors = (socialConnectors?: ExperienceSocialConnector[]) => {
   if (!socialConnectors) {
     return [];
   }
 
-  const connectorMap = new Map<string, ConnectorMetadata>();
+  const connectorMap = new Map<string, ExperienceSocialConnector>();
 
   /**
    * Browser Environment
@@ -152,13 +165,13 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) =
  */
 export const filterPreviewSocialConnectors = (
   platform: ConnectorPlatform.Native | ConnectorPlatform.Web,
-  socialConnectors?: ConnectorMetadata[]
+  socialConnectors?: ExperienceSocialConnector[]
 ) => {
   if (!socialConnectors) {
     return [];
   }
 
-  const connectorMap = new Map<string, ConnectorMetadata>();
+  const connectorMap = new Map<string, ExperienceSocialConnector>();
 
   /**
    * Browser Environment

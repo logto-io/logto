@@ -18,7 +18,7 @@ jobs:
           token: ${{ secrets.BOT_PAT }}
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
           pnpm-version: 9
 

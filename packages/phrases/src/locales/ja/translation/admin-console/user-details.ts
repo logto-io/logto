@@ -18,7 +18,7 @@ const user_details = {
     new_password: '新しいパスワード：',
   },
   tab_settings: '設定',
-  tab_roles: '役割',
+  tab_roles: 'ユーザー役割',
   tab_logs: 'ユーザーログ',
   tab_organizations: '組織',
   authentication: '認証',
@@ -72,26 +72,22 @@ const user_details = {
   reactivate_action: '活性化',
   user_reactivated: 'ユーザーが再活性化されました。',
   roles: {
-    name_column: '役割',
+    name_column: 'ユーザー役割',
     description_column: '説明',
-    assign_button: '役割を割り当てる',
     delete_description:
       'この操作により、このユーザーからこの役割が削除されます。役割自体はまだ存在しますが、このユーザーに関連付けられなくなります。',
     deleted: '役割 {{name}} はこのユーザーから正常に削除されました。',
-    assign_title: '{{name}} に役割を割り当てる',
-    assign_subtitle: '{{name}} に1つ以上の役割を承認します',
+    assign_subtitle: '名前、説明、または役割IDで検索して適切なユーザー役割を見つけます。',
     assign_role_field: '役割を割り当てる',
     role_search_placeholder: '役割名で検索',
     added_text: '{{value, number}} 追加しました',
     assigned_user_count: '{{value, number}} ユーザー',
-    confirm_assign: '役割を割り当てる',
     role_assigned: '役割が正常に割り当てられました',
     search: 'ロール名、説明、または ID で検索',
     empty: '利用可能な役割はありません',
   },
   warning_no_sign_in_identifier:
     'ユーザーは、サインインに少なくとも1つの識別子（ユーザー名、メールアドレス、電話番号、またはソーシャル）を持っている必要があります。続行してよろしいですか？',
-  organization_roles_tooltip: 'この組織内のユーザーに割り当てられた役割。',
 };
 
 export default Object.freeze(user_details);

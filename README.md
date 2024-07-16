@@ -1,8 +1,14 @@
 <p align="center">
-  <a href="https://logto.io" target="_blank" align="center" alt="Logto Logo">
-    <img src="./logo.png" height="120">
+  <a href="https://logto.io/?utm_source=github&utm_medium=readme" target="_blank" align="center" alt="Go to Logto website">
+    <picture>
+      <source width="200" media="(prefers-color-scheme: dark)" srcset="https://github.com/logto-io/.github/raw/master/profile/logto-logo-dark.svg">
+      <source width="200" media="(prefers-color-scheme: light)" srcset="https://github.com/logto-io/.github/raw/master/profile/logto-logo-light.svg">
+      <img width="200" src="https://github.com/logto-io/logto/raw/master/logo.png" alt="Logto logo">
+    </picture>
   </a>
 </p>
+
+<br />
 
 [![discord](https://img.shields.io/discord/965845662535147551?color=5865f2&label=discord)](https://discord.gg/vRvwuwgpVX)
 [![checks](https://img.shields.io/github/checks-status/logto-io/logto/master)](https://github.com/logto-io/logto/actions?query=branch%3Amaster)

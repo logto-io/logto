@@ -33,7 +33,8 @@ mockEsm('#src/utils/password.js', () => ({
 }));
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
-const { encryptUserPassword, createUserLibrary } = await import('./user.js');
+const { createUserLibrary } = await import('./user.js');
+const { encryptUserPassword } = await import('./user.utils.js');
 
 const hasUserWithId = jest.fn();
 const updateUserById = jest.fn();

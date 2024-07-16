@@ -20,7 +20,7 @@ type Props = {
 function ApplicationName({ applicationId, isLink = false }: Props) {
   const isAdminConsole = applicationId === adminConsoleApplicationId;
 
-  const fetchApi = useApi({ hideErrorToast: true });
+  const fetchApi = useApi({ hideErrorToast: ['entity.not_exists_with_id'] });
   const fetcher = useSwrFetcher<Application>(fetchApi);
   const { data, error } = useSWR<Application, RequestError>(
     !isAdminConsole && `api/applications/${applicationId}`,

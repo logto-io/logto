@@ -48,7 +48,7 @@ type BuildParameters = {
    * For path parameters, this function will try to match reusable ID parameters:
    *
    * - If the parameter name is `id`, and the path is `/organizations/{id}/users`, the parameter
-   *   `id` will be a reference to `#/components/parameters/organizationId:root`.
+   *   `id` will be a reference to `#/components/parameters/organizationId-root`.
    * - If the parameter name ends with `Id`, and the path is `/organizations/{id}/users/{userId}`,
    *   the parameter `userId` will be a reference to `#/components/parameters/userId`.
    *
@@ -91,7 +91,7 @@ export const buildParameters: BuildParameters = (
       if (key === 'id') {
         if (rootComponent) {
           return {
-            $ref: `#/components/parameters/${pluralize(rootComponent, 1)}Id:root`,
+            $ref: `#/components/parameters/${pluralize(rootComponent, 1)}Id-root`,
           };
         }
 
@@ -206,7 +206,7 @@ export const mergeParameters = (destination: unknown[], source: unknown[]) => {
  *       type: 'string',
  *     },
  *   },
- *   'organizationId:root': {
+ *   'organizationId-root': {
  *     name: 'id',
  *     // ... same as above
  *   },
@@ -216,7 +216,7 @@ export const mergeParameters = (destination: unknown[], source: unknown[]) => {
  * @remarks
  * The root path component is the first path component in the path. For example, the root path
  * component of `/organizations/{id}/users` is `organizations`. Since the name of the parameter is
- * same for all root path components, we need to add an additional key with the `:root` suffix to
+ * same for all root path components, we need to add an additional key with the `-root` suffix to
  * distinguish them.
  *
  * @param rootComponent The root path component in kebab case (`foo-bar`).
@@ -241,7 +241,7 @@ export const buildPathIdParameters = (
   // Need to duplicate the object because OpenAPI does not support partial reference.
   // See https://github.com/OAI/OpenAPI-Specification/issues/2026
   return {
-    [`${entityId}:root`]: {
+    [`${entityId}-root`]: {
       ...shared,
       name: 'id',
     },
@@ -250,4 +250,22 @@ export const buildPathIdParameters = (
       name: entityId,
     },
   };
+};
+
+/**
+ * Build a parameter object with additional parameters that are not inferred from the path.
+ */
+export const customParameters = (): Record<string, OpenAPIV3.ParameterObject> => {
+  const entityId = 'tenantId';
+  const shared = Object.freeze({
+    in: 'path',
+    description: 'The unique identifier of the tenant.',
+    required: true,
+    schema: { type: 'string' },
+  } as const);
+
+  return Object.freeze({
+    [`${entityId}-root`]: { name: 'id', ...shared },
+    [entityId]: { name: 'tenantId', ...shared },
+  });
 };

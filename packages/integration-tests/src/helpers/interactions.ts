@@ -36,6 +36,69 @@ export const registerNewUser = async (username: string, password: string) => {
   return userId;
 };
 
+/**
+ * Register a new user with email and verification code. Email connector must be enabled.
+ *
+ * @param email The email address of the user to register.
+ * @returns The client and the user ID.
+ */
+export const registerWithEmail = async (email: string) => {
+  const client = await initClient();
+
+  await client.successSend(putInteraction, {
+    event: InteractionEvent.Register,
+  });
+
+  await client.successSend(sendVerificationCode, {
+    email,
+  });
+
+  const verificationCodeRecord = await readConnectorMessage('Email');
+
+  expect(verificationCodeRecord).toMatchObject({
+    address: email,
+    type: InteractionEvent.Register,
+  });
+
+  const { code } = verificationCodeRecord;
+
+  await client.successSend(patchInteractionIdentifiers, {
+    email,
+    verificationCode: code,
+  });
+
+  await client.successSend(putInteractionProfile, {
+    email,
+  });
+
+  const { redirectTo } = await client.submitInteraction();
+  const id = await processSession(client, redirectTo);
+
+  return { client, id };
+};
+
+export const signInWithEmail = async (email: string) => {
+  const client = await initClient();
+
+  await client.successSend(putInteraction, {
+    event: InteractionEvent.SignIn,
+  });
+  await client.successSend(sendVerificationCode, {
+    email,
+  });
+
+  const { code } = await readConnectorMessage('Email');
+
+  await client.successSend(patchInteractionIdentifiers, {
+    email,
+    verificationCode: code,
+  });
+
+  const { redirectTo } = await client.submitInteraction();
+  const id = await processSession(client, redirectTo);
+  return { client, id };
+};
+
 export const signInWithPassword = async (
   payload: UsernamePasswordPayload | EmailPasswordPayload | PhonePasswordPayload
 ) => {

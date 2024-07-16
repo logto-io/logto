@@ -1,11 +1,14 @@
-import { joinPath } from '@silverhand/essentials';
+import { type Application } from '@logto/schemas';
+import { type Nullable, joinPath, cond } from '@silverhand/essentials';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
 import Plus from '@/assets/icons/plus.svg';
-import ApplicationIcon from '@/components/ApplicationIcon';
+import ApplicationCreation from '@/components/ApplicationCreation';
 import ChargeNotification from '@/components/ChargeNotification';
-import ItemPreview from '@/components/ItemPreview';
+import { type SelectedGuide } from '@/components/Guide/GuideCard';
+import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
 import PageMeta from '@/components/PageMeta';
 import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
@@ -16,7 +19,6 @@ import Table from '@/ds-components/Table';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
-import { applicationTypeI18nKey } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
 
 import GuideLibrary from './components/GuideLibrary';
@@ -52,6 +54,13 @@ function Applications({ tab }: Props) {
 
   const isCreating = match(createApplicationPathname);
   const { hasMachineToMachineAppsSurpassedLimit } = useApplicationsUsage();
+  /**
+   * Selected guide from the guide library
+   * - `undefined`: No guide is selected
+   * - `null`: Create application without a framework guide
+   * - `selectedGuide`: Create application with the selected guide
+   */
+  const [selectedGuide, setSelectedGuide] = useState<Nullable<SelectedGuide>>();
 
   const {
     data,
@@ -65,6 +74,31 @@ function Applications({ tab }: Props) {
 
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];
+
+  const onAppCreationCompleted = useCallback(
+    (newApp?: Application) => {
+      if (newApp) {
+        /**
+         * Navigate to the application details page if no framework guide is selected or the selected guide is third party
+         */
+        if (selectedGuide === null || selectedGuide?.isThirdParty) {
+          navigate(`/applications/${newApp.id}`, { replace: true });
+          setSelectedGuide(undefined);
+          return;
+        }
+
+        // Create application from the framework guide
+        if (selectedGuide) {
+          navigate(`/applications/${newApp.id}/guide/${selectedGuide.id}`, { replace: true });
+          setSelectedGuide(undefined);
+          return;
+        }
+      }
+
+      setSelectedGuide(undefined);
+    },
+    [navigate, selectedGuide]
+  );
 
   return (
     <div className={pageLayout.container}>
@@ -122,7 +156,12 @@ function Applications({ tab }: Props) {
             title="guide.app.select_framework_or_tutorial"
             subtitle="guide.app.modal_subtitle"
           />
-          <GuideLibrary hasCardBorder hasCardButton className={styles.library} />
+          <GuideLibrary
+            hasCardBorder
+            hasCardButton
+            className={styles.library}
+            onSelectGuide={setSelectedGuide}
+          />
         </div>
       )}
       {(isLoading || !!applications?.length) && (
@@ -137,24 +176,7 @@ function Applications({ tab }: Props) {
               title: t('applications.application_name'),
               dataIndex: 'name',
               colSpan: 6,
-              render: ({ id, name, type, isThirdParty }) => (
-                <ItemPreview
-                  title={name}
-                  subtitle={
-                    isThirdParty
-                      ? t(`${applicationTypeI18nKey.thirdParty}.title`)
-                      : t(`${applicationTypeI18nKey[type]}.title`)
-                  }
-                  icon={
-                    <ApplicationIcon
-                      className={styles.icon}
-                      type={type}
-                      isThirdParty={isThirdParty}
-                    />
-                  }
-                  to={buildDetailsPathname(id)}
-                />
-              ),
+              render: (data) => <ApplicationPreview data={data} />,
             },
             {
               title: t('applications.app_id'),
@@ -179,7 +201,16 @@ function Applications({ tab }: Props) {
         onClose={() => {
           navigate(-1);
         }}
+        onSelectGuide={setSelectedGuide}
       />
+      {selectedGuide !== undefined && (
+        <ApplicationCreation
+          defaultCreateType={cond(selectedGuide?.target !== 'API' && selectedGuide?.target)}
+          defaultCreateFrameworkName={selectedGuide?.name ?? undefined}
+          isDefaultCreateThirdParty={selectedGuide?.isThirdParty ?? undefined}
+          onCompleted={onAppCreationCompleted}
+        />
+      )}
     </div>
   );
 }

@@ -3,6 +3,8 @@ import { builtInLanguages } from '@logto/phrases-experience';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 
 import {
+  mockGithubConnector,
+  mockGoogleConnector,
   mockSignInExperience,
   mockSocialConnectors,
   socialTarget01,
@@ -167,6 +169,49 @@ describe('getFullSignInExperience()', () => {
         },
       ],
       isDevelopmentTenant: false,
+      googleOneTap: undefined,
+    });
+  });
+
+  it('should return full sign-in experience with google one tap', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      socialSignInConnectorTargets: ['github', 'facebook', 'google'],
+    });
+    getLogtoConnectors.mockResolvedValueOnce([mockGoogleConnector, mockGithubConnector]);
+    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+      wellConfiguredSsoConnector,
+    ]);
+
+    const fullSignInExperience = await getFullSignInExperience('en');
+    const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
+
+    expect(fullSignInExperience).toStrictEqual({
+      ...mockSignInExperience,
+      socialConnectors: [
+        { ...mockGithubConnector.metadata, id: mockGithubConnector.dbEntry.id },
+        { ...mockGoogleConnector.metadata, id: mockGoogleConnector.dbEntry.id },
+      ],
+      socialSignInConnectorTargets: ['github', 'facebook', 'google'],
+      forgotPassword: {
+        email: false,
+        phone: false,
+      },
+      ssoConnectors: [
+        {
+          id: wellConfiguredSsoConnector.id,
+          connectorName: connectorFactory.name.en,
+          logo: connectorFactory.logo,
+          darkLogo: connectorFactory.logoDark,
+        },
+      ],
+      isDevelopmentTenant: false,
+      googleOneTap: {
+        isEnabled: true,
+        autoSelect: true,
+        clientId: 'fake_client_id',
+        connectorId: 'google',
+      },
     });
   });
 });

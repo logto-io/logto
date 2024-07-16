@@ -2,6 +2,8 @@ import UriInputField from '@/mdx-components/UriInputField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import RedirectUrisNative from '../../fragments/_redirect-uris-native.mdx';
+import Checkpoint from '../../fragments/_checkpoint.md';
 
 <Steps>
 
@@ -14,17 +16,17 @@ import Step from '@/mdx-components/Step';
 
 Before you install Logto Android SDK, ensure `mavenCentral()` is added to your repository configuration in the Gradle project build file:
 
-```kotlin
-dependencyResolutionManagement {
+<Code title="settings.gradle.kts" className="language-kotlin">
+{`dependencyResolutionManagement {
     repositories {
         mavenCentral()
     }
-}
-```
+}`}
+</Code>
 
 Add Logto Android SDK to your dependencies:
 
-```kotlin
+```kotlin title="build.gradle.kts"
 dependencies {
     implementation("io.logto.sdk:android:1.1.3")
 }
@@ -32,7 +34,7 @@ dependencies {
 
 Since the SDK needs internet access, you need to add the following permission to your `AndroidManifest.xml` file:
 
-```xml
+```xml title="AndroidManifest.xml"
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools">
@@ -46,18 +48,14 @@ Since the SDK needs internet access, you need to add the following permission to
 
 </Step>
 
-<Step
-  title="Init LogtoClient"
-  subtitle="1 step"
->
+<Step title="Init LogtoClient">
 
 <InlineNotification>We use Kotlin in this example, but the concepts are the same for Java.</InlineNotification>
 
 Create a `LogtoViewModel.kt` and init `LogtoClient` in this view model:
 
-<pre>
-  <code className="language-kotlin">
-    {`//...with other imports
+```kotlin title="LogtoViewModel.kt"
+//...with other imports
 import io.logto.sdk.android.LogtoClient
 import io.logto.sdk.android.type.LogtoConfig
 
@@ -85,13 +83,12 @@ class LogtoViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-}`}
-  </code>
-</pre>
+}
+```
 
 then, create a `LogtoViewModel` for your `MainActivity.kt`:
 
-```kotlin
+```kotlin title="MainActivity.kt"
 //...with other imports
 class MainActivity : AppCompatActivity() {
     private val logtoViewModel: LogtoViewModel by viewModels { LogtoViewModel.Factory }
@@ -101,12 +98,9 @@ class MainActivity : AppCompatActivity() {
 
 </Step>
 
-<Step
-  title="Implement sign-in"
-  subtitle="2 steps"
->
+<Step title="Configure redirect URI">
 
-Before starting, you need to add a redirect URI in the Admin Console for your application.
+<RedirectUrisNative defaultUri="io.logto.android://io.logto.sample/callback"/>
 
 In Android, the redirect URI follows the pattern: `$(LOGTO_REDIRECT_SCHEME)://$(YOUR_APP_PACKAGE)/callback`:
 
@@ -115,98 +109,15 @@ In Android, the redirect URI follows the pattern: `$(LOGTO_REDIRECT_SCHEME)://$(
 
 Assuming you treat `io.logto.android` as the custom `LOGTO_REDIRECT_SCHEME`, and `io.logto.sample` is your app package name, the Redirect URI should be `io.logto.android://io.logto.sample/callback`.
 
-You can add the redirect URI in the following input field:
-
-<UriInputField name="redirectUris" />
-
-After the redirect URI is configured, we add a `signIn` method to your `LogtoViewModel.kt`, which will call `logtoClient.signIn` API to invoke the Logto sign-in page:
-
-<pre>
-  <code className="language-kotlin">
-    {`//...with other imports
-class LogtoViewModel(application: Application) : AndroidViewModel(application) {
-    // ...other codes
-    fun signIn(context: Activity) {
-        logtoClient.signIn(context, "${props.redirectUris[0] ?? '<your-redirect-uri>'}") { logtoException ->
-            logtoException?.let { println(it) }
-        }
-    }
-}`}
-  </code>
-</pre>
-
-Now setup on-click listener for the sign-in button in your `MainActivity.kt` to call the `signIn` method:
-
-```kotlin
-//...with other imports
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        //...other codes
-
-        // Assume you have a button with id `sign_in_button` in your layout
-        val signInButton = findViewById<Button>(R.id.sign_in_button)
-        signInButton.setOnClickListener {
-            logtoViewModel.signIn(this)
-        }
-    }
-}
-```
-
 </Step>
 
-<Step
-  title="Implement sign-out"
-  subtitle="1 step"
->
+<Step title="Implement sign-in and sign-out">
 
-Similar to sign-in, we add a `signOut` method to `LogtoViewModel.kt` to call `logtoClient.signOut` API:
+After the redirect URI is configured, we can use `logtoClient.signIn` to sign in the user and `logtoClient.signOut` to sign out the user.
 
-```kotlin
-//...with other imports
-class LogtoViewModel(application: Application) : AndroidViewModel(application) {
-    // ...other codes
-    fun signOut() {
-        logtoClient.signOut { logtoException ->
-            logtoException?.let { println(it) }
-        }
-    }
-}
-```
+Now let's use them in your `LogtoViewModel.kt`:
 
-After you signed out, the Logto SDK will clear all local credentials even though Logto exceptions occurred when calling `logtoClient.signOut` API.
-
-Then, we can add a button to call the `signOut` method in `MainActivity.kt`:
-
-```kotlin
-//...with other imports
-class MainActivity : AppCompatActivity() {
-    //...other codes
-    override fun onCreate(savedInstanceState: Bundle?) {
-        //...other codes
-        //...sign-in button codes
-
-        // Assume you have a button with id `sign_out_button` in your layout
-        val signOutButton = findViewById<Button>(R.id.sign_out_button)
-        signOutButton.setOnClickListener {
-            logtoViewModel.signOut()
-        }
-    }
-}
-```
-
-</Step>
-
-<Step
-  title="Handle authentication status"
-  subtitle="1 step"
->
-
-In Logto SDK, we can use `logtoClient.isAuthenticated` to check the authentication status, if the user is signed in, the value will be `true`, otherwise, the value will be `false`.
-
-Now, let's add a live data to `LogtoViewModel.kt` to observe the authentication status, and update the status when the user signed in or signed out:
-
-<pre>
-  <code className="language-kotlin">
+<Code title="LogtoViewModel.kt" className="language-kotlin">
     {`//...with other imports
 class LogtoViewModel(application: Application) : AndroidViewModel(application) {
     // ...other codes
@@ -232,22 +143,31 @@ class LogtoViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }`}
-  </code>
-</pre>
+</Code>
 
-Then, we observe the `authenticated` live data in `MainActivity.kt`, when the user is signed in, we hide the sign-in button and show the sign-out button and vice versa:
+Now setup on-click listener for the sign-in button and sign-out button in your `MainActivity.kt`:
 
-```kotlin
+```kotlin title="MainActivity.kt"
 //...with other imports
 class MainActivity : AppCompatActivity() {
-    //...other codes
     override fun onCreate(savedInstanceState: Bundle?) {
         //...other codes
-        val signInButton = findViewById<Button>(R.id.sign_in_button)
-        val signOutButton = findViewById<Button>(R.id.sign_out_button)
-        // ...handle button click codes
 
-        // Observe the authentication status
+        // Assume you have a button with id "sign_in_button" in your layout
+        val signInButton = findViewById<Button>(R.id.sign_in_button)
+        signInButton.setOnClickListener {
+            logtoViewModel.signIn(this)
+        }
+
+        // Assume you have a button with id "sign_out_button" in your layout
+        val signOutButton = findViewById<Button>(R.id.sign_out_button)
+        signOutButton.setOnClickListener {
+            if (logtoViewModel.authenticated) { // Check if the user is authenticated
+                logtoViewModel.signOut()
+            }
+        }
+
+        // Observe the authentication status to update the UI
         logtoViewModel.authenticated.observe(this) { authenticated ->
             if (authenticated) {
                 // The user is authenticated
@@ -259,23 +179,61 @@ class MainActivity : AppCompatActivity() {
                 signOutButton.visibility = View.GONE
             }
         }
+
     }
 }
 ```
 
 </Step>
 
-<Step
-  title="Checkpoint: Test your application"
-  subtitle="1 step"
->
+<Step title="Checkpoint: Test your app">
 
-Now, you can test your application:
+<Checkpoint />
 
-1. Run your application, you will see the sign-in button.
-2. Click the sign-in button, the Logto SDK will navigate to the Logto sign-in page.
-3. After you signed in, you will be redirect back to your application and see the sign-out button.
-4. Click the sign-out button, you will see the sign-in button again.
+</Step>
+
+
+<Step title="Display user information">
+
+To display the user's information, you can use the `getIdTokenClaims` method to get user information. For example, you can get user information in a ViewModel and then display it in your activity:
+
+```kotlin title="LogtoViewModel.kt"
+//...with other imports
+class LogtoViewModel(application: Application) : AndroidViewModel(application) {
+    // ...other codes
+
+    // Add a live data to observe the id token claims
+    private val _idTokenClaims = MutableLiveData<IdTokenClaims>()
+    val idTokenClaims: LiveData<IdTokenClaims>
+        get() = _idTokenClaims
+
+    fun getIdTokenClaims() {
+        logtoClient.getIdTokenClaims { logtoException, idTokenClaims ->
+            logtoException?.let { _logtoException.postValue(it) } ?: _idTokenClaims.postValue(idTokenClaims)
+        }
+    }
+}
+```
+
+```kotlin title="MainActivity.kt"
+//...with other imports
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        //...other codes
+
+        // Assume you have a text View with id `user_info_text_view` in your layout
+        val userInfoResponseTextView: TextView = findViewById(R.id.user_info_text_view)
+        logtoViewModel.userInfoResponse.observe(this) { userInfoResponse ->
+            userInfoResponseTextView.text = if (userInfoResponse !== null) {
+                val json = Gson().toJson(userInfoResponse, UserInfoResponse::class.java)
+                JSONObject(json).toString(2)
+            } else {
+                ""
+            }
+        }
+    }
+}
+```
 
 </Step>
 

@@ -6,10 +6,6 @@ const roles = {
   create: 'ロールを作成する',
   role_name: '役割名',
   role_type: '役割タイプ',
-  show_role_type_button_text: 'さらにオプションを表示',
-  hide_role_type_button_text: 'さらにオプションを非表示',
-  type_user: 'ユーザーの役割',
-  type_machine_to_machine: 'マシン対マシンアプリの役割',
   role_description: '説明',
   role_name_placeholder: 'ロールの名前を入力してください',
   role_description_placeholder: 'ロールの説明を入力してください',
@@ -23,16 +19,12 @@ const roles = {
   application_count: '{{count}} アプリ',
   assign_permissions: '権限の割り当て',
   create_role_title: 'ロールを作成する',
-  create_role_description:
-    'アプリケーションのロールを作成して管理します。ロールには権限のコレクションが含まれ、ユーザーに割り当てることができます。',
   create_role_button: 'ロールを作成する',
   role_created: '{{name}}ロールが正常に作成されました。',
   search: 'ロール名、説明、またはIDで検索',
   placeholder_title: 'ロール',
   placeholder_description:
     'ロールは、ユーザーに割り当てられる権限のグループです。ロールを作成する前に、まず権限を追加してください。',
-  assign_user_roles: 'ユーザー役割を割り当てる',
-  assign_m2m_roles: 'マシン間役割を割り当てる',
   management_api_access_notification:
     'Logto管理APIへのアクセスには、管理API権限を持つ役割を選択してください<flag/>。',
   with_management_api_access_tip: 'このマシン間役割には、Logto管理APIのアクセス権が含まれています',

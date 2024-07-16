@@ -16,8 +16,8 @@ const role_details = {
   field_is_default: 'Default role',
   field_is_default_description:
     'Set this role as a default role for new users. Multiple default roles can be set. This will also affect the default roles for users created via Management API.',
-  type_m2m_role_tag: 'Machine-to-machine app role',
-  type_user_role_tag: 'User role',
+  type_m2m_role_tag: 'Machine-to-machine',
+  type_user_role_tag: 'User',
   m2m_role_notification:
     'Assign this machine-to-machine role to a machine-to-machine app to grant access to the relative API resources. <a>Create a machine-to-machine app</a> first if you haven’t already.',
   permission: {
@@ -45,27 +45,26 @@ const role_details = {
     delete_description:
       'It will remain in your user pool but lose the authorization for this role.',
     deleted: '{{name}} was successfully removed from this role',
-    assign_title: 'Assign users',
-    assign_subtitle:
-      'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.',
+    assign_title: 'Assign users to {{name}}',
+    assign_subtitle: 'Find appropriate users by searching name, email, phone, or user ID.',
     assign_field: 'Assign users',
     confirm_assign: 'Assign users',
     assigned_toast_text: 'The selected users were successfully assigned to this role',
     empty: 'No user available',
   },
   applications: {
-    assign_button: 'Assign applications',
+    assign_button: 'Assign machine-to-machine apps',
     name_column: 'Application',
-    app_column: 'Apps',
+    app_column: 'Machine-to-machine app',
     description_column: 'Description',
     delete_description:
       'It will remain in your application pool but lose the authorization for this role.',
     deleted: '{{name}} was successfully removed from this role',
-    assign_title: 'Assign apps',
+    assign_title: 'Assign machine-to-machine apps to {{name}}',
     assign_subtitle:
-      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
-    assign_field: 'Assign applications',
-    confirm_assign: 'Assign applications',
+      'Find appropriate machine-to-machine apps by searching name, description or app ID.',
+    assign_field: 'Assign machine-to-machine apps',
+    confirm_assign: 'Assign machine-to-machine apps',
     assigned_toast_text: 'The selected applications were successfully assigned to this role',
     empty: 'No application available',
   },

@@ -28,7 +28,7 @@ jobs:
         id: changes-detection
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            BASE=$(git merge-base origin/${{github.base_ref}} HEAD)
+            BASE=$(git merge-base origin/${{ github.base_ref }} HEAD)
           else
             BASE=${{ github.event.before }}
           fi
@@ -37,24 +37,25 @@ jobs:
 
           if [ -n "$CHANGE_FILES" ]; then
             echo "$CHANGE_FILES"
-            echo "::set-output name=has-alteration-changes::true"
+            echo "has-alteration-changes=true" >> $GITHUB_OUTPUT
             echo "Alteration changes detected"
           else
-            echo "::set-output name=has-alteration-changes::false"
+            echo "has-alteration-changes=false" >> $GITHUB_OUTPUT
             echo "No alteration changes detected"
           fi
 
   package:
     needs: check-alteration-changes
     runs-on: ubuntu-latest
-    if: ${{needs.check-alteration-changes.outputs.has-alteration-changes == 'true'}}
+    if: ${{ needs.check-alteration-changes.outputs.has-alteration-changes == 'true' }}
     env:
       INTEGRATION_TEST: true
+      DEV_FEATURES_ENABLED: false
     steps:
-      - uses: logto-io/actions-package-logto-artifact@v2
+      - uses: logto-io/actions-package-logto-artifact@v3
         with:
           artifact-name: alteration-integration-test-${{ github.sha }}
-          branch: ${{github.base_ref}}
+          branch: ${{ github.base_ref }}
           pnpm-version: 9
 
   run-logto:
@@ -66,13 +67,27 @@ jobs:
     runs-on: ubuntu-latest
     env:
       INTEGRATION_TEST: true
+      DEV_FEATURES_ENABLED: false
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
-      - uses: logto-io/actions-run-logto-integration-tests@v3
+      - uses: logto-io/actions-run-logto-integration-tests@v4
         with:
-          branch: ${{github.base_ref}}
+          branch: ${{ github.base_ref }}
           logto-artifact: alteration-integration-test-${{ github.sha }}
           test-target: ${{ matrix.target }}
-          db-alteration-target: ${{github.head_ref}}
+          db-alteration-target: ${{ github.head_ref }}
           pnpm-version: 9
+
+  # Automatically rerun the workflow since the integration tests are moody
+  # From this genius: https://github.com/orgs/community/discussions/67654#discussioncomment-8038649
+  rerun-on-failure:
+    needs: run-logto
+    if: failure() && fromJSON(github.run_attempt) < 3
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: api
+        run: gh workflow run rerun.yml -F run_id=${{ github.run_id }}

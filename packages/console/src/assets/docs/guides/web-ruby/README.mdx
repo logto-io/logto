@@ -1,0 +1,179 @@
+import UriInputField from '@/mdx-components/UriInputField';
+import InlineNotification from '@/ds-components/InlineNotification';
+import { generateStandardSecret } from '@logto/shared/universal';
+import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
+import Checkpoint from '../../fragments/_checkpoint.md';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+
+<Steps>
+
+<Step
+  title="Add Logto SDK as a dependency"
+  subtitle="Use your preferred method of adding gems"
+>
+
+```bash
+bundle add logto
+```
+
+Or whatever your preferred method of adding gems is.
+
+</Step>
+
+<Step
+  title="Initialize Logto client"
+  subtitle="1 step"
+>
+
+<InlineNotification>
+
+The following demonstration is for Ruby on Rails. However, you can apply the same steps to other Ruby frameworks.
+
+</InlineNotification>
+
+In the file where you want to initialize the Logto client (e.g. a base controller or a middleware), add the following code:
+
+<Code className="language-ruby">
+    {`require "logto/client"
+
+@client = LogtoClient.new(
+  config: LogtoClient::Config.new(
+    endpoint: "${props.endpoint}",
+    app_id: "${props.app.id}",
+    app_secret: "${props.app.secret}"
+  ),
+  navigate: ->(uri) { a_redirect_method(uri) },
+  storage: LogtoClient::SessionStorage.new(the_session_object)
+)
+end`}
+</Code>
+
+For instance, in a Rails controller, the code might look like this:
+
+<Code title="app/controllers/sample_controller.rb" className="language-ruby">
+    {`require "logto/client"
+
+class SampleController < ApplicationController
+  before_action :initialize_logto_client
+
+  private
+
+  def initialize_logto_client
+    @client = LogtoClient.new(
+      config: LogtoClient::Config.new(
+        endpoint: "${props.endpoint}",
+        app_id: "${props.app.id}",
+        app_secret: "${props.app.secret}"
+      ),
+      # Allow the client to redirect to other hosts (i.e. your Logto tenant)
+      navigate: ->(uri) { redirect_to(uri, allow_other_host: true) },
+      # Controller has access to the session object
+      storage: LogtoClient::SessionStorage.new(session)
+    )
+  end
+end`}
+</Code>
+
+</Step>
+
+<Step
+  title="Configure redirect URIs"
+  subtitle="2 URIs"
+>
+
+<RedirectUrisWeb />
+
+</Step>
+
+<Step
+  title="Handle the callback"
+  subtitle="1 step"
+>
+
+<p>
+  Since the redirect URI has been set to <code>{props.redirectUris[0] || 'http://localhost:3000/callback'}</code>, it needs to be handled it in our application. In a Rails controller, you can add the following code:
+</p>
+
+<Code title="app/controllers/sample_controller.rb" className="language-ruby">
+    {`class SampleController < ApplicationController
+  def ${props.redirectUris[0]?.split('/').pop() || 'callback'}
+    @client.handle_sign_in_callback(url: request.original_url)
+  end
+end`}
+</Code>
+
+And configure the route:
+
+<Code title="config/routes.rb" className="language-ruby">
+    {`Rails.application.routes.draw do
+  get "${new URL(props.redirectUris[0] || 'http://localhost:3000/callback').pathname}", to: "sample#${props.redirectUris[0]?.split('/').pop() || 'callback'}"
+end`}
+</Code>
+
+</Step>
+
+<Step
+  title="Invoke sign-in and sign-out"
+>
+
+There are various ways to invoke sign-in and sign-out in your application. For example, you can implement two routes in your Rails application:
+
+<Code title="app/controllers/sample_controller.rb" className="language-ruby">
+    {`class SampleController < ApplicationController
+  def sign_in
+    @client.sign_in(redirect_uri: request.base_url + "${new URL(props.redirectUris[0] || 'http://localhost:3000/callback').pathname}")
+  end
+
+  def sign_out
+    @client.sign_out(post_logout_redirect_uri: request.base_url)
+  end
+
+  # ...
+end`}
+</Code>
+
+```ruby title="config/routes.rb"
+Rails.application.routes.draw do
+  get "/sign_in", to: "sample#sign_in"
+  get "/sign_out", to: "sample#sign_out"
+
+  # ...
+end
+```
+
+Then you can create buttons or links in your views to trigger these actions. For example:
+
+```erb title="app/views/sample/index.html.erb"
+<% if @client.is_authenticated? %>
+  <a href="<%= sign_out_path %>">Sign out</a>
+<% else %>
+  <a href="<%= sign_in_path %>">Sign in</a>
+<% end %>
+```
+
+</Step>
+
+<Step title="Checkpoint: Test your app">
+
+<Checkpoint />
+
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can use the `@client.id_token_claims` method. For example, in a view:
+
+```erb title="app/views/sample/index.html.erb"
+<% if @client.is_authenticated? %>
+  <p>Welcome, <%= @client.id_token_claims["name"] %></p>
+<% else %>
+  <p>Please sign in</p>
+<% end %>
+```
+
+Please refer to the `#id_token_claims` method in the [gemdocs](https://gemdocs.org/gems/logto/latest) for more information.
+
+</Step>
+
+</Steps>

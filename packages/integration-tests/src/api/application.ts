@@ -5,6 +5,7 @@ import {
   type OidcClientMetadata,
   type Role,
   type ProtectedAppMetadata,
+  type OrganizationWithRoles,
 } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -100,11 +101,29 @@ export const generateM2mLog = async (applicationId: string) => {
 
   // This is a token request with insufficient parameters and should fail. We make the request to generate a log for the current machine to machine app.
   return oidcApi.post('token', {
-    headers: formUrlEncodedHeaders,
     body: new URLSearchParams({
       client_id: id,
       client_secret: secret,
       grant_type: 'client_credentials',
     }),
   });
+};
+
+/** Get organizations that an application is associated with. */
+export const getOrganizations = async (applicationId: string, page?: number, pageSize?: number) => {
+  const searchParams = new URLSearchParams();
+
+  if (page) {
+    searchParams.append('page', String(page));
+  }
+
+  if (pageSize) {
+    searchParams.append('page_size', String(pageSize));
+  }
+
+  return authedAdminApi
+    .get(`applications/${applicationId}/organizations`, {
+      searchParams,
+    })
+    .json<OrganizationWithRoles[]>();
 };

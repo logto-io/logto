@@ -20,9 +20,12 @@ export const getSharedResourceServerData = (
   },
 });
 
+// TODO: Refactor me. This function is too complex.
 /**
- * Find the scopes for a given resource indicator according to the subject in the
- * context. The subject can be either a user or an application.
+ * Find the scopes for a given resource indicator according to the subject in the context. The
+ * subject can be either a user or an application.
+ *
+ * When both `userId` and `applicationId` are provided, the function will prioritize the user.
  *
  * This function also handles the reserved resources.
  *
@@ -40,6 +43,15 @@ export const findResourceScopes = async ({
   queries: Queries;
   libraries: Libraries;
   indicator: string;
+  /**
+   * In consent or code exchange flow, the `organizationId` is `undefined`, and all the scopes
+   * inherited from the all organization roles should be granted.
+   *
+   * In the flow of granting token for a specific organization with API resource, `organizationId`
+   * is provided, and only the scopes inherited from that organization should be granted.
+   *
+   * Note: This value does not affect the reserved resources and application subjects.
+   */
   findFromOrganizations: boolean;
   userId?: string;
   applicationId?: string;
@@ -65,6 +77,14 @@ export const findResourceScopes = async ({
       indicator,
       findFromOrganizations,
       organizationId
+    );
+  }
+
+  if (applicationId && organizationId) {
+    return queries.organizations.relations.appsRoles.getApplicationResourceScopes(
+      organizationId,
+      applicationId,
+      indicator
     );
   }
 
@@ -195,5 +215,5 @@ export const isOrganizationConsentedToApplication = async (
   accountId: string,
   organizationId: string
 ) => {
-  return userConsentOrganizations.exists(applicationId, accountId, organizationId);
+  return userConsentOrganizations.exists({ applicationId, userId: accountId, organizationId });
 };

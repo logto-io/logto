@@ -1,6 +1,5 @@
 const demo_app = {
   title: 'Pomyślnie zalogowałeś się do podglądu na żywo!',
-  subtitle: 'Oto twoje informacje logowania:',
   username: 'Nazwa użytkownika: ',
   user_id: 'ID użytkownika: ',
   sign_out: 'Wyloguj się z podglądu na żywo',

@@ -1,5 +1,5 @@
 import type { Application, Role } from '@logto/schemas';
-import { RoleType, Theme } from '@logto/schemas';
+import { RoleType, roleTypeToKey } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -7,12 +7,11 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
-import MachineToMachineRoleIconDark from '@/assets/icons/m2m-role-dark.svg';
-import MachineToMachineRoleIcon from '@/assets/icons/m2m-role.svg';
 import Plus from '@/assets/icons/plus.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import RoleAssignmentModal from '@/components/RoleAssignmentModal';
+import RoleIcon from '@/components/RoleIcon';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
@@ -86,25 +85,21 @@ function MachineToMachineApplicationRoles({ application }: Props) {
         rowIndexKey="id"
         columns={[
           {
-            title: t('application_details.roles.name_column'),
+            title: t('roles.role_name'),
             dataIndex: 'name',
             colSpan: 6,
             render: ({ id, name }) => (
-              <ItemPreview
-                title={name}
-                to={`/roles/${id}`}
-                icon={
-                  theme === Theme.Dark ? (
-                    <MachineToMachineRoleIconDark />
-                  ) : (
-                    <MachineToMachineRoleIcon />
-                  )
-                }
-              />
+              <ItemPreview title={name} to={`/roles/${id}`} icon={<RoleIcon />} />
             ),
           },
           {
-            title: t('application_details.roles.description_column'),
+            title: t('roles.col_type'),
+            dataIndex: 'type',
+            colSpan: 4,
+            render: ({ type }) => <div>{t(`roles.type_${roleTypeToKey[type]}`)}</div>,
+          },
+          {
+            title: t('roles.col_description'),
             dataIndex: 'description',
             colSpan: 9,
             render: ({ description }) => <div className={styles.description}>{description}</div>,

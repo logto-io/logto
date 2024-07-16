@@ -1,9 +1,11 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { isLanguageTag } from '@logto/language-kit';
+import { type Nullable } from '@silverhand/essentials';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
 import { connectorConfigFormItemGuard } from './config-form.js';
+import { type ToZodObject } from './foundation.js';
 
 export enum ConnectorPlatform {
   Native = 'Native',
@@ -34,12 +36,32 @@ export type I18nPhrases = { en: string } & {
   [K in Exclude<LanguageTag, 'en'>]?: string;
 };
 
+export type SocialConnectorMetadata = {
+  platform: Nullable<ConnectorPlatform>;
+  isStandard?: boolean;
+};
+
 export const socialConnectorMetadataGuard = z.object({
   // Social connector platform. TODO: @darcyYe considering remove the nullable and make all the social connector field optional
   platform: z.nativeEnum(ConnectorPlatform).nullable(),
   // Indicates custom connector that follows standard protocol. Currently supported standard connectors are OIDC, OAuth2, and SAML2
   isStandard: z.boolean().optional(),
-});
+}) satisfies ToZodObject<SocialConnectorMetadata>;
+
+export type ConnectorMetadata = {
+  id: string;
+  target: string;
+  name: I18nPhrases;
+  description: I18nPhrases;
+  logo: string;
+  logoDark: Nullable<string>;
+  readme: string;
+  configTemplate?: string;
+  formItems?: Array<z.infer<typeof connectorConfigFormItemGuard>>;
+  customData?: Record<string, unknown>;
+  /** @deprecated Use `customData` instead. */
+  fromEmail?: string;
+} & SocialConnectorMetadata;
 
 export const connectorMetadataGuard = z
   .object({
@@ -57,11 +79,10 @@ export const connectorMetadataGuard = z
     readme: z.string(),
     configTemplate: z.string().optional(), // Connector config template
     formItems: connectorConfigFormItemGuard.array().optional(),
+    customData: z.record(z.unknown()).optional(),
+    fromEmail: z.string().optional(),
   })
-  .merge(socialConnectorMetadataGuard)
-  .catchall(z.unknown());
-
-export type ConnectorMetadata = z.infer<typeof connectorMetadataGuard>;
+  .merge(socialConnectorMetadataGuard) satisfies ToZodObject<ConnectorMetadata>;
 
 // Configurable connector metadata guard. Stored in DB metadata field
 export const configurableConnectorMetadataGuard = connectorMetadataGuard

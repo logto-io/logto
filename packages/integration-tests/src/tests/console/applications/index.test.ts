@@ -165,13 +165,13 @@ describe('applications', () => {
     await expectToSaveChanges(page);
     await waitForToast(page, { text: 'Saved' });
 
-    const redirectUriFiled = await expect(page).toMatchElement(
+    const redirectUriField = await expect(page).toMatchElement(
       'div[class$=field]:has(>div[class$=headline]>div[class$=title]',
       { text: 'Redirect URIs' }
     );
 
     // Add and remove redirect uri
-    await expect(redirectUriFiled).toClick('div[class$=multilineInput]>button>span', {
+    await expect(redirectUriField).toClick('div[class$=multilineInput]>button>span', {
       text: 'Add another',
     });
 
@@ -180,7 +180,7 @@ describe('applications', () => {
       'div:has(>div[class$=deletableInput]):last-of-type button:has(svg[class$=minusIcon])'
     );
 
-    await expect(redirectUriFiled).toFill(
+    await expect(redirectUriField).toFill(
       'div:has(>div[class$=deletableInput]):last-of-type input',
       `${testApp.redirectUri}/v2`
     );
@@ -190,7 +190,7 @@ describe('applications', () => {
     await waitForToast(page, { text: 'Saved' });
 
     // Click delete button
-    await expect(redirectUriFiled).toClick(
+    await expect(redirectUriField).toClick(
       'div:has(>div[class$=deletableInput]):last-of-type button:has(svg[class$=minusIcon])'
     );
 
@@ -254,10 +254,7 @@ describe('applications', () => {
 
       // Expect to assign management API access role for the M2M app
       if (app.type === ApplicationType.MachineToMachine) {
-        await expectModalWithTitle(
-          page,
-          'Authorize app with machine-to-machine role for permissions'
-        );
+        await expectModalWithTitle(page, `Assign roles to ${app.name}`);
 
         await expect(page).toClick(
           '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div',

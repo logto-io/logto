@@ -135,7 +135,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     async (ctx, next) => {
       const {
         assignInteractionHookResult,
-        assignDataHookContext,
+        appendDataHookContext,
         guard: { params },
       } = ctx;
       const {
@@ -161,7 +161,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
 
       // Trigger webhooks
       assignInteractionHookResult({ userId: accountId });
-      assignDataHookContext({ event: 'User.Created', user });
+      appendDataHookContext('User.Created', { user });
 
       return next();
     }

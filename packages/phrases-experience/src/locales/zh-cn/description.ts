@@ -14,8 +14,8 @@ const description = {
   and: '和',
   enter_passcode: '验证码已经发送至你的{{ address }} {{target}}',
   passcode_sent: '验证码已经发送',
-  resend_after_seconds: '在 <span>{{ seconds }}</span> 秒后重发',
-  resend_passcode: '重发验证码',
+  resend_after_seconds: '还没收到？ <span>{{seconds}}</span> 秒后重发',
+  resend_passcode: '还没收到？ <a>重发验证码</a>',
   create_account_id_exists: '{{type}}为 {{value}} 的帐号已存在，你要登录吗？',
   link_account_id_exists: ' {{type}}为 {{value}} 的账号已注册，你要绑定至这个账号吗？',
   sign_in_id_does_not_exist: '{{type}}为 {{value}} 的帐号不存在，你要创建一个新帐号吗？',
@@ -78,6 +78,7 @@ const description = {
   not_you: '不是你本人吗？',
   user_id: '用户 ID: {{id}}',
   redirect_to: '你将被重定向到 {{name}}。',
+  auto_agreement: '继续即表示您同意<link></link>。',
 };
 
 export default Object.freeze(description);

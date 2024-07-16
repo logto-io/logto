@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 import { httpCodeToMessage } from '@logto/core-kit';
-import { condString, conditionalArray, deduplicate } from '@silverhand/essentials';
+import { cond, condArray, condString, conditionalArray, deduplicate } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
@@ -21,20 +21,33 @@ import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from '../types.js';
 
+import { managementApiDescription } from './consts.js';
 import {
   buildTag,
+  devFeatureTag,
   findSupplementFiles,
   normalizePath,
-  removeCloudOnlyOperations,
+  removeUnnecessaryOperations,
+  shouldThrow,
   validateSupplement,
   validateSwaggerDocument,
 } from './utils/general.js';
+import { buildOperationId, customRoutes, throwByDifference } from './utils/operation-id.js';
 import {
   buildParameters,
   paginationParameters,
   buildPathIdParameters,
   mergeParameters,
+  customParameters,
 } from './utils/parameters.js';
+
+const anonymousPaths = new Set<string>([
+  'interaction',
+  '.well-known',
+  'authn',
+  'swagger.json',
+  'status',
+]);
 
 type RouteObject = {
   path: string;
@@ -43,6 +56,7 @@ type RouteObject = {
 };
 
 const buildOperation = (
+  method: OpenAPIV3.HttpMethods,
   stack: IMiddleware[],
   path: string,
   isAuthGuarded: boolean
@@ -97,11 +111,15 @@ const buildOperation = (
     })
   );
 
+  const [firstSegment] = path.split('/').slice(1);
+
   return {
+    operationId: buildOperationId(method, path),
     tags: [buildTag(path)],
     parameters: [...pathParameters, ...queryParameters],
     requestBody,
     responses,
+    security: cond(firstSegment && anonymousPaths.has(firstSegment) && []),
   };
 };
 
@@ -112,7 +130,7 @@ const isManagementApiRouter = ({ stack }: Router) =>
 
 // Add more components here to cover more ID parameters in paths. For example, if there is a
 // path `/foo/:barBazId`, then add `bar-baz` to the array.
-const identifiableEntityNames = [
+const identifiableEntityNames = Object.freeze([
   'key',
   'connector-factory',
   'factory',
@@ -131,7 +149,16 @@ const identifiableEntityNames = [
   'organization-role',
   'organization-scope',
   'organization-invitation',
-];
+]);
+
+/** Additional tags that cannot be inferred from the path. */
+const additionalTags = Object.freeze(
+  condArray<string>(
+    'Organization applications',
+    EnvSet.values.isDevFeaturesEnabled && 'Security',
+    'Organization users'
+  )
+);
 
 /**
  * Attach the `/swagger.json` route which returns the generated OpenAPI document for the
@@ -147,6 +174,12 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   allRouters: R[]
 ) {
   router.get('/swagger.json', async (ctx, next) => {
+    /**
+     * A set to store all custom routes that have been built.
+     * @see {@link customRoutes}
+     */
+    const builtCustomRoutes = new Set<string>();
+
     const routes = allRouters.flatMap<RouteObject>((router) => {
       const isAuthGuarded = isManagementApiRouter(router);
 
@@ -161,7 +194,11 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
               .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
               .map((httpMethod) => {
                 const path = normalizePath(routerPath);
-                const operation = buildOperation(stack, routerPath, isAuthGuarded);
+                const operation = buildOperation(httpMethod, stack, routerPath, isAuthGuarded);
+
+                if (customRoutes[`${httpMethod} ${routerPath}`]) {
+                  builtCustomRoutes.add(`${httpMethod} ${routerPath}`);
+                }
 
                 return {
                   path,
@@ -172,6 +209,9 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
           )
       );
     });
+
+    // Ensure all custom routes are built.
+    throwByDifference(builtCustomRoutes);
 
     const pathMap = new Map<string, OpenAPIV3.PathItemObject>();
     const tags = new Set<string>();
@@ -194,13 +234,20 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     assertThat(routesDirectory, new Error('Cannot find routes directory.'));
 
     const supplementPaths = await findSupplementFiles(routesDirectory);
-    const supplementDocuments = await Promise.all(
+    const allSupplementDocuments = await Promise.all(
       supplementPaths.map(async (path) =>
-        removeCloudOnlyOperations(
+        removeUnnecessaryOperations(
           // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
           JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
         )
       )
+    );
+
+    // Filter out supplement documents that are for dev features when dev features are disabled.
+    const supplementDocuments = allSupplementDocuments.filter(
+      (supplement) =>
+        EnvSet.values.isDevFeaturesEnabled ||
+        !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
     );
 
     const baseDocument: OpenAPIV3.Document = {
@@ -214,7 +261,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       info: {
         title: 'Logto API references',
         description:
-          'API references for Logto services. To learn more about how to interact with Logto APIs, see [Interact with Management API](https://docs.logto.io/docs/recipes/interact-with-management-api/).' +
+          'API references for Logto services.' +
           condString(
             EnvSet.values.isCloud &&
               '\n\nNote: The documentation is for Logto Cloud. If you are using Logto OSS, please refer to the response of `/api/swagger.json` endpoint on your Logto instance.'
@@ -222,14 +269,26 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         version: 'Cloud',
       },
       paths: Object.fromEntries(pathMap),
+      security: [{ ManagementApi: [] }],
       components: {
+        securitySchemes: {
+          ManagementApi: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            description: managementApiDescription,
+          },
+        },
         schemas: translationSchemas,
         parameters: identifiableEntityNames.reduce(
-          (previous, entityName) => ({ ...previous, ...buildPathIdParameters(entityName) }),
-          {}
+          (previous, entityName) => ({
+            ...previous,
+            ...buildPathIdParameters(entityName),
+          }),
+          customParameters()
         ),
       },
-      tags: [...tags].map((tag) => ({ name: tag })),
+      tags: [...tags, ...additionalTags].map((tag) => ({ name: tag })),
     };
 
     const data = supplementDocuments.reduce<OpenAPIV3.Document>(
@@ -244,7 +303,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       getConsoleLogFromContext(ctx).warn('Skip validating swagger document in unit test.');
     }
     // Don't throw for integrity check in production as it has no benefit.
-    else if (!EnvSet.values.isProduction || EnvSet.values.isIntegrationTest) {
+    else if (shouldThrow()) {
       for (const document of supplementDocuments) {
         validateSupplement(baseDocument, document);
       }

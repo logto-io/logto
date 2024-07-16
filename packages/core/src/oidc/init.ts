@@ -112,6 +112,7 @@ export default function initOidc(
       introspection: { enabled: true },
       devInteractions: { enabled: false },
       clientCredentials: { enabled: true },
+      backchannelLogout: { enabled: true },
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
@@ -130,7 +131,9 @@ export default function initOidc(
         enabled: true,
         defaultResource: async () => {
           const resource = await findDefaultResource();
-          return resource?.indicator ?? '';
+          // The default implementation returns `undefined` - https://github.com/panva/node-oidc-provider/blob/0c52469f08b0a4a1854d90a96546a3f7aa090e5e/lib/helpers/defaults.js#L195
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          return resource?.indicator ?? undefined!;
         },
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
@@ -146,13 +149,6 @@ export default function initOidc(
           const { client, params, session, entities } = ctx.oidc;
           const userId = session?.accountId ?? entities.Account?.accountId;
 
-          /**
-           * In consent or code exchange flow, the organization_id is undefined,
-           * and all the scopes inherited from the all organization roles will be granted.
-           * In the flow of granting token for organization with api resource,
-           * this value is set to the organization id,
-           * and will then narrow down the scopes to the specific organization.
-           */
           const organizationId = params?.organization_id;
           const scopes = await findResourceScopes({
             queries,
@@ -227,7 +223,6 @@ export default function initOidc(
       },
     },
     extraParams: Object.values(ExtraParamsKey),
-
     extraTokenClaims: async (ctx, token) => {
       const organizationApiResourceClaims = await getExtraTokenClaimsForOrganizationApiResource(
         ctx,

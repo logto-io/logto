@@ -1,11 +1,11 @@
-import { type OrganizationRoleWithScopes } from '@logto/schemas';
+import { roleTypeToKey, type OrganizationRoleWithScopes } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import OrgRoleIcon from '@/assets/icons/organization-role-feature.svg';
 import Plus from '@/assets/icons/plus.svg';
-import OrgRoleIcon from '@/assets/icons/role-feature.svg';
 import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
 import RolesEmpty from '@/assets/images/roles-empty.svg';
 import Breakable from '@/components/Breakable';
@@ -66,6 +66,14 @@ function OrganizationRoles() {
             colSpan: 4,
             render: ({ id, name }) => {
               return <ItemPreview title={name} icon={<ThemedIcon for={OrgRoleIcon} />} to={id} />;
+            },
+          },
+          {
+            title: <DynamicT forKey="roles.col_type" />,
+            dataIndex: 'type',
+            colSpan: 4,
+            render: ({ type }) => {
+              return <DynamicT forKey={`roles.type_${roleTypeToKey[type]}`} />;
             },
           },
           {

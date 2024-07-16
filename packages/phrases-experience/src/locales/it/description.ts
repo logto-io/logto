@@ -14,8 +14,8 @@ const description = {
   and: 'e',
   enter_passcode: 'Il codice di verifica è stato inviato alla tua {{address}} {{target}}',
   passcode_sent: 'Il codice di verifica è stato inviato di nuovo',
-  resend_after_seconds: 'Inviare di nuovo dopo <span>{{seconds}}</span> secondi',
-  resend_passcode: 'Inviare nuovamente il codice di verifica',
+  resend_after_seconds: 'Non ricevuto? Invia di nuovo dopo <span>{{seconds}}</span> secondi',
+  resend_passcode: 'Non ricevuto? <a>Invia di nuovo il codice di verifica</a>',
   create_account_id_exists: "L'account con {{type}} {{value}} già esiste, vuoi accedere?",
   link_account_id_exists: "L'account con {{type}} {{value}} è già esistente. Vuoi collegarlo?",
   sign_in_id_does_not_exist:
@@ -96,6 +96,7 @@ const description = {
   user_id: 'User ID: {{id}}',
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
+  auto_agreement: 'Continuando, accetti i <link></link>.',
 };
 
 export default Object.freeze(description);

@@ -91,28 +91,35 @@ const insertOrganizationRelationsForUser = async (params: {
     return;
   }
 
-  const orgMappings = params.organizations.map((organization: Organization): [string, string] => [
-    organization.id,
-    params.userId,
-  ]);
-
   await Promise.all(
-    orgMappings.map(async (org) => params.organizationQueries.relations.users.insert(org))
+    params.organizations.map(async (org) =>
+      params.organizationQueries.relations.users.insert({
+        organizationId: org.id,
+        userId: params.userId,
+      })
+    )
   );
 
   if (params.roles.length > 0) {
-    // Org id, role id, user id
-    const rolesMappings: Array<[string, string, string]> = [];
+    const rolesMappings: Array<{
+      organizationId: string;
+      organizationRoleId: string;
+      userId: string;
+    }> = [];
     for (const role of params.roles) {
-      for (const orgMap of orgMappings) {
+      for (const org of params.organizations) {
         // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        rolesMappings.push([orgMap[0], role.id, orgMap[1]]);
+        rolesMappings.push({
+          organizationId: org.id,
+          organizationRoleId: role.id,
+          userId: params.userId,
+        });
       }
     }
 
     await Promise.all(
       rolesMappings.map(async (roleMap) =>
-        params.organizationQueries.relations.rolesUsers.insert(roleMap)
+        params.organizationQueries.relations.usersRoles.insert(roleMap)
       )
     );
   }
@@ -156,7 +163,10 @@ const assignCitizenRole = async (
 const assignUserToOrganization = async (user: User, organizationQueries: OrganizationQueries) => {
   try {
     const organization = await organizationQueries.findById(OGCIO_ORGANIZATIONS.OGCIO);
-    await organizationQueries.relations.users.insert([organization.id, user.id]);
+    await organizationQueries.relations.users.insert({
+      organizationId: organization.id,
+      userId: user.id,
+    });
     return organization;
   } catch {
     consoleLog.error(phrases.en.errors.entity.not_exists_with_id);
@@ -172,11 +182,11 @@ const assignOrganizationRoleToUser = async (
     OGCIO_ORGANIZATION_ROLES.BB_PUBLIC_SERVANT
   );
 
-  await organizationQueries.relations.rolesUsers.insert([
-    organization.id,
-    publicServantRole.id,
-    user.id,
-  ]);
+  await organizationQueries.relations.usersRoles.insert({
+    organizationId: organization.id,
+    organizationRoleId: publicServantRole.id,
+    userId: user.id,
+  });
 };
 
 const assignPublicServantRole = async (user: User, organizationQueries: OrganizationQueries) => {

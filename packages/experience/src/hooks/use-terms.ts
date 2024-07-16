@@ -1,3 +1,4 @@
+import { AgreeToTermsPolicy } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useCallback, useContext, useMemo } from 'react';
 
@@ -10,14 +11,15 @@ const useTerms = () => {
   const { termsAgreement, setTermsAgreement, experienceSettings } = useContext(PageContext);
   const { show } = useConfirmModal();
 
-  const { termsOfUseUrl, privacyPolicyUrl, isTermsDisabled } = useMemo(() => {
-    const { termsOfUseUrl, privacyPolicyUrl } = experienceSettings ?? {};
+  const { termsOfUseUrl, privacyPolicyUrl, isTermsDisabled, agreeToTermsPolicy } = useMemo(() => {
+    const { termsOfUseUrl, privacyPolicyUrl, agreeToTermsPolicy } = experienceSettings ?? {};
     const isTermsDisabled = !termsOfUseUrl && !privacyPolicyUrl;
 
     return {
       termsOfUseUrl: conditional(termsOfUseUrl),
       privacyPolicyUrl: conditional(privacyPolicyUrl),
       isTermsDisabled,
+      agreeToTermsPolicy,
     };
   }, [experienceSettings]);
 
@@ -36,18 +38,19 @@ const useTerms = () => {
   }, [setTermsAgreement, show]);
 
   const termsValidation = useCallback(async () => {
-    if (termsAgreement || isTermsDisabled) {
+    if (termsAgreement || isTermsDisabled || agreeToTermsPolicy === AgreeToTermsPolicy.Automatic) {
       return true;
     }
 
     return termsAndPrivacyConfirmModalHandler();
-  }, [termsAgreement, isTermsDisabled, termsAndPrivacyConfirmModalHandler]);
+  }, [termsAgreement, isTermsDisabled, agreeToTermsPolicy, termsAndPrivacyConfirmModalHandler]);
 
   return {
     termsOfUseUrl,
     privacyPolicyUrl,
     termsAgreement,
     isTermsDisabled,
+    agreeToTermsPolicy,
     termsValidation,
     setTermsAgreement,
     termsAndPrivacyConfirmModalHandler,

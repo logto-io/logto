@@ -8,6 +8,7 @@ import {
   mockUserTotpMfaVerification,
   mockUserWithMfaVerifications,
 } from '#src/__mocks__/index.js';
+import { type InsertUserResult } from '#src/libraries/user.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
@@ -49,10 +50,12 @@ await mockEsmWithActual('../interaction/utils/backup-code-validation.js', () => 
 const usersLibraries = {
   generateUserId: jest.fn(async () => 'fooId'),
   insertUser: jest.fn(
-    async (user: CreateUser): Promise<User> => ({
-      ...mockUser,
-      ...removeUndefinedKeys(user), // No undefined values will be returned from database
-    })
+    async (user: CreateUser): Promise<InsertUserResult> => [
+      {
+        ...mockUser,
+        ...removeUndefinedKeys(user), // No undefined values will be returned from database
+      },
+    ]
   ),
 } satisfies Partial<Libraries['users']>;
 

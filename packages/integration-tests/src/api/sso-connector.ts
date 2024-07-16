@@ -1,10 +1,13 @@
 import {
+  SsoProviderName,
   type CreateSsoConnector,
   type SsoConnector,
   type SsoConnectorProvidersResponse,
 } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
+import { logtoUrl } from '#src/constants.js';
+import { randomString } from '#src/utils.js';
 
 export type SsoConnectorWithProviderConfig = SsoConnector & {
   providerLogo: string;
@@ -37,3 +40,44 @@ export const patchSsoConnectorById = async (id: string, data: Partial<SsoConnect
       json: data,
     })
     .json<SsoConnectorWithProviderConfig>();
+
+export class SsoConnectorApi {
+  readonly connectorInstances = new Map<string, SsoConnector>();
+
+  async createMockOidcConnector(domains: string[], connectorName?: string) {
+    const connector = await this.create({
+      providerName: SsoProviderName.OIDC,
+      connectorName: connectorName ?? `test-oidc-${randomString()}`,
+      domains,
+      config: {
+        clientId: 'foo',
+        clientSecret: 'bar',
+        issuer: `${logtoUrl}/oidc`,
+      },
+    });
+
+    return connector;
+  }
+
+  async create(data: Partial<CreateSsoConnector>): Promise<SsoConnector> {
+    const connector = await createSsoConnector(data);
+
+    this.connectorInstances.set(connector.id, connector);
+    return connector;
+  }
+
+  async delete(id: string) {
+    await deleteSsoConnectorById(id);
+    this.connectorInstances.delete(id);
+  }
+
+  async cleanUp() {
+    await Promise.all(
+      Array.from(this.connectorInstances.keys()).map(async (id) => this.delete(id))
+    );
+  }
+
+  get firstConnectorId() {
+    return Array.from(this.connectorInstances.keys())[0];
+  }
+}

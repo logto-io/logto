@@ -1,0 +1,92 @@
+{
+  "tags": [
+    {
+      "name": "Organizations"
+    }
+  ],
+  "paths": {
+    "/api/organizations/{id}/jit/email-domains": {
+      "get": {
+        "summary": "Get organization JIT email domains",
+        "description": "Get email domains for just-in-time provisioning of users in the organization.",
+        "responses": {
+          "200": {
+            "description": "A list of email domains."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add organization JIT email domain",
+        "description": "Add a new email domain for just-in-time provisioning of users in the organization.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "emailDomain": {
+                    "description": "The email domain to add."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The email domain was added successfully."
+          },
+          "422": {
+            "description": "The email domain is already in use."
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace organization JIT email domains",
+        "description": "Replace all just-in-time provisioning email domains for the organization with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "emailDomains": {
+                    "description": "An array of email domains to replace existing email domains."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The email domains were replaced successfully."
+          }
+        }
+      }
+    },
+    "/api/organizations/{id}/jit/email-domains/{emailDomain}": {
+      "delete": {
+        "summary": "Remove organization JIT email domain",
+        "description": "Remove an email domain for just-in-time provisioning of users in the organization.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "name": "emailDomain",
+            "in": "path",
+            "required": true,
+            "description": "The email domain to remove."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The email domain was removed successfully."
+          },
+          "404": {
+            "description": "The email domain was not found."
+          }
+        }
+      }
+    }
+  }
+}

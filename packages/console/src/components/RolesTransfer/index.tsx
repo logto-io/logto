@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ManagementApiAccessFlag from '@/assets/icons/management-api-access.svg';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -36,8 +35,7 @@ function RolesTransfer({ entityId, type, value, onChange }: Props) {
 
   return (
     <div>
-      {/* Todo @xiaoyijun remove dev feature flag */}
-      {isDevFeaturesEnabled && isM2mRole && !notificationAcknowledged && (
+      {isM2mRole && !notificationAcknowledged && (
         <InlineNotification
           action="general.got_it"
           onClick={() => {
@@ -55,7 +53,7 @@ function RolesTransfer({ entityId, type, value, onChange }: Props) {
           </Trans>
         </InlineNotification>
       )}
-      <FormField title={isM2mRole ? 'roles.assign_m2m_roles' : 'roles.assign_user_roles'}>
+      <FormField title="roles.assign_roles">
         <div className={classNames(transferLayout.container, styles.rolesTransfer)}>
           <SourceRolesBox
             entityId={entityId}

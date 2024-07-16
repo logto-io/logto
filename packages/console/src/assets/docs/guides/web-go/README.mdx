@@ -2,6 +2,8 @@ import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import InlineNotification from '@/ds-components/InlineNotification';
+import RedirectUrisWeb, {defaultBaseUrl, defaultRedirectUri} from '../../fragments/_redirect-uris-web.mdx';
+import Checkpoint from '../../fragments/_checkpoint.md';
 
 <Steps>
 
@@ -10,9 +12,8 @@ import InlineNotification from '@/ds-components/InlineNotification';
 >
 
 <InlineNotification>
-  The following demonstration is built upon the <a href="https://gin-gonic.com">Gin Web Framework</a>.  
-  You may also integrate Logto into other frameworks by taking the same steps.  
-  We assume your app is running on <code>http://localhost:8080</code> in this guide.  
+  The following demonstration is built upon the <Anchor href="https://gin-gonic.com">Gin Web Framework</Anchor>.  
+  You may also integrate Logto into other frameworks by taking the same steps.
 </InlineNotification>
 
 Execute in the project root directory:
@@ -23,8 +24,7 @@ go get github.com/logto-io/go
 
 Add the `github.com/logto-io/go/client` package to your application code:
 
-```go
-// main.go
+```go title="main.go"
 package main
 
 import (
@@ -38,15 +38,13 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.String(200, "Hello Logto!")
 	})
-	router.Run(":8080")
+	router.Run(":3000")
 }
 ```
 
 </Step>
 
-<Step
-  title="Create a session storage"
->
+<Step title="Create a session storage">
 
 In traditional web applications, the user authentication information will be stored in the user session.
 
@@ -60,8 +58,7 @@ Logto SDK provides a `Storage` interface, you can implement a `Storage` adapter 
 
 The `Storage` type in the Logto SDK is as follows:
 
-```go
-// github.com/logto-io/client/storage.go
+```go title="github.com/logto-io/client/storage.go"
 package client
 
 type Storage interface {
@@ -74,7 +71,7 @@ We use [github.com/gin-contrib/sessions](https://github.com/gin-contrib/sessions
 
 Apply the middleware to the application, so that we can get the user session by the user request context in the route handler:
 
-```go
+```go title="main.go"
 package main
 
 import (
@@ -97,14 +94,13 @@ func main() {
 		// ...
 		ctx.String(200, "Hello Logto!")
 	})
-	router.Run(":8080")
+	router.Run(":3000")
 }
 ```
 
 Create a `session_storage.go` file, define a `SessionStorage` and implement the Logto SDK's `Storage` interfaces:
 
-```go
-// session_storage.go
+```go title="session_storage.go"
 package main
 
 import (
@@ -138,16 +134,12 @@ sessionStorage := &SessionStorage{session: session}
 
 </Step>
 
-<Step
-  title="Init LogtoClient"
->
+<Step title="Init LogtoClient">
 
 First, create a Logto config:
 
-<pre>
-  <code className="language-go">
-    {`// main.go
-func main() {
+<Code title="main.go" className="language-go">
+{`func main() {
     // ...
 
     logtoConfig := &client.LogtoConfig{
@@ -158,13 +150,11 @@ func main() {
 
     // ...
 }`}
-  </code>
-</pre>
+</Code>
 
 Then, you can create a `LogtoClient` for each user request with the Logto config above:
 
-```go
-// main.go
+```go title="main.go"
 func main() {
     // ...
 
@@ -183,7 +173,7 @@ func main() {
             authState = "You are logged in to this website! :)"
         }
 
-        homePage := `<h1>Hello Logto</h1>` +
+        homePage := "<h1>Hello Logto</h1>" +
             "<div>" + authState + "</div>"
 
         ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
@@ -195,24 +185,18 @@ func main() {
 
 </Step>
 
-<Step
-  title="Implement sign-in route"
->
+<Step title="Configure redirect URIs">
 
-Before you start implementing the sign-in flow, you need to add a redirect URI in the Admin Console for your application.
+<RedirectUrisWeb />
 
-This allows Logto to redirect the user to the redirect URI  after signing in.
+</Step>
 
-For example, if you add `http://localhost:8080/sign-in-callback` to your Redirect URI, Logto will redirect the user to the `/sign-in-callback` route of your application after signing in.
-
-<UriInputField name="redirectUris" />
+<Step title="Implement sign-in route">
 
 After the redirect URI is configured, we add a `sign-in` route to handle the sign-in request and also add an sign-in link on the home page:
 
-<pre>
-  <code className="language-go">
-    {`//main.go
-func main() {
+<Code title="main.go" className="language-go">
+    {`func main() {
     // ...
 
     // Add a link to perform a sign-in request on the home page
@@ -248,28 +232,24 @@ func main() {
 
     // ...
 }`}
-  </code>
-</pre>
+</Code>
 
-Now, when your user visit `http://localhost:8080/sign-in`, the user will be redirected to the Logto sign-in page.
+Now, when your user visit <code>{defaultBaseUrl}sign-in</code>, the user will be redirected to the Logto sign-in page.
 
 </Step>
 
-<Step
-  title="Implement the callback route"
->
+<Step title="Implement the callback route">
 
 When the user signs in successfully on the Logto sign-in page, Logto will redirect the user to the Redirect URI.
 
-Assuming your Redirect URI is `http://localhost:8080/sign-in-callback`, then we will add the `/sign-in-callback` route to handle the callback after signing in.
+Assuming your Redirect URI is <code>{defaultRedirectUri}</code>, then we will add the `/callback` route to handle the callback after signing in.
 
-```go
-// main.go
+```go title="main.go"
 func main() {
     // ...
 
     // Add a route for handling sign-in callback requests
-    router.GET("/sign-in-callback", func(ctx *gin.Context) {
+    router.GET("/callback", func(ctx *gin.Context) {
         session := sessions.Default(ctx)
         logtoClient := client.NewLogtoClient(
             logtoConfig,
@@ -294,22 +274,14 @@ func main() {
 
 </Step>
 
-<Step
-  title="Implement sign-out route"
->
+<Step title="Implement sign-out route">
 
 Similar to the sign-in flow, when the user signs out, Logto will redirect the user to the post sign-out redirect URI.
 
-Assuming that you add `http://localhost:8080` to the Post Sign-out Redirect URI filed, Logto will redirect the user to the home page after signing out.
-
-<UriInputField name="postLogoutRedirectUris" />
-
 Now, let's add the `sign-out` route to handle the sign-out request and also add a sign-out link on the home page:
 
-<pre>
-  <code className="language-go">
-    {`//main.go
-func main() {
+<Code title="main.go" className="language-go">
+    {`func main() {
     // ...
 
     // Add a link to perform a sign-out request on the home page
@@ -346,23 +318,40 @@ func main() {
 
     // ...
 }`}
-  </code>
-</pre>
+</Code>
 
 After the user makes a signing-out request, Logto will clear all user authentication information in the session.
 
 </Step>
 
-<Step
-  title="Checkpoint: Test your application"
->
+<Step title="Checkpoint: Test your app">
 
-Now, you can test your application:
+<Checkpoint />
 
-1. Visit `http://localhost:8080`, you will see "You are not logged in to this website." message on the home page.
-2. Click the "Sign In" link, you will be redirected to the Logto sign-in page.
-3. Sign in with your Logto account, you will be redirected to the home page and see "You are logged in to this website!" message.
-4. Click the "Sign Out" link, and your user authentication information will be cleared, and the home page will display "You are not logged in to this website." message again.
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can use the `client.GetIdTokenClaims` method. For example, add a route:
+
+```go title="main.go"
+func main() {
+    //...
+
+    router.GET("/user-id-token-claims", func(ctx *gin.Context) {
+		session := sessions.Default(ctx)
+		logtoClient := client.NewLogtoClient(logtoConfig, &SessionStorage{session: session})
+
+		idTokenClaims, err := logtoClient.GetIdTokenClaims()
+
+		if err != nil {
+			ctx.String(http.StatusOK, err.Error())
+		}
+
+		ctx.JSON(http.StatusOK, idTokenClaims)
+	})
+}
+```
 
 </Step>
 

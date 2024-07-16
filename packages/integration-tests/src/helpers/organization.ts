@@ -4,7 +4,7 @@ import {
   type Organization,
   type OrganizationRoleWithScopes,
   type OrganizationInvitationEntity,
-  type JsonObject,
+  type CreateOrganization,
 } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
@@ -123,11 +123,7 @@ export class OrganizationApiTest extends OrganizationApi {
     return this.#organizations;
   }
 
-  override async create(data: {
-    name: string;
-    description?: string;
-    customData?: JsonObject;
-  }): Promise<Organization> {
+  override async create(data: Omit<CreateOrganization, 'id'>): Promise<Organization> {
     const created = await super.create(data);
     this.organizations.push(created);
     return created;
@@ -141,10 +137,12 @@ export class OrganizationApiTest extends OrganizationApi {
    * when they are deleted by other tests.
    */
   async cleanUp(): Promise<void> {
-    await Promise.all(
+    await Promise.all([
       // Use `trySafe` to avoid error when organization is deleted by other tests.
-      this.organizations.map(async (organization) => trySafe(this.delete(organization.id)))
-    );
+      ...this.organizations.map(async (organization) => trySafe(this.delete(organization.id))),
+      this.roleApi.cleanUp(),
+      this.scopeApi.cleanUp(),
+    ]);
     this.#organizations = [];
   }
 }

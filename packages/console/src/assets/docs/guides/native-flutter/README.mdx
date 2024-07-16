@@ -1,12 +1,22 @@
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisNative, { defaultRedirectUri } from '../../fragments/_redirect-uris-native.mdx';
 
 <Steps>
-<Step title="Install Logto SDK">
+<Step title="Install SDK">
+
+<InlineNotification severity="alert">
+
+The Logto Flutter SDK is compatible with Android and iOS platforms only.
+
+For Dart v2.x users, please use Logto Flutter SDK v1.x. Logto Flutter SDK v2.x requires Dart v3.0.0 or higher.
+
+</InlineNotification>
 
 <Tabs>
 
@@ -16,124 +26,163 @@ You can install the `logto_dart_sdk package` directly using the pub package mana
 Run the following command under your project root:
 
 ```sh
-  flutter pub get logto_dart_sdk
+flutter pub get logto_dart_sdk
 ```
 
 </TabItem>
 
-<TabItem value="github" label="github">
+<TabItem value="github" label="GitHub">
 
 If you prefer to fork your own version of the SDK, you can clone the repository directly from GitHub.
 
 ```sh
-  git clone https://github.com/logto-io/dart
+git clone https://github.com/logto-io/dart
 ```
 
 </TabItem>
 
 </Tabs>
 
-</Step>
+### Dependencies and Android settings
 
-<Step title="Dependency settings" subtitle="2 steps">
-
-<details>
+<Details>
 
 <summary>flutter_secure_storage</summary>
-
-<p>
 
 We use [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage) to implement the cross-platform persistent secure token storage.
 
 - Keychain is used for iOS
 - AES encryption is used for Android.
 
-### Config Android version:
+**Config Android version**
 
-In `[project]/android/app/build.gradle` set minSdkVersion to >= 18.
+Set the `android:minSdkVersion` to 18 in your project's `android/app/build.gradle` file.
 
-```gradle
+```kotlin title="android/app/build.gradle"
 android {
-    ...
-
-    defaultConfig {
-        ...
-        minSdkVersion 18
-        ...
-    }
+  {/* ... */}
+  defaultConfig {
+      {/* ... */}
+      minSdkVersion 18
+  }
 }
 ```
+**Disable autobackup**
 
-### Disable autobackup:
+By default Android may backup data on Google Drive automatically. It can cause the exception `java.security.InvalidKeyException: Failed to unwrap key`.
 
-<InlineNotification>
-  By default Android backups data on Google Drive. It can cause exception
-  `java.security.InvalidKeyException:Failed` to unwrap key.
-  <br />
-  You will need to either disable `autobackup` or exclude `sharedprefs` used by the
-  FlutterSecureStorage plugin.
-</InlineNotification>
+To avoid this, you can disable auto backup for your app or exclude `sharedprefs` from the `FlutterSecureStorage`.
 
-1. To disable `autobackup`, go to your app manifest file and set the boolean value `android:allowBackup`:
+1. To disable auto backup, go to your app manifest file and set the `android:allowBackup` and `android:fullBackupContent` attributes to `false`.
 
-   ```xml
-   <manifest ... >
-       ...
-       <application
-         android:allowBackup="false"
-         android:fullBackupContent="false"
-         ...
-       >
-           ...
-       </application>
-   </manifest>
+  ```xml title="AndroidManifest.xml"
+  <manifest>
+    <!-- ...other attributes -->
+    <application
+      android:allowBackup="false"
+      android:fullBackupContent="false"
+    >
+      <!-- ... -->
+    </application>
+  </manifest>
+  ```
 
-   ```
+2. Exclude `sharedprefs` from `FlutterSecureStorage`.
 
-2. To exclude `sharedprefs` for FlutterSecureStorage.
+  If you need to keep the `android:fullBackupContent` for your app rather than disabling it, you can exclude the `sharedprefs` directory from the backup.
 
-   If you need to enable the `android:fullBackupContent` for your app. Set up a backup rule to [exclude](https://developer.android.com/guide/topics/data/autobackup#IncludingFiles) the prefs used by the plugin:
+  See more details in the [Android documentation](https://developer.android.com/identity/data/autobackup#IncludingFiles).
 
-   ```xml
-   <application ...
-     android:fullBackupContent="@xml/backup_rules">
-   </application>
-   ```
+  In your `AndroidManifest.xml` file, add the `android:fullBackupContent` attribute to the `<application>` element, as shown in the following example. This attribute points to an XML file that contains backup rules.
 
-   ```xml
-   <?xml version="1.0" encoding="utf-8"?>
-   <full-backup-content>
-     <exclude domain="sharedpref" path="FlutterSecureStorage"/>
-   </full-backup-content>
-   ```
+  ```xml title="AndroidManifest.xml"
+  <manifest>
+    <!-- ...other attributes -->
+    <application
+      android:fullBackupContent="@xml/backup_rules"
+    >
+      <!-- ... -->
+    </application>
+  </manifest>
+  ```
+
+  Create an XML file called `@xml/backup_rules` in the `res/xml/` directory. In this file, add rules with the `<include>` and `<exclude>` elements. The following sample backs up all shared preferences except device.xml:
+
+  ```xml title="res/xml/backup_rules.xml"
+  <?xml version="1.0" encoding="utf-8"?>
+  <full-backup-content>
+    <exclude domain="sharedpref" path="FlutterSecureStorage"/>
+  </full-backup-content>
+  ```
 
 Please check [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage#configure-android-version) for more details.
 
-</p>
+</Details>
 
-</details>
-
-<details>
+<Details>
 
 <summary>flutter_web_auth</summary>
 
-<p>
+[flutter_web_auth](https://pub.dev/packages/flutter_web_auth) is used behind Logto's flutter SDK. We rely on its webview-based interaction interface to authenticate users.
 
-[flutter_web_auth](https://pub.dev/packages/flutter_web_auth) is used behind Logto's flutter SDK. We rely on its webview-based interaction interface to open Logto's authorization pages.
+This plugin uses `ASWebAuthenticationSession` on iOS 12+ and macOS 10.15+, `SFAuthenticationSession` on iOS 11, `Chrome Custom Tabs` on Android and opens a new window on Web.
 
-<InlineNotification>
+</Details>
 
-Under the hood, this plugin uses `ASWebAuthenticationSession` on iOS 12+ and macOS 10.15+,
-`SFAuthenticationSession` on iOS 11, Chrome Custom Tabs on Android and opens a new window on Web.
-You can build it with iOS 8+, but it is currently only supported by iOS 11 or higher.
+</Step>
 
-</InlineNotification>
+<Step title="Init Client" subtitle="1 step">
 
-Andorid:
+Import the `logto_dart_sdk` package and initialize the `LogtoClient` instance at the root state of your application.
 
-In order to capture the callback url from Logto's sign-in web page, you will need to register your sign-in redirectUri to the `AndroidManifest.xml`.
+<Code className="language-dart" title="lib/main.dart">
+    {`import 'package:logto_dart_sdk/logto_dart_sdk.dart';
+import 'package:http/http.dart' as http;
 
-```xml
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final logtoConfig = LogtoConfig(
+    endpoint: 'your_logto_endpoint', // Replace with your Logto endpoint
+    appId: 'your_app_id', // Replace with your App ID
+  );
+
+  late LogtoClient logtoClient;
+
+  void _init() async {
+    logtoClient = LogtoClient(
+      config: logtoConfig,
+      httpClient: http.Client(), // Optional: Custom HTTP client
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  // ...
+}`}
+</Code>
+
+</Step>
+
+<Step title="Configure redirect URIs" subtitle="2 steps">
+
+<RedirectUrisNative />
+
+- For iOS, the redirect URI scheme does not really matter since the iOS will listen to the redirect URI regardless of if it's registered.
+
+- For Android, in order to capture the callback url from Logto's sign-in web page, you will need to register your sign-in redirectUri to the `AndroidManifest.xml`.
+
+```xml title="AndroidManifest.xml"
 <activity android:name="com.linusu.flutter_web_auth.CallbackActivity" android:exported="true">
   <intent-filter android:label="flutter_web_auth">
     <action android:name="android.intent.action.VIEW"/>
@@ -143,76 +192,40 @@ In order to capture the callback url from Logto's sign-in web page, you will nee
   </intent-filter>
 </activity>
 ```
-
-</p>
-
-</details>
-
 </Step>
 
-<Step title="Init LogtoClient" subtitle="1 step">
+<Step title="Implement sign-in and sign-out" subtitle="2 steps">
 
-Import the `logto_dart_sdk` package and initialize the `LogtoClient` instance at the root of your application.
+Let's implement the `signIn` and `signOut` buttons in your application.
 
-<pre>
-  <code className="language-dart">
-    {`
-import 'package:logto_dart_sdk/logto_dart_sdk.dart';
-import 'package:http/http.dart' as http;
+<Code className="language-dart" title="lib/main.dart">
+{`class _MyHomePageState extends State<MyHomePage> {
+  // ...
 
-late LogtoClient logtoClient;
+  final redirectUri = '${props.redirectUris[0] ?? defaultRedirectUri}';
 
-// LogtoConfig
-final logtoConfig = const LogtoConfig(
-  endpoint: '${props.endpoint}', // Your Logto endpoint
-  appId: '${props.app.id}', // Your App ID
-);
+  @override
+  Widget build(BuildContext context) {
+    Widget signInButton = TextButton(
+      onPressed: () async {
+        await logtoClient.signIn(redirectUri);
+      },
+      child: const Text('Sign In'),
+    );
 
-void init() async {
-  logtoClient = LogtoClient(
-    config: logtoConfig,
-    httpClient: http.Client(), // Optional http client
-  );
-}
-`}
-  </code>
-</pre>
+    Widget signOutButton = TextButton(
+      onPressed: () async {
+        await logtoClient.signOut();
+      },
+      child: const Text('Sign Out'),
+    );
 
-</Step>
-<Step title="Sign In" subtitle="2 steps">
+    // ...
+  }
+}`}
+</Code>
 
-### Configure Redirect URI
-
-<InlineNotification>
-  In the following steps, we assume your app has configured using `io.logo` as your schema .
-</InlineNotification>
-
-Let's switch to the Application details page of Logto Admin Console. Add a Redirect URI `io.logto://callback` and click "Save changes".
-
-<UriInputField name="redirectUris" />
-
-### Implement a sign-in method
-
-<pre>
-  <code className="language-dart">
-    {`void signIn() async {
-  await logtoClient.signIn('${props.redirectUris[0] ?? 'io.logto://callback'}');
-}
-  `}
-  </code>
-</pre>
-
-</Step>
-
-<Step title="Sign Out" subtitle="1 step">
-
-### Implement a sign-out method
-
-```dart
-void signOut() async {
-  await logtoClient.signOut();
-}
-```
+<br />
 
 <InlineNotification>
   The `signOut` method will clear the user's session and remove the token from the secure storage.
@@ -220,86 +233,39 @@ void signOut() async {
 
 </Step>
 
-<Step title="Handle authentication state" subtitle="1 step">
+<Step title="Handle authentication status" subtitle="1 step">
 
-In Logto SDK, you can use `logtoClient.isAuthenticated` to check the authentication status, if the
-user is signed in, the value will be `true`, otherwise, the value will be `false`.
+In Logto SDK, you can use `logtoClient.isAuthenticated` to check the authentication status, if the user is signed in, the value will be `true`, otherwise, the value will be `false`.
 
-```dart
- bool isAuthenticated = await logtoClient.isAuthenticated;
-```
+Define a boolean variable `isAuthenticated` in the state of your application to keep track of the authentication status.
 
-</Step>
+```dart title="lib/main.dart"
+class _MyHomePageState extends State<MyHomePage>{
+  bool isAuthenticated = false;
 
-<Step title="Checkpoint: Test your application" subtitle="1 step">
+  // ...
+  
+  void render() async {
+    if (await logtoClient.isAuthenticated()) {
+      setState(() {
+        isAuthenticated = true;
+      });
 
-Now let's wrap up the implementation and test your application.
+      return;
+    }
 
-<pre>
-  <code className="language-dart">
-    {`import 'package:logto_dart_sdk/logto_dart_sdk.dart';
-import 'package:http/http.dart' as http;
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter Demo',
-      home: MyHomePage(title: 'Logto Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  late LogtoClient logtoClient;
-  bool? isAuthenticated = false;
-
-  // Update the authentication state
-  void render() {
-    setState(() async {
-      isAuthenticated = await logtoClient.isAuthenticated;
+    setState(() {
+      isAuthenticated = false;
     });
   }
 
-  // LogtoConfig
-  final logtoConfig = const LogtoConfig(
-    endpoint: '${props.endpoint}',
-    appId: '${props.app.id}',
-  );
-
-  void _init() {
-    logtoClient = LogtoClient(
-      config: logtoConfig,
-      httpClient: http.Client(), // Optional http client
-    );
-    render();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _init();
-  }
-
-  @override
+  @overwrite
   Widget build(BuildContext context) {
-    Widget signInButton = TextButton(
+    // ...
+
+     Widget signInButton = TextButton(
       onPressed: () async {
-        await logtoClient.signIn('${props.redirectUris[0] ?? 'io.logto://callback'}');
+        await logtoClient.signIn(redirectUri);
         render();
       },
       child: const Text('Sign In'),
@@ -321,7 +287,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SelectableText('My Demo App'),
             isAuthenticated ? signOutButton : signInButton,
           ],
         ),
@@ -329,9 +294,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-`}
-  </code>
-</pre>
+```
+
+</Step>
+
+<Step title="Checkpoint: Test your application">
+
+<Checkpoint />
 
 </Step>
 

@@ -5,6 +5,12 @@ const content = {
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'Privacy policy URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
+    agree_to_terms: 'Şartları kabul et',
+    agree_policies: {
+      automatic: 'Şartları otomatik olarak kabul etmeye devam et',
+      manual_registration_only: 'Sadece kayıt sırasında onay kutusu ile onay gerektirir',
+      manual: 'Kayıt ve giriş sırasında onay kutusu ile onay gerektirir',
+    },
   },
   languages: {
     title: 'LANGUAGES',

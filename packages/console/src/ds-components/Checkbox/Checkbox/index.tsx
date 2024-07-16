@@ -9,7 +9,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   /* eslint-disable react/boolean-prop-naming */
-  readonly checked: boolean;
+  readonly checked?: boolean;
   readonly disabled?: boolean;
   readonly indeterminate?: boolean;
   /* eslint-enable react/boolean-prop-naming */
@@ -61,7 +61,7 @@ function Checkbox({
           <svg
             className={classNames(
               styles.icon,
-              (checked || isIndeterminate) && styles.checked,
+              (Boolean(checked) || isIndeterminate) && styles.checked,
               disabled && styles.disabled
             )}
             width="20"

@@ -20,6 +20,8 @@ import {
   OrganizationRoleResourceScopeRelations,
   Scopes,
   Resources,
+  Users,
+  OrganizationJitRoles,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -28,7 +30,12 @@ import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
-import { RoleUserRelationQueries, UserRelationQueries } from './relations.js';
+import { ApplicationRelationQueries } from './application-relations.js';
+import { ApplicationRoleRelationQueries } from './application-role-relations.js';
+import { EmailDomainQueries } from './email-domains.js';
+import { SsoConnectorQueries } from './sso-connectors.js';
+import { UserRelationQueries } from './user-relations.js';
+import { UserRoleRelationQueries } from './user-role-relations.js';
 
 /**
  * The schema field keys that can be used for searching roles.
@@ -278,7 +285,11 @@ export default class OrganizationQueries extends SchemaQueries<
     /** Queries for organization - user relations. */
     users: new UserRelationQueries(this.pool),
     /** Queries for organization - organization role - user relations. */
-    rolesUsers: new RoleUserRelationQueries(this.pool),
+    usersRoles: new UserRoleRelationQueries(this.pool),
+    /** Queries for organization - application relations. */
+    apps: new ApplicationRelationQueries(this.pool),
+    /** Queries for organization - organization role - application relations. */
+    appsRoles: new ApplicationRoleRelationQueries(this.pool),
     invitationsRoles: new TwoRelationsQueries(
       this.pool,
       OrganizationInvitationRoleRelations.table,
@@ -287,7 +298,47 @@ export default class OrganizationQueries extends SchemaQueries<
     ),
   };
 
+  jit = {
+    /** Queries for email domains that are used for just-in-time provisioning. */
+    emailDomains: new EmailDomainQueries(this.pool),
+    roles: new TwoRelationsQueries(
+      this.pool,
+      OrganizationJitRoles.table,
+      Organizations,
+      OrganizationRoles
+    ),
+    ssoConnectors: new SsoConnectorQueries(this.pool),
+  };
+
   constructor(pool: CommonQueryMethods) {
     super(pool, Organizations);
+  }
+
+  /**
+   * Get the multi-factor authentication (MFA) status for the given organization and user.
+   *
+   * @returns Whether MFA is required for the organization and whether the user has configured MFA.
+   * @see {@link MfaData}
+   */
+  async getMfaStatus(organizationId: string, userId: string) {
+    const { table, fields } = convertToIdentifiers(Organizations);
+    const users = convertToIdentifiers(Users);
+
+    type MfaData = {
+      /** Whether MFA is required for the organization. */
+      isMfaRequired: boolean;
+      /** Whether the user has configured MFA. */
+      hasMfaConfigured: boolean;
+    };
+
+    return this.pool.one<MfaData>(sql`
+      select
+        (select ${fields.isMfaRequired} from ${table} where ${fields.id} = ${organizationId}),
+        exists (
+          select 1 from ${users.table} 
+            where ${users.fields.id} = ${userId}
+            and jsonb_array_length(${users.fields.mfaVerifications}) > 0
+        ) as "hasMfaConfigured";
+    `);
   }
 }

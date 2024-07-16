@@ -5,6 +5,12 @@ const content = {
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'Privacy policy URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
+    agree_to_terms: '약관에 동의하기',
+    agree_policies: {
+      automatic: '자동으로 약관에 계속 동의하기',
+      manual_registration_only: '등록 시에만 체크박스 동의 요구',
+      manual: '등록 시와 로그인 시 모두 체크박스 동의 요구',
+    },
   },
   languages: {
     title: 'LANGUAGES',

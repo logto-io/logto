@@ -6,7 +6,7 @@ import type { UserDetailsForm } from './types';
 
 export const userDetailsParser = {
   toLocalForm: (data: UserProfileResponse): UserDetailsForm => {
-    const { primaryEmail, primaryPhone, username, name, avatar, customData } = data;
+    const { primaryEmail, primaryPhone, username, name, avatar, customData, profile } = data;
     const parsedPhoneNumber = conditional(
       primaryPhone && formatToInternationalPhoneNumber(primaryPhone)
     );
@@ -18,6 +18,7 @@ export const userDetailsParser = {
       name: name ?? '',
       avatar: avatar ?? '',
       customData: JSON.stringify(customData, null, 2),
+      profile: JSON.stringify(profile, null, 2),
     };
   },
 };

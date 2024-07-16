@@ -51,7 +51,7 @@ export const userSearchKeys = Object.freeze([
   'primaryPhone',
   'username',
   'name',
-] as const);
+] satisfies Array<keyof User>);
 
 /**
  * The actual database field names that can be used for searching users. For the schema field

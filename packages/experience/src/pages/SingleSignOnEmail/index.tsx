@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -21,7 +21,7 @@ type FormState = {
 
 const SingleSignOnEmail = () => {
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
-  const { email } = useContext(SingleSignOnContext);
+  const { ssoEmail } = useContext(UserInteractionContext);
 
   const {
     handleSubmit,
@@ -73,7 +73,7 @@ const SingleSignOnEmail = () => {
               className={styles.inputField}
               {...field}
               isDanger={!!errors.identifier}
-              defaultValue={email}
+              defaultValue={ssoEmail}
               errorMessage={errors.identifier?.message}
               enabledTypes={[SignInIdentifier.Email]}
             />

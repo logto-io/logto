@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-import guides from '@/assets/docs/guides';
+import { guides } from '@/assets/docs/guides';
 import { type Guide } from '@/assets/docs/guides/types';
 import {
   thirdPartyAppCategory,

@@ -1,4 +1,4 @@
-import { type OrganizationRole } from '@logto/schemas';
+import { roleTypeToKey, type OrganizationRole } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -7,7 +7,7 @@ import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
-import OrgRoleIcon from '@/assets/icons/role-feature.svg';
+import OrgRoleIcon from '@/assets/icons/organization-role-feature.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import PageMeta from '@/components/PageMeta';
@@ -81,7 +81,7 @@ function OrganizationRoleDetails() {
           <DetailsPageHeader
             icon={<ThemedIcon for={OrgRoleIcon} size={60} />}
             title={data.name}
-            primaryTag={t('organization_role_details.org_role')}
+            primaryTag={t(`roles.type_${roleTypeToKey[data.type]}`)}
             identifier={{ name: 'ID', value: data.id }}
             actionMenuItems={[
               {

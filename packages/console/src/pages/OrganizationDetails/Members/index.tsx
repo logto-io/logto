@@ -20,10 +20,10 @@ import useActionTranslation from '@/hooks/use-action-translation';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { buildUrl } from '@/utils/url';
 
+import EditOrganizationRolesModal from '../EditOrganizationRolesModal';
 import { type OrganizationDetailsOutletContext } from '../types';
 
 import AddMembersToOrganization from './AddMembersToOrganization';
-import EditOrganizationRolesModal from './EditOrganizationRolesModal';
 import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
@@ -68,13 +68,13 @@ function Members() {
         columns={[
           {
             dataIndex: 'user',
-            title: 'User',
+            title: t('organization_details.user'),
             colSpan: 4,
             render: (user) => <UserPreview user={user} />,
           },
           {
             dataIndex: 'roles',
-            title: 'Organization roles',
+            title: t('organization_details.roles'),
             colSpan: 6,
             render: ({ organizationRoles }) => {
               if (organizationRoles.length === 0) {
@@ -94,7 +94,7 @@ function Members() {
           },
           {
             dataIndex: 'lastSignInAt',
-            title: 'Last sign-in',
+            title: t('users.latest_sign_in'),
             colSpan: 5,
             render: ({ lastSignInAt }) => <DateTime>{lastSignInAt}</DateTime>,
           },
@@ -153,8 +153,9 @@ function Members() {
       {userToBeEdited && (
         <EditOrganizationRolesModal
           isOpen
+          type="user"
           organizationId={organization.id}
-          user={userToBeEdited}
+          data={userToBeEdited}
           onClose={() => {
             setUserToBeEdited(undefined);
             void mutate();

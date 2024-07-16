@@ -34,9 +34,13 @@ const user_details = {
   field_custom_data: 'Custom data',
   field_custom_data_tip:
     'Additional user info not listed in the pre-defined user properties, such as user-preferred color and language.',
+  field_profile: 'Profile',
+  field_profile_tip:
+    "Additional OpenID Connect standard claims that are not included in user's properties. Note that all unknown properties will be stripped. Please refer to <a>profile property reference</a> for more information.",
   field_connectors: 'Social connections',
   field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: 'Custom data must be a valid JSON object',
+  profile_invalid: 'Profile must be a valid JSON object',
   connectors: {
     connectors: 'Connectors',
     user_id: 'User ID',
@@ -74,14 +78,14 @@ const user_details = {
   reactivate_action: 'Reactivate',
   user_reactivated: 'User has been reactivated.',
   roles: {
-    name_column: 'Role',
+    name_column: 'User role',
     description_column: 'Description',
     assign_button: 'Assign roles',
     delete_description:
       'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.',
     deleted: '{{name}} was successfully removed from this user.',
     assign_title: 'Assign roles to {{name}}',
-    assign_subtitle: 'Authorize {{name}} one or more roles',
+    assign_subtitle: 'Find appropriate user roles by by searching name, description or role ID.',
     assign_role_field: 'Assign roles',
     role_search_placeholder: 'Search by role name',
     added_text: '{{value, number}} added',
@@ -93,7 +97,6 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'User needs to have at least one of the sign-in identifiers (username, email, phone number or social) to sign in. Are you sure you want to continue?',
-  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
 };
 
 export default Object.freeze(user_details);

@@ -8,6 +8,14 @@
   position: relative;
   overflow-y: auto;
 
+  .title {
+    margin-top: _.unit(-2);
+    padding-bottom: _.unit(2);
+    margin-bottom: _.unit(3);
+    border-bottom: 1px solid var(--color-border);
+    color: #f7f8f8;
+  }
+
   .placeholder {
     position: absolute;
     inset: _.unit(6);

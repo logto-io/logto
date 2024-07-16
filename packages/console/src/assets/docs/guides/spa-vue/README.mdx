@@ -1,9 +1,12 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
+
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
+import { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -11,29 +14,9 @@ import Step from '@/mdx-components/Step';
   title="Installation"
   subtitle="Install Logto SDK for your project"
 >
-<Tabs>
-<TabItem value="npm" label="npm">
 
-```bash
-npm i @logto/vue
-```
+<NpmLikeInstallation packageName="@logto/vue" />
 
-</TabItem>
-<TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @logto/vue
-```
-
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/vue
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
 <Step
@@ -41,15 +24,15 @@ pnpm add @logto/vue
 >
 
 <InlineNotification>
-  We only support Vue 3 Composition API at this point. Will add support to Vue Options API and
-  possibly Vue 2 in future releases.
+  Logto Vue SDK is built with Vue 3 composition API. Therefore, only Vue 3 is supported at the moment. Contact us if you want to add support for Vue 2.
 </InlineNotification>
 
 Import and use `createLogto` to install Logto plugin:
 
-<pre>
-  <code className="language-ts">
+<Code className="language-ts" title="main.ts">
     {`import { createLogto, LogtoConfig } from '@logto/vue';
+import { createApp } from 'vue';
+import App from './App.vue';
 
 const config: LogtoConfig = {
   endpoint: '${props.endpoint}',
@@ -60,69 +43,29 @@ const app = createApp(App);
 
 app.use(createLogto, config);
 app.mount("#app");`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
-<Step
-  title="Sign in"
-  subtitle="3 steps"
->
+<Step title="Configure redirect URIs">
 
-<InlineNotification>
-  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
-</InlineNotification>
+<RedirectUrisWeb />
 
-### Configure Redirect URI
+</Step>
 
-First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
+<Step title="Handle redirect">
 
-<UriInputField name="redirectUris" />
+There are still things to do after the user is redirected back to your application from Logto. Let's handle it properly.
 
-### Implement a sign-in button
+First let's create a callback page:
 
-We provide two composables `useHandleSignInCallback()` and `useLogto()`, which can help you easily manage the authentication flow.
+```ts title="views/CallbackView.vue"
+import { useHandleSignInCallback } from '@logto/vue';
+import router from '@/router';
 
-Go back to your IDE/editor, use the following code to implement the sign-in button:
-
-<pre>
-<code className="language-html">
-{`<script setup lang="ts">
-  import { useLogto } from "@logto/vue";
-
-  const { signIn, isAuthenticated } = useLogto();
-  const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}');
-</script>`}
-
-</code>
-</pre>
-
-```html
-<template>
-  <div v-if="isAuthenticated">
-    <div>Signed in</div>
-  </div>
-  <div v-else>
-    <button @click="onClickSignIn">Sign In</button>
-  </div>
-</template>
-```
-
-### Handle redirect
-
-We're almost there! In the last step, we use `http://localhost:3000/callback` as the Redirect URI, and now we need to handle it properly.
-
-First let's create a callback component:
-
-```html
-<!-- CallbackView.vue -->
-<script setup lang="ts">
-  import { useHandleSignInCallback } from '@logto/vue';
-  const { isLoading } = useHandleSignInCallback(() => {
-    // Navigate to root path when finished
-  });
-</script>
+const { isLoading } = useHandleSignInCallback(() => {
+  // Do something when finished, e.g. redirect to home page
+});
 ```
 
 ```html
@@ -132,9 +75,9 @@ First let's create a callback component:
 </template>
 ```
 
-Finally insert the code below to create a `/callback` route which does NOT require authentication:
+Insert the code below in your `/callback` route which does NOT require authentication:
 
-```ts
+```ts title="router/index.ts"
 // Assuming vue-router
 const router = createRouter({
   routes: [
@@ -149,79 +92,69 @@ const router = createRouter({
 
 </Step>
 
-<Step
-  title="Sign out"
->
+<Step title="Implement sign-in and sign-out">
+
+We provide a composable `useLogto()` which can help you easily manage the authentication flow.
+
+<Code className="language-ts" title="views/HomeView.vue">
+    {`import { useLogto } from '@logto/vue';
+
+const { signIn, signOut, isAuthenticated } = useLogto();
+
+const onClickSignIn = () => signIn('${props.redirectUris[0] || defaultRedirectUri}');
+const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] || defaultPostSignOutUri}');
+`}
+</Code>
 
 Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
 
-After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
+</Step>
 
-<UriInputField name="postLogoutRedirectUris" />
+<Step title="Checkpoint: Test your application">
 
-### Implement a sign-out button
-
-<pre>
-<code className="language-html">
-{`<script setup lang="ts">
-  import { useLogto } from "@logto/vue";
-
-  const { signOut } = useLogto();
-  const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}');
-</script>`}
-
-</code>
-</pre>
-
-```html
-<template>
-  <button @click="onClickSignOut">Sign Out</button>
-</template>
-```
+<Checkpoint />
 
 </Step>
 
-<Step title="Handle authentication status">
+<Step title="Display user information">
 
-In Logto SDK, generally we can use `logtoClient.isAuthenticated` to check the authentication status, if the user is signed in, the value will be `true`, otherwise, the value will be `false`.
+To display the user's information, you can use the `getIdTokenClaims()` method. For example, in your Home page:
 
-In Logto Vue SDK, the `isAuthenticated` status can be checked by using the `useLogto` composable. In the example code below, we can use it to programmatically show and hide the sign-in and sign-out buttons. Also we'll use `getIdTokenClaims` to get the ID of the currently logged-in user.
+```ts title="views/HomeView.vue"
+import { useLogto, type IdTokenClaims } from '@logto/vue';
+import { ref } from 'vue';
 
-```tsx
-import { useLogto } from "@logto/vue";
-import { ref } from "vue";
-
-const { isAuthenticated, getIdTokenClaims, signIn, signOut } = useLogto();
-const userId = ref<string>();
+const { isAuthenticated, getIdTokenClaims } = useLogto();
+const user = ref<IdTokenClaims>();
 
 if (isAuthenticated.value) {
   (async () => {
     const claims = await getIdTokenClaims();
-    userId.value = claims.sub;
+    user.value = claims;
   })();
 }
 ```
 
 ```html
 <template>
-  <p v-if="userId">Logged in as {{ userId }}</p>
-  <button v-if="!isAuthenticated" @click="onClickSignIn">Sign In</button>
-  <button v-else @click="onClickSignOut">Sign Out</button>
+  <div v-if="isAuthenticated && user">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(value, key) in user" v-bind:key="key">
+          <td>{{ key }}</td>
+          <td>{{ typeof value === "string" ? value : JSON.stringify(value) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 ```
-
-</Step>
-
-<Step
-  title="Checkpoint: Test your application"
->
-
-Now, you can test your application:
-
-1. Run your application, you will see the sign-in button.
-2. Click the sign-in button, the SDK will init the sign-in process and redirect you to the Logto sign-in page.
-3. After you signed in, you will be redirected back to your application and see user ID and the sign-out button.
-4. Click the sign-out button to sign-out.
 
 </Step>
 

@@ -1,23 +1,29 @@
-import { Trans, useTranslation } from 'react-i18next';
+import { ReservedPlanId } from '@logto/schemas';
+import { useContext } from 'react';
 import ReactModal from 'react-modal';
 
-import { contactEmail, contactEmailLink } from '@/consts';
-import Button from '@/ds-components/Button';
-import ModalLayout from '@/ds-components/ModalLayout';
-import TextLink from '@/ds-components/TextLink';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import * as styles from './index.module.scss';
+import DeletionConfirmationModal from './components/DeletionConfirmationModal';
+import TenantsIssuesModal from './components/TenantsIssuesModal';
 
 type Props = {
   readonly isOpen: boolean;
   readonly onClose: () => void;
 };
 
-const mailToLink = `${contactEmailLink}?subject=Account%20Deletion%20Request`;
-
-function DeleteAccountModal({ isOpen, onClose }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+export default function DeleteAccountModal({ isOpen, onClose }: Props) {
+  const { tenants } = useContext(TenantsContext);
+  const paidPlans = tenants.filter(
+    ({ planId }) => planId !== ReservedPlanId.Free && planId !== ReservedPlanId.Development
+  );
+  const subscriptionStatusIssues = tenants.filter(
+    ({ subscription }) => subscription.status !== 'active'
+  );
+  const openInvoices = tenants.filter(({ openInvoices }) => openInvoices.length > 0);
+  const hasIssues =
+    paidPlans.length > 0 || subscriptionStatusIssues.length > 0 || openInvoices.length > 0;
 
   return (
     <ReactModal
@@ -27,27 +33,18 @@ function DeleteAccountModal({ isOpen, onClose }: Props) {
       overlayClassName={modalStyles.overlay}
       onRequestClose={onClose}
     >
-      <ModalLayout
-        title="profile.delete_account.label"
-        footer={<Button size="large" title="general.got_it" onClick={onClose} />}
-        onClose={onClose}
-      >
-        <div className={styles.container}>
-          <p>{t('profile.delete_account.dialog_paragraph_1')}</p>
-          <p>
-            <Trans
-              components={{
-                a: <TextLink href={mailToLink} className={styles.mail} />,
-              }}
-            >
-              {t('profile.delete_account.dialog_paragraph_2', { mail: contactEmail })}
-            </Trans>
-          </p>
-          <p>{t('profile.delete_account.dialog_paragraph_3')}</p>
-        </div>
-      </ModalLayout>
+      {hasIssues ? (
+        <TenantsIssuesModal
+          issues={[
+            { description: 'paid_plan', tenants: paidPlans },
+            { description: 'subscription_status', tenants: subscriptionStatusIssues },
+            { description: 'open_invoice', tenants: openInvoices },
+          ]}
+          onClose={onClose}
+        />
+      ) : (
+        <DeletionConfirmationModal onClose={onClose} />
+      )}
     </ReactModal>
   );
 }
-
-export default DeleteAccountModal;

@@ -20,7 +20,7 @@ const user_details = {
     new_password: 'Nuova password:',
   },
   tab_settings: 'Impostazioni',
-  tab_roles: 'Ruoli',
+  tab_roles: 'Ruoli utente',
   tab_logs: 'Log utente',
   tab_organizations: 'Organizzazioni',
   authentication: 'Autenticazione',
@@ -77,26 +77,22 @@ const user_details = {
   reactivate_action: 'Riattiva',
   user_reactivated: "L'utente è stato riattivato.",
   roles: {
-    name_column: 'Ruolo',
+    name_column: 'Ruolo utente',
     description_column: 'Descrizione',
-    assign_button: 'Assegna ruoli',
     delete_description:
       'Questa azione rimuoverà questo ruolo da questo utente. Il ruolo stesso esisterà ancora, ma non sarà più associato a questo utente.',
     deleted: '{{nome}} è stato rimosso con successo da questo utente.',
-    assign_title: 'Assegna ruoli a {{nome}}',
-    assign_subtitle: 'Autorizza {{nome}} uno o più ruoli',
+    assign_subtitle: 'Trova i ruoli utente appropriati cercando per nome, descrizione o ID ruolo.',
     assign_role_field: 'Assegna ruoli',
     role_search_placeholder: 'Cerca per nome ruolo',
     added_text: '{{value, number}} aggiunti',
     assigned_user_count: '{{value, number}} utenti',
-    confirm_assign: 'Assegna ruoli',
     role_assigned: 'Ruolo(ruoli) assegnati con successo',
     search: 'Cerca per nome ruolo, descrizione o ID',
     empty: 'Nessun ruolo disponibile',
   },
   warning_no_sign_in_identifier:
     "L'utente deve avere almeno uno degli identificatori di accesso (nome utente, email, numero di telefono, o social) per accedere. Sei sicuro di voler continuare?",
-  organization_roles_tooltip: "I ruoli assegnati all'utente all'interno di questa organizzazione.",
 };
 
 export default Object.freeze(user_details);

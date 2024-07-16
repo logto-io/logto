@@ -3,6 +3,7 @@ import type {
   Identity,
   MfaFactor,
   MfaVerification,
+  OrganizationWithRoles,
   Role,
   User,
   UserSsoIdentity,
@@ -123,3 +124,6 @@ export const createUserMfaVerification = async (userId: string, type: MfaFactor)
       | { type: MfaFactor.TOTP; secret: string; secretQrCode: string }
       | { type: MfaFactor.BackupCode; codes: string[] }
     >();
+
+export const getUserOrganizations = async (userId: string) =>
+  authedAdminApi.get(`users/${userId}/organizations`).json<OrganizationWithRoles[]>();

@@ -1,6 +1,6 @@
 {
   "name": "@logto/phrases-experience",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "Logto shared phrases (i18n) for experience.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
-    "buffer": "^5.7.1",
+    "buffer": "^6.0.0",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",

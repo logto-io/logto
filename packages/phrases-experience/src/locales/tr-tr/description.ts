@@ -14,8 +14,8 @@ const description = {
   and: 've',
   enter_passcode: 'Doğrulama kodu {{address}} {{target}} adresinize gönderildi',
   passcode_sent: 'Doğrulama kodu yeniden gönderildi',
-  resend_after_seconds: '<span>{{seconds}}</span> saniye sonra tekrar gönder',
-  resend_passcode: 'Doğrulama kodunu tekrar gönder',
+  resend_after_seconds: 'Henüz almadınız mı? <span>{{seconds}}</span> saniye sonra tekrar gönderin',
+  resend_passcode: 'Henüz almadınız mı? <a>Doğrulama kodunu tekrar gönderin</a>',
   create_account_id_exists: '{{type}} {{value}} ile hesap mevcut, giriş yapmak ister misiniz?',
   link_account_id_exists: '{{type}} {{value}} olan hesap zaten var, bağlamak ister misiniz?',
   sign_in_id_does_not_exist:
@@ -95,6 +95,7 @@ const description = {
   user_id: 'User ID: {{id}}',
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
+  auto_agreement: 'Devam ederek <link></link> kabul etmiş oluyorsunuz.',
 };
 
 export default Object.freeze(description);

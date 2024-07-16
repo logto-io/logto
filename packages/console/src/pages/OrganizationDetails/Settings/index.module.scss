@@ -1,0 +1,69 @@
+@use '@/scss/underscore' as _;
+
+.jitContent {
+  margin-top: _.unit(3);
+}
+
+// Additional layer of nesting to override the styles from the imported components
+.jitEmailDomains .ssoEnabled {
+  display: flex;
+  align-items: center;
+  gap: _.unit(1);
+  background-color: var(--color-alert-container);
+
+  > svg {
+    color: var(--color-on-alert-container);
+  }
+}
+
+.jitFormField {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.mfaWarning {
+  margin-top: _.unit(3);
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  font: var(--font-body-2);
+
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.ssoConnectorList {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
+.ssoConnector {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+
+  .info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: _.unit(3);
+    gap: _.unit(3);
+    background-color: var(--color-layer-2);
+    font: var(--font-label-2);
+    border-radius: 8px;
+    color: var(--color-text);
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

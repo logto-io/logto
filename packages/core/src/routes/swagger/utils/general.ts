@@ -14,6 +14,10 @@ const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slic
 
 /** The tag name used in the supplement document to indicate that the operation is cloud only. */
 const cloudOnlyTag = 'Cloud only';
+/** The tag name is used in the supplement document to indicate that the corresponding API operation is a dev feature. */
+export const devFeatureTag = 'Dev feature';
+
+const reservedTags = new Set([cloudOnlyTag, devFeatureTag]);
 
 /**
  * Get the root component name from the given absolute path.
@@ -114,10 +118,12 @@ const validateSupplementPaths = (
         if (
           isKeyInObject(operation, 'tags') &&
           Array.isArray(operation.tags) &&
-          (operation.tags.length > 1 || operation.tags[0] !== cloudOnlyTag)
+          !operation.tags.every(
+            (tag) => typeof tag === 'string' && [cloudOnlyTag, devFeatureTag].includes(tag)
+          )
         ) {
           throw new TypeError(
-            `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\` except for tag \`${cloudOnlyTag}\`.  Define tags in the document root instead.`
+            `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\` except for tag \`${cloudOnlyTag}\` and \`${devFeatureTag}\`. Define tags in the document root instead.`
           );
         }
       }
@@ -141,8 +147,10 @@ export const validateSupplement = (
     const originalTags = new Set(original.tags?.map((tag) => tag.name));
 
     for (const { name } of supplementTags) {
-      if (!originalTags.has(name)) {
-        throw new TypeError(`Supplement document contains extra tag \`${name}\`.`);
+      if (!reservedTags.has(name) && !originalTags.has(name)) {
+        throw new TypeError(
+          `Supplement document contains extra tag \`${name}\`. If you want to add a new tag, please add it to the \`additionalTags\` array in the main swagger route file.`
+        );
       }
     }
   }
@@ -207,7 +215,10 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
     }
 
     for (const tag of document.tags ?? []) {
-      assert(tag.description, `Tag \`${tag.name}\` must have a description.`);
+      assert(
+        reservedTags.has(tag.name) || tag.description,
+        `Tag \`${tag.name}\` must have a description.`
+      );
     }
   }
 };
@@ -216,19 +227,28 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
  * **CAUTION**: This function mutates the input document.
  *
  * Remove operations (path + method) that are tagged with `Cloud only` if the application is not
- * running in the cloud. This will prevent the swagger validation from failing in the OSS
- * environment.
+ * running in the cloud and remove operations with `Dev feature` tag if Logto's `isDevFeatureEnabled` flag
+ * is set to be false.
+ *
+ * This will prevent the swagger validation from failing in the OSS environment.
+ *
  */
-export const removeCloudOnlyOperations = (
+// eslint-disable-next-line complexity
+export const removeUnnecessaryOperations = (
   document: DeepPartial<OpenAPIV3.Document>
 ): DeepPartial<OpenAPIV3.Document> => {
-  if (EnvSet.values.isCloud || !document.paths) {
+  const { isCloud, isDevFeaturesEnabled } = EnvSet.values;
+  if ((isCloud && isDevFeaturesEnabled) || !document.paths) {
     return document;
   }
 
   for (const [path, pathItem] of Object.entries(document.paths)) {
     for (const method of Object.values(OpenAPIV3.HttpMethods)) {
-      if (pathItem?.[method]?.tags?.includes(cloudOnlyTag)) {
+      if (
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        (!isCloud && pathItem?.[method]?.tags?.includes(cloudOnlyTag)) ||
+        (!isDevFeaturesEnabled && pathItem?.[method]?.tags?.includes(devFeatureTag))
+      ) {
         // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete -- intended
         delete pathItem[method];
       }
@@ -242,3 +262,5 @@ export const removeCloudOnlyOperations = (
 
   return document;
 };
+
+export const shouldThrow = () => !EnvSet.values.isProduction || EnvSet.values.isIntegrationTest;

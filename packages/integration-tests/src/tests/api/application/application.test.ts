@@ -10,7 +10,7 @@ import {
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
-describe('admin console application', () => {
+describe('application APIs', () => {
   it('should create application successfully', async () => {
     const applicationName = 'test-create-app';
     const applicationType = ApplicationType.SPA;

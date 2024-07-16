@@ -10,7 +10,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     repo: 'swift',
     path: 'Demos/SwiftUI%20Demo',
   },
-  isFeatured: true,
+  fullGuide: 'swift',
 });
 
 export default metadata;

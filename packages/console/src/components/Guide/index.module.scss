@@ -51,12 +51,19 @@
     code:not(pre > code) {
       background: var(--color-layer-2);
       font: var(--font-body-2);
-      padding: _.unit(1);
       border-radius: 4px;
+
+      &:not(a > code) {
+        padding: _.unit(1);
+      }
     }
 
     hr {
       border-color: var(--color-border);
+
+      + div {
+        margin-top: _.unit(4.5);
+      }
     }
   }
 }

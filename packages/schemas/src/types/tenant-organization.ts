@@ -8,6 +8,7 @@
  */
 
 import {
+  RoleType,
   type CreateOrganization,
   type OrganizationRole,
   type OrganizationScope,
@@ -147,6 +148,7 @@ const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.free
  *   id: 'collaborator',
  *   name: 'collaborator',
  *   description: 'Collaborator of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
+ *   type: RoleType.User,
  * });
  * ```
  *
@@ -158,6 +160,7 @@ export const getTenantRole = (role: TenantRole): Readonly<OrganizationRole> =>
     id: role,
     name: role,
     description: tenantRoleDescriptions[role],
+    type: RoleType.User,
   });
 
 /**

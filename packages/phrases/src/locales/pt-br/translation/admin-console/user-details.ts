@@ -18,7 +18,7 @@ const user_details = {
     new_password: 'Nova senha:',
   },
   tab_settings: 'Configurações',
-  tab_roles: 'Funções',
+  tab_roles: 'Papéis de usuário',
   tab_logs: 'Registros',
   tab_organizations: 'Organizações',
   authentication: 'Autenticação',
@@ -74,26 +74,23 @@ const user_details = {
   reactivate_action: 'Reativar',
   user_reactivated: 'O usuário foi reativado',
   roles: {
-    name_column: 'Função',
+    name_column: 'Papel de usuário',
     description_column: 'Descrição',
-    assign_button: 'Atribuir funções',
     delete_description:
       'Esta ação removerá esta função deste usuário. A função em si ainda existirá, mas não estará mais associada a este usuário.',
     deleted: '{{name}} foi removido com sucesso deste usuário.',
-    assign_title: 'Atribuir funções para {{name}}',
-    assign_subtitle: 'Autorizar {{name}} uma ou mais funções',
+    assign_subtitle:
+      'Encontre papéis de usuário apropriados buscando pelo nome, descrição ou ID do papel.',
     assign_role_field: 'Atribuir funções',
     role_search_placeholder: 'Pesquisar por nome de função',
     added_text: '{{value, number}} adicionado(s)',
     assigned_user_count: '{{value, number}} usuários',
-    confirm_assign: 'Atribuir funções',
     role_assigned: 'Função(ões) atribuída(s) com sucesso',
     search: 'Pesquisar por nome de função, descrição ou ID',
     empty: 'Nenhuma função disponível',
   },
   warning_no_sign_in_identifier:
     'O usuário precisa ter pelo menos um dos identificadores de login (nome de usuário, e-mail, número de telefone ou social) para fazer login. Tem certeza de que deseja continuar?',
-  organization_roles_tooltip: 'As funções atribuídas ao usuário dentro desta organização.',
 };
 
 export default Object.freeze(user_details);

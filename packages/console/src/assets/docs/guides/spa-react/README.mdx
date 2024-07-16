@@ -1,9 +1,11 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
+
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
@@ -11,37 +13,16 @@ import Step from '@/mdx-components/Step';
   title="Installation"
   subtitle="Install Logto SDK for your project"
 >
-<Tabs>
-<TabItem value="npm" label="npm">
 
-```bash
-npm i @logto/react
-```
+<NpmLikeInstallation packageName="@logto/react" />
 
-</TabItem>
-<TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @logto/react
-```
-
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/react
-```
-
-</TabItem>
-</Tabs>
 </Step>
 
-<Step title="Init LogtoClient">
+<Step title="Init Logto provider">
 
-Import and use `LogtoProvider` to provide a Logto context:
+Import and use `LogtoProvider` to provide a Logto context to your app:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx" title="App.tsx">
     {`import { LogtoProvider, LogtoConfig } from '@logto/react';
 
 const config: LogtoConfig = {
@@ -54,59 +35,23 @@ const App = () => (
     <YourAppContent />
   </LogtoProvider>
 );`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
-<Step
-  title="Implement sign-in"
-  subtitle="3 steps"
->
+<Step title="Configure redirect URIs">
 
-<InlineNotification>
-  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
-</InlineNotification>
+<RedirectUrisWeb />
 
-### Configure Redirect URI
+</Step>
 
-First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
+<Step title="Handle redirect">
 
-<UriInputField name="redirectUris" />
+After the user signs in, Logto will redirect the user back to the redirect URI configured above. However, there are still things to do to make your application work properly.
 
-### Implement a sign-in button
+First let's create a callback page:
 
-We provide two hooks `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow.
-
-Go back to your IDE/editor, use the following code to implement the sign-in button:
-
-<pre>
-  <code className="language-tsx">
-    {`import { useLogto } from '@logto/react';
-
-const SignIn = () => {
-  const { signIn, isAuthenticated } = useLogto();
-
-  if (isAuthenticated) {
-    return <div>Signed in</div>;
-  }
-
-  return (
-    <button onClick={() => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}')}>
-      Sign In
-    </button>
-  );
-};`}
-  </code>
-</pre>
-
-### Handle redirect
-
-We're almost there! In the last step, we use `http://localhost:3000/callback` as the Redirect URI, and now we need to handle it properly.
-
-First let's create a callback component:
-
-```tsx
+```tsx title="pages/Callback/index.tsx"
 import { useHandleSignInCallback } from '@logto/react';
 
 const Callback = () => {
@@ -118,78 +63,43 @@ const Callback = () => {
   if (isLoading) {
     return <div>Redirecting...</div>;
   }
+
+  return null;
 };
 ```
 
-Finally insert the code below to create a `/callback` route which does NOT require authentication:
+Then, insert the code below to create a `/callback` route which does NOT require authentication:
 
-```tsx
+```tsx title="App.tsx"
 // Assuming react-router
 <Route path="/callback" element={<Callback />} />
 ```
 
 </Step>
 
-<Step title="Implement sign-out">
+<Step title="Implement sign-in and sign-out">
 
-Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
+We provide a hook `useLogto()` which can help you easily manage the authentication flow.
 
-After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
+<InlineNotification>
+  Before calling `.signIn()`, make sure you have correctly configured Redirect URI in Admin Console.
+</InlineNotification>
 
-<UriInputField name="postLogoutRedirectUris" />
+<Code className="language-tsx" title="pages/Home/index.tsx">
+    {`import { useLogto } from '@logto/react';
 
-### Implement a sign-out button
+const Home = () => {
+  const { signIn, signOut, isAuthenticated } = useLogto();
 
-<pre>
-  <code className="language-tsx">
-    {`const SignOut = () => {
-  const { signOut } = useLogto();
-
-  return (
-    <button onClick={() => signOut('${
-      props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'
-    }')}>
-      Sign out
-    </button>
+  return isAuthenticated ? (
+    <button onClick={() => signOut('${props.postLogoutRedirectUris[0] || defaultRedirectUri}')}>Sign Out</button>
+  ) : (
+    <button onClick={() => signIn('${props.redirectUris[0] || defaultPostSignOutUri}')}>Sign In</button>
   );
 };`}
-  </code>
-</pre>
+</Code>
 
-</Step>
-
-<Step title="Handle authentication status">
-
-In Logto SDK, generally we can use `logtoClient.isAuthenticated` to check the authentication status, if the user is signed in, the value will be `true`, otherwise, the value will be `false`.
-
-In Logto React SDK, the `isAuthenticated` status can be checked by using the `useLogto` hook. In the example code below, we can use it to programmatically show and hide the sign-in and sign-out buttons. And also use `getIdTokenClaims` to get the id of the currently logged-in user.
-
-```tsx
-const Home = () => {
-  const { isAuthenticated, getIdTokenClaims, signIn, signOut } = useLogto();
-  const [userId, setUserId] = useState('');
-
-  useEffect(() => {
-    (async () => {
-      if (isAuthenticated) {
-        const claims = await getIdTokenClaims();
-        setUserId(claims.sub);
-      }
-    })();
-  }, [isAuthenticated]);
-
-  return (
-    <div>
-      {userId && <p>Logged in as {userId}</p>}
-      {isAuthenticated ? (
-        <button onClick={signOut}>Sign Out</button>
-      ) : (
-        <button onClick={() => signIn('http://localhost:3000/callback')}>Sign In</button>
-      )}
-    </div>
-  );
-};
-```
+Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
 
 </Step>
 
@@ -197,12 +107,54 @@ const Home = () => {
   title="Checkpoint: Test your application"
 >
 
-Now, you can test your application:
+<Checkpoint />
 
-1. Run your application, you will see the sign-in button.
-2. Click the sign-in button, the SDK will init the sign-in process and redirect you to the Logto sign-in page.
-3. After you signed in, you will be redirected back to your application and see user ID and the sign-out button.
-4. Click the sign-out button to sign-out.
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can use the `getIdTokenClaims()` method. For example, in your Home page:
+
+```tsx title="pages/Home/index.tsx"
+import { useLogto, type IdTokenClaims } from '@logto/react';
+import { useEffect, useState } from 'react';
+
+const Home = () => {
+  const { isAuthenticated, getIdTokenClaims } = useLogto();
+  const [user, setUser] = useState<IdTokenClaims>();
+
+  useEffect(() => {
+    (async () => {
+      if (isAuthenticated) {
+        const claims = await getIdTokenClaims();
+        setUser(claims);
+      }
+    })();
+  }, [getIdTokenClaims, isAuthenticated]);
+
+  return (
+    // ...
+    {isAuthenticated && user && (
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(user).map(([key, value]) => (
+            <tr key={key}>
+              <td>{key}</td>
+              <td>{typeof value === 'string' ? value : JSON.stringify(value)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+  );
+}
+```
 
 </Step>
 

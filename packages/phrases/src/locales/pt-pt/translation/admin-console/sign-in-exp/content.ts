@@ -5,6 +5,12 @@ const content = {
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'Privacy policy URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
+    agree_to_terms: 'Aceitar os termos',
+    agree_policies: {
+      automatic: 'Continuar a aceitar automaticamente os termos',
+      manual_registration_only: 'Exigir aceitação da caixa de verificação apenas no registo',
+      manual: 'Exigir aceitação da caixa de verificação tanto no registo quanto no login',
+    },
   },
   languages: {
     title: 'LANGUAGES',

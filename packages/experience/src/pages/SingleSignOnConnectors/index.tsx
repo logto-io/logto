@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
@@ -13,7 +13,7 @@ import * as styles from './index.module.scss';
 
 const SingleSignOnConnectors = () => {
   const { theme } = useContext(PageContext);
-  const { email, ssoConnectors } = useContext(SingleSignOnContext);
+  const { ssoEmail, ssoConnectors } = useContext(UserInteractionContext);
   const navigate = useNavigate();
   const onSubmit = useSingleSignOn();
 
@@ -22,18 +22,18 @@ const SingleSignOnConnectors = () => {
 
   useEffect(() => {
     // Return to the previous page if no email and no connectors are available in the context
-    if (!email || ssoConnectors.length === 0) {
+    if (!ssoEmail || ssoConnectors.length === 0) {
       navigate('../email', {
         replace: true,
       });
     }
-  }, [email, navigate, ssoConnectors.length]);
+  }, [ssoEmail, navigate, ssoConnectors.length]);
 
   return (
     <SecondaryPageLayout
       title="action.single_sign_on"
       description="description.single_sign_on_connectors_list"
-      descriptionProps={{ email }}
+      descriptionProps={{ email: ssoEmail }}
     >
       <div className={styles.ssoLinkList}>
         {ssoConnectors.map((connector) => {

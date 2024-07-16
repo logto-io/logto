@@ -31,18 +31,24 @@ export type GuideMetadata = {
   /** Indicate whether the application is for third-party use */
   isThirdParty?: boolean;
 
-  /** The related complete guide for this guide which will be displayed in the 'Further readings' section. */
-  fullGuide?: {
+  /** The related complete guide url relative to the quick starts page (https://docs.logto.io/quick-starts). */
+  fullGuide?: string;
+
+  /** The related URLs to add to the further readings section. */
+  furtherReadings?: Array<{
     title: string;
-    url: string;
-  };
+    url: URL;
+  }>;
 };
 
 /** The guide instance to build in the console. */
 export type Guide = {
+  order: number;
   /** The unique identifier of the guide. */
   id: string;
-  Logo: LazyExoticComponent<SvgComponent>;
+  Logo:
+    | LazyExoticComponent<SvgComponent>
+    | ((props: { readonly className?: string }) => JSX.Element);
   Component: LazyExoticComponent<FunctionComponent<MDXProps>>;
   metadata: Readonly<GuideMetadata>;
 };

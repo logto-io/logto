@@ -2,15 +2,14 @@ import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
+
 <Steps>
 
 <Step title="Get started">
 
-This tutorial will show you how to use [Blorc.OpenIdConnect](https://github.com/WildGums/Blorc.OpenIdConnect) to add Logto authentication to a Blazor WebAssembly application.
-
-<ul>
-  <li>It assumes your website is hosted on <code>{props.sampleUrls.origin}</code>.</li>
-</ul>
+This guide will show you how to use [Blorc.OpenIdConnect](https://github.com/WildGums/Blorc.OpenIdConnect) to add Logto authentication to a Blazor WebAssembly application.
 
 ### Installation
 
@@ -26,7 +25,7 @@ dotnet add package Blorc.OpenIdConnect
 
 Include `Blorc.Core/injector.js` the `index.html` file:
 
-```html
+```html title="index.html"
 <head>
   <!-- ... -->
   <script src="_content/Blorc.Core/injector.js"></script>
@@ -38,7 +37,7 @@ Include `Blorc.Core/injector.js` the `index.html` file:
 
 Add the following code to the `Program.cs` file:
 
-```csharp
+```csharp title="Program.cs"
 using Blorc.OpenIdConnect;
 using Blorc.Services;
 
@@ -66,45 +65,29 @@ Note: There's no need to use the `Microsoft.AspNetCore.Components.WebAssembly.Au
 
 </Step>
 
-<Step title="Configure Logto">
+<Step title="Configure redirect URIs">
 
-### Configure redirect URI
+<RedirectUrisWeb />
 
-<p>
-First, let's enter your redirect URI. E.g. <code>{props.sampleUrls.origin + 'Callback'}</code> (replace the endpoint with yours). This is where Logto will redirect users after they sign in.
-</p>
+</Step>
 
-<UriInputField name="redirectUris" />
-
-### Configure post sign-out redirect URI
-
-To clean up both ASP.NET session and Logto session, we can designate a post sign-out redierct URI. This is where Logto will redirect users after they sign out.
-
-<p>
-For example, set the URI to <code>{props.sampleUrls.origin + 'SignedOutCallback'}</code> (replace the endpoint with yours):
-</p>
-
-<UriInputField name="postLogoutRedirectUris" />
-
-### Configure application
+<Step title="Configure application">
 
 Add the following code to the `appsettings.json` file:
 
-<pre>
-  <code className="language-json5">
+<Code className="language-json5" title="appsettings.json">
 {`// ...
   IdentityServer: {
     Authority: '${props.endpoint}oidc',
     ClientId: '${props.app.id}',
-    RedirectUri: '${props.redirectUris[0] ?? props.sampleUrls.callback}',
-    PostLogoutRedirectUri: '${props.postLogoutRedirectUris[0] ?? props.sampleUrls.origin}',
+    RedirectUri: '${props.redirectUris[0] ?? defaultRedirectUri}',
+    PostLogoutRedirectUri: '${props.postLogoutRedirectUris[0] ?? defaultPostSignOutUri}',
     ResponseType: 'code',
     Scope: 'openid profile', // Add more scopes if needed
   },
 }
 `}
-    </code>
-</pre>
+  </Code>
 
 </Step>
 
@@ -114,7 +97,7 @@ Add the following code to the `appsettings.json` file:
 
 In the Razor pages that require authentication, add the `AuthorizeView` component. Let's assume it's the `Home.razor` page:
 
-```cshtml
+```cshtml title="Pages/Home.razor"
 @using Microsoft.AspNetCore.Components.Authorization
 @page "/"
 
@@ -138,7 +121,7 @@ In the Razor pages that require authentication, add the `AuthorizeView` componen
 
 In the `Home.razor.cs` file (create it if it doesn't exist), add the following code:
 
-```csharp
+```csharp title="Pages/Home.razor.cs"
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -175,11 +158,19 @@ public partial class Home : ComponentBase
 
 Once the user is authenticated, the `User` property will be populated with the user information.
 
-### Display user information
+</Step>
+
+<Step title="Checkpoint: Test your application">
+
+<Checkpoint />
+
+</Step>
+
+<Step title="Display user information">
 
 Here are some examples of how to display user information in the `Home.razor` page:
 
-```cshtml
+```cshtml title="Pages/Home.razor"
 <AuthorizeView>
     <Authorized>
         @* Signed in view *@
@@ -191,25 +182,6 @@ Here are some examples of how to display user information in the `Home.razor` pa
 ```
 
 For more properties and claims, check the `User` and `Profile` classes in the `Blorc.OpenIdConnect` package.
-
-</Step>
-
-<Step title="Checkpoint: Test your application">
-
-Now you can run the web application and try to sign in and sign out with Logto:
-
-1. Open the web application in your browser, you should see "Is authenticated: False" and the "Sign in" button.
-2. Click the "Sign in" button, and you should be redirected to the Logto sign-in page.
-3. After you have signed in, you should be redirected back to the web application, and you should see "Is authenticated: True" and the "Sign out" button.
-4. Click the "Sign out" button, and you should be redirected to the Logto sign-out page, and then redirected back to the web application.
-
-</Step>
-
-<Step title="The user object">
-
-To get the user profile, you can use the `User?.Profile` property; to fetch the access token, you can use the `User?.AccessToken` property or add it to your HTTP client using `.AddAccessToken()`.
-
-See the [full tutorial](https://docs.logto.io/quick-starts/dotnet-core/blazor-wasm/) for more details.
 
 </Step>
 

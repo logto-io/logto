@@ -57,13 +57,15 @@ export default function userAssetsRoutes<T extends AuthedMeRouter>(...[router]: 
     '/user-assets',
     koaGuard({
       files: object({
-        file: uploadFileGuard,
+        file: uploadFileGuard.array().min(1),
       }),
       response: userAssetsGuard,
     }),
     async (ctx, next) => {
-      const { file } = ctx.guard.files;
+      const { file: bodyFiles } = ctx.guard.files;
 
+      const file = bodyFiles[0];
+      assertThat(file, 'guard.invalid_input');
       assertThat(file.size <= maxUploadFileSize, 'guard.file_size_exceeded');
       assertThat(
         allowUploadMimeTypes.map(String).includes(file.mimetype),

@@ -1,6 +1,8 @@
-import type { SignIn, ConnectorMetadata } from '@logto/schemas';
+import { type SignIn, type ExperienceSocialConnector, AgreeToTermsPolicy } from '@logto/schemas';
 
 import SocialSignInList from '@/containers/SocialSignInList';
+import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
+import useTerms from '@/hooks/use-terms';
 
 import IdentifierSignInForm from './IdentifierSignInForm';
 import PasswordSignInForm from './PasswordSignInForm';
@@ -8,12 +10,27 @@ import * as styles from './index.module.scss';
 
 type Props = {
   readonly signInMethods: SignIn['methods'];
-  readonly socialConnectors: ConnectorMetadata[];
+  readonly socialConnectors: ExperienceSocialConnector[];
 };
 
 const Main = ({ signInMethods, socialConnectors }: Props) => {
+  const { agreeToTermsPolicy } = useTerms();
+
   if (signInMethods.length === 0 && socialConnectors.length > 0) {
-    return <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />;
+    return (
+      <>
+        <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />
+        {
+          /**
+           * Display agreement checkbox when only social sign-in methods are available
+           * and the user needs to agree to terms manually.
+           */
+          agreeToTermsPolicy === AgreeToTermsPolicy.Manual && (
+            <TermsAndPrivacyCheckbox className={styles.checkbox} />
+          )
+        }
+      </>
+    );
   }
 
   const isPasswordOnly =

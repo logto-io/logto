@@ -18,7 +18,7 @@ const user_details = {
     new_password: 'Nowe hasło:',
   },
   tab_settings: 'Ustawienia',
-  tab_roles: 'Role',
+  tab_roles: 'Role użytkowników',
   tab_logs: 'Logi użytkownika',
   tab_organizations: 'Organizacje',
   authentication: 'Autoryzacja',
@@ -73,26 +73,23 @@ const user_details = {
   reactivate_action: 'Aktywuj',
   user_reactivated: 'Użytkownik został aktywowany.',
   roles: {
-    name_column: 'Rola',
+    name_column: 'Rola użytkownika',
     description_column: 'Opis',
-    assign_button: 'Przypisz rolę',
     delete_description:
       'Ta akcja usunie tę rolę z tego użytkownika. Rola nadal będzie istnieć, ale nie będzie już przypisana do tego użytkownika.',
     deleted: '{{name}} została usunięta z tego użytkownika.',
-    assign_title: 'Przypisz rolę dla {{name}}',
-    assign_subtitle: 'Przypisz {{name}} jedną lub wiele ról',
+    assign_subtitle:
+      'Znajdź odpowiednie role użytkowników, wyszukując według nazwy, opisu lub identyfikatora roli.',
     assign_role_field: 'Przypisz rolę',
     role_search_placeholder: 'Szukaj po nazwie roli',
     added_text: '{{value, number}} dodanych',
     assigned_user_count: '{{value, number}} użytkowników',
-    confirm_assign: 'Przypisz rolę',
     role_assigned: 'Pomyślnie przypisano rolę(y)',
     search: 'Szukaj po nazwie roli, opisie lub ID',
     empty: 'Brak dostępnej roli',
   },
   warning_no_sign_in_identifier:
     'Aby się zalogować, użytkownik musi mieć co najmniej jeden identyfikator logowania (nazwa użytkownika, e-mail, numer telefonu lub konto społecznościowe). Czy na pewno chcesz kontynuować?',
-  organization_roles_tooltip: 'Role przypisane użytkownikowi w ramach tej organizacji.',
 };
 
 export default Object.freeze(user_details);

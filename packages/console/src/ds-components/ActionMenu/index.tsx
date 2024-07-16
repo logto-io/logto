@@ -57,7 +57,7 @@ function ActionMenu(props: Props) {
         <Button
           {...props.buttonProps}
           ref={anchorReference}
-          className={styles.actionMenuButton}
+          className={classNames(styles.actionMenuButton, props.buttonProps.className)}
           onClick={() => {
             setIsOpen(true);
           }}

@@ -18,7 +18,7 @@ const user_details = {
     new_password: '新密码：',
   },
   tab_settings: '设置',
-  tab_roles: '角色',
+  tab_roles: '用户角色',
   tab_logs: '用户日志',
   tab_organizations: '组织',
   authentication: '认证',
@@ -68,25 +68,21 @@ const user_details = {
   reactivate_action: '重新启用',
   user_reactivated: '用户已重新启用。',
   roles: {
-    name_column: '角色名称',
+    name_column: '用户角色',
     description_column: '描述',
-    assign_button: '分配角色',
     delete_description: '此操作将从此用户中删除此角色。角色本身仍将存在，但不再与此用户相关联。',
     deleted: '已成功将 {{name}} 从此用户中删除。',
-    assign_title: '将角色分配给 {{name}}',
-    assign_subtitle: '为 {{name}} 授权一个或多个角色',
+    assign_subtitle: '通过搜索名称、描述或角色ID找到合适的用户角色。',
     assign_role_field: '分配角色',
     role_search_placeholder: '按角色名称搜索',
     added_text: '添加了 {{value, number}} 个',
     assigned_user_count: '{{value, number}} 个用户',
-    confirm_assign: '分配角色',
     role_assigned: '已成功分配角色',
     search: '按角色名称、描述或 ID 搜索',
     empty: '无可用角色',
   },
   warning_no_sign_in_identifier:
     '用户需要至少拥有一个登录标识（用户名、邮箱、手机号或社交账户）才能登录。确定要继续吗？',
-  organization_roles_tooltip: '用户在该组织内分配的角色。',
 };
 
 export default Object.freeze(user_details);

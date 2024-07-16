@@ -7,10 +7,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   description: 'Enables direct communication between machines.',
   target: ApplicationType.MachineToMachine,
   isFeatured: true,
-  fullGuide: {
-    title: 'Full machine-to-machine integration tutorial',
-    url: 'https://docs.logto.io/quick-starts/m2m',
-  },
+  fullGuide: 'm2m',
 });
 
 export default metadata;

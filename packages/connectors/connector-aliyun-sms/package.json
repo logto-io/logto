@@ -1,9 +1,9 @@
 {
   "name": "@logto/connector-aliyun-sms",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Aliyun SMS connector implementation.",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^3.0.0",
+    "@logto/connector-kit": "workspace:^4.0.0",
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
     "snakecase-keys": "^8.0.0",
@@ -51,7 +51,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-commonjs": "^26.0.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",

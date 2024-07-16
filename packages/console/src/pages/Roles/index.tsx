@@ -1,20 +1,17 @@
-import { RoleType, type RoleResponse } from '@logto/schemas';
-import { Theme } from '@logto/schemas';
+import { RoleType, roleTypeToKey, type RoleResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import MachineToMachineRoleIconDark from '@/assets/icons/m2m-role-dark.svg';
-import MachineToMachineRoleIcon from '@/assets/icons/m2m-role.svg';
 import Plus from '@/assets/icons/plus.svg';
-import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
-import UserRoleIcon from '@/assets/icons/user-role.svg';
 import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
 import RolesEmpty from '@/assets/images/roles-empty.svg';
+import Breakable from '@/components/Breakable';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
+import RoleIcon from '@/components/RoleIcon';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import Search from '@/ds-components/Search';
@@ -28,21 +25,12 @@ import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import AssignedEntities from './components/AssignedEntities';
 import CreateRoleModal from './components/CreateRoleModal';
-import * as styles from './index.module.scss';
 
 const rolesPathname = '/roles';
 const createRolePathname = `${rolesPathname}/create`;
 const buildDetailsPathname = (id: string) => `${rolesPathname}/${id}`;
 
 const pageSize = defaultPageSize;
-
-const getRoleIcon = (type: RoleType, isDarkMode: boolean) => {
-  if (type === RoleType.User) {
-    return isDarkMode ? <UserRoleIconDark /> : <UserRoleIcon />;
-  }
-
-  return isDarkMode ? <MachineToMachineRoleIconDark /> : <MachineToMachineRoleIcon />;
-};
 
 function Roles() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -96,29 +84,21 @@ function Roles() {
             title: t('roles.col_roles'),
             dataIndex: 'roles',
             colSpan: 5,
-            render: ({ id, name, type }) => (
-              <ItemPreview
-                title={name}
-                to={buildDetailsPathname(id)}
-                icon={getRoleIcon(type, theme === Theme.Dark)}
-              />
+            render: ({ id, name }) => (
+              <ItemPreview title={name} to={buildDetailsPathname(id)} icon={<RoleIcon />} />
             ),
           },
           {
             title: t('roles.col_type'),
             dataIndex: 'type',
-            colSpan: 5,
-            render: ({ type }) => (
-              <div className={styles.type}>
-                {type === RoleType.User ? t('roles.type_user') : t('roles.type_machine_to_machine')}
-              </div>
-            ),
+            colSpan: 4,
+            render: ({ type }) => <Breakable>{t(`roles.type_${roleTypeToKey[type]}`)}</Breakable>,
           },
           {
             title: t('roles.col_description'),
             dataIndex: 'description',
-            colSpan: 5,
-            render: ({ description }) => <div className={styles.description}>{description}</div>,
+            colSpan: 6,
+            render: ({ description }) => <Breakable>{description}</Breakable>,
           },
           {
             title: <span>{t('roles.col_assigned_entities')}</span>,

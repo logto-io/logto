@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import { HTTPError } from 'ky';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/ds-components/Button';
@@ -33,7 +32,9 @@ function TestWebhook({ hookId }: Props) {
   const { result, setResult } = useWebhookTestResult();
 
   const [isSendingPayload, setIsSendingPayload] = useState(false);
-  const api = useApi({ hideErrorToast: true });
+  const api = useApi({
+    hideErrorToast: ['hook.send_test_payload_failed', 'hook.endpoint_responded_with_error'],
+  });
 
   const sendTestPayload = async () => {
     if (isSendingPayload) {
@@ -57,37 +58,34 @@ function TestWebhook({ hookId }: Props) {
         requestTime,
       });
     } catch (error: unknown) {
-      if (!(error instanceof HTTPError)) {
-        toast.error(error instanceof Error ? String(error) : t('general.unknown_error'));
-        return;
-      }
+      if (error instanceof HTTPError) {
+        const { code, data, message } = await error.response.clone().json<RequestErrorBody>();
 
-      const { code, data, message } = await error.response.clone().json<RequestErrorBody>();
+        if (code === 'hook.send_test_payload_failed') {
+          setResult({
+            result: 'error',
+            endpointUrl,
+            requestTime,
+            message,
+          });
+          return;
+        }
 
-      if (code === 'hook.send_test_payload_failed') {
-        setResult({
-          result: 'error',
-          endpointUrl,
-          requestTime,
-          message,
-        });
-        return;
-      }
+        if (code === 'hook.endpoint_responded_with_error') {
+          const { responseStatus, responseBody } =
+            trySafe(() => hookTestErrorResponseDataGuard.parse(data)) ?? {};
 
-      if (code === 'hook.endpoint_responded_with_error') {
-        const { responseStatus, responseBody } =
-          trySafe(() => hookTestErrorResponseDataGuard.parse(data)) ?? {};
+          setResult({
+            result: 'error',
+            endpointUrl,
+            requestTime,
+            message,
+            responseStatus,
+            responseBody,
+          });
 
-        setResult({
-          result: 'error',
-          endpointUrl,
-          requestTime,
-          message,
-          responseStatus,
-          responseBody,
-        });
-
-        return;
+          return;
+        }
       }
 
       throw error;

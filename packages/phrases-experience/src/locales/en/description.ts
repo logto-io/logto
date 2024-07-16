@@ -14,8 +14,8 @@ const description = {
   and: 'and',
   enter_passcode: 'The verification code has been sent to your {{address}} {{target}}',
   passcode_sent: 'The verification code has been resent',
-  resend_after_seconds: 'Resend after <span>{{seconds}}</span> seconds',
-  resend_passcode: 'Resend verification code',
+  resend_after_seconds: 'Not received yet? Resend after <span>{{seconds}}</span> seconds',
+  resend_passcode: 'Not received yet? <a>Resend verification code</a>',
   create_account_id_exists:
     'The account with {{type}} {{value}} already exists, would you like to sign in?',
   link_account_id_exists:
@@ -85,6 +85,7 @@ const description = {
   not_you: 'Not you?',
   user_id: 'User ID: {{id}}',
   redirect_to: 'You will be redirected to {{name}}.',
+  auto_agreement: 'By continuing, you agree to the <link></link>.',
 };
 
 export default Object.freeze(description);

@@ -2,6 +2,7 @@ import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
 import { MfaFactor, jsonObjectGuard, webAuthnTransportGuard } from '../foundations/index.js';
+import { type ToZodObject } from '../utils/zod.js';
 
 import type {
   EmailVerificationCodePayload,
@@ -13,12 +14,120 @@ import {
 } from './verification-code.js';
 
 /**
+ * User interaction events defined in Logto RFC 0004.
+ * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information.
+ */
+export enum InteractionEvent {
+  SignIn = 'SignIn',
+  Register = 'Register',
+  ForgotPassword = 'ForgotPassword',
+}
+
+// ====== Experience API payload guards and type definitions start ======
+export enum InteractionIdentifierType {
+  Username = 'username',
+  Email = 'email',
+  Phone = 'phone',
+}
+
+/** Identifiers that can be used to uniquely identify a user. */
+export type InteractionIdentifier = {
+  type: InteractionIdentifierType;
+  value: string;
+};
+
+export const interactionIdentifierGuard = z.object({
+  type: z.nativeEnum(InteractionIdentifierType),
+  value: z.string(),
+}) satisfies ToZodObject<InteractionIdentifier>;
+
+/** Currently only email and phone are supported for verification code validation. */
+export type VerificationCodeIdentifier = {
+  type: InteractionIdentifierType.Email | InteractionIdentifierType.Phone;
+  value: string;
+};
+
+export const verificationCodeIdentifierGuard = z.object({
+  type: z.enum([InteractionIdentifierType.Email, InteractionIdentifierType.Phone]),
+  value: z.string(),
+}) satisfies ToZodObject<VerificationCodeIdentifier>;
+
+/** Logto supported interaction verification types. */
+export enum VerificationType {
+  Password = 'Password',
+  VerificationCode = 'VerificationCode',
+  Social = 'Social',
+  EnterpriseSso = 'EnterpriseSso',
+  TOTP = 'Totp',
+  WebAuthn = 'WebAuthn',
+  BackupCode = 'BackupCode',
+}
+
+// REMARK: API payload guard
+
+/** Payload type for `POST /api/experience/verification/social/:connectorId/authorization-uri`. */
+export type SocialAuthorizationUrlPayload = {
+  state: string;
+  redirectUri: string;
+};
+export const socialAuthorizationUrlPayloadGuard = z.object({
+  state: z.string(),
+  redirectUri: z.string(),
+}) satisfies ToZodObject<SocialAuthorizationUrlPayload>;
+
+/** Payload type for `POST /api/experience/verification/social/:connectorId/verify`. */
+export type SocialVerificationCallbackPayload = {
+  /** The callback data from the social connector. */
+  connectorData: Record<string, unknown>;
+  /**  The verification ID returned from the authorization URI. */
+  verificationId: string;
+};
+export const socialVerificationCallbackPayloadGuard = z.object({
+  connectorData: jsonObjectGuard,
+  verificationId: z.string(),
+}) satisfies ToZodObject<SocialVerificationCallbackPayload>;
+
+/** Payload type for `POST /api/experience/verification/password`. */
+export type PasswordVerificationPayload = {
+  identifier: InteractionIdentifier;
+  password: string;
+};
+
+export const passwordVerificationPayloadGuard = z.object({
+  identifier: interactionIdentifierGuard,
+  password: z.string().min(1),
+}) satisfies ToZodObject<PasswordVerificationPayload>;
+
+/** Payload type for `POST /api/experience/identification`. */
+export type IdentificationApiPayload = {
+  interactionEvent: InteractionEvent;
+  verificationId: string;
+};
+
+export const identificationApiPayloadGuard = z.object({
+  interactionEvent: z.nativeEnum(InteractionEvent),
+  verificationId: z.string(),
+}) satisfies ToZodObject<IdentificationApiPayload>;
+
+// ====== Experience API payload guard and types definitions end ======
+
+/**
+ * Legacy interaction identifier payload guard
+ *
+ * @remark
+ * Following are the types for legacy interaction APIs. They are all treated as deprecated, and can be removed
+ * once the new Experience API are fully implemented and migrated.
+ * =================================================================================================================
+ */
+
+/**
  * Detailed interaction identifier payload guard
  */
-export const usernamePasswordPayloadGuard = z.object({
+const usernamePasswordPayloadGuard = z.object({
   username: z.string().min(1),
   password: z.string().min(1),
 });
+
 export type UsernamePasswordPayload = z.infer<typeof usernamePasswordPayloadGuard>;
 
 export const emailPasswordPayloadGuard = z.object({
@@ -52,13 +161,6 @@ export const socialPhonePayloadGuard = z.object({
 });
 
 export type SocialPhonePayload = z.infer<typeof socialPhonePayloadGuard>;
-
-// Interaction flow event types
-export enum InteractionEvent {
-  SignIn = 'SignIn',
-  Register = 'Register',
-  ForgotPassword = 'ForgotPassword',
-}
 
 export const eventGuard = z.nativeEnum(InteractionEvent);
 

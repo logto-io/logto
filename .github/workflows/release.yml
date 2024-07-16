@@ -105,7 +105,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64
           context: .
@@ -129,7 +129,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
           pnpm-version: 9
 
@@ -161,7 +161,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v4
+        uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
           pnpm-version: 9
 

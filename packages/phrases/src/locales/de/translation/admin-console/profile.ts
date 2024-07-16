@@ -52,12 +52,6 @@ const profile = {
     description:
       'Wenn Sie Ihr Konto löschen, werden alle Ihre persönlichen Informationen, Benutzerdaten und Konfigurationen entfernt. Diese Aktion kann nicht rückgängig gemacht werden.',
     button: 'Konto löschen',
-    dialog_paragraph_1:
-      'Wir bedauern, dass Sie Ihr Konto löschen möchten. Das Löschen Ihres Kontos entfernt dauerhaft alle Daten, einschließlich Benutzerinformationen, Protokolle und Einstellungen, und diese Aktion kann nicht rückgängig gemacht werden. Stellen Sie also sicher, dass Sie wichtige Daten sichern, bevor Sie fortfahren.',
-    dialog_paragraph_2:
-      'Um mit dem Konto-Löschvorgang fortzufahren, senden Sie bitte eine E-Mail an unser Support-Team unter <a>mail</a> mit dem Betreff "Anforderung zur Kontolöschung". Wir werden Ihnen helfen und sicherstellen, dass all Ihre Daten ordnungsgemäß aus unserem System gelöscht werden.',
-    dialog_paragraph_3:
-      'Vielen Dank, dass Sie sich für Logto Cloud entschieden haben. Wenn Sie weitere Fragen oder Bedenken haben, zögern Sie bitte nicht, uns zu kontaktieren.',
   },
   set: 'Festlegen',
   change: 'Ändern',

@@ -1,9 +1,11 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisNative, { defaultRedirectUri } from '../../fragments/_redirect-uris-native.mdx';
 
 <Steps>
 
@@ -22,20 +24,20 @@ Since Xcode 11, you can [directly import a swift package](https://developer.appl
 
 We do not support **Carthage** and **CocoaPods** at the time due to some technical issues.
 
-<details>
+<Details>
   <summary>Carthage</summary>
 
 Carthage [needs a `xcodeproj` file to build](https://github.com/Carthage/Carthage/issues/1226#issuecomment-290931385), but `swift package generate-xcodeproj` will report a failure since we are using binary targets
 for native social plugins. We will try to find a workaround later.
 
-</details>
+</Details>
 
-<details>
+<Details>
   <summary>CocoaPods</summary>
 
 CocoaPods [does not support local dependency](https://github.com/CocoaPods/CocoaPods/issues/3276) and monorepo, thus it's hard to create a `.podspec` for this repo.
 
-</details>
+</Details>
 
 </Step>
 
@@ -44,8 +46,9 @@ CocoaPods [does not support local dependency](https://github.com/CocoaPods/Cocoa
   subtitle="1 step"
 >
 
-<pre>
-  <code className="language-swift">
+You can initialize `LogtoClient` in a proper place of your app that can be accessed globally:
+
+<Code className="language-swift">
     {`import Logto
 import LogtoClient
 
@@ -54,8 +57,7 @@ let config = try? LogtoConfig(
   appId: "${props.app.id}"
 )
 let logtoClient = LogtoClient(useConfig: config)`}
-  </code>
-</pre>
+</Code>
 
 By default, we store credentials like ID Token and Refresh Token in Keychain. Thus the user doesn't need to sign in again when he returns.
 
@@ -70,52 +72,93 @@ let config = try? LogtoConfig(
 
 </Step>
 
-<Step
-  title="Sign in"
-  subtitle="2 steps"
->
+<Step title="Configure redirect URI">
 
-### Configure Redirect URI
-
-First, let’s configure your redirect URI scheme. E.g. `io.logto://callback`
-
-<UriInputField name="redirectUris" />
+<RedirectUrisNative />
 
 <InlineNotification>
-  The Redirect URI in iOS SDK is only for internal use. There's <em>NO NEED</em> to add a{' '}
-  <a href="https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app">
-    Custom URL Scheme
-  </a>{' '}
-  until a connector asks.
+  The Redirect URI in iOS SDK is only for internal use. There's <em>NO NEED</em> to add a [Custom URL Scheme](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) until a connector asks.
 </InlineNotification>
-
-Go back to Xcode, use the following code to implement sign-in:
-
-<pre>
-  <code className="language-swift">
-    {`do {
-  try await client.signInWithBrowser(redirectUri: "${
-    props.redirectUris[0] ?? 'io.logto://callback'
-  }")
-  print(client.isAuthenticated) // true
-} catch let error as LogtoClientErrors.SignIn {
-  // error occured during sign in
-}`}
-  </code>
-</pre>
 
 </Step>
 
-<Step
-  title="Sign out"
-  subtitle="1 step"
->
+<Step title="Implement sign-in and sign-out">
 
-Calling `.signOut()` will clean all the Logto data in Keychain, if they exist.
+You can use `client.signInWithBrowser(redirectUri:)` to sign in the user and `client.signOut()` to sign out the user.
 
-```swift
-await client.signOut()
-```
+For example, in a SwiftUI app:
+
+<Code title="ContentView.swift" className="language-swift">
+    {`struct ContentView: View {
+  @State var isAuthenticated: Bool
+
+  init() {
+    isAuthenticated = client.isAuthenticated
+  }
+
+  var body: some View {
+    VStack {
+      if isAuthenticated {
+        Button("Sign Out") {
+          Task { [self] in
+            await client.signOut()
+            isAuthenticated = false
+          }
+        }
+      } else {
+        Button("Sign In") {
+          Task { [self] in
+            do {
+              try await client.signInWithBrowser(redirectUri: "${
+                props.redirectUris[0] ?? defaultRedirectUri
+              }")
+              isAuthenticated = true
+            } catch let error as LogtoClientErrors.SignIn {
+              // error occured during sign in
+            } catch {
+              // other errors
+            }
+          }
+        }
+      }
+    }
+  }
+}`}
+</Code>
+
+</Step>
+
+<Step title="Checkpoint: Test your app">
+
+<Checkpoint />
+
+</Step>
+
+<Step title="Display user information">
+
+To display the user's information, you can use the `client.getIdTokenClaims()` method. For example, in a SwiftUI app:
+
+<Code title="ContentView.swift" className="language-swift">
+    {`struct ContentView: View {
+  @State var isAuthenticated: Bool
+  @State var name: String?
+
+  init() {
+    isAuthenticated = client.isAuthenticated
+    name = try? client.getIdTokenClaims().name
+  }
+
+  var body: some View {
+    VStack {
+      if isAuthenticated {
+        Text("Welcome, \(name)")
+      } else {
+        Text("Please sign in")
+      }
+    }
+  }
+}`}
+</Code>
 
 </Step>
 

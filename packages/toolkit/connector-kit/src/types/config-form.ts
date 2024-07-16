@@ -6,6 +6,7 @@ export enum ConnectorConfigFormItemType {
   MultilineText = 'MultilineText',
   Switch = 'Switch',
   Select = 'Select',
+  MultiSelect = 'MultiSelect',
   Json = 'Json',
 }
 
@@ -27,6 +28,11 @@ export const connectorConfigFormItemGuard = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(ConnectorConfigFormItemType.Select),
     selectItems: z.array(z.object({ value: z.string(), title: z.string() })),
+    ...baseConfigFormItem,
+  }),
+  z.object({
+    type: z.literal(ConnectorConfigFormItemType.MultiSelect),
+    selectItems: z.array(z.object({ value: z.string() })),
     ...baseConfigFormItem,
   }),
   z.object({

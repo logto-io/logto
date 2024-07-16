@@ -3,38 +3,111 @@
 @use '@logto/core-kit/scss/console-themes' as themes;
 
 .app {
+  input {
+    background-color: var(--color-layer-1);
+    font: var(--font-body-2);
+    color: var(--color-text);
+    padding: 0 _.unit(3);
+    height: 36px;
+    border: 1px solid var(--color-border);
+    outline: 3px solid transparent;
+    border-radius: 6px;
+  }
+
+  .button {
+    display: inline-block;
+    user-select: none;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-layer-1);
+    border-radius: 8px;
+    padding: _.unit(3) _.unit(6);
+    font: var(--font-label-2);
+    color: var(--color-text);
+    transition: background ease-in-out 0.2s;
+
+    &:hover {
+      cursor: pointer;
+      background: var(--color-hover);
+    }
+
+    &:focus {
+      outline: 3px solid var(--color-focused-variant);
+    }
+  }
+
+
   .card {
     background: var(--color-layer-1);
     border-radius: 16px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 640px;
-    height: 640px;
-    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
     font-size: 14px;
     line-height: 20px;
 
-    img {
-      margin-top: _.unit(25);
-      width: 120px;
-      height: 120px;
-    }
-
     .title {
-      margin-top: _.unit(6);
       color: var(--color-neutral-10);
       font: var(--font-title-2);
     }
 
     .text {
-      margin-top: _.unit(1);
       font: var(--font-body-2);
       color: var(--color-text-secondary);
+    }
+
+    &.congrats {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      align-items: center;
+      text-align: center;
+      width: 640px;
+      height: 640px;
+      transform: translate(-50%, -50%);
+
+      .title {
+        margin-top: _.unit(6);
+      }
+
+      .text {
+        margin-top: _.unit(1);
+      }
+
+      .button {
+        margin-top: _.unit(8);
+      }
+    }
+
+    &.devPanel {
+      max-width: 800px;
+      width: 25vw;
+      position: fixed;
+      left: _.unit(2);
+      top: _.unit(2);
+      padding: _.unit(4);
+      gap: _.unit(3);
+
+      .item {
+        margin: _.unit(2) 0;
+        display: flex;
+        flex-direction: column;
+        gap: _.unit(1);
+      }
+
+      .button {
+        align-self: flex-end;
+      }
+
+      .action {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    img {
+      margin-top: _.unit(25);
+      width: 120px;
+      height: 120px;
     }
 
     .infoCard {
@@ -61,25 +134,6 @@
       }
     }
 
-    .button {
-      user-select: none;
-      margin-top: _.unit(8);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      padding: _.unit(3) _.unit(6);
-      font: var(--font-label-2);
-      color: var(--color-text);
-      transition: background ease-in-out 0.2s;
-
-      &:hover {
-        cursor: pointer;
-        background: var(--color-hover);
-      }
-
-      &:focus {
-        outline: 3px solid var(--color-focused-variant);
-      }
-    }
 
     .continue {
       margin-top: _.unit(12);
@@ -119,6 +173,11 @@
       }
     }
   }
+}
+
+.error {
+  color: var(--color-neutral-10);
+  margin: _.unit(3);
 }
 
 @media (prefers-color-scheme: light) {

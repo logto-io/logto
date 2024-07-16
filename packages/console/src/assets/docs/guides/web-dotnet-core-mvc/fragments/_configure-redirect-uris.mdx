@@ -1,0 +1,28 @@
+import UriInputField from '@/mdx-components/UriInputField';
+
+export const defaultBaseUrl = 'http://localhost:5000/';
+
+First, let's configure the **Logto redirect URI**. For example, if your website is hosted on <code>{defaultBaseUrl}</code>, add <code>{defaultBaseUrl + 'Callback'}</code> as the redirect URI below:
+
+<UriInputField name="redirectUris" />
+
+Now let's configure the **Logto post sign-out redirect URI**. For example, set the URI to <code>{defaultBaseUrl + 'SignedOutCallback'}</code>:
+
+<UriInputField name="postLogoutRedirectUris" />
+
+#### Change the default paths
+
+The **Logto redirect URI** has a default path of `/Callback`, and the **Logto post sign-out redirect URI** has a default path of `/SignedOutCallback`.
+
+You can leave them as are if there's no special requirement. If you want to change it, you can set the `CallbackPath` and `SignedOutCallbackPath` property for `LogtoOptions`:
+
+```csharp title="Program.cs"
+builder.Services.AddLogtoAuthentication(options =>
+{
+  // Other configurations...
+  options.CallbackPath = "/Foo";
+  options.SignedOutCallbackPath = "/Bar";
+});
+```
+
+Remember to update the values in the redirect URI fields accordingly.

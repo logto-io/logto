@@ -3,18 +3,17 @@
 The Google connector provides a succinct way for your application to use Google’s OAuth 2.0 authentication system.
 
 **Table of contents**
-- [Google connector](#google-connector)
-  - [Set up a project in the Google API Console](#set-up-a-project-in-the-google-api-console)
-  - [Configure your consent screen](#configure-your-consent-screen)
-    - [Configure and register your application](#configure-and-register-your-application)
-    - [Edit app registration](#edit-app-registration)
-      - [Config OAuth consent screen](#config-oauth-consent-screen)
-      - [Config scopes](#config-scopes)
-      - [Add test users (External user type only)](#add-test-users-external-user-type-only)
-  - [Obtain OAuth 2.0 credentials](#obtain-oauth-20-credentials)
-  - [Configure your connector](#configure-your-connector)
-    - [Config types](#config-types)
-  - [References](#references)
+- [Set up a project in the Google API Console](#set-up-a-project-in-the-google-api-console)
+- [Configure your consent screen](#configure-your-consent-screen)
+  - [Configure and register your application](#configure-and-register-your-application)
+  - [Edit app registration](#edit-app-registration)
+    - [Config OAuth consent screen](#config-oauth-consent-screen)
+    - [Config scopes](#config-scopes)
+    - [Add test users (External user type only)](#add-test-users-external-user-type-only)
+- [Obtain OAuth 2.0 credentials](#obtain-oauth-20-credentials)
+- [Configure your connector](#configure-your-connector)
+  - [Config types](#config-types)
+- [References](#references)
 
 ## Set up a project in the Google API Console
 
@@ -57,8 +56,8 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 - On the **Credentials** page, click the **+ CREATE CREDENTIALS** button on the top menu bar, and select **OAuth client ID**.
 - On the **Create OAuth client ID** page, select **Web application** as the application type.
 - Fill out the basic information for your application.
-- Click **+ Add URI** to add an authorized domain to the **Authorized JavaScript origins** section. This is the domain that your logto authorization page will be served from. In our case, this will be `${your_logto_origin}`. e.g.`https://logto.dev`.
-- Click **+ Add URI** in the ****Authorized redirect URIs**** section to set up the ****Authorized redirect URIs****, which redirect the user to the application after logging in. In our case, this will be `${your_logto_endpoint}/callback/${connector_id}`. e.g. `https://logto.dev/callback/${connector_id}`. The `connector_id` can be found on the top bar of the Logto Admin Console connector details page.
+- Click **+ Add URI** to add an authorized domain to the **Authorized JavaScript origins** section. This is the domain that your logto authorization page will be served from. In our case, this will be `${your_logto_endpoint_origin}`. e.g.`https://foo.logto.app`.
+- Click **+ Add URI** in the ****Authorized redirect URIs**** section to set up the ****Authorized redirect URIs****, which redirect the user to the application after logging in. In our case, this will be `${your_logto_endpoint}/callback/${connector_id}`. e.g. `https://foo.logto.app/callback/${connector_id}`. The `connector_id` can be found on the top bar of the Logto Admin Console connector details page.
 - Click **Create** to finish and then you will get the **Client ID** and **Client Secret**.
 
 ## Configure your connector
@@ -67,13 +66,20 @@ Fill out the `clientId` and `clientSecret` field with _Client ID_ and _Client Se
 
 `scope` is a space-delimited list of [scopes](https://developers.google.com/identity/protocols/oauth2/scopes). If not provided, scope defaults to be `openid profile email`.
 
+`prompts` is an array of strings that specifies the type of user interaction that is required. The string can be one of the following values:
+
+- `none`: The authorization server does not display any authentication or user consent screens; it will return an error if the user is not already authenticated and has not pre-configured consent for the requested scopes. You can use none to check for existing authentication and/or consent.
+- `consent`: The authorization server prompts the user for consent before returning information to the client.
+- `select_account`: The authorization server prompts the user to select a user account. This allows a user who has multiple accounts at the authorization server to select amongst the multiple accounts that they may have current sessions for.
+
 ### Config types
 
-| Name         | Type   |
-|--------------|--------|
-| clientId     | string |
-| clientSecret | string |
-| scope        | string |
+| Name         | Type     |
+|--------------|----------|
+| clientId     | string   |
+| clientSecret | string   |
+| scope        | string   |
+| prompts      | string[] |
 
 ## References
 * [Google Identity: Setting up OAuth 2.0](https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup)

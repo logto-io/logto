@@ -6,6 +6,7 @@ import type { JWK } from 'jose';
 import { createLocalJWKSet, jwtVerify } from 'jose';
 import type { MiddlewareType, Request } from 'koa';
 import type { IMiddleware, IRouterParamContext } from 'koa-router';
+import { HTTPError } from 'ky';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -103,6 +104,16 @@ export const verifyBearerTokenFromRequest = async (
     return { sub, clientId, scopes: z.string().parse(scope).split(' ') };
   } catch (error: unknown) {
     if (error instanceof RequestError) {
+      throw error;
+    }
+
+    /**
+     * Handle potential errors when ky makes requests during validation
+     * This may occur when fetching OIDC configuration from the oidc-config endpoint
+     * `TypeError`: typically thrown when the fetch operation fails (e.g., network issues)
+     * `HTTPError`: thrown by ky for non-2xx responses
+     */
+    if (error instanceof TypeError || error instanceof HTTPError) {
       throw error;
     }
 

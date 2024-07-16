@@ -82,7 +82,10 @@ export class OrganizationInvitationLibrary {
 
       if (organizationRoleIds?.length) {
         await organizationQueries.relations.invitationsRoles.insert(
-          ...organizationRoleIds.map<[string, string]>((roleId) => [invitation.id, roleId])
+          ...organizationRoleIds.map((roleId) => ({
+            organizationInvitationId: invitation.id,
+            organizationRoleId: roleId,
+          }))
         );
       }
 
@@ -165,15 +168,18 @@ export class OrganizationInvitationLibrary {
             });
           }
 
-          await organizationQueries.relations.users.insert([entity.organizationId, acceptedUserId]);
+          await organizationQueries.relations.users.insert({
+            organizationId: entity.organizationId,
+            userId: acceptedUserId,
+          });
 
           if (entity.organizationRoles.length > 0) {
-            await organizationQueries.relations.rolesUsers.insert(
-              ...entity.organizationRoles.map<[string, string, string]>((role) => [
-                entity.organizationId,
-                role.id,
-                acceptedUserId,
-              ])
+            await organizationQueries.relations.usersRoles.insert(
+              ...entity.organizationRoles.map((role) => ({
+                organizationId: entity.organizationId,
+                organizationRoleId: role.id,
+                userId: acceptedUserId,
+              }))
             );
           }
           break;

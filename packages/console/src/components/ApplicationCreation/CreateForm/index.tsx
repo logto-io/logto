@@ -6,6 +6,7 @@ import { useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
+import { useSWRConfig } from 'swr';
 
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import DynamicT from '@/ds-components/DynamicT';
@@ -52,6 +53,7 @@ function CreateForm({
     defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
   });
   const { user } = useCurrentUser();
+  const { mutate: mutateGlobal } = useSWRConfig();
 
   const {
     field: { onChange, value, name, ref },
@@ -77,6 +79,8 @@ function CreateForm({
       reportConversion({ gtagId: GtagConversionId.CreateFirstApp, transactionId: user?.id });
 
       toast.success(t('applications.application_created'));
+      // Trigger a refetch of the applications list
+      void mutateGlobal((key) => typeof key === 'string' && key.startsWith('api/applications'));
       onClose?.(createdApp);
     })
   );

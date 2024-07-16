@@ -16,7 +16,7 @@ const role_details = {
   field_is_default: 'Standardrolle',
   field_is_default_description:
     'Setze diese Rolle als Standardrolle für neue Benutzer. Es können mehrere Standardrollen festgelegt werden. Dies betrifft auch die Standardrollen für Benutzer, die über die Management-API erstellt wurden.',
-  type_m2m_role_tag: 'Maschinen-zu-Maschinen-App-Rolle',
+  type_m2m_role_tag: 'Maschine-zu-Maschine-Rolle',
   type_user_role_tag: 'Benutzerrolle',
   m2m_role_notification:
     'Weisen Sie dieser Maschinen-zu-Maschinen-Rolle eine Maschinen-zu-Maschinen-App zu, um Zugriff auf die entsprechenden API-Ressourcen zu gewähren. <a>Erstellen Sie zuerst eine Maschinen-zu-Maschinen-App</a>, wenn Sie noch keine erstellt haben.',
@@ -46,27 +46,26 @@ const role_details = {
     delete_description:
       'Es bleibt in Ihrer Benutzergruppe, aber verliert die Autorisierung für diese Rolle.',
     deleted: '{{name}} wurde erfolgreich von dieser Rolle entfernt',
-    assign_title: 'Benutzer zuweisen',
+    assign_title: 'Benutzer zu {{name}} zuweisen',
     assign_subtitle:
-      'Weisen Sie Benutzer dieser Rolle zu. Finden Sie geeignete Benutzer, indem Sie nach Name, E-Mail, Telefon oder Benutzer-ID suchen.',
+      'Finden Sie geeignete Benutzer, indem Sie nach Name, E-Mail, Telefon oder Benutzer-ID suchen.',
     assign_field: 'Benutzer zuweisen',
     confirm_assign: 'Benutzer zuweisen',
     assigned_toast_text: 'Die ausgewählten Benutzer wurden erfolgreich dieser Rolle zugewiesen',
     empty: 'Kein Benutzer verfügbar',
   },
   applications: {
-    assign_button: 'Apps zuweisen',
+    assign_button: 'Maschine-zu-Maschine-Anwendungen zuweisen',
     name_column: 'Anwendung',
-    app_column: 'Apps',
+    app_column: 'Maschine-zu-Maschine-Anwendung',
     description_column: 'Beschreibung',
     delete_description:
       'Es bleibt in Ihrem Anwendungspool, verliert jedoch die Autorisierung für diese Rolle.',
     deleted: '{{name}} wurde erfolgreich aus dieser Rolle entfernt',
-    assign_title: 'Apps zuweisen',
     assign_subtitle:
-      'Weisen Sie dieser Rolle Anwendungen zu. Finden Sie geeignete Anwendungen, indem Sie nach Name, Beschreibung oder App-ID suchen.',
-    assign_field: 'Apps zuweisen',
-    confirm_assign: 'Apps zuweisen',
+      'Finden Sie geeignete Maschine-zu-Maschine-Anwendungen, indem Sie nach Name, Beschreibung oder App-ID suchen.',
+    assign_field: 'Maschine-zu-Maschine-Anwendungen zuweisen',
+    confirm_assign: 'Maschine-zu-Maschine-Anwendungen zuweisen',
     assigned_toast_text: 'Die ausgewählten Anwendungen wurden erfolgreich dieser Rolle zugewiesen',
     empty: 'Keine Anwendung verfügbar',
   },

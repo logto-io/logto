@@ -54,12 +54,6 @@ const applications = {
   placeholder_title: '어플리케이션 유형을 선택하여 계속하세요',
   placeholder_description:
     'Logto는 OIDC용 앱 엔티티를 사용하여 앱 식별, 로그인 관리 및 감사 로그 생성과 같은 작업을 지원합니다.',
-  m2m_role_assignment: {
-    title: '권한을 위해 기계 간 역할로 앱을 인증합니다',
-    subtitle: '기계 간 애플리케이션은 인증된 기계 간 역할이 필요합니다.',
-    role_creation_hint:
-      '적절한 머신 투 머신 역할을 찾을 수 없습니까? <a>머신 투 머신 역할 만들기</a>',
-  },
 };
 
 export default Object.freeze(applications);

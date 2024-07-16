@@ -2,23 +2,16 @@ import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
+
 <Steps>
 
 <Step title="Get started">
-  This tutorial will show you how to integrate Logto into your Java Spring Boot web application.
 
-<ul>
-  <li>
-    The sample was created using the Spring Boot [securing web
-    starter](https://spring.io/guides/gs/securing-web). Following the instructions to bootstrap a
-    new web application.
-  </li>
-  <li>
-    The sample uses the [Spring Security
-    OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2) library to handle OIDC
-    authentication and integrate with Logto.
-  </li>
-</ul>
+This tutorial will show you how to integrate Logto into your Java Spring Boot application.
+
+No official SDK is required to integrate Logto with your Java Spring Boot application. We will use the [Spring Security](https://spring.io/projects/spring-security) and [Spring Security OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2) libraries to handle the OIDC authentication flow with Logto.
 
 Before we begin, make sure you have went through the spring boot guides linked above.
 
@@ -27,21 +20,21 @@ Before we begin, make sure you have went through the spring boot guides linked a
 <Step title="Add dependencies">
   Include the following dependencies in your `build.gradle` file:
 
-```gradle
+```groovy title="build.gradle"
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 ```
 
-The sample uses [gradle](https://spring.io/guides/gs/gradle) as the build tool. You can use
+Our sample project uses [gradle](https://spring.io/guides/gs/gradle) as the build tool. You can use
 maven or any other build tool as well. The configurations might be slightly different.
 
 For maven, include the following dependencies in your `pom.xml` file:
 
-```maven
+```xml title="pom.xml"
 <dependency>
   <groupId>org.springframework.boot</groupId>
   <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -67,8 +60,7 @@ For maven, include the following dependencies in your `pom.xml` file:
 Register your application with Logto to get the client credentials and IdP configurations.
 Add the following configuration to your `application.properties` file:
 
-<pre>
-  <code className="language-properties">
+<Code className="language-properties" title="application.properties">
     {`spring.security.oauth2.client.registration.logto.client-name=logto
 spring.security.oauth2.client.registration.logto.client-id=${props.app.id}
 spring.security.oauth2.client.registration.logto.client-secret=${props.app.secret}
@@ -81,26 +73,29 @@ spring.security.oauth2.client.provider.logto.issuer-uri=${props.endpoint}oidc
 spring.security.oauth2.client.provider.logto.authorization-uri=${props.endpoint}oidc/auth
 spring.security.oauth2.client.provider.logto.jwk-set-uri=${props.endpoint}oidc/jwks
   `}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
 <Step title="Setup the redirect URI in Logto">
 
-In order to redirect users back to your application after they sign in, you need to set the redirect URI using the `client.registration.logto.redirect-uri` property in the previous step.
+<RedirectUrisWeb
+  defaultBaseUrl="http://localhost:8080/"
+  defaultRedirectUri="http://localhost:8080/login/oauth2/code/logto"
+  defaultPostSignOutUri="http://localhost:8080/login/oauth2/code/logto"
+/>
 
-<UriInputField name="redirectUris" />
-
-e.g. In our example, the redirect URI is `http://localhost:8080/login/oauth2/code/logto`.
+Make sure the redirect URI in Logto matches the `redirect-uri` set in the `application.properties` file in the previous step.
 
 </Step>
 
 <Step title="Implement the WebSecurityConfig">
 
-#### Create a new class `WebSecurityConfig` in your project:
+The `WebSecurityConfig` class will be used to configure the security settings for your application. It is the key class that will handle the authentication and authorization flow. Please check the [Spring Security documentation](https://spring.io/guides/topicals/spring-security-architecture) for more details.
 
-```java
+### Create a new class `WebSecurityConfig` in your project
+
+```java title="WebSecurityConfig.java"
 package com.example.securingweb;
 
 import org.springframework.context.annotation.Configuration;
@@ -114,11 +109,11 @@ public class WebSecurityConfig {
 }
 ```
 
-#### Create a idTokenDecoderFactory bean to set the JWS algorithm to `ES384`:
+### Create a idTokenDecoderFactory bean to set the JWS algorithm to `ES384`
 
 This is required because Logto uses ES384 as the default algorithm, we need to update the OidcIdTokenDecoderFactory to use the same algorithm.
 
-```java
+```java title="WebSecurityConfig.java"
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.client.oidc.authentication.OidcIdTokenDecoderFactory;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -137,11 +132,11 @@ public class WebSecurityConfig {
 }
 ```
 
-#### Create a LoginSuccessHandler class to handle the login success event:
+### Create a LoginSuccessHandler class to handle the login success event
 
 Redirect the user to the user page after successful login:
 
-```java
+```java title="LoginSuccessHandler.java"
 package com.example.securingweb;
 
 import java.io.IOException;
@@ -162,11 +157,11 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 }
 ```
 
-#### Create a LogoutSuccessHandler class to handle the logout success event:
+### Create a LogoutSuccessHandler class to handle the logout success event
 
 Clear the session and redirect the user to the home page.
 
-```java
+```java title="LogoutSuccessHandler.java"
 package com.example.securingweb;
 
 import java.io.IOException;
@@ -194,11 +189,11 @@ public class CustomLogoutHandler implements LogoutSuccessHandler {
 }
 ```
 
-#### Create a `securityFilterChain` bean to configure the security configuration:
+#### Create a `securityFilterChain` bean to configure the security configuration
 
 Add the following code to complete the `WebSecurityConfig` class:
 
-```java
+```java title="WebSecurityConfig.java"
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -229,13 +224,12 @@ public class WebSecurityConfig {
 
 </Step>
 
-<Step title="Create the home page">
+<Step title="Create the home page" subtitle="Implement sign-in">
 
 (You may skip this step if you already have a home page in your project)
 
-HomeController.java:
 
-```java
+```java title="HomeController.java"
 package com.example.securingweb;
 
 import java.security.Principal;
@@ -254,9 +248,7 @@ public class HomeController {
 
 This controller will redirect the user to the user page if the user is authenticated, otherwise, it will show the home page.
 
-home.html:
-
-```html
+```html title="resources/templates/home.html"
 <body>
   <h1>Welcome!</h1>
 
@@ -266,11 +258,11 @@ home.html:
 
 </Step>
 
-<Step title="Get user info">
+<Step title="Create the user page" subtitle="Implement sign-out">
 
 Create a new controller to handle the user page:
 
-```java
+```java title="UserController.java"
 package com.example.securingweb;
 
 import java.security.Principal;
@@ -306,9 +298,7 @@ public class UserController {
 
 Read the user information from the `OAuth2User` object and pass it to the `user.html` template.
 
-user.html:
-
-```html
+```html title="resources/templates/user.html"
 <body>
   <h1>User Details</h1>
   <div>
@@ -324,6 +314,12 @@ user.html:
   </form>
 </body>
 ```
+
+</Step>
+
+<Step title="Checkpoint: Test your app">
+
+<Checkpoint />
 
 </Step>
 

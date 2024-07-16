@@ -14,8 +14,8 @@ const description = {
   and: 'и',
   enter_passcode: 'Код подтверждения был отправлен на {{address}}',
   passcode_sent: 'Код подтверждения был отправлен повторно',
-  resend_after_seconds: 'Отправить повторно через <span>{{seconds}}</span> сек.',
-  resend_passcode: 'Отправить повторно',
+  resend_after_seconds: 'Еще не получили? Отправить повторно через <span>{{seconds}}</span> секунд',
+  resend_passcode: 'Еще не получили? <a>Отправить повторно код подтверждения</a>',
   create_account_id_exists: 'Учетная запись для {{value}} уже существует, хотите войти?',
   link_account_id_exists: 'Учетная запись для {{value}} уже существует, хотите привязать?',
   sign_in_id_does_not_exist:
@@ -99,6 +99,7 @@ const description = {
   user_id: 'User ID: {{id}}',
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
+  auto_agreement: 'Продолжая, вы соглашаетесь с <link></link>.',
 };
 
 export default Object.freeze(description);

@@ -2,7 +2,7 @@ import { type ApplicationResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
-import guides from '@/assets/docs/guides';
+import { guides } from '@/assets/docs/guides';
 import Guide, { GuideContext, type GuideContextType } from '@/components/Guide';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import useCustomDomain from '@/hooks/use-custom-domain';
@@ -32,10 +32,6 @@ function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
             redirectUris: app.oidcClientMetadata.redirectUris,
             postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
             isCompact: Boolean(isCompact),
-            sampleUrls: {
-              origin: 'http://localhost:3001/',
-              callback: 'http://localhost:3001/callback',
-            },
           }
       ) satisfies GuideContextType | undefined,
     [guide, app, tenantEndpoint?.href, applyCustomDomain, isCompact]

@@ -14,8 +14,8 @@ const description = {
   and: '그리고',
   enter_passcode: '{{address}} {{target}} 으로 비밀번호가 전송되었어요.',
   passcode_sent: '비밀번호가 재전송되었어요.',
-  resend_after_seconds: '<span>{{seconds}}</span> 초 후에 재전송',
-  resend_passcode: '비밀번호 재전송',
+  resend_after_seconds: '아직 못 받으셨나요? <span>{{seconds}}</span> 초 후에 다시 보내기',
+  resend_passcode: '아직 못 받으셨나요? <a>인증 코드를 다시 보내기</a>',
   create_account_id_exists:
     '{{type}} {{value}} 계정은 다른 계정과 연결되어 있습니다. 다른 {{type}}을(를) 시도해주세요.',
   link_account_id_exists: '{{type}} {{value}}와/과 연동된 계정이 이미 존재해요. 연동할까요?',
@@ -91,6 +91,7 @@ const description = {
   user_id: 'User ID: {{id}}',
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
+  auto_agreement: '계속 진행하면 <link></link>에 동의하는 것입니다.',
 };
 
 export default Object.freeze(description);

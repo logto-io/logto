@@ -6,7 +6,7 @@
       "@parcel/transformer-svg-react"
     ],
     "*.{md,mdx}": [
-      "@parcel/transformer-mdx"
+      "./parcel-transformer-mdx2.js"
     ]
   },
   "compressors": {

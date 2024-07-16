@@ -186,7 +186,7 @@ describe('User RBAC', () => {
       text: `The role ${roleName} has been successfully created.`,
     });
 
-    await expectModalWithTitle(page, 'Assign users');
+    await expectModalWithTitle(page, `Assign users to ${roleName}`);
     await expectToClickModalAction(page, 'Skip for now');
 
     await expect(page).toMatchElement('div[class$=header] div[class$=metadata] div', {
@@ -250,7 +250,7 @@ describe('User RBAC', () => {
       text: 'Assign users',
     });
 
-    await expectModalWithTitle(page, 'Assign users');
+    await expectModalWithTitle(page, `Assign users to ${roleName}`);
 
     await expect(page).toClick(
       '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div[class$=title]',

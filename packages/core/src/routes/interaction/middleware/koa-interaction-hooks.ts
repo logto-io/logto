@@ -1,9 +1,10 @@
-import { userInfoSelectFields, type DataHookEvent, type User } from '@logto/schemas';
-import { conditional, conditionalString, pick, trySafe } from '@silverhand/essentials';
+import { type User } from '@logto/schemas';
+import { conditionalString, trySafe } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import {
+  type DataHookContext,
   DataHookContextManager,
   InteractionHookContextManager,
 } from '#src/libraries/hook/context-manager.js';
@@ -14,17 +15,17 @@ import { getInteractionStorage } from '../utils/interaction.js';
 
 import type { WithInteractionDetailsContext } from './koa-interaction-details.js';
 
-type AssignDataHookContext = (payload: {
-  event: DataHookEvent;
-  user?: User;
-  data?: Record<string, unknown>;
-}) => void;
+type AppendDataHookContext = (
+  payload: DataHookContext & {
+    user?: User;
+  }
+) => void;
 
 export type WithInteractionHooksContext<
   ContextT extends IRouterParamContext = IRouterParamContext,
 > = ContextT & {
   assignInteractionHookResult: InteractionHookContextManager['assignInteractionHookResult'];
-  assignDataHookContext: AssignDataHookContext;
+  appendDataHookContext: DataHookContextManager['appendContext'];
 };
 
 /**
@@ -68,17 +69,7 @@ export default function koaInteractionHooks<
       ip,
     });
 
-    // Assign user and event data to the data hook context
-    ctx.assignDataHookContext = ({ event, user, data: extraData }) => {
-      dataHookContext.appendContext({
-        event,
-        data: {
-          // Only return the selected user fields
-          ...conditional(user && pick(user, ...userInfoSelectFields)),
-          ...extraData,
-        },
-      });
-    };
+    ctx.appendDataHookContext = dataHookContext.appendContext.bind(dataHookContext);
 
     await next();
 

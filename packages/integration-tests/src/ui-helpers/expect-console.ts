@@ -3,7 +3,7 @@ import path from 'node:path';
 import { appendPath, condString } from '@silverhand/essentials';
 
 import { consolePassword, consoleUsername, logtoConsoleUrl } from '#src/constants.js';
-import { cls, dcls } from '#src/utils.js';
+import { cls, dcls, waitFor } from '#src/utils.js';
 
 import ExpectPage, { ExpectPageError } from './expect-page.js';
 import { expectConfirmModalAndAct, expectToSaveChanges } from './index.js';
@@ -50,6 +50,16 @@ export default class ExpectConsole extends ExpectPage {
       });
       await this.toClickSubmit();
     }
+  }
+
+  /** Sign out from the Console by clicking the top-right dropdown. */
+  async end() {
+    await expect(this.page).toClick('div[class$=topbar] > div[class$=container]');
+    // Try awaiting for 500ms to ensure the dropdown is rendered.
+    await waitFor(500);
+    await expect(this.page).toClick(
+      '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownItem]:last-child'
+    );
   }
 
   /**

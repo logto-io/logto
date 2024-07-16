@@ -101,11 +101,11 @@ export default function applicationUserConsentOrganizationRoutes<T extends Manag
       await validateUserConsentOrganizationMembership(userId, organizationIds);
 
       await applications.userConsentOrganizations.insert(
-        ...organizationIds.map<[string, string, string]>((organizationId) => [
-          id,
+        ...organizationIds.map((organizationId) => ({
+          applicationId: id,
           userId,
           organizationId,
-        ])
+        }))
       );
 
       ctx.status = 201;

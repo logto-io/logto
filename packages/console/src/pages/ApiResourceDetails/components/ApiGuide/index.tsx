@@ -2,7 +2,7 @@ import { type Resource } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
-import guides from '@/assets/docs/guides';
+import { guides } from '@/assets/docs/guides';
 import Guide, { GuideContext, type GuideContextType } from '@/components/Guide';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import useCustomDomain from '@/hooks/use-custom-domain';

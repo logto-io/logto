@@ -1,16 +1,19 @@
-import { SignInMode } from '@logto/schemas';
-import { useContext } from 'react';
+import { AgreeToTermsPolicy, SignInMode } from '@logto/schemas';
+import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import Divider from '@/components/Divider';
+import GoogleOneTap from '@/components/GoogleOneTap';
 import TextLink from '@/components/TextLink';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
+import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import { useSieMethods } from '@/hooks/use-sie';
+import useTerms from '@/hooks/use-terms';
 
 import ErrorPage from '../ErrorPage';
 
@@ -18,12 +21,25 @@ import IdentifierRegisterForm from './IdentifierRegisterForm';
 import * as styles from './index.module.scss';
 
 const RegisterFooter = () => {
+  const { t } = useTranslation();
   const { signUpMethods, socialConnectors, signInMode, signInMethods, singleSignOnEnabled } =
     useSieMethods();
-
-  const { t } = useTranslation();
+  const { termsValidation, agreeToTermsPolicy } = useTerms();
+  const navigate = useNavigate();
 
   const { showSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
+
+  const handleSsoNavigation = useCallback(async () => {
+    /**
+     * Check if the user has agreed to the terms and privacy policy before navigating to the SSO page
+     * when the policy is set to `Manual`
+     */
+    if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual && !(await termsValidation())) {
+      return;
+    }
+
+    navigate('/single-sign-on/email');
+  }, [agreeToTermsPolicy, navigate, termsValidation]);
 
   /* Hide footers when showing Single Sign On form */
   if (showSingleSignOnForm) {
@@ -35,10 +51,22 @@ const RegisterFooter = () => {
       {
         // Single Sign On footer
         singleSignOnEnabled && (
-          <div className={styles.singleSignOn}>
-            {t('description.use')}{' '}
-            <TextLink to="/single-sign-on/email" text="action.single_sign_on" />
-          </div>
+          <>
+            <div className={styles.singleSignOn}>
+              {t('description.use')}{' '}
+              <TextLink text="action.single_sign_on" onClick={handleSsoNavigation} />
+            </div>
+            {
+              /**
+               * If only SSO sign-in methods are available, display the agreement checkbox when the agreement policy is `Manual`.
+               */
+              signInMethods.length === 0 &&
+                socialConnectors.length === 0 &&
+                agreeToTermsPolicy === AgreeToTermsPolicy.Manual && (
+                  <TermsAndPrivacyCheckbox className={styles.checkbox} />
+                )
+            }
+          </>
         )
       }
       {
@@ -64,6 +92,7 @@ const RegisterFooter = () => {
 
 const Register = () => {
   const { signUpMethods, socialConnectors, signInMode } = useSieMethods();
+  const { agreeToTermsPolicy } = useTerms();
 
   if (!signInMode) {
     return <ErrorPage />;
@@ -75,6 +104,7 @@ const Register = () => {
 
   return (
     <LandingPageLayout title="description.create_your_account">
+      <GoogleOneTap context="signup" />
       <SingleSignOnFormModeContextProvider>
         {signUpMethods.length > 0 && (
           <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
@@ -82,13 +112,17 @@ const Register = () => {
         {/* Social sign-in methods only */}
         {signUpMethods.length === 0 && socialConnectors.length > 0 && (
           <>
-            <TermsAndPrivacyCheckbox className={styles.terms} />
+            {agreeToTermsPolicy !== AgreeToTermsPolicy.Automatic && (
+              <TermsAndPrivacyCheckbox className={styles.terms} />
+            )}
             <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />
           </>
         )}
         <RegisterFooter />
+        {agreeToTermsPolicy === AgreeToTermsPolicy.Automatic && (
+          <TermsAndPrivacyLinks className={styles.terms} />
+        )}
       </SingleSignOnFormModeContextProvider>
-
       {/* Hide footer elements when showing Single Sign On form */}
     </LandingPageLayout>
   );

@@ -24,7 +24,7 @@ const { assignInteractionResults } = mockEsm('#src/libraries/session.js', () => 
   assignInteractionResults: jest.fn(),
 }));
 
-mockEsm('#src/libraries/user.js', () => ({
+mockEsm('#src/libraries/user.utils.js', () => ({
   encryptUserPassword: jest.fn().mockResolvedValue({
     passwordEncrypted: 'passwordEncrypted',
     passwordEncryptionMethod: 'plain',
@@ -52,7 +52,10 @@ const userQueries = {
 
 const { hasActiveUsers, updateUserById } = userQueries;
 
-const userLibraries = { generateUserId: jest.fn().mockResolvedValue('uid'), insertUser: jest.fn() };
+const userLibraries = {
+  generateUserId: jest.fn().mockResolvedValue('uid'),
+  insertUser: jest.fn().mockResolvedValue([{}, { organizations: [] }]),
+};
 const { generateUserId, insertUser } = userLibraries;
 
 const submitInteraction = await pickDefault(import('./submit-interaction.js'));
@@ -73,7 +76,7 @@ describe('submit action', () => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     interactionDetails: { params: {} } as Awaited<ReturnType<Provider['interactionDetails']>>,
     assignInteractionHookResult: jest.fn(),
-    assignDataHookContext: jest.fn(),
+    appendDataHookContext: jest.fn(),
   };
   const profile = {
     username: 'username',

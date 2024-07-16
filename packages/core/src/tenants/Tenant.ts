@@ -1,4 +1,5 @@
 import { adminTenantId, experience } from '@logto/schemas';
+import { ConsoleLog } from '@logto/shared';
 import type { MiddlewareType } from 'koa';
 import Koa from 'koa';
 import compose from 'koa-compose';
@@ -33,6 +34,8 @@ import Queries from './Queries.js';
 import type TenantContext from './TenantContext.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
+const consoleLog = new ConsoleLog('tenant');
+
 /** Data for creating a tenant instance. */
 type CreateTenant = {
   /** The unique identifier of the tenant. */
@@ -45,12 +48,19 @@ type CreateTenant = {
 
 export default class Tenant implements TenantContext {
   static async create({ id, redisCache, customDomain }: CreateTenant): Promise<Tenant> {
-    // Treat the default database URL as the management URL
-    const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
-    // Custom endpoint is used for building OIDC issuer URL when the request is a custom domain
-    await envSet.load(customDomain);
+    // Try to avoid unexpected "triggerUncaughtException" by using try-catch block
+    try {
+      // Treat the default database URL as the management URL
+      const tenantDatabaseDsn = await getTenantDatabaseDsn(id);
+      const envSet = new EnvSet(id, tenantDatabaseDsn);
+      // Custom endpoint is used for building OIDC issuer URL when the request is a custom domain
+      await envSet.load(customDomain);
 
-    return new Tenant(envSet, id, new WellKnownCache(id, redisCache));
+      return new Tenant(envSet, id, new WellKnownCache(id, redisCache));
+    } catch (error) {
+      consoleLog.error('Failed to create tenant:', id, error);
+      throw error;
+    }
   }
 
   public readonly provider: Provider;

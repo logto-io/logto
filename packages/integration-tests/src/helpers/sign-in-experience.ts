@@ -1,7 +1,9 @@
 import type { SignInExperience } from '@logto/schemas';
-import { SignInMode, SignInIdentifier, MfaFactor, MfaPolicy } from '@logto/schemas';
+import { SignInMode, SignInIdentifier, MfaFactor, MfaPolicy, ConnectorType } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/index.js';
+
+import { clearConnectorsByTypes } from './connector.js';
 
 export const defaultSignUpMethod = {
   identifiers: [],
@@ -126,3 +128,27 @@ export const enableMandatoryMfaWithWebAuthnAndBackupCode = async () =>
 
 export const resetMfaSettings = async () =>
   updateSignInExperience({ mfa: { policy: MfaPolicy.UserControlled, factors: [] } });
+
+/** Enable only username and password sign-in and sign-up. */
+export const setUsernamePasswordOnly = async () => {
+  await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+  await updateSignInExperience({
+    signInMode: SignInMode.SignInAndRegister,
+    signUp: {
+      identifiers: [SignInIdentifier.Username],
+      password: true,
+      verify: false,
+    },
+    signIn: {
+      methods: [
+        {
+          identifier: SignInIdentifier.Username,
+          password: true,
+          verificationCode: false,
+          isPasswordPrimary: true,
+        },
+      ],
+    },
+    passwordPolicy: {},
+  });
+};

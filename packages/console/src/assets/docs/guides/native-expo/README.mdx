@@ -1,46 +1,19 @@
 import UriInputField from '@/mdx-components/UriInputField';
-import Tabs from '@mdx/components/Tabs';
-import TabItem from '@mdx/components/TabItem';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisNative, { defaultRedirectUri } from '../../fragments/_redirect-uris-native.mdx';
 
 <Steps>
 
 <Step
-  title="Installation"
+  title="Install SDK"
   subtitle="Install Logto SDK and peer dependencies"
 >
 
-<Tabs>
-
-  <TabItem value="npm" label="npm">
-
-```bash
-npm i @logto/rn
-npm i expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage
-```
-
-  </TabItem>
-  <TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @logto/rn
-yarn add expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage
-```
-
-  </TabItem>
-  <TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm add @logto/rn
-pnpm add expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage
-```
-
-  </TabItem>
-
-</Tabs>
+<NpmLikeInstallation packageName="@logto/rn expo-crypto expo-secure-store expo-web-browser @react-native-async-storage/async-storage" />
 
 The `@logto/rn` package is the SDK for Logto. The remaining packages are its peer dependencies. They couldn't be listed as direct dependencies because the Expo CLI requires that all dependencies for native modules be installed directly within the root project's `package.json`.
 
@@ -56,8 +29,7 @@ If you're installing this in a [bare React Native app](https://docs.expo.dev/bar
 
 Import and use `LogtoProvider` to provide a Logto context:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx" title="App.tsx">
     {`import { LogtoProvider, LogtoConfig } from '@logto/rn';
 
 const config: LogtoConfig = {
@@ -70,21 +42,18 @@ const App = () => (
     <YourAppContent />
   </LogtoProvider>
 );`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
-<Step title="Implement sign-in and sign-out">
+<Step title="Configure redirect URIs">
 
-Add a native redirect URI (for example, `io.logto://callback`), then click "Save".
-
-<UriInputField name="redirectUris" />
+<RedirectUrisNative />
 
 - For iOS, the redirect URI scheme does not really matter since the `ASWebAuthenticationSession` class will listen to the redirect URI regardless of if it's registered.
 - For Android, the redirect URI scheme must be filled in Expo's `app.json` file, for example:
 
-  ```json
+  ```json title="app.json"
   {
     "expo": {
       "scheme": "io.logto"
@@ -100,8 +69,7 @@ The redirect URI is used to redirect the user back to your app after they sign i
 
 You can use `useLogto` hook to sign in and sign out:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx" title="App.tsx">
     {`import { useLogto } from '@logto/rn';
 import { Button } from 'react-native';
 
@@ -113,13 +81,20 @@ const Content = () => {
       {isAuthenticated ? (
         <Button title="Sign out" onPress={async () => signOut()} />
       ) : (
-        <Button title="Sign in" onPress={async () => signIn('${props.redirectUris[0] ?? 'io.logto://callback'}')} />
+        <Button title="Sign in" onPress={async () => signIn('${
+          props.redirectUris[0] || defaultRedirectUri
+        }')} />
       )}
     </div>
   );
 };`}
-  </code>
-</pre>
+</Code>
+
+</Step>
+
+<Step title="Checkpoint: Test your app">
+
+<Checkpoint />
 
 </Step>
 
@@ -127,8 +102,7 @@ const Content = () => {
 
 To display the user's information, you can use the `getIdTokenClaims()` method:
 
-<pre>
-  <code className="language-tsx">
+<Code className="language-tsx" title="App.tsx">
     {`import { useLogto } from '@logto/rn';
 import { Button, Text } from 'react-native';
 
@@ -139,33 +113,37 @@ const Content = () => {
   useEffect(() => {
     if (isAuthenticated) {
       getIdTokenClaims().then((claims) => {
-        setUser(claims);
+        setUser(claims); // { sub: '...', ... }
       });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, getIdTokenClaims]);
 
-  return (
-    <div>
-      {isAuthenticated ? (
-        <>
-          <Text>{user?.name}</Text>
-          <Text>{user?.email}</Text>
-          <Button title="Sign out" onPress={async () => signOut()} />
-        </>
-      ) : (
-        <Button title="Sign in" onPress={async () => signIn('${props.redirectUris[0] ?? 'io.logto://callback'}')} />
-      )}
-    </div>
-  );
+ // ...
 };`}
-  </code>
-</pre>
+</Code>
 
 </Step>
 
-<Step title="Checkpoint: Test your app">
+<Step title="Troubleshooting">
 
-<Checkpoint />
+For Expo projects, if you encounter the error `Unable to resolve "@logto/client/shim" from "node_modules/@logto/rn/lib/index.js"`, you can resolve it by adding the following to your `metro.config.js` file:
+
+```js title="metro.config.js"
+const config = {
+  // ...
+  resolver: {
+    unstable_enablePackageExports: true,
+  },
+};
+
+module.exports = config;
+```
+
+This error indicates that `@logto/rn` package is not able to resolve the `@logto/client/shim` module.
+
+As the node exports were used in the`@logto/client` package, and package exports are not enabled by default in Metro bundler, you need to enable them manually.
+
+See the [React Native package exports support](https://reactnative.dev/blog/2023/06/21/package-exports-support#enabling-package-exports-beta) for more details.
 
 </Step>
 
