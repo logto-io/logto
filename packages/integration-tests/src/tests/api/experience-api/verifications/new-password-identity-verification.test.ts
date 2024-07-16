@@ -38,8 +38,9 @@ devFeatureTest.describe('password verifications', () => {
   afterAll(async () => {
     await updateSignInExperience({
       // Need to reset password policy to default value otherwise it will affect other tests.
-      passwordPolicy:{}
-  })
+      passwordPolicy: {},
+    });
+  });
 
   it.each(invalidIdentifiers)(
     'should fail to verify with password using %p',
