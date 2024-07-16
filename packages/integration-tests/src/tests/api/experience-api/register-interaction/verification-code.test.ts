@@ -7,7 +7,7 @@ import {
 import { deleteUser } from '#src/api/admin-user.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
-import { signInWithVerificationCode } from '#src/helpers/experience/index.js';
+import { registerNewUserWithVerificationCode } from '#src/helpers/experience/index.js';
 import {
   successfullySendVerificationCode,
   successfullyVerifyVerificationCode,
@@ -25,7 +25,7 @@ const identifiersTypeToUserProfile = Object.freeze({
   phone: 'primaryPhone',
 });
 
-devFeatureTest.describe('Sign-in with verification code', () => {
+devFeatureTest.describe('Register interaction with verification code happy path', () => {
   beforeAll(async () => {
     await Promise.all([setEmailConnector(), setSmsConnector()]);
     await enableAllVerificationCodeSignInMethods({
@@ -36,36 +36,35 @@ devFeatureTest.describe('Sign-in with verification code', () => {
   });
 
   it.each(verificationIdentifierType)(
-    'should sign-in with verification code using %p',
+    'Should register with verification code using %p successfully',
     async (identifier) => {
-      const { userProfile, user } = await generateNewUser({
-        [identifiersTypeToUserProfile[identifier]]: true,
-        password: true,
-      });
-
-      await signInWithVerificationCode({
+      const userId = await registerNewUserWithVerificationCode({
         type: identifier,
-        value: userProfile[identifiersTypeToUserProfile[identifier]]!,
+        value: identifier === SignInIdentifier.Email ? generateEmail() : generatePhone(),
       });
 
-      await deleteUser(user.id);
+      await deleteUser(userId);
     }
   );
 
   it.each(verificationIdentifierType)(
-    'should fail to sign-in with non-existing %p identifier and directly sign-up instead',
-    async (type) => {
+    'Should fail to sign-up with existing %p identifier and directly sign-in instead ',
+    async (identifierType) => {
+      const { userProfile, user } = await generateNewUser({
+        [identifiersTypeToUserProfile[identifierType]]: true,
+      });
+
       const identifier: VerificationCodeIdentifier = {
-        type,
-        value: type === SignInIdentifier.Email ? generateEmail() : generatePhone(),
+        type: identifierType,
+        value: userProfile[identifiersTypeToUserProfile[identifierType]]!,
       };
 
       const client = await initExperienceClient();
-      await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+      await client.initInteraction({ interactionEvent: InteractionEvent.Register });
 
       const { verificationId, code } = await successfullySendVerificationCode(client, {
         identifier,
-        interactionEvent: InteractionEvent.SignIn,
+        interactionEvent: InteractionEvent.Register,
       });
 
       await successfullyVerifyVerificationCode(client, {
@@ -79,22 +78,24 @@ devFeatureTest.describe('Sign-in with verification code', () => {
           verificationId,
         }),
         {
-          code: 'user.user_not_exist',
-          status: 404,
+          code: `user.${identifierType}_already_in_use`,
+          status: 422,
         }
       );
 
-      await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
+      await client.updateInteractionEvent({
+        interactionEvent: InteractionEvent.SignIn,
+      });
 
       await client.identifyUser({
         verificationId,
       });
 
       const { redirectTo } = await client.submitInteraction();
-      const userId = await processSession(client, redirectTo);
+      await processSession(client, redirectTo);
       await logoutClient(client);
 
-      await deleteUser(userId);
+      await deleteUser(user.id);
     }
   );
 });
