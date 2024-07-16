@@ -51,7 +51,7 @@ const useSignInFlowCodeVerification = (
       return;
     }
 
-    const [confirm] = await show({
+    show({
       confirmText: 'action.create',
       ModalContent: t('description.sign_in_id_does_not_exist', {
         type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
@@ -60,27 +60,25 @@ const useSignInFlowCodeVerification = (
             ? formatPhoneNumberWithCountryCallingCode(target)
             : target,
       }),
+      onConfirm: async () => {
+        const [error, result] = await registerWithIdentifierAsync(
+          method === SignInIdentifier.Email ? { email: target } : { phone: target }
+        );
+
+        if (error) {
+          await handleError(error, preSignInErrorHandler);
+
+          return;
+        }
+
+        if (result?.redirectTo) {
+          redirectTo(result.redirectTo);
+        }
+      },
+      onCancel: () => {
+        navigate(-1);
+      },
     });
-
-    if (!confirm) {
-      navigate(-1);
-
-      return;
-    }
-
-    const [error, result] = await registerWithIdentifierAsync(
-      method === SignInIdentifier.Email ? { email: target } : { phone: target }
-    );
-
-    if (error) {
-      await handleError(error, preSignInErrorHandler);
-
-      return;
-    }
-
-    if (result?.redirectTo) {
-      redirectTo(result.redirectTo);
-    }
   }, [
     signInMode,
     show,

@@ -16,6 +16,7 @@ import type { ModalProps } from './type';
 const AcModal = ({
   className,
   isOpen = false,
+  isConfirmLoading = false,
   children,
   cancelText = 'action.cancel',
   confirmText = 'action.confirm',
@@ -69,6 +70,7 @@ const AcModal = ({
               title={confirmText}
               i18nProps={confirmTextI18nProps}
               size="small"
+              isLoading={isConfirmLoading}
               onClick={onConfirm}
             />
           )}

@@ -11,6 +11,7 @@ import type { ModalProps } from './type';
 const MobileModal = ({
   className,
   isOpen = false,
+  isConfirmLoading = false,
   children,
   cancelText = 'action.cancel',
   confirmText = 'action.confirm',
@@ -38,7 +39,12 @@ const MobileModal = ({
             onClick={onClose}
           />
           {onConfirm && (
-            <Button title={confirmText} i18nProps={confirmTextI18nProps} onClick={onConfirm} />
+            <Button
+              title={confirmText}
+              i18nProps={confirmTextI18nProps}
+              isLoading={isConfirmLoading}
+              onClick={onConfirm}
+            />
           )}
         </div>
       </div>

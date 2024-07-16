@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 export type ModalProps = {
   className?: string;
   isOpen?: boolean;
+  isConfirmLoading?: boolean;
   children: ReactNode;
   cancelText?: TFuncKey;
   confirmText?: TFuncKey;
