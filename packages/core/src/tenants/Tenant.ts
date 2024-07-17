@@ -147,7 +147,12 @@ export default class Tenant implements TenantContext {
         app.use(
           mount(
             '/' + AdminApps.Console,
-            koaSpaProxy(mountedApps, AdminApps.Console, 5002, AdminApps.Console)
+            koaSpaProxy({
+              mountedApps,
+              packagePath: AdminApps.Console,
+              port: 5002,
+              prefix: AdminApps.Console,
+            })
           )
         );
       }
@@ -162,7 +167,12 @@ export default class Tenant implements TenantContext {
       app.use(
         mount(
           '/' + UserApps.DemoApp,
-          koaSpaProxy(mountedApps, UserApps.DemoApp, 5003, UserApps.DemoApp)
+          koaSpaProxy({
+            mountedApps,
+            packagePath: UserApps.DemoApp,
+            port: 5003,
+            prefix: UserApps.DemoApp,
+          })
         )
       );
     }
@@ -173,7 +183,7 @@ export default class Tenant implements TenantContext {
         koaExperienceSsr(libraries, queries),
         koaSpaSessionGuard(provider, queries),
         mount(`/${experience.routes.consent}`, koaAutoConsent(provider, queries)),
-        koaSpaProxy(mountedApps, undefined, undefined, undefined, queries),
+        koaSpaProxy({ mountedApps, queries }),
       ])
     );
 

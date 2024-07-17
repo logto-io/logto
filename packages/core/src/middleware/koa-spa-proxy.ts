@@ -11,14 +11,21 @@ import type Queries from '#src/tenants/Queries.js';
 
 import serveCustomUiAssets from './koa-serve-custom-ui-assets.js';
 
-// eslint-disable-next-line max-params
-export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
-  mountedApps: string[],
+type Properties = {
+  readonly mountedApps: string[];
+  readonly packagePath?: string;
+  readonly port?: number;
+  readonly prefix?: string;
+  readonly queries?: Queries;
+};
+
+export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>({
+  mountedApps,
   packagePath = 'experience',
   port = 5001,
   prefix = '',
-  queries?: Queries
-): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+  queries,
+}: Properties): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
   const distributionPath = path.join('node_modules/@logto', packagePath, 'dist');
