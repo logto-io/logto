@@ -90,7 +90,7 @@
         "description": "Life Events App",
         "type": "Traditional",
         "redirect_uri": "http://localhost:3000/callback",
-        "logout_redirect_uri": "http://localhost:3000",
+        "logout_redirect_uri": "http://localhost:3000/admin",
         "secret": "life_events_app_local_secret",
         "id": "nfg61tuyfsgizsx8c4p3t",
         "is_third_party": false
