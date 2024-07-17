@@ -6,7 +6,7 @@ import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { setUserPassword } from '@/apis/interaction';
 import SetPassword from '@/containers/SetPassword';
-import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import { type ErrorHandlers } from '@/hooks/use-error-handler';
 import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
 import { usePasswordPolicy } from '@/hooks/use-sie';
@@ -20,7 +20,7 @@ const ResetPassword = () => {
   const { t } = useTranslation();
   const { setToast } = useToast();
   const navigate = useNavigate();
-  const { show } = useConfirmModal();
+  const { show } = usePromiseConfirmModal();
   const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({

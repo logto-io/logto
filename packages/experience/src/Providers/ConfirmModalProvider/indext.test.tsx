@@ -1,15 +1,15 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import { useConfirmModal, usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 
 import ConfirmModalProvider from '.';
 
 const confirmHandler = jest.fn();
 const cancelHandler = jest.fn();
 
-const ConfirmModalTestComponent = () => {
-  const { show } = useConfirmModal();
+const PromiseConfirmModalTestComponent = () => {
+  const { show } = usePromiseConfirmModal();
 
   const onClick = async () => {
     const [result] = await show({ ModalContent: 'confirm modal content' });
@@ -26,82 +26,178 @@ const ConfirmModalTestComponent = () => {
   return <button onClick={onClick}>show modal</button>;
 };
 
+const CallbackConfirmModalTestComponent = () => {
+  const { show } = useConfirmModal();
+
+  const onClick = () => {
+    show({
+      ModalContent: 'confirm modal content',
+      onConfirm: confirmHandler,
+      onCancel: cancelHandler,
+    });
+  };
+
+  return <button onClick={onClick}>show modal</button>;
+};
+
 describe('confirm modal provider', () => {
-  it('render confirm modal', async () => {
-    const { queryByText, getByText } = render(
-      <ConfirmModalProvider>
-        <ConfirmModalTestComponent />
-      </ConfirmModalProvider>
-    );
+  describe('promise confirm modal', () => {
+    it('render confirm modal', async () => {
+      const { queryByText, getByText } = render(
+        <ConfirmModalProvider>
+          <PromiseConfirmModalTestComponent />
+        </ConfirmModalProvider>
+      );
 
-    const trigger = getByText('show modal');
+      const trigger = getByText('show modal');
 
-    act(() => {
-      fireEvent.click(trigger);
+      act(() => {
+        fireEvent.click(trigger);
+      });
+
+      await waitFor(() => {
+        expect(queryByText('confirm modal content')).not.toBeNull();
+        expect(queryByText('action.confirm')).not.toBeNull();
+        expect(queryByText('action.cancel')).not.toBeNull();
+      });
     });
 
-    await waitFor(() => {
-      expect(queryByText('confirm modal content')).not.toBeNull();
-      expect(queryByText('action.confirm')).not.toBeNull();
-      expect(queryByText('action.cancel')).not.toBeNull();
+    it('confirm callback of confirm modal', async () => {
+      const { queryByText, getByText } = render(
+        <ConfirmModalProvider>
+          <PromiseConfirmModalTestComponent />
+        </ConfirmModalProvider>
+      );
+
+      const trigger = getByText('show modal');
+
+      act(() => {
+        fireEvent.click(trigger);
+      });
+
+      await waitFor(() => {
+        expect(queryByText('confirm modal content')).not.toBeNull();
+        expect(queryByText('action.confirm')).not.toBeNull();
+      });
+
+      const confirm = getByText('action.confirm');
+
+      act(() => {
+        fireEvent.click(confirm);
+      });
+
+      await waitFor(() => {
+        expect(confirmHandler).toBeCalled();
+      });
+    });
+
+    it('cancel callback of confirm modal', async () => {
+      const { queryByText, getByText } = render(
+        <ConfirmModalProvider>
+          <PromiseConfirmModalTestComponent />
+        </ConfirmModalProvider>
+      );
+
+      const trigger = getByText('show modal');
+
+      act(() => {
+        fireEvent.click(trigger);
+      });
+
+      await waitFor(() => {
+        expect(queryByText('confirm modal content')).not.toBeNull();
+        expect(queryByText('action.cancel')).not.toBeNull();
+      });
+
+      const cancel = getByText('action.cancel');
+
+      act(() => {
+        fireEvent.click(cancel);
+      });
+
+      await waitFor(() => {
+        expect(cancelHandler).toBeCalled();
+      });
     });
   });
 
-  it('confirm callback of confirm modal', async () => {
-    const { queryByText, getByText } = render(
-      <ConfirmModalProvider>
-        <ConfirmModalTestComponent />
-      </ConfirmModalProvider>
-    );
+  describe('callback confirm modal', () => {
+    it('render confirm modal', async () => {
+      const { queryByText, getByText } = render(
+        <ConfirmModalProvider>
+          <CallbackConfirmModalTestComponent />
+        </ConfirmModalProvider>
+      );
 
-    const trigger = getByText('show modal');
+      const trigger = getByText('show modal');
 
-    act(() => {
-      fireEvent.click(trigger);
+      act(() => {
+        fireEvent.click(trigger);
+      });
+
+      await waitFor(() => {
+        expect(queryByText('confirm modal content')).not.toBeNull();
+        expect(queryByText('action.confirm')).not.toBeNull();
+        expect(queryByText('action.cancel')).not.toBeNull();
+      });
     });
 
-    await waitFor(() => {
-      expect(queryByText('confirm modal content')).not.toBeNull();
-      expect(queryByText('action.confirm')).not.toBeNull();
+    it('confirm callback of confirm modal', async () => {
+      const { queryByText, getByText } = render(
+        <ConfirmModalProvider>
+          <CallbackConfirmModalTestComponent />
+        </ConfirmModalProvider>
+      );
+
+      const trigger = getByText('show modal');
+
+      act(() => {
+        fireEvent.click(trigger);
+      });
+
+      await waitFor(() => {
+        expect(queryByText('confirm modal content')).not.toBeNull();
+        expect(queryByText('action.confirm')).not.toBeNull();
+      });
+
+      const confirm = getByText('action.confirm');
+
+      act(() => {
+        fireEvent.click(confirm);
+      });
+
+      await waitFor(() => {
+        expect(confirmHandler).toBeCalled();
+      });
     });
 
-    const confirm = getByText('action.confirm');
+    it('cancel callback of confirm modal', async () => {
+      const { queryByText, getByText } = render(
+        <ConfirmModalProvider>
+          <CallbackConfirmModalTestComponent />
+        </ConfirmModalProvider>
+      );
 
-    act(() => {
-      fireEvent.click(confirm);
-    });
+      const trigger = getByText('show modal');
 
-    await waitFor(() => {
-      expect(confirmHandler).toBeCalled();
-    });
-  });
+      act(() => {
+        fireEvent.click(trigger);
+      });
 
-  it('cancel callback of confirm modal', async () => {
-    const { queryByText, getByText } = render(
-      <ConfirmModalProvider>
-        <ConfirmModalTestComponent />
-      </ConfirmModalProvider>
-    );
+      await waitFor(() => {
+        expect(queryByText('confirm modal content')).not.toBeNull();
+        expect(queryByText('action.cancel')).not.toBeNull();
+      });
 
-    const trigger = getByText('show modal');
+      const cancel = getByText('action.cancel');
 
-    act(() => {
-      fireEvent.click(trigger);
-    });
+      act(() => {
+        fireEvent.click(cancel);
+      });
 
-    await waitFor(() => {
-      expect(queryByText('confirm modal content')).not.toBeNull();
-      expect(queryByText('action.cancel')).not.toBeNull();
-    });
-
-    const cancel = getByText('action.cancel');
-
-    act(() => {
-      fireEvent.click(cancel);
-    });
-
-    await waitFor(() => {
-      expect(cancelHandler).toBeCalled();
+      await waitFor(() => {
+        expect(cancelHandler).toBeCalled();
+      });
     });
   });
 });

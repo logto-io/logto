@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import { setUserPassword } from '@/apis/interaction';
 import SetPassword from '@/containers/SetPassword';
-import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useMfaErrorHandler from '@/hooks/use-mfa-error-handler';
@@ -19,7 +19,7 @@ const RegisterPassword = () => {
 
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
-  const { show } = useConfirmModal();
+  const { show } = usePromiseConfirmModal();
   const [errorMessage, setErrorMessage] = useState<string>();
   const clearErrorMessage = useCallback(() => {
     setErrorMessage(undefined);
