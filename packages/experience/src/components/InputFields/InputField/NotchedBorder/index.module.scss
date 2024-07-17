@@ -2,14 +2,14 @@
 
 .container {
   position: absolute;
-  inset: 0;
+  inset: -0.4px -2px 0;
   pointer-events: none;
 
   .border,
   .outline {
     text-align: left;
     position: absolute;
-    inset: -8px 0 0;
+    inset: -10px 0 -0.5px;
     border: _.border(var(--color-line-border));
     border-radius: var(--radius);
     pointer-events: none;
@@ -18,6 +18,8 @@
     legend {
       display: inline-block;
       visibility: hidden;
+      // To keep the label in the middle of the empty space
+      margin-left: 1px;
       padding: 0;
       // fix to the label font height to keep space for the input container
       height: 20px;
@@ -36,7 +38,7 @@
 
   .outline {
     display: none;
-    inset: -9px -2px -2px;
+    inset: -11.5px -2px -2.5px;
     border-radius: 10px;
     border: 3px outset var(--color-overlay-brand-focused);
   }
@@ -47,8 +49,8 @@
     font: var(--font-body-1);
     color: var(--color-type-secondary);
     pointer-events: none;
-    top: 50%;
-    transform: translateY(-46%);
+    top: 48%;
+    transform: translateY(-50%);
     transition: 0.2s ease-out;
     transition-property: position, font, top;
     background-color: transparent;
@@ -65,8 +67,8 @@
     }
 
     .label {
-      top: 0;
-      left: _.unit(3.25);
+      top: -1px;
+      left: _.unit(3.5);
       font: var(--font-body-3);
       color: var(--color-type-secondary);
       padding: 0 _.unit(1);
