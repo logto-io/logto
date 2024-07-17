@@ -149,6 +149,7 @@ export default class Tenant implements TenantContext {
             '/' + AdminApps.Console,
             koaSpaProxy({
               mountedApps,
+              queries,
               packagePath: AdminApps.Console,
               port: 5002,
               prefix: AdminApps.Console,
@@ -169,6 +170,7 @@ export default class Tenant implements TenantContext {
           '/' + UserApps.DemoApp,
           koaSpaProxy({
             mountedApps,
+            queries,
             packagePath: UserApps.DemoApp,
             port: 5003,
             prefix: UserApps.DemoApp,

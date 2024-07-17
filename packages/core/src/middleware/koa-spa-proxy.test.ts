@@ -23,7 +23,7 @@ mockEsmDefault('#src/middleware/koa-serve-custom-ui-assets.js', () =>
   jest.fn(() => mockCustomUiAssetsMiddleware)
 );
 
-const mockFindDefaultSignInExperience = jest.fn();
+const mockFindDefaultSignInExperience = jest.fn().mockResolvedValue({ customUiAssets: null });
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const queries = new MockQueries({
   signInExperiences: {
@@ -54,7 +54,7 @@ describe('koaSpaProxy middleware', () => {
         url: `/${app}/foo`,
       });
 
-      await koaSpaProxy({ mountedApps })(ctx, next);
+      await koaSpaProxy({ mountedApps, queries })(ctx, next);
 
       expect(mockProxyMiddleware).not.toBeCalled();
     });
@@ -62,7 +62,7 @@ describe('koaSpaProxy middleware', () => {
 
   it('dev env should call dev proxy for SPA paths', async () => {
     const ctx = createContextWithRouteParameters();
-    await koaSpaProxy({ mountedApps })(ctx, next);
+    await koaSpaProxy({ mountedApps, queries })(ctx, next);
     expect(mockProxyMiddleware).toBeCalled();
   });
 
@@ -76,7 +76,7 @@ describe('koaSpaProxy middleware', () => {
       url: '/foo',
     });
 
-    await koaSpaProxy({ mountedApps })(ctx, next);
+    await koaSpaProxy({ mountedApps, queries })(ctx, next);
 
     expect(mockStaticMiddleware).toBeCalled();
     expect(ctx.request.path).toEqual('/');
@@ -93,7 +93,7 @@ describe('koaSpaProxy middleware', () => {
       url: '/sign-in',
     });
 
-    await koaSpaProxy({ mountedApps })(ctx, next);
+    await koaSpaProxy({ mountedApps, queries })(ctx, next);
     expect(mockStaticMiddleware).toBeCalled();
     stub.restore();
   });

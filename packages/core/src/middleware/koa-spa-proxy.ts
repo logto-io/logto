@@ -13,10 +13,10 @@ import serveCustomUiAssets from './koa-serve-custom-ui-assets.js';
 
 type Properties = {
   readonly mountedApps: string[];
+  readonly queries: Queries;
   readonly packagePath?: string;
   readonly port?: number;
   readonly prefix?: string;
-  readonly queries?: Queries;
 };
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>({
@@ -55,8 +55,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
       return next();
     }
 
-    const { signInExperiences } = queries ?? {};
-    const { customUiAssets } = (await signInExperiences?.findDefaultSignInExperience()) ?? {};
+    const { customUiAssets } = await queries.signInExperiences.findDefaultSignInExperience();
     // If user has uploaded custom UI assets, serve them instead of native experience UI
     if (customUiAssets && packagePath === 'experience') {
       const serve = serveCustomUiAssets(customUiAssets.id);
