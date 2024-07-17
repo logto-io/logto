@@ -11,6 +11,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { interactionProfileGuard, type Interaction, type InteractionProfile } from '../types.js';
 
+import { ProvisionLibrary } from './provision-library.js';
 import { getNewUserProfileFromVerificationRecord, toUserSocialIdentityData } from './utils.js';
 import { ProfileValidator } from './validators/profile-validator.js';
 import { SignInExperienceValidator } from './validators/sign-in-experience-validator.js';
@@ -44,13 +45,14 @@ const interactionStorageGuard = z.object({
 export default class ExperienceInteraction {
   public readonly signInExperienceValidator: SignInExperienceValidator;
   public readonly profileValidator: ProfileValidator;
+  public readonly provisionLibrary: ProvisionLibrary;
 
   /** The user verification record list for the current interaction. */
   private readonly verificationRecords = new Map<VerificationType, VerificationRecord>();
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
-  private readonly profile?: Record<string, unknown>; // TODO: Fix the type
+  private readonly profile?: InteractionProfile;
   /** The interaction event for the current interaction. */
   #interactionEvent?: InteractionEvent;
 
@@ -63,11 +65,12 @@ export default class ExperienceInteraction {
   constructor(
     private readonly ctx: WithLogContext,
     private readonly tenant: TenantContext,
-    public interactionDetails?: Interaction
+    interactionDetails?: Interaction
   ) {
     const { libraries, queries } = tenant;
 
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
+    this.provisionLibrary = new ProvisionLibrary(tenant, ctx);
 
     if (!interactionDetails) {
       this.profileValidator = new ProfileValidator(libraries, queries);
@@ -294,18 +297,24 @@ export default class ExperienceInteraction {
 
     await this.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
 
-    // TODO: new user provisioning and hooks
-
     const { socialIdentity, enterpriseSsoIdentity, ...rest } = newProfile;
+
+    const { isCreatingFirstAdminUser, initialUserRoles, customData } =
+      await this.provisionLibrary.getUserProvisionContext(newProfile);
 
     const [user] = await insertUser(
       {
         id: await generateUserId(),
         ...rest,
         ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
+        ...conditional(customData && { customData }),
       },
-      []
+      initialUserRoles
     );
+
+    if (isCreatingFirstAdminUser) {
+      await this.provisionLibrary.adminUserProvision(user);
+    }
 
     if (enterpriseSsoIdentity) {
       await userSsoIdentitiesQueries.insert({
@@ -314,6 +323,10 @@ export default class ExperienceInteraction {
         ...enterpriseSsoIdentity,
       });
     }
+
+    await this.provisionLibrary.newUserJtiOrganizationProvision(user.id, newProfile);
+
+    // TODO: new user hooks
 
     this.userId = user.id;
   }
