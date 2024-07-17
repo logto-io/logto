@@ -40,7 +40,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
   const {
     watch,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
     control,
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
@@ -154,6 +154,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.create_account'}
         icon={showSingleSignOnForm ? <LockIcon /> : undefined}
         htmlType="submit"
+        isLoading={isSubmitting}
       />
 
       <input hidden type="submit" />

@@ -44,7 +44,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     watch,
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
   });
@@ -153,6 +153,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in'}
         icon={showSingleSignOnForm ? <LockIcon /> : undefined}
         htmlType="submit"
+        isLoading={isSubmitting}
       />
 
       <input hidden type="submit" />
