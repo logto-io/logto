@@ -1,7 +1,7 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { SignInIdentifier } from '@logto/schemas';
 
-import { deleteUser, getUserOrganizations } from '#src/api/admin-user.js';
+import { createUser, deleteUser, getUserOrganizations } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import {
@@ -148,7 +148,7 @@ devFeatureTest.describe('organization just-in-time provisioning', () => {
     await deleteUser(userId);
   });
 
-  it('should provision a user with the matched sso connector', async () => {
+  it('should provision a user with the matched sso connector registration', async () => {
     const organization = await organizationApi.create({ name: 'sso_foo' });
     const domain = 'sso_example.com';
     const connector = await ssoConnectorApi.createMockOidcConnector([domain]);
@@ -166,6 +166,32 @@ devFeatureTest.describe('organization just-in-time provisioning', () => {
 
     const userOrganizations = await getUserOrganizations(userId);
 
+    expect(userOrganizations).toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: organization.id })])
+    );
+
+    await deleteUser(userId);
+  });
+
+  it('should provision a user with the matched linked SSO connector identity', async () => {
+    const organization = await organizationApi.create({ name: 'sso_foo' });
+    const domain = 'sso_example.com';
+    const email = generateEmail(domain);
+
+    const connector = await ssoConnectorApi.createMockOidcConnector([domain]);
+    await organizationApi.jit.ssoConnectors.add(organization.id, [connector.id]);
+
+    const user = await createUser({ primaryEmail: email });
+
+    const userId = await signInWithEnterpriseSso(connector.id, {
+      sub: randomString(),
+      email,
+      email_verified: true,
+    });
+
+    expect(userId).toBe(user.id);
+
+    const userOrganizations = await getUserOrganizations(userId);
     expect(userOrganizations).toEqual(
       expect.arrayContaining([expect.objectContaining({ id: organization.id })])
     );
