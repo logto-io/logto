@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const maxUploadFileSize = 8 * 1024 * 1024; // 8MB
+export const maxUploadFileSize = 10 * 1024 * 1024; // 10 MB
 
 // Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
 export const allowUploadMimeTypes = [
