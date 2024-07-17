@@ -7,13 +7,25 @@ import type { IRouterParamContext } from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
 import serveStatic from '#src/middleware/koa-serve-static.js';
+import type Queries from '#src/tenants/Queries.js';
 
-export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
-  mountedApps: string[],
+import serveCustomUiAssets from './koa-serve-custom-ui-assets.js';
+
+type Properties = {
+  readonly mountedApps: string[];
+  readonly queries: Queries;
+  readonly packagePath?: string;
+  readonly port?: number;
+  readonly prefix?: string;
+};
+
+export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>({
+  mountedApps,
   packagePath = 'experience',
   port = 5001,
-  prefix = ''
-): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+  prefix = '',
+  queries,
+}: Properties): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
   const distributionPath = path.join('node_modules/@logto', packagePath, 'dist');
@@ -41,6 +53,13 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     // Skip if the request is for another app
     if (!prefix && mountedApps.some((app) => app !== prefix && requestPath.startsWith(`/${app}`))) {
       return next();
+    }
+
+    const { customUiAssets } = await queries.signInExperiences.findDefaultSignInExperience();
+    // If user has uploaded custom UI assets, serve them instead of native experience UI
+    if (customUiAssets && packagePath === 'experience') {
+      const serve = serveCustomUiAssets(customUiAssets.id);
+      return serve(ctx, next);
     }
 
     if (!EnvSet.values.isProduction) {
