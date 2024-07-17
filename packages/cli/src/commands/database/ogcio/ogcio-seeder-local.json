@@ -5,6 +5,11 @@
         "name": "OGCIO Seeded Org",
         "description": "Organization created through seeder",
         "id": "ogcio"
+      },
+      {
+        "name": "Inactive Public Servants Org",
+        "description": "Temporary organization for inactive Public Servants",
+        "id": "inactive-ps-org"
       }
     ],
     "organization_permissions": {
@@ -18,7 +23,8 @@
         "messaging:template:*",
         "messaging:citizen:*",
         "messaging:event:read",
-        "life-events:digital-wallet-flow:*"
+        "life-events:digital-wallet-flow:*",
+        "bb:public-servant.inactive:*"
       ]
     },
     "organization_roles": [
@@ -50,6 +56,12 @@
         "name": "Life Events Public Servant",
         "description": "Life Events Public servant",
         "specific_permissions": ["life-events:digital-wallet-flow:*"]
+      },
+      {
+        "id": "bb-inactive-ps",
+        "name": "Inactive Public Servant",
+        "description": "Inactive Public Servant",
+        "specific_permissions": ["bb:public-servant.inactive:*"]
       }
     ],
     "applications": [
