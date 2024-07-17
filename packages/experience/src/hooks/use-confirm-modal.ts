@@ -36,8 +36,9 @@ export const usePromiseConfirmModal = () => {
  *    // This will automatically set the confirm button to loading state
  *    await someAsyncOperation();
  *  },
- *  onCancel: () => {
- *    // Handle cancellation
+ *  onCancel: async () => {
+ *    // This will automatically set the cancel button to loading state
+ *    await someAsyncOperation();
  *  }
  * });
  * ```

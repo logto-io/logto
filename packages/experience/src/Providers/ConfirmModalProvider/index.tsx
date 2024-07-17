@@ -12,6 +12,7 @@ type ConfirmModalState = Omit<ModalProps, 'onClose' | 'onConfirm' | 'children'> 
   ModalContent: string | (() => Nullable<JSX.Element>);
   type: ConfirmModalType;
   isConfirmLoading?: boolean;
+  isCancelLoading?: boolean;
 };
 
 /**
@@ -26,7 +27,7 @@ type PromiseConfirmModalProps = Omit<ConfirmModalState, 'isOpen' | 'type' | 'isC
  */
 export type CallbackConfirmModalProps = PromiseConfirmModalProps & {
   onConfirm?: () => Promise<void> | void;
-  onCancel?: () => void;
+  onCancel?: () => Promise<void> | void;
 };
 
 type ConfirmModalContextType = {
@@ -48,6 +49,7 @@ const defaultModalState: ConfirmModalState = {
   type: 'confirm',
   ModalContent: () => null,
   isConfirmLoading: false,
+  isCancelLoading: false,
 };
 
 /**
@@ -62,7 +64,7 @@ const ConfirmModalProvider = ({ children }: Props) => {
   const resolver = useRef<(value: [result: boolean, data?: unknown]) => void>();
   const callbackRef = useRef<{
     onConfirm?: () => Promise<void> | void;
-    onCancel?: () => void;
+    onCancel?: () => Promise<void> | void;
   }>({});
 
   const { isMobile } = usePlatform();
@@ -77,6 +79,7 @@ const ConfirmModalProvider = ({ children }: Props) => {
         isOpen: true,
         type,
         isConfirmLoading: false,
+        isCancelLoading: false,
         ...props,
       });
 
@@ -109,14 +112,16 @@ const ConfirmModalProvider = ({ children }: Props) => {
     if (callbackRef.current.onConfirm) {
       setModalState((previous) => ({ ...previous, isConfirmLoading: true }));
       await callbackRef.current.onConfirm();
-      setModalState((previous) => ({ ...previous, isConfirmLoading: false }));
     }
     resolver.current?.([true, data]);
     setModalState(defaultModalState);
   }, []);
 
-  const handleCancel = useCallback((data?: unknown) => {
-    callbackRef.current.onCancel?.();
+  const handleCancel = useCallback(async (data?: unknown) => {
+    if (callbackRef.current.onCancel) {
+      setModalState((previous) => ({ ...previous, isCancelLoading: true }));
+      await callbackRef.current.onCancel();
+    }
     resolver.current?.([false, data]);
     setModalState(defaultModalState);
   }, []);
@@ -144,7 +149,7 @@ const ConfirmModalProvider = ({ children }: Props) => {
             : undefined
         }
         onClose={() => {
-          handleCancel();
+          void handleCancel();
         }}
       >
         {typeof ModalContent === 'string' ? ModalContent : <ModalContent />}

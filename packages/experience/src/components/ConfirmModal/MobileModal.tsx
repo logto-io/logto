@@ -12,6 +12,7 @@ const MobileModal = ({
   className,
   isOpen = false,
   isConfirmLoading = false,
+  isCancelLoading = false,
   children,
   cancelText = 'action.cancel',
   confirmText = 'action.confirm',
@@ -35,6 +36,7 @@ const MobileModal = ({
           <Button
             title={cancelText}
             i18nProps={cancelTextI18nProps}
+            isLoading={isCancelLoading}
             type="secondary"
             onClick={onClose}
           />
