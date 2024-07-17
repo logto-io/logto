@@ -1,5 +1,5 @@
 import { type ToZodObject } from '@logto/connector-kit';
-import { InteractionEvent, type VerificationType } from '@logto/schemas';
+import { InteractionEvent, type User, type VerificationType } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -17,6 +17,7 @@ import {
   identifyUserByVerificationRecord,
   toUserSocialIdentityData,
 } from './utils.js';
+import { MfaValidator } from './validators/mfa-validator.js';
 import { ProfileValidator } from './validators/profile-validator.js';
 import { SignInExperienceValidator } from './validators/sign-in-experience-validator.js';
 import {
@@ -55,6 +56,7 @@ export default class ExperienceInteraction {
   private readonly verificationRecords = new Map<VerificationType, VerificationRecord>();
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
+  private userCache?: User;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
   #profile?: InteractionProfile;
   /** The interaction event for the current interaction. */
@@ -190,6 +192,27 @@ export default class ExperienceInteraction {
     return this.verificationRecordsArray.find((record) => record.id === verificationId);
   }
 
+  /**
+   * Validate the interaction verification records against the sign-in experience and user MFA settings.
+   *
+   * The interaction is verified if at least one user enabled MFA verification record is present and verified.
+   */
+  public async guardMfaVerificationStatus() {
+    const user = await this.getIdentifiedUser();
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+    const mfaValidator = new MfaValidator(mfaSettings, user);
+
+    const isVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
+
+    assertThat(
+      isVerified,
+      new RequestError(
+        { code: 'session.mfa.require_mfa_verification', status: 403 },
+        { availableFactors: mfaValidator.availableMfaVerificationTypes }
+      )
+    );
+  }
+
   /** Save the current interaction result. */
   public async save() {
     const { provider } = this.tenant;
@@ -212,22 +235,30 @@ export default class ExperienceInteraction {
 
   /** Submit the current interaction result to the OIDC provider and clear the interaction data */
   public async submit() {
-    assertThat(this.userId, 'session.verification_session_not_found');
-
     const {
       queries: { users: userQueries, userSsoIdentities: userSsoIdentitiesQueries },
     } = this.tenant;
 
-    const user = await userQueries.findUserById(this.userId);
+    // Initiated
+    assertThat(
+      this.interactionEvent,
+      new RequestError({ code: 'session.interaction_not_found', status: 404 })
+    );
 
-    // TODO: mfa validation
-    // TODO: profile updates validation
-    // TODO: missing profile fields validation
+    // Identified
+    const user = await this.getIdentifiedUser();
+
+    // Verified
+    if (this.#interactionEvent !== InteractionEvent.ForgotPassword) {
+      await this.guardMfaVerificationStatus();
+    }
 
     const { socialIdentity, enterpriseSsoIdentity, ...rest } = this.#profile ?? {};
 
+    // TODO: profile updates validation
+
     // Update user profile
-    await userQueries.updateUserById(this.userId, {
+    await userQueries.updateUserById(user.id, {
       ...rest,
       ...conditional(
         socialIdentity && {
@@ -239,6 +270,8 @@ export default class ExperienceInteraction {
       ),
       lastSignInAt: Date.now(),
     });
+
+    // TODO: missing profile fields validation
 
     if (enterpriseSsoIdentity) {
       await userSsoIdentitiesQueries.insert({
@@ -254,7 +287,7 @@ export default class ExperienceInteraction {
     const { provider } = this.tenant;
 
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
-      login: { accountId: this.userId },
+      login: { accountId: user.id },
     });
 
     this.ctx.body = { redirectTo };
@@ -376,5 +409,29 @@ export default class ExperienceInteraction {
       ...this.#profile,
       ...profile,
     };
+  }
+
+  /**
+   * Assert the interaction is identified and return the identified user.
+   *
+   * @throws RequestError with 400 if the user is not identified
+   * @throws RequestError with 404 if the user is not found
+   */
+  private async getIdentifiedUser(): Promise<User> {
+    if (this.userCache) {
+      return this.userCache;
+    }
+
+    // Identified
+    assertThat(this.userId, 'session.identifier_not_found');
+
+    const {
+      queries: { users: userQueries },
+    } = this.tenant;
+
+    const user = await userQueries.findUserById(this.userId);
+
+    this.userCache = user;
+    return this.userCache;
   }
 }

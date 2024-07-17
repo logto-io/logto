@@ -10,7 +10,7 @@ export const successFullyCreateNewTotpSecret = async (client: ExperienceClient) 
   return { secret, secretQrCode, verificationId };
 };
 
-export const successFullyVerifyTotp = async (
+export const successfullyVerifyTotp = async (
   client: ExperienceClient,
   payload: {
     code: string;

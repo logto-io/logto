@@ -32,8 +32,6 @@ export default function backupCodeVerificationRoutes<T extends WithLogContext>(
 
       assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
 
-      // TODO: Check if the MFA is enabled
-
       const backupCodeVerificationRecord = BackupCodeVerification.create(
         libraries,
         queries,
@@ -49,6 +47,8 @@ export default function backupCodeVerificationRoutes<T extends WithLogContext>(
       ctx.body = {
         verificationId: backupCodeVerificationRecord.id,
       };
+
+      return next();
     }
   );
 }

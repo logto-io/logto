@@ -128,7 +128,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   router.post(
     `${experienceRoutes.prefix}/submit`,
     koaGuard({
-      status: [200, 400],
+      status: [200, 400, 403, 422],
       response: z.object({
         redirectTo: z.string(),
       }),

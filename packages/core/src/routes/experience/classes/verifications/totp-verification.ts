@@ -124,6 +124,7 @@ export class TotpVerification implements VerificationRecord<VerificationType.TOT
 
     const { mfaVerifications } = await findUserById(this.userId);
 
+    // User can only have one TOTP MFA record in the profile
     const totpVerification = findUserTotp(mfaVerifications);
 
     // Can not found totp verification, this is an invalid request, throw invalid code error anyway for security reason

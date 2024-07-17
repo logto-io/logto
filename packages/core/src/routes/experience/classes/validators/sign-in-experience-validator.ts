@@ -111,6 +111,12 @@ export class SignInExperienceValidator {
     return availableSsoConnectors.filter(({ domains }) => domains.includes(domain));
   }
 
+  public async getMfaSettings() {
+    const { mfa } = await this.getSignInExperienceData();
+
+    return mfa;
+  }
+
   public async getSignInExperienceData() {
     this.signInExperienceDataCache ||=
       await this.queries.signInExperiences.findDefaultSignInExperience();
