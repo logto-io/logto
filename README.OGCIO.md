@@ -39,9 +39,10 @@ make build run
 If you want to run Logto on your machine without cloning the repo, you need to have access to aws to pull our images as a prerequisite. If you haven't already, install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html).
 If not yet configured, run
 ```
-aws sso configure
+aws configure sso
 ```
-And follow the prompts. If you don't know what your SSO start URL is, you can find it on your AWS access portal. Click on your AWS account and then on the `Access keys` option.
+After that, follow the prompts. You should be asked a name for the session (whatever helps you identify the session), the SSO start URL and the region. If you don't know what your SSO start URL is, you can find it on your AWS access portal. Click on your AWS account and then on the `Access keys` option. You can also find the region value in the same section.
+For all other options, such as registration scopes, you can go with the default.
 
 A script is available to login with AWS and Docker, create the custom network and run the containers. This is useful when launching it for the first time, or more in general when the image needs to be pulled.
 The script expects an environment variable for the aws profile that you need to be logged in:
@@ -63,7 +64,7 @@ curl -fsSL https://raw.githubusercontent.com/ogcio/logto/HEAD/docker-compose-ogc
 
 If you already have the repo cloned locally there is a Make command available:
 ```
-make build run-remote
+make run-remote
 ```
 
 ## Setup and run Logto natively
