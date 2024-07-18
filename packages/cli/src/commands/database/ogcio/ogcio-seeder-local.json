@@ -14,6 +14,10 @@
     ],
     "organization_permissions": {
       "specific_permissions": [
+        "analytics:global:*",
+        "analytics:website:admin",
+        "analytics:website:write",
+        "analytics:website:view",
         "payments:provider:*",
         "payments:payment_request:*",
         "payments:payment_request.public:read",
@@ -58,6 +62,24 @@
         "specific_permissions": ["life-events:digital-wallet-flow:*"]
       },
       {
+        "id": "anl-admin",
+        "name": "Analytics Admin",
+        "description": "Analytics Admin",
+        "specific_permissions": ["analytics:website:admin"]
+      },
+      {
+        "id": "anl-public-servant",
+        "name": "Analytics Public Servant",
+        "description": "Analytics Public servant",
+        "specific_permissions": ["analytics:website:view"]
+      },
+      {
+        "id": "anl-super-user",
+        "name": "Analytics Super User",
+        "description": "Analytics Super User",
+        "specific_permissions": ["analytics:global:*"]
+      },
+      {
         "id": "bb-inactive-ps",
         "name": "Inactive Public Servant",
         "description": "Inactive Public Servant",
@@ -93,6 +115,16 @@
         "logout_redirect_uri": "http://localhost:3000/admin",
         "secret": "life_events_app_local_secret",
         "id": "nfg61tuyfsgizsx8c4p3t",
+        "is_third_party": false
+      },
+      {
+        "name": "Analytics Building Block",
+        "description": "Shared platform for Analytics",
+        "type": "Traditional",
+        "redirect_uri": "http://localhost:8055/index.php?module=LoginOGCIO&action=callback&provider=oidc",
+        "logout_redirect_uri": "http://localhost:8055",
+        "secret": "analytics_app_local_secret",
+        "id": "kgz1zomlw27cxx4pxh5gi",
         "is_third_party": false
       }
     ],
