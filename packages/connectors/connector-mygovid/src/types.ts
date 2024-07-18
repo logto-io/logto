@@ -25,6 +25,8 @@ export const myGovIdTokenProfileStandardClaimsGuard = z.object({
   email: z.string().nullish(),
   mobile: z.string().nullish(),
   nonce: z.string().nullish(),
+  surname: z.string().nullish(),
+  givenName: z.string().nullish(),
 });
 
 export const userProfileGuard = z.object({

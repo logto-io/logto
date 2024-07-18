@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable complexity */
 import { assert, conditional } from '@silverhand/essentials';
 
 import type {
@@ -109,7 +111,16 @@ const getUserInfo =
         throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, result.error);
       }
 
-      const { sub: id, firstName, lastName, email, mobile, nonce } = result.data;
+      const {
+        sub: id,
+        firstName,
+        lastName,
+        email,
+        mobile,
+        nonce,
+        surname,
+        givenName,
+      } = result.data;
 
       if (nonce) {
         // TODO @darcy: need to specify error code
@@ -130,10 +141,13 @@ const getUserInfo =
 
       // TODO: Understand how to fill customData here
       // await setCustomData({ ...customDataNeededFromResult })
-
+      const toConcatName = firstName && firstName.length > 0 ? firstName : givenName;
+      const toConcatSurname = lastName && lastName.length > 0 ? lastName : surname;
+      const concatenated = [toConcatName, toConcatSurname].join(' ').trim();
+      const name = concatenated.length > 0 ? concatenated : 'Name not found';
       return {
         id,
-        name: firstName + ' ' + lastName,
+        name,
         avatar: undefined,
         email: conditional(email),
         phone: mobile ?? undefined, // Convert null to undefined
