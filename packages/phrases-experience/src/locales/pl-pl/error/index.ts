@@ -12,7 +12,7 @@ const error = {
   invalid_email: 'Nieprawidłowy adres e-mail',
   invalid_phone: 'Nieprawidłowy numer telefonu',
   passwords_do_not_match: 'Hasła nie pasują do siebie. Proszę spróbuj ponownie.',
-  invalid_passcode: 'Nieprawidłowy kod weryfikacyjny',
+  invalid_passcode: 'Nieprawidłowy kod weryfikacyjny.',
   invalid_connector_auth: 'Nieprawidłowa autoryzacja',
   invalid_connector_request: 'Nieprawidłowe dane konektora',
   unknown: 'Nieznany błąd. Proszę spróbuj ponownie później.',

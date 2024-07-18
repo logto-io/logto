@@ -11,7 +11,7 @@ const error = {
   invalid_email: "L'email non è valida",
   invalid_phone: 'Il numero di telefono non è valido',
   passwords_do_not_match: 'Le password non corrispondono. Per favore prova di nuovo.',
-  invalid_passcode: 'Il codice di verifica non è valido',
+  invalid_passcode: 'Il codice di verifica non è valido.',
   invalid_connector_auth: "L'autorizzazione è invalida",
   invalid_connector_request: 'I dati del connettore non sono validi',
   unknown: 'Errore sconosciuto. Si prega di riprovare più tardi.',
