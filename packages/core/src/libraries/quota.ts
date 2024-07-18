@@ -74,6 +74,7 @@ export const createQuotaLibrary = (
     builtInEmailConnectorEnabled: notNumber, // No limit for now
     customJwtEnabled: notNumber, // No limit for now
     subjectTokenEnabled: notNumber, // No limit for now
+    bringYourUiEnabled: notNumber,
   };
 
   const getTenantUsage = async (key: keyof FeatureQuota, queryKey?: string): Promise<number> => {
