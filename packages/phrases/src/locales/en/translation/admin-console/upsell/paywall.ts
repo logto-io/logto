@@ -65,6 +65,8 @@ const paywall = {
     description:
       "Upgrade to a paid plan for custom JWT functionality and premium benefits. Don't hesitate to <a>contact us</a> if you have any questions.",
   },
+  bring_your_ui:
+    'Upgrade to a paid plan for bring your custom UI functionality and premium benefits.',
 };
 
 export default Object.freeze(paywall);

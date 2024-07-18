@@ -1,8 +1,12 @@
+import { ReservedPlanId } from '@logto/schemas';
+import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import CustomUiAssetsUploader from '@/components/CustomUiAssetsUploader';
+import InlineUpsell from '@/components/InlineUpsell';
 import { isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
@@ -18,6 +22,8 @@ function CustomUiForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const { control } = useFormContext<SignInExperienceForm>();
+  const { currentPlan } = useContext(SubscriptionDataContext);
+  const isBringYourUiEnabled = currentPlan.quota.bringYourUiEnabled;
 
   return (
     <Card>
@@ -79,14 +85,29 @@ function CustomUiForm() {
             </Trans>
           }
           descriptionPosition="top"
+          featureTag={{
+            isVisible: !isBringYourUiEnabled,
+            plan: ReservedPlanId.Pro,
+          }}
         >
           <Controller
             name="customUiAssets"
             control={control}
             render={({ field: { onChange, value } }) => (
-              <CustomUiAssetsUploader value={value} onChange={onChange} />
+              <CustomUiAssetsUploader
+                disabled={!isBringYourUiEnabled}
+                value={value}
+                onChange={onChange}
+              />
             )}
           />
+          {!isBringYourUiEnabled && (
+            <InlineUpsell
+              className={brandingStyles.upsell}
+              for="bring_your_ui"
+              actionButtonText="upsell.view_plans"
+            />
+          )}
         </FormField>
       )}
     </Card>
