@@ -175,7 +175,12 @@ function SignInExperience() {
                     name="logo"
                     control={control}
                     render={({ field: { onChange, value, name } }) => (
-                      <ImageUploaderField name={name} value={value ?? ''} onChange={onChange} />
+                      <ImageUploaderField
+                        apiInstance={api}
+                        name={name}
+                        value={value ?? ''}
+                        onChange={onChange}
+                      />
                     )}
                   />
                 ) : (
