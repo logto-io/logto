@@ -14,12 +14,12 @@ import { Ring } from '../../Spinner';
 
 import * as styles from './index.module.scss';
 
-export type Props = {
+export type Props<T extends Record<string, unknown> = UserAssets> = {
   readonly maxSize: number; // In bytes
   readonly allowedMimeTypes: AllowedUploadMimeType[];
   readonly actionDescription?: string;
-  readonly onCompleted: (fileUrl: string) => void;
-  readonly onUploadErrorChange: (errorMessage?: string) => void;
+  readonly onCompleted: (response: T) => void;
+  readonly onUploadErrorChange: (errorMessage?: string, files?: File[]) => void;
   readonly className?: string;
   /**
    * Specify which API instance to use for the upload request. For example, you can use admin tenant API instead.
@@ -32,7 +32,7 @@ export type Props = {
   readonly uploadUrl?: string;
 };
 
-function FileUploader({
+function FileUploader<T extends Record<string, unknown> = UserAssets>({
   maxSize,
   allowedMimeTypes,
   actionDescription,
@@ -41,7 +41,7 @@ function FileUploader({
   className,
   apiInstance,
   uploadUrl = 'api/user-assets',
-}: Props) {
+}: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>();
@@ -60,7 +60,8 @@ function FileUploader({
     async (acceptedFiles: File[] = [], fileRejection: FileRejection[] = []) => {
       setUploadError(undefined);
 
-      if (fileRejection.length > 1) {
+      // Do not support uploading multiple files
+      if (acceptedFiles.length + fileRejection.length > 1) {
         setUploadError(t('components.uploader.error_file_count'));
 
         return;
@@ -104,9 +105,9 @@ function FileUploader({
       try {
         setIsUploading(true);
         const uploadApi = apiInstance ?? api;
-        const { url } = await uploadApi.post(uploadUrl, { body: formData }).json<UserAssets>();
+        const response = await uploadApi.post(uploadUrl, { body: formData }).json<T>();
 
-        onCompleted(url);
+        onCompleted(response);
       } catch {
         setUploadError(t('components.uploader.error_upload'));
       } finally {

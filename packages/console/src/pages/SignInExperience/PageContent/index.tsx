@@ -137,6 +137,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
             <Preview
               isLivePreviewDisabled={isDirty}
               signInExperience={previewConfigs}
+              isPreviewIframeDisabled={Boolean(data.customUiAssets)}
               className={styles.preview}
             />
           )}

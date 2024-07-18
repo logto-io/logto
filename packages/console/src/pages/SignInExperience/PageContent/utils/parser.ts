@@ -49,13 +49,14 @@ export const signUpFormDataParser = {
 
 export const sieFormDataParser = {
   fromSignInExperience: (data: SignInExperience): SignInExperienceForm => {
-    const { signUp, signInMode, customCss, branding, passwordPolicy } = data;
+    const { signUp, signInMode, customCss, customUiAssets, branding, passwordPolicy } = data;
 
     return {
       ...data,
       signUp: signUpFormDataParser.fromSignUp(signUp),
       createAccountEnabled: signInMode !== SignInMode.SignIn,
       customCss: customCss ?? undefined,
+      customUiAssets: customUiAssets ?? undefined,
       branding: {
         ...emptyBranding,
         ...branding,
@@ -74,6 +75,7 @@ export const sieFormDataParser = {
       createAccountEnabled,
       signUp,
       customCss,
+      customUiAssets,
       /** Remove the custom words related properties since they are not used in the remote model. */
       passwordPolicy: { isCustomWordsEnabled, customWords, ...passwordPolicy },
     } = formData;
@@ -84,6 +86,7 @@ export const sieFormDataParser = {
       signUp: signUpFormDataParser.toSignUp(signUp),
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
+      customUiAssets: customUiAssets?.id ? customUiAssets : null,
       passwordPolicy: {
         ...passwordPolicy,
         rejects: {

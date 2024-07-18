@@ -23,7 +23,9 @@ function ImageUploaderField({ onChange, allowedMimeTypes: mimeTypes, ...rest }: 
     <div>
       <ImageUploader
         allowedMimeTypes={allowedMimeTypes}
-        onCompleted={onChange}
+        onCompleted={({ url }) => {
+          onChange(url);
+        }}
         onUploadErrorChange={setUploadError}
         onDelete={() => {
           onChange('');
