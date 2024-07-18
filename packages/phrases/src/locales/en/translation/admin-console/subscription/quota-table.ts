@@ -37,6 +37,7 @@ const quota_table = {
     mfa: 'Multi-factor authentication',
     sso: 'Enterprise SSO',
     adaptive_mfa: 'Adaptive MFA',
+    impersonation: 'Impersonation',
   },
   user_management: {
     title: 'User management',

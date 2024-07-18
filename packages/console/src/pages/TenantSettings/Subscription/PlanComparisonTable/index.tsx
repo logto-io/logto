@@ -102,6 +102,7 @@ function PlanComparisonTable() {
     const mfaPrice = t('monthly_price', { value: 48 });
     const orgPrice = t('monthly_price', { value: 48 });
     const adaptiveMfa = t('user_authn.adaptive_mfa');
+    const impersonation = t('user_authn.impersonation');
 
     // User management
     const userManagement = t('user_management.user_management');
@@ -203,6 +204,7 @@ function PlanComparisonTable() {
             name: adaptiveMfa,
             data: ['-', comingSoon, contact],
           },
+          { name: impersonation, data: ['-', '✓', '✓'] },
         ],
       },
       {
