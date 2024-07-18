@@ -28,6 +28,8 @@ export const quotaItemPhrasesMap: Record<
   ssoEnabled: 'sso_enabled.name',
   tenantMembersLimit: 'tenant_members_limit.name',
   customJwtEnabled: 'custom_jwt_enabled.name',
+  subjectTokenEnabled: 'impersonation_enabled.name',
+  bringYourUiEnabled: 'bring_your_ui_enabled.name',
 };
 
 export const quotaItemUnlimitedPhrasesMap: Record<
@@ -56,6 +58,8 @@ export const quotaItemUnlimitedPhrasesMap: Record<
   ssoEnabled: 'sso_enabled.unlimited',
   tenantMembersLimit: 'tenant_members_limit.unlimited',
   customJwtEnabled: 'custom_jwt_enabled.unlimited',
+  subjectTokenEnabled: 'impersonation_enabled.unlimited',
+  bringYourUiEnabled: 'bring_your_ui_enabled.unlimited',
 };
 
 export const quotaItemLimitedPhrasesMap: Record<
@@ -84,6 +88,8 @@ export const quotaItemLimitedPhrasesMap: Record<
   ssoEnabled: 'sso_enabled.limited',
   tenantMembersLimit: 'tenant_members_limit.limited',
   customJwtEnabled: 'custom_jwt_enabled.limited',
+  subjectTokenEnabled: 'impersonation_enabled.limited',
+  bringYourUiEnabled: 'bring_your_ui_enabled.limited',
 };
 
 export const quotaItemNotEligiblePhrasesMap: Record<
@@ -112,4 +118,6 @@ export const quotaItemNotEligiblePhrasesMap: Record<
   ssoEnabled: 'sso_enabled.not_eligible',
   tenantMembersLimit: 'tenant_members_limit.not_eligible',
   customJwtEnabled: 'custom_jwt_enabled.not_eligible',
+  subjectTokenEnabled: 'impersonation_enabled.not_eligible',
+  bringYourUiEnabled: 'bring_your_ui_enabled.not_eligible',
 };

@@ -85,6 +85,7 @@ function PlanComparisonTable() {
     // UI and branding
     const customDomain = t('branding.custom_domain');
     const customCss = t('branding.custom_css');
+    const bringYourUi = t('branding.bring_your_ui');
     const appLogoAndFavicon = t('branding.logo_and_favicon');
     const darkMode = t('branding.dark_mode');
     const i18n = t('branding.i18n');
@@ -186,6 +187,7 @@ function PlanComparisonTable() {
           { name: appLogoAndFavicon, data: ['✓', '✓', '✓'] },
           { name: darkMode, data: ['✓', '✓', '✓'] },
           { name: i18n, data: ['✓', '✓', '✓'] },
+          { name: bringYourUi, data: ['-', '✓', '✓'] },
         ],
       },
       {
