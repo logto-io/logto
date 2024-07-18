@@ -68,7 +68,11 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
       const { syncProfile, name, logo, logoDark, target, rawConfig } = data;
       // Apply the raw config first to avoid losing data updated from other forms that are not
       // included in the form items.
-      const config = removeFalsyValues({ ...rawConfig, ...configParser(data, formItems) });
+      // Explicitly SKIP falsy values removal logic (the last argument of `configParser()` method) for social connectors.
+      const config = removeFalsyValues({
+        ...rawConfig,
+        ...configParser(data, formItems, isSocialConnector),
+      });
 
       const payload = isSocialConnector
         ? {
