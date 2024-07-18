@@ -21,8 +21,6 @@ KOOK 应用社交登录官方 Logto 连接器 [中文文档](#kook-连接器)
 
 ## Get started
 
-If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
-
 KOOK connector enables end-users to sign in to your application using their own KOOK account via KOOK OAuth 2.0 authentication protocol.
 
 ## Create an Application in the KOOK Developer Center
@@ -64,8 +62,6 @@ That's it. The KOOK connector should be available now. Don't forget to [Enable c
 - [KOOK Developer Center - OAuth2](https://developer.kookapp.cn/doc/oauth2)
 
 # KOOK 连接器
-
-如果你还不知道连接器的概念，或者还不知道如何将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
 
 > 💡 **Tip**
 > 
