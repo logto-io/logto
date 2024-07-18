@@ -32,6 +32,18 @@
         transition: opacity 0.2s ease-out;
         opacity: 0%;
       }
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--color-type-primary);
+        /*
+         * Create an extremely long (about 11.57 days) transition for background-color
+         * This is a "hack" to prevent the browser from applying its default autofill background color
+         */
+        transition: background-color 999999s ease-in-out 0s;
+        background-color: transparent;
+      }
     }
 
     .suffix {
