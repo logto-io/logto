@@ -91,7 +91,7 @@ function InstructionTab({ isActive }: Props) {
             language="typescript"
             className={styles.sampleCode}
             value={jwtCustomizerGrantContextTypeDefinition}
-            height="400px"
+            height="180px"
             theme="logto-dark"
             options={typeDefinitionCodeEditorOptions}
           />
