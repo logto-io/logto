@@ -46,7 +46,7 @@ services:
       - 5433:5433
 
   mygovid-mock-service:
-    image: 730335224023.dkr.ecr.eu-west-1.amazonaws.com/life-events-logto@sha256:d27a147deb66d0869c8384c0f7415d7df7694212b95b3a54b183be4723924e36
+    image: 730335224023.dkr.ecr.eu-west-1.amazonaws.com/life-events-logto@sha256:e970daf7bba41fd23f8b2fda0ab12f1f13449883fc0b0ce625fa1b1c2233d698
     ports:
       - 4005:4005
 
