@@ -14,6 +14,9 @@
     border-radius: var(--radius);
     pointer-events: none;
     display: block;
+    transition-property: outline, border;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.2s;
 
     legend {
       display: inline-block;
