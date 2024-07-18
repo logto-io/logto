@@ -40,7 +40,7 @@ export function newKoaQuotaGuard<StateT, ContextT, ResponseBodyT>({
   return async (ctx, next) => {
     // eslint-disable-next-line no-restricted-syntax
     if (!methods || methods.includes(ctx.method.toUpperCase() as Method)) {
-      await quota.newGuardKey(key);
+      await quota.guardTenantUsageByKey(key);
     }
     return next();
   };

@@ -143,8 +143,7 @@ export const createQuotaLibrary = (
     }
   };
 
-  // `SubscriptionQuota` and `SubscriptionUsage` are sharing keys.
-  const newGuardKey = async (key: keyof SubscriptionQuota) => {
+  const guardTenantUsageByKey = async (key: keyof SubscriptionQuota) => {
     const { isCloud, isIntegrationTest } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
@@ -160,6 +159,8 @@ export const createQuotaLibrary = (
     const { quota: fullQuota, usage: fullUsage } = await getTenantSubscriptionQuotaAndUsage(
       cloudConnection
     );
+
+    // Type `SubscriptionQuota` and type `SubscriptionUsage` are sharing keys, this design helps us to compare the usage with the quota limit in a easier way.
     const { [key]: limit } = fullQuota;
     const { [key]: usage } = fullUsage;
 
@@ -178,7 +179,10 @@ export const createQuotaLibrary = (
           },
         })
       );
-    } else if (typeof limit === 'number') {
+      return;
+    }
+
+    if (typeof limit === 'number') {
       // See the definition of `SubscriptionQuota` and `SubscriptionUsage` in `types.ts`, this should never happen.
       assertThat(
         typeof usage === 'number',
@@ -197,12 +201,14 @@ export const createQuotaLibrary = (
           },
         })
       );
-    } else {
-      throw new TypeError('Unsupported subscription quota type');
+
+      return;
     }
+
+    throw new TypeError('Unsupported subscription quota type');
   };
 
-  const scopesGuardKey = async (entityName: 'resources' | 'roles', entityId: string) => {
+  const guardEntityScopesUsage = async (entityName: 'resources' | 'roles', entityId: string) => {
     const { isCloud, isIntegrationTest } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
@@ -215,10 +221,15 @@ export const createQuotaLibrary = (
       return;
     }
 
-    const {
-      quota: { scopesPerResourceLimit, scopesPerRoleLimit },
-    } = await getTenantSubscriptionQuotaAndUsage(cloudConnection);
-    const scopeUsages = await getTenantSubscriptionScopeUsage(cloudConnection, entityName);
+    const [
+      {
+        quota: { scopesPerResourceLimit, scopesPerRoleLimit },
+      },
+      scopeUsages,
+    ] = await Promise.all([
+      getTenantSubscriptionQuotaAndUsage(cloudConnection),
+      getTenantSubscriptionScopeUsage(cloudConnection, entityName),
+    ]);
     const usage = scopeUsages[entityId] ?? 0;
 
     if (entityName === 'resources') {
@@ -251,5 +262,5 @@ export const createQuotaLibrary = (
     );
   };
 
-  return { guardKey, newGuardKey, scopesGuardKey };
+  return { guardKey, guardTenantUsageByKey, guardEntityScopesUsage };
 };

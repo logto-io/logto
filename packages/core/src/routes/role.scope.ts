@@ -95,7 +95,7 @@ export default function roleScopeRoutes<T extends ManagementApiRouter>(
       } = ctx.guard;
 
       await (EnvSet.values.isDevFeaturesEnabled
-        ? quota.scopesGuardKey('roles', id)
+        ? quota.guardEntityScopesUsage('roles', id)
         : quota.guardKey('scopesPerRoleLimit', id));
 
       await validateRoleScopeAssignment(scopeIds, id);

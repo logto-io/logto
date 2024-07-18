@@ -159,14 +159,14 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       await Promise.all([
         rest.type === ApplicationType.MachineToMachine &&
           (isDevFeaturesEnabled
-            ? quota.newGuardKey('machineToMachineLimit')
+            ? quota.guardTenantUsageByKey('machineToMachineLimit')
             : quota.guardKey('machineToMachineLimit')),
         rest.isThirdParty &&
           (isDevFeaturesEnabled
-            ? quota.newGuardKey('thirdPartyApplicationsLimit')
+            ? quota.guardTenantUsageByKey('thirdPartyApplicationsLimit')
             : quota.guardKey('thirdPartyApplicationsLimit')),
         isDevFeaturesEnabled
-          ? quota.newGuardKey('applicationsLimit')
+          ? quota.guardTenantUsageByKey('applicationsLimit')
           : quota.guardKey('applicationsLimit'),
       ]);
 

@@ -28,7 +28,7 @@ const guardConnectorsQuota = async (
 ) => {
   if (factory.type === ConnectorType.Social) {
     await (EnvSet.values.isDevFeaturesEnabled
-      ? quota.newGuardKey('socialConnectorsLimit')
+      ? quota.guardTenantUsageByKey('socialConnectorsLimit')
       : quota.guardKey('socialConnectorsLimit'));
   }
 };

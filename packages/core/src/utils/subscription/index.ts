@@ -2,14 +2,28 @@ import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js'
 
 import assertThat from '../assert-that.js';
 
-import { type SubscriptionQuota, type SubscriptionUsage, type SubscriptionPlan } from './types.js';
+import {
+  type SubscriptionQuota,
+  type SubscriptionUsage,
+  type SubscriptionPlan,
+  type Subscription,
+} from './types.js';
+
+export const getTenantSubscription = async (
+  cloudConnection: CloudConnectionLibrary
+): Promise<Subscription> => {
+  const client = await cloudConnection.getClient();
+  const subscription = await client.get('/api/tenants/my/subscription');
+
+  return subscription;
+};
 
 export const getTenantSubscriptionPlan = async (
   cloudConnection: CloudConnectionLibrary
 ): Promise<SubscriptionPlan> => {
   const client = await cloudConnection.getClient();
   const [subscription, plans] = await Promise.all([
-    client.get('/api/tenants/my/subscription'),
+    getTenantSubscription(cloudConnection),
     client.get('/api/subscription-plans'),
   ]);
   const plan = plans.find(({ id }) => id === subscription.planId);

@@ -152,7 +152,7 @@ export default function roleRoutes<T extends ManagementApiRouter>(
       // We have optional `type` when creating a new role, if `type` is not provided, use `User` as default.
       // `machineToMachineRolesLimit` is the limit of machine to machine roles, and is independent to `rolesLimit`.
       await (EnvSet.values.isDevFeaturesEnabled
-        ? quota.newGuardKey(
+        ? quota.guardTenantUsageByKey(
             roleBody.type === RoleType.MachineToMachine
               ? 'machineToMachineRolesLimit'
               : // In new pricing model, we rename `rolesLimit` to `userRolesLimit`, which is easier to be distinguished from `machineToMachineRolesLimit`.
