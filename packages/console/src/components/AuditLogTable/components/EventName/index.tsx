@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Failed from '@/assets/icons/failed.svg';
 import Success from '@/assets/icons/success.svg';
 import { logEventTitle } from '@/consts/logs';
+import Tag from '@/ds-components/Tag';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import * as styles from './index.module.scss';
@@ -35,6 +36,7 @@ function EventName({ eventKey, isSuccess, to }: Props) {
         </Link>
       )}
       {!to && <div className={styles.title}>{title}</div>}
+      {eventKey === 'ExchangeTokenBy.TokenExchange' && <Tag status="alert">Impersonation</Tag>}
     </div>
   );
 }
