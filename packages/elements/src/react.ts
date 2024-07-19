@@ -1,6 +1,12 @@
 import { createComponent } from '@lit/react';
 
-import { LogtoThemeProvider, LogtoCard, LogtoFormCard, LogtoProfileCard } from './index.js';
+import {
+  LogtoThemeProvider,
+  LogtoCard,
+  LogtoFormCard,
+  LogtoProfileCard,
+  LogtoList,
+} from './index.js';
 
 export * from './utils/locale.js';
 
@@ -9,6 +15,11 @@ export const createReactComponents = (react: Parameters<typeof createComponent>[
     LogtoFormCard: createComponent({
       tagName: LogtoFormCard.tagName,
       elementClass: LogtoFormCard,
+      react,
+    }),
+    LogtoList: createComponent({
+      tagName: LogtoList.tagName,
+      elementClass: LogtoList,
       react,
     }),
     LogtoProfileCard: createComponent({

@@ -6,6 +6,16 @@ import { vars } from '../utils/theme.js';
 
 const tagName = 'logto-card';
 
+/**
+ * A card with background, padding, and border radius.
+ *
+ * @example
+ * ```html
+ * <logto-card>
+ *   <!-- Content goes here -->
+ * </logto-card>
+ * ```
+ */
 @customElement(tagName)
 export class LogtoCard extends LitElement {
   static tagName = tagName;

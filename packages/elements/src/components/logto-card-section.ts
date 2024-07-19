@@ -7,6 +7,7 @@ import { vars } from '../utils/theme.js';
 
 const tagName = 'logto-card-section';
 
+/** A section in a form card with a heading. It is used to group related content. */
 @customElement(tagName)
 @localized()
 export class LogtoCardSection extends LitElement {
@@ -14,7 +15,7 @@ export class LogtoCardSection extends LitElement {
   static styles = css`
     header {
       font: ${vars.fontLabel2};
-      color: ${vars.colorText};
+      color: ${vars.colorTextPrimary};
       margin-bottom: ${unit(1)};
     }
   `;

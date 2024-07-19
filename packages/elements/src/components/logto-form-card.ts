@@ -8,6 +8,26 @@ import { vars } from '../utils/theme.js';
 
 const tagName = 'logto-form-card';
 
+/**
+ * A card that contains a form or form-like content. A heading and an optional description can be
+ * provided to describe the purpose of the content.
+ *
+ * To group related content in a form card, use the `logto-card-section` element.
+ *
+ * @example
+ * ```tsx
+ * html`
+ *   <logto-form-card heading=${msg('Account', ...)}>
+ *     <logto-card-section heading=${msg('Personal information', ...)}>
+ *       <!-- Content goes here -->
+ *     </logto-card-section>
+ *     <logto-card-section heading=${msg('Account settings', ...)}>
+ *       <!-- Content goes here -->
+ *     </logto-card-section>
+ *   </logto-form-card>
+ * `
+ * ```
+ */
 @customElement(tagName)
 @localized()
 export class LogtoFormCard extends LitElement {
@@ -30,7 +50,8 @@ export class LogtoFormCard extends LitElement {
       flex: 1;
     }
 
-    ::slotted(*) {
+    slot {
+      display: block;
       flex: 16;
     }
   `;

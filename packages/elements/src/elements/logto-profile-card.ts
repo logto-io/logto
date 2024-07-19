@@ -11,7 +11,7 @@ const tagName = 'logto-profile-card';
 export class LogtoProfileCard extends LitElement {
   static tagName = tagName;
   static styles = css`
-    p {
+    p.dev {
       color: ${vars.colorTextSecondary};
     }
   `;
@@ -19,10 +19,42 @@ export class LogtoProfileCard extends LitElement {
   render() {
     return html`
       <logto-form-card heading=${msg('Profile', { id: 'account.profile.title' })}>
+        <p class="dev">🚧 This section is a dev feature that is still working in progress.</p>
         <logto-card-section
           heading=${msg('Personal information', { id: 'account.profile.personal-info.title' })}
         >
-          <p>🚧 This section is a dev feature that is still working in progress.</p>
+          <logto-list>
+            <logto-list-row>
+              <div slot="title">
+                ${msg('Avatar', {
+                  id: 'account.profile.personal-info.avatar',
+                  desc: 'The avatar of the user.',
+                })}
+              </div>
+              <div slot="content">
+                <logto-avatar size="large" src="https://github.com/logto-io.png"></logto-avatar>
+              </div>
+              <div slot="actions">
+                <logto-button type="text">
+                  ${msg('Change', { id: 'general.change' })}
+                </logto-button>
+              </div>
+            </logto-list-row>
+            <logto-list-row>
+              <div slot="title">
+                ${msg('Name', {
+                  id: 'account.profile.personal-info.name',
+                  desc: 'The name of the user.',
+                })}
+              </div>
+              <div slot="content">John Doe</div>
+              <div slot="actions">
+                <logto-button type="text">
+                  ${msg('Change', { id: 'general.change' })}
+                </logto-button>
+              </div>
+            </logto-list-row>
+          </logto-list>
         </logto-card-section>
       </logto-form-card>
     `;

@@ -5,13 +5,18 @@ import { type KebabCase, kebabCase } from './string.js';
 /** All the colors to be used in the Logto components and elements. */
 export type Color = {
   colorPrimary: string;
-  colorText: string;
+  colorTextPrimary: string;
   colorTextLink: string;
   colorTextSecondary: string;
   colorBorder: string;
   colorCardTitle: string;
   colorLayer1: string;
   colorLayer2: string;
+  colorLineDivider: string;
+  colorDisabled: string;
+  colorHover: string;
+  colorHoverVariant: string;
+  colorFocusedVariant: string;
 };
 
 /** All the fonts to be used in the Logto components and elements. */
@@ -19,6 +24,9 @@ export type Font = {
   fontLabel1: string;
   fontLabel2: string;
   fontLabel3: string;
+  fontBody1: string;
+  fontBody2: string;
+  fontBody3: string;
   fontSectionHeading1: string;
   fontSectionHeading2: string;
 };
@@ -33,6 +41,9 @@ export const defaultFont: Readonly<Font> = Object.freeze({
   fontLabel1: `500 16px / 24px ${defaultFontFamily}`,
   fontLabel2: `500 14px / 20px ${defaultFontFamily}`,
   fontLabel3: `500 12px / 16px ${defaultFontFamily}`,
+  fontBody1: `400 16px / 24px ${defaultFontFamily}`,
+  fontBody2: `400 14px / 20px ${defaultFontFamily}`,
+  fontBody3: `400 12px / 16px ${defaultFontFamily}`,
   fontSectionHeading1: `700 12px / 16px ${defaultFontFamily}`,
   fontSectionHeading2: `700 10px / 16px ${defaultFontFamily}`,
 });
@@ -40,25 +51,35 @@ export const defaultFont: Readonly<Font> = Object.freeze({
 export const defaultTheme: Readonly<Theme> = Object.freeze({
   ...defaultFont,
   colorPrimary: '#5d34f2',
-  colorText: '#191c1d',
+  colorTextPrimary: '#191c1d',
   colorTextLink: '#5d34f2',
   colorTextSecondary: '#747778',
   colorBorder: '#c4c7c7',
   colorCardTitle: '#928f9a',
   colorLayer1: '#000',
   colorLayer2: '#2d3132',
+  colorLineDivider: '#191c1d1f',
+  colorDisabled: '#5c5f60',
+  colorHover: '#191c1d14',
+  colorHoverVariant: '#5d34f214',
+  colorFocusedVariant: '#5d34f229',
 });
 
 export const darkTheme: Readonly<Theme> = Object.freeze({
   ...defaultFont,
   colorPrimary: '#7958ff',
-  colorText: '#f7f8f8',
+  colorTextPrimary: '#f7f8f8',
   colorTextLink: '#cabeff',
   colorTextSecondary: '#a9acac',
   colorBorder: '#5c5f60',
   colorCardTitle: '#928f9a',
   colorLayer1: '#2a2c32',
   colorLayer2: '#34353f',
+  colorLineDivider: '#f7f8f824',
+  colorDisabled: '#5c5f60',
+  colorHover: '#f7f8f814',
+  colorHoverVariant: '#cabeff14',
+  colorFocusedVariant: '#cabeff29',
 });
 
 /**
@@ -109,7 +130,7 @@ export const toVar = (value: string) => unsafeCSS(`var(--logto-${kebabCase(value
  * `
  */
 // eslint-disable-next-line no-restricted-syntax -- `Object.fromEntries` will lose the type
-export const vars = Object.freeze(
+export const vars: Record<keyof Theme, CSSResult> = Object.freeze(
   Object.fromEntries(Object.keys(defaultTheme).map((key) => [key, toVar(key)]))
 ) as Record<keyof Theme, CSSResult>;
 
