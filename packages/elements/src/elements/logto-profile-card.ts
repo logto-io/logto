@@ -25,6 +25,9 @@ export class LogtoProfileCard extends LitElement {
   @state()
   updateNameOpened = false;
 
+  @state()
+  name = '';
+
   render() {
     const user = this.userContext?.user;
 
@@ -74,6 +77,7 @@ export class LogtoProfileCard extends LitElement {
                   size="small"
                   @click=${() => {
                     this.updateNameOpened = true;
+                    this.name = user.name ?? '';
                   }}
                 >
                   ${msg('Update', { id: 'general.update' })}
@@ -100,10 +104,22 @@ export class LogtoProfileCard extends LitElement {
                 id: 'account.profile.personal-info.name-placeholder',
                 desc: 'The placeholder for the name input field.',
               })}
-              value=""
+              .value=${this.name}
+              @input=${(event: InputEvent) => {
+                // eslint-disable-next-line no-restricted-syntax
+                this.name = (event.target as HTMLInputElement).value;
+              }}
             />
           </logto-text-input>
-          <logto-button slot="footer" size="large" type="primary">
+          <logto-button
+            slot="footer"
+            size="large"
+            type="primary"
+            @click=${async () => {
+              await this.userContext?.updateUser({ name: this.name });
+              this.updateNameOpened = false;
+            }}
+          >
             ${msg('Save', { id: 'general.save' })}
           </logto-button>
         </logto-modal-layout>
