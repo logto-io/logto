@@ -1,14 +1,11 @@
-import { TemplateType } from '@logto/connector-kit';
+import { TemplateType, type ToZodObject } from '@logto/connector-kit';
 import {
   InteractionEvent,
   SignInIdentifier,
   VerificationType,
-  verificationCodeIdentifierGuard,
   type User,
   type VerificationCodeIdentifier,
-  type VerificationCodeSignInIdentifier,
 } from '@logto/schemas';
-import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
@@ -43,35 +40,36 @@ const getPasscodeIdentifierPayload = (
 ): Parameters<ReturnType<typeof createPasscodeLibrary>['createPasscode']>[2] =>
   identifier.type === 'email' ? { email: identifier.value } : { phone: identifier.value };
 
+type CodeVerificationType =
+  | VerificationType.EmailVerificationCode
+  | VerificationType.PhoneVerificationCode;
+
+type SinInIdentifierTypeOf<T extends CodeVerificationType> =
+  T extends VerificationType.EmailVerificationCode
+    ? SignInIdentifier.Email
+    : SignInIdentifier.Phone;
+
+type VerificationCodeIdentifierOf<T extends CodeVerificationType> = VerificationCodeIdentifier<
+  SinInIdentifierTypeOf<T>
+>;
+
 /** The JSON data type for the CodeVerification record */
-export type CodeVerificationRecordData<
-  T extends VerificationCodeSignInIdentifier = VerificationCodeSignInIdentifier,
-> = {
+export type CodeVerificationRecordData<T extends CodeVerificationType = CodeVerificationType> = {
   id: string;
-  type: VerificationType.VerificationCode;
-  identifier: VerificationCodeIdentifier<T>;
+  type: T;
+  identifier: VerificationCodeIdentifierOf<T>;
   interactionEvent: InteractionEvent;
   verified: boolean;
 };
-export const codeVerificationRecordDataGuard = z.object({
-  id: z.string(),
-  type: z.literal(VerificationType.VerificationCode),
-  identifier: verificationCodeIdentifierGuard,
-  interactionEvent: z.nativeEnum(InteractionEvent),
-  verified: z.boolean(),
-}) satisfies ToZodObject<CodeVerificationRecordData>;
 
 /**
- * CodeVerification is a verification type that verifies a given identifier by sending a verification code.
  * This is the parent class for `EmailCodeVerification` and `PhoneCodeVerification`. Not publicly exposed.
  */
-class CodeVerification<
-  T extends VerificationCodeSignInIdentifier = VerificationCodeSignInIdentifier,
-> implements IdentifierVerificationRecord<VerificationType.VerificationCode>
+abstract class CodeVerification<T extends CodeVerificationType>
+  implements IdentifierVerificationRecord<T>
 {
   public readonly id: string;
-  public readonly type = VerificationType.VerificationCode;
-  public readonly identifier: VerificationCodeIdentifier<T>;
+  public readonly identifier: VerificationCodeIdentifierOf<T>;
 
   /**
    * The interaction event that triggered the verification.
@@ -81,6 +79,7 @@ class CodeVerification<
    * `InteractionEvent.ForgotPassword` triggered verification results can not used as a verification record for other events.
    */
   public readonly interactionEvent: InteractionEvent;
+  public abstract readonly type: T;
   protected verified: boolean;
 
   constructor(
@@ -166,17 +165,6 @@ class CodeVerification<
     return user;
   }
 
-  toUserProfile(): { primaryEmail: string } | { primaryPhone: string } {
-    assertThat(
-      this.verified,
-      new RequestError({ code: 'session.verification_failed', status: 400 })
-    );
-
-    const { type, value } = this.identifier;
-
-    return type === 'email' ? { primaryEmail: value } : { primaryPhone: value };
-  }
-
   toJson(): CodeVerificationRecordData<T> {
     const { id, type, identifier, interactionEvent, verified } = this;
 
@@ -188,16 +176,28 @@ class CodeVerification<
       verified,
     };
   }
+
+  abstract toUserProfile(): T extends VerificationType.EmailVerificationCode
+    ? { primaryEmail: string }
+    : { primaryPhone: string };
 }
 
+const basicCodeVerificationRecordDataGuard = z.object({
+  id: z.string(),
+  interactionEvent: z.nativeEnum(InteractionEvent),
+  verified: z.boolean(),
+});
+
 /**
- * CodeVerification is a verification type that verifies a given identifier by sending a verification code.
+ * EmailCodeVerification is a verification type that verifies a given email identifier by sending a verification code.
  *
  * @remark The verification code is sent to the user's email the user is required to enter the code to verify.
  * If the identifier is for a existing user, the userId will be set after the verification.
  */
-export class EmailCodeVerification extends CodeVerification<SignInIdentifier.Email> {
-  override toUserProfile(): { primaryEmail: string } {
+export class EmailCodeVerification extends CodeVerification<VerificationType.EmailVerificationCode> {
+  public readonly type = VerificationType.EmailVerificationCode;
+
+  toUserProfile(): { primaryEmail: string } {
     assertThat(
       this.verified,
       new RequestError({
@@ -212,14 +212,24 @@ export class EmailCodeVerification extends CodeVerification<SignInIdentifier.Ema
   }
 }
 
+export const emailCodeVerificationRecordDataGuard = basicCodeVerificationRecordDataGuard.extend({
+  type: z.literal(VerificationType.EmailVerificationCode),
+  identifier: z.object({
+    type: z.literal(SignInIdentifier.Email),
+    value: z.string(),
+  }),
+}) satisfies ToZodObject<CodeVerificationRecordData<VerificationType.EmailVerificationCode>>;
+
 /**
- * CodeVerification is a verification type that verifies a given identifier by sending a verification code.
+ * PhoneCodeVerification is a verification type that verifies a given phone identifier by sending a verification code.
  *
  * @remark The verification code is sent to the user's phone the user is required to enter the code to verify.
  * If the identifier is for a existing user, the userId will be set after the verification.
  */
-export class PhoneCodeVerification extends CodeVerification<SignInIdentifier.Phone> {
-  override toUserProfile(): { primaryPhone: string } {
+export class PhoneCodeVerification extends CodeVerification<VerificationType.PhoneVerificationCode> {
+  public readonly type = VerificationType.PhoneVerificationCode;
+
+  toUserProfile(): { primaryPhone: string } {
     assertThat(
       this.verified,
       new RequestError({
@@ -234,15 +244,13 @@ export class PhoneCodeVerification extends CodeVerification<SignInIdentifier.Pho
   }
 }
 
-export const assertEmailCodeVerificationData = (
-  data: CodeVerificationRecordData
-): data is CodeVerificationRecordData<SignInIdentifier.Email> =>
-  data.identifier.type === SignInIdentifier.Email;
-
-export const assertPhoneCodeVerificationData = (
-  data: CodeVerificationRecordData
-): data is CodeVerificationRecordData<SignInIdentifier.Phone> =>
-  data.identifier.type === SignInIdentifier.Phone;
+export const phoneCodeVerificationRecordDataGuard = basicCodeVerificationRecordDataGuard.extend({
+  type: z.literal(VerificationType.PhoneVerificationCode),
+  identifier: z.object({
+    type: z.literal(SignInIdentifier.Phone),
+    value: z.string(),
+  }),
+}) satisfies ToZodObject<CodeVerificationRecordData<VerificationType.PhoneVerificationCode>>;
 
 /**
  * Factory method to create a new EmailCodeVerification/PhoneCodeVerification record using the given identifier.
@@ -260,7 +268,7 @@ export const createNewCodeVerificationRecord = (
   if (type === SignInIdentifier.Email) {
     return new EmailCodeVerification(libraries, queries, {
       id: generateStandardId(),
-      type: VerificationType.VerificationCode,
+      type: VerificationType.EmailVerificationCode,
       identifier,
       interactionEvent,
       verified: false,
@@ -269,7 +277,7 @@ export const createNewCodeVerificationRecord = (
 
   return new PhoneCodeVerification(libraries, queries, {
     id: generateStandardId(),
-    type: VerificationType.VerificationCode,
+    type: VerificationType.PhoneVerificationCode,
     identifier,
     interactionEvent,
     verified: false,

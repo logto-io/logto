@@ -4,6 +4,7 @@ import {
   VerificationType,
   type InteractionIdentifier,
   type User,
+  type VerificationCodeSignInIdentifier,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -41,7 +42,8 @@ export const getNewUserProfileFromVerificationRecord = async (
 ): Promise<InteractionProfile> => {
   switch (verificationRecord.type) {
     case VerificationType.NewPasswordIdentity:
-    case VerificationType.VerificationCode: {
+    case VerificationType.EmailVerificationCode:
+    case VerificationType.PhoneVerificationCode: {
       return verificationRecord.toUserProfile();
     }
     case VerificationType.EnterpriseSso:
@@ -86,7 +88,8 @@ export const identifyUserByVerificationRecord = async (
 
   switch (verificationRecord.type) {
     case VerificationType.Password:
-    case VerificationType.VerificationCode: {
+    case VerificationType.EmailVerificationCode:
+    case VerificationType.PhoneVerificationCode: {
       return { user: await verificationRecord.identifyUser() };
     }
     case VerificationType.Social: {
@@ -171,3 +174,8 @@ export function profileToUserInfo(
     phoneNumber: primaryPhone ?? undefined,
   };
 }
+
+export const codeVerificationIdentifierRecordTypeMap = Object.freeze({
+  [SignInIdentifier.Email]: VerificationType.EmailVerificationCode,
+  [SignInIdentifier.Phone]: VerificationType.PhoneVerificationCode,
+}) satisfies Record<VerificationCodeSignInIdentifier, VerificationType>;

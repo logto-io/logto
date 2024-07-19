@@ -58,7 +58,8 @@ export const verificationCodeIdentifierGuard = z.object({
 /** Logto supported interaction verification types. */
 export enum VerificationType {
   Password = 'Password',
-  VerificationCode = 'VerificationCode',
+  EmailVerificationCode = 'EmailVerificationCode',
+  PhoneVerificationCode = 'PhoneVerificationCode',
   Social = 'Social',
   EnterpriseSso = 'EnterpriseSso',
   TOTP = 'Totp',

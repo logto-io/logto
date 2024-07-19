@@ -4,6 +4,7 @@ import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
   InteractionEvent,
   type SignInExperience,
+  SignInIdentifier,
   SignInMode,
   VerificationType,
 } from '@logto/schemas';
@@ -18,12 +19,13 @@ import { type VerificationRecord } from '../verifications/index.js';
 const getEmailIdentifierFromVerificationRecord = (verificationRecord: VerificationRecord) => {
   switch (verificationRecord.type) {
     case VerificationType.Password:
-    case VerificationType.VerificationCode: {
+    case VerificationType.EmailVerificationCode:
+    case VerificationType.PhoneVerificationCode: {
       const {
         identifier: { type, value },
       } = verificationRecord;
 
-      return type === 'email' ? value : undefined;
+      return type === SignInIdentifier.Email ? value : undefined;
     }
     case VerificationType.Social: {
       const { socialUserInfo } = verificationRecord;
@@ -174,7 +176,8 @@ export class SignInExperienceValidator {
 
     switch (verificationRecord.type) {
       case VerificationType.Password:
-      case VerificationType.VerificationCode: {
+      case VerificationType.EmailVerificationCode:
+      case VerificationType.PhoneVerificationCode: {
         const {
           identifier: { type },
         } = verificationRecord;
@@ -224,7 +227,8 @@ export class SignInExperienceValidator {
         );
         break;
       }
-      case VerificationType.VerificationCode: {
+      case VerificationType.EmailVerificationCode:
+      case VerificationType.PhoneVerificationCode: {
         const {
           identifier: { type },
         } = verificationRecord;
@@ -255,7 +259,8 @@ export class SignInExperienceValidator {
   /** Forgot password only supports verification code type verification record */
   private guardForgotPasswordVerificationMethod(verificationRecord: VerificationRecord) {
     assertThat(
-      verificationRecord.type === VerificationType.VerificationCode,
+      verificationRecord.type === VerificationType.EmailVerificationCode ||
+        verificationRecord.type === VerificationType.PhoneVerificationCode,
       new RequestError({ code: 'session.not_supported_for_forgot_password', status: 422 })
     );
   }

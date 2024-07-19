@@ -10,11 +10,10 @@ import {
   type BackupCodeVerificationRecordData,
 } from './backup-code-verification.js';
 import {
-  assertEmailCodeVerificationData,
-  assertPhoneCodeVerificationData,
-  codeVerificationRecordDataGuard,
   EmailCodeVerification,
+  emailCodeVerificationRecordDataGuard,
   PhoneCodeVerification,
+  phoneCodeVerificationRecordDataGuard,
   type CodeVerificationRecordData,
 } from './code-verification.js';
 import {
@@ -45,7 +44,8 @@ import {
 
 export type VerificationRecordData =
   | PasswordVerificationRecordData
-  | CodeVerificationRecordData
+  | CodeVerificationRecordData<VerificationType.EmailVerificationCode>
+  | CodeVerificationRecordData<VerificationType.PhoneVerificationCode>
   | SocialVerificationRecordData
   | EnterpriseSsoVerificationRecordData
   | TotpVerificationRecordData
@@ -72,7 +72,8 @@ export type VerificationRecord =
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
-  codeVerificationRecordDataGuard,
+  emailCodeVerificationRecordDataGuard,
+  phoneCodeVerificationRecordDataGuard,
   socialVerificationRecordDataGuard,
   enterPriseSsoVerificationRecordDataGuard,
   totpVerificationRecordDataGuard,
@@ -92,17 +93,11 @@ export const buildVerificationRecord = (
     case VerificationType.Password: {
       return new PasswordVerification(libraries, queries, data);
     }
-    case VerificationType.VerificationCode: {
-      // TS can't distribute the CodeVerificationRecordData type directly
-      // so we need to assert the data type here
-      if (assertEmailCodeVerificationData(data)) {
-        return new EmailCodeVerification(libraries, queries, data);
-      }
-      if (assertPhoneCodeVerificationData(data)) {
-        return new PhoneCodeVerification(libraries, queries, data);
-      }
-      // Make the type checker happy
-      throw new Error('Invalid code verification data');
+    case VerificationType.EmailVerificationCode: {
+      return new EmailCodeVerification(libraries, queries, data);
+    }
+    case VerificationType.PhoneVerificationCode: {
+      return new PhoneCodeVerification(libraries, queries, data);
     }
     case VerificationType.Social: {
       return new SocialVerification(libraries, queries, data);

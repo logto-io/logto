@@ -77,7 +77,7 @@ describe('ExperienceInteraction class', () => {
 
   const emailVerificationRecord = new EmailCodeVerification(libraries, queries, {
     id: 'mock_email_verification_id',
-    type: VerificationType.VerificationCode,
+    type: VerificationType.EmailVerificationCode,
     identifier: {
       type: SignInIdentifier.Email,
       value: mockEmail,
