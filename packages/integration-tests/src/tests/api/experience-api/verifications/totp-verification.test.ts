@@ -6,7 +6,7 @@ import { initExperienceClient } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
   successFullyCreateNewTotpSecret,
-  successFullyVerifyTotp,
+  successfullyVerifyTotp,
 } from '#src/helpers/experience/totp-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
@@ -98,7 +98,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
       const { verificationId, secret } = await successFullyCreateNewTotpSecret(client);
       const code = authenticator.generate(secret);
 
-      await successFullyVerifyTotp(client, { code, verificationId });
+      await successfullyVerifyTotp(client, { code, verificationId });
     });
   });
 
@@ -157,7 +157,7 @@ devFeatureTest.describe('TOTP verification APIs', () => {
 
       const code = authenticator.generate(secret);
 
-      await successFullyVerifyTotp(client, { code });
+      await successfullyVerifyTotp(client, { code });
     });
   });
 });
