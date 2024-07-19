@@ -28,14 +28,13 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "build": "lit-localize build && tsup",
+    "build": "pnpm check && lit-localize build && tsup",
     "start": "web-dev-server",
     "dev": "lit-localize build && tsup --watch --no-splitting",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "echo \"No tests yet.\"",
     "test:ci": "pnpm run test --silent --coverage",
-    "prepublishOnly": "pnpm check",
     "prepack": "pnpm build",
     "localize": "lit-localize",
     "check": "lit-localize extract && git add . -N && git diff --exit-code"
