@@ -1,10 +1,12 @@
 import { TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
+  SignInIdentifier,
   VerificationType,
   verificationCodeIdentifierGuard,
   type User,
   type VerificationCodeIdentifier,
+  type VerificationCodeSignInIdentifier,
 } from '@logto/schemas';
 import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
 import { generateStandardId } from '@logto/shared';
@@ -35,15 +37,22 @@ const eventToTemplateTypeMap: Record<InteractionEvent, TemplateType> = {
 const getTemplateTypeByEvent = (event: InteractionEvent): TemplateType =>
   eventToTemplateTypeMap[event];
 
+/** This util method convert the interaction identifier to passcode library payload format */
+const getPasscodeIdentifierPayload = (
+  identifier: VerificationCodeIdentifier
+): Parameters<ReturnType<typeof createPasscodeLibrary>['createPasscode']>[2] =>
+  identifier.type === 'email' ? { email: identifier.value } : { phone: identifier.value };
+
 /** The JSON data type for the CodeVerification record */
-export type CodeVerificationRecordData = {
+export type CodeVerificationRecordData<
+  T extends VerificationCodeSignInIdentifier = VerificationCodeSignInIdentifier,
+> = {
   id: string;
   type: VerificationType.VerificationCode;
-  identifier: VerificationCodeIdentifier;
+  identifier: VerificationCodeIdentifier<T>;
   interactionEvent: InteractionEvent;
   verified: boolean;
 };
-
 export const codeVerificationRecordDataGuard = z.object({
   id: z.string(),
   type: z.literal(VerificationType.VerificationCode),
@@ -52,47 +61,17 @@ export const codeVerificationRecordDataGuard = z.object({
   verified: z.boolean(),
 }) satisfies ToZodObject<CodeVerificationRecordData>;
 
-/** This util method convert the interaction identifier to passcode library payload format */
-const getPasscodeIdentifierPayload = (
-  identifier: VerificationCodeIdentifier
-): Parameters<ReturnType<typeof createPasscodeLibrary>['createPasscode']>[2] =>
-  identifier.type === 'email' ? { email: identifier.value } : { phone: identifier.value };
-
 /**
- * CodeVerification is a verification type that verifies a given identifier by sending a verification code
- * to the user's email or phone.
- *
- * @remark The verification code is sent to the user's email or phone and the user is required to enter the code to verify.
- * If the identifier is for a existing user, the userId will be set after the verification.
- *
- * To avoid the redundant naming, the `CodeVerification` is used instead of `VerificationCodeVerification`.
+ * CodeVerification is a verification type that verifies a given identifier by sending a verification code.
+ * This is the parent class for `EmailCodeVerification` and `PhoneCodeVerification`. Not publicly exposed.
  */
-export class CodeVerification
-  implements IdentifierVerificationRecord<VerificationType.VerificationCode>
+class CodeVerification<
+  T extends VerificationCodeSignInIdentifier = VerificationCodeSignInIdentifier,
+> implements IdentifierVerificationRecord<VerificationType.VerificationCode>
 {
-  /**
-   * Factory method to create a new CodeVerification record using the given identifier.
-   */
-  static create(
-    libraries: Libraries,
-    queries: Queries,
-    identifier: VerificationCodeIdentifier,
-    interactionEvent: InteractionEvent
-  ) {
-    const record = new CodeVerification(libraries, queries, {
-      id: generateStandardId(),
-      type: VerificationType.VerificationCode,
-      identifier,
-      interactionEvent,
-      verified: false,
-    });
-
-    return record;
-  }
-
   public readonly id: string;
   public readonly type = VerificationType.VerificationCode;
-  public readonly identifier: VerificationCodeIdentifier;
+  public readonly identifier: VerificationCodeIdentifier<T>;
 
   /**
    * The interaction event that triggered the verification.
@@ -102,12 +81,12 @@ export class CodeVerification
    * `InteractionEvent.ForgotPassword` triggered verification results can not used as a verification record for other events.
    */
   public readonly interactionEvent: InteractionEvent;
-  private verified: boolean;
+  protected verified: boolean;
 
   constructor(
     private readonly libraries: Libraries,
     private readonly queries: Queries,
-    data: CodeVerificationRecordData
+    data: CodeVerificationRecordData<T>
   ) {
     const { id, identifier, verified, interactionEvent } = data;
 
@@ -198,7 +177,7 @@ export class CodeVerification
     return type === 'email' ? { primaryEmail: value } : { primaryPhone: value };
   }
 
-  toJson(): CodeVerificationRecordData {
+  toJson(): CodeVerificationRecordData<T> {
     const { id, type, identifier, interactionEvent, verified } = this;
 
     return {
@@ -210,3 +189,89 @@ export class CodeVerification
     };
   }
 }
+
+/**
+ * CodeVerification is a verification type that verifies a given identifier by sending a verification code.
+ *
+ * @remark The verification code is sent to the user's email the user is required to enter the code to verify.
+ * If the identifier is for a existing user, the userId will be set after the verification.
+ */
+export class EmailCodeVerification extends CodeVerification<SignInIdentifier.Email> {
+  override toUserProfile(): { primaryEmail: string } {
+    assertThat(
+      this.verified,
+      new RequestError({
+        code: 'session.verification_failed',
+        state: 400,
+      })
+    );
+
+    const { value } = this.identifier;
+
+    return { primaryEmail: value };
+  }
+}
+
+/**
+ * CodeVerification is a verification type that verifies a given identifier by sending a verification code.
+ *
+ * @remark The verification code is sent to the user's phone the user is required to enter the code to verify.
+ * If the identifier is for a existing user, the userId will be set after the verification.
+ */
+export class PhoneCodeVerification extends CodeVerification<SignInIdentifier.Phone> {
+  override toUserProfile(): { primaryPhone: string } {
+    assertThat(
+      this.verified,
+      new RequestError({
+        code: 'session.verification_failed',
+        state: 400,
+      })
+    );
+
+    const { value } = this.identifier;
+
+    return { primaryPhone: value };
+  }
+}
+
+export const assertEmailCodeVerificationData = (
+  data: CodeVerificationRecordData
+): data is CodeVerificationRecordData<SignInIdentifier.Email> =>
+  data.identifier.type === SignInIdentifier.Email;
+
+export const assertPhoneCodeVerificationData = (
+  data: CodeVerificationRecordData
+): data is CodeVerificationRecordData<SignInIdentifier.Phone> =>
+  data.identifier.type === SignInIdentifier.Phone;
+
+/**
+ * Factory method to create a new EmailCodeVerification/PhoneCodeVerification record using the given identifier.
+ */
+export const createNewCodeVerificationRecord = (
+  libraries: Libraries,
+  queries: Queries,
+  identifier:
+    | VerificationCodeIdentifier<SignInIdentifier.Email>
+    | VerificationCodeIdentifier<SignInIdentifier.Phone>,
+  interactionEvent: InteractionEvent
+) => {
+  const { type } = identifier;
+
+  if (type === SignInIdentifier.Email) {
+    return new EmailCodeVerification(libraries, queries, {
+      id: generateStandardId(),
+      type: VerificationType.VerificationCode,
+      identifier,
+      interactionEvent,
+      verified: false,
+    });
+  }
+
+  return new PhoneCodeVerification(libraries, queries, {
+    id: generateStandardId(),
+    type: VerificationType.VerificationCode,
+    identifier,
+    interactionEvent,
+    verified: false,
+  });
+};

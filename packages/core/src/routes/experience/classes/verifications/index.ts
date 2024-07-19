@@ -10,8 +10,11 @@ import {
   type BackupCodeVerificationRecordData,
 } from './backup-code-verification.js';
 import {
-  CodeVerification,
+  assertEmailCodeVerificationData,
+  assertPhoneCodeVerificationData,
   codeVerificationRecordDataGuard,
+  EmailCodeVerification,
+  PhoneCodeVerification,
   type CodeVerificationRecordData,
 } from './code-verification.js';
 import {
@@ -59,7 +62,8 @@ export type VerificationRecordData =
  */
 export type VerificationRecord =
   | PasswordVerification
-  | CodeVerification
+  | EmailCodeVerification
+  | PhoneCodeVerification
   | SocialVerification
   | EnterpriseSsoVerification
   | TotpVerification
@@ -89,7 +93,16 @@ export const buildVerificationRecord = (
       return new PasswordVerification(libraries, queries, data);
     }
     case VerificationType.VerificationCode: {
-      return new CodeVerification(libraries, queries, data);
+      // TS can't distribute the CodeVerificationRecordData type directly
+      // so we need to assert the data type here
+      if (assertEmailCodeVerificationData(data)) {
+        return new EmailCodeVerification(libraries, queries, data);
+      }
+      if (assertPhoneCodeVerificationData(data)) {
+        return new PhoneCodeVerification(libraries, queries, data);
+      }
+      // Make the type checker happy
+      throw new Error('Invalid code verification data');
     }
     case VerificationType.Social: {
       return new SocialVerification(libraries, queries, data);
