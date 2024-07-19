@@ -141,7 +141,10 @@ export const registerNewUserWithVerificationCode = async (
 export const signInWithSocial = async (
   connectorId: string,
   socialUserInfo: SocialUserInfo,
-  registerNewUser = false
+  options?: {
+    registerNewUser?: boolean;
+    linkSocial?: boolean;
+  }
 ) => {
   const state = 'state';
   const redirectUri = 'http://localhost:3000';
@@ -154,6 +157,8 @@ export const signInWithSocial = async (
     state,
   });
 
+  const { id, ...rest } = socialUserInfo;
+
   await successFullyVerifySocialAuthorization(client, connectorId, {
     verificationId,
     connectorData: {
@@ -161,11 +166,11 @@ export const signInWithSocial = async (
       redirectUri,
       code: 'fake_code',
       userId: socialUserInfo.id,
-      email: socialUserInfo.email,
+      ...rest,
     },
   });
 
-  if (registerNewUser) {
+  if (options?.registerNewUser) {
     await expectRejects(client.identifyUser({ verificationId }), {
       code: 'user.identity_not_exist',
       status: 404,
@@ -173,6 +178,13 @@ export const signInWithSocial = async (
 
     await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
     await client.identifyUser({ verificationId });
+  } else if (options?.linkSocial) {
+    await expectRejects(client.identifyUser({ verificationId }), {
+      code: 'user.identity_not_exist',
+      status: 404,
+    });
+
+    await client.identifyUser({ verificationId, linkSocialIdentity: true });
   } else {
     await client.identifyUser({
       verificationId,

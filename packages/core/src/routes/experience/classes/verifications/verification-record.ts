@@ -33,5 +33,6 @@ export abstract class IdentifierVerificationRecord<
   T extends VerificationType = IdentifierVerificationType,
   Json extends Data<T> = Data<T>,
 > extends VerificationRecord<T, Json> {
+  /** Identify the user associated with the verification record. */
   abstract identifyUser(): Promise<User>;
 }

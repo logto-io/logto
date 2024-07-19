@@ -8,6 +8,7 @@ import {
   type UserSsoIdentity,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -151,6 +152,15 @@ export class EnterpriseSsoVerification
       return userSsoIdentityResult.user;
     }
 
+    throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
+  }
+
+  async identifyRelatedUser(): Promise<User> {
+    assertThat(
+      this.isVerified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
     const relatedUser = await this.findRelatedUserSsoIdentity();
 
     if (relatedUser) {
@@ -182,7 +192,7 @@ export class EnterpriseSsoVerification
   /**
    * Returns the synced profile from the enterprise SSO identity.
    *
-   * @param isNewUser - Whether the returned profile is for a new user. If true, the profile should contain the user's email.
+   * @param isNewUser - Whether the returned profile is for a new user. Only return the primary email if it is a new user.
    */
   async toSyncedProfile(
     isNewUser = false
@@ -195,12 +205,21 @@ export class EnterpriseSsoVerification
     const { name, avatar, email: primaryEmail } = this.enterpriseSsoUserInfo;
 
     if (isNewUser) {
-      return { name, avatar, primaryEmail };
+      return {
+        ...conditional(primaryEmail && { primaryEmail }),
+        ...conditional(name && { name }),
+        ...conditional(avatar && { avatar }),
+      };
     }
 
     const { syncProfile } = await this.getConnectorData();
 
-    return syncProfile ? { name, avatar } : {};
+    return syncProfile
+      ? {
+          ...conditional(name && { name }),
+          ...conditional(avatar && { avatar }),
+        }
+      : {};
   }
 
   toJson(): EnterpriseSsoVerificationRecordData {

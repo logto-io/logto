@@ -12,7 +12,11 @@ import assertThat from '#src/utils/assert-that.js';
 import { interactionProfileGuard, type Interaction, type InteractionProfile } from '../types.js';
 
 import { ProvisionLibrary } from './provision-library.js';
-import { getNewUserProfileFromVerificationRecord, toUserSocialIdentityData } from './utils.js';
+import {
+  getNewUserProfileFromVerificationRecord,
+  identifyUserByVerificationRecord,
+  toUserSocialIdentityData,
+} from './utils.js';
 import { ProfileValidator } from './validators/profile-validator.js';
 import { SignInExperienceValidator } from './validators/sign-in-experience-validator.js';
 import {
@@ -52,7 +56,7 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
-  private readonly profile?: InteractionProfile;
+  #profile?: InteractionProfile;
   /** The interaction event for the current interaction. */
   #interactionEvent?: InteractionEvent;
 
@@ -89,7 +93,7 @@ export default class ExperienceInteraction {
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
-    this.profile = profile;
+    this.#profile = profile;
 
     // Profile validator requires the userId for existing user profile update validation
     this.profileValidator = new ProfileValidator(libraries, queries, userId);
@@ -146,7 +150,7 @@ export default class ExperienceInteraction {
    * @see {@link identifyExistingUser} for more exceptions that can be thrown in the SignIn and ForgotPassword events.
    * @see {@link createNewUser} for more exceptions that can be thrown in the Register event.
    **/
-  public async identifyUser(verificationId: string) {
+  public async identifyUser(verificationId: string, linkSocialIdentity?: boolean) {
     const verificationRecord = this.getVerificationRecordById(verificationId);
 
     assertThat(
@@ -169,7 +173,7 @@ export default class ExperienceInteraction {
       return;
     }
 
-    await this.identifyExistingUser(verificationRecord);
+    await this.identifyExistingUser(verificationRecord, linkSocialIdentity);
   }
 
   /**
@@ -210,17 +214,42 @@ export default class ExperienceInteraction {
   public async submit() {
     assertThat(this.userId, 'session.verification_session_not_found');
 
+    const {
+      queries: { users: userQueries, userSsoIdentities: userSsoIdentitiesQueries },
+    } = this.tenant;
+
+    const user = await userQueries.findUserById(this.userId);
+
     // TODO: mfa validation
+    // TODO: profile updates validation
     // TODO: missing profile fields validation
 
-    const {
-      queries: { users: userQueries },
-    } = this.tenant;
+    const { socialIdentity, enterpriseSsoIdentity, ...rest } = this.#profile ?? {};
 
     // Update user profile
     await userQueries.updateUserById(this.userId, {
+      ...rest,
+      ...conditional(
+        socialIdentity && {
+          identities: {
+            ...user.identities,
+            ...toUserSocialIdentityData(socialIdentity),
+          },
+        }
+      ),
       lastSignInAt: Date.now(),
     });
+
+    if (enterpriseSsoIdentity) {
+      await userSsoIdentitiesQueries.insert({
+        id: generateStandardId(),
+        userId: user.id,
+        ...enterpriseSsoIdentity,
+      });
+      await this.provisionLibrary.newUserJtiOrganizationProvision(user.id, {
+        enterpriseSsoIdentity,
+      });
+    }
 
     const { provider } = this.tenant;
 
@@ -233,12 +262,12 @@ export default class ExperienceInteraction {
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   public toJson(): InteractionStorage {
-    const { interactionEvent, userId, profile } = this;
+    const { interactionEvent, userId } = this;
 
     return {
       interactionEvent,
       userId,
-      profile,
+      profile: this.#profile,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
     };
   }
@@ -250,21 +279,24 @@ export default class ExperienceInteraction {
   /**
    * Identify the existing user using the verification record.
    *
+   * @param linkSocialIdentity Applies only to the SocialIdentity verification record sign-in events only.
+   * If true, the social identity will be linked to related user.
+   *
    * @throws RequestError with 400 if the verification record is not verified or not valid for identifying a user
    * @throws RequestError with 404 if the user is not found
    * @throws RequestError with 401 if the user is suspended
    * @throws RequestError with 409 if the current session has already identified a different user
    */
-  private async identifyExistingUser(verificationRecord: VerificationRecord) {
-    // Check verification record can be used to identify a user using the `identifyUser` method.
-    // E.g. MFA verification record does not have the `identifyUser` method, cannot be used to identify a user.
-    assertThat(
-      'identifyUser' in verificationRecord,
-      new RequestError({ code: 'session.verification_failed', status: 400 })
+  private async identifyExistingUser(
+    verificationRecord: VerificationRecord,
+    linkSocialIdentity?: boolean
+  ) {
+    const { user, syncedProfile } = await identifyUserByVerificationRecord(
+      verificationRecord,
+      linkSocialIdentity
     );
 
-    const { id, isSuspended } = await verificationRecord.identifyUser();
-
+    const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
     // Throws an 409 error if the current session has already identified a different user
@@ -274,6 +306,11 @@ export default class ExperienceInteraction {
         new RequestError({ code: 'session.identity_conflict', status: 409 })
       );
       return;
+    }
+
+    // Sync social/enterprise SSO identity profile data
+    if (syncedProfile) {
+      this.setProfile(syncedProfile);
     }
 
     this.userId = id;
@@ -329,5 +366,15 @@ export default class ExperienceInteraction {
     // TODO: new user hooks
 
     this.userId = user.id;
+  }
+
+  /**
+   * Private method to set the profile data without validation.
+   */
+  private setProfile(profile: InteractionProfile) {
+    this.#profile = {
+      ...this.#profile,
+      ...profile,
+    };
   }
 }
