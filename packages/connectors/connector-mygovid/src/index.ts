@@ -145,12 +145,17 @@ const getUserInfo =
       const toConcatSurname = lastName && lastName.length > 0 ? lastName : surname;
       const concatenated = [toConcatName, toConcatSurname].join(' ').trim();
       const name = concatenated.length > 0 ? concatenated : 'Name not found';
+      // MyGovId, if the user has no set phone number
+      // return +00000000 number, then, if we find it,
+      // we set it as undefined
+      const validatedPhone = mobile && /^\+0+$/.exec(mobile) === null ? mobile : undefined;
+
       return {
         id,
         name,
         avatar: undefined,
         email: conditional(email),
-        phone: mobile ?? undefined, // Convert null to undefined
+        phone: validatedPhone,
         rawData: jsonGuard.parse(payload),
       };
     } catch (error: unknown) {
