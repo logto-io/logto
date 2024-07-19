@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="fr" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="form-card.fallback-title">
+  <source>Not available</source>
+  <target>Non disponible</target>
+  <note from="lit-localize">The fallback title of a form card when the title is not provided.</note>
+</trans-unit>
+<trans-unit id="account.profile.title">
+  <source>Profile</source>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.title">
+  <source>Personal information</source>
+</trans-unit>
+</body>
+</file>
+</xliff>

@@ -27,13 +27,15 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "build": "tsup",
-    "dev": "tsup --watch --no-splitting",
+    "build": "lit-localize build && tsup",
+    "dev": "lit-localize build && tsup --watch --no-splitting",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "echo \"No tests yet.\"",
     "test:ci": "pnpm run test --silent --coverage",
-    "prepack": "pnpm build"
+    "prepack": "pnpm check && pnpm build",
+    "localize": "lit-localize",
+    "check": "lit-localize extract && git add . -N && git diff --exit-code"
   },
   "engines": {
     "node": "^20.9.0"
@@ -48,6 +50,7 @@
     "lit": "^3.1.4"
   },
   "devDependencies": {
+    "@lit/localize-tools": "^0.7.2",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "eslint": "^8.56.0",
@@ -57,6 +60,9 @@
   },
   "eslintConfig": {
     "extends": "@silverhand",
+    "ignorePatterns": [
+      "src/generated/"
+    ],
     "rules": {
       "no-console": "error",
       "unicorn/prevent-abbreviations": [
