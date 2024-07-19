@@ -91,3 +91,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_DEBUG: api
         run: gh workflow run rerun.yml -F run_id=${{ github.run_id }}
+
+  alteration-compatibility-conclusion:
+    needs: run-logto
+    runs-on: ubuntu-latest
+    if: always() && (needs.run-logto.result == 'success' || needs.run-logto.result == 'skipped')
+    steps:
+      - name: Conclusion
+        run: echo "Alteration compatibility integration test completed successfully"
