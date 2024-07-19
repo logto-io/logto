@@ -21,9 +21,9 @@ export class LogtoCardSection extends LitElement {
   `;
 
   @property()
-  heading = msg('Not available', {
-    id: 'form-card.fallback-title',
-    desc: 'The fallback title of a form card when the title is not provided.',
+  heading = msg('Not set', {
+    id: 'general.fallback-title',
+    desc: 'A fallback title when the title or heading of a component is not provided.',
   });
 
   render() {

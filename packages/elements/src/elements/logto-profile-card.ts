@@ -1,6 +1,6 @@
 import { localized, msg } from '@lit/localize';
 import { LitElement, css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 
 import { vars } from '../utils/theme.js';
 
@@ -15,6 +15,9 @@ export class LogtoProfileCard extends LitElement {
       color: ${vars.colorTextSecondary};
     }
   `;
+
+  @state()
+  updateNameOpened = false;
 
   render() {
     return html`
@@ -49,14 +52,41 @@ export class LogtoProfileCard extends LitElement {
               </div>
               <div slot="content">John Doe</div>
               <div slot="actions">
-                <logto-button type="text">
-                  ${msg('Change', { id: 'general.change' })}
+                <logto-button
+                  type="text"
+                  @click=${() => {
+                    this.updateNameOpened = true;
+                  }}
+                >
+                  ${msg('Update', { id: 'general.update' })}
                 </logto-button>
               </div>
             </logto-list-row>
           </logto-list>
         </logto-card-section>
       </logto-form-card>
+      <logto-modal
+        ?open=${this.updateNameOpened}
+        .onClose=${() => {
+          this.updateNameOpened = false;
+        }}
+      >
+        <logto-modal-layout
+          heading=${msg('Update name', {
+            id: 'account.profile.personal-info.update-name',
+          })}
+        >
+          <logto-text-input>
+            <input
+              placeholder=${msg('Person Doe', {
+                id: 'account.profile.personal-info.name-placeholder',
+                desc: 'The placeholder for the name input field.',
+              })}
+              value=""
+            />
+          </logto-text-input>
+        </logto-modal-layout>
+      </logto-modal>
     `;
   }
 }

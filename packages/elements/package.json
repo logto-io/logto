@@ -28,14 +28,15 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "build": "pnpm check && lit-localize build && tsup",
+    "build:only": "lit-localize build && tsup",
+    "build": "pnpm check && pnpm build:only",
     "start": "web-dev-server",
     "dev": "lit-localize build && tsup --watch --no-splitting",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "echo \"No tests yet.\"",
     "test:ci": "pnpm run test --silent --coverage",
-    "prepack": "pnpm build",
+    "prepack": "pnpm build:only",
     "localize": "lit-localize",
     "check": "if command -v git &> /dev/null; then lit-localize extract && git add . -N && git diff --exit-code; fi"
   },
@@ -46,6 +47,7 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
+    "@lit/context": "^1.1.2",
     "@lit/localize": "^0.12.1",
     "@lit/react": "^1.0.5",
     "@silverhand/essentials": "^2.9.1",
@@ -55,6 +57,7 @@
     "@lit/localize-tools": "^0.7.2",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
+    "@types/node": "^20.9.5",
     "@web/dev-server": "^0.4.6",
     "@web/dev-server-esbuild": "^1.0.2",
     "eslint": "^8.56.0",

@@ -14,13 +14,21 @@ export type Color = {
   colorLayer2: string;
   colorLineDivider: string;
   colorDisabled: string;
+  colorDisabledBackground: string;
   colorHover: string;
   colorHoverVariant: string;
+  colorPressed: string;
+  colorFocused: string;
   colorFocusedVariant: string;
+  colorOverlay: string;
+  colorPlaceholder: string;
 };
 
 /** All the fonts to be used in the Logto components and elements. */
 export type Font = {
+  fontTitle1: string;
+  fontTitle2: string;
+  fontTitle3: string;
   fontLabel1: string;
   fontLabel2: string;
   fontLabel3: string;
@@ -38,6 +46,9 @@ export const defaultFontFamily =
   '-apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji';
 
 export const defaultFont: Readonly<Font> = Object.freeze({
+  fontTitle1: `600 20px / 28px ${defaultFontFamily}`,
+  fontTitle2: `600 16px / 24px ${defaultFontFamily}`,
+  fontTitle3: `600 14px / 20px ${defaultFontFamily}`,
   fontLabel1: `500 16px / 24px ${defaultFontFamily}`,
   fontLabel2: `500 14px / 20px ${defaultFontFamily}`,
   fontLabel3: `500 12px / 16px ${defaultFontFamily}`,
@@ -60,9 +71,14 @@ export const defaultTheme: Readonly<Theme> = Object.freeze({
   colorLayer2: '#2d3132',
   colorLineDivider: '#191c1d1f',
   colorDisabled: '#5c5f60',
+  colorDisabledBackground: '#2d3132',
   colorHover: '#191c1d14',
   colorHoverVariant: '#5d34f214',
+  colorPressed: 'rgba(25, 28, 29, 12%)',
+  colorFocused: 'rgba(25, 28, 29, 16%)',
   colorFocusedVariant: '#5d34f229',
+  colorOverlay: '#000000b3',
+  colorPlaceholder: '#747778',
 });
 
 export const darkTheme: Readonly<Theme> = Object.freeze({
@@ -77,9 +93,14 @@ export const darkTheme: Readonly<Theme> = Object.freeze({
   colorLayer2: '#34353f',
   colorLineDivider: '#f7f8f824',
   colorDisabled: '#5c5f60',
+  colorDisabledBackground: '#2d3132',
   colorHover: '#f7f8f814',
   colorHoverVariant: '#cabeff14',
+  colorPressed: 'rgba(247, 248, 248, 12%)',
+  colorFocused: 'rgba(247, 248, 248, 16%)',
   colorFocusedVariant: '#cabeff29',
+  colorOverlay: '#0000003c',
+  colorPlaceholder: '#747778',
 });
 
 /**

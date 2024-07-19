@@ -31,11 +31,11 @@ When using `msg()`, a human-readable ID should be used, and it is highly recomme
 
 ```ts
 // ✅ Good
-msg('Not available', {
-  id: 'form-card.fallback-title',
-  desc: 'The fallback title of a form card when the title is not provided.',
+msg('Not set', {
+  id: 'general.fallback-title',
+  desc: 'A fallback title when the title or heading of a component is not provided.',
 })
 
 // ❌ Bad
-msg('Not available')
+msg('Not set')
 ```

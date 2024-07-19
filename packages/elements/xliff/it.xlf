@@ -2,11 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 <file target-language="it" source-language="en" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="form-card.fallback-title">
-  <source>Not available</source>
-  <target>Non disponibile</target>
-  <note from="lit-localize">The fallback title of a form card when the title is not provided.</note>
-</trans-unit>
 <trans-unit id="account.profile.title">
   <source>Profile</source>
 </trans-unit>
@@ -25,6 +20,16 @@
 <trans-unit id="general.change">
   <source>Change</source>
 </trans-unit>
+<trans-unit id="general.update">
+  <source>Update</source>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.update-name">
+  <source>Update name</source>
+</trans-unit>
+<trans-unit id="general.fallback-title">
+  <source>Not set</source>
+  <note from="lit-localize">A fallback title when the title or heading of a component is not provided.</note>
+</trans-unit>
 <trans-unit id="account.profile.personal-info.avatar">
   <source>Avatar</source>
   <note from="lit-localize">The avatar of the user.</note>
@@ -32,6 +37,10 @@
 <trans-unit id="account.profile.personal-info.name">
   <source>Name</source>
   <note from="lit-localize">The name of the user.</note>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.name-placeholder">
+  <source>Person Doe</source>
+  <note from="lit-localize">The placeholder for the name input field.</note>
 </trans-unit>
 </body>
 </file>

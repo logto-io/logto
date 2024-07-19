@@ -3560,6 +3560,9 @@ importers:
 
   packages/elements:
     dependencies:
+      '@lit/context':
+        specifier: ^1.1.2
+        version: 1.1.2
       '@lit/localize':
         specifier: ^0.12.1
         version: 0.12.1
@@ -3582,6 +3585,9 @@ importers:
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
+      '@types/node':
+        specifier: ^20.9.5
+        version: 20.12.7
       '@web/dev-server':
         specifier: ^0.4.6
         version: 0.4.6
@@ -5373,6 +5379,9 @@ packages:
 
   '@lit-labs/ssr-dom-shim@1.2.0':
     resolution: {integrity: sha512-yWJKmpGE6lUURKAaIltoPIE/wrbY3TEkqQt+X0m+7fQNnAv0keydnYvbiJFP1PnMhizmIWRWOG5KLhYyc/xl+g==}
+
+  '@lit/context@1.1.2':
+    resolution: {integrity: sha512-S0nw2C6Tkm7fVX5TGYqeROGD+Z9Coa2iFpW+ysYBDH3YvCqOY3wVQvSgwbaliLJkjTnSEYCBe9qFqKV8WUFpVw==}
 
   '@lit/localize-tools@0.7.2':
     resolution: {integrity: sha512-d5tehVao3Hz1DlTq6jy7TUYrCeyFi/E4BkzWr8MuAMjIM8aoKCR9s3cUw6m++8ZIiqGm2z7+6aHaPc/p1FGHyA==}
@@ -15405,6 +15414,10 @@ snapshots:
       '@lezer/common': 0.15.12
 
   '@lit-labs/ssr-dom-shim@1.2.0': {}
+
+  '@lit/context@1.1.2':
+    dependencies:
+      '@lit/reactive-element': 2.0.4
 
   '@lit/localize-tools@0.7.2':
     dependencies:
