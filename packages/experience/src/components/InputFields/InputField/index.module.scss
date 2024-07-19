@@ -44,6 +44,15 @@
         transition: background-color 999999s ease-in-out 0s;
         background-color: transparent;
       }
+
+      &:-webkit-autofill {
+        /*
+         * Define a void transition css rule on the desired <input> element once it is :-webkit-autofilled.
+         * JavaScript will then be able to hook onto the 'animationstart' event.
+         * see https://stackoverflow.com/questions/11708092/detecting-browser-autofill/41530164#41530164
+         */
+        animation-name: onAutoFillStart;
+      }
     }
 
     .suffix {
@@ -115,3 +124,18 @@
     }
   }
 }
+
+
+/*
+* Define a void transition css rule on the desired <input> element once it is :-webkit-autofilled.
+* JavaScript will then be able to hook onto the 'animationstart' event.
+* see https://stackoverflow.com/questions/11708092/detecting-browser-autofill/41530164#41530164
+*/
+@keyframes onAutoFillStart {
+  /* stylelint-disable-next-line block-no-empty */
+  from {}
+
+  /* stylelint-disable-next-line block-no-empty */
+  to {}
+}
+
