@@ -3579,6 +3579,9 @@ importers:
       '@lit/localize-tools':
         specifier: ^0.7.2
         version: 0.7.2
+      '@logto/schemas':
+        specifier: workspace:^1.18.0
+        version: link:../schemas
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)

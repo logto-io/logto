@@ -4,56 +4,47 @@ import { customElement, property } from 'lit/decorators.js';
 import { unit } from '../utils/css.js';
 import { vars } from '../utils/theme.js';
 
+import { buttonSizes, defaultButton, primaryButton, textButton } from './logto-button.styles.js';
+
 const tagName = 'logto-button';
 
 @customElement(tagName)
 export class LogtoButton extends LitElement {
   static tagName = tagName;
-  static styles = css`
-    :host {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      outline: none;
-      font: ${vars.fontLabel2};
-      transition: background-color 0.2s ease-in-out;
-      white-space: nowrap;
-      user-select: none;
-      position: relative;
-      text-decoration: none;
-      gap: ${unit(2)};
-      cursor: pointer;
-    }
+  static styles = [
+    css`
+      :host {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        outline: none;
+        font: ${vars.fontLabel2};
+        transition: background-color 0.2s ease-in-out;
+        white-space: nowrap;
+        user-select: none;
+        position: relative;
+        text-decoration: none;
+        gap: ${unit(2)};
+        border-radius: ${unit(2)};
+        cursor: pointer;
+      }
 
-    :host(:disabled) {
-      cursor: not-allowed;
-    }
+      :host(:disabled) {
+        cursor: not-allowed;
+      }
+    `,
+    buttonSizes,
+    textButton,
+    defaultButton,
+    primaryButton,
+  ];
 
-    :host([type='text']) {
-      background: none;
-      border-color: transparent;
-      font: ${vars.fontLabel2};
-      color: ${vars.colorTextLink};
-      padding: ${unit(0.5, 1)};
-      border-radius: ${unit(1)};
-    }
+  @property({ reflect: true })
+  type: 'default' | 'text' | 'primary' = 'default';
 
-    :host([type='text']:disabled) {
-      color: ${vars.colorDisabled};
-    }
-
-    :host([type='text']:focus-visible) {
-      outline: 2px solid ${vars.colorFocusedVariant};
-    }
-
-    :host([type='text']:not(:disabled):hover) {
-      background: ${vars.colorHoverVariant};
-    }
-  `;
-
-  @property()
-  type: 'default' | 'text' = 'default';
+  @property({ reflect: true })
+  size: 'small' | 'medium' | 'large' = 'medium';
 
   connectedCallback(): void {
     super.connectedCallback();

@@ -1,8 +1,9 @@
-import { localized, msg } from '@lit/localize';
+import { localized } from '@lit/localize';
 import { cond } from '@silverhand/essentials';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+import { notSet } from '../phrases/index.js';
 import { unit } from '../utils/css.js';
 import { vars } from '../utils/theme.js';
 
@@ -57,10 +58,7 @@ export class LogtoFormCard extends LitElement {
   `;
 
   @property()
-  heading = msg('Not set', {
-    id: 'general.fallback-title',
-    desc: 'A fallback title when the title or heading of a component is not provided.',
-  });
+  heading = notSet;
 
   @property()
   description = '';

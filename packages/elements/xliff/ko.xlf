@@ -5,9 +5,6 @@
 <trans-unit id="general.title">
   <source>Title</source>
 </trans-unit>
-<trans-unit id="general.content">
-  <source>Content</source>
-</trans-unit>
 <trans-unit id="general.actions">
   <source>Actions</source>
 </trans-unit>
@@ -41,6 +38,12 @@
 <trans-unit id="account.profile.personal-info.name-placeholder">
   <source>Person Doe</source>
   <note from="lit-localize">The placeholder for the name input field.</note>
+</trans-unit>
+<trans-unit id="account.profile.no-user">
+  <source>No user provided.</source>
+</trans-unit>
+<trans-unit id="general.save">
+  <source>Save</source>
 </trans-unit>
 </body>
 </file>
