@@ -1,6 +1,3 @@
-import crypto from 'node:crypto';
-
-import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
   InteractionEvent,
   type SignInExperience,
@@ -46,7 +43,6 @@ const getEmailIdentifierFromVerificationRecord = (verificationRecord: Verificati
  */
 export class SignInExperienceValidator {
   private signInExperienceDataCache?: SignInExperience;
-  #passwordPolicyChecker?: PasswordPolicyChecker;
 
   constructor(
     private readonly libraries: Libraries,
@@ -119,20 +115,17 @@ export class SignInExperienceValidator {
     return mfa;
   }
 
+  public async getPasswordPolicy() {
+    const { passwordPolicy } = await this.getSignInExperienceData();
+
+    return passwordPolicy;
+  }
+
   public async getSignInExperienceData() {
     this.signInExperienceDataCache ||=
       await this.queries.signInExperiences.findDefaultSignInExperience();
 
     return this.signInExperienceDataCache;
-  }
-
-  public async getPasswordPolicyChecker() {
-    if (!this.#passwordPolicyChecker) {
-      const { passwordPolicy } = await this.getSignInExperienceData();
-      this.#passwordPolicyChecker = new PasswordPolicyChecker(passwordPolicy, crypto.subtle);
-    }
-
-    return this.#passwordPolicyChecker;
   }
 
   /**

@@ -1,4 +1,3 @@
-import { type UserInfo } from '@logto/core-kit';
 import {
   SignInIdentifier,
   VerificationType,
@@ -156,23 +155,6 @@ export function interactionIdentifierToUserProfile(
       return { primaryPhone: value };
     }
   }
-}
-
-/**
- * This function is used to convert the interaction profile to the UserInfo format.
- * It will be used by the PasswordPolicyChecker to check the password policy against the user profile.
- */
-export function profileToUserInfo(
-  profile: Pick<InteractionProfile, 'name' | 'username' | 'primaryEmail' | 'primaryPhone'>
-): UserInfo {
-  const { name, username, primaryEmail, primaryPhone } = profile;
-
-  return {
-    name: name ?? undefined,
-    username: username ?? undefined,
-    email: primaryEmail ?? undefined,
-    phoneNumber: primaryPhone ?? undefined,
-  };
 }
 
 export const codeVerificationIdentifierRecordTypeMap = Object.freeze({

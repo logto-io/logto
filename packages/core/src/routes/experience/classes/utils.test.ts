@@ -2,7 +2,7 @@ import { type InteractionIdentifier, SignInIdentifier } from '@logto/schemas';
 
 import { type InteractionProfile } from '../types.js';
 
-import { interactionIdentifierToUserProfile, profileToUserInfo } from './utils.js';
+import { interactionIdentifierToUserProfile } from './utils.js';
 
 const identifierToProfileTestCase = [
   {
@@ -35,18 +35,4 @@ describe('experience utils tests', () => {
       expect(interactionIdentifierToUserProfile(identifier)).toEqual(expected);
     }
   );
-  it('profileToUserInfo', () => {
-    expect(
-      profileToUserInfo({
-        username: 'username',
-        primaryEmail: 'email',
-        primaryPhone: 'phone',
-      })
-    ).toEqual({
-      name: undefined,
-      username: 'username',
-      email: 'email',
-      phoneNumber: 'phone',
-    });
-  });
 });
