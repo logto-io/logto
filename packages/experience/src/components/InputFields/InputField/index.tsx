@@ -65,10 +65,15 @@ const InputField = (
 
   /**
    * Fix the issue that the input field doesn't have the active style when the autofill value is set.
-   * Modern browsers will trigger an animation event when the input field is autofilled.
+   * We have define a void transition css rule on the input element once it is `:-webkit-autofill`ed.
+   * Hook onto this 'animationstart' event to detect the autofill start.
+   * see https://stackoverflow.com/questions/11708092/detecting-browser-autofill/41530164#41530164
    */
   const handleAnimationStart = useCallback((event: AnimationEvent<HTMLInputElement>) => {
-    if (event.animationName === 'onautofillstart') {
+    /**
+     * Because SCSS adds some random characters to the ‘onAutoFillStart’ animation name during the build process, we can’t use the exact name here.
+     */
+    if (event.animationName.includes('onAutoFillStart')) {
       setHasValue(true);
     }
   }, []);
