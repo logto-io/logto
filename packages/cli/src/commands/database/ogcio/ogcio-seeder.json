@@ -24,7 +24,8 @@
         "messaging:citizen:*",
         "messaging:event:read",
         "life-events:digital-wallet-flow:*",
-        "bb:public-servant.inactive:*"
+        "bb:public-servant.inactive:*",
+        "scheduler:jobs:write"
       ]
     },
     "organization_roles": [
@@ -36,7 +37,8 @@
           "payments:provider:*",
           "payments:payment_request:*",
           "payments:payment_request.public:read",
-          "payments:transaction:*"
+          "payments:transaction:*",
+          "scheduler:jobs:write"
         ]
       },
       {
@@ -48,7 +50,8 @@
           "messaging:provider:*",
           "messaging:template:*",
           "messaging:citizen:*",
-          "messaging:event:read"
+          "messaging:event:read",
+          "scheduler:jobs:write"
         ]
       },
       {
@@ -106,6 +109,11 @@
         "id": "messaging-api",
         "name": "Messaging Building Block API",
         "indicator": "<SEEDER_MESSAGING_API_INDICATOR>"
+      },
+      {
+        "id": "scheduler-api",
+        "name": "Scheduler Building Block API",
+        "indicator": "<SEEDER_SCHEDULER_API_INDICATOR>"
       }
     ],
     "resource_permissions": [
@@ -124,6 +132,12 @@
           "messaging:message.self:read",
           "messaging:citizen.self:read",
           "messaging:citizen.self:write"
+        ]
+      },
+      {
+        "resource_id": "scheduler-api",
+        "specific_permissions": [
+          "scheduler:jobs:write"
         ]
       }
     ],
