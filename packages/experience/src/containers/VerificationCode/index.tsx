@@ -23,6 +23,8 @@ type Props = {
 
 const VerificationCode = ({ flow, identifier, className, hasPasswordButton, target }: Props) => {
   const [codeInput, setCodeInput] = useState<string[]>([]);
+  const [inputErrorMessage, setInputErrorMessage] = useState<string>();
+
   const { t } = useTranslation();
 
   const isCodeInputReady = useMemo(
@@ -34,13 +36,16 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
 
   const errorCallback = useCallback(() => {
     setCodeInput([]);
+    setInputErrorMessage(undefined);
   }, []);
 
-  const { errorMessage, clearErrorMessage, onSubmit } = useVerificationCode(
-    identifier,
-    target,
-    errorCallback
-  );
+  const {
+    errorMessage: submitErrorMessage,
+    clearErrorMessage,
+    onSubmit,
+  } = useVerificationCode(identifier, target, errorCallback);
+
+  const errorMessage = inputErrorMessage ?? submitErrorMessage;
 
   const { seconds, isRunning, onResendVerificationCode } = useResendVerificationCode(
     flow,
@@ -52,6 +57,8 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
 
   const handleSubmit = useCallback(
     async (code: string[]) => {
+      setInputErrorMessage(undefined);
+
       setIsSubmitting(true);
 
       await onSubmit(
@@ -110,10 +117,14 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
       <Button
         title="action.continue"
         type="primary"
-        isDisabled={!isCodeInputReady}
         isLoading={isSubmitting}
         className={styles.continueButton}
         onClick={() => {
+          if (!isCodeInputReady) {
+            setInputErrorMessage(t('error.invalid_passcode'));
+            return;
+          }
+
           void handleSubmit(codeInput);
         }}
       />

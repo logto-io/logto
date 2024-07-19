@@ -11,7 +11,7 @@ const error = {
   invalid_email: 'E-posta adresi geçersiz',
   invalid_phone: 'Telefon numarası geçersiz',
   passwords_do_not_match: 'Şifreler eşleşmiyor',
-  invalid_passcode: 'Doğrulama kodu geçersiz',
+  invalid_passcode: 'Doğrulama kodu geçersiz.',
   invalid_connector_auth: 'Yetki geçersiz',
   invalid_connector_request: 'Bağlayıcı veri geçersiz',
   unknown: 'Bilinmeyen hata. Lütfen daha sonra tekrar deneyiniz.',
