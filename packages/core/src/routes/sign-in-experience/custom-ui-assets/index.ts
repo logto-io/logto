@@ -8,6 +8,7 @@ import { object, z } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -20,7 +21,12 @@ import { type ManagementApiRouter, type RouterInitArgs } from '../../types.js';
 const maxRetryCount = 5;
 
 export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
-  ...[router]: RouterInitArgs<T>
+  ...[
+    router,
+    {
+      libraries: { quota },
+    },
+  ]: RouterInitArgs<T>
 ) {
   // TODO: Remove
   if (!EnvSet.values.isDevFeaturesEnabled) {
@@ -29,6 +35,7 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/sign-in-exp/default/custom-ui-assets',
+    koaQuotaGuard({ key: 'bringYourUiEnabled', quota }),
     koaGuard({
       files: object({
         file: uploadFileGuard.array().min(1).max(1),
