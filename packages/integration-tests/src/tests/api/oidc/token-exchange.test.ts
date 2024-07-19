@@ -22,15 +22,12 @@ import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import {
-  devFeatureTest,
   getAccessTokenPayload,
   randomString,
   generateName,
   generatePassword,
   generateUsername,
 } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('Token Exchange', () => {
   const username = generateUsername();

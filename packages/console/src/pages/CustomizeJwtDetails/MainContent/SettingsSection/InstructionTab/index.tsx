@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
   environmentVariablesCodeExample,
@@ -79,7 +78,7 @@ function InstructionTab({ isActive }: Props) {
           />
         </GuideCard>
       )}
-      {isDevFeaturesEnabled && tokenType === LogtoJwtTokenKeyType.AccessToken && (
+      {tokenType === LogtoJwtTokenKeyType.AccessToken && (
         <GuideCard
           name={CardType.GrantData}
           isExpanded={expendCard === CardType.GrantData}

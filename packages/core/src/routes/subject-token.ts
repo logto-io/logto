@@ -4,7 +4,6 @@ import { addSeconds } from 'date-fns';
 import { object, string } from 'zod';
 
 import { subjectTokenExpiresIn, subjectTokenPrefix } from '#src/constants/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 
@@ -23,10 +22,6 @@ export default function subjectTokenRoutes<T extends ManagementApiRouter>(
   const {
     subjectTokens: { insertSubjectToken },
   } = queries;
-
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
 
   router.post(
     '/subject-tokens',
