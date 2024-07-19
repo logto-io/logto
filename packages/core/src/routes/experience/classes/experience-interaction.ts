@@ -1,6 +1,5 @@
 import { type ToZodObject } from '@logto/connector-kit';
 import { InteractionEvent, type User, type VerificationType } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -11,14 +10,14 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { interactionProfileGuard, type Interaction, type InteractionProfile } from '../types.js';
 
-import { ProvisionLibrary } from './provision-library.js';
 import {
   getNewUserProfileFromVerificationRecord,
   identifyUserByVerificationRecord,
-  toUserSocialIdentityData,
-} from './utils.js';
+} from './helpers.js';
+import { toUserSocialIdentityData } from './utils.js';
 import { MfaValidator } from './validators/mfa-validator.js';
 import { ProfileValidator } from './validators/profile-validator.js';
+import { ProvisionLibrary } from './validators/provision-library.js';
 import { SignInExperienceValidator } from './validators/sign-in-experience-validator.js';
 import {
   buildVerificationRecord,
@@ -274,14 +273,7 @@ export default class ExperienceInteraction {
     // TODO: missing profile fields validation
 
     if (enterpriseSsoIdentity) {
-      await userSsoIdentitiesQueries.insert({
-        id: generateStandardId(),
-        userId: user.id,
-        ...enterpriseSsoIdentity,
-      });
-      await this.provisionLibrary.newUserJtiOrganizationProvision(user.id, {
-        enterpriseSsoIdentity,
-      });
+      await this.provisionLibrary.provisionNewSsoIdentity(user.id, enterpriseSsoIdentity);
     }
 
     const { provider } = this.tenant;
@@ -356,47 +348,10 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 400 if the verification record is invalid for creating a new user or not verified
    */
   private async createNewUser(verificationRecord: VerificationRecord) {
-    const {
-      libraries: {
-        users: { generateUserId, insertUser },
-      },
-      queries: { userSsoIdentities: userSsoIdentitiesQueries },
-    } = this.tenant;
-
     const newProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
-
     await this.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
 
-    const { socialIdentity, enterpriseSsoIdentity, ...rest } = newProfile;
-
-    const { isCreatingFirstAdminUser, initialUserRoles, customData } =
-      await this.provisionLibrary.getUserProvisionContext(newProfile);
-
-    const [user] = await insertUser(
-      {
-        id: await generateUserId(),
-        ...rest,
-        ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
-        ...conditional(customData && { customData }),
-      },
-      initialUserRoles
-    );
-
-    if (isCreatingFirstAdminUser) {
-      await this.provisionLibrary.adminUserProvision(user);
-    }
-
-    if (enterpriseSsoIdentity) {
-      await userSsoIdentitiesQueries.insert({
-        id: generateStandardId(),
-        userId: user.id,
-        ...enterpriseSsoIdentity,
-      });
-    }
-
-    await this.provisionLibrary.newUserJtiOrganizationProvision(user.id, newProfile);
-
-    // TODO: new user hooks
+    const user = await this.provisionLibrary.provisionNewUser(newProfile);
 
     this.userId = user.id;
   }
