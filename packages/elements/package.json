@@ -1,0 +1,74 @@
+{
+  "name": "@logto/elements",
+  "version": "0.0.0",
+  "description": "Logto user interface elements.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "homepage": "https://github.com/logto-io/logto#readme",
+  "license": "MPL-2.0",
+  "type": "module",
+  "private": true,
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react.js",
+      "types": "./dist/react.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logto-io/logto.git"
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "tsup",
+    "dev": "tsup --watch --no-splitting",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "test": "echo \"No tests yet.\"",
+    "test:ci": "pnpm run test --silent --coverage",
+    "prepack": "pnpm build"
+  },
+  "engines": {
+    "node": "^20.9.0"
+  },
+  "bugs": {
+    "url": "https://github.com/logto-io/logto/issues"
+  },
+  "dependencies": {
+    "@lit/localize": "^0.12.1",
+    "@lit/react": "^1.0.5",
+    "@silverhand/essentials": "^2.9.1",
+    "lit": "^3.1.4"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/ts-config": "6.0.0",
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "tsup": "^8.1.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand",
+    "rules": {
+      "no-console": "error",
+      "unicorn/prevent-abbreviations": [
+        "error",
+        {
+          "replacements": {
+            "var": false,
+            "vars": false
+          }
+        }
+      ]
+    }
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}
