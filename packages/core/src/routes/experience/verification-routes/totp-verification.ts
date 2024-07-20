@@ -75,13 +75,13 @@ export default function totpVerificationRoutes<T extends WithLogContext>(
 
       // Verify new generated secret
       if (verificationId) {
-        const totpVerificationRecord =
-          experienceInteraction.getVerificationRecordById(verificationId);
+        const totpVerificationRecord = experienceInteraction.getVerificationRecordByTypeAndId(
+          VerificationType.TOTP,
+          verificationId
+        );
 
         assertThat(
-          totpVerificationRecord &&
-            totpVerificationRecord.type === VerificationType.TOTP &&
-            totpVerificationRecord.userId === experienceInteraction.identifiedUserId,
+          totpVerificationRecord.userId === experienceInteraction.identifiedUserId,
           new RequestError({
             code: 'session.verification_session_not_found',
             status: 404,

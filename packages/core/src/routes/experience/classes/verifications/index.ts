@@ -60,15 +60,19 @@ export type VerificationRecordData =
  * This union type is used to narrow down the type of the verification record.
  * Used in the ExperienceInteraction class to store and manage all the verification records. With a given verification type, we can narrow down the type of the verification record.
  */
-export type VerificationRecord =
-  | PasswordVerification
-  | EmailCodeVerification
-  | PhoneCodeVerification
-  | SocialVerification
-  | EnterpriseSsoVerification
-  | TotpVerification
-  | BackupCodeVerification
-  | NewPasswordIdentityVerification;
+export type VerificationRecordMap = {
+  [VerificationType.Password]: PasswordVerification;
+  [VerificationType.EmailVerificationCode]: EmailCodeVerification;
+  [VerificationType.PhoneVerificationCode]: PhoneCodeVerification;
+  [VerificationType.Social]: SocialVerification;
+  [VerificationType.EnterpriseSso]: EnterpriseSsoVerification;
+  [VerificationType.TOTP]: TotpVerification;
+  [VerificationType.BackupCode]: BackupCodeVerification;
+  [VerificationType.NewPasswordIdentity]: NewPasswordIdentityVerification;
+};
+type ValueOf<T> = T[keyof T];
+
+export type VerificationRecord = ValueOf<VerificationRecordMap>;
 
 export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,

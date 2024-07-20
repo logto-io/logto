@@ -80,12 +80,13 @@ export default function enterpriseSsoVerificationRoutes<T extends WithLogContext
       const { connectorData, verificationId } = ctx.guard.body;
 
       const enterpriseSsoVerificationRecord =
-        ctx.experienceInteraction.getVerificationRecordById(verificationId);
+        ctx.experienceInteraction.getVerificationRecordByTypeAndId(
+          VerificationType.EnterpriseSso,
+          verificationId
+        );
 
       assertThat(
-        enterpriseSsoVerificationRecord &&
-          enterpriseSsoVerificationRecord.type === VerificationType.EnterpriseSso &&
-          enterpriseSsoVerificationRecord.connectorId === connectorId,
+        enterpriseSsoVerificationRecord.connectorId === connectorId,
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 

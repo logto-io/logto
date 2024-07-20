@@ -75,13 +75,13 @@ export default function socialVerificationRoutes<T extends WithLogContext>(
       const { connectorId } = ctx.params;
       const { connectorData, verificationId } = ctx.guard.body;
 
-      const socialVerificationRecord =
-        ctx.experienceInteraction.getVerificationRecordById(verificationId);
+      const socialVerificationRecord = ctx.experienceInteraction.getVerificationRecordByTypeAndId(
+        VerificationType.Social,
+        verificationId
+      );
 
       assertThat(
-        socialVerificationRecord &&
-          socialVerificationRecord.type === VerificationType.Social &&
-          socialVerificationRecord.connectorId === connectorId,
+        socialVerificationRecord.connectorId === connectorId,
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 

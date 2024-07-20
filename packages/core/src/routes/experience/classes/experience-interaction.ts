@@ -1,5 +1,5 @@
 import { type ToZodObject } from '@logto/connector-kit';
-import { InteractionEvent, type User, type VerificationType } from '@logto/schemas';
+import { InteractionEvent, type User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -24,7 +24,9 @@ import {
   verificationRecordDataGuard,
   type VerificationRecord,
   type VerificationRecordData,
+  type VerificationRecordMap,
 } from './verifications/index.js';
+import { VerificationRecordsMap } from './verifications/verification-records-map.js';
 
 type InteractionStorage = {
   interactionEvent?: InteractionEvent;
@@ -52,7 +54,7 @@ export default class ExperienceInteraction {
   public readonly provisionLibrary: ProvisionLibrary;
 
   /** The user verification record list for the current interaction. */
-  private readonly verificationRecords = new Map<VerificationType, VerificationRecord>();
+  private readonly verificationRecords = new VerificationRecordsMap();
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
@@ -187,8 +189,18 @@ export default class ExperienceInteraction {
     this.verificationRecords.set(type, record);
   }
 
-  public getVerificationRecordById(verificationId: string) {
-    return this.verificationRecordsArray.find((record) => record.id === verificationId);
+  public getVerificationRecordByTypeAndId<K extends keyof VerificationRecordMap>(
+    type: K,
+    verificationId: string
+  ) {
+    const record = this.verificationRecords.get(type);
+
+    assertThat(
+      record?.id === verificationId,
+      new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+    );
+
+    return record;
   }
 
   /**
@@ -298,7 +310,7 @@ export default class ExperienceInteraction {
   }
 
   private get verificationRecordsArray() {
-    return [...this.verificationRecords.values()];
+    return this.verificationRecords.toArray();
   }
 
   /**
@@ -388,5 +400,9 @@ export default class ExperienceInteraction {
 
     this.userCache = user;
     return this.userCache;
+  }
+
+  private getVerificationRecordById(verificationId: string) {
+    return this.verificationRecordsArray.find((record) => record.id === verificationId);
   }
 }
