@@ -13,6 +13,26 @@
 <trans-unit id="account.profile.personal-info.title">
   <source>Personal information</source>
 </trans-unit>
+<trans-unit id="general.title">
+  <source>Title</source>
+</trans-unit>
+<trans-unit id="general.content">
+  <source>Content</source>
+</trans-unit>
+<trans-unit id="general.actions">
+  <source>Actions</source>
+</trans-unit>
+<trans-unit id="general.change">
+  <source>Change</source>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.avatar">
+  <source>Avatar</source>
+  <note from="lit-localize">The avatar of the user.</note>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.name">
+  <source>Name</source>
+  <note from="lit-localize">The name of the user.</note>
+</trans-unit>
 </body>
 </file>
 </xliff>
