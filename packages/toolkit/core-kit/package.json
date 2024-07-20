@@ -60,7 +60,7 @@
     "@silverhand/ts-config-react": "6.0.0",
     "@types/color": "^3.0.3",
     "@types/node": "^20.9.5",
-    "@types/react": "^18.0.31",
+    "@types/react": "^18.3.3",
     "@vitest/coverage-v8": "^2.0.0",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
