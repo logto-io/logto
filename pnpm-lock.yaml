@@ -54,10 +54,10 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
@@ -74,8 +74,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -155,8 +155,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.1
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       yargs:
         specifier: ^17.6.0
         version: 17.6.0
@@ -166,10 +166,10 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/inquirer':
         specifier: ^9.0.0
         version: 9.0.3
@@ -245,16 +245,16 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
         version: 5.0.0
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -286,8 +286,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -327,16 +327,16 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
         version: 5.0.0
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -368,8 +368,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -403,13 +403,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -441,8 +441,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -476,13 +476,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -514,8 +514,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -555,13 +555,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -593,8 +593,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -634,13 +634,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -672,8 +672,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -710,13 +710,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -748,8 +748,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -789,16 +789,16 @@ importers:
         version: 15.2.3(rollup@4.14.3)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.14.3)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.14.3)(tslib@2.6.2)(typescript@5.5.3)
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
         version: 5.0.0
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.12.7
@@ -830,8 +830,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.12.7)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -865,13 +865,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -903,8 +903,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -938,13 +938,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -976,8 +976,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1011,13 +1011,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1049,8 +1049,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1087,13 +1087,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1125,8 +1125,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1163,13 +1163,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1201,8 +1201,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1236,13 +1236,13 @@ importers:
         version: 15.2.3(rollup@4.14.3)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.14.3)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.14.3)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.12.7
@@ -1274,8 +1274,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.12.7)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1309,13 +1309,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1347,8 +1347,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1385,13 +1385,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1423,8 +1423,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1458,13 +1458,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1496,8 +1496,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1531,13 +1531,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1569,8 +1569,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1604,13 +1604,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1642,8 +1642,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1677,13 +1677,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1715,8 +1715,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1750,13 +1750,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1788,8 +1788,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1823,13 +1823,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1861,8 +1861,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1896,13 +1896,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -1934,8 +1934,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -1969,13 +1969,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2007,8 +2007,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2051,13 +2051,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2089,8 +2089,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2136,13 +2136,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2174,8 +2174,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2215,13 +2215,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2253,8 +2253,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2288,13 +2288,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2326,8 +2326,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2361,13 +2361,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2399,8 +2399,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2437,13 +2437,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2478,8 +2478,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2513,13 +2513,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2551,8 +2551,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2586,13 +2586,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2624,8 +2624,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2659,13 +2659,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2697,8 +2697,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2732,13 +2732,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
@@ -2770,8 +2770,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2805,13 +2805,13 @@ importers:
         version: 15.2.3(rollup@4.12.0)
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
-        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)
+        version: 11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.10.4
         version: 20.10.4
@@ -2843,8 +2843,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -2913,19 +2913,19 @@ importers:
         version: 2.9.3(@parcel/core@2.9.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.3.3))(typescript@5.3.3)
+        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
       '@silverhand/essentials':
         specifier: ^2.9.1
         version: 2.9.1
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@silverhand/ts-config-react':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@swc/core':
         specifier: ^1.3.52
         version: 1.3.52(@swc/helpers@0.5.1)
@@ -3018,7 +3018,7 @@ importers:
         version: 3.0.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+        version: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       jest-environment-jsdom:
         specifier: ^29.7.0
         version: 29.7.0
@@ -3027,7 +3027,7 @@ importers:
         version: 2.0.0
       jest-transformer-svg:
         specifier: ^2.0.0
-        version: 2.0.0(jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)))(react@18.2.0)
+        version: 2.0.0(jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3)))(react@18.2.0)
       just-kebab-case:
         specifier: ^4.2.0
         version: 4.2.0
@@ -3138,25 +3138,25 @@ importers:
         version: 4.0.0
       stylelint:
         specifier: ^15.0.0
-        version: 15.11.0(typescript@5.3.3)
+        version: 15.11.0(typescript@5.5.3)
       swr:
         specifier: ^2.2.0
         version: 2.2.0(react@18.2.0)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3)
       tslib:
         specifier: ^2.4.1
         version: 2.4.1
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       zod:
         specifier: ^3.23.8
         version: 3.23.8
       zod-to-ts:
         specifier: ^1.2.0
-        version: 1.2.0(typescript@5.3.3)(zod@3.23.8)
+        version: 1.2.0(typescript@5.5.3)(zod@3.23.8)
 
   packages/core:
     dependencies:
@@ -3364,10 +3364,10 @@ importers:
         version: 0.2.5-3b703da(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/adm-zip':
         specifier: ^0.5.5
         version: 0.5.5
@@ -3459,8 +3459,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
 
   packages/create:
     dependencies:
@@ -3493,16 +3493,16 @@ importers:
         version: 2.9.3(@parcel/core@2.9.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.3.3))(typescript@5.3.3)
+        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@silverhand/ts-config-react':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/react':
         specifier: ^18.0.31
         version: 18.0.31
@@ -3550,10 +3550,10 @@ importers:
         version: 12.3.1(i18next@22.4.15)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       stylelint:
         specifier: ^15.0.0
-        version: 15.11.0(typescript@5.3.3)
+        version: 15.11.0(typescript@5.5.3)
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -3578,10 +3578,10 @@ importers:
         version: 0.7.2
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@web/dev-server':
         specifier: ^0.4.6
         version: 0.4.6
@@ -3599,7 +3599,7 @@ importers:
         version: 3.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.3.3))(typescript@5.3.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
 
   packages/experience:
     devDependencies:
@@ -3647,19 +3647,19 @@ importers:
         version: 9.6.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.3.3))(typescript@5.3.3)
+        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
       '@silverhand/essentials':
         specifier: ^2.9.1
         version: 2.9.1
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@silverhand/ts-config-react':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@simplewebauthn/browser':
         specifier: ^10.0.0
         version: 10.0.0
@@ -3800,7 +3800,7 @@ importers:
         version: 2.3.1(react@18.2.0)
       stylelint:
         specifier: ^15.0.0
-        version: 15.11.0(typescript@5.3.3)
+        version: 15.11.0(typescript@5.5.3)
       superstruct:
         specifier: ^2.0.0
         version: 2.0.0
@@ -3808,8 +3808,8 @@ importers:
         specifier: ^2.4.1
         version: 2.4.1
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       use-debounced-loader:
         specifier: ^0.1.1
         version: 0.1.1(react@18.2.0)
@@ -3852,13 +3852,13 @@ importers:
         version: link:../shared
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/essentials':
         specifier: ^2.9.1
         version: 2.9.1
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -3882,7 +3882,7 @@ importers:
         version: 1.0.0
       jest-puppeteer:
         specifier: ^10.0.1
-        version: 10.0.1(puppeteer@22.6.5(typescript@5.3.3))(typescript@5.3.3)
+        version: 10.0.1(puppeteer@22.6.5(typescript@5.5.3))(typescript@5.5.3)
       jose:
         specifier: ^5.6.3
         version: 5.6.3
@@ -3900,10 +3900,10 @@ importers:
         version: 3.0.0
       puppeteer:
         specifier: ^22.6.5
-        version: 22.6.5(typescript@5.3.3)
+        version: 22.6.5(typescript@5.5.3)
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -3922,10 +3922,10 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -3936,8 +3936,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
 
   packages/phrases-experience:
     dependencies:
@@ -3956,10 +3956,10 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       buffer:
         specifier: ^6.0.0
         version: 6.0.3
@@ -3973,8 +3973,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
 
   packages/schemas:
     dependencies:
@@ -4008,7 +4008,7 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/essentials':
         specifier: ^2.9.1
         version: 2.9.1
@@ -4017,7 +4017,7 @@ importers:
         version: 31.0.0-beta.2
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/inquirer':
         specifier: ^9.0.0
         version: 9.0.3
@@ -4052,8 +4052,8 @@ importers:
         specifier: ^7.11.0
         version: 7.11.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -4081,10 +4081,10 @@ importers:
         version: 29.7.0
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
@@ -4101,8 +4101,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -4128,10 +4128,10 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
@@ -4148,8 +4148,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -4175,16 +4175,16 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.3.3))(typescript@5.3.3)
+        version: 6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@silverhand/ts-config-react':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/color':
         specifier: ^3.0.3
         version: 3.0.3
@@ -4211,10 +4211,10 @@ importers:
         version: 3.0.0
       stylelint:
         specifier: ^15.0.0
-        version: 15.11.0(typescript@5.3.3)
+        version: 15.11.0(typescript@5.5.3)
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -4227,10 +4227,10 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.5.3)
       '@types/node':
         specifier: ^20.9.5
         version: 20.10.4
@@ -4247,8 +4247,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(sass@1.56.1)
@@ -13193,6 +13193,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  typescript@5.5.3:
+    resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   typical@4.0.0:
     resolution: {integrity: sha512-VAH4IvQ7BDFYglMd7BPRDfLgxZZX4O4TFcRDA6EN5X7erNJJq+McIEp8np9aVtxrCJ6qx4GTYVfOWNjcqwZgRw==}
     engines: {node: '>=8'}
@@ -15155,7 +15160,7 @@ snapshots:
       jest-util: 29.7.0
       slash: 3.0.0
 
-  '@jest/core@29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))':
+  '@jest/core@29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))':
     dependencies:
       '@jest/console': 29.7.0
       '@jest/reporters': 29.7.0
@@ -15169,7 +15174,7 @@ snapshots:
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -16379,20 +16384,20 @@ snapshots:
     optionalDependencies:
       rollup: 4.14.3
 
-  '@rollup/plugin-typescript@11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.3.3)':
+  '@rollup/plugin-typescript@11.1.6(rollup@4.12.0)(tslib@2.6.2)(typescript@5.5.3)':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.12.0)
       resolve: 1.22.8
-      typescript: 5.3.3
+      typescript: 5.5.3
     optionalDependencies:
       rollup: 4.12.0
       tslib: 2.6.2
 
-  '@rollup/plugin-typescript@11.1.6(rollup@4.14.3)(tslib@2.6.2)(typescript@5.3.3)':
+  '@rollup/plugin-typescript@11.1.6(rollup@4.14.3)(tslib@2.6.2)(typescript@5.5.3)':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.14.3)
       resolve: 1.22.8
-      typescript: 5.3.3
+      typescript: 5.5.3
     optionalDependencies:
       rollup: 4.14.3
       tslib: 2.6.2
@@ -16515,17 +16520,17 @@ snapshots:
 
   '@sideway/pinpoint@2.0.0': {}
 
-  '@silverhand/eslint-config-react@6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.3.3))(typescript@5.3.3)':
+  '@silverhand/eslint-config-react@6.0.2(eslint@8.57.0)(postcss@8.4.31)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)':
     dependencies:
-      '@silverhand/eslint-config': 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+      '@silverhand/eslint-config': 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0(eslint@8.57.0))(eslint-plugin-react@7.34.1(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
       eslint-plugin-react: 7.34.1(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
       postcss-scss: 4.0.9(postcss@8.4.31)
-      stylelint: 15.11.0(typescript@5.3.3)
-      stylelint-config-xo: 0.22.0(stylelint@15.11.0(typescript@5.3.3))
-      stylelint-scss: 6.2.1(stylelint@15.11.0(typescript@5.3.3))
+      stylelint: 15.11.0(typescript@5.5.3)
+      stylelint-config-xo: 0.22.0(stylelint@15.11.0(typescript@5.5.3))
+      stylelint-scss: 6.2.1(stylelint@15.11.0(typescript@5.5.3))
     transitivePeerDependencies:
       - '@types/eslint'
       - eslint
@@ -16536,26 +16541,26 @@ snapshots:
       - supports-color
       - typescript
 
-  '@silverhand/eslint-config@6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)':
+  '@silverhand/eslint-config@6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)':
     dependencies:
       '@silverhand/eslint-plugin-fp': 2.5.0(eslint@8.57.0)
-      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       eslint: 8.57.0
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
-      eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0)
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.0.0)
       eslint-plugin-promise: 6.1.1(eslint@8.57.0)
       eslint-plugin-sql: 2.1.0(eslint@8.57.0)
       eslint-plugin-unicorn: 52.0.0(eslint@8.57.0)
-      eslint-plugin-unused-imports: 3.1.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)
+      eslint-plugin-unused-imports: 3.1.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)
       prettier: 3.0.0
     transitivePeerDependencies:
       - '@types/eslint'
@@ -16594,14 +16599,14 @@ snapshots:
     transitivePeerDependencies:
       - pg-native
 
-  '@silverhand/ts-config-react@6.0.0(typescript@5.3.3)':
+  '@silverhand/ts-config-react@6.0.0(typescript@5.5.3)':
     dependencies:
-      '@silverhand/ts-config': 6.0.0(typescript@5.3.3)
-      typescript: 5.3.3
+      '@silverhand/ts-config': 6.0.0(typescript@5.5.3)
+      typescript: 5.5.3
 
-  '@silverhand/ts-config@6.0.0(typescript@5.3.3)':
+  '@silverhand/ts-config@6.0.0(typescript@5.5.3)':
     dependencies:
-      typescript: 5.3.3
+      typescript: 5.5.3
 
   '@simplewebauthn/browser@10.0.0':
     dependencies:
@@ -17565,13 +17570,13 @@ snapshots:
       '@types/node': 20.12.7
     optional: true
 
-  '@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)':
+  '@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)':
     dependencies:
       '@eslint-community/regexpp': 4.10.0
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       '@typescript-eslint/scope-manager': 7.7.0
-      '@typescript-eslint/type-utils': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
-      '@typescript-eslint/utils': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/type-utils': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
+      '@typescript-eslint/utils': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       '@typescript-eslint/visitor-keys': 7.7.0
       debug: 4.3.4
       eslint: 8.57.0
@@ -17579,22 +17584,22 @@ snapshots:
       ignore: 5.3.1
       natural-compare: 1.4.0
       semver: 7.6.0
-      ts-api-utils: 1.3.0(typescript@5.3.3)
+      ts-api-utils: 1.3.0(typescript@5.5.3)
     optionalDependencies:
-      typescript: 5.3.3
+      typescript: 5.5.3
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3)':
+  '@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 7.7.0
       '@typescript-eslint/types': 7.7.0
-      '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.3.3)
+      '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.5.3)
       '@typescript-eslint/visitor-keys': 7.7.0
       debug: 4.3.4
       eslint: 8.57.0
     optionalDependencies:
-      typescript: 5.3.3
+      typescript: 5.5.3
     transitivePeerDependencies:
       - supports-color
 
@@ -17603,21 +17608,21 @@ snapshots:
       '@typescript-eslint/types': 7.7.0
       '@typescript-eslint/visitor-keys': 7.7.0
 
-  '@typescript-eslint/type-utils@7.7.0(eslint@8.57.0)(typescript@5.3.3)':
+  '@typescript-eslint/type-utils@7.7.0(eslint@8.57.0)(typescript@5.5.3)':
     dependencies:
-      '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.3.3)
-      '@typescript-eslint/utils': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.5.3)
+      '@typescript-eslint/utils': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       debug: 4.3.4
       eslint: 8.57.0
-      ts-api-utils: 1.3.0(typescript@5.3.3)
+      ts-api-utils: 1.3.0(typescript@5.5.3)
     optionalDependencies:
-      typescript: 5.3.3
+      typescript: 5.5.3
     transitivePeerDependencies:
       - supports-color
 
   '@typescript-eslint/types@7.7.0': {}
 
-  '@typescript-eslint/typescript-estree@7.7.0(typescript@5.3.3)':
+  '@typescript-eslint/typescript-estree@7.7.0(typescript@5.5.3)':
     dependencies:
       '@typescript-eslint/types': 7.7.0
       '@typescript-eslint/visitor-keys': 7.7.0
@@ -17626,20 +17631,20 @@ snapshots:
       is-glob: 4.0.3
       minimatch: 9.0.4
       semver: 7.6.0
-      ts-api-utils: 1.3.0(typescript@5.3.3)
+      ts-api-utils: 1.3.0(typescript@5.5.3)
     optionalDependencies:
-      typescript: 5.3.3
+      typescript: 5.5.3
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@7.7.0(eslint@8.57.0)(typescript@5.3.3)':
+  '@typescript-eslint/utils@7.7.0(eslint@8.57.0)(typescript@5.5.3)':
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
       '@types/json-schema': 7.0.15
       '@types/semver': 7.5.8
       '@typescript-eslint/scope-manager': 7.7.0
       '@typescript-eslint/types': 7.7.0
-      '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.3.3)
+      '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.5.3)
       eslint: 8.57.0
       semver: 7.6.0
     transitivePeerDependencies:
@@ -18664,23 +18669,23 @@ snapshots:
     optionalDependencies:
       typescript: 5.0.2
 
-  cosmiconfig@8.3.6(typescript@5.3.3):
+  cosmiconfig@8.3.6(typescript@5.5.3):
     dependencies:
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       parse-json: 5.2.0
       path-type: 4.0.0
     optionalDependencies:
-      typescript: 5.3.3
+      typescript: 5.5.3
 
-  cosmiconfig@9.0.0(typescript@5.3.3):
+  cosmiconfig@9.0.0(typescript@5.5.3):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 5.3.3
+      typescript: 5.5.3
 
   create-eslint-index@1.0.0:
     dependencies:
@@ -18701,13 +18706,13 @@ snapshots:
       - supports-color
       - ts-node
 
-  create-jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)):
+  create-jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3)):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -19516,12 +19521,12 @@ snapshots:
       eslint-plugin-react: 7.34.1(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
 
-  eslint-config-xo-typescript@4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3):
+  eslint-config-xo-typescript@4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       eslint: 8.57.0
-      typescript: 5.3.3
+      typescript: 5.5.3
 
   eslint-config-xo@0.44.0(eslint@8.57.0):
     dependencies:
@@ -19536,13 +19541,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -19553,14 +19558,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7(supports-color@5.5.0)
     optionalDependencies:
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -19582,7 +19587,7 @@ snapshots:
       eslint: 8.57.0
       ignore: 5.3.1
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -19592,7 +19597,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -19603,7 +19608,7 @@ snapshots:
       semver: 6.3.1
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -19720,12 +19725,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-unused-imports@3.1.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0):
+  eslint-plugin-unused-imports@3.1.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0):
     dependencies:
       eslint: 8.57.0
       eslint-rule-composer: 0.3.0
     optionalDependencies:
-      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/eslint-plugin': 7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)
 
   eslint-rule-composer@0.3.0: {}
 
@@ -21088,7 +21093,7 @@ snapshots:
 
   jest-cli@29.7.0(@types/node@20.10.4):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
@@ -21107,14 +21112,14 @@ snapshots:
 
   jest-cli@29.7.0(@types/node@20.12.7):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      create-jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       exit: 0.1.2
       import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -21124,16 +21129,16 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-cli@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)):
+  jest-cli@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3)):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      create-jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       exit: 0.1.2
       import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -21173,7 +21178,7 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-config@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)):
+  jest-config@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3)):
     dependencies:
       '@babel/core': 7.24.4
       '@jest/test-sequencer': 29.7.0
@@ -21199,7 +21204,7 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 20.12.7
-      ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)
+      ts-node: 10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -21260,10 +21265,10 @@ snapshots:
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
-  jest-environment-puppeteer@10.0.1(typescript@5.3.3):
+  jest-environment-puppeteer@10.0.1(typescript@5.5.3):
     dependencies:
       chalk: 4.1.2
-      cosmiconfig: 8.3.6(typescript@5.3.3)
+      cosmiconfig: 8.3.6(typescript@5.5.3)
       deepmerge: 4.3.1
       jest-dev-server: 10.0.0
       jest-environment-node: 29.7.0
@@ -21342,11 +21347,11 @@ snapshots:
     optionalDependencies:
       jest-resolve: 29.7.0
 
-  jest-puppeteer@10.0.1(puppeteer@22.6.5(typescript@5.3.3))(typescript@5.3.3):
+  jest-puppeteer@10.0.1(puppeteer@22.6.5(typescript@5.5.3))(typescript@5.5.3):
     dependencies:
       expect-puppeteer: 10.0.0
-      jest-environment-puppeteer: 10.0.1(typescript@5.3.3)
-      puppeteer: 22.6.5(typescript@5.3.3)
+      jest-environment-puppeteer: 10.0.1(typescript@5.5.3)
+      puppeteer: 22.6.5(typescript@5.5.3)
     transitivePeerDependencies:
       - debug
       - supports-color
@@ -21455,9 +21460,9 @@ snapshots:
 
   jest-transform-stub@2.0.0: {}
 
-  jest-transformer-svg@2.0.0(jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)))(react@18.2.0):
+  jest-transformer-svg@2.0.0(jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3)))(react@18.2.0):
     dependencies:
-      jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      jest: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       react: 18.2.0
 
   jest-transformer-svg@2.0.0(jest@29.7.0(@types/node@20.12.7))(react@18.2.0):
@@ -21519,7 +21524,7 @@ snapshots:
 
   jest@29.7.0(@types/node@20.10.4):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       '@jest/types': 29.6.3
       import-local: 3.1.0
       jest-cli: 29.7.0(@types/node@20.10.4)
@@ -21531,7 +21536,7 @@ snapshots:
 
   jest@29.7.0(@types/node@20.12.7):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       '@jest/types': 29.6.3
       import-local: 3.1.0
       jest-cli: 29.7.0(@types/node@20.12.7)
@@ -21541,12 +21546,12 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)):
+  jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3)):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       '@jest/types': 29.6.3
       import-local: 3.1.0
-      jest-cli: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3))
+      jest-cli: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -23540,13 +23545,13 @@ snapshots:
 
   possible-typed-array-names@1.0.0: {}
 
-  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.3.3)):
+  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3)):
     dependencies:
       lilconfig: 3.1.2
       yaml: 2.4.5
     optionalDependencies:
       postcss: 8.4.39
-      ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3)
+      ts-node: 10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3)
 
   postcss-media-query-parser@0.2.3: {}
 
@@ -23770,10 +23775,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  puppeteer@22.6.5(typescript@5.3.3):
+  puppeteer@22.6.5(typescript@5.5.3):
     dependencies:
       '@puppeteer/browsers': 2.2.2
-      cosmiconfig: 9.0.0(typescript@5.3.3)
+      cosmiconfig: 9.0.0(typescript@5.5.3)
       devtools-protocol: 0.0.1262051
       puppeteer-core: 22.6.5
     transitivePeerDependencies:
@@ -24839,32 +24844,32 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.3
 
-  stylelint-config-xo@0.22.0(stylelint@15.11.0(typescript@5.3.3)):
+  stylelint-config-xo@0.22.0(stylelint@15.11.0(typescript@5.5.3)):
     dependencies:
-      stylelint: 15.11.0(typescript@5.3.3)
-      stylelint-declaration-block-no-ignored-properties: 2.8.0(stylelint@15.11.0(typescript@5.3.3))
-      stylelint-order: 6.0.4(stylelint@15.11.0(typescript@5.3.3))
+      stylelint: 15.11.0(typescript@5.5.3)
+      stylelint-declaration-block-no-ignored-properties: 2.8.0(stylelint@15.11.0(typescript@5.5.3))
+      stylelint-order: 6.0.4(stylelint@15.11.0(typescript@5.5.3))
 
-  stylelint-declaration-block-no-ignored-properties@2.8.0(stylelint@15.11.0(typescript@5.3.3)):
+  stylelint-declaration-block-no-ignored-properties@2.8.0(stylelint@15.11.0(typescript@5.5.3)):
     dependencies:
-      stylelint: 15.11.0(typescript@5.3.3)
+      stylelint: 15.11.0(typescript@5.5.3)
 
-  stylelint-order@6.0.4(stylelint@15.11.0(typescript@5.3.3)):
+  stylelint-order@6.0.4(stylelint@15.11.0(typescript@5.5.3)):
     dependencies:
       postcss: 8.4.38
       postcss-sorting: 8.0.2(postcss@8.4.38)
-      stylelint: 15.11.0(typescript@5.3.3)
+      stylelint: 15.11.0(typescript@5.5.3)
 
-  stylelint-scss@6.2.1(stylelint@15.11.0(typescript@5.3.3)):
+  stylelint-scss@6.2.1(stylelint@15.11.0(typescript@5.5.3)):
     dependencies:
       known-css-properties: 0.29.0
       postcss-media-query-parser: 0.2.3
       postcss-resolve-nested-selector: 0.1.1
       postcss-selector-parser: 6.0.16
       postcss-value-parser: 4.2.0
-      stylelint: 15.11.0(typescript@5.3.3)
+      stylelint: 15.11.0(typescript@5.5.3)
 
-  stylelint@15.11.0(typescript@5.3.3):
+  stylelint@15.11.0(typescript@5.5.3):
     dependencies:
       '@csstools/css-parser-algorithms': 2.6.1(@csstools/css-tokenizer@2.2.4)
       '@csstools/css-tokenizer': 2.2.4
@@ -24872,7 +24877,7 @@ snapshots:
       '@csstools/selector-specificity': 3.0.3(postcss-selector-parser@6.0.16)
       balanced-match: 2.0.0
       colord: 2.9.3
-      cosmiconfig: 8.3.6(typescript@5.3.3)
+      cosmiconfig: 8.3.6(typescript@5.5.3)
       css-functions-list: 3.2.1
       css-tree: 2.3.1
       debug: 4.3.4
@@ -25140,15 +25145,15 @@ snapshots:
 
   trough@2.1.0: {}
 
-  ts-api-utils@1.3.0(typescript@5.3.3):
+  ts-api-utils@1.3.0(typescript@5.5.3):
     dependencies:
-      typescript: 5.3.3
+      typescript: 5.5.3
 
   ts-dedent@2.2.0: {}
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.3.3):
+  ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.9
@@ -25162,7 +25167,7 @@ snapshots:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.3.3
+      typescript: 5.5.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
@@ -25185,7 +25190,7 @@ snapshots:
 
   tsscmp@1.0.6: {}
 
-  tsup@8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.3.3))(typescript@5.3.3):
+  tsup@8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3):
     dependencies:
       bundle-require: 4.2.1(esbuild@0.21.5)
       cac: 6.7.14
@@ -25195,7 +25200,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.3.3))
+      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))
       resolve-from: 5.0.0
       rollup: 4.14.3
       source-map: 0.8.0-beta.0
@@ -25204,7 +25209,7 @@ snapshots:
     optionalDependencies:
       '@swc/core': 1.3.52(@swc/helpers@0.5.1)
       postcss: 8.4.39
-      typescript: 5.3.3
+      typescript: 5.5.3
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -25287,6 +25292,8 @@ snapshots:
   typescript@5.0.2: {}
 
   typescript@5.3.3: {}
+
+  typescript@5.5.3: {}
 
   typical@4.0.0: {}
 
@@ -25885,9 +25892,9 @@ snapshots:
 
   yocto-queue@1.1.1: {}
 
-  zod-to-ts@1.2.0(typescript@5.3.3)(zod@3.23.8):
+  zod-to-ts@1.2.0(typescript@5.5.3)(zod@3.23.8):
     dependencies:
-      typescript: 5.3.3
+      typescript: 5.5.3
       zod: 3.23.8
 
   zod@3.22.4: {}

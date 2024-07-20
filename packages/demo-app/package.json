@@ -46,7 +46,7 @@
     "react-dom": "^18.0.0",
     "react-i18next": "^12.3.1",
     "stylelint": "^15.0.0",
-    "typescript": "^5.3.3",
+    "typescript": "^5.5.3",
     "zod": "^3.23.8"
   },
   "engines": {
