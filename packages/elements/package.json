@@ -37,7 +37,7 @@
     "test:ci": "pnpm run test --silent --coverage",
     "prepack": "pnpm build",
     "localize": "lit-localize",
-    "check": "lit-localize extract && git add . -N && git diff --exit-code"
+    "check": "if command -v git &> /dev/null; then lit-localize extract && git add . -N && git diff --exit-code; fi"
   },
   "engines": {
     "node": "^20.9.0"
