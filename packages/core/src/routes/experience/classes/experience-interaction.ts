@@ -1,6 +1,11 @@
 import { type ToZodObject } from '@logto/connector-kit';
-import { InteractionEvent, type User } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import {
+  InteractionEvent,
+  VerificationType,
+  type UpdateProfileApiPayload,
+  type User,
+} from '@logto/schemas';
+import { conditional, removeUndefinedKeys } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -15,9 +20,9 @@ import {
   identifyUserByVerificationRecord,
 } from './helpers.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
-import { ProfileValidator } from './libraries/profile-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
+import { Profile } from './profile.js';
 import { toUserSocialIdentityData } from './utils.js';
 import {
   buildVerificationRecord,
@@ -50,7 +55,6 @@ const interactionStorageGuard = z.object({
  */
 export default class ExperienceInteraction {
   public readonly signInExperienceValidator: SignInExperienceValidator;
-  public readonly profileValidator: ProfileValidator;
   public readonly provisionLibrary: ProvisionLibrary;
 
   /** The user verification record list for the current interaction. */
@@ -59,7 +63,7 @@ export default class ExperienceInteraction {
   private userId?: string;
   private userCache?: User;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
-  #profile?: InteractionProfile;
+  readonly #profile: Profile;
   /** The interaction event for the current interaction. */
   #interactionEvent?: InteractionEvent;
 
@@ -80,7 +84,7 @@ export default class ExperienceInteraction {
     this.provisionLibrary = new ProvisionLibrary(tenant, ctx);
 
     if (!interactionDetails) {
-      this.profileValidator = new ProfileValidator(libraries, queries);
+      this.#profile = new Profile(libraries, queries, {}, async () => this.getIdentifiedUser());
       return;
     }
 
@@ -92,14 +96,11 @@ export default class ExperienceInteraction {
       new RequestError({ code: 'session.interaction_not_found', status: 404 })
     );
 
-    const { verificationRecords = [], profile, userId, interactionEvent } = result.data;
+    const { verificationRecords = [], profile = {}, userId, interactionEvent } = result.data;
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
-    this.#profile = profile;
-
-    // Profile validator requires the userId for existing user profile update validation
-    this.profileValidator = new ProfileValidator(libraries, queries);
+    this.#profile = new Profile(libraries, queries, profile, async () => this.getIdentifiedUser());
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -201,10 +202,48 @@ export default class ExperienceInteraction {
     return record;
   }
 
+  public async addUserProfile({ email, phone, username, password }: UpdateProfileApiPayload) {
+    // Guard current interaction event is MFA verified
+    await this.guardMfaVerificationStatus();
+
+    const primaryEmail =
+      email &&
+      this.getVerificationRecordByTypeAndId(
+        VerificationType.EmailVerificationCode,
+        email.verificationId
+      ).toUserProfile().primaryEmail;
+
+    const primaryPhone =
+      phone &&
+      this.getVerificationRecordByTypeAndId(
+        VerificationType.PhoneVerificationCode,
+        phone.verificationId
+      ).toUserProfile().primaryPhone;
+
+    await this.#profile.setProfileWithValidation(
+      removeUndefinedKeys({
+        primaryEmail,
+        primaryPhone,
+        username,
+      })
+    );
+
+    if (password) {
+      await this.#profile.encryptAndSetPassword(password);
+    }
+  }
+
+  public async resetPassword(password: string) {
+    await this.getIdentifiedUser();
+    await this.#profile.encryptAndSetPassword(password, true);
+  }
+
   /**
    * Validate the interaction verification records against the sign-in experience and user MFA settings.
-   *
    * The interaction is verified if at least one user enabled MFA verification record is present and verified.
+   *
+   * @throws — RequestError with 404 if the if the user is not identified or not found
+   * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
   public async guardMfaVerificationStatus() {
     const user = await this.getIdentifiedUser();
@@ -242,7 +281,16 @@ export default class ExperienceInteraction {
     this.ctx.prependAllLogEntries({ interaction: interactionData });
   }
 
-  /** Submit the current interaction result to the OIDC provider and clear the interaction data */
+  /**
+   * Submit the current interaction result to the OIDC provider and clear the interaction data
+   *
+   * @throws {RequestError} with 404 if the interaction event is not set
+   * @throws {RequestError} with 404 if the user is not identified
+   * @throws {RequestError} with 403 if the mfa verification is required but not verified
+   * @throws {RequestError} with 422 if the profile data is conflicting with the current user account
+   * @throws {RequestError} with 422 if the profile data is not unique across users
+   * @throws {RequestError} with 422 if the required profile fields are missing
+   **/
   public async submit() {
     const {
       queries: { users: userQueries, userSsoIdentities: userSsoIdentitiesQueries },
@@ -257,14 +305,37 @@ export default class ExperienceInteraction {
     // Identified
     const user = await this.getIdentifiedUser();
 
-    // Verified
-    if (this.#interactionEvent !== InteractionEvent.ForgotPassword) {
-      await this.guardMfaVerificationStatus();
+    // Forgot Password: No need to verify MFAs and profile data for forgot password flow
+    if (this.#interactionEvent === InteractionEvent.ForgotPassword) {
+      const { passwordEncrypted, passwordEncryptionMethod } = this.#profile.data;
+
+      assertThat(
+        passwordEncrypted && passwordEncryptionMethod,
+        new RequestError({ code: 'user.new_password_required_in_profile', status: 422 })
+      );
+
+      await userQueries.updateUserById(user.id, {
+        passwordEncrypted,
+        passwordEncryptionMethod,
+      });
+
+      await this.cleanUp();
+
+      // TODO: User data updated hook
+
+      return;
     }
 
-    const { socialIdentity, enterpriseSsoIdentity, ...rest } = this.#profile ?? {};
+    // Verified
+    await this.guardMfaVerificationStatus();
 
-    // TODO: profile updates validation
+    // Revalidate the new profile data if any
+    await this.#profile.checkAvailability();
+
+    // Profile fulfilled
+    await this.#profile.assertUserMandatoryProfileFulfilled();
+
+    const { socialIdentity, enterpriseSsoIdentity, ...rest } = this.#profile.data;
 
     // Update user profile
     await userQueries.updateUserById(user.id, {
@@ -280,8 +351,6 @@ export default class ExperienceInteraction {
       lastSignInAt: Date.now(),
     });
 
-    // TODO: missing profile fields validation
-
     if (enterpriseSsoIdentity) {
       await this.provisionLibrary.addSsoIdentityToUser(user.id, enterpriseSsoIdentity);
     }
@@ -291,6 +360,8 @@ export default class ExperienceInteraction {
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
       login: { accountId: user.id },
     });
+
+    // TODO: PostInteractionHooks
 
     this.ctx.body = { redirectTo };
   }
@@ -302,7 +373,7 @@ export default class ExperienceInteraction {
     return {
       interactionEvent,
       userId,
-      profile: this.#profile,
+      profile: this.#profile.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
     };
   }
@@ -343,23 +414,27 @@ export default class ExperienceInteraction {
       return;
     }
 
-    // Sync social/enterprise SSO identity profile data
-    if (syncedProfile) {
-      this.setProfile(syncedProfile);
-    }
-
+    // Update the current interaction with the identified user
+    this.userCache = user;
     this.userId = id;
+
+    // Sync social/enterprise SSO identity profile data.
+    // Note: The profile data is not saved to the user profile until the user submits the interaction.
+    // Also no need to validate the synced profile data availability as it is already validated during the identification process.
+    if (syncedProfile) {
+      this.#profile.unsafeSet(syncedProfile);
+    }
   }
 
   /**
    * Create a new user using the verification record.
    *
-   * @throws {RequestError} with 422 if the profile data is not unique across users
    * @throws {RequestError} with 400 if the verification record is invalid for creating a new user or not verified
+   * @throws {RequestError} with 422 if the profile data is not unique across users
    */
   private async createNewUser(verificationRecord: VerificationRecord) {
     const newProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
-    await this.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
+    await this.#profile.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
 
     const user = await this.provisionLibrary.createUser(newProfile);
 
@@ -367,20 +442,8 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * Private method to set the profile data without validation.
-   */
-  private setProfile(profile: InteractionProfile) {
-    this.#profile = {
-      ...this.#profile,
-      ...profile,
-    };
-  }
-
-  /**
    * Assert the interaction is identified and return the identified user.
-   *
-   * @throws RequestError with 400 if the user is not identified
-   * @throws RequestError with 404 if the user is not found
+   * @throws RequestError with 404 if the if the user is not identified or not found
    */
   private async getIdentifiedUser(): Promise<User> {
     if (this.userCache) {
@@ -388,7 +451,13 @@ export default class ExperienceInteraction {
     }
 
     // Identified
-    assertThat(this.userId, 'session.identifier_not_found');
+    assertThat(
+      this.userId,
+      new RequestError({
+        code: 'session.identifier_not_found',
+        status: 404,
+      })
+    );
 
     const {
       queries: { users: userQueries },
@@ -402,5 +471,13 @@ export default class ExperienceInteraction {
 
   private getVerificationRecordById(verificationId: string) {
     return this.verificationRecordsArray.find((record) => record.id === verificationId);
+  }
+
+  /**
+   * Clean up the interaction storage.
+   */
+  private async cleanUp() {
+    const { provider } = this.tenant;
+    await provider.interactionResult(this.ctx.req, this.ctx.res, {});
   }
 }

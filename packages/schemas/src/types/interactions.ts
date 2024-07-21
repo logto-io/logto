@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
@@ -162,6 +163,32 @@ export type CreateExperienceApiPayload = {
 export const CreateExperienceApiPayloadGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
 }) satisfies ToZodObject<CreateExperienceApiPayload>;
+
+/** Payload type for `PATCH /api/experience/profile */
+export type UpdateProfileApiPayload = {
+  [SignInIdentifier.Username]?: string;
+  [SignInIdentifier.Email]?: {
+    verificationId: string;
+  };
+  [SignInIdentifier.Phone]?: {
+    verificationId: string;
+  };
+  password?: string;
+};
+export const updateProfileApiPayloadGuard = z.object({
+  [SignInIdentifier.Username]: z.string().optional(),
+  [SignInIdentifier.Email]: z
+    .object({
+      verificationId: z.string(),
+    })
+    .optional(),
+  [SignInIdentifier.Phone]: z
+    .object({
+      verificationId: z.string(),
+    })
+    .optional(),
+  password: z.string().optional(),
+}) satisfies ToZodObject<UpdateProfileApiPayload>;
 
 // ====== Experience API payload guard and types definitions end ======
 
@@ -410,3 +437,4 @@ export const verifyMfaResultGuard = z.object({
 });
 
 export type VerifyMfaResult = z.infer<typeof verifyMfaResultGuard>;
+/* eslint-enable max-lines */

@@ -22,6 +22,8 @@ const session = {
   identifier_not_found: 'User identifier not found. Please go back and sign in again.',
   interaction_not_found:
     'Interaction session not found. Please go back and start the session again.',
+  invalid_interaction_type:
+    'This operation is not supported for the current interaction. Please initiate a new session.',
   not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
   identity_conflict:
     'Identity mismatch detected. Please initiate a new session to proceed with a different identity.',

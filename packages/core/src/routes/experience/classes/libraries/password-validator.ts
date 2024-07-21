@@ -1,8 +1,10 @@
 import { PasswordPolicyChecker, type UserInfo } from '@logto/core-kit';
-import { type SignInExperience, type User } from '@logto/schemas';
+import { UsersPasswordEncryptionMethod, type SignInExperience, type User } from '@logto/schemas';
+import { argon2Verify } from 'hash-wasm';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { encryptUserPassword } from '#src/libraries/user.utils.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { type InteractionProfile } from '../../types.js';
 
@@ -32,8 +34,10 @@ export class PasswordValidator {
   }
 
   /**
-   * Validate password against the password policy
-   * @throws {RequestError} with status 422 if the password does not meet the policy
+   * Validate password against the given password policy and current user's profile.
+   *
+   * @throws {RequestError} with status code 422 if the password is against the policy.
+   * @throws {RequestError} with status code 422 if the password is the same as the current user's password.
    */
   public async validatePassword(password: string, profile: InteractionProfile) {
     const userInfo = getUserInfo({
@@ -48,6 +52,18 @@ export class PasswordValidator {
 
     if (issues.length > 0) {
       throw new RequestError({ code: 'password.rejected', status: 422 }, { issues });
+    }
+
+    if (this.user) {
+      const { passwordEncrypted: oldPasswordEncrypted, passwordEncryptionMethod } = this.user;
+
+      assertThat(
+        !oldPasswordEncrypted ||
+          // If the password is not encrypted with Argon2i, allow to reset the same password with Argon2i
+          passwordEncryptionMethod !== UsersPasswordEncryptionMethod.Argon2i ||
+          !(await argon2Verify({ password, hash: oldPasswordEncrypted })),
+        new RequestError({ code: 'user.same_password', status: 422 })
+      );
     }
   }
 
