@@ -98,4 +98,31 @@ devFeatureTest.describe('Register interaction with verification code happy path'
       await deleteUser(user.id);
     }
   );
+
+  describe('fulfill password', () => {
+    beforeAll(async () => {
+      await enableAllVerificationCodeSignInMethods({
+        identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
+        password: true,
+        verify: true,
+      });
+    });
+
+    it.each(verificationIdentifierType)(
+      'Should register with verification code using %p and fulfill the password successfully',
+      async (identifier) => {
+        const userId = await registerNewUserWithVerificationCode(
+          {
+            type: identifier,
+            value: identifier === SignInIdentifier.Email ? generateEmail() : generatePhone(),
+          },
+          {
+            fulfillPassword: true,
+          }
+        );
+
+        await deleteUser(userId);
+      }
+    );
+  });
 });

@@ -4,6 +4,7 @@ import {
   type InteractionEvent,
   type NewPasswordIdentityVerificationPayload,
   type PasswordVerificationPayload,
+  type UpdateProfileApiPayload,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
 
@@ -195,5 +196,19 @@ export class ExperienceClient extends MockClient {
         json: payload,
       })
       .json<{ verificationId: string }>();
+  }
+
+  public async resetPassword(payload: { password: string }) {
+    return api.put(`${experienceRoutes.profile}/password`, {
+      headers: { cookie: this.interactionCookie },
+      json: payload,
+    });
+  }
+
+  public async updateProfile(payload: UpdateProfileApiPayload) {
+    return api.patch(`${experienceRoutes.profile}`, {
+      headers: { cookie: this.interactionCookie },
+      json: payload,
+    });
   }
 }
