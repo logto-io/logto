@@ -2,7 +2,7 @@ import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser, getUser } from '#src/api/admin-user.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
-import { setEmailConnector } from '#src/helpers/connector.js';
+import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import {
   identifyUserWithUsernamePassword,
   signInWithPassword,
@@ -28,7 +28,7 @@ const identifiersTypeToUserProfile = Object.freeze({
 devFeatureTest.describe('sign-in with password verification happy path', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
-    await setEmailConnector();
+    await Promise.all([setEmailConnector(), setSmsConnector()]);
   });
 
   it.each(Object.values(SignInIdentifier))(
