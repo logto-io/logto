@@ -15,7 +15,10 @@ devFeatureTest.describe('enterprise sso sign-in and sign-up', () => {
 
   beforeAll(async () => {
     await ssoConnectorApi.createMockOidcConnector([domain]);
-    await updateSignInExperience({ singleSignOnEnabled: true });
+    await updateSignInExperience({
+      singleSignOnEnabled: true,
+      signUp: { identifiers: [], password: false, verify: false },
+    });
   });
 
   afterAll(async () => {

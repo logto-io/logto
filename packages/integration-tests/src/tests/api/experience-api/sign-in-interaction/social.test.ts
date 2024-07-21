@@ -6,6 +6,7 @@ import {
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
 import { deleteUser, getUser } from '#src/api/admin-user.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import { signInWithSocial } from '#src/helpers/experience/index.js';
 import { generateNewUser } from '#src/helpers/user.js';
@@ -18,6 +19,13 @@ devFeatureTest.describe('social sign-in and sign-up', () => {
 
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Social]);
+    await updateSignInExperience({
+      signUp: {
+        identifiers: [],
+        password: false,
+        verify: false,
+      },
+    });
 
     const { id: socialConnectorId } = await setSocialConnector();
     connectorIdMap.set(mockSocialConnectorId, socialConnectorId);
