@@ -34,7 +34,10 @@ create unique index applications__protected_app_metadata_custom_domain
     (protected_app_metadata->'customDomains'->0->>'domain')
   );
 
-create function check_application_type(application_id varchar(21), target_type application_type) returns boolean as
+create function check_application_type(
+  application_id varchar(21),
+  variadic target_type application_type[]
+) returns boolean as
 $$ begin
-  return (select type from applications where id = application_id) = target_type;
+  return (select type from applications where id = application_id) = any(target_type);
 end; $$ language plpgsql set search_path = public;
