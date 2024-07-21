@@ -6,6 +6,8 @@ import {
   type Role,
   type ProtectedAppMetadata,
   type OrganizationWithRoles,
+  type CreateApplicationSecret,
+  type ApplicationSecret,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -14,7 +16,12 @@ import { authedAdminApi, oidcApi } from './api.js';
 export const createApplication = async (
   name: string,
   type: ApplicationType,
-  rest?: Partial<CreateApplication>
+  rest?: Partial<
+    // Synced from packages/core/src/routes/applications/types.ts
+    Omit<CreateApplication, 'protectedAppMetadata'> & {
+      protectedAppMetadata: { origin: string; subDomain: string };
+    }
+  >
 ) =>
   authedAdminApi
     .post('applications', {
@@ -126,3 +133,20 @@ export const getOrganizations = async (applicationId: string, page?: number, pag
     })
     .json<OrganizationWithRoles[]>();
 };
+
+export const createApplicationSecret = async ({
+  applicationId,
+  ...body
+}: Omit<CreateApplicationSecret, 'value'>) =>
+  authedAdminApi
+    .post(`applications/${applicationId}/secrets`, { json: body })
+    .json<ApplicationSecret>();
+
+export const getApplicationSecrets = async (applicationId: string) =>
+  authedAdminApi.get(`applications/${applicationId}/secrets`).json<ApplicationSecret[]>();
+
+export const deleteApplicationSecret = async (applicationId: string, secretName: string) =>
+  authedAdminApi.delete(`applications/${applicationId}/secrets/${secretName}`);
+
+export const deleteLegacyApplicationSecret = async (applicationId: string) =>
+  authedAdminApi.delete(`applications/${applicationId}/legacy-secret`);

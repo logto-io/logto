@@ -109,7 +109,6 @@ describe('application route', () => {
     expect(response.body).toEqual({
       ...mockApplication,
       id: mockId,
-      secret: mockId,
       name,
       description,
       type,
