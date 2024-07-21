@@ -6,6 +6,7 @@
 
 import { type VerificationType } from '@logto/schemas';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { type VerificationRecord, type VerificationRecordMap } from './index.js';
@@ -22,7 +23,10 @@ export class VerificationRecordsMap {
   get<K extends keyof VerificationRecordMap>(key: K): VerificationRecordMap[K] | undefined {
     const record = this.#map.get(key);
 
-    assertThat(record?.type === key, new TypeError('Invalid verification record type'));
+    assertThat(
+      record?.type === key,
+      new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+    );
 
     // eslint-disable-next-line no-restricted-syntax -- We are sure that the record is of type K
     return this.#map.get(key) as VerificationRecordMap[K];
