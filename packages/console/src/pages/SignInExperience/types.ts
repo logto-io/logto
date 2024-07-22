@@ -1,10 +1,5 @@
 import { type PasswordPolicy } from '@logto/core-kit';
-import {
-  type SignUp,
-  type SignInExperience,
-  type SignInIdentifier,
-  type CustomUiAssets,
-} from '@logto/schemas';
+import { type SignUp, type SignInExperience, type SignInIdentifier } from '@logto/schemas';
 
 export enum SignInExperienceTab {
   Branding = 'branding',
@@ -27,10 +22,9 @@ export type SignUpForm = Omit<SignUp, 'identifiers'> & {
 
 export type SignInExperienceForm = Omit<
   SignInExperience,
-  'signUp' | 'customCss' | 'customUiAssets' | 'passwordPolicy'
+  'signUp' | 'customCss' | 'passwordPolicy'
 > & {
   customCss?: string; // Code editor components can not properly handle null value, manually transform null to undefined instead.
-  customUiAssets?: CustomUiAssets;
   signUp: SignUpForm;
   /** The parsed password policy object. All properties are required. */
   passwordPolicy: PasswordPolicy & {

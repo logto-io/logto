@@ -1,4 +1,5 @@
 import { type CustomUiAssets, maxUploadFileSize, type AllowedUploadMimeType } from '@logto/schemas';
+import { type Nullable } from '@silverhand/essentials';
 import { format } from 'date-fns/fp';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,15 +14,15 @@ import FileIcon from '../FileIcon';
 import * as styles from './index.module.scss';
 
 type Props = {
-  readonly value?: CustomUiAssets;
-  readonly onChange: (value: CustomUiAssets) => void;
   // eslint-disable-next-line react/boolean-prop-naming
   readonly disabled?: boolean;
+  readonly value: Nullable<CustomUiAssets>;
+  readonly onChange: (value: Nullable<CustomUiAssets>) => void;
 };
 
 const allowedMimeTypes: AllowedUploadMimeType[] = ['application/zip'];
 
-function CustomUiAssetsUploader({ value, onChange, disabled }: Props) {
+function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<string>();
@@ -79,7 +80,7 @@ function CustomUiAssetsUploader({ value, onChange, disabled }: Props) {
         onClick={() => {
           setFile(undefined);
           setError(undefined);
-          onChange({ id: '', createdAt: 0 });
+          onChange(null);
         }}
       >
         <DeleteIcon />
