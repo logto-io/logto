@@ -229,13 +229,13 @@ export default class ExperienceInteraction {
     );
 
     if (password) {
-      await this.#profile.encryptAndSetPassword(password);
+      await this.#profile.setPasswordDigest(password);
     }
   }
 
   public async resetPassword(password: string) {
     await this.getIdentifiedUser();
-    await this.#profile.encryptAndSetPassword(password, true);
+    await this.#profile.setPasswordDigest(password, true);
   }
 
   /**

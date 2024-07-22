@@ -50,18 +50,18 @@ export class Profile {
    * @throws {RequestError} 422 if the password does not meet the password policy.
    * @throws {RequestError} 422 if the password is the same as the current user's password.
    */
-  async encryptAndSetPassword(password: string, reset = false) {
+  async setPasswordDigest(password: string, reset = false) {
     const user = await this.getUserFromContext();
     const passwordPolicy = await this.signInExperienceValidator.getPasswordPolicy();
     const passwordValidator = new PasswordValidator(passwordPolicy, user);
     await passwordValidator.validatePassword(password, this.#data);
-    const encryptedPasswordData = await passwordValidator.encryptPassword(password);
+    const passwordDigests = await passwordValidator.createPasswordDigest(password);
 
     if (!reset) {
-      this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, encryptedPasswordData);
+      this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, passwordDigests);
     }
 
-    this.unsafeSet(encryptedPasswordData);
+    this.unsafeSet(passwordDigests);
   }
 
   /**
