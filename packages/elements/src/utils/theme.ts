@@ -5,6 +5,9 @@ import { type KebabCase, kebabCase } from './string.js';
 /** All the colors to be used in the Logto components and elements. */
 export type Color = {
   colorPrimary: string;
+  colorOnPrimary: string;
+  colorPrimaryPressed: string;
+  colorPrimaryHover: string;
   colorTextPrimary: string;
   colorTextLink: string;
   colorTextSecondary: string;
@@ -62,6 +65,9 @@ export const defaultFont: Readonly<Font> = Object.freeze({
 export const defaultTheme: Readonly<Theme> = Object.freeze({
   ...defaultFont,
   colorPrimary: '#5d34f2',
+  colorOnPrimary: '#000',
+  colorPrimaryPressed: '#e6deff',
+  colorPrimaryHover: '#af9eff',
   colorTextPrimary: '#191c1d',
   colorTextLink: '#5d34f2',
   colorTextSecondary: '#747778',
@@ -84,6 +90,9 @@ export const defaultTheme: Readonly<Theme> = Object.freeze({
 export const darkTheme: Readonly<Theme> = Object.freeze({
   ...defaultFont,
   colorPrimary: '#7958ff',
+  colorOnPrimary: '#fff',
+  colorPrimaryPressed: '#5d34f2',
+  colorPrimaryHover: '#947dff',
   colorTextPrimary: '#f7f8f8',
   colorTextLink: '#cabeff',
   colorTextSecondary: '#a9acac',

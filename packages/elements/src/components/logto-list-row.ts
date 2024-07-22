@@ -2,6 +2,7 @@ import { localized, msg } from '@lit/localize';
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
+import { notSet } from '../phrases/index.js';
 import { unit } from '../utils/css.js';
 import { vars } from '../utils/theme.js';
 
@@ -38,13 +39,17 @@ export class LogtoListRow extends LitElement {
     slot[name='actions'] {
       text-align: right;
     }
+
+    span.not-set {
+      color: ${vars.colorTextSecondary};
+    }
   `;
 
   render() {
     return html`
-      <slot name="title">{${msg('Title', { id: 'general.title' })}}</slot>
-      <slot name="content">{${msg('Content', { id: 'general.content' })}}</slot>
-      <slot name="actions">{${msg('Actions', { id: 'general.actions' })}}</slot>
+      <slot name="title">${msg('Title', { id: 'general.title' })}</slot>
+      <slot name="content"><span class="not-set">${notSet}</span></slot>
+      <slot name="actions">${msg('Actions', { id: 'general.actions' })}</slot>
     `;
   }
 }

@@ -55,6 +55,7 @@
   },
   "devDependencies": {
     "@lit/localize-tools": "^0.7.2",
+    "@logto/schemas": "workspace:^1.18.0",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.9.5",

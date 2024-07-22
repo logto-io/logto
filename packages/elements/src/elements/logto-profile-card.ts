@@ -1,7 +1,10 @@
+import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
+import { cond } from '@silverhand/essentials';
 import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
+import { UserContext, type UserContextType } from '../providers/logto-user-provider.js';
 import { vars } from '../utils/theme.js';
 
 const tagName = 'logto-profile-card';
@@ -16,10 +19,21 @@ export class LogtoProfileCard extends LitElement {
     }
   `;
 
+  @consume({ context: UserContext, subscribe: true })
+  userContext?: UserContextType;
+
   @state()
   updateNameOpened = false;
 
   render() {
+    const user = this.userContext?.user;
+
+    if (!user) {
+      return html`<logto-form-card heading=${msg('Profile', { id: 'account.profile.title' })}>
+        <p class="dev">⚠️ ${msg('No user provided.', { id: 'account.profile.no-user' })}</p>
+      </logto-form-card>`;
+    }
+
     return html`
       <logto-form-card heading=${msg('Profile', { id: 'account.profile.title' })}>
         <p class="dev">🚧 This section is a dev feature that is still working in progress.</p>
@@ -34,11 +48,14 @@ export class LogtoProfileCard extends LitElement {
                   desc: 'The avatar of the user.',
                 })}
               </div>
-              <div slot="content">
-                <logto-avatar size="large" src="https://github.com/logto-io.png"></logto-avatar>
-              </div>
+              ${cond(
+                user.avatar &&
+                  html`<div slot="content">
+                    <logto-avatar size="large" src=${user.avatar}></logto-avatar>
+                  </div>`
+              )}
               <div slot="actions">
-                <logto-button type="text">
+                <logto-button type="text" size="small">
                   ${msg('Change', { id: 'general.change' })}
                 </logto-button>
               </div>
@@ -50,10 +67,11 @@ export class LogtoProfileCard extends LitElement {
                   desc: 'The name of the user.',
                 })}
               </div>
-              <div slot="content">John Doe</div>
+              ${cond(user.name && html`<div slot="content">${user.name}</div>`)}
               <div slot="actions">
                 <logto-button
                   type="text"
+                  size="small"
                   @click=${() => {
                     this.updateNameOpened = true;
                   }}
@@ -85,6 +103,9 @@ export class LogtoProfileCard extends LitElement {
               value=""
             />
           </logto-text-input>
+          <logto-button slot="footer" size="large" type="primary">
+            ${msg('Save', { id: 'general.save' })}
+          </logto-button>
         </logto-modal-layout>
       </logto-modal>
     `;

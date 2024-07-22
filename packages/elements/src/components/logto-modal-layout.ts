@@ -35,6 +35,14 @@ export class LogtoModalLayout extends LitElement {
     h1 {
       all: unset;
     }
+
+    footer:not(:empty) {
+      margin-top: ${unit(6)};
+      display: flex;
+      justify-content: flex-end;
+      gap: ${unit(4)};
+      align-items: center;
+    }
   `;
 
   @property({ reflect: true })
@@ -44,19 +52,24 @@ export class LogtoModalLayout extends LitElement {
   });
 
   @consume({ context: ModalContext })
-  context!: ModalContextType;
+  context?: ModalContextType;
 
   render() {
+    const { onClose } = this.context ?? {};
+
     return html`
       <header>
         <h1>${this.heading}</h1>
         ${cond(
-          this.context.onClose !== noop &&
-            html`<logto-icon-button @click=${this.context.onClose}>${closeIcon}</logto-icon-button>`
+          onClose &&
+            onClose !== noop &&
+            html`<logto-icon-button @click=${onClose}>${closeIcon}</logto-icon-button>`
         )}
       </header>
       <slot></slot>
-      <footer></footer>
+      <footer>
+        <slot name="footer"></slot>
+      </footer>
     `;
   }
 }
