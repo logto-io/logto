@@ -36,7 +36,7 @@ if (isDevFeaturesEnabled) {
   initLocalization();
 }
 
-const { LogtoProfileCard, LogtoThemeProvider } = createReactComponents(React);
+const { LogtoProfileCard, LogtoThemeProvider, LogtoUserProvider } = createReactComponents(React);
 
 function Profile() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -70,60 +70,62 @@ function Profile() {
   return (
     <AppBoundary>
       <LogtoThemeProvider theme="dark">
-        <div className={styles.pageContainer}>
-          <Topbar hideTenantSelector hideTitle />
-          <OverlayScrollbar className={styles.scrollable}>
-            <div className={styles.wrapper}>
-              <PageMeta titleKey="profile.page_title" />
-              <div className={pageLayout.headline}>
-                <CardTitle title="profile.title" subtitle="profile.description" />
-              </div>
-              {showLoadingSkeleton && <Skeleton />}
-              {isDevFeaturesEnabled && <LogtoProfileCard />}
-              {user && !showLoadingSkeleton && (
-                <div className={styles.content}>
-                  <BasicUserInfoSection user={user} onUpdate={reload} />
-                  {isCloud && (
-                    <LinkAccountSection user={user} connectors={connectors} onUpdate={reload} />
-                  )}
-                  <FormCard title="profile.password.title">
-                    <CardContent
-                      title="profile.password.password_setting"
-                      data={[
-                        {
-                          key: 'password',
-                          label: 'profile.password.password',
-                          value: user.hasPassword,
-                          renderer: (value) => (value ? <span>********</span> : <NotSet />),
-                          action: {
-                            name: 'profile.change',
-                            handler: () => {
-                              navigate(user.hasPassword ? 'verify-password' : 'change-password', {
-                                state: { email: user.primaryEmail, action: 'changePassword' },
-                              });
+        <LogtoUserProvider api={api}>
+          <div className={styles.pageContainer}>
+            <Topbar hideTenantSelector hideTitle />
+            <OverlayScrollbar className={styles.scrollable}>
+              <div className={styles.wrapper}>
+                <PageMeta titleKey="profile.page_title" />
+                <div className={pageLayout.headline}>
+                  <CardTitle title="profile.title" subtitle="profile.description" />
+                </div>
+                {showLoadingSkeleton && <Skeleton />}
+                {isDevFeaturesEnabled && <LogtoProfileCard />}
+                {user && !showLoadingSkeleton && (
+                  <div className={styles.content}>
+                    <BasicUserInfoSection user={user} onUpdate={reload} />
+                    {isCloud && (
+                      <LinkAccountSection user={user} connectors={connectors} onUpdate={reload} />
+                    )}
+                    <FormCard title="profile.password.title">
+                      <CardContent
+                        title="profile.password.password_setting"
+                        data={[
+                          {
+                            key: 'password',
+                            label: 'profile.password.password',
+                            value: user.hasPassword,
+                            renderer: (value) => (value ? <span>********</span> : <NotSet />),
+                            action: {
+                              name: 'profile.change',
+                              handler: () => {
+                                navigate(user.hasPassword ? 'verify-password' : 'change-password', {
+                                  state: { email: user.primaryEmail, action: 'changePassword' },
+                                });
+                              },
                             },
                           },
-                        },
-                      ]}
-                    />
-                  </FormCard>
-                  {isCloud && (
-                    <FormCard title="profile.delete_account.title">
-                      <div className={styles.deleteAccount}>
-                        <div className={styles.description}>
-                          {t('profile.delete_account.description')}
-                        </div>
-                        <Button title="profile.delete_account.button" onClick={show} />
-                      </div>
-                      <DeleteAccountModal isOpen={showDeleteAccountModal} onClose={hide} />
+                        ]}
+                      />
                     </FormCard>
-                  )}
-                </div>
-              )}
-            </div>
-          </OverlayScrollbar>
-          {childrenRoutes}
-        </div>
+                    {isCloud && (
+                      <FormCard title="profile.delete_account.title">
+                        <div className={styles.deleteAccount}>
+                          <div className={styles.description}>
+                            {t('profile.delete_account.description')}
+                          </div>
+                          <Button title="profile.delete_account.button" onClick={show} />
+                        </div>
+                        <DeleteAccountModal isOpen={showDeleteAccountModal} onClose={hide} />
+                      </FormCard>
+                    )}
+                  </div>
+                )}
+              </div>
+            </OverlayScrollbar>
+            {childrenRoutes}
+          </div>
+        </LogtoUserProvider>
       </LogtoThemeProvider>
     </AppBoundary>
   );
