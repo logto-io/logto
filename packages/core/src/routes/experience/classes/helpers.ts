@@ -16,8 +16,8 @@ import type { InteractionProfile } from '../types.js';
 import { type VerificationRecord } from './verifications/index.js';
 
 /**
- * @throws {RequestError} -400 if the verification record type is not supported for user creation.
- * @throws {RequestError} -400 if the verification record is not verified.
+ * @throws {RequestError} with status 400 if the verification record type is not supported for user creation.
+ * @throws {RequestError} with status 400 if the verification record is not verified.
  */
 export const getNewUserProfileFromVerificationRecord = async (
   verificationRecord: VerificationRecord

@@ -75,9 +75,9 @@ type ValueOf<T> = T[keyof T];
  * Union type for all verification record types
  *
  * @remarks This is a discriminated union type.
- * The VerificationRecord generic class can not narrow down the type of a verification record instance by its type property.
+ * The `VerificationRecord` generic class can not narrow down the type of a verification record instance by its type property.
  * This union type is used to narrow down the type of the verification record.
- * Used in the ExperienceInteraction class to store and manage all the verification records. With a given verification type, we can narrow down the type of the verification record.
+ * Used in the `ExperienceInteraction` class to store and manage all the verification records. With a given verification type, we can narrow down the type of the verification record.
  */
 export type VerificationRecord = ValueOf<VerificationRecordMap>;
 
