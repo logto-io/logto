@@ -44,16 +44,21 @@ type CodeVerificationType =
   | VerificationType.EmailVerificationCode
   | VerificationType.PhoneVerificationCode;
 
-type SinInIdentifierTypeOf<T extends CodeVerificationType> =
-  T extends VerificationType.EmailVerificationCode
-    ? SignInIdentifier.Email
-    : SignInIdentifier.Phone;
+type SinInIdentifierTypeOf = {
+  [VerificationType.EmailVerificationCode]: SignInIdentifier.Email;
+  [VerificationType.PhoneVerificationCode]: SignInIdentifier.Phone;
+};
 
 type VerificationCodeIdentifierOf<T extends CodeVerificationType> = VerificationCodeIdentifier<
-  SinInIdentifierTypeOf<T>
+  SinInIdentifierTypeOf[T]
 >;
 
-/** The JSON data type for the CodeVerification record */
+type CodeVerificationIdentifierMap = {
+  [VerificationType.EmailVerificationCode]: { primaryEmail: string };
+  [VerificationType.PhoneVerificationCode]: { primaryPhone: string };
+};
+
+/** The JSON data type for the `CodeVerification` record */
 export type CodeVerificationRecordData<T extends CodeVerificationType = CodeVerificationType> = {
   id: string;
   type: T;
@@ -122,7 +127,8 @@ abstract class CodeVerification<T extends CodeVerificationType>
   /**
    * Verify the `identifier` with the given code
    *
-   * @remark The identifier and code will be verified in the passcode library.
+   * @remarks
+   * The identifier and code will be verified in the passcode library.
    * No need to verify the identifier before calling this method.
    *
    * - `isVerified` will be set to true if the code is verified successfully.
@@ -177,9 +183,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
     };
   }
 
-  abstract toUserProfile(): T extends VerificationType.EmailVerificationCode
-    ? { primaryEmail: string }
-    : { primaryPhone: string };
+  abstract toUserProfile(): CodeVerificationIdentifierMap[T];
 }
 
 const basicCodeVerificationRecordDataGuard = z.object({
@@ -189,10 +193,11 @@ const basicCodeVerificationRecordDataGuard = z.object({
 });
 
 /**
- * EmailCodeVerification is a verification type that verifies a given email identifier by sending a verification code.
+ * A verification code class that verifies a given email identifier.
  *
- * @remark The verification code is sent to the user's email the user is required to enter the code to verify.
- * If the identifier is for a existing user, the userId will be set after the verification.
+ * @remarks
+ * The verification code is sent to the user's email and the user is required to enter the exact same code to
+ * complete the process. If the identifier is for an existing user, the `userId` will be set after the verification.
  */
 export class EmailCodeVerification extends CodeVerification<VerificationType.EmailVerificationCode> {
   public readonly type = VerificationType.EmailVerificationCode;
@@ -221,10 +226,11 @@ export const emailCodeVerificationRecordDataGuard = basicCodeVerificationRecordD
 }) satisfies ToZodObject<CodeVerificationRecordData<VerificationType.EmailVerificationCode>>;
 
 /**
- * PhoneCodeVerification is a verification type that verifies a given phone identifier by sending a verification code.
+ * A verification code class that verifies a given phone identifier.
  *
- * @remark The verification code is sent to the user's phone the user is required to enter the code to verify.
- * If the identifier is for a existing user, the userId will be set after the verification.
+ * @remarks
+ * The verification code will be sent to the user's phone and the user is required to enter the exact same code to
+ * complete the process. If the identifier is for an existing user, the `userId` will be set after the verification.
  */
 export class PhoneCodeVerification extends CodeVerification<VerificationType.PhoneVerificationCode> {
   public readonly type = VerificationType.PhoneVerificationCode;
@@ -253,7 +259,7 @@ export const phoneCodeVerificationRecordDataGuard = basicCodeVerificationRecordD
 }) satisfies ToZodObject<CodeVerificationRecordData<VerificationType.PhoneVerificationCode>>;
 
 /**
- * Factory method to create a new EmailCodeVerification/PhoneCodeVerification record using the given identifier.
+ * Factory method to create a new `EmailCodeVerification` / `PhoneCodeVerification` record using the given identifier.
  */
 export const createNewCodeVerificationRecord = (
   libraries: Libraries,
@@ -265,21 +271,24 @@ export const createNewCodeVerificationRecord = (
 ) => {
   const { type } = identifier;
 
-  if (type === SignInIdentifier.Email) {
-    return new EmailCodeVerification(libraries, queries, {
-      id: generateStandardId(),
-      type: VerificationType.EmailVerificationCode,
-      identifier,
-      interactionEvent,
-      verified: false,
-    });
+  switch (type) {
+    case SignInIdentifier.Email: {
+      return new EmailCodeVerification(libraries, queries, {
+        id: generateStandardId(),
+        type: VerificationType.EmailVerificationCode,
+        identifier,
+        interactionEvent,
+        verified: false,
+      });
+    }
+    case SignInIdentifier.Phone: {
+      return new PhoneCodeVerification(libraries, queries, {
+        id: generateStandardId(),
+        type: VerificationType.PhoneVerificationCode,
+        identifier,
+        interactionEvent,
+        verified: false,
+      });
+    }
   }
-
-  return new PhoneCodeVerification(libraries, queries, {
-    id: generateStandardId(),
-    type: VerificationType.PhoneVerificationCode,
-    identifier,
-    interactionEvent,
-    verified: false,
-  });
 };
