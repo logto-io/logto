@@ -42,6 +42,11 @@ import {
   type TotpVerificationRecordData,
 } from './totp-verification.js';
 import { type VerificationRecord as GenericVerificationRecord } from './verification-record.js';
+import {
+  WebAuthnVerification,
+  webAuthnVerificationRecordDataGuard,
+  type WebAuthnVerificationRecordData,
+} from './web-authn.js';
 
 export type VerificationRecordData =
   | PasswordVerificationRecordData
@@ -51,6 +56,7 @@ export type VerificationRecordData =
   | EnterpriseSsoVerificationRecordData
   | TotpVerificationRecordData
   | BackupCodeVerificationRecordData
+  | WebAuthnVerificationRecordData
   | NewPasswordIdentityVerificationRecordData;
 
 // This is to ensure the keys of the map are the same as the type of the verification record
@@ -67,6 +73,7 @@ export type VerificationRecordMap = AssertVerificationMap<{
   [VerificationType.EnterpriseSso]: EnterpriseSsoVerification;
   [VerificationType.TOTP]: TotpVerification;
   [VerificationType.BackupCode]: BackupCodeVerification;
+  [VerificationType.WebAuthn]: WebAuthnVerification;
   [VerificationType.NewPasswordIdentity]: NewPasswordIdentityVerification;
 }>;
 
@@ -89,6 +96,7 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   enterPriseSsoVerificationRecordDataGuard,
   totpVerificationRecordDataGuard,
   backupCodeVerificationRecordDataGuard,
+  webAuthnVerificationRecordDataGuard,
   newPasswordIdentityVerificationRecordDataGuard,
 ]);
 
@@ -121,6 +129,9 @@ export const buildVerificationRecord = (
     }
     case VerificationType.BackupCode: {
       return new BackupCodeVerification(libraries, queries, data);
+    }
+    case VerificationType.WebAuthn: {
+      return new WebAuthnVerification(libraries, queries, data);
     }
     case VerificationType.NewPasswordIdentity: {
       return new NewPasswordIdentityVerification(libraries, queries, data);

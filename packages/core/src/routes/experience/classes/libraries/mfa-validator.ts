@@ -110,8 +110,8 @@ export class MfaValidator {
     // Filter out the verified MFA verification records
     const mfaVerificationRecords = verificationRecords.filter(({ type, isVerified }) => {
       return (
-        isVerified &&
         isMfaVerificationRecordType(type) &&
+        isVerified &&
         // Check if the verification type is enabled in the user's MFA settings
         enabledMfaFactors.some((factor) => factor.type === mfaVerificationTypeToMfaFactorMap[type])
       );

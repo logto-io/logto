@@ -32,6 +32,7 @@ import passwordVerificationRoutes from './verification-routes/password-verificat
 import socialVerificationRoutes from './verification-routes/social-verification.js';
 import totpVerificationRoutes from './verification-routes/totp-verification.js';
 import verificationCodeRoutes from './verification-routes/verification-code.js';
+import webAuthnVerificationRoute from './verification-routes/web-authn-verification.js';
 
 type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
 
@@ -148,6 +149,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   socialVerificationRoutes(router, tenant);
   enterpriseSsoVerificationRoutes(router, tenant);
   totpVerificationRoutes(router, tenant);
+  webAuthnVerificationRoute(router, tenant);
   backupCodeVerificationRoutes(router, tenant);
   newPasswordIdentityVerificationRoutes(router, tenant);
 
