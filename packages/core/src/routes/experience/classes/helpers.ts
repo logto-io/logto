@@ -30,8 +30,11 @@ export const getNewUserProfileFromVerificationRecord = async (
     }
     case VerificationType.EnterpriseSso:
     case VerificationType.Social: {
-      const identityProfile = await verificationRecord.toUserProfile();
-      const syncedProfile = await verificationRecord.toSyncedProfile(true);
+      const [identityProfile, syncedProfile] = await Promise.all([
+        verificationRecord.toUserProfile(),
+        verificationRecord.toSyncedProfile(),
+      ]);
+
       return { ...identityProfile, ...syncedProfile };
     }
     default: {
@@ -95,8 +98,9 @@ export const identifyUserByVerificationRecord = async (
         // Auto fallback to identify the related user if the user does not exist for enterprise SSO.
         if (error instanceof RequestError && error.code === 'user.identity_not_exist') {
           const user = await verificationRecord.identifyRelatedUser();
+
           const syncedProfile = {
-            ...(await verificationRecord.toUserProfile()),
+            ...verificationRecord.toUserProfile(),
             ...(await verificationRecord.toSyncedProfile()),
           };
           return { user, syncedProfile };
