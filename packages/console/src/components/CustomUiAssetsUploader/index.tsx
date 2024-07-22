@@ -15,11 +15,13 @@ import * as styles from './index.module.scss';
 type Props = {
   readonly value?: CustomUiAssets;
   readonly onChange: (value: CustomUiAssets) => void;
+  // eslint-disable-next-line react/boolean-prop-naming
+  readonly disabled?: boolean;
 };
 
 const allowedMimeTypes: AllowedUploadMimeType[] = ['application/zip'];
 
-function CustomUiAssetsUploader({ value, onChange }: Props) {
+function CustomUiAssetsUploader({ value, onChange, disabled }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<string>();
@@ -48,6 +50,7 @@ function CustomUiAssetsUploader({ value, onChange }: Props) {
   if (showUploader) {
     return (
       <FileUploader<{ customUiAssetId: string }>
+        disabled={disabled}
         allowedMimeTypes={allowedMimeTypes}
         maxSize={maxUploadFileSize}
         uploadUrl="api/sign-in-exp/default/custom-ui-assets"

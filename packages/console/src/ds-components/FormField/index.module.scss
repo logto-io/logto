@@ -34,6 +34,10 @@
     font: var(--font-body-2);
     color: var(--color-text-secondary);
   }
+
+  .featureTag {
+    margin-left: _.unit(2);
+  }
 }
 
 .description {

@@ -8,7 +8,7 @@ import * as styles from './index.module.scss';
 
 export { default as BetaTag } from './BetaTag';
 
-type Props = {
+export type Props = {
   /**
    * Whether the tag should be visible. It should be `true` if the tenant's subscription
    * plan has NO access to the feature (paywall), but it will always be visible for dev

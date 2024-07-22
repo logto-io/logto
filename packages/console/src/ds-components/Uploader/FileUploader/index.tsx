@@ -15,6 +15,8 @@ import { Ring } from '../../Spinner';
 import * as styles from './index.module.scss';
 
 export type Props<T extends Record<string, unknown> = UserAssets> = {
+  // eslint-disable-next-line react/boolean-prop-naming
+  readonly disabled?: boolean;
   readonly maxSize: number; // In bytes
   readonly allowedMimeTypes: AllowedUploadMimeType[];
   readonly actionDescription?: string;
@@ -33,6 +35,7 @@ export type Props<T extends Record<string, unknown> = UserAssets> = {
 };
 
 function FileUploader<T extends Record<string, unknown> = UserAssets>({
+  disabled,
   maxSize,
   allowedMimeTypes,
   actionDescription,
@@ -121,7 +124,7 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    disabled: isUploading,
+    disabled: isUploading || disabled,
     multiple: false,
     accept: Object.fromEntries(allowedMimeTypes.map((mimeType) => [mimeType, []])),
   });
@@ -133,6 +136,7 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
         styles.uploader,
         Boolean(uploadError) && styles.uploaderError,
         isDragActive && styles.dragActive,
+        disabled && styles.disabled,
         className
       )}
     >
