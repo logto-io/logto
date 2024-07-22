@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 
-import { uploadFileGuard, maxUploadFileSize } from '@logto/schemas';
+import { uploadFileGuard, maxUploadFileSize, adminTenantId } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import pRetry, { AbortError } from 'p-retry';
 import { object, z } from 'zod';
@@ -53,6 +53,10 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
       assertThat(file.size <= maxUploadFileSize, 'guard.file_size_exceeded');
       assertThat(file.mimetype === 'application/zip', 'guard.mime_type_not_allowed');
 
+      const [tenantId] = await getTenantId(ctx.URL);
+      assertThat(tenantId, 'guard.can_not_get_tenant_id');
+      assertThat(tenantId !== adminTenantId, 'guard.not_allowed_for_admin_tenant');
+
       const { experienceZipsProviderConfig } = SystemContext.shared;
       assertThat(
         experienceZipsProviderConfig?.provider === 'AzureStorage',
@@ -64,9 +68,6 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
         connectionString,
         container
       );
-
-      const [tenantId] = await getTenantId(ctx.URL);
-      assertThat(tenantId, 'guard.can_not_get_tenant_id');
 
       const customUiAssetId = generateStandardId(8);
       const objectKey = `${tenantId}/${customUiAssetId}/assets.zip`;
