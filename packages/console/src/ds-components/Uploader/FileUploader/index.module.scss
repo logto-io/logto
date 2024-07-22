@@ -6,8 +6,7 @@
   justify-content: center;
   border: 1px dashed var(--color-border);
   border-radius: 8px;
-  padding: _.unit(2);
-  height: 80px;
+  padding: _.unit(5);
 
   > input {
     display: none;

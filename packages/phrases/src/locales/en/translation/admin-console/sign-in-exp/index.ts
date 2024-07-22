@@ -80,7 +80,7 @@ const sign_in_exp = {
       'Enter your custom CSS to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.',
     bring_your_ui_title: 'Bring your UI',
     bring_your_ui_description:
-      'Upload a compressed package (.zip) and replace the Logto prebuilt UI with your own code. <a>Learn more</a>',
+      'Upload a compressed package (.zip) to replace the Logto prebuilt UI with your own code. <a>Learn more</a>',
     preview_with_bring_your_ui_description:
       'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',
   },
