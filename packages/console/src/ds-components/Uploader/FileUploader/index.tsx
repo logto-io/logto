@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import UploaderIcon from '@/assets/icons/upload.svg';
 import useApi from '@/hooks/use-api';
-import { convertToFileExtensionArray } from '@/utils/uploader';
+import { convertToFileExtensionArray, formatBytes } from '@/utils/uploader';
 
 import { Ring } from '../../Spinner';
 
@@ -94,7 +94,9 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
       const fileSizeLimit = Math.min(maxSize, maxUploadFileSize);
 
       if (acceptedFile.size > fileSizeLimit) {
-        setUploadError(t('components.uploader.error_file_size', { size: fileSizeLimit / 1024 }));
+        setUploadError(
+          t('components.uploader.error_file_size', { limitWithUnit: formatBytes(fileSizeLimit) })
+        );
 
         return;
       }
