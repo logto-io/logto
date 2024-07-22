@@ -32,7 +32,9 @@ export const getNewUserProfileFromVerificationRecord = async (
     case VerificationType.Social: {
       const [identityProfile, syncedProfile] = await Promise.all([
         verificationRecord.toUserProfile(),
-        verificationRecord.toSyncedProfile(),
+        // Set `isNewUser` to true to specify syncing profile from the
+        // social/enterprise SSO identity for a new user.
+        verificationRecord.toSyncedProfile(true),
       ]);
 
       return { ...identityProfile, ...syncedProfile };
