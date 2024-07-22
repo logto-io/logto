@@ -215,7 +215,11 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
             <Settings data={data} />
             {/* Protected apps will reference this section in <ProtectedAppSettings /> component */}
             {data.type !== ApplicationType.Protected && (
-              <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
+              <EndpointsAndCredentials
+                app={data}
+                oidcConfig={oidcConfig}
+                onApplicationUpdated={onApplicationUpdated}
+              />
             )}
             {![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(data.type) && (
               <RefreshTokenSettings data={data} />

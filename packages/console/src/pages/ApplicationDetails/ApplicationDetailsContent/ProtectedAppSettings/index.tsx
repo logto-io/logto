@@ -287,7 +287,7 @@ function ProtectedAppSettings({ data }: Props) {
           </InlineNotification>
         </FormField>
       </FormCard>
-      <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
+      <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} onApplicationUpdated={mutate} />
       <SessionForm data={data} />
     </>
   );
