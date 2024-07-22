@@ -71,6 +71,8 @@ export const defaultSubscriptionPlan: SubscriptionPlan = {
     thirdPartyApplicationsLimit: null,
     tenantMembersLimit: null,
     customJwtEnabled: true,
+    subjectTokenEnabled: true,
+    bringYourUiEnabled: true,
   },
 };
 

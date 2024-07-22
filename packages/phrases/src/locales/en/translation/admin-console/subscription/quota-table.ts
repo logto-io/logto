@@ -21,6 +21,7 @@ const quota_table = {
     custom_domain: 'Custom domain',
     custom_css: 'Custom CSS',
     logo_and_favicon: 'Logo and favicon',
+    bring_your_ui: 'Bring your UI',
     dark_mode: 'Dark mode',
     i18n: 'Internationalization',
   },
