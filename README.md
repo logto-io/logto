@@ -25,7 +25,7 @@ Logto[^info] is an Auth0 alternative designed for modern apps and SaaS products.
 - Enables OIDC-based authentication with Logto SDKs.
 - Supports passwordless sign-in, along with various options like email, phone number, username, Google, Facebook, and other social sign-in methods.
 - Offers beautiful UI components with customizable CSS to suit your business needs.
-- Has an open community with many warm-hearted contributors and users. Check out our awesome list of community-contributed resources.
+- Has an open community with many warm-hearted contributors and users. Check out our [awesome list](./AWESOME.md) of community-contributed resources.
 
 📦 **Out-of-the-box infrastructure**
 
