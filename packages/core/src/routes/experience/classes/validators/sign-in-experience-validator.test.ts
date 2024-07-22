@@ -11,7 +11,7 @@ import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
-import { CodeVerification } from '../verifications/code-verification.js';
+import { createNewCodeVerificationRecord } from '../verifications/code-verification.js';
 import { EnterpriseSsoVerification } from '../verifications/enterprise-sso-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
 import { NewPasswordIdentityVerification } from '../verifications/new-password-identity-verification.js';
@@ -53,7 +53,7 @@ const passwordVerificationRecords = Object.fromEntries(
 ) as Record<SignInIdentifier, PasswordVerification>;
 
 const verificationCodeVerificationRecords = Object.freeze({
-  [SignInIdentifier.Email]: CodeVerification.create(
+  [SignInIdentifier.Email]: createNewCodeVerificationRecord(
     mockTenant.libraries,
     mockTenant.queries,
     {
@@ -62,7 +62,7 @@ const verificationCodeVerificationRecords = Object.freeze({
     },
     InteractionEvent.SignIn
   ),
-  [SignInIdentifier.Phone]: CodeVerification.create(
+  [SignInIdentifier.Phone]: createNewCodeVerificationRecord(
     mockTenant.libraries,
     mockTenant.queries,
     {

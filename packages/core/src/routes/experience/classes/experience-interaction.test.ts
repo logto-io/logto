@@ -17,7 +17,7 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { CodeVerification } from './verifications/code-verification.js';
+import { EmailCodeVerification } from './verifications/code-verification.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -75,9 +75,9 @@ describe('ExperienceInteraction class', () => {
   };
   const { libraries, queries } = tenant;
 
-  const emailVerificationRecord = new CodeVerification(libraries, queries, {
+  const emailVerificationRecord = new EmailCodeVerification(libraries, queries, {
     id: 'mock_email_verification_id',
-    type: VerificationType.VerificationCode,
+    type: VerificationType.EmailVerificationCode,
     identifier: {
       type: SignInIdentifier.Email,
       value: mockEmail,

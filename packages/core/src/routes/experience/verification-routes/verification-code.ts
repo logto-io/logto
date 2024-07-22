@@ -1,8 +1,4 @@
-import {
-  InteractionEvent,
-  VerificationType,
-  verificationCodeIdentifierGuard,
-} from '@logto/schemas';
+import { InteractionEvent, verificationCodeIdentifierGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -12,7 +8,8 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { CodeVerification } from '../classes/verifications/code-verification.js';
+import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
+import { createNewCodeVerificationRecord } from '../classes/verifications/code-verification.js';
 import { experienceRoutes } from '../const.js';
 import { type WithExperienceInteractionContext } from '../middleware/koa-experience-interaction.js';
 
@@ -36,7 +33,7 @@ export default function verificationCodeRoutes<T extends WithLogContext>(
     async (ctx, next) => {
       const { identifier, interactionEvent } = ctx.guard.body;
 
-      const codeVerification = CodeVerification.create(
+      const codeVerification = createNewCodeVerificationRecord(
         libraries,
         queries,
         identifier,
@@ -80,7 +77,7 @@ export default function verificationCodeRoutes<T extends WithLogContext>(
       assertThat(
         codeVerificationRecord &&
           // Make the Verification type checker happy
-          codeVerificationRecord.type === VerificationType.VerificationCode,
+          codeVerificationRecord.type === codeVerificationIdentifierRecordTypeMap[identifier.type],
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 

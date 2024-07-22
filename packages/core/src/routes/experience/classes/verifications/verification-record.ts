@@ -19,7 +19,8 @@ export abstract class VerificationRecord<
 }
 
 type IdentifierVerificationType =
-  | VerificationType.VerificationCode
+  | VerificationType.EmailVerificationCode
+  | VerificationType.PhoneVerificationCode
   | VerificationType.Password
   | VerificationType.Social
   | VerificationType.EnterpriseSso;
