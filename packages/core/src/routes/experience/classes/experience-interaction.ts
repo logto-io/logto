@@ -103,7 +103,7 @@ export default class ExperienceInteraction {
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
-      this.verificationRecords.set(instance.type, instance);
+      this.verificationRecords.setValue(instance);
     }
   }
 
@@ -192,8 +192,8 @@ export default class ExperienceInteraction {
   public getVerificationRecordByTypeAndId<K extends keyof VerificationRecordMap>(
     type: K,
     verificationId: string
-  ) {
-    const record = this.verificationRecords.get(type);
+  ): VerificationRecordMap[K] {
+    const record = this.verificationRecords.getValue(type);
 
     assertThat(
       record?.id === verificationId,
