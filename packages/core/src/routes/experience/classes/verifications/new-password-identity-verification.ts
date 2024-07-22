@@ -104,9 +104,8 @@ export class NewPasswordIdentityVerification
     const passwordValidator = new PasswordValidator(passwordPolicy);
     await passwordValidator.validatePassword(password, identifierProfile);
 
-    const { passwordEncrypted, passwordEncryptionMethod } = await passwordValidator.encryptPassword(
-      password
-    );
+    const { passwordEncrypted, passwordEncryptionMethod } =
+      await passwordValidator.createPasswordDigest(password);
 
     this.passwordEncrypted = passwordEncrypted;
     this.passwordEncryptionMethod = passwordEncryptionMethod;

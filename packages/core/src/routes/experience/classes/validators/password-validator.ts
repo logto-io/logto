@@ -32,8 +32,8 @@ export class PasswordValidator {
   }
 
   /**
-   * Validate password against the given password policy
-   * throw a {@link RequestError} 422 if the password is invalid; otherwise, do nothing.
+   * Validate password against the password policy
+   * @throws {RequestError} with status 422 if the password does not meet the policy
    */
   public async validatePassword(password: string, profile: InteractionProfile) {
     const userInfo = getUserInfo({
@@ -51,7 +51,7 @@ export class PasswordValidator {
     }
   }
 
-  public async encryptPassword(password: string) {
+  public async createPasswordDigest(password: string) {
     return encryptUserPassword(password);
   }
 }
