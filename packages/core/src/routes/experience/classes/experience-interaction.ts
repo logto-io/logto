@@ -98,7 +98,7 @@ export default class ExperienceInteraction {
     this.#profile = profile;
 
     // Profile validator requires the userId for existing user profile update validation
-    this.profileValidator = new ProfileValidator(libraries, queries, userId);
+    this.profileValidator = new ProfileValidator(libraries, queries);
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);

@@ -33,14 +33,11 @@ export default function newPasswordIdentityVerificationRoutes<T extends WithLogC
         identifier
       );
 
-      const policyChecker =
-        await experienceInteraction.signInExperienceValidator.getPasswordPolicyChecker();
+      await newPasswordIdentityVerification.verify(password);
 
-      await newPasswordIdentityVerification.verify(password, policyChecker);
+      experienceInteraction.setVerificationRecord(newPasswordIdentityVerification);
 
-      ctx.experienceInteraction.setVerificationRecord(newPasswordIdentityVerification);
-
-      await ctx.experienceInteraction.save();
+      await experienceInteraction.save();
 
       ctx.body = { verificationId: newPasswordIdentityVerification.id };
 

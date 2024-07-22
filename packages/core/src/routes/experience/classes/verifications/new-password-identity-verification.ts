@@ -1,5 +1,4 @@
 import { type ToZodObject } from '@logto/connector-kit';
-import { type PasswordPolicyChecker } from '@logto/core-kit';
 import {
   type InteractionIdentifier,
   interactionIdentifierGuard,
@@ -10,13 +9,14 @@ import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { interactionIdentifierToUserProfile, profileToUserInfo } from '../utils.js';
+import { interactionIdentifierToUserProfile } from '../utils.js';
+import { PasswordValidator } from '../validators/password-validator.js';
 import { ProfileValidator } from '../validators/profile-validator.js';
+import { SignInExperienceValidator } from '../validators/sign-in-experience-validator.js';
 
 import { type VerificationRecord } from './verification-record.js';
 
@@ -68,6 +68,7 @@ export class NewPasswordIdentityVerification
   private passwordEncryptionMethod?: UsersPasswordEncryptionMethod.Argon2i;
 
   private readonly profileValidator: ProfileValidator;
+  private readonly signInExperienceValidator: SignInExperienceValidator;
 
   constructor(
     private readonly libraries: Libraries,
@@ -81,6 +82,7 @@ export class NewPasswordIdentityVerification
     this.passwordEncrypted = passwordEncrypted;
     this.passwordEncryptionMethod = passwordEncryptionMethod;
     this.profileValidator = new ProfileValidator(libraries, queries);
+    this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
   }
 
   get isVerified() {
@@ -93,19 +95,17 @@ export class NewPasswordIdentityVerification
    * - Check if the identifier is unique across users
    * - Validate the password against the password policy
    */
-  async verify(password: string, passwordPolicyChecker: PasswordPolicyChecker) {
+  async verify(password: string) {
     const { identifier } = this;
     const identifierProfile = interactionIdentifierToUserProfile(identifier);
-
     await this.profileValidator.guardProfileUniquenessAcrossUsers(identifierProfile);
 
-    await this.profileValidator.validatePassword(
-      password,
-      passwordPolicyChecker,
-      profileToUserInfo(identifierProfile)
-    );
+    const passwordPolicy = await this.signInExperienceValidator.getPasswordPolicy();
+    const passwordValidator = new PasswordValidator(passwordPolicy);
+    await passwordValidator.validatePassword(password, identifierProfile);
 
-    const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
+    const { passwordEncrypted, passwordEncryptionMethod } =
+      await passwordValidator.createPasswordDigest(password);
 
     this.passwordEncrypted = passwordEncrypted;
     this.passwordEncryptionMethod = passwordEncryptionMethod;

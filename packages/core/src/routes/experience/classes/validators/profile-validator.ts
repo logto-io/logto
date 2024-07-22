@@ -1,5 +1,3 @@
-import { type PasswordPolicyChecker, type UserInfo } from '@logto/core-kit';
-
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -10,9 +8,7 @@ import type { InteractionProfile } from '../../types.js';
 export class ProfileValidator {
   constructor(
     private readonly libraries: Libraries,
-    private readonly queries: Queries,
-    /** UserId is required for existing user profile update validation */
-    private readonly userId?: string
+    private readonly queries: Queries
   ) {}
 
   public async guardProfileUniquenessAcrossUsers(profile: InteractionProfile) {
@@ -80,25 +76,6 @@ export class ProfileValidator {
           status: 422,
         })
       );
-    }
-  }
-
-  /**
-   * Validate password against the given password policy
-   * throw a {@link RequestError} -422 if the password is invalid; otherwise, do nothing.
-   */
-  public async validatePassword(
-    password: string,
-    passwordPolicyChecker: PasswordPolicyChecker,
-    userInfo: UserInfo = {}
-  ) {
-    const issues = await passwordPolicyChecker.check(
-      password,
-      passwordPolicyChecker.policy.rejects.userInfo ? userInfo : {}
-    );
-
-    if (issues.length > 0) {
-      throw new RequestError({ code: 'password.rejected', status: 422 }, { issues });
     }
   }
 }
