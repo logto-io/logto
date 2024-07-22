@@ -69,7 +69,7 @@ const useRegisterFlowCodeVerification = (
         }
 
         if (result?.redirectTo) {
-          redirectTo(result.redirectTo);
+          await redirectTo(result.redirectTo);
         }
       },
       onCancel: () => {
@@ -118,7 +118,7 @@ const useRegisterFlowCodeVerification = (
       }
 
       if (result?.redirectTo) {
-        redirectTo(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
     [errorCallback, errorHandlers, handleError, redirectTo, verifyVerificationCode]

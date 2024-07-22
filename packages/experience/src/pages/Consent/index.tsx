@@ -43,7 +43,7 @@ const Consent = () => {
     }
 
     if (result?.redirectTo) {
-      redirectTo(result.redirectTo);
+      await redirectTo(result.redirectTo);
     }
   }, [asyncConsent, handleError, redirectTo, selectedOrganization?.id]);
 

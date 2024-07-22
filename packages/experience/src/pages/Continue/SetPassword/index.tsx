@@ -34,9 +34,9 @@ const SetPassword = () => {
     [navigate, preSignInErrorHandler, show]
   );
   const successHandler: SuccessHandler<typeof addProfile> = useCallback(
-    (result) => {
+    async (result) => {
       if (result?.redirectTo) {
-        redirectTo(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
     [redirectTo]

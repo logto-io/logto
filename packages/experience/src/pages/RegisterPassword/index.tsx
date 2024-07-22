@@ -40,9 +40,9 @@ const RegisterPassword = () => {
   );
 
   const successHandler: SuccessHandler<typeof setUserPassword> = useCallback(
-    (result) => {
+    async (result) => {
       if (result && 'redirectTo' in result) {
-        redirectTo(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
     [redirectTo]
