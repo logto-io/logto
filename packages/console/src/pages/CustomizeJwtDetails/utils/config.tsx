@@ -10,7 +10,6 @@ import { type EditorProps } from '@monaco-editor/react';
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg';
 import UserFileIcon from '@/assets/icons/user-file-icon.svg';
 
-import { isDevFeaturesEnabled } from '../../../consts/env.js';
 import type { ModelSettings } from '../MainContent/MonacoCodeEditor/type.js';
 
 import {
@@ -210,14 +209,10 @@ const defaultGrantContext: Partial<JwtCustomizerGrantContext> = {
   },
 };
 
-export const defaultUserTokenContextData = isDevFeaturesEnabled
-  ? {
-      user: defaultUserContext,
-      grant: defaultGrantContext,
-    }
-  : {
-      user: defaultUserContext,
-    };
+export const defaultUserTokenContextData = {
+  user: defaultUserContext,
+  grant: defaultGrantContext,
+};
 
 export const accessTokenPayloadTestModel: ModelSettings = {
   language: 'json',
