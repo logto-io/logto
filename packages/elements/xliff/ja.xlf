@@ -2,12 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 <file target-language="ja" source-language="en" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="account.profile.title">
-  <source>Profile</source>
-</trans-unit>
-<trans-unit id="account.profile.personal-info.title">
-  <source>Personal information</source>
-</trans-unit>
 <trans-unit id="general.title">
   <source>Title</source>
 </trans-unit>
@@ -16,6 +10,12 @@
 </trans-unit>
 <trans-unit id="general.actions">
   <source>Actions</source>
+</trans-unit>
+<trans-unit id="account.profile.title">
+  <source>Profile</source>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.title">
+  <source>Personal information</source>
 </trans-unit>
 <trans-unit id="general.change">
   <source>Change</source>

@@ -2,12 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 <file target-language="ko" source-language="en" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="account.profile.title">
-  <source>Profile</source>
-</trans-unit>
-<trans-unit id="account.profile.personal-info.title">
-  <source>Personal information</source>
-</trans-unit>
 <trans-unit id="general.title">
   <source>Title</source>
 </trans-unit>
@@ -17,11 +11,15 @@
 <trans-unit id="general.actions">
   <source>Actions</source>
 </trans-unit>
+<trans-unit id="account.profile.title">
+  <source>Profile</source>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.title">
+  <source>Personal information</source>
+</trans-unit>
 <trans-unit id="general.change">
   <source>Change</source>
 </trans-unit>
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-=======
 <trans-unit id="general.update">
   <source>Update</source>
 </trans-unit>
@@ -32,7 +30,6 @@
   <source>Not set</source>
   <note from="lit-localize">A fallback title when the title or heading of a component is not provided.</note>
 </trans-unit>
-&gt;&gt;&gt;&gt;&gt;&gt;&gt; 70b24bb1b (feat(elements): init modal and input)
 <trans-unit id="account.profile.personal-info.avatar">
   <source>Avatar</source>
   <note from="lit-localize">The avatar of the user.</note>
@@ -41,13 +38,10 @@
   <source>Name</source>
   <note from="lit-localize">The name of the user.</note>
 </trans-unit>
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-=======
 <trans-unit id="account.profile.personal-info.name-placeholder">
   <source>Person Doe</source>
   <note from="lit-localize">The placeholder for the name input field.</note>
 </trans-unit>
-&gt;&gt;&gt;&gt;&gt;&gt;&gt; 70b24bb1b (feat(elements): init modal and input)
 </body>
 </file>
 </xliff>
