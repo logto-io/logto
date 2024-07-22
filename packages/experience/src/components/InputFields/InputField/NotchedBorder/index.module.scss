@@ -48,15 +48,16 @@
 
   .label {
     position: absolute;
-    left: _.unit(4);
+    left: _.unit(3.5);
     font: var(--font-body-1);
     color: var(--color-type-secondary);
     pointer-events: none;
     top: 48%;
     transform: translateY(-50%);
     transition: 0.2s ease-out;
-    transition-property: position, font, top;
+    transition-property: position, font, top, color;
     background-color: transparent;
+    padding: 0 _.unit(1);
     z-index: 1;
   }
 
@@ -71,10 +72,8 @@
 
     .label {
       top: -1px;
-      left: _.unit(3.5);
       font: var(--font-body-3);
       color: var(--color-type-secondary);
-      padding: 0 _.unit(1);
     }
   }
 
