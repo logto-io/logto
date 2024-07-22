@@ -32,7 +32,7 @@ export class LogtoButton extends LitElement {
 
     :host([type='text']) {
       background: none;
-      border-color: none;
+      border-color: transparent;
       font: ${vars.fontLabel2};
       color: ${vars.colorTextLink};
       padding: ${unit(0.5, 1)};

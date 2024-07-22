@@ -15,6 +15,18 @@ const config = {
       ts: true,
       tsconfig: fileURLToPath(new URL('tsconfig.json', import.meta.url)),
     }),
+    // Transform SVG files into Lit templates
+    {
+      name: 'transform-svg',
+      transform(context) {
+        if (context.path.endsWith('.svg')) {
+          return {
+            body: `import { html } from 'lit';\nexport default html\`${context.body}\`;`,
+            headers: { 'content-type': 'application/javascript' },
+          };
+        }
+      },
+    },
   ],
 };
 
