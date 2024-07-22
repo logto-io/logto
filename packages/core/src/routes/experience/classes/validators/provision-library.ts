@@ -13,14 +13,16 @@ import {
   type User,
   type UserOnboardingData,
 } from '@logto/schemas';
-import { conditionalArray } from '@silverhand/essentials';
+import { generateStandardId } from '@logto/shared';
+import { conditional, conditionalArray } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
-import { type InteractionProfile } from '../types.js';
+import { type InteractionProfile } from '../../types.js';
+import { toUserSocialIdentityData } from '../utils.js';
 
 type OrganizationProvisionPayload =
   | {
@@ -39,10 +41,76 @@ export class ProvisionLibrary {
   ) {}
 
   /**
+   * Insert a new user into the Logto database using the provided profile.
+   *
+   * - provision the organization for the new user based on the profile
+   * - OSS only, new user provisioning
+   */
+  async provisionNewUser(profile: InteractionProfile) {
+    const {
+      libraries: {
+        users: { generateUserId, insertUser },
+      },
+      queries: { userSsoIdentities: userSsoIdentitiesQueries },
+    } = this.tenantContext;
+
+    const { socialIdentity, enterpriseSsoIdentity, ...rest } = profile;
+
+    const { isCreatingFirstAdminUser, initialUserRoles, customData } =
+      await this.getUserProvisionContext(profile);
+
+    const [user] = await insertUser(
+      {
+        id: await generateUserId(),
+        ...rest,
+        ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
+        ...conditional(customData && { customData }),
+      },
+      initialUserRoles
+    );
+
+    if (enterpriseSsoIdentity) {
+      await userSsoIdentitiesQueries.insert({
+        id: generateStandardId(),
+        userId: user.id,
+        ...enterpriseSsoIdentity,
+      });
+    }
+
+    if (isCreatingFirstAdminUser) {
+      await this.provisionForFirstAdminUser(user);
+    }
+
+    await this.provisionNewUserJitOrganizations(user.id, profile);
+
+    // TODO: New user created hooks
+    // TODO: log
+
+    return user;
+  }
+
+  async provisionNewSsoIdentity(
+    userId: string,
+    enterpriseSsoIdentity: Required<InteractionProfile>['enterpriseSsoIdentity']
+  ) {
+    const {
+      queries: { userSsoIdentities: userSsoIdentitiesQueries },
+    } = this.tenantContext;
+
+    await userSsoIdentitiesQueries.insert({
+      id: generateStandardId(),
+      userId,
+      ...enterpriseSsoIdentity,
+    });
+
+    await this.provisionNewUserJitOrganizations(userId, { enterpriseSsoIdentity });
+  }
+
+  /**
    * This method is used to get the provision context for a new user registration.
    * It will return the provision context based on the current tenant and the request context.
    */
-  async getUserProvisionContext(profile: InteractionProfile): Promise<{
+  private async getUserProvisionContext(profile: InteractionProfile): Promise<{
     /** Admin user provisioning flag */
     isCreatingFirstAdminUser: boolean;
     /** Initial user roles for admin tenant users */
@@ -122,13 +190,38 @@ export class ProvisionLibrary {
   }
 
   /**
+   * Provision the organization for a new user
+   *
+   * - If the user has an enterprise SSO identity, provision the organization based on the SSO connector
+   * - Otherwise, provision the organization based on the primary email
+   */
+  private async provisionNewUserJitOrganizations(
+    userId: string,
+    { primaryEmail, enterpriseSsoIdentity }: InteractionProfile
+  ) {
+    if (enterpriseSsoIdentity) {
+      return this.provisionJitOrganization({
+        userId,
+        ssoConnectorId: enterpriseSsoIdentity.ssoConnectorId,
+      });
+    }
+    if (primaryEmail) {
+      return this.provisionJitOrganization({
+        userId,
+        email: primaryEmail,
+      });
+    }
+  }
+
+  /**
    * First admin user provision
    *
    * - For OSS, update the default sign-in experience to "sign-in only" once the first admin has been created.
    * - Add the user to the default organization and assign the admin role.
    */
-  async adminUserProvision({ id }: User) {
+  private async provisionForFirstAdminUser({ id }: User) {
     const { isCloud } = EnvSet.values;
+
     const {
       queries: { signInExperiences, organizations },
     } = this.tenantContext;
@@ -148,31 +241,7 @@ export class ProvisionLibrary {
     });
   }
 
-  /**
-   * Provision the organization for a new user
-   *
-   * - If the user has an enterprise SSO identity, provision the organization based on the SSO connector
-   * - Otherwise, provision the organization based on the primary email
-   */
-  async newUserJtiOrganizationProvision(
-    userId: string,
-    { primaryEmail, enterpriseSsoIdentity }: InteractionProfile
-  ) {
-    if (enterpriseSsoIdentity) {
-      return this.jitOrganizationProvision({
-        userId,
-        ssoConnectorId: enterpriseSsoIdentity.ssoConnectorId,
-      });
-    }
-    if (primaryEmail) {
-      return this.jitOrganizationProvision({
-        userId,
-        email: primaryEmail,
-      });
-    }
-  }
-
-  private async jitOrganizationProvision(payload: OrganizationProvisionPayload) {
+  private async provisionJitOrganization(payload: OrganizationProvisionPayload) {
     const {
       libraries: { users: usersLibraries },
     } = this.tenantContext;
