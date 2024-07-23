@@ -8,7 +8,7 @@
 
 import assert from 'node:assert';
 
-import { ApplicationType } from '@logto/schemas';
+import { ApplicationType, token } from '@logto/schemas';
 import { noop, removeUndefinedKeys } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 
@@ -18,6 +18,7 @@ import {
   createApplicationSecret,
   deleteApplication,
 } from '#src/api/application.js';
+import { getAuditLogs } from '#src/api/index.js';
 import { createResource } from '#src/api/resource.js';
 import { devFeatureTest, randomString, waitFor } from '#src/utils.js';
 
@@ -32,6 +33,23 @@ const [application, resource] = await Promise.all([
   createApplication('application', ApplicationType.MachineToMachine),
   createResource(),
 ]);
+
+const getLogs = async () =>
+  getAuditLogs(
+    new URLSearchParams({
+      logKey: `${token.Type.ExchangeTokenBy}.${token.ExchangeByType.ClientCredentials}`,
+    })
+  );
+
+const expectLog = (applicationId: string, secretName: string) =>
+  expect.objectContaining({
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    payload: expect.objectContaining({
+      applicationId,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      applicationSecret: expect.objectContaining({ name: secretName }),
+    }),
+  });
 
 afterAll(async () => {
   await deleteApplication(application.id).catch(noop);
@@ -155,11 +173,14 @@ devFeatureTest.describe('client authentication', () => {
   });
 
   it('should pass when client credentials are valid in authorization header', async () => {
+    const application = await createApplication('application', ApplicationType.MachineToMachine);
     const secret = await createApplicationSecret({
       applicationId: application.id,
       name: randomString(),
     });
+    const beforeLogs = await getLogs();
 
+    expect(beforeLogs).not.toContainEqual(expectLog(application.id, secret.name));
     await expect(
       post({
         authorization: `Basic ${Buffer.from(`${application.id}:${secret.value}`).toString(
@@ -170,14 +191,21 @@ devFeatureTest.describe('client authentication', () => {
     ).resolves.toMatchObject({
       token_type: 'Bearer',
     });
+
+    const logs = await getLogs();
+    expect(logs).toContainEqual(expectLog(application.id, secret.name));
+    await deleteApplication(application.id);
   });
 
   it('should pass when client credentials are valid in body', async () => {
+    const application = await createApplication('application', ApplicationType.MachineToMachine);
     const secret = await createApplicationSecret({
       applicationId: application.id,
       name: randomString(),
     });
+    const beforeLogs = await getLogs();
 
+    expect(beforeLogs).not.toContainEqual(expectLog(application.id, secret.name));
     await expect(
       post({
         body: {
@@ -206,5 +234,9 @@ devFeatureTest.describe('client authentication', () => {
         token_type: 'Bearer',
       });
     }
+
+    const logs = await getLogs();
+    expect(logs).toContainEqual(expectLog(application.id, secret.name));
+    await deleteApplication(application.id);
   });
 });

@@ -1,5 +1,5 @@
 import type { Nullable } from '@silverhand/essentials';
-import type { MiddlewareType } from 'koa';
+import type { Context, MiddlewareType } from 'koa';
 import { errors } from 'oidc-provider';
 
 import type Queries from '#src/tenants/Queries.js';
@@ -13,6 +13,14 @@ function decodeAuthToken(token: string) {
   }
   return authToken;
 }
+
+export type WithAppSecretContext<ContextT = Context> = ContextT & {
+  /** The application secret that has been transpiled during the middleware execution. */
+  appSecret?: {
+    /** The application secret name of the application (client). */
+    name: string;
+  };
+};
 
 /** @import { getConstantClientMetadata } from '#src/oidc/utils.js'; */
 /**
@@ -39,7 +47,7 @@ function decodeAuthToken(token: string) {
  */
 export default function koaAppSecretTranspilation<StateT, ContextT, ResponseBodyT>(
   queries: Queries
-): MiddlewareType<StateT, ContextT, Nullable<ResponseBodyT>> {
+): MiddlewareType<StateT, WithAppSecretContext<ContextT>, Nullable<ResponseBodyT>> {
   return async (ctx, next) => {
     type ClientCredentials = Partial<{
       clientId: string;
@@ -127,6 +135,7 @@ export default function koaAppSecretTranspilation<StateT, ContextT, ResponseBody
       ctx.query.client_secret = result.originalSecret;
     }
 
+    ctx.appSecret = { name: result.name };
     return next();
   };
 }
