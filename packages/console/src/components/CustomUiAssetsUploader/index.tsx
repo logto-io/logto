@@ -13,6 +13,8 @@ import FileIcon from '../FileIcon';
 
 import styles from './index.module.scss';
 
+const requestTimeout = 300_000; // 5 minutes
+
 type Props = {
   // eslint-disable-next-line react/boolean-prop-naming
   readonly disabled?: boolean;
@@ -51,6 +53,7 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
   if (showUploader) {
     return (
       <FileUploader<{ customUiAssetId: string }>
+        defaultApiInstanceTimeout={requestTimeout}
         disabled={disabled}
         allowedMimeTypes={allowedMimeTypes}
         maxSize={maxUploadFileSize}
