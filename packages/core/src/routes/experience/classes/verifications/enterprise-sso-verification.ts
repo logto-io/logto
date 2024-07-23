@@ -173,7 +173,7 @@ export class EnterpriseSsoVerification
   /**
    * Returns the use SSO identity as a new user profile.
    */
-  async toUserProfile(): Promise<Required<Pick<InteractionProfile, 'enterpriseSsoIdentity'>>> {
+  toUserProfile(): Required<Pick<InteractionProfile, 'enterpriseSsoIdentity'>> {
     assertThat(
       this.enterpriseSsoUserInfo && this.issuer,
       new RequestError({ code: 'session.verification_failed', status: 400 })

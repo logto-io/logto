@@ -43,7 +43,7 @@ export class ProvisionLibrary {
   /**
    * Insert a new user into the Logto database using the provided profile.
    *
-   * - provision the organization for the new user based on the profile
+   * - Provision the organization for the new user based on the profile
    * - OSS only, new user provisioning
    */
   async provisionNewUser(profile: InteractionProfile) {

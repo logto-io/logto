@@ -16,8 +16,8 @@ import type { InteractionProfile } from '../types.js';
 import { type VerificationRecord } from './verifications/index.js';
 
 /**
- * @throws {RequestError} -400 if the verification record type is not supported for user creation.
- * @throws {RequestError} -400 if the verification record is not verified.
+ * @throws {RequestError} with status 400 if the verification record type is not supported for user creation.
+ * @throws {RequestError} with status 400 if the verification record is not verified.
  */
 export const getNewUserProfileFromVerificationRecord = async (
   verificationRecord: VerificationRecord
@@ -30,8 +30,13 @@ export const getNewUserProfileFromVerificationRecord = async (
     }
     case VerificationType.EnterpriseSso:
     case VerificationType.Social: {
-      const identityProfile = await verificationRecord.toUserProfile();
-      const syncedProfile = await verificationRecord.toSyncedProfile(true);
+      const [identityProfile, syncedProfile] = await Promise.all([
+        verificationRecord.toUserProfile(),
+        // Set `isNewUser` to true to specify syncing profile from the
+        // social/enterprise SSO identity for a new user.
+        verificationRecord.toSyncedProfile(true),
+      ]);
+
       return { ...identityProfile, ...syncedProfile };
     }
     default: {
@@ -95,8 +100,9 @@ export const identifyUserByVerificationRecord = async (
         // Auto fallback to identify the related user if the user does not exist for enterprise SSO.
         if (error instanceof RequestError && error.code === 'user.identity_not_exist') {
           const user = await verificationRecord.identifyRelatedUser();
+
           const syncedProfile = {
-            ...(await verificationRecord.toUserProfile()),
+            ...verificationRecord.toUserProfile(),
             ...(await verificationRecord.toSyncedProfile()),
           };
           return { user, syncedProfile };
