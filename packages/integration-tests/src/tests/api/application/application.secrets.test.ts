@@ -1,4 +1,4 @@
-import { ApplicationType, type Application } from '@logto/schemas';
+import { ApplicationType, hasSecrets, internalPrefix, type Application } from '@logto/schemas';
 import { cond, noop } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 
@@ -10,6 +10,8 @@ import {
   getApplicationSecrets,
 } from '#src/api/application.js';
 import { devFeatureTest, randomString } from '#src/utils.js';
+
+const defaultSecretName = 'Default secret';
 
 devFeatureTest.describe('application secrets', () => {
   const applications: Application[] = [];
@@ -39,19 +41,29 @@ devFeatureTest.describe('application secrets', () => {
           }
         )
       );
+      expect(application.secret).toMatch(new RegExp(`^${internalPrefix}`));
+
+      // Check the default secret
+      const secrets = await getApplicationSecrets(application.id);
+      if (hasSecrets(type)) {
+        expect(secrets).toHaveLength(1);
+        expect(secrets[0]).toEqual(
+          expect.objectContaining({
+            applicationId: application.id,
+            name: defaultSecretName,
+          })
+        );
+      } else {
+        expect(secrets).toHaveLength(0);
+      }
+
       const secretName = randomString();
       const secretPromise = createApplicationSecret({
         applicationId: application.id,
         name: secretName,
       });
 
-      if (
-        [
-          ApplicationType.MachineToMachine,
-          ApplicationType.Protected,
-          ApplicationType.Traditional,
-        ].includes(type)
-      ) {
+      if (hasSecrets(type)) {
         expect(await secretPromise).toEqual(
           expect.objectContaining({ applicationId: application.id, name: secretName })
         );
@@ -137,8 +149,12 @@ devFeatureTest.describe('application secrets', () => {
     expect(await getApplicationSecrets(application.id)).toEqual(
       expect.arrayContaining([secret1, secret2])
     );
-    await deleteApplicationSecret(application.id, secretName1);
-    await deleteApplicationSecret(application.id, secretName2);
+
+    await Promise.all([
+      deleteApplicationSecret(application.id, secretName1),
+      deleteApplicationSecret(application.id, secretName2),
+      deleteApplicationSecret(application.id, defaultSecretName),
+    ]);
     expect(await getApplicationSecrets(application.id)).toEqual([]);
   });
 });

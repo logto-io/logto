@@ -17,6 +17,7 @@ import {
   LogtoOidcConfigKey,
   DomainStatus,
   LogtoJwtTokenKey,
+  internalPrefix,
 } from '@logto/schemas';
 
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
@@ -33,7 +34,7 @@ export * from './protected-app.js';
 export const mockApplication: Application = {
   tenantId: 'fake_tenant',
   id: 'foo',
-  secret: mockId,
+  secret: internalPrefix + mockId,
   name: 'foo',
   type: ApplicationType.SPA,
   description: null,
