@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import CustomUiAssetsUploader from '@/components/CustomUiAssetsUploader';
 import InlineUpsell from '@/components/InlineUpsell';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
 import CodeEditor from '@/ds-components/CodeEditor';
@@ -67,7 +67,7 @@ function CustomUiForm() {
           )}
         />
       </FormField>
-      {isDevFeaturesEnabled && (
+      {isDevFeaturesEnabled && isCloud && (
         <FormField
           title="sign_in_exp.custom_ui.bring_your_ui_title"
           description={
