@@ -26,6 +26,9 @@ e.g. `git merge v1.17.0 --strategy-option theirs`
 - commit the changes with `git commit -a` to end the merge and let git write the correct message
 - push and open your PR!
 
+To help with conflict resolution you can leverage git rerere functionality (reuse recorded resolution). To enable it run `git config rerere.enabled true`. Enabling the rerere setting makes Git run for you `git rerere`, with no subcommand, at the appropriate times. When performing any merge, git will record the conflicting diff hunks and record, at commit time, how they were manually resolved. If there is already any previous recorded resolutions for those conflicts, git will use them to resolve the conflicts automatically. Additional [subcommands](https://git-scm.com/docs/git-rerere) are available and can help interacting with its working state.
+
+
 ## Run with Docker Compose
 It is possible to run Logto, its database and our MyGovId mock service in a dockerized solution, with local or remote images.
 
