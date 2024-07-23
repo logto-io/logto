@@ -72,7 +72,7 @@ const useSignInFlowCodeVerification = (
         }
 
         if (result?.redirectTo) {
-          redirectTo(result.redirectTo);
+          await redirectTo(result.redirectTo);
         }
       },
       onCancel: () => {
@@ -119,7 +119,7 @@ const useSignInFlowCodeVerification = (
       }
 
       if (result?.redirectTo) {
-        redirectTo(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
     [asyncSignInWithVerificationCodeIdentifier, errorHandlers, handleError, redirectTo]
