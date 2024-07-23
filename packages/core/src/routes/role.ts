@@ -182,6 +182,8 @@ export default function roleRoutes<T extends ManagementApiRouter>(
 
           ctx.appendDataHookContext('Role.Scopes.Updated', {
             ...buildManagementApiContext(ctx),
+            // Hook context was appended ahead of the response, manually set the status code to 200
+            status: 200,
             roleId: role.id,
             data: newRolesScopes,
           });
