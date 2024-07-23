@@ -174,7 +174,12 @@ export default function roleRoutes<T extends ManagementApiRouter>(
         await insertRolesScopes(
           scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: role.id, scopeId }))
         );
+      }
 
+      ctx.body = role;
+
+      // Hook context must be triggered after the response is set.
+      if (scopeIds) {
         // Trigger the `Role.Scopes.Updated` event if scopeIds are provided. Should not break the request
         await trySafe(async () => {
           // Align the response type with POST /roles/:id/scopes
@@ -182,15 +187,11 @@ export default function roleRoutes<T extends ManagementApiRouter>(
 
           ctx.appendDataHookContext('Role.Scopes.Updated', {
             ...buildManagementApiContext(ctx),
-            // Hook context was appended ahead of the response, manually set the status code to 200
-            status: 200,
             roleId: role.id,
             data: newRolesScopes,
           });
         });
       }
-
-      ctx.body = role;
 
       return next();
     }
