@@ -16,6 +16,8 @@ const tenants = {
     tenant_id: 'ID Inquilino',
     tenant_name: 'Nome Inquilino',
     tenant_region: 'Regione di hosting',
+    tenant_region_description:
+      'La posizione fisica in cui sono ospitate le risorse del tuo inquilino (utenti, app, ecc.). Questo non può essere cambiato dopo la creazione.',
     tenant_region_tip:
       'Le risorse del tuo inquilino sono ospitate in {{region}}. <a>Scopri di più</a>',
     environment_tag_development: 'Svil',
@@ -48,6 +50,7 @@ const tenants = {
   },
   create_modal: {
     title: 'Crea nuovo inquilino',
+    subtitle: 'Crea un nuovo inquilino che ha risorse e utenti isolati.',
     tenant_usage_purpose: 'Per cosa desideri utilizzare questo inquilino?',
     development_description:
       'Solo per scopi di test e non dovrebbe essere utilizzato in produzione. Non è richiesto alcun abbonamento.',
@@ -58,6 +61,10 @@ const tenants = {
     available_plan: 'Piano disponibile:',
     create_button: 'Crea inquilino',
     tenant_name_placeholder: 'Il mio inquilino',
+    tenant_created: 'Inquilino creato con successo.',
+    invitation_failed:
+      'Alcuni inviti non sono riusciti a essere inviati. Prova di nuovo in Impostazioni -> Membri più tardi.',
+    tenant_type_description: 'Questo non può essere cambiato dopo la creazione.',
   },
   dev_tenant_migration: {
     title:
@@ -104,6 +111,10 @@ const tenants = {
       'Ci dispiace molto informarti che il tuo account inquilino è stato temporaneamente sospeso a causa di un utilizzo improprio, inclusi superamenti dei limiti di MAU, pagamenti in ritardo o altre azioni non autorizzate.',
     description_2:
       'Se necessiti ulteriori chiarimenti, hai qualche preoccupazione o desideri ripristinare la funzionalità completa e sbloccare i tuoi inquilini, ti preghiamo di contattarci immediatamente.',
+  },
+  production_tenant_notification: {
+    text: 'Sei in un inquilino di sviluppo per test gratuiti. Crea un inquilino di produzione per andare in diretta.',
+    action: 'Crea inquilino',
   },
 };
 

@@ -159,6 +159,18 @@ const quota_item = {
     unlimited: '自定义 JWT',
     not_eligible: '移除你的 JWT 声明自定义器',
   },
+  impersonation_enabled: {
+    name: '冒充',
+    limited: '冒充',
+    unlimited: '冒充',
+    not_eligible: '不允许冒充',
+  },
+  bring_your_ui_enabled: {
+    name: '自定义 UI',
+    limited: '自定义 UI',
+    unlimited: '自定义 UI',
+    not_eligible: '移除你的自定义 UI 资产',
+  },
 };
 
 export default Object.freeze(quota_item);

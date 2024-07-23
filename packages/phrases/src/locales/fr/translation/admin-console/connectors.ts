@@ -46,6 +46,8 @@ const connectors = {
     name_placeholder: 'Entrez un nom pour le bouton de connexion sociale',
     name_tip:
       'Le nom du bouton de connexion s\'affichera comme "Continuer avec {{name}}". Tenez compte de la longueur du nom si celui-ci devient trop long.',
+    connector_logo: 'Logo du connecteur',
+    connector_logo_tip: 'Le logo sera affiché sur le bouton de connexion du connecteur.',
     target: "Nom du fournisseur d'identité",
     target_placeholder: "Entrez le nom du fournisseur d'identité du connecteur",
     target_tip:

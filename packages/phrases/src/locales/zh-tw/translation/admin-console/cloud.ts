@@ -29,6 +29,12 @@ const cloud = {
       others: '以上都不是',
     },
   },
+  create_tenant: {
+    page_title: '新增租戶',
+    title: '創建你的第一個租戶',
+    description: '租戶是一個隔離的環境，你可以在其中管理用戶身份、應用程式和所有其他 Logto 資源。',
+    invite_collaborators: '通過電子郵件邀請你的合作者',
+  },
   sie: {
     page_title: '定制登錄體驗',
     title: '讓我們輕鬆定制你的登錄體驗',

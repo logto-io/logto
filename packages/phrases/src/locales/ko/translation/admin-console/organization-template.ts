@@ -14,8 +14,9 @@ const organization_template = {
     create_modal: {
       title: '조직 역할 만들기',
       create: '역할 만들기',
-      name_field: '역할 이름',
-      description_field: '설명',
+      name: '역할 이름',
+      description: '설명',
+      type: '역할 유형',
       created: '조직 역할 {{name}}이(가) 성공적으로 만들어졌습니다.',
     },
   },

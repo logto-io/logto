@@ -141,10 +141,10 @@ const quota_item = {
     not_eligible: '二要素認証を削除',
   },
   sso_enabled: {
-    name: 'エンタープライズSSO',
-    limited: 'エンタープライズSSO',
-    unlimited: 'エンタープライズSSO',
-    not_eligible: 'エンタープライズSSOを削除してください',
+    name: 'エンタープライズ SSO',
+    limited: 'エンタープライズ SSO',
+    unlimited: 'エンタープライズ SSO',
+    not_eligible: 'エンタープライズ SSO を削除してください',
   },
   tenant_members_limit: {
     name: 'テナントメンバー',
@@ -154,10 +154,22 @@ const quota_item = {
     not_eligible: 'テナントメンバーを削除してください',
   },
   custom_jwt_enabled: {
-    name: 'カスタムJWT',
-    limited: 'カスタムJWT',
-    unlimited: 'カスタムJWT',
-    not_eligible: 'JWTクレームカスタマイザーを削除してください',
+    name: 'カスタム JWT',
+    limited: 'カスタム JWT',
+    unlimited: 'カスタム JWT',
+    not_eligible: 'JWT クレームカスタマイザーを削除してください',
+  },
+  impersonation_enabled: {
+    name: 'インパーソネーション',
+    limited: 'インパーソネーション',
+    unlimited: 'インパーソネーション',
+    not_eligible: 'インパーソネーションを許可しません',
+  },
+  bring_your_ui_enabled: {
+    name: 'カスタム UI',
+    limited: 'カスタム UI',
+    unlimited: 'カスタム UI',
+    not_eligible: 'カスタム UI を削除してください',
   },
 };
 

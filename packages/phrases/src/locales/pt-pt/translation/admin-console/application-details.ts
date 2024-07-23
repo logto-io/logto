@@ -23,6 +23,7 @@ const application_details = {
   description: 'Descrição',
   description_placeholder: 'Insira a descrição da sua aplicação',
   config_endpoint: 'Endpoint de configuração do Provedor de ID Aberto',
+  issuer_endpoint: 'Endpoint do emissor',
   authorization_endpoint: 'Endpoint de autorização',
   authorization_endpoint_tip:
     'O endpoint para realizar a autenticação e autorização. É usado para <a>autenticação</a> OpenID Connect.',
@@ -62,6 +63,13 @@ const application_details = {
   rotate_refresh_token: 'Rotacionar o token de atualização',
   rotate_refresh_token_label:
     'Quando ativado, o Logto emitirá um novo token de atualização para solicitações de token quando 70% do tempo de vida original (TTL) tiver passado ou certas condições forem atendidas. <a>Saiba mais</a>',
+  backchannel_logout: 'Logout de backchannel',
+  backchannel_logout_description:
+    'Configure o endpoint de logout de backchannel do OpenID Connect e se a sessão é necessária para esta aplicação.',
+  backchannel_logout_uri: 'URI de logout de backchannel',
+  backchannel_logout_uri_session_required: 'A sessão é necessária?',
+  backchannel_logout_uri_session_required_description:
+    'Quando ativado, o RP exige que uma reivindicação `sid` (ID da sessão) seja incluída no token de logout para identificar a sessão do RP com o OP quando o `backchannel_logout_uri` é utilizado.',
   delete_description:
     'Esta ação não pode ser revertida. Esta ação irá eliminar permanentemente a aplicação. Insira o nome da aplicação <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Insira o nome da aplicação',
@@ -79,21 +87,30 @@ const application_details = {
   custom_rules_tip:
     "Aqui estão dois cenários possíveis:<ol><li>Para proteger apenas as rotas '/admin' e '/privacy' com autenticação: ^/(admin|privacy)/.*</li><li>Para excluir imagens JPG da autenticação: ^(?!.*\\.jpg$).*$</li></ol>",
   authentication_routes_description:
-    'Redirecione o seu botão de autenticação usando as rotas especificadas. Nota: Estas rotas são irsubstituíveis.',
+    'Redirecione o seu botão de autenticação usando as rotas especificadas. Nota: Estas rotas são insubstituíveis.',
   protect_origin_server: 'Proteja o seu servidor de origem',
   protect_origin_server_description:
     'Assegure-se de proteger o seu servidor de origem do acesso direto. Consulte o guia para mais <a>instruções detalhadas</a>.',
   session_duration: 'Duração da sessão (dias)',
   try_it: 'Experimente',
+  no_organization_placeholder: 'Nenhuma organização encontrada. <a>Ir para organizações</a>',
   branding: {
     name: 'Marca',
     description: 'Personalize o nome e o logótipo da sua aplicação no ecrã de consentimento.',
+    description_third_party:
+      'Personalize o nome e o logotipo da aplicação no ecrã de consentimento.',
+    app_logo: 'Logótipo da aplicação',
+    app_level_sie: 'Experiência de início de sessão ao nível da aplicação',
+    app_level_sie_switch:
+      'Ative a experiência de início de sessão ao nível da aplicação e configure a personalização da marca específica da aplicação. Se desativado, será utilizada a experiência de início de sessão omni.',
     more_info: 'Mais informações',
     more_info_description:
       'Ofereça aos utilizadores mais detalhes sobre a sua aplicação no ecrã de consentimento.',
     display_name: 'Nome a apresentar',
-    display_logo: 'Logótipo a apresentar',
-    display_logo_dark: 'Logótipo a apresentar (escuro)',
+    application_logo: 'Logótipo da aplicação',
+    application_logo_dark: 'Logótipo da aplicação (escuro)',
+    brand_color: 'Cor da marca',
+    brand_color_dark: 'Cor da marca (escura)',
     terms_of_use_url: 'URL dos termos de utilização da aplicação',
     privacy_policy_url: 'URL da política de privacidade da aplicação',
   },
@@ -131,13 +148,13 @@ const application_details = {
     grant_organization_level_permissions: 'Conceder permissões de dados da organização',
   },
   roles: {
-    name_column: 'Função de máquina a máquina',
-    description_column: 'Descrição',
     assign_button: 'Atribuir funções de máquina a máquina',
     delete_description:
       'Esta ação irá remover esta função desta aplicação entre máquinas. A função em si ainda existirá, mas não será mais associada a esta aplicação entre as máquinas.',
     deleted: '{{name}} foi removido com sucesso deste utilizador.',
     assign_title: 'Atribuir funções de máquina a máquina a {{name}}',
+    assign_subtitle:
+      'Aplicações de máquina a máquina devem ter funções do tipo máquina a máquina para aceder a recursos de API relacionados.',
     assign_role_field: 'Atribuir funções de máquina a máquina',
     role_search_placeholder: 'Pesquisar por nome de função',
     added_text: '{{value, number}} adicionado',

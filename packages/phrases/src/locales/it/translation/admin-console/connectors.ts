@@ -45,6 +45,8 @@ const connectors = {
     name_placeholder: 'Inserisci il nome per il pulsante di accesso tramite social media',
     name_tip:
       'Il nome del pulsante del connettore verrà visualizzato come "Continua con {{name}}." Presta attenzione alla lunghezza del nome in caso risulti troppo lungo.',
+    connector_logo: 'Logo del connettore',
+    connector_logo_tip: 'Il logo verrà visualizzato sul pulsante di accesso del connettore.',
     target: 'Nome del provider di identità',
     target_placeholder: 'Inserisci il nome del provider di identità del connettore',
     target_tip:

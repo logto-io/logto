@@ -44,6 +44,8 @@ const connectors = {
     name: 'Nome do botão de login social',
     name_placeholder: 'Insira o nome do botão de login social',
     name_tip: 'O nome do botão do conector será exibido como "Continuar com {{Nome do Conector}}".',
+    connector_logo: 'Logotipo do conector',
+    connector_logo_tip: 'O logotipo será exibido no botão de login do conector.',
     target: 'Nome do fornecedor de identidade',
     target_placeholder: 'Insira o nome do fornecedor de identidade do conector',
     target_tip:

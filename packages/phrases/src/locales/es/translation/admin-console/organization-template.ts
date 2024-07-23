@@ -14,8 +14,9 @@ const organization_template = {
     create_modal: {
       title: 'Crear rol de organización',
       create: 'Crear rol',
-      name_field: 'Nombre del rol',
-      description_field: 'Descripción',
+      name: 'Nombre del rol',
+      description: 'Descripción',
+      type: 'Tipo de rol',
       created: 'El rol de organización {{name}} se ha creado correctamente.',
     },
   },
