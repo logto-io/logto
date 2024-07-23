@@ -1,5 +1,6 @@
 import type { ExperienceSocialConnector } from '@logto/schemas';
 import classNames from 'classnames';
+import { useState } from 'react';
 
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
@@ -17,6 +18,14 @@ const SocialSignInList = ({ className, socialConnectors = [] }: Props) => {
   const { invokeSocialSignIn, theme } = useSocial();
   useNativeMessageListener();
 
+  const [loadingConnectorId, setLoadingConnectorId] = useState<string>();
+
+  const handleClick = async (connector: ExperienceSocialConnector) => {
+    setLoadingConnectorId(connector.id);
+    await invokeSocialSignIn(connector);
+    setLoadingConnectorId(undefined);
+  };
+
   return (
     <div className={classNames(styles.socialLinkList, className)}>
       {socialConnectors.map((connector) => {
@@ -29,8 +38,9 @@ const SocialSignInList = ({ className, socialConnectors = [] }: Props) => {
             name={name}
             logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
             target={target}
+            isLoading={loadingConnectorId === id}
             onClick={() => {
-              void invokeSocialSignIn(connector);
+              void handleClick(connector);
             }}
           />
         );
