@@ -24,8 +24,7 @@ export class VerificationRecordsMap extends Map<VerificationType, VerificationRe
     return super.get(key) as VerificationRecordMap[K] | undefined;
   }
 
-  // @ts-expect-error - Override the set method to throw an error
-  override set() {
+  override set(): never {
     throw new Error('Use `setValue` method to set the value');
   }
 
