@@ -184,16 +184,14 @@ export default class ExperienceInteraction {
    * If a record with the same type already exists, it will be replaced.
    */
   public setVerificationRecord(record: VerificationRecord) {
-    const { type } = record;
-
-    this.verificationRecords.set(type, record);
+    this.verificationRecords.setValue(record);
   }
 
   public getVerificationRecordByTypeAndId<K extends keyof VerificationRecordMap>(
     type: K,
     verificationId: string
   ): VerificationRecordMap[K] {
-    const record = this.verificationRecords.getValue(type);
+    const record = this.verificationRecords.get(type);
 
     assertThat(
       record?.id === verificationId,
@@ -310,7 +308,7 @@ export default class ExperienceInteraction {
   }
 
   private get verificationRecordsArray() {
-    return this.verificationRecords.toArray();
+    return this.verificationRecords.array();
   }
 
   /**
