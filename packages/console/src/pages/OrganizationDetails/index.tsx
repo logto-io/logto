@@ -12,10 +12,8 @@ import useSWR from 'swr';
 import Delete from '@/assets/icons/delete.svg';
 import File from '@/assets/icons/file.svg';
 import OrganizationIcon from '@/assets/icons/organization-preview.svg';
-import AppError from '@/components/AppError';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
-import Skeleton from '@/components/DetailsPage/Skeleton';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import ThemedIcon from '@/components/ThemedIcon';
@@ -31,7 +29,6 @@ import { OrganizationDetailsTabs, type OrganizationDetailsOutletContext } from '
 
 const pathname = '/organizations';
 
-// eslint-disable-next-line complexity
 function OrganizationDetails() {
   const { id } = useParams();
   const { navigate } = useTenantPathname();
@@ -70,14 +67,19 @@ function OrganizationDetails() {
     (!jitEmailDomains.data && !jitEmailDomains.error) ||
     (!jitRoles.data && !jitRoles.error) ||
     (!jitSsoConnectors.data && !jitSsoConnectors.error);
+
   const error =
     organization.error ?? jitEmailDomains.error ?? jitRoles.error ?? jitSsoConnectors.error;
 
   return (
-    <DetailsPage backLink={pathname} backLinkTitle="organizations.title" className={styles.page}>
+    <DetailsPage
+      backLink={pathname}
+      backLinkTitle="organizations.title"
+      className={styles.page}
+      isLoading={isLoading}
+      error={error}
+    >
       <PageMeta titleKey="organization_details.page_title" />
-      {isLoading && <Skeleton />}
-      {error && <AppError errorCode={error.body?.code} errorMessage={error.body?.message} />}
       {id &&
         organization.data &&
         jitEmailDomains.data &&
