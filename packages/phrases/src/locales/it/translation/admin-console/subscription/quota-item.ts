@@ -159,6 +159,18 @@ const quota_item = {
     unlimited: 'JWT personalizzato',
     not_eligible: 'Rimuovi il tuo personalizzatore di claim JWT',
   },
+  impersonation_enabled: {
+    name: 'Impersonazione',
+    limited: 'Impersonazione',
+    unlimited: 'Impersonazione',
+    not_eligible: 'Nessuna impersonazione permessa',
+  },
+  bring_your_ui_enabled: {
+    name: 'Portare la tua UI',
+    limited: 'Portare la tua UI',
+    unlimited: 'Portare la tua UI',
+    not_eligible: 'Rimuova le risorse della tua UI personalizzata',
+  },
 };
 
 export default Object.freeze(quota_item);

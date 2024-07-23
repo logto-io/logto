@@ -40,6 +40,8 @@ const connectors = {
     name: '社交登錄按鈕的名稱',
     name_placeholder: '輸入社交登錄按鈕的名稱',
     name_tip: '按鈕上將展示「通過 {{name}} 繼續」。名字不宜過長而導致信息無法展示完整。',
+    connector_logo: '連接器標誌',
+    connector_logo_tip: '標誌將顯示在連接器登錄按鈕上。',
     target: '身份提供商名稱',
     target_placeholder: '輸入身份提供商的名稱',
     target_tip: '在“身份供應商名稱”字段中輸入唯一的標識符字符串，用於區分社交身份來源。',

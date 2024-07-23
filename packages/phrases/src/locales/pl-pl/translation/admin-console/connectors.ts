@@ -44,6 +44,8 @@ const connectors = {
     name_placeholder: 'Wpisz nazwę przycisku logowania społecznościowego',
     name_tip:
       'Nazwa przycisku łącznika będzie wyświetlana jako "Kontynuuj z {{name}}." Uwzględnij długość nazwy, gdyż może stać się zbyt długa.',
+    connector_logo: 'Logo łącznika',
+    connector_logo_tip: 'Logo będzie wyświetlane na przycisku logowania łącznika.',
     target: 'Nazwa dostawcy tożsamości',
     target_placeholder: 'Wpisz nazwę dostawcy tożsamości łącznika',
     target_tip:

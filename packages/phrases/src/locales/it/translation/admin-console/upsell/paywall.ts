@@ -65,6 +65,8 @@ const paywall = {
     description:
       'Aggiorna a un piano a pagamento per la funzionalità JWT personalizzata e benefici premium. Non esitare a <a>contattarci</a> se hai domande.',
   },
+  bring_your_ui:
+    'Aggiorna a un piano a pagamento per portare la tua funzionalità di interfaccia utente personalizzata e beneficiare dei vantaggi premium.',
 };
 
 export default Object.freeze(paywall);

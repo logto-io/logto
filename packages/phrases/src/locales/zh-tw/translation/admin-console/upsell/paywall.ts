@@ -62,6 +62,7 @@ const paywall = {
     description:
       '升級至付費計劃以解鎖自訂JWT功能和高級福利。如果有任何問題，請隨時<a>聯繹我們</a>。',
   },
+  bring_your_ui: '升級到付費計劃以獲得自訂UI功能和高級福利。',
 };
 
 export default Object.freeze(paywall);

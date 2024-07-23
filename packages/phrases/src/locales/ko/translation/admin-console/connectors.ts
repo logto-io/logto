@@ -44,6 +44,8 @@ const connectors = {
     name: '소셜 로그인 버튼 이름',
     name_placeholder: '소셜 로그인 버튼 이름을 입력하세요',
     name_tip: '다음과 같이 연동 이름이 출력돼요. "{{name}}으로 계속하기".',
+    connector_logo: '연동 로고',
+    connector_logo_tip: '로고는 연동 로그인 버튼에 표시됩니다.',
     target: '연동 ID 공급자',
     target_placeholder: '연동 ID 공급자 이름을 입력하세요',
     target_tip: '"IdP 이름"의 값은 소셜 식별자를 구분하기 위한 고유 식별자 문자열이 될 수 있어요.',

@@ -24,6 +24,7 @@ const application_details = {
   description: 'Beschreibung',
   description_placeholder: 'Gib eine Beschreibung ein',
   config_endpoint: 'OpenID Provider Konfigurations-Endpunkt',
+  issuer_endpoint: 'Issuer-Endpunkt',
   authorization_endpoint: 'Autorisierungs-Endpoint',
   authorization_endpoint_tip:
     'Der Endpunkt, der für die Authentifizierung und <a>Authorisierung</a> über OpenID Connect verwendet wird.',
@@ -63,6 +64,13 @@ const application_details = {
   rotate_refresh_token: 'Auffrischungstoken drehen',
   rotate_refresh_token_label:
     'Wenn diese Option aktiviert ist, wird Logto ein neues Auffrischungstoken für Tokenanfragen ausgeben, wenn 70% der ursprünglichen Zeit bis zum Ablauf (TTL) verstrichen sind oder bestimmte Bedingungen erfüllt sind. <a>Erfahren Sie mehr</a>',
+  backchannel_logout: 'Backchannel-Logout',
+  backchannel_logout_description:
+    'Konfigurieren Sie den OpenID Connect-Backchannel-Logout-Endpunkt und ob eine Sitzung für diese Anwendung erforderlich ist.',
+  backchannel_logout_uri: 'Backchannel-Logout-URI',
+  backchannel_logout_uri_session_required: 'Ist eine Sitzung erforderlich?',
+  backchannel_logout_uri_session_required_description:
+    'Wenn aktiviert, erfordert der RP, dass ein `sid`- (Sitzungs-ID) Anspruch im Logout-Token enthalten ist, um die RP-Sitzung mit dem OP zu identifizieren, wenn die `backchannel_logout_uri` verwendet wird.',
   delete_description:
     'Diese Aktion ist nicht umkehrbar. Die Anwendung wird dauerhaft gelöscht. Bitte geben Sie den Anwendungsnamen <span>{{name}}</span> zur Bestätigung ein.',
   enter_your_application_name: 'Geben Sie einen Anwendungsnamen ein',
@@ -86,16 +94,25 @@ const application_details = {
     'Stellen Sie sicher, dass Ihr Herkunftsserver vor direktem Zugriff geschützt ist. Beachten Sie die Anleitung für weitere <a>detaillierte Anweisungen</a>.',
   session_duration: 'Sitzungsdauer (Tage)',
   try_it: 'Probieren Sie es aus',
+  no_organization_placeholder: 'Keine Organisation gefunden. <a>Zu den Organisationen</a>',
   branding: {
     name: 'Branding',
     description:
       'Passen Sie den Anzeigenamen und das Logo Ihrer Anwendung auf dem Einwilligungsbildschirm an.',
+    description_third_party:
+      'Passen Sie den Anzeigenamen und das Logo Ihrer Anwendung auf dem Einwilligungsbildschirm an.',
+    app_logo: 'App-Logo',
+    app_level_sie: 'Anmeldeerfahrung auf App-Ebene',
+    app_level_sie_switch:
+      'Aktivieren Sie die Anmeldeerfahrung auf App-Ebene und richten Sie app-spezifisches Branding ein. Wenn deaktiviert, wird die Omni-Anmeldeerfahrung verwendet.',
     more_info: 'Mehr Infos',
     more_info_description:
       'Bieten Sie den Benutzern auf dem Einwilligungsbildschirm weitere Informationen über Ihre Anwendung.',
     display_name: 'Anzeigenamen',
-    display_logo: 'Logo anzeigen',
-    display_logo_dark: 'Logo anzeigen (dunkel)',
+    application_logo: 'Anwendungslogo',
+    application_logo_dark: 'Anwendungslogo (dunkel)',
+    brand_color: 'Markenfarbe',
+    brand_color_dark: 'Markenfarbe (dunkel)',
     terms_of_use_url: 'URL der Anwendungsbedingungen',
     privacy_policy_url: 'URL der Anwendungsdatenschutzbestimmungen',
   },
@@ -107,7 +124,7 @@ const application_details = {
     organization_permissions: 'Zugriff auf Organisation',
     table_name: 'Berechtigungen erteilen',
     field_name: 'Berechtigung',
-    field_description: 'Ersccheint auf dem Einwilligungsbildschirm',
+    field_description: 'Erscheint auf dem Einwilligungsbildschirm',
     delete_text: 'Berechtigung entfernen',
     permission_delete_confirm:
       'Diese Aktion hebt die der Drittanbieter-App erteilten Berechtigungen auf, was sie daran hindert, Benutzerberechtigung für bestimmte Datentypen anzufragen. Sind Sie sicher, dass Sie fortfahren möchten?',
@@ -136,12 +153,13 @@ const application_details = {
     grant_organization_level_permissions: 'Berechtigungen für Organisationdaten erteilen',
   },
   roles: {
-    name_column: 'Rolle von Maschine zu Maschine',
-    description_column: 'Beschreibung',
     assign_button: 'Rollen von Maschine zu Maschine zuweisen',
     delete_description:
       'Diese Aktion entfernt diese Rolle von dieser Maschinen-zu-Maschinen-App. Die Rolle existiert zwar weiterhin, ist jedoch nicht mehr mit dieser Maschinen-zu-Maschinen-App verknüpft.',
     deleted: '{{name}} wurde erfolgreich von diesem Benutzer entfernt.',
+    assign_title: 'Rollen an {{name}} zuweisen',
+    assign_subtitle:
+      'Machine-to-Machine-Apps müssen Rollen vom Typ Machine-to-Machine haben, um auf verwandte API-Ressourcen zuzugreifen.',
     assign_role_field: 'Rollen von Maschine zu Maschine zuweisen',
     role_search_placeholder: 'Nach Rollennamen suchen',
     added_text: '{{value, number}} hinzugefügt',

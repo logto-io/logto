@@ -34,6 +34,13 @@ const cloud = {
       others: 'Yukarıdakilerden hiçbiri',
     },
   },
+  create_tenant: {
+    page_title: 'Kiracı oluştur',
+    title: 'İlk kiracınızı oluşturun',
+    description:
+      'Bir kiracı, kullanıcı kimliklerini, uygulamaları ve diğer tüm Logto kaynaklarını yönetebileceğiniz izole bir ortamdır.',
+    invite_collaborators: 'E-posta ile işbirlikçilerinizi davet edin',
+  },
   sie: {
     page_title: 'Oturum açma deneyimini özelleştirin',
     title: 'Öncelikle giriş deneyiminizi kolaylıkla özelleştirin',

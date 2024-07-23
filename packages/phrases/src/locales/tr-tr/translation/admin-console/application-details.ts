@@ -22,6 +22,7 @@ const application_details = {
   description: 'Açıklama',
   description_placeholder: 'Uygulama açıklamasını giriniz',
   config_endpoint: 'OpenID Sağlayıcı yapılandırma bitiş noktası',
+  issuer_endpoint: 'Yayımlayıcı bitiş noktası',
   authorization_endpoint: 'Yetkilendirme bitiş noktası',
   authorization_endpoint_tip:
     'Kimlik doğrulama ve yetkilendirme için bir bitiş noktası. OpenID Connect <a>Authentication</a> için kullanılır.',
@@ -61,6 +62,13 @@ const application_details = {
   rotate_refresh_token: 'Yenileme Belirteci değiştir',
   rotate_refresh_token_label:
     "Bu seçenek etkinleştirildiğinde, Logto Yenileme Belirteği Bitiş Süresinin %70'i geçildiğinde veya belirli koşullar sağlandığında yeni bir Yenileme Belirteği verecektir. <a>Daha fazlası için tıklayın</a>",
+  backchannel_logout: 'Arka kanal oturumu kapatma',
+  backchannel_logout_description:
+    'OpenID Connect arka kanal oturumu kapatma bitiş noktasını yapılandırın ve bu uygulama için oturumun gerekli olup olmadığını ayarlayın.',
+  backchannel_logout_uri: 'Arka kanal oturum kapatma URI',
+  backchannel_logout_uri_session_required: 'Oturum gerekli mi?',
+  backchannel_logout_uri_session_required_description:
+    'Etkinleştirildiğinde, RP, `sid` (oturum IDsi) talebinin oturumu kapatma belirtecinde bulunmasını ve `backchannel_logout_uri` kullanıldığında RP oturumunu OP ile tanımlamak için dahil edilmesini isteyecektir.',
   delete_description:
     'Bu eylem geri alınamaz. Uygulama kalıcı olarak silinecektir. Lütfen onaylamak için uygulama adı <span>{{name}}</span> girin.',
   enter_your_application_name: 'Uygulama adı giriniz',
@@ -78,21 +86,29 @@ const application_details = {
   custom_rules_tip:
     "İki durum senaryosu burada:<ol><li>Sadece '/admin' ve '/privacy' rotalarını kimlik doğrulama ile korumak için: ^/(admin|privacy)/.*</li><li>JPG resimlerini kimlik doğrulamadan hariç tutmak için: ^(?!.*\\.jpg$).*$</li></ol>",
   authentication_routes_description:
-    'Belirtilen rotaları kullanarak kimlik doğrulama düğmesinizi yönlendirin. Not: Bu rotalar değiştirilemez.',
+    'Belirtilen rotaları kullanarak kimlik doğrulama düğmenizi yönlendirin. Not: Bu rotalar değiştirilemez.',
   protect_origin_server: 'Orjın sunucunu koru',
   protect_origin_server_description:
     'Orjın sunucunuzu doğrudan erişimden korumaya emin olun. Daha fazla <a>açıklamalı talimatlar</a> için kılavuza bakın.',
   session_duration: 'Oturum süresi (gün cinsinden)',
   try_it: 'Deneyin',
+  no_organization_placeholder: 'Organizasyon bulunamadı. <a>Organizasyonlara git</a>',
   branding: {
     name: 'Markalama',
     description: 'Uygulamanızın adını ve logosunu açıklama ekranında özelleştirin.',
+    description_third_party: 'Uygulamanızın adını ve logosunu onay ekranında özelleştirin.',
+    app_logo: 'Uygulama logosu',
+    app_level_sie: 'Uygulama düzeyinde oturum açma deneyimi',
+    app_level_sie_switch:
+      'Uygulama düzeyinde oturum açma deneyimini etkinleştirin ve uygulamaya özel markalama ayarlayın. Devre dışı bırakılırsa, genel oturum açma deneyimi kullanılacaktır.',
     more_info: 'Daha fazla bilgi',
     more_info_description:
       'Uygulamanız hakkında kullanıcılara açıklama ekranında daha fazla bilgi sunun.',
     display_name: 'Adı göster',
-    display_logo: 'Logoyu göster',
-    display_logo_dark: 'Logoyu göster (koyu)',
+    application_logo: 'Uygulama logosu',
+    application_logo_dark: 'Uygulama logosu (koyu)',
+    brand_color: 'Marka rengi',
+    brand_color_dark: 'Marka rengi (koyu)',
     terms_of_use_url: 'Kullanım Koşulları URLsi',
     privacy_policy_url: 'Gizlilik Politikası URLsi',
   },
@@ -130,13 +146,13 @@ const application_details = {
     grant_organization_level_permissions: 'Organizasyon veri izinlerini ver',
   },
   roles: {
-    name_column: 'Makineden makineye rol',
-    description_column: 'Açıklama',
     assign_button: 'Makineden makineye rolleri atayın',
     delete_description:
       'Bu işlem bu rolü bu makine günlüğünden kaldıracaktır. Rol kendisi hala var olacak, ancak artık makine-makine uygulamasıyla ilişkilendirilmeyecektir.',
     deleted: '{{name}}, bu kullanıcıdan başarıyla kaldırıldı.',
     assign_title: '{{name}} için makineden makineye rolleri atayın',
+    assign_subtitle:
+      'Makine-makine uygulamalarının ilgili API kaynaklarına erişmek için makine-makine türünde rolleri olması gerekir.',
     assign_role_field: 'Makineden makineye rolleri atayın',
     role_search_placeholder: 'Rol adıyla arama yapın',
     added_text: '{{value, number}} eklendi',

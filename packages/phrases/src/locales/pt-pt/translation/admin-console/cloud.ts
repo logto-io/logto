@@ -34,6 +34,13 @@ const cloud = {
       others: 'Nenhuma das acima mencionadas',
     },
   },
+  create_tenant: {
+    page_title: 'Criar inquilino',
+    title: 'Crie o seu primeiro inquilino',
+    description:
+      'Um inquilino é um ambiente isolado onde pode gerir identidades de utilizadores, aplicações e todos os demais recursos da Logto.',
+    invite_collaborators: 'Convide os seus colaboradores por email',
+  },
   sie: {
     page_title: 'Personalize a Experiência de Login',
     title: 'Vamos personalizar a sua experiência de login com facilidade',
