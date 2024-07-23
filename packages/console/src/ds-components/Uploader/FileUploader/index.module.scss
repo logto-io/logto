@@ -1,9 +1,12 @@
 @use '@/scss/underscore' as _;
 
 .uploader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px dashed var(--color-border);
   border-radius: 8px;
-  padding: _.unit(3.25);
+  padding: _.unit(5);
 
   > input {
     display: none;
