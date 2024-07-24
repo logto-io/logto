@@ -16,7 +16,7 @@ import { defaultConfig } from '../../vite.shared.config';
 dotenv.config({ path: await findUp('.env', {}) });
 
 const buildConfig = (mode: string): UserConfig => ({
-  base: `/${process.env.CONSOLE_PUBLIC_URL ?? 'console'}`,
+  base: `${process.env.CONSOLE_PUBLIC_URL ?? '/console'}`,
   envDir: '../../',
   server: {
     port: 5002,
