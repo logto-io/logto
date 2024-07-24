@@ -14,11 +14,11 @@ import {
   getNewUserProfileFromVerificationRecord,
   identifyUserByVerificationRecord,
 } from './helpers.js';
+import { MfaValidator } from './libraries/mfa-validator.js';
+import { ProfileValidator } from './libraries/profile-validator.js';
+import { ProvisionLibrary } from './libraries/provision-library.js';
+import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import { toUserSocialIdentityData } from './utils.js';
-import { MfaValidator } from './validators/mfa-validator.js';
-import { ProfileValidator } from './validators/profile-validator.js';
-import { ProvisionLibrary } from './validators/provision-library.js';
-import { SignInExperienceValidator } from './validators/sign-in-experience-validator.js';
 import {
   buildVerificationRecord,
   verificationRecordDataGuard,
@@ -283,7 +283,7 @@ export default class ExperienceInteraction {
     // TODO: missing profile fields validation
 
     if (enterpriseSsoIdentity) {
-      await this.provisionLibrary.provisionNewSsoIdentity(user.id, enterpriseSsoIdentity);
+      await this.provisionLibrary.addNewSsoIdentityToUser(user.id, enterpriseSsoIdentity);
     }
 
     const { provider } = this.tenant;
@@ -361,7 +361,7 @@ export default class ExperienceInteraction {
     const newProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
     await this.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
 
-    const user = await this.provisionLibrary.provisionNewUser(newProfile);
+    const user = await this.provisionLibrary.createNewUser(newProfile);
 
     this.userId = user.id;
   }

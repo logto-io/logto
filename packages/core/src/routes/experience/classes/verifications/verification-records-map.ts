@@ -1,13 +1,15 @@
 /**
  * @fileoverview
  *
- * Since `Map` in TS does not support  key value type mapping,
- * we have to manually define a `setValue` method to ensure correct key will be set
  * This class is used to store and manage all the verification records.
  *
- * Extends the Map class and adds a `setValue` method to ensure the key value type mapping.
+ * Since `Map` in TS does not support key - value type mapping,
+ * we have to manually define a `setValue` method to ensure correct key will be set.
+ *
+ * - Extends the Map class and add a `setValue` method to ensure the key value type mapping.
+ * - Override the `get` method to return the correct value type.
+ * - Override the `set` method to throw an error to prevent using it directly.
  */
-
 import { type VerificationType } from '@logto/schemas';
 
 import { type VerificationRecord, type VerificationRecordMap } from './index.js';
