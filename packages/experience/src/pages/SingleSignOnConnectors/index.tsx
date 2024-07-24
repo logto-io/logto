@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
@@ -16,6 +16,14 @@ const SingleSignOnConnectors = () => {
   const { ssoEmail, ssoConnectors } = useContext(UserInteractionContext);
   const navigate = useNavigate();
   const onSubmit = useSingleSignOn();
+
+  const [loadingConnectorId, setLoadingConnectorId] = useState<string>();
+
+  const handleSubmit = async (connectorId: string) => {
+    setLoadingConnectorId(connectorId);
+    await onSubmit(connectorId);
+    setLoadingConnectorId(undefined);
+  };
 
   // Listen to native message
   useNativeMessageListener();
@@ -46,7 +54,10 @@ const SingleSignOnConnectors = () => {
               name={{ en: connectorName }} // I18n support for connectorName not supported yet, always display the plain text
               logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
               target={connectorName}
-              onClick={async () => onSubmit(id)}
+              isLoading={loadingConnectorId === connector.id}
+              onClick={() => {
+                void handleSubmit(connector.id);
+              }}
             />
           );
         })}
