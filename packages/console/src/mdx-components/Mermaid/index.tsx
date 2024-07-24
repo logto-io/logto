@@ -3,6 +3,7 @@ import { noop, yes } from '@silverhand/essentials';
 import { type Mermaid as MermaidType } from 'mermaid';
 import { useEffect } from 'react';
 
+import { normalizeEnv } from '@/consts/env';
 import useTheme from '@/hooks/use-theme';
 
 /**
@@ -14,14 +15,14 @@ const loadMermaid = async () => {
   // https://github.com/parcel-bundler/parcel/issues/7064#issuecomment-942441649
   const uri = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const imported: { default: MermaidType } = await (process.env.NODE_ENV === 'development'
+  const imported: { default: MermaidType } = await (import.meta.env.DEV
     ? // eslint-disable-next-line no-eval -- https://github.com/parcel-bundler/parcel/issues/8316
       eval(`import('${uri}')`)
     : import(uri));
   return imported.default;
 };
 
-const mermaidPromise = yes(process.env.INTEGRATION_TEST)
+const mermaidPromise = yes(normalizeEnv(import.meta.env.INTEGRATION_TEST))
   ? // Mock Mermaid in integration tests to avoid issues with network requests and testing environment.
     Promise.resolve({
       initialize: noop,

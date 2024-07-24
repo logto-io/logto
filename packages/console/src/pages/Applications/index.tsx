@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
-import Plus from '@/assets/icons/plus.svg';
+import Plus from '@/assets/icons/plus.svg?react';
 import ApplicationCreation from '@/components/ApplicationCreation';
 import ChargeNotification from '@/components/ChargeNotification';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
@@ -18,13 +18,13 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import * as pageLayout from '@/scss/page-layout.module.scss';
+import pageLayout from '@/scss/page-layout.module.scss';
 import { buildUrl } from '@/utils/url';
 
 import GuideLibrary from './components/GuideLibrary';
 import GuideLibraryModal from './components/GuideLibraryModal';
 import useApplicationsData from './hooks/use-application-data';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const tabs = Object.freeze({
   thirdPartyApplications: 'third-party-applications',

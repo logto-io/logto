@@ -1,12 +1,12 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import ReactModal from 'react-modal';
 
-import Close from '@/assets/icons/close.svg';
+import Close from '@/assets/icons/close.svg?react';
 import CardTitle from '@/ds-components/CardTitle';
 import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly title?: AdminConsoleKey;

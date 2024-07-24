@@ -1,7 +1,9 @@
+import { lazy } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
-import SignInExperience from '@/pages/SignInExperience';
 import { SignInExperienceTab } from '@/pages/SignInExperience/types';
+
+const SignInExperience = lazy(async () => import('@/pages/SignInExperience'));
 
 export const signInExperience: RouteObject = {
   path: 'sign-in-experience',

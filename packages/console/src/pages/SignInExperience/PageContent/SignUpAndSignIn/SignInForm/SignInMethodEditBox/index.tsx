@@ -13,7 +13,7 @@ import { getSignUpRequiredConnectorTypes, createSignInMethod } from '../../utils
 
 import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function SignInMethodEditBox() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

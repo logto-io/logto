@@ -5,7 +5,7 @@ import DynamicT from '@/ds-components/DynamicT';
 
 import CheckboxGroup, { type Option } from '../CheckboxGroup';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type CheckboxOptionGroup<T> = {
   title: AdminConsoleKey;

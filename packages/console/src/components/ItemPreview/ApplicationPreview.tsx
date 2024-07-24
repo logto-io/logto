@@ -5,7 +5,7 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import ItemPreview from '.';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const applicationsPathname = '/applications';
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;

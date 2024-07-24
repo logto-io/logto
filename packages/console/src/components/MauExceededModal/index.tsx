@@ -12,11 +12,11 @@ import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 
 import PlanName from '../PlanName';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function MauExceededModal() {
   const { currentTenant } = useContext(TenantsContext);

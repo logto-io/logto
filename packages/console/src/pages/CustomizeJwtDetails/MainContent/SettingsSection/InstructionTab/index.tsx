@@ -19,11 +19,11 @@ import {
   jwtCustomizerGrantContextTypeDefinition,
 } from '@/pages/CustomizeJwtDetails/utils/type-definitions';
 
-import * as tabContentStyles from '../index.module.scss';
+import tabContentStyles from '../index.module.scss';
 
 import EnvironmentVariablesField from './EnvironmentVariablesField';
 import GuideCard, { CardType } from './GuideCard';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isActive: boolean;

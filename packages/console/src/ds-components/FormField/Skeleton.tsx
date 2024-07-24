@@ -1,4 +1,4 @@
-import * as styles from './Skeleton.module.scss';
+import styles from './Skeleton.module.scss';
 
 type Props = {
   readonly formFieldCount: number;

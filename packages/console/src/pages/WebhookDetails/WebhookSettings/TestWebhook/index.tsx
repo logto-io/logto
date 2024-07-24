@@ -14,7 +14,7 @@ import useApi from '@/hooks/use-api';
 import { type WebhookDetailsFormType } from '@/pages/WebhookDetails/types';
 import { webhookDetailsParser } from '@/pages/WebhookDetails/utils';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import useWebhookTestResult from './use-webhook-test-result';
 
 type Props = {

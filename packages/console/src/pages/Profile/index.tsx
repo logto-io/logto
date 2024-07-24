@@ -22,7 +22,7 @@ import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
-import * as pageLayout from '@/scss/page-layout.module.scss';
+import pageLayout from '@/scss/page-layout.module.scss';
 
 import BasicUserInfoSection from './components/BasicUserInfoSection';
 import CardContent from './components/CardContent';
@@ -30,7 +30,7 @@ import LinkAccountSection from './components/LinkAccountSection';
 import NotSet from './components/NotSet';
 import Skeleton from './components/Skeleton';
 import DeleteAccountModal from './containers/DeleteAccountModal';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 if (isDevFeaturesEnabled) {
   initLocalization();

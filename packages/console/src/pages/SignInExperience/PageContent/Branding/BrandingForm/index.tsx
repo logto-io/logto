@@ -14,7 +14,7 @@ import Switch from '@/ds-components/Switch';
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function BrandingForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

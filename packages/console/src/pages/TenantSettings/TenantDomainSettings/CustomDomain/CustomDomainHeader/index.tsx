@@ -2,8 +2,8 @@ import { DomainStatus, type CustomDomain } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Delete from '@/assets/icons/delete.svg';
-import More from '@/assets/icons/more.svg';
+import Delete from '@/assets/icons/delete.svg?react';
+import More from '@/assets/icons/more.svg?react';
 import DomainStatusTag from '@/components/DomainStatusTag';
 import OpenExternalLink from '@/components/OpenExternalLink';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
@@ -12,7 +12,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import Spacer from '@/ds-components/Spacer';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly customDomain: CustomDomain;

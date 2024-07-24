@@ -1,13 +1,13 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme } from '@logto/schemas';
 
-import Calendar from '@/assets/icons/calendar.svg';
-import DiscordDark from '@/assets/icons/discord-dark.svg';
-import Discord from '@/assets/icons/discord.svg';
-import EmailDark from '@/assets/icons/email-dark.svg';
-import Email from '@/assets/icons/email.svg';
-import GithubDark from '@/assets/icons/github-dark.svg';
-import Github from '@/assets/icons/github.svg';
+import Calendar from '@/assets/icons/calendar.svg?react';
+import DiscordDark from '@/assets/icons/discord-dark.svg?react';
+import Discord from '@/assets/icons/discord.svg?react';
+import EmailDark from '@/assets/icons/email-dark.svg?react';
+import Email from '@/assets/icons/email.svg?react';
+import GithubDark from '@/assets/icons/github-dark.svg?react';
+import Github from '@/assets/icons/github.svg?react';
 import { contactEmailLink, discordLink, githubIssuesLink, reservationLink } from '@/consts';
 import useTheme from '@/hooks/use-theme';
 

@@ -36,7 +36,9 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   // Logto Cloud uses cloud service to serve the admin console; while Logto OSS uses a fixed path under the admin URL set.
   const adminOrigins = isCloud ? cloudUrlSet.origins : adminUrlSet.origins;
   const coreOrigins = urlSet.origins;
-  const developmentOrigins = conditionalArray(!isProduction && 'ws:');
+  const developmentOrigins = isProduction
+    ? []
+    : ['ws:', ...['6001', '6002', '6003'].map((port) => `ws://localhost:${port}`)];
   const logtoOrigin = 'https://*.logto.io';
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';

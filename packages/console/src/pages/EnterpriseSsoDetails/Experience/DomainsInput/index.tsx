@@ -6,13 +6,13 @@ import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Close from '@/assets/icons/close.svg';
+import Close from '@/assets/icons/close.svg?react';
 import IconButton from '@/ds-components/IconButton';
 import Tag from '@/ds-components/Tag';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import { domainRegExp } from './consts';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { domainOptionsParser, type Option } from './utils';
 
 export type DomainsFormType = {

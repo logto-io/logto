@@ -16,7 +16,7 @@ import type { ConnectorFormType } from '@/types/connector';
 import { jsonValidator } from '@/utils/validator';
 
 import ConfigFormFields from './ConfigFormFields';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly formItems?: ConnectorConfigFormItem[];

@@ -28,7 +28,7 @@ import { emptyBranding } from '@/types/sign-in-experience';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import useApplicationSignInExperienceSWR from './use-application-sign-in-experience-swr';
 import useSignInExperienceSWR from './use-sign-in-experience-swr';
 import { type ApplicationSignInExperienceForm, formatFormToSubmitData } from './utils';

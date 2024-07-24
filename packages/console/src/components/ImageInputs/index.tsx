@@ -22,7 +22,7 @@ import useImageMimeTypes from '@/hooks/use-image-mime-types';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { uriValidator } from '@/utils/validator';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export const themeToLogoName = Object.freeze({
   [Theme.Light]: 'logoUrl',

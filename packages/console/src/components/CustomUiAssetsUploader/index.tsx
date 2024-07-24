@@ -4,14 +4,14 @@ import { format } from 'date-fns/fp';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import DeleteIcon from '@/assets/icons/delete.svg';
+import DeleteIcon from '@/assets/icons/delete.svg?react';
 import IconButton from '@/ds-components/IconButton';
 import FileUploader from '@/ds-components/Uploader/FileUploader';
 import { formatBytes } from '@/utils/uploader';
 
 import FileIcon from '../FileIcon';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   // eslint-disable-next-line react/boolean-prop-naming

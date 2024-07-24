@@ -14,7 +14,7 @@ import {
 import DynamicT from '@/ds-components/DynamicT';
 
 import TableDataWrapper from './TableDataWrapper';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const featuredPlanPhraseKey: AdminConsoleKey[] = [
   'subscription.free_plan',

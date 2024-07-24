@@ -13,7 +13,7 @@ import { hasSurpassedQuotaLimit } from '@/utils/quota';
 
 import MauLimitExceedNotification from './MauLimitExceededNotification';
 import PaymentOverdueNotification from './PaymentOverdueNotification';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly subscription: Subscription;

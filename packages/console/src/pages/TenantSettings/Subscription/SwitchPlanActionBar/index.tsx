@@ -18,7 +18,7 @@ import { isDowngradePlan, parseExceededQuotaLimitError } from '@/utils/subscript
 
 import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly currentSubscriptionPlanId: string;

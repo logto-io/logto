@@ -9,9 +9,9 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/icons/delete.svg';
-import File from '@/assets/icons/file.svg';
-import OrganizationIcon from '@/assets/icons/organization-preview.svg';
+import Delete from '@/assets/icons/delete.svg?react';
+import File from '@/assets/icons/file.svg?react';
+import OrganizationIcon from '@/assets/icons/organization-preview.svg?react';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
@@ -24,7 +24,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import Introduction from '../Organizations/Introduction';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { OrganizationDetailsTabs, type OrganizationDetailsOutletContext } from './types';
 
 const pathname = '/organizations';

@@ -14,7 +14,7 @@ import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { type ConnectorFormType } from '@/types/connector';
 import { uriValidator } from '@/utils/validator';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly extraInfo?: Record<string, unknown>;

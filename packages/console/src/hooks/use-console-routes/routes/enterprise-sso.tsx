@@ -1,8 +1,10 @@
+import { lazy } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
 import { EnterpriseSsoDetailsTabs } from '@/consts/page-tabs';
-import EnterpriseSso from '@/pages/EnterpriseSso';
-import EnterpriseSsoDetails from '@/pages/EnterpriseSsoDetails';
+
+const EnterpriseSso = lazy(async () => import('@/pages/EnterpriseSso'));
+const EnterpriseSsoDetails = lazy(async () => import('@/pages/EnterpriseSsoDetails'));
 
 export const enterpriseSso: RouteObject = {
   path: 'enterprise-sso',

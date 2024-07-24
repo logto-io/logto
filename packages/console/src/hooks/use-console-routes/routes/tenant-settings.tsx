@@ -1,19 +1,22 @@
 import { condArray } from '@silverhand/essentials';
-import { useContext, useMemo } from 'react';
+import { lazy, useContext, useMemo } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
 import { TenantSettingsTabs } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import NotFound from '@/pages/NotFound';
-import TenantSettings from '@/pages/TenantSettings';
-import BillingHistory from '@/pages/TenantSettings/BillingHistory';
-import Subscription from '@/pages/TenantSettings/Subscription';
-import TenantBasicSettings from '@/pages/TenantSettings/TenantBasicSettings';
-import TenantDomainSettings from '@/pages/TenantSettings/TenantDomainSettings';
-import TenantMembers from '@/pages/TenantSettings/TenantMembers';
-import Invitations from '@/pages/TenantSettings/TenantMembers/Invitations';
-import Members from '@/pages/TenantSettings/TenantMembers/Members';
+
+const TenantSettings = lazy(async () => import('@/pages/TenantSettings'));
+const TenantBasicSettings = lazy(async () => import('@/pages/TenantSettings/TenantBasicSettings'));
+const TenantDomainSettings = lazy(
+  async () => import('@/pages/TenantSettings/TenantDomainSettings')
+);
+const TenantMembers = lazy(async () => import('@/pages/TenantSettings/TenantMembers'));
+const Invitations = lazy(async () => import('@/pages/TenantSettings/TenantMembers/Invitations'));
+const Members = lazy(async () => import('@/pages/TenantSettings/TenantMembers/Members'));
+const BillingHistory = lazy(async () => import('@/pages/TenantSettings/BillingHistory'));
+const Subscription = lazy(async () => import('@/pages/TenantSettings/Subscription'));
 
 export const useTenantSettings = () => {
   const { isDevTenant } = useContext(TenantsContext);

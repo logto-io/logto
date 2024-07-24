@@ -10,7 +10,7 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly target: string;

@@ -11,7 +11,7 @@ import {
 } from '@/types/subscriptions';
 
 import PlanQuotaDiffCard from './PlanQuotaDiffCard';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly currentPlan: SubscriptionPlan;

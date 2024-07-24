@@ -7,18 +7,18 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Search from '@/assets/icons/search.svg';
+import Search from '@/assets/icons/search.svg?react';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import { defaultPageSize } from '@/consts';
 import Pagination from '@/ds-components/Pagination';
 import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
-import * as transferLayout from '@/scss/transfer.module.scss';
+import transferLayout from '@/scss/transfer.module.scss';
 import { buildUrl } from '@/utils/url';
 
 import SourceRoleItem from './SourceRoleItem';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly entityId: string;

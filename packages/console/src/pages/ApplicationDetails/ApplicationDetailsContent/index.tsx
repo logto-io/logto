@@ -9,8 +9,8 @@ import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import Delete from '@/assets/icons/delete.svg';
-import File from '@/assets/icons/file.svg';
+import Delete from '@/assets/icons/delete.svg?react';
+import File from '@/assets/icons/file.svg?react';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import DetailsForm from '@/components/DetailsForm';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
@@ -39,7 +39,7 @@ import MachineToMachineApplicationRoles from './MachineToMachineApplicationRoles
 import Permissions from './Permissions';
 import RefreshTokenSettings from './RefreshTokenSettings';
 import Settings from './Settings';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { type ApplicationForm, applicationFormDataParser } from './utils';
 
 type Props = {

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { type SubscriptionPlanQuotaEntries } from '@/types/subscriptions';
 
 import DiffQuotaItem from './DiffQuotaItem';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly entries: SubscriptionPlanQuotaEntries;

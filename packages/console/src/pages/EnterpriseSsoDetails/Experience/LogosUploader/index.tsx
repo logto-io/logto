@@ -8,7 +8,7 @@ import ImageUploader from '@/ds-components/Uploader/ImageUploader';
 
 import type { FormType } from '../index.js';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const allowedMimeTypes: AllowedUploadMimeType[] = ['image/png', 'image/jpeg', 'image/svg+xml']; // Only allow `svg`, `png`, `jpg` and `jpeg` files.
 

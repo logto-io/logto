@@ -2,7 +2,7 @@ import { TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 
-import Tick from '@/assets/icons/tick.svg';
+import Tick from '@/assets/icons/tick.svg?react';
 import { type TenantResponse } from '@/cloud/types/router';
 import PlanName from '@/components/PlanName';
 import TenantEnvTag from '@/components/TenantEnvTag';
@@ -11,7 +11,7 @@ import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
 
 import TenantStatusTag from './TenantStatusTag';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly tenantData: TenantResponse;

@@ -26,7 +26,7 @@ import type {
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const nameToKey: Record<Name, AdminConsoleKey> = Object.freeze({
   redirectUris: 'application_details.redirect_uri',

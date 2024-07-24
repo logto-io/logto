@@ -23,7 +23,7 @@ import useApi from '@/hooks/use-api';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

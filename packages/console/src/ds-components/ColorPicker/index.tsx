@@ -6,7 +6,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import Dropdown from '../Dropdown';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly name?: string;

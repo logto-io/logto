@@ -6,7 +6,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function OidcCallbackUri() {
   const { ssoConnector } = useContext(SsoConnectorContext);

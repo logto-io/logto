@@ -8,7 +8,7 @@ import CreateTenantModal from '@/components/CreateTenantModal';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import TextLink from '@/ds-components/TextLink';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function CreateProductionTenantBanner() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);

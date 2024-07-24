@@ -11,7 +11,7 @@ import {
 import { sortBy } from '@/utils/sort';
 
 import PlanQuotaList from './PlanQuotaList';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly planName: string;

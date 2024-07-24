@@ -3,7 +3,7 @@ import { demoAppApplicationId } from '@logto/schemas';
 import { decodeJwt } from 'jose';
 import { useCallback, useState, type FormEventHandler } from 'react';
 
-import * as styles from './App.module.scss';
+import styles from './App.module.scss';
 import { getLocalData, setLocalData } from './utils';
 
 const safeDecodeJwt = (token: string) => {

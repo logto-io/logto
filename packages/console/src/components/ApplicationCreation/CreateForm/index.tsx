@@ -17,12 +17,12 @@ import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
 import TypeDescription from '@/pages/Applications/components/TypeDescription';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
 import Footer from './Footer';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type FormData = {
   type: ApplicationType;

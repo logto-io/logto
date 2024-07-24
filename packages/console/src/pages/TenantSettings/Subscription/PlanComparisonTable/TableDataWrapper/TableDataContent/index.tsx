@@ -1,6 +1,6 @@
-import Success from '@/assets/icons/success.svg';
+import Success from '@/assets/icons/success.svg?react';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly content: string;

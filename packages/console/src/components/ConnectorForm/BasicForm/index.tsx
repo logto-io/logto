@@ -2,7 +2,7 @@ import { Theme } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Error from '@/assets/icons/toast-error.svg';
+import Error from '@/assets/icons/toast-error.svg?react';
 import ImageInputs from '@/components/ImageInputs';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import FormField from '@/ds-components/FormField';
@@ -13,7 +13,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import type { ConnectorFormType } from '@/types/connector';
 import { SyncProfileMode } from '@/types/connector';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const themeToField = Object.freeze({
   [Theme.Light]: 'logo',

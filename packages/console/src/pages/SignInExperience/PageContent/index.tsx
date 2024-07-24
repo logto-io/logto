@@ -25,7 +25,7 @@ import Content from './Content';
 import PasswordPolicy from './PasswordPolicy';
 import SignUpAndSignIn from './SignUpAndSignIn';
 import SignUpAndSignInChangePreview from './SignUpAndSignInChangePreview';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import {
   getBrandingErrorCount,
   getSignUpAndSignInErrorCount,

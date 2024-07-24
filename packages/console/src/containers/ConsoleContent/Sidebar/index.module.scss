@@ -6,3 +6,9 @@
   margin-bottom: _.unit(6);
   flex-shrink: 0;
 }
+
+.skeleton {
+  @include _.shimmering-animation;
+  width: 248px;
+  height: 100%;
+}

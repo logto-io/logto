@@ -4,6 +4,7 @@
   flex: 0 0 64px;
   width: 100%;
   padding: 0 _.unit(6);
+  gap: _.unit(4);
   display: flex;
   align-items: center;
 
@@ -17,16 +18,11 @@
   .line {
     @include _.vertical-bar;
     height: 20px;
-    margin: 0 _.unit(5);
   }
 
   .text {
     font: var(--font-title-2);
     color: var(--color-text);
-  }
-
-  > :not(:last-child) {
-    margin-right: _.unit(4);
   }
 }
 
