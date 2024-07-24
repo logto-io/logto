@@ -206,7 +206,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async updateProfile(payload: UpdateProfileApiPayload) {
-    return api.patch(`${experienceRoutes.profile}`, {
+    return api.post(`${experienceRoutes.profile}`, {
       headers: { cookie: this.interactionCookie },
       json: payload,
     });

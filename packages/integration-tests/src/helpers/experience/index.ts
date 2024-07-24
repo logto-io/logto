@@ -135,7 +135,10 @@ export const registerNewUserWithVerificationCode = async (
 
     const password = generatePassword();
 
-    await client.updateProfile({ password });
+    await client.updateProfile({
+      type: 'password',
+      value: password,
+    });
   }
 
   const { redirectTo } = await client.submitInteraction();

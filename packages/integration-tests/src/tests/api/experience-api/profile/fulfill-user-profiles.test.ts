@@ -42,10 +42,13 @@ devFeatureTest.describe('Fulfill User Profiles', () => {
 
     await client.initInteraction({ interactionEvent: InteractionEvent.ForgotPassword });
 
-    await expectRejects(client.updateProfile({ username: 'username ' }), {
-      status: 400,
-      code: 'session.not_supported_for_forgot_password',
-    });
+    await expectRejects(
+      client.updateProfile({ type: SignInIdentifier.Username, value: 'username' }),
+      {
+        status: 400,
+        code: 'session.not_supported_for_forgot_password',
+      }
+    );
   });
 
   it('should throw 404 if the interaction is not identified', async () => {
@@ -53,10 +56,13 @@ devFeatureTest.describe('Fulfill User Profiles', () => {
 
     await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 
-    await expectRejects(client.updateProfile({ username: 'username' }), {
-      status: 404,
-      code: 'session.identifier_not_found',
-    });
+    await expectRejects(
+      client.updateProfile({ type: SignInIdentifier.Username, value: 'username' }),
+      {
+        status: 404,
+        code: 'session.identifier_not_found',
+      }
+    );
   });
 
   it('should throw 422 if the profile field is already exist in current user account', async () => {
@@ -67,12 +73,15 @@ devFeatureTest.describe('Fulfill User Profiles', () => {
     const client = await initExperienceClient();
     await identifyUserWithUsernamePassword(client, username, password);
 
-    await expectRejects(client.updateProfile({ username: 'username' }), {
-      status: 422,
-      code: 'user.username_exists_in_profile',
-    });
+    await expectRejects(
+      client.updateProfile({ type: SignInIdentifier.Username, value: 'username' }),
+      {
+        status: 422,
+        code: 'user.username_exists_in_profile',
+      }
+    );
 
-    await expectRejects(client.updateProfile({ password: 'password' }), {
+    await expectRejects(client.updateProfile({ type: 'password', value: 'password' }), {
       status: 422,
       code: 'user.password_exists_in_profile',
     });
@@ -102,7 +111,7 @@ devFeatureTest.describe('Fulfill User Profiles', () => {
       code: verificationCode,
     });
 
-    await expectRejects(client.updateProfile({ email: { verificationId } }), {
+    await expectRejects(client.updateProfile({ type: SignInIdentifier.Email, verificationId }), {
       status: 422,
       code: 'user.email_already_in_use',
     });
@@ -124,10 +133,13 @@ devFeatureTest.describe('Fulfill User Profiles', () => {
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
 
-      await expectRejects(client.updateProfile({ username: 'username' }), {
-        status: 403,
-        code: 'session.mfa.require_mfa_verification',
-      });
+      await expectRejects(
+        client.updateProfile({ type: SignInIdentifier.Username, value: 'username' }),
+        {
+          status: 403,
+          code: 'session.mfa.require_mfa_verification',
+        }
+      );
     });
 
     it('should update the profile successfully if the mfa is enabled and verified', async () => {
@@ -164,7 +176,9 @@ devFeatureTest.describe('Fulfill User Profiles', () => {
         code: verificationCode,
       });
 
-      await expect(client.updateProfile({ email: { verificationId } })).resolves.not.toThrow();
+      await expect(
+        client.updateProfile({ type: SignInIdentifier.Email, verificationId })
+      ).resolves.not.toThrow();
     });
   });
 });

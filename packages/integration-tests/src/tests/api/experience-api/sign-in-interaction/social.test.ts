@@ -167,7 +167,7 @@ devFeatureTest.describe('social sign-in and sign-up', () => {
         status: 422,
       });
 
-      await client.updateProfile({ username: generateUsername() });
+      await client.updateProfile({ type: SignInIdentifier.Username, value: generateUsername() });
 
       const { redirectTo } = await client.submitInteraction();
       const userId = await processSession(client, redirectTo);

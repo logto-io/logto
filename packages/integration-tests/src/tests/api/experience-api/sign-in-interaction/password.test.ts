@@ -89,7 +89,7 @@ devFeatureTest.describe('sign-in with password verification happy path', () => {
       code: verificationCode,
     });
 
-    await client.updateProfile({ email: { verificationId } });
+    await client.updateProfile({ type: SignInIdentifier.Email, verificationId });
 
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
