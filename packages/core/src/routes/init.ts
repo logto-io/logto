@@ -15,6 +15,7 @@ import adminUserRoutes from './admin-user/index.js';
 import applicationOrganizationRoutes from './applications/application-organization.js';
 import applicationProtectedAppMetadataRoutes from './applications/application-protected-app-metadata.js';
 import applicationRoleRoutes from './applications/application-role.js';
+import applicationSecretRoutes from './applications/application-secret.js';
 import applicationSignInExperienceRoutes from './applications/application-sign-in-experience.js';
 import applicationUserConsentOrganizationRoutes from './applications/application-user-consent-organization.js';
 import applicationUserConsentScopeRoutes from './applications/application-user-consent-scope.js';
@@ -65,6 +66,9 @@ const createRouters = (tenant: TenantContext) => {
   applicationRoleRoutes(managementRouter, tenant);
   applicationProtectedAppMetadataRoutes(managementRouter, tenant);
   applicationOrganizationRoutes(managementRouter, tenant);
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    applicationSecretRoutes(managementRouter, tenant);
+  }
 
   // Third-party application related routes
   applicationUserConsentScopeRoutes(managementRouter, tenant);

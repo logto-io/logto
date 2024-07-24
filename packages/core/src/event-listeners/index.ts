@@ -1,14 +1,11 @@
-import { ConsoleLog } from '@logto/shared';
-import chalk from 'chalk';
 import type Provider from 'oidc-provider';
 
 import type Queries from '#src/tenants/Queries.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { grantListener, grantRevocationListener } from './grant.js';
 import { interactionEndedListener, interactionStartedListener } from './interaction.js';
 import { recordActiveUsers } from './record-active-users.js';
-
-const consoleLog = new ConsoleLog(chalk.magenta('oidc'));
 
 /**
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details Getting auth error with no details?}
@@ -29,8 +26,8 @@ export const addOidcEventListeners = (provider: Provider, queries: Queries) => {
   });
   provider.addListener('interaction.started', interactionStartedListener);
   provider.addListener('interaction.ended', interactionEndedListener);
-  provider.addListener('server_error', (_, error) => {
-    consoleLog.error('server_error:', error);
+  provider.addListener('server_error', (ctx, error) => {
+    getConsoleLogFromContext(ctx).error('server_error:', error);
   });
 
   // Record token usage.

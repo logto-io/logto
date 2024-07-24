@@ -10,6 +10,7 @@ import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -19,6 +20,7 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
+import { generateInternalSecret } from './application-secret.js';
 import { applicationCreateGuard, applicationPatchGuard } from './types.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
@@ -38,7 +40,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {
-      queries,
+      queries: { applications, applicationsRoles, roles },
       id: tenantId,
       libraries: { quota, protectedApps },
     },
@@ -51,16 +53,14 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     updateApplicationById,
     countApplications,
     findApplications,
-  } = queries.applications;
+  } = applications;
 
   const {
     findApplicationsRolesByApplicationId,
     insertApplicationsRoles,
     deleteApplicationRole,
     findApplicationsRolesByRoleId,
-  } = queries.applicationsRoles;
-
-  const { findRoleByRoleName } = queries.roles;
+  } = applicationsRoles;
 
   router.get(
     '/applications',
@@ -191,7 +191,9 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       const application = await insertApplication({
         id: generateStandardId(),
-        secret: generateStandardSecret(),
+        secret: EnvSet.values.isDevFeaturesEnabled
+          ? generateStandardSecret()
+          : generateInternalSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...conditional(
           rest.type === ApplicationType.Protected &&
@@ -275,7 +277,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       if (isAdmin !== undefined) {
         const [applicationsRoles, internalAdminRole] = await Promise.all([
           findApplicationsRolesByApplicationId(id),
-          findRoleByRoleName(InternalRole.Admin),
+          roles.findRoleByRoleName(InternalRole.Admin),
         ]);
         const usedToBeAdmin = includesInternalAdminRole(applicationsRoles);
 
