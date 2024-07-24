@@ -1,4 +1,4 @@
-import { InteractionEvent, updateProfileApiPayloadGuard } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier, updateProfileApiPayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -8,6 +8,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { identifierCodeVerificationTypeMap } from './classes/verifications/code-verification.js';
 import { experienceRoutes } from './const.js';
 import { type WithExperienceInteractionContext } from './middleware/koa-experience-interaction.js';
 
@@ -15,7 +16,7 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
   router: Router<unknown, WithExperienceInteractionContext<T>>,
   tenant: TenantContext
 ) {
-  router.patch(
+  router.post(
     `${experienceRoutes.profile}`,
     koaGuard({
       body: updateProfileApiPayloadGuard,
@@ -33,9 +34,32 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
         })
       );
 
+      // Guard MFA verification status
+      await experienceInteraction.guardMfaVerificationStatus();
+
       const profilePayload = guard.body;
 
-      await experienceInteraction.addUserProfile(profilePayload);
+      switch (profilePayload.type) {
+        case SignInIdentifier.Email:
+        case SignInIdentifier.Phone: {
+          const verificationType = identifierCodeVerificationTypeMap[profilePayload.type];
+          await experienceInteraction.profile.setProfileByVerificationRecord(
+            verificationType,
+            profilePayload.verificationId
+          );
+          break;
+        }
+        case SignInIdentifier.Username: {
+          await experienceInteraction.profile.setProfileWithValidation({
+            username: profilePayload.value,
+          });
+          break;
+        }
+        case 'password': {
+          await experienceInteraction.profile.setPasswordDigestWithValidation(profilePayload.value);
+        }
+      }
+
       await experienceInteraction.save();
 
       ctx.status = 204;
@@ -43,6 +67,7 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
       return next();
     }
   );
+
   router.put(
     `${experienceRoutes.profile}/password`,
     koaGuard({
@@ -63,7 +88,16 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
         })
       );
 
-      await experienceInteraction.resetPassword(password);
+      // Guard interaction is identified
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
+
+      await experienceInteraction.profile.setPasswordDigestWithValidation(password, true);
       await experienceInteraction.save();
 
       ctx.status = 204;

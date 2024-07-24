@@ -1,11 +1,6 @@
 import { type ToZodObject } from '@logto/connector-kit';
-import {
-  InteractionEvent,
-  VerificationType,
-  type UpdateProfileApiPayload,
-  type User,
-} from '@logto/schemas';
-import { conditional, removeUndefinedKeys } from '@silverhand/essentials';
+import { InteractionEvent, type User } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -13,7 +8,12 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { interactionProfileGuard, type Interaction, type InteractionProfile } from '../types.js';
+import {
+  interactionProfileGuard,
+  type Interaction,
+  type InteractionContext,
+  type InteractionProfile,
+} from '../types.js';
 
 import {
   getNewUserProfileFromVerificationRecord,
@@ -56,6 +56,7 @@ const interactionStorageGuard = z.object({
 export default class ExperienceInteraction {
   public readonly signInExperienceValidator: SignInExperienceValidator;
   public readonly provisionLibrary: ProvisionLibrary;
+  readonly profile: Profile;
 
   /** The user verification record list for the current interaction. */
   private readonly verificationRecords = new VerificationRecordsMap();
@@ -63,7 +64,6 @@ export default class ExperienceInteraction {
   private userId?: string;
   private userCache?: User;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
-  readonly #profile: Profile;
   /** The interaction event for the current interaction. */
   #interactionEvent?: InteractionEvent;
 
@@ -83,8 +83,14 @@ export default class ExperienceInteraction {
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
     this.provisionLibrary = new ProvisionLibrary(tenant, ctx);
 
+    const interactionContext: InteractionContext = {
+      getIdentifierUser: async () => this.getIdentifiedUser(),
+      getVerificationRecordByTypeAndId: (type, verificationId) =>
+        this.getVerificationRecordByTypeAndId(type, verificationId),
+    };
+
     if (!interactionDetails) {
-      this.#profile = new Profile(libraries, queries, {}, async () => this.getIdentifiedUser());
+      this.profile = new Profile(libraries, queries, {}, interactionContext);
       return;
     }
 
@@ -100,7 +106,7 @@ export default class ExperienceInteraction {
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
-    this.#profile = new Profile(libraries, queries, profile, async () => this.getIdentifiedUser());
+    this.profile = new Profile(libraries, queries, profile, interactionContext);
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -202,42 +208,6 @@ export default class ExperienceInteraction {
     return record;
   }
 
-  public async addUserProfile({ email, phone, username, password }: UpdateProfileApiPayload) {
-    // Guard current interaction event is MFA verified
-    await this.guardMfaVerificationStatus();
-
-    const primaryEmail =
-      email &&
-      this.getVerificationRecordByTypeAndId(
-        VerificationType.EmailVerificationCode,
-        email.verificationId
-      ).toUserProfile().primaryEmail;
-
-    const primaryPhone =
-      phone &&
-      this.getVerificationRecordByTypeAndId(
-        VerificationType.PhoneVerificationCode,
-        phone.verificationId
-      ).toUserProfile().primaryPhone;
-
-    await this.#profile.setProfileWithValidation(
-      removeUndefinedKeys({
-        primaryEmail,
-        primaryPhone,
-        username,
-      })
-    );
-
-    if (password) {
-      await this.#profile.setPasswordDigest(password);
-    }
-  }
-
-  public async resetPassword(password: string) {
-    await this.getIdentifiedUser();
-    await this.#profile.setPasswordDigest(password, true);
-  }
-
   /**
    * Validate the interaction verification records against the sign-in experience and user MFA settings.
    * The interaction is verified if at least one user enabled MFA verification record is present and verified.
@@ -249,7 +219,6 @@ export default class ExperienceInteraction {
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const mfaValidator = new MfaValidator(mfaSettings, user);
-
     const isVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
 
     assertThat(
@@ -307,7 +276,7 @@ export default class ExperienceInteraction {
 
     // Forgot Password: No need to verify MFAs and profile data for forgot password flow
     if (this.#interactionEvent === InteractionEvent.ForgotPassword) {
-      const { passwordEncrypted, passwordEncryptionMethod } = this.#profile.data;
+      const { passwordEncrypted, passwordEncryptionMethod } = this.profile.data;
 
       assertThat(
         passwordEncrypted && passwordEncryptionMethod,
@@ -330,12 +299,12 @@ export default class ExperienceInteraction {
     await this.guardMfaVerificationStatus();
 
     // Revalidate the new profile data if any
-    await this.#profile.checkAvailability();
+    await this.profile.validateAvailability();
 
     // Profile fulfilled
-    await this.#profile.assertUserMandatoryProfileFulfilled();
+    await this.profile.assertUserMandatoryProfileFulfilled();
 
-    const { socialIdentity, enterpriseSsoIdentity, ...rest } = this.#profile.data;
+    const { socialIdentity, enterpriseSsoIdentity, ...rest } = this.profile.data;
 
     // Update user profile
     await userQueries.updateUserById(user.id, {
@@ -373,7 +342,7 @@ export default class ExperienceInteraction {
     return {
       interactionEvent,
       userId,
-      profile: this.#profile.data,
+      profile: this.profile.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
     };
   }
@@ -422,7 +391,7 @@ export default class ExperienceInteraction {
     // Note: The profile data is not saved to the user profile until the user submits the interaction.
     // Also no need to validate the synced profile data availability as it is already validated during the identification process.
     if (syncedProfile) {
-      this.#profile.unsafeSet(syncedProfile);
+      this.profile.unsafeSet(syncedProfile);
     }
   }
 
@@ -434,7 +403,7 @@ export default class ExperienceInteraction {
    */
   private async createNewUser(verificationRecord: VerificationRecord) {
     const newProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
-    await this.#profile.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
+    await this.profile.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
 
     const user = await this.provisionLibrary.createUser(newProfile);
 

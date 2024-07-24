@@ -164,31 +164,26 @@ export const CreateExperienceApiPayloadGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
 }) satisfies ToZodObject<CreateExperienceApiPayload>;
 
-/** Payload type for `PATCH /api/experience/profile */
-export type UpdateProfileApiPayload = {
-  [SignInIdentifier.Username]?: string;
-  [SignInIdentifier.Email]?: {
-    verificationId: string;
-  };
-  [SignInIdentifier.Phone]?: {
-    verificationId: string;
-  };
-  password?: string;
-};
-export const updateProfileApiPayloadGuard = z.object({
-  [SignInIdentifier.Username]: z.string().optional(),
-  [SignInIdentifier.Email]: z
-    .object({
-      verificationId: z.string(),
-    })
-    .optional(),
-  [SignInIdentifier.Phone]: z
-    .object({
-      verificationId: z.string(),
-    })
-    .optional(),
-  password: z.string().optional(),
-}) satisfies ToZodObject<UpdateProfileApiPayload>;
+/** Payload type for `POST /api/experience/profile */
+export const updateProfileApiPayloadGuard = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal(SignInIdentifier.Username),
+    value: z.string(),
+  }),
+  z.object({
+    type: z.literal('password'),
+    value: z.string(),
+  }),
+  z.object({
+    type: z.literal(SignInIdentifier.Email),
+    verificationId: z.string(),
+  }),
+  z.object({
+    type: z.literal(SignInIdentifier.Phone),
+    verificationId: z.string(),
+  }),
+]);
+export type UpdateProfileApiPayload = z.infer<typeof updateProfileApiPayloadGuard>;
 
 // ====== Experience API payload guard and types definitions end ======
 

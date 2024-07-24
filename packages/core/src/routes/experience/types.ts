@@ -1,7 +1,15 @@
 import { type SocialUserInfo, socialUserInfoGuard, type ToZodObject } from '@logto/connector-kit';
-import { type CreateUser, Users, UserSsoIdentities, type UserSsoIdentity } from '@logto/schemas';
+import {
+  type CreateUser,
+  type User,
+  Users,
+  UserSsoIdentities,
+  type UserSsoIdentity,
+} from '@logto/schemas';
 import type Provider from 'oidc-provider';
 import { z } from 'zod';
+
+import { type VerificationRecordMap } from './classes/verifications/index.js';
 
 export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
 
@@ -51,3 +59,14 @@ export const interactionProfileGuard = Users.createGuard
       })
       .optional(),
   }) satisfies ToZodObject<InteractionProfile>;
+
+/**
+ * The interaction context provides the callback functions to get the user and verification record from the interaction
+ */
+export type InteractionContext = {
+  getIdentifierUser: () => Promise<User>;
+  getVerificationRecordByTypeAndId: <K extends keyof VerificationRecordMap>(
+    type: K,
+    verificationId: string
+  ) => VerificationRecordMap[K];
+};
