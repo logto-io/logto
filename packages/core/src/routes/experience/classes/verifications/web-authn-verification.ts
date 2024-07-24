@@ -72,7 +72,7 @@ export class WebAuthnVerification implements VerificationRecord<VerificationType
   private verified;
   private registrationChallenge?: string;
   private readonly authenticationChallenge?: string;
-  private registrationInfo?: BindWebAuthn;
+  #registrationInfo?: BindWebAuthn;
 
   constructor(
     private readonly libraries: Libraries,
@@ -93,11 +93,15 @@ export class WebAuthnVerification implements VerificationRecord<VerificationType
     this.verified = verified;
     this.registrationChallenge = registrationChallenge;
     this.authenticationChallenge = authenticationChallenge;
-    this.registrationInfo = registrationInfo;
+    this.#registrationInfo = registrationInfo;
   }
 
   get isVerified() {
     return this.verified;
+  }
+
+  get registrationInfo() {
+    return this.#registrationInfo;
   }
 
   /**
@@ -161,7 +165,7 @@ export class WebAuthnVerification implements VerificationRecord<VerificationType
 
     this.verified = true;
 
-    this.registrationInfo = {
+    this.#registrationInfo = {
       type: MfaFactor.WebAuthn,
       credentialId: credentialID,
       publicKey: isoBase64URL.fromBuffer(credentialPublicKey),
@@ -240,6 +244,16 @@ export class WebAuthnVerification implements VerificationRecord<VerificationType
         };
       }),
     });
+  }
+
+  /**
+   *
+   * @throws {RequestError} with status 400, if the WebAuthn registration information is not found or not verified.
+   */
+  toBindMfa(): BindWebAuthn {
+    assertThat(this.isVerified, 'session.verification_failed');
+    assertThat(this.#registrationInfo, 'session.mfa.pending_info_not_found');
+    return this.#registrationInfo;
   }
 
   toJson(): WebAuthnVerificationRecordData {

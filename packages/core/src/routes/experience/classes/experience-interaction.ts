@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { type ToZodObject } from '@logto/connector-kit';
 import { InteractionEvent, type User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -18,10 +19,12 @@ import {
 import {
   getNewUserProfileFromVerificationRecord,
   identifyUserByVerificationRecord,
+  mergeUserMfaVerifications,
 } from './helpers.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
+import { Mfa, mfaDataGuard, userMfaDataKey, type MfaData } from './mfa.js';
 import { Profile } from './profile.js';
 import { toUserSocialIdentityData } from './utils.js';
 import {
@@ -37,6 +40,7 @@ type InteractionStorage = {
   interactionEvent?: InteractionEvent;
   userId?: string;
   profile?: InteractionProfile;
+  mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
 };
 
@@ -44,6 +48,7 @@ const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent).optional(),
   userId: z.string().optional(),
   profile: interactionProfileGuard.optional(),
+  mfa: mfaDataGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
 }) satisfies ToZodObject<InteractionStorage>;
 
@@ -56,14 +61,16 @@ const interactionStorageGuard = z.object({
 export default class ExperienceInteraction {
   public readonly signInExperienceValidator: SignInExperienceValidator;
   public readonly provisionLibrary: ProvisionLibrary;
+  /** The user provided profile data in the current interaction that needs to be stored to database. */
   readonly profile: Profile;
+  /** The user linked MFA data in the current interaction that needs to be stored to database. */
+  readonly mfa: Mfa;
 
   /** The user verification record list for the current interaction. */
   private readonly verificationRecords = new VerificationRecordsMap();
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
-  /** The user provided profile data in the current interaction that needs to be stored to database. */
   /** The interaction event for the current interaction. */
   #interactionEvent?: InteractionEvent;
 
@@ -91,6 +98,7 @@ export default class ExperienceInteraction {
 
     if (!interactionDetails) {
       this.profile = new Profile(libraries, queries, {}, interactionContext);
+      this.mfa = new Mfa(libraries, queries, {}, interactionContext);
       return;
     }
 
@@ -102,11 +110,18 @@ export default class ExperienceInteraction {
       new RequestError({ code: 'session.interaction_not_found', status: 404 })
     );
 
-    const { verificationRecords = [], profile = {}, userId, interactionEvent } = result.data;
+    const {
+      verificationRecords = [],
+      profile = {},
+      mfa = {},
+      userId,
+      interactionEvent,
+    } = result.data;
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
+    this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -194,6 +209,9 @@ export default class ExperienceInteraction {
     this.verificationRecords.setValue(record);
   }
 
+  /**
+   * @throws {RequestError} with 404 if the verification record is not found
+   */
   public getVerificationRecordByTypeAndId<K extends keyof VerificationRecordMap>(
     type: K,
     verificationId: string
@@ -225,7 +243,7 @@ export default class ExperienceInteraction {
       isVerified,
       new RequestError(
         { code: 'session.mfa.require_mfa_verification', status: 403 },
-        { availableFactors: mfaValidator.availableMfaVerificationTypes }
+        { availableFactors: mfaValidator.availableUserMfaVerificationTypes }
       )
     );
   }
@@ -262,7 +280,7 @@ export default class ExperienceInteraction {
    **/
   public async submit() {
     const {
-      queries: { users: userQueries, userSsoIdentities: userSsoIdentitiesQueries },
+      queries: { users: userQueries },
     } = this.tenant;
 
     // Initiated
@@ -304,7 +322,14 @@ export default class ExperienceInteraction {
     // Profile fulfilled
     await this.profile.assertUserMandatoryProfileFulfilled();
 
+    // Revalidate the new MFA data if any
+    await this.mfa.checkAvailability();
+
+    // MFA fulfilled
+    await this.mfa.assertUserMandatoryMfaFulfilled();
+
     const { socialIdentity, enterpriseSsoIdentity, ...rest } = this.profile.data;
+    const { mfaSkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
 
     // Update user profile
     await userQueries.updateUserById(user.id, {
@@ -314,6 +339,21 @@ export default class ExperienceInteraction {
           identities: {
             ...user.identities,
             ...toUserSocialIdentityData(socialIdentity),
+          },
+        }
+      ),
+      ...conditional(
+        mfaVerifications.length > 0 && {
+          mfaVerifications: mergeUserMfaVerifications(user.mfaVerifications, mfaVerifications),
+        }
+      ),
+      ...conditional(
+        mfaSkipped && {
+          logtoConfig: {
+            ...user.logtoConfig,
+            [userMfaDataKey]: {
+              skipped: true,
+            },
           },
         }
       ),
@@ -343,6 +383,7 @@ export default class ExperienceInteraction {
       interactionEvent,
       userId,
       profile: this.profile.data,
+      mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
     };
   }
@@ -450,3 +491,4 @@ export default class ExperienceInteraction {
     await provider.interactionResult(this.ctx.req, this.ctx.res, {});
   }
 }
+/* eslint-enable max-lines */

@@ -46,7 +46,7 @@ import {
   WebAuthnVerification,
   webAuthnVerificationRecordDataGuard,
   type WebAuthnVerificationRecordData,
-} from './web-authn.js';
+} from './web-authn-verification.js';
 
 export type VerificationRecordData =
   | PasswordVerificationRecordData

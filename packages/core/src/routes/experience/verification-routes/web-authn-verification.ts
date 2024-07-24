@@ -13,7 +13,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { WebAuthnVerification } from '../classes/verifications/web-authn.js';
+import { WebAuthnVerification } from '../classes/verifications/web-authn-verification.js';
 import { experienceRoutes } from '../const.js';
 import { type WithExperienceInteractionContext } from '../middleware/koa-experience-interaction.js';
 
