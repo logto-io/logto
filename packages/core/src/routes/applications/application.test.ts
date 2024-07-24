@@ -53,6 +53,7 @@ const tenantContext = new MockTenant(
       ),
       updateApplicationById,
     },
+    applicationSecrets: { insert: jest.fn() },
   },
   undefined,
   {

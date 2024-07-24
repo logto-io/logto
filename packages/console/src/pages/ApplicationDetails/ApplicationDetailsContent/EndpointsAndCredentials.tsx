@@ -1,10 +1,10 @@
 import {
   type ApplicationSecret,
-  ApplicationType,
   DomainStatus,
   type Application,
   type SnakeCaseOidcConfig,
   internalPrefix,
+  hasSecrets,
 } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -57,11 +57,7 @@ function EndpointsAndCredentials({
   const [showCreateSecretModal, setShowCreateSecretModal] = useState(false);
   const secrets = useSWR<ApplicationSecretRow[], RequestError>(`api/applications/${id}/secrets`);
   const api = useApi();
-  const shouldShowAppSecrets = [
-    ApplicationType.Traditional,
-    ApplicationType.MachineToMachine,
-    ApplicationType.Protected,
-  ].includes(type);
+  const shouldShowAppSecrets = hasSecrets(type);
 
   const toggleShowMoreEndpoints = useCallback(() => {
     setShowMoreEndpoints((previous) => !previous);
