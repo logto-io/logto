@@ -48,6 +48,8 @@ function CreateSecretModal({ appId, isOpen, onClose }: Props) {
   const expirationDays = watch('expiration');
   const [expirationDate, setExpirationDate] = useState<Date>();
 
+  // Update expiration date every second since our options are relative to the current time (in
+  // days).
   useEffect(() => {
     const setDate = () => {
       if (expirationDays === neverExpires) {
