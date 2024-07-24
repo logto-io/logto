@@ -26,7 +26,7 @@ import {
   getSignInMethodVerificationCodeCheckState,
 } from '../utils';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function SignUpForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import { type ReactElement } from 'react';
 
 import FormField from '@/ds-components/FormField';
-import * as transferLayout from '@/scss/transfer.module.scss';
+import transferLayout from '@/scss/transfer.module.scss';
 
 import type DangerousRaw from '../DangerousRaw';
 
 import SourcePanel from './SourcePanel';
 import TargetPanel from './TargetPanel';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { type DataEntry, type DataGroup, type SelectedDataEntry } from './type';
 
 /**

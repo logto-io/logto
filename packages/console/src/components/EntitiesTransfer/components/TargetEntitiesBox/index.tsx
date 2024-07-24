@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
-import * as transferLayout from '@/scss/transfer.module.scss';
+import transferLayout from '@/scss/transfer.module.scss';
 import { type Identifiable } from '@/types/general';
 
 import TargetEntityItem from '../TargetEntityItem';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props<T> = {
   readonly renderEntity: (entity: T) => React.ReactNode;

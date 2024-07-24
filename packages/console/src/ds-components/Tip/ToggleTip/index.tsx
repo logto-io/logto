@@ -4,7 +4,7 @@ import { useCallback, useState, useRef } from 'react';
 import ReactModal from 'react-modal';
 
 import usePosition from '@/hooks/use-position';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 import type { HorizontalAlignment } from '@/types/positioning';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -17,7 +17,7 @@ import {
   getHorizontalOffset,
 } from '../TipBubble/utils';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type Props = {
   readonly children: ReactNode;

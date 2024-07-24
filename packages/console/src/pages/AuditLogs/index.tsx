@@ -1,7 +1,7 @@
 import AuditLogTable from '@/components/AuditLogTable';
 import PageMeta from '@/components/PageMeta';
 import CardTitle from '@/ds-components/CardTitle';
-import * as pageLayout from '@/scss/page-layout.module.scss';
+import pageLayout from '@/scss/page-layout.module.scss';
 
 function AuditLogs() {
   return (

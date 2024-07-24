@@ -1,12 +1,14 @@
+import { lazy } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
 import { RoleDetailsTabs } from '@/consts/page-tabs';
-import RoleDetails from '@/pages/RoleDetails';
-import RoleApplications from '@/pages/RoleDetails/RoleApplications';
-import RolePermissions from '@/pages/RoleDetails/RolePermissions';
-import RoleSettings from '@/pages/RoleDetails/RoleSettings';
-import RoleUsers from '@/pages/RoleDetails/RoleUsers';
-import Roles from '@/pages/Roles';
+
+const Roles = lazy(async () => import('@/pages/Roles'));
+const RoleDetails = lazy(async () => import('@/pages/RoleDetails'));
+const RolePermissions = lazy(async () => import('@/pages/RoleDetails/RolePermissions'));
+const RoleSettings = lazy(async () => import('@/pages/RoleDetails/RoleSettings'));
+const RoleUsers = lazy(async () => import('@/pages/RoleDetails/RoleUsers'));
+const RoleApplications = lazy(async () => import('@/pages/RoleDetails/RoleApplications'));
 
 export const roles: RouteObject = {
   path: 'roles',

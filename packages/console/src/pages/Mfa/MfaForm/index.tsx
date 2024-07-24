@@ -23,7 +23,7 @@ import { type MfaConfigForm, type MfaConfig } from '../types';
 
 import FactorLabel from './FactorLabel';
 import { policyOptionTitleMap } from './constants';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { convertMfaFormToConfig, convertMfaConfigToForm, validateBackupCodeFactor } from './utils';
 
 type Props = {

@@ -5,7 +5,7 @@ import { type ConnectorRadioGroupSize } from '@/components/CreateConnectorForm/C
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 
 import SsoConnectorRadio from './SsoConnectorRadio';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly name: string;

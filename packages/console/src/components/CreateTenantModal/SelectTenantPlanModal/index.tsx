@@ -13,14 +13,14 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
 import useSubscribe from '@/hooks/use-subscribe';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { pickupFeaturedPlans } from '@/utils/subscription';
 
 import { type CreateTenantData } from '../types';
 
 import PlanCardItem from './PlanCardItem';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly tenantData?: CreateTenantData;

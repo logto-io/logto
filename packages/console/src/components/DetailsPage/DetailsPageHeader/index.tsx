@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import More from '@/assets/icons/more.svg';
+import More from '@/assets/icons/more.svg?react';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
@@ -20,7 +20,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import Tag, { type Props as TagProps } from '@/ds-components/Tag';
 import useWindowResize from '@/hooks/use-window-resize';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type StatusTag = {
   status: TagProps['status'];

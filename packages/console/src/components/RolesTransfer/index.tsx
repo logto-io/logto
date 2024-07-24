@@ -2,15 +2,15 @@ import { type RoleResponse, RoleType } from '@logto/schemas';
 import classNames from 'classnames';
 import { Trans, useTranslation } from 'react-i18next';
 
-import ManagementApiAccessFlag from '@/assets/icons/management-api-access.svg';
+import ManagementApiAccessFlag from '@/assets/icons/management-api-access.svg?react';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import * as transferLayout from '@/scss/transfer.module.scss';
+import transferLayout from '@/scss/transfer.module.scss';
 
 import SourceRolesBox from './SourceRolesBox';
 import TargetRolesBox from './TargetRolesBox';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly entityId: string;

@@ -13,7 +13,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isLivePreviewDisabled?: boolean;

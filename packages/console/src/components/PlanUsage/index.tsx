@@ -7,7 +7,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { formatPeriod } from '@/utils/subscription';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly subscriptionUsage: SubscriptionUsage;

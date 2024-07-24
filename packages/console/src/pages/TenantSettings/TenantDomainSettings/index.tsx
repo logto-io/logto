@@ -15,7 +15,7 @@ import Skeleton from '../components/Skeleton';
 import AddDomainForm from './AddDomainForm';
 import CustomDomain from './CustomDomain';
 import DefaultDomain from './DefaultDomain';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function TenantDomainSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

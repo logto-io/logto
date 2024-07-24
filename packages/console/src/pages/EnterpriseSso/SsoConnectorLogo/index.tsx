@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import useTheme from '@/hooks/use-theme';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { pickLogoForCurrentThemeHelper } from './utils';
 
 type Props = {

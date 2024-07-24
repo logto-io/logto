@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import UserAvatar from '../UserAvatar';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

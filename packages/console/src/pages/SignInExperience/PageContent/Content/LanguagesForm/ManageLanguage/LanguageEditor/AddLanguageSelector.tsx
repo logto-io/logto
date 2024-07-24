@@ -4,15 +4,15 @@ import type { ChangeEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Plus from '@/assets/icons/plus.svg';
-import SearchIcon from '@/assets/icons/search.svg';
+import Plus from '@/assets/icons/plus.svg?react';
+import SearchIcon from '@/assets/icons/search.svg?react';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as style from './AddLanguageSelector.module.scss';
+import style from './AddLanguageSelector.module.scss';
 
 type Props = {
   readonly options: LanguageTag[];

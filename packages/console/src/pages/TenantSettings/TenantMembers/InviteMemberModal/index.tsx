@@ -11,11 +11,11 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import Select, { type Option } from '@/ds-components/Select';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 
 import InviteEmailsInput from '../InviteEmailsInput';
 import useEmailInputUtils from '../InviteEmailsInput/hooks';
-import * as styles from '../index.module.scss';
+import styles from '../index.module.scss';
 import { type InviteMemberForm } from '../types';
 
 import Footer from './Footer';

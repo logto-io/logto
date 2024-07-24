@@ -1,12 +1,12 @@
 import type { FormEventHandler, KeyboardEventHandler } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
-import SearchIcon from '@/assets/icons/search.svg';
+import SearchIcon from '@/assets/icons/search.svg?react';
 
 import Button from '../Button';
 import TextInput from '../TextInput';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly defaultValue?: string;

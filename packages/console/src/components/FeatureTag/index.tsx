@@ -4,7 +4,7 @@ import { useContext } from 'react';
 
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export { default as BetaTag } from './BetaTag';
 

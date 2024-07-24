@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import * as styles from './TableEmptyWrapper.module.scss';
+import styles from './TableEmptyWrapper.module.scss';
 
 type Props = {
   readonly columns: number;

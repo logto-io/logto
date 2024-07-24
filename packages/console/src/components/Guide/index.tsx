@@ -10,7 +10,7 @@ import MdxProvider from '@/mdx-components/MdxProvider';
 import NotFound from '@/pages/NotFound';
 
 import StepsSkeleton from './StepsSkeleton';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type GuideContextType = {
   metadata: Readonly<GuideMetadata>;

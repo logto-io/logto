@@ -6,7 +6,7 @@ import { trustAndSecurityLink } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import TextLink from '@/ds-components/TextLink';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function TenantRegion() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

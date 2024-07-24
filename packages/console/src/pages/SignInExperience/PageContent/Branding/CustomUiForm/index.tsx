@@ -16,7 +16,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
-import * as brandingStyles from './index.module.scss';
+import brandingStyles from './index.module.scss';
 
 function CustomUiForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

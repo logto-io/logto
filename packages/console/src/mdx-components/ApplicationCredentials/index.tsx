@@ -6,7 +6,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function ApplicationCredentials() {
   const { app } = useContext(GuideContext);

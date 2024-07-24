@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/icons/delete.svg';
-import Plus from '@/assets/icons/plus.svg';
+import Delete from '@/assets/icons/delete.svg?react';
+import Plus from '@/assets/icons/plus.svg?react';
 import ApplicationName from '@/components/ApplicationName';
 import DateTime from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
@@ -27,7 +27,7 @@ import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import type { RoleDetailsOutletContext } from '../types';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 

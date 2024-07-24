@@ -22,11 +22,11 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi, { type RequestError } from '@/hooks/use-api';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 import SsoConnectorRadioGroup from './SsoConnectorRadioGroup';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { categorizeSsoConnectorProviders } from './utils';
 
 type Props = {

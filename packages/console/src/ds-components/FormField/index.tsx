@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import type { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Tip from '@/assets/icons/tip.svg';
+import Tip from '@/assets/icons/tip.svg?react';
 import FeatureTag, { type Props as FeatureTagProps } from '@/components/FeatureTag';
 
 import type DangerousRaw from '../DangerousRaw';
@@ -13,7 +13,7 @@ import Spacer from '../Spacer';
 import { ToggleTip } from '../Tip';
 import type { Props as ToggleTipProps } from '../Tip/ToggleTip';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type Props = {
   readonly title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;

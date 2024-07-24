@@ -1,16 +1,20 @@
+import { lazy, Suspense } from 'react';
 import { useOutletContext, useRoutes } from 'react-router-dom';
 
 import { isDevFeaturesEnabled } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import { Daisy } from '@/ds-components/Spinner';
 import Tag from '@/ds-components/Tag';
 import { useConsoleRoutes } from '@/hooks/use-console-routes';
 import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
 
 import type { AppContentOutletContext } from '../AppContent/types';
 
-import Sidebar from './Sidebar';
+import { Skeleton } from './Sidebar';
 import useTenantScopeListener from './hooks';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
+
+const Sidebar = lazy(async () => import('./Sidebar'));
 
 function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
@@ -23,10 +27,12 @@ function ConsoleContent() {
 
   return (
     <div className={styles.content}>
-      <Sidebar />
+      <Suspense fallback={<Skeleton />}>
+        <Sidebar />
+      </Suspense>
       <OverlayScrollbar className={styles.overlayScrollbarWrapper}>
         <div ref={scrollableContent} className={styles.main}>
-          {routes}
+          <Suspense fallback={<Daisy className={styles.daisy} />}>{routes}</Suspense>
         </div>
       </OverlayScrollbar>
       {isDevFeaturesEnabled && (

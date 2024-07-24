@@ -2,8 +2,8 @@ import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import OrganizationFeatureDark from '@/assets/icons/organization-feature-dark.svg';
-import OrganizationFeature from '@/assets/icons/organization-feature.svg';
+import OrganizationFeatureDark from '@/assets/icons/organization-feature-dark.svg?react';
+import OrganizationFeature from '@/assets/icons/organization-feature.svg?react';
 import Card from '@/ds-components/Card';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useTheme from '@/hooks/use-theme';
@@ -15,7 +15,7 @@ import Permission from './components/Permission';
 import Role from './components/Role';
 import Section from './components/Section';
 import User from './components/User';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const icons = {
   [Theme.Light]: { OrganizationIcon: OrganizationFeature },

@@ -8,7 +8,7 @@ import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import MdxProvider from '@/mdx-components/MdxProvider';
 import NotFound from '@/pages/NotFound';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly ssoConnector?: SsoConnectorWithProviderConfig;

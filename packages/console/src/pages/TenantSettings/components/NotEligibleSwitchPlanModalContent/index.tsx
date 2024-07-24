@@ -18,7 +18,7 @@ import {
 } from '@/types/subscriptions';
 import { sortBy } from '@/utils/sort';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const excludedQuotaKeys = new Set<keyof SubscriptionPlanQuota>([
   'auditLogsRetentionDays',

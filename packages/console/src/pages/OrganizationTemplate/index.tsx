@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import { useCallback, useContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import OrganizationEmptyDark from '@/assets/images/organization-empty-dark.svg';
-import OrganizationEmpty from '@/assets/images/organization-empty.svg';
+import OrganizationEmptyDark from '@/assets/images/organization-empty-dark.svg?react';
+import OrganizationEmpty from '@/assets/images/organization-empty.svg?react';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { OrganizationTemplateTabs, organizationTemplateLink } from '@/consts';
@@ -21,11 +21,11 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import * as pageLayout from '@/scss/page-layout.module.scss';
+import pageLayout from '@/scss/page-layout.module.scss';
 
 import Introduction from '../Organizations/Introduction';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const basePathname = '/organization-template';
 

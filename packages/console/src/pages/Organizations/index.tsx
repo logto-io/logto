@@ -2,7 +2,7 @@ import { ReservedPlanId } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import { useCallback, useContext, useState } from 'react';
 
-import Plus from '@/assets/icons/plus.svg';
+import Plus from '@/assets/icons/plus.svg?react';
 import PageMeta from '@/components/PageMeta';
 import { organizationsFeatureLink } from '@/consts';
 import { isCloud } from '@/consts/env';
@@ -14,12 +14,12 @@ import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import * as pageLayout from '@/scss/page-layout.module.scss';
+import pageLayout from '@/scss/page-layout.module.scss';
 
 import CreateOrganizationModal from './CreateOrganizationModal';
 import OrganizationsTable from './OrganizationsTable';
 import EmptyDataPlaceholder from './OrganizationsTable/EmptyDataPlaceholder';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const organizationsPathname = '/organizations';
 

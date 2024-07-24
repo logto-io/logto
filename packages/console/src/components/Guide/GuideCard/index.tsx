@@ -9,7 +9,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type SelectedGuide = {
   id: Guide['id'];

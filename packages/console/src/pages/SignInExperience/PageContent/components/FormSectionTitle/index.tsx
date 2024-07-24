@@ -2,7 +2,7 @@ import { type TFuncKey } from 'i18next';
 
 import DynamicT from '@/ds-components/DynamicT';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly title: TFuncKey<'translation', 'admin_console.sign_in_exp'>;

@@ -1,8 +1,10 @@
+import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { ConnectorsTabs } from '@/consts';
-import ConnectorDetails from '@/pages/ConnectorDetails';
-import Connectors from '@/pages/Connectors';
+
+const Connectors = lazy(async () => import('@/pages/Connectors'));
+const ConnectorDetails = lazy(async () => import('@/pages/ConnectorDetails'));
 
 export const connectors = {
   path: 'connectors',

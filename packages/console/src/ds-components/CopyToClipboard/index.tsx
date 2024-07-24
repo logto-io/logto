@@ -12,15 +12,15 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Copy from '@/assets/icons/copy.svg';
-import EyeClosed from '@/assets/icons/eye-closed.svg';
-import Eye from '@/assets/icons/eye.svg';
+import Copy from '@/assets/icons/copy.svg?react';
+import EyeClosed from '@/assets/icons/eye-closed.svg?react';
+import Eye from '@/assets/icons/eye.svg?react';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import IconButton from '../IconButton';
 import { Tooltip } from '../Tip';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly value: string;

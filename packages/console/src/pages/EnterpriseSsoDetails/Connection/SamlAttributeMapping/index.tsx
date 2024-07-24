@@ -10,7 +10,7 @@ import {
   type SamlConnectorConfig,
 } from '@/pages/EnterpriseSsoDetails/types/saml';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly samlProviderConfig?: SamlProviderConfig;

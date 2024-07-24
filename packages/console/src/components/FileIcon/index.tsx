@@ -1,8 +1,8 @@
 import { Theme } from '@logto/schemas';
 import { type ReactNode } from 'react';
 
-import FileIconDark from '@/assets/icons/file-icon-dark.svg';
-import FileIconLight from '@/assets/icons/file-icon.svg';
+import FileIconDark from '@/assets/icons/file-icon-dark.svg?react';
+import FileIconLight from '@/assets/icons/file-icon.svg?react';
 import useTheme from '@/hooks/use-theme';
 
 const themeToRoleIcon = Object.freeze({

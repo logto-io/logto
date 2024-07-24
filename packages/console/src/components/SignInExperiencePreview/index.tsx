@@ -16,12 +16,12 @@ import {
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import PhoneInfo from '@/assets/images/phone-info.svg';
+import PhoneInfo from '@/assets/images/phone-info.svg?react';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { PreviewPlatform } from './types';
 
 export { default as ToggleUiThemeButton } from './components/ToggleUiThemeButton';

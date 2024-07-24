@@ -8,6 +8,7 @@ import type { IRouterParamContext } from 'koa-router';
 import { EnvSet } from '#src/env-set/index.js';
 import serveStatic from '#src/middleware/koa-serve-static.js';
 import type Queries from '#src/tenants/Queries.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import serveCustomUiAssets from './koa-serve-custom-ui-assets.js';
 
@@ -35,7 +36,14 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     : proxy('*', {
         target: `http://localhost:${port}`,
         changeOrigin: true,
-        logs: true,
+        logs: (ctx, target) => {
+          // Ignoring static file requests in development since vite will load a crazy amount of files
+          if (path.basename(ctx.request.path).includes('.')) {
+            return;
+          }
+
+          getConsoleLogFromContext(ctx).plain(`\tproxy --> ${target}`);
+        },
         rewrite: (requestPath) => {
           const fullPath = '/' + path.join(prefix, requestPath);
           // Static files
@@ -45,7 +53,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 
           // In-app routes
           // We'll gradually migrate our single-page apps to use vite, which can directly return the full path
-          return packagePath === 'demo-app' ? fullPath : requestPath;
+          return packagePath === 'demo-app' || packagePath === 'console' ? fullPath : requestPath;
         },
       });
 

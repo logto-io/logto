@@ -24,7 +24,7 @@ import { trySubmitSafe } from '@/utils/form';
 import { type OrganizationDetailsOutletContext } from '../types';
 
 import JitSettings from './JitSettings';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { assembleData, isJsonObject, normalizeData, type FormData } from './utils';
 
 function Settings() {

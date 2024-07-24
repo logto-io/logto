@@ -13,7 +13,7 @@ import useUserAssetsService from '@/hooks/use-user-assets-service';
 import PageContent from './PageContent';
 import Skeleton from './Skeleton';
 import Welcome from './Welcome';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type PageWrapperProps = {
   readonly children: ReactNode;

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly title: ReactNode;

@@ -13,7 +13,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import Select from '@/ds-components/Select';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 type FormData = { name: string; expiration: string };

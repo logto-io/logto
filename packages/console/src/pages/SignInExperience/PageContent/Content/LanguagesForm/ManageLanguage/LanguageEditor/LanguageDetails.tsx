@@ -15,8 +15,8 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR, { useSWRConfig } from 'swr';
 
-import Clear from '@/assets/icons/clear.svg';
-import Delete from '@/assets/icons/delete.svg';
+import Clear from '@/assets/icons/clear.svg?react';
+import Delete from '@/assets/icons/delete.svg?react';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import IconButton from '@/ds-components/IconButton';
@@ -31,7 +31,7 @@ import type { CustomPhraseResponse } from '@/types/custom-phrase';
 import { trySubmitSafe } from '@/utils/form';
 import { shouldRetryOnError } from '@/utils/request';
 
-import * as styles from './LanguageDetails.module.scss';
+import styles from './LanguageDetails.module.scss';
 import { hiddenLocalePhraseGroups, hiddenLocalePhrases } from './constants';
 import { LanguageEditorContext } from './use-language-editor-context';
 import { createEmptyUiTranslation, flattenTranslation } from './utils';

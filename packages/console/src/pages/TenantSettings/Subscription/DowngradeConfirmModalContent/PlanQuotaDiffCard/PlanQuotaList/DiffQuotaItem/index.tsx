@@ -1,12 +1,12 @@
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 
-import DescendArrow from '@/assets/icons/descend-arrow.svg';
-import Failed from '@/assets/icons/failed.svg';
+import DescendArrow from '@/assets/icons/descend-arrow.svg?react';
+import Failed from '@/assets/icons/failed.svg?react';
 import { type SubscriptionPlanQuota } from '@/types/subscriptions';
 
 import QuotaItemPhrase from './QuotaItemPhrase';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly quotaKey: keyof SubscriptionPlanQuota;

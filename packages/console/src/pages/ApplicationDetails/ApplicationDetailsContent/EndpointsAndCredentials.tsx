@@ -11,10 +11,10 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import CaretDown from '@/assets/icons/caret-down.svg';
-import CaretUp from '@/assets/icons/caret-up.svg';
-import CirclePlus from '@/assets/icons/circle-plus.svg';
-import Plus from '@/assets/icons/plus.svg';
+import CaretDown from '@/assets/icons/caret-down.svg?react';
+import CaretUp from '@/assets/icons/caret-up.svg?react';
+import CirclePlus from '@/assets/icons/circle-plus.svg?react';
+import Plus from '@/assets/icons/plus.svg?react';
 import ActionsButton from '@/components/ActionsButton';
 import FormCard from '@/components/FormCard';
 import { isDevFeaturesEnabled } from '@/consts/env';
@@ -31,7 +31,7 @@ import useApi, { type RequestError } from '@/hooks/use-api';
 import useCustomDomain from '@/hooks/use-custom-domain';
 
 import CreateSecretModal from './CreateSecretModal';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const isLegacySecret = (secret: string) => !secret.startsWith(internalPrefix);
 

@@ -49,5 +49,17 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['*.config.js', '*.config.ts', '*.d.ts'],
+      rules: {
+        'import/no-unused-modules': 'off',
+      },
+    },
+    {
+      files: ['*.d.ts'],
+      rules: {
+        'import/no-unassigned-import': 'off',
+      },
+    },
   ],
 };

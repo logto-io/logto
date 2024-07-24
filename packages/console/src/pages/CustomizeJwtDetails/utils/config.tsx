@@ -7,8 +7,8 @@ import {
 } from '@logto/schemas';
 import { type EditorProps } from '@monaco-editor/react';
 
-import TokenFileIcon from '@/assets/icons/token-file-icon.svg';
-import UserFileIcon from '@/assets/icons/user-file-icon.svg';
+import TokenFileIcon from '@/assets/icons/token-file-icon.svg?react';
+import UserFileIcon from '@/assets/icons/user-file-icon.svg?react';
 
 import type { ModelSettings } from '../MainContent/MonacoCodeEditor/type.js';
 

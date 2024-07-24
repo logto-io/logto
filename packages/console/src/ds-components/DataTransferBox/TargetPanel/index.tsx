@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import * as transferLayout from '@/scss/transfer.module.scss';
+import transferLayout from '@/scss/transfer.module.scss';
 
 import TargetDataItem from '../TargetDataItem';
 import { type DataEntry, type SelectedDataEntry } from '../type';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props<TEntry extends DataEntry> = {
   readonly selectedData: Array<SelectedDataEntry<TEntry>>;

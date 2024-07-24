@@ -17,7 +17,7 @@ import 'property-information';
 import CodeEditor from '@/ds-components/CodeEditor';
 
 import GithubRawImage from './components/GithubRawImage';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

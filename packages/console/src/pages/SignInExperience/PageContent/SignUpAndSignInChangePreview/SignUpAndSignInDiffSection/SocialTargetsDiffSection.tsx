@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 
 import DiffSegment from './DiffSegment';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly before: string[];

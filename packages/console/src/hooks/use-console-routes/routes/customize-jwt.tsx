@@ -1,7 +1,8 @@
+import { lazy } from 'react';
 import { type RouteObject } from 'react-router-dom';
 
-import CustomizeJwt from '@/pages/CustomizeJwt';
-import CustomizeJwtDetails from '@/pages/CustomizeJwtDetails';
+const CustomizeJwt = lazy(async () => import('@/pages/CustomizeJwt'));
+const CustomizeJwtDetails = lazy(async () => import('@/pages/CustomizeJwtDetails'));
 
 export const customizeJwt: RouteObject = {
   path: 'customize-jwt',

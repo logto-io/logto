@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import '@/scss/normalized.scss';
 
-import * as styles from './App.module.scss';
+import styles from './App.module.scss';
 import Callback from './Callback';
 import DevPanel from './DevPanel';
 import congratsDark from './assets/congrats-dark.svg';

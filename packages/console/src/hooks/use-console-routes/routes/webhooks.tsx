@@ -1,11 +1,13 @@
+import { lazy } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
 import { WebhookDetailsTabs } from '@/consts';
-import AuditLogDetails from '@/pages/AuditLogDetails';
-import WebhookDetails from '@/pages/WebhookDetails';
-import WebhookLogs from '@/pages/WebhookDetails/WebhookLogs';
-import WebhookSettings from '@/pages/WebhookDetails/WebhookSettings';
-import Webhooks from '@/pages/Webhooks';
+
+const WebhookDetails = lazy(async () => import('@/pages/WebhookDetails'));
+const AuditLogDetails = lazy(async () => import('@/pages/AuditLogDetails'));
+const WebhookSettings = lazy(async () => import('@/pages/WebhookDetails/WebhookSettings'));
+const WebhookLogs = lazy(async () => import('@/pages/WebhookDetails/WebhookLogs'));
+const Webhooks = lazy(async () => import('@/pages/Webhooks'));
 
 export const webhooks: RouteObject = {
   path: 'webhooks',

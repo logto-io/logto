@@ -5,9 +5,9 @@ import { Controller, type UseFormReturn } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWRInfinite from 'swr/infinite';
 
-import Minus from '@/assets/icons/minus.svg';
-import Plus from '@/assets/icons/plus.svg';
-import SsoIcon from '@/assets/icons/single-sign-on.svg';
+import Minus from '@/assets/icons/minus.svg?react';
+import Plus from '@/assets/icons/plus.svg?react';
+import SsoIcon from '@/assets/icons/single-sign-on.svg?react';
 import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
 import OrganizationRolesSelect from '@/components/OrganizationRolesSelect';
@@ -23,7 +23,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
 import { domainRegExp } from '@/pages/EnterpriseSsoDetails/Experience/DomainsInput/consts';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { type FormData } from './utils';
 
 type Props = {

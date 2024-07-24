@@ -11,7 +11,7 @@ import Skeleton from '../components/Skeleton';
 import CurrentPlan from './CurrentPlan';
 import PlanComparisonTable from './PlanComparisonTable';
 import SwitchPlanActionBar from './SwitchPlanActionBar';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function Subscription() {
   const { currentTenantId } = useContext(TenantsContext);

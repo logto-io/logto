@@ -1,5 +1,6 @@
+import { lazy } from 'react';
 import { type RouteObject } from 'react-router-dom';
 
-import Mfa from '@/pages/Mfa';
+const Mfa = lazy(async () => import('@/pages/Mfa'));
 
 export const mfa: RouteObject = { path: 'mfa', element: <Mfa /> };

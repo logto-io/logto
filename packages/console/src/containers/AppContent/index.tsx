@@ -16,7 +16,7 @@ import { useSidebarMenuItems } from '../ConsoleContent/Sidebar/hook';
 
 import TenantNotificationContainer from './TenantNotificationContainer';
 import TenantSuspendedPage from './TenantSuspendedPage';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { type AppContentOutletContext } from './types';
 
 export default function AppContent() {

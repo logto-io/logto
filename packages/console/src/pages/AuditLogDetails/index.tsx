@@ -22,7 +22,7 @@ import { isWebhookEventLogKey } from '@/pages/WebhookDetails/utils';
 import { getUserTitle } from '@/utils/user';
 
 import EventIcon from './components/EventIcon';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
   `${pathname.slice(0, pathname.lastIndexOf('/'))}`;

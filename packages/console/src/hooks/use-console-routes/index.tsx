@@ -1,12 +1,9 @@
 import { condArray } from '@silverhand/essentials';
-import { useMemo } from 'react';
+import { lazy, useMemo } from 'react';
 import { type RouteObject } from 'react-router-dom';
 
 import { isCloud } from '@/consts/env';
-import Dashboard from '@/pages/Dashboard';
-import GetStarted from '@/pages/GetStarted';
 import NotFound from '@/pages/NotFound';
-import SigningKeys from '@/pages/SigningKeys';
 
 import { apiResources } from './routes/api-resources';
 import { applications } from './routes/applications';
@@ -22,6 +19,10 @@ import { signInExperience } from './routes/sign-in-experience';
 import { useTenantSettings } from './routes/tenant-settings';
 import { users } from './routes/users';
 import { webhooks } from './routes/webhooks';
+
+const Dashboard = lazy(async () => import('@/pages/Dashboard'));
+const GetStarted = lazy(async () => import('@/pages/GetStarted'));
+const SigningKeys = lazy(async () => import('@/pages/SigningKeys'));
 
 export const useConsoleRoutes = () => {
   const tenantSettings = useTenantSettings();
