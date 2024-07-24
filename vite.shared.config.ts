@@ -30,7 +30,7 @@ export const defaultConfig: UserConfig = {
     include: ['@logto/phrases', '@logto/phrases-experience', '@logto/schemas'],
   },
   build: {
-    sourcemap: false,
+    sourcemap: true,
     rollupOptions: {
       output: { manualChunks },
     },

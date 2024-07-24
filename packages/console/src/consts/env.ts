@@ -2,7 +2,7 @@ import { yes } from '@silverhand/essentials';
 
 import { storageKeys } from './storage';
 
-export const normalizeEnv = (value: unknown) =>
+const normalizeEnv = (value: unknown) =>
   value === null || value === undefined ? undefined : String(value);
 
 const isProduction = import.meta.env.PROD;
