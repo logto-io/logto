@@ -37,13 +37,15 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
         changeOrigin: true,
         logs: true,
         rewrite: (requestPath) => {
+          const fullPath = '/' + path.join(prefix, requestPath);
           // Static files
           if (requestPath.includes('.')) {
-            return '/' + path.join(prefix, requestPath);
+            return fullPath;
           }
 
           // In-app routes
-          return requestPath;
+          // We'll gradually migrate our single-page apps to use vite, which can directly return the full path
+          return packagePath === 'demo-app' ? fullPath : requestPath;
         },
       });
 
