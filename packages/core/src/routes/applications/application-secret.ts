@@ -13,6 +13,7 @@ export const generateInternalSecret = () => internalPrefix + generateStandardSec
 export default function applicationSecretRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
+  // See OpenAPI description for the rationale of this endpoint.
   router.delete(
     '/applications/:id/legacy-secret',
     koaGuard({
