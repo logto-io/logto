@@ -12,7 +12,7 @@ import { totpBindingStateGuard } from '@/types/guard';
 
 import SecretSection from './SecretSection';
 import VerificationSection from './VerificationSection';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const TotpBinding = () => {
   const { state } = useLocation();

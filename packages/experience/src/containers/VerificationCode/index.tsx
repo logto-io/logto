@@ -9,7 +9,7 @@ import VerificationCodeInput, { defaultLength } from '@/components/VerificationC
 import { UserFlow } from '@/types';
 
 import PasswordSignInLink from './PasswordSignInLink';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import useResendVerificationCode from './use-resend-verification-code';
 import { getCodeVerificationHookByFlow } from './utils';
 

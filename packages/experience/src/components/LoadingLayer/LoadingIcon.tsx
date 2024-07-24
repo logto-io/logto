@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 
-import LoadingSvg from '@/assets/icons/loading-icon.svg';
+import LoadingSvg from '@/assets/icons/loading-icon.svg?react';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

@@ -52,9 +52,5 @@
   },
   "dependencies": {
     "@logto/cli": "workspace:^1.1.0"
-  },
-  "//": "@see https://parceljs.org/features/dependency-resolution/#package-exports",
-  "@parcel/resolver-default": {
-    "packageExports": true
   }
 }

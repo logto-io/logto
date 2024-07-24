@@ -10,7 +10,7 @@
 		"scope": "javascriptreact,typescriptreact",
 		"prefix": "isc",
 		"body": [
-			"import * as styles from './index.module.scss';",
+			"import styles from './index.module.scss';",
 			"$0"
 		],
 		"description": "Import SCSS styles from the same directory."

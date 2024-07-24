@@ -1,7 +1,21 @@
 /** @fileoverview The common config for frontend projects. */
 
-import { UserConfig } from 'vite';
-import fs from 'fs';
+import { Rollup, UserConfig } from 'vite';
+
+export const manualChunks: Rollup.GetManualChunk = (id) => {
+  if (id.includes('/@logto/')) {
+    return 'logto';
+  }
+
+  if (id.includes('/node_modules/')) {
+    return 'vendors';
+  }
+
+  const match = /\/lib\/locales\/([^/]+)/.exec(id);
+  if (match?.[1]) {
+    return `phrases-${match[1]}`;
+  }
+};
 
 export const defaultConfig: UserConfig = {
   resolve: {
@@ -18,22 +32,7 @@ export const defaultConfig: UserConfig = {
   build: {
     sourcemap: false,
     rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('/@logto/')) {
-            return 'logto';
-          }
-
-          if (id.includes('/node_modules/')) {
-            return 'vendors';
-          }
-
-          const match = /\/lib\/locales\/([^/]+)/.exec(id);
-          if (match?.[1]) {
-            return `phrases-${match[1]}`;
-          }
-        },
-      },
+      output: { manualChunks },
     },
   },
 };

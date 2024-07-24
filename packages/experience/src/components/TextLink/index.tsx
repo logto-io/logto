@@ -11,7 +11,7 @@ import usePlatform from '@/hooks/use-platform';
 
 import DynamicT from '../DynamicT';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type Props = AnchorHTMLAttributes<HTMLAnchorElement> & {
   readonly className?: string;

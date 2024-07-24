@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 
 import TextLink, { type Props as TextLinkProps } from '@/components/TextLink';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly linkType?: TextLinkProps['type'];
