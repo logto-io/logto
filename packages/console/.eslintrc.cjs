@@ -15,6 +15,7 @@ module.exports = {
         unnamedComponents: 'arrow-function',
       },
     ],
+    'react/jsx-pascal-case': ['error', { ignore: ['__Internal__*'] }],
     'import/no-unused-modules': [
       'error',
       {
@@ -30,6 +31,8 @@ module.exports = {
         '**/assets/docs/guides/*/index.ts',
         '**/assets/docs/guides/*/components/**/*.tsx',
         '**/mdx-components*/*/index.tsx',
+        '*.config.js',
+        '*.config.ts',
       ],
       rules: {
         'import/no-unused-modules': 'off',
@@ -47,12 +50,6 @@ module.exports = {
               "Don't use `Route` or `Routes` in pages, add routes to `src/hooks/use-console-routes` instead.",
           },
         ],
-      },
-    },
-    {
-      files: ['*.config.js', '*.config.ts', '*.d.ts'],
-      rules: {
-        'import/no-unused-modules': 'off',
       },
     },
     {

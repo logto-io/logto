@@ -1,14 +1,15 @@
-import { lazy } from 'react';
 import { type RouteObject } from 'react-router-dom';
 
-const ChangePasswordModal = lazy(
+import safeLazy from '@/utils/lazy';
+
+const ChangePasswordModal = safeLazy(
   async () => import('@/pages/Profile/containers/ChangePasswordModal')
 );
-const LinkEmailModal = lazy(async () => import('@/pages/Profile/containers/LinkEmailModal'));
-const VerificationCodeModal = lazy(
+const LinkEmailModal = safeLazy(async () => import('@/pages/Profile/containers/LinkEmailModal'));
+const VerificationCodeModal = safeLazy(
   async () => import('@/pages/Profile/containers/VerificationCodeModal')
 );
-const VerifyPasswordModal = lazy(
+const VerifyPasswordModal = safeLazy(
   async () => import('@/pages/Profile/containers/VerifyPasswordModal')
 );
 

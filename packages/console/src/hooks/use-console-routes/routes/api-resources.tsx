@@ -1,14 +1,14 @@
-import { lazy } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
 import { ApiResourceDetailsTabs } from '@/consts';
+import safeLazy from '@/utils/lazy';
 
-const ApiResources = lazy(async () => import('@/pages/ApiResources'));
-const ApiResourceDetails = lazy(async () => import('@/pages/ApiResourceDetails'));
-const ApiResourcePermissions = lazy(
+const ApiResources = safeLazy(async () => import('@/pages/ApiResources'));
+const ApiResourceDetails = safeLazy(async () => import('@/pages/ApiResourceDetails'));
+const ApiResourcePermissions = safeLazy(
   async () => import('@/pages/ApiResourceDetails/ApiResourcePermissions')
 );
-const ApiResourceSettings = lazy(
+const ApiResourceSettings = safeLazy(
   async () => import('@/pages/ApiResourceDetails/ApiResourceSettings')
 );
 

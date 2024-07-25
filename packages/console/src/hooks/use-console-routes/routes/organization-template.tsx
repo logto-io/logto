@@ -1,18 +1,18 @@
-import { lazy } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
 import { OrganizationRoleDetailsTabs, OrganizationTemplateTabs } from '@/consts';
+import safeLazy from '@/utils/lazy';
 
-const OrganizationTemplate = lazy(async () => import('@/pages/OrganizationTemplate'));
-const OrganizationRoles = lazy(
+const OrganizationTemplate = safeLazy(async () => import('@/pages/OrganizationTemplate'));
+const OrganizationRoles = safeLazy(
   async () => import('@/pages/OrganizationTemplate/OrganizationRoles')
 );
-const OrganizationPermissions = lazy(
+const OrganizationPermissions = safeLazy(
   async () => import('@/pages/OrganizationTemplate/OrganizationPermissions')
 );
-const OrganizationRoleDetails = lazy(async () => import('@/pages/OrganizationRoleDetails'));
-const Permissions = lazy(async () => import('@/pages/OrganizationRoleDetails/Permissions'));
-const Settings = lazy(async () => import('@/pages/OrganizationRoleDetails/Settings'));
+const OrganizationRoleDetails = safeLazy(async () => import('@/pages/OrganizationRoleDetails'));
+const Permissions = safeLazy(async () => import('@/pages/OrganizationRoleDetails/Permissions'));
+const Settings = safeLazy(async () => import('@/pages/OrganizationRoleDetails/Settings'));
 
 export const organizationTemplate: RouteObject[] = [
   {

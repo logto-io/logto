@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { useOutletContext, useRoutes } from 'react-router-dom';
 
 import { isDevFeaturesEnabled } from '@/consts/env';
@@ -7,6 +7,7 @@ import { Daisy } from '@/ds-components/Spinner';
 import Tag from '@/ds-components/Tag';
 import { useConsoleRoutes } from '@/hooks/use-console-routes';
 import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
+import safeLazy from '@/utils/lazy';
 
 import type { AppContentOutletContext } from '../AppContent/types';
 
@@ -14,7 +15,7 @@ import { Skeleton } from './Sidebar';
 import useTenantScopeListener from './hooks';
 import styles from './index.module.scss';
 
-const Sidebar = lazy(async () => import('./Sidebar'));
+const Sidebar = safeLazy(async () => import('./Sidebar'));
 
 function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
