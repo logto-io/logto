@@ -1,4 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
 import {
@@ -6,11 +7,21 @@ import {
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
 import { deleteUser, getUser } from '#src/api/admin-user.js';
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
+import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
+import {
+  clearConnectorsByTypes,
+  setEmailConnector,
+  setSocialConnector,
+} from '#src/helpers/connector.js';
 import { signInWithSocial } from '#src/helpers/experience/index.js';
+import {
+  successFullyCreateSocialVerification,
+  successFullyVerifySocialAuthorization,
+} from '#src/helpers/experience/social-verification.js';
+import { expectRejects } from '#src/helpers/index.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { devFeatureTest, generateEmail, generateUsername } from '#src/utils.js';
 
 devFeatureTest.describe('social sign-in and sign-up', () => {
   const connectorIdMap = new Map<string, string>();
@@ -18,16 +29,15 @@ devFeatureTest.describe('social sign-in and sign-up', () => {
   const email = generateEmail();
 
   beforeAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Social]);
-    await updateSignInExperience({
-      signUp: {
-        identifiers: [],
-        password: false,
-        verify: false,
-      },
+    await enableAllPasswordSignInMethods({
+      identifiers: [],
+      password: false,
+      verify: false,
     });
+    await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email]);
 
     const { id: socialConnectorId } = await setSocialConnector();
+    await setEmailConnector();
     connectorIdMap.set(mockSocialConnectorId, socialConnectorId);
   });
 
@@ -111,5 +121,82 @@ devFeatureTest.describe('social sign-in and sign-up', () => {
     expect(name).toBe('Foo Bar');
 
     await deleteUser(userId);
+  });
+
+  describe('fulfill missing user profile', () => {
+    const state = 'state';
+    const redirectUri = 'http://localhost:3000';
+
+    it('should successfully sign-up with social and fulfill missing username', async () => {
+      const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
+
+      await enableAllPasswordSignInMethods({
+        identifiers: [SignInIdentifier.Username],
+        password: true,
+        verify: false,
+      });
+
+      const client = await initExperienceClient();
+      await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+
+      const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+        redirectUri,
+        state,
+      });
+
+      await successFullyVerifySocialAuthorization(client, connectorId, {
+        verificationId,
+        connectorData: {
+          state,
+          redirectUri,
+          code: 'fake_code',
+          userId: generateStandardId(),
+        },
+      });
+
+      await expectRejects(client.identifyUser({ verificationId }), {
+        code: 'user.identity_not_exist',
+        status: 404,
+      });
+
+      await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
+      await client.identifyUser({ verificationId });
+
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.missing_profile',
+        status: 422,
+      });
+
+      await client.updateProfile({ type: SignInIdentifier.Username, value: generateUsername() });
+
+      const { redirectTo } = await client.submitInteraction();
+      const userId = await processSession(client, redirectTo);
+      await logoutClient(client);
+      await deleteUser(userId);
+    });
+
+    it('should directly sync trusted email', async () => {
+      await enableAllPasswordSignInMethods({
+        identifiers: [SignInIdentifier.Email],
+        password: true,
+        verify: true,
+      });
+
+      const userId = await signInWithSocial(
+        connectorIdMap.get(mockSocialConnectorId)!,
+        {
+          id: socialUserId,
+          email,
+        },
+        {
+          registerNewUser: true,
+        }
+      );
+
+      const { primaryEmail } = await getUser(userId);
+      expect(primaryEmail).toBe(email);
+
+      await deleteUser(userId);
+    });
   });
 });

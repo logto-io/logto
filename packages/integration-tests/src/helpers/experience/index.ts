@@ -11,6 +11,7 @@ import {
 } from '@logto/schemas';
 
 import { type ExperienceClient } from '#src/client/experience/index.js';
+import { generatePassword } from '#src/utils.js';
 
 import { initExperienceClient, logoutClient, processSession } from '../client.js';
 import { expectRejects } from '../index.js';
@@ -104,7 +105,8 @@ export const identifyUserWithUsernamePassword = async (
 };
 
 export const registerNewUserWithVerificationCode = async (
-  identifier: VerificationCodeIdentifier
+  identifier: VerificationCodeIdentifier,
+  options?: { fulfillPassword?: boolean }
 ) => {
   const client = await initExperienceClient();
 
@@ -124,6 +126,20 @@ export const registerNewUserWithVerificationCode = async (
   await client.identifyUser({
     verificationId: verifiedVerificationId,
   });
+
+  if (options?.fulfillPassword) {
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_profile',
+      status: 422,
+    });
+
+    const password = generatePassword();
+
+    await client.updateProfile({
+      type: 'password',
+      value: password,
+    });
+  }
 
   const { redirectTo } = await client.submitInteraction();
 
