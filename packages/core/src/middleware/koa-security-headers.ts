@@ -45,10 +45,8 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
 
   // We have the following use cases:
   //
-  // 1. We use `react-monaco-editor` for code editing in the admin console. It loads the monaco
+  // - We use `react-monaco-editor` for code editing in the admin console. It loads the monaco
   // editor asynchronously from jsDelivr.
-  // 2. We use `mermaid` for rendering diagrams in the admin console. It loads the mermaid library
-  // asynchronously from jsDelivr since Parcel has issues with loading it directly in production.
   //
   // Allow the CDN src in the CSP.
   // Allow blob: for monaco editor to load worker scripts
