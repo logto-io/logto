@@ -283,7 +283,7 @@ export default class ExperienceInteraction {
     // TODO: missing profile fields validation
 
     if (enterpriseSsoIdentity) {
-      await this.provisionLibrary.addNewSsoIdentityToUser(user.id, enterpriseSsoIdentity);
+      await this.provisionLibrary.addSsoIdentityToUser(user.id, enterpriseSsoIdentity);
     }
 
     const { provider } = this.tenant;
@@ -361,7 +361,7 @@ export default class ExperienceInteraction {
     const newProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
     await this.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
 
-    const user = await this.provisionLibrary.createNewUser(newProfile);
+    const user = await this.provisionLibrary.createUser(newProfile);
 
     this.userId = user.id;
   }
