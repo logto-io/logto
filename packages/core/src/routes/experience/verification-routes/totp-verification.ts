@@ -33,9 +33,6 @@ export default function totpVerificationRoutes<T extends WithLogContext>(
 
       assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
 
-      // TODO: Check if the MFA is enabled
-      // TODO: Check if the interaction is fully verified
-
       const totpVerification = TotpVerification.create(
         libraries,
         queries,
