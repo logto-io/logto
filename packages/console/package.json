@@ -37,7 +37,6 @@
     "@logto/react": "^3.0.12",
     "@logto/schemas": "workspace:^1.18.0",
     "@logto/shared": "workspace:^3.1.1",
-    "@mdx-js/mdx": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
     "@mdx-js/rollup": "^3.0.1",
     "@monaco-editor/react": "^4.6.0",

@@ -27,13 +27,8 @@ const buildConfig = (mode: string): UserConfig => ({
     target: browserslistToEsbuild('> 0.5%, last 2 versions, Firefox ESR, not dead'),
     rollupOptions: {
       output: {
+        // Tip: You can use `pnpx vite-bundle-visualizer` to analyze the bundle size
         manualChunks: (id, meta) => {
-          // Caution: React-related packages should be bundled together otherwise it will cause runtime errors
-          // Update this list if necessary when adding new React-related packages
-          if (/\/node_modules\/(react|react-[^/]*|@react-spring)\//.test(id)) {
-            return 'react';
-          }
-
           if (/\/node_modules\/i18next[^/]*\//.test(id)) {
             return 'i18next';
           }

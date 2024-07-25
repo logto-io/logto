@@ -2,9 +2,23 @@
 
 import { Rollup, UserConfig } from 'vite';
 
-export const manualChunks: Rollup.GetManualChunk = (id) => {
+export const manualChunks: Rollup.GetManualChunk = (id, { getModuleInfo }) => {
+  const hasReactDependency = (id: string): boolean => {
+    return getModuleInfo(id)
+      ?.importedIds
+      .some((importedId) =>
+        importedId.includes('react') ||
+        importedId.includes('react-dom')
+      ) ?? false;
+  }
+
+  // Caution: React-related packages should be bundled together otherwise it will cause runtime errors
+  if (id.includes('/node_modules/') && hasReactDependency(id)) {
+    return 'react';
+  }
+
   if (id.includes('/@logto/')) {
-    return 'logto';
+    return '@logto';
   }
 
   if (id.includes('/node_modules/')) {
