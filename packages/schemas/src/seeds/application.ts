@@ -30,6 +30,7 @@ export const buildDemoAppDataForTenant = (tenantId: string): Application => ({
   protectedAppMetadata: null,
   isThirdParty: false,
   createdAt: 0,
+  customData: {},
 });
 
 export const createDefaultAdminConsoleApplication = (): Readonly<CreateApplication> =>
