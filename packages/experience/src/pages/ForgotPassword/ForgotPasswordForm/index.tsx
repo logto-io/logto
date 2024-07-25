@@ -12,7 +12,7 @@ import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

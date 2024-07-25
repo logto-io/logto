@@ -13,7 +13,7 @@ import { UserMfaFlow } from '@/types';
 import { webAuthnStateGuard } from '@/types/guard';
 import { isWebAuthnOptions } from '@/utils/webauthn';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const WebAuthnBinding = () => {
   const { state } = useLocation();

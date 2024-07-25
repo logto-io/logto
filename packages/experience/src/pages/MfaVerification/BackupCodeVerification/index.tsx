@@ -13,7 +13,7 @@ import useSendMfaPayload from '@/hooks/use-send-mfa-payload';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type FormState = {
   code: string;

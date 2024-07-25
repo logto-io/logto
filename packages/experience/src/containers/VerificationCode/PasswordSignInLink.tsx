@@ -1,4 +1,4 @@
-import SwitchIcon from '@/assets/icons/switch-icon.svg';
+import SwitchIcon from '@/assets/icons/switch-icon.svg?react';
 import TextLink from '@/components/TextLink';
 import { UserFlow } from '@/types';
 

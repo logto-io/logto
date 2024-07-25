@@ -15,7 +15,7 @@ import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import OrganizationSelector, { type Organization } from './OrganizationSelector';
 import ScopesListCard from './ScopesListCard';
 import UserProfile from './UserProfile';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { getRedirectUriOrigin } from './util';
 
 const Consent = () => {

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import ClearIcon from '@/assets/icons/clear-icon.svg';
+import ClearIcon from '@/assets/icons/clear-icon.svg?react';
 import Button from '@/components/Button';
 import IconButton from '@/components/Button/IconButton';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -11,7 +11,7 @@ import { InputField } from '@/components/InputFields';
 
 import HiddenIdentifierInput from './HiddenIdentifierInput';
 import TogglePassword from './TogglePassword';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

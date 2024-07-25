@@ -1,7 +1,7 @@
 import LoadingMask from '../LoadingMask';
 
 import LoadingIcon from './LoadingIcon';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export { default as LoadingIcon } from './LoadingIcon';
 

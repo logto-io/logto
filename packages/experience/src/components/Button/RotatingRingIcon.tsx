@@ -1,6 +1,6 @@
-import Ring from '@/assets/icons/loading-ring.svg';
+import Ring from '@/assets/icons/loading-ring.svg?react';
 
-import * as RotatingRingIconStyles from './RotatingRingIcon.module.scss';
+import RotatingRingIconStyles from './RotatingRingIcon.module.scss';
 
 const RotatingRingIcon = () => <Ring className={RotatingRingIconStyles.icon} />;
 

@@ -45,15 +45,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
           getConsoleLogFromContext(ctx).plain(`\tproxy --> ${target}`);
         },
         rewrite: (requestPath) => {
-          const fullPath = '/' + path.join(prefix, requestPath);
-          // Static files
-          if (requestPath.includes('.')) {
-            return fullPath;
-          }
-
-          // In-app routes
-          // We'll gradually migrate our single-page apps to use vite, which can directly return the full path
-          return packagePath === 'demo-app' || packagePath === 'console' ? fullPath : requestPath;
+          return '/' + path.join(prefix, requestPath);
         },
       });
 

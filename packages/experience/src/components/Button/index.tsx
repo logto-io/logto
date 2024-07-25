@@ -6,7 +6,7 @@ import { useDebouncedLoader } from 'use-debounced-loader';
 import DynamicT from '../DynamicT';
 
 import RotatingRingIcon from './RotatingRingIcon';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type ButtonType = 'primary' | 'secondary';
 

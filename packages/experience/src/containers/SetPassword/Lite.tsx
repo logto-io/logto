@@ -8,7 +8,7 @@ import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInputField } from '@/components/InputFields';
 
 import HiddenIdentifierInput from './HiddenIdentifierInput';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

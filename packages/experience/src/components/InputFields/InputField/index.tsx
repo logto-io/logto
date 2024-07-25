@@ -14,7 +14,7 @@ import {
 import ErrorMessage from '@/components/ErrorMessage';
 
 import NotchedBorder from './NotchedBorder';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
   readonly className?: string;

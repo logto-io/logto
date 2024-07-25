@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import LockIcon from '@/assets/icons/lock.svg';
+import LockIcon from '@/assets/icons/lock.svg?react';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import SmartInputField, {
@@ -13,7 +13,7 @@ import SmartInputField, {
 import useOnSubmit from '@/hooks/use-check-single-sign-on';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type FormState = {
   identifier: IdentifierInputValue;

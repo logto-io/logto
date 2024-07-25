@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useDebouncedLoader } from 'use-debounced-loader';
 
 import RotatingRingIcon from './RotatingRingIcon';
-import * as socialLinkButtonStyles from './SocialLinkButton.module.scss';
-import * as styles from './index.module.scss';
+import socialLinkButtonStyles from './SocialLinkButton.module.scss';
+import styles from './index.module.scss';
 
 export type Props = {
   readonly isDisabled?: boolean;

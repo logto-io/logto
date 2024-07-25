@@ -5,7 +5,7 @@ import Button from '@/components/Button';
 import VerificationCodeInput from '@/components/VerificationCode';
 import { type UserMfaFlow } from '@/types';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import useTotpCodeVerification from './use-totp-code-verification';
 
 const totpCodeLength = 6;

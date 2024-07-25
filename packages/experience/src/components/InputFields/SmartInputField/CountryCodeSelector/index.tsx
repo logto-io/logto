@@ -3,12 +3,12 @@ import classNames from 'classnames';
 import type { ForwardedRef } from 'react';
 import { useState, useMemo, forwardRef } from 'react';
 
-import DownArrowIcon from '@/assets/icons/arrow-down.svg';
+import DownArrowIcon from '@/assets/icons/arrow-down.svg?react';
 import { onKeyDownHandler } from '@/utils/a11y';
 import { getCountryList, getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import CountryCodeDropdown from './CountryCodeDropdown';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

@@ -14,7 +14,7 @@ import { UserMfaFlow } from '@/types';
 import { backupCodeBindingStateGuard } from '@/types/guard';
 import { isNativeWebview } from '@/utils/native-sdk';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const BackupCodeBinding = () => {
   const { copyText, downloadText } = useTextHandler();
