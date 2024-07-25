@@ -1,11 +1,11 @@
 import type { Role } from '@logto/schemas';
 import {
-  demoAppApplicationId,
-  buildDemoAppDataForTenant,
-  InternalRole,
-  ApplicationType,
   Applications,
+  ApplicationType,
+  buildDemoAppDataForTenant,
+  demoAppApplicationId,
   hasSecrets,
+  InternalRole,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -21,6 +21,7 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
+import applicationCustomDataRoutes from './application-custom-data.js';
 import { generateInternalSecret } from './application-secret.js';
 import { applicationCreateGuard, applicationPatchGuard } from './types.js';
 
@@ -38,15 +39,14 @@ const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false' | undefi
 const applicationTypeGuard = z.nativeEnum(ApplicationType);
 
 export default function applicationRoutes<T extends ManagementApiRouter>(
-  ...[
-    router,
-    {
-      queries,
-      id: tenantId,
-      libraries: { quota, protectedApps },
-    },
-  ]: RouterInitArgs<T>
+  ...[router, tenant]: RouterInitArgs<T>
 ) {
+  const {
+    queries,
+    id: tenantId,
+    libraries: { quota, protectedApps },
+  } = tenant;
+
   router.get(
     '/applications',
     koaPagination({ isOptional: true }),
@@ -346,4 +346,6 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       return next();
     }
   );
+
+  applicationCustomDataRoutes(router, tenant);
 }

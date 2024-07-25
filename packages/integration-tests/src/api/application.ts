@@ -1,13 +1,13 @@
 import {
   ApplicationType,
   type Application,
-  type CreateApplication,
-  type OidcClientMetadata,
-  type Role,
-  type ProtectedAppMetadata,
-  type OrganizationWithRoles,
-  type CreateApplicationSecret,
   type ApplicationSecret,
+  type CreateApplication,
+  type CreateApplicationSecret,
+  type OidcClientMetadata,
+  type OrganizationWithRoles,
+  type ProtectedAppMetadata,
+  type Role,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -150,3 +150,14 @@ export const deleteApplicationSecret = async (applicationId: string, secretName:
 
 export const deleteLegacyApplicationSecret = async (applicationId: string) =>
   authedAdminApi.delete(`applications/${applicationId}/legacy-secret`);
+
+export const patchApplicationCustomData = async (
+  applicationId: string,
+  customData: Record<string, unknown>
+) => {
+  return authedAdminApi
+    .patch(`applications/${applicationId}/custom-data`, {
+      json: customData,
+    })
+    .json<Record<string, unknown>>();
+};
