@@ -221,7 +221,7 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
       body: z.object({
         codes: z.array(z.string()),
       }),
-      status: [200, 400, 403, 404, 422],
+      status: [204, 400, 403, 404, 422],
     }),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
