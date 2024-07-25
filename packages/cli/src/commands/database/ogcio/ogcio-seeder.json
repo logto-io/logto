@@ -23,6 +23,9 @@
         "messaging:template:*",
         "messaging:citizen:*",
         "messaging:event:read",
+        "profile:user:*",
+        "profile:address:*",
+        "profile:entitlement:*",
         "life-events:digital-wallet-flow:*",
         "bb:public-servant.inactive:*",
         "scheduler:jobs:write"
@@ -58,13 +61,27 @@
         "id": "le-public-servant",
         "name": "Life Events Public Servant",
         "description": "Life Events Public servant",
-        "specific_permissions": ["life-events:digital-wallet-flow:*"]
+        "specific_permissions": [
+          "life-events:digital-wallet-flow:*"
+        ]
+      },
+      {
+        "id": "pro-public-servant",
+        "name": "Profile Public Servant",
+        "description": "Profile Public servant",
+        "specific_permissions": [
+          "profile:user:*",
+          "profile:address:*",
+          "profile:entitlement:*"
+        ]
       },
       {
         "id": "bb-inactive-ps",
         "name": "Inactive Public Servant",
         "description": "Inactive Public Servant",
-        "specific_permissions": ["bb:public-servant.inactive:*"]
+        "specific_permissions": [
+          "bb:public-servant.inactive:*"
+        ]
       }
     ],
     "applications": [
@@ -97,6 +114,16 @@
         "secret": "<SEEDER_LIFE_EVENTS_APP_SECRET>",
         "id": "i61nya0wctzpqeyeno54z",
         "is_third_party": false
+      },
+      {
+        "name": "Profile Building Block",
+        "description": "Profile App of Life Events",
+        "type": "Traditional",
+        "redirect_uri": "<SEEDER_PROFILE_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_PROFILE_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_PROFILE_APP_SECRET>",
+        "id": "0921d8onfb9f3bv75trgf",
+        "is_third_party": false
       }
     ],
     "resources": [
@@ -114,6 +141,11 @@
         "id": "scheduler-api",
         "name": "Scheduler Building Block API",
         "indicator": "<SEEDER_SCHEDULER_API_INDICATOR>"
+      },
+      {
+        "id": "profile-api",
+        "name": "Profile Building Block API",
+        "indicator": "<SEEDER_PROFILE_API_INDICATOR>"
       }
     ],
     "resource_permissions": [
@@ -139,6 +171,17 @@
         "specific_permissions": [
           "scheduler:jobs:write"
         ]
+      },
+      {
+        "resource_id": "profile-api",
+        "specific_permissions": [
+          "profile:user.self:read",
+          "profile:user.self:write",
+          "profile:address.self:read",
+          "profile:address.self:write",
+          "profile:entitlement.self:read",
+          "profile:entitlement.self:write"
+        ]
       }
     ],
     "resource_roles": [
@@ -162,6 +205,17 @@
               "messaging:message.self:read",
               "messaging:citizen.self:read",
               "messaging:citizen.self:write"
+            ]
+          },
+          {
+            "resource_id": "profile-api",
+            "specific_permissions": [
+              "profile:user.self:read",
+              "profile:user.self:write",
+              "profile:address.self:read",
+              "profile:address.self:write",
+              "profile:entitlement.self:read",
+              "profile:entitlement.self:write"
             ]
           }
         ]
@@ -217,7 +271,9 @@
           "password": false,
           "identifiers": []
         },
-        "social_sign_in_connector_targets": ["MyGovId (MyGovId connector)"],
+        "social_sign_in_connector_targets": [
+          "MyGovId (MyGovId connector)"
+        ],
         "sign_in_mode": "SignInAndRegister"
       }
     ],
