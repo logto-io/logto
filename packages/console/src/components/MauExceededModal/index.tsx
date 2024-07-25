@@ -1,4 +1,3 @@
-import { conditional } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -87,9 +86,7 @@ function MauExceededModal() {
         <InlineNotification severity="error">
           <Trans
             components={{
-              planName: (
-                <PlanName name={conditional(isDevFeaturesEnabled && currentSku.name) ?? planName} />
-              ),
+              planName: <PlanName skuId={currentSku.id} name={planName} />,
             }}
           >
             {t('upsell.mau_exceeded_modal.notification')}

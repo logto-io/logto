@@ -28,7 +28,7 @@ type CreateHookPayload = Pick<CreateHook, 'name'> & {
 };
 
 function CreateForm({ totalWebhookCount, onClose }: Props) {
-  const { currentPlan, currentSubscriptionQuota, currentSubscriptionUsage } =
+  const { currentPlan, currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
     useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -78,7 +78,7 @@ function CreateForm({ totalWebhookCount, onClose }: Props) {
             <Trans
               components={{
                 a: <ContactUsPhraseLink />,
-                planName: <PlanName name={currentPlan.name} />,
+                planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
               }}
             >
               {t('upsell.paywall.hooks', {

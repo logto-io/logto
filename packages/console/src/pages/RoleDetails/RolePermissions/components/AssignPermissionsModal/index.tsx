@@ -1,5 +1,4 @@
 import type { ScopeResponse, RoleType } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -89,13 +88,7 @@ function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose
               <Trans
                 components={{
                   a: <ContactUsPhraseLink />,
-                  planName: (
-                    <PlanName
-                      name={
-                        conditional(isDevFeaturesEnabled && currentSku.name) ?? currentPlan.name
-                      }
-                    />
-                  ),
+                  planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
                 }}
               >
                 {t('upsell.paywall.scopes_per_role', {

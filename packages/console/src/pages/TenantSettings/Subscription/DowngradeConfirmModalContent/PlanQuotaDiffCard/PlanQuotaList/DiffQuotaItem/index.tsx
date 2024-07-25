@@ -3,14 +3,12 @@ import classNames from 'classnames';
 
 import DescendArrow from '@/assets/icons/descend-arrow.svg?react';
 import Failed from '@/assets/icons/failed.svg?react';
+import { type LogtoSkuQuota } from '@/types/skus';
 import { type SubscriptionPlanQuota } from '@/types/subscriptions';
 
 import QuotaItemPhrase from './QuotaItemPhrase';
-import styles from './index.module.scss';
-
-import { type LogtoSkuQuota } from '@/types/skus';
-
 import SkuQuotaItemPhrase from './SkuQuotaItemPhrase';
+import styles from './index.module.scss';
 
 type Props = {
   readonly quotaKey: keyof SubscriptionPlanQuota;

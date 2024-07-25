@@ -69,7 +69,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <PlanName name={planName} />,
+              planName: <PlanName skuId={currentSku.id} name={planName} />,
             }}
           >
             {t('applications', { count: quota.applicationsLimit ?? 0 })}

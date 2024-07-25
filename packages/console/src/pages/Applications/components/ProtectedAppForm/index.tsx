@@ -208,9 +208,7 @@ function ProtectedAppForm({
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: (
-                <PlanName name={conditional(isDevFeaturesEnabled && currentSku.name) ?? planName} />
-              ),
+              planName: <PlanName skuId={currentSku.id} name={planName} />,
             }}
           >
             {t('upsell.paywall.applications', {

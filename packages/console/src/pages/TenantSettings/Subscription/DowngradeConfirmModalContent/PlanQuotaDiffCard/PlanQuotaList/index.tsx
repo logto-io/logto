@@ -4,8 +4,8 @@ import { isDevFeaturesEnabled } from '@/consts/env';
 import { type LogtoSkuQuotaEntries } from '@/types/skus';
 import { type SubscriptionPlanQuotaEntries } from '@/types/subscriptions';
 
-import styles from './index.module.scss';
 import DiffQuotaItem, { DiffSkuQuotaItem } from './DiffQuotaItem';
+import styles from './index.module.scss';
 
 type Props = {
   readonly entries: SubscriptionPlanQuotaEntries;

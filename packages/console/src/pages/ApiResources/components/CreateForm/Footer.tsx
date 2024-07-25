@@ -36,7 +36,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <PlanName name={currentPlan.name} />,
+            planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
           }}
         >
           {t('upsell.paywall.resources', {

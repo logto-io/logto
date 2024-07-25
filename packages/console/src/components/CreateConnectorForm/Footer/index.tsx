@@ -4,7 +4,6 @@ import {
   type ConnectorFactoryResponse,
   ReservedPlanId,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -88,11 +87,7 @@ function Footer({
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: (
-                <PlanName
-                  name={conditional(isDevFeaturesEnabled && currentSku.name) ?? planName}
-                />
-              ),
+              planName: <PlanName skuId={currentSku.id} name={planName} />,
             }}
           >
             {quota.standardConnectorsLimit === 0
@@ -116,11 +111,7 @@ function Footer({
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: (
-                <PlanName
-                  name={conditional(isDevFeaturesEnabled && currentSku.name) ?? planName}
-                />
-              ),
+              planName: <PlanName skuId={currentSku.id} name={planName} />,
             }}
           >
             {t('social_connectors', {

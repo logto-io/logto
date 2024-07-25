@@ -22,8 +22,8 @@ import { pickupFeaturedPlans, pickupFeaturedLogtoSkus } from '@/utils/subscripti
 import { type CreateTenantData } from '../types';
 
 import PlanCardItem from './PlanCardItem';
-import styles from './index.module.scss';
 import SkuCardItem from './SkuCardItem';
+import styles from './index.module.scss';
 
 type Props = {
   readonly tenantData?: CreateTenantData;

@@ -1,6 +1,5 @@
 import { noSpaceRegEx } from '@logto/core-kit';
 import type { Scope, CreateScope } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -95,13 +94,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
               <Trans
                 components={{
                   a: <ContactUsPhraseLink />,
-                  planName: (
-                    <PlanName
-                      name={
-                        conditional(isDevFeaturesEnabled && currentSku.name) ?? currentPlan.name
-                      }
-                    />
-                  ),
+                  planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
                 }}
               >
                 {t('upsell.paywall.scopes_per_resource', {

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import ArrowRight from '@/assets/icons/arrow-right.svg';
+import ArrowRight from '@/assets/icons/arrow-right.svg?react';
 import { type LogtoSkuResponse } from '@/cloud/types/router';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
@@ -14,7 +14,7 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
 
-import * as styles from '../PlanCardItem/index.module.scss';
+import styles from '../PlanCardItem/index.module.scss';
 
 import FeaturedSkuContent from './FeaturedSkuContent';
 
