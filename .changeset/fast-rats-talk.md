@@ -2,7 +2,7 @@
 "@logto/core": patch
 ---
 
-Fix the status code 404 error in webhook events payload
+fix the status code 404 error in webhook events payload
 
 Impact webhook events:
 
