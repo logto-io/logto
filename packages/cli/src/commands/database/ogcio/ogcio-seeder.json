@@ -116,6 +116,16 @@
         "is_third_party": false
       },
       {
+        "name": "Home Building Block",
+        "description": "Building Blocks home application",
+        "type": "Traditional",
+        "redirect_uri": "<SEEDER_HOME_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_HOME_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_HOME_APP_SECRET>",
+        "id": "4icd76x8we31j1e8bqyfn",
+        "is_third_party": false
+      },
+      {
         "name": "Profile Building Block",
         "description": "Profile App of Life Events",
         "type": "Traditional",
