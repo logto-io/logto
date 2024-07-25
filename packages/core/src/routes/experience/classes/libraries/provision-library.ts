@@ -43,10 +43,10 @@ export class ProvisionLibrary {
   /**
    * Insert a new user into the Logto database using the provided profile.
    *
-   * - Provision the organization for the new user based on the profile
-   * - OSS only, new user provisioning
+   * - Provision all JIT organizations for the user if necessary.
+   * - Assign the first user to the admin role and the default tenant organization membership. [OSS only]
    */
-  async provisionNewUser(profile: InteractionProfile) {
+  async createUser(profile: InteractionProfile) {
     const {
       libraries: {
         users: { generateUserId, insertUser },
@@ -89,7 +89,7 @@ export class ProvisionLibrary {
     return user;
   }
 
-  async provisionNewSsoIdentity(
+  async addSsoIdentityToUser(
     userId: string,
     enterpriseSsoIdentity: Required<InteractionProfile>['enterpriseSsoIdentity']
   ) {

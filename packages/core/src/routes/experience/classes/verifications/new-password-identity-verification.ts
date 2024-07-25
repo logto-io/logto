@@ -13,10 +13,10 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { PasswordValidator } from '../libraries/password-validator.js';
+import { ProfileValidator } from '../libraries/profile-validator.js';
+import { SignInExperienceValidator } from '../libraries/sign-in-experience-validator.js';
 import { interactionIdentifierToUserProfile } from '../utils.js';
-import { PasswordValidator } from '../validators/password-validator.js';
-import { ProfileValidator } from '../validators/profile-validator.js';
-import { SignInExperienceValidator } from '../validators/sign-in-experience-validator.js';
 
 import { type VerificationRecord } from './verification-record.js';
 
