@@ -8,7 +8,7 @@ import { defineConfig, mergeConfig, type UserConfig } from 'vite';
 import viteCompression from 'vite-plugin-compression';
 import svgr from 'vite-plugin-svgr';
 
-import { defaultConfig } from '../../vite.shared.config';
+import { defaultConfig, manualChunks } from '../../vite.shared.config';
 
 // We need to explicitly import the `.env` file and use `define` later because we do not have a
 // prefix for our environment variables which it is required in Vite.
@@ -49,6 +49,34 @@ const buildConfig = (mode: string): UserConfig => ({
     'import.meta.env.INTEGRATION_TEST': JSON.stringify(process.env.INTEGRATION_TEST),
     // `@withtyped/client` needs this to be defined. We can optimize this later.
     'process.env': {},
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        // Tip: You can use `pnpx vite-bundle-visualizer` to analyze the bundle size
+        manualChunks: (id, meta) => {
+          if (/\/node_modules\/(cose-base|layout-base|cytoscape|cytoscape-[^/]*)\//.test(id)) {
+            return 'cytoscape';
+          }
+
+          for (const largePackage of [
+            'libphonenumber-js',
+            'mermaid',
+            'elkjs',
+            'katex',
+            'refractor',
+            'lodash',
+            'lodash-es',
+          ]) {
+            if (id.includes(`/node_modules/${largePackage}/`)) {
+              return largePackage;
+            }
+          }
+
+          return manualChunks(id, meta);
+        },
+      },
+    },
   },
 });
 
