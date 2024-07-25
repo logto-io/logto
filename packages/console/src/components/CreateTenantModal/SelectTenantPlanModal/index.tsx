@@ -31,7 +31,8 @@ type Props = {
 };
 
 function SelectTenantPlanModal({ tenantData, onClose }: Props) {
-  const [isSubmitting, setIsSubmitting] = useState<string>();
+  const [processingPlanId, setProcessingPlanId] = useState<string>();
+  const [processingSkuId, setProcessingSkuId] = useState<string>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { data: subscriptionPlans } = useSubscriptionPlans();
@@ -50,7 +51,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
   const handleSelectPlan = async (plan: SubscriptionPlan) => {
     const { id: planId } = plan;
     try {
-      setIsSubmitting(planId);
+      setProcessingPlanId(planId);
       if (planId === ReservedPlanId.Free) {
         const { name, tag, regionName } = tenantData;
         const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
@@ -64,14 +65,14 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
     } catch (error: unknown) {
       void toastResponseError(error);
     } finally {
-      setIsSubmitting(undefined);
+      setProcessingPlanId(undefined);
     }
   };
 
   const handleSelectSku = async (logtoSku: LogtoSkuResponse) => {
     const { id: skuId } = logtoSku;
     try {
-      setIsSubmitting(skuId);
+      setProcessingSkuId(skuId);
       if (skuId === ReservedPlanId.Free) {
         const { name, tag, regionName } = tenantData;
         const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
@@ -85,7 +86,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
     } catch (error: unknown) {
       void toastResponseError(error);
     } finally {
-      setIsSubmitting(undefined);
+      setProcessingSkuId(undefined);
     }
   };
 
@@ -118,8 +119,8 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
                   key={logtoSku.id}
                   sku={logtoSku}
                   buttonProps={{
-                    isLoading: isSubmitting === logtoSku.id,
-                    disabled: Boolean(isSubmitting),
+                    isLoading: processingSkuId === logtoSku.id,
+                    disabled: Boolean(processingSkuId),
                   }}
                   onSelect={() => {
                     void handleSelectSku(logtoSku);
@@ -131,8 +132,8 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
                   key={plan.id}
                   plan={plan}
                   buttonProps={{
-                    isLoading: isSubmitting === plan.id,
-                    disabled: Boolean(isSubmitting),
+                    isLoading: processingPlanId === plan.id,
+                    disabled: Boolean(processingPlanId),
                   }}
                   onSelect={() => {
                     void handleSelectPlan(plan);

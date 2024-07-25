@@ -13,7 +13,7 @@ import { type SubscriptionPlan } from '@/types/subscriptions';
 type Props = {
   readonly tenantData: TenantResponse;
   readonly tenantSubscriptionPlan: SubscriptionPlan;
-  readonly tenantStatus?: {
+  readonly tenantStatus: {
     usage: NewSubscriptionUsage;
     quota: NewSubscriptionQuota;
   };
@@ -46,7 +46,7 @@ function TenantStatusTag({ tenantData, tenantSubscriptionPlan, tenantStatus, cla
     );
   }
 
-  const { usage: tenantUsage, quota: tenantQuota } = tenantStatus ?? {};
+  const { usage: tenantUsage, quota: tenantQuota } = tenantStatus;
 
   const { activeUsers } = usage;
 
@@ -57,9 +57,7 @@ function TenantStatusTag({ tenantData, tenantSubscriptionPlan, tenantStatus, cla
   const isMauExceeded =
     conditional(
       isDevFeaturesEnabled &&
-        tenantUsage &&
-        tenantQuota?.mauLimit !== null &&
-        tenantQuota?.mauLimit &&
+        tenantQuota.mauLimit !== null &&
         tenantUsage.mauLimit >= tenantQuota.mauLimit
     ) ??
     (mauLimit !== null && activeUsers >= mauLimit);

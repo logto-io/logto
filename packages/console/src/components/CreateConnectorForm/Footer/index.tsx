@@ -90,7 +90,7 @@ function Footer({
               a: <ContactUsPhraseLink />,
               planName: (
                 <PlanName
-                  name={conditional(isDevFeaturesEnabled && currentPlan.name) ?? planName}
+                  name={conditional(isDevFeaturesEnabled && currentSku.name) ?? planName}
                 />
               ),
             }}
@@ -118,7 +118,7 @@ function Footer({
               a: <ContactUsPhraseLink />,
               planName: (
                 <PlanName
-                  name={conditional(isDevFeaturesEnabled && currentPlan.name) ?? planName}
+                  name={conditional(isDevFeaturesEnabled && currentSku.name) ?? planName}
                 />
               ),
             }}

@@ -13,8 +13,8 @@ import {
 } from '@/consts/subscriptions';
 
 type ContentData = {
-  title: string;
-  isAvailable: boolean;
+  readonly title: string;
+  readonly isAvailable: boolean;
 };
 
 const useFeaturedSkuContent = (skuId: string) => {

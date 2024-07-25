@@ -9,7 +9,7 @@ import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
 import { pricingLink } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import Button from '@/ds-components/Button';
+import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
@@ -21,7 +21,7 @@ import FeaturedSkuContent from './FeaturedSkuContent';
 type Props = {
   readonly sku: LogtoSkuResponse;
   readonly onSelect: () => void;
-  readonly buttonProps?: Partial<React.ComponentProps<typeof Button>>;
+  readonly buttonProps?: Partial<ButtonProps>;
 };
 
 function SkuCardItem({ sku, onSelect, buttonProps }: Props) {
