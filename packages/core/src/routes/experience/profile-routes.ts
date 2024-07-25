@@ -218,14 +218,10 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
   router.post(
     `${experienceRoutes.mfa}/backup-codes`,
     koaGuard({
-      body: z.object({
-        codes: z.array(z.string()),
-      }),
       status: [204, 400, 403, 404, 422],
     }),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
-      const { codes } = ctx.guard.body;
 
       // Guard current interaction event is not ForgotPassword
       assertThat(
@@ -238,8 +234,7 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
 
       // Guard current interaction event is identified and MFA verified
       await experienceInteraction.guardMfaVerificationStatus();
-
-      await experienceInteraction.mfa.addBackupCodes(codes);
+      await experienceInteraction.mfa.addBackupCodes();
       await experienceInteraction.save();
 
       ctx.status = 204;

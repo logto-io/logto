@@ -72,16 +72,6 @@ const filterOutEmptyBackupCodes = (
     return true;
   });
 
-const assertPendingCodes = (codes: string[], pendingCodes: string[]) => {
-  assertThat(
-    codes.length === pendingCodes.length && codes.every((code) => pendingCodes.includes(code)),
-    new RequestError({
-      code: 'session.mfa.pending_info_not_found',
-      status: 422,
-    })
-  );
-};
-
 /**
  * This class stores all the pending new MFA settings for a user.
  */
@@ -235,29 +225,13 @@ export class Mfa {
 
   /**
    * Generates new backup codes for the user.
-   * @throws {RequestError} with status 422 if Backup Code is not enabled in the sign-in experience
-   * */
-  async generateBackupCodes() {
-    await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.BackupCode]);
-
-    const codes = generateBackupCodes();
-    this.#pendingBackupCodes = codes;
-
-    return this.#pendingBackupCodes;
-  }
-
-  /**
-   *
-   * Add backup codes to the user account.
    *
    * @throws {RequestError} with status 422 if Backup Code is not enabled in the sign-in experience
    * @throws {RequestError} with status 422 if the backup code is the only MFA factor
-   * @throws {RequestError} with status 422 if the codes is not the same as the pending backup codes
-   *
-   * - Any existing backup code factor will be replaced with the new one.
-   */
-  async addBackupCodes(codes: string[]) {
+   **/
+  async generateBackupCodes() {
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.BackupCode]);
+
     const { mfaVerifications } = await this.interactionContext.getIdentifierUser();
 
     const userHasOtherMfa = mfaVerifications.some((mfa) => mfa.type !== MfaFactor.BackupCode);
@@ -271,13 +245,35 @@ export class Mfa {
       })
     );
 
-    assertPendingCodes(codes, this.#pendingBackupCodes ?? []);
+    const codes = generateBackupCodes();
+    this.#pendingBackupCodes = codes;
 
-    this.#pendingBackupCodes = undefined;
+    return this.#pendingBackupCodes;
+  }
+
+  /**
+   * Add backup codes to the user account.
+   *
+   * - This is to ensure the user has received the backup codes before adding them to the account.
+   * - Any existing backup code factor will be replaced with the new one.
+   *
+   * @throws {RequestError} with status 404 if no pending backup codes are found
+   */
+  async addBackupCodes() {
+    assertThat(
+      this.#pendingBackupCodes?.length,
+      new RequestError({
+        code: 'session.mfa.pending_info_not_found',
+        status: 404,
+      })
+    );
+
     this.#backupCode = {
       type: MfaFactor.BackupCode,
-      codes,
+      codes: this.#pendingBackupCodes,
     };
+
+    this.#pendingBackupCodes = undefined;
   }
 
   /**
