@@ -1,5 +1,6 @@
 import {
   InteractionEvent,
+  MissingProfile,
   type SignInExperience,
   SignInIdentifier,
   SignInMode,
@@ -126,6 +127,39 @@ export class SignInExperienceValidator {
       await this.queries.signInExperiences.findDefaultSignInExperience();
 
     return this.signInExperienceDataCache;
+  }
+
+  public async getMandatoryUserProfileBySignUpMethods(): Promise<Set<MissingProfile>> {
+    const {
+      signUp: { identifiers, password },
+    } = await this.getSignInExperienceData();
+    const mandatoryUserProfile = new Set<MissingProfile>();
+
+    if (password) {
+      mandatoryUserProfile.add(MissingProfile.password);
+    }
+
+    if (identifiers.includes(SignInIdentifier.Username)) {
+      mandatoryUserProfile.add(MissingProfile.username);
+    }
+
+    if (
+      identifiers.includes(SignInIdentifier.Email) &&
+      identifiers.includes(SignInIdentifier.Phone)
+    ) {
+      mandatoryUserProfile.add(MissingProfile.emailOrPhone);
+      return mandatoryUserProfile;
+    }
+
+    if (identifiers.includes(SignInIdentifier.Email)) {
+      mandatoryUserProfile.add(MissingProfile.email);
+    }
+
+    if (identifiers.includes(SignInIdentifier.Phone)) {
+      mandatoryUserProfile.add(MissingProfile.phone);
+    }
+
+    return mandatoryUserProfile;
   }
 
   /**

@@ -24,6 +24,7 @@ import { experienceRoutes } from './const.js';
 import koaExperienceInteraction, {
   type WithExperienceInteractionContext,
 } from './middleware/koa-experience-interaction.js';
+import profileRoutes from './profile-routes.js';
 import backupCodeVerificationRoutes from './verification-routes/backup-code-verification.js';
 import enterpriseSsoVerificationRoutes from './verification-routes/enterprise-sso-verification.js';
 import newPasswordIdentityVerificationRoutes from './verification-routes/new-password-identity-verification.js';
@@ -128,10 +129,12 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   router.post(
     `${experienceRoutes.prefix}/submit`,
     koaGuard({
-      status: [200, 400, 403, 422],
-      response: z.object({
-        redirectTo: z.string(),
-      }),
+      status: [200, 400, 403, 404, 422],
+      response: z
+        .object({
+          redirectTo: z.string(),
+        })
+        .optional(),
     }),
     async (ctx, next) => {
       await ctx.experienceInteraction.submit();
@@ -147,4 +150,6 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   totpVerificationRoutes(router, tenant);
   backupCodeVerificationRoutes(router, tenant);
   newPasswordIdentityVerificationRoutes(router, tenant);
+
+  profileRoutes(router, tenant);
 }
