@@ -1,3 +1,5 @@
+import { Component, CoreEvent, getEventName } from '@logto/app-insights/custom-event';
+import { appInsights } from '@logto/app-insights/node';
 import {
   adminConsoleApplicationId,
   adminTenantId,
@@ -14,14 +16,17 @@ import {
   type UserOnboardingData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional, conditionalArray } from '@silverhand/essentials';
+import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import { type InteractionProfile } from '../../types.js';
+import { postAffiliateLogs } from '../helpers.js';
 import { toUserSocialIdentityData } from '../utils.js';
 
 type OrganizationProvisionPayload =
@@ -85,6 +90,8 @@ export class ProvisionLibrary {
 
     // TODO: New user created hooks
     // TODO: log
+
+    this.triggerRegistrationAffiliateAndAnalyticsHooks(user);
 
     return user;
   }
@@ -262,4 +269,17 @@ export class ProvisionLibrary {
       isInAdminTenant && AdminTenantRole.User,
       isCreatingFirstAdminUser && !isCloud && defaultManagementApiAdminName // OSS uses the legacy Management API user role
     );
+
+  private readonly triggerRegistrationAffiliateAndAnalyticsHooks = ({ id }: User) => {
+    appInsights.client?.trackEvent({
+      name: getEventName(Component.Core, CoreEvent.Register),
+    });
+
+    const { cloudConnection, id: tenantId } = this.tenantContext;
+
+    void trySafe(postAffiliateLogs(this.ctx, cloudConnection, id, tenantId), (error) => {
+      getConsoleLogFromContext(this.ctx).warn('Failed to post affiliate logs', error);
+      void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+    });
+  };
 }
