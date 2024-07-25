@@ -18,6 +18,11 @@ export type Props<T extends Record<string, unknown> = UserAssets> = {
   // eslint-disable-next-line react/boolean-prop-naming
   readonly disabled?: boolean;
   readonly maxSize: number; // In bytes
+  /**
+   * The timeout for the default api instance, in milliseconds.
+   * Will not be applied if a custom API instance is provided.
+   */
+  readonly defaultApiInstanceTimeout?: number;
   readonly allowedMimeTypes: AllowedUploadMimeType[];
   readonly actionDescription?: string;
   readonly onCompleted: (response: T) => void;
@@ -25,6 +30,7 @@ export type Props<T extends Record<string, unknown> = UserAssets> = {
   readonly className?: string;
   /**
    * Specify which API instance to use for the upload request. For example, you can use admin tenant API instead.
+   * The `timeout` prop will not be applied to this instance.
    * Defaults to the return value of `useApi()`.
    */
   readonly apiInstance?: KyInstance;
@@ -37,6 +43,7 @@ export type Props<T extends Record<string, unknown> = UserAssets> = {
 function FileUploader<T extends Record<string, unknown> = UserAssets>({
   disabled,
   maxSize,
+  defaultApiInstanceTimeout,
   allowedMimeTypes,
   actionDescription,
   onCompleted,
@@ -57,7 +64,7 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
     };
   }, [onUploadErrorChange, uploadError]);
 
-  const api = useApi();
+  const api = useApi({ timeout: defaultApiInstanceTimeout });
 
   const onDrop = useCallback(
     async (acceptedFiles: File[] = [], fileRejection: FileRejection[] = []) => {
