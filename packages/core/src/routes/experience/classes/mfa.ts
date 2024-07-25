@@ -165,7 +165,7 @@ export class Mfa {
    * @throws {RequestError} with status 400 if the verification record is not verified
    * @throws {RequestError} with status 400 if the verification record has no secret
    * @throws {RequestError} with status 404 if the verification record is not found
-   * @throws {RequestError} with status 422 if TOTP is not enabled in the sign-in experience
+   * @throws {RequestError} with status 400 if TOTP is not enabled in the sign-in experience
    * @throws {RequestError} with status 422 if the user already has a TOTP factor
    *
    * - Any existing TOTP factor will be replaced with the new one.
@@ -196,7 +196,7 @@ export class Mfa {
    * @throws {RequestError} with status 400 if the verification record is not verified
    * @throws {RequestError} with status 400 if the verification record has no registration data
    * @throws {RequestError} with status 404 if the verification record is not found
-   * @throws {RequestError} with status 422 if WebAuthn is not enabled in the sign-in experience
+   * @throws {RequestError} with status 400 if WebAuthn is not enabled in the sign-in experience
    */
   async addWebAuthnByVerificationId(verificationId: string) {
     const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
@@ -215,7 +215,7 @@ export class Mfa {
    * - Any existing backup code factor will be replaced with the new one.
    *
    * @throws {RequestError} with status 404 if no pending backup codes are found
-   * @throws {RequestError} with status 422 if Backup Code is not enabled in the sign-in experience
+   * @throws {RequestError} with status 400 if Backup Code is not enabled in the sign-in experience
    * @throws {RequestError} with status 422 if the backup code is the only MFA factor
    */
   async addBackupCodeByVerificationId(verificationId: string) {
@@ -241,7 +241,7 @@ export class Mfa {
   }
 
   /**
-   * @throws {RequestError} with status 422 if the mfa factors are not enabled in the sign-in experience
+   * @throws {RequestError} with status 400 if the mfa factors are not enabled in the sign-in experience
    */
   async checkAvailability() {
     const newBindMfaFactors = deduplicate(this.bindMfaFactorsArray.map(({ type }) => type));
