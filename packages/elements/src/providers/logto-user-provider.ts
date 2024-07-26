@@ -15,7 +15,7 @@ export type UserContextType = Readonly<{
 /**
  * Context for the current user. It's a fundamental context for the account-related elements.
  */
-export const UserContext = createContext<UserContextType>('modal-context');
+export const UserContext = createContext<UserContextType>('user-context');
 
 /** The default value for the user context. */
 export const userContext: UserContextType = Object.freeze({
