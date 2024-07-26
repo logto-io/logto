@@ -41,6 +41,7 @@ export type StaticApiProps = {
   hideErrorToast?: boolean | LogtoErrorCode[];
   resourceIndicator: string;
   timeout?: number;
+  signal?: AbortSignal;
 };
 
 const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: LogtoErrorCode[]) => {
@@ -112,6 +113,7 @@ export const useStaticApi = ({
   hideErrorToast,
   resourceIndicator,
   timeout = requestTimeout,
+  signal,
 }: StaticApiProps): KyInstance => {
   const { isAuthenticated, getAccessToken, getOrganizationToken } = useLogto();
   const { i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -128,6 +130,7 @@ export const useStaticApi = ({
       ky.create({
         prefixUrl,
         timeout,
+        signal,
         hooks: {
           beforeError: conditionalArray(
             !disableGlobalErrorHandling &&
@@ -159,6 +162,7 @@ export const useStaticApi = ({
       getAccessToken,
       i18n.language,
       timeout,
+      signal,
     ]
   );
 

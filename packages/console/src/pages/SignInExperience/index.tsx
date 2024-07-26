@@ -13,6 +13,7 @@ import useUserAssetsService from '@/hooks/use-user-assets-service';
 import PageContent from './PageContent';
 import Skeleton from './Skeleton';
 import Welcome from './Welcome';
+import SignInExperienceContextProvider from './contexts/SignInExperienceContextProvider';
 import styles from './index.module.scss';
 
 type PageWrapperProps = {
@@ -21,14 +22,16 @@ type PageWrapperProps = {
 
 function PageWrapper({ children }: PageWrapperProps) {
   return (
-    <div className={styles.container}>
-      <CardTitle
-        title="sign_in_exp.title"
-        subtitle="sign_in_exp.description"
-        className={styles.cardTitle}
-      />
-      {children}
-    </div>
+    <SignInExperienceContextProvider>
+      <div className={styles.container}>
+        <CardTitle
+          title="sign_in_exp.title"
+          subtitle="sign_in_exp.description"
+          className={styles.cardTitle}
+        />
+        {children}
+      </div>
+    </SignInExperienceContextProvider>
   );
 }
 

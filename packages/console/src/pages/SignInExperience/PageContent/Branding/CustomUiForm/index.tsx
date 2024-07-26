@@ -3,7 +3,6 @@ import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
-import CustomUiAssetsUploader from '@/components/CustomUiAssetsUploader';
 import InlineUpsell from '@/components/InlineUpsell';
 import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -12,6 +11,7 @@ import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
