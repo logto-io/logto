@@ -76,7 +76,7 @@ function CustomUiForm() {
                 a: (
                   <TextLink
                     targetBlank="noopener"
-                    href={getDocumentationUrl('/docs/recipes/customize-sie/custom-css')}
+                    href={getDocumentationUrl('/docs/recipes/customize-sie/bring-your-ui')}
                   />
                 ),
               }}
