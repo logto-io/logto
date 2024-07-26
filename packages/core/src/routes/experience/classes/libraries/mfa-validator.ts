@@ -36,24 +36,6 @@ const isMfaVerificationRecord = (
   return mfaVerificationTypes.includes(verification.type);
 };
 
-/**
- * Check if the MFA verification record is a new bind MFA verification.
- * New bind MFA verification can only be used for binding new MFA factors.
- */
-const isNewBindMfaVerification = (verification: MfaVerificationRecord) => {
-  switch (verification.type) {
-    case VerificationType.TOTP: {
-      return Boolean(verification.secret);
-    }
-    case VerificationType.WebAuthn: {
-      return Boolean(verification.registrationInfo);
-    }
-    case VerificationType.BackupCode: {
-      return false;
-    }
-  }
-};
-
 export class MfaValidator {
   constructor(
     private readonly mfaSettings: Mfa,
@@ -137,7 +119,7 @@ export class MfaValidator {
         isMfaVerificationRecord(verification) &&
         verification.isVerified &&
         // New bind MFA verification can not be used for verification
-        !isNewBindMfaVerification(verification) &&
+        !verification.isNewBindMfaVerification &&
         // Check if the verification type is enabled in the user's MFA settings
         this.userEnabledMfaVerifications.some(
           (factor) => factor.type === mfaVerificationTypeToMfaFactorMap[verification.type]

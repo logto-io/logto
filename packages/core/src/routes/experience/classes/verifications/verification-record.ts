@@ -37,3 +37,19 @@ export abstract class IdentifierVerificationRecord<
   /** Identify the user associated with the verification record. */
   abstract identifyUser(): Promise<User>;
 }
+
+type MfaVerificationType =
+  | VerificationType.TOTP
+  | VerificationType.BackupCode
+  | VerificationType.WebAuthn;
+
+export abstract class MfaVerificationRecord<
+  T extends MfaVerificationType = MfaVerificationType,
+  Json extends Data<T> = Data<T>,
+> extends VerificationRecord<T, Json> {
+  /**
+   * Indicates if the verification record is for a new bind MFA verification.
+   * A new bind MFA verification record can not be used for existing user's interaction verification.
+   **/
+  abstract get isNewBindMfaVerification(): boolean;
+}

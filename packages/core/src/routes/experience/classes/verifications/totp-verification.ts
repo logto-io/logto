@@ -20,7 +20,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type VerificationRecord } from './verification-record.js';
+import { type MfaVerificationRecord } from './verification-record.js';
 
 const defaultDisplayName = 'Unnamed User';
 
@@ -47,7 +47,7 @@ export const totpVerificationRecordDataGuard = z.object({
   verified: z.boolean(),
 }) satisfies ToZodObject<TotpVerificationRecordData>;
 
-export class TotpVerification implements VerificationRecord<VerificationType.TOTP> {
+export class TotpVerification implements MfaVerificationRecord<VerificationType.TOTP> {
   /**
    * Factory method to create a new TotpVerification instance
    *
@@ -88,6 +88,10 @@ export class TotpVerification implements VerificationRecord<VerificationType.TOT
 
   get secret() {
     return this.#secret;
+  }
+
+  get isNewBindMfaVerification() {
+    return Boolean(this.#secret);
   }
 
   /**
