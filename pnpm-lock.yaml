@@ -2247,6 +2247,82 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(@types/node@20.11.20)(jsdom@20.0.2)(sass@1.56.1)
 
+  packages/connectors/connector-ogcio-entraid:
+    dependencies:
+      '@azure/msal-node':
+        specifier: ^2.0.0
+        version: 2.6.4
+      '@logto/connector-kit':
+        specifier: workspace:^4.0.0
+        version: link:../../toolkit/connector-kit
+      '@silverhand/essentials':
+        specifier: ^2.9.1
+        version: 2.9.1
+      got:
+        specifier: ^14.0.0
+        version: 14.0.0
+      snakecase-keys:
+        specifier: ^8.0.0
+        version: 8.0.0
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^26.0.0
+        version: 26.0.1(rollup@4.14.3)
+      '@rollup/plugin-json':
+        specifier: ^6.1.0
+        version: 6.1.0(rollup@4.14.3)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.2.3(rollup@4.14.3)
+      '@rollup/plugin-typescript':
+        specifier: ^11.1.6
+        version: 11.1.6(rollup@4.14.3)(tslib@2.6.2)(typescript@5.5.3)
+      '@silverhand/eslint-config':
+        specifier: 6.0.1
+        version: 6.0.1(eslint@8.57.0)(prettier@3.3.2)(typescript@5.5.3)
+      '@silverhand/ts-config':
+        specifier: 6.0.0
+        version: 6.0.0(typescript@5.5.3)
+      '@types/node':
+        specifier: ^20.11.20
+        version: 20.12.7
+      '@types/supertest':
+        specifier: ^6.0.2
+        version: 6.0.2
+      '@vitest/coverage-v8':
+        specifier: ^1.4.0
+        version: 1.4.0(vitest@1.4.0(@types/node@20.12.7)(jsdom@20.0.2)(sass@1.56.1))
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      lint-staged:
+        specifier: ^15.0.2
+        version: 15.0.2
+      nock:
+        specifier: ^13.3.1
+        version: 13.3.1
+      prettier:
+        specifier: ^3.0.0
+        version: 3.3.2
+      rollup:
+        specifier: ^4.12.0
+        version: 4.14.3
+      rollup-plugin-output-size:
+        specifier: ^1.3.0
+        version: 1.3.0(rollup@4.14.3)
+      supertest:
+        specifier: ^7.0.0
+        version: 7.0.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.5.3
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.12.7)(jsdom@20.0.2)(sass@1.56.1)
+
   packages/connectors/connector-oidc:
     dependencies:
       '@logto/connector-kit':
