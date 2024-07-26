@@ -130,6 +130,9 @@ importers:
       hpagent:
         specifier: ^1.2.0
         version: 1.2.0
+      http-proxy-middleware:
+        specifier: ^3.0.0
+        version: 3.0.0
       inquirer:
         specifier: ^9.0.0
         version: 9.1.4
@@ -176,6 +179,9 @@ importers:
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
+      '@types/http-proxy-middleware':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@types/inquirer':
         specifier: ^9.0.0
         version: 9.0.3
@@ -5929,6 +5935,13 @@ packages:
   '@types/http-errors@1.8.2':
     resolution: {integrity: sha512-EqX+YQxINb+MeXaIqYDASb6U6FCHbWjkj4a1CKDBks3d/QiB2+PqBLyO72vLDgAO1wUI4O+9gweRcQK11bTL/w==}
 
+  '@types/http-proxy-middleware@1.0.0':
+    resolution: {integrity: sha512-/s8lFX6rT43hSPqjjD8KNuu0SkPKY7uIdR6u9DCxVqCRhAvfKxGbVOixJsAT2mdpSnCyrGFAGoB39KFh6tmRxw==}
+    deprecated: This is a stub types definition. http-proxy-middleware provides its own type definitions, so you do not need this installed.
+
+  '@types/http-proxy@1.17.14':
+    resolution: {integrity: sha512-SSrD0c1OQzlFX7pGu1eXxSEjemej64aaNPRhhVYUGqXh0BtldAAx37MG8btcumvpgKyZp1F5Gn3JkktdxiFv6w==}
+
   '@types/inquirer@9.0.3':
     resolution: {integrity: sha512-CzNkWqQftcmk2jaCWdBTf9Sm7xSw4rkI1zpU/Udw3HX5//adEZUIm9STtoRP1qgWj0CWQtJ9UTvqmO2NNjhMJw==}
 
@@ -8561,6 +8574,10 @@ packages:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
     engines: {node: '>= 14'}
 
+  http-proxy-middleware@3.0.0:
+    resolution: {integrity: sha512-36AV1fIaI2cWRzHo+rbcxhe3M3jUDCNzc4D5zRl57sEWRAxdXYtw7FSQKYY6PDKssiAKjLYypbssHk+xs/kMXw==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+
   http-proxy@1.18.1:
     resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
     engines: {node: '>=8.0.0'}
@@ -8893,6 +8910,10 @@ packages:
   is-plain-obj@1.1.0:
     resolution: {integrity: sha512-yvkRyxmFKEOQ4pNXCmJG5AEQNlXJS5LaONXo5/cLdTZdWvsZ1ioJEonLGAosKlMWE8lwUy/bJzMjcw8az73+Fg==}
     engines: {node: '>=0.10.0'}
+
+  is-plain-obj@3.0.0:
+    resolution: {integrity: sha512-gwsOE28k+23GP1B6vFl1oVh/WOzmawBrKwo5Ev6wMKzPkaXaCDIQKzLnvsA42DRlbVTWorkgTKIviAKCWkfUwA==}
+    engines: {node: '>=10'}
 
   is-plain-obj@4.1.0:
     resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
@@ -15775,6 +15796,16 @@ snapshots:
 
   '@types/http-errors@1.8.2': {}
 
+  '@types/http-proxy-middleware@1.0.0':
+    dependencies:
+      http-proxy-middleware: 3.0.0
+    transitivePeerDependencies:
+      - supports-color
+
+  '@types/http-proxy@1.17.14':
+    dependencies:
+      '@types/node': 20.12.7
+
   '@types/inquirer@9.0.3':
     dependencies:
       '@types/through': 0.0.30
@@ -16620,7 +16651,7 @@ snapshots:
 
   axios@1.6.7:
     dependencies:
-      follow-redirects: 1.15.6
+      follow-redirects: 1.15.6(debug@4.3.5)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -18480,7 +18511,9 @@ snapshots:
 
   flatted@3.3.1: {}
 
-  follow-redirects@1.15.6: {}
+  follow-redirects@1.15.6(debug@4.3.5):
+    optionalDependencies:
+      debug: 4.3.5
 
   for-each@0.3.3:
     dependencies:
@@ -18991,10 +19024,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy@1.18.1:
+  http-proxy-middleware@3.0.0:
+    dependencies:
+      '@types/http-proxy': 1.17.14
+      debug: 4.3.5
+      http-proxy: 1.18.1(debug@4.3.5)
+      is-glob: 4.0.3
+      is-plain-obj: 3.0.0
+      micromatch: 4.0.5
+    transitivePeerDependencies:
+      - supports-color
+
+  http-proxy@1.18.1(debug@4.3.5):
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.6
+      follow-redirects: 1.15.6(debug@4.3.5)
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -19297,6 +19341,8 @@ snapshots:
   is-path-inside@3.0.3: {}
 
   is-plain-obj@1.1.0: {}
+
+  is-plain-obj@3.0.0: {}
 
   is-plain-obj@4.1.0: {}
 
@@ -20171,7 +20217,7 @@ snapshots:
 
   koa-proxies@0.12.4(koa@2.15.3):
     dependencies:
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1(debug@4.3.5)
       koa: 2.15.3
       path-match: 1.2.4
       uuid: 8.3.2
@@ -21878,7 +21924,7 @@ snapshots:
       yaml: 2.4.5
     optionalDependencies:
       postcss: 8.4.39
-      ts-node: 10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3)
+      ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3)
 
   postcss-media-query-parser@0.2.3: {}
 
@@ -23515,27 +23561,6 @@ snapshots:
       diff: 4.0.2
       make-error: 1.3.6
       typescript: 5.0.2
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optionalDependencies:
-      '@swc/core': 1.3.52(@swc/helpers@0.5.1)
-    optional: true
-
-  ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.9
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.12.7
-      acorn: 8.11.3
-      acorn-walk: 8.3.2
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.5.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
