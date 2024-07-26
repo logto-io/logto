@@ -2,6 +2,7 @@ import {
   type CreateExperienceApiPayload,
   type IdentificationApiPayload,
   type InteractionEvent,
+  type MfaFactor,
   type NewPasswordIdentityVerificationPayload,
   type PasswordVerificationPayload,
   type UpdateProfileApiPayload,
@@ -178,6 +179,14 @@ export class ExperienceClient extends MockClient {
       .json<{ verificationId: string }>();
   }
 
+  public async generateMfaBackupCodes() {
+    return api
+      .post(`${experienceRoutes.verification}/backup-code/generate`, {
+        headers: { cookie: this.interactionCookie },
+      })
+      .json<{ verificationId: string; codes: string[] }>();
+  }
+
   public async verifyBackupCode(payload: { code: string }) {
     return api
       .post(`${experienceRoutes.verification}/backup-code/verify`, {
@@ -209,6 +218,19 @@ export class ExperienceClient extends MockClient {
     return api.post(`${experienceRoutes.profile}`, {
       headers: { cookie: this.interactionCookie },
       json: payload,
+    });
+  }
+
+  public async skipMfaBinding() {
+    return api.post(`${experienceRoutes.mfa}/mfa-skipped`, {
+      headers: { cookie: this.interactionCookie },
+    });
+  }
+
+  public async bindMfa(type: MfaFactor, verificationId: string) {
+    return api.post(`${experienceRoutes.mfa}`, {
+      headers: { cookie: this.interactionCookie },
+      json: { type, verificationId },
     });
   }
 }
