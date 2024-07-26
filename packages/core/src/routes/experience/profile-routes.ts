@@ -142,7 +142,7 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
     `${experienceRoutes.mfa}`,
     koaGuard({
       body: z.object({
-        type: z.literal(MfaFactor.TOTP).or(z.literal(MfaFactor.WebAuthn)),
+        type: z.nativeEnum(MfaFactor),
         verificationId: z.string(),
       }),
       status: [204, 400, 403, 404, 422],
@@ -172,69 +172,12 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
           await experienceInteraction.mfa.addWebAuthnByVerificationId(verificationId);
           break;
         }
+        case MfaFactor.BackupCode: {
+          await experienceInteraction.mfa.addBackupCodeByVerificationId(verificationId);
+          break;
+        }
       }
 
-      await experienceInteraction.save();
-
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.post(
-    `${experienceRoutes.mfa}/backup-codes/generate`,
-    koaGuard({
-      status: [200, 400, 403, 404, 422],
-      response: z.object({
-        codes: z.array(z.string()),
-      }),
-    }),
-    async (ctx, next) => {
-      const { experienceInteraction } = ctx;
-
-      // Guard current interaction event is not ForgotPassword
-      assertThat(
-        experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
-        new RequestError({
-          code: 'session.not_supported_for_forgot_password',
-          statue: 400,
-        })
-      );
-
-      // Guard current interaction event is identified and MFA verified
-      await experienceInteraction.guardMfaVerificationStatus();
-
-      const backupCodes = await experienceInteraction.mfa.generateBackupCodes();
-
-      await experienceInteraction.save();
-
-      ctx.body = { codes: backupCodes };
-
-      return next();
-    }
-  );
-
-  router.post(
-    `${experienceRoutes.mfa}/backup-codes`,
-    koaGuard({
-      status: [204, 400, 403, 404, 422],
-    }),
-    async (ctx, next) => {
-      const { experienceInteraction } = ctx;
-
-      // Guard current interaction event is not ForgotPassword
-      assertThat(
-        experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
-        new RequestError({
-          code: 'session.not_supported_for_forgot_password',
-          statue: 400,
-        })
-      );
-
-      // Guard current interaction event is identified and MFA verified
-      await experienceInteraction.guardMfaVerificationStatus();
-      await experienceInteraction.mfa.addBackupCodes();
       await experienceInteraction.save();
 
       ctx.status = 204;

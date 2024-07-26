@@ -1,8 +1,14 @@
 import { type ToZodObject } from '@logto/connector-kit';
-import { MfaFactor, VerificationType, type MfaVerificationBackupCode } from '@logto/schemas';
+import {
+  MfaFactor,
+  VerificationType,
+  type BindBackupCode,
+  type MfaVerificationBackupCode,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
+import { generateBackupCodes } from '#src/routes/interaction/utils/backup-code-validation.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -15,6 +21,7 @@ export type BackupCodeVerificationRecordData = {
   /** UserId is required for backup code verification */
   userId: string;
   code?: string;
+  backupCodes?: string[];
 };
 
 export const backupCodeVerificationRecordDataGuard = z.object({
@@ -22,6 +29,7 @@ export const backupCodeVerificationRecordDataGuard = z.object({
   type: z.literal(VerificationType.BackupCode),
   userId: z.string(),
   code: z.string().optional(),
+  backupCodes: z.string().array().optional(),
 }) satisfies ToZodObject<BackupCodeVerificationRecordData>;
 
 export class BackupCodeVerification implements MfaVerificationRecord<VerificationType.BackupCode> {
@@ -43,17 +51,19 @@ export class BackupCodeVerification implements MfaVerificationRecord<Verificatio
   public readonly type = VerificationType.BackupCode;
   public readonly userId: string;
   private code?: string;
+  private backupCodes?: string[];
 
   constructor(
     private readonly libraries: Libraries,
     private readonly queries: Queries,
     data: BackupCodeVerificationRecordData
   ) {
-    const { id, userId, code } = data;
+    const { id, userId, code, backupCodes } = data;
 
     this.id = id;
     this.userId = userId;
     this.code = code;
+    this.backupCodes = backupCodes;
   }
 
   get isVerified() {
@@ -62,6 +72,12 @@ export class BackupCodeVerification implements MfaVerificationRecord<Verificatio
 
   get isNewBindMfaVerification() {
     return false;
+  }
+
+  generate() {
+    const codes = generateBackupCodes();
+    this.backupCodes = codes;
+    return codes;
   }
 
   async verify(code: string) {
@@ -113,14 +129,24 @@ export class BackupCodeVerification implements MfaVerificationRecord<Verificatio
     this.code = code;
   }
 
+  toBindMfa(): BindBackupCode {
+    assertThat(this.backupCodes, 'session.mfa.pending_info_not_found');
+
+    return {
+      type: MfaFactor.BackupCode,
+      codes: this.backupCodes,
+    };
+  }
+
   toJson(): BackupCodeVerificationRecordData {
-    const { id, type, userId, code } = this;
+    const { id, type, userId, code, backupCodes } = this;
 
     return {
       id,
       type,
       userId,
       code,
+      backupCodes,
     };
   }
 }

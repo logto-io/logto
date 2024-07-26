@@ -1,4 +1,4 @@
-import { type User, type VerificationType } from '@logto/schemas';
+import { type BindMfa, type User, type VerificationType } from '@logto/schemas';
 
 type Data<T> = {
   id: string;
@@ -52,4 +52,8 @@ export abstract class MfaVerificationRecord<
    * A new bind MFA verification record can not be used for existing user's interaction verification.
    **/
   abstract get isNewBindMfaVerification(): boolean;
+  /**
+   * Convert the verification record to a BindMfa data type.
+   */
+  abstract toBindMfa(): BindMfa;
 }
