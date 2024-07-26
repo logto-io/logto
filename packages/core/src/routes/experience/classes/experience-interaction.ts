@@ -37,7 +37,7 @@ import {
 import { VerificationRecordsMap } from './verifications/verification-records-map.js';
 
 type InteractionStorage = {
-  interactionEvent?: InteractionEvent;
+  interactionEvent: InteractionEvent;
   userId?: string;
   profile?: InteractionProfile;
   mfa?: MfaData;
@@ -45,7 +45,7 @@ type InteractionStorage = {
 };
 
 const interactionStorageGuard = z.object({
-  interactionEvent: z.nativeEnum(InteractionEvent).optional(),
+  interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),
@@ -72,18 +72,20 @@ export default class ExperienceInteraction {
   private userId?: string;
   private userCache?: User;
   /** The interaction event for the current interaction. */
-  #interactionEvent?: InteractionEvent;
+  #interactionEvent: InteractionEvent;
 
   /**
-   * Create a new `ExperienceInteraction` instance.
-   *
-   * If the `interactionDetails` is provided, the instance will be initialized with the data from the `interactionDetails` storage.
-   * Otherwise, a brand new instance will be created.
+   * Restore experience interaction from the interaction storage.
    */
+  constructor(ctx: WithLogContext, tenant: TenantContext, interactionDetails: Interaction);
+  /**
+   * Create a new `ExperienceInteraction` instance.
+   */
+  constructor(ctx: WithLogContext, tenant: TenantContext, interactionEvent: InteractionEvent);
   constructor(
     private readonly ctx: WithLogContext,
     private readonly tenant: TenantContext,
-    interactionDetails?: Interaction
+    interactionData: Interaction | InteractionEvent
   ) {
     const { libraries, queries } = tenant;
 
@@ -96,13 +98,14 @@ export default class ExperienceInteraction {
         this.getVerificationRecordByTypeAndId(type, verificationId),
     };
 
-    if (!interactionDetails) {
+    if (typeof interactionData === 'string') {
+      this.#interactionEvent = interactionData;
       this.profile = new Profile(libraries, queries, {}, interactionContext);
       this.mfa = new Mfa(libraries, queries, {}, interactionContext);
       return;
     }
 
-    const result = interactionStorageGuard.safeParse(interactionDetails.result ?? {});
+    const result = interactionStorageGuard.safeParse(interactionData.result ?? {});
 
     // `interactionDetails.result` is not a valid experience interaction storage
     assertThat(
@@ -148,14 +151,12 @@ export default class ExperienceInteraction {
     await this.signInExperienceValidator.guardInteractionEvent(interactionEvent);
 
     // `ForgotPassword` interaction event can not interchanged with other events
-    if (this.interactionEvent) {
-      assertThat(
-        interactionEvent === InteractionEvent.ForgotPassword
-          ? this.interactionEvent === InteractionEvent.ForgotPassword
-          : this.interactionEvent !== InteractionEvent.ForgotPassword,
-        new RequestError({ code: 'session.not_supported_for_forgot_password', status: 400 })
-      );
-    }
+    assertThat(
+      interactionEvent === InteractionEvent.ForgotPassword
+        ? this.interactionEvent === InteractionEvent.ForgotPassword
+        : this.interactionEvent !== InteractionEvent.ForgotPassword,
+      new RequestError({ code: 'session.not_supported_for_forgot_password', status: 400 })
+    );
 
     this.#interactionEvent = interactionEvent;
   }

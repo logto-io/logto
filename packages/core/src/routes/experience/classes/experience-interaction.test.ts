@@ -92,9 +92,12 @@ describe('ExperienceInteraction class', () => {
 
   describe('new user registration', () => {
     it('First admin user provisioning', async () => {
-      const experienceInteraction = new ExperienceInteraction(ctx, tenant);
+      const experienceInteraction = new ExperienceInteraction(
+        ctx,
+        tenant,
+        InteractionEvent.Register
+      );
 
-      await experienceInteraction.setInteractionEvent(InteractionEvent.Register);
       experienceInteraction.setVerificationRecord(emailVerificationRecord);
       await experienceInteraction.identifyUser(emailVerificationRecord.id);
 

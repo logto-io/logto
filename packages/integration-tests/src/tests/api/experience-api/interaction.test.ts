@@ -12,9 +12,32 @@ devFeatureTest.describe('PUT /experience API', () => {
     await userApi.cleanUp();
   });
 
+  it('should throw 404 with interaction_not_found error if no interactionEvent is initiated', async () => {
+    const client = await initExperienceClient();
+
+    await expectRejects(
+      client.updateInteractionEvent({ interactionEvent: InteractionEvent.SignIn }),
+      {
+        code: 'session.interaction_not_found',
+        status: 404,
+      }
+    );
+
+    await expectRejects(
+      client.verifyPassword({
+        identifier: { type: SignInIdentifier.Username, value: 'test' },
+        password: 'test',
+      }),
+      {
+        code: 'session.interaction_not_found',
+        status: 404,
+      }
+    );
+  });
+
   it('PUT new experience API should reset all existing verification records', async () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const user = await userApi.create({ username, password });
+    await userApi.create({ username, password });
 
     const client = await initExperienceClient();
     await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
@@ -30,5 +53,40 @@ devFeatureTest.describe('PUT /experience API', () => {
       code: 'session.verification_session_not_found',
       status: 404,
     });
+  });
+
+  it('should throw if trying to update interaction event from ForgotPassword to others', async () => {
+    const client = await initExperienceClient();
+    await client.initInteraction({ interactionEvent: InteractionEvent.ForgotPassword });
+
+    await expectRejects(
+      client.updateInteractionEvent({ interactionEvent: InteractionEvent.SignIn }),
+      {
+        code: 'session.not_supported_for_forgot_password',
+        status: 400,
+      }
+    );
+  });
+
+  it('should throw if trying to update interaction event from SignIn and Register to ForgotPassword', async () => {
+    const client = await initExperienceClient();
+    await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+
+    await expectRejects(
+      client.updateInteractionEvent({ interactionEvent: InteractionEvent.ForgotPassword }),
+      {
+        code: 'session.not_supported_for_forgot_password',
+        status: 400,
+      }
+    );
+  });
+
+  it('should update interaction event from SignIn to Register', async () => {
+    const client = await initExperienceClient();
+    await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+
+    await expect(
+      client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register })
+    ).resolves.not.toThrow();
   });
 });
