@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
-import { ChromePicker } from 'react-color';
+import { ColorPicker as ColorPalette, useColor } from 'react-color-palette';
 
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -17,6 +17,7 @@ type Props = {
 function ColorPicker({ name, onChange, value = '#000000' }: Props) {
   const anchorRef = useRef<HTMLSpanElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [color] = useColor(value);
 
   return (
     <div
@@ -41,12 +42,14 @@ function ColorPicker({ name, onChange, value = '#000000' }: Props) {
           setIsOpen(false);
         }}
       >
-        <ChromePicker
-          color={value}
-          onChange={({ hex }) => {
-            onChange(hex);
-          }}
-        />
+        <div className={styles.palette}>
+          <ColorPalette
+            color={color}
+            onChange={({ hex }) => {
+              onChange(hex);
+            }}
+          />
+        </div>
       </Dropdown>
     </div>
   );

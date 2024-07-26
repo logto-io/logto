@@ -5,20 +5,17 @@ import {
   type Application,
   type ApplicationSignInExperience,
 } from '@logto/schemas';
-import { useCallback, useEffect, useMemo } from 'react';
-import { useForm, FormProvider, Controller } from 'react-hook-form';
+import { useCallback, useEffect } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import ImageInputs, { themeToLogoName } from '@/components/ImageInputs';
-import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
 import RequestDataError from '@/components/RequestDataError';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { appSpecificBrandingLink, logtoThirdPartyAppBrandingLink } from '@/consts';
-import Button from '@/ds-components/Button';
-import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
@@ -28,7 +25,7 @@ import { emptyBranding } from '@/types/sign-in-experience';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
-import styles from './index.module.scss';
+import NonThirdPartyBrandingForm from './NonThirdPartyBrandingForm';
 import useApplicationSignInExperienceSWR from './use-application-sign-in-experience-swr';
 import useSignInExperienceSWR from './use-sign-in-experience-swr';
 import { type ApplicationSignInExperienceForm, formatFormToSubmitData } from './utils';
@@ -118,84 +115,6 @@ function Branding({ application, isActive }: Props) {
       });
     }
   }, [color, isBrandingEnabled, setValue]);
-
-  const [primaryColor, darkPrimaryColor] = watch(['color.primaryColor', 'color.darkPrimaryColor']);
-  const calculatedDarkPrimaryColor = useMemo(() => {
-    return primaryColor && generateDarkColor(primaryColor);
-  }, [primaryColor]);
-
-  const handleResetColor = useCallback(() => {
-    setValue('color.darkPrimaryColor', calculatedDarkPrimaryColor);
-  }, [calculatedDarkPrimaryColor, setValue]);
-
-  const NonThirdPartyBrandingForm = useCallback(
-    () => (
-      <>
-        <LogoAndFavicon
-          control={control}
-          register={register}
-          theme={Theme.Light}
-          type="app_logo"
-          logo={{ name: 'branding.logoUrl', error: errors.branding?.logoUrl }}
-          favicon={{
-            name: 'branding.favicon',
-            error: errors.branding?.favicon,
-          }}
-        />
-        <LogoAndFavicon
-          control={control}
-          register={register}
-          theme={Theme.Dark}
-          type="app_logo"
-          logo={{ name: 'branding.darkLogoUrl', error: errors.branding?.darkLogoUrl }}
-          favicon={{
-            name: 'branding.darkFavicon',
-            error: errors.branding?.darkFavicon,
-          }}
-        />
-        <div className={styles.colors}>
-          <Controller
-            control={control}
-            name="color.primaryColor"
-            render={({ field: { name, value, onChange } }) => (
-              <FormField title="application_details.branding.brand_color">
-                <ColorPicker name={name} value={value} onChange={onChange} />
-              </FormField>
-            )}
-          />
-          <Controller
-            control={control}
-            name="color.darkPrimaryColor"
-            render={({ field: { name, value, onChange } }) => (
-              <FormField title="application_details.branding.brand_color_dark">
-                <ColorPicker name={name} value={value} onChange={onChange} />
-              </FormField>
-            )}
-          />
-          {calculatedDarkPrimaryColor !== darkPrimaryColor && (
-            <div className={styles.darkModeTip}>
-              {t('sign_in_exp.color.dark_mode_reset_tip')}
-              <Button
-                type="text"
-                size="small"
-                title="sign_in_exp.color.reset"
-                onClick={handleResetColor}
-              />
-            </div>
-          )}
-        </div>
-      </>
-    ),
-    [
-      control,
-      errors.branding,
-      register,
-      calculatedDarkPrimaryColor,
-      darkPrimaryColor,
-      handleResetColor,
-      t,
-    ]
-  );
 
   if (isLoading) {
     return <FormCardSkeleton />;
