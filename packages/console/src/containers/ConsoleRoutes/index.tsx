@@ -1,10 +1,11 @@
 import { ossConsolePath } from '@logto/schemas';
 import { Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 import { SWRConfig } from 'swr';
 
 import AppLoading from '@/components/AppLoading';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import AppBoundary from '@/containers/AppBoundary';
 import AppContent, { RedirectToFirstItem } from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
@@ -14,7 +15,6 @@ import { GlobalRoute } from '@/contexts/TenantsProvider';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
-import safeLazy from '@/utils/lazy';
 import { dropLeadingSlash } from '@/utils/url';
 
 import { __Internal__ImportError } from './internal';
@@ -47,7 +47,9 @@ export function ConsoleRoutes() {
         <Route path="/:tenantId" element={<Layout />}>
           <Route path="callback" element={<Callback />} />
           <Route path="welcome" element={<Welcome />} />
-          <Route path="__internal__/import-error" element={<__Internal__ImportError />} />
+          {isDevFeaturesEnabled && (
+            <Route path="__internal__/import-error" element={<__Internal__ImportError />} />
+          )}
           <Route element={<ProtectedRoutes />}>
             <Route path={dropLeadingSlash(GlobalRoute.Profile) + '/*'} element={<Profile />} />
             <Route element={<TenantAccess />}>

@@ -1,7 +1,7 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { OrganizationRoleDetailsTabs, OrganizationTemplateTabs } from '@/consts';
-import safeLazy from '@/utils/lazy';
 
 const OrganizationTemplate = safeLazy(async () => import('@/pages/OrganizationTemplate'));
 const OrganizationRoles = safeLazy(

@@ -1,10 +1,10 @@
 import { condArray } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { isCloud } from '@/consts/env';
 import NotFound from '@/pages/NotFound';
-import safeLazy from '@/utils/lazy';
 
 import { apiResources } from './routes/api-resources';
 import { applications } from './routes/applications';

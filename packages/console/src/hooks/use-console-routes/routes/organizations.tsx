@@ -1,8 +1,8 @@
 import { condArray } from '@silverhand/essentials';
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { OrganizationDetailsTabs } from '@/pages/OrganizationDetails/types';
-import safeLazy from '@/utils/lazy';
 
 const Organizations = safeLazy(async () => import('@/pages/Organizations'));
 const OrganizationDetails = safeLazy(async () => import('@/pages/OrganizationDetails'));

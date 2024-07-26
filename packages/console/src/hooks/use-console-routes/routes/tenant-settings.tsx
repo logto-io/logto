@@ -1,12 +1,12 @@
 import { condArray } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { TenantSettingsTabs } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import NotFound from '@/pages/NotFound';
-import safeLazy from '@/utils/lazy';
 
 const TenantSettings = safeLazy(async () => import('@/pages/TenantSettings'));
 const TenantBasicSettings = safeLazy(

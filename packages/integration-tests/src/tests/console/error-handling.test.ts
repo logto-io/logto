@@ -2,11 +2,12 @@ import { appendPath } from '@silverhand/essentials';
 
 import ExpectConsole from '#src/ui-helpers/expect-console.js';
 import { Trace } from '#src/ui-helpers/trace.js';
+import { devFeatureTest } from '#src/utils.js';
 
 describe('error handling', () => {
   const trace = new Trace();
 
-  it('should handle dynamic import errors', async () => {
+  devFeatureTest.it('should handle dynamic import errors', async () => {
     const expectConsole = new ExpectConsole(await browser.newPage());
     const path = appendPath(expectConsole.options.endpoint, 'console/__internal__/import-error');
 

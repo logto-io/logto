@@ -1,7 +1,7 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { SignInExperienceTab } from '@/pages/SignInExperience/types';
-import safeLazy from '@/utils/lazy';
 
 const SignInExperience = safeLazy(async () => import('@/pages/SignInExperience'));
 

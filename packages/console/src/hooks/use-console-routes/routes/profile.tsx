@@ -1,6 +1,5 @@
 import { type RouteObject } from 'react-router-dom';
-
-import safeLazy from '@/utils/lazy';
+import { safeLazy } from 'react-safe-lazy';
 
 const ChangePasswordModal = safeLazy(
   async () => import('@/pages/Profile/containers/ChangePasswordModal')

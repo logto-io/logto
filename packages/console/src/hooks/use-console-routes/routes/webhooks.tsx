@@ -1,7 +1,7 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { WebhookDetailsTabs } from '@/consts';
-import safeLazy from '@/utils/lazy';
 
 const WebhookDetails = safeLazy(async () => import('@/pages/WebhookDetails'));
 const AuditLogDetails = safeLazy(async () => import('@/pages/AuditLogDetails'));

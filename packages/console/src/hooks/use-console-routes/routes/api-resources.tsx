@@ -1,7 +1,7 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { ApiResourceDetailsTabs } from '@/consts';
-import safeLazy from '@/utils/lazy';
 
 const ApiResources = safeLazy(async () => import('@/pages/ApiResources'));
 const ApiResourceDetails = safeLazy(async () => import('@/pages/ApiResourceDetails'));

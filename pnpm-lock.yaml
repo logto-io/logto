@@ -3100,6 +3100,9 @@ importers:
       react-router-dom:
         specifier: ^6.25.1
         version: 6.25.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-safe-lazy:
+        specifier: ^0.1.0
+        version: 0.1.0(react@18.3.1)
       react-syntax-highlighter:
         specifier: ^15.5.0
         version: 15.5.0(react@18.3.1)
@@ -11699,6 +11702,11 @@ packages:
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: '>=16.8'
+
+  react-safe-lazy@0.1.0:
+    resolution: {integrity: sha512-CZSaQHlNVG8OuSRaLkBGe5cP+qjZtW+fJA/PRNTyCIVkH3F7GQO0aBu+jIrm2PFrTVs4xjSvuDFVyzlX6OL0oQ==}
+    peerDependencies:
+      react: ^18.0.0
 
   react-side-effect@2.1.2:
     resolution: {integrity: sha512-PVjOcvVOyIILrYoyGEpDN3vmYNLdy1CajSFNt4TDsVQC5KpTijDvWVoR+/7Rz2xT978D8/ZtFceXxzsPwZEDvw==}
@@ -23040,6 +23048,10 @@ snapshots:
   react-router@6.25.1(react@18.3.1):
     dependencies:
       '@remix-run/router': 1.18.0
+      react: 18.3.1
+
+  react-safe-lazy@0.1.0(react@18.3.1):
+    dependencies:
       react: 18.3.1
 
   react-side-effect@2.1.2(react@18.3.1):

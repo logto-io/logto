@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { useOutletContext, useRoutes } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { isDevFeaturesEnabled } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -7,7 +8,6 @@ import { Daisy } from '@/ds-components/Spinner';
 import Tag from '@/ds-components/Tag';
 import { useConsoleRoutes } from '@/hooks/use-console-routes';
 import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
-import safeLazy from '@/utils/lazy';
 
 import type { AppContentOutletContext } from '../AppContent/types';
 
