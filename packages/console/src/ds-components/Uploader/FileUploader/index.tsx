@@ -25,7 +25,8 @@ export type Props<T extends Record<string, unknown> = UserAssets> = {
   readonly defaultApiInstanceTimeout?: number;
   readonly allowedMimeTypes: AllowedUploadMimeType[];
   readonly actionDescription?: string;
-  readonly onCompleted: (response: T) => void;
+  readonly onUploadStart?: (file: File) => void;
+  readonly onUploadComplete?: (response: T) => void;
   readonly onUploadErrorChange: (errorMessage?: string, files?: File[]) => void;
   readonly className?: string;
   /**
@@ -46,7 +47,8 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
   defaultApiInstanceTimeout,
   allowedMimeTypes,
   actionDescription,
-  onCompleted,
+  onUploadStart,
+  onUploadComplete,
   onUploadErrorChange,
   className,
   apiInstance,
@@ -116,17 +118,21 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
 
       try {
         setIsUploading(true);
+        onUploadStart?.(acceptedFile);
         const uploadApi = apiInstance ?? api;
         const response = await uploadApi.post(uploadUrl, { body: formData }).json<T>();
 
-        onCompleted(response);
-      } catch {
+        onUploadComplete?.(response);
+      } catch (error: unknown) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          return;
+        }
         setUploadError(t('components.uploader.error_upload'));
       } finally {
         setIsUploading(false);
       }
     },
-    [api, apiInstance, allowedMimeTypes, maxSize, onCompleted, t, uploadUrl]
+    [api, apiInstance, allowedMimeTypes, maxSize, onUploadComplete, onUploadStart, t, uploadUrl]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

@@ -137,7 +137,7 @@ function ImageInputs<FormContext extends FieldValues>({
                 actionDescription={t(`sign_in_exp.branding.with_${field.theme}`, {
                   value: t(`sign_in_exp.branding_uploads.${field.type}.title`),
                 })}
-                onCompleted={({ url }) => {
+                onUploadComplete={({ url }) => {
                   onChange(url);
                 }}
                 // Noop fallback should not be necessary, but for TypeScript to be happy

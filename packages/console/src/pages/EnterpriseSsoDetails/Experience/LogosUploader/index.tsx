@@ -44,7 +44,7 @@ function LogosUploader({ isDarkModeEnabled }: Props) {
                     : 'enterprise_sso_details.branding_logo_context'
                 )}
                 allowedMimeTypes={allowedMimeTypes}
-                onCompleted={({ url }) => {
+                onUploadComplete={({ url }) => {
                   onChange(url);
                 }}
                 onUploadErrorChange={setUploadLogoError}
@@ -67,7 +67,7 @@ function LogosUploader({ isDarkModeEnabled }: Props) {
                   value={value ?? ''}
                   actionDescription={t('enterprise_sso_details.branding_dark_logo_context')}
                   allowedMimeTypes={allowedMimeTypes}
-                  onCompleted={({ url }) => {
+                  onUploadComplete={({ url }) => {
                     onChange(url);
                   }}
                   onUploadErrorChange={setUploadDarkLogoError}

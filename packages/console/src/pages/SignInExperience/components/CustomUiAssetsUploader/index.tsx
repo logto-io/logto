@@ -1,15 +1,17 @@
 import { type CustomUiAssets, maxUploadFileSize, type AllowedUploadMimeType } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
 import { format } from 'date-fns/fp';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DeleteIcon from '@/assets/icons/delete.svg?react';
+import FileIcon from '@/components/FileIcon';
 import IconButton from '@/ds-components/IconButton';
 import FileUploader from '@/ds-components/Uploader/FileUploader';
+import useApi from '@/hooks/use-api';
 import { formatBytes } from '@/utils/uploader';
 
-import FileIcon from '../FileIcon';
+import { SignInExperienceContext } from '../../contexts/SignInExperienceContextProvider';
 
 import styles from './index.module.scss';
 
@@ -28,7 +30,19 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<string>();
+  const [abortController, setAbortController] = useState(new AbortController());
   const showUploader = !value?.id && !file && !error;
+  const { setIsUploading, setCancelUpload } = useContext(SignInExperienceContext);
+
+  const api = useApi({ timeout: requestTimeout, signal: abortController.signal });
+
+  useEffect(() => {
+    setCancelUpload(() => {
+      abortController.abort();
+      setIsUploading(false);
+      setAbortController(new AbortController());
+    });
+  }, [abortController, setCancelUpload, setIsUploading]);
 
   const onComplete = useCallback(
     (id: string) => {
@@ -53,13 +67,17 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
   if (showUploader) {
     return (
       <FileUploader<{ customUiAssetId: string }>
-        defaultApiInstanceTimeout={requestTimeout}
+        apiInstance={api}
         disabled={disabled}
         allowedMimeTypes={allowedMimeTypes}
         maxSize={maxUploadFileSize}
         uploadUrl="api/sign-in-exp/default/custom-ui-assets"
-        onCompleted={({ customUiAssetId }) => {
+        onUploadStart={() => {
+          setIsUploading(true);
+        }}
+        onUploadComplete={({ customUiAssetId }) => {
           onComplete(customUiAssetId);
+          setIsUploading(false);
         }}
         onUploadErrorChange={onErrorChange}
       />
