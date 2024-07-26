@@ -4,6 +4,7 @@ import {
   SignInIdentifier,
   updateProfileApiPayloadGuard,
 } from '@logto/schemas';
+import { type MiddlewareType } from 'koa';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -17,6 +18,35 @@ import { identifierCodeVerificationTypeMap } from './classes/verifications/code-
 import { experienceRoutes } from './const.js';
 import { type WithExperienceInteractionContext } from './middleware/koa-experience-interaction.js';
 
+/**
+ * @throws {RequestError} with status 400 if current interaction is ForgotPassword
+ * @throws {RequestError} with status 404 if current interaction is not identified
+ * @throws {RequestError} with status 403 if MFA verification status is not verified
+ */
+function verifiedInteractionGuard<
+  StateT,
+  ContextT extends WithLogContext,
+  ResponseT,
+>(): MiddlewareType<StateT, WithExperienceInteractionContext<ContextT>, ResponseT> {
+  return async (ctx, next) => {
+    const { experienceInteraction } = ctx;
+
+    // Guard current interaction event is not ForgotPassword
+    assertThat(
+      experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
+      new RequestError({
+        code: 'session.not_supported_for_forgot_password',
+        statue: 400,
+      })
+    );
+
+    // Guard MFA verification status
+    await experienceInteraction.guardMfaVerificationStatus();
+
+    return next();
+  };
+}
+
 export default function interactionProfileRoutes<T extends WithLogContext>(
   router: Router<unknown, WithExperienceInteractionContext<T>>,
   tenant: TenantContext
@@ -27,21 +57,9 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
       body: updateProfileApiPayloadGuard,
       status: [204, 400, 403, 404, 422],
     }),
+    verifiedInteractionGuard(),
     async (ctx, next) => {
       const { experienceInteraction, guard } = ctx;
-
-      // Guard current interaction event is not ForgotPassword
-      assertThat(
-        experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
-        new RequestError({
-          code: 'session.not_supported_for_forgot_password',
-          statue: 400,
-        })
-      );
-
-      // Guard MFA verification status
-      await experienceInteraction.guardMfaVerificationStatus();
-
       const profilePayload = guard.body;
 
       switch (profilePayload.type) {
@@ -114,20 +132,9 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
   router.post(
     `${experienceRoutes.mfa}/mfa-skipped`,
     koaGuard({ status: [204, 400, 403, 404, 422] }),
+    verifiedInteractionGuard(),
     async (ctx, next) => {
       const { experienceInteraction, guard } = ctx;
-
-      // Guard current interaction event is not ForgotPassword
-      assertThat(
-        experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
-        new RequestError({
-          code: 'session.not_supported_for_forgot_password',
-          statue: 400,
-        })
-      );
-
-      // Guard current interaction event is identified and MFA verified
-      await experienceInteraction.guardMfaVerificationStatus();
 
       await experienceInteraction.mfa.skip();
       await experienceInteraction.save();
@@ -147,21 +154,10 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
       }),
       status: [204, 400, 403, 404, 422],
     }),
+    verifiedInteractionGuard(),
     async (ctx, next) => {
       const { experienceInteraction, guard } = ctx;
       const { type, verificationId } = guard.body;
-
-      // Guard current interaction event is not ForgotPassword
-      assertThat(
-        experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
-        new RequestError({
-          code: 'session.not_supported_for_forgot_password',
-          statue: 400,
-        })
-      );
-
-      // Guard current interaction event is identified and MFA verified
-      await experienceInteraction.guardMfaVerificationStatus();
 
       switch (type) {
         case MfaFactor.TOTP: {
