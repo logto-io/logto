@@ -1,14 +1,16 @@
 import { condArray } from '@silverhand/essentials';
-import { lazy } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { OrganizationDetailsTabs } from '@/pages/OrganizationDetails/types';
 
-const Organizations = lazy(async () => import('@/pages/Organizations'));
-const OrganizationDetails = lazy(async () => import('@/pages/OrganizationDetails'));
-const MachineToMachine = lazy(async () => import('@/pages/OrganizationDetails/MachineToMachine'));
-const Members = lazy(async () => import('@/pages/OrganizationDetails/Members'));
-const Settings = lazy(async () => import('@/pages/OrganizationDetails/Settings'));
+const Organizations = safeLazy(async () => import('@/pages/Organizations'));
+const OrganizationDetails = safeLazy(async () => import('@/pages/OrganizationDetails'));
+const MachineToMachine = safeLazy(
+  async () => import('@/pages/OrganizationDetails/MachineToMachine')
+);
+const Members = safeLazy(async () => import('@/pages/OrganizationDetails/Members'));
+const Settings = safeLazy(async () => import('@/pages/OrganizationDetails/Settings'));
 
 export const organizations: RouteObject = {
   path: 'organizations',

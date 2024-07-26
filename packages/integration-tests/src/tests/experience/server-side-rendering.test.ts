@@ -1,14 +1,10 @@
-import fs from 'node:fs/promises';
-import os from 'node:os';
-import path from 'node:path';
-
 import { demoAppApplicationId, fullSignInExperienceGuard } from '@logto/schemas';
-import { type Page } from 'puppeteer';
 import { z } from 'zod';
 
 import { demoAppUrl } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
+import { Trace } from '#src/ui-helpers/trace.js';
 
 const ssrDataGuard = z.object({
   signInExperience: z.object({
@@ -21,53 +17,6 @@ const ssrDataGuard = z.object({
     data: z.record(z.unknown()),
   }),
 });
-
-class Trace {
-  protected tracePath?: string;
-
-  constructor(protected page?: Page) {}
-
-  async start() {
-    if (this.tracePath) {
-      throw new Error('Trace already started');
-    }
-
-    if (!this.page) {
-      throw new Error('Page not set');
-    }
-
-    const traceDirectory = await fs.mkdtemp(path.join(os.tmpdir(), 'trace-'));
-    this.tracePath = path.join(traceDirectory, 'trace.json');
-    await this.page.tracing.start({ path: this.tracePath, categories: ['devtools.timeline'] });
-  }
-
-  async stop() {
-    if (!this.page) {
-      throw new Error('Page not set');
-    }
-
-    return this.page.tracing.stop();
-  }
-
-  async read() {
-    if (!this.tracePath) {
-      throw new Error('Trace not started');
-    }
-
-    return JSON.parse(await fs.readFile(this.tracePath, 'utf8'));
-  }
-
-  reset(page: Page) {
-    this.page = page;
-    this.tracePath = undefined;
-  }
-
-  async cleanup() {
-    if (this.tracePath) {
-      await fs.unlink(this.tracePath);
-    }
-  }
-}
 
 describe('server-side rendering', () => {
   const trace = new Trace();
