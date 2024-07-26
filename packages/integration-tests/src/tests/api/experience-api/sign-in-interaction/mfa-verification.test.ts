@@ -50,6 +50,8 @@ devFeatureTest.describe('mfa sign-in verification', () => {
       const user = await userApi.create({ username, password });
 
       const response = await createUserMfaVerification(user.id, MfaFactor.TOTP);
+      // Fulfill the backup code requirement
+      await createUserMfaVerification(user.id, MfaFactor.BackupCode);
 
       if (response.type !== MfaFactor.TOTP) {
         throw new Error('unexpected mfa type');

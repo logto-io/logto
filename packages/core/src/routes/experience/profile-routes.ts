@@ -1,4 +1,9 @@
-import { InteractionEvent, SignInIdentifier, updateProfileApiPayloadGuard } from '@logto/schemas';
+import {
+  InteractionEvent,
+  MfaFactor,
+  SignInIdentifier,
+  updateProfileApiPayloadGuard,
+} from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -98,6 +103,138 @@ export default function interactionProfileRoutes<T extends WithLogContext>(
       );
 
       await experienceInteraction.profile.setPasswordDigestWithValidation(password, true);
+      await experienceInteraction.save();
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${experienceRoutes.mfa}/mfa-skipped`,
+    koaGuard({ status: [204, 400, 403, 404, 422] }),
+    async (ctx, next) => {
+      const { experienceInteraction, guard } = ctx;
+
+      // Guard current interaction event is not ForgotPassword
+      assertThat(
+        experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
+        new RequestError({
+          code: 'session.not_supported_for_forgot_password',
+          statue: 400,
+        })
+      );
+
+      // Guard current interaction event is identified and MFA verified
+      await experienceInteraction.guardMfaVerificationStatus();
+
+      await experienceInteraction.mfa.skip();
+      await experienceInteraction.save();
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${experienceRoutes.mfa}`,
+    koaGuard({
+      body: z.object({
+        type: z.literal(MfaFactor.TOTP).or(z.literal(MfaFactor.WebAuthn)),
+        verificationId: z.string(),
+      }),
+      status: [204, 400, 403, 404, 422],
+    }),
+    async (ctx, next) => {
+      const { experienceInteraction, guard } = ctx;
+      const { type, verificationId } = guard.body;
+
+      // Guard current interaction event is not ForgotPassword
+      assertThat(
+        experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
+        new RequestError({
+          code: 'session.not_supported_for_forgot_password',
+          statue: 400,
+        })
+      );
+
+      // Guard current interaction event is identified and MFA verified
+      await experienceInteraction.guardMfaVerificationStatus();
+
+      switch (type) {
+        case MfaFactor.TOTP: {
+          await experienceInteraction.mfa.addTotpByVerificationId(verificationId);
+          break;
+        }
+        case MfaFactor.WebAuthn: {
+          await experienceInteraction.mfa.addWebAuthnByVerificationId(verificationId);
+          break;
+        }
+      }
+
+      await experienceInteraction.save();
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${experienceRoutes.mfa}/backup-codes/generate`,
+    koaGuard({
+      status: [200, 400, 403, 404, 422],
+      response: z.object({
+        codes: z.array(z.string()),
+      }),
+    }),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
+
+      // Guard current interaction event is not ForgotPassword
+      assertThat(
+        experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
+        new RequestError({
+          code: 'session.not_supported_for_forgot_password',
+          statue: 400,
+        })
+      );
+
+      // Guard current interaction event is identified and MFA verified
+      await experienceInteraction.guardMfaVerificationStatus();
+
+      const backupCodes = await experienceInteraction.mfa.generateBackupCodes();
+
+      await experienceInteraction.save();
+
+      ctx.body = { codes: backupCodes };
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${experienceRoutes.mfa}/backup-codes`,
+    koaGuard({
+      status: [204, 400, 403, 404, 422],
+    }),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
+
+      // Guard current interaction event is not ForgotPassword
+      assertThat(
+        experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
+        new RequestError({
+          code: 'session.not_supported_for_forgot_password',
+          statue: 400,
+        })
+      );
+
+      // Guard current interaction event is identified and MFA verified
+      await experienceInteraction.guardMfaVerificationStatus();
+      await experienceInteraction.mfa.addBackupCodes();
       await experienceInteraction.save();
 
       ctx.status = 204;

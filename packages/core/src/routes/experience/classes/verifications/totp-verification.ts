@@ -1,5 +1,11 @@
 import { type ToZodObject } from '@logto/connector-kit';
-import { MfaFactor, VerificationType, type MfaVerificationTotp, type User } from '@logto/schemas';
+import {
+  MfaFactor,
+  VerificationType,
+  type BindTotp,
+  type MfaVerificationTotp,
+  type User,
+} from '@logto/schemas';
 import { generateStandardId, getUserDisplayName } from '@logto/shared';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
@@ -60,8 +66,8 @@ export class TotpVerification implements VerificationRecord<VerificationType.TOT
   public readonly id: string;
   public readonly type = VerificationType.TOTP;
   public readonly userId: string;
-  private secret?: string;
   private verified: boolean;
+  #secret?: string;
 
   constructor(
     private readonly libraries: Libraries,
@@ -72,12 +78,16 @@ export class TotpVerification implements VerificationRecord<VerificationType.TOT
 
     this.id = id;
     this.userId = userId;
-    this.secret = secret;
+    this.#secret = secret;
     this.verified = verified;
   }
 
   get isVerified() {
     return this.verified;
+  }
+
+  get secret() {
+    return this.#secret;
   }
 
   /**
@@ -87,13 +97,13 @@ export class TotpVerification implements VerificationRecord<VerificationType.TOT
    * @returns The TOTP secret and QR code as a base64 encoded image.
    */
   async generateNewSecret(ctx: WithLogContext): Promise<{ secret: string; secretQrCode: string }> {
-    this.secret = generateTotpSecret();
+    this.#secret = generateTotpSecret();
 
     const { hostname } = ctx.URL;
     const secretQrCode = await this.generateSecretQrCode(hostname);
 
     return {
-      secret: this.secret,
+      secret: this.#secret,
       secretQrCode,
     };
   }
@@ -105,7 +115,7 @@ export class TotpVerification implements VerificationRecord<VerificationType.TOT
    */
   verifyNewTotpSecret(code: string) {
     assertThat(
-      this.secret && validateTotpToken(this.secret, code),
+      this.#secret && validateTotpToken(this.#secret, code),
       'session.mfa.invalid_totp_code'
     );
 
@@ -147,6 +157,15 @@ export class TotpVerification implements VerificationRecord<VerificationType.TOT
         };
       }),
     });
+  }
+
+  toBindMfa(): BindTotp {
+    assertThat(this.isVerified, 'session.verification_failed');
+    assertThat(this.secret, 'session.mfa.pending_info_not_found');
+    return {
+      type: MfaFactor.TOTP,
+      secret: this.secret,
+    };
   }
 
   toJson(): TotpVerificationRecordData {

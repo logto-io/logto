@@ -5,7 +5,7 @@
  * we have moved some of the standalone functions into this file.
  */
 
-import { VerificationType, type User } from '@logto/schemas';
+import { MfaFactor, VerificationType, type User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -111,4 +111,21 @@ export const identifyUserByVerificationRecord = async (
       }
     }
   }
+};
+
+/**
+ * Should remove the old backup codes verification if the user is binding a new one
+ */
+export const mergeUserMfaVerifications = (
+  userMfaVerifications: User['mfaVerifications'],
+  newMfaVerifications: User['mfaVerifications']
+): User['mfaVerifications'] => {
+  if (newMfaVerifications.some((verification) => verification.type === MfaFactor.BackupCode)) {
+    const filteredMfaVerifications = userMfaVerifications.filter(({ type }) => {
+      return type !== MfaFactor.BackupCode;
+    });
+    return [...filteredMfaVerifications, ...newMfaVerifications];
+  }
+
+  return [...userMfaVerifications, ...newMfaVerifications];
 };

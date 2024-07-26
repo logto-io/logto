@@ -5,4 +5,5 @@ export const experienceRoutes = Object.freeze({
   identification: `${prefix}/identification`,
   verification: `${prefix}/verification`,
   profile: `${prefix}/profile`,
+  mfa: `${prefix}/profile/mfa`,
 });

@@ -6,7 +6,10 @@ import {
   type User,
 } from '@logto/schemas';
 
+import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
+import { type TotpVerification } from '../verifications/totp-verification.js';
+import { type WebAuthnVerification } from '../verifications/web-authn-verification.js';
 
 const mfaVerificationTypes = Object.freeze([
   VerificationType.TOTP,
@@ -25,8 +28,30 @@ const mfaVerificationTypeToMfaFactorMap = Object.freeze({
   [VerificationType.WebAuthn]: MfaFactor.WebAuthn,
 }) satisfies Record<MfaVerificationType, MfaFactor>;
 
-const isMfaVerificationRecordType = (type: VerificationType): type is MfaVerificationType => {
-  return mfaVerificationTypes.includes(type);
+type MfaVerificationRecord = TotpVerification | WebAuthnVerification | BackupCodeVerification;
+
+const isMfaVerificationRecord = (
+  verification: VerificationRecord
+): verification is MfaVerificationRecord => {
+  return mfaVerificationTypes.includes(verification.type);
+};
+
+/**
+ * Check if the MFA verification record is a new bind MFA verification.
+ * New bind MFA verification can only be used for binding new MFA factors.
+ */
+const isNewBindMfaVerification = (verification: MfaVerificationRecord) => {
+  switch (verification.type) {
+    case VerificationType.TOTP: {
+      return Boolean(verification.secret);
+    }
+    case VerificationType.WebAuthn: {
+      return Boolean(verification.registrationInfo);
+    }
+    case VerificationType.BackupCode: {
+      return false;
+    }
+  }
 };
 
 export class MfaValidator {
@@ -37,6 +62,7 @@ export class MfaValidator {
 
   /**
    * Get the enabled MFA factors for the user
+   *
    * - Filter out MFA factors that are not configured in the sign-in experience
    */
   get userEnabledMfaVerifications() {
@@ -48,10 +74,14 @@ export class MfaValidator {
   }
 
   /**
-   * For front-end display usage only
-   * Return the available MFA verifications for the user.
+   * For front-end display usage only.
+   * Returns all the available MFA verifications for the user that can be used for verification.
+   *
+   * - Filter out backup codes if all the codes are used
+   * - Filter out duplicated verifications with the same type
+   * - Sort by last used time, the latest used factor is the first one, backup code is always the last one
    */
-  get availableMfaVerificationTypes() {
+  get availableUserMfaVerificationTypes() {
     return (
       this.userEnabledMfaVerifications
         // Filter out backup codes if all the codes are used
@@ -89,6 +119,9 @@ export class MfaValidator {
     );
   }
 
+  /**
+   * Check if the user has enabled MFA verifications, if true, MFA verification records are required.
+   */
   get isMfaEnabled() {
     return this.userEnabledMfaVerifications.length > 0;
   }
@@ -99,24 +132,18 @@ export class MfaValidator {
       return true;
     }
 
-    const mfaVerificationRecords = this.filterVerifiedMfaVerificationRecords(verificationRecords);
-
-    return mfaVerificationRecords.length > 0;
-  }
-
-  filterVerifiedMfaVerificationRecords(verificationRecords: VerificationRecord[]) {
-    const enabledMfaFactors = this.userEnabledMfaVerifications;
-
-    // Filter out the verified MFA verification records
-    const mfaVerificationRecords = verificationRecords.filter(({ type, isVerified }) => {
-      return (
-        isMfaVerificationRecordType(type) &&
-        isVerified &&
+    const verifiedMfaVerificationRecords = verificationRecords.filter(
+      (verification) =>
+        isMfaVerificationRecord(verification) &&
+        verification.isVerified &&
+        // New bind MFA verification can not be used for verification
+        !isNewBindMfaVerification(verification) &&
         // Check if the verification type is enabled in the user's MFA settings
-        enabledMfaFactors.some((factor) => factor.type === mfaVerificationTypeToMfaFactorMap[type])
-      );
-    });
+        this.userEnabledMfaVerifications.some(
+          (factor) => factor.type === mfaVerificationTypeToMfaFactorMap[verification.type]
+        )
+    );
 
-    return mfaVerificationRecords;
+    return verifiedMfaVerificationRecords.length > 0;
   }
 }
