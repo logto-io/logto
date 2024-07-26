@@ -34,8 +34,6 @@ export const signInWithPassword = async ({
 }) => {
   const client = await initExperienceClient();
 
-  await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
-
   const { verificationId } = await client.verifyPassword({
     identifier,
     password,
@@ -53,8 +51,6 @@ export const signInWithPassword = async ({
 
 export const signInWithVerificationCode = async (identifier: VerificationCodeIdentifier) => {
   const client = await initExperienceClient();
-
-  await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 
   const { verificationId, code } = await successfullySendVerificationCode(client, {
     identifier,
@@ -89,8 +85,6 @@ export const identifyUserWithUsernamePassword = async (
   username: string,
   password: string
 ) => {
-  await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
-
   const { verificationId } = await client.verifyPassword({
     identifier: {
       type: SignInIdentifier.Username,
@@ -108,9 +102,7 @@ export const registerNewUserWithVerificationCode = async (
   identifier: VerificationCodeIdentifier,
   options?: { fulfillPassword?: boolean }
 ) => {
-  const client = await initExperienceClient();
-
-  await client.initInteraction({ interactionEvent: InteractionEvent.Register });
+  const client = await initExperienceClient(InteractionEvent.Register);
 
   const { verificationId, code } = await successfullySendVerificationCode(client, {
     identifier,
@@ -166,7 +158,6 @@ export const signInWithSocial = async (
   const redirectUri = 'http://localhost:3000';
 
   const client = await initExperienceClient();
-  await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 
   const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
     redirectUri,
@@ -223,7 +214,6 @@ export const signInWithEnterpriseSso = async (
   const redirectUri = 'http://localhost:3000';
 
   const client = await initExperienceClient();
-  await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 
   const { verificationId } = await client.getEnterpriseSsoAuthorizationUri(connectorId, {
     redirectUri,
@@ -257,8 +247,7 @@ export const signInWithEnterpriseSso = async (
 };
 
 export const registerNewUserUsernamePassword = async (username: string, password: string) => {
-  const client = await initExperienceClient();
-  await client.initInteraction({ interactionEvent: InteractionEvent.Register });
+  const client = await initExperienceClient(InteractionEvent.Register);
 
   const { verificationId } = await client.createNewPasswordIdentityVerification({
     identifier: {

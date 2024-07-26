@@ -59,8 +59,7 @@ devFeatureTest.describe('Register interaction with verification code happy path'
         value: userProfile[identifiersTypeToUserProfile[identifierType]]!,
       };
 
-      const client = await initExperienceClient();
-      await client.initInteraction({ interactionEvent: InteractionEvent.Register });
+      const client = await initExperienceClient(InteractionEvent.Register);
 
       const { verificationId, code } = await successfullySendVerificationCode(client, {
         identifier,

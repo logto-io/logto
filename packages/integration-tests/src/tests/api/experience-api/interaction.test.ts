@@ -12,35 +12,11 @@ devFeatureTest.describe('PUT /experience API', () => {
     await userApi.cleanUp();
   });
 
-  it('should throw 404 with interaction_not_found error if no interactionEvent is initiated', async () => {
-    const client = await initExperienceClient();
-
-    await expectRejects(
-      client.updateInteractionEvent({ interactionEvent: InteractionEvent.SignIn }),
-      {
-        code: 'session.interaction_not_found',
-        status: 404,
-      }
-    );
-
-    await expectRejects(
-      client.verifyPassword({
-        identifier: { type: SignInIdentifier.Username, value: 'test' },
-        password: 'test',
-      }),
-      {
-        code: 'session.interaction_not_found',
-        status: 404,
-      }
-    );
-  });
-
   it('PUT new experience API should reset all existing verification records', async () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     await userApi.create({ username, password });
 
     const client = await initExperienceClient();
-    await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
     const { verificationId } = await client.verifyPassword({
       identifier: { type: SignInIdentifier.Username, value: username },
       password,
@@ -56,8 +32,7 @@ devFeatureTest.describe('PUT /experience API', () => {
   });
 
   it('should throw if trying to update interaction event from ForgotPassword to others', async () => {
-    const client = await initExperienceClient();
-    await client.initInteraction({ interactionEvent: InteractionEvent.ForgotPassword });
+    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
 
     await expectRejects(
       client.updateInteractionEvent({ interactionEvent: InteractionEvent.SignIn }),
@@ -70,7 +45,6 @@ devFeatureTest.describe('PUT /experience API', () => {
 
   it('should throw if trying to update interaction event from SignIn and Register to ForgotPassword', async () => {
     const client = await initExperienceClient();
-    await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 
     await expectRejects(
       client.updateInteractionEvent({ interactionEvent: InteractionEvent.ForgotPassword }),
@@ -83,7 +57,6 @@ devFeatureTest.describe('PUT /experience API', () => {
 
   it('should update interaction event from SignIn to Register', async () => {
     const client = await initExperienceClient();
-    await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 
     await expect(
       client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register })

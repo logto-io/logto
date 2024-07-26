@@ -61,7 +61,6 @@ devFeatureTest.describe('Sign-in with verification code', () => {
       };
 
       const client = await initExperienceClient();
-      await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 
       const { verificationId, code } = await successfullySendVerificationCode(client, {
         identifier,
