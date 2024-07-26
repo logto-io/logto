@@ -4,6 +4,7 @@ import { type InvoicesResponse, type SubscriptionPlanResponse } from '@/cloud/ty
 
 export enum ReservedPlanName {
   Free = 'Free',
+  /** @deprecated */
   Hobby = 'Hobby',
   Pro = 'Pro',
   Enterprise = 'Enterprise',

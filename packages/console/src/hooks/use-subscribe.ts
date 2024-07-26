@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { GlobalRoute, TenantsContext } from '@/contexts/TenantsProvider';
 import { createLocalCheckoutSession } from '@/utils/checkout';
@@ -15,6 +16,12 @@ import { dropLeadingSlash } from '@/utils/url';
 import useTenantPathname from './use-tenant-pathname';
 
 type SubscribeProps = {
+  /**
+   * @remarks
+   * Temporarily mark this as optional for backward compatibility, in new pricing model we should always provide `skuId`.
+   */
+  skuId?: string;
+  /** @deprecated in new pricing model */
   planId: string;
   callbackPage?: string;
   tenantId?: string;
@@ -30,6 +37,7 @@ const useSubscribe = () => {
   const [isSubscribeLoading, setIsSubscribeLoading] = useState(false);
 
   const subscribe = async ({
+    skuId,
     planId,
     callbackPage,
     tenantId,
@@ -54,6 +62,7 @@ const useSubscribe = () => {
     try {
       const { redirectUri, sessionId } = await cloudApi.post('/api/checkout-session', {
         body: {
+          skuId,
           planId,
           successCallbackUrl,
           tenantId,
@@ -87,6 +96,20 @@ const useSubscribe = () => {
         tenantId,
       },
     });
+
+    // Should not use hard-coded plan update here, need to update the tenant's subscription data with response from corresponding API.
+    if (isDevFeaturesEnabled) {
+      const { id, ...rest } = await cloudApi.get('/api/tenants/:tenantId/subscription', {
+        params: {
+          tenantId,
+        },
+      });
+      updateTenant(tenantId, {
+        planId: rest.planId,
+        subscription: rest,
+      });
+      return;
+    }
 
     /**
      * Note: need to update the tenant's subscription cache data,

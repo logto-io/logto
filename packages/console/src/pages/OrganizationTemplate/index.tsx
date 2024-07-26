@@ -9,7 +9,7 @@ import OrganizationEmpty from '@/assets/images/organization-empty.svg?react';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { OrganizationTemplateTabs, organizationTemplateLink } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -32,9 +32,13 @@ const basePathname = '/organization-template';
 function OrganizationTemplate() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
-  const isOrganizationsDisabled = isCloud && !currentPlan.quota.organizationsEnabled;
+  const isOrganizationsDisabled =
+    isCloud &&
+    !(isDevFeaturesEnabled
+      ? currentSubscriptionQuota.organizationsEnabled
+      : currentPlan.quota.organizationsEnabled);
   const { navigate } = useTenantPathname();
 
   const handleUpgradePlan = useCallback(() => {

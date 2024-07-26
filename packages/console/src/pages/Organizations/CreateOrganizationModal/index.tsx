@@ -6,7 +6,7 @@ import ReactModal from 'react-modal';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -24,8 +24,12 @@ type Props = {
 function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan } = useContext(SubscriptionDataContext);
-  const isOrganizationsDisabled = isCloud && !currentPlan.quota.organizationsEnabled;
+  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const isOrganizationsDisabled =
+    isCloud &&
+    !(isDevFeaturesEnabled
+      ? currentSubscriptionQuota.organizationsEnabled
+      : currentPlan.quota.organizationsEnabled);
 
   const {
     reset,
