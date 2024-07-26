@@ -7,7 +7,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type VerificationRecord } from './verification-record.js';
+import { type MfaVerificationRecord } from './verification-record.js';
 
 export type BackupCodeVerificationRecordData = {
   id: string;
@@ -24,7 +24,7 @@ export const backupCodeVerificationRecordDataGuard = z.object({
   code: z.string().optional(),
 }) satisfies ToZodObject<BackupCodeVerificationRecordData>;
 
-export class BackupCodeVerification implements VerificationRecord<VerificationType.BackupCode> {
+export class BackupCodeVerification implements MfaVerificationRecord<VerificationType.BackupCode> {
   /**
    * Factory method to create a new BackupCodeVerification instance
    *
@@ -58,6 +58,10 @@ export class BackupCodeVerification implements VerificationRecord<VerificationTy
 
   get isVerified() {
     return Boolean(this.code);
+  }
+
+  get isNewBindMfaVerification() {
+    return false;
   }
 
   async verify(code: string) {

@@ -25,7 +25,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type VerificationRecord } from './verification-record.js';
+import { type MfaVerificationRecord } from './verification-record.js';
 
 export type WebAuthnVerificationRecordData = {
   id: string;
@@ -50,7 +50,7 @@ export const webAuthnVerificationRecordDataGuard = z.object({
   registrationInfo: bindWebAuthnGuard.optional(),
 }) satisfies ToZodObject<WebAuthnVerificationRecordData>;
 
-export class WebAuthnVerification implements VerificationRecord<VerificationType.WebAuthn> {
+export class WebAuthnVerification implements MfaVerificationRecord<VerificationType.WebAuthn> {
   /**
    * Factory method to create a new WebAuthnVerification instance
    *
@@ -102,6 +102,10 @@ export class WebAuthnVerification implements VerificationRecord<VerificationType
 
   get registrationInfo() {
     return this.#registrationInfo;
+  }
+
+  get isNewBindMfaVerification() {
+    return Boolean(this.#registrationInfo ?? this.registrationChallenge);
   }
 
   /**
