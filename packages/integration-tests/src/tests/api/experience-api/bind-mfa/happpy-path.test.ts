@@ -220,11 +220,12 @@ devFeatureTest.describe('Bind MFA APIs happy path', () => {
         status: 422,
       });
 
-      const { codes } = await client.generateMfaBackupCodes();
+      const { codes, verificationId: backupCodeVerificationId } =
+        await client.generateMfaBackupCodes();
 
       expect(codes.length).toBeGreaterThan(0);
 
-      await client.bindBackupCodes();
+      await client.bindMfa(MfaFactor.BackupCode, backupCodeVerificationId);
 
       const { redirectTo } = await client.submitInteraction();
       const userId = await processSession(client, redirectTo);
@@ -261,10 +262,10 @@ devFeatureTest.describe('Bind MFA APIs happy path', () => {
         status: 422,
       });
 
-      const { codes } = await client.generateMfaBackupCodes();
+      const { codes, verificationId } = await client.generateMfaBackupCodes();
       expect(codes.length).toBeGreaterThan(0);
 
-      await client.bindBackupCodes();
+      await client.bindMfa(MfaFactor.BackupCode, verificationId);
 
       const { redirectTo } = await client.submitInteraction();
       await processSession(client, redirectTo);

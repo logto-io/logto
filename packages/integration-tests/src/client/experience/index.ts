@@ -179,6 +179,14 @@ export class ExperienceClient extends MockClient {
       .json<{ verificationId: string }>();
   }
 
+  public async generateMfaBackupCodes() {
+    return api
+      .post(`${experienceRoutes.verification}/backup-code/generate`, {
+        headers: { cookie: this.interactionCookie },
+      })
+      .json<{ verificationId: string; codes: string[] }>();
+  }
+
   public async verifyBackupCode(payload: { code: string }) {
     return api
       .post(`${experienceRoutes.verification}/backup-code/verify`, {
@@ -219,24 +227,10 @@ export class ExperienceClient extends MockClient {
     });
   }
 
-  public async bindMfa(type: MfaFactor.TOTP | MfaFactor.WebAuthn, verificationId: string) {
+  public async bindMfa(type: MfaFactor, verificationId: string) {
     return api.post(`${experienceRoutes.mfa}`, {
       headers: { cookie: this.interactionCookie },
       json: { type, verificationId },
-    });
-  }
-
-  public async generateMfaBackupCodes() {
-    return api
-      .post(`${experienceRoutes.mfa}/backup-codes/generate`, {
-        headers: { cookie: this.interactionCookie },
-      })
-      .json<{ codes: string[] }>();
-  }
-
-  public async bindBackupCodes() {
-    return api.post(`${experienceRoutes.mfa}/backup-codes`, {
-      headers: { cookie: this.interactionCookie },
     });
   }
 }

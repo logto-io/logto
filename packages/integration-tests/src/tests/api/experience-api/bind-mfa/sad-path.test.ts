@@ -82,7 +82,9 @@ devFeatureTest.describe('Bind MFA APIs sad path', () => {
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
 
-      await expectRejects(client.generateMfaBackupCodes(), {
+      const { verificationId } = await client.generateMfaBackupCodes();
+
+      await expectRejects(client.bindMfa(MfaFactor.BackupCode, verificationId), {
         code: 'session.mfa.mfa_factor_not_enabled',
         status: 400,
       });
@@ -131,15 +133,16 @@ devFeatureTest.describe('Bind MFA APIs sad path', () => {
       });
     });
 
-    it('should throw if the interaction is not verified, when generate new backup codes', async () => {
+    it('should throw if the interaction is not verified, when add new backup codes', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       const user = await userApi.create({ username, password });
       await createUserMfaVerification(user.id, MfaFactor.TOTP);
 
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
+      const { verificationId } = await client.generateMfaBackupCodes();
 
-      await expectRejects(client.generateMfaBackupCodes(), {
+      await expectRejects(client.bindMfa(MfaFactor.BackupCode, verificationId), {
         code: 'session.mfa.require_mfa_verification',
         status: 403,
       });
@@ -151,7 +154,10 @@ devFeatureTest.describe('Bind MFA APIs sad path', () => {
 
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
-      await expectRejects(client.generateMfaBackupCodes(), {
+
+      const { verificationId } = await client.generateMfaBackupCodes();
+
+      await expectRejects(client.bindMfa(MfaFactor.BackupCode, verificationId), {
         code: 'session.mfa.backup_code_can_not_be_alone',
         status: 422,
       });
@@ -165,8 +171,9 @@ devFeatureTest.describe('Bind MFA APIs sad path', () => {
       await identifyUserWithUsernamePassword(client, username, password);
       const totpVerificationId = await successfullyCreateAndVerifyTotp(client);
       await client.bindMfa(MfaFactor.TOTP, totpVerificationId);
-      await expectRejects(client.bindBackupCodes(), {
-        code: 'session.mfa.pending_info_not_found',
+
+      await expectRejects(client.bindMfa(MfaFactor.BackupCode, 'invalid_verification'), {
+        code: 'session.verification_session_not_found',
         status: 404,
       });
     });
