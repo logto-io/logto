@@ -18,6 +18,30 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
 ) {
   const { libraries, queries } = tenantContext;
 
+  router.post(`${experienceRoutes.verification}/backup-code/generate`, async (ctx, next) => {
+    const { experienceInteraction } = ctx;
+
+    assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+
+    const backupCodeVerificationRecord = BackupCodeVerification.create(
+      libraries,
+      queries,
+      experienceInteraction.identifiedUserId
+    );
+
+    backupCodeVerificationRecord.generate();
+
+    ctx.experienceInteraction.setVerificationRecord(backupCodeVerificationRecord);
+
+    await ctx.experienceInteraction.save();
+
+    ctx.body = {
+      verificationId: backupCodeVerificationRecord.id,
+    };
+
+    return next();
+  });
+
   router.post(
     `${experienceRoutes.verification}/backup-code/generate`,
     koaGuard({
