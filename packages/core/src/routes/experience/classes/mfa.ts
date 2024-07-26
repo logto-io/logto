@@ -18,7 +18,6 @@ import { deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { generateBackupCodes } from '#src/routes/interaction/utils/backup-code-validation.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -32,8 +31,6 @@ export type MfaData = {
   totp?: BindTotp;
   webAuthn?: BindWebAuthn[];
   backupCode?: BindBackupCode;
-  /** The backup codes that have been generated but not yet added to the bindMfa queue */
-  pendingBackupCodes?: string[];
 };
 
 export const mfaDataGuard = z.object({
@@ -41,7 +38,6 @@ export const mfaDataGuard = z.object({
   totp: bindTotpGuard.optional(),
   webAuthn: z.array(bindWebAuthnGuard).optional(),
   backupCode: bindBackupCodeGuard.optional(),
-  pendingBackupCodes: z.array(z.string()).optional(),
 }) satisfies ToZodObject<MfaData>;
 
 export const userMfaDataKey = 'mfa';
@@ -81,15 +77,6 @@ export class Mfa {
   #totp?: BindTotp;
   #webAuthn?: BindWebAuthn[];
   #backupCode?: BindBackupCode;
-  /**
-   * We split the backup codes binding flow into two steps:
-   * 1. Generate backup codes
-   * 2. Add backup codes
-   *
-   * This is to prevent the user may not receive the backup codes after generating them.
-   * User need to explicitly send the binding request to add the backup codes.
-   */
-  #pendingBackupCodes?: string[];
 
   constructor(
     private readonly libraries: Libraries,
@@ -98,13 +85,12 @@ export class Mfa {
     private readonly interactionContext: InteractionContext
   ) {
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
-    const { mfaSkipped, totp, webAuthn, backupCode, pendingBackupCodes } = data;
+    const { mfaSkipped, totp, webAuthn, backupCode } = data;
 
     this.#mfaSkipped = mfaSkipped;
     this.#totp = totp;
     this.#webAuthn = webAuthn;
     this.#backupCode = backupCode;
-    this.#pendingBackupCodes = pendingBackupCodes;
   }
 
   get mfaSkipped() {
@@ -224,19 +210,25 @@ export class Mfa {
   }
 
   /**
-   * Generates new backup codes for the user.
+   * Add new backup codes to the user account.
    *
+   * - Any existing backup code factor will be replaced with the new one.
+   *
+   * @throws {RequestError} with status 404 if no pending backup codes are found
    * @throws {RequestError} with status 422 if Backup Code is not enabled in the sign-in experience
    * @throws {RequestError} with status 422 if the backup code is the only MFA factor
-   **/
-  async generateBackupCodes() {
+   */
+  async addBackupCodeByVerificationId(verificationId: string) {
+    const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
+      VerificationType.BackupCode,
+      verificationId
+    );
+
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.BackupCode]);
 
     const { mfaVerifications } = await this.interactionContext.getIdentifierUser();
-
     const userHasOtherMfa = mfaVerifications.some((mfa) => mfa.type !== MfaFactor.BackupCode);
     const hasOtherNewMfa = Boolean(this.#totp ?? this.#webAuthn?.length);
-
     assertThat(
       userHasOtherMfa || hasOtherNewMfa,
       new RequestError({
@@ -245,35 +237,7 @@ export class Mfa {
       })
     );
 
-    const codes = generateBackupCodes();
-    this.#pendingBackupCodes = codes;
-
-    return this.#pendingBackupCodes;
-  }
-
-  /**
-   * Add backup codes to the user account.
-   *
-   * - This is to ensure the user has received the backup codes before adding them to the account.
-   * - Any existing backup code factor will be replaced with the new one.
-   *
-   * @throws {RequestError} with status 404 if no pending backup codes are found
-   */
-  async addBackupCodes() {
-    assertThat(
-      this.#pendingBackupCodes?.length,
-      new RequestError({
-        code: 'session.mfa.pending_info_not_found',
-        status: 404,
-      })
-    );
-
-    this.#backupCode = {
-      type: MfaFactor.BackupCode,
-      codes: this.#pendingBackupCodes,
-    };
-
-    this.#pendingBackupCodes = undefined;
+    this.#backupCode = verificationRecord.toBindMfa();
   }
 
   /**
@@ -338,7 +302,6 @@ export class Mfa {
       totp: this.#totp,
       webAuthn: this.#webAuthn,
       backupCode: this.#backupCode,
-      pendingBackupCodes: this.#pendingBackupCodes,
     };
   }
 
