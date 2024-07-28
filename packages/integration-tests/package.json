@@ -10,6 +10,7 @@
     "#src/*": "./lib/*"
   },
   "scripts": {
+    "check": "tsc --noEmit",
     "build": "tsup",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "pnpm build && pnpm test:api && pnpm test:experience && pnpm test:console",

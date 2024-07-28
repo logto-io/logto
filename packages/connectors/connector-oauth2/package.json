@@ -26,6 +26,7 @@
   ],
   "scripts": {
     "precommit": "lint-staged",
+    "check": "tsc --noEmit",
     "build": "tsup && tsc --declaration --emitDeclarationOnly",
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
