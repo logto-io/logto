@@ -5,6 +5,8 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
+import { buildUpdateWhereWithPool } from '../database/update-where.js';
+
 type ApplicationCredentials = ApplicationSecret & {
   /** The original application secret that stored in the `applications` table. */
   originalSecret: string;
@@ -16,6 +18,8 @@ export class ApplicationSecretQueries {
   public readonly insert = buildInsertIntoWithPool(this.pool)(ApplicationSecrets, {
     returning: true,
   });
+
+  public readonly update = buildUpdateWhereWithPool(this.pool)(ApplicationSecrets, true);
 
   constructor(public readonly pool: CommonQueryMethods) {}
 

@@ -104,4 +104,27 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
       return next();
     }
   );
+
+  router.patch(
+    '/applications/:id/secrets/:name',
+    koaGuard({
+      params: z.object({ id: z.string(), name: z.string() }),
+      body: ApplicationSecrets.updateGuard.pick({ name: true }).required(),
+      response: ApplicationSecrets.guard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id: appId, name },
+        body,
+      } = ctx.guard;
+
+      ctx.body = await queries.applicationSecrets.update({
+        where: { applicationId: appId, name },
+        set: body,
+        jsonbMode: 'replace',
+      });
+      return next();
+    }
+  );
 }

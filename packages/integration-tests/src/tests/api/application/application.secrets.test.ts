@@ -8,6 +8,7 @@ import {
   deleteApplication,
   deleteApplicationSecret,
   getApplicationSecrets,
+  updateApplicationSecret,
 } from '#src/api/application.js';
 import { randomString } from '#src/utils.js';
 
@@ -156,5 +157,24 @@ describe('application secrets', () => {
       deleteApplicationSecret(application.id, defaultSecretName),
     ]);
     expect(await getApplicationSecrets(application.id)).toEqual([]);
+  });
+
+  it('should be able to update application secret', async () => {
+    const application = await createApplication('application', ApplicationType.MachineToMachine);
+    const secretName = randomString();
+    await createApplicationSecret({
+      applicationId: application.id,
+      name: secretName,
+    });
+
+    const newSecretName = randomString();
+    const updatedSecret = await updateApplicationSecret(application.id, secretName, {
+      name: newSecretName,
+    });
+    expect(updatedSecret).toEqual(
+      expect.objectContaining({ applicationId: application.id, name: newSecretName })
+    );
+
+    await deleteApplicationSecret(application.id, newSecretName);
   });
 });

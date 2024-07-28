@@ -38,7 +38,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const coreOrigins = urlSet.origins;
   const developmentOrigins = isProduction
     ? []
-    : ['ws:', ...['6001', '6002', '6003'].map((port) => `ws://localhost:${port}`)];
+    : [
+        'ws:',
+        ...['6001', '6002', '6003'].flatMap((port) => [
+          `ws://localhost:${port}`,
+          `http://localhost:${port}`,
+        ]),
+      ];
   const logtoOrigin = 'https://*.logto.io';
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';

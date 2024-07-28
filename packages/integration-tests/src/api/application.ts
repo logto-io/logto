@@ -148,6 +148,17 @@ export const getApplicationSecrets = async (applicationId: string) =>
 export const deleteApplicationSecret = async (applicationId: string, secretName: string) =>
   authedAdminApi.delete(`applications/${applicationId}/secrets/${secretName}`);
 
+export const updateApplicationSecret = async (
+  applicationId: string,
+  secretName: string,
+  body: Record<string, unknown>
+) =>
+  authedAdminApi
+    .patch(`applications/${applicationId}/secrets/${secretName}`, {
+      json: body,
+    })
+    .json<ApplicationSecret>();
+
 export const deleteLegacyApplicationSecret = async (applicationId: string) =>
   authedAdminApi.delete(`applications/${applicationId}/legacy-secret`);
 
