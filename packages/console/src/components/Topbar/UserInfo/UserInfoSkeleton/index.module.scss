@@ -8,17 +8,17 @@
   border-radius: 8px;
 
   .image {
-    @include _.shimmering-animation;
     width: 36px;
     height: 36px;
     margin-right: _.unit(2);
     border-radius: 6px;
+    @include _.shimmering-animation;
   }
 
   .name {
-    @include _.shimmering-animation;
     width: 85px;
     height: 20px;
     color: var(--color-text);
+    @include _.shimmering-animation;
   }
 }
