@@ -31,7 +31,7 @@ Prepare configuration for the Logto client:
 const config: LogtoExpressConfig = {
   endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
-  appSecret: '${props.app.secret}',
+  appSecret: '${props.secrets[0]?.value ?? props.app.secret}',
   baseUrl: 'http://localhost:3000', // Change to your own base URL
 };
 `}

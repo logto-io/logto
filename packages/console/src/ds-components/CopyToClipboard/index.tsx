@@ -60,7 +60,10 @@ function CopyToClipboard(
       return value;
     }
 
-    return '•'.repeat(value.length);
+    return Array.from({ length: Math.max(Math.floor((value.length / 5) * 3), 1) }).map(
+      // eslint-disable-next-line react/no-array-index-key -- No need to persist the key
+      (_, index) => <span key={index} className={styles.dot} />
+    );
   }, [hasVisibilityToggle, showHiddenContent, value]);
 
   useEffect(() => {
@@ -107,7 +110,7 @@ function CopyToClipboard(
         {variant !== 'icon' && (
           <div
             className={classNames(styles.content, isWordWrapAllowed && styles.wrapContent)}
-            style={valueStyle}
+            style={{ width: `${value.length}ch`, ...valueStyle }}
           >
             {displayValue}
           </div>
@@ -124,11 +127,7 @@ function CopyToClipboard(
             </IconButton>
           </Tooltip>
         )}
-        <Tooltip
-          isSuccessful={copyState === 'copied'}
-          anchorClassName={styles.copyToolTipAnchor}
-          content={t(copyState)}
-        >
+        <Tooltip isSuccessful={copyState === 'copied'} content={t(copyState)}>
           <IconButton
             ref={copyIconReference}
             className={styles.iconButton}

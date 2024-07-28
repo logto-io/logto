@@ -11,15 +11,17 @@ import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 
 import AppGuide from '../../components/AppGuide';
+import { type ApplicationSecretRow } from '../EndpointsAndCredentials';
 
 import styles from './index.module.scss';
 
 type Props = {
   readonly app: ApplicationResponse;
+  readonly secrets: ApplicationSecretRow[];
   readonly onClose: () => void;
 };
 
-function GuideDrawer({ app, onClose }: Props) {
+function GuideDrawer({ app, secrets, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.guide' });
   const { getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
@@ -89,6 +91,7 @@ function GuideDrawer({ app, onClose }: Props) {
           className={styles.guide}
           guideId={selectedGuide.id}
           app={app}
+          secrets={secrets}
           onClose={() => {
             setSelectedGuide(undefined);
           }}

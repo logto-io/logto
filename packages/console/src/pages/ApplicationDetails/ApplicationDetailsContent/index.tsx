@@ -32,7 +32,7 @@ import { trySubmitSafe } from '@/utils/form';
 
 import BackchannelLogout from './BackchannelLogout';
 import Branding from './Branding';
-import EndpointsAndCredentials from './EndpointsAndCredentials';
+import EndpointsAndCredentials, { type ApplicationSecretRow } from './EndpointsAndCredentials';
 import GuideDrawer from './GuideDrawer';
 import MachineLogs from './MachineLogs';
 import MachineToMachineApplicationRoles from './MachineToMachineApplicationRoles';
@@ -44,11 +44,12 @@ import { type ApplicationForm, applicationFormDataParser } from './utils';
 
 type Props = {
   readonly data: ApplicationResponse;
+  readonly secrets: ApplicationSecretRow[];
   readonly oidcConfig: SnakeCaseOidcConfig;
   readonly onApplicationUpdated: () => void;
 };
 
-function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: Props) {
+function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { navigate } = useTenantPathname();
@@ -154,7 +155,7 @@ function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: P
         ]}
       />
       <Drawer isOpen={isReadmeOpen} onClose={onCloseDrawer}>
-        <GuideDrawer app={data} onClose={onCloseDrawer} />
+        <GuideDrawer app={data} secrets={secrets} onClose={onCloseDrawer} />
       </Drawer>
       <DeleteConfirmModal
         isOpen={isDeleteFormOpen}
