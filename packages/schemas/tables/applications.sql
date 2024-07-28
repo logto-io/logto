@@ -7,6 +7,7 @@ create table applications (
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
   name varchar(256) not null,
+  /** @deprecated The internal client secret. Note it is only used for internal validation, and the actual secret should be stored in the `application_secrets` table. You should NOT use it unless you are sure what you are doing. */
   secret varchar(64) not null,
   description text,
   type application_type not null,

@@ -17,7 +17,6 @@ import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import ActionsButton from '@/components/ActionsButton';
 import FormCard from '@/components/FormCard';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { openIdProviderConfigPath, openIdProviderPath } from '@/consts/oidc';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
@@ -239,17 +238,7 @@ function EndpointsAndCredentials({
       <FormField title="application_details.application_id">
         <CopyToClipboard displayType="block" value={id} variant="border" />
       </FormField>
-      {!isDevFeaturesEnabled && shouldShowAppSecrets && (
-        <FormField title="application_details.application_secret">
-          <CopyToClipboard
-            hasVisibilityToggle
-            displayType="block"
-            value={secret}
-            variant="border"
-          />
-        </FormField>
-      )}
-      {isDevFeaturesEnabled && shouldShowAppSecrets && (
+      {shouldShowAppSecrets && (
         <FormField title="application_details.application_secret_other">
           {secretsData.length === 0 && !secrets.error ? (
             <>
