@@ -36,6 +36,7 @@ import { buildOperationId, customRoutes, throwByDifference } from './utils/opera
 import {
   buildParameters,
   paginationParameters,
+  searchParameters,
   buildPathIdParameters,
   mergeParameters,
   customParameters,
@@ -55,6 +56,7 @@ type RouteObject = {
   operation: OpenAPIV3.OperationObject;
 };
 
+// eslint-disable-next-line complexity
 const buildOperation = (
   method: OpenAPIV3.HttpMethods,
   stack: IMiddleware[],
@@ -71,6 +73,7 @@ const buildOperation = (
   const queryParameters = [
     ...buildParameters(query, 'query'),
     ...(hasPagination ? paginationParameters : []),
+    ...(path === '/users' && method === 'get' ? [searchParameters] : []),
   ];
 
   const requestBody = body && {
