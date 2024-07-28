@@ -10,7 +10,7 @@
     "#src/*": "./lib/*"
   },
   "scripts": {
-    "build": "rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
+    "build": "tsup",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "pnpm build && pnpm test:api && pnpm test:experience && pnpm test:console",
     "test:api": "pnpm test:only -i ./lib/tests/api/",
@@ -47,6 +47,7 @@
     "openapi-types": "^12.1.3",
     "prettier": "^3.0.0",
     "puppeteer": "^22.6.5",
+    "tsup": "^8.1.0",
     "typescript": "^5.5.3",
     "zod": "^3.23.8"
   },
