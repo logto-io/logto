@@ -1,5 +1,4 @@
 import {
-  type ApplicationSecret,
   DomainStatus,
   type Application,
   type SnakeCaseOidcConfig,
@@ -15,7 +14,6 @@ import CaretDown from '@/assets/icons/caret-down.svg?react';
 import CaretUp from '@/assets/icons/caret-up.svg?react';
 import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
-import ActionsButton from '@/components/ActionsButton';
 import FormCard from '@/components/FormCard';
 import { openIdProviderConfigPath, openIdProviderPath } from '@/consts/oidc';
 import { AppDataContext } from '@/contexts/AppDataProvider';
@@ -24,19 +22,18 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
-import { type Column } from '@/ds-components/Table/types';
 import TextLink from '@/ds-components/TextLink';
-import useApi, { type RequestError } from '@/hooks/use-api';
+import { type RequestError } from '@/hooks/use-api';
 import useCustomDomain from '@/hooks/use-custom-domain';
 
-import CreateSecretModal from './CreateSecretModal';
+import CreateSecretModal from '../CreateSecretModal';
+
 import styles from './index.module.scss';
+import { type ApplicationSecretRow, useSecretTableColumns } from './use-secret-table-columns';
+
+export { type ApplicationSecretRow } from './use-secret-table-columns';
 
 const isLegacySecret = (secret: string) => !secret.startsWith(internalPrefix);
-
-type ApplicationSecretRow = Pick<ApplicationSecret, 'name' | 'value' | 'expiresAt'> & {
-  isLegacy?: boolean;
-};
 
 type Props = {
   readonly app: Application;
@@ -55,7 +52,6 @@ function EndpointsAndCredentials({
   const { data: customDomain, applyDomain: applyCustomDomain } = useCustomDomain();
   const [showCreateSecretModal, setShowCreateSecretModal] = useState(false);
   const secrets = useSWR<ApplicationSecretRow[], RequestError>(`api/applications/${id}/secrets`);
-  const api = useApi();
   const shouldShowAppSecrets = hasSecrets(type);
 
   const toggleShowMoreEndpoints = useCallback(() => {
@@ -80,57 +76,21 @@ function EndpointsAndCredentials({
     ],
     [secret, secrets.data, t]
   );
-  const tableColumns: Array<Column<ApplicationSecretRow>> = useMemo(
-    () => [
-      {
-        title: t('general.name'),
-        dataIndex: 'name',
-        colSpan: 3,
-        render: ({ name }) => <span>{name}</span>,
-      },
-      {
-        title: t('application_details.secrets.value'),
-        dataIndex: 'value',
-        colSpan: 6,
-        render: ({ value }) => (
-          <CopyToClipboard hasVisibilityToggle displayType="block" value={value} variant="text" />
-        ),
-      },
-      {
-        title: t('application_details.secrets.expires_at'),
-        dataIndex: 'expiresAt',
-        colSpan: 3,
-        render: ({ expiresAt }) => (
-          <span>
-            {expiresAt
-              ? new Date(expiresAt).toLocaleString()
-              : t('application_details.secrets.never')}
-          </span>
-        ),
-      },
-      {
-        title: '',
-        dataIndex: 'actions',
-        render: ({ name, isLegacy }) => (
-          <ActionsButton
-            fieldName="application_details.application_secret"
-            deleteConfirmation="application_details.secrets.delete_confirmation"
-            onDelete={async () => {
-              if (isLegacy) {
-                await api.delete(`api/applications/${id}/legacy-secret`);
-                onApplicationUpdated();
-              } else {
-                await api.delete(`api/applications/${id}/secrets/${encodeURIComponent(name)}`);
-                void secrets.mutate();
-              }
-            }}
-          />
-        ),
-      },
-    ],
-    [api, id, onApplicationUpdated, secrets, t]
-  );
 
+  const onUpdated = useCallback(
+    (isLegacy: boolean) => {
+      if (isLegacy) {
+        onApplicationUpdated();
+      } else {
+        void secrets.mutate();
+      }
+    },
+    [onApplicationUpdated, secrets]
+  );
+  const tableColumns = useSecretTableColumns({
+    appId: id,
+    onUpdated,
+  });
   return (
     <FormCard
       title="application_details.endpoints_and_credentials"

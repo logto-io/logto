@@ -9,7 +9,7 @@ import useSWR from 'swr';
 import Delete from '@/assets/icons/delete.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import ApplicationName from '@/components/ApplicationName';
-import DateTime from '@/components/DateTime';
+import { LocaleDate } from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import UserPreview from '@/components/ItemPreview/UserPreview';
 import { defaultPageSize } from '@/consts';
@@ -103,7 +103,7 @@ function RoleUsers() {
             title: t('role_details.users.latest_sign_in_column'),
             dataIndex: 'latestSignIn',
             colSpan: 5,
-            render: ({ lastSignInAt }) => <DateTime>{lastSignInAt}</DateTime>,
+            render: ({ lastSignInAt }) => <LocaleDate>{lastSignInAt}</LocaleDate>,
           },
           {
             title: null,

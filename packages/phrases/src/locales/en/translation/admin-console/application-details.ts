@@ -172,12 +172,14 @@ const application_details = {
     delete_confirmation:
       'This action cannot be undone. Are you sure you want to delete this secret?',
     legacy_secret: 'Legacy secret',
+    expired: 'Expired',
+    expired_tooltip: 'This secret was expired on {{date}}.',
     create_modal: {
       title: 'Create application secret',
       expiration: 'Expiration',
       expiration_description: 'The secret will expire at {{date}}.',
       expiration_description_never:
-        'The secret will never expire. We strongly recommend setting an expiration date.',
+        'The secret will never expire. We recommend setting an expiration date for enhanced security.',
       days: '{{count}} day',
       days_other: '{{count}} days',
     },

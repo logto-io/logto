@@ -36,7 +36,7 @@ function CreateSecretModal({ appId, isOpen, onClose }: Props) {
     formState: { errors, isSubmitting },
     handleSubmit,
     reset,
-  } = useForm<FormData>({ defaultValues: { name: '', expiration: String(days[0]) } });
+  } = useForm<FormData>({ defaultValues: { name: '', expiration: neverExpires } });
   const onCloseHandler = useCallback(
     (created?: ApplicationSecret) => {
       reset();
