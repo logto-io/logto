@@ -5,7 +5,6 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import ProtectedAppDarkIcon from '@/assets/icons/protected-app-dark.svg?react';
 import ProtectedAppIcon from '@/assets/icons/protected-app.svg?react';
-import { BetaTag } from '@/components/FeatureTag';
 import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -48,7 +47,6 @@ function ProtectedAppCard({
               <div className={isInAppCreationPage ? styles.label : styles.title}>
                 {t(isInAppCreationPage ? 'name' : 'title')}
               </div>
-              <BetaTag />
             </div>
             <div className={styles.description}>
               <Trans
