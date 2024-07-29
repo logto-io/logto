@@ -32,6 +32,7 @@ import webNextAppRouter from './web-next-app-router/index';
 import webNextAuth from './web-next-auth/index';
 import webNuxt from './web-nuxt/index';
 import webOutline from './web-outline/index';
+import webPassport from './web-passport/index';
 import webPhp from './web-php/index';
 import webPython from './web-python/index';
 import webRuby from './web-ruby/index';
@@ -244,6 +245,13 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-outline/logo.svg?react')),
     Component: lazy(async () => import('./web-outline/README.mdx')),
     metadata: webOutline,
+  },
+  {
+    order: 6.1,
+    id: 'web-passport',
+    Logo: lazy(async () => import('./web-passport/logo.svg?react')),
+    Component: lazy(async () => import('./web-passport/README.mdx')),
+    metadata: webPassport,
   },
   {
     order: 999,
