@@ -138,7 +138,7 @@ export const mergeUserMfaVerifications = (
 /**
  * Post affiliate data to the cloud service.
  *
- * @remarks forked from {@link routes/interaction/actions/helpers.ts}
+ * @remarks forked from `routes/interaction/actions/helpers.ts`
  */
 export const postAffiliateLogs = async (
   ctx: IRouterContext,

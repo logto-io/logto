@@ -91,7 +91,7 @@ export class ProvisionLibrary {
     // TODO: New user created hooks
     // TODO: log
 
-    this.triggerRegistrationAffiliateAndAnalyticsHooks(user);
+    this.triggerAnalyticReports(user);
 
     return user;
   }
@@ -270,7 +270,7 @@ export class ProvisionLibrary {
       isCreatingFirstAdminUser && !isCloud && defaultManagementApiAdminName // OSS uses the legacy Management API user role
     );
 
-  private readonly triggerRegistrationAffiliateAndAnalyticsHooks = ({ id }: User) => {
+  private readonly triggerAnalyticReports = ({ id }: User) => {
     appInsights.client?.trackEvent({
       name: getEventName(Component.Core, CoreEvent.Register),
     });
