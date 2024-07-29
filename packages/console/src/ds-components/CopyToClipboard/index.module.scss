@@ -72,11 +72,6 @@
   }
 
   .dot {
-    flex-shrink: 0;
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--color-text-secondary);
+    -webkit-text-stroke: 1px var(--color-text);
   }
 }

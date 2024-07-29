@@ -60,10 +60,7 @@ function CopyToClipboard(
       return value;
     }
 
-    return Array.from({ length: Math.max(Math.floor((value.length / 5) * 3), 1) }).map(
-      // eslint-disable-next-line react/no-array-index-key -- No need to persist the key
-      (_, index) => <span key={index} className={styles.dot} />
-    );
+    return <span className={styles.dot}>{'•'.repeat(value.length)}</span>;
   }, [hasVisibilityToggle, showHiddenContent, value]);
 
   useEffect(() => {

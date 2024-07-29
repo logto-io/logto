@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ActionsButton from '@/components/ActionsButton';
+import { LocaleDateTime } from '@/components/DateTime';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import { type Column } from '@/ds-components/Table/types';
 import { Tooltip } from '@/ds-components/Tip';
@@ -68,7 +69,7 @@ export const useSecretTableColumns = ({ appId, onUpdated }: UseSecretTableColumn
               compareDesc(expiresAt, new Date()) === 1 ? (
                 <Expired expiresAt={new Date(expiresAt)} />
               ) : (
-                new Date(expiresAt).toLocaleString()
+                <LocaleDateTime>{expiresAt}</LocaleDateTime>
               )
             ) : (
               t('application_details.secrets.never')

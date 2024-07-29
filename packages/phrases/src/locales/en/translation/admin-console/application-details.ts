@@ -179,7 +179,7 @@ const application_details = {
       expiration: 'Expiration',
       expiration_description: 'The secret will expire at {{date}}.',
       expiration_description_never:
-        'The secret will never expire. We recommend setting an expiration date for better security.',
+        'The secret will never expire. We recommend setting an expiration date for enhanced security.',
       days: '{{count}} day',
       days_other: '{{count}} days',
     },

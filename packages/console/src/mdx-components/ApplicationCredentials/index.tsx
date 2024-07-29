@@ -9,8 +9,8 @@ import TextLink from '@/ds-components/TextLink';
 import styles from './index.module.scss';
 
 function ApplicationCredentials() {
-  const { app } = useContext(GuideContext);
-  const { id, secret } = app ?? {};
+  const { app, secrets } = useContext(GuideContext);
+  const { id } = app ?? {};
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -37,12 +37,12 @@ function ApplicationCredentials() {
           <CopyToClipboard displayType="block" value={id} variant="border" />
         </FormField>
       )}
-      {secret && (
+      {secrets?.[0] && (
         <FormField title="application_details.application_secret">
           <CopyToClipboard
             hasVisibilityToggle
             displayType="block"
-            value={secret}
+            value={secrets[0].value}
             variant="border"
           />
         </FormField>

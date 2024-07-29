@@ -8,7 +8,7 @@ import Plus from '@/assets/icons/plus.svg?react';
 import UsersEmptyDark from '@/assets/images/users-empty-dark.svg?react';
 import UsersEmpty from '@/assets/images/users-empty.svg?react';
 import ApplicationName from '@/components/ApplicationName';
-import DateTime from '@/components/DateTime';
+import { LocaleDate } from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
@@ -104,7 +104,7 @@ function Users() {
             title: t('users.latest_sign_in'),
             dataIndex: 'lastSignInAt',
             colSpan: 5,
-            render: ({ lastSignInAt }) => <DateTime>{lastSignInAt}</DateTime>,
+            render: ({ lastSignInAt }) => <LocaleDate>{lastSignInAt}</LocaleDate>,
           },
         ],
         filter: (

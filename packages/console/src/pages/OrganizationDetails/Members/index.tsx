@@ -6,7 +6,7 @@ import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg?react';
 import ActionsButton from '@/components/ActionsButton';
-import DateTime from '@/components/DateTime';
+import { LocaleDate } from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import UserPreview from '@/components/ItemPreview/UserPreview';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
@@ -96,7 +96,7 @@ function Members() {
             dataIndex: 'lastSignInAt',
             title: t('users.latest_sign_in'),
             colSpan: 5,
-            render: ({ lastSignInAt }) => <DateTime>{lastSignInAt}</DateTime>,
+            render: ({ lastSignInAt }) => <LocaleDate>{lastSignInAt}</LocaleDate>,
           },
           {
             dataIndex: 'actions',
