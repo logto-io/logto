@@ -182,11 +182,9 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         );
       }
 
-      const getSecret = () =>
-        EnvSet.values.isDevFeaturesEnabled ? generateInternalSecret() : generateStandardSecret();
       const application = await queries.applications.insertApplication({
         id: generateStandardId(),
-        secret: getSecret(),
+        secret: generateInternalSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...conditional(
           rest.type === ApplicationType.Protected &&
@@ -196,7 +194,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         ...rest,
       });
 
-      if (EnvSet.values.isDevFeaturesEnabled && hasSecrets(application.type)) {
+      if (hasSecrets(application.type)) {
         await queries.applicationSecrets.insert({
           name: 'Default secret',
           applicationId: application.id,

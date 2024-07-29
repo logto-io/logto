@@ -27,6 +27,7 @@ import {
   devFeatureTag,
   findSupplementFiles,
   normalizePath,
+  pruneSwaggerDocument,
   removeUnnecessaryOperations,
   shouldThrow,
   validateSupplement,
@@ -298,6 +299,8 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         }),
       baseDocument
     );
+
+    pruneSwaggerDocument(data);
 
     if (EnvSet.values.isUnitTest) {
       getConsoleLogFromContext(ctx).warn('Skip validating swagger document in unit test.');

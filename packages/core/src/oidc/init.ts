@@ -22,7 +22,7 @@ import Provider, { errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
 import snakecaseKeys from 'snakecase-keys';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
@@ -410,10 +410,7 @@ export default function initOidc(
     return next();
   });
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    oidc.use(koaAppSecretTranspilation(queries));
-  }
-
+  oidc.use(koaAppSecretTranspilation(queries));
   oidc.use(koaBodyEtag());
 
   return oidc;

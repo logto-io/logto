@@ -66,9 +66,7 @@ const createRouters = (tenant: TenantContext) => {
   applicationRoleRoutes(managementRouter, tenant);
   applicationProtectedAppMetadataRoutes(managementRouter, tenant);
   applicationOrganizationRoutes(managementRouter, tenant);
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    applicationSecretRoutes(managementRouter, tenant);
-  }
+  applicationSecretRoutes(managementRouter, tenant);
 
   // Third-party application related routes
   applicationUserConsentScopeRoutes(managementRouter, tenant);

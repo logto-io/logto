@@ -9,11 +9,11 @@ import {
   deleteApplicationSecret,
   getApplicationSecrets,
 } from '#src/api/application.js';
-import { devFeatureTest, randomString } from '#src/utils.js';
+import { randomString } from '#src/utils.js';
 
 const defaultSecretName = 'Default secret';
 
-devFeatureTest.describe('application secrets', () => {
+describe('application secrets', () => {
   const applications: Application[] = [];
   const createApplication = async (...args: Parameters<typeof createApplicationApi>) => {
     const created = await createApplicationApi(...args);
