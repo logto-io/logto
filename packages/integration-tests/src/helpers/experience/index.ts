@@ -141,6 +141,22 @@ export const registerNewUserWithVerificationCode = async (
   return userId;
 };
 
+export const identifyUserWithEmailVerificationCode = async (
+  client: ExperienceClient,
+  email: string
+) => {
+  const { verificationId, code } = await successfullySendVerificationCode(client, {
+    identifier: { type: SignInIdentifier.Email, value: email },
+    interactionEvent: InteractionEvent.ForgotPassword,
+  });
+  await successfullyVerifyVerificationCode(client, {
+    identifier: { type: SignInIdentifier.Email, value: email },
+    verificationId,
+    code,
+  });
+  await client.identifyUser({ verificationId });
+};
+
 /**
  *
  * @param socialUserInfo The social user info that will be returned by the social connector.
@@ -264,4 +280,19 @@ export const registerNewUserUsernamePassword = async (username: string, password
   await logoutClient(client);
 
   return userId;
+};
+
+export const fulfillUserEmail = async (client: ExperienceClient, email: string) => {
+  const { verificationId, code } = await successfullySendVerificationCode(client, {
+    identifier: { type: SignInIdentifier.Email, value: email },
+    interactionEvent: InteractionEvent.Register,
+  });
+
+  await successfullyVerifyVerificationCode(client, {
+    identifier: { type: SignInIdentifier.Email, value: email },
+    verificationId,
+    code,
+  });
+
+  await client.updateProfile({ type: SignInIdentifier.Email, verificationId });
 };

@@ -14,17 +14,17 @@ import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas'
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
 import ExperienceInteraction from './classes/experience-interaction.js';
 import { experienceRoutes } from './const.js';
-import koaExperienceInteraction, {
-  type WithExperienceInteractionContext,
-} from './middleware/koa-experience-interaction.js';
+import { koaExperienceInteractionHooks } from './middleware/koa-experience-interaction-hooks.js';
+import koaExperienceInteraction from './middleware/koa-experience-interaction.js';
 import profileRoutes from './profile-routes.js';
+import { type ExperienceInteractionRouterContext } from './types.js';
 import backupCodeVerificationRoutes from './verification-routes/backup-code-verification.js';
 import enterpriseSsoVerificationRoutes from './verification-routes/enterprise-sso-verification.js';
 import newPasswordIdentityVerificationRoutes from './verification-routes/new-password-identity-verification.js';
@@ -39,13 +39,14 @@ type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : nev
 export default function experienceApiRoutes<T extends AnonymousRouter>(
   ...[anonymousRouter, tenant]: RouterInitArgs<T>
 ) {
-  const { queries } = tenant;
+  const { provider, libraries } = tenant;
 
   const experienceRouter =
     // @ts-expect-error for good koa types
     // eslint-disable-next-line no-restricted-syntax
-    (anonymousRouter as Router<unknown, WithExperienceInteractionContext<RouterContext<T>>>).use(
-      koaAuditLog(queries),
+    (anonymousRouter as Router<unknown, ExperienceInteractionRouterContext<RouterContext<T>>>).use(
+      koaInteractionDetails(provider),
+      koaExperienceInteractionHooks(libraries),
       koaExperienceInteraction(tenant)
     );
 

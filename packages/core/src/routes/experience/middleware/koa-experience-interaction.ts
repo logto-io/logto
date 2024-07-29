@@ -5,6 +5,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 
 import ExperienceInteraction from '../classes/experience-interaction.js';
 import { experienceRoutes } from '../const.js';
+import { type WithHooksAndLogsContext } from '../types.js';
 
 export type WithExperienceInteractionContext<ContextT extends WithLogContext = WithLogContext> =
   ContextT & {
@@ -20,22 +21,22 @@ export type WithExperienceInteractionContext<ContextT extends WithLogContext = W
  */
 export default function koaExperienceInteraction<
   StateT,
-  ContextT extends WithLogContext,
+  ContextT extends WithHooksAndLogsContext,
   ResponseT,
 >(
   tenant: TenantContext
 ): MiddlewareType<StateT, WithExperienceInteractionContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
-    const { method, path } = ctx.request;
+    const {
+      interactionDetails,
+      request: { method, path },
+    } = ctx;
 
-    // Should not apply the koaExperienceInteraction middleware to the PUT /experience route.
-    // New ExperienceInteraction instance are supposed to be created in the PUT /experience route.
+    // Should not retrieve the interaction details for the PUT /experience request.
+    // New ExperienceInteraction instance supposed to be created for this request.
     if (method === 'PUT' && path === `${experienceRoutes.prefix}`) {
       return next();
     }
-
-    const { provider } = tenant;
-    const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
 
     ctx.experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 

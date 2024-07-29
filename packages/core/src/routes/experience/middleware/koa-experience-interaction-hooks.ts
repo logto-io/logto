@@ -1,52 +1,58 @@
-import { conditionalString, trySafe } from '@silverhand/essentials';
-import type { MiddlewareType } from 'koa';
-import type { IRouterParamContext } from 'koa-router';
+import { InteractionEvent } from '@logto/schemas';
+import { conditionalString, noop, trySafe } from '@silverhand/essentials';
+import { type MiddlewareType } from 'koa';
+import { type IRouterParamContext } from 'koa-router';
+import { z } from 'zod';
 
 import {
   DataHookContextManager,
   InteractionHookContextManager,
 } from '#src/libraries/hook/context-manager.js';
-import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
-import { getInteractionStorage } from '../utils/interaction.js';
+const interactionEventGuard = z.object({
+  interactionEvent: z.nativeEnum(InteractionEvent),
+});
 
-export type WithInteractionHooksContext<
+export type WithExperienceInteractionHooksContext<
   ContextT extends IRouterParamContext = IRouterParamContext,
 > = ContextT & {
   assignInteractionHookResult: InteractionHookContextManager['assignInteractionHookResult'];
   appendDataHookContext: DataHookContextManager['appendContext'];
 };
 
-/**
- * The factory to create a new interaction hook middleware function.
- * Interaction related event hooks will be triggered once we got the interaction hook result.
- * Use `assignInteractionHookResult` to assign the interaction hook result.
- */
-export default function koaInteractionHooks<
+export function koaExperienceInteractionHooks<
   StateT,
   ContextT extends WithInteractionDetailsContext,
   ResponseT,
 >({
   hooks: { triggerInteractionHooks, triggerDataHooks },
-}: Libraries): MiddlewareType<StateT, WithInteractionHooksContext<ContextT>, ResponseT> {
+}: Libraries): MiddlewareType<StateT, WithExperienceInteractionHooksContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
-    const { event: interactionEvent } = getInteractionStorage(ctx.interactionDetails.result);
-
     const {
       interactionDetails,
       header: { 'user-agent': userAgent },
       ip,
     } = ctx;
 
+    // Get the interaction event from the interaction details
+    const result = interactionEventGuard.safeParse(interactionDetails.result ?? {});
+
+    if (!result.success) {
+      ctx.assignInteractionHookResult = noop;
+      ctx.appendDataHookContext = noop;
+      return next();
+    }
+
+    const { interactionEvent } = result.data;
     const interactionApiMetadata = {
       interactionEvent,
       userAgent,
       applicationId: conditionalString(interactionDetails.params.client_id),
       sessionId: interactionDetails.jti,
     };
-
     const interactionHookContext = new InteractionHookContextManager({
       ...interactionApiMetadata,
       userIp: ip,

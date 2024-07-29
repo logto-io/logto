@@ -5,7 +5,6 @@ import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -14,6 +13,7 @@ import {
   type Interaction,
   type InteractionContext,
   type InteractionProfile,
+  type WithHooksAndLogsContext,
 } from '../types.js';
 
 import {
@@ -77,13 +77,17 @@ export default class ExperienceInteraction {
   /**
    * Restore experience interaction from the interaction storage.
    */
-  constructor(ctx: WithLogContext, tenant: TenantContext, interactionDetails: Interaction);
+  constructor(ctx: WithHooksAndLogsContext, tenant: TenantContext, interactionDetails: Interaction);
   /**
    * Create a new `ExperienceInteraction` instance.
    */
-  constructor(ctx: WithLogContext, tenant: TenantContext, interactionEvent: InteractionEvent);
   constructor(
-    private readonly ctx: WithLogContext,
+    ctx: WithHooksAndLogsContext,
+    tenant: TenantContext,
+    interactionEvent: InteractionEvent
+  );
+  constructor(
+    private readonly ctx: WithHooksAndLogsContext,
     private readonly tenant: TenantContext,
     interactionData: Interaction | InteractionEvent
   ) {
@@ -302,14 +306,15 @@ export default class ExperienceInteraction {
         new RequestError({ code: 'user.new_password_required_in_profile', status: 422 })
       );
 
-      await userQueries.updateUserById(user.id, {
+      const updatedUser = await userQueries.updateUserById(user.id, {
         passwordEncrypted,
         passwordEncryptionMethod,
       });
 
       await this.cleanUp();
 
-      // TODO: User data updated hook
+      this.ctx.assignInteractionHookResult({ userId: user.id });
+      this.ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
       return;
     }
@@ -333,7 +338,7 @@ export default class ExperienceInteraction {
     const { mfaSkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
 
     // Update user profile
-    await userQueries.updateUserById(user.id, {
+    const updatedUser = await userQueries.updateUserById(user.id, {
       ...rest,
       ...conditional(
         socialIdentity && {
@@ -371,9 +376,13 @@ export default class ExperienceInteraction {
       login: { accountId: user.id },
     });
 
-    // TODO: PostInteractionHooks
-
     this.ctx.body = { redirectTo };
+
+    this.ctx.assignInteractionHookResult({ userId: user.id });
+
+    if (Object.keys(this.profile.data).length > 0 || mfaVerifications.length > 0) {
+      this.ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+    }
   }
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */

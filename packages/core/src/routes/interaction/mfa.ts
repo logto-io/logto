@@ -12,11 +12,11 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix } from './const.js';
-import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
 import { getInteractionStorage, storeInteractionResult } from './utils/interaction.js';
 import { verifyMfaSettings } from './utils/sign-in-experience-validation.js';

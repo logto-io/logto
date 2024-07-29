@@ -7,6 +7,8 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter, RouterInitArgs } from '../types.js';
@@ -16,34 +18,32 @@ import additionalRoutes from './additional.js';
 import consentRoutes from './consent/index.js';
 import { interactionPrefix } from './const.js';
 import mfaRoutes from './mfa.js';
-import koaInteractionDetails from './middleware/koa-interaction-details.js';
-import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
 import singleSignOnRoutes from './single-sign-on.js';
 import {
   getInteractionStorage,
-  storeInteractionResult,
-  mergeIdentifiers,
   isForgotPasswordInteractionResult,
   isSignInInteractionResult,
+  mergeIdentifiers,
+  storeInteractionResult,
 } from './utils/interaction.js';
 import {
-  verifySignInModeSettings,
   verifyIdentifierSettings,
   verifyProfileSettings,
+  verifySignInModeSettings,
 } from './utils/sign-in-experience-validation.js';
 import { verifySsoOnlyEmailIdentifier } from './utils/single-sign-on-guard.js';
 import { validatePassword } from './utils/validate-password.js';
 import {
-  verifyIdentifierPayload,
-  verifyIdentifier,
-  verifyProfile,
-  validateMandatoryUserProfile,
-  validateMandatoryBindMfa,
-  verifyBindMfa,
-  verifyMfa,
   validateBindMfaBackupCode,
+  validateMandatoryBindMfa,
+  validateMandatoryUserProfile,
+  verifyBindMfa,
+  verifyIdentifier,
+  verifyIdentifierPayload,
+  verifyMfa,
+  verifyProfile,
 } from './verifications/index.js';
 
 export type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;

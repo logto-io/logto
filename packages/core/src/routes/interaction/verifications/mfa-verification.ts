@@ -10,10 +10,10 @@ import type Provider from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 import { type WithInteractionSieContext } from '../middleware/koa-interaction-sie.js';
 import {
   type AccountVerifiedInteractionResult,
