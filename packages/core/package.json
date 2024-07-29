@@ -13,11 +13,11 @@
   "scripts": {
     "precommit": "lint-staged",
     "copy:apidocs": "rsync -a -m --include '*/' --include '*.openapi.json' --exclude '*' src/routes/ build/routes/",
-    "build": "rm -rf build/ && tsc -p tsconfig.build.json && pnpm run copy:apidocs",
+    "build": "tsup",
     "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap && pnpm run copy:apidocs",
     "lint": "eslint --ext .ts --ext .json src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "dev": "rm -rf build/ && nodemon",
+    "dev": "tsup --config tsup.dev.config.ts",
     "start": "NODE_ENV=production node .",
     "test:only": "NODE_OPTIONS=\"--experimental-vm-modules --max_old_space_size=4096\" jest --logHeapUsage",
     "test": "pnpm build:test && pnpm test:only",
@@ -127,6 +127,7 @@
     "prettier": "^3.0.0",
     "sinon": "^18.0.0",
     "supertest": "^7.0.0",
+    "tsup": "^8.1.0",
     "typescript": "^5.5.3"
   },
   "engines": {
