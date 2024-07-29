@@ -1,4 +1,5 @@
-import { passwordVerificationPayloadGuard } from '@logto/schemas';
+import { passwordVerificationPayloadGuard, VerificationType } from '@logto/schemas';
+import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -7,6 +8,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 
 import { PasswordVerification } from '../classes/verifications/password-verification.js';
 import { experienceRoutes } from '../const.js';
+import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
 
 export default function passwordVerificationRoutes<T extends ExperienceInteractionRouterContext>(
@@ -22,8 +24,19 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
         verificationId: z.string(),
       }),
     }),
+    koaExperienceVerificationsAuditLog({
+      type: VerificationType.Password,
+      action: Action.Submit,
+    }),
     async (ctx, next) => {
       const { identifier, password } = ctx.guard.body;
+
+      ctx.verificationAuditLog.append({
+        payload: {
+          identifier,
+          password,
+        },
+      });
 
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
       await passwordVerification.verify(password);

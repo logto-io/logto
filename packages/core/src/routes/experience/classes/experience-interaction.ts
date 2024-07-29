@@ -5,6 +5,7 @@ import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -180,8 +181,12 @@ export default class ExperienceInteraction {
    * @see {@link identifyExistingUser} for more exceptions that can be thrown in the SignIn and ForgotPassword events.
    * @see {@link createNewUser} for more exceptions that can be thrown in the Register event.
    **/
-  public async identifyUser(verificationId: string, linkSocialIdentity?: boolean) {
+  public async identifyUser(verificationId: string, linkSocialIdentity?: boolean, log?: LogEntry) {
     const verificationRecord = this.getVerificationRecordById(verificationId);
+
+    log?.append({
+      verification: verificationRecord?.toJson(),
+    });
 
     assertThat(
       this.interactionEvent,
@@ -442,6 +447,8 @@ export default class ExperienceInteraction {
     // Note: The profile data is not saved to the user profile until the user submits the interaction.
     // Also no need to validate the synced profile data availability as it is already validated during the identification process.
     if (syncedProfile) {
+      const log = this.ctx.createLog(`Interaction.${this.interactionEvent}.Profile.Update`);
+      log.append({ syncedProfile });
       this.profile.unsafeSet(syncedProfile);
     }
   }

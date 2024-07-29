@@ -1,6 +1,7 @@
 import { type VerificationType } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -38,12 +39,18 @@ export class Profile {
    */
   async setProfileByVerificationRecord(
     type: VerificationType.EmailVerificationCode | VerificationType.PhoneVerificationCode,
-    verificationId: string
+    verificationId: string,
+    log?: LogEntry
   ) {
     const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
       type,
       verificationId
     );
+
+    log?.append({
+      verification: verificationRecord.toJson(),
+    });
+
     const profile = verificationRecord.toUserProfile();
     await this.setProfileWithValidation(profile);
   }

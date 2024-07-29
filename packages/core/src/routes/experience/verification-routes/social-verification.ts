@@ -3,6 +3,7 @@ import {
   socialAuthorizationUrlPayloadGuard,
   socialVerificationCallbackPayloadGuard,
 } from '@logto/schemas';
+import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -13,6 +14,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { SocialVerification } from '../classes/verifications/social-verification.js';
 import { experienceRoutes } from '../const.js';
+import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
 
 export default function socialVerificationRoutes<T extends ExperienceInteractionRouterContext>(
@@ -34,8 +36,20 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       }),
       status: [200, 400, 404, 500],
     }),
+    koaExperienceVerificationsAuditLog({
+      type: VerificationType.Social,
+      action: Action.Create,
+    }),
     async (ctx, next) => {
       const { connectorId } = ctx.guard.params;
+      const { verificationAuditLog } = ctx;
+
+      verificationAuditLog.append({
+        payload: {
+          connectorId,
+          ...ctx.guard.body,
+        },
+      });
 
       const socialVerification = SocialVerification.create(libraries, queries, connectorId);
 
@@ -70,9 +84,22 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       }),
       status: [200, 400, 404],
     }),
+    koaExperienceVerificationsAuditLog({
+      type: VerificationType.Social,
+      action: Action.Submit,
+    }),
     async (ctx, next) => {
       const { connectorId } = ctx.params;
       const { connectorData, verificationId } = ctx.guard.body;
+      const { verificationAuditLog } = ctx;
+
+      verificationAuditLog.append({
+        payload: {
+          connectorId,
+          verificationId,
+          connectorData,
+        },
+      });
 
       const socialVerificationRecord = ctx.experienceInteraction.getVerificationRecordByTypeAndId(
         VerificationType.Social,
@@ -85,7 +112,6 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       );
 
       await socialVerificationRecord.verify(ctx, tenantContext, connectorData);
-
       await ctx.experienceInteraction.save();
 
       ctx.body = {

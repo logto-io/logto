@@ -59,8 +59,14 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }),
     verifiedInteractionGuard(),
     async (ctx, next) => {
-      const { experienceInteraction, guard } = ctx;
+      const { experienceInteraction, guard, createLog } = ctx;
       const profilePayload = guard.body;
+
+      const log = createLog(`Interaction.${experienceInteraction.interactionEvent}.Profile.Update`);
+
+      log.append({
+        payload: profilePayload,
+      });
 
       switch (profilePayload.type) {
         case SignInIdentifier.Email:
@@ -100,7 +106,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       status: [204, 400, 404, 422],
     }),
     async (ctx, next) => {
-      const { experienceInteraction, guard } = ctx;
+      const { experienceInteraction, guard, createLog } = ctx;
       const { password } = guard.body;
 
       assertThat(
@@ -110,6 +116,8 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           status: 400,
         })
       );
+
+      createLog(`Interaction.ForgotPassword.Profile.Update`);
 
       // Guard interaction is identified
       assertThat(
@@ -159,17 +167,25 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       const { experienceInteraction, guard } = ctx;
       const { type, verificationId } = guard.body;
 
+      const log = ctx.createLog(
+        `Interaction.${experienceInteraction.interactionEvent}.BindMfa.${type}.Submit`
+      );
+
+      log.append({
+        verificationId,
+      });
+
       switch (type) {
         case MfaFactor.TOTP: {
-          await experienceInteraction.mfa.addTotpByVerificationId(verificationId);
+          await experienceInteraction.mfa.addTotpByVerificationId(verificationId, log);
           break;
         }
         case MfaFactor.WebAuthn: {
-          await experienceInteraction.mfa.addWebAuthnByVerificationId(verificationId);
+          await experienceInteraction.mfa.addWebAuthnByVerificationId(verificationId, log);
           break;
         }
         case MfaFactor.BackupCode: {
-          await experienceInteraction.mfa.addBackupCodeByVerificationId(verificationId);
+          await experienceInteraction.mfa.addBackupCodeByVerificationId(verificationId, log);
           break;
         }
       }

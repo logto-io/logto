@@ -18,6 +18,7 @@ import { deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -170,11 +171,16 @@ export class Mfa {
    *
    * - Any existing TOTP factor will be replaced with the new one.
    */
-  async addTotpByVerificationId(verificationId: string) {
+  async addTotpByVerificationId(verificationId: string, log?: LogEntry) {
     const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
       VerificationType.TOTP,
       verificationId
     );
+
+    log?.append({
+      verification: verificationRecord.toJson(),
+    });
+
     const bindTotp = verificationRecord.toBindMfa();
 
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.TOTP]);
@@ -198,11 +204,16 @@ export class Mfa {
    * @throws {RequestError} with status 404 if the verification record is not found
    * @throws {RequestError} with status 400 if WebAuthn is not enabled in the sign-in experience
    */
-  async addWebAuthnByVerificationId(verificationId: string) {
+  async addWebAuthnByVerificationId(verificationId: string, log?: LogEntry) {
     const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
       VerificationType.WebAuthn,
       verificationId
     );
+
+    log?.append({
+      verification: verificationRecord.toJson(),
+    });
+
     const bindWebAuthn = verificationRecord.toBindMfa();
 
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.WebAuthn]);
@@ -218,11 +229,15 @@ export class Mfa {
    * @throws {RequestError} with status 400 if Backup Code is not enabled in the sign-in experience
    * @throws {RequestError} with status 422 if the backup code is the only MFA factor
    */
-  async addBackupCodeByVerificationId(verificationId: string) {
+  async addBackupCodeByVerificationId(verificationId: string, log?: LogEntry) {
     const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
       VerificationType.BackupCode,
       verificationId
     );
+
+    log?.append({
+      verification: verificationRecord.toJson(),
+    });
 
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.BackupCode]);
 

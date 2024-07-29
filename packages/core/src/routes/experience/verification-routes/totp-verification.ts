@@ -1,4 +1,5 @@
 import { VerificationType, totpVerificationVerifyPayloadGuard } from '@logto/schemas';
+import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -9,6 +10,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { TotpVerification } from '../classes/verifications/totp-verification.js';
 import { experienceRoutes } from '../const.js';
+import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
 
 export default function totpVerificationRoutes<T extends ExperienceInteractionRouterContext>(
@@ -26,6 +28,10 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
         secretQrCode: z.string(),
       }),
       status: [200, 400, 404],
+    }),
+    koaExperienceVerificationsAuditLog({
+      type: VerificationType.TOTP,
+      action: Action.Create,
     }),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
@@ -63,9 +69,20 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
       }),
       status: [200, 400, 404],
     }),
+    koaExperienceVerificationsAuditLog({
+      type: VerificationType.TOTP,
+      action: Action.Submit,
+    }),
     async (ctx, next) => {
-      const { experienceInteraction } = ctx;
+      const { experienceInteraction, verificationAuditLog } = ctx;
       const { verificationId, code } = ctx.guard.body;
+
+      verificationAuditLog.append({
+        payload: {
+          verificationId,
+          code,
+        },
+      });
 
       assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
 
