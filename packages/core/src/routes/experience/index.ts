@@ -41,11 +41,15 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 ) {
   const { queries } = tenant;
 
-  const routerWithLogs = anonymousRouter.use(koaAuditLog(queries));
+  const experienceRouter =
+    // @ts-expect-error for good koa types
+    // eslint-disable-next-line no-restricted-syntax
+    (anonymousRouter as Router<unknown, WithExperienceInteractionContext<RouterContext<T>>>).use(
+      koaAuditLog(queries),
+      koaExperienceInteraction(tenant)
+    );
 
-  // Should not apply the koaExperienceInteraction middleware to this route.
-  // New ExperienceInteraction instance will be created.
-  routerWithLogs.put(
+  experienceRouter.put(
     experienceRoutes.prefix,
     koaGuard({
       body: z.object({
@@ -70,13 +74,6 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
-
-  const experienceRouter =
-    // @ts-expect-error for good koa types
-    // eslint-disable-next-line no-restricted-syntax
-    (routerWithLogs as Router<unknown, WithExperienceInteractionContext<RouterContext<T>>>).use(
-      koaExperienceInteraction(tenant)
-    );
 
   experienceRouter.put(
     `${experienceRoutes.prefix}/interaction-event`,

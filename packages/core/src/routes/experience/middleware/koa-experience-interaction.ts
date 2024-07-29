@@ -4,6 +4,7 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import ExperienceInteraction from '../classes/experience-interaction.js';
+import { experienceRoutes } from '../const.js';
 
 export type WithExperienceInteractionContext<ContextT extends WithLogContext = WithLogContext> =
   ContextT & {
@@ -25,6 +26,14 @@ export default function koaExperienceInteraction<
   tenant: TenantContext
 ): MiddlewareType<StateT, WithExperienceInteractionContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
+    const { method, path } = ctx.request;
+
+    // Should not apply the koaExperienceInteraction middleware to the PUT /experience route.
+    // New ExperienceInteraction instance are supposed to be created in the PUT /experience route.
+    if (method === 'PUT' && path === `${experienceRoutes.prefix}`) {
+      return next();
+    }
+
     const { provider } = tenant;
     const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
 
