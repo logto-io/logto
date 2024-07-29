@@ -8,7 +8,7 @@
 }
 
 .skeleton {
-  @include _.shimmering-animation;
   width: 248px;
   height: 100%;
+  @include _.shimmering-animation;
 }
