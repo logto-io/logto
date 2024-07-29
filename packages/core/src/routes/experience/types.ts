@@ -64,7 +64,7 @@ export const interactionProfileGuard = Users.createGuard
  * The interaction context provides the callback functions to get the user and verification record from the interaction
  */
 export type InteractionContext = {
-  getIdentifierUser: () => Promise<User>;
+  getIdentifiedUser: () => Promise<User>;
   getVerificationRecordByTypeAndId: <K extends keyof VerificationRecordMap>(
     type: K,
     verificationId: string

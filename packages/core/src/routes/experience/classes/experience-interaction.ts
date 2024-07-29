@@ -91,7 +91,7 @@ export default class ExperienceInteraction {
     this.provisionLibrary = new ProvisionLibrary(tenant, ctx);
 
     const interactionContext: InteractionContext = {
-      getIdentifierUser: async () => this.getIdentifiedUser(),
+      getIdentifiedUser: async () => this.getIdentifiedUser(),
       getVerificationRecordByTypeAndId: (type, verificationId) =>
         this.getVerificationRecordByTypeAndId(type, verificationId),
     };

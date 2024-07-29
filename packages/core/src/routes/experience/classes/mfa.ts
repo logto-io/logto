@@ -178,7 +178,7 @@ export class Mfa {
     const bindTotp = verificationRecord.toBindMfa();
 
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.TOTP]);
-    const { mfaVerifications } = await this.interactionContext.getIdentifierUser();
+    const { mfaVerifications } = await this.interactionContext.getIdentifiedUser();
 
     // A user can only bind one TOTP factor
     assertThat(
@@ -226,7 +226,7 @@ export class Mfa {
 
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.BackupCode]);
 
-    const { mfaVerifications } = await this.interactionContext.getIdentifierUser();
+    const { mfaVerifications } = await this.interactionContext.getIdentifiedUser();
     const userHasOtherMfa = mfaVerifications.some((mfa) => mfa.type !== MfaFactor.BackupCode);
     const hasOtherNewMfa = Boolean(this.#totp ?? this.#webAuthn?.length);
     assertThat(
@@ -261,7 +261,7 @@ export class Mfa {
       return;
     }
 
-    const { mfaVerifications, logtoConfig } = await this.interactionContext.getIdentifierUser();
+    const { mfaVerifications, logtoConfig } = await this.interactionContext.getIdentifiedUser();
 
     // If the policy is user controlled and the user has skipped MFA, then there is nothing to check
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing

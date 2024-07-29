@@ -55,7 +55,7 @@ export class Profile {
    * @throws {RequestError} 422 if the unique identifier data already exists in another user account.
    */
   async setProfileWithValidation(profile: InteractionProfile) {
-    const user = await this.interactionContext.getIdentifierUser();
+    const user = await this.interactionContext.getIdentifiedUser();
     this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, profile);
     await this.profileValidator.guardProfileUniquenessAcrossUsers(profile);
     this.unsafeSet(profile);
@@ -69,7 +69,7 @@ export class Profile {
    * @throws {RequestError} 422 if the password is the same as the current user's password.
    */
   async setPasswordDigestWithValidation(password: string, reset = false) {
-    const user = await this.interactionContext.getIdentifierUser();
+    const user = await this.interactionContext.getIdentifiedUser();
     const passwordPolicy = await this.signInExperienceValidator.getPasswordPolicy();
     const passwordValidator = new PasswordValidator(passwordPolicy, user);
     await passwordValidator.validatePassword(password, this.#data);
@@ -89,7 +89,7 @@ export class Profile {
    * @throws {RequestError} 422 if the unique identifier data already exists in another user account.
    */
   async validateAvailability() {
-    const user = await this.interactionContext.getIdentifierUser();
+    const user = await this.interactionContext.getIdentifiedUser();
     this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, this.#data);
     await this.profileValidator.guardProfileUniquenessAcrossUsers(this.#data);
   }
@@ -98,7 +98,7 @@ export class Profile {
    * Checks if the user has fulfilled the mandatory profile fields.
    */
   async assertUserMandatoryProfileFulfilled() {
-    const user = await this.interactionContext.getIdentifierUser();
+    const user = await this.interactionContext.getIdentifiedUser();
     const mandatoryProfileFields =
       await this.signInExperienceValidator.getMandatoryUserProfileBySignUpMethods();
 
