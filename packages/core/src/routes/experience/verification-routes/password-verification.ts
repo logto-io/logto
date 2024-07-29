@@ -2,16 +2,15 @@ import { passwordVerificationPayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import { PasswordVerification } from '../classes/verifications/password-verification.js';
 import { experienceRoutes } from '../const.js';
-import { type WithExperienceInteractionContext } from '../middleware/koa-experience-interaction.js';
+import { type ExperienceInteractionRouterContext } from '../types.js';
 
-export default function passwordVerificationRoutes<T extends WithLogContext>(
-  router: Router<unknown, WithExperienceInteractionContext<T>>,
+export default function passwordVerificationRoutes<T extends ExperienceInteractionRouterContext>(
+  router: Router<unknown, T>,
   { libraries, queries }: TenantContext
 ) {
   router.post(

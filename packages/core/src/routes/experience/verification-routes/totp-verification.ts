@@ -3,17 +3,16 @@ import type Router from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { TotpVerification } from '../classes/verifications/totp-verification.js';
 import { experienceRoutes } from '../const.js';
-import { type WithExperienceInteractionContext } from '../middleware/koa-experience-interaction.js';
+import { type ExperienceInteractionRouterContext } from '../types.js';
 
-export default function totpVerificationRoutes<T extends WithLogContext>(
-  router: Router<unknown, WithExperienceInteractionContext<T>>,
+export default function totpVerificationRoutes<T extends ExperienceInteractionRouterContext>(
+  router: Router<unknown, T>,
   tenantContext: TenantContext
 ) {
   const { libraries, queries } = tenantContext;
