@@ -2,7 +2,7 @@ import { conditional } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
-import { ReservedPlanName } from '@/types/subscriptions';
+import { ReservedPlanName, ReservedSkuId } from '@/types/subscriptions';
 
 const registeredPlanNamePhraseMap: Record<
   string,
@@ -13,6 +13,16 @@ const registeredPlanNamePhraseMap: Record<
   [ReservedPlanName.Hobby]: 'pro_plan',
   [ReservedPlanName.Pro]: 'pro_plan',
   [ReservedPlanName.Enterprise]: 'enterprise',
+};
+
+const registeredSkuIdNamePhraseMap: Record<
+  string,
+  TFuncKey<'translation', 'admin_console.subscription'> | undefined
+> = {
+  quotaKey: undefined,
+  [ReservedSkuId.Free]: 'free_plan',
+  [ReservedSkuId.Pro]: 'pro_plan',
+  [ReservedSkuId.Enterprise]: 'enterprise',
 };
 
 type Props = {
@@ -26,7 +36,7 @@ type Props = {
 function PlanName({ skuId, name }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
   const planNamePhrase =
-    conditional(skuId && registeredPlanNamePhraseMap[skuId]) ?? registeredPlanNamePhraseMap[name];
+    conditional(skuId && registeredSkuIdNamePhraseMap[skuId]) ?? registeredPlanNamePhraseMap[name];
 
   /**
    * Note: fallback to the plan name if the phrase is not registered.

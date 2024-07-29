@@ -10,11 +10,13 @@ import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useNewSubscriptionScopeUsage from '@/hooks/use-new-subscription-scopes-usage';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit, hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
@@ -35,6 +37,10 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
     currentSubscriptionQuota,
     currentSubscriptionScopeResourceUsage,
   } = useContext(SubscriptionDataContext);
+  const { currentTenantId } = useContext(TenantsContext);
+  const {
+    scopeResourceUsage: { mutate: mutateScopeResourceUsage },
+  } = useNewSubscriptionScopeUsage(currentTenantId);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -55,6 +61,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
         .post(`api/resources/${resourceId}/scopes`, { json: formData })
         .json<Scope>();
 
+      void mutateScopeResourceUsage();
       onClose(createdScope);
     })
   );

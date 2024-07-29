@@ -2,7 +2,7 @@ import type { Resource } from '@logto/schemas';
 import { isManagementApi, Theme } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
@@ -19,11 +19,13 @@ import DetailsPageHeader, { type MenuItem } from '@/components/DetailsPage/Detai
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import useNewSubscriptionScopeUsage from '@/hooks/use-new-subscription-scopes-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
@@ -41,6 +43,10 @@ const icons = {
 function ApiResourceDetails() {
   const { pathname } = useLocation();
   const { id, guideId } = useParams();
+  const { currentTenantId } = useContext(TenantsContext);
+  const {
+    scopeResourceUsage: { mutate: mutateScopeResourceUsage },
+  } = useNewSubscriptionScopeUsage(currentTenantId);
   const { navigate, match } = useTenantPathname();
   const { getDocumentationUrl } = useDocumentationUrl();
   const isGuideView = !!id && !!guideId && match(`/api-resources/${id}/guide/${guideId}`);
@@ -75,6 +81,7 @@ function ApiResourceDetails() {
 
     try {
       await api.delete(`api/resources/${data.id}`);
+      void mutateScopeResourceUsage();
       toast.success(t('api_resource_details.api_resource_deleted', { name: data.name }));
       navigate(`/api-resources`);
     } finally {
