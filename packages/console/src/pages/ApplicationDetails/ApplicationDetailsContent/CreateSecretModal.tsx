@@ -74,7 +74,7 @@ function CreateSecretModal({ appId, isOpen, onClose }: Props) {
         })
         .json<ApplicationSecret>();
       toast.success(
-        t('organization_template.roles.create_modal.created', { name: createdData.name })
+        t('application_details.secrets.create_modal.created', { name: createdData.name })
       );
       onCloseHandler(createdData);
     })

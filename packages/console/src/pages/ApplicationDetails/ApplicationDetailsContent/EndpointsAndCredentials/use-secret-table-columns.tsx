@@ -16,6 +16,8 @@ export type ApplicationSecretRow = Pick<ApplicationSecret, 'name' | 'value' | 'e
   isLegacy?: boolean;
 };
 
+const isExpired = (expiresAt: Date | number) => compareDesc(expiresAt, new Date()) === 1;
+
 function Expired({ expiresAt }: { readonly expiresAt: Date }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   return (
@@ -31,10 +33,11 @@ function Expired({ expiresAt }: { readonly expiresAt: Date }) {
 
 type UseSecretTableColumns = {
   appId: string;
+  onEdit: (secret: ApplicationSecretRow) => void;
   onUpdated: (isLegacy: boolean) => void;
 };
 
-export const useSecretTableColumns = ({ appId, onUpdated }: UseSecretTableColumns) => {
+export const useSecretTableColumns = ({ appId, onUpdated, onEdit }: UseSecretTableColumns) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
   const tableColumns: Array<Column<ApplicationSecretRow>> = useMemo(
@@ -66,7 +69,7 @@ export const useSecretTableColumns = ({ appId, onUpdated }: UseSecretTableColumn
         render: ({ expiresAt }) => (
           <span>
             {expiresAt ? (
-              compareDesc(expiresAt, new Date()) === 1 ? (
+              isExpired(expiresAt) ? (
                 <Expired expiresAt={new Date(expiresAt)} />
               ) : (
                 <LocaleDateTime>{expiresAt}</LocaleDateTime>
@@ -80,21 +83,31 @@ export const useSecretTableColumns = ({ appId, onUpdated }: UseSecretTableColumn
       {
         title: '',
         dataIndex: 'actions',
-        render: ({ name, isLegacy }) => (
-          <ActionsButton
-            fieldName="application_details.application_secret"
-            deleteConfirmation="application_details.secrets.delete_confirmation"
-            onDelete={async () => {
-              await (isLegacy
-                ? api.delete(`api/applications/${appId}/legacy-secret`)
-                : api.delete(`api/applications/${appId}/secrets/${encodeURIComponent(name)}`));
-              onUpdated(isLegacy ?? false);
-            }}
-          />
-        ),
+        render: (secret) => {
+          const { expiresAt, isLegacy, name } = secret;
+          return (
+            <ActionsButton
+              fieldName="application_details.application_secret"
+              deleteConfirmation="application_details.secrets.delete_confirmation"
+              onEdit={
+                (isLegacy ?? false) || (expiresAt && isExpired(expiresAt))
+                  ? undefined
+                  : () => {
+                      onEdit(secret);
+                    }
+              }
+              onDelete={async () => {
+                await (isLegacy
+                  ? api.delete(`api/applications/${appId}/legacy-secret`)
+                  : api.delete(`api/applications/${appId}/secrets/${encodeURIComponent(name)}`));
+                onUpdated(isLegacy ?? false);
+              }}
+            />
+          );
+        },
       },
     ],
-    [api, appId, onUpdated, t]
+    [api, appId, onEdit, onUpdated, t]
   );
 
   return tableColumns;

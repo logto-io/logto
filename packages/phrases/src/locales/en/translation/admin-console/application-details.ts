@@ -182,6 +182,11 @@ const application_details = {
         'The secret will never expire. We recommend setting an expiration date for enhanced security.',
       days: '{{count}} day',
       days_other: '{{count}} days',
+      created: 'The secret {{name}} has been successfully created.',
+    },
+    edit_modal: {
+      title: 'Edit application secret',
+      edited: 'The secret {{name}} has been successfully edited.',
     },
   },
 };

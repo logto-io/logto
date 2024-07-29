@@ -27,6 +27,7 @@ import { type RequestError } from '@/hooks/use-api';
 import useCustomDomain from '@/hooks/use-custom-domain';
 
 import CreateSecretModal from '../CreateSecretModal';
+import EditSecretModal from '../EditSecretModal';
 
 import styles from './index.module.scss';
 import { type ApplicationSecretRow, useSecretTableColumns } from './use-secret-table-columns';
@@ -51,6 +52,7 @@ function EndpointsAndCredentials({
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: customDomain, applyDomain: applyCustomDomain } = useCustomDomain();
   const [showCreateSecretModal, setShowCreateSecretModal] = useState(false);
+  const [editSecret, setEditSecret] = useState<ApplicationSecretRow>();
   const secrets = useSWR<ApplicationSecretRow[], RequestError>(`api/applications/${id}/secrets`);
   const shouldShowAppSecrets = hasSecrets(type);
 
@@ -87,9 +89,13 @@ function EndpointsAndCredentials({
     },
     [onApplicationUpdated, secrets]
   );
+  const onEditSecret = useCallback((secret: ApplicationSecretRow) => {
+    setEditSecret(secret);
+  }, []);
   const tableColumns = useSecretTableColumns({
     appId: id,
     onUpdated,
+    onEdit: onEditSecret,
   });
   return (
     <FormCard
@@ -242,11 +248,26 @@ function EndpointsAndCredentials({
           <CreateSecretModal
             appId={id}
             isOpen={showCreateSecretModal}
-            onClose={() => {
+            onClose={(created) => {
+              if (created) {
+                void secrets.mutate();
+              }
               setShowCreateSecretModal(false);
-              void secrets.mutate();
             }}
           />
+          {editSecret && (
+            <EditSecretModal
+              isOpen
+              appId={id}
+              secret={editSecret}
+              onClose={(updated) => {
+                if (updated) {
+                  void secrets.mutate();
+                }
+                setEditSecret(undefined);
+              }}
+            />
+          )}
         </FormField>
       )}
     </FormCard>
