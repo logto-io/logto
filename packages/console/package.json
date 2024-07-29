@@ -17,7 +17,7 @@
     "start": "vite",
     "dev": "vite",
     "check": "tsc --noEmit",
-    "build": "pnpm generate && pnpm check && vite build",
+    "build": "pnpm generate && vite build",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\"",
