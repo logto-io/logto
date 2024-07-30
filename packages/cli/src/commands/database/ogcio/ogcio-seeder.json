@@ -28,7 +28,8 @@
         "profile:entitlement:*",
         "life-events:digital-wallet-flow:*",
         "bb:public-servant.inactive:*",
-        "scheduler:jobs:write"
+        "scheduler:jobs:write",
+        "upload:file:*"
       ]
     },
     "organization_roles": [
@@ -74,6 +75,12 @@
           "profile:address:*",
           "profile:entitlement:*"
         ]
+      },
+      {
+        "id": "upload-public-servant",
+        "name": "File Upload Public Servant",
+        "description": "File Upload Public servant",
+        "specific_permissions": ["upload:file:*"]
       },
       {
         "id": "bb-inactive-ps",
@@ -125,6 +132,16 @@
         "id": "4icd76x8we31j1e8bqyfn",
         "is_third_party": false
       },
+       {
+        "name": "File Upload Service",
+        "description": "File Upload Service",
+        "type": "Traditional",
+        "redirect_uri": "<SEEDER_UPLOAD_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_UPLOAD_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_UPLOAD_APP_SECRET>",
+        "id": "8mdj23ty5vk94w7rblxhf",
+        "is_third_party": false
+      },
       {
         "name": "Profile Building Block",
         "description": "Profile App of Life Events",
@@ -156,6 +173,11 @@
         "id": "profile-api",
         "name": "Profile Building Block API",
         "indicator": "<SEEDER_PROFILE_API_INDICATOR>"
+      },
+      {
+        "id": "upload-api",
+        "name": "Upload Building Block API",
+        "indicator": "<SEEDER_UPLOAD_API_INDICATOR>"
       }
     ],
     "resource_permissions": [
@@ -192,6 +214,14 @@
           "profile:entitlement.self:read",
           "profile:entitlement.self:write"
         ]
+      },
+      {
+        "resource_id": "upload-api",
+        "specific_permissions": [
+          "upload:file.self:write",
+          "upload:file.self:read",
+          "upload:file.self:delete"
+        ]
       }
     ],
     "resource_roles": [
@@ -226,6 +256,14 @@
               "profile:address.self:write",
               "profile:entitlement.self:read",
               "profile:entitlement.self:write"
+            ]
+          },
+          {
+            "resource_id": "upload-api",
+            "specific_permissions": [
+              "upload:file.self:write",
+              "upload:file.self:read",
+              "upload:file.self:delete"
             ]
           }
         ]
