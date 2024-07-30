@@ -10,7 +10,7 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import { type Option } from '@/ds-components/Select/MultiSelect';
 import useApi from '@/hooks/use-api';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 import { decapitalize } from '@/utils/string';
 
 type WithOrganizationRoles = {

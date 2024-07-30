@@ -6,7 +6,7 @@ import LoadingBar from 'react-top-loading-bar';
 
 import NavBar from '@/components/NavBar';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type ModalProps = {
   readonly className?: string;

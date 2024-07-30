@@ -11,7 +11,7 @@ import { uriValidator } from '@/utils/validator';
 import { type OidcConnectorConfig, type OidcProviderConfig } from '../../types/oidc';
 
 import ParsedConfigPreview from './ParsedConfigPreview';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly providerConfig?: OidcProviderConfig;

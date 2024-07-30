@@ -80,12 +80,13 @@ export default function enterpriseSsoVerificationRoutes<T extends WithLogContext
       const { connectorData, verificationId } = ctx.guard.body;
 
       const enterpriseSsoVerificationRecord =
-        ctx.experienceInteraction.getVerificationRecordById(verificationId);
+        ctx.experienceInteraction.getVerificationRecordByTypeAndId(
+          VerificationType.EnterpriseSso,
+          verificationId
+        );
 
       assertThat(
-        enterpriseSsoVerificationRecord &&
-          enterpriseSsoVerificationRecord.type === VerificationType.EnterpriseSso &&
-          enterpriseSsoVerificationRecord.connectorId === connectorId,
+        enterpriseSsoVerificationRecord.connectorId === connectorId,
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 
@@ -95,6 +96,38 @@ export default function enterpriseSsoVerificationRoutes<T extends WithLogContext
 
       ctx.body = {
         verificationId,
+      };
+
+      return next();
+    }
+  );
+
+  router.get(
+    `${experienceRoutes.verification}/sso/connectors`,
+    koaGuard({
+      query: z.object({
+        email: z.string().email(),
+      }),
+      status: [200, 400],
+      response: z.object({
+        connectorIds: z.string().array(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { email } = ctx.guard.query;
+      const {
+        experienceInteraction: { signInExperienceValidator },
+      } = ctx;
+
+      assertThat(
+        email.split('@')[1],
+        new RequestError({ code: 'guard.invalid_input', status: 400, email })
+      );
+
+      const connectors = await signInExperienceValidator.getEnabledSsoConnectorsByEmail(email);
+
+      ctx.body = {
+        connectorIds: connectors.map(({ id }) => id),
       };
 
       return next();

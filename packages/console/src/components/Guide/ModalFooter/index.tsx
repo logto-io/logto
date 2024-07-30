@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly wrapperClassName?: string;

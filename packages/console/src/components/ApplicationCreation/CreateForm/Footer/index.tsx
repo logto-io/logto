@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
@@ -17,7 +18,7 @@ type Props = {
 };
 
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSku } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
   const {
     hasAppsReachedLimit,
@@ -32,7 +33,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
       selectedType === ApplicationType.MachineToMachine &&
       hasMachineToMachineAppsReachedLimit &&
       // For paid plan (pro plan), we don't guard the m2m app creation since it's an add-on feature.
-      planId === ReservedPlanId.Free
+      (isDevFeaturesEnabled ? currentSku.id : planId) === ReservedPlanId.Free
     ) {
       return (
         <QuotaGuardFooter>
@@ -68,7 +69,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <PlanName name={planName} />,
+              planName: <PlanName skuId={currentSku.id} name={planName} />,
             }}
           >
             {t('applications', { count: quota.applicationsLimit ?? 0 })}

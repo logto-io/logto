@@ -3,8 +3,8 @@ import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import OrganizationIcon from '@/assets/icons/organization-preview.svg';
-import Tip from '@/assets/icons/tip.svg';
+import OrganizationIcon from '@/assets/icons/organization-preview.svg?react';
+import Tip from '@/assets/icons/tip.svg?react';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
@@ -18,7 +18,7 @@ import { ToggleTip } from '@/ds-components/Tip';
 import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly type: 'user' | 'application';

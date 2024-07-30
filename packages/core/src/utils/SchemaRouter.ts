@@ -1,4 +1,4 @@
-import { type SchemaLike, type GeneratedSchema, type DataHookEvent } from '@logto/schemas';
+import { type DataHookEvent, type GeneratedSchema, type SchemaLike } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type DeepPartial, isPlainObject } from '@silverhand/essentials';
 import camelcase from 'camelcase';
@@ -257,8 +257,8 @@ export default class SchemaRouter<
             [columns.relationSchemaId]: relationId,
           })) ?? [])
         );
-        appendHookContext(ctx, id);
         ctx.status = 201;
+        appendHookContext(ctx, id);
         return next();
       }
     );
@@ -277,8 +277,8 @@ export default class SchemaRouter<
         } = ctx.guard;
 
         await relationQueries.replace(id, relationIds ?? []);
-        appendHookContext(ctx, id);
         ctx.status = 204;
+        appendHookContext(ctx, id);
         return next();
       }
     );
@@ -286,7 +286,9 @@ export default class SchemaRouter<
     this.delete(
       `/:id/${pathname}/:${camelCaseSchemaId(relationSchema)}`,
       koaGuard({
-        params: z.object({ id: z.string().min(1), [relationSchemaId]: z.string().min(1) }),
+        params: z
+          .object({ id: z.string().min(1) })
+          .extend({ [relationSchemaId]: z.string().min(1) }),
         status: [204, 422],
       }),
       async (ctx, next) => {
@@ -300,9 +302,10 @@ export default class SchemaRouter<
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- `koaGuard()` ensures the value is not `undefined`
           [columns.relationSchemaId]: relationId!,
         });
+
+        ctx.status = 204;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         appendHookContext(ctx, id!);
-        ctx.status = 204;
         return next();
       }
     );
@@ -337,6 +340,7 @@ export default class SchemaRouter<
       this.post(
         '/',
         koaGuard({
+          // @ts-expect-error -- `.omit()` doesn't play well with generics
           body: schema.createGuard.omit({ id: true }),
           response: entityGuard ?? schema.guard,
           status: [201], // TODO: 409/422 for conflict?

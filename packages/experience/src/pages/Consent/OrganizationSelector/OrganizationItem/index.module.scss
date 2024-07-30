@@ -4,6 +4,7 @@
   border-radius: _.unit(2);
   padding: _.unit(2.5) _.unit(2);
   cursor: pointer;
+  @include _.flex-row;
 
   .icon {
     width: 20px;
@@ -28,5 +29,4 @@
       color: var(--color-brand-default);
     }
   }
-  @include _.flex-row;
 }

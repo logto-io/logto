@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Plus from '@/assets/icons/plus.svg';
-import PermissionsEmptyDark from '@/assets/images/permissions-empty-dark.svg';
-import PermissionsEmpty from '@/assets/images/permissions-empty.svg';
+import Plus from '@/assets/icons/plus.svg?react';
+import PermissionsEmptyDark from '@/assets/images/permissions-empty-dark.svg?react';
+import PermissionsEmpty from '@/assets/images/permissions-empty.svg?react';
 import ActionsButton from '@/components/ActionsButton';
 import Breakable from '@/components/Breakable';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
@@ -23,7 +23,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function OrganizationPermissions() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

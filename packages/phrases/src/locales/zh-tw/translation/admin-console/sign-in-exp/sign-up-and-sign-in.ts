@@ -36,6 +36,9 @@ const sign_up_and_sign_in = {
       set_up_more: '立即設定',
       go_to: '參考其他的社交連結器。',
     },
+    automatic_account_linking: '自動帳號連結',
+    automatic_account_linking_label:
+      '當啟用時，如果使用者以新社交身份登入系統，且系統中有且僅有一個現有帳戶具有相同的標識符（如電子郵件），Logto 將自動連結該帳戶與社交身份，而不是提示使用者進行帳戶連結。',
   },
   tip: {
     set_a_password: '啟用使用者名稱註冊，必須設定密碼。',

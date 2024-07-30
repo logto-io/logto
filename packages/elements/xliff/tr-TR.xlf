@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="tr-TR" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="general.title">
+  <source>Title</source>
+</trans-unit>
+<trans-unit id="general.actions">
+  <source>Actions</source>
+</trans-unit>
+<trans-unit id="account.profile.title">
+  <source>Profile</source>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.title">
+  <source>Personal information</source>
+</trans-unit>
+<trans-unit id="general.change">
+  <source>Change</source>
+</trans-unit>
+<trans-unit id="general.update">
+  <source>Update</source>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.update-name">
+  <source>Update name</source>
+</trans-unit>
+<trans-unit id="general.fallback-title">
+  <source>Not set</source>
+  <note from="lit-localize">A fallback title when the title or heading of a component is not provided.</note>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.avatar">
+  <source>Avatar</source>
+  <note from="lit-localize">The avatar of the user.</note>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.name">
+  <source>Name</source>
+  <note from="lit-localize">The name of the user.</note>
+</trans-unit>
+<trans-unit id="account.profile.personal-info.name-placeholder">
+  <source>Person Doe</source>
+  <note from="lit-localize">The placeholder for the name input field.</note>
+</trans-unit>
+<trans-unit id="account.profile.no-user">
+  <source>No user provided.</source>
+</trans-unit>
+<trans-unit id="general.save">
+  <source>Save</source>
+</trans-unit>
+</body>
+</file>
+</xliff>

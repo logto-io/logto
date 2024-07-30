@@ -76,6 +76,7 @@ export const mockHookResponseGuard = z.object({
         event: hookEventGuard,
         createdAt: z.string(),
         hookId: z.string(),
+        status: z.number().optional(),
       })
       .catchall(z.any()),
     // Use the raw payload for signature verification

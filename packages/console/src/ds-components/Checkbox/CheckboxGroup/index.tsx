@@ -6,7 +6,7 @@ import DynamicT from '@/ds-components/DynamicT';
 
 import Checkbox from '../Checkbox';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type Option<T> = {
   title?: AdminConsoleKey;

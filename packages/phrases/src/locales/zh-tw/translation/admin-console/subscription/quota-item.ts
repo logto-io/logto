@@ -159,6 +159,18 @@ const quota_item = {
     unlimited: '自訂 JWT',
     not_eligible: '移除你的 JWT 声明自訂器',
   },
+  impersonation_enabled: {
+    name: '模擬',
+    limited: '模擬',
+    unlimited: '模擬',
+    not_eligible: '不允許模擬',
+  },
+  bring_your_ui_enabled: {
+    name: '自帶 UI',
+    limited: '自帶 UI',
+    unlimited: '自帶 UI',
+    not_eligible: '移除你的自訂 UI 資產',
+  },
 };
 
 export default Object.freeze(quota_item);

@@ -1,3 +1,5 @@
+import { authenticator } from 'otplib';
+
 import { type ExperienceClient } from '#src/client/experience/index.js';
 
 export const successFullyCreateNewTotpSecret = async (client: ExperienceClient) => {
@@ -10,7 +12,7 @@ export const successFullyCreateNewTotpSecret = async (client: ExperienceClient) 
   return { secret, secretQrCode, verificationId };
 };
 
-export const successFullyVerifyTotp = async (
+export const successfullyVerifyTotp = async (
   client: ExperienceClient,
   payload: {
     code: string;
@@ -20,6 +22,18 @@ export const successFullyVerifyTotp = async (
   const { verificationId } = await client.verifyTotp(payload);
 
   expect(verificationId).toBeTruthy();
+
+  return verificationId;
+};
+
+export const successfullyCreateAndVerifyTotp = async (client: ExperienceClient) => {
+  const { secret, verificationId } = await successFullyCreateNewTotpSecret(client);
+  const code = authenticator.generate(secret);
+
+  await successfullyVerifyTotp(client, {
+    code,
+    verificationId,
+  });
 
   return verificationId;
 };

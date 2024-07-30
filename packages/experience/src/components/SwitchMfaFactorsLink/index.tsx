@@ -1,4 +1,4 @@
-import SwitchIcon from '@/assets/icons/switch-icon.svg';
+import SwitchIcon from '@/assets/icons/switch-icon.svg?react';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
 

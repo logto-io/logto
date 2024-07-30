@@ -3,6 +3,7 @@ import { useCallback, useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -19,13 +20,14 @@ function CreateButton({ tokenType }: Props) {
   const { show } = useConfirmModal();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { currentPlan } = useContext(SubscriptionDataContext);
-  const {
-    quota: { customJwtEnabled },
-  } = currentPlan;
+  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+
+  const isCustomJwtEnabled = isDevFeaturesEnabled
+    ? currentSubscriptionQuota.customJwtEnabled
+    : currentPlan.quota.customJwtEnabled;
 
   const onCreateButtonClick = useCallback(async () => {
-    if (customJwtEnabled) {
+    if (isCustomJwtEnabled) {
       navigate(link);
       return;
     }
@@ -50,7 +52,7 @@ function CreateButton({ tokenType }: Props) {
       // Navigate to subscription page by default
       navigate('/tenant-settings/subscription');
     }
-  }, [customJwtEnabled, link, navigate, show, t]);
+  }, [isCustomJwtEnabled, link, navigate, show, t]);
 
   return (
     <Button

@@ -22,7 +22,7 @@ import useImageMimeTypes from '@/hooks/use-image-mime-types';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { uriValidator } from '@/utils/validator';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export const themeToLogoName = Object.freeze({
   [Theme.Light]: 'logoUrl',
@@ -45,7 +45,10 @@ export type ImageField<FormContext extends FieldValues> = {
 type Props<FormContext extends FieldValues> = {
   /** The condensed title when user assets service is available. */
   readonly uploadTitle: React.ComponentProps<typeof FormField>['title'];
-  /** The tooltip to show for all the fields. */
+  /**
+   * When user assets service is available, the tip will be displayed for the `uploadTitle`;
+   * otherwise, it will be displayed for each text input.
+   */
   readonly tip?: React.ComponentProps<typeof FormField>['tip'];
   readonly control: Control<FormContext>;
   readonly register: UseFormRegister<FormContext>;
@@ -134,7 +137,9 @@ function ImageInputs<FormContext extends FieldValues>({
                 actionDescription={t(`sign_in_exp.branding.with_${field.theme}`, {
                   value: t(`sign_in_exp.branding_uploads.${field.type}.title`),
                 })}
-                onCompleted={onChange}
+                onUploadComplete={({ url }) => {
+                  onChange(url);
+                }}
                 // Noop fallback should not be necessary, but for TypeScript to be happy
                 onUploadErrorChange={uploadErrorChangeHandlers[field.name] ?? noop}
                 onDelete={() => {

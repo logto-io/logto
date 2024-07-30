@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/icons/plus.svg';
-import EnterpriseSsoConnectorEmptyDark from '@/assets/images/sso-connector-empty-dark.svg';
-import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg';
+import Plus from '@/assets/icons/plus.svg?react';
+import EnterpriseSsoConnectorEmptyDark from '@/assets/images/sso-connector-empty-dark.svg?react';
+import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg?react';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
@@ -24,7 +24,7 @@ import { buildUrl } from '@/utils/url';
 
 import SsoConnectorLogo from './SsoConnectorLogo';
 import SsoCreationModal from './SsoCreationModal';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 const enterpriseSsoPathname = '/enterprise-sso';

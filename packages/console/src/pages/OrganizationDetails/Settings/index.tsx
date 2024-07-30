@@ -7,7 +7,7 @@ import useSWR from 'swr';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
-import LogoInputs, { themeToLogoName } from '@/components/ImageInputs';
+import ImageInputs, { themeToLogoName } from '@/components/ImageInputs';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { organizationLogosForExperienceLink } from '@/consts';
 import CodeEditor from '@/ds-components/CodeEditor';
@@ -24,7 +24,7 @@ import { trySubmitSafe } from '@/utils/form';
 import { type OrganizationDetailsOutletContext } from '../types';
 
 import JitSettings from './JitSettings';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { assembleData, isJsonObject, normalizeData, type FormData } from './utils';
 
 function Settings() {
@@ -107,7 +107,7 @@ function Settings() {
             {...register('description')}
           />
         </FormField>
-        <LogoInputs
+        <ImageInputs
           uploadTitle="organization_details.branding.logo"
           tip={
             <Trans

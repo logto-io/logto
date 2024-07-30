@@ -2,7 +2,7 @@ import { type Application } from '@logto/schemas';
 import Modal from 'react-modal';
 
 import ModalLayout from '@/ds-components/ModalLayout';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 
 import ProtectedAppForm from '../ProtectedAppForm';
 

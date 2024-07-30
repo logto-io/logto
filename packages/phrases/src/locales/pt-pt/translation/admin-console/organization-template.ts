@@ -14,8 +14,9 @@ const organization_template = {
     create_modal: {
       title: 'Criar função da organização',
       create: 'Criar função',
-      name_field: 'Nome da função',
-      description_field: 'Descrição',
+      name: 'Nome do papel',
+      description: 'Descrição',
+      type: 'Tipo de papel',
       created: 'A função da organização {{name}} foi criada com sucesso.',
     },
   },

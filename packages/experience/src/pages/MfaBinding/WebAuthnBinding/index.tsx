@@ -1,4 +1,5 @@
 import { conditional } from '@silverhand/essentials';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
@@ -12,13 +13,14 @@ import { UserMfaFlow } from '@/types';
 import { webAuthnStateGuard } from '@/types/guard';
 import { isWebAuthnOptions } from '@/utils/webauthn';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const WebAuthnBinding = () => {
   const { state } = useLocation();
   const [, webAuthnState] = validate(state, webAuthnStateGuard);
   const handleWebAuthn = useWebAuthnOperation();
   const skipMfa = useSkipMfa();
+  const [isCreatingPasskey, setIsCreatingPasskey] = useState(false);
 
   if (!webAuthnState) {
     return <ErrorPage title="error.invalid_session" />;
@@ -38,8 +40,11 @@ const WebAuthnBinding = () => {
     >
       <Button
         title="mfa.create_a_passkey"
-        onClick={() => {
-          void handleWebAuthn(options);
+        isLoading={isCreatingPasskey}
+        onClick={async () => {
+          setIsCreatingPasskey(true);
+          await handleWebAuthn(options);
+          setIsCreatingPasskey(false);
         }}
       />
       <SwitchMfaFactorsLink

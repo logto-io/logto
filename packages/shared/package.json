@@ -41,12 +41,12 @@
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.9.5",
-    "@vitest/coverage-v8": "^1.4.0",
+    "@vitest/coverage-v8": "^2.0.0",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
-    "typescript": "^5.3.3",
-    "vitest": "^1.4.0"
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.0"
   },
   "engines": {
     "node": "^20.9.0"
@@ -60,7 +60,7 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@silverhand/essentials": "^2.9.1",
-    "chalk": "^5.0.0",
+    "chalk": "^5.3.0",
     "find-up": "^7.0.0",
     "libphonenumber-js": "^1.9.49",
     "nanoid": "^5.0.1"

@@ -6,7 +6,7 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import { tenantAbbreviatedTagNameMap } from '@/components/TenantEnvTag';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isOpen: boolean;

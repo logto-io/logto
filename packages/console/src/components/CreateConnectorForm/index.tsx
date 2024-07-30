@@ -10,7 +10,7 @@ import useSWR from 'swr';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import type { RequestError } from '@/hooks/use-api';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
@@ -18,7 +18,7 @@ import ConnectorRadioGroup from './ConnectorRadioGroup';
 import Footer from './Footer';
 import PlatformSelector from './PlatformSelector';
 import Skeleton from './Skeleton';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { compareConnectors, getConnectorRadioGroupSize, getModalTitle } from './utils';
 
 type Props = {

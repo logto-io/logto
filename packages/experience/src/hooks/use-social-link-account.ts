@@ -22,7 +22,7 @@ const useLinkSocial = () => {
       }
 
       if (result?.redirectTo) {
-        redirectTo(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
     [asyncLinkWithSocial, handleError, redirectTo]

@@ -3,11 +3,11 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import ArrowPrev from '@/assets/icons/arrow-prev.svg';
-import NavClose from '@/assets/icons/nav-close.svg';
+import ArrowPrev from '@/assets/icons/arrow-prev.svg?react';
+import NavClose from '@/assets/icons/nav-close.svg?react';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly title?: string;

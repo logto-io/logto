@@ -5,11 +5,11 @@ import type { TipBubblePlacement } from '.';
 export const getVerticalOffset = (placement: TipBubblePlacement) => {
   switch (placement) {
     case 'top': {
-      return -16;
+      return -8;
     }
 
     case 'bottom': {
-      return 16;
+      return 8;
     }
 
     default: {

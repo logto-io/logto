@@ -1,27 +1,39 @@
 import classNames from 'classnames';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { type LogtoSkuQuotaEntries } from '@/types/skus';
 import { type SubscriptionPlanQuotaEntries } from '@/types/subscriptions';
 
-import DiffQuotaItem from './DiffQuotaItem';
-import * as styles from './index.module.scss';
+import DiffQuotaItem, { DiffSkuQuotaItem } from './DiffQuotaItem';
+import styles from './index.module.scss';
 
 type Props = {
   readonly entries: SubscriptionPlanQuotaEntries;
+  readonly skuQuotaEntries: LogtoSkuQuotaEntries;
   readonly isDowngradeTargetPlan: boolean;
   readonly className?: string;
 };
 
-function PlanQuotaList({ entries, isDowngradeTargetPlan, className }: Props) {
+function PlanQuotaList({ entries, skuQuotaEntries, isDowngradeTargetPlan, className }: Props) {
   return (
     <ul className={classNames(styles.planQuotaList, className)}>
-      {entries.map(([quotaKey, quotaValue]) => (
-        <DiffQuotaItem
-          key={quotaKey}
-          quotaKey={quotaKey}
-          quotaValue={quotaValue}
-          hasStatusIcon={isDowngradeTargetPlan}
-        />
-      ))}
+      {isDevFeaturesEnabled
+        ? skuQuotaEntries.map(([quotaKey, quotaValue]) => (
+            <DiffSkuQuotaItem
+              key={quotaKey}
+              quotaKey={quotaKey}
+              quotaValue={quotaValue}
+              hasStatusIcon={isDowngradeTargetPlan}
+            />
+          ))
+        : entries.map(([quotaKey, quotaValue]) => (
+            <DiffQuotaItem
+              key={quotaKey}
+              quotaKey={quotaKey}
+              quotaValue={quotaValue}
+              hasStatusIcon={isDowngradeTargetPlan}
+            />
+          ))}
     </ul>
   );
 }

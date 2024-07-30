@@ -1,9 +1,9 @@
-import Native from '@/assets/icons/connector-platform-icon-native.svg';
-import Web from '@/assets/icons/connector-platform-icon-web.svg';
+import Native from '@/assets/icons/connector-platform-icon-native.svg?react';
+import Web from '@/assets/icons/connector-platform-icon-web.svg?react';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 
 import PlatformTab from './PlatformTab';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly currentTab: PreviewPlatform;

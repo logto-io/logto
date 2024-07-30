@@ -191,16 +191,6 @@ describe('refresh token grant', () => {
     );
   });
 
-  it('should throw when refresh token has no organization scope', async () => {
-    const ctx = createOidcContext(validOidcContext);
-    stubRefreshToken(ctx, {
-      scopes: new Set(),
-    });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
-      new errors.InsufficientScope('refresh token missing required scope', UserScope.Organizations)
-    );
-  });
-
   it('should throw when refresh token has no grant id or the grant cannot be found', async () => {
     const ctx = createOidcContext(validOidcContext);
     const findRefreshToken = stubRefreshToken(ctx, {
@@ -308,6 +298,36 @@ describe('refresh token grant', () => {
     });
     await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
       createAccessDeniedError('organization requires MFA but user has no MFA configured', 403)
+    );
+  });
+
+  it('should throw when refresh token has no organization scope', async () => {
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      params: {
+        ...validOidcContext.params,
+        scope: '',
+      },
+    });
+    const tenant = new MockTenant();
+    stubRefreshToken(ctx, {
+      scopes: new Set(),
+    });
+    stubGrant(ctx);
+    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves(mockApplication);
+    Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves([
+      { tenantId: 'default', id: 'foo', name: 'foo', description: 'foo' },
+      { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
+      { tenantId: 'default', id: 'baz', name: 'baz', description: 'baz' },
+    ]);
+    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
+      isMfaRequired: false,
+      hasMfaConfigured: false,
+    });
+
+    await expect(mockHandler(tenant)(ctx, noop)).rejects.toMatchError(
+      new errors.InsufficientScope('refresh token missing required scope', UserScope.Organizations)
     );
   });
 

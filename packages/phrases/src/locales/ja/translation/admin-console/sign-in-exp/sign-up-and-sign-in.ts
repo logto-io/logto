@@ -27,7 +27,7 @@ const sign_up_and_sign_in = {
     password_auth: 'パスワード',
     verification_code_auth: '確認コード',
     auth_swap_tip: '以下のオプションを交換して、フローで最初に表示されるオプションを決定します。',
-    require_auth_factor: '少なくとも1つの認証要素を選択する必要があります。',
+    require_auth_factor: '少なくとも 1 つの認証要素を選択する必要があります。',
   },
   social_sign_in: {
     title: 'ソーシャルサインイン',
@@ -40,6 +40,9 @@ const sign_up_and_sign_in = {
       set_up_more: '設定',
       go_to: '他のソーシャルコネクタに移動します。',
     },
+    automatic_account_linking: '自動アカウントリンク',
+    automatic_account_linking_label:
+      'オンにすると、ユーザーがシステムに新しいソーシャルアイデンティティでサインインし、同じ識別子 (例：メールアドレス) を持つ既存のアカウントが 1 つだけ存在する場合、Logto はアカウントリンクのプロンプトを表示する代わりに、そのアカウントをソーシャルアイデンティティに自動的にリンクします。',
   },
   tip: {
     set_a_password: 'ユーザー名にユニークなパスワードを設定することが重要です。',
@@ -49,11 +52,11 @@ const sign_up_and_sign_in = {
       'これは、サインアッププロセス中にパスワードを設定するオプションを有効にした場合に必要です。',
     verification_code_auth:
       'これは、サインアップ時に確認コードの提供オプションのみを有効にした場合に必要です。サインアッププロセスでパスワード設定を許可する場合は、ボックスのチェックを外してもかまいません。',
-    delete_sign_in_method: 'これは{{identifier}}を必須の識別子として選択した場合に必要です。',
+    delete_sign_in_method: 'これは {{identifier}} を必須の識別子として選択した場合に必要です。',
   },
   advanced_options: {
     title: '高度なオプション',
-    enable_single_sign_on: '企業向けシングルサインオン（SSO）を有効にする',
+    enable_single_sign_on: '企業向けシングルサインオン (SSO) を有効にする',
     enable_single_sign_on_description:
       'ユーザーが企業のアイデンティティを使用してアプリケーションにサインインできるようにします。',
     single_sign_on_hint: {

@@ -41,7 +41,7 @@ const useSetUsername = () => {
       }
 
       if (result?.redirectTo) {
-        redirectTo(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
     [asyncAddProfile, errorHandlers, handleError, redirectTo]

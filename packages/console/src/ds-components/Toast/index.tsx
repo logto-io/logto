@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import { Toaster, resolveValue } from 'react-hot-toast';
 
-import Error from '@/assets/icons/toast-error.svg';
-import Success from '@/assets/icons/toast-success.svg';
+import Error from '@/assets/icons/toast-error.svg?react';
+import Success from '@/assets/icons/toast-success.svg?react';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function Toast() {
   return (

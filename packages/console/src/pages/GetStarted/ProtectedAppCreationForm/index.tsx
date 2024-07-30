@@ -12,7 +12,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ProtectedAppCard from '@/pages/Applications/components/ProtectedAppCard';
 import ProtectedAppForm from '@/pages/Applications/components/ProtectedAppForm';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function ProtectedAppCreationForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

@@ -1,15 +1,26 @@
-import { type TenantResponse } from '@/cloud/types/router';
+import { conditional } from '@silverhand/essentials';
+
+import {
+  type TenantResponse,
+  type NewSubscriptionUsage,
+  type NewSubscriptionQuota,
+} from '@/cloud/types/router';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
 type Props = {
   readonly tenantData: TenantResponse;
-  readonly tenantPlan: SubscriptionPlan;
+  readonly tenantSubscriptionPlan: SubscriptionPlan;
+  readonly tenantStatus: {
+    usage: NewSubscriptionUsage;
+    quota: NewSubscriptionQuota;
+  };
   readonly className?: string;
 };
 
-function TenantStatusTag({ tenantData, tenantPlan, className }: Props) {
+function TenantStatusTag({ tenantData, tenantSubscriptionPlan, tenantStatus, className }: Props) {
   const { usage, openInvoices, isSuspended } = tenantData;
 
   /**
@@ -35,13 +46,21 @@ function TenantStatusTag({ tenantData, tenantPlan, className }: Props) {
     );
   }
 
+  const { usage: tenantUsage, quota: tenantQuota } = tenantStatus;
+
   const { activeUsers } = usage;
 
   const {
     quota: { mauLimit },
-  } = tenantPlan;
+  } = tenantSubscriptionPlan;
 
-  const isMauExceeded = mauLimit !== null && activeUsers >= mauLimit;
+  const isMauExceeded =
+    conditional(
+      isDevFeaturesEnabled &&
+        tenantQuota.mauLimit !== null &&
+        tenantUsage.mauLimit >= tenantQuota.mauLimit
+    ) ??
+    (mauLimit !== null && activeUsers >= mauLimit);
 
   if (isMauExceeded) {
     return (

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 
 import AssignRoleModal from '../AssignRoleModal';
 import type { Props as CreateRoleFormProps } from '../CreateRoleForm';

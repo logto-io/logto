@@ -6,7 +6,7 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import UserAvatar from '@/components/UserAvatar';
 import DynamicT from '@/ds-components/DynamicT';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type User = GetArrayElementType<RoleResponse['featuredUsers']>;
 type Application = GetArrayElementType<RoleResponse['featuredApplications']>;

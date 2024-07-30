@@ -45,7 +45,7 @@ function LogoAndFavicon<FormContext extends FieldValues>({
       uploadTitle={
         <>
           {t(`sign_in_exp.branding.with_${theme}`, {
-            value: t('sign_in_exp.branding.app_logo_and_favicon'),
+            value: t(`sign_in_exp.branding.${type}_and_favicon`),
           })}
         </>
       }

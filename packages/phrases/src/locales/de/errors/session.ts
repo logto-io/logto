@@ -19,12 +19,15 @@ const session = {
     'Die Verifizierung war nicht erfolgreich. Starte die Verifizierung neu und versuche es erneut.',
   connector_validation_session_not_found:
     'Die Connector-Sitzung zur Token-Validierung wurde nicht gefunden.',
+  csrf_token_mismatch: 'CSRF-Token stimmt nicht überein.',
   identifier_not_found:
     'Benutzerkennung nicht gefunden. Bitte gehen Sie zurück und melden Sie sich erneut an.',
   interaction_not_found:
     'Interaktionssitzung nicht gefunden. Bitte gehen Sie zurück und starten Sie die Sitzung erneut.',
   not_supported_for_forgot_password:
     'Diese Operation wird für das vergessene Passwort nicht unterstützt.',
+  identity_conflict:
+    'Identitätskonflikt festgestellt. Bitte starten Sie eine neue Sitzung, um mit einer anderen Identität fortzufahren.',
   mfa: {
     require_mfa_verification: 'MFA-Verifizierung ist erforderlich, um sich anzumelden.',
     mfa_sign_in_only: 'MFA ist nur für die Anmeldeinteraktion verfügbar.',

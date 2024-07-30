@@ -22,15 +22,12 @@ import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import {
-  devFeatureTest,
   getAccessTokenPayload,
   randomString,
   generateName,
   generatePassword,
   generateUsername,
 } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('Token Exchange', () => {
   const username = generateUsername();
@@ -204,6 +201,47 @@ describe('Token Exchange', () => {
       expect(body).toHaveProperty('token_type', 'Bearer');
       expect(body).toHaveProperty('expires_in');
       expect(body).toHaveProperty('scope', UserScope.Profile);
+    });
+  });
+
+  describe('get access token for resource', () => {
+    it('should exchange an access token with resource as `aud`', async () => {
+      const { subjectToken } = await createSubjectToken(testUserId);
+
+      const { access_token } = await oidcApi
+        .post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: testApplicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            resource: testApiResourceInfo.indicator,
+          }),
+        })
+        .json<{ access_token: string }>();
+
+      expect(getAccessTokenPayload(access_token)).toHaveProperty(
+        'aud',
+        testApiResourceInfo.indicator
+      );
+    });
+
+    it('should fail with invalid resource', async () => {
+      const { subjectToken } = await createSubjectToken(testUserId);
+
+      await expect(
+        oidcApi.post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: testApplicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            resource: 'invalid_resource',
+          }),
+        })
+      ).rejects.toThrow();
     });
   });
 

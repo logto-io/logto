@@ -7,6 +7,7 @@ const organizations = {
   organization_template: '조직 템플릿',
   organization_id: '조직 ID',
   members: '회원',
+  machine_to_machine: '기계 대 기계 앱',
   create_organization: '조직 만들기',
   setup_organization: '조직 설정',
   organization_list_placeholder_title: '조직',

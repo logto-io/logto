@@ -18,6 +18,76 @@ export default function backupCodeVerificationRoutes<T extends WithLogContext>(
   const { libraries, queries } = tenantContext;
 
   router.post(
+    `${experienceRoutes.verification}/backup-code/generate`,
+    koaGuard({
+      status: [200, 400],
+      response: z.object({
+        verificationId: z.string(),
+        codes: z.array(z.string()),
+      }),
+    }),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
+
+      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+
+      const backupCodeVerificationRecord = BackupCodeVerification.create(
+        libraries,
+        queries,
+        experienceInteraction.identifiedUserId
+      );
+
+      const codes = backupCodeVerificationRecord.generate();
+
+      ctx.experienceInteraction.setVerificationRecord(backupCodeVerificationRecord);
+
+      await ctx.experienceInteraction.save();
+
+      ctx.body = {
+        verificationId: backupCodeVerificationRecord.id,
+        codes,
+      };
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${experienceRoutes.verification}/backup-code/generate`,
+    koaGuard({
+      status: [200, 400],
+      response: z.object({
+        verificationId: z.string(),
+        codes: z.array(z.string()),
+      }),
+    }),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
+
+      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+
+      const backupCodeVerificationRecord = BackupCodeVerification.create(
+        libraries,
+        queries,
+        experienceInteraction.identifiedUserId
+      );
+
+      const codes = backupCodeVerificationRecord.generate();
+
+      ctx.experienceInteraction.setVerificationRecord(backupCodeVerificationRecord);
+
+      await ctx.experienceInteraction.save();
+
+      ctx.body = {
+        verificationId: backupCodeVerificationRecord.id,
+        codes,
+      };
+
+      return next();
+    }
+  );
+
+  router.post(
     `${experienceRoutes.verification}/backup-code/verify`,
     koaGuard({
       body: backupCodeVerificationVerifyPayloadGuard,
@@ -30,9 +100,7 @@ export default function backupCodeVerificationRoutes<T extends WithLogContext>(
       const { experienceInteraction } = ctx;
       const { code } = ctx.guard.body;
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.not_identified');
-
-      // TODO: Check if the MFA is enabled
+      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
 
       const backupCodeVerificationRecord = BackupCodeVerification.create(
         libraries,
@@ -49,6 +117,8 @@ export default function backupCodeVerificationRoutes<T extends WithLogContext>(
       ctx.body = {
         verificationId: backupCodeVerificationRecord.id,
       };
+
+      return next();
     }
   );
 }

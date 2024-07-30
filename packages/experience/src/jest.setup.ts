@@ -1,4 +1,5 @@
 import { type LocalePhrase } from '@logto/phrases-experience';
+import { ssrPlaceholder } from '@logto/schemas';
 import { type DeepPartial } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -18,3 +19,6 @@ export const setupI18nForTesting = async (
   });
 
 void setupI18nForTesting();
+
+// eslint-disable-next-line @silverhand/fp/no-mutating-methods
+Object.defineProperty(global, 'logtoSsr', { value: ssrPlaceholder });

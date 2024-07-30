@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import CaretExpanded from '@/assets/icons/caret-expanded.svg';
-import CaretFolded from '@/assets/icons/caret-folded.svg';
+import CaretExpanded from '@/assets/icons/caret-expanded.svg?react';
+import CaretFolded from '@/assets/icons/caret-folded.svg?react';
 import Checkbox from '@/ds-components/Checkbox';
 import IconButton from '@/ds-components/IconButton';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -11,7 +11,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import SourceDataItem from '../SourceDataItem';
 import { type DataEntry, type DataGroup, type SelectedDataEntry } from '../type';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props<TEntry extends DataEntry> = {
   readonly dataGroup: DataGroup<TEntry>;

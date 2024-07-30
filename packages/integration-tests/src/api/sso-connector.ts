@@ -54,6 +54,7 @@ export class SsoConnectorApi {
         clientSecret: 'bar',
         issuer: `${logtoUrl}/oidc`,
       },
+      syncProfile: true,
     });
 
     return connector;

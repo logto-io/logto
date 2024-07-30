@@ -2,14 +2,14 @@ import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import RequestErrorDarkImage from '@/assets/images/request-error-dark.svg';
-import RequestErrorImage from '@/assets/images/request-error.svg';
+import RequestErrorDarkImage from '@/assets/images/request-error-dark.svg?react';
+import RequestErrorImage from '@/assets/images/request-error.svg?react';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import type { RequestError } from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly error: RequestError;

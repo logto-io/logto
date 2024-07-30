@@ -20,7 +20,8 @@ const quota_table = {
     title: 'Kullanıcı Arayüzü ve Markalama',
     custom_domain: 'Özel alan adı',
     custom_css: 'Özel CSS',
-    app_logo_and_favicon: 'Uygulama logoları ve favicon',
+    logo_and_favicon: 'Logo ve favicon',
+    bring_your_ui: 'Kendi arayüzünü getir',
     dark_mode: 'Karanlık mod',
     i18n: 'Uluslararasılaştırma',
   },
@@ -37,6 +38,7 @@ const quota_table = {
     mfa: 'Çoklu faktörlü kimlik doğrulama',
     sso: 'Kurumsal SSO',
     adaptive_mfa: 'Uyarlamalı MFA',
+    impersonation: 'Taklit etme',
   },
   user_management: {
     title: 'Kullanıcı Yönetimi',

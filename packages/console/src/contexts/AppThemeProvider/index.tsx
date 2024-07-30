@@ -1,5 +1,5 @@
 import { Theme } from '@logto/schemas';
-import { conditionalString, noop, trySafe } from '@silverhand/essentials';
+import { condArray, noop, trySafe } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
 
@@ -7,7 +7,7 @@ import { storageKeys } from '@/consts';
 import type { AppearanceMode } from '@/types/appearance-mode';
 import { appearanceModeGuard, DynamicAppearanceMode } from '@/types/appearance-mode';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly children: ReactNode;
@@ -78,8 +78,8 @@ export function AppThemeProvider({ children }: Props) {
 
   // Set Theme Mode
   useEffect(() => {
-    document.body.classList.remove(conditionalString(styles.light), conditionalString(styles.dark));
-    document.body.classList.add(conditionalString(styles[theme]));
+    document.body.classList.remove(...condArray(styles.light, styles.dark));
+    document.body.classList.add(...condArray(styles[theme]));
   }, [theme]);
 
   const context = useMemo<Context>(

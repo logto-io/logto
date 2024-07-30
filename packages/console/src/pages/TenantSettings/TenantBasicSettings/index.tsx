@@ -18,7 +18,7 @@ import DeleteCard from './DeleteCard';
 import DeleteModal from './DeleteModal';
 import LeaveCard from './LeaveCard';
 import ProfileForm from './ProfileForm';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { type TenantSettingsForm } from './types.js';
 
 function TenantBasicSettings() {

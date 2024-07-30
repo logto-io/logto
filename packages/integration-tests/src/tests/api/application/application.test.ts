@@ -56,7 +56,6 @@ describe('application APIs', () => {
     };
 
     const application = await createApplication(applicationName, ApplicationType.Protected, {
-      // @ts-expect-error the create guard has been modified
       protectedAppMetadata: metadata,
     });
 
@@ -76,12 +75,10 @@ describe('application APIs', () => {
     };
 
     const application = await createApplication(applicationName, ApplicationType.Protected, {
-      // @ts-expect-error the create guard has been modified
       protectedAppMetadata: metadata,
     });
     await expectRejects(
       createApplication('test-create-app', ApplicationType.Protected, {
-        // @ts-expect-error the create guard has been modified
         protectedAppMetadata: metadata,
       }),
       {
@@ -133,7 +130,6 @@ describe('application APIs', () => {
     };
 
     const application = await createApplication('test-update-app', ApplicationType.Protected, {
-      // @ts-expect-error the create guard has been modified
       protectedAppMetadata: metadata,
     });
 

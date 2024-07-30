@@ -15,6 +15,8 @@ const tenants = {
     tenant_id: 'ID del inquilino',
     tenant_name: 'Nombre del inquilino',
     tenant_region: 'Región de alojamiento de datos',
+    tenant_region_description:
+      'La ubicación física donde se alojan sus recursos de inquilino (usuarios, aplicaciones, etc.). Esto no se puede cambiar después de la creación.',
     tenant_region_tip:
       'Sus recursos de inquilino se alojan en {{region}}. <a>Obtener más información</a>',
     environment_tag_development: 'Desarrollo',
@@ -47,6 +49,7 @@ const tenants = {
   },
   create_modal: {
     title: 'Crear inquilino',
+    subtitle: 'Crea un nuevo inquilino que tenga recursos y usuarios aislados.',
     tenant_usage_purpose: '¿Para qué desea usar este inquilino?',
     development_description:
       'Solo para pruebas y no debe usarse en producción. No se requiere suscripción.',
@@ -56,6 +59,10 @@ const tenants = {
     available_plan: 'Plan disponible:',
     create_button: 'Crear inquilino',
     tenant_name_placeholder: 'Mi inquilino',
+    tenant_created: 'Inquilino creado con éxito.',
+    invitation_failed:
+      'Algunas invitaciones no se pudieron enviar. Inténtalo de nuevo en Configuraciones -> Miembros más tarde.',
+    tenant_type_description: 'Esto no se puede cambiar después de la creación.',
   },
   dev_tenant_migration: {
     title:
@@ -102,6 +109,10 @@ const tenants = {
       'Lamentamos informarle que su cuenta de inquilino ha sido suspendida temporalmente debido a un uso indebido, que incluye exceder los límites de MAU, pagos atrasados ​​u otras acciones no autorizadas.',
     description_2:
       'Si necesita aclaraciones adicionales, tiene alguna inquietud o desea restaurar la funcionalidad completa y desbloquear sus inquilinos, no dude en contactarnos de inmediato.',
+  },
+  production_tenant_notification: {
+    text: 'Estás en un inquilino de desarrollo para pruebas gratuitas. Crea un inquilino de producción para ponerlo en marcha.',
+    action: 'Crear inquilino',
   },
 };
 

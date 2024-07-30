@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import ProgressBar from '../ProgressBar';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly step: number;

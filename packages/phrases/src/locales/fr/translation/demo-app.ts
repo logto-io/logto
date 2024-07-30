@@ -1,5 +1,6 @@
 const demo_app = {
   title: "Vous vous êtes connecté avec succès à l'aperçu en direct !",
+  subtitle: 'Voici vos informations utilisateur :',
   username: "Nom d'utilisateur :",
   user_id: "ID de l'utilisateur :",
   sign_out: "Se déconnecter de l'aperçu en direct",

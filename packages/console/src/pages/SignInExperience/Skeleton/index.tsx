@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import CardTitle from '@/ds-components/CardTitle';
 import Spacer from '@/ds-components/Spacer';
 
-import * as pageContentStyles from '../PageContent/index.module.scss';
-import * as pageStyles from '../index.module.scss';
+import pageContentStyles from '../PageContent/index.module.scss';
+import pageStyles from '../index.module.scss';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function Skeleton() {
   return (

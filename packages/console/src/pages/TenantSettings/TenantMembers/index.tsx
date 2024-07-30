@@ -3,9 +3,9 @@ import { useContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import useSWRMutation from 'swr/mutation';
 
-import InvitationIcon from '@/assets/icons/invitation.svg';
-import MembersIcon from '@/assets/icons/members.svg';
-import PlusIcon from '@/assets/icons/plus.svg';
+import InvitationIcon from '@/assets/icons/invitation.svg?react';
+import MembersIcon from '@/assets/icons/members.svg?react';
+import PlusIcon from '@/assets/icons/plus.svg?react';
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import ChargeNotification from '@/components/ChargeNotification';
 import { TenantSettingsTabs } from '@/consts';
@@ -17,7 +17,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import InviteMemberModal from './InviteMemberModal';
 import useTenantMembersUsage from './hooks';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function TenantMembers() {
   const { hasTenantMembersSurpassedLimit } = useTenantMembersUsage();

@@ -3,7 +3,7 @@ import { useMemo, useRef, useCallback, useEffect } from 'react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export const defaultLength = 6;
 

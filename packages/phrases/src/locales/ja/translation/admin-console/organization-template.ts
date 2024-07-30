@@ -1,7 +1,7 @@
 const organization_template = {
   title: '組織テンプレート',
   subtitle:
-    'マルチテナントSaaSアプリケーションでは、組織テンプレートが複数の組織の共有アクセス制御ポリシー（権限と役割）を定義します。',
+    'マルチテナント SaaS アプリケーションでは、組織テンプレートが複数の組織の共有アクセス制御ポリシー（権限と役割）を定義します。',
   roles: {
     tab_name: '組織の役割',
     search_placeholder: '役割名で検索',
@@ -14,8 +14,9 @@ const organization_template = {
     create_modal: {
       title: '組織の役割を作成する',
       create: '役割を作成する',
-      name_field: '役割名',
-      description_field: '説明',
+      name: '役割名',
+      description: '説明',
+      type: '役割の種類',
       created: '組織の役割{{name}}が正常に作成されました。',
     },
   },

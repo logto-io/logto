@@ -5,11 +5,11 @@ import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ExternalLinkIcon from '@/assets/icons/external-link.svg';
-import Globe from '@/assets/icons/globe.svg';
-import Palette from '@/assets/icons/palette.svg';
-import Profile from '@/assets/icons/profile.svg';
-import SignOut from '@/assets/icons/sign-out.svg';
+import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
+import Globe from '@/assets/icons/globe.svg?react';
+import Palette from '@/assets/icons/palette.svg?react';
+import Profile from '@/assets/icons/profile.svg?react';
+import SignOut from '@/assets/icons/sign-out.svg?react';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
 import { isCloud } from '@/consts/env';
@@ -26,7 +26,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import SubMenu from './SubMenu';
 import UserInfoSkeleton from './UserInfoSkeleton';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function UserInfo() {
   const { signOut } = useLogto();

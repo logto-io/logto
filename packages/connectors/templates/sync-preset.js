@@ -20,7 +20,7 @@ const templateKeys = Object.keys(templateJson);
  * Value format: `{ "<connector-name>": ["<script-name>"] }`
  * Example: `{ "connector-oauth2": ["prepack"] }`
  */
-const scriptExceptions = { 'connector-oauth2': ['prepack'] };
+const scriptExceptions = { 'connector-oauth2': ['prepack', 'build', 'build:test'] };
 
 const sync = async () => {
   const packagesDirectory = './';

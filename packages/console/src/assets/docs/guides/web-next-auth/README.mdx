@@ -45,7 +45,7 @@ const handler = NextAuth({
       wellKnown: '${props.endpoint}oidc/.well-known/openid-configuration',
       authorization: { params: { scope: 'openid offline_access profile email' } },
       clientId: '${props.app.id}'',
-      clientSecret: '${props.app.secret}',
+      clientSecret: '${props.secrets[0]?.value ?? props.app.secret}',
       client: {
         id_token_signed_response_alg: 'ES384',
       },

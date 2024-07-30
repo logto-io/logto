@@ -31,10 +31,7 @@ export default function totpVerificationRoutes<T extends WithLogContext>(
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.not_identified');
-
-      // TODO: Check if the MFA is enabled
-      // TODO: Check if the interaction is fully verified
+      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
 
       const totpVerification = TotpVerification.create(
         libraries,
@@ -71,17 +68,17 @@ export default function totpVerificationRoutes<T extends WithLogContext>(
       const { experienceInteraction } = ctx;
       const { verificationId, code } = ctx.guard.body;
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.not_identified');
+      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
 
       // Verify new generated secret
       if (verificationId) {
-        const totpVerificationRecord =
-          experienceInteraction.getVerificationRecordById(verificationId);
+        const totpVerificationRecord = experienceInteraction.getVerificationRecordByTypeAndId(
+          VerificationType.TOTP,
+          verificationId
+        );
 
         assertThat(
-          totpVerificationRecord &&
-            totpVerificationRecord.type === VerificationType.TOTP &&
-            totpVerificationRecord.userId === experienceInteraction.identifiedUserId,
+          totpVerificationRecord.userId === experienceInteraction.identifiedUserId,
           new RequestError({
             code: 'session.verification_session_not_found',
             status: 404,

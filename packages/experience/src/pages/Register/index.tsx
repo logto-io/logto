@@ -18,7 +18,7 @@ import useTerms from '@/hooks/use-terms';
 import ErrorPage from '../ErrorPage';
 
 import IdentifierRegisterForm from './IdentifierRegisterForm';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const RegisterFooter = () => {
   const { t } = useTranslation();

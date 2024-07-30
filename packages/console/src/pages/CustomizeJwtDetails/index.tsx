@@ -8,7 +8,7 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import { CodeEditorLoadingContext } from './CodeEditorLoadingContext';
 import MainContent from './MainContent';
 import PageLoadingSkeleton from './PageLoadingSkeleton';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { pageParamsGuard, type Action } from './type';
 import useDataFetch from './use-data-fetch';
 

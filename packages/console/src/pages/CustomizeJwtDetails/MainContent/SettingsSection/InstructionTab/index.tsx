@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
   environmentVariablesCodeExample,
@@ -20,11 +19,11 @@ import {
   jwtCustomizerGrantContextTypeDefinition,
 } from '@/pages/CustomizeJwtDetails/utils/type-definitions';
 
-import * as tabContentStyles from '../index.module.scss';
+import tabContentStyles from '../index.module.scss';
 
 import EnvironmentVariablesField from './EnvironmentVariablesField';
 import GuideCard, { CardType } from './GuideCard';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isActive: boolean;
@@ -79,7 +78,7 @@ function InstructionTab({ isActive }: Props) {
           />
         </GuideCard>
       )}
-      {isDevFeaturesEnabled && tokenType === LogtoJwtTokenKeyType.AccessToken && (
+      {tokenType === LogtoJwtTokenKeyType.AccessToken && (
         <GuideCard
           name={CardType.GrantData}
           isExpanded={expendCard === CardType.GrantData}
@@ -91,7 +90,7 @@ function InstructionTab({ isActive }: Props) {
             language="typescript"
             className={styles.sampleCode}
             value={jwtCustomizerGrantContextTypeDefinition}
-            height="400px"
+            height="180px"
             theme="logto-dark"
             options={typeDefinitionCodeEditorOptions}
           />

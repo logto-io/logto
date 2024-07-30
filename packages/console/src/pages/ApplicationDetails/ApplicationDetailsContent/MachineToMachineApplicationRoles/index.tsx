@@ -6,8 +6,8 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Delete from '@/assets/icons/delete.svg';
-import Plus from '@/assets/icons/plus.svg';
+import Delete from '@/assets/icons/delete.svg?react';
+import Plus from '@/assets/icons/plus.svg?react';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import RoleAssignmentModal from '@/components/RoleAssignmentModal';
@@ -25,7 +25,7 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 

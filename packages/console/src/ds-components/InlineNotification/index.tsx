@@ -3,17 +3,17 @@ import classNames from 'classnames';
 import { forwardRef } from 'react';
 import type { ReactNode, Ref } from 'react';
 
-import Alert from '@/assets/icons/alert.svg';
-import Info from '@/assets/icons/info.svg';
-import Error from '@/assets/icons/toast-error.svg';
-import Success from '@/assets/icons/toast-success.svg';
+import Alert from '@/assets/icons/alert.svg?react';
+import Info from '@/assets/icons/info.svg?react';
+import Error from '@/assets/icons/toast-error.svg?react';
+import Success from '@/assets/icons/toast-success.svg?react';
 import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 
 import Button from '../Button';
 import DynamicT from '../DynamicT';
 import TextLink from '../TextLink';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly severity?: 'info' | 'alert' | 'success' | 'error';

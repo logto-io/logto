@@ -1,9 +1,9 @@
-import Close from '@/assets/icons/close.svg';
+import Close from '@/assets/icons/close.svg?react';
 import IconButton from '@/ds-components/IconButton';
 
 import { type DataEntry, type SelectedDataEntry } from '../type';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props<TEntry extends DataEntry> = {
   readonly data: SelectedDataEntry<TEntry>;

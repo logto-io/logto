@@ -31,9 +31,13 @@ const useJsonStringConfigParser = () => {
 export const useConnectorFormConfigParser = () => {
   const parseJsonConfig = useJsonStringConfigParser();
 
-  return (data: ConnectorFormType, formItems: ConnectorResponse['formItems']) => {
+  return (
+    data: ConnectorFormType,
+    formItems: ConnectorResponse['formItems'],
+    skipFalsyValuesRemoval = false
+  ) => {
     return formItems
-      ? parseFormConfig(data.formConfig, formItems)
+      ? parseFormConfig(data.formConfig, formItems, skipFalsyValuesRemoval)
       : parseJsonConfig(data.jsonConfig);
   };
 };

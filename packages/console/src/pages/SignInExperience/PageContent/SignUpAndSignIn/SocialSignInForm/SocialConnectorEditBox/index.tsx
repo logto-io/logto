@@ -10,7 +10,7 @@ import ConnectorSetupWarning from '../../components/ConnectorSetupWarning';
 
 import AddButton from './AddButton';
 import SelectedConnectorItem from './SelectedConnectorItem';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly value: string[];

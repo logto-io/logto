@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { newPlansBlogLink } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
@@ -38,7 +39,7 @@ function ChargeNotification({
   checkedFlagKey,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSku } = useContext(SubscriptionDataContext);
   const { configs, updateConfigs } = useConfigs();
 
   // Display null when loading
@@ -52,7 +53,7 @@ function ChargeNotification({
     Boolean(checkedChargeNotification?.[checkedFlagKey]) ||
     !hasSurpassedLimit ||
     // No charge notification for free plan
-    currentPlan.id === ReservedPlanId.Free
+    (isDevFeaturesEnabled ? currentSku.id : currentPlan.id) === ReservedPlanId.Free
   ) {
     return null;
   }

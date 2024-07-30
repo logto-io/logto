@@ -2,7 +2,7 @@ import { TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 
-import Tick from '@/assets/icons/tick.svg';
+import Tick from '@/assets/icons/tick.svg?react';
 import { type TenantResponse } from '@/cloud/types/router';
 import PlanName from '@/components/PlanName';
 import TenantEnvTag from '@/components/TenantEnvTag';
@@ -11,7 +11,7 @@ import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
 
 import TenantStatusTag from './TenantStatusTag';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly tenantData: TenantResponse;
@@ -26,13 +26,18 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
     subscription: { planId },
   } = tenantData;
 
-  const { subscriptionPlans } = useContext(SubscriptionDataContext);
-  const tenantPlan = useMemo(
+  const {
+    subscriptionPlans,
+    currentSku,
+    currentSubscriptionUsage: usage,
+    currentSubscriptionQuota: quota,
+  } = useContext(SubscriptionDataContext);
+  const tenantSubscriptionPlan = useMemo(
     () => subscriptionPlans.find((plan) => plan.id === planId),
     [subscriptionPlans, planId]
   );
 
-  if (!tenantPlan) {
+  if (!tenantSubscriptionPlan) {
     return null;
   }
 
@@ -44,7 +49,8 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
           <TenantEnvTag tag={tag} />
           <TenantStatusTag
             tenantData={tenantData}
-            tenantPlan={tenantPlan}
+            tenantStatus={{ usage, quota }}
+            tenantSubscriptionPlan={tenantSubscriptionPlan}
             className={styles.statusTag}
           />
         </div>
@@ -52,7 +58,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
           {tag === TenantTag.Development ? (
             <DynamicT forKey="subscription.no_subscription" />
           ) : (
-            <PlanName name={tenantPlan.name} />
+            <PlanName skuId={currentSku.id} name={tenantSubscriptionPlan.name} />
           )}
         </div>
       </div>

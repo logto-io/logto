@@ -6,30 +6,38 @@ import type { ModalProps } from '@/components/ConfirmModal';
 import { WebModal, MobileModal } from '@/components/ConfirmModal';
 import usePlatform from '@/hooks/use-platform';
 
-export type ModalContentRenderProps = {
-  confirm: (data?: unknown) => void;
-  cancel: (data?: unknown) => void;
-};
-
 type ConfirmModalType = 'alert' | 'confirm';
 
 type ConfirmModalState = Omit<ModalProps, 'onClose' | 'onConfirm' | 'children'> & {
-  ModalContent: string | ((props: ModalContentRenderProps) => Nullable<JSX.Element>);
+  ModalContent: string | (() => Nullable<JSX.Element>);
   type: ConfirmModalType;
+  isConfirmLoading?: boolean;
+  isCancelLoading?: boolean;
 };
 
-type ConfirmModalProps = Omit<ConfirmModalState, 'isOpen' | 'type'> & { type?: ConfirmModalType };
+/**
+ * Props for promise-based modal usage
+ */
+type PromiseConfirmModalProps = Omit<ConfirmModalState, 'isOpen' | 'type' | 'isConfirmLoading'> & {
+  type?: ConfirmModalType;
+};
+
+/**
+ * Props for callback-based modal usage
+ */
+export type CallbackConfirmModalProps = PromiseConfirmModalProps & {
+  onConfirm?: () => Promise<void> | void;
+  onCancel?: () => Promise<void> | void;
+};
 
 type ConfirmModalContextType = {
-  show: (props: ConfirmModalProps) => Promise<[boolean, unknown?]>;
-  confirm: (data?: unknown) => void;
-  cancel: (data?: unknown) => void;
+  showPromise: (props: PromiseConfirmModalProps) => Promise<[boolean, unknown?]>;
+  showCallback: (props: CallbackConfirmModalProps) => void;
 };
 
 export const ConfirmModalContext = createContext<ConfirmModalContextType>({
-  show: async () => [true],
-  confirm: noop,
-  cancel: noop,
+  showPromise: async () => [true],
+  showCallback: noop,
 });
 
 type Props = {
@@ -40,49 +48,90 @@ const defaultModalState: ConfirmModalState = {
   isOpen: false,
   type: 'confirm',
   ModalContent: () => null,
+  isConfirmLoading: false,
+  isCancelLoading: false,
 };
 
+/**
+ * ConfirmModalProvider component
+ *
+ * This component provides a context for managing confirm modals throughout the application.
+ * It supports both promise-based and callback-based usage patterns. see `usePromiseConfirmModal` and `useConfirmModal` hooks.
+ */
 const ConfirmModalProvider = ({ children }: Props) => {
   const [modalState, setModalState] = useState<ConfirmModalState>(defaultModalState);
 
   const resolver = useRef<(value: [result: boolean, data?: unknown]) => void>();
+  const callbackRef = useRef<{
+    onConfirm?: () => Promise<void> | void;
+    onCancel?: () => Promise<void> | void;
+  }>({});
 
   const { isMobile } = usePlatform();
 
   const ConfirmModal = isMobile ? MobileModal : WebModal;
 
-  const handleShow = useCallback(async ({ type = 'confirm', ...props }: ConfirmModalProps) => {
-    resolver.current?.([false]);
+  const handleShowPromise = useCallback(
+    async ({ type = 'confirm', ...props }: PromiseConfirmModalProps) => {
+      resolver.current?.([false]);
 
-    setModalState({
-      isOpen: true,
-      type,
-      ...props,
-    });
+      setModalState({
+        isOpen: true,
+        type,
+        isConfirmLoading: false,
+        isCancelLoading: false,
+        ...props,
+      });
 
-    return new Promise<[result: boolean, data?: unknown]>((resolve) => {
+      return new Promise<[result: boolean, data?: unknown]>((resolve) => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        resolver.current = resolve;
+      });
+    },
+    []
+  );
+
+  const handleShowCallback = useCallback(
+    ({ type = 'confirm', onConfirm, onCancel, ...props }: CallbackConfirmModalProps) => {
+      resolver.current?.([false]);
+
+      setModalState({
+        isOpen: true,
+        type,
+        isConfirmLoading: false,
+        ...props,
+      });
+
       // eslint-disable-next-line @silverhand/fp/no-mutation
-      resolver.current = resolve;
-    });
-  }, []);
+      callbackRef.current = { onConfirm, onCancel };
+    },
+    []
+  );
 
-  const handleConfirm = useCallback((data?: unknown) => {
+  const handleConfirm = useCallback(async (data?: unknown) => {
+    if (callbackRef.current.onConfirm) {
+      setModalState((previous) => ({ ...previous, isConfirmLoading: true }));
+      await callbackRef.current.onConfirm();
+    }
     resolver.current?.([true, data]);
     setModalState(defaultModalState);
   }, []);
 
-  const handleCancel = useCallback((data?: unknown) => {
+  const handleCancel = useCallback(async (data?: unknown) => {
+    if (callbackRef.current.onCancel) {
+      setModalState((previous) => ({ ...previous, isCancelLoading: true }));
+      await callbackRef.current.onCancel();
+    }
     resolver.current?.([false, data]);
     setModalState(defaultModalState);
   }, []);
 
   const contextValue = useMemo(
     () => ({
-      show: handleShow,
-      confirm: handleConfirm,
-      cancel: handleCancel,
+      showPromise: handleShowPromise,
+      showCallback: handleShowCallback,
     }),
-    [handleCancel, handleConfirm, handleShow]
+    [handleShowPromise, handleShowCallback]
   );
 
   const { ModalContent, type, ...restProps } = modalState;
@@ -95,19 +144,15 @@ const ConfirmModalProvider = ({ children }: Props) => {
         onConfirm={
           type === 'confirm'
             ? () => {
-                handleConfirm();
+                void handleConfirm();
               }
             : undefined
         }
         onClose={() => {
-          handleCancel();
+          void handleCancel();
         }}
       >
-        {typeof ModalContent === 'string' ? (
-          ModalContent
-        ) : (
-          <ModalContent confirm={handleConfirm} cancel={handleCancel} />
-        )}
+        {typeof ModalContent === 'string' ? ModalContent : <ModalContent />}
       </ConfirmModal>
     </ConfirmModalContext.Provider>
   );

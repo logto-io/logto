@@ -13,7 +13,7 @@ import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 
-import * as styles from '../index.module.scss';
+import styles from '../index.module.scss';
 
 import VerificationCodeLink from './VerificationCodeLink';
 
@@ -47,7 +47,7 @@ const PasswordForm = ({
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -114,7 +114,7 @@ const PasswordForm = ({
         <ForgotPasswordLink className={styles.link} identifier={identifier} value={value} />
       )}
 
-      <Button title="action.continue" name="submit" htmlType="submit" />
+      <Button title="action.continue" name="submit" htmlType="submit" isLoading={isSubmitting} />
 
       {identifier !== SignInIdentifier.Username && isVerificationCodeEnabled && (
         <VerificationCodeLink className={styles.switch} identifier={identifier} value={value} />

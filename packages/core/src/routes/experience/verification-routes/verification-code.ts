@@ -1,18 +1,13 @@
-import {
-  InteractionEvent,
-  VerificationType,
-  verificationCodeIdentifierGuard,
-} from '@logto/schemas';
+import { InteractionEvent, verificationCodeIdentifierGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
-import assertThat from '#src/utils/assert-that.js';
 
-import { CodeVerification } from '../classes/verifications/code-verification.js';
+import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
+import { createNewCodeVerificationRecord } from '../classes/verifications/code-verification.js';
 import { experienceRoutes } from '../const.js';
 import { type WithExperienceInteractionContext } from '../middleware/koa-experience-interaction.js';
 
@@ -36,12 +31,14 @@ export default function verificationCodeRoutes<T extends WithLogContext>(
     async (ctx, next) => {
       const { identifier, interactionEvent } = ctx.guard.body;
 
-      const codeVerification = await CodeVerification.create(
+      const codeVerification = createNewCodeVerificationRecord(
         libraries,
         queries,
         identifier,
         interactionEvent
       );
+
+      await codeVerification.sendVerificationCode();
 
       ctx.experienceInteraction.setVerificationRecord(codeVerification);
 
@@ -72,14 +69,9 @@ export default function verificationCodeRoutes<T extends WithLogContext>(
     async (ctx, next) => {
       const { verificationId, code, identifier } = ctx.guard.body;
 
-      const codeVerificationRecord =
-        ctx.experienceInteraction.getVerificationRecordById(verificationId);
-
-      assertThat(
-        codeVerificationRecord &&
-          // Make the Verification type checker happy
-          codeVerificationRecord.type === VerificationType.VerificationCode,
-        new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+      const codeVerificationRecord = ctx.experienceInteraction.getVerificationRecordByTypeAndId(
+        codeVerificationIdentifierRecordTypeMap[identifier.type],
+        verificationId
       );
 
       await codeVerificationRecord.verify(identifier, code);

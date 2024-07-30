@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import ClearIcon from '@/assets/icons/clear-icon.svg';
+import ClearIcon from '@/assets/icons/clear-icon.svg?react';
 import Button from '@/components/Button';
 import IconButton from '@/components/Button/IconButton';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -11,13 +11,13 @@ import { InputField } from '@/components/InputFields';
 
 import HiddenIdentifierInput from './HiddenIdentifierInput';
 import TogglePassword from './TogglePassword';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   readonly autoFocus?: boolean;
-  readonly onSubmit: (password: string) => void;
+  readonly onSubmit: (password: string) => Promise<void>;
   readonly errorMessage?: string;
   readonly clearErrorMessage?: () => void;
 };
@@ -43,7 +43,7 @@ const SetPassword = ({
     watch,
     resetField,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FieldState>({
     reValidateMode: 'onBlur',
     defaultValues: { newPassword: '', confirmPassword: '' },
@@ -59,8 +59,8 @@ const SetPassword = ({
     (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage?.();
 
-      void handleSubmit((data, event) => {
-        onSubmit(data.newPassword);
+      void handleSubmit(async (data) => {
+        await onSubmit(data.newPassword);
       })(event);
     },
     [clearErrorMessage, handleSubmit, onSubmit]
@@ -119,7 +119,12 @@ const SetPassword = ({
 
       <TogglePassword isChecked={showPassword} onChange={setShowPassword} />
 
-      <Button name="submit" title="action.save_password" htmlType="submit" />
+      <Button
+        name="submit"
+        title="action.save_password"
+        htmlType="submit"
+        isLoading={isSubmitting}
+      />
 
       <input hidden type="submit" />
     </form>

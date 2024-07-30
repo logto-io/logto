@@ -78,7 +78,7 @@ const useContinueFlowCodeVerification = (
       }
 
       if (result?.redirectTo) {
-        redirectTo(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
     [

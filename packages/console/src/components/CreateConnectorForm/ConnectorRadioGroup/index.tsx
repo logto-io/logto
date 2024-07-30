@@ -5,7 +5,7 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import { type ConnectorGroup } from '@/types/connector';
 
 import ConnectorRadio from './ConnectorRadio';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type ConnectorRadioGroupSize = 'medium' | 'large' | 'xlarge';
 

@@ -15,8 +15,10 @@ const tenants = {
     tenant_id: 'ID do Inquilino',
     tenant_name: 'Nome do Inquilino',
     tenant_region: 'Região de hospedagem',
+    tenant_region_description:
+      'A localização física onde os recursos do seu inquilino (utilizadores, aplicações, etc.) estão hospedados. Isto não pode ser alterado após a criação.',
     tenant_region_tip:
-      'Os recursos do seu inquilino são hospedados na região {{region}}. <a>Learn more</a>',
+      'Os recursos do seu inquilino são hospedados na região {{region}}. <a>Saiba mais</a>',
     environment_tag_development: 'Dev',
     environment_tag_production: 'Prod',
     tenant_type: 'Tipo de inquilino',
@@ -47,6 +49,7 @@ const tenants = {
   },
   create_modal: {
     title: 'Criar inquilino',
+    subtitle: 'Crie um novo inquilino que tenha recursos e utilizadores isolados.',
     tenant_usage_purpose: 'Para que pretende utilizar este inquilino?',
     development_description:
       'Apenas para testes e não deve ser usado em produção. Não é necessário nenhum plano de subscrição.',
@@ -56,6 +59,10 @@ const tenants = {
     available_plan: 'Plano disponível:',
     create_button: 'Criar inquilino',
     tenant_name_placeholder: 'Meu inquilino',
+    tenant_created: 'Inquilino criado com sucesso.',
+    invitation_failed:
+      'Alguns convites falharam ao enviar. Por favor, tente novamente em Definições -> Membros mais tarde.',
+    tenant_type_description: 'Isto não pode ser alterado após a criação.',
   },
   dev_tenant_migration: {
     title:
@@ -102,6 +109,10 @@ const tenants = {
       'Lamentamos informar que a sua conta de inquilino foi temporariamente suspensa devido a uso indevido, incluindo exceder os limites de MAU, pagamentos em atraso ou outras ações não autorizadas.',
     description_2:
       'Se precisar de mais esclarecimentos, tiver alguma preocupação ou desejar restaurar a funcionalidade completa e desbloquear os seus inquilinos, não hesite em contactar-nos imediatamente.',
+  },
+  production_tenant_notification: {
+    text: 'Está no inquilino de desenvolvimento para testes gratuitos. Crie um inquilino de produção para entrar ao vivo.',
+    action: 'Criar inquilino',
   },
 };
 

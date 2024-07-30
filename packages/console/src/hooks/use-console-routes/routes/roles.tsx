@@ -1,12 +1,14 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { RoleDetailsTabs } from '@/consts/page-tabs';
-import RoleDetails from '@/pages/RoleDetails';
-import RoleApplications from '@/pages/RoleDetails/RoleApplications';
-import RolePermissions from '@/pages/RoleDetails/RolePermissions';
-import RoleSettings from '@/pages/RoleDetails/RoleSettings';
-import RoleUsers from '@/pages/RoleDetails/RoleUsers';
-import Roles from '@/pages/Roles';
+
+const Roles = safeLazy(async () => import('@/pages/Roles'));
+const RoleDetails = safeLazy(async () => import('@/pages/RoleDetails'));
+const RolePermissions = safeLazy(async () => import('@/pages/RoleDetails/RolePermissions'));
+const RoleSettings = safeLazy(async () => import('@/pages/RoleDetails/RoleSettings'));
+const RoleUsers = safeLazy(async () => import('@/pages/RoleDetails/RoleUsers'));
+const RoleApplications = safeLazy(async () => import('@/pages/RoleDetails/RoleApplications'));
 
 export const roles: RouteObject = {
   path: 'roles',

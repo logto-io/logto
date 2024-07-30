@@ -1,5 +1,9 @@
 import { condString } from '@silverhand/essentials';
 
+export const searchKeysCamelCase = Object.freeze(['organizationId', 'appId'] as const);
+
+type SearchKeysCamelCase = (typeof searchKeysCamelCase)[number];
+
 export const searchKeys = Object.freeze({
   /**
    * The key for specifying the organization ID that may be used to override the default settings.
@@ -7,7 +11,7 @@ export const searchKeys = Object.freeze({
   organizationId: 'organization_id',
   /** The current application ID. */
   appId: 'app_id',
-});
+} satisfies Record<SearchKeysCamelCase, string>);
 
 export const handleSearchParametersData = () => {
   const { search } = window.location;

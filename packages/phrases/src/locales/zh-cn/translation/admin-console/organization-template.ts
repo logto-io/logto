@@ -12,8 +12,9 @@ const organization_template = {
     create_modal: {
       title: '创建组织角色',
       create: '创建角色',
-      name_field: '角色名称',
-      description_field: '描述',
+      name: '角色名称',
+      description: '描述',
+      type: '角色类型',
       created: '成功创建组织角色 {{name}}。',
     },
   },

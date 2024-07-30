@@ -159,6 +159,18 @@ const quota_item = {
     unlimited: '自定義JWT',
     not_eligible: '刪除您的JWT聲明自訂程式',
   },
+  impersonation_enabled: {
+    name: '假扮',
+    limited: '假扮',
+    unlimited: '假扮',
+    not_eligible: '不允許假扮',
+  },
+  bring_your_ui_enabled: {
+    name: '自帶介面',
+    limited: '自帶介面',
+    unlimited: '自帶介面',
+    not_eligible: '移除您的自定義介面資產',
+  },
 };
 
 export default Object.freeze(quota_item);

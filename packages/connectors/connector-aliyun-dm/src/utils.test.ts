@@ -24,7 +24,6 @@ describe('request', () => {
   it('should call got.post with extended params', async () => {
     const parameters = mockedParameters;
     await request('http://test.endpoint.com', parameters, 'testsecret');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const calledData = post.mock.calls[0];
     expect(calledData).not.toBeUndefined();
     const payload = calledData?.[0].form as Record<string, unknown>;

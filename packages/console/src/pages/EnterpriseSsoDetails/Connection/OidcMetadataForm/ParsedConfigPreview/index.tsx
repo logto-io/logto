@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { type OidcProviderConfig } from '@/pages/EnterpriseSsoDetails/types/oidc';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly providerConfig: OidcProviderConfig;

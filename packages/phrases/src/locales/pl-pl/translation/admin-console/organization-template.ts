@@ -14,8 +14,9 @@ const organization_template = {
     create_modal: {
       title: 'Utwórz rolę organizacji',
       create: 'Utwórz rolę',
-      name_field: 'Nazwa roli',
-      description_field: 'Opis',
+      name: 'Nazwa roli',
+      description: 'Opis',
+      type: 'Typ roli',
       created: 'Rola organizacji {{name}} została pomyślnie utworzona.',
     },
   },

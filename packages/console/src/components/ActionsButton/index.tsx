@@ -2,15 +2,15 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Delete from '@/assets/icons/delete.svg';
-import Edit from '@/assets/icons/edit.svg';
-import More from '@/assets/icons/more.svg';
+import Delete from '@/assets/icons/delete.svg?react';
+import Edit from '@/assets/icons/edit.svg?react';
+import More from '@/assets/icons/more.svg?react';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
 import useActionTranslation from '@/hooks/use-action-translation';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   /** A function that will be called when the user confirms the deletion. If not provided,

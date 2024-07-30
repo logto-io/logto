@@ -9,3 +9,6 @@
  * If we use `/default`, the URL will look ugly; thus we keep the old fashion `/console`.
  */
 export const ossConsolePath = '/console';
+
+/** The prefix for keys and values that need to be explicitly marked as internal. */
+export const internalPrefix = '#internal:';

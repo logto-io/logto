@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import Redo from '@/assets/icons/redo.svg';
+import Redo from '@/assets/icons/redo.svg?react';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -11,7 +11,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import useApi from '@/hooks/use-api';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly hookId: string;

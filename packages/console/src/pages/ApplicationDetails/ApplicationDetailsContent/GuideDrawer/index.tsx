@@ -2,8 +2,8 @@ import { type ApplicationResponse } from '@logto/schemas';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ArrowLeft from '@/assets/icons/arrow-left.svg';
-import Close from '@/assets/icons/close.svg';
+import ArrowLeft from '@/assets/icons/arrow-left.svg?react';
+import Close from '@/assets/icons/close.svg?react';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
@@ -11,15 +11,17 @@ import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 
 import AppGuide from '../../components/AppGuide';
+import { type ApplicationSecretRow } from '../EndpointsAndCredentials';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly app: ApplicationResponse;
+  readonly secrets: ApplicationSecretRow[];
   readonly onClose: () => void;
 };
 
-function GuideDrawer({ app, onClose }: Props) {
+function GuideDrawer({ app, secrets, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.guide' });
   const { getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
@@ -89,6 +91,7 @@ function GuideDrawer({ app, onClose }: Props) {
           className={styles.guide}
           guideId={selectedGuide.id}
           app={app}
+          secrets={secrets}
           onClose={() => {
             setSelectedGuide(undefined);
           }}

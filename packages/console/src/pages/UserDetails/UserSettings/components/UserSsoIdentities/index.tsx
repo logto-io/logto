@@ -13,7 +13,7 @@ import Table from '@/ds-components/Table';
 import type { RequestError } from '@/hooks/use-api';
 import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
 
-import * as styles from '../UserSocialIdentities/index.module.scss';
+import styles from '../UserSocialIdentities/index.module.scss';
 
 type Props = {
   readonly ssoIdentities: UserSsoIdentity[];

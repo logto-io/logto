@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ExternalLinkIcon from '@/assets/icons/external-link.svg';
+import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { Props as ButtonProps, ButtonType } from '@/ds-components/Button';
 import Button from '@/ds-components/Button';
 import { Tooltip } from '@/ds-components/Tip';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly size?: ButtonProps['size'];

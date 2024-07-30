@@ -1,7 +1,23 @@
 {
-  "extends": "./tsconfig.base",
+  "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
-    "types": ["node", "jest", "jest-matcher-specific-error"]
+    "declaration": false,
+    "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "#src/*": [
+        "src/*"
+      ]
+    },
+    "types": [
+      "node",
+      "jest",
+      "jest-matcher-specific-error"
+    ]
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "*.config.ts",
+    "*.setup.ts"
+  ]
 }

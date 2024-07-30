@@ -30,25 +30,25 @@
 }
 
 .title {
-  @include _.shimmering-animation;
   width: 200px;
   height: 20px;
+  @include _.shimmering-animation;
 }
 
 .card {
   flex-grow: 1;
 
   .label {
-    @include _.shimmering-animation;
     width: 250px;
     height: 16px;
     margin-bottom: _.unit(2);
+    @include _.shimmering-animation;
   }
 
   .item {
-    @include _.shimmering-animation;
     width: 350px;
     height: 20px;
+    @include _.shimmering-animation;
   }
 
   .table {

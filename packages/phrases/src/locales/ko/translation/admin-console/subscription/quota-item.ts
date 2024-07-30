@@ -159,6 +159,18 @@ const quota_item = {
     unlimited: '사용자 정의 JWT',
     not_eligible: '사용자 정의 JWT 클레임 사용자를 제거하십시오',
   },
+  impersonation_enabled: {
+    name: '임퍼소네이션',
+    limited: '임퍼소네이션',
+    unlimited: '임퍼소네이션',
+    not_eligible: '임퍼소네이션 허용 안 됨',
+  },
+  bring_your_ui_enabled: {
+    name: '맞춤 UI 사용',
+    limited: '맞춤 UI 사용',
+    unlimited: '맞춤 UI 사용',
+    not_eligible: '맞춤 UI 자산을 제거하십시오',
+  },
 };
 
 export default Object.freeze(quota_item);

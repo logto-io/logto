@@ -1,12 +1,20 @@
 import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import type { HTMLProps, ReactElement, Ref } from 'react';
-import { forwardRef, cloneElement, useState, useImperativeHandle, useRef, useEffect } from 'react';
+import type { HTMLProps, ReactElement, Ref, AnimationEvent } from 'react';
+import {
+  forwardRef,
+  cloneElement,
+  useState,
+  useImperativeHandle,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 
 import NotchedBorder from './NotchedBorder';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
   readonly className?: string;
@@ -47,33 +55,30 @@ const InputField = (
 
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(false);
-  const hasContent =
-    Boolean(isPrefixVisible) ||
-    hasValue ||
-    // Handle the case when this filed have a default value
-    Boolean(value);
-
-  const isActive = hasContent || isFocused;
 
   useEffect(() => {
-    const inputDom = innerRef.current;
-    if (!inputDom) {
-      return;
-    }
-
     /**
-     * Use a timeout to check if the input field has autofill value.
-     * Fix the issue that the input field doesn't have the active style when the autofill value is set.
-     * see https://github.com/facebook/react/issues/1159#issuecomment-1025423604
+     * Should listen to the value prop to update the hasValue state.
      */
-    const checkAutoFillTimeout = setTimeout(() => {
-      setHasValue(inputDom.matches('*:-webkit-autofill'));
-    }, 200);
+    setHasValue(Boolean(value));
+  }, [value]);
 
-    return () => {
-      clearTimeout(checkAutoFillTimeout);
-    };
-  }, [innerRef]);
+  /**
+   * Fix the issue that the input field doesn't have the active style when the autofill value is set.
+   * We have define a void transition css rule on the input element once it is `:-webkit-autofill`ed.
+   * Hook onto this 'animationstart' event to detect the autofill start.
+   * see https://stackoverflow.com/questions/11708092/detecting-browser-autofill/41530164#41530164
+   */
+  const handleAnimationStart = useCallback((event: AnimationEvent<HTMLInputElement>) => {
+    /**
+     * Because SCSS adds some random characters to the ‘onAutoFillStart’ animation name during the build process, we can’t use the exact name here.
+     */
+    if (event.animationName.includes('onAutoFillStart')) {
+      setHasValue(true);
+    }
+  }, []);
+
+  const isActive = Boolean(isPrefixVisible) || hasValue || isFocused;
 
   return (
     <div className={className}>
@@ -97,6 +102,7 @@ const InputField = (
             {...props}
             ref={innerRef}
             value={value}
+            onAnimationStart={handleAnimationStart}
             onFocus={(event) => {
               setIsFocused(true);
               return onFocus?.(event);

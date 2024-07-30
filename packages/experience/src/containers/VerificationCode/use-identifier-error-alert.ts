@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import type { VerificationCodeIdentifier } from '@/types';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
@@ -13,7 +13,7 @@ export enum IdentifierErrorType {
 }
 
 const useIdentifierErrorAlert = () => {
-  const { show } = useConfirmModal();
+  const { show } = usePromiseConfirmModal();
   const navigate = useNavigate();
   const { t } = useTranslation();
 

@@ -2,7 +2,7 @@ import FormFieldSkeleton from '@/ds-components/FormField/Skeleton';
 
 import FormCardLayout from '../FormCardLayout';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly formFieldCount?: number;

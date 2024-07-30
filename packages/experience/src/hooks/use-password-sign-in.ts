@@ -53,7 +53,7 @@ const usePasswordSignIn = () => {
       }
 
       if (result?.redirectTo) {
-        redirectTo(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
     [asyncSignIn, checkSingleSignOn, errorHandlers, handleError, redirectTo]

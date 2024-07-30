@@ -65,6 +65,8 @@ const paywall = {
     description:
       'Upgrade auf einen kostenpflichtigen Plan für benutzerdefinierte JWT-Funktionalität und Premium-Vorteile. Wenn Sie Fragen haben, zögern Sie nicht, uns zu <a>kontaktieren</a>.',
   },
+  bring_your_ui:
+    'Upgrade auf einen kostenpflichtigen Plan für benutzerdefinierte UI-Funktionalität und Premium-Vorteile.',
 };
 
 export default Object.freeze(paywall);

@@ -10,7 +10,7 @@ import defaultAppleTouchLogo from '@/assets/apple-touch-icon.png';
 import defaultFavicon from '@/assets/favicon.png';
 import { type SignInExperienceResponse } from '@/types';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const themeToFavicon = Object.freeze({
   [Theme.Light]: 'favicon',
@@ -33,7 +33,8 @@ const themeToFavicon = Object.freeze({
 
 const AppMeta = () => {
   const { experienceSettings, theme, platform, isPreview } = useContext(PageContext);
-  const favicon = experienceSettings?.branding[themeToFavicon[theme]];
+  const favicon =
+    experienceSettings?.branding[themeToFavicon[theme]] ?? experienceSettings?.branding.favicon;
 
   return (
     <Helmet>

@@ -8,7 +8,7 @@ import useStartWebAuthnProcessing from '@/hooks/use-start-webauthn-processing';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly flow: UserMfaFlow;

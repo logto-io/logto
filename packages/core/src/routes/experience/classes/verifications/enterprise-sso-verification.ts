@@ -8,6 +8,7 @@ import {
   type UserSsoIdentity,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -21,7 +22,9 @@ import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type VerificationRecord } from './verification-record.js';
+import type { InteractionProfile } from '../../types.js';
+
+import { type IdentifierVerificationRecord } from './verification-record.js';
 
 /** The JSON data type for the EnterpriseSsoVerification record stored in the interaction storage */
 export type EnterpriseSsoVerificationRecordData = {
@@ -44,7 +47,7 @@ export const enterPriseSsoVerificationRecordDataGuard = z.object({
 }) satisfies ToZodObject<EnterpriseSsoVerificationRecordData>;
 
 export class EnterpriseSsoVerification
-  implements VerificationRecord<VerificationType.EnterpriseSso>
+  implements IdentifierVerificationRecord<VerificationType.EnterpriseSso>
 {
   static create(libraries: Libraries, queries: Queries, connectorId: string) {
     return new EnterpriseSsoVerification(libraries, queries, {
@@ -81,8 +84,10 @@ export class EnterpriseSsoVerification
     return Boolean(this.enterpriseSsoUserInfo && this.issuer);
   }
 
-  async getConnectorData(connectorId: string) {
-    this.connectorDataCache ||= await this.libraries.ssoConnectors.getSsoConnectorById(connectorId);
+  async getConnectorData() {
+    this.connectorDataCache ||= await this.libraries.ssoConnectors.getSsoConnectorById(
+      this.connectorId
+    );
 
     return this.connectorDataCache;
   }
@@ -104,7 +109,7 @@ export class EnterpriseSsoVerification
     tenantContext: TenantContext,
     payload: SocialAuthorizationUrlPayload
   ) {
-    const connectorData = await this.getConnectorData(this.connectorId);
+    const connectorData = await this.getConnectorData();
     return getSsoAuthorizationUrl(ctx, tenantContext, connectorData, payload);
   }
 
@@ -117,7 +122,7 @@ export class EnterpriseSsoVerification
    * See the above {@link createAuthorizationUrl} method for more details.
    */
   async verify(ctx: WithLogContext, tenantContext: TenantContext, callbackData: JsonObject) {
-    const connectorData = await this.getConnectorData(this.connectorId);
+    const connectorData = await this.getConnectorData();
     const { issuer, userInfo } = await verifySsoIdentity(
       ctx,
       tenantContext,
@@ -129,10 +134,14 @@ export class EnterpriseSsoVerification
     this.enterpriseSsoUserInfo = userInfo;
   }
 
+  /**
+   * Identify the user by the enterprise SSO identity.
+   * If the user is not found, find the related user by the enterprise SSO identity and return the related user.
+   */
   async identifyUser(): Promise<User> {
     assertThat(
       this.isVerified,
-      new RequestError({ code: 'session.verification_failed', status: 422 })
+      new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
     // TODO: sync userInfo and link sso identity
@@ -143,6 +152,15 @@ export class EnterpriseSsoVerification
       return userSsoIdentityResult.user;
     }
 
+    throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
+  }
+
+  async identifyRelatedUser(): Promise<User> {
+    assertThat(
+      this.isVerified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
     const relatedUser = await this.findRelatedUserSsoIdentity();
 
     if (relatedUser) {
@@ -150,6 +168,58 @@ export class EnterpriseSsoVerification
     }
 
     throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
+  }
+
+  /**
+   * Returns the use SSO identity as a new user profile.
+   */
+  toUserProfile(): Required<Pick<InteractionProfile, 'enterpriseSsoIdentity'>> {
+    assertThat(
+      this.enterpriseSsoUserInfo && this.issuer,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    return {
+      enterpriseSsoIdentity: {
+        issuer: this.issuer,
+        ssoConnectorId: this.connectorId,
+        identityId: this.enterpriseSsoUserInfo.id,
+        detail: this.enterpriseSsoUserInfo,
+      },
+    };
+  }
+
+  /**
+   * Returns the synced profile from the enterprise SSO identity.
+   *
+   * @param isNewUser - Whether the returned profile is for a new user. Only return the primary email if it is a new user.
+   */
+  async toSyncedProfile(
+    isNewUser = false
+  ): Promise<Pick<InteractionProfile, 'avatar' | 'name' | 'primaryEmail'>> {
+    assertThat(
+      this.enterpriseSsoUserInfo && this.issuer,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const { name, avatar, email: primaryEmail } = this.enterpriseSsoUserInfo;
+
+    if (isNewUser) {
+      return {
+        ...conditional(primaryEmail && { primaryEmail }),
+        ...conditional(name && { name }),
+        ...conditional(avatar && { avatar }),
+      };
+    }
+
+    const { syncProfile } = await this.getConnectorData();
+
+    return syncProfile
+      ? {
+          ...conditional(name && { name }),
+          ...conditional(avatar && { avatar }),
+        }
+      : {};
   }
 
   toJson(): EnterpriseSsoVerificationRecordData {

@@ -3,7 +3,7 @@ import { type PropsWithChildren } from 'react';
 
 import FlexBox from '../FlexBox';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 /**
  * The section component with a gray background

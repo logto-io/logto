@@ -2,8 +2,8 @@ import { Theme } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Error from '@/assets/icons/toast-error.svg';
-import LogoInputs from '@/components/ImageInputs';
+import Error from '@/assets/icons/toast-error.svg?react';
+import ImageInputs from '@/components/ImageInputs';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
@@ -13,7 +13,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import type { ConnectorFormType } from '@/types/connector';
 import { SyncProfileMode } from '@/types/connector';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const themeToField = Object.freeze({
   [Theme.Light]: 'logo',
@@ -57,7 +57,7 @@ function BasicForm({ isAllowEditTarget, isStandard, conflictConnectorName }: Pro
               {...register('name', { required: true })}
             />
           </FormField>
-          <LogoInputs
+          <ImageInputs
             uploadTitle="connectors.guide.connector_logo"
             tip={t('connectors.guide.connector_logo_tip')}
             control={control}
@@ -65,7 +65,7 @@ function BasicForm({ isAllowEditTarget, isStandard, conflictConnectorName }: Pro
             fields={Object.values(Theme).map((theme) => ({
               name: themeToField[theme],
               error: errors[themeToField[theme]],
-              type: 'app_logo',
+              type: 'connector_logo',
               theme,
             }))}
           />

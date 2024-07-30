@@ -1,9 +1,11 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { ApplicationDetailsTabs } from '@/consts';
-import ApplicationDetails from '@/pages/ApplicationDetails';
-import Applications from '@/pages/Applications';
-import AuditLogDetails from '@/pages/AuditLogDetails';
+
+const Applications = safeLazy(async () => import('@/pages/Applications'));
+const ApplicationDetails = safeLazy(async () => import('@/pages/ApplicationDetails'));
+const AuditLogDetails = safeLazy(async () => import('@/pages/AuditLogDetails'));
 
 export const applications: RouteObject = {
   path: 'applications',

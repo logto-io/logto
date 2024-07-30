@@ -16,7 +16,7 @@ import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
 import ManageLanguageButton from './ManageLanguage/ManageLanguageButton';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isManageLanguageVisible?: boolean;

@@ -11,7 +11,7 @@ const error = {
   invalid_email: '无效的邮箱',
   invalid_phone: '无效的手机号',
   passwords_do_not_match: '两次输入的密码不一致，请重试。',
-  invalid_passcode: '无效的验证码',
+  invalid_passcode: '无效的验证码。',
   invalid_connector_auth: '登录失败',
   invalid_connector_request: '无效的登录请求',
   unknown: '未知错误，请稍后重试。',

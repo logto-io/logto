@@ -41,6 +41,9 @@ const sign_up_and_sign_in = {
       set_up_more: 'Einrichten',
       go_to: 'andere Social Connectors jetzt.',
     },
+    automatic_account_linking: 'Automatische Kontoverknüpfung',
+    automatic_account_linking_label:
+      'Wenn diese Option aktiviert ist und sich ein Benutzer mit einer dem System neuen sozialen Identität anmeldet und genau ein vorhandenes Konto mit demselben Identifier (z. B. E-Mail) vorhanden ist, wird Logto das Konto automatisch mit der sozialen Identität verknüpfen, anstatt den Benutzer zur Kontoverknüpfung aufzufordern.',
   },
   tip: {
     set_a_password: 'Ein einmaliges Passwort für Ihren Benutzernamen ist ein Muss.',

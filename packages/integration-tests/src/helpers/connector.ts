@@ -40,6 +40,7 @@ export const setSocialConnector = async () =>
   postConnector({
     connectorId: mockSocialConnectorId,
     config: mockSocialConnectorConfig,
+    syncProfile: true,
   });
 
 export const resetPasswordlessConnectors = async () => {

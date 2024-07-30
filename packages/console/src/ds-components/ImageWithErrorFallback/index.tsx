@@ -2,8 +2,8 @@ import { Theme } from '@logto/schemas';
 import type { ImgHTMLAttributes, ReactElement } from 'react';
 import { cloneElement, useState } from 'react';
 
-import FallbackImageDark from '@/assets/images/broken-image-dark.svg';
-import FallbackImageLight from '@/assets/images/broken-image-light.svg';
+import FallbackImageDark from '@/assets/images/broken-image-dark.svg?react';
+import FallbackImageLight from '@/assets/images/broken-image-light.svg?react';
 import useTheme from '@/hooks/use-theme';
 
 type Props = {

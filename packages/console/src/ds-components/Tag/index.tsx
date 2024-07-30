@@ -2,10 +2,10 @@ import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { HTMLProps, ReactNode } from 'react';
 
-import Failed from '@/assets/icons/failed.svg';
-import Success from '@/assets/icons/success.svg';
+import Failed from '@/assets/icons/failed.svg?react';
+import Success from '@/assets/icons/success.svg?react';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type Props = Pick<HTMLProps<HTMLDivElement>, 'className' | 'onClick'> & {
   readonly type?: 'property' | 'state' | 'result';

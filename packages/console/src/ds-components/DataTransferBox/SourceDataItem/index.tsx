@@ -3,7 +3,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import type { DataEntry } from '../type';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props<TEntry extends DataEntry> = {
   readonly data: TEntry;

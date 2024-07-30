@@ -35,6 +35,7 @@ export const mockedConfig = {
       usageType: 'OrganizationInvitation',
     },
   ],
+  customHeaders: {},
 };
 
 export const mockedOauth2AuthWithToken = {

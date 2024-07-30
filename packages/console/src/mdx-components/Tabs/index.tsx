@@ -11,7 +11,7 @@ import { useState, isValidElement, type ReactElement, cloneElement, useRef, Chil
 
 import type { Props as TabItemProps } from '../TabItem';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type MaybeArray<T> = T | T[];
 

@@ -40,6 +40,8 @@ const connectors = {
     name: '社交登录按钮的名称',
     name_placeholder: '输入社交登录按钮的名称',
     name_tip: '按钮上将展示「通过 {{name}} 继续」。名字不宜过长而导致信息无法展示完整。',
+    connector_logo: '连接器 logo',
+    connector_logo_tip: '该 logo 将显示在连接器登录按钮上。',
     target: '身份提供商名称',
     target_placeholder: '输入身份提供商的名称',
     target_tip: '在“身份供应商名称”字段中输入唯一的标识符字符串，用于区分社交身份来源。',

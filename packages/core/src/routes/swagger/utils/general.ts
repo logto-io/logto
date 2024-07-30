@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { isKeyInObject, type Optional } from '@silverhand/essentials';
+import { isKeyInObject, isObject, type Optional } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import { z } from 'zod';
 
@@ -264,3 +264,32 @@ export const removeUnnecessaryOperations = (
 };
 
 export const shouldThrow = () => !EnvSet.values.isProduction || EnvSet.values.isIntegrationTest;
+
+/**
+ * Remove all other properties when "$ref" is present in an object. Supplemental documents may
+ * contain "$ref" properties, which all other properties should be removed to prevent conflicts.
+ *
+ * **CAUTION**: This function mutates the input document.
+ */
+export const pruneSwaggerDocument = (document: OpenAPIV3.Document) => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const prune = (object: {}) => {
+    if (isKeyInObject(object, '$ref')) {
+      for (const key of Object.keys(object)) {
+        if (key !== '$ref') {
+          // @ts-expect-error -- intended
+          // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete
+          delete object[key];
+        }
+      }
+    }
+
+    for (const value of Object.values(object)) {
+      if (isObject(value)) {
+        prune(value);
+      }
+    }
+  };
+
+  prune(document);
+};

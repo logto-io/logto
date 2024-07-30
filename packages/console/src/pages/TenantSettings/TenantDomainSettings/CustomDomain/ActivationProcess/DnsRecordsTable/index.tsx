@@ -5,7 +5,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import { Ring } from '@/ds-components/Spinner';
 import Table from '@/ds-components/Table';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly records: DomainDnsRecords;

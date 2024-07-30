@@ -22,7 +22,7 @@ import type { RequestError } from '@/hooks/use-api';
 import Block from './components/Block';
 import ChartTooltip from './components/ChartTooltip';
 import Skeleton from './components/Skeleton';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import type { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
 
 const tickStyle = {

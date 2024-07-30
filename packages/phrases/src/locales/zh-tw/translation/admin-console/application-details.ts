@@ -21,6 +21,7 @@ const application_details = {
   description: '說明',
   description_placeholder: '請輸入應用程式說明',
   config_endpoint: 'OpenID Provider 配置端點',
+  issuer_endpoint: '發行者端點',
   authorization_endpoint: '授權端點',
   authorization_endpoint_tip: '進行驗證與授權的端點。用於 OpenID Connect 中的 <a>驗證</a> 流程。',
   show_endpoint_details: '顯示端點詳情',
@@ -58,7 +59,13 @@ const application_details = {
     'Refresh Token 可用來獲取新的訪問令牌，失效日期之前可用。獲取訪問令牌時，該令牌的期限將被延長至此值。',
   rotate_refresh_token: '旋轉 Refresh Token',
   rotate_refresh_token_label:
-    '啟用此配置將使 Logto 当 Refresh Token 的原始有效期剩下 70% 时或当满足某些条件时，授予新的 Refresh Token 以獲取新的 Access Token。<a>了解更多</a>',
+    '啟用此配置將使 Logto 當 Refresh Token 的原始有效期剩下 70% 時或當滿足某些條件時，授予新的 Refresh Token 以獲取新的 Access Token。<a>了解更多</a>',
+  backchannel_logout: '後台登出',
+  backchannel_logout_description: '配置 OpenID Connect 後台登出端點以及此應用程式是否需要會話。',
+  backchannel_logout_uri: '後台登出 URI',
+  backchannel_logout_uri_session_required: '需要會話嗎？',
+  backchannel_logout_uri_session_required_description:
+    '啟用後，RP 要求 logout token 中包含 `sid`（會話 ID）聲明，以便當使用 `backchannel_logout_uri` 時識別 RP 與 OP 的會話。',
   delete_description:
     '本操作會永久性地刪除該應用程式，且不可撤銷。輸入 <span>{{name}}</span> 確認。',
   enter_your_application_name: '輸入你的應用程式姓名',
@@ -79,14 +86,22 @@ const application_details = {
     '確保保護您的源伺服器免受直接訪問。請參閱指南以獲取更多 <a>詳細說明</a>。',
   session_duration: '會話持續時間（天數）',
   try_it: '試試看',
+  no_organization_placeholder: '未找到組織。<a>前往組織</a>',
   branding: {
     name: '品牌',
     description: '在同意畫面上自訂應用程式的顯示名稱和標誌。',
+    description_third_party: '自訂應用程式的顯示名稱和標誌在同意畫面上。',
+    app_logo: '應用圖標',
+    app_level_sie: '應用層級登入體驗',
+    app_level_sie_switch:
+      '啟用應用層級登入體驗，並設置應用特定的品牌。如果禁用，將使用全局登入體驗。',
     more_info: '更多資訊',
     more_info_description: '在同意畫面上提供有關您的應用程式的更多詳細資訊。',
     display_name: '顯示名稱',
-    display_logo: '顯示標誌',
-    display_logo_dark: '顯示標誌（深色）',
+    application_logo: '應用程式標誌',
+    application_logo_dark: '應用程式標誌（深色）',
+    brand_color: '品牌顏色',
+    brand_color_dark: '品牌顏色（深色）',
     terms_of_use_url: '應用程式使用條款網址',
     privacy_policy_url: '應用程式隱私政策網址',
   },
@@ -107,7 +122,7 @@ const application_details = {
     organization: '組織權限',
     user_permissions_assignment_form_title: '添加用戶資料權限',
     organization_permissions_assignment_form_title: '添加組織權限',
-    api_resource_permissions_assignment_form_title: '添加 API 资源權限',
+    api_resource_permissions_assignment_form_title: '添加 API 資源權限',
     user_data_permission_description_tips:
       '您可以通過「登入體驗 > 內容 > 管理語言」修改個人用戶資料權限的描述。',
     permission_description_tips:
@@ -120,13 +135,12 @@ const application_details = {
     grant_organization_level_permissions: '授予組織資料權限',
   },
   roles: {
-    name_column: '機器對機器角色',
-    description_column: '描述',
     assign_button: '分配機器對機器角色',
     delete_description:
       '此操作將從此機器到機器應用程式中刪除該角色。該角色本身仍然存在，但不再與此機器到機器應用程式關聯。',
     deleted: '已成功從此用戶中刪除 {{name}}。',
     assign_title: '將機器對機器角色分配給 {{name}}',
+    assign_subtitle: '機器對機器應用程式必須具有機器對機器類型的角色才能訪問相關的 API 資源。',
     assign_role_field: '分配機器對機器角色',
     role_search_placeholder: '按角色名稱搜索',
     added_text: '{{value, number}} 已添加',

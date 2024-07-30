@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
 
-import * as styles from './Radio.module.scss';
+import styles from './Radio.module.scss';
 
 function Check() {
   return (

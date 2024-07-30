@@ -4,7 +4,7 @@ import type { Nullable } from '@silverhand/essentials';
 import type { HTMLProps, Ref } from 'react';
 import { useEffect, useImperativeHandle, useRef, forwardRef } from 'react';
 
-import ClearIcon from '@/assets/icons/clear-icon.svg';
+import ClearIcon from '@/assets/icons/clear-icon.svg?react';
 import IconButton from '@/components/Button/IconButton';
 
 import InputField from '../InputField';

@@ -1,12 +1,12 @@
-import Draggable from '@/assets/icons/draggable.svg';
-import Minus from '@/assets/icons/minus.svg';
+import Draggable from '@/assets/icons/draggable.svg?react';
+import Minus from '@/assets/icons/minus.svg?react';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import IconButton from '@/ds-components/IconButton';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly data: ConnectorGroup;

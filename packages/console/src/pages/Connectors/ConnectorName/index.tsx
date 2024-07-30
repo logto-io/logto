@@ -17,7 +17,7 @@ import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 
 import DemoTag from './DemoTag';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly connectorGroup: ConnectorGroup;

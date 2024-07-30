@@ -6,6 +6,8 @@ const roles = {
   create: '創建角色',
   role_name: '角色名稱',
   role_type: '角色類型',
+  type_user: '用戶',
+  type_machine_to_machine: '機器對機器',
   role_description: '描述',
   role_name_placeholder: '輸入你的角色名稱',
   role_description_placeholder: '輸入你的角色描述',
@@ -19,13 +21,17 @@ const roles = {
   application_count: '{{count}} 個應用程式',
   assign_permissions: '分配權限',
   create_role_title: '創建角色',
+  create_role_description: '使用角色來整理權限並將其分配給用戶。',
   create_role_button: '創建角色',
   role_created: '角色 {{name}} 已成功創建。',
   search: '按角色名稱、描述或 ID 搜索',
   placeholder_title: '角色',
   placeholder_description: '角色是可以分配給用戶的權限分組。在創建角色之前，請確保先添加權限。',
-  management_api_access_notification: '要訪問Logto管理API，請選擇具有管理API權限的角色<flag/>。',
-  with_management_api_access_tip: '此機器對機器角色包含Logto管理API權限',
+  assign_roles: '分配角色',
+  management_api_access_notification:
+    '要訪問 Logto 管理 API，請選擇具有管理 API 權限的角色<flag/>。',
+  with_management_api_access_tip: '此機器對機器角色包含 Logto 管理 API 權限',
+  role_creation_hint: '找不到合適的角色？ <a>創建角色</a>',
 };
 
 export default Object.freeze(roles);

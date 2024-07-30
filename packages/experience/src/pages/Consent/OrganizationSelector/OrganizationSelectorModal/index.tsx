@@ -6,7 +6,7 @@ import usePlatform from '@/hooks/use-platform';
 import OrganizationItem from '../OrganizationItem';
 import { type Organization } from '../OrganizationItem';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isOpen: boolean;

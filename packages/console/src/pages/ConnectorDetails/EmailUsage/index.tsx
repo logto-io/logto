@@ -1,9 +1,9 @@
 import { Theme } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
-import EmailSentIconDark from '@/assets/icons/email-sent-dark.svg';
-import EmailSentIconLight from '@/assets/icons/email-sent.svg';
-import Tip from '@/assets/icons/tip.svg';
+import EmailSentIconDark from '@/assets/icons/email-sent-dark.svg?react';
+import EmailSentIconLight from '@/assets/icons/email-sent.svg?react';
+import Tip from '@/assets/icons/tip.svg?react';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
@@ -11,7 +11,7 @@ import { ToggleTip } from '@/ds-components/Tip';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTheme from '@/hooks/use-theme';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly usage: number;

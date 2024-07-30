@@ -7,10 +7,11 @@ import { generateStandardShortId } from '@logto/shared';
 import { assert, conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
+import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { ssoConnectorCreateGuard, ssoConnectorPatchGuard } from '#src/routes/sso-connector/type.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { isSupportedSsoConnector, isSupportedSsoProvider } from '#src/sso/utils.js';
@@ -68,7 +69,9 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
   /* Create a new single sign on connector */
   router.post(
     pathname,
-    koaQuotaGuard({ key: 'ssoEnabled', quota }),
+    EnvSet.values.isDevFeaturesEnabled
+      ? newKoaQuotaGuard({ key: 'enterpriseSsoLimit', quota })
+      : koaQuotaGuard({ key: 'ssoEnabled', quota }),
     koaGuard({
       body: ssoConnectorCreateGuard,
       response: SsoConnectors.guard,

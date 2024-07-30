@@ -14,7 +14,7 @@ import Switch from '@/ds-components/Switch';
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function BrandingForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -35,7 +35,7 @@ function BrandingForm() {
   }, [primaryColor]);
 
   const handleResetColor = useCallback(() => {
-    setValue('color.darkPrimaryColor', calculatedDarkPrimaryColor);
+    setValue('color.darkPrimaryColor', calculatedDarkPrimaryColor, { shouldDirty: true });
   }, [calculatedDarkPrimaryColor, setValue]);
 
   useEffect(() => {
@@ -56,8 +56,8 @@ function BrandingForm() {
         <Controller
           name="color.primaryColor"
           control={control}
-          render={({ field: { onChange, value } }) => (
-            <ColorPicker value={value} onChange={onChange} />
+          render={({ field: { name, onChange, value } }) => (
+            <ColorPicker name={name} value={value} onChange={onChange} />
           )}
         />
       </FormField>

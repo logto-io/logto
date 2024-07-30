@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 
-import Plus from '@/assets/icons/plus.svg';
+import Plus from '@/assets/icons/plus.svg?react';
 import ActionsButton from '@/components/ActionsButton';
 import Breakable from '@/components/Breakable';
 import EditScopeModal, { type EditScopeData } from '@/components/EditScopeModal';
@@ -21,7 +21,7 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { type OrganizationRoleDetailsOutletContext } from '../types';
 
 import ResourceName from './ResourceName';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import useOrganizationRoleScopes from './use-organization-role-scopes';
 
 type OrganizationRoleScope = OrganizationScope | Scope;

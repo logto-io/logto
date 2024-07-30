@@ -1,11 +1,11 @@
 import type { ScopeResponse, RoleType } from '@logto/schemas';
 import classNames from 'classnames';
 
-import * as transferLayout from '@/scss/transfer.module.scss';
+import transferLayout from '@/scss/transfer.module.scss';
 
 import SourceScopesBox from './components/SourceScopesBox';
 import TargetScopesBox from './components/TargetScopesBox';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 /**
  * @deprecated Use `@/ds-component/DataTransferBox` instead.

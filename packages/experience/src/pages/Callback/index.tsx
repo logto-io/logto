@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import StaticPageLayout from '@/Layout/StaticPageLayout';
 import SocialLanding from '@/containers/SocialLanding';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import useSocialCallbackHandler from './use-social-callback-handler';
 
 type Parameters = {

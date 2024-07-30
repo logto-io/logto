@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSWRConfig } from 'swr';
 
-import Delete from '@/assets/icons/delete.svg';
+import Delete from '@/assets/icons/delete.svg?react';
 import DeleteConnectorConfirmModal from '@/components/DeleteConnectorConfirmModal';
 import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';

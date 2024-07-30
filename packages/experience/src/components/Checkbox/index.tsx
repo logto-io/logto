@@ -2,9 +2,9 @@ import classNames from 'classnames';
 import type { InputHTMLAttributes, Ref } from 'react';
 import { forwardRef } from 'react';
 
-import CheckBox from '@/assets/icons/checkbox-icon.svg';
+import CheckBox from '@/assets/icons/checkbox-icon.svg?react';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly size?: 'small' | 'default';

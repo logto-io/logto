@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 
-import Tip from '@/assets/icons/tip.svg';
+import Tip from '@/assets/icons/tip.svg?react';
 import IconButton from '@/ds-components/IconButton';
 import { ToggleTip } from '@/ds-components/Tip';
 
 import TableDataContent from './TableDataContent';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly value: string;

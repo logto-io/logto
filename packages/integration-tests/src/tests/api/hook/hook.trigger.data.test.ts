@@ -47,6 +47,7 @@ const mockHookResponseGuard = z.object({
         .optional()
         .transform((value) => value?.toUpperCase()),
       matchedRoute: z.string().optional(),
+      status: z.number().optional(),
     })
     .catchall(z.any()),
   // Keep the raw payload for signature verification
@@ -364,6 +365,7 @@ describe('data hook events coverage and signature verification', () => {
 
     const webhookResult = await getWebhookResult(key);
     expect(webhookResult).toBeDefined();
+    expect(webhookResult?.payload.status).not.toBe(404);
     assert(webhookResult, new Error('webhookResult is undefined'));
 
     const { signature, rawPayload } = webhookResult;

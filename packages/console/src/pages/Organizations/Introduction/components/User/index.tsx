@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 
-import UserIcon from '@/assets/icons/user.svg';
+import UserIcon from '@/assets/icons/user.svg?react';
 import Tooltip from '@/ds-components/Tip/Tooltip';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

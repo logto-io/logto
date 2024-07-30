@@ -2,8 +2,8 @@ import type { Nullable } from '@silverhand/essentials';
 import type { Ref } from 'react';
 import { forwardRef, useRef, useImperativeHandle } from 'react';
 
-import PasswordHideIcon from '@/assets/icons/password-hide-icon.svg';
-import PasswordShowIcon from '@/assets/icons/password-show-icon.svg';
+import PasswordHideIcon from '@/assets/icons/password-hide-icon.svg?react';
+import PasswordShowIcon from '@/assets/icons/password-show-icon.svg?react';
 import IconButton from '@/components/Button/IconButton';
 import useToggle from '@/hooks/use-toggle';
 

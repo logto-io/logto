@@ -1,8 +1,8 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 
-import EmailConnector from '@/assets/icons/connector-email.svg';
-import SmsConnectorIcon from '@/assets/icons/connector-sms.svg';
+import EmailConnector from '@/assets/icons/connector-email.svg?react';
+import SmsConnectorIcon from '@/assets/icons/connector-sms.svg?react';
 import type { ConnectorGroup } from '@/types/connector';
 
 type TitlePlaceHolder = {

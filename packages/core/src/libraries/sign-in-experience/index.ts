@@ -7,7 +7,7 @@ import type {
   SignInExperience,
   SsoConnectorMetadata,
 } from '@logto/schemas';
-import { ConnectorType } from '@logto/schemas';
+import { ConnectorType, ReservedPlanId } from '@logto/schemas';
 import { deduplicate, pick, trySafe } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
@@ -19,7 +19,7 @@ import type { SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
-import { getTenantSubscriptionPlan } from '#src/utils/subscription/index.js';
+import { getTenantSubscription, getTenantSubscriptionPlan } from '#src/utils/subscription/index.js';
 import { isKeyOfI18nPhrases } from '#src/utils/translation.js';
 
 import { type CloudConnectionLibrary } from '../cloud-connection.js';
@@ -113,8 +113,12 @@ export const createSignInExperienceLibrary = (
       return false;
     }
 
-    const plan = await getTenantSubscriptionPlan(cloudConnection);
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      const subscription = await getTenantSubscription(cloudConnection);
+      return subscription.planId === ReservedPlanId.Development;
+    }
 
+    const plan = await getTenantSubscriptionPlan(cloudConnection);
     return plan.id === developmentTenantPlanId;
   }, ['is-development-tenant']);
 
@@ -147,7 +151,7 @@ export const createSignInExperienceLibrary = (
       return;
     }
 
-    return pick(found, 'branding', 'color');
+    return pick(found, 'branding', 'color', 'type', 'isThirdParty');
   };
 
   const getFullSignInExperience = async ({
@@ -223,9 +227,17 @@ export const createSignInExperienceLibrary = (
       };
     };
 
+    /** Get the branding and color from the app sign-in experience if it is not a third-party app. */
+    const getAppSignInExperience = () => {
+      if (!appSignInExperience || appSignInExperience.isThirdParty) {
+        return {};
+      }
+      return pick(appSignInExperience, 'branding', 'color');
+    };
+
     return {
       ...deepmerge(
-        deepmerge(signInExperience, appSignInExperience ?? {}),
+        deepmerge(signInExperience, getAppSignInExperience()),
         organizationOverride ?? {}
       ),
       socialConnectors,

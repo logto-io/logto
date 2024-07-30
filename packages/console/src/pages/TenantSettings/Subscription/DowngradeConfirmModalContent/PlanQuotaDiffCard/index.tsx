@@ -2,8 +2,9 @@ import { useMemo } from 'react';
 import { Trans } from 'react-i18next';
 
 import PlanName from '@/components/PlanName';
-import { planQuotaItemOrder } from '@/consts/plan-quotas';
+import { planQuotaItemOrder, skuQuotaItemOrder } from '@/consts/plan-quotas';
 import DynamicT from '@/ds-components/DynamicT';
+import { type LogtoSkuQuota, type LogtoSkuQuotaEntries } from '@/types/skus';
 import {
   type SubscriptionPlanQuotaEntries,
   type SubscriptionPlanQuota,
@@ -11,15 +12,21 @@ import {
 import { sortBy } from '@/utils/sort';
 
 import PlanQuotaList from './PlanQuotaList';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly planName: string;
   readonly quotaDiff: Partial<SubscriptionPlanQuota>;
+  readonly skuQuotaDiff: Partial<LogtoSkuQuota>;
   readonly isDowngradeTargetPlan?: boolean;
 };
 
-function PlanQuotaDiffCard({ planName, quotaDiff, isDowngradeTargetPlan = false }: Props) {
+function PlanQuotaDiffCard({
+  planName,
+  quotaDiff,
+  skuQuotaDiff,
+  isDowngradeTargetPlan = false,
+}: Props) {
   // eslint-disable-next-line no-restricted-syntax
   const sortedEntries = useMemo(
     () =>
@@ -30,6 +37,16 @@ function PlanQuotaDiffCard({ planName, quotaDiff, isDowngradeTargetPlan = false 
         ),
     [quotaDiff]
   ) as SubscriptionPlanQuotaEntries;
+  // eslint-disable-next-line no-restricted-syntax
+  const sortedSkuQuotaEntries = useMemo(
+    () =>
+      Object.entries(skuQuotaDiff)
+        .slice()
+        .sort(([preQuotaKey], [nextQuotaKey]) =>
+          sortBy(skuQuotaItemOrder)(preQuotaKey, nextQuotaKey)
+        ),
+    [skuQuotaDiff]
+  ) as LogtoSkuQuotaEntries;
 
   return (
     <div className={styles.container}>
@@ -44,7 +61,11 @@ function PlanQuotaDiffCard({ planName, quotaDiff, isDowngradeTargetPlan = false 
           />
         </Trans>
       </div>
-      <PlanQuotaList entries={sortedEntries} isDowngradeTargetPlan={isDowngradeTargetPlan} />
+      <PlanQuotaList
+        entries={sortedEntries}
+        skuQuotaEntries={sortedSkuQuotaEntries}
+        isDowngradeTargetPlan={isDowngradeTargetPlan}
+      />
     </div>
   );
 }

@@ -12,6 +12,15 @@
   overflow: hidden;
 }
 
+.loadingIcon {
+  display: block;
+  // To avoid the layout shift, add padding manually (keep the same size as the icon)
+  padding: 0 1.5px;
+  color: var(--color-brand-loading);
+  font-size: 0;
+  line-height: normal;
+}
+
 .name {
   flex: 1;
   overflow: hidden;

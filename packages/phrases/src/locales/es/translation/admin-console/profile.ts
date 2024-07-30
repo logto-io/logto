@@ -53,6 +53,44 @@ const profile = {
     description:
       'La eliminación de su cuenta eliminará toda su información personal, datos de usuario y configuración. Esta acción no se puede deshacer.',
     button: 'Eliminar cuenta',
+    p: {
+      has_issue:
+        'Lamentamos escuchar que deseas eliminar tu cuenta. Antes de poder eliminar tu cuenta, necesitas resolver los siguientes problemas.',
+      after_resolved:
+        'Una vez que hayas resuelto los problemas, podrás eliminar tu cuenta. No dudes en contactarnos si necesitas ayuda.',
+      check_information:
+        'Lamentamos escuchar que deseas eliminar tu cuenta. Por favor, revisa la siguiente información cuidadosamente antes de proceder.',
+      remove_all_data:
+        'Eliminar tu cuenta eliminará permanentemente todos tus datos en Logto Cloud. Así que asegura respaldar cualquier dato importante antes de proceder.',
+      confirm_information:
+        'Por favor, confirma que la información anterior es lo que esperabas. Una vez que elimines tu cuenta, no podremos recuperarla.',
+      has_admin_role:
+        'Dado que tienes el rol de administrador en el siguiente inquilino, será eliminado junto con tu cuenta:',
+      has_admin_role_other:
+        'Dado que tienes el rol de administrador en los siguientes inquilinos, serán eliminados junto con tu cuenta:',
+      quit_tenant: 'Estás a punto de salir del siguiente inquilino:',
+      quit_tenant_other: 'Estás a punto de salir de los siguientes inquilinos:',
+    },
+    issues: {
+      paid_plan:
+        'El siguiente inquilino tiene un plan pagado, por favor cancela la suscripción primero:',
+      paid_plan_other:
+        'Los siguientes inquilinos tienen planes pagados, por favor cancela la suscripción primero:',
+      subscription_status: 'El siguiente inquilino tiene un problema de estado de suscripción:',
+      subscription_status_other:
+        'Los siguientes inquilinos tienen problemas de estado de suscripción:',
+      open_invoice: 'El siguiente inquilino tiene una factura abierta:',
+      open_invoice_other: 'Los siguientes inquilinos tienen facturas abiertas:',
+    },
+    error_occurred: 'Ocurrió un error',
+    error_occurred_description: 'Lo siento, algo salió mal al eliminar tu cuenta:',
+    request_id: 'ID de solicitud: {{requestId}}',
+    try_again_later:
+      'Por favor, inténtalo nuevamente más tarde. Si el problema persiste, contacta al equipo de Logto con el ID de solicitud.',
+    final_confirmation: 'Confirmación final',
+    about_to_start_deletion:
+      'Estás a punto de iniciar el proceso de eliminación y esta acción no se puede deshacer.',
+    permanently_delete: 'Eliminar permanentemente',
   },
   set: 'Establecer',
   change: 'Cambiar',

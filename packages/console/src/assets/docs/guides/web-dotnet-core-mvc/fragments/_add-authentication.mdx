@@ -9,7 +9,7 @@ builder.Services.AddLogtoAuthentication(options =>
 {
   options.Endpoint = "${props.endpoint}";
   options.AppId = "${props.app.id}";
-  options.AppSecret = "${props.app.secret}";
+  options.AppSecret = "${props.secrets[0]?.value ?? props.app.secret}";
 });
 
 app.UseAuthentication();`}

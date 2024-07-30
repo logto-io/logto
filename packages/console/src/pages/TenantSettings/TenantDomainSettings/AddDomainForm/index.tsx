@@ -8,7 +8,7 @@ import TextInput from '@/ds-components/TextInput';
 import { onKeyDownHandler } from '@/utils/a11y';
 import { trySubmitSafe } from '@/utils/form';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type FormData = {
   domain: string;

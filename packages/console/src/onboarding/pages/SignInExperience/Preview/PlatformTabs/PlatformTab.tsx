@@ -6,7 +6,7 @@ import type { PreviewPlatform } from '@/components/SignInExperiencePreview/types
 import DynamicT from '@/ds-components/DynamicT';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './PlatformTab.module.scss';
+import styles from './PlatformTab.module.scss';
 
 type Props = {
   readonly isSelected: boolean;

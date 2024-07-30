@@ -34,6 +34,13 @@ const cloud = {
       others: 'Keines der oben genannten',
     },
   },
+  create_tenant: {
+    page_title: 'Mandant erstellen',
+    title: 'Erstellen Sie Ihren ersten Mandanten',
+    description:
+      'Ein Mandant ist eine isolierte Umgebung, in der Sie Benutzeridentitäten, Anwendungen und alle anderen Logto-Ressourcen verwalten können.',
+    invite_collaborators: 'Laden Sie Ihre Mitarbeiter per E-Mail ein',
+  },
   sie: {
     page_title: 'Meldeeinrichtung anpassen',
     title: 'Passen Sie zuerst Ihre Anmeldungserfahrung mit Leichtigkeit an',

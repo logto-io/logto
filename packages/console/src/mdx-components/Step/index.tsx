@@ -4,7 +4,7 @@ import Index from '@/components/Index';
 import CardTitle from '@/ds-components/CardTitle';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type Props = {
   readonly index?: number;

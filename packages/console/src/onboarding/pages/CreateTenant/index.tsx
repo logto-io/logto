@@ -7,8 +7,8 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
-import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
+import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg?react';
+import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?react';
 import { createTenantApi, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import ActionBar from '@/components/ActionBar';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
@@ -23,7 +23,7 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
-import * as pageLayout from '@/onboarding/scss/layout.module.scss';
+import pageLayout from '@/onboarding/scss/layout.module.scss';
 import { OnboardingPage, OnboardingRoute } from '@/onboarding/types';
 import InviteEmailsInput from '@/pages/TenantSettings/TenantMembers/InviteEmailsInput';
 import { type InviteeEmailItem } from '@/pages/TenantSettings/TenantMembers/types';
@@ -78,19 +78,21 @@ function CreateTenant() {
         tenantId: newTenant.id,
       });
 
-      // Should not block the onboarding flow if the invitation fails.
-      try {
-        await Promise.all(
-          collaboratorEmails.map(async (email) =>
-            tenantCloudApi.post('/api/tenants/:tenantId/invitations', {
-              params: { tenantId: newTenant.id },
-              body: { invitee: email.value, roleName: TenantRole.Collaborator },
-            })
-          )
-        );
-        toast.success(t('tenant_members.messages.invitation_sent'));
-      } catch {
-        toast.error(t('tenants.create_modal.invitation_failed', { duration: 5 }));
+      if (collaboratorEmails.length > 0) {
+        // Should not block the onboarding flow if the invitation fails.
+        try {
+          await Promise.all(
+            collaboratorEmails.map(async (email) =>
+              tenantCloudApi.post('/api/tenants/:tenantId/invitations', {
+                params: { tenantId: newTenant.id },
+                body: { invitee: email.value, roleName: TenantRole.Collaborator },
+              })
+            )
+          );
+          toast.success(t('tenant_members.messages.invitation_sent'));
+        } catch {
+          toast.error(t('tenants.create_modal.invitation_failed', { duration: 5 }));
+        }
       }
       navigate(joinPath(OnboardingRoute.Onboarding, newTenant.id, OnboardingPage.SignInExperience));
     })

@@ -1,13 +1,15 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
 import { UserDetailsTabs } from '@/consts/page-tabs';
-import AuditLogDetails from '@/pages/AuditLogDetails';
-import UserDetails from '@/pages/UserDetails';
-import UserLogs from '@/pages/UserDetails/UserLogs';
-import UserOrganizations from '@/pages/UserDetails/UserOrganizations';
-import UserRoles from '@/pages/UserDetails/UserRoles';
-import UserSettings from '@/pages/UserDetails/UserSettings';
-import Users from '@/pages/Users';
+
+const AuditLogDetails = safeLazy(async () => import('@/pages/AuditLogDetails'));
+const UserDetails = safeLazy(async () => import('@/pages/UserDetails'));
+const UserLogs = safeLazy(async () => import('@/pages/UserDetails/UserLogs'));
+const UserOrganizations = safeLazy(async () => import('@/pages/UserDetails/UserOrganizations'));
+const UserRoles = safeLazy(async () => import('@/pages/UserDetails/UserRoles'));
+const UserSettings = safeLazy(async () => import('@/pages/UserDetails/UserSettings'));
+const Users = safeLazy(async () => import('@/pages/Users'));
 
 export const users: RouteObject = {
   path: 'users',

@@ -242,13 +242,6 @@ describe('`refresh_token` grant (for organization tokens)', () => {
       expect(response.access_token).not.toContain('.');
     });
 
-    it('should return error when organizations scope is not requested', async () => {
-      const client = await initClient({ scopes: [] });
-      await expect(client.fetchOrganizationToken('1')).rejects.toMatchError(
-        grantErrorContaining('oidc.insufficient_scope', 'refresh token missing required scope', 403)
-      );
-    });
-
     it('should return access denied when organization id is invalid', async () => {
       const client = await initClient();
       await expect(client.fetchOrganizationToken('1')).rejects.toMatchError(accessDeniedError);
@@ -271,6 +264,17 @@ describe('`refresh_token` grant (for organization tokens)', () => {
       // Remove user from the organization
       await organizationApi.deleteUser(org.id, userId);
       await expect(client.fetchOrganizationToken(org.id)).rejects.toMatchError(accessDeniedError);
+    });
+
+    it('should return error when organizations scope is not requested', async () => {
+      const org = await organizationApi.create({ name: 'org' });
+      await organizationApi.addUsers(org.id, [userId]);
+
+      const client = await initClient({ scopes: [] });
+      await expect(client.fetchOrganizationToken(org.id)).rejects.toMatchError(
+        grantErrorContaining('oidc.insufficient_scope', 'refresh token missing required scope', 403)
+      );
+      await organizationApi.deleteUser(org.id, userId);
     });
 
     it('should issue organization scopes even organization resource is not requested (handled by SDK)', async () => {

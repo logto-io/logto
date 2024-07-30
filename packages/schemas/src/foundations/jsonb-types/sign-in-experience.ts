@@ -109,3 +109,10 @@ export const mfaGuard = z.object({
 });
 
 export type Mfa = z.infer<typeof mfaGuard>;
+
+export const customUiAssetsGuard = z.object({
+  id: z.string(),
+  createdAt: z.number(),
+});
+
+export type CustomUiAssets = z.infer<typeof customUiAssetsGuard>;

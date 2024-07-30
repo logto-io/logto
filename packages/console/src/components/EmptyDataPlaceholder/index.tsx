@@ -3,11 +3,11 @@ import classNames from 'classnames';
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import EmptyDark from '@/assets/images/table-empty-dark.svg';
-import Empty from '@/assets/images/table-empty.svg';
+import EmptyDark from '@/assets/images/table-empty-dark.svg?react';
+import Empty from '@/assets/images/table-empty.svg?react';
 import useTheme from '@/hooks/use-theme';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly title?: ReactNode;

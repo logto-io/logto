@@ -20,12 +20,15 @@ const session = {
     'La verificación no se completó correctamente. Reinicie el flujo de verificación e intente de nuevo.',
   connector_validation_session_not_found:
     'No se encuentra la sesión del conector para la validación del token.',
+  csrf_token_mismatch: 'Desajuste de token CSRF.',
   identifier_not_found:
     'Identificador de usuario no encontrado. Vuelva atrás e inicie sesión nuevamente.',
   interaction_not_found:
     'No se encuentra la sesión de interacción. Vuelva atrás y vuelva a iniciar la sesión.',
   not_supported_for_forgot_password:
     'Esta operación no es compatible para restablecer la contraseña.',
+  identity_conflict:
+    'Se detectó un conflicto de identidad. Por favor, inicie una nueva sesión para continuar con una identidad diferente.',
   mfa: {
     require_mfa_verification: 'Se requiere verificación de MFA para iniciar sesión.',
     mfa_sign_in_only: 'MFA solo está disponible para la interacción de inicio de sesión.',

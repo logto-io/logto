@@ -27,6 +27,7 @@ import {
   devFeatureTag,
   findSupplementFiles,
   normalizePath,
+  pruneSwaggerDocument,
   removeUnnecessaryOperations,
   shouldThrow,
   validateSupplement,
@@ -93,7 +94,7 @@ const buildOperation = (
         throw new Error(`Invalid status code ${status}.`);
       }
 
-      if (status === 200) {
+      if (status === 200 || status === 201) {
         return [
           status,
           {
@@ -155,7 +156,7 @@ const identifiableEntityNames = Object.freeze([
 const additionalTags = Object.freeze(
   condArray<string>(
     'Organization applications',
-    EnvSet.values.isDevFeaturesEnabled && 'Security',
+    EnvSet.values.isDevFeaturesEnabled && 'Custom UI assets',
     'Organization users'
   )
 );
@@ -298,6 +299,8 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         }),
       baseDocument
     );
+
+    pruneSwaggerDocument(data);
 
     if (EnvSet.values.isUnitTest) {
       getConsoleLogFromContext(ctx).warn('Skip validating swagger document in unit test.');

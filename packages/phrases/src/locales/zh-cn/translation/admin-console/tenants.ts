@@ -14,6 +14,7 @@ const tenants = {
     tenant_id: '租户 ID',
     tenant_name: '租户名称',
     tenant_region: '数据托管地区',
+    tenant_region_description: '托管您的租户资源（用户、应用程序等）的物理位置。创建后无法更改。',
     tenant_region_tip: '您的租户资源托管在 {{region}}。 <a>了解更多</a>',
     environment_tag_development: '开发',
     environment_tag_production: '产品',
@@ -41,6 +42,7 @@ const tenants = {
   },
   create_modal: {
     title: '创建租户',
+    subtitle: '创建一个拥有独立资源和用户的新租户。',
     tenant_usage_purpose: '您想要使用此租户做什么?',
     development_description: '仅用于测试，不应在生产环境中使用。不需要订阅。',
     development_hint: '它具有所有专业功能，但有像登录横幅之类的限制。',
@@ -48,6 +50,9 @@ const tenants = {
     available_plan: '可用方案：',
     create_button: '创建租户',
     tenant_name_placeholder: '我的租户',
+    tenant_created: '租户创建成功。',
+    invitation_failed: '某些邀请未能发送。请稍后在设置 -> 成员中重试。',
+    tenant_type_description: '创建后将无法更改。',
   },
   dev_tenant_migration: {
     title: '您现在可以通过创建新的“开发租户”免费尝试我们的专业功能！',
@@ -92,6 +97,10 @@ const tenants = {
       '我们非常遗憾地通知您，由于不当使用，包括超出MAU限制、逾期付款或其他未经授权的操作，您的租户帐户已被临时停用。',
     description_2:
       '如果您需要进一步澄清、有任何疑虑或希望恢复全部功能并解锁您的租户，请立即联系我们。',
+  },
+  production_tenant_notification: {
+    text: '你在一个用于免费测试的开发租户中。创建一个生产租户以投入使用。',
+    action: '创建租户',
   },
 };
 

@@ -3,15 +3,15 @@ import { Theme } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
-import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
-import ErrorDark from '@/assets/images/error-dark.svg';
-import Error from '@/assets/images/error.svg';
+import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg?react';
+import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg?react';
+import ErrorDark from '@/assets/images/error-dark.svg?react';
+import Error from '@/assets/images/error.svg?react';
 import Button from '@/ds-components/Button';
 import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly title?: string;

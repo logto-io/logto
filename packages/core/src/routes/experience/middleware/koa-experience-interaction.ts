@@ -25,7 +25,10 @@ export default function koaExperienceInteraction<
   tenant: TenantContext
 ): MiddlewareType<StateT, WithExperienceInteractionContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
-    ctx.experienceInteraction = await ExperienceInteraction.create(ctx, tenant);
+    const { provider } = tenant;
+    const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
+
+    ctx.experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
     return next();
   };

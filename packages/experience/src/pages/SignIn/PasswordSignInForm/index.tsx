@@ -5,7 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import LockIcon from '@/assets/icons/lock.svg';
+import LockIcon from '@/assets/icons/lock.svg?react';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField, PasswordInputField } from '@/components/InputFields';
@@ -18,7 +18,7 @@ import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
@@ -45,7 +45,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -174,6 +174,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in'}
         icon={showSingleSignOnForm ? <LockIcon /> : undefined}
         htmlType="submit"
+        isLoading={isSubmitting}
       />
 
       <input hidden type="submit" />

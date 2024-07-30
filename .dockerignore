@@ -33,5 +33,4 @@ dump.rdb
 .devcontainer
 .github
 .husky
-.parcel-cache
 .vscode

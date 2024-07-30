@@ -1,13 +1,13 @@
 import { Theme } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import RequestErrorDarkImage from '@/assets/images/request-error-dark.svg';
-import RequestErrorImage from '@/assets/images/request-error.svg';
+import RequestErrorDarkImage from '@/assets/images/request-error-dark.svg?react';
+import RequestErrorImage from '@/assets/images/request-error.svg?react';
 import useTheme from '@/hooks/use-theme';
 
 import Button from '../Button';
 
-import * as styles from './TableError.module.scss';
+import styles from './TableError.module.scss';
 
 type Props = {
   readonly title?: string;

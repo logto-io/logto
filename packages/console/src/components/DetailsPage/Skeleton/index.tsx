@@ -1,7 +1,7 @@
 import { FormCardSkeleton } from '@/components/FormCard';
 import Spacer from '@/ds-components/Spacer';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function Skeleton() {
   return (

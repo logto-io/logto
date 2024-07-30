@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 
-import Failed from '@/assets/icons/failed.svg';
-import Success from '@/assets/icons/success.svg';
+import Failed from '@/assets/icons/failed.svg?react';
+import Success from '@/assets/icons/success.svg?react';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isSuccess: boolean;

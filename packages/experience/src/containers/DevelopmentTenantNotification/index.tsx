@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import DevIcon from '@/assets/icons/dev-icon.svg';
+import DevIcon from '@/assets/icons/dev-icon.svg?react';
 import usePlatform from '@/hooks/use-platform';
 
 /**

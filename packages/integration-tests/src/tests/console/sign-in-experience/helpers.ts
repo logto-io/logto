@@ -31,7 +31,7 @@ export const expectToSelectColor = async (
 
   await expect(colorField).toClick('div[role=button]');
 
-  await expect(page).toFill('input[id^=rc-editable-input]', color);
+  await expect(page).toFill('input[id=hex][class=rcp-field-input]', color);
 
   // Close the color input
   await page.keyboard.press('Escape');

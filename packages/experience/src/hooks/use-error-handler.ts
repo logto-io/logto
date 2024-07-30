@@ -24,6 +24,7 @@ const useErrorHandler = () => {
           const logtoError = await error.response.json<RequestErrorBody>();
 
           const { code, message } = logtoError;
+
           const handler = errorHandlers?.[code] ?? errorHandlers?.global;
 
           if (handler) {

@@ -92,7 +92,7 @@ export const mockSignInExperience: SignInExperience = {
   customCss: null,
   customContent: {},
   agreeToTermsPolicy: AgreeToTermsPolicy.Automatic,
-  customUiAssetId: null,
+  customUiAssets: null,
   passwordPolicy: {},
   mfa: {
     policy: MfaPolicy.UserControlled,

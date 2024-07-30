@@ -11,7 +11,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import CodeRestoreButton from './ActionButton/CodeRestoreButton.js';
 import DashBoard, { type Props as DashboardProps } from './Dashboard';
 import { defaultOptions, logtoDarkTheme, logtoLightTheme } from './config.js';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import type { IStandaloneCodeEditor, ModelSettings } from './type.js';
 import useEditorHeight from './use-editor-height.js';
 

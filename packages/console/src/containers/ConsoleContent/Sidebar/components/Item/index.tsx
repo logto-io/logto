@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { getPath } from '../../utils';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly icon?: ReactNode;

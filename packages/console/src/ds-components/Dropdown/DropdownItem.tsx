@@ -3,7 +3,7 @@ import type { MouseEvent, KeyboardEvent, ReactNode } from 'react';
 
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './DropdownItem.module.scss';
+import styles from './DropdownItem.module.scss';
 
 export type Props = {
   readonly onClick?: (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;

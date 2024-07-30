@@ -7,6 +7,7 @@ const organizations = {
   organization_template: 'Kuruluş şablonu',
   organization_id: 'Kuruluş Kimliği',
   members: 'Üyeler',
+  machine_to_machine: 'Makineden makineye uygulamalar',
   create_organization: 'Kuruluş oluştur',
   setup_organization: 'Kuruluşunuzu ayarlayın',
   organization_list_placeholder_title: 'Kuruluş',

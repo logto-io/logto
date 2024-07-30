@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import ExternalLinkIcon from '@/assets/icons/external-link.svg';
+import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';
 

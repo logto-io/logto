@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import { type ComponentProps } from 'react';
 
-import CaretDown from '@/assets/icons/caret-down.svg';
-import CaretUp from '@/assets/icons/caret-up.svg';
+import CaretDown from '@/assets/icons/caret-down.svg?react';
+import CaretUp from '@/assets/icons/caret-up.svg?react';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './NumericInput.module.scss';
+import styles from './NumericInput.module.scss';
 import TextInput from './index';
 
 type ButtonProps = {

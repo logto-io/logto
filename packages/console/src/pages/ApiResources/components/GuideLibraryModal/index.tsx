@@ -4,12 +4,12 @@ import Modal from 'react-modal';
 import ModalFooter from '@/components/Guide/ModalFooter';
 import ModalHeader from '@/components/Guide/ModalHeader';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 
 import CreateForm from '../CreateForm';
 import GuideLibrary from '../GuideLibrary';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isOpen: boolean;

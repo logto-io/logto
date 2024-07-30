@@ -5,7 +5,7 @@ import { SsoConnectorContext } from '@/contexts/SsoConnectorContextProvider';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 // Basic SAML SP config metadata, @see `packages/core/sso/src/types/saml`
 const samlServiceProviderMetadataGuard = z.object({

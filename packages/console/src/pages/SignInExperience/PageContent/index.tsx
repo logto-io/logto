@@ -1,6 +1,6 @@
 import { type SignInExperience } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
 
 import Preview from '../components/Preview';
+import { SignInExperienceContext } from '../contexts/SignInExperienceContextProvider';
 import usePreviewConfigs from '../hooks/use-preview-configs';
 import { SignInExperienceTab } from '../types';
 import { type SignInExperienceForm } from '../types';
@@ -25,7 +26,7 @@ import Content from './Content';
 import PasswordPolicy from './PasswordPolicy';
 import SignUpAndSignIn from './SignUpAndSignIn';
 import SignUpAndSignInChangePreview from './SignUpAndSignInChangePreview';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import {
   getBrandingErrorCount,
   getSignUpAndSignInErrorCount,
@@ -48,6 +49,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
 
   const { updateConfigs } = useConfigs();
   const { getPathname } = useTenantPathname();
+  const { isUploading, cancelUpload } = useContext(SignInExperienceContext);
 
   const [dataToCompare, setDataToCompare] = useState<SignInExperience>();
 
@@ -106,6 +108,13 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
     })
   );
 
+  const onDiscard = useCallback(() => {
+    reset();
+    if (isUploading && cancelUpload) {
+      cancelUpload();
+    }
+  }, [isUploading, cancelUpload, reset]);
+
   return (
     <>
       <TabNav className={styles.tabs}>
@@ -137,14 +146,16 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
             <Preview
               isLivePreviewDisabled={isDirty}
               signInExperience={previewConfigs}
+              isPreviewIframeDisabled={Boolean(data.customUiAssets)}
               className={styles.preview}
             />
           )}
         </div>
         <SubmitFormChangesActionBar
-          isOpen={isDirty}
+          isOpen={isDirty || isUploading}
+          isSubmitDisabled={isUploading}
           isSubmitting={isSaving}
-          onDiscard={reset}
+          onDiscard={onDiscard}
           onSubmit={onSubmit}
         />
       </div>
@@ -161,8 +172,9 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
         {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
       </ConfirmModal>
       <UnsavedChangesAlertModal
-        hasUnsavedChanges={isDirty}
+        hasUnsavedChanges={isDirty || isUploading}
         parentPath={getPathname('/sign-in-experience')}
+        onConfirm={onDiscard}
       />
     </>
   );

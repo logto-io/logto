@@ -1,62 +1,66 @@
 import {
-  InteractionEvent,
-  InteractionIdentifierType,
+  SignInIdentifier,
   VerificationType,
   type InteractionIdentifier,
+  type User,
+  type VerificationCodeSignInIdentifier,
 } from '@logto/schemas';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
-import assertThat from '#src/utils/assert-that.js';
 
-import { type VerificationRecord } from './verifications/index.js';
+import type { InteractionProfile } from '../types.js';
 
 export const findUserByIdentifier = async (
   userQuery: Queries['users'],
   { type, value }: InteractionIdentifier
 ) => {
   switch (type) {
-    case InteractionIdentifierType.Username: {
+    case SignInIdentifier.Username: {
       return userQuery.findUserByUsername(value);
     }
-    case InteractionIdentifierType.Email: {
+    case SignInIdentifier.Email: {
       return userQuery.findUserByEmail(value);
     }
-    case InteractionIdentifierType.Phone: {
+    case SignInIdentifier.Phone: {
       return userQuery.findUserByPhone(value);
     }
   }
 };
 
 /**
- * Check if the verification record is valid for the current interaction event.
- *
- * This function will compare the verification record for the current interaction event with Logto's SIE settings
- *
- * @throws RequestError with 400 if the verification record is not valid for the current interaction event
+ * Convert the interaction profile `socialIdentity` to `User['identities']` data format
  */
-export const validateSieVerificationMethod = (
-  interactionEvent: InteractionEvent,
-  verificationRecord: VerificationRecord
-) => {
-  switch (interactionEvent) {
-    case InteractionEvent.SignIn: {
-      // TODO: sign-in methods validation
-      break;
+export const toUserSocialIdentityData = (
+  socialIdentity: Required<InteractionProfile>['socialIdentity']
+): User['identities'] => {
+  const { target, userInfo } = socialIdentity;
+
+  return {
+    [target]: {
+      userId: userInfo.id,
+      details: userInfo,
+    },
+  };
+};
+
+export const interactionIdentifierToUserProfile = (
+  identifier: InteractionIdentifier
+): { username: string } | { primaryEmail: string } | { primaryPhone: string } => {
+  const { type, value } = identifier;
+  switch (type) {
+    case SignInIdentifier.Username: {
+      return { username: value };
     }
-    case InteractionEvent.Register: {
-      // TODO: sign-up methods validation
-      break;
+    case SignInIdentifier.Email: {
+      return { primaryEmail: value };
     }
-    case InteractionEvent.ForgotPassword: {
-      // Forgot password only supports verification code type verification record
-      // The verification record's interaction event must be ForgotPassword
-      assertThat(
-        verificationRecord.type === VerificationType.VerificationCode &&
-          verificationRecord.interactionEvent === InteractionEvent.ForgotPassword,
-        new RequestError({ code: 'session.verification_session_not_found', status: 400 })
-      );
-      break;
+    case SignInIdentifier.Phone: {
+      return { primaryPhone: value };
     }
   }
 };
+
+export const codeVerificationIdentifierRecordTypeMap = Object.freeze({
+  [SignInIdentifier.Email]: VerificationType.EmailVerificationCode,
+  [SignInIdentifier.Phone]: VerificationType.PhoneVerificationCode,
+}) satisfies Record<VerificationCodeSignInIdentifier, VerificationType>;

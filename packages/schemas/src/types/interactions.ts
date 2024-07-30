@@ -1,7 +1,13 @@
+/* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
-import { MfaFactor, jsonObjectGuard, webAuthnTransportGuard } from '../foundations/index.js';
+import {
+  MfaFactor,
+  SignInIdentifier,
+  jsonObjectGuard,
+  webAuthnTransportGuard,
+} from '../foundations/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
 import type {
@@ -24,43 +30,43 @@ export enum InteractionEvent {
 }
 
 // ====== Experience API payload guards and type definitions start ======
-export enum InteractionIdentifierType {
-  Username = 'username',
-  Email = 'email',
-  Phone = 'phone',
-}
 
 /** Identifiers that can be used to uniquely identify a user. */
-export type InteractionIdentifier = {
-  type: InteractionIdentifierType;
+export type InteractionIdentifier<T extends SignInIdentifier = SignInIdentifier> = {
+  type: T;
   value: string;
 };
 
 export const interactionIdentifierGuard = z.object({
-  type: z.nativeEnum(InteractionIdentifierType),
+  type: z.nativeEnum(SignInIdentifier),
   value: z.string(),
 }) satisfies ToZodObject<InteractionIdentifier>;
 
+export type VerificationCodeSignInIdentifier = SignInIdentifier.Email | SignInIdentifier.Phone;
+
 /** Currently only email and phone are supported for verification code validation. */
-export type VerificationCodeIdentifier = {
-  type: InteractionIdentifierType.Email | InteractionIdentifierType.Phone;
+export type VerificationCodeIdentifier<
+  T extends VerificationCodeSignInIdentifier = VerificationCodeSignInIdentifier,
+> = {
+  type: T;
   value: string;
 };
-
 export const verificationCodeIdentifierGuard = z.object({
-  type: z.enum([InteractionIdentifierType.Email, InteractionIdentifierType.Phone]),
+  type: z.enum([SignInIdentifier.Email, SignInIdentifier.Phone]),
   value: z.string(),
 }) satisfies ToZodObject<VerificationCodeIdentifier>;
 
 /** Logto supported interaction verification types. */
 export enum VerificationType {
   Password = 'Password',
-  VerificationCode = 'VerificationCode',
+  EmailVerificationCode = 'EmailVerificationCode',
+  PhoneVerificationCode = 'PhoneVerificationCode',
   Social = 'Social',
   EnterpriseSso = 'EnterpriseSso',
   TOTP = 'Totp',
   WebAuthn = 'WebAuthn',
   BackupCode = 'BackupCode',
+  NewPasswordIdentity = 'NewPasswordIdentity',
 }
 
 // REMARK: API payload guard
@@ -115,15 +121,69 @@ export const backupCodeVerificationVerifyPayloadGuard = z.object({
   code: z.string().min(1),
 }) satisfies ToZodObject<BackupCodeVerificationVerifyPayload>;
 
+/**
+ * Payload type for `POST /api/experience/verification/new-password-identity`.
+ * @remarks Currently we only support username identifier for new password identity registration.
+ * For email and phone new identity registration, a `CodeVerification` record is required.
+ */
+export type NewPasswordIdentityVerificationPayload = {
+  identifier: {
+    type: SignInIdentifier.Username;
+    value: string;
+  };
+  password: string;
+};
+export const newPasswordIdentityVerificationPayloadGuard = z.object({
+  identifier: z.object({
+    type: z.literal(SignInIdentifier.Username),
+    value: z.string(),
+  }),
+  password: z.string().min(1),
+}) satisfies ToZodObject<NewPasswordIdentityVerificationPayload>;
+
 /** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {
-  interactionEvent: InteractionEvent;
+  /** The ID of the verification record that is used to identify the user. */
   verificationId: string;
+  /**
+   * Link social identity to a related user account with the same email or phone.
+   * Only applicable for social verification records and a related user account is found.
+   */
+  linkSocialIdentity?: boolean;
 };
 export const identificationApiPayloadGuard = z.object({
-  interactionEvent: z.nativeEnum(InteractionEvent),
   verificationId: z.string(),
+  linkSocialIdentity: z.boolean().optional(),
 }) satisfies ToZodObject<IdentificationApiPayload>;
+
+/** Payload type for `POST /api/experience`. */
+export type CreateExperienceApiPayload = {
+  interactionEvent: InteractionEvent;
+};
+export const CreateExperienceApiPayloadGuard = z.object({
+  interactionEvent: z.nativeEnum(InteractionEvent),
+}) satisfies ToZodObject<CreateExperienceApiPayload>;
+
+/** Payload type for `POST /api/experience/profile */
+export const updateProfileApiPayloadGuard = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal(SignInIdentifier.Username),
+    value: z.string(),
+  }),
+  z.object({
+    type: z.literal('password'),
+    value: z.string(),
+  }),
+  z.object({
+    type: z.literal(SignInIdentifier.Email),
+    verificationId: z.string(),
+  }),
+  z.object({
+    type: z.literal(SignInIdentifier.Phone),
+    verificationId: z.string(),
+  }),
+]);
+export type UpdateProfileApiPayload = z.infer<typeof updateProfileApiPayloadGuard>;
 
 // ====== Experience API payload guard and types definitions end ======
 
@@ -372,3 +432,4 @@ export const verifyMfaResultGuard = z.object({
 });
 
 export type VerifyMfaResult = z.infer<typeof verifyMfaResultGuard>;
+/* eslint-enable max-lines */

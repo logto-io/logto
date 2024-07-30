@@ -39,6 +39,8 @@ const getUserInfo: GetUserInfo = async (data, getSession) => {
     userId: z.optional(z.string()),
     email: z.string().optional(),
     phone: z.string().optional(),
+    name: z.string().optional(),
+    avatar: z.string().optional(),
   });
   const result = dataGuard.safeParse(data);
 

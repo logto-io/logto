@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
+  gap: _.unit(2);
 
   .icon {
     flex-shrink: 0;

@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import http2 from 'node:http2';
+import path from 'node:path';
 
 import { appInsights } from '@logto/app-insights/node';
 import { ConsoleLog } from '@logto/shared';
@@ -33,7 +34,11 @@ export default async function initApp(app: Koa): Promise<void> {
     ctx.console = consoleLog;
 
     await koaLogger({
-      transporter: (string) => {
+      transporter: (string, [, _, requestPath]) => {
+        // Ignoring static file requests in development since vite will load a crazy amount of files
+        if (!EnvSet.values.isProduction && path.basename(requestPath).includes('.')) {
+          return;
+        }
         consoleLog.plain(string);
       },
     })(ctx, next);

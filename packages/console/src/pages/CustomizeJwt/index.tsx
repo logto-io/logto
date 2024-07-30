@@ -13,7 +13,7 @@ import FormField from '@/ds-components/FormField';
 import CreateButton from './CreateButton';
 import CustomizerItem from './CustomizerItem';
 import DeleteConfirmModal from './DeleteConfirmModal';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import useJwtCustomizer from './use-jwt-customizer';
 
 function CustomizeJwt() {

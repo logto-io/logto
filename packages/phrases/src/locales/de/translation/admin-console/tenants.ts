@@ -15,6 +15,8 @@ const tenants = {
     tenant_id: 'Mieter-ID',
     tenant_name: 'Mietername',
     tenant_region: 'Gehostete Region der Daten',
+    tenant_region_description:
+      'Der physische Ort, an dem Ihre Mandantenressourcen (Benutzer, Apps, usw.) gehostet werden. Dies kann nach Erstellung nicht mehr geändert werden.',
     tenant_region_tip:
       'Ihre Mandantenressourcen werden in {{region}} gehostet. <a>Mehr erfahren</a>',
     environment_tag_development: 'Entw',
@@ -47,6 +49,7 @@ const tenants = {
   },
   create_modal: {
     title: 'Mieter erstellen',
+    subtitle: 'Erstellen Sie einen neuen Mandanten, der isolierte Ressourcen und Benutzer hat.',
     tenant_usage_purpose: 'Wofür möchten Sie diesen Mieter verwenden?',
     development_description:
       'Nur für Tests und sollte nicht in der Produktion verwendet werden. Es ist kein Abonnement erforderlich.',
@@ -57,6 +60,10 @@ const tenants = {
     available_plan: 'Verfügbare Pläne:',
     create_button: 'Mieter erstellen',
     tenant_name_placeholder: 'Mein Mieter',
+    tenant_created: 'Mieter erfolgreich erstellt.',
+    invitation_failed:
+      'Einige Einladungen konnten nicht gesendet werden. Bitte versuchen Sie es später erneut unter Einstellungen -> Mitglieder.',
+    tenant_type_description: 'Dies kann nach Erstellung nicht geändert werden.',
   },
   dev_tenant_migration: {
     title:
@@ -103,6 +110,10 @@ const tenants = {
       'Es tut uns leid, Ihnen mitteilen zu müssen, dass Ihr Mieterkonto vorübergehend gesperrt wurde, da es unsachgemäß genutzt wurde. Dies umfasst die Überschreitung der MAU-Grenzen, überfällige Zahlungen oder andere unbefugte Aktionen.',
     description_2:
       'Wenn Sie weitere Informationen wünschen, Bedenken haben oder die volle Funktionalität wiederherstellen und Ihre Mieter entsperren möchten, zögern Sie nicht, uns umgehend zu kontaktieren.',
+  },
+  production_tenant_notification: {
+    text: 'Sie befinden sich in einem Entwicklungsmieter für kostenlose Tests. Erstellen Sie einen Produktionsmandanten, um live zu gehen.',
+    action: 'Mieter erstellen',
   },
 };
 

@@ -198,4 +198,50 @@ devFeatureTest.describe('enterprise sso verification', () => {
       });
     });
   });
+
+  describe('getSsoConnectorsByEmail', () => {
+    const ssoConnectorApi = new SsoConnectorApi();
+    const domain = `foo${randomString()}.com`;
+
+    beforeAll(async () => {
+      await ssoConnectorApi.createMockOidcConnector([domain]);
+
+      await updateSignInExperience({
+        singleSignOnEnabled: true,
+      });
+    });
+
+    afterAll(async () => {
+      await ssoConnectorApi.cleanUp();
+    });
+
+    it('should get sso connectors with given email properly', async () => {
+      const client = await initExperienceClient();
+
+      const response = await client.getAvailableSsoConnectors('bar@' + domain);
+
+      expect(response.connectorIds.length).toBeGreaterThan(0);
+      expect(response.connectorIds[0]).toBe(ssoConnectorApi.firstConnectorId);
+    });
+
+    it('should return empty array if no sso connectors found', async () => {
+      const client = await initExperienceClient();
+
+      const response = await client.getAvailableSsoConnectors('bar@invalid.com');
+
+      expect(response.connectorIds.length).toBe(0);
+    });
+
+    it('should return empty array if sso is not enabled', async () => {
+      await updateSignInExperience({
+        singleSignOnEnabled: false,
+      });
+
+      const client = await initExperienceClient();
+
+      const response = await client.getAvailableSsoConnectors('bar@' + domain);
+
+      expect(response.connectorIds.length).toBe(0);
+    });
+  });
 });

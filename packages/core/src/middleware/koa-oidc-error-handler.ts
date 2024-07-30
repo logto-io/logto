@@ -90,17 +90,10 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
         throw error;
       }
 
-      // Report oidc exceptions to ApplicationInsights
-      void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
-
       // Mimic oidc-provider's error handling, thus we can use the unified logic below.
       // See https://github.com/panva/node-oidc-provider/blob/37d0a6cfb3c618141a44cbb904ce45659438f821/lib/shared/error_handler.js
       ctx.status = error.statusCode || 500;
       ctx.body = errorOut(error);
-
-      if (!EnvSet.values.isUnitTest && (!EnvSet.values.isProduction || ctx.status >= 500)) {
-        getConsoleLogFromContext(ctx).error(error);
-      }
     }
 
     // This is the only way we can check if the error is handled by the oidc-provider, because
@@ -115,6 +108,7 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
 
       if (parsed.success) {
         const { data } = parsed;
+
         const code = isSessionNotFound(data.error_description)
           ? 'session.not_found'
           : `oidc.${data.error}`;
@@ -126,6 +120,12 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
           error_uri: uri,
           ...ctx.body,
         };
+
+        if (!EnvSet.values.isUnitTest && (!EnvSet.values.isProduction || ctx.status >= 500)) {
+          getConsoleLogFromContext(ctx).error(ctx.body);
+        }
+
+        void appInsights.trackException(ctx.body, buildAppInsightsTelemetry(ctx));
       }
     }
   };

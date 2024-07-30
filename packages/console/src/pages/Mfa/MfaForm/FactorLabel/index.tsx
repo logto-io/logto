@@ -5,7 +5,7 @@ import MfaFactorTitle from '@/components/MfaFactorTitle';
 import DynamicT from '@/ds-components/DynamicT';
 
 import WebAuthnTipContent from './WebAuthnTipContent';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly type: MfaFactor;

@@ -61,16 +61,22 @@ export type StorageProviderData = z.infer<typeof storageProviderDataGuard>;
 
 export enum StorageProviderKey {
   StorageProvider = 'storageProvider',
+  ExperienceBlobsProvider = 'experienceBlobsProvider',
+  ExperienceZipsProvider = 'experienceZipsProvider',
 }
 
 export type StorageProviderType = {
   [StorageProviderKey.StorageProvider]: StorageProviderData;
+  [StorageProviderKey.ExperienceBlobsProvider]: StorageProviderData;
+  [StorageProviderKey.ExperienceZipsProvider]: StorageProviderData;
 };
 
 export const storageProviderGuard: Readonly<{
   [key in StorageProviderKey]: ZodType<StorageProviderType[key]>;
 }> = Object.freeze({
   [StorageProviderKey.StorageProvider]: storageProviderDataGuard,
+  [StorageProviderKey.ExperienceBlobsProvider]: storageProviderDataGuard,
+  [StorageProviderKey.ExperienceZipsProvider]: storageProviderDataGuard,
 });
 
 // Email service provider
