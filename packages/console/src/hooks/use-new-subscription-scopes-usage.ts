@@ -2,7 +2,7 @@ import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type NewSubscriptionScopeUsage } from '@/cloud/types/router';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 
 const useNewSubscriptionScopeUsage = (tenantId: string) => {
   const cloudApi = useCloudApi();
@@ -12,7 +12,9 @@ const useNewSubscriptionScopeUsage = (tenantId: string) => {
 
   return {
     scopeResourceUsage: useSWR<NewSubscriptionScopeUsage, Error>(
-      isCloud && `/api/tenants/${tenantId}/subscription/usage/${resourceEntityName}/scopes`,
+      isCloud &&
+        isDevFeaturesEnabled &&
+        `/api/tenants/${tenantId}/subscription/usage/${resourceEntityName}/scopes`,
       async () =>
         cloudApi.get('/api/tenants/:tenantId/subscription/usage/:entityName/scopes', {
           params: { tenantId, entityName: resourceEntityName },
@@ -20,7 +22,9 @@ const useNewSubscriptionScopeUsage = (tenantId: string) => {
         })
     ),
     scopeRoleUsage: useSWR<NewSubscriptionScopeUsage, Error>(
-      isCloud && `/api/tenants/${tenantId}/subscription/usage/${roleEntityName}/scopes`,
+      isCloud &&
+        isDevFeaturesEnabled &&
+        `/api/tenants/${tenantId}/subscription/usage/${roleEntityName}/scopes`,
       async () =>
         cloudApi.get('/api/tenants/:tenantId/subscription/usage/:entityName/scopes', {
           params: { tenantId, entityName: roleEntityName },
