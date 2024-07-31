@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
-export const kookConfigGuard = z.object({
-  clientId: z.string(),
-  clientSecret: z.string(),
-  scope: z.string().optional(),
+import { oauth2ConfigGuard } from '@logto/connector-oauth';
+
+export const kookConfigGuard = oauth2ConfigGuard.pick({
+  clientId: true,
+  clientSecret: true,
+  scope: true,
 });
 
 export type KookConfig = z.infer<typeof kookConfigGuard>;
