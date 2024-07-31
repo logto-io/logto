@@ -105,6 +105,9 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           "'self'",
           "'unsafe-inline'",
           `${gsiOrigin}client`,
+          // Some of our users may use the Cloudflare Web Analytics service. We need to allow it to
+          // load its scripts.
+          'https://static.cloudflareinsights.com/',
           ...conditionalArray(!isProduction && "'unsafe-eval'"),
         ],
         connectSrc: ["'self'", gsiOrigin, tenantEndpointOrigin, ...developmentOrigins],
