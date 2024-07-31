@@ -45,8 +45,7 @@ export const newPasswordIdentityVerificationRecordDataGuard = z.object({
  *
  * @remarks This verification record can only be used for new user registration.
  * By default this verification record allows all types of identifiers, username, email, and phone.
- * But in our current product design, only username + password registration is supported. The identifier type
- * will be guarded at the API level.
+ * For email and phone identifiers, a `CodeVerification` record is required.
  */
 export class NewPasswordIdentityVerification
   implements VerificationRecord<VerificationType.NewPasswordIdentity>

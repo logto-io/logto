@@ -15,7 +15,7 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
+import { devFeatureTest, generateEmail, generatePassword, generatePhone } from '#src/utils.js';
 
 const verificationIdentifierType: readonly [SignInIdentifier.Email, SignInIdentifier.Phone] =
   Object.freeze([SignInIdentifier.Email, SignInIdentifier.Phone]);
@@ -47,56 +47,68 @@ devFeatureTest.describe('Register interaction with verification code happy path'
     }
   );
 
-  it.each(verificationIdentifierType)(
-    'Should fail to sign-up with existing %p identifier and directly sign-in instead ',
-    async (identifierType) => {
-      const { userProfile, user } = await generateNewUser({
-        [identifiersTypeToUserProfile[identifierType]]: true,
+  describe('sign-up with existing identifier', () => {
+    beforeAll(async () => {
+      await Promise.all([setEmailConnector(), setSmsConnector()]);
+      await enableAllVerificationCodeSignInMethods({
+        identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
+        password: true,
+        verify: true,
       });
+    });
 
-      const identifier: VerificationCodeIdentifier = {
-        type: identifierType,
-        value: userProfile[identifiersTypeToUserProfile[identifierType]]!,
-      };
+    it.each(verificationIdentifierType)(
+      'Should fail to sign-up with existing %p identifier and directly sign-in instead ',
+      async (identifierType) => {
+        const { userProfile, user } = await generateNewUser({
+          [identifiersTypeToUserProfile[identifierType]]: true,
+          password: true,
+        });
 
-      const client = await initExperienceClient(InteractionEvent.Register);
+        const identifier: VerificationCodeIdentifier = {
+          type: identifierType,
+          value: userProfile[identifiersTypeToUserProfile[identifierType]]!,
+        };
 
-      const { verificationId, code } = await successfullySendVerificationCode(client, {
-        identifier,
-        interactionEvent: InteractionEvent.Register,
-      });
+        const client = await initExperienceClient(InteractionEvent.Register);
 
-      await successfullyVerifyVerificationCode(client, {
-        identifier,
-        verificationId,
-        code,
-      });
+        const { verificationId, code } = await successfullySendVerificationCode(client, {
+          identifier,
+          interactionEvent: InteractionEvent.Register,
+        });
 
-      await expectRejects(
-        client.identifyUser({
+        await successfullyVerifyVerificationCode(client, {
+          identifier,
           verificationId,
-        }),
-        {
-          code: `user.${identifierType}_already_in_use`,
-          status: 422,
-        }
-      );
+          code,
+        });
 
-      await client.updateInteractionEvent({
-        interactionEvent: InteractionEvent.SignIn,
-      });
+        await expectRejects(
+          client.identifyUser({
+            verificationId,
+          }),
+          {
+            code: `user.${identifierType}_already_in_use`,
+            status: 422,
+          }
+        );
 
-      await client.identifyUser({
-        verificationId,
-      });
+        await client.updateInteractionEvent({
+          interactionEvent: InteractionEvent.SignIn,
+        });
 
-      const { redirectTo } = await client.submitInteraction();
-      await processSession(client, redirectTo);
-      await logoutClient(client);
+        await client.identifyUser({
+          verificationId,
+        });
 
-      await deleteUser(user.id);
-    }
-  );
+        const { redirectTo } = await client.submitInteraction();
+        await processSession(client, redirectTo);
+        await logoutClient(client);
+
+        await deleteUser(user.id);
+      }
+    );
+  });
 
   describe('fulfill password', () => {
     beforeAll(async () => {
@@ -106,6 +118,50 @@ devFeatureTest.describe('Register interaction with verification code happy path'
         verify: true,
       });
     });
+
+    it.each(verificationIdentifierType)(
+      'Should throw identifier not verified error when trying to fulfill password without verifying %p identifier',
+      async (identifier) => {
+        const client = await initExperienceClient(InteractionEvent.Register);
+        const interactionIdentifier = {
+          type: identifier,
+          value: identifier === SignInIdentifier.Email ? generateEmail() : generatePhone(),
+        };
+
+        const { verificationId } = await client.createNewPasswordIdentityVerification({
+          identifier: interactionIdentifier,
+          password: generatePassword(),
+        });
+
+        await expectRejects(client.identifyUser({ verificationId }), {
+          code: 'session.identifier_not_verified',
+          status: 422,
+        });
+
+        const { verificationId: codeVerificationId, code } = await successfullySendVerificationCode(
+          client,
+          {
+            identifier: interactionIdentifier,
+            interactionEvent: InteractionEvent.Register,
+          }
+        );
+
+        await successfullyVerifyVerificationCode(client, {
+          identifier: interactionIdentifier,
+          verificationId: codeVerificationId,
+          code,
+        });
+
+        await client.identifyUser({ verificationId });
+
+        const { redirectTo } = await client.submitInteraction();
+
+        const userId = await processSession(client, redirectTo);
+        await logoutClient(client);
+
+        await deleteUser(userId);
+      }
+    );
 
     it.each(verificationIdentifierType)(
       'Should register with verification code using %p and fulfill the password successfully',

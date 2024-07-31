@@ -3,7 +3,6 @@ import {
   type IdentificationApiPayload,
   type InteractionEvent,
   type MfaFactor,
-  type NewPasswordIdentityVerificationPayload,
   type PasswordVerificationPayload,
   type UpdateProfileApiPayload,
   type VerificationCodeIdentifier,
@@ -196,9 +195,7 @@ export class ExperienceClient extends MockClient {
       .json<{ verificationId: string }>();
   }
 
-  public async createNewPasswordIdentityVerification(
-    payload: NewPasswordIdentityVerificationPayload
-  ) {
+  public async createNewPasswordIdentityVerification(payload: PasswordVerificationPayload) {
     return api
       .post(`${experienceRoutes.verification}/new-password-identity`, {
         headers: { cookie: this.interactionCookie },
