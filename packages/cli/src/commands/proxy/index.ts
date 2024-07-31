@@ -73,8 +73,8 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
           verbose,
         })
     );
-    const proxySignInExpRequest = conditional(url && createProxy(url));
-    const proxyStaticFileRequest = conditional(path && createStaticFileProxy(path));
+    const proxyExperienceServerRequest = conditional(url && createProxy(url));
+    const proxyExperienceStaticFileRequest = conditional(path && createStaticFileProxy(path));
 
     const server = http.createServer((request, response) => {
       if (verbose) {
@@ -87,13 +87,13 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
         return;
       }
 
-      if (proxySignInExpRequest) {
-        void proxySignInExpRequest(request, response);
+      if (proxyExperienceServerRequest) {
+        void proxyExperienceServerRequest(request, response);
         return;
       }
 
-      if (proxyStaticFileRequest) {
-        void proxyStaticFileRequest(request, response);
+      if (proxyExperienceStaticFileRequest) {
+        void proxyExperienceStaticFileRequest(request, response);
       }
     });
 

@@ -24,6 +24,9 @@ export const createProxy = (targetUrl: string, onProxyResponse?: OnProxyEvent['p
       hasResponseHandler && {
         on: {
           proxyRes: onProxyResponse,
+          error: (error) => {
+            consoleLog.error(chalk.red(error));
+          },
         },
       }
     ),
@@ -51,9 +54,10 @@ export const createStaticFileProxy = (staticPath: string) => {
         response.setHeader('content-type', loadIndex ? indexContentType : getMimeType(request.url));
         response.writeHead(200);
         response.end(content);
-      } catch {
+      } catch (error: unknown) {
+        consoleLog.error(chalk.red(error));
         response.setHeader('content-type', getMimeType(request.url));
-        response.writeHead(404);
+        response.writeHead(existsSync(request.url) ? 500 : 404);
         response.end();
       }
     }
@@ -93,23 +97,22 @@ export const createLogtoResponseHandler = async ({
     }
 
     if (proxyResponse.headers['content-type']?.includes('text/html')) {
-      return responseBody.replace(
-        `action="${logtoEndpointUrl.href}oidc/session/end/confirm"`,
-        `action="${proxyUrl.href}oidc/session/end/confirm"`
-      );
+      return responseBody.replace(`action="${logtoEndpointUrl.href}`, `action="${proxyUrl.href}`);
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    const jsonData = trySafe(() => JSON.parse(responseBody) as Record<string, unknown>);
+    if (proxyResponse.headers['content-type']?.includes('application/json')) {
+      // eslint-disable-next-line no-restricted-syntax
+      const jsonData = trySafe(() => JSON.parse(responseBody) as Record<string, unknown>);
 
-    if (jsonData) {
-      for (const [key, value] of Object.entries(jsonData)) {
-        if ((key === 'redirectTo' || key.endsWith('_endpoint')) && typeof value === 'string') {
-          // eslint-disable-next-line @silverhand/fp/no-mutation
-          jsonData[key] = value.replace(logtoEndpointUrl.href, proxyUrl.href);
+      if (jsonData) {
+        for (const [key, value] of Object.entries(jsonData)) {
+          if ((key === 'redirectTo' || key.endsWith('_endpoint')) && typeof value === 'string') {
+            // eslint-disable-next-line @silverhand/fp/no-mutation
+            jsonData[key] = value.replace(logtoEndpointUrl.href, proxyUrl.href);
+          }
         }
+        return JSON.stringify(jsonData);
       }
-      return JSON.stringify(jsonData);
     }
 
     return responseBody;
