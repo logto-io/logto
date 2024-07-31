@@ -53,8 +53,7 @@ devFeatureTest.describe('Bind MFA APIs sad path', () => {
     it('should throw not supported error when binding TOTP on ForgotPassword interaction', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       await userApi.create({ username, password });
-      const client = await initExperienceClient();
-      await client.initInteraction({ interactionEvent: InteractionEvent.ForgotPassword });
+      const client = await initExperienceClient(InteractionEvent.ForgotPassword);
 
       await expectRejects(client.skipMfaBinding(), {
         code: 'session.not_supported_for_forgot_password',
@@ -69,7 +68,6 @@ devFeatureTest.describe('Bind MFA APIs sad path', () => {
 
     it('should throw identifier_not_found error, if user has not been identified', async () => {
       const client = await initExperienceClient();
-      await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
       await expectRejects(client.bindMfa(MfaFactor.TOTP, 'dummy_verification_id'), {
         code: 'session.identifier_not_found',
         status: 404,

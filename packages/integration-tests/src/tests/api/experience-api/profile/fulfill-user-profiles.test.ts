@@ -38,9 +38,7 @@ devFeatureTest.describe('Fulfill User Profiles', () => {
   });
 
   it('should throw 400 if the interaction event is ForgotPassword', async () => {
-    const client = await initExperienceClient();
-
-    await client.initInteraction({ interactionEvent: InteractionEvent.ForgotPassword });
+    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
 
     await expectRejects(
       client.updateProfile({ type: SignInIdentifier.Username, value: 'username' }),
@@ -53,8 +51,6 @@ devFeatureTest.describe('Fulfill User Profiles', () => {
 
   it('should throw 404 if the interaction is not identified', async () => {
     const client = await initExperienceClient();
-
-    await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 
     await expectRejects(
       client.updateProfile({ type: SignInIdentifier.Username, value: 'username' }),

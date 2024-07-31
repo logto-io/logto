@@ -41,7 +41,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 ) {
   const { queries } = tenant;
 
-  const router =
+  const experienceRouter =
     // @ts-expect-error for good koa types
     // eslint-disable-next-line no-restricted-syntax
     (anonymousRouter as Router<unknown, WithExperienceInteractionContext<RouterContext<T>>>).use(
@@ -49,7 +49,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       koaExperienceInteraction(tenant)
     );
 
-  router.put(
+  experienceRouter.put(
     experienceRoutes.prefix,
     koaGuard({
       body: z.object({
@@ -63,20 +63,19 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       createLog(`Interaction.${interactionEvent}.Update`);
 
-      const experienceInteraction = new ExperienceInteraction(ctx, tenant);
+      const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionEvent);
 
-      await experienceInteraction.setInteractionEvent(interactionEvent);
-
+      // Save new experience interaction instance.
+      // This will overwrite any existing interaction data in the storage.
       await experienceInteraction.save();
 
-      ctx.experienceInteraction = experienceInteraction;
       ctx.status = 204;
 
       return next();
     }
   );
 
-  router.put(
+  experienceRouter.put(
     `${experienceRoutes.prefix}/interaction-event`,
     koaGuard({
       body: z.object({
@@ -88,9 +87,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       const { interactionEvent } = ctx.guard.body;
       const { createLog, experienceInteraction } = ctx;
 
-      const eventLog = createLog(
-        `Interaction.${experienceInteraction.interactionEvent ?? interactionEvent}.Update`
-      );
+      const eventLog = createLog(`Interaction.${experienceInteraction.interactionEvent}.Update`);
 
       await experienceInteraction.setInteractionEvent(interactionEvent);
 
@@ -106,7 +103,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }
   );
 
-  router.post(
+  experienceRouter.post(
     experienceRoutes.identification,
     koaGuard({
       body: identificationApiPayloadGuard,
@@ -127,7 +124,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }
   );
 
-  router.post(
+  experienceRouter.post(
     `${experienceRoutes.prefix}/submit`,
     koaGuard({
       status: [200, 400, 403, 404, 422],
@@ -144,14 +141,14 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }
   );
 
-  passwordVerificationRoutes(router, tenant);
-  verificationCodeRoutes(router, tenant);
-  socialVerificationRoutes(router, tenant);
-  enterpriseSsoVerificationRoutes(router, tenant);
-  totpVerificationRoutes(router, tenant);
-  webAuthnVerificationRoute(router, tenant);
-  backupCodeVerificationRoutes(router, tenant);
-  newPasswordIdentityVerificationRoutes(router, tenant);
+  passwordVerificationRoutes(experienceRouter, tenant);
+  verificationCodeRoutes(experienceRouter, tenant);
+  socialVerificationRoutes(experienceRouter, tenant);
+  enterpriseSsoVerificationRoutes(experienceRouter, tenant);
+  totpVerificationRoutes(experienceRouter, tenant);
+  webAuthnVerificationRoute(experienceRouter, tenant);
+  backupCodeVerificationRoutes(experienceRouter, tenant);
+  newPasswordIdentityVerificationRoutes(experienceRouter, tenant);
 
-  profileRoutes(router, tenant);
+  profileRoutes(experienceRouter, tenant);
 }

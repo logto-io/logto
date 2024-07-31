@@ -14,11 +14,7 @@ import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 import { devFeatureTest, generatePassword } from '#src/utils.js';
 
-const initAndIdentifyForgotPasswordInteraction = async (
-  client: ExperienceClient,
-  email: string
-) => {
-  await client.initInteraction({ interactionEvent: InteractionEvent.ForgotPassword });
+const identifyForgotPasswordInteraction = async (client: ExperienceClient, email: string) => {
   const { verificationId, code } = await successfullySendVerificationCode(client, {
     identifier: { type: SignInIdentifier.Email, value: email },
     interactionEvent: InteractionEvent.ForgotPassword,
@@ -52,8 +48,6 @@ devFeatureTest.describe('Reset Password', () => {
   it('should 400 if the interaction is not ForgotPassword', async () => {
     const client = await initExperienceClient();
 
-    await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
-
     await expectRejects(client.resetPassword({ password: 'password' }), {
       status: 400,
       code: 'session.invalid_interaction_type',
@@ -61,9 +55,7 @@ devFeatureTest.describe('Reset Password', () => {
   });
 
   it('should throw 404 if the interaction is not identified', async () => {
-    const client = await initExperienceClient();
-
-    await client.initInteraction({ interactionEvent: InteractionEvent.ForgotPassword });
+    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
 
     await expectRejects(client.resetPassword({ password: 'password' }), {
       status: 404,
@@ -74,8 +66,8 @@ devFeatureTest.describe('Reset Password', () => {
   it('should throw 422 if identify the user using VerificationType other than CodeVerification', async () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     await userApi.create({ username, password });
-    const client = await initExperienceClient();
-    await client.initInteraction({ interactionEvent: InteractionEvent.ForgotPassword });
+    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
+
     const { verificationId } = await client.verifyPassword({
       identifier: { type: SignInIdentifier.Username, value: username },
       password,
@@ -93,9 +85,9 @@ devFeatureTest.describe('Reset Password', () => {
       password: true,
     });
     await userApi.create({ primaryEmail, password });
-    const client = await initExperienceClient();
+    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
 
-    await initAndIdentifyForgotPasswordInteraction(client, primaryEmail);
+    await identifyForgotPasswordInteraction(client, primaryEmail);
 
     await expectRejects(client.resetPassword({ password }), {
       status: 422,
@@ -123,9 +115,9 @@ devFeatureTest.describe('Reset Password', () => {
 
     await userApi.create({ primaryEmail, password });
 
-    const client = await initExperienceClient();
+    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
 
-    await initAndIdentifyForgotPasswordInteraction(client, primaryEmail);
+    await identifyForgotPasswordInteraction(client, primaryEmail);
 
     await expectRejects(client.resetPassword({ password: primaryEmail }), {
       status: 422,
@@ -142,9 +134,9 @@ devFeatureTest.describe('Reset Password', () => {
 
     const newPassword = generatePassword();
 
-    const client = await initExperienceClient();
+    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
 
-    await initAndIdentifyForgotPasswordInteraction(client, primaryEmail);
+    await identifyForgotPasswordInteraction(client, primaryEmail);
 
     await client.resetPassword({ password: newPassword });
 

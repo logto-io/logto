@@ -137,8 +137,6 @@ devFeatureTest.describe('social sign-in and sign-up', () => {
       });
 
       const client = await initExperienceClient();
-      await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
-
       const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
         redirectUri,
         state,
