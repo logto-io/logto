@@ -58,6 +58,7 @@
     "hpagent": "^1.2.0",
     "http-proxy-middleware": "^3.0.0",
     "inquirer": "^9.0.0",
+    "mime": "^4.0.4",
     "nanoid": "^5.0.1",
     "ora": "^8.0.1",
     "p-limit": "^6.0.0",

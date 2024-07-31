@@ -2,9 +2,10 @@ import type * as http from 'node:http';
 
 export type ProxyCommandArgs = {
   'experience-uri'?: string;
-  'tenant-id'?: string;
+  'experience-path'?: string;
   endpoint?: string;
   port: number;
+  verbose: boolean;
 };
 
 export type ProxyResponseHandler = {
@@ -13,4 +14,5 @@ export type ProxyResponseHandler = {
   response: http.ServerResponse;
   logtoEndpointUrl: URL;
   proxyUrl: URL;
+  verbose: boolean;
 };

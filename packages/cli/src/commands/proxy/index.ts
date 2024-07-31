@@ -1,13 +1,20 @@
-import * as http from 'node:http';
+import http from 'node:http';
 
 import { isValidUrl } from '@logto/core-kit';
+import { conditional } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
 import { consoleLog } from '../../utils.js';
 
 import { type ProxyCommandArgs } from './types.js';
-import { createLogtoResponseHandler, createProxy, isLogtoRequestPath } from './utils.js';
+import {
+  checkExperienceInput,
+  createLogtoResponseHandler,
+  createProxy,
+  createStaticFileProxy,
+  isLogtoRequestPath,
+} from './utils.js';
 
 const proxy: CommandModule<unknown, ProxyCommandArgs> = {
   command: ['proxy'],
@@ -20,16 +27,15 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
           describe: 'The URI of your custom sign-in experience page.',
           type: 'string',
         },
-        'tenant-id': {
-          alias: ['t'],
-          describe:
-            'Your Logto Cloud tenant ID. WHen provided, endpoint URI will be set to `https://<tenant-id>.logto.app` by default.',
+        'experience-path': {
+          alias: ['xp'],
+          describe: 'The local folder path of your custom sign-in experience assets.',
           type: 'string',
         },
         endpoint: {
           alias: 'ep',
           describe:
-            'Specify the full Logto endpoint URI, which takes precedence over tenant ID when provided.',
+            'Logto endpoint URI, which can be found in Logto Console. E.g.: https://<tenant-id>.logto.app/',
           type: 'string',
         },
         port: {
@@ -38,19 +44,21 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
           type: 'number',
           default: 9000,
         },
+        verbose: {
+          alias: 'v',
+          describe: 'Show verbose output.',
+          type: 'boolean',
+          default: false,
+        },
       })
       .global('e'),
-  handler: async ({ 'experience-uri': expUri, 'tenant-id': tenantId, endpoint, port }) => {
-    if (!expUri || !isValidUrl(expUri)) {
-      consoleLog.fatal(
-        'A valid sign-in experience URI must be provided. E.g.: http://localhost:4000'
-      );
-    }
-    if (!tenantId && (!endpoint || !isValidUrl(endpoint))) {
-      consoleLog.fatal('Either tenant ID or a valid Logto endpoint URI must be provided.');
-    }
+  handler: async ({ 'experience-uri': url, 'experience-path': path, endpoint, port, verbose }) => {
+    checkExperienceInput(url, path);
 
-    const logtoEndpointUrl = new URL(endpoint ?? `https://${tenantId}.logto.app}`);
+    if (!endpoint || !isValidUrl(endpoint)) {
+      consoleLog.fatal('A valid Logto endpoint URI must be provided.');
+    }
+    const logtoEndpointUrl = new URL(endpoint);
     const proxyUrl = new URL(`http://localhost:${port}`);
 
     const proxyLogtoRequest = createProxy(
@@ -62,12 +70,16 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
           response,
           logtoEndpointUrl,
           proxyUrl,
+          verbose,
         })
     );
-    const proxySignInExpRequest = createProxy(expUri);
+    const proxySignInExpRequest = conditional(url && createProxy(url));
+    const proxyStaticFileRequest = conditional(path && createStaticFileProxy(path));
 
     const server = http.createServer((request, response) => {
-      consoleLog.info(`Incoming request: ${chalk.blue(request.url)}`);
+      if (verbose) {
+        consoleLog.info(`Incoming request: ${chalk.blue(request.method, request.url)}`);
+      }
 
       // Proxy the requests to Logto endpoint
       if (isLogtoRequestPath(request.url)) {
@@ -75,7 +87,14 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
         return;
       }
 
-      void proxySignInExpRequest(request, response);
+      if (proxySignInExpRequest) {
+        void proxySignInExpRequest(request, response);
+        return;
+      }
+
+      if (proxyStaticFileRequest) {
+        void proxyStaticFileRequest(request, response);
+      }
     });
 
     server.listen(port, () => {
