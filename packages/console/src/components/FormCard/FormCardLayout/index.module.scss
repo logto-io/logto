@@ -25,7 +25,7 @@ $column-width: calc((100% - 23 * $gutter-width) / 24);
     width: calc($column-width * 16 + $gutter-width * 15);
   }
 
-  @container (max-width: 600px) {
+  @container (max-width: 800px) {
     .container {
       flex-direction: column;
       justify-content: unset;

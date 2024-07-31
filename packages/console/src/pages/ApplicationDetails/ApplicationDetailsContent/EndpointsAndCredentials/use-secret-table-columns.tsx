@@ -53,13 +53,7 @@ export const useSecretTableColumns = ({ appId, onUpdated, onEdit }: UseSecretTab
         dataIndex: 'value',
         colSpan: 6,
         render: ({ value }) => (
-          <CopyToClipboard
-            hasVisibilityToggle
-            displayType="block"
-            value={value}
-            className={styles.copyToClipboard}
-            variant="text"
-          />
+          <CopyToClipboard hasVisibilityToggle displayType="block" value={value} variant="text" />
         ),
       },
       {
