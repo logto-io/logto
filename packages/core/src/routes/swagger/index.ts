@@ -21,7 +21,7 @@ import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from '../types.js';
 
-import { managementApiDescription } from './consts.js';
+import { managementApiAuthDescription } from './consts.js';
 import {
   buildTag,
   devFeatureTag,
@@ -270,14 +270,20 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         version: 'Cloud',
       },
       paths: Object.fromEntries(pathMap),
-      security: [{ ManagementApi: [] }],
+      security: [{ OAuth2: ['all'] }],
       components: {
         securitySchemes: {
-          ManagementApi: {
-            type: 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT',
-            description: managementApiDescription,
+          OAuth2: {
+            type: 'oauth2',
+            description: managementApiAuthDescription,
+            flows: {
+              clientCredentials: {
+                tokenUrl: '/oidc/token',
+                scopes: {
+                  all: 'All scopes',
+                },
+              },
+            },
           },
         },
         schemas: translationSchemas,
