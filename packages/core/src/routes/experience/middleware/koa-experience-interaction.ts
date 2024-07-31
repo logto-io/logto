@@ -1,16 +1,17 @@
 import type { MiddlewareType } from 'koa';
+import { type IRouterParamContext } from 'koa-router';
 
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import ExperienceInteraction from '../classes/experience-interaction.js';
 import { experienceRoutes } from '../const.js';
 import { type WithHooksAndLogsContext } from '../types.js';
 
-export type WithExperienceInteractionContext<ContextT extends WithLogContext = WithLogContext> =
-  ContextT & {
-    experienceInteraction: ExperienceInteraction;
-  };
+export type WithExperienceInteractionContext<
+  ContextT extends IRouterParamContext = IRouterParamContext,
+> = ContextT & {
+  experienceInteraction: ExperienceInteraction;
+};
 
 /**
  * @overview This middleware initializes the `ExperienceInteraction` for the current request.
@@ -40,6 +41,17 @@ export default function koaExperienceInteraction<
 
     ctx.experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
-    return next();
+    try {
+      await next();
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- make sure the interaction is initialized
+      if (ctx.experienceInteraction) {
+        ctx.prependAllLogEntries({
+          interaction: ctx.experienceInteraction.toJson(),
+        });
+      }
+
+      throw error;
+    }
   };
 }

@@ -62,13 +62,15 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       const { interactionEvent } = ctx.guard.body;
       const { createLog } = ctx;
 
-      createLog(`Interaction.${interactionEvent}.Update`);
+      createLog(`Interaction.${interactionEvent}.Create`);
 
       const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionEvent);
 
       // Save new experience interaction instance.
       // This will overwrite any existing interaction data in the storage.
       await experienceInteraction.save();
+
+      ctx.experienceInteraction = experienceInteraction;
 
       ctx.status = 204;
 
@@ -89,12 +91,11 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       const { createLog, experienceInteraction } = ctx;
 
       const eventLog = createLog(`Interaction.${experienceInteraction.interactionEvent}.Update`);
-
-      await experienceInteraction.setInteractionEvent(interactionEvent);
-
       eventLog.append({
         interactionEvent,
       });
+
+      await experienceInteraction.setInteractionEvent(interactionEvent);
 
       await experienceInteraction.save();
 
@@ -112,9 +113,20 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       const { verificationId, linkSocialIdentity } = ctx.guard.body;
-      const { experienceInteraction } = ctx;
+      const { experienceInteraction, createLog } = ctx;
 
-      await experienceInteraction.identifyUser(verificationId, linkSocialIdentity);
+      const log = createLog(
+        `Interaction.${experienceInteraction.interactionEvent}.Identifier.Submit`
+      );
+
+      log.append({
+        payload: {
+          verificationId,
+          linkSocialIdentity,
+        },
+      });
+
+      await experienceInteraction.identifyUser(verificationId, linkSocialIdentity, log);
 
       await experienceInteraction.save();
 
@@ -136,7 +148,16 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
         .optional(),
     }),
     async (ctx, next) => {
+      const { createLog, experienceInteraction } = ctx;
+
+      const log = createLog(`Interaction.${experienceInteraction.interactionEvent}.Submit`);
+
       await ctx.experienceInteraction.submit();
+
+      log.append({
+        interaction: ctx.experienceInteraction.toJson(),
+      });
+
       ctx.status = 200;
       return next();
     }

@@ -3,6 +3,7 @@ import {
   socialAuthorizationUrlPayloadGuard,
   socialVerificationCallbackPayloadGuard,
 } from '@logto/schemas';
+import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -13,6 +14,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { EnterpriseSsoVerification } from '../classes/verifications/enterprise-sso-verification.js';
 import { experienceRoutes } from '../const.js';
+import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
 
 export default function enterpriseSsoVerificationRoutes<
@@ -33,8 +35,19 @@ export default function enterpriseSsoVerificationRoutes<
       }),
       status: [200, 400, 404, 500],
     }),
+    koaExperienceVerificationsAuditLog({
+      type: VerificationType.EnterpriseSso,
+      action: Action.Create,
+    }),
     async (ctx, next) => {
       const { connectorId } = ctx.guard.params;
+
+      ctx.verificationAuditLog.append({
+        payload: {
+          connectorId,
+          ...ctx.guard.body,
+        },
+      });
 
       const enterpriseSsoVerification = EnterpriseSsoVerification.create(
         libraries,
@@ -73,9 +86,21 @@ export default function enterpriseSsoVerificationRoutes<
       }),
       status: [200, 400, 404, 500],
     }),
+    koaExperienceVerificationsAuditLog({
+      type: VerificationType.EnterpriseSso,
+      action: Action.Submit,
+    }),
     async (ctx, next) => {
       const { connectorId } = ctx.params;
       const { connectorData, verificationId } = ctx.guard.body;
+
+      ctx.verificationAuditLog.append({
+        payload: {
+          connectorId,
+          verificationId,
+          connectorData,
+        },
+      });
 
       const enterpriseSsoVerificationRecord =
         ctx.experienceInteraction.getVerificationRecordByTypeAndId(

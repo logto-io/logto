@@ -1,14 +1,32 @@
-import { InteractionEvent, verificationCodeIdentifierGuard } from '@logto/schemas';
+import {
+  InteractionEvent,
+  type VerificationCodeIdentifier,
+  verificationCodeIdentifierGuard,
+} from '@logto/schemas';
+import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { type LogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
+import type ExperienceInteraction from '../classes/experience-interaction.js';
 import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
 import { createNewCodeVerificationRecord } from '../classes/verifications/code-verification.js';
 import { experienceRoutes } from '../const.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
+
+const createVerificationCodeAuditLog = (
+  { createLog }: LogContext,
+  { interactionEvent }: ExperienceInteraction,
+  identifier: VerificationCodeIdentifier,
+  action: Action
+) => {
+  const verificationType = codeVerificationIdentifierRecordTypeMap[identifier.type];
+
+  return createLog(`Interaction.${interactionEvent}.Verification.${verificationType}.${action}`);
+};
 
 export default function verificationCodeRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
@@ -29,6 +47,20 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     }),
     async (ctx, next) => {
       const { identifier, interactionEvent } = ctx.guard.body;
+
+      const log = createVerificationCodeAuditLog(
+        ctx,
+        ctx.experienceInteraction,
+        identifier,
+        Action.Create
+      );
+
+      log.append({
+        payload: {
+          identifier,
+          interactionEvent,
+        },
+      });
 
       const codeVerification = createNewCodeVerificationRecord(
         libraries,
@@ -67,6 +99,21 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     }),
     async (ctx, next) => {
       const { verificationId, code, identifier } = ctx.guard.body;
+
+      const log = createVerificationCodeAuditLog(
+        ctx,
+        ctx.experienceInteraction,
+        identifier,
+        Action.Submit
+      );
+
+      log.append({
+        payload: {
+          identifier,
+          verificationId,
+          code,
+        },
+      });
 
       const codeVerificationRecord = ctx.experienceInteraction.getVerificationRecordByTypeAndId(
         codeVerificationIdentifierRecordTypeMap[identifier.type],
