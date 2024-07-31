@@ -1,81 +1,77 @@
 import * as http from 'node:http';
 
+import { isValidUrl } from '@logto/core-kit';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
 import { consoleLog } from '../../utils.js';
 
-import { createOidcResponseHandler, createProxy, isLogtoRequestPath } from './utils.js';
+import { type ProxyCommandArgs } from './types.js';
+import { createLogtoResponseHandler, createProxy, isLogtoRequestPath } from './utils.js';
 
-const proxy: CommandModule<
-  unknown,
-  {
-    url?: string;
-    tenant?: string;
-    port: number;
-    endpoint?: string;
-  }
-> = {
+const proxy: CommandModule<unknown, ProxyCommandArgs> = {
   command: ['proxy'],
   describe: 'Command for Logto proxy',
   builder: (yargs) =>
     yargs
       .options({
-        url: {
-          alias: ['u', 'sign-in-experience-url'],
-          describe: 'The URL of your custom sign-in experience page',
+        'experience-uri': {
+          alias: ['x'],
+          describe: 'The URI of your custom sign-in experience page.',
           type: 'string',
         },
-        tenant: {
-          alias: ['t', 'tenant-id'],
-          describe: 'The ID of your Logto Cloud tenant',
+        'tenant-id': {
+          alias: ['t'],
+          describe:
+            'Your Logto Cloud tenant ID. WHen provided, endpoint URI will be set to `https://<tenant-id>.logto.app` by default.',
+          type: 'string',
+        },
+        endpoint: {
+          alias: 'ep',
+          describe:
+            'Specify the full Logto endpoint URI, which takes precedence over tenant ID when provided.',
           type: 'string',
         },
         port: {
           alias: 'p',
-          describe: 'The port number where the proxy server will be running on',
+          describe: 'The port number where the proxy server will be running on. Defaults to 9000.',
           type: 'number',
           default: 9000,
         },
-        endpoint: {
-          alias: 'logto-endpoint',
-          describe:
-            '[Internal] Specify Logto Cloud endpoint URL. E.g. `https://[tenant-id].app.logto.dev` for dev environment. Tenant ID will be omitted when this argument is provided.',
-          type: 'string',
-          hidden: true,
-        },
       })
       .global('e'),
-  handler: async ({ url: signInExpUrl, tenant: tenantId, port, endpoint }) => {
-    if (!signInExpUrl) {
-      consoleLog.fatal('No sign-in experience URL provided.');
+  handler: async ({ 'experience-uri': expUri, 'tenant-id': tenantId, endpoint, port }) => {
+    if (!expUri || !isValidUrl(expUri)) {
+      consoleLog.fatal(
+        'A valid sign-in experience URI must be provided. E.g.: http://localhost:4000'
+      );
     }
-    if (!tenantId && !endpoint) {
-      consoleLog.fatal('No tenant ID provided.');
+    if (!tenantId && (!endpoint || !isValidUrl(endpoint))) {
+      consoleLog.fatal('Either tenant ID or a valid Logto endpoint URI must be provided.');
     }
 
-    const logtoCloudEndpointUrl = new URL(endpoint ?? `https://${tenantId}.logto.app}`);
+    const logtoEndpointUrl = new URL(endpoint ?? `https://${tenantId}.logto.app}`);
     const proxyUrl = new URL(`http://localhost:${port}`);
 
-    const proxyOidcRequest = createProxy(
-      logtoCloudEndpointUrl.href,
+    const proxyLogtoRequest = createProxy(
+      logtoEndpointUrl.href,
       async (proxyResponse, request, response) =>
-        createOidcResponseHandler({
+        createLogtoResponseHandler({
           proxyResponse,
           request,
           response,
-          logtoCloudEndpointUrl,
+          logtoEndpointUrl,
           proxyUrl,
         })
     );
-    const proxySignInExpRequest = createProxy(signInExpUrl);
+    const proxySignInExpRequest = createProxy(expUri);
 
     const server = http.createServer((request, response) => {
       consoleLog.info(`Incoming request: ${chalk.blue(request.url)}`);
 
-      // Proxy the request to Logto Cloud endpoint
+      // Proxy the requests to Logto endpoint
       if (isLogtoRequestPath(request.url)) {
-        void proxyOidcRequest(request, response);
+        void proxyLogtoRequest(request, response);
         return;
       }
 

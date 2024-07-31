@@ -1,4 +1,4 @@
-import { conditional } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middleware';
 import { type OnProxyEvent } from 'http-proxy-middleware/dist/types.js';
@@ -24,35 +24,52 @@ export const createProxy = (targetUrl: string, onProxyResponse?: OnProxyEvent['p
 };
 
 /**
- * Intercept the response from Logto OIDC server and replace Logto Cloud endpoint URLs in the response
- * with the proxy URL. The string replace happens in the following cases:
+ * Intercept the response from Logto endpoint and replace Logto endpoint URLs in the response with the
+ * proxy URL. The string replace happens in the following cases:
  * - The response is a redirect response, and the response header contains `location` property.
  * - The response contains JSON data that consists of properties such as `**_endpoint` and `redirectTo`.
  * - The response is HTML content (logoutsource) that contains a form action URL.
- *
- * However, the `issuer` and `jwks_uri` properties in the `/oidc/.well-known` response will not be replaced,
- * even they also contain the Logto Cloud endpoint URL.
+ * Note: the `issuer` and `jwks_uri` properties in the `/oidc/.well-known` response should not be replaced,
+ * even they also contain the Logto endpoint URL.
  */
-export const createOidcResponseHandler = async ({
+export const createLogtoResponseHandler = async ({
   proxyResponse,
   request,
   response,
-  logtoCloudEndpointUrl,
+  logtoEndpointUrl,
   proxyUrl,
 }: ProxyResponseHandler) => {
   const { location } = proxyResponse.headers;
   if (location) {
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    proxyResponse.headers.location = location.replaceAll(logtoCloudEndpointUrl.href, proxyUrl.href);
+    proxyResponse.headers.location = location.replace(logtoEndpointUrl.href, proxyUrl.href);
   }
 
-  void responseInterceptor(async (responseBuffer) => {
+  void responseInterceptor(async (responseBuffer, proxyResponse) => {
     const responseBody = responseBuffer.toString();
     consoleLog.info(`Response received: ${chalk.green(responseBody)}`);
-    return responseBody
-      .replaceAll(`_endpoint":"${logtoCloudEndpointUrl.href}`, `_endpoint":"${proxyUrl.href}`)
-      .replace(`redirectTo":"${logtoCloudEndpointUrl.href}`, `redirectTo":"${proxyUrl.href}`)
-      .replace(`action="${logtoCloudEndpointUrl.href}`, `action="${proxyUrl.href}`);
+
+    if (proxyResponse.headers['content-type']?.includes('text/html')) {
+      return responseBody.replace(
+        `action="${logtoEndpointUrl.href}oidc/session/end/confirm"`,
+        `action="${proxyUrl.href}oidc/session/end/confirm"`
+      );
+    }
+
+    // eslint-disable-next-line no-restricted-syntax
+    const jsonData = trySafe(() => JSON.parse(responseBody) as Record<string, unknown>);
+
+    if (jsonData) {
+      for (const [key, value] of Object.entries(jsonData)) {
+        if ((key === 'redirectTo' || key.endsWith('_endpoint')) && typeof value === 'string') {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          jsonData[key] = value.replace(logtoEndpointUrl.href, proxyUrl.href);
+        }
+      }
+      return JSON.stringify(jsonData);
+    }
+
+    return responseBody;
   })(proxyResponse, request, response);
 };
 
