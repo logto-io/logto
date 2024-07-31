@@ -147,7 +147,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     id: string,
     set: Partial<OmitAutoSetFields<CreateApplication>>,
     jsonbMode: 'merge' | 'replace' = 'merge'
-  ) => updateApplication({ set, where: { id }, jsonbMode: 'merge' });
+  ) => updateApplication({ set, where: { id }, jsonbMode });
 
   const countAllApplications = async () =>
     countApplications({
