@@ -327,7 +327,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       }
 
       ctx.body = await (Object.keys(rest).length > 0
-        ? queries.applications.updateApplicationById(id, rest)
+        ? queries.applications.updateApplicationById(id, rest, 'replace')
         : queries.applications.findApplicationById(id));
 
       return next();
