@@ -66,6 +66,7 @@ stages:
         awsServiceConnection: ${{ variables.awsServiceConnection }}
         awsRegion: ${{ variables.awsRegion }}
         serviceName: logto
+        containerTag: $(Build.SourceBranchName)
   - stage: Deploy_Logto
     displayName: Deploy to ECS - logto
     dependsOn: Push_Logto
@@ -106,3 +107,4 @@ stages:
         awsServiceConnection: ${{ variables.awsServiceConnection }}
         awsRegion: ${{ variables.awsRegion }}
         serviceName: mygovid-mock-service
+        containerTag: mygovid-mock-service
