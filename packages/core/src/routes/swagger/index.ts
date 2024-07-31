@@ -50,6 +50,18 @@ const anonymousPaths = new Set<string>([
   'status',
 ]);
 
+const advancedSearchPaths = new Set<string>([
+  '/applications',
+  '/applications/:applicationId/roles',
+  '/resources/:resourceId/scopes',
+  '/roles/:id/applications',
+  '/roles/:id/scopes',
+  '/roles',
+  '/roles/:id/users',
+  '/users',
+  '/users/:userId/roles',
+]);
+
 type RouteObject = {
   path: string;
   method: OpenAPIV3.HttpMethods;
@@ -73,7 +85,7 @@ const buildOperation = (
   const queryParameters = [
     ...buildParameters(query, 'query'),
     ...(hasPagination ? paginationParameters : []),
-    ...(path === '/users' && method === 'get' ? [searchParameters] : []),
+    ...(advancedSearchPaths.has(path) && method === 'get' ? [searchParameters] : []),
   ];
 
   const requestBody = body && {
