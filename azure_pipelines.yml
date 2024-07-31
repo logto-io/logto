@@ -56,10 +56,26 @@ stages:
         serviceName: logto
         pushArtefacts: ${{ variables.pushArtefacts }}
         buildArguments: $(buildArguments)
+  - stage: EnvApproval
+    displayName: Approvals for deployments - ${{ upper(variables.environment) }}
+    dependsOn:
+      - Build_Logto
+    condition: ${{ variables.pushArtefacts }}
+    jobs:
+    - deployment: VerifyDeployment
+      displayName: Verify conditions for deployment
+      environment: ${{ variables.environment }}
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - script: |
+                date
+              displayName: Show current date
   - stage: Push_Logto
     displayName: Push logto to ECR
-    dependsOn: Build_Logto
-    condition: ${{ variables.pushArtefacts }}
+    dependsOn: EnvApproval
+    condition: and(${{ variables.pushArtefacts }}, succeeded())
     jobs:
     - template: pipeline-templates/push_image.yml
       parameters:
@@ -99,8 +115,10 @@ stages:
         dockerfile: ./mygovid-mock-service/Dockerfile
   - stage: Push_MyGovId_Mock
     displayName: Push MyGovId Mock to ECR
-    dependsOn: Build_MyGovId_Mock
-    condition: eq(variables['Build.SourceBranchName'], 'dev')
+    dependsOn: 
+      - Build_MyGovId_Mock
+      - EnvApproval
+    condition: and(eq(variables['Build.SourceBranchName'], 'dev'), succeeded())
     jobs:
     - template: pipeline-templates/push_image.yml
       parameters:

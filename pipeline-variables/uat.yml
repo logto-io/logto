@@ -3,3 +3,4 @@ variables:
   awsRegion: eu-west-1
   ecrEndpoint: 339713032391.dkr.ecr.eu-west-1.amazonaws.com
   buildArguments: ""
+  environment: LifeEvents-uat
