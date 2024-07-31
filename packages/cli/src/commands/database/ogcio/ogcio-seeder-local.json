@@ -184,8 +184,8 @@
         "name": "File Upload Service",
         "description": "File Upload Service",
         "type": "Traditional",
-        "redirect_uri": "http://localhost:3007/callback",
-        "logout_redirect_uri": "http://localhost:3007",
+        "redirect_uri": "http://localhost:3008/callback",
+        "logout_redirect_uri": "http://localhost:3008",
         "secret": "upload_app_local_sercret",
         "id": "5vnf94y2lr17s2u9htkmq",
         "is_third_party": false
