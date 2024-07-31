@@ -44,8 +44,12 @@ export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
   }
 
   // We need to copy alteration files to execute in the CLI context to make `slonik` available
-  await fs.rm(localAlterationDirectory, { force: true, recursive: true });
-  await fs.cp(alterationDirectory, localAlterationDirectory, { recursive: true });
+  for (const file of await fs.readdir(localAlterationDirectory)) {
+    await fs.rm(path.join(localAlterationDirectory, file), { force: true, recursive: true });
+  }
+  for (const file of await fs.readdir(alterationDirectory)) {
+    await fs.cp(path.join(alterationDirectory, file), path.join(localAlterationDirectory, file), { recursive: true, preserveTimestamps: true });
+  }
 
   const directory = await fs.readdir(localAlterationDirectory);
   const files = directory.filter((file) => alterationFilenameRegex.test(file));
