@@ -74,7 +74,6 @@
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
-    "@types/http-proxy-middleware": "^1.0.0",
     "@types/inquirer": "^9.0.0",
     "@types/node": "^20.9.5",
     "@types/semver": "^7.3.12",

@@ -5,20 +5,15 @@ import type { CommandModule } from 'yargs';
 
 import { consoleLog } from '../../utils.js';
 
-import {
-  createOidcResponseHandler,
-  createProxy,
-  isLogtoRequestPath,
-  isSignInExperienceRequestPath,
-} from './utils.js';
+import { createOidcResponseHandler, createProxy, isLogtoRequestPath } from './utils.js';
 
 const proxy: CommandModule<
   unknown,
   {
-    u?: string;
-    t?: string;
-    p: number;
-    d: boolean;
+    url?: string;
+    tenant?: string;
+    port: number;
+    endpoint?: string;
   }
 > = {
   command: ['proxy'],
@@ -26,41 +21,40 @@ const proxy: CommandModule<
   builder: (yargs) =>
     yargs
       .options({
-        u: {
-          alias: ['url', 'sign-in-experience-url'],
+        url: {
+          alias: ['u', 'sign-in-experience-url'],
           describe: 'The URL of your custom sign-in experience page',
           type: 'string',
         },
-        t: {
-          alias: ['tenant', 'tenant-id'],
+        tenant: {
+          alias: ['t', 'tenant-id'],
           describe: 'The ID of your Logto Cloud tenant',
           type: 'string',
         },
-        p: {
-          alias: 'port',
+        port: {
+          alias: 'p',
           describe: 'The port number where the proxy server will be running on',
           type: 'number',
           default: 9000,
         },
-        d: {
-          alias: 'dev',
-          describe: 'Enable development features',
-          type: 'boolean',
-          default: false,
+        endpoint: {
+          alias: 'logto-endpoint',
+          describe:
+            '[Internal] Specify Logto Cloud endpoint URL. E.g. `https://[tenant-id].app.logto.dev` for dev environment. Tenant ID will be omitted when this argument is provided.',
+          type: 'string',
           hidden: true,
         },
       })
       .global('e'),
-  handler: async ({ u: signInExpUrl, t: tenantId, p: port, d: isDev }) => {
+  handler: async ({ url: signInExpUrl, tenant: tenantId, port, endpoint }) => {
     if (!signInExpUrl) {
       consoleLog.fatal('No sign-in experience URL provided.');
     }
-    if (!tenantId) {
+    if (!tenantId && !endpoint) {
       consoleLog.fatal('No tenant ID provided.');
     }
 
-    const logtoCloudDomain = isDev ? 'app.logto.dev' : 'logto.app';
-    const logtoCloudEndpointUrl = new URL(`https://${tenantId}.${logtoCloudDomain}`);
+    const logtoCloudEndpointUrl = new URL(endpoint ?? `https://${tenantId}.logto.app}`);
     const proxyUrl = new URL(`http://localhost:${port}`);
 
     const proxyOidcRequest = createProxy(
@@ -85,21 +79,7 @@ const proxy: CommandModule<
         return;
       }
 
-      // Proxy the request to the sign-in experience URL
-      if (isSignInExperienceRequestPath(request.url)) {
-        void proxySignInExpRequest(request, response);
-        return;
-      }
-
-      // TODO: add more rich content as user guide
-      if (request.url === '/') {
-        response.writeHead(200, { 'Content-Type': 'text/plain' });
-        response.end('Your Logto proxy server is up and running.');
-        return;
-      }
-
-      response.writeHead(404);
-      response.end('Not Found');
+      void proxySignInExpRequest(request, response);
     });
 
     server.listen(port, () => {

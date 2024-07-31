@@ -5,7 +5,6 @@ import { type OnProxyEvent } from 'http-proxy-middleware/dist/types.js';
 
 import { consoleLog } from '../../utils.js';
 
-import { fileAssetPathRegex, LogtoSignInExperienceRoutes } from './consts.js';
 import { type ProxyResponseHandler } from './types.js';
 
 export const createProxy = (targetUrl: string, onProxyResponse?: OnProxyEvent['proxyRes']) => {
@@ -66,13 +65,3 @@ export const createOidcResponseHandler = async ({
  */
 export const isLogtoRequestPath = (requestPath?: string) =>
   ['/oidc/', '/api/'].some((path) => requestPath?.startsWith(path)) || requestPath === '/consent';
-
-/**
- * Check if the request path is a sign-in experience router path.
- * @example isSignInExperienceRequestPath('/sign-in') // true
- * @example isSignInExperienceRequestPath('/register') // true
- * @example isSignInExperienceRequestPath('/forgot-password') // true
- */
-export const isSignInExperienceRequestPath = (requestPath?: string) =>
-  LogtoSignInExperienceRoutes.some((path) => requestPath?.startsWith(path)) ||
-  Boolean(requestPath && fileAssetPathRegex.test(requestPath));
