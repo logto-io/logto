@@ -4,6 +4,7 @@ import type Provider from 'oidc-provider';
 import { mockSsoConnector, wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import { OidcSsoConnector } from '#src/sso/OidcSsoConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { type SingleSignOnConnectorData } from '#src/sso/types/connector.js';
@@ -12,7 +13,6 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { type WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
 const { jest } = import.meta;

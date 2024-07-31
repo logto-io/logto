@@ -3,6 +3,7 @@ import Koa from 'koa';
 import Router from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
+import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaCors from '#src/middleware/koa-cors.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
@@ -53,6 +54,7 @@ const createRouters = (tenant: TenantContext) => {
 
   const experienceRouter: AnonymousRouter = new Router();
   if (EnvSet.values.isDevFeaturesEnabled) {
+    experienceRouter.use(koaAuditLog(tenant.queries));
     experienceApiRoutes(experienceRouter, tenant);
   }
 

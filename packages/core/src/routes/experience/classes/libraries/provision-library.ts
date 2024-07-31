@@ -19,13 +19,12 @@ import { generateStandardId } from '@logto/shared';
 import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
-import { type InteractionProfile } from '../../types.js';
+import { type InteractionProfile, type WithHooksAndLogsContext } from '../../types.js';
 import { postAffiliateLogs } from '../helpers.js';
 import { toUserSocialIdentityData } from '../utils.js';
 
@@ -42,7 +41,7 @@ type OrganizationProvisionPayload =
 export class ProvisionLibrary {
   constructor(
     private readonly tenantContext: TenantContext,
-    private readonly ctx: WithLogContext
+    private readonly ctx: WithHooksAndLogsContext
   ) {}
 
   /**
@@ -88,7 +87,7 @@ export class ProvisionLibrary {
 
     await this.provisionNewUserJitOrganizations(user.id, profile);
 
-    // TODO: New user created hooks
+    this.ctx.appendDataHookContext('User.Created', { user });
     // TODO: log
 
     this.triggerAnalyticReports(user);
@@ -255,7 +254,11 @@ export class ProvisionLibrary {
 
     const provisionedOrganizations = await usersLibraries.provisionOrganizations(payload);
 
-    // TODO: trigger hooks event
+    for (const { organizationId } of provisionedOrganizations) {
+      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
+        organizationId,
+      });
+    }
 
     return provisionedOrganizations;
   }

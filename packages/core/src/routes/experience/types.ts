@@ -9,7 +9,12 @@ import {
 import type Provider from 'oidc-provider';
 import { z } from 'zod';
 
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+
 import { type VerificationRecordMap } from './classes/verifications/index.js';
+import { type WithExperienceInteractionHooksContext } from './middleware/koa-experience-interaction-hooks.js';
+import { type WithExperienceInteractionContext } from './middleware/koa-experience-interaction.js';
 
 export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
 
@@ -70,3 +75,13 @@ export type InteractionContext = {
     verificationId: string
   ) => VerificationRecordMap[K];
 };
+
+export type ExperienceInteractionRouterContext<ContextT extends WithLogContext = WithLogContext> =
+  ContextT &
+    WithInteractionDetailsContext &
+    WithExperienceInteractionHooksContext &
+    WithExperienceInteractionContext;
+
+export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogContext> = ContextT &
+  WithInteractionDetailsContext &
+  WithExperienceInteractionHooksContext;

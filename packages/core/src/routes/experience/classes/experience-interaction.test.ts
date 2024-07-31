@@ -17,6 +17,8 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
+import { type WithHooksAndLogsContext } from '../types.js';
+
 import { EmailCodeVerification } from './verifications/code-verification.js';
 
 const { jest } = import.meta;
@@ -36,7 +38,7 @@ const userQueries = {
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
   insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]),
-  provisionOrganizations: jest.fn(),
+  provisionOrganizations: jest.fn().mockResolvedValue([]),
 };
 const ssoConnectors = {
   getAvailableSsoConnectors: jest.fn().mockResolvedValue([]),
@@ -69,7 +71,11 @@ describe('ExperienceInteraction class', () => {
     undefined,
     { users: userLibraries, ssoConnectors }
   );
-  const ctx = {
+
+  // @ts-expect-error --mock test context
+  const ctx: WithHooksAndLogsContext = {
+    assignInteractionHookResult: jest.fn(),
+    appendDataHookContext: jest.fn(),
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
   };

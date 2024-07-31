@@ -16,7 +16,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { identifierCodeVerificationTypeMap } from './classes/verifications/code-verification.js';
 import { experienceRoutes } from './const.js';
-import { type WithExperienceInteractionContext } from './middleware/koa-experience-interaction.js';
+import { type ExperienceInteractionRouterContext } from './types.js';
 
 /**
  * @throws {RequestError} with status 400 if current interaction is ForgotPassword
@@ -27,7 +27,7 @@ function verifiedInteractionGuard<
   StateT,
   ContextT extends WithLogContext,
   ResponseT,
->(): MiddlewareType<StateT, WithExperienceInteractionContext<ContextT>, ResponseT> {
+>(): MiddlewareType<StateT, ExperienceInteractionRouterContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
     const { experienceInteraction } = ctx;
 
@@ -47,8 +47,8 @@ function verifiedInteractionGuard<
   };
 }
 
-export default function interactionProfileRoutes<T extends WithLogContext>(
-  router: Router<unknown, WithExperienceInteractionContext<T>>,
+export default function interactionProfileRoutes<T extends ExperienceInteractionRouterContext>(
+  router: Router<unknown, T>,
   tenant: TenantContext
 ) {
   router.post(
