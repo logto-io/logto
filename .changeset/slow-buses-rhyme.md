@@ -19,7 +19,13 @@ Or if you don't have your custom UI pages hosted on a dev server, you can use th
 npm cli proxy --endpoint https://<tenant-id>.logto.app --port 9000 --experience-path /path/to/your/custom/ui
 ```
 
-This sets up the proxy and it will be running on your local machine at `http://localhost:9000/`.
+This command also works if you have enabled custom domain in your Logto tenant. E.g.:
+
+```bash
+npm cli proxy --endpoint https://your-custom-domain.com --port 9000 --experience-path /path/to/your/custom/ui
+```
+
+This should set up the proxy and it will be running on your local machine at `http://localhost:9000/`.
 
 Finally, run your application and set its Logto endpoint to the proxy address `http://localhost:9000/` instead.
 

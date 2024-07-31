@@ -33,25 +33,25 @@ export const createProxy = (targetUrl: string, onProxyResponse?: OnProxyEvent['p
   });
 };
 
-export const createStaticFileProxy = (staticPath: string) => {
-  const index = 'index.html';
-  const indexContentType = 'text/html; charset=utf-8';
-  const noCache = 'no-cache, no-store, must-revalidate';
-  const maxAgeSevenDays = 'max-age=604_800_000';
+const index = 'index.html';
+const indexContentType = 'text/html; charset=utf-8';
+const noCache = 'no-cache, no-store, must-revalidate';
+const maxAgeSevenDays = 'max-age=604_800_000';
 
-  return async (request: http.IncomingMessage, response: http.ServerResponse) => {
+export const createStaticFileProxy =
+  (staticPath: string) => async (request: http.IncomingMessage, response: http.ServerResponse) => {
     if (!request.url) {
       response.writeHead(400).end();
       return;
     }
 
     if (request.method === 'HEAD' || request.method === 'GET') {
-      const loadIndex = !isFileAssetPath(request.url);
-      const requestPath = path.join(staticPath, loadIndex ? index : request.url);
+      const fallBackToIndex = !isFileAssetPath(request.url);
+      const requestPath = path.join(staticPath, fallBackToIndex ? index : request.url);
       try {
         const content = await fs.readFile(requestPath, 'utf8');
-        response.setHeader('cache-control', loadIndex ? noCache : maxAgeSevenDays);
-        response.setHeader('content-type', loadIndex ? indexContentType : getMimeType(request.url));
+        response.setHeader('cache-control', fallBackToIndex ? noCache : maxAgeSevenDays);
+        response.setHeader('content-type', getMimeType(request.url));
         response.writeHead(200);
         response.end(content);
       } catch (error: unknown) {
@@ -62,7 +62,6 @@ export const createStaticFileProxy = (staticPath: string) => {
       }
     }
   };
-};
 
 /**
  * Intercept the response from Logto endpoint and replace Logto endpoint URLs in the response with the
@@ -131,7 +130,7 @@ export const checkExperienceInput = (url?: string, staticPath?: string) => {
       'A valid sign-in experience URI must be provided. E.g.: http://localhost:4000'
     );
   }
-  if (staticPath && !existsSync(path.join(staticPath, 'index.html'))) {
+  if (staticPath && !existsSync(path.join(staticPath, index))) {
     consoleLog.fatal('The provided path does not contain a valid index.html file.');
   }
 };
@@ -147,4 +146,11 @@ export const isLogtoRequestPath = (requestPath?: string) =>
   ['/oidc/', '/api/'].some((path) => requestPath?.startsWith(path)) || requestPath === '/consent';
 
 const isFileAssetPath = (url: string) => url.split('/').at(-1)?.includes('.');
-const getMimeType = (filePath: string) => mime.getType(filePath) ?? 'application/octet-stream';
+
+const getMimeType = (requestPath: string) => {
+  const fallBackToIndex = !isFileAssetPath(requestPath);
+  if (fallBackToIndex) {
+    return indexContentType;
+  }
+  return mime.getType(requestPath) ?? 'application/octet-stream';
+};
