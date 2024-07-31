@@ -28,7 +28,6 @@ function SuspenseFallback() {
 
     return () => {
       clearTimeout(timeout);
-      setShowSpinner(false);
     };
   }, []);
 
