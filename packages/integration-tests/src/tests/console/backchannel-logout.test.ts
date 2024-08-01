@@ -19,10 +19,9 @@
 
 import { createServer, type RequestListener, type Server } from 'node:http';
 
-import { adminConsoleApplicationId } from '@logto/schemas';
+import { adminConsoleApplicationId, type Application } from '@logto/schemas';
 
 import { authedAdminTenantApi } from '#src/api/api.js';
-import { getApplication } from '#src/api/application.js';
 import ExpectConsole from '#src/ui-helpers/expect-console.js';
 import { waitFor } from '#src/utils.js';
 
@@ -92,7 +91,10 @@ describe('backchannel logout', () => {
   });
 
   it('should call the backchannel logout endpoint when a user logs out', async () => {
-    const application = await getApplication(adminConsoleApplicationId);
+    const application = await authedAdminTenantApi
+      .get('applications/' + adminConsoleApplicationId)
+      .json<Application>();
+
     await authedAdminTenantApi.patch('applications/' + adminConsoleApplicationId, {
       json: {
         oidcClientMetadata: {
