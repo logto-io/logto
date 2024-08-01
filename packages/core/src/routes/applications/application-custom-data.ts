@@ -19,10 +19,8 @@ export default function applicationCustomDataRoutes<T extends ManagementApiRoute
       const { applicationId } = ctx.guard.params;
       const patchPayload = ctx.guard.body;
 
-      const { customData } = await queries.applications.findApplicationById(applicationId);
-
       const application = await queries.applications.updateApplicationById(applicationId, {
-        customData: { ...customData, ...patchPayload },
+        customData: patchPayload,
       });
 
       ctx.body = application.customData;

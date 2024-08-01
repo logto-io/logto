@@ -94,6 +94,10 @@ const application_details = {
   session_duration: 'Session duration (days)',
   try_it: 'Try it',
   no_organization_placeholder: 'No organization found. <a>Go to organizations</a>',
+  field_custom_data: 'Custom data',
+  field_custom_data_tip:
+    'Additional custom application metadata not listed in the pre-defined application properties, ',
+  custom_data_invalid: 'Custom data must be a valid JSON object',
   branding: {
     name: 'Branding',
     description: 'Customize your app logo and branding color for the app-level experience.',

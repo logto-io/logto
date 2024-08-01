@@ -40,7 +40,7 @@ import Permissions from './Permissions';
 import RefreshTokenSettings from './RefreshTokenSettings';
 import Settings from './Settings';
 import styles from './index.module.scss';
-import { type ApplicationForm, applicationFormDataParser } from './utils';
+import { applicationFormDataParser, type ApplicationForm } from './utils';
 
 type Props = {
   readonly data: ApplicationResponse;
@@ -84,14 +84,24 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         return;
       }
 
-      const updatedData = await api
-        .patch(`api/applications/${data.id}`, {
-          json: applicationFormDataParser.toRequestPayload(formData),
-        })
-        .json<ApplicationResponse>();
-      reset(applicationFormDataParser.fromResponse(updatedData));
-      onApplicationUpdated();
-      toast.success(t('general.saved'));
+      const [error, result] = applicationFormDataParser.toRequestPayload(formData);
+
+      if (result) {
+        const updatedData = await api
+          .patch(`api/applications/${data.id}`, {
+            json: result,
+          })
+          .json<ApplicationResponse>();
+
+        reset(applicationFormDataParser.fromResponse(updatedData));
+        onApplicationUpdated();
+        toast.success(t('general.saved'));
+        return;
+      }
+
+      if (error) {
+        toast.error(String(t(error)));
+      }
     })
   );
 

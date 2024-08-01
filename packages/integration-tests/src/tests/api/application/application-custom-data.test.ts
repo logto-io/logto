@@ -23,6 +23,12 @@ describe('application custom data API', () => {
 
     expect(fetchedApplication.customData.key).toEqual(customData.key);
 
+    await patchApplicationCustomData(application.id, { key: 'new-value', test: 'foo' });
+
+    const updatedApplication = await getApplication(application.id);
+    expect(updatedApplication.customData.key).toEqual('new-value');
+    expect(updatedApplication.customData.test).toEqual('foo');
+
     await deleteApplication(application.id);
   });
 
@@ -37,10 +43,10 @@ describe('application custom data API', () => {
     expect(result.key).toEqual(customData.key);
 
     await updateApplication(application.id, {
-      customData: { key: 'bar' },
+      customData: {},
     });
 
     const fetchedApplication = await getApplication(application.id);
-    expect(fetchedApplication.customData.key).toEqual('bar');
+    expect(Object.keys(fetchedApplication.customData)).toHaveLength(0);
   });
 });
