@@ -1,7 +1,7 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { Controller, useController, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
@@ -34,7 +34,6 @@ function Settings({ data }: Props) {
   } = useFormContext<ApplicationForm>();
 
   const { type: applicationType } = data;
-  const { field: customData } = useController({ name: 'customData', control });
 
   const isNativeApp = applicationType === ApplicationType.Native;
   const isProtectedApp = applicationType === ApplicationType.Protected;
@@ -164,12 +163,19 @@ function Settings({ data }: Props) {
           )}
         />
       )}
-      <FormField
-        title="application_details.field_custom_data"
-        tip={t('application_details.field_custom_data_tip')}
-      >
-        <CodeEditor language="json" value={customData.value} onChange={customData.onChange} />
-      </FormField>
+      <Controller
+        name="customData"
+        control={control}
+        defaultValue="{}"
+        render={({ field: { value, onChange } }) => (
+          <FormField
+            title="application_details.field_custom_data"
+            tip={t('application_details.field_custom_data_tip')}
+          >
+            <CodeEditor language="json" value={value} onChange={onChange} />
+          </FormField>
+        )}
+      />
     </FormCard>
   );
 }
