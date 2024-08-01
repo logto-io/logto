@@ -52,13 +52,13 @@ devFeatureTest.describe('Register interaction with verification code happy path'
       await Promise.all([setEmailConnector(), setSmsConnector()]);
       await enableAllVerificationCodeSignInMethods({
         identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
-        password: true,
+        password: false,
         verify: true,
       });
     });
 
     it.each(verificationIdentifierType)(
-      'Should fail to sign-up with existing %p identifier and directly sign-in instead ',
+      'Should fail to sign-up with existing %p identifier and directly sign-in instead',
       async (identifierType) => {
         const { userProfile, user } = await generateNewUser({
           [identifiersTypeToUserProfile[identifierType]]: true,
@@ -110,7 +110,7 @@ devFeatureTest.describe('Register interaction with verification code happy path'
     );
   });
 
-  describe('fulfill password', () => {
+  describe('password enabled', () => {
     beforeAll(async () => {
       await enableAllVerificationCodeSignInMethods({
         identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
@@ -160,6 +160,68 @@ devFeatureTest.describe('Register interaction with verification code happy path'
         await logoutClient(client);
 
         await deleteUser(userId);
+      }
+    );
+
+    it.each(verificationIdentifierType)(
+      'Should fail to sign-up with existing %p identifier and directly sign-in instead',
+      async (identifierType) => {
+        const { userProfile, user } = await generateNewUser({
+          [identifiersTypeToUserProfile[identifierType]]: true,
+          password: true,
+        });
+
+        const identifier: VerificationCodeIdentifier = {
+          type: identifierType,
+          value: userProfile[identifiersTypeToUserProfile[identifierType]]!,
+        };
+
+        const client = await initExperienceClient(InteractionEvent.Register);
+
+        const { verificationId, code } = await successfullySendVerificationCode(client, {
+          identifier,
+          interactionEvent: InteractionEvent.Register,
+        });
+
+        await successfullyVerifyVerificationCode(client, {
+          identifier,
+          verificationId,
+          code,
+        });
+
+        await expectRejects(
+          client.identifyUser({
+            verificationId,
+          }),
+          {
+            code: `user.password_required_in_profile`,
+            status: 422,
+          }
+        );
+
+        await expectRejects(
+          client.createNewPasswordIdentityVerification({
+            identifier,
+          }),
+          {
+            code: `user.${identifierType}_already_in_use`,
+            status: 422,
+          }
+        );
+
+        await client.updateInteractionEvent({
+          interactionEvent: InteractionEvent.SignIn,
+        });
+
+        await client.identifyUser({
+          verificationId,
+        });
+
+        const { redirectTo } = await client.submitInteraction();
+        await processSession(client, redirectTo);
+        await logoutClient(client);
+
+        await deleteUser(user.id);
       }
     );
 

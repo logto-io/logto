@@ -195,7 +195,9 @@ export class ExperienceClient extends MockClient {
       .json<{ verificationId: string }>();
   }
 
-  public async createNewPasswordIdentityVerification(payload: PasswordVerificationPayload) {
+  public async createNewPasswordIdentityVerification(
+    payload: Pick<PasswordVerificationPayload, 'identifier'> & { password?: string }
+  ) {
     return api
       .post(`${experienceRoutes.verification}/new-password-identity`, {
         headers: { cookie: this.interactionCookie },

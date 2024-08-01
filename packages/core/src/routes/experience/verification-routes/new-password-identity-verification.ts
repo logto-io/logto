@@ -1,4 +1,4 @@
-import { passwordVerificationPayloadGuard, VerificationType } from '@logto/schemas';
+import { interactionIdentifierGuard, VerificationType } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
@@ -17,7 +17,10 @@ export default function newPasswordIdentityVerificationRoutes<
   router.post(
     `${experienceRoutes.verification}/new-password-identity`,
     koaGuard({
-      body: passwordVerificationPayloadGuard,
+      body: z.object({
+        identifier: interactionIdentifierGuard,
+        password: z.string().optional(),
+      }),
       status: [200, 400, 422],
       response: z.object({
         verificationId: z.string(),
