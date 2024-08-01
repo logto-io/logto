@@ -3,10 +3,10 @@ import { HTTPError } from 'ky';
 
 import {
   createApplication,
-  getApplication,
-  updateApplication,
   deleteApplication,
+  getApplication,
   getApplications,
+  updateApplication,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -108,6 +108,7 @@ describe('application APIs', () => {
     await updateApplication(application.id, {
       description: newApplicationDescription,
       oidcClientMetadata: {
+        ...application.oidcClientMetadata,
         redirectUris: newRedirectUris,
       },
       customClientMetadata: { rotateRefreshToken: true, refreshTokenTtlInDays: 10 },
