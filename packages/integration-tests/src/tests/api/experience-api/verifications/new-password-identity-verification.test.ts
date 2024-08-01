@@ -3,22 +3,12 @@ import { SignInIdentifier } from '@logto/schemas';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { generateNewUser } from '#src/helpers/user.js';
+import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 import { devFeatureTest, randomString } from '#src/utils.js';
-
-const invalidIdentifiers = Object.freeze([
-  {
-    type: SignInIdentifier.Email,
-    value: 'email',
-  },
-  {
-    type: SignInIdentifier.Phone,
-    value: 'phone',
-  },
-]);
 
 devFeatureTest.describe('password verifications', () => {
   const username = 'test_' + randomString();
+  const userApi = new UserApiTest();
 
   beforeAll(async () => {
     await updateSignInExperience({
@@ -35,6 +25,10 @@ devFeatureTest.describe('password verifications', () => {
     });
   });
 
+  afterEach(async () => {
+    await userApi.cleanUp();
+  });
+
   afterAll(async () => {
     await updateSignInExperience({
       // Need to reset password policy to default value otherwise it will affect other tests.
@@ -42,44 +36,77 @@ devFeatureTest.describe('password verifications', () => {
     });
   });
 
-  it.each(invalidIdentifiers)(
-    'should fail to verify with password using %p',
-    async (identifier) => {
+  describe('invalid identifier check', () => {
+    it('should throw error if username is registered', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      await userApi.create({ username, password });
+
       const client = await initExperienceClient();
 
       await expectRejects(
         client.createNewPasswordIdentityVerification({
-          // @ts-expect-error
-          identifier,
-          password: 'password',
+          identifier: {
+            type: SignInIdentifier.Username,
+            value: username,
+          },
+          password,
         }),
         {
-          code: 'guard.invalid_input',
-          status: 400,
+          code: 'user.username_already_in_use',
+          status: 422,
         }
       );
-    }
-  );
+    });
 
-  it('should throw error if username is registered', async () => {
-    const { userProfile } = await generateNewUser({ username: true, password: true });
-    const { username } = userProfile;
+    it('should throw error if email is registered', async () => {
+      const { primaryEmail, password } = generateNewUserProfile({
+        primaryEmail: true,
+        password: true,
+      });
 
-    const client = await initExperienceClient();
+      await userApi.create({ primaryEmail, password });
 
-    await expectRejects(
-      client.createNewPasswordIdentityVerification({
-        identifier: {
-          type: SignInIdentifier.Username,
-          value: username,
-        },
-        password: 'password',
-      }),
-      {
-        code: 'user.username_already_in_use',
-        status: 422,
-      }
-    );
+      const client = await initExperienceClient();
+
+      await expectRejects(
+        client.createNewPasswordIdentityVerification({
+          identifier: {
+            type: SignInIdentifier.Email,
+            value: primaryEmail,
+          },
+          password,
+        }),
+        {
+          code: 'user.email_already_in_use',
+          status: 422,
+        }
+      );
+    });
+
+    it('should throw error if phone is registered', async () => {
+      const { primaryPhone, password } = generateNewUserProfile({
+        primaryPhone: true,
+        password: true,
+      });
+
+      await userApi.create({ primaryPhone, password });
+
+      const client = await initExperienceClient();
+
+      await expectRejects(
+        client.createNewPasswordIdentityVerification({
+          identifier: {
+            type: SignInIdentifier.Phone,
+            value: primaryPhone,
+          },
+          password,
+        }),
+        {
+          code: 'user.phone_already_in_use',
+          status: 422,
+        }
+      );
+    });
   });
 
   describe('password policy check', () => {

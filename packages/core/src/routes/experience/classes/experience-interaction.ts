@@ -1,6 +1,12 @@
 /* eslint-disable max-lines */
 import { type ToZodObject } from '@logto/connector-kit';
-import { InteractionEvent, type User } from '@logto/schemas';
+import {
+  InteractionEvent,
+  SignInIdentifier,
+  VerificationType,
+  type InteractionIdentifier,
+  type User,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -28,6 +34,7 @@ import { SignInExperienceValidator } from './libraries/sign-in-experience-valida
 import { Mfa, mfaDataGuard, userMfaDataKey, type MfaData } from './mfa.js';
 import { Profile } from './profile.js';
 import { toUserSocialIdentityData } from './utils.js';
+import { identifierCodeVerificationTypeMap } from './verifications/code-verification.js';
 import {
   buildVerificationRecord,
   verificationRecordDataGuard,
@@ -456,12 +463,27 @@ export default class ExperienceInteraction {
   /**
    * Create a new user using the verification record.
    *
-   * @throws {RequestError} with 400 if the verification record is invalid for creating a new user or not verified
+   * @throws {RequestError} with 422 if a new password identity verification is provided, but identifier (email/phone) is not verified
+   * @throws {RequestError} with 400 if the verification record can not be used for creating a new user or not verified
    * @throws {RequestError} with 422 if the profile data is not unique across users
+   * @throws {RequestError} with 422 if the password is required for the sign-up settings but only email/phone verification record is provided
    */
   private async createNewUser(verificationRecord: VerificationRecord) {
+    if (verificationRecord.type === VerificationType.NewPasswordIdentity) {
+      const { identifier } = verificationRecord;
+      assertThat(
+        this.isIdentifierVerified(identifier),
+        new RequestError(
+          { code: 'session.identifier_not_verified', status: 422 },
+          { identifier: identifier.value }
+        )
+      );
+    }
+
     const newProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
     await this.profile.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
+
+    await this.signInExperienceValidator.guardMandatoryPasswordOnRegister(verificationRecord);
 
     const user = await this.provisionLibrary.createUser(newProfile);
 
@@ -498,6 +520,20 @@ export default class ExperienceInteraction {
 
   private getVerificationRecordById(verificationId: string) {
     return this.verificationRecordsArray.find((record) => record.id === verificationId);
+  }
+
+  private isIdentifierVerified(identifier: InteractionIdentifier) {
+    const { type, value } = identifier;
+
+    if (type === SignInIdentifier.Username) {
+      return true;
+    }
+
+    const verificationRecord = this.verificationRecords.get(
+      identifierCodeVerificationTypeMap[type]
+    );
+
+    return verificationRecord?.identifier.value === value && verificationRecord.isVerified;
   }
 
   /**

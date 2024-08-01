@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
@@ -120,26 +119,6 @@ export type BackupCodeVerificationVerifyPayload = {
 export const backupCodeVerificationVerifyPayloadGuard = z.object({
   code: z.string().min(1),
 }) satisfies ToZodObject<BackupCodeVerificationVerifyPayload>;
-
-/**
- * Payload type for `POST /api/experience/verification/new-password-identity`.
- * @remarks Currently we only support username identifier for new password identity registration.
- * For email and phone new identity registration, a `CodeVerification` record is required.
- */
-export type NewPasswordIdentityVerificationPayload = {
-  identifier: {
-    type: SignInIdentifier.Username;
-    value: string;
-  };
-  password: string;
-};
-export const newPasswordIdentityVerificationPayloadGuard = z.object({
-  identifier: z.object({
-    type: z.literal(SignInIdentifier.Username),
-    value: z.string(),
-  }),
-  password: z.string().min(1),
-}) satisfies ToZodObject<NewPasswordIdentityVerificationPayload>;
 
 /** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {
@@ -432,4 +411,3 @@ export const verifyMfaResultGuard = z.object({
 });
 
 export type VerifyMfaResult = z.infer<typeof verifyMfaResultGuard>;
-/* eslint-enable max-lines */

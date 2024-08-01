@@ -42,6 +42,15 @@ const newPasswordIdentityVerificationRecord = NewPasswordIdentityVerification.cr
   }
 );
 
+const emailNewPasswordIdentityVerificationRecord = NewPasswordIdentityVerification.create(
+  mockTenant.libraries,
+  mockTenant.queries,
+  {
+    type: SignInIdentifier.Email,
+    value: `foo@${emailDomain}`,
+  }
+);
+
 const passwordVerificationRecords = Object.fromEntries(
   Object.values(SignInIdentifier).map((identifier) => [
     identifier,
@@ -507,6 +516,120 @@ describe('SignInExperienceValidator', () => {
           socialVerificationRecord
         )
       ).rejects.toMatchError(expectError);
+    });
+  });
+
+  describe('guardMandatoryPasswordOnRegister', () => {
+    const testCases: Record<
+      string,
+      {
+        signInExperience: SignInExperience;
+        cases: Array<{ verificationRecord: VerificationRecord; accepted: boolean }>;
+      }
+    > = Object.freeze({
+      'should throw error for CodeVerification Records if password is required': {
+        signInExperience: {
+          ...mockSignInExperience,
+          signUp: {
+            identifiers: [SignInIdentifier.Email],
+            password: true,
+            verify: true,
+          },
+        },
+        cases: [
+          {
+            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Email],
+            accepted: false,
+          },
+          {
+            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Phone],
+            accepted: false,
+          },
+        ],
+      },
+      'should not throw error for CodeVerification Records if password is not required': {
+        signInExperience: {
+          ...mockSignInExperience,
+          signUp: {
+            identifiers: [SignInIdentifier.Email],
+            password: false,
+            verify: true,
+          },
+        },
+        cases: [
+          {
+            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Email],
+            accepted: true,
+          },
+          {
+            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Phone],
+            accepted: true,
+          },
+        ],
+      },
+      'should not throw error for NewPasswordIdentity verification record': {
+        signInExperience: {
+          ...mockSignInExperience,
+          signUp: {
+            identifiers: [SignInIdentifier.Username],
+            password: true,
+            verify: true,
+          },
+        },
+        cases: [
+          {
+            verificationRecord: newPasswordIdentityVerificationRecord,
+            accepted: true,
+          },
+          {
+            verificationRecord: emailNewPasswordIdentityVerificationRecord,
+            accepted: true,
+          },
+        ],
+      },
+      'should not throw error for Social and SSO verification records': {
+        signInExperience: {
+          ...mockSignInExperience,
+          signUp: {
+            identifiers: [SignInIdentifier.Email],
+            password: true,
+            verify: true,
+          },
+        },
+        cases: [
+          {
+            verificationRecord: socialVerificationRecord,
+            accepted: true,
+          },
+          {
+            verificationRecord: enterpriseSsoVerificationRecords,
+            accepted: true,
+          },
+        ],
+      },
+    });
+
+    describe.each(Object.keys(testCases))(`%s`, (testCase) => {
+      const { signInExperience, cases } = testCases[testCase]!;
+
+      it.each(cases)('guard verification record %p', async ({ verificationRecord, accepted }) => {
+        signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce(signInExperience);
+
+        const signInExperienceSettings = new SignInExperienceValidator(
+          mockTenant.libraries,
+          mockTenant.queries
+        );
+
+        await (accepted
+          ? expect(
+              signInExperienceSettings.guardMandatoryPasswordOnRegister(verificationRecord)
+            ).resolves.not.toThrow()
+          : expect(
+              signInExperienceSettings.guardMandatoryPasswordOnRegister(verificationRecord)
+            ).rejects.toMatchError(
+              new RequestError({ code: 'user.password_required_in_profile', status: 422 })
+            ));
+      });
     });
   });
 });

@@ -109,28 +109,29 @@ export const registerNewUserWithVerificationCode = async (
     interactionEvent: InteractionEvent.Register,
   });
 
-  const verifiedVerificationId = await successfullyVerifyVerificationCode(client, {
+  await successfullyVerifyVerificationCode(client, {
     identifier,
     verificationId,
     code,
   });
 
-  await client.identifyUser({
-    verificationId: verifiedVerificationId,
-  });
-
   if (options?.fulfillPassword) {
-    await expectRejects(client.submitInteraction(), {
-      code: 'user.missing_profile',
+    await expectRejects(client.identifyUser({ verificationId }), {
+      code: 'user.password_required_in_profile',
       status: 422,
     });
 
     const password = generatePassword();
 
-    await client.updateProfile({
-      type: 'password',
-      value: password,
-    });
+    const { verificationId: newPasswordIdentityVerificationId } =
+      await client.createNewPasswordIdentityVerification({
+        identifier,
+        password,
+      });
+
+    await client.identifyUser({ verificationId: newPasswordIdentityVerificationId });
+  } else {
+    await client.identifyUser({ verificationId });
   }
 
   const { redirectTo } = await client.submitInteraction();

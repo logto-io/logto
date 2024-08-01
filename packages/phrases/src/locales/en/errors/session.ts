@@ -27,6 +27,8 @@ const session = {
   not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
   identity_conflict:
     'Identity mismatch detected. Please initiate a new session to proceed with a different identity.',
+  identifier_not_verified:
+    'The provided identifier {{identifier}} has not been verified. Please create a verification record for this identifier and complete the verification process.',
   mfa: {
     require_mfa_verification: 'Mfa verification is required to sign in.',
     mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',
