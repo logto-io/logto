@@ -400,10 +400,10 @@ export default function initOidc(
       // 'application/json' for body parsing. Update relatively when we enable that feature.
       if (ctx.is(jsonContentType)) {
         ctx.headers['content-type'] = formUrlEncodedContentType;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        ctx.request.body = JSON.parse(body);
+        // eslint-disable-next-line no-restricted-syntax
+        ctx.request.body = trySafe(() => JSON.parse(body) as unknown);
       } else if (ctx.is(formUrlEncodedContentType)) {
-        ctx.request.body = querystring.parse(body);
+        ctx.request.body = trySafe(() => querystring.parse(body));
       }
     }
 
