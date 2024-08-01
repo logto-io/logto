@@ -70,13 +70,14 @@ function UriInputField(props: Props) {
   const title: AdminConsoleKey = nameToKey[name];
 
   const onSubmit = trySubmitSafe(async (value: string[]) => {
-    if (!appId) {
+    if (!appId || !data) {
       return;
     }
     const updatedApp = await api
       .patch(`api/applications/${appId}`, {
         json: {
           [type]: {
+            ...data[type],
             [name]: value.filter(Boolean),
           },
         },

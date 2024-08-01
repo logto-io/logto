@@ -2,7 +2,8 @@
 "@logto/core": minor
 ---
 
-update the jsonb field update mode from `merge` to `replace` for the `PATCH /application/:id endpoint`
+update the jsonb field update mode from `merge` to `replace` for the `PATCH /application/:id` endpoint.
+remove the `deepPartial` statement from the `PATCH /application/:id` endpoint payload guard.
 
 For all the jsonb typed fields in the application entity, the update mode is now `replace` instead of `merge`. This means that when you send a `PATCH` request to update an application, the jsonb fields will be replaced with the new values instead of merging them.
 
