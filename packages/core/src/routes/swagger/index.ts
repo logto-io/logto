@@ -37,6 +37,7 @@ import { buildOperationId, customRoutes, throwByDifference } from './utils/opera
 import {
   buildParameters,
   paginationParameters,
+  searchParameters,
   buildPathIdParameters,
   mergeParameters,
   customParameters,
@@ -50,12 +51,25 @@ const anonymousPaths = new Set<string>([
   'status',
 ]);
 
+const advancedSearchPaths = new Set<string>([
+  '/applications',
+  '/applications/:applicationId/roles',
+  '/resources/:resourceId/scopes',
+  '/roles/:id/applications',
+  '/roles/:id/scopes',
+  '/roles',
+  '/roles/:id/users',
+  '/users',
+  '/users/:userId/roles',
+]);
+
 type RouteObject = {
   path: string;
   method: OpenAPIV3.HttpMethods;
   operation: OpenAPIV3.OperationObject;
 };
 
+// eslint-disable-next-line complexity
 const buildOperation = (
   method: OpenAPIV3.HttpMethods,
   stack: IMiddleware[],
@@ -72,6 +86,7 @@ const buildOperation = (
   const queryParameters = [
     ...buildParameters(query, 'query'),
     ...(hasPagination ? paginationParameters : []),
+    ...(advancedSearchPaths.has(path) && method === 'get' ? [searchParameters] : []),
   ];
 
   const requestBody = body && {
