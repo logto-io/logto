@@ -403,7 +403,7 @@ export default function initOidc(
         // eslint-disable-next-line no-restricted-syntax
         ctx.request.body = trySafe(() => JSON.parse(body) as unknown);
       } else if (ctx.is(formUrlEncodedContentType)) {
-        ctx.request.body = trySafe(() => querystring.parse(body));
+        ctx.request.body = querystring.parse(body);
       }
     }
 
