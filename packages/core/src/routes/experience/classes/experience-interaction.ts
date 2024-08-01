@@ -483,8 +483,6 @@ export default class ExperienceInteraction {
     const newProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
     await this.profile.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
 
-    await this.signInExperienceValidator.guardMandatoryPasswordOnRegister(verificationRecord);
-
     const user = await this.provisionLibrary.createUser(newProfile);
 
     this.userId = user.id;

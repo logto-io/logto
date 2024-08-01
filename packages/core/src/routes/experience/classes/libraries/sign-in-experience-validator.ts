@@ -163,25 +163,6 @@ export class SignInExperienceValidator {
   }
 
   /**
-   * If password is enabled in the sign-up settings,
-   * guard the verification record contains password (NewPasswordIdentity).
-   *
-   * - Password is not required for social and SSO verification records.
-   */
-  public async guardMandatoryPasswordOnRegister({ type }: VerificationRecord) {
-    const { signUp } = await this.getSignInExperienceData();
-
-    if (
-      signUp.password &&
-      [VerificationType.EmailVerificationCode, VerificationType.PhoneVerificationCode].includes(
-        type
-      )
-    ) {
-      throw new RequestError({ code: 'user.password_required_in_profile', status: 422 });
-    }
-  }
-
-  /**
    * Guard the verification records contains email identifier with SSO enabled
    *
    * @remarks
@@ -282,6 +263,11 @@ export class SignInExperienceValidator {
         assertThat(
           signUp.identifiers.includes(type) && signUp.verify,
           new RequestError({ code: 'user.sign_up_method_not_enabled', status: 422 })
+        );
+
+        assertThat(
+          !signUp.password,
+          new RequestError({ code: 'user.password_required_in_profile', status: 422 })
         );
         break;
       }
