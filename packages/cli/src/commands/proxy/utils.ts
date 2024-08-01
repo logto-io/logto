@@ -100,20 +100,21 @@ export const createLogtoResponseHandler = async ({
     }
 
     if (proxyResponse.headers['content-type']?.includes('application/json')) {
-      // eslint-disable-next-line no-restricted-syntax
-      const jsonData = trySafe(() => JSON.parse(responseBody) as Record<string, unknown>);
+      const jsonData = trySafe<unknown>(() => JSON.parse(responseBody));
 
-      if (jsonData) {
-        for (const [key, value] of Object.entries(jsonData)) {
-          if ((key === 'redirectTo' || key.endsWith('_endpoint')) && typeof value === 'string') {
-            // eslint-disable-next-line @silverhand/fp/no-mutation
-            jsonData[key] = value.replace(logtoEndpointUrl.href, proxyUrl.href);
+      if (jsonData && typeof jsonData === 'object') {
+        const updatedEntries: Array<[string, unknown]> = Object.entries(jsonData).map(
+          ([key, value]) => {
+            if ((key === 'redirectTo' || key.endsWith('_endpoint')) && typeof value === 'string') {
+              return [key, value.replace(logtoEndpointUrl.href, proxyUrl.href)];
+            }
+            return [key, value];
           }
-        }
-        return JSON.stringify(jsonData);
+        );
+
+        return JSON.stringify(Object.fromEntries(updatedEntries));
       }
     }
-
     return responseBody;
   })(proxyResponse, request, response);
 };
