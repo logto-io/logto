@@ -51,7 +51,7 @@ export class PasswordValidator {
     );
 
     if (issues.length > 0) {
-      throw new RequestError({ code: 'password.rejected', status: 422 }, { issues });
+      throw new RequestError({ code: 'password.rejected', status: 422 }, issues);
     }
 
     if (this.user) {
