@@ -41,6 +41,7 @@ const buildConfig = (mode: string): UserConfig => ({
     react(),
     svgr(),
     viteCompression({ disable: mode === 'development' }),
+    viteCompression({ disable: mode === 'development', algorithm: 'brotliCompress' }),
   ],
   define: {
     'import.meta.env.IS_CLOUD': JSON.stringify(process.env.IS_CLOUD),

@@ -20,7 +20,12 @@ const buildConfig = (mode: string): UserConfig => ({
         mode === 'development' ? '__[hash:base64:5]__[local]' : '[hash:base64:5]_[local]',
     },
   },
-  plugins: [react(), svgr(), viteCompression({ disable: mode === 'development' })],
+  plugins: [
+    react(),
+    svgr(),
+    viteCompression({ disable: mode === 'development' }),
+    viteCompression({ disable: mode === 'development', algorithm: 'brotliCompress' }),
+  ],
   build: {
     // Use the same browserslist configuration as in README.md.
     // Consider using the esbuild target directly in the future.
