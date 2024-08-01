@@ -1,11 +1,11 @@
 import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
-import { fireEvent, waitFor, act } from '@testing-library/react';
+import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import {
-  signInWithPasswordIdentifier,
   putInteraction,
   sendVerificationCode,
+  signInWithPasswordIdentifier,
 } from '@/apis/interaction';
 import { UserFlow } from '@/types';
 
@@ -71,7 +71,13 @@ describe('PasswordSignInForm', () => {
       });
 
       await waitFor(() => {
-        expect(signInWithPasswordIdentifier).toBeCalledWith({ [identifier]: value, password });
+        expect(signInWithPasswordIdentifier).toBeCalledWith({
+          identifier: {
+            type: identifier,
+            value,
+          },
+          password,
+        });
       });
 
       if (isVerificationCodeEnabled) {

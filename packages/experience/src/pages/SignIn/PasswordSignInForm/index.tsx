@@ -1,14 +1,14 @@
 import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
-import { SmartInputField, PasswordInputField } from '@/components/InputFields';
+import { PasswordInputField, SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
@@ -80,7 +80,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         }
 
         await onSubmit({
-          [type]: value,
+          identifier: { type, value },
           password,
         });
       })(event);

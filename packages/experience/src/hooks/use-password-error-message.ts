@@ -1,4 +1,4 @@
-import { type PasswordRejectionCode, type PasswordIssue } from '@logto/core-kit';
+import { type PasswordIssue, type PasswordRejectionCode } from '@logto/core-kit';
 import { type RequestErrorBody } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

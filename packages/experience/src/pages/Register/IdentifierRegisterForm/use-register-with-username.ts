@@ -1,7 +1,7 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { registerWithUsernamePassword } from '@/apis/interaction';
+import { registerWithUsername } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -19,7 +19,7 @@ const useRegisterWithUsername = () => {
       'user.username_already_in_use': (error) => {
         setErrorMessage(error.message);
       },
-      'user.missing_profile': () => {
+      'user.password_required_in_profile': () => {
         navigate('password');
       },
     }),
@@ -27,7 +27,7 @@ const useRegisterWithUsername = () => {
   );
 
   const handleError = useErrorHandler();
-  const asyncRegister = useApi(registerWithUsernamePassword);
+  const asyncRegister = useApi(registerWithUsername);
 
   const onSubmit = useCallback(
     async (username: string) => {

@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
-import { useState, useCallback, useMemo } from 'react';
 import type { ChangeEventHandler } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import useUpdateEffect from '@/hooks/use-update-effect';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';

@@ -1,16 +1,21 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { useCallback, useMemo, useState } from 'react';
+import { t } from 'i18next';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import { setUserPassword } from '@/apis/interaction';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { registerPassword } from '@/apis/experience';
 import SetPassword from '@/containers/SetPassword';
+import useApi from '@/hooks/use-api';
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
-import { type ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useMfaErrorHandler from '@/hooks/use-mfa-error-handler';
-import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
+import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
+import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import { usePasswordPolicy, useSieMethods } from '@/hooks/use-sie';
+import useToast from '@/hooks/use-toast';
 
 import ErrorPage from '../ErrorPage';
 
@@ -24,8 +29,15 @@ const RegisterPassword = () => {
   const clearErrorMessage = useCallback(() => {
     setErrorMessage(undefined);
   }, []);
+  const { setToast } = useToast();
+
+  const { identifierInputValue } = useContext(UserInteractionContext);
+  const checkPassword = usePasswordPolicyChecker({ setErrorMessage });
+  const asyncRegisterPassword = useApi(registerPassword);
+  const handleError = useErrorHandler();
 
   const mfaErrorHandler = useMfaErrorHandler({ replace: true });
+  const passwordRejectionErrorHandler = usePasswordRejectionErrorHandler({ setErrorMessage });
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -35,25 +47,48 @@ const RegisterPassword = () => {
         navigate(-1);
       },
       ...mfaErrorHandler,
+      ...passwordRejectionErrorHandler,
     }),
-    [navigate, mfaErrorHandler, show]
+    [mfaErrorHandler, passwordRejectionErrorHandler, show, navigate]
   );
 
-  const successHandler: SuccessHandler<typeof setUserPassword> = useCallback(
-    async (result) => {
-      if (result && 'redirectTo' in result) {
+  const onSubmitHandler = useCallback(
+    async (password: string) => {
+      if (!identifierInputValue?.type) {
+        setToast(t('error.invalid_session'));
+        navigate(-1);
+        return;
+      }
+
+      const success = await checkPassword(password);
+
+      if (!success) {
+        return;
+      }
+
+      const { type, value } = identifierInputValue;
+      const [error, result] = await asyncRegisterPassword({ type, value }, password);
+
+      if (error) {
+        await handleError(error, errorHandlers);
+        return;
+      }
+
+      if (result) {
         await redirectTo(result.redirectTo);
       }
     },
-    [redirectTo]
+    [
+      asyncRegisterPassword,
+      checkPassword,
+      errorHandlers,
+      handleError,
+      identifierInputValue,
+      navigate,
+      redirectTo,
+      setToast,
+    ]
   );
-
-  const [action] = usePasswordAction({
-    api: setUserPassword,
-    setErrorMessage,
-    errorHandlers,
-    successHandler,
-  });
 
   const {
     policy: {
@@ -78,7 +113,7 @@ const RegisterPassword = () => {
         errorMessage={errorMessage}
         maxLength={max}
         clearErrorMessage={clearErrorMessage}
-        onSubmit={action}
+        onSubmit={onSubmitHandler}
       />
     </SecondaryPageLayout>
   );
