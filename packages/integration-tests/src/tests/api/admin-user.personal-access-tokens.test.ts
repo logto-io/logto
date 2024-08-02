@@ -1,6 +1,10 @@
 import { HTTPError } from 'ky';
 
-import { createPersonalAccessToken, deleteUser } from '#src/api/admin-user.js';
+import {
+  createPersonalAccessToken,
+  deleteUser,
+  getUserPersonalAccessTokens,
+} from '#src/api/admin-user.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { devFeatureTest, randomString } from '#src/utils.js';
 
@@ -63,7 +67,7 @@ devFeatureTest.describe('personal access tokens', () => {
     await deleteUser(user.id);
   });
 
-  it('should be able to create multiple PATs', async () => {
+  it('should be able to create, get multiple PATs', async () => {
     const user = await createUserByAdmin();
     const name1 = randomString();
     const name2 = randomString();
@@ -77,8 +81,9 @@ devFeatureTest.describe('personal access tokens', () => {
       name: name2,
     });
 
-    expect(pat1).toHaveProperty('name', name1);
-    expect(pat2).toHaveProperty('name', name2);
+    expect(await getUserPersonalAccessTokens(user.id)).toEqual(
+      expect.arrayContaining([pat1, pat2])
+    );
 
     await deleteUser(user.id);
   });
