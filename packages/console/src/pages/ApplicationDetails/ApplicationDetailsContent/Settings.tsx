@@ -16,6 +16,7 @@ import {
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import { isJsonObject } from '@/utils/json';
 
 import ProtectedAppSettings from './ProtectedAppSettings';
 import { type ApplicationForm } from './utils';
@@ -167,12 +168,21 @@ function Settings({ data }: Props) {
         name="customData"
         control={control}
         defaultValue="{}"
+        rules={{
+          validate: (value) =>
+            isJsonObject(value) ? true : t('application_details.custom_data_invalid'),
+        }}
         render={({ field: { value, onChange } }) => (
           <FormField
             title="application_details.field_custom_data"
             tip={t('application_details.field_custom_data_tip')}
           >
-            <CodeEditor language="json" value={value} onChange={onChange} />
+            <CodeEditor
+              language="json"
+              value={value}
+              error={errors.customData?.message}
+              onChange={onChange}
+            />
           </FormField>
         )}
       />

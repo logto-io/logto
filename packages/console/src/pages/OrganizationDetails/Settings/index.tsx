@@ -1,4 +1,4 @@
-import { type SignInExperience, type Organization, Theme } from '@logto/schemas';
+import { Theme, type Organization, type SignInExperience } from '@logto/schemas';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -20,12 +20,13 @@ import useApi, { type RequestError } from '@/hooks/use-api';
 import { mfa } from '@/hooks/use-console-routes/routes/mfa';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
+import { isJsonObject } from '@/utils/json';
 
 import { type OrganizationDetailsOutletContext } from '../types';
 
 import JitSettings from './JitSettings';
 import styles from './index.module.scss';
-import { assembleData, isJsonObject, normalizeData, type FormData } from './utils';
+import { assembleData, normalizeData, type FormData } from './utils';
 
 function Settings() {
   const { isDeleting, data, jit, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();
