@@ -65,6 +65,8 @@ $dropdown-item-height: 40px;
 }
 
 .dropdown {
+  display: flex;
+  flex-direction: column;
   max-width: 500px;
   min-width: 320px;
 
@@ -75,11 +77,6 @@ $dropdown-item-height: 40px;
 
 .createTenantButton {
   all: unset;
-  /**
-   * `inline-size: stretch` is needed since button will have the used value `inline-size: fit-content` by default.
-   * @see {@link https://html.spec.whatwg.org/multipage/rendering.html#button-layout}
-   */
-  inline-size: stretch;
   display: flex;
   align-items: center;
   padding: _.unit(2.5) _.unit(3) _.unit(2.5) _.unit(4);
