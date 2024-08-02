@@ -170,7 +170,7 @@ function Settings({ data }: Props) {
         defaultValue="{}"
         rules={{
           validate: (value) =>
-            isJsonObject(value) ? true : t('application_details.custom_data_invalid'),
+            isJsonObject(value ?? '') ? true : t('application_details.custom_data_invalid'),
         }}
         render={({ field: { value, onChange } }) => (
           <FormField
