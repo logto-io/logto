@@ -29,6 +29,8 @@ import { createUserQueries } from '#src/queries/user.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import { createVerificationStatusQueries } from '#src/queries/verification-status.js';
 
+import { PersonalAccessTokensQueries } from '../queries/personal-access-tokens.js';
+
 export default class Queries {
   applications = createApplicationQueries(this.pool);
   applicationSecrets = new ApplicationSecretQueries(this.pool);
@@ -56,6 +58,7 @@ export default class Queries {
   ssoConnectors = new SsoConnectorQueries(this.pool);
   userSsoIdentities = new UserSsoIdentityQueries(this.pool);
   subjectTokens = createSubjectTokenQueries(this.pool);
+  personalAccessTokens = new PersonalAccessTokensQueries(this.pool);
   tenants = createTenantQueries(this.pool);
 
   constructor(
