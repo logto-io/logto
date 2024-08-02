@@ -4,6 +4,8 @@ import {
   type InteractionIdentifier,
   type PasswordVerificationPayload,
   SignInIdentifier,
+  type UpdateProfileApiPayload,
+  type VerificationCodeIdentifier,
 } from '@logto/schemas';
 
 import api from './api';
@@ -26,7 +28,7 @@ type SubmitInteractionResponse = {
   redirectTo: string;
 };
 
-const initInteraction = async (interactionEvent: InteractionEvent) =>
+export const initInteraction = async (interactionEvent: InteractionEvent) =>
   api.put(`${experienceRoutes.prefix}`, {
     json: {
       interactionEvent,
@@ -39,6 +41,23 @@ const identifyUser = async (payload: IdentificationApiPayload) =>
 const submitInteraction = async () =>
   api.post(`${experienceRoutes.prefix}/submit`).json<SubmitInteractionResponse>();
 
+const updateInteractionEvent = async (interactionEvent: InteractionEvent) =>
+  api.put(`${experienceRoutes.prefix}/interaction-event`, {
+    json: {
+      interactionEvent,
+    },
+  });
+
+const identifyAndSubmitInteraction = async (verificationId: string) => {
+  await identifyUser({ verificationId });
+  return submitInteraction();
+};
+
+const updateProfile = async (payload: UpdateProfileApiPayload) => {
+  await api.post(experienceRoutes.profile, { json: payload });
+  return submitInteraction();
+};
+
 export const signInWithPasswordIdentifier = async (payload: PasswordVerificationPayload) => {
   await initInteraction(InteractionEvent.SignIn);
 
@@ -48,9 +67,7 @@ export const signInWithPasswordIdentifier = async (payload: PasswordVerification
     })
     .json<VerificationResponse>();
 
-  await identifyUser({ verificationId });
-
-  return submitInteraction();
+  return identifyAndSubmitInteraction(verificationId);
 };
 
 export const registerWithUsername = async (username: string) => {
@@ -77,7 +94,59 @@ export const registerPassword = async (identifier: InteractionIdentifier, passwo
     })
     .json<VerificationResponse>();
 
-  await identifyUser({ verificationId });
+  return identifyAndSubmitInteraction(verificationId);
+};
 
-  return submitInteraction();
+export const sendVerificationCode = async (
+  interactionEvent: InteractionEvent,
+  identifier: VerificationCodeIdentifier
+) =>
+  api
+    .post(`${experienceRoutes.verification}/verification-code`, {
+      json: {
+        interactionEvent,
+        identifier,
+      },
+    })
+    .json<VerificationResponse>();
+
+type VerificationCodePayload = {
+  identifier: VerificationCodeIdentifier;
+  code: string;
+  verificationId: string;
+};
+
+export const verifyVerificationCode = async (json: VerificationCodePayload) =>
+  api
+    .post(`${experienceRoutes.verification}/verification-code/verify`, {
+      json,
+    })
+    .json<VerificationResponse>();
+
+export const identifyWithVerificationCode = async (json: VerificationCodePayload) => {
+  const { verificationId } = await verifyVerificationCode(json);
+  return identifyAndSubmitInteraction(verificationId);
+};
+
+export const registerWithVerifiedIdentifier = async (verificationId: string) => {
+  await updateInteractionEvent(InteractionEvent.Register);
+  return identifyAndSubmitInteraction(verificationId);
+};
+
+export const signInWithVerifiedIdentifier = async (verificationId: string) => {
+  await updateInteractionEvent(InteractionEvent.SignIn);
+  return identifyAndSubmitInteraction(verificationId);
+};
+
+export const updateProfileWithVerificationCode = async (json: VerificationCodePayload) => {
+  const { verificationId } = await verifyVerificationCode(json);
+
+  const {
+    identifier: { type },
+  } = json;
+
+  return updateProfile({
+    type,
+    verificationId,
+  });
 };

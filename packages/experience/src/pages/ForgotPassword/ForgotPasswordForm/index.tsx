@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
@@ -42,8 +42,7 @@ const ForgotPasswordForm = ({
     UserFlow.ForgotPassword
   );
 
-  const { setForgotPasswordIdentifierInputValue, setIdentifierInputValue } =
-    useContext(UserInteractionContext);
+  const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
 
   const {
     handleSubmit,

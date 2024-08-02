@@ -1,60 +1,58 @@
-import type { EmailVerificationCodePayload, PhoneVerificationCodePayload } from '@logto/schemas';
+import type { VerificationCodeIdentifier, VerificationCodeSignInIdentifier } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { addProfileWithVerificationCodeIdentifier } from '@/apis/interaction';
+import { updateProfileWithVerificationCode } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
-import type { VerificationCodeIdentifier } from '@/types';
 import { SearchParameters } from '@/types';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
-import useLinkSocialConfirmModal from './use-link-social-confirm-modal';
 
 const useContinueFlowCodeVerification = (
-  _method: VerificationCodeIdentifier,
-  target: string,
+  identifier: VerificationCodeIdentifier,
+  verificationId: string,
   errorCallback?: () => void
 ) => {
   const [searchParameters] = useSearchParams();
   const redirectTo = useGlobalRedirectTo();
 
   const handleError = useErrorHandler();
-  const verifyVerificationCode = useApi(addProfileWithVerificationCodeIdentifier);
+  const verifyVerificationCode = useApi(updateProfileWithVerificationCode);
 
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
     useGeneralVerificationCodeErrorHandler();
   const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
 
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
-  const showLinkSocialConfirmModal = useLinkSocialConfirmModal();
+
   const identifierExistErrorHandler = useCallback(
-    async (method: VerificationCodeIdentifier, target: string) => {
+    async (method: VerificationCodeSignInIdentifier, target: string) => {
       const linkSocial = searchParameters.get(SearchParameters.LinkSocial);
 
       // Show bind with social confirm modal
-      if (linkSocial) {
-        await showLinkSocialConfirmModal(method, target, linkSocial);
+      // if (linkSocial) {
+      //   await showLinkSocialConfirmModal(method, target, linkSocial);
 
-        return;
-      }
+      //   return;
+      // }
 
       await showIdentifierErrorAlert(IdentifierErrorType.IdentifierAlreadyExists, method, target);
     },
-    [searchParameters, showIdentifierErrorAlert, showLinkSocialConfirmModal]
+    [searchParameters, showIdentifierErrorAlert]
   );
 
   const verifyVerificationCodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.phone_already_in_use': async () =>
-        identifierExistErrorHandler(SignInIdentifier.Phone, target),
+        identifierExistErrorHandler(SignInIdentifier.Phone, identifier.value),
       'user.email_already_in_use': async () =>
-        identifierExistErrorHandler(SignInIdentifier.Email, target),
+        identifierExistErrorHandler(SignInIdentifier.Email, identifier.value),
       ...preSignInErrorHandler,
       ...generalVerificationCodeErrorHandlers,
     }),
@@ -62,13 +60,17 @@ const useContinueFlowCodeVerification = (
       preSignInErrorHandler,
       generalVerificationCodeErrorHandlers,
       identifierExistErrorHandler,
-      target,
+      identifier.value,
     ]
   );
 
   const onSubmit = useCallback(
-    async (payload: EmailVerificationCodePayload | PhoneVerificationCodePayload) => {
-      const [error, result] = await verifyVerificationCode(payload);
+    async (code: string) => {
+      const [error, result] = await verifyVerificationCode({
+        code,
+        identifier,
+        verificationId,
+      });
 
       if (error) {
         await handleError(error, verifyVerificationCodeErrorHandlers);
@@ -84,7 +86,9 @@ const useContinueFlowCodeVerification = (
     [
       errorCallback,
       handleError,
+      identifier,
       redirectTo,
+      verificationId,
       verifyVerificationCode,
       verifyVerificationCodeErrorHandlers,
     ]

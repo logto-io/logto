@@ -1,5 +1,5 @@
-import { type SsoConnectorMetadata } from '@logto/schemas';
-import { type ReactNode, useEffect, useMemo, useState, useCallback } from 'react';
+import { type SsoConnectorMetadata, type VerificationType } from '@logto/schemas';
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
@@ -34,6 +34,10 @@ const UserInteractionContextProvider = ({ children }: Props) => {
   const [forgotPasswordIdentifierInputValue, setForgotPasswordIdentifierInputValue] = useState<
     IdentifierInputValue | undefined
   >(get(StorageKeys.ForgotPasswordIdentifierInputValue));
+
+  const [verificationIdsMap, setVerificationIdsMap] = useState(
+    get(StorageKeys.verificationIds) ?? {}
+  );
 
   useEffect(() => {
     if (!ssoEmail) {
@@ -71,6 +75,15 @@ const UserInteractionContextProvider = ({ children }: Props) => {
     set(StorageKeys.ForgotPasswordIdentifierInputValue, forgotPasswordIdentifierInputValue);
   }, [forgotPasswordIdentifierInputValue, remove, set]);
 
+  useEffect(() => {
+    if (Object.keys(verificationIdsMap).length === 0) {
+      remove(StorageKeys.verificationIds);
+      return;
+    }
+
+    set(StorageKeys.verificationIds, verificationIdsMap);
+  }, [verificationIdsMap, remove, set]);
+
   const ssoConnectorsMap = useMemo(
     () => new Map(ssoConnectors.map((connector) => [connector.id, connector])),
     [ssoConnectors]
@@ -79,7 +92,12 @@ const UserInteractionContextProvider = ({ children }: Props) => {
   const clearInteractionContextSessionStorage = useCallback(() => {
     remove(StorageKeys.IdentifierInputValue);
     remove(StorageKeys.ForgotPasswordIdentifierInputValue);
+    remove(StorageKeys.verificationIds);
   }, [remove]);
+
+  const setVerificationId = useCallback((type: VerificationType, id: string) => {
+    setVerificationIdsMap((previous) => ({ ...previous, [type]: id }));
+  }, []);
 
   const userInteractionContext = useMemo<UserInteractionContextType>(
     () => ({
@@ -92,6 +110,8 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       setIdentifierInputValue,
       forgotPasswordIdentifierInputValue,
       setForgotPasswordIdentifierInputValue,
+      verificationIdsMap,
+      setVerificationId,
       clearInteractionContextSessionStorage,
     }),
     [
@@ -100,6 +120,8 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       domainFilteredConnectors,
       identifierInputValue,
       forgotPasswordIdentifierInputValue,
+      verificationIdsMap,
+      setVerificationId,
       clearInteractionContextSessionStorage,
     ]
   );
