@@ -96,7 +96,7 @@ const application_details = {
   no_organization_placeholder: 'No organization found. <a>Go to organizations</a>',
   field_custom_data: 'Custom data',
   field_custom_data_tip:
-    'Additional custom application metadata not listed in the pre-defined application properties, ',
+    'Additional custom application info not listed in the pre-defined application properties, such as business-specific settings and configurations.',
   custom_data_invalid: 'Custom data must be a valid JSON object',
   branding: {
     name: 'Branding',

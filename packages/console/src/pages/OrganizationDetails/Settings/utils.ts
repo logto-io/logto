@@ -1,5 +1,4 @@
 import { type Organization } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
 
 import { type Option } from '@/ds-components/Select/MultiSelect';
 import { emptyBranding } from '@/types/sign-in-experience';
@@ -9,11 +8,6 @@ export type FormData = Partial<Omit<Organization, 'customData'> & { customData: 
   jitEmailDomains: string[];
   jitRoles: Array<Option<string>>;
   jitSsoConnectorIds: string[];
-};
-
-export const isJsonObject = (value: string) => {
-  const parsed = trySafe<unknown>(() => JSON.parse(value));
-  return Boolean(parsed && typeof parsed === 'object');
 };
 
 export const normalizeData = (

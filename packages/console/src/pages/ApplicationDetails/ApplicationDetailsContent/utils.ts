@@ -1,8 +1,7 @@
-import { type AdminConsoleKey } from '@logto/phrases';
 import { customClientMetadataDefault, type ApplicationResponse } from '@logto/schemas';
-import { cond, type DeepPartial, type Nullable } from '@silverhand/essentials';
+import { cond, conditional, type DeepPartial } from '@silverhand/essentials';
 
-import { safeParseJsonObject } from '@/utils/json';
+import { isJsonObject } from '@/utils/json';
 
 type ProtectedAppMetadataType = ApplicationResponse['protectedAppMetadata'];
 
@@ -14,7 +13,7 @@ export type ApplicationForm = {
   isAdmin?: ApplicationResponse['isAdmin'];
   // eslint-disable-next-line @typescript-eslint/ban-types
   protectedAppMetadata?: Omit<Exclude<ProtectedAppMetadataType, null>, 'customDomains'>; // Custom domains are handled separately
-  customData: string;
+  customData?: string;
 };
 
 const mapToUriFormatArrays = (value?: string[]) =>
@@ -46,6 +45,7 @@ export const applicationFormDataParser = {
             ...customClientMetadataDefault,
             ...customClientMetadata,
           },
+          customData: JSON.stringify(customData, null, 2),
           isAdmin,
         }
       ),
@@ -57,12 +57,9 @@ export const applicationFormDataParser = {
           },
         }
       ),
-      customData: JSON.stringify(customData, null, 2),
     };
   },
-  toRequestPayload: (
-    data: ApplicationForm
-  ): [Nullable<AdminConsoleKey>, DeepPartial<ApplicationResponse>?] => {
+  toRequestPayload: (data: ApplicationForm): DeepPartial<ApplicationResponse> => {
     const {
       name,
       description,
@@ -73,47 +70,42 @@ export const applicationFormDataParser = {
       customData,
     } = data;
 
-    const parsedCustomData = safeParseJsonObject(customData);
-
-    if (!parsedCustomData.success) {
-      return ['application_details.custom_data_invalid'];
-    }
-
-    return [
-      null,
-      {
-        name,
-        ...cond(
-          !protectedAppMetadata && {
-            description,
-            oidcClientMetadata: {
-              ...oidcClientMetadata,
-              redirectUris: mapToUriFormatArrays(oidcClientMetadata?.redirectUris),
-              postLogoutRedirectUris: mapToUriFormatArrays(
-                oidcClientMetadata?.postLogoutRedirectUris
-              ),
-              // Empty string is not a valid URL
-              backchannelLogoutUri: cond(oidcClientMetadata?.backchannelLogoutUri),
-            },
-            customClientMetadata: {
-              ...customClientMetadata,
-              corsAllowedOrigins: mapToUriOriginFormatArrays(
-                customClientMetadata?.corsAllowedOrigins
-              ),
-            },
-            customData: parsedCustomData.data,
-            isAdmin,
-          }
-        ),
-        ...cond(
-          protectedAppMetadata && {
-            protectedAppMetadata: {
-              ...protectedAppMetadata,
-              sessionDuration: protectedAppMetadata.sessionDuration * 3600 * 24,
-            },
-          }
-        ),
-      },
-    ];
+    return {
+      name,
+      ...cond(
+        !protectedAppMetadata && {
+          description,
+          oidcClientMetadata: {
+            ...oidcClientMetadata,
+            redirectUris: mapToUriFormatArrays(oidcClientMetadata?.redirectUris),
+            postLogoutRedirectUris: mapToUriFormatArrays(
+              oidcClientMetadata?.postLogoutRedirectUris
+            ),
+            // Empty string is not a valid URL
+            backchannelLogoutUri: cond(oidcClientMetadata?.backchannelLogoutUri),
+          },
+          customClientMetadata: {
+            ...customClientMetadata,
+            corsAllowedOrigins: mapToUriOriginFormatArrays(
+              customClientMetadata?.corsAllowedOrigins
+            ),
+          },
+          ...conditional(
+            // Invalid JSON string will be guarded by the form field validation
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            customData && isJsonObject(customData) && { customData: JSON.parse(customData) }
+          ),
+          isAdmin,
+        }
+      ),
+      ...cond(
+        protectedAppMetadata && {
+          protectedAppMetadata: {
+            ...protectedAppMetadata,
+            sessionDuration: protectedAppMetadata.sessionDuration * 3600 * 24,
+          },
+        }
+      ),
+    };
   },
 };

@@ -84,24 +84,17 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         return;
       }
 
-      const [error, result] = applicationFormDataParser.toRequestPayload(formData);
+      const json = applicationFormDataParser.toRequestPayload(formData);
 
-      if (result) {
-        const updatedData = await api
-          .patch(`api/applications/${data.id}`, {
-            json: result,
-          })
-          .json<ApplicationResponse>();
+      const updatedData = await api
+        .patch(`api/applications/${data.id}`, {
+          json,
+        })
+        .json<ApplicationResponse>();
 
-        reset(applicationFormDataParser.fromResponse(updatedData));
-        onApplicationUpdated();
-        toast.success(t('general.saved'));
-        return;
-      }
-
-      if (error) {
-        toast.error(String(t(error)));
-      }
+      reset(applicationFormDataParser.fromResponse(updatedData));
+      onApplicationUpdated();
+      toast.success(t('general.saved'));
     })
   );
 
