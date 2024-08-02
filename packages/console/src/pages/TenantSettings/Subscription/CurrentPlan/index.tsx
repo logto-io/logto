@@ -1,5 +1,5 @@
 import { cond } from '@silverhand/essentials';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 
 import { type SubscriptionUsage, type Subscription } from '@/cloud/types/router';
 import BillInfo from '@/components/BillInfo';
@@ -28,13 +28,21 @@ type Props = {
 };
 
 function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Props) {
-  const { currentSku, currentSubscriptionUsage, currentSubscriptionQuota } =
+  const { currentSku, currentSubscription, currentSubscriptionUsage, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
   const {
     id,
     name,
     quota: { tokenLimit },
   } = subscriptionPlan;
+
+  /**
+   * After the new pricing model goes live, `upcomingInvoice` will always exist. However, for compatibility reasons, the price of the SKU's corresponding `unitPrice` will be used as a fallback when it does not exist. If `unitPrice` also does not exist, it means that the tenant does not have any applicable paid subscription, and the bill will be 0.
+   */
+  const upcomingCost = useMemo(
+    () => currentSubscription.upcomingInvoice?.subtotal ?? currentSku.unitPrice ?? 0,
+    [currentSku.unitPrice, currentSubscription.upcomingInvoice?.subtotal]
+  );
 
   const hasTokenSurpassedLimit = isDevFeaturesEnabled
     ? hasSurpassedSubscriptionQuotaLimit({
@@ -66,10 +74,11 @@ function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Prop
         />
       </FormField>
       <FormField title="subscription.next_bill">
-        {/* TODO: update the value once https://github.com/logto-io/cloud/pull/830 is merged. */}
         <BillInfo
-          cost={subscriptionUsage.cost}
-          isManagePaymentVisible={Boolean(subscriptionUsage.cost)}
+          cost={isDevFeaturesEnabled ? upcomingCost : subscriptionUsage.cost}
+          isManagePaymentVisible={Boolean(
+            isDevFeaturesEnabled ? upcomingCost : subscriptionUsage.cost
+          )}
         />
       </FormField>
       <MauLimitExceedNotification
