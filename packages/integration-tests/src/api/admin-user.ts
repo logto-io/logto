@@ -140,3 +140,6 @@ export const createPersonalAccessToken = async ({
   authedAdminApi
     .post(`users/${userId}/personal-access-tokens`, { json: body })
     .json<PersonalAccessToken>();
+
+export const getUserPersonalAccessTokens = async (userId: string) =>
+  authedAdminApi.get(`users/${userId}/personal-access-tokens`).json<PersonalAccessToken[]>();

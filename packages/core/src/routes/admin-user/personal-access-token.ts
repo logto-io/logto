@@ -11,6 +11,22 @@ import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 export default function adminUserPersonalAccessTokenRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
+  router.get(
+    '/users/:userId/personal-access-tokens',
+    koaGuard({
+      params: z.object({ userId: z.string() }),
+      response: PersonalAccessTokens.guard.array(),
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const { userId } = ctx.guard.params;
+      // Ensure that the user exists.
+      await queries.users.findUserById(userId);
+      ctx.body = await queries.personalAccessTokens.getTokensByUserId(userId);
+      return next();
+    }
+  );
+
   router.post(
     '/users/:userId/personal-access-tokens',
     koaGuard({
