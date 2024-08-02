@@ -284,15 +284,15 @@ export class Mfa {
       return;
     }
 
-    const requiredFactors = factors.filter((factor) => factor !== MfaFactor.BackupCode);
+    const availableFactors = factors.filter((factor) => factor !== MfaFactor.BackupCode);
 
     const factorsInUser = filterOutEmptyBackupCodes(mfaVerifications).map(({ type }) => type);
     const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);
-    const availableFactors = deduplicate([...factorsInUser, ...factorsInBind]);
+    const linkedFactors = deduplicate([...factorsInUser, ...factorsInBind]);
 
     // Assert that the user has at least one of the required factors bound
     assertThat(
-      requiredFactors.some((factor) => availableFactors.includes(factor)),
+      availableFactors.some((factor) => linkedFactors.includes(factor)),
       new RequestError(
         { code: 'user.missing_mfa', status: 422 },
         policy === MfaPolicy.Mandatory
@@ -303,7 +303,7 @@ export class Mfa {
 
     // Assert backup code
     assertThat(
-      !factors.includes(MfaFactor.BackupCode) || availableFactors.includes(MfaFactor.BackupCode),
+      !factors.includes(MfaFactor.BackupCode) || linkedFactors.includes(MfaFactor.BackupCode),
       new RequestError({
         code: 'session.mfa.backup_code_required',
         status: 422,
