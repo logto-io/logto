@@ -20,12 +20,14 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { requestTimeout } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-
-import { useConfirmModal } from './use-confirm-modal';
-import useRedirectUri from './use-redirect-uri';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useNewSubscriptionQuota from '@/hooks/use-new-subscription-quota';
+import useNewSubscriptionScopeUsage from '@/hooks/use-new-subscription-scopes-usage';
+import useNewSubscriptionUsage from '@/hooks/use-new-subscription-usage';
+import useRedirectUri from '@/hooks/use-redirect-uri';
 
 export class RequestError extends Error {
   constructor(
@@ -124,6 +126,14 @@ export const useStaticApi = ({
   const toastDisabledErrorCodes = Array.isArray(hideErrorToast) ? hideErrorToast : undefined;
 
   const { handleError } = useGlobalRequestErrorHandler(toastDisabledErrorCodes);
+  const { currentTenantId } = useContext(TenantsContext);
+
+  const { mutate: mutateSubscriptionUsage } = useNewSubscriptionUsage(currentTenantId);
+  const { mutate: mutateSubscriptionQuota } = useNewSubscriptionQuota(currentTenantId);
+  const {
+    scopeResourceUsage: { mutate: mutateScopeResourceUsage },
+    scopeRoleUsage: { mutate: mutateScopeRoleUsage },
+  } = useNewSubscriptionScopeUsage(currentTenantId);
 
   const api = useMemo(
     () =>
@@ -150,10 +160,28 @@ export const useStaticApi = ({
               }
             },
           ],
+          afterResponse: [
+            async (request, _options, response) => {
+              if (
+                isCloud &&
+                isDevFeaturesEnabled &&
+                ['POST', 'PUT', 'DELETE'].includes(request.method) &&
+                response.status >= 200 &&
+                response.status < 300
+              ) {
+                void mutateSubscriptionUsage();
+                void mutateSubscriptionQuota();
+                void mutateScopeResourceUsage();
+                void mutateScopeRoleUsage();
+              }
+            },
+          ],
         },
       }),
     [
       prefixUrl,
+      timeout,
+      signal,
       disableGlobalErrorHandling,
       handleError,
       isAuthenticated,
@@ -161,8 +189,10 @@ export const useStaticApi = ({
       getOrganizationToken,
       getAccessToken,
       i18n.language,
-      timeout,
-      signal,
+      mutateSubscriptionUsage,
+      mutateSubscriptionQuota,
+      mutateScopeResourceUsage,
+      mutateScopeRoleUsage,
     ]
   );
 

@@ -13,6 +13,10 @@ import { GlobalRoute, TenantsContext } from '@/contexts/TenantsProvider';
 import { createLocalCheckoutSession } from '@/utils/checkout';
 import { dropLeadingSlash } from '@/utils/url';
 
+import useNewSubscriptionQuota from './use-new-subscription-quota';
+import useNewSubscriptionScopeUsage from './use-new-subscription-scopes-usage';
+import useNewSubscriptionUsage from './use-new-subscription-usage';
+import useSubscription from './use-subscription';
 import useTenantPathname from './use-tenant-pathname';
 
 type SubscribeProps = {
@@ -32,9 +36,17 @@ type SubscribeProps = {
 const useSubscribe = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const cloudApi = useCloudApi({ hideErrorToast: true });
-  const { updateTenant } = useContext(TenantsContext);
+  const { updateTenant, currentTenantId } = useContext(TenantsContext);
   const { getUrl } = useTenantPathname();
   const [isSubscribeLoading, setIsSubscribeLoading] = useState(false);
+
+  const { mutate: mutateSubscription } = useSubscription(currentTenantId);
+  const { mutate: mutateSubscriptionQuota } = useNewSubscriptionQuota(currentTenantId);
+  const { mutate: mutateSubscriptionUsage } = useNewSubscriptionUsage(currentTenantId);
+  const {
+    scopeResourceUsage: { mutate: mutateScopeResourceUsage },
+    scopeRoleUsage: { mutate: mutateScopeRoleUsage },
+  } = useNewSubscriptionScopeUsage(currentTenantId);
 
   const subscribe = async ({
     skuId,
@@ -104,6 +116,13 @@ const useSubscribe = () => {
           tenantId,
         },
       });
+
+      void mutateSubscription();
+      void mutateSubscriptionQuota();
+      void mutateSubscriptionUsage();
+      void mutateScopeResourceUsage();
+      void mutateScopeRoleUsage();
+
       updateTenant(tenantId, {
         planId: rest.planId,
         subscription: rest,
