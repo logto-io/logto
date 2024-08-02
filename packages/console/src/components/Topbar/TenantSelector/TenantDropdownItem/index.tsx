@@ -1,4 +1,5 @@
 import { TenantTag } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 
@@ -6,6 +7,7 @@ import Tick from '@/assets/icons/tick.svg?react';
 import { type TenantResponse } from '@/cloud/types/router';
 import PlanName from '@/components/PlanName';
 import TenantEnvTag from '@/components/TenantEnvTag';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
@@ -27,8 +29,8 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
   } = tenantData;
 
   const {
+    currentPlan,
     subscriptionPlans,
-    currentSku,
     currentSubscriptionUsage: usage,
     currentSubscriptionQuota: quota,
   } = useContext(SubscriptionDataContext);
@@ -58,7 +60,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
           {tag === TenantTag.Development ? (
             <DynamicT forKey="subscription.no_subscription" />
           ) : (
-            <PlanName skuId={currentSku.id} name={tenantSubscriptionPlan.name} />
+            <PlanName skuId={conditional(isDevFeaturesEnabled && planId)} name={currentPlan.name} />
           )}
         </div>
       </div>
