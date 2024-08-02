@@ -24,10 +24,9 @@ import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
-import useNewSubscriptionQuota from '@/hooks/use-new-subscription-quota';
-import useNewSubscriptionScopeUsage from '@/hooks/use-new-subscription-scopes-usage';
-import useNewSubscriptionUsage from '@/hooks/use-new-subscription-usage';
 import useRedirectUri from '@/hooks/use-redirect-uri';
+
+import useSubscribe from './use-subscribe';
 
 export class RequestError extends Error {
   constructor(
@@ -126,14 +125,7 @@ export const useStaticApi = ({
   const toastDisabledErrorCodes = Array.isArray(hideErrorToast) ? hideErrorToast : undefined;
 
   const { handleError } = useGlobalRequestErrorHandler(toastDisabledErrorCodes);
-  const { currentTenantId } = useContext(TenantsContext);
-
-  const { mutate: mutateSubscriptionUsage } = useNewSubscriptionUsage(currentTenantId);
-  const { mutate: mutateSubscriptionQuota } = useNewSubscriptionQuota(currentTenantId);
-  const {
-    scopeResourceUsage: { mutate: mutateScopeResourceUsage },
-    scopeRoleUsage: { mutate: mutateScopeRoleUsage },
-  } = useNewSubscriptionScopeUsage(currentTenantId);
+  const { syncSubscriptionData } = useSubscribe();
 
   const api = useMemo(
     () =>
@@ -169,10 +161,7 @@ export const useStaticApi = ({
                 response.status >= 200 &&
                 response.status < 300
               ) {
-                void mutateSubscriptionUsage();
-                void mutateSubscriptionQuota();
-                void mutateScopeResourceUsage();
-                void mutateScopeRoleUsage();
+                syncSubscriptionData();
               }
             },
           ],
@@ -189,10 +178,7 @@ export const useStaticApi = ({
       getOrganizationToken,
       getAccessToken,
       i18n.language,
-      mutateSubscriptionUsage,
-      mutateSubscriptionQuota,
-      mutateScopeResourceUsage,
-      mutateScopeRoleUsage,
+      syncSubscriptionData,
     ]
   );
 

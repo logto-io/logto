@@ -1,7 +1,7 @@
 import { ReservedPlanId } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -47,6 +47,22 @@ const useSubscribe = () => {
     scopeResourceUsage: { mutate: mutateScopeResourceUsage },
     scopeRoleUsage: { mutate: mutateScopeRoleUsage },
   } = useNewSubscriptionScopeUsage(currentTenantId);
+
+  const syncSubscriptionData = useCallback(() => {
+    void mutateSubscription();
+    if (isDevFeaturesEnabled) {
+      void mutateSubscriptionQuota();
+      void mutateSubscriptionUsage();
+      void mutateScopeResourceUsage();
+      void mutateScopeRoleUsage();
+    }
+  }, [
+    mutateScopeResourceUsage,
+    mutateScopeRoleUsage,
+    mutateSubscription,
+    mutateSubscriptionQuota,
+    mutateSubscriptionUsage,
+  ]);
 
   const subscribe = async ({
     skuId,
@@ -117,12 +133,7 @@ const useSubscribe = () => {
         },
       });
 
-      void mutateSubscription();
-      void mutateSubscriptionQuota();
-      void mutateSubscriptionUsage();
-      void mutateScopeResourceUsage();
-      void mutateScopeRoleUsage();
-
+      syncSubscriptionData();
       updateTenant(tenantId, {
         planId: rest.planId,
         subscription: rest,
@@ -166,6 +177,7 @@ const useSubscribe = () => {
     isSubscribeLoading,
     subscribe,
     cancelSubscription,
+    syncSubscriptionData,
     visitManagePaymentPage,
   };
 };
