@@ -50,6 +50,13 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
             status: 422,
           });
         }
+
+        if (error.constraint === 'personal_access_tokens_pkey') {
+          throw new RequestError({
+            code: 'user.personal_access_token_name_exists',
+            status: 422,
+          });
+        }
       }
 
       if (error instanceof CheckIntegrityConstraintViolationError) {
