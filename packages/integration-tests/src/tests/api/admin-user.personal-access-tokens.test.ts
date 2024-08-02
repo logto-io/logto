@@ -2,8 +2,10 @@ import { HTTPError } from 'ky';
 
 import {
   createPersonalAccessToken,
+  deletePersonalAccessToken,
   deleteUser,
   getUserPersonalAccessTokens,
+  updatePersonalAccessToken,
 } from '#src/api/admin-user.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { devFeatureTest, randomString } from '#src/utils.js';
@@ -67,7 +69,7 @@ devFeatureTest.describe('personal access tokens', () => {
     await deleteUser(user.id);
   });
 
-  it('should be able to create, get multiple PATs', async () => {
+  it('should be able to create, get, and delete multiple PATs', async () => {
     const user = await createUserByAdmin();
     const name1 = randomString();
     const name2 = randomString();
@@ -84,6 +86,29 @@ devFeatureTest.describe('personal access tokens', () => {
     expect(await getUserPersonalAccessTokens(user.id)).toEqual(
       expect.arrayContaining([pat1, pat2])
     );
+
+    await Promise.all([
+      deletePersonalAccessToken(user.id, name1),
+      deletePersonalAccessToken(user.id, name2),
+    ]);
+    expect(await getUserPersonalAccessTokens(user.id)).toEqual([]);
+
+    await deleteUser(user.id);
+  });
+
+  it('should be able to update PAT', async () => {
+    const user = await createUserByAdmin();
+    const name = randomString();
+    await createPersonalAccessToken({
+      userId: user.id,
+      name,
+    });
+
+    const newName = randomString();
+    const updatedPat = await updatePersonalAccessToken(user.id, name, {
+      name: newName,
+    });
+    expect(updatedPat).toEqual(expect.objectContaining({ userId: user.id, name: newName }));
 
     await deleteUser(user.id);
   });
