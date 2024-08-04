@@ -17,6 +17,7 @@ import useBindSocialRelatedUser from './use-social-link-related-user';
 type Props = {
   readonly className?: string;
   readonly connectorId: string;
+  readonly verificationId: string;
   readonly relatedUser: SocialRelatedUserInfo;
 };
 
@@ -39,7 +40,7 @@ const getCreateAccountActionText = (signUpMethods: string[]): TFuncKey => {
   return 'action.create_account_without_linking';
 };
 
-const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
+const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser }: Props) => {
   const { t } = useTranslation();
   const { signUpMethods } = useSieMethods();
 
@@ -58,10 +59,7 @@ const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
         title="action.bind"
         i18nProps={{ address: type === 'email' ? maskEmail(value) : maskPhone(value) }}
         onClick={() => {
-          void bindSocialRelatedUser({
-            connectorId,
-            ...(type === 'email' ? { email: value } : { phone: value }),
-          });
+          void bindSocialRelatedUser(verificationId);
         }}
       />
 
@@ -72,7 +70,7 @@ const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
         <TextLink
           text={actionText}
           onClick={() => {
-            void registerWithSocial(connectorId);
+            void registerWithSocial(verificationId);
           }}
         />
       </div>
