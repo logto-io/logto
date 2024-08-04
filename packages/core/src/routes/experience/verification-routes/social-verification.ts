@@ -1,3 +1,4 @@
+import { GoogleConnector } from '@logto/connector-kit';
 import {
   VerificationType,
   socialAuthorizationUrlPayloadGuard,
@@ -101,10 +102,34 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
         },
       });
 
-      const socialVerificationRecord = ctx.experienceInteraction.getVerificationRecordByTypeAndId(
-        VerificationType.Social,
-        verificationId
-      );
+      const socialVerificationRecord = (() => {
+        if (verificationId) {
+          return ctx.experienceInteraction.getVerificationRecordByTypeAndId(
+            VerificationType.Social,
+            verificationId
+          );
+        }
+
+        // Check if is Google one tap verification
+        if (
+          connectorId === GoogleConnector.factoryId &&
+          connectorData[GoogleConnector.oneTapParams.credential]
+        ) {
+          const socialVerificationRecord = SocialVerification.create(
+            libraries,
+            queries,
+            connectorId
+          );
+          ctx.experienceInteraction.setVerificationRecord(socialVerificationRecord);
+          return socialVerificationRecord;
+        }
+
+        // No verificationId provided and not Google one tap callback
+        throw new RequestError({
+          code: 'session.verification_session_not_found',
+          status: 404,
+        });
+      })();
 
       assertThat(
         socialVerificationRecord.connectorId === connectorId,
