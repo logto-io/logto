@@ -84,12 +84,12 @@ export const socialAuthorizationUrlPayloadGuard = z.object({
 export type SocialVerificationCallbackPayload = {
   /** The callback data from the social connector. */
   connectorData: Record<string, unknown>;
-  /**  The verification ID returned from the authorization URI. */
-  verificationId: string;
+  /**  The verification ID returned from the authorization URI. Optional for Google one tap callback */
+  verificationId?: string;
 };
 export const socialVerificationCallbackPayloadGuard = z.object({
   connectorData: jsonObjectGuard,
-  verificationId: z.string(),
+  verificationId: z.string().optional(),
 }) satisfies ToZodObject<SocialVerificationCallbackPayload>;
 
 /** Payload type for `POST /api/experience/verification/password`. */

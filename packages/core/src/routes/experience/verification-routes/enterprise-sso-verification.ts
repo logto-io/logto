@@ -80,7 +80,11 @@ export default function enterpriseSsoVerificationRoutes<
       params: z.object({
         connectorId: z.string(),
       }),
-      body: socialVerificationCallbackPayloadGuard,
+      body: socialVerificationCallbackPayloadGuard.merge(
+        z.object({
+          verificationId: z.string(),
+        })
+      ),
       response: z.object({
         verificationId: z.string(),
       }),
