@@ -247,10 +247,17 @@ export default class ExperienceInteraction {
    * Validate the interaction verification records against the sign-in experience and user MFA settings.
    * The interaction is verified if at least one user enabled MFA verification record is present and verified.
    *
-   * @throws — RequestError with 404 if the if the user is not identified or not found
+   * @remarks
+   * - EnterpriseSso verified interaction does not require MFA verification.
+   *
+   * @throws {RequestError} with 404 if the if the user is not identified or not found
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
   public async guardMfaVerificationStatus() {
+    if (this.hasVerifiedSsoIdentity) {
+      return;
+    }
+
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const mfaValidator = new MfaValidator(mfaSettings, user);
@@ -338,13 +345,17 @@ export default class ExperienceInteraction {
     await this.profile.validateAvailability();
 
     // Profile fulfilled
-    await this.profile.assertUserMandatoryProfileFulfilled();
+    if (!this.hasVerifiedSsoIdentity) {
+      await this.profile.assertUserMandatoryProfileFulfilled();
+    }
 
     // Revalidate the new MFA data if any
     await this.mfa.checkAvailability();
 
     // MFA fulfilled
-    await this.mfa.assertUserMandatoryMfaFulfilled();
+    if (!this.hasVerifiedSsoIdentity) {
+      await this.mfa.assertUserMandatoryMfaFulfilled();
+    }
 
     const { socialIdentity, enterpriseSsoIdentity, ...rest } = this.profile.data;
     const { mfaSkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
@@ -532,6 +543,12 @@ export default class ExperienceInteraction {
     );
 
     return verificationRecord?.identifier.value === value && verificationRecord.isVerified;
+  }
+
+  private get hasVerifiedSsoIdentity() {
+    const ssoVerificationRecord = this.verificationRecords.get(VerificationType.EnterpriseSso);
+
+    return Boolean(ssoVerificationRecord?.isVerified);
   }
 
   /**
