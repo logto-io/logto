@@ -23,6 +23,7 @@
         "messaging:template:*",
         "messaging:citizen:*",
         "messaging:event:read",
+        "profile:user:read",
         "profile:user:*",
         "profile:address:*",
         "profile:entitlement:*",
@@ -80,7 +81,19 @@
         "id": "bb-inactive-ps",
         "name": "Inactive Public Servant",
         "description": "Inactive Public Servant",
-        "specific_permissions": ["bb:public-servant.inactive:*"]
+        "specific_permissions": [
+          "bb:public-servant.inactive:*"
+        ]
+      },
+      {
+        "id": "m2m-ps-profile-reader",
+        "name": "M2M Public Servant Profile Reader",
+        "description": "Role for M2M Applications that need to read from Profile resources",
+        "specific_permissions": [
+          "profile:user:read"
+        ],
+        "type": "MachineToMachine",
+        "related_applications": [{"application_id":"tty6llp30risjwcjhbvc9", "organization_id": "ogcio"}]
       }
     ],
     "applications": [
@@ -142,6 +155,16 @@
         "logout_redirect_uri": "<SEEDER_PROFILE_APP_LOGOUT_REDIRECT_URI>",
         "secret": "<SEEDER_PROFILE_APP_SECRET>",
         "id": "0921d8onfb9f3bv75trgf",
+        "is_third_party": false
+      },
+      {
+        "name": "M2M Profile Reader",
+        "description": "Machine 2 Machine application used to communicate between services and Profile resource",
+        "type": "MachineToMachine",
+        "redirect_uri": "",
+        "logout_redirect_uri": "",
+        "secret": "<SEEDER_M2M_PROFILE_APP_SECRET>",
+        "id": "tty6llp30risjwcjhbvc9",
         "is_third_party": false
       }
     ],
@@ -257,6 +280,21 @@
             ]
           }
         ]
+      },
+      {
+        "id": "m2m-citizen-profile",
+        "name": "M2M Citizen Profile Reader role",
+        "description": "Role used to make M2M applications able to read from profile resource",
+        "permissions": [
+          {
+            "resource_id": "profile-api",
+            "specific_permissions": [
+              "profile:user.self:read"
+            ]
+          }
+        ],
+        "type": "MachineToMachine",
+        "related_application_ids": ["tty6llp30risjwcjhbvc9"]
       }
     ],
     "connectors": [

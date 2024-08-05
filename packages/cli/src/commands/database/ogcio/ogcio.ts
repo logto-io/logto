@@ -27,12 +27,6 @@ const createDataForTenant = async (
     });
   }
 
-  await seedOrganizationRbacData({
-    transaction,
-    tenantId,
-    toSeed: tenantData,
-  });
-
   if (tenantData.applications?.length) {
     const applications = await seedApplications({
       transaction,
@@ -40,6 +34,12 @@ const createDataForTenant = async (
       applications: tenantData.applications,
     });
   }
+
+  await seedOrganizationRbacData({
+    transaction,
+    tenantId,
+    toSeed: tenantData,
+  });
 
   if (tenantData.resources?.length) {
     const resources = await seedResources({

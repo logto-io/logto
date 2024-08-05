@@ -1,10 +1,12 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-
+/* eslint-disable @silverhand/fp/no-mutating-methods */
 /* eslint-disable @silverhand/fp/no-mutation */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 import {
+  OrganizationApplicationRelations,
+  OrganizationRoleApplicationRelations,
   OrganizationRoles,
   OrganizationRoleScopeRelations,
   OrganizationScopes,
@@ -81,6 +83,7 @@ const createRole = async (params: {
     name: string;
     description: string;
     id: string;
+    type: string;
   };
 }) => {
   await createOrUpdateItem({
@@ -92,6 +95,7 @@ const createRole = async (params: {
       id: params.roleToSeed.id,
       name: params.roleToSeed.name,
       description: params.roleToSeed.description,
+      type: params.roleToSeed.type,
     },
     tableName: OrganizationRoles.table,
   });
@@ -110,6 +114,8 @@ const createRoles = async (params: {
     name: role.name,
     description: role.description,
     scopes: role.specific_permissions,
+    type: role.type ?? 'User',
+    related_applications: role.related_applications ?? [],
   }));
 
   const queries = rolesToCreate.map(async (role) =>
@@ -204,5 +210,79 @@ export const seedOrganizationRbacData = async (params: {
     });
 
     await createRelations(params.transaction, params.tenantId, createdScopes, createdRoles);
+
+    await assignOrganizationsToM2MApplications(params.transaction, params.tenantId, createdRoles);
   }
+};
+
+const assignOrganizationsToM2MApplications = async (
+  transaction: DatabaseTransactionConnection,
+  tenantId: string,
+  roles: Array<{
+    id: string;
+    related_applications: Array<{ application_id: string; organization_id: string }>;
+    type: string;
+  }>
+) => {
+  const addedRoles: Array<
+    Promise<{ organization_role_id: string; application_id: string; organization_id: string }>
+  > = [];
+  for (const role of roles) {
+    if (role.type === 'MachineToMachine' && role.related_applications.length > 0) {
+      addedRoles.push(
+        ...role.related_applications.map(
+          async (relation: { application_id: string; organization_id: string }) =>
+            assignOrganizationToM2MApplication(transaction, tenantId, {
+              organization_role_id: role.id,
+              application_id: relation.application_id,
+              organization_id: relation.organization_id,
+            })
+        )
+      );
+    }
+  }
+
+  await Promise.all(addedRoles);
+};
+
+const assignOrganizationToM2MApplication = async (
+  transaction: DatabaseTransactionConnection,
+  tenantId: string,
+  relation: {
+    organization_role_id: string;
+    application_id: string;
+    organization_id: string;
+  }
+) => {
+  await createOrUpdateItemWithoutId({
+    transaction,
+    tableName: OrganizationApplicationRelations.table,
+    tenantId,
+    toLogFieldName: 'organization_id',
+    whereClauses: [
+      sql`tenant_id = ${tenantId}`,
+      sql`application_id = ${relation.application_id}`,
+      sql`organization_id = ${relation.organization_id}`,
+    ],
+    toInsert: {
+      organization_id: relation.organization_id,
+      application_id: relation.application_id,
+    },
+    columnToGet: 'organization_id',
+  });
+
+  return createOrUpdateItemWithoutId({
+    transaction,
+    tableName: OrganizationRoleApplicationRelations.table,
+    tenantId,
+    toLogFieldName: 'organization_role_id',
+    whereClauses: [
+      sql`tenant_id = ${tenantId}`,
+      sql`organization_role_id = ${relation.organization_role_id}`,
+      sql`application_id = ${relation.application_id}`,
+      sql`organization_id = ${relation.organization_id}`,
+    ],
+    toInsert: relation,
+    columnToGet: 'organization_role_id',
+  });
 };

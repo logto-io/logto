@@ -43,8 +43,13 @@ const setApplicationId = async (
 
 const createArrayString = (values: string | string[]): string => {
   const valuesString = (Array.isArray(values) ? values : [values])
+    .filter((value) => value.length > 0)
     .map((uri) => `"${uri}"`)
     .join(',');
+
+  if (valuesString.length === 0) {
+    return '[]';
+  }
 
   return `[${valuesString}]`;
 };

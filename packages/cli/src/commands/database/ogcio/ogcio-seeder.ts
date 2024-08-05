@@ -1,6 +1,8 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable @silverhand/fp/no-mutation */
 /* eslint-disable @silverhand/fp/no-let */
+
+export type OgcioApplicationTypes = 'User' | 'MachineToMachine';
 export type OgcioTenantSeeder = Record<string, OgcioSeeder>;
 
 export type OgcioSeeder = {
@@ -31,6 +33,8 @@ export type OrganizationRoleSeeder = {
   name: string;
   specific_permissions: string[];
   description: string;
+  type?: OgcioApplicationTypes;
+  related_applications?: Array<{ application_id: string; organization_id: string }>;
 };
 
 export type ApplicationSeeder = {
@@ -110,6 +114,8 @@ export type ResourceRoleSeeder = {
   name: string;
   description: string;
   permissions: ScopePerResourceRoleSeeder[];
+  type?: OgcioApplicationTypes;
+  related_application_ids?: string[];
 };
 
 export type ScopePerResourceRoleSeeder = {

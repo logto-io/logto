@@ -27,6 +27,7 @@
         "messaging:template:*",
         "messaging:citizen:*",
         "messaging:event:read",
+        "profile:user:read",
         "profile:user:*",
         "profile:address:*",
         "profile:entitlement:*",
@@ -96,13 +97,27 @@
         "id": "upload-public-servant",
         "name": "File Upload Public Servant",
         "description": "File Upload Public servant",
-        "specific_permissions": ["upload:file:*"]
+        "specific_permissions": [
+          "upload:file:*"
+        ]
       },
       {
         "id": "bb-inactive-ps",
         "name": "Inactive Public Servant",
         "description": "Inactive Public Servant",
-        "specific_permissions": ["bb:public-servant.inactive:*"]
+        "specific_permissions": [
+          "bb:public-servant.inactive:*"
+        ]
+      },
+      {
+        "id": "m2m-ps-profile-reader",
+        "name": "M2M Public Servant Profile Reader",
+        "description": "Role for M2M Applications that need to read from Profile resources",
+        "specific_permissions": [
+          "profile:user:read"
+        ],
+        "type": "MachineToMachine",
+        "related_applications": [{"application_id":"ddl4llp30risjwcjymqw3", "organization_id": "ogcio"}]
       }
     ],
     "applications": [
@@ -174,6 +189,16 @@
         "logout_redirect_uri": "http://localhost:3008",
         "secret": "upload_app_local_sercret",
         "id": "5vnf94y2lr17s2u9htkmq",
+        "is_third_party": false
+      },
+      {
+        "name": "M2M Profile Reader",
+        "description": "Machine 2 Machine application used to communicate between services and Profile resource",
+        "type": "MachineToMachine",
+        "redirect_uri": "",
+        "logout_redirect_uri": "",
+        "secret": "profile_reader_local_secret",
+        "id": "ddl4llp30risjwcjymqw3",
         "is_third_party": false
       }
     ],
@@ -289,6 +314,21 @@
             ]
           }
         ]
+      },
+      {
+        "id": "m2m-citizen-profile",
+        "name": "M2M Citizen Profile Reader role",
+        "description": "Role used to make M2M applications able to read from profile resource",
+        "permissions": [
+          {
+            "resource_id": "profile-api",
+            "specific_permissions": [
+              "profile:user.self:read"
+            ]
+          }
+        ],
+        "type": "MachineToMachine",
+        "related_application_ids": ["ddl4llp30risjwcjymqw3"]
       }
     ],
     "connectors": [
