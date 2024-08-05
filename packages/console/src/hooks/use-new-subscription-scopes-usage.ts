@@ -14,6 +14,7 @@ const useNewSubscriptionScopeUsage = (tenantId: string) => {
     scopeResourceUsage: useSWR<NewSubscriptionScopeUsage, Error>(
       isCloud &&
         isDevFeaturesEnabled &&
+        tenantId &&
         `/api/tenants/${tenantId}/subscription/usage/${resourceEntityName}/scopes`,
       async () =>
         cloudApi.get('/api/tenants/:tenantId/subscription/usage/:entityName/scopes', {
@@ -24,6 +25,7 @@ const useNewSubscriptionScopeUsage = (tenantId: string) => {
     scopeRoleUsage: useSWR<NewSubscriptionScopeUsage, Error>(
       isCloud &&
         isDevFeaturesEnabled &&
+        tenantId &&
         `/api/tenants/${tenantId}/subscription/usage/${roleEntityName}/scopes`,
       async () =>
         cloudApi.get('/api/tenants/:tenantId/subscription/usage/:entityName/scopes', {
