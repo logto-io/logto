@@ -90,9 +90,12 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       action: Action.Submit,
     }),
     async (ctx, next) => {
-      const { connectorId } = ctx.params;
+      const { connectorId } = ctx.guard.params;
       const { connectorData, verificationId } = ctx.guard.body;
       const { verificationAuditLog } = ctx;
+      const {
+        socials: { getConnector },
+      } = libraries;
 
       verificationAuditLog.append({
         payload: {
@@ -102,17 +105,12 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
         },
       });
 
-      const socialVerificationRecord = (() => {
-        if (verificationId) {
-          return ctx.experienceInteraction.getVerificationRecordByTypeAndId(
-            VerificationType.Social,
-            verificationId
-          );
-        }
+      const connector = await getConnector(connectorId);
 
+      const socialVerificationRecord = (() => {
         // Check if is Google one tap verification
         if (
-          connectorId === GoogleConnector.factoryId &&
+          connector.metadata.id === GoogleConnector.factoryId &&
           connectorData[GoogleConnector.oneTapParams.credential]
         ) {
           const socialVerificationRecord = SocialVerification.create(
@@ -122,6 +120,13 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
           );
           ctx.experienceInteraction.setVerificationRecord(socialVerificationRecord);
           return socialVerificationRecord;
+        }
+
+        if (verificationId) {
+          return ctx.experienceInteraction.getVerificationRecordByTypeAndId(
+            VerificationType.Social,
+            verificationId
+          );
         }
 
         // No verificationId provided and not Google one tap callback
