@@ -1,9 +1,11 @@
+import { MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
-import { deleteUser, getUser } from '#src/api/admin-user.js';
+import { createUserMfaVerification, deleteUser, getUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { signInWithEnterpriseSso } from '#src/helpers/experience/index.js';
+import { enableMandatoryMfaWithTotp } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import { devFeatureTest, generateEmail } from '#src/utils.js';
 
@@ -77,5 +79,46 @@ devFeatureTest.describe('enterprise sso sign-in and sign-up', () => {
     );
 
     await deleteUser(userId);
+  });
+
+  describe('should not check mfa and profile fulfillment for the enterprise sso authentication flow', () => {
+    const email = generateEmail(domain);
+    const enterpriseSsoIdentityId = generateStandardId();
+    const userIdMap = new Map<string, string>();
+
+    beforeAll(async () => {
+      await updateSignInExperience({
+        signUp: { identifiers: [SignInIdentifier.Username], password: true, verify: false },
+      });
+      await enableMandatoryMfaWithTotp();
+    });
+
+    it('should successfully sign-up with enterprise sso without profile and mfa fulfillment', async () => {
+      const userId = await signInWithEnterpriseSso(
+        ssoConnectorApi.firstConnectorId!,
+        {
+          sub: enterpriseSsoIdentityId,
+          email,
+          email_verified: true,
+        },
+        true
+      );
+
+      userIdMap.set('ssoUser', userId);
+    });
+
+    it('should successfully sign-in with enterprise sso without mfa validation', async () => {
+      const userId = userIdMap.get('ssoUser')!;
+
+      await createUserMfaVerification(userId, MfaFactor.TOTP);
+
+      await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
+        sub: enterpriseSsoIdentityId,
+        email,
+        email_verified: true,
+      });
+
+      await deleteUser(userId);
+    });
   });
 });
