@@ -334,7 +334,7 @@
     "connectors": [
       {
         "id": "mygovid",
-        "sync_profile": false,
+        "sync_profile": true,
         "connector_id": "mygovid",
         "config": {
           "scope": "openid profile email",
