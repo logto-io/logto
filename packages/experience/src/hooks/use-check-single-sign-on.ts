@@ -56,8 +56,8 @@ const useCheckSingleSignOn = () => {
         return;
       }
 
-      const connectors = result
-        ?.map((connectorId) => availableSsoConnectorsMap.get(connectorId))
+      const connectors = result?.connectorIds
+        .map((connectorId) => availableSsoConnectorsMap.get(connectorId))
         // eslint-disable-next-line unicorn/prefer-native-coercion-functions -- make the type more specific
         .filter((connector): connector is SsoConnectorMetadata => Boolean(connector));
 

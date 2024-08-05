@@ -43,7 +43,7 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
         return false;
       }
 
-      const connectors = result
+      const connectors = result.connectorIds
         .map((connectorId) => availableSsoConnectorsMap.get(connectorId))
         // eslint-disable-next-line unicorn/prefer-native-coercion-functions -- make the type more specific
         .filter((connector): connector is SsoConnectorMetadata => Boolean(connector));

@@ -206,7 +206,7 @@ export const getSsoConnectors = async (email: string) =>
         email,
       },
     })
-    .json<string[]>();
+    .json<{ connectorIds: string[] }>();
 
 export const getSsoAuthorizationUrl = async (connectorId: string, payload: unknown) => {
   await initInteraction(InteractionEvent.SignIn);
