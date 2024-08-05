@@ -13,8 +13,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { identifyAndSubmitInteraction, verifySocialVerification } from '@/apis/experience';
-import { putInteraction } from '@/apis/interaction';
+import {
+  identifyAndSubmitInteraction,
+  initInteraction,
+  verifySocialVerification,
+} from '@/apis/experience';
 import useBindSocialRelatedUser from '@/containers/SocialLinkAccount/use-social-link-related-user';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
@@ -49,7 +52,7 @@ const useSocialSignInListener = (connectorId: string) => {
   const registerWithSocial = useSocialRegister(connectorId, true);
   const verifySocial = useApi(verifySocialVerification);
   const asyncSignInWithSocial = useApi(identifyAndSubmitInteraction);
-  const asyncPutInteraction = useApi(putInteraction);
+  const asyncPutInteraction = useApi(initInteraction);
 
   const accountNotExistErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
