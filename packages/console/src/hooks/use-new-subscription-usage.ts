@@ -8,7 +8,7 @@ const useNewSubscriptionUsage = (tenantId: string) => {
   const cloudApi = useCloudApi();
 
   return useSWR<NewSubscriptionUsage, Error>(
-    isCloud && isDevFeaturesEnabled && `/api/tenants/${tenantId}/subscription/usage`,
+    isCloud && isDevFeaturesEnabled && tenantId && `/api/tenants/${tenantId}/subscription/usage`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/subscription/usage', {
         params: { tenantId },
