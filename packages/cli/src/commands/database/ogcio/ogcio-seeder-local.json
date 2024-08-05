@@ -226,7 +226,7 @@
       {
         "id": "upload-api",
         "name": "File Upload Service API",
-        "indicator": "http://localhost:8007/"
+        "indicator": "http://localhost:8008/"
       }
     ],
     "resource_permissions": [
