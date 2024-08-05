@@ -1,8 +1,9 @@
-import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
+import { AgreeToTermsPolicy, ExtraParamsKey, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
@@ -36,6 +37,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
   const { identifierInputValue, setIdentifierInputValue } = useContext(UserInteractionContext);
+
+  const [searchParams] = useSearchParams();
 
   const {
     watch,
@@ -117,7 +120,9 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            defaultValue={identifierInputValue?.value}
+            defaultValue={
+              identifierInputValue?.value ?? searchParams.get(ExtraParamsKey.LoginHint) ?? undefined
+            }
             defaultType={identifierInputValue?.type}
             isDanger={!!errors.id || !!errorMessage}
             errorMessage={errors.id?.message}

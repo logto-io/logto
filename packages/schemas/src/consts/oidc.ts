@@ -41,6 +41,11 @@ export enum ExtraParamsKey {
    * organization ID.
    */
   OrganizationId = 'organization_id',
+  /**
+   * Provides a hint about the login identifier the user might use.
+   * This can be used to pre-fill the identifier field **only on the first screen** of the sign-in/sign-up flow.
+   */
+  LoginHint = 'login_hint',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -60,6 +65,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.FirstScreen]: z.nativeEnum(FirstScreen),
     [ExtraParamsKey.DirectSignIn]: z.string(),
     [ExtraParamsKey.OrganizationId]: z.string(),
+    [ExtraParamsKey.LoginHint]: z.string(),
   })
   .partial() satisfies ToZodObject<ExtraParamsObject>;
 
@@ -68,4 +74,5 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.FirstScreen]: FirstScreen;
   [ExtraParamsKey.DirectSignIn]: string;
   [ExtraParamsKey.OrganizationId]: string;
+  [ExtraParamsKey.LoginHint]: string;
 }>;
