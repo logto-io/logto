@@ -157,6 +157,7 @@ devFeatureTest.describe('social verification', () => {
     it('should throw if the connectorId is different', async () => {
       const client = await initExperienceClient();
       const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
+      const emailConnectorId = connectorIdMap.get(mockEmailConnectorId)!;
 
       const { verificationId } = await client.getSocialAuthorizationUri(connectorId, {
         redirectUri,
@@ -164,7 +165,7 @@ devFeatureTest.describe('social verification', () => {
       });
 
       await expectRejects(
-        client.verifySocialAuthorization('invalid_connector_id', {
+        client.verifySocialAuthorization(emailConnectorId, {
           verificationId,
           connectorData: {
             authorizationCode,
