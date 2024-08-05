@@ -57,16 +57,18 @@ export const verifySocialIdentity = async (
   { provider, libraries }: TenantContext
 ): Promise<SocialUserInfo> => {
   const {
-    socials: { getUserInfo },
+    socials: { getUserInfo, getConnector },
   } = libraries;
 
   const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
+  const connector = await getConnector(connectorId);
+
   // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap
   // verification)
   if (
-    connectorId === GoogleConnector.factoryId &&
+    connector.metadata.id === GoogleConnector.factoryId &&
     connectorData[GoogleConnector.oneTapParams.credential]
   ) {
     const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
