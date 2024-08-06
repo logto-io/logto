@@ -1,4 +1,4 @@
-// This script generates the `index.ts` file for all the guides.
+// This script generates the `index.tsx` file for all the guides.
 // It should be run from the `packages/console/src/assets/docs/guides` (current) directory.
 // For conventions and specifications, see the `README.md` file in this directory.
 
@@ -21,6 +21,9 @@ const data = await Promise.all(
     }
 
     const logo = ['logo.webp', 'logo.svg', 'logo.png'].find((logo) => existsSync(`${directory}/${logo}`));
+    const darkLogo = ['logo-dark.webp', 'logo-dark.svg', 'logo-dark.png'].find((logo) =>
+      existsSync(`${directory}/${logo}`)
+    );
 
     const config = existsSync(`${directory}/config.json`)
       ? await import(`./${directory}/config.json`, { assert: { type: 'json' } }).then(
@@ -31,6 +34,7 @@ const data = await Promise.all(
     return {
       name: directory,
       logo,
+      darkLogo,
       order: config?.order ?? Number.POSITIVE_INFINITY,
     };
   })
@@ -45,10 +49,11 @@ const filename = 'index.tsx';
 
 await fs.writeFile(
   filename,
-  "// This is a generated file, don't update manually.\n\nimport { lazy } from 'react';\n\nimport { type Guide } from './types';\n"
+  `/* eslint-disable max-lines */
+// This is a generated file, don't update manually.\n\nimport { lazy } from 'react';\n\nimport { type Guide } from './types';\n`
 );
 
-for (const { name, logo } of metadata) {
+for (const { name, logo, darkLogo } of metadata) {
   // eslint-disable-next-line no-await-in-loop
   await fs.appendFile(filename, `import ${camelCase(name)} from './${name}/index';\n`);
 
@@ -56,18 +61,23 @@ for (const { name, logo } of metadata) {
     // eslint-disable-next-line no-await-in-loop
     await fs.appendFile(filename, `import ${camelCase(name)}Logo from './${name}/${logo}';\n`);
   }
+
+  if (darkLogo && !darkLogo.endsWith('.svg')) {
+    // eslint-disable-next-line no-await-in-loop
+    await fs.appendFile(filename, `import ${camelCase(name)}LogoDark from './${name}/${darkLogo}';\n`);
+  }
 }
 
 await fs.appendFile(filename, '\n');
 await fs.appendFile(filename, 'export const guides: Readonly<Guide[]> = Object.freeze([');
 
-const getLogo = ({ name, logo }) => {
+const getLogo = ({ name, logo, isDark }) => {
   if (!logo) return 'undefined';
-  if (logo.endsWith('.svg')) return `lazy(async () => import('./${name}/${logo}'))`;
-  return `({ className }: { readonly className?: string }) => <img src={${camelCase(name)}Logo} alt="${name}" className={className} />`;
+  if (logo.endsWith('.svg')) return `lazy(async () => import('./${name}/${logo}?react'))`;
+  return `({ className }: { readonly className?: string }) => <img src={${camelCase(name)}Logo${isDark ? 'Dark' : ''}} alt="${name}" className={className} />`;
 };
 
-for (const { name, logo, order } of metadata) {
+for (const { name, logo, darkLogo, order } of metadata) {
   // eslint-disable-next-line no-await-in-loop
   await fs.appendFile(
     filename,
@@ -76,10 +86,12 @@ for (const { name, logo, order } of metadata) {
     order: ${order},
     id: '${name}',
     Logo: ${getLogo({ name, logo })},
+    DarkLogo: ${getLogo({ name, logo: darkLogo, isDark: true })},
     Component: lazy(async () => import('./${name}/README.mdx')),
     metadata: ${camelCase(name)},
   },`
   );
 }
 
-await fs.appendFile(filename, ']);\n');
+await fs.appendFile(filename, `]);
+/* eslint-enable max-lines */\n`);
