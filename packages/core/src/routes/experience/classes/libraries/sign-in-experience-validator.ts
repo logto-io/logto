@@ -50,6 +50,9 @@ export class SignInExperienceValidator {
     private readonly queries: Queries
   ) {}
 
+  /**
+   * @throws {RequestError} with status 403 if the interaction event is not allowed
+   */
   public async guardInteractionEvent(event: InteractionEvent) {
     const { signInMode } = await this.getSignInExperienceData();
 
@@ -74,17 +77,15 @@ export class SignInExperienceValidator {
     }
   }
 
-  public async verifyIdentificationMethod(
-    event: InteractionEvent,
+  public async guardIdentificationMethod(
+    event: InteractionEvent.ForgotPassword | InteractionEvent.SignIn,
     verificationRecord: VerificationRecord
   ) {
+    await this.guardInteractionEvent(event);
+
     switch (event) {
       case InteractionEvent.SignIn: {
         await this.guardSignInVerificationMethod(verificationRecord);
-        break;
-      }
-      case InteractionEvent.Register: {
-        await this.guardRegisterVerificationMethod(verificationRecord);
         break;
       }
       case InteractionEvent.ForgotPassword: {
@@ -92,8 +93,6 @@ export class SignInExperienceValidator {
         break;
       }
     }
-
-    await this.guardSsoOnlyEmailIdentifier(verificationRecord);
   }
 
   public async getEnabledSsoConnectorsByEmail(email: string) {
@@ -169,8 +168,7 @@ export class SignInExperienceValidator {
    * Email identifier with SSO enabled domain will be blocked.
    * Can only verify/identify via SSO verification record.
    *
-   * - VerificationCode with email identifier
-   * - Social userinfo with email
+   * @throws {RequestError} with status 422 if the email identifier is SSO enabled
    **/
   private async guardSsoOnlyEmailIdentifier(verificationRecord: VerificationRecord) {
     const emailIdentifier = getEmailIdentifierFromVerificationRecord(verificationRecord);
@@ -195,6 +193,10 @@ export class SignInExperienceValidator {
     );
   }
 
+  /**
+   * @throws {RequestError} with status 422 if the verification record type is not enabled
+   * @throws {RequestError} with status 422 if the email identifier is SSO enabled
+   */
   private async guardSignInVerificationMethod(verificationRecord: VerificationRecord) {
     const {
       signIn: { methods: signInMethods },
@@ -236,56 +238,8 @@ export class SignInExperienceValidator {
         throw new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 });
       }
     }
-  }
 
-  private async guardRegisterVerificationMethod(verificationRecord: VerificationRecord) {
-    const { signUp, singleSignOnEnabled } = await this.getSignInExperienceData();
-
-    switch (verificationRecord.type) {
-      // Username and password registration
-      case VerificationType.NewPasswordIdentity: {
-        const {
-          identifier: { type },
-        } = verificationRecord;
-
-        assertThat(
-          signUp.identifiers.includes(type) && signUp.password,
-          new RequestError({ code: 'user.sign_up_method_not_enabled', status: 422 })
-        );
-        break;
-      }
-      case VerificationType.EmailVerificationCode:
-      case VerificationType.PhoneVerificationCode: {
-        const {
-          identifier: { type },
-        } = verificationRecord;
-
-        assertThat(
-          signUp.identifiers.includes(type) && signUp.verify,
-          new RequestError({ code: 'user.sign_up_method_not_enabled', status: 422 })
-        );
-
-        assertThat(
-          !signUp.password,
-          new RequestError({ code: 'user.password_required_in_profile', status: 422 })
-        );
-        break;
-      }
-      case VerificationType.Social: {
-        // No need to verify social verification method
-        break;
-      }
-      case VerificationType.EnterpriseSso: {
-        assertThat(
-          singleSignOnEnabled,
-          new RequestError({ code: 'user.sign_up_method_not_enabled', status: 422 })
-        );
-        break;
-      }
-      default: {
-        throw new RequestError({ code: 'user.sign_up_method_not_enabled', status: 422 });
-      }
-    }
+    await this.guardSsoOnlyEmailIdentifier(verificationRecord);
   }
 
   /** Forgot password only supports verification code type verification record */

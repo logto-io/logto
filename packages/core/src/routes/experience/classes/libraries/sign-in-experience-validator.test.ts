@@ -1,5 +1,3 @@
-/* eslint-disable max-lines */
-import { type LogtoErrorCode } from '@logto/phrases';
 import {
   InteractionEvent,
   type SignInExperience,
@@ -318,13 +316,13 @@ describe('SignInExperienceValidator', () => {
 
         await (accepted
           ? expect(
-              signInExperienceSettings.verifyIdentificationMethod(
+              signInExperienceSettings.guardIdentificationMethod(
                 InteractionEvent.SignIn,
                 verificationRecord
               )
             ).resolves.not.toThrow()
           : expect(
-              signInExperienceSettings.verifyIdentificationMethod(
+              signInExperienceSettings.guardIdentificationMethod(
                 InteractionEvent.SignIn,
                 verificationRecord
               )
@@ -332,162 +330,6 @@ describe('SignInExperienceValidator', () => {
               new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 })
             ));
       });
-    });
-  });
-
-  describe('verifyIdentificationMethod (Register)', () => {
-    const registerVerificationTestCases: Record<
-      string,
-      {
-        signInExperience: SignInExperience;
-        cases: Array<{
-          verificationRecord: VerificationRecord;
-          accepted: boolean;
-          errorCode?: LogtoErrorCode;
-        }>;
-      }
-    > = Object.freeze({
-      'only username is enabled for sign-up': {
-        signInExperience: mockSignInExperience,
-        cases: [
-          {
-            verificationRecord: newPasswordIdentityVerificationRecord,
-            accepted: true,
-          },
-          {
-            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Email],
-            accepted: false,
-          },
-          {
-            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Phone],
-            accepted: false,
-          },
-        ],
-      },
-      'email is enabled for sign-up': {
-        signInExperience: {
-          ...mockSignInExperience,
-          signUp: {
-            identifiers: [SignInIdentifier.Email],
-            password: false,
-            verify: true,
-          },
-        },
-        cases: [
-          {
-            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Email],
-            accepted: true,
-          },
-          {
-            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Phone],
-            accepted: false,
-          },
-          {
-            verificationRecord: emailNewPasswordIdentityVerificationRecord,
-            accepted: false,
-          },
-        ],
-      },
-      'email and phone are enabled for sign-up': {
-        signInExperience: {
-          ...mockSignInExperience,
-          signUp: {
-            identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
-            password: false,
-            verify: true,
-          },
-        },
-        cases: [
-          {
-            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Email],
-            accepted: true,
-          },
-          {
-            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Phone],
-            accepted: true,
-          },
-        ],
-      },
-      'email are enabled for sign-up but password is required': {
-        signInExperience: {
-          ...mockSignInExperience,
-          signUp: {
-            identifiers: [SignInIdentifier.Email],
-            password: true,
-            verify: true,
-          },
-        },
-        cases: [
-          {
-            verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Email],
-            accepted: false,
-            errorCode: 'user.password_required_in_profile',
-          },
-          {
-            verificationRecord: emailNewPasswordIdentityVerificationRecord,
-            accepted: true,
-          },
-        ],
-      },
-      'enterprise sso enabled': {
-        signInExperience: {
-          ...mockSignInExperience,
-          singleSignOnEnabled: true,
-        },
-        cases: [
-          {
-            verificationRecord: enterpriseSsoVerificationRecords,
-            accepted: true,
-          },
-        ],
-      },
-      'enterprise sso disabled': {
-        signInExperience: {
-          ...mockSignInExperience,
-          singleSignOnEnabled: false,
-        },
-        cases: [
-          {
-            verificationRecord: enterpriseSsoVerificationRecords,
-            accepted: false,
-          },
-        ],
-      },
-    });
-
-    describe.each(Object.keys(registerVerificationTestCases))(`%s`, (testCase) => {
-      const { signInExperience, cases } = registerVerificationTestCases[testCase]!;
-
-      it.each(cases)(
-        'guard verification record %p',
-        async ({ verificationRecord, accepted, errorCode }) => {
-          signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce(signInExperience);
-
-          const signInExperienceSettings = new SignInExperienceValidator(
-            mockTenant.libraries,
-            mockTenant.queries
-          );
-
-          await (accepted
-            ? expect(
-                signInExperienceSettings.verifyIdentificationMethod(
-                  InteractionEvent.Register,
-                  verificationRecord
-                )
-              ).resolves.not.toThrow()
-            : expect(
-                signInExperienceSettings.verifyIdentificationMethod(
-                  InteractionEvent.Register,
-                  verificationRecord
-                )
-              ).rejects.toMatchError(
-                new RequestError({
-                  code: errorCode ?? 'user.sign_up_method_not_enabled',
-                  status: 422,
-                })
-              ));
-        }
-      );
     });
   });
 
@@ -515,7 +357,7 @@ describe('SignInExperienceValidator', () => {
       );
 
       await expect(
-        signInExperienceSettings.verifyIdentificationMethod(
+        signInExperienceSettings.guardIdentificationMethod(
           InteractionEvent.SignIn,
           passwordVerificationRecords[SignInIdentifier.Email]
         )
@@ -531,7 +373,7 @@ describe('SignInExperienceValidator', () => {
       );
 
       await expect(
-        signInExperienceSettings.verifyIdentificationMethod(
+        signInExperienceSettings.guardIdentificationMethod(
           InteractionEvent.SignIn,
           verificationCodeVerificationRecords[SignInIdentifier.Email]
         )
@@ -547,7 +389,7 @@ describe('SignInExperienceValidator', () => {
       );
 
       await expect(
-        signInExperienceSettings.verifyIdentificationMethod(
+        signInExperienceSettings.guardIdentificationMethod(
           InteractionEvent.SignIn,
           socialVerificationRecord
         )
@@ -555,4 +397,3 @@ describe('SignInExperienceValidator', () => {
     });
   });
 });
-/* eslint-enable max-lines */

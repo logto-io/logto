@@ -58,7 +58,7 @@ devFeatureTest.describe('password verifications', () => {
       );
     });
 
-    it('should throw error if email is registered', async () => {
+    it('email password is not supported', async () => {
       const { primaryEmail, password } = generateNewUserProfile({
         primaryEmail: true,
         password: true,
@@ -77,33 +77,8 @@ devFeatureTest.describe('password verifications', () => {
           password,
         }),
         {
-          code: 'user.email_already_in_use',
-          status: 422,
-        }
-      );
-    });
-
-    it('should throw error if phone is registered', async () => {
-      const { primaryPhone, password } = generateNewUserProfile({
-        primaryPhone: true,
-        password: true,
-      });
-
-      await userApi.create({ primaryPhone, password });
-
-      const client = await initExperienceClient();
-
-      await expectRejects(
-        client.createNewPasswordIdentityVerification({
-          identifier: {
-            type: SignInIdentifier.Phone,
-            value: primaryPhone,
-          },
-          password,
-        }),
-        {
-          code: 'user.phone_already_in_use',
-          status: 422,
+          code: 'guard.invalid_input',
+          status: 400,
         }
       );
     });

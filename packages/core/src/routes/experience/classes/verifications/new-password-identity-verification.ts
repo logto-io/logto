@@ -98,7 +98,7 @@ export class NewPasswordIdentityVerification
    * @throws {RequestError} with status 422 if the password is not provided
    * @throws {RequestError} with status 422 if the password does not meet the password policy
    */
-  async verify(password?: string) {
+  async verify(password: string) {
     const { identifier } = this;
     const identifierProfile = interactionIdentifierToUserProfile(identifier);
     await this.profileValidator.guardProfileUniquenessAcrossUsers(identifierProfile);

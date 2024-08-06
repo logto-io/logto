@@ -122,8 +122,11 @@ export const backupCodeVerificationVerifyPayloadGuard = z.object({
 
 /** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {
-  /** The ID of the verification record that is used to identify the user. */
-  verificationId: string;
+  /**
+   * The ID of the verification record that is used to identify the user.
+   * Optional for the register interaction event
+   */
+  verificationId?: string;
   /**
    * Link social identity to a related user account with the same email or phone.
    * Only applicable for social verification records and a related user account is found.
@@ -131,7 +134,7 @@ export type IdentificationApiPayload = {
   linkSocialIdentity?: boolean;
 };
 export const identificationApiPayloadGuard = z.object({
-  verificationId: z.string(),
+  verificationId: z.string().optional(),
   linkSocialIdentity: z.boolean().optional(),
 }) satisfies ToZodObject<IdentificationApiPayload>;
 
@@ -147,7 +150,7 @@ export const CreateExperienceApiPayloadGuard = z.object({
 export const updateProfileApiPayloadGuard = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(SignInIdentifier.Username),
-    value: z.string(),
+    value: z.string().regex(usernameRegEx),
   }),
   z.object({
     type: z.literal('password'),
@@ -159,6 +162,10 @@ export const updateProfileApiPayloadGuard = z.discriminatedUnion('type', [
   }),
   z.object({
     type: z.literal(SignInIdentifier.Phone),
+    verificationId: z.string(),
+  }),
+  z.object({
+    type: z.literal('social'),
     verificationId: z.string(),
   }),
 ]);
