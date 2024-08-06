@@ -9,6 +9,7 @@ import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { organizationAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -32,7 +33,6 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const {
     currentPlan,
     currentSubscription: { planId },
-    logtoSkus,
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const isOrganizationsDisabled =
@@ -40,7 +40,6 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     !(isDevFeaturesEnabled
       ? currentSubscriptionQuota.organizationsEnabled
       : currentPlan.quota.organizationsEnabled);
-  const addOnUnitPrice = logtoSkus.find(({ id }) => id === planId)?.unitPrice ?? 0;
 
   const {
     reset,
@@ -95,7 +94,7 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
                   }}
                 >
                   {t('upsell.add_on.footer.organization', {
-                    price: Number(addOnUnitPrice) / 100,
+                    price: organizationAddOnUnitPrice,
                     planName: t('subscription.pro_plan'),
                   })}
                 </Trans>

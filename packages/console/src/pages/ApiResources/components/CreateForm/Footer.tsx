@@ -7,6 +7,7 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isDevFeaturesEnabled } from '@/consts/env';
+import { resourceAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
@@ -23,13 +24,11 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     currentPlan,
-    logtoSkus,
     currentSubscription: { planId },
     currentSubscriptionUsage: { resourcesLimit },
     currentSku,
   } = useContext(SubscriptionDataContext);
   const { hasReachedLimit } = useApiResourcesUsage();
-  const addOnUnitPrice = logtoSkus.find(({ id }) => id === planId)?.unitPrice ?? 0;
 
   if (
     hasReachedLimit &&
@@ -68,7 +67,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
           }}
         >
           {t('upsell.add_on.footer.api_resource', {
-            price: Number(addOnUnitPrice) / 100,
+            price: resourceAddOnUnitPrice,
           })}
         </Trans>
       </AddOnNoticeFooter>

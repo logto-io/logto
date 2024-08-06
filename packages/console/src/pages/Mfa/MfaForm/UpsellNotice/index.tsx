@@ -2,6 +2,7 @@ import { ReservedPlanId } from '@logto/schemas';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+import { mfaAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
@@ -15,13 +16,11 @@ function UpsellNotice({ className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     currentSubscription: { planId },
-    logtoSkus,
   } = useContext(SubscriptionDataContext);
   const {
     data: { mfaUpsellNoticeAcknowledged },
     update,
   } = useUserPreferences();
-  const addOnUnitPrice = logtoSkus.find(({ id }) => id === planId)?.unitPrice ?? 0;
 
   if (planId !== ReservedPlanId.Pro || mfaUpsellNoticeAcknowledged) {
     return null;
@@ -41,7 +40,7 @@ function UpsellNotice({ className }: Props) {
         }}
       >
         {t('upsell.add_on.mfa_inline_notification', {
-          price: Number(addOnUnitPrice) / 100,
+          price: mfaAddOnUnitPrice,
           planName: String(t('subscription.pro_plan')),
         })}
       </Trans>

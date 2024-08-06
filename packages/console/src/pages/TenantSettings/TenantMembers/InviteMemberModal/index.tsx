@@ -9,6 +9,7 @@ import ReactModal from 'react-modal';
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import { isDevFeaturesEnabled } from '@/consts/env';
+import { tenantMembersAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
@@ -40,9 +41,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const { show } = useConfirmModal();
   const {
     currentSubscription: { planId },
-    logtoSkus,
   } = useContext(SubscriptionDataContext);
-  const addOnUnitPrice = logtoSkus.find(({ id }) => id === planId)?.unitPrice ?? 0;
 
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
@@ -137,7 +136,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
                   }}
                 >
                   {t('upsell.add_on.footer.tenant_members', {
-                    price: Number(addOnUnitPrice) / 100,
+                    price: tenantMembersAddOnUnitPrice,
                   })}
                 </Trans>
               </AddOnNoticeFooter>

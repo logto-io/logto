@@ -18,6 +18,7 @@ import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { enterpriseSsoAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -48,7 +49,6 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     currentPlan,
-    logtoSkus,
     currentSubscription: { planId },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
@@ -60,7 +60,6 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
       ? currentSubscriptionQuota.enterpriseSsoLimit === null ||
         currentSubscriptionQuota.enterpriseSsoLimit > 0
       : currentPlan.quota.ssoEnabled);
-  const addOnUnitPrice = logtoSkus.find(({ id }) => id === planId)?.unitPrice ?? 0;
 
   const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
     'api/sso-connector-providers'
@@ -160,7 +159,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
                   }}
                 >
                   {t('upsell.add_on.footer.enterprise_sso', {
-                    price: Number(addOnUnitPrice) / 100,
+                    price: enterpriseSsoAddOnUnitPrice,
                     planName: t('subscription.pro_plan'),
                   })}
                 </Trans>

@@ -7,6 +7,7 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isDevFeaturesEnabled } from '@/consts/env';
+import { machineToMachineAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
@@ -22,14 +23,13 @@ type Props = {
 };
 
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
-  const { currentPlan, currentSku, logtoSkus } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSku } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
   const {
     hasAppsReachedLimit,
     hasMachineToMachineAppsReachedLimit,
     hasThirdPartyAppsReachedLimit,
   } = useApplicationsUsage();
-  const addOnUnitPrice = logtoSkus.find(({ id }) => id === currentPlan.id)?.unitPrice ?? 0;
 
   if (selectedType) {
     const { id: planId, name: planName, quota } = currentPlan;
@@ -52,7 +52,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
             }}
           >
             {t('add_on.footer.machine_to_machine_app', {
-              price: Number(addOnUnitPrice) / 100,
+              price: machineToMachineAddOnUnitPrice,
             })}
           </Trans>
         </AddOnNoticeFooter>
