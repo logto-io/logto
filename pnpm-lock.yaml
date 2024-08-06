@@ -3036,6 +3036,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      '@vitejs/plugin-react':
+        specifier: ^4.3.1
+        version: 4.3.1(vite@5.3.4(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -3072,6 +3075,9 @@ importers:
       vite:
         specifier: ^5.3.4
         version: 5.3.4(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8)
+      vite-plugin-compression:
+        specifier: ^0.5.1
+        version: 0.5.1(vite@5.3.4(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8))
       zod:
         specifier: ^3.23.8
         version: 3.23.8
