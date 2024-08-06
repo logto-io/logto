@@ -105,7 +105,7 @@ describe('ExperienceInteraction class', () => {
       );
 
       experienceInteraction.setVerificationRecord(emailVerificationRecord);
-      await experienceInteraction.identifyUser(emailVerificationRecord.id);
+      await experienceInteraction.createUser(emailVerificationRecord.id);
 
       expect(userLibraries.insertUser).toHaveBeenCalledWith(
         {

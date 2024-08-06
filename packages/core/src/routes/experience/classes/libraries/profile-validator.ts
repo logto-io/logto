@@ -132,15 +132,17 @@ export class ProfileValidator {
   // eslint-disable-next-line complexity
   public getMissingUserProfile(
     profile: InteractionProfile,
-    user: User,
-    mandatoryUserProfile: Set<MissingProfile>
+    mandatoryUserProfile: Set<MissingProfile>,
+    user?: User
   ): Set<MissingProfile> {
     const missingProfile = new Set<MissingProfile>();
 
     if (mandatoryUserProfile.has(MissingProfile.password)) {
-      // Social and enterprise SSO identities can take place the role of password
-      const isUserPasswordSet =
-        Boolean(user.passwordEncrypted) || Object.keys(user.identities).length > 0;
+      const isUserPasswordSet = user
+        ? // Social and enterprise SSO identities can take place the role of password
+          Boolean(user.passwordEncrypted) || Object.keys(user.identities).length > 0
+        : false;
+
       const isProfilePasswordSet = Boolean(
         profile.passwordEncrypted ?? profile.socialIdentity ?? profile.enterpriseSsoIdentity
       );
@@ -150,14 +152,14 @@ export class ProfileValidator {
       }
     }
 
-    if (mandatoryUserProfile.has(MissingProfile.username) && !user.username && !profile.username) {
+    if (mandatoryUserProfile.has(MissingProfile.username) && !user?.username && !profile.username) {
       missingProfile.add(MissingProfile.username);
     }
 
     if (
       mandatoryUserProfile.has(MissingProfile.emailOrPhone) &&
-      !user.primaryPhone &&
-      !user.primaryEmail &&
+      !user?.primaryPhone &&
+      !user?.primaryEmail &&
       !profile.primaryPhone &&
       !profile.primaryEmail
     ) {
@@ -166,7 +168,7 @@ export class ProfileValidator {
 
     if (
       mandatoryUserProfile.has(MissingProfile.email) &&
-      !user.primaryEmail &&
+      !user?.primaryEmail &&
       !profile.primaryEmail
     ) {
       missingProfile.add(MissingProfile.email);
@@ -174,7 +176,7 @@ export class ProfileValidator {
 
     if (
       mandatoryUserProfile.has(MissingProfile.phone) &&
-      !user.primaryPhone &&
+      !user?.primaryPhone &&
       !profile.primaryPhone
     ) {
       missingProfile.add(MissingProfile.phone);

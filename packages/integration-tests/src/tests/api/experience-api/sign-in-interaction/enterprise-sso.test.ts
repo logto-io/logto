@@ -1,19 +1,30 @@
-import { MfaFactor, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
 import { createUserMfaVerification, deleteUser, getUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
+import { initExperienceClient } from '#src/helpers/client.js';
+import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import { signInWithEnterpriseSso } from '#src/helpers/experience/index.js';
-import { enableMandatoryMfaWithTotp } from '#src/helpers/sign-in-experience.js';
-import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import {
+  successfullySendVerificationCode,
+  successfullyVerifyVerificationCode,
+} from '#src/helpers/experience/verification-code.js';
+import { expectRejects } from '#src/helpers/index.js';
+import {
+  enableAllVerificationCodeSignInMethods,
+  enableMandatoryMfaWithTotp,
+} from '#src/helpers/sign-in-experience.js';
+import { generateNewUser, UserApiTest } from '#src/helpers/user.js';
+import { devFeatureTest, generateEmail, generatePassword } from '#src/utils.js';
 
 devFeatureTest.describe('enterprise sso sign-in and sign-up', () => {
   const ssoConnectorApi = new SsoConnectorApi();
   const domain = 'foo.com';
   const enterpriseSsoIdentityId = generateStandardId();
   const email = generateEmail(domain);
+  const userApi = new UserApiTest();
 
   beforeAll(async () => {
     await ssoConnectorApi.createMockOidcConnector([domain]);
@@ -24,7 +35,7 @@ devFeatureTest.describe('enterprise sso sign-in and sign-up', () => {
   });
 
   afterAll(async () => {
-    await ssoConnectorApi.cleanUp();
+    await Promise.all([ssoConnectorApi.cleanUp(), userApi.cleanUp()]);
   });
 
   it('should successfully sign-up with enterprise sso and sync email', async () => {
@@ -119,6 +130,62 @@ devFeatureTest.describe('enterprise sso sign-in and sign-up', () => {
       });
 
       await deleteUser(userId);
+    });
+  });
+
+  describe('should block email identifier from non-enterprise sso verifications if the SSO is enabled', () => {
+    const password = generatePassword();
+    const email = generateEmail(domain);
+    const identifier = Object.freeze({ type: SignInIdentifier.Email, value: email });
+
+    beforeAll(async () => {
+      await Promise.all([setEmailConnector(), setSmsConnector()]);
+      await enableAllVerificationCodeSignInMethods();
+      await userApi.create({ primaryEmail: email, password });
+    });
+
+    it('should reject when trying to sign-in with email verification code', async () => {
+      const client = await initExperienceClient();
+
+      const { verificationId, code } = await successfullySendVerificationCode(client, {
+        identifier,
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await successfullyVerifyVerificationCode(client, {
+        identifier,
+        verificationId,
+        code,
+      });
+
+      await expectRejects(
+        client.identifyUser({
+          verificationId,
+        }),
+        {
+          code: `session.sso_enabled`,
+          status: 422,
+        }
+      );
+    });
+
+    it('should reject when trying to sign-in with email password', async () => {
+      const client = await initExperienceClient();
+
+      const { verificationId } = await client.verifyPassword({
+        identifier,
+        password,
+      });
+
+      await expectRejects(
+        client.identifyUser({
+          verificationId,
+        }),
+        {
+          code: `session.sso_enabled`,
+          status: 422,
+        }
+      );
     });
   });
 });

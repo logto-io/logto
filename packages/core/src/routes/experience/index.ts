@@ -14,8 +14,10 @@ import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas'
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
@@ -109,7 +111,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     experienceRoutes.identification,
     koaGuard({
       body: identificationApiPayloadGuard,
-      status: [201, 204, 400, 401, 404, 409, 422],
+      status: [201, 204, 400, 401, 403, 404, 409, 422],
     }),
     async (ctx, next) => {
       const { verificationId, linkSocialIdentity } = ctx.guard.body;
@@ -126,7 +128,19 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
         },
       });
 
-      await experienceInteraction.identifyUser(verificationId, linkSocialIdentity, log);
+      if (experienceInteraction.interactionEvent === InteractionEvent.Register) {
+        await experienceInteraction.createUser(verificationId, log);
+      } else {
+        assertThat(
+          verificationId,
+          new RequestError({
+            code: 'guard.invalid_input',
+            status: 400,
+            details: 'verificationId is missing',
+          })
+        );
+        await experienceInteraction.identifyUser(verificationId, linkSocialIdentity, log);
+      }
 
       await experienceInteraction.save();
 

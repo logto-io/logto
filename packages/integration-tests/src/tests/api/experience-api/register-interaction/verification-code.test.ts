@@ -15,7 +15,7 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generatePassword, generatePhone } from '#src/utils.js';
+import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
 
 const verificationIdentifierType: readonly [SignInIdentifier.Email, SignInIdentifier.Phone] =
   Object.freeze([SignInIdentifier.Email, SignInIdentifier.Phone]);
@@ -120,50 +120,6 @@ devFeatureTest.describe('Register interaction with verification code happy path'
     });
 
     it.each(verificationIdentifierType)(
-      'Should throw identifier not verified error when trying to fulfill password without verifying %p identifier',
-      async (identifier) => {
-        const client = await initExperienceClient(InteractionEvent.Register);
-        const interactionIdentifier = {
-          type: identifier,
-          value: identifier === SignInIdentifier.Email ? generateEmail() : generatePhone(),
-        };
-
-        const { verificationId } = await client.createNewPasswordIdentityVerification({
-          identifier: interactionIdentifier,
-          password: generatePassword(),
-        });
-
-        await expectRejects(client.identifyUser({ verificationId }), {
-          code: 'session.identifier_not_verified',
-          status: 422,
-        });
-
-        const { verificationId: codeVerificationId, code } = await successfullySendVerificationCode(
-          client,
-          {
-            identifier: interactionIdentifier,
-            interactionEvent: InteractionEvent.Register,
-          }
-        );
-
-        await successfullyVerifyVerificationCode(client, {
-          identifier: interactionIdentifier,
-          verificationId: codeVerificationId,
-          code,
-        });
-
-        await client.identifyUser({ verificationId });
-
-        const { redirectTo } = await client.submitInteraction();
-
-        const userId = await processSession(client, redirectTo);
-        await logoutClient(client);
-
-        await deleteUser(userId);
-      }
-    );
-
-    it.each(verificationIdentifierType)(
       'Should fail to sign-up with existing %p identifier and directly sign-in instead',
       async (identifierType) => {
         const { userProfile, user } = await generateNewUser({
@@ -192,16 +148,6 @@ devFeatureTest.describe('Register interaction with verification code happy path'
         await expectRejects(
           client.identifyUser({
             verificationId,
-          }),
-          {
-            code: `user.password_required_in_profile`,
-            status: 422,
-          }
-        );
-
-        await expectRejects(
-          client.createNewPasswordIdentityVerification({
-            identifier,
           }),
           {
             code: `user.${identifierType}_already_in_use`,

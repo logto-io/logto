@@ -117,19 +117,15 @@ export const registerNewUserWithVerificationCode = async (
 
   if (options?.fulfillPassword) {
     await expectRejects(client.identifyUser({ verificationId }), {
-      code: 'user.password_required_in_profile',
+      code: 'user.missing_profile',
       status: 422,
     });
 
     const password = generatePassword();
 
-    const { verificationId: newPasswordIdentityVerificationId } =
-      await client.createNewPasswordIdentityVerification({
-        identifier,
-        password,
-      });
+    await client.updateProfile({ type: 'password', value: password });
 
-    await client.identifyUser({ verificationId: newPasswordIdentityVerificationId });
+    await client.identifyUser();
   } else {
     await client.identifyUser({ verificationId });
   }
