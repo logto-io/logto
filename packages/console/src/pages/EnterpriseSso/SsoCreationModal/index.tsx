@@ -1,8 +1,10 @@
 import {
+  ReservedPlanId,
   type RequestErrorBody,
   type SsoConnectorProvidersResponse,
   type SsoConnectorWithProviderConfig,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 import { useContext, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,6 +12,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
@@ -21,6 +24,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
@@ -42,7 +46,12 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const {
+    currentPlan,
+    logtoSkus,
+    currentSubscription: { planId },
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
   const [selectedProviderName, setSelectedProviderName] = useState<string>();
 
   const isSsoEnabled =
@@ -51,6 +60,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
       ? currentSubscriptionQuota.enterpriseSsoLimit === null ||
         currentSubscriptionQuota.enterpriseSsoLimit > 0
       : currentPlan.quota.ssoEnabled);
+  const addOnUnitPrice = logtoSkus.find(({ id }) => id === planId)?.unitPrice ?? 0;
 
   const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
     'api/sso-connector-providers'
@@ -133,8 +143,31 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     >
       <ModalLayout
         title="enterprise_sso.create_modal.title"
+        paywall={conditional(
+          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+        )}
         footer={
-          isSsoEnabled ? (
+          conditional(
+            isDevFeaturesEnabled && planId === ReservedPlanId.Pro && (
+              <AddOnNoticeFooter
+                buttonTitle="enterprise_sso.create_modal.create_button_text"
+                onClick={onSubmit}
+              >
+                <Trans
+                  components={{
+                    span: <span className={styles.strong} />,
+                    a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                  }}
+                >
+                  {t('upsell.add_on.footer.enterprise_sso', {
+                    price: Number(addOnUnitPrice) / 100,
+                    planName: t('subscription.pro_plan'),
+                  })}
+                </Trans>
+              </AddOnNoticeFooter>
+            )
+          ) ??
+          (isSsoEnabled ? (
             <Button
               title="enterprise_sso.create_modal.create_button_text"
               type="primary"
@@ -157,7 +190,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
                 {t('upsell.paywall.sso_connectors')}
               </Trans>
             </QuotaGuardFooter>
-          )
+          ))
         }
         size="xlarge"
         onClose={onClose}

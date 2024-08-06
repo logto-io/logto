@@ -1,9 +1,11 @@
-import { type Organization, type CreateOrganization } from '@logto/schemas';
+import { type Organization, type CreateOrganization, ReservedPlanId } from '@logto/schemas';
+import { cond, conditional } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
+import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
@@ -12,9 +14,12 @@ import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
+
+import styles from './index.module.scss';
 
 type Props = {
   readonly isOpen: boolean;
@@ -24,12 +29,18 @@ type Props = {
 function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const {
+    currentPlan,
+    currentSubscription: { planId },
+    logtoSkus,
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
   const isOrganizationsDisabled =
     isCloud &&
     !(isDevFeaturesEnabled
       ? currentSubscriptionQuota.organizationsEnabled
       : currentPlan.quota.organizationsEnabled);
+  const addOnUnitPrice = logtoSkus.find(({ id }) => id === planId)?.unitPrice ?? 0;
 
   const {
     reset,
@@ -66,8 +77,32 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     >
       <ModalLayout
         title="organizations.create_organization"
+        paywall={conditional(
+          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+        )}
         footer={
-          isOrganizationsDisabled ? (
+          cond(
+            isDevFeaturesEnabled && planId === ReservedPlanId.Pro && (
+              <AddOnNoticeFooter
+                isLoading={isSubmitting}
+                buttonTitle="general.create"
+                onClick={submit}
+              >
+                <Trans
+                  components={{
+                    span: <span className={styles.strong} />,
+                    a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                  }}
+                >
+                  {t('upsell.add_on.footer.organization', {
+                    price: Number(addOnUnitPrice) / 100,
+                    planName: t('subscription.pro_plan'),
+                  })}
+                </Trans>
+              </AddOnNoticeFooter>
+            )
+          ) ??
+          (isOrganizationsDisabled ? (
             <QuotaGuardFooter>
               <Trans
                 components={{
@@ -84,7 +119,7 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
               isLoading={isSubmitting}
               onClick={submit}
             />
-          )
+          ))
         }
         onClose={onClose}
       >

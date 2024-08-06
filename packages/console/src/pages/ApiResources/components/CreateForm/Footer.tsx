@@ -2,13 +2,17 @@ import { ReservedPlanId } from '@logto/schemas';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
+import TextLink from '@/ds-components/TextLink';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
+
+import styles from './index.module.scss';
 
 type Props = {
   readonly isCreationLoading: boolean;
@@ -19,10 +23,13 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     currentPlan,
+    logtoSkus,
+    currentSubscription: { planId },
     currentSubscriptionUsage: { resourcesLimit },
     currentSku,
   } = useContext(SubscriptionDataContext);
   const { hasReachedLimit } = useApiResourcesUsage();
+  const addOnUnitPrice = logtoSkus.find(({ id }) => id === planId)?.unitPrice ?? 0;
 
   if (
     hasReachedLimit &&
@@ -44,6 +51,27 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
           })}
         </Trans>
       </QuotaGuardFooter>
+    );
+  }
+
+  if (isDevFeaturesEnabled && planId === ReservedPlanId.Pro) {
+    return (
+      <AddOnNoticeFooter
+        isLoading={isCreationLoading}
+        buttonTitle="api_resources.create"
+        onClick={onClickCreate}
+      >
+        <Trans
+          components={{
+            span: <span className={styles.strong} />,
+            a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+          }}
+        >
+          {t('upsell.add_on.footer.api_resource', {
+            price: Number(addOnUnitPrice) / 100,
+          })}
+        </Trans>
+      </AddOnNoticeFooter>
     );
   }
 

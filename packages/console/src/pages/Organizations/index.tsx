@@ -25,7 +25,11 @@ const organizationsPathname = '/organizations';
 
 function Organizations() {
   const { getDocumentationUrl } = useDocumentationUrl();
-  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const {
+    currentPlan,
+    currentSubscription: { planId },
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
 
   const { navigate } = useTenantPathname();
@@ -60,7 +64,11 @@ function Organizations() {
       <PageMeta titleKey="organizations.page_title" />
       <div className={pageLayout.headline}>
         <CardTitle
-          paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
+          paywall={
+            isDevFeaturesEnabled
+              ? cond(planId === ReservedPlanId.Pro && ReservedPlanId.Pro)
+              : cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)
+          }
           title="organizations.title"
           subtitle="organizations.subtitle"
           learnMoreLink={{
