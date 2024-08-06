@@ -80,7 +80,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         }
 
         await onSubmit({
-          [type]: value,
+          identifier: { type, value },
           password,
         });
       })(event);
