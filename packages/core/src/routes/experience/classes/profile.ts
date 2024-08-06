@@ -185,10 +185,6 @@ export class Profile {
     this.#data = {};
   }
 
-  get notEmpty() {
-    return Object.keys(this.#data).length > 0;
-  }
-
   /**
    * Safely get the identified user from the interaction context.
    * If the interaction event is register, the user will be retrieved safely.
