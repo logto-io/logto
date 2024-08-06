@@ -99,13 +99,50 @@ describe('encryptUserPassword()', () => {
 describe('verifyUserPassword()', () => {
   const { verifyUserPassword } = createUserLibrary(queries);
 
-  describe('Argon2', () => {
+  describe('Argon2i', () => {
     it('resolves when password is correct', async () => {
       await expect(verifyUserPassword(mockUser, 'password')).resolves.not.toThrowError();
     });
 
     it('rejects when password is incorrect', async () => {
       await expect(verifyUserPassword(mockUser, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('Argon2d', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: '$argon2d$v=19$m=16,t=2,p=1$VW1JcEJrMjN1Vnp3Tm5JUA$Ddl/I6Zem7vbZ4r5jPCb/g',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2d,
+    };
+
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
+        new RequestError({ code: 'session.invalid_credentials', status: 422 })
+      );
+    });
+  });
+
+  describe('Argon2id', () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted:
+        '$argon2id$v=19$m=16,t=2,p=1$VW1JcEJrMjN1Vnp3Tm5JUA$0uzNwxbjs/f/1e5r4uX7JQ',
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2id,
+    };
+
+    it('resolves when password is correct', async () => {
+      await expect(verifyUserPassword(user, 'password')).resolves.not.toThrowError();
+    });
+
+    it('rejects when password is incorrect', async () => {
+      await expect(verifyUserPassword(user, 'wrong')).rejects.toThrowError(
         new RequestError({ code: 'session.invalid_credentials', status: 422 })
       );
     });
