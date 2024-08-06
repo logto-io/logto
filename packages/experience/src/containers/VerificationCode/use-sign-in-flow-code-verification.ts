@@ -1,13 +1,9 @@
-import type { EmailVerificationCodePayload, PhoneVerificationCodePayload } from '@logto/schemas';
-import { SignInIdentifier, SignInMode } from '@logto/schemas';
+import { SignInIdentifier, SignInMode, type VerificationCodeIdentifier } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  registerWithVerifiedIdentifier,
-  signInWithVerificationCodeIdentifier,
-} from '@/apis/interaction';
+import { identifyWithVerificationCode, registerWithVerifiedIdentifier } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
@@ -15,15 +11,14 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
-import type { VerificationCodeIdentifier } from '@/types';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
 
 const useSignInFlowCodeVerification = (
-  method: VerificationCodeIdentifier,
-  target: string,
+  identifier: VerificationCodeIdentifier,
+  verificationId: string,
   errorCallback?: () => void
 ) => {
   const { t } = useTranslation();
@@ -31,10 +26,9 @@ const useSignInFlowCodeVerification = (
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
   const { signInMode } = useSieMethods();
-
   const handleError = useErrorHandler();
   const registerWithIdentifierAsync = useApi(registerWithVerifiedIdentifier);
-  const asyncSignInWithVerificationCodeIdentifier = useApi(signInWithVerificationCodeIdentifier);
+  const asyncSignInWithVerificationCodeIdentifier = useApi(identifyWithVerificationCode);
 
   const { errorMessage, clearErrorMessage, generalVerificationCodeErrorHandlers } =
     useGeneralVerificationCodeErrorHandler();
@@ -44,9 +38,11 @@ const useSignInFlowCodeVerification = (
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
   const identifierNotExistErrorHandler = useCallback(async () => {
+    const { type, value } = identifier;
+
     // Should not redirect user to register if is sign-in only mode or bind social flow
     if (signInMode === SignInMode.SignIn) {
-      void showIdentifierErrorAlert(IdentifierErrorType.IdentifierNotExist, method, target);
+      void showIdentifierErrorAlert(IdentifierErrorType.IdentifierNotExist, type, value);
 
       return;
     }
@@ -54,16 +50,12 @@ const useSignInFlowCodeVerification = (
     show({
       confirmText: 'action.create',
       ModalContent: t('description.sign_in_id_does_not_exist', {
-        type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
+        type: t(`description.${type === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
         value:
-          method === SignInIdentifier.Phone
-            ? formatPhoneNumberWithCountryCallingCode(target)
-            : target,
+          type === SignInIdentifier.Phone ? formatPhoneNumberWithCountryCallingCode(value) : value,
       }),
       onConfirm: async () => {
-        const [error, result] = await registerWithIdentifierAsync(
-          method === SignInIdentifier.Email ? { email: target } : { phone: target }
-        );
+        const [error, result] = await registerWithIdentifierAsync(verificationId);
 
         if (error) {
           await handleError(error, preSignInErrorHandler);
@@ -80,17 +72,17 @@ const useSignInFlowCodeVerification = (
       },
     });
   }, [
+    identifier,
     signInMode,
     show,
     t,
-    method,
-    target,
-    registerWithIdentifierAsync,
     showIdentifierErrorAlert,
-    navigate,
+    registerWithIdentifierAsync,
+    verificationId,
     handleError,
     preSignInErrorHandler,
     redirectTo,
+    navigate,
   ]);
 
   const errorHandlers = useMemo<ErrorHandlers>(
@@ -109,12 +101,15 @@ const useSignInFlowCodeVerification = (
   );
 
   const onSubmit = useCallback(
-    async (payload: EmailVerificationCodePayload | PhoneVerificationCodePayload) => {
-      const [error, result] = await asyncSignInWithVerificationCodeIdentifier(payload);
+    async (code: string) => {
+      const [error, result] = await asyncSignInWithVerificationCodeIdentifier({
+        verificationId,
+        identifier,
+        code,
+      });
 
       if (error) {
         await handleError(error, errorHandlers);
-
         return;
       }
 
@@ -122,7 +117,14 @@ const useSignInFlowCodeVerification = (
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncSignInWithVerificationCodeIdentifier, errorHandlers, handleError, redirectTo]
+    [
+      asyncSignInWithVerificationCodeIdentifier,
+      errorHandlers,
+      handleError,
+      identifier,
+      redirectTo,
+      verificationId,
+    ]
   );
 
   return {

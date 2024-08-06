@@ -1,4 +1,4 @@
-import { type SsoConnectorMetadata } from '@logto/schemas';
+import { type SsoConnectorMetadata, type VerificationType } from '@logto/schemas';
 import { noop } from '@silverhand/essentials';
 import { createContext } from 'react';
 
@@ -6,6 +6,7 @@ import {
   type IdentifierInputType,
   type IdentifierInputValue,
 } from '@/components/InputFields/SmartInputField';
+import { type VerificationIdsMap } from '@/types/guard';
 
 export type UserInteractionContextType = {
   // All the enabled sso connectors
@@ -54,6 +55,8 @@ export type UserInteractionContextType = {
   setForgotPasswordIdentifierInputValue: React.Dispatch<
     React.SetStateAction<IdentifierInputValue | undefined>
   >;
+  verificationIdsMap: VerificationIdsMap;
+  setVerificationId: (type: VerificationType, id: string) => void;
   /**
    * This method only clear the identifier input values from the session storage.
    *
@@ -79,5 +82,7 @@ export default createContext<UserInteractionContextType>({
   setIdentifierInputValue: noop,
   forgotPasswordIdentifierInputValue: undefined,
   setForgotPasswordIdentifierInputValue: noop,
+  verificationIdsMap: {},
+  setVerificationId: noop,
   clearInteractionContextSessionStorage: noop,
 });

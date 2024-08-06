@@ -1,8 +1,9 @@
 import {
-  SignInIdentifier,
-  MissingProfile,
   MfaFactor,
+  MissingProfile,
+  SignInIdentifier,
   type SsoConnectorMetadata,
+  VerificationType,
 } from '@logto/schemas';
 import * as s from 'superstruct';
 
@@ -130,3 +131,15 @@ export const identifierInputValueGuard: s.Describe<IdentifierInputValue> = s.obj
  * Type guard for the `identifier` search param config on the identifier sign-in/register page.
  */
 export const identifierSearchParamGuard = s.array(identifierEnumGuard);
+
+type StringGuard = ReturnType<typeof s.string>;
+// eslint-disable-next-line no-restricted-syntax -- Object.fromEntries can not infer the key type
+const mapGuard = Object.fromEntries(
+  Object.values(VerificationType).map((type) => [type, s.string()])
+) as { [key in VerificationType]: StringGuard };
+
+/**
+ * Defines the type guard for the verification ids map.
+ */
+export const verificationIdsMapGuard = s.partial(mapGuard);
+export type VerificationIdsMap = s.Infer<typeof verificationIdsMapGuard>;

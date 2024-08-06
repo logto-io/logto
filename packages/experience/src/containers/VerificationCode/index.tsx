@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { type VerificationCodeIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
@@ -15,13 +15,19 @@ import { getCodeVerificationHookByFlow } from './utils';
 
 type Props = {
   readonly flow: UserFlow;
-  readonly identifier: SignInIdentifier.Email | SignInIdentifier.Phone;
-  readonly target: string;
+  readonly identifier: VerificationCodeIdentifier;
+  readonly verificationId: string;
   readonly hasPasswordButton?: boolean;
   readonly className?: string;
 };
 
-const VerificationCode = ({ flow, identifier, className, hasPasswordButton, target }: Props) => {
+const VerificationCode = ({
+  flow,
+  identifier,
+  verificationId,
+  className,
+  hasPasswordButton,
+}: Props) => {
   const [codeInput, setCodeInput] = useState<string[]>([]);
   const [inputErrorMessage, setInputErrorMessage] = useState<string>();
 
@@ -43,14 +49,13 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
     errorMessage: submitErrorMessage,
     clearErrorMessage,
     onSubmit,
-  } = useVerificationCode(identifier, target, errorCallback);
+  } = useVerificationCode(identifier, verificationId, errorCallback);
 
   const errorMessage = inputErrorMessage ?? submitErrorMessage;
 
   const { seconds, isRunning, onResendVerificationCode } = useResendVerificationCode(
     flow,
-    identifier,
-    target
+    identifier
   );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,15 +66,11 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
 
       setIsSubmitting(true);
 
-      await onSubmit(
-        identifier === SignInIdentifier.Email
-          ? { email: target, verificationCode: code.join('') }
-          : { phone: target, verificationCode: code.join('') }
-      );
+      await onSubmit(code.join(''));
 
       setIsSubmitting(false);
     },
-    [identifier, onSubmit, target]
+    [onSubmit]
   );
 
   useEffect(() => {
