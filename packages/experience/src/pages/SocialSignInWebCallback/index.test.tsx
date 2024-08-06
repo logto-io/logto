@@ -3,9 +3,9 @@ import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSsoConnectors, mockSignInExperienceSettings } from '@/__mocks__/logto';
+import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import { socialConnectors } from '@/__mocks__/social-connectors';
-import { signInWithSocial } from '@/apis/interaction';
+import { verifySocialVerification } from '@/apis/experience';
 import { singleSignOnAuthorization } from '@/apis/single-sign-on';
 import { type SignInExperienceResponse } from '@/types';
 import { generateState, storeState } from '@/utils/social-connectors';
@@ -17,8 +17,9 @@ jest.mock('i18next', () => ({
   language: 'en',
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  signInWithSocial: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
+jest.mock('@/apis/experience', () => ({
+  verifySocialVerification: jest.fn().mockResolvedValue({ verificationId: 'foo' }),
+  identifyAndSubmitInteraction: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
 }));
 
 jest.mock('@/apis/single-sign-on', () => ({
@@ -49,7 +50,7 @@ describe('SocialCallbackPage with code', () => {
       );
 
       await waitFor(() => {
-        expect(signInWithSocial).not.toBeCalled();
+        expect(verifySocialVerification).not.toBeCalled();
         expect(mockNavigate.mock.calls[0][0].to).toBe('/sign-in');
       });
     });
@@ -76,12 +77,12 @@ describe('SocialCallbackPage with code', () => {
       );
 
       await waitFor(() => {
-        expect(signInWithSocial).toBeCalled();
+        expect(verifySocialVerification).toBeCalled();
       });
     });
 
     it('callback with invalid state should not call signInWithSocial', async () => {
-      (signInWithSocial as jest.Mock).mockClear();
+      (verifySocialVerification as jest.Mock).mockClear();
 
       mockUseSearchParameters.mockReturnValue([
         new URLSearchParams(`state=bar&code=foo`),
@@ -98,7 +99,7 @@ describe('SocialCallbackPage with code', () => {
       );
 
       await waitFor(() => {
-        expect(signInWithSocial).not.toBeCalled();
+        expect(verifySocialVerification).not.toBeCalled();
       });
     });
   });
