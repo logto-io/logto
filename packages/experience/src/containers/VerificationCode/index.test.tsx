@@ -1,13 +1,9 @@
 import resource from '@logto/phrases-experience';
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, type VerificationCodeIdentifier } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import {
-  verifyForgotPasswordVerificationCodeIdentifier,
-  signInWithVerificationCodeIdentifier,
-  addProfileWithVerificationCodeIdentifier,
-} from '@/apis/interaction';
+import { identifyWithVerificationCode } from '@/apis/experience';
 import { sendVerificationCodeApi } from '@/apis/utils';
 import { setupI18nForTesting } from '@/jest.setup';
 import { UserFlow } from '@/types';
@@ -27,16 +23,25 @@ jest.mock('@/apis/utils', () => ({
   sendVerificationCodeApi: jest.fn(),
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  verifyForgotPasswordVerificationCodeIdentifier: jest.fn(),
-  signInWithVerificationCodeIdentifier: jest.fn(),
-  addProfileWithVerificationCodeIdentifier: jest.fn(),
+jest.mock('@/apis/experience', () => ({
+  identifyWithVerificationCode: jest.fn().mockResolvedValue({ redirectTo: 'foo.com' }),
 }));
 
 describe('<VerificationCode />', () => {
   const email = 'foo@logto.io';
   const phone = '18573333333';
   const originalLocation = window.location;
+  const verificationId = '123456';
+
+  const emailIdentifier: VerificationCodeIdentifier = {
+    type: SignInIdentifier.Email,
+    value: email,
+  };
+
+  const phoneIdentifier: VerificationCodeIdentifier = {
+    type: SignInIdentifier.Phone,
+    value: phone,
+  };
 
   beforeAll(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
@@ -58,7 +63,11 @@ describe('<VerificationCode />', () => {
 
   it('render counter', () => {
     const { queryByText } = renderWithPageContext(
-      <VerificationCode flow={UserFlow.SignIn} identifier={SignInIdentifier.Email} target={email} />
+      <VerificationCode
+        flow={UserFlow.SignIn}
+        identifier={emailIdentifier}
+        verificationId={verificationId}
+      />
     );
 
     expect(queryByText('description.resend_after_seconds')).not.toBeNull();
@@ -87,7 +96,11 @@ describe('<VerificationCode />', () => {
     });
 
     const { getByText } = renderWithPageContext(
-      <VerificationCode flow={UserFlow.SignIn} identifier={SignInIdentifier.Email} target={email} />
+      <VerificationCode
+        flow={UserFlow.SignIn}
+        identifier={emailIdentifier}
+        verificationId={verificationId}
+      />
     );
     act(() => {
       jest.advanceTimersByTime(1e3 * 60);
@@ -106,15 +119,11 @@ describe('<VerificationCode />', () => {
 
   describe('sign-in', () => {
     it('fire email sign-in validate verification code event', async () => {
-      (signInWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
-        redirectTo: 'foo.com',
-      }));
-
       const { container } = renderWithPageContext(
         <VerificationCode
           flow={UserFlow.SignIn}
-          identifier={SignInIdentifier.Email}
-          target={email}
+          identifier={emailIdentifier}
+          verificationId={verificationId}
         />
       );
       const inputs = container.querySelectorAll('input');
@@ -126,9 +135,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(signInWithVerificationCodeIdentifier).toBeCalledWith({
-          email,
-          verificationCode: '111111',
+        expect(identifyWithVerificationCode).toBeCalledWith({
+          identifier: emailIdentifier,
+          verificationId,
+          code: '111111',
         });
       });
 
@@ -138,15 +148,11 @@ describe('<VerificationCode />', () => {
     });
 
     it('fire phone sign-in validate verification code event', async () => {
-      (signInWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
-        redirectTo: 'foo.com',
-      }));
-
       const { container } = renderWithPageContext(
         <VerificationCode
           flow={UserFlow.SignIn}
-          identifier={SignInIdentifier.Phone}
-          target={phone}
+          identifier={phoneIdentifier}
+          verificationId={verificationId}
         />
       );
       const inputs = container.querySelectorAll('input');
@@ -158,9 +164,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(signInWithVerificationCodeIdentifier).toBeCalledWith({
-          phone,
-          verificationCode: '111111',
+        expect(identifyWithVerificationCode).toBeCalledWith({
+          identifier: phoneIdentifier,
+          verificationId,
+          code: '111111',
         });
       });
 
@@ -172,15 +179,11 @@ describe('<VerificationCode />', () => {
 
   describe('register', () => {
     it('fire email register validate verification code event', async () => {
-      (addProfileWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
-        redirectTo: 'foo.com',
-      }));
-
       const { container } = renderWithPageContext(
         <VerificationCode
           flow={UserFlow.Register}
-          identifier={SignInIdentifier.Email}
-          target={email}
+          identifier={emailIdentifier}
+          verificationId={verificationId}
         />
       );
       const inputs = container.querySelectorAll('input');
@@ -192,9 +195,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith({
-          email,
-          verificationCode: '111111',
+        expect(identifyWithVerificationCode).toBeCalledWith({
+          identifier: emailIdentifier,
+          verificationId,
+          code: '111111',
         });
       });
 
@@ -204,15 +208,11 @@ describe('<VerificationCode />', () => {
     });
 
     it('fire phone register validate verification code event', async () => {
-      (addProfileWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
-        redirectTo: 'foo.com',
-      }));
-
       const { container } = renderWithPageContext(
         <VerificationCode
           flow={UserFlow.Register}
-          identifier={SignInIdentifier.Phone}
-          target={phone}
+          identifier={phoneIdentifier}
+          verificationId={verificationId}
         />
       );
       const inputs = container.querySelectorAll('input');
@@ -224,9 +224,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith({
-          phone,
-          verificationCode: '111111',
+        expect(identifyWithVerificationCode).toBeCalledWith({
+          identifier: phoneIdentifier,
+          verificationId,
+          code: '111111',
         });
       });
 
@@ -238,15 +239,11 @@ describe('<VerificationCode />', () => {
 
   describe('forgot password', () => {
     it('fire email forgot-password validate verification code event', async () => {
-      (verifyForgotPasswordVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
-        success: true,
-      }));
-
       const { container } = renderWithPageContext(
         <VerificationCode
           flow={UserFlow.ForgotPassword}
-          identifier={SignInIdentifier.Email}
-          target={email}
+          identifier={emailIdentifier}
+          verificationId={verificationId}
         />
       );
 
@@ -259,23 +256,20 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyForgotPasswordVerificationCodeIdentifier).toBeCalledWith({
-          email,
-          verificationCode: '111111',
+        expect(identifyWithVerificationCode).toBeCalledWith({
+          identifier: emailIdentifier,
+          verificationId,
+          code: '111111',
         });
       });
     });
 
     it('fire phone forgot-password validate verification code event', async () => {
-      (verifyForgotPasswordVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
-        success: true,
-      }));
-
       const { container } = renderWithPageContext(
         <VerificationCode
           flow={UserFlow.ForgotPassword}
-          identifier={SignInIdentifier.Phone}
-          target={phone}
+          identifier={phoneIdentifier}
+          verificationId={verificationId}
         />
       );
 
@@ -288,9 +282,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyForgotPasswordVerificationCodeIdentifier).toBeCalledWith({
-          phone,
-          verificationCode: '111111',
+        expect(identifyWithVerificationCode).toBeCalledWith({
+          identifier: phoneIdentifier,
+          verificationId,
+          code: '111111',
         });
       });
     });
@@ -298,15 +293,11 @@ describe('<VerificationCode />', () => {
 
   describe('continue flow', () => {
     it('set email', async () => {
-      (addProfileWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
-        redirectTo: '/redirect',
-      }));
-
       const { container } = renderWithPageContext(
         <VerificationCode
           flow={UserFlow.Continue}
-          identifier={SignInIdentifier.Email}
-          target={email}
+          identifier={emailIdentifier}
+          verificationId={verificationId}
         />
       );
 
@@ -319,9 +310,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith({
-          email,
-          verificationCode: '111111',
+        expect(identifyWithVerificationCode).toBeCalledWith({
+          identifier: emailIdentifier,
+          verificationId,
+          code: '111111',
         });
       });
 
@@ -331,15 +323,11 @@ describe('<VerificationCode />', () => {
     });
 
     it('set Phone', async () => {
-      (addProfileWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
-        redirectTo: '/redirect',
-      }));
-
       const { container } = renderWithPageContext(
         <VerificationCode
           flow={UserFlow.Continue}
-          identifier={SignInIdentifier.Phone}
-          target={phone}
+          identifier={phoneIdentifier}
+          verificationId={verificationId}
         />
       );
 
@@ -352,9 +340,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith({
-          phone,
-          verificationCode: '111111',
+        expect(identifyWithVerificationCode).toBeCalledWith({
+          identifier: phoneIdentifier,
+          verificationId,
+          code: '111111',
         });
       });
 
