@@ -1,5 +1,6 @@
 import {
   InteractionEvent,
+  SentinelActivityAction,
   type VerificationCodeIdentifier,
   verificationCodeIdentifierGuard,
 } from '@logto/schemas';
@@ -12,6 +13,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import type ExperienceInteraction from '../classes/experience-interaction.js';
+import { withSentinel } from '../classes/libraries/sentinel-guard.js';
 import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
 import { createNewCodeVerificationRecord } from '../classes/verifications/code-verification.js';
 import { experienceRoutes } from '../const.js';
@@ -30,7 +32,7 @@ const createVerificationCodeAuditLog = (
 
 export default function verificationCodeRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
-  { libraries, queries }: TenantContext
+  { libraries, queries, sentinel }: TenantContext
 ) {
   router.post(
     `${experienceRoutes.verification}/verification-code`,
@@ -99,6 +101,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     }),
     async (ctx, next) => {
       const { verificationId, code, identifier } = ctx.guard.body;
+      const { experienceInteraction } = ctx;
 
       const log = createVerificationCodeAuditLog(
         ctx,
@@ -120,7 +123,18 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         verificationId
       );
 
-      await codeVerificationRecord.verify(identifier, code);
+      await withSentinel(
+        {
+          sentinel,
+          action: SentinelActivityAction.VerificationCode,
+          identifier,
+          payload: {
+            event: experienceInteraction.interactionEvent,
+            verificationId: codeVerificationRecord.id,
+          },
+        },
+        codeVerificationRecord.verify(identifier, code)
+      );
 
       await ctx.experienceInteraction.save();
 
