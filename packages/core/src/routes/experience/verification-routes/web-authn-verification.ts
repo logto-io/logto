@@ -1,6 +1,7 @@
 import {
   bindWebAuthnPayloadGuard,
   VerificationType,
+  webAuthnAuthenticationOptionsGuard,
   webAuthnRegistrationOptionsGuard,
   webAuthnVerificationPayloadGuard,
 } from '@logto/schemas';
@@ -128,7 +129,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
     koaGuard({
       response: z.object({
         verificationId: z.string(),
-        authenticationOptions: webAuthnRegistrationOptionsGuard,
+        authenticationOptions: webAuthnAuthenticationOptionsGuard,
       }),
       status: [200, 400, 404],
     }),

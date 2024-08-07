@@ -1,4 +1,5 @@
-import { type VerificationType } from '@logto/schemas';
+import { InteractionEvent, VerificationType } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -52,18 +53,44 @@ export class Profile {
     });
 
     const profile = verificationRecord.toUserProfile();
+
     await this.setProfileWithValidation(profile);
+  }
+
+  async setProfileBySocialVerificationRecord(verificationId: string, log?: LogEntry) {
+    const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
+      VerificationType.Social,
+      verificationId
+    );
+
+    log?.append({
+      verification: verificationRecord.toJson(),
+    });
+
+    const profile = await verificationRecord.toUserProfile();
+    await this.setProfileWithValidation(profile);
+
+    const user = await this.safeGetIdentifiedUser();
+    const isNewUserIdentity = !user;
+
+    // Sync the email and phone to the user profile only for new user identity
+    const syncedProfile = await verificationRecord.toSyncedProfile(isNewUserIdentity);
+    this.unsafePrepend(syncedProfile);
   }
 
   /**
    * Set the profile data with validation.
    *
-   * @throws {RequestError} 422 if the profile data already exists in the current user account.
+   * @throws {RequestError} 422 if the profile data already exists in the current user account. (Existing user profile only)
    * @throws {RequestError} 422 if the unique identifier data already exists in another user account.
    */
   async setProfileWithValidation(profile: InteractionProfile) {
-    const user = await this.interactionContext.getIdentifiedUser();
-    this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, profile);
+    const user = await this.safeGetIdentifiedUser();
+
+    if (user) {
+      this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, profile);
+    }
+
     await this.profileValidator.guardProfileUniquenessAcrossUsers(profile);
     this.unsafeSet(profile);
   }
@@ -73,16 +100,16 @@ export class Profile {
    *
    * @param reset - If true the password will be set without checking if it already exists in the current user account.
    * @throws {RequestError} 422 if the password does not meet the password policy.
-   * @throws {RequestError} 422 if the password is the same as the current user's password.
+   * @throws {RequestError} 422 if the password is the same as the current user's password. (Existing user profile only)
    */
   async setPasswordDigestWithValidation(password: string, reset = false) {
-    const user = await this.interactionContext.getIdentifiedUser();
+    const user = await this.safeGetIdentifiedUser();
     const passwordPolicy = await this.signInExperienceValidator.getPasswordPolicy();
     const passwordValidator = new PasswordValidator(passwordPolicy, user);
     await passwordValidator.validatePassword(password, this.#data);
     const passwordDigests = await passwordValidator.createPasswordDigest(password);
 
-    if (!reset) {
+    if (user && !reset) {
       this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, passwordDigests);
     }
 
@@ -92,34 +119,43 @@ export class Profile {
   /**
    * Verifies the profile data is valid.
    *
-   * @throws {RequestError} 422 if the profile data already exists in the current user account.
+   * @throws {RequestError} 422 if the profile data already exists in the current user account. (Existing user profile only)
    * @throws {RequestError} 422 if the unique identifier data already exists in another user account.
    */
   async validateAvailability() {
-    const user = await this.interactionContext.getIdentifiedUser();
-    this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, this.#data);
+    const user = await this.safeGetIdentifiedUser();
+
+    if (user) {
+      this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, this.#data);
+    }
+
     await this.profileValidator.guardProfileUniquenessAcrossUsers(this.#data);
   }
 
   /**
    * Checks if the user has fulfilled the mandatory profile fields.
+   *
+   * - Skip the check if the profile contains an enterprise SSO identity.
    */
   async assertUserMandatoryProfileFulfilled() {
-    const user = await this.interactionContext.getIdentifiedUser();
+    const user = await this.safeGetIdentifiedUser();
+
+    if (this.#data.enterpriseSsoIdentity) {
+      return;
+    }
+
     const mandatoryProfileFields =
       await this.signInExperienceValidator.getMandatoryUserProfileBySignUpMethods();
 
     const missingProfile = this.profileValidator.getMissingUserProfile(
       this.#data,
-      user,
-      mandatoryProfileFields
+      mandatoryProfileFields,
+      user
     );
 
     if (missingProfile.size === 0) {
       return;
     }
-
-    // TODO: find missing profile fields from the social identity if any
 
     throw new RequestError(
       { code: 'user.missing_profile', status: 422 },
@@ -132,5 +168,38 @@ export class Profile {
       ...this.#data,
       ...profile,
     };
+  }
+
+  /**
+   * Prepend the profile data to the existing profile data.
+   * Avoid overwriting the existing profile data.
+   */
+  unsafePrepend(profile: InteractionProfile) {
+    this.#data = {
+      ...profile,
+      ...this.#data,
+    };
+  }
+
+  cleanUp() {
+    this.#data = {};
+  }
+
+  /**
+   * Safely get the identified user from the interaction context.
+   * If the interaction event is register, the user will be retrieved safely.
+   *
+   * @returns The identified user from the interaction context.
+   */
+  private async safeGetIdentifiedUser() {
+    const { getInteractionEvent, getIdentifiedUser } = this.interactionContext;
+
+    const interactionEvent = getInteractionEvent();
+
+    if (interactionEvent === InteractionEvent.Register) {
+      return trySafe(async () => getIdentifiedUser());
+    }
+
+    return getIdentifiedUser();
   }
 }

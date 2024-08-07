@@ -1,6 +1,7 @@
 import { type SocialUserInfo, socialUserInfoGuard, type ToZodObject } from '@logto/connector-kit';
 import {
   type CreateUser,
+  type InteractionEvent,
   type User,
   Users,
   UserSsoIdentities,
@@ -69,6 +70,7 @@ export const interactionProfileGuard = Users.createGuard
  * The interaction context provides the callback functions to get the user and verification record from the interaction
  */
 export type InteractionContext = {
+  getInteractionEvent: () => InteractionEvent;
   getIdentifiedUser: () => Promise<User>;
   getVerificationRecordByTypeAndId: <K extends keyof VerificationRecordMap>(
     type: K,

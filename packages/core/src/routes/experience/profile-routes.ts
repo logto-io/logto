@@ -57,12 +57,26 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       body: updateProfileApiPayloadGuard,
       status: [204, 400, 403, 404, 422],
     }),
-    verifiedInteractionGuard(),
     async (ctx, next) => {
       const { experienceInteraction, guard, createLog } = ctx;
       const profilePayload = guard.body;
+      const { interactionEvent } = experienceInteraction;
 
-      const log = createLog(`Interaction.${experienceInteraction.interactionEvent}.Profile.Update`);
+      const log = createLog(`Interaction.${interactionEvent}.Profile.Update`);
+
+      // Guard current interaction event is not ForgotPassword
+      assertThat(
+        interactionEvent !== InteractionEvent.ForgotPassword,
+        new RequestError({
+          code: 'session.not_supported_for_forgot_password',
+          statue: 400,
+        })
+      );
+
+      // Guard MFA verification status for SignIn interaction only
+      if (interactionEvent === InteractionEvent.SignIn) {
+        await experienceInteraction.guardMfaVerificationStatus();
+      }
 
       log.append({
         payload: profilePayload,
@@ -74,7 +88,8 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           const verificationType = identifierCodeVerificationTypeMap[profilePayload.type];
           await experienceInteraction.profile.setProfileByVerificationRecord(
             verificationType,
-            profilePayload.verificationId
+            profilePayload.verificationId,
+            log
           );
           break;
         }
@@ -86,6 +101,13 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         }
         case 'password': {
           await experienceInteraction.profile.setPasswordDigestWithValidation(profilePayload.value);
+          break;
+        }
+        case 'social': {
+          await experienceInteraction.profile.setProfileBySocialVerificationRecord(
+            profilePayload.verificationId,
+            log
+          );
         }
       }
 
@@ -142,7 +164,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     koaGuard({ status: [204, 400, 403, 404, 422] }),
     verifiedInteractionGuard(),
     async (ctx, next) => {
-      const { experienceInteraction, guard } = ctx;
+      const { experienceInteraction } = ctx;
 
       await experienceInteraction.mfa.skip();
       await experienceInteraction.save();

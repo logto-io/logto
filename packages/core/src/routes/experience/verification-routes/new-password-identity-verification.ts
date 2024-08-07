@@ -1,4 +1,5 @@
-import { interactionIdentifierGuard, VerificationType } from '@logto/schemas';
+import { usernameRegEx } from '@logto/core-kit';
+import { SignInIdentifier, VerificationType } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
@@ -18,8 +19,12 @@ export default function newPasswordIdentityVerificationRoutes<
     `${experienceRoutes.verification}/new-password-identity`,
     koaGuard({
       body: z.object({
-        identifier: interactionIdentifierGuard,
-        password: z.string().optional(),
+        identifier: z.object({
+          // Only username is supported for now
+          type: z.literal(SignInIdentifier.Username),
+          value: z.string().regex(usernameRegEx),
+        }),
+        password: z.string(),
       }),
       status: [200, 400, 422],
       response: z.object({

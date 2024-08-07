@@ -1,12 +1,6 @@
 /* eslint-disable max-lines */
 import { type ToZodObject } from '@logto/connector-kit';
-import {
-  InteractionEvent,
-  SignInIdentifier,
-  VerificationType,
-  type InteractionIdentifier,
-  type User,
-} from '@logto/schemas';
+import { InteractionEvent, VerificationType, type User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -34,7 +28,6 @@ import { SignInExperienceValidator } from './libraries/sign-in-experience-valida
 import { Mfa, mfaDataGuard, userMfaDataKey, type MfaData } from './mfa.js';
 import { Profile } from './profile.js';
 import { toUserSocialIdentityData } from './utils.js';
-import { identifierCodeVerificationTypeMap } from './verifications/code-verification.js';
 import {
   buildVerificationRecord,
   verificationRecordDataGuard,
@@ -105,6 +98,7 @@ export default class ExperienceInteraction {
     this.provisionLibrary = new ProvisionLibrary(tenant, ctx);
 
     const interactionContext: InteractionContext = {
+      getInteractionEvent: () => this.#interactionEvent,
       getIdentifiedUser: async () => this.getIdentifiedUser(),
       getVerificationRecordByTypeAndId: (type, verificationId) =>
         this.getVerificationRecordByTypeAndId(type, verificationId),
@@ -153,7 +147,9 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * Set the interaction event for the current interaction
+   * Switch the interaction event for the current interaction sign-in <> register
+   *
+   * - any pending profile data will be cleared
    *
    * @throws RequestError with 403 if the interaction event is not allowed by the `SignInExperienceValidator`
    * @throws RequestError with 400 if the interaction event is `ForgotPassword` and the current interaction event is not `ForgotPassword`
@@ -170,6 +166,10 @@ export default class ExperienceInteraction {
       new RequestError({ code: 'session.not_supported_for_forgot_password', status: 400 })
     );
 
+    if (this.#interactionEvent !== interactionEvent) {
+      this.profile.cleanUp();
+    }
+
     this.#interactionEvent = interactionEvent;
   }
 
@@ -178,17 +178,23 @@ export default class ExperienceInteraction {
    *
    * - Check if the verification record exists.
    * - Verify the verification record with {@link SignInExperienceValidator}.
-   * - Create a new user using the verification record if the current interaction event is `Register`.
-   * - Identify the user using the verification record if the current interaction event is `SignIn` or `ForgotPassword`.
    * - Set the user id to the current interaction.
    *
-   * @throws RequestError with 404 if the interaction event is not set.
-   * @throws RequestError with 404 if the verification record is not found.
-   * @throws RequestError with 422 if the verification record is not enabled in the SIE settings.
-   * @see {@link identifyExistingUser} for more exceptions that can be thrown in the SignIn and ForgotPassword events.
-   * @see {@link createNewUser} for more exceptions that can be thrown in the Register event.
+   * @param linkSocialIdentity Applies only to the SocialIdentity verification record sign-in events only.
+   * If true, the social identity will be linked to related user.
+   *
+   * @throws {RequestError} with 400 if the verification record is not verified or not valid for identifying a user
+   * @throws {RequestError} with 403 if the interaction event is not allowed
+   * @throws {RequestError} with 404 if the user is not found
+   * @throws {RequestError} with 401 if the user is suspended
+   * @throws {RequestError} with 409 if the current session has already identified a different user
    **/
   public async identifyUser(verificationId: string, linkSocialIdentity?: boolean, log?: LogEntry) {
+    assertThat(
+      this.interactionEvent !== InteractionEvent.Register,
+      new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
+    );
+
     const verificationRecord = this.getVerificationRecordById(verificationId);
 
     log?.append({
@@ -196,26 +202,93 @@ export default class ExperienceInteraction {
     });
 
     assertThat(
-      this.interactionEvent,
-      new RequestError({ code: 'session.interaction_not_found', status: 404 })
-    );
-
-    assertThat(
       verificationRecord,
       new RequestError({ code: 'session.verification_session_not_found', status: 404 })
     );
 
-    await this.signInExperienceValidator.verifyIdentificationMethod(
+    await this.signInExperienceValidator.guardIdentificationMethod(
       this.interactionEvent,
       verificationRecord
     );
 
-    if (this.interactionEvent === InteractionEvent.Register) {
-      await this.createNewUser(verificationRecord);
+    const { user, syncedProfile } = await identifyUserByVerificationRecord(
+      verificationRecord,
+      linkSocialIdentity
+    );
+
+    const { id, isSuspended } = user;
+    assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+
+    // Throws an 409 error if the current session has already identified a different user
+    if (this.userId) {
+      assertThat(
+        this.userId === id,
+        new RequestError({ code: 'session.identity_conflict', status: 409 })
+      );
       return;
     }
 
-    await this.identifyExistingUser(verificationRecord, linkSocialIdentity);
+    // Update the current interaction with the identified user
+    this.userCache = user;
+    this.userId = id;
+
+    // Sync social/enterprise SSO identity profile data.
+    // Note: The profile data is not saved to the user profile until the user submits the interaction.
+    // Also no need to validate the synced profile data availability as it is already validated during the identification process.
+    if (syncedProfile) {
+      const log = this.ctx.createLog(`Interaction.${this.interactionEvent}.Profile.Update`);
+      log.append({ syncedProfile });
+      this.profile.unsafeSet(syncedProfile);
+    }
+  }
+
+  /**
+   * Create new user using the profile data in the current interaction.
+   *
+   * - if a `verificationId` is provided, the profile data will be updated with the verification record data.
+   * - id no `verificationId` is provided, directly create a new user with the current profile data.
+   *
+   * @throws {RequestError} with 403 if the register is not allowed by the sign-in experience settings
+   * @throws {RequestError} with 404 if a `verificationId` is provided but the verification record is not found
+   * @throws {RequestError} with 400 if the verification record can not be used for creating a new user or not verified
+   * @throws {RequestError} with 422 if the profile data is not unique across users
+   * @throws {RequestError} with 422 if any of required profile fields are missing
+   */
+  public async createUser(verificationId?: string, log?: LogEntry) {
+    assertThat(
+      this.interactionEvent === InteractionEvent.Register,
+      new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
+    );
+
+    await this.signInExperienceValidator.guardInteractionEvent(InteractionEvent.Register);
+
+    if (verificationId) {
+      const verificationRecord = this.getVerificationRecordById(verificationId);
+
+      assertThat(
+        verificationRecord,
+        new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+      );
+
+      log?.append({
+        verification: verificationRecord.toJson(),
+      });
+
+      const identifierProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
+
+      await this.profile.setProfileWithValidation(identifierProfile);
+
+      // Save the updated profile data to the interaction storage
+      await this.save();
+    }
+
+    await this.profile.assertUserMandatoryProfileFulfilled();
+
+    const user = await this.provisionLibrary.createUser(this.profile.data);
+
+    this.userId = user.id;
+    this.userCache = user;
+    this.profile.cleanUp();
   }
 
   /**
@@ -426,80 +499,6 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * Identify the existing user using the verification record.
-   *
-   * @param linkSocialIdentity Applies only to the SocialIdentity verification record sign-in events only.
-   * If true, the social identity will be linked to related user.
-   *
-   * @throws RequestError with 400 if the verification record is not verified or not valid for identifying a user
-   * @throws RequestError with 404 if the user is not found
-   * @throws RequestError with 401 if the user is suspended
-   * @throws RequestError with 409 if the current session has already identified a different user
-   */
-  private async identifyExistingUser(
-    verificationRecord: VerificationRecord,
-    linkSocialIdentity?: boolean
-  ) {
-    const { user, syncedProfile } = await identifyUserByVerificationRecord(
-      verificationRecord,
-      linkSocialIdentity
-    );
-
-    const { id, isSuspended } = user;
-    assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
-
-    // Throws an 409 error if the current session has already identified a different user
-    if (this.userId) {
-      assertThat(
-        this.userId === id,
-        new RequestError({ code: 'session.identity_conflict', status: 409 })
-      );
-      return;
-    }
-
-    // Update the current interaction with the identified user
-    this.userCache = user;
-    this.userId = id;
-
-    // Sync social/enterprise SSO identity profile data.
-    // Note: The profile data is not saved to the user profile until the user submits the interaction.
-    // Also no need to validate the synced profile data availability as it is already validated during the identification process.
-    if (syncedProfile) {
-      const log = this.ctx.createLog(`Interaction.${this.interactionEvent}.Profile.Update`);
-      log.append({ syncedProfile });
-      this.profile.unsafeSet(syncedProfile);
-    }
-  }
-
-  /**
-   * Create a new user using the verification record.
-   *
-   * @throws {RequestError} with 422 if a new password identity verification is provided, but identifier (email/phone) is not verified
-   * @throws {RequestError} with 400 if the verification record can not be used for creating a new user or not verified
-   * @throws {RequestError} with 422 if the profile data is not unique across users
-   * @throws {RequestError} with 422 if the password is required for the sign-up settings but only email/phone verification record is provided
-   */
-  private async createNewUser(verificationRecord: VerificationRecord) {
-    if (verificationRecord.type === VerificationType.NewPasswordIdentity) {
-      const { identifier } = verificationRecord;
-      assertThat(
-        this.isIdentifierVerified(identifier),
-        new RequestError(
-          { code: 'session.identifier_not_verified', status: 422 },
-          { identifier: identifier.value }
-        )
-      );
-    }
-
-    const newProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
-    await this.profile.profileValidator.guardProfileUniquenessAcrossUsers(newProfile);
-
-    const user = await this.provisionLibrary.createUser(newProfile);
-
-    this.userId = user.id;
-  }
-
-  /**
    * Assert the interaction is identified and return the identified user.
    * @throws RequestError with 404 if the if the user is not identified or not found
    */
@@ -529,20 +528,6 @@ export default class ExperienceInteraction {
 
   private getVerificationRecordById(verificationId: string) {
     return this.verificationRecordsArray.find((record) => record.id === verificationId);
-  }
-
-  private isIdentifierVerified(identifier: InteractionIdentifier) {
-    const { type, value } = identifier;
-
-    if (type === SignInIdentifier.Username) {
-      return true;
-    }
-
-    const verificationRecord = this.verificationRecords.get(
-      identifierCodeVerificationTypeMap[type]
-    );
-
-    return verificationRecord?.identifier.value === value && verificationRecord.isVerified;
   }
 
   private get hasVerifiedSsoIdentity() {
