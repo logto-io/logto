@@ -65,9 +65,12 @@ const fillApplications = (
       secret: inputApp.secret,
       description: inputApp.description,
       type: inputApp.type,
-      oidc_client_metadata: `{"redirectUris": ${createArrayString(inputApp.redirect_uri)}, "postLogoutRedirectUris": ${createArrayString(inputApp.logout_redirect_uri)}}`,
-      custom_client_metadata:
-        '{"idTokenTtl": 3600, "corsAllowedOrigins": [], "rotateRefreshToken": true, "refreshTokenTtlInDays": 14, "alwaysIssueRefreshToken": false}',
+      oidc_client_metadata: `{"redirectUris": ${createArrayString(
+        inputApp.redirect_uri
+      )}, "postLogoutRedirectUris": ${createArrayString(inputApp.logout_redirect_uri)}}`,
+      custom_client_metadata: `{"idTokenTtl": 3600, "corsAllowedOrigins": [], "rotateRefreshToken": true, "refreshTokenTtlInDays": 14, "alwaysIssueRefreshToken": ${
+        inputApp.always_issue_refresh_token ?? false
+      }}`,
       is_third_party: inputApp.is_third_party ?? false,
     };
   }

@@ -169,7 +169,8 @@
         "logout_redirect_uri": "http://localhost:8055",
         "secret": "analytics_app_local_secret",
         "id": "kgz1zomlw27cxx4pxh5gi",
-        "is_third_party": false
+        "is_third_party": false,
+        "always_issue_refresh_token": true
       },
       {
         "name": "Home Building Block",

@@ -46,6 +46,7 @@ export type ApplicationSeeder = {
   logout_redirect_uri: string | string[];
   secret: string;
   is_third_party?: boolean;
+  always_issue_refresh_token?: boolean;
 };
 
 export type ResourceSeeder = {
