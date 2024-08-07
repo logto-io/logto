@@ -250,7 +250,7 @@ export const signInWithSso = async (
   return identifyAndSubmitInteraction({ verificationId: payload.verificationId });
 };
 
-export const signInAndLinkWithSso = async (
+export const signInAndLinkWithSocial = async (
   verificationId: string,
   socialVerificationid: string
 ) => {

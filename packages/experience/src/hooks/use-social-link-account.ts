@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { signInAndLinkWithSso } from '@/apis/experience';
+import { signInAndLinkWithSocial } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 
 import useErrorHandler from './use-error-handler';
@@ -9,7 +9,7 @@ import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
 
 const useLinkSocial = () => {
   const handleError = useErrorHandler();
-  const asyncLinkWithSocial = useApi(signInAndLinkWithSso);
+  const asyncLinkWithSocial = useApi(signInAndLinkWithSocial);
   const redirectTo = useGlobalRedirectTo();
   const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
 
