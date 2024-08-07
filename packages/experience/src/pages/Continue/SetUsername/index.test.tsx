@@ -1,3 +1,4 @@
+import { InteractionEvent } from '@logto/schemas';
 import { act, waitFor, fireEvent } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -27,7 +28,7 @@ describe('SetUsername', () => {
   it('render SetUsername page properly', () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <SetUsername />
+        <SetUsername interactionEvent={InteractionEvent.Register} />
       </SettingsProvider>
     );
     expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
@@ -37,7 +38,7 @@ describe('SetUsername', () => {
   it('should submit properly', async () => {
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <SetUsername />
+        <SetUsername interactionEvent={InteractionEvent.Register} />
       </SettingsProvider>
     );
     const submitButton = getByText('action.continue');

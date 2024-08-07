@@ -8,6 +8,8 @@ import {
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
 
+import { type ContinueFlowInteractionEvent } from '@/types';
+
 import api from './api';
 
 const prefix = '/api/experience';
@@ -41,9 +43,8 @@ const identifyUser = async (payload: IdentificationApiPayload = {}) =>
 const submitInteraction = async () =>
   api.post(`${experienceRoutes.prefix}/submit`).json<SubmitInteractionResponse>();
 
-const updateProfile = async (payload: UpdateProfileApiPayload) => {
-  await api.post(experienceRoutes.profile, { json: payload });
-};
+const _updateProfile = async (payload: UpdateProfileApiPayload) =>
+  api.post(experienceRoutes.profile, { json: payload });
 
 const updateInteractionEvent = async (interactionEvent: InteractionEvent) =>
   api.put(`${experienceRoutes.prefix}/interaction-event`, {
@@ -83,11 +84,11 @@ export const signInWithPasswordIdentifier = async (payload: PasswordVerification
 export const registerWithUsername = async (username: string) => {
   await initInteraction(InteractionEvent.Register);
 
-  return updateProfile({ type: SignInIdentifier.Username, value: username });
+  return _updateProfile({ type: SignInIdentifier.Username, value: username });
 };
 
 export const continueRegisterWithPassword = async (password: string) => {
-  await updateProfile({ type: 'password', value: password });
+  await _updateProfile({ type: 'password', value: password });
 
   return identifyAndSubmitInteraction();
 };
@@ -126,17 +127,42 @@ export const identifyWithVerificationCode = async (json: VerificationCodePayload
 
 // Profile APIs
 
-export const updateProfileWithVerificationCode = async (json: VerificationCodePayload) => {
+export const updateProfileWithVerificationCode = async (
+  json: VerificationCodePayload,
+  interactionEvent?: ContinueFlowInteractionEvent
+) => {
   const { verificationId } = await verifyVerificationCode(json);
 
   const {
     identifier: { type },
   } = json;
 
-  await updateProfile({
+  await _updateProfile({
     type,
     verificationId,
   });
+
+  if (interactionEvent === InteractionEvent.Register) {
+    await identifyUser();
+  }
+
+  return submitInteraction();
+};
+
+type UpdateProfilePayload = {
+  type: SignInIdentifier.Username | 'password';
+  value: string;
+};
+
+export const updateProfile = async (
+  payload: UpdateProfilePayload,
+  interactionEvent: ContinueFlowInteractionEvent
+) => {
+  await _updateProfile(payload);
+
+  if (interactionEvent === InteractionEvent.Register) {
+    await identifyUser();
+  }
 
   return submitInteraction();
 };
@@ -222,4 +248,14 @@ export const signInWithSso = async (
   });
 
   return identifyAndSubmitInteraction({ verificationId: payload.verificationId });
+};
+
+export const signInAndLinkWithSso = async (
+  verificationId: string,
+  socialVerificationid: string
+) => {
+  await updateInteractionEvent(InteractionEvent.SignIn);
+  await identifyUser({ verificationId });
+  await _updateProfile({ type: 'social', verificationId: socialVerificationid });
+  return submitInteraction();
 };

@@ -1,4 +1,5 @@
 import {
+  InteractionEvent,
   MfaFactor,
   MissingProfile,
   SignInIdentifier,
@@ -135,3 +136,17 @@ const mapGuard = Object.fromEntries(
  */
 export const verificationIdsMapGuard = s.partial(mapGuard);
 export type VerificationIdsMap = s.Infer<typeof verificationIdsMapGuard>;
+
+/**
+ * Define the interaction event state guard.
+ *
+ * This is used to pass the current interaction event state to the continue flow page.
+ *
+ * - If is in the sign in flow, directly call the submitInteraction endpoint after the user completes the profile.
+ * - If is in the register flow, we need to call the identify endpoint first after the user completes the profile.
+ */
+export const continueFlowStateGuard = s.object({
+  interactionEvent: s.enums([InteractionEvent.SignIn, InteractionEvent.Register]),
+});
+
+export type InteractionFlowState = s.Infer<typeof continueFlowStateGuard>;

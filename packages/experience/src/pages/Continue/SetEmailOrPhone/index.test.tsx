@@ -1,4 +1,4 @@
-import { MissingProfile, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
@@ -40,7 +40,10 @@ describe('continue with email or phone', () => {
   const renderPage = (missingProfile: VerificationCodeProfileType) =>
     renderWithPageContext(
       <SettingsProvider>
-        <SetEmailOrPhone missingProfile={missingProfile} />
+        <SetEmailOrPhone
+          missingProfile={missingProfile}
+          interactionEvent={InteractionEvent.Register}
+        />
       </SettingsProvider>
     );
 
