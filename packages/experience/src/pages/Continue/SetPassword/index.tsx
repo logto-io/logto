@@ -10,6 +10,7 @@ import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
+import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
 import { type ContinueFlowInteractionEvent } from '@/types';
@@ -33,6 +34,7 @@ const SetPassword = ({ interactionEvent }: Props) => {
   const addPassword = useApi(updateProfile);
   const handleError = useErrorHandler();
 
+  const passwordRejectionErrorHandler = usePasswordRejectionErrorHandler({ setErrorMessage });
   const preSignInErrorHandler = usePreSignInErrorHandler({ interactionEvent, replace: true });
 
   const errorHandlers: ErrorHandlers = useMemo(
@@ -42,8 +44,9 @@ const SetPassword = ({ interactionEvent }: Props) => {
         navigate(-1);
       },
       ...preSignInErrorHandler,
+      ...passwordRejectionErrorHandler,
     }),
-    [navigate, preSignInErrorHandler, show]
+    [navigate, passwordRejectionErrorHandler, preSignInErrorHandler, show]
   );
 
   const onSubmitHandler = useCallback(
