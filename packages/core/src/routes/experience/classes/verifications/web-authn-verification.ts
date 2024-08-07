@@ -71,7 +71,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
   readonly userId;
   private verified;
   private registrationChallenge?: string;
-  private readonly authenticationChallenge?: string;
+  private authenticationChallenge?: string;
   #registrationInfo?: BindWebAuthn;
 
   constructor(
@@ -200,6 +200,8 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
       mfaVerifications,
       rpId: hostname,
     });
+
+    this.authenticationChallenge = authenticationOptions.challenge;
 
     return authenticationOptions;
   }
