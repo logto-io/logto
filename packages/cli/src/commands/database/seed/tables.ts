@@ -181,8 +181,7 @@ export const seedTables = async (
         ({ name }) =>
           name === CloudScope.SendSms ||
           name === CloudScope.SendEmail ||
-          name === CloudScope.FetchCustomJwt ||
-          name === CloudScope.ReportSubscriptionUpdates
+          name === CloudScope.FetchCustomJwt
       )
       .map(({ id }) => id)
   );
