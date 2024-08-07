@@ -157,6 +157,7 @@ export const useStaticApi = ({
               if (
                 isCloud &&
                 isDevFeaturesEnabled &&
+                isAuthenticated &&
                 ['POST', 'PUT', 'DELETE'].includes(request.method) &&
                 response.status >= 200 &&
                 response.status < 300
