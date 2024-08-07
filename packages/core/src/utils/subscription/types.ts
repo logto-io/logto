@@ -3,9 +3,12 @@ import { type RouterRoutes } from '@withtyped/client';
 import { type z, type ZodType } from 'zod';
 
 type GetRoutes = RouterRoutes<typeof router>['get'];
+type PostRoutes = RouterRoutes<typeof router>['post'];
 
 type RouteResponseType<T extends { search?: unknown; body?: unknown; response?: ZodType }> =
   z.infer<NonNullable<T['response']>>;
+type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response?: unknown }> =
+  z.infer<NonNullable<T['body']>>;
 
 export type SubscriptionPlan = RouteResponseType<GetRoutes['/api/subscription-plans']>[number];
 
@@ -37,3 +40,18 @@ export type SubscriptionQuota = Omit<
 export type SubscriptionUsage = RouteResponseType<
   GetRoutes['/api/tenants/:tenantId/subscription/usage']
 >;
+
+export type ReportSubscriptionUpdatesUsageKey = RouteRequestBodyType<
+  PostRoutes['/api/tenants/my/subscription/item-updates']
+>['usageKey'];
+
+// Have to manually define this variable since we can only get the literal union from the @logto/cloud/routes module.
+export const allReportSubscriptionUpdatesUsageKeys = Object.freeze([
+  'tokenLimit',
+  'machineToMachineLimit',
+  'resourcesLimit',
+  'mfaEnabled',
+  'organizationsEnabled',
+  'tenantMembersLimit',
+  'enterpriseSsoLimit',
+]) satisfies readonly ReportSubscriptionUpdatesUsageKey[];
