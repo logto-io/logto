@@ -1,3 +1,4 @@
+import { GoogleConnector } from '@logto/connector-kit';
 import {
   VerificationType,
   socialAuthorizationUrlPayloadGuard,
@@ -89,9 +90,12 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       action: Action.Submit,
     }),
     async (ctx, next) => {
-      const { connectorId } = ctx.params;
+      const { connectorId } = ctx.guard.params;
       const { connectorData, verificationId } = ctx.guard.body;
       const { verificationAuditLog } = ctx;
+      const {
+        socials: { getConnector },
+      } = libraries;
 
       verificationAuditLog.append({
         payload: {
@@ -101,10 +105,36 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
         },
       });
 
-      const socialVerificationRecord = ctx.experienceInteraction.getVerificationRecordByTypeAndId(
-        VerificationType.Social,
-        verificationId
-      );
+      const connector = await getConnector(connectorId);
+
+      const socialVerificationRecord = (() => {
+        // Check if is Google one tap verification
+        if (
+          connector.metadata.id === GoogleConnector.factoryId &&
+          connectorData[GoogleConnector.oneTapParams.credential]
+        ) {
+          const socialVerificationRecord = SocialVerification.create(
+            libraries,
+            queries,
+            connectorId
+          );
+          ctx.experienceInteraction.setVerificationRecord(socialVerificationRecord);
+          return socialVerificationRecord;
+        }
+
+        if (verificationId) {
+          return ctx.experienceInteraction.getVerificationRecordByTypeAndId(
+            VerificationType.Social,
+            verificationId
+          );
+        }
+
+        // No verificationId provided and not Google one tap callback
+        throw new RequestError({
+          code: 'session.verification_session_not_found',
+          status: 404,
+        });
+      })();
 
       assertThat(
         socialVerificationRecord.connectorId === connectorId,

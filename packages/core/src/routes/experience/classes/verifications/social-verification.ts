@@ -139,8 +139,6 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
-    // TODO: sync userInfo and link social identity
-
     const user = await this.findUserBySocialIdentity();
 
     if (!user) {
