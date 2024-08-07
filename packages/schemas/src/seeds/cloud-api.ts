@@ -22,6 +22,10 @@ export enum CloudScope {
    * scripts and fetch the parsed token payload.
    */
   FetchCustomJwt = 'fetch:custom:jwt',
+  /**
+   * The entity can report changes on Stripe subscription to Logto Cloud.
+   */
+  ReportSubscriptionUpdates = 'report:subscription:updates',
   /** The user can see and manage affiliates, including create, update, and delete. */
   ManageAffiliate = 'manage:affiliate',
   /** The user can create new affiliates and logs. */
@@ -69,6 +73,10 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
     buildScope(
       CloudScope.FetchCustomJwt,
       'Allow accessing external resource to execute JWT payload customizer script and fetch the parsed token payload.'
+    ),
+    buildScope(
+      CloudScope.ReportSubscriptionUpdates,
+      'Allow reporting changes on Stripe subscription to Logto Cloud.'
     ),
     buildScope(CloudScope.CreateAffiliate, 'Allow creating new affiliates and logs.'),
     buildScope(
