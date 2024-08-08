@@ -1,5 +1,58 @@
 # Change Log
 
+## 1.8.0
+
+### Minor Changes
+
+- 3a839f6d6: support organization logo and sign-in experience override
+
+  Now it's able to set light and dark logos for organizations. You can upload the logos in the organization settings page.
+
+  Also, it's possible to override the sign-in experience logo from an organization. Simply add the `organization_id` parameter to the authentication request. In most Logto SDKs, it can be done by using the `extraParams` field in the `signIn` method.
+
+  For example, in the JavaScript SDK:
+
+  ```ts
+  import LogtoClient from "@logto/client";
+
+  const logtoClient = new LogtoClient(/* your configuration */);
+
+  logtoClient.signIn({
+    redirectUri: "https://your-app.com/callback",
+    extraParams: {
+      organization_id: "<organization-id>",
+    },
+  });
+  ```
+
+  The value `<organization-id>` can be found in the organization settings page.
+
+  If you could not find the `extraParams` field in the SDK you are using, please let us know.
+
+- 62f5e5e0c: support app-level branding
+
+  You can now set logos, favicons, and colors for your app. These settings will be used in the sign-in experience when the app initiates the authentication flow. For apps that have no branding settings, the omni sign-in experience branding will be used.
+
+  If `organization_id` is provided in the authentication request, the app-level branding settings will be overridden by the organization's branding settings, if available.
+
+- d203c8d2f: support experience data server-side rendering
+
+  Logto now injects the sign-in experience settings and phrases into the `index.html` file for better first-screen performance. The experience app will still fetch the settings and phrases from the server if:
+
+  - The server didn't inject the settings and phrases.
+  - The parameters in the URL are different from server-rendered data.
+
+- 3bf756f2b: use Vite for transpilation and bundling
+
+  Removed ParcelJS and replaced with Vite. No breaking changes should be expected, but use a minor version bump to catch your attention.
+
+  > [!Important]
+  > The browserlist configuration for `@logto/experience` and been synced with what is stated in README.md.
+
+- 62f5e5e0c: support dark favicon
+
+  The favicon for the dark theme now can be set in the sign-in experience branding settings.
+
 ## 1.7.0
 
 ### Minor Changes
