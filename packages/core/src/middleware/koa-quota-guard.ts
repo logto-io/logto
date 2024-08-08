@@ -1,3 +1,4 @@
+import { type Nullable } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
 import { type QuotaLibrary } from '#src/libraries/quota.js';
@@ -43,5 +44,20 @@ export function newKoaQuotaGuard<StateT, ContextT, ResponseBodyT>({
       await quota.guardTenantUsageByKey(key);
     }
     return next();
+  };
+}
+
+export function koaReportSubscriptionUpdates<StateT, ContextT, ResponseBodyT>({
+  key,
+  quota,
+  methods = ['POST', 'PUT', 'DELETE'],
+}: NewUsageGuardConfig): MiddlewareType<StateT, ContextT, Nullable<ResponseBodyT>> {
+  return async (ctx, next) => {
+    await next();
+
+    // eslint-disable-next-line no-restricted-syntax
+    if (methods.includes(ctx.method.toUpperCase() as Method)) {
+      await quota.reportSubscriptionUpdatesUsage(key);
+    }
   };
 }

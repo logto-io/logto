@@ -1,3 +1,5 @@
+import { trySafe } from '@silverhand/essentials';
+
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 
 import assertThat from '../assert-that.js';
@@ -7,6 +9,8 @@ import {
   type SubscriptionUsage,
   type SubscriptionPlan,
   type Subscription,
+  type ReportSubscriptionUpdatesUsageKey,
+  allReportSubscriptionUpdatesUsageKeys,
 } from './types.js';
 
 export const getTenantSubscription = async (
@@ -33,19 +37,21 @@ export const getTenantSubscriptionPlan = async (
   return plan;
 };
 
-export const getTenantSubscriptionQuotaAndUsage = async (
+export const getTenantSubscriptionData = async (
   cloudConnection: CloudConnectionLibrary
 ): Promise<{
+  planId: string;
   quota: SubscriptionQuota;
   usage: SubscriptionUsage;
 }> => {
   const client = await cloudConnection.getClient();
-  const [quota, usage] = await Promise.all([
+  const [{ planId }, quota, usage] = await Promise.all([
+    client.get('/api/tenants/my/subscription'),
     client.get('/api/tenants/my/subscription/quota'),
     client.get('/api/tenants/my/subscription/usage'),
   ]);
 
-  return { quota, usage };
+  return { planId, quota, usage };
 };
 
 export const getTenantSubscriptionScopeUsage = async (
@@ -59,4 +65,30 @@ export const getTenantSubscriptionScopeUsage = async (
   });
 
   return scopeUsages;
+};
+
+export const reportSubscriptionUpdates = async (
+  cloudConnection: CloudConnectionLibrary,
+  usageKey: keyof SubscriptionQuota
+): Promise<void> => {
+  if (!isReportSubscriptionUpdatesUsageKey(usageKey)) {
+    return;
+  }
+
+  const client = await cloudConnection.getClient();
+  // We only report to the Cloud to notify the resource usage updates, and do not care the response. We will see error logs on the Cloud side if there is any issue.
+  await trySafe(
+    client.post('/api/tenants/my/subscription/item-updates', {
+      body: {
+        usageKey,
+      },
+    })
+  );
+};
+
+export const isReportSubscriptionUpdatesUsageKey = (
+  value: string
+): value is ReportSubscriptionUpdatesUsageKey => {
+  // eslint-disable-next-line no-restricted-syntax
+  return allReportSubscriptionUpdatesUsageKeys.includes(value as ReportSubscriptionUpdatesUsageKey);
 };

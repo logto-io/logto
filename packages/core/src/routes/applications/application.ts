@@ -213,6 +213,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       }
 
       ctx.body = application;
+
+      if (rest.type === ApplicationType.MachineToMachine) {
+        await quota.reportSubscriptionUpdatesUsage('machineToMachineLimit');
+      }
+
       return next();
     }
   );
@@ -355,6 +360,10 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       // Note: will need delete cascade when application is joint with other tables
       await queries.applications.deleteApplicationById(id);
       ctx.status = 204;
+
+      if (type === ApplicationType.MachineToMachine) {
+        await quota.reportSubscriptionUpdatesUsage('machineToMachineLimit');
+      }
 
       return next();
     }

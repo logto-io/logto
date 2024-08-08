@@ -6,13 +6,17 @@ import {
   type OrganizationRoleKeys,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { condArray } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import koaQuotaGuard, {
+  koaReportSubscriptionUpdates,
+  newKoaQuotaGuard,
+} from '#src/middleware/koa-quota-guard.js';
 import { organizationRoleSearchKeys } from '#src/queries/organization/index.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
@@ -45,11 +49,17 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     unknown,
     ManagementApiRouterContext
   >(OrganizationRoles, roles, {
-    middlewares: [
+    middlewares: condArray(
       EnvSet.values.isDevFeaturesEnabled
         ? newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })
         : koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
-    ],
+      EnvSet.values.isDevFeaturesEnabled &&
+        koaReportSubscriptionUpdates({
+          key: 'organizationsEnabled',
+          quota,
+          methods: ['POST', 'PUT', 'DELETE'],
+        })
+    ),
     disabled: { get: true, post: true },
     errorHandler,
     searchFields: ['name'],

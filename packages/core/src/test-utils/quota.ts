@@ -7,5 +7,6 @@ export const createMockQuotaLibrary = (): QuotaLibrary => {
     guardKey: jest.fn(),
     guardTenantUsageByKey: jest.fn(),
     guardEntityScopesUsage: jest.fn(),
+    reportSubscriptionUpdatesUsage: jest.fn(),
   };
 };

@@ -11,7 +11,10 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import koaQuotaGuard, {
+  koaReportSubscriptionUpdates,
+  newKoaQuotaGuard,
+} from '#src/middleware/koa-quota-guard.js';
 import { ssoConnectorCreateGuard, ssoConnectorPatchGuard } from '#src/routes/sso-connector/type.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { isSupportedSsoConnector, isSupportedSsoProvider } from '#src/sso/utils.js';
@@ -76,6 +79,11 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       body: ssoConnectorCreateGuard,
       response: SsoConnectors.guard,
       status: [200, 400, 409, 422],
+    }),
+    koaReportSubscriptionUpdates({
+      quota,
+      key: 'enterpriseSsoLimit',
+      methods: ['POST'],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
@@ -201,6 +209,11 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     koaGuard({
       params: z.object({ id: z.string().min(1) }),
       status: [204, 404],
+    }),
+    koaReportSubscriptionUpdates({
+      quota,
+      key: 'enterpriseSsoLimit',
+      methods: ['DELETE'],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;

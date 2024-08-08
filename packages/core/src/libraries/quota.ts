@@ -7,8 +7,10 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   getTenantSubscriptionPlan,
-  getTenantSubscriptionQuotaAndUsage,
+  getTenantSubscriptionData,
   getTenantSubscriptionScopeUsage,
+  reportSubscriptionUpdates,
+  isReportSubscriptionUpdatesUsageKey,
 } from '#src/utils/subscription/index.js';
 import { type SubscriptionQuota, type FeatureQuota } from '#src/utils/subscription/types.js';
 
@@ -20,6 +22,11 @@ export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
 const notNumber = (): never => {
   throw new Error('Only support usage query for numeric quota');
 };
+
+const shouldReportSubscriptionUpdates = (planId: string, key: keyof SubscriptionQuota): boolean =>
+  EnvSet.values.isDevFeaturesEnabled &&
+  planId === ReservedPlanId.Pro &&
+  isReportSubscriptionUpdatesUsageKey(key);
 
 export const createQuotaLibrary = (
   queries: Queries,
@@ -156,9 +163,16 @@ export const createQuotaLibrary = (
       return;
     }
 
-    const { quota: fullQuota, usage: fullUsage } = await getTenantSubscriptionQuotaAndUsage(
-      cloudConnection
-    );
+    const {
+      planId,
+      quota: fullQuota,
+      usage: fullUsage,
+    } = await getTenantSubscriptionData(cloudConnection);
+
+    // Do not block Pro plan from adding add-on resources.
+    if (shouldReportSubscriptionUpdates(planId, key)) {
+      return;
+    }
 
     // Type `SubscriptionQuota` and type `SubscriptionUsage` are sharing keys, this design helps us to compare the usage with the quota limit in a easier way.
     const { [key]: limit } = fullQuota;
@@ -227,7 +241,7 @@ export const createQuotaLibrary = (
       },
       scopeUsages,
     ] = await Promise.all([
-      getTenantSubscriptionQuotaAndUsage(cloudConnection),
+      getTenantSubscriptionData(cloudConnection),
       getTenantSubscriptionScopeUsage(cloudConnection, entityName),
     ]);
     const usage = scopeUsages[entityId] ?? 0;
@@ -262,5 +276,30 @@ export const createQuotaLibrary = (
     );
   };
 
-  return { guardKey, guardTenantUsageByKey, guardEntityScopesUsage };
+  const reportSubscriptionUpdatesUsage = async (key: keyof SubscriptionQuota) => {
+    const { isCloud, isIntegrationTest } = EnvSet.values;
+
+    // Cloud only feature, skip in non-cloud environments
+    if (!isCloud) {
+      return;
+    }
+
+    // Disable in integration tests
+    if (isIntegrationTest) {
+      return;
+    }
+
+    const { planId } = await getTenantSubscriptionData(cloudConnection);
+
+    if (shouldReportSubscriptionUpdates(planId, key)) {
+      await reportSubscriptionUpdates(cloudConnection, key);
+    }
+  };
+
+  return {
+    guardKey,
+    guardTenantUsageByKey,
+    guardEntityScopesUsage,
+    reportSubscriptionUpdatesUsage,
+  };
 };

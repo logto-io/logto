@@ -19,7 +19,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const { deleteConnectorById } = queries.connectors;
   const {
     signInExperiences: { validateLanguageInfo },
-    quota: { guardKey, guardTenantUsageByKey },
+    quota: { guardKey, guardTenantUsageByKey, reportSubscriptionUpdatesUsage },
   } = libraries;
   const { getLogtoConnectors } = connectors;
 
@@ -121,6 +121,8 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             }
           : rest
       );
+
+      await reportSubscriptionUpdatesUsage('mfaEnabled');
 
       return next();
     }
