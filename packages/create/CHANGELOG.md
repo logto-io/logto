@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.19.0
+
+### Patch Changes
+
+- Updated dependencies [2d0502a42]
+  - @logto/cli@1.19.0
+
 ## 1.18.0
 
 ### Patch Changes
