@@ -1,9 +1,9 @@
-import { MissingProfile } from '@logto/schemas';
+import { InteractionEvent, MissingProfile } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { validate } from 'superstruct';
 
-import { UserFlow, SearchParameters } from '@/types';
+import { UserFlow, SearchParameters, type ContinueFlowInteractionEvent } from '@/types';
 import { missingProfileErrorDataGuard } from '@/types/guard';
 import { queryStringify } from '@/utils';
 
@@ -13,9 +13,19 @@ import useToast from './use-toast';
 export type Options = {
   replace?: boolean;
   linkSocial?: string;
+  /**
+   * We use this param to track the current profile fulfillment flow.
+   * If is UserFlow.Register, we need to call the identify endpoint after the user completes the profile.
+   * If is UserFlow.SignIn, directly call the submitInteraction endpoint.
+   **/
+  interactionEvent?: ContinueFlowInteractionEvent;
 };
 
-const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) => {
+const useRequiredProfileErrorHandler = ({
+  replace,
+  linkSocial,
+  interactionEvent = InteractionEvent.SignIn,
+}: Options = {}) => {
   const navigate = useNavigate();
   const { setToast } = useToast();
 
@@ -26,9 +36,6 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
 
         // Required as a sign up method but missing in the user profile
         const missingProfile = data?.missingProfile[0];
-
-        // Required as a sign up method, verified email or phone can be found in Social Identity, but registered with a different account
-        const registeredSocialIdentity = data?.registeredSocialIdentity;
 
         const linkSocialQueryString = linkSocial
           ? `?${queryStringify({ [SearchParameters.LinkSocial]: linkSocial })}`
@@ -41,7 +48,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
               {
                 pathname: `/${UserFlow.Continue}/${missingProfile}`,
               },
-              { replace }
+              { replace, state: { interactionEvent } }
             );
             break;
           }
@@ -53,7 +60,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
                 pathname: `/${UserFlow.Continue}/${missingProfile}`,
                 search: linkSocialQueryString,
               },
-              { replace, state: { registeredSocialIdentity } }
+              { replace, state: { interactionEvent } }
             );
             break;
           }
@@ -65,7 +72,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
         }
       },
     }),
-    [linkSocial, navigate, replace, setToast]
+    [interactionEvent, linkSocial, navigate, replace, setToast]
   );
 
   return requiredProfileErrorHandler;

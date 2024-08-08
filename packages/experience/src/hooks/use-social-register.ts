@@ -1,3 +1,4 @@
+import { InteractionEvent } from '@logto/schemas';
 import { useCallback } from 'react';
 
 import { registerWithVerifiedIdentifier } from '@/apis/experience';
@@ -12,14 +13,18 @@ const useSocialRegister = (connectorId: string, replace?: boolean) => {
   const asyncRegisterWithSocial = useApi(registerWithVerifiedIdentifier);
   const redirectTo = useGlobalRedirectTo();
 
-  const preSignInErrorHandler = usePreSignInErrorHandler({ linkSocial: connectorId, replace });
+  const preRegisterErrorHandler = usePreSignInErrorHandler({
+    linkSocial: connectorId,
+    replace,
+    interactionEvent: InteractionEvent.Register,
+  });
 
   return useCallback(
     async (verificationId: string) => {
       const [error, result] = await asyncRegisterWithSocial(verificationId);
 
       if (error) {
-        await handleError(error, preSignInErrorHandler);
+        await handleError(error, preRegisterErrorHandler);
 
         return;
       }
@@ -28,7 +33,7 @@ const useSocialRegister = (connectorId: string, replace?: boolean) => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncRegisterWithSocial, handleError, preSignInErrorHandler, redirectTo]
+    [asyncRegisterWithSocial, handleError, preRegisterErrorHandler, redirectTo]
   );
 };
 

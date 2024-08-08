@@ -1,20 +1,20 @@
 import { SignInIdentifier } from '@logto/schemas';
-import type { TFuncKey } from 'i18next';
 import { useContext } from 'react';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { type ContinueFlowInteractionEvent } from '@/types';
 
 import IdentifierProfileForm from '../IdentifierProfileForm';
 
 import useSetUsername from './use-set-username';
 
 type Props = {
-  readonly notification?: TFuncKey;
+  readonly interactionEvent: ContinueFlowInteractionEvent;
 };
 
-const SetUsername = (props: Props) => {
-  const { onSubmit, errorMessage, clearErrorMessage } = useSetUsername();
+const SetUsername = ({ interactionEvent }: Props) => {
+  const { onSubmit, errorMessage, clearErrorMessage } = useSetUsername(interactionEvent);
 
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
 
@@ -32,7 +32,6 @@ const SetUsername = (props: Props) => {
     <SecondaryPageLayout
       title="description.enter_username"
       description="description.enter_username_description"
-      {...props}
     >
       <IdentifierProfileForm
         autoFocus

@@ -4,6 +4,7 @@ import type {
   WebAuthnRegistrationOptions,
   WebAuthnAuthenticationOptions,
   FullSignInExperience,
+  InteractionEvent,
 } from '@logto/schemas';
 
 export enum UserFlow {
@@ -45,3 +46,5 @@ export type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType exten
   : never;
 
 export type WebAuthnOptions = WebAuthnRegistrationOptions | WebAuthnAuthenticationOptions;
+
+export type ContinueFlowInteractionEvent = InteractionEvent.Register | InteractionEvent.SignIn;

@@ -10,8 +10,8 @@ import useRequiredProfileErrorHandler, {
 
 type Options = UseRequiredProfileErrorHandlerOptions & UseMfaVerificationErrorHandlerOptions;
 
-const usePreSignInErrorHandler = ({ replace, linkSocial }: Options = {}): ErrorHandlers => {
-  const requiredProfileErrorHandler = useRequiredProfileErrorHandler({ replace, linkSocial });
+const usePreSignInErrorHandler = ({ replace, ...rest }: Options = {}): ErrorHandlers => {
+  const requiredProfileErrorHandler = useRequiredProfileErrorHandler({ replace, ...rest });
   const mfaErrorHandler = useMfaErrorHandler({ replace });
 
   return useMemo(

@@ -6,7 +6,7 @@ import { useContext } from 'react';
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
-import type { VerificationCodeIdentifier } from '@/types';
+import type { ContinueFlowInteractionEvent, VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 
 import IdentifierProfileForm from '../IdentifierProfileForm';
@@ -17,7 +17,7 @@ export type VerificationCodeProfileType = Exclude<MissingProfile, 'username' | '
 
 type Props = {
   readonly missingProfile: VerificationCodeProfileType;
-  readonly notification?: TFuncKey;
+  readonly interactionEvent: ContinueFlowInteractionEvent;
 };
 
 export const pageContent: Record<
@@ -59,7 +59,7 @@ const formSettings: Record<
   },
 };
 
-const SetEmailOrPhone = ({ missingProfile, notification }: Props) => {
+const SetEmailOrPhone = ({ missingProfile, interactionEvent }: Props) => {
   const { onSubmit, errorMessage, clearErrorMessage } = useSendVerificationCode(UserFlow.Continue);
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
 
@@ -71,11 +71,11 @@ const SetEmailOrPhone = ({ missingProfile, notification }: Props) => {
 
     setIdentifierInputValue({ type: identifier, value });
 
-    return onSubmit({ identifier, value });
+    return onSubmit({ identifier, value }, interactionEvent);
   };
 
   return (
-    <SecondaryPageLayout {...pageContent[missingProfile]} notification={notification}>
+    <SecondaryPageLayout {...pageContent[missingProfile]}>
       <IdentifierProfileForm
         autoFocus
         errorMessage={errorMessage}

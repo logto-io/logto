@@ -1,4 +1,9 @@
-import { SignInIdentifier, SignInMode, type VerificationCodeIdentifier } from '@logto/schemas';
+import {
+  InteractionEvent,
+  SignInIdentifier,
+  SignInMode,
+  type VerificationCodeIdentifier,
+} from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +40,15 @@ const useRegisterFlowCodeVerification = (
 
   const { errorMessage, clearErrorMessage, generalVerificationCodeErrorHandlers } =
     useGeneralVerificationCodeErrorHandler();
-  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
+
+  const preRegisterErrorHandler = usePreSignInErrorHandler({
+    replace: true,
+    interactionEvent: InteractionEvent.Register,
+  });
+
+  const preSignInErrorHandler = usePreSignInErrorHandler({
+    replace: true,
+  });
 
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
@@ -77,10 +90,10 @@ const useRegisterFlowCodeVerification = (
     handleError,
     identifier,
     navigate,
-    preSignInErrorHandler,
     redirectTo,
     show,
     showIdentifierErrorAlert,
+    preSignInErrorHandler,
     signInMode,
     signInWithIdentifierAsync,
     t,
@@ -92,13 +105,13 @@ const useRegisterFlowCodeVerification = (
       'user.email_already_in_use': identifierExistErrorHandler,
       'user.phone_already_in_use': identifierExistErrorHandler,
       ...generalVerificationCodeErrorHandlers,
-      ...preSignInErrorHandler,
+      ...preRegisterErrorHandler,
       callback: errorCallback,
     }),
     [
       identifierExistErrorHandler,
       generalVerificationCodeErrorHandlers,
-      preSignInErrorHandler,
+      preRegisterErrorHandler,
       errorCallback,
     ]
   );

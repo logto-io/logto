@@ -1,4 +1,9 @@
-import { SignInIdentifier, SignInMode, type VerificationCodeIdentifier } from '@logto/schemas';
+import {
+  InteractionEvent,
+  SignInIdentifier,
+  SignInMode,
+  type VerificationCodeIdentifier,
+} from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +30,7 @@ const useSignInFlowCodeVerification = (
   const { show } = useConfirmModal();
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
-  const { signInMode } = useSieMethods();
+  const { signInMode, signUpMethods } = useSieMethods();
   const handleError = useErrorHandler();
   const registerWithIdentifierAsync = useApi(registerWithVerifiedIdentifier);
   const asyncSignInWithVerificationCodeIdentifier = useApi(identifyWithVerificationCode);
@@ -35,13 +40,17 @@ const useSignInFlowCodeVerification = (
 
   const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
 
+  const preRegisterErrorHandler = usePreSignInErrorHandler({
+    interactionEvent: InteractionEvent.Register,
+  });
+
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
   const identifierNotExistErrorHandler = useCallback(async () => {
     const { type, value } = identifier;
 
     // Should not redirect user to register if is sign-in only mode or bind social flow
-    if (signInMode === SignInMode.SignIn) {
+    if (signInMode === SignInMode.SignIn || !signUpMethods.includes(type)) {
       void showIdentifierErrorAlert(IdentifierErrorType.IdentifierNotExist, type, value);
 
       return;
@@ -58,7 +67,7 @@ const useSignInFlowCodeVerification = (
         const [error, result] = await registerWithIdentifierAsync(verificationId);
 
         if (error) {
-          await handleError(error, preSignInErrorHandler);
+          await handleError(error, preRegisterErrorHandler);
 
           return;
         }
@@ -74,13 +83,14 @@ const useSignInFlowCodeVerification = (
   }, [
     identifier,
     signInMode,
+    signUpMethods,
     show,
     t,
     showIdentifierErrorAlert,
     registerWithIdentifierAsync,
     verificationId,
     handleError,
-    preSignInErrorHandler,
+    preRegisterErrorHandler,
     redirectTo,
     navigate,
   ]);

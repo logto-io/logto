@@ -10,6 +10,7 @@ import useApi from '@/hooks/use-api';
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
+import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
 import useToast from '@/hooks/use-toast';
 
@@ -28,6 +29,8 @@ const ResetPassword = () => {
   const asyncResetPassword = useApi(resetPassword);
   const handleError = useErrorHandler();
 
+  const passwordRejectionErrorHandler = usePasswordRejectionErrorHandler({ setErrorMessage });
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.verification_session_not_found': async (error) => {
@@ -37,8 +40,9 @@ const ResetPassword = () => {
       'user.same_password': (error) => {
         setErrorMessage(error.message);
       },
+      ...passwordRejectionErrorHandler,
     }),
-    [navigate, setErrorMessage, show]
+    [navigate, passwordRejectionErrorHandler, show]
   );
 
   const onSubmitHandler = useCallback(
