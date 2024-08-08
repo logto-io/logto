@@ -1,6 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { renderHook } from '@testing-library/react';
-import { useLocation } from 'react-router-dom';
 
 import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -13,7 +12,6 @@ import SignInPassword from '.';
 describe('SignInPassword', () => {
   const { result } = renderHook(() => useSessionStorage());
   const { set, remove } = result.current;
-  const mockUseLocation = useLocation as jest.Mock;
   const email = 'email@logto.io';
   const phone = '18571111111';
   const username = 'foo';
