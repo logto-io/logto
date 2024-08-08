@@ -11,10 +11,11 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
 
 type Props = {
+  readonly isDisabled: boolean;
   readonly tokenType: LogtoJwtTokenKeyType;
 };
 
-function CreateButton({ tokenType }: Props) {
+function CreateButton({ isDisabled, tokenType }: Props) {
   const link = getPagePath(tokenType, 'create');
   const { navigate } = useTenantPathname();
   const { show } = useConfirmModal();
@@ -58,6 +59,7 @@ function CreateButton({ tokenType }: Props) {
     <Button
       type="primary"
       title="jwt_claims.custom_jwt_create_button"
+      disabled={isDevFeaturesEnabled && isDisabled}
       onClick={onCreateButtonClick}
     />
   );

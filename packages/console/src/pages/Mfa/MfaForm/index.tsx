@@ -22,6 +22,7 @@ import { trySubmitSafe } from '@/utils/form';
 import { type MfaConfigForm, type MfaConfig } from '../types';
 
 import FactorLabel from './FactorLabel';
+import UpsellNotice from './UpsellNotice';
 import { policyOptionTitleMap } from './constants';
 import styles from './index.module.scss';
 import { convertMfaFormToConfig, convertMfaConfigToForm, validateBackupCodeFactor } from './utils';
@@ -84,6 +85,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
 
   return (
     <>
+      <UpsellNotice className={styles.upsellNotice} />
       <DetailsForm
         isDirty={isDirty}
         isSubmitting={isSubmitting}

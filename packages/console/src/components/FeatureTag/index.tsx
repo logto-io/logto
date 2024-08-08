@@ -1,9 +1,12 @@
-import { type ReservedPlanId } from '@logto/schemas';
+import { ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
+import AddOnTag from './AddOnTag';
 import styles from './index.module.scss';
 
 export { default as BetaTag } from './BetaTag';
@@ -50,6 +53,9 @@ export type Props = {
 function FeatureTag(props: Props) {
   const { className } = props;
   const { isDevTenant } = useContext(TenantsContext);
+  const {
+    currentSubscription: { planId },
+  } = useContext(SubscriptionDataContext);
 
   const { isVisible, plan } = props;
 
@@ -57,6 +63,11 @@ function FeatureTag(props: Props) {
   // useful for developers to know which features need to be paid for in production.
   if (!isDevTenant && !isVisible) {
     return null;
+  }
+
+  // Show the add-on tag for Pro plan when dev features are enabled.
+  if (isDevFeaturesEnabled && planId === ReservedPlanId.Pro) {
+    return <AddOnTag className={className} />;
   }
 
   return <div className={classNames(styles.tag, className)}>{plan}</div>;
