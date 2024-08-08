@@ -23,6 +23,11 @@ const notNumber = (): never => {
   throw new Error('Only support usage query for numeric quota');
 };
 
+const shouldReportSubscriptionUpdates = (planId: string, key: keyof SubscriptionQuota): boolean =>
+  EnvSet.values.isDevFeaturesEnabled &&
+  planId === ReservedPlanId.Pro &&
+  isReportSubscriptionUpdatesUsageKey(key);
+
 export const createQuotaLibrary = (
   queries: Queries,
   cloudConnection: CloudConnectionLibrary,
@@ -146,7 +151,7 @@ export const createQuotaLibrary = (
   };
 
   const guardTenantUsageByKey = async (key: keyof SubscriptionQuota) => {
-    const { isCloud, isIntegrationTest, isDevFeaturesEnabled } = EnvSet.values;
+    const { isCloud, isIntegrationTest } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
     if (!isCloud) {
@@ -165,11 +170,7 @@ export const createQuotaLibrary = (
     } = await getTenantSubscriptionData(cloudConnection);
 
     // Do not block Pro plan from adding add-on resources.
-    if (
-      isDevFeaturesEnabled &&
-      planId === ReservedPlanId.Pro &&
-      isReportSubscriptionUpdatesUsageKey(key)
-    ) {
+    if (shouldReportSubscriptionUpdates(planId, key)) {
       return;
     }
 
@@ -276,7 +277,7 @@ export const createQuotaLibrary = (
   };
 
   const reportSubscriptionUpdatesUsage = async (key: keyof SubscriptionQuota) => {
-    const { isCloud, isIntegrationTest, isDevFeaturesEnabled } = EnvSet.values;
+    const { isCloud, isIntegrationTest } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
     if (!isCloud) {
@@ -290,12 +291,7 @@ export const createQuotaLibrary = (
 
     const { planId } = await getTenantSubscriptionData(cloudConnection);
 
-    // Do not block Pro plan from adding add-on resources.
-    if (
-      isDevFeaturesEnabled &&
-      planId === ReservedPlanId.Pro &&
-      isReportSubscriptionUpdatesUsageKey(key)
-    ) {
+    if (shouldReportSubscriptionUpdates(planId, key)) {
       await reportSubscriptionUpdates(cloudConnection, key);
     }
   };

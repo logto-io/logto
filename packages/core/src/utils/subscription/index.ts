@@ -69,8 +69,12 @@ export const getTenantSubscriptionScopeUsage = async (
 
 export const reportSubscriptionUpdates = async (
   cloudConnection: CloudConnectionLibrary,
-  usageKey: ReportSubscriptionUpdatesUsageKey
+  usageKey: keyof SubscriptionQuota
 ): Promise<void> => {
+  if (!isReportSubscriptionUpdatesUsageKey(usageKey)) {
+    return;
+  }
+
   const client = await cloudConnection.getClient();
   // We only report to the Cloud to notify the resource usage updates, and do not care the response. We will see error logs on the Cloud side if there is any issue.
   await trySafe(
