@@ -1,8 +1,11 @@
+import { VerificationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Divider from '@/components/Divider';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useSkipMfa from '@/hooks/use-skip-mfa';
@@ -17,9 +20,12 @@ import styles from './index.module.scss';
 const TotpBinding = () => {
   const { state } = useLocation();
   const [, totpBindingState] = validate(state, totpBindingStateGuard);
+  const { verificationIdsMap } = useContext(UserInteractionContext);
+  const verificationId = verificationIdsMap[VerificationType.TOTP];
+
   const skipMfa = useSkipMfa();
 
-  if (!totpBindingState) {
+  if (!totpBindingState || !verificationId) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
@@ -33,7 +39,7 @@ const TotpBinding = () => {
       <div className={styles.container}>
         <SecretSection {...totpBindingState} />
         <Divider />
-        <VerificationSection />
+        <VerificationSection verificationId={verificationId} />
         {availableFactors.length > 1 && (
           <>
             <Divider />

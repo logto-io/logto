@@ -5,7 +5,7 @@ import { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useSendMfaPayload from '@/hooks/use-send-mfa-payload';
 import { type UserMfaFlow } from '@/types';
 
-const useTotpCodeVerification = (flow: UserMfaFlow, errorCallback?: () => void) => {
+const useTotpCodeVerification = (errorCallback?: () => void) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const sendMfaPayload = useSendMfaPayload();
 
@@ -19,14 +19,19 @@ const useTotpCodeVerification = (flow: UserMfaFlow, errorCallback?: () => void) 
   );
 
   const onSubmit = useCallback(
-    async (code: string) => {
+    async (
+      code: string,
+      payload:
+        | { flow: UserMfaFlow.MfaBinding; verificationId: string }
+        | { flow: UserMfaFlow.MfaVerification }
+    ) => {
       await sendMfaPayload(
-        { flow, payload: { type: MfaFactor.TOTP, code } },
+        { payload: { type: MfaFactor.TOTP, code }, ...payload },
         invalidCodeErrorHandlers,
         errorCallback
       );
     },
-    [errorCallback, flow, invalidCodeErrorHandlers, sendMfaPayload]
+    [errorCallback, invalidCodeErrorHandlers, sendMfaPayload]
   );
 
   return {

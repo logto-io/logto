@@ -14,11 +14,16 @@ const isCodeReady = (code: string[]) => {
   return code.length === totpCodeLength && code.every(Boolean);
 };
 
-type Props = {
-  readonly flow: UserMfaFlow;
-};
+type Props<T extends UserMfaFlow> = T extends UserMfaFlow.MfaBinding
+  ? {
+      flow: T;
+      verificationId: string;
+    }
+  : {
+      flow: T;
+    };
 
-const TotpCodeVerification = ({ flow }: Props) => {
+const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
   const { t } = useTranslation();
 
   const [codeInput, setCodeInput] = useState<string[]>([]);
@@ -29,10 +34,7 @@ const TotpCodeVerification = ({ flow }: Props) => {
     setInputErrorMessage(undefined);
   }, []);
 
-  const { errorMessage: submitErrorMessage, onSubmit } = useTotpCodeVerification(
-    flow,
-    errorCallback
-  );
+  const { errorMessage: submitErrorMessage, onSubmit } = useTotpCodeVerification(errorCallback);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -42,10 +44,11 @@ const TotpCodeVerification = ({ flow }: Props) => {
     async (code: string[]) => {
       setInputErrorMessage(undefined);
       setIsSubmitting(true);
-      await onSubmit(code.join(''));
+
+      await onSubmit(code.join(''), props);
       setIsSubmitting(false);
     },
-    [onSubmit]
+    [onSubmit, props]
   );
 
   return (

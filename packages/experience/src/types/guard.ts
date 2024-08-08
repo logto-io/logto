@@ -83,11 +83,9 @@ export const totpBindingStateGuard = s.assign(
 
 export type TotpBindingState = s.Infer<typeof totpBindingStateGuard>;
 
-export const backupCodeErrorDataGuard = s.object({
+export const backupCodeBindingStateGuard = s.object({
   codes: s.array(s.string()),
 });
-
-export const backupCodeBindingStateGuard = backupCodeErrorDataGuard;
 
 export type BackupCodeBindingState = s.Infer<typeof backupCodeBindingStateGuard>;
 

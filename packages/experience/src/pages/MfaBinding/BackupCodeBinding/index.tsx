@@ -1,10 +1,11 @@
 import { MfaFactor } from '@logto/schemas';
 import { t } from 'i18next';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Button from '@/components/Button';
 import DynamicT from '@/components/DynamicT';
 import useSendMfaPayload from '@/hooks/use-send-mfa-payload';
@@ -20,11 +21,13 @@ const BackupCodeBinding = () => {
   const { copyText, downloadText } = useTextHandler();
   const sendMfaPayload = useSendMfaPayload();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { verificationIdsMap } = useContext(UserInteractionContext);
+  const verificationId = verificationIdsMap[MfaFactor.BackupCode];
 
   const { state } = useLocation();
   const [, backupCodeBindingState] = validate(state, backupCodeBindingStateGuard);
 
-  if (!backupCodeBindingState) {
+  if (!backupCodeBindingState || !verificationId) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
@@ -72,6 +75,7 @@ const BackupCodeBinding = () => {
             await sendMfaPayload({
               flow: UserMfaFlow.MfaBinding,
               payload: { type: MfaFactor.BackupCode },
+              verificationId,
             });
             setIsSubmitting(false);
           }}

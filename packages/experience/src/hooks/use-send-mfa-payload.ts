@@ -1,7 +1,7 @@
 import { type BindMfaPayload, type VerifyMfaPayload } from '@logto/schemas';
 import { useCallback } from 'react';
 
-import { bindMfa, verifyMfa } from '@/apis/interaction';
+import { bindMfa, verifyMfa } from '@/apis/experience';
 import { UserMfaFlow } from '@/types';
 
 import useApi from './use-api';
@@ -13,17 +13,19 @@ export type SendMfaPayloadApiOptions =
   | {
       flow: UserMfaFlow.MfaBinding;
       payload: BindMfaPayload;
+      verificationId: string;
     }
   | {
       flow: UserMfaFlow.MfaVerification;
       payload: VerifyMfaPayload;
+      verificationId?: string;
     };
 
-const sendMfaPayloadApi = async ({ flow, payload }: SendMfaPayloadApiOptions) => {
+const sendMfaPayloadApi = async ({ flow, payload, verificationId }: SendMfaPayloadApiOptions) => {
   if (flow === UserMfaFlow.MfaBinding) {
-    return bindMfa(payload);
+    return bindMfa(payload, verificationId);
   }
-  return verifyMfa(payload);
+  return verifyMfa(payload, verificationId);
 };
 
 const useSendMfaPayload = () => {
