@@ -3,6 +3,7 @@ import { languages, fallback } from '@logto/language-kit';
 import type { NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import ar from './locales/ar/index.js';
 import de from './locales/de/index.js';
 import en from './locales/en/index.js';
 import es from './locales/es/index.js';
@@ -25,6 +26,7 @@ export type { LocalePhrase } from './types.js';
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 
 export const builtInLanguages = [
+  'ar',
   'de',
   'en',
   'es',
@@ -54,6 +56,7 @@ export type BuiltInLanguageTag = z.infer<typeof builtInLanguageTagGuard>;
 export type Resource = Record<BuiltInLanguageTag, LocalePhrase>;
 
 const resource: Resource = {
+  ar,
   de,
   en,
   es,
