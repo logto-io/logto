@@ -5,7 +5,8 @@ import { type NewSubscriptionScopeUsage } from '@/cloud/types/router';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 
 const useNewSubscriptionScopeUsage = (tenantId: string) => {
-  const cloudApi = useCloudApi();
+  // TODO: Console sometimes toast 401 unauthorized error, but can not be reproduced in local environment easily, we temporarily hide the error toast for prod env.
+  const cloudApi = useCloudApi({ hideErrorToast: !isDevFeaturesEnabled });
 
   const resourceEntityName = 'resources';
   const roleEntityName = 'roles';
