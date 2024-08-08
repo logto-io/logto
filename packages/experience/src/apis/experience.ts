@@ -3,6 +3,7 @@ import {
   InteractionEvent,
   type PasswordVerificationPayload,
   SignInIdentifier,
+  type SocialVerificationCallbackPayload,
   type UpdateProfileApiPayload,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
@@ -51,9 +52,19 @@ const updateInteractionEvent = async (interactionEvent: InteractionEvent) =>
     },
   });
 
-const identifyAndSubmitInteraction = async (payload?: IdentificationApiPayload) => {
+export const identifyAndSubmitInteraction = async (payload?: IdentificationApiPayload) => {
   await identifyUser(payload);
   return submitInteraction();
+};
+
+export const registerWithVerifiedIdentifier = async (verificationId: string) => {
+  await updateInteractionEvent(InteractionEvent.Register);
+  return identifyAndSubmitInteraction({ verificationId });
+};
+
+export const signInWithVerifiedIdentifier = async (verificationId: string) => {
+  await updateInteractionEvent(InteractionEvent.SignIn);
+  return identifyAndSubmitInteraction({ verificationId });
 };
 
 // Password APIs
@@ -113,16 +124,6 @@ export const identifyWithVerificationCode = async (json: VerificationCodePayload
   return identifyAndSubmitInteraction({ verificationId });
 };
 
-export const registerWithVerifiedIdentifier = async (verificationId: string) => {
-  await updateInteractionEvent(InteractionEvent.Register);
-  return identifyAndSubmitInteraction({ verificationId });
-};
-
-export const signInWithVerifiedIdentifier = async (verificationId: string) => {
-  await updateInteractionEvent(InteractionEvent.SignIn);
-  return identifyAndSubmitInteraction({ verificationId });
-};
-
 // Profile APIs
 
 export const updateProfileWithVerificationCode = async (json: VerificationCodePayload) => {
@@ -148,4 +149,77 @@ export const resetPassword = async (password: string) => {
   });
 
   return submitInteraction();
+};
+
+// Social and SSO APIs
+
+export const getSocialAuthorizationUrl = async (
+  connectorId: string,
+  state: string,
+  redirectUri: string
+) => {
+  await initInteraction(InteractionEvent.SignIn);
+
+  return api
+    .post(`${experienceRoutes.verification}/social/${connectorId}/authorization-uri`, {
+      json: {
+        state,
+        redirectUri,
+      },
+    })
+    .json<
+      VerificationResponse & {
+        authorizationUri: string;
+      }
+    >();
+};
+
+export const verifySocialVerification = async (
+  connectorId: string,
+  payload: SocialVerificationCallbackPayload
+) =>
+  api
+    .post(`${experienceRoutes.verification}/social/${connectorId}/verify`, {
+      json: payload,
+    })
+    .json<VerificationResponse>();
+
+export const bindSocialRelatedUser = async (verificationId: string) => {
+  await updateInteractionEvent(InteractionEvent.SignIn);
+  await identifyUser({ verificationId, linkSocialIdentity: true });
+  return submitInteraction();
+};
+
+export const getSsoConnectors = async (email: string) =>
+  api
+    .get(`${experienceRoutes.verification}/sso/connectors`, {
+      searchParams: {
+        email,
+      },
+    })
+    .json<{ connectorIds: string[] }>();
+
+export const getSsoAuthorizationUrl = async (connectorId: string, payload: unknown) => {
+  await initInteraction(InteractionEvent.SignIn);
+
+  return api
+    .post(`${experienceRoutes.verification}/sso/${connectorId}/authorization-uri`, {
+      json: payload,
+    })
+    .json<
+      VerificationResponse & {
+        authorizationUri: string;
+      }
+    >();
+};
+
+export const signInWithSso = async (
+  connectorId: string,
+  payload: SocialVerificationCallbackPayload & { verificationId: string }
+) => {
+  await api.post(`${experienceRoutes.verification}/sso/${connectorId}/verify`, {
+    json: payload,
+  });
+
+  return identifyAndSubmitInteraction({ verificationId: payload.verificationId });
 };

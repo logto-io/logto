@@ -1,6 +1,8 @@
-import { useCallback } from 'react';
+import { VerificationType } from '@logto/schemas';
+import { useCallback, useContext } from 'react';
 
-import { getSingleSignOnUrl } from '@/apis/single-sign-on';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { getSsoAuthorizationUrl } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
@@ -10,11 +12,12 @@ import useGlobalRedirectTo from './use-global-redirect-to';
 
 const useSingleSignOn = () => {
   const handleError = useErrorHandler();
-  const asyncInvokeSingleSignOn = useApi(getSingleSignOnUrl);
+  const asyncInvokeSingleSignOn = useApi(getSsoAuthorizationUrl);
   const redirectTo = useGlobalRedirectTo({
     shouldClearInteractionContextSession: false,
     isReplace: false,
   });
+  const { setVerificationId } = useContext(UserInteractionContext);
 
   /**
    * Native IdP Sign In Flow
@@ -45,11 +48,10 @@ const useSingleSignOn = () => {
       const state = generateState();
       storeState(state, connectorId);
 
-      const [error, redirectUrl] = await asyncInvokeSingleSignOn(
-        connectorId,
+      const [error, result] = await asyncInvokeSingleSignOn(connectorId, {
         state,
-        `${window.location.origin}/callback/${connectorId}`
-      );
+        redirectUri: `${window.location.origin}/callback/${connectorId}`,
+      });
 
       if (error) {
         await handleError(error);
@@ -57,19 +59,23 @@ const useSingleSignOn = () => {
         return;
       }
 
-      if (!redirectUrl) {
+      if (!result) {
         return;
       }
 
+      const { authorizationUri, verificationId } = result;
+
+      setVerificationId(VerificationType.EnterpriseSso, verificationId);
+
       // Invoke Native Sign In flow
       if (isNativeWebview()) {
-        nativeSignInHandler(redirectUrl, connectorId);
+        nativeSignInHandler(authorizationUri, connectorId);
       }
 
       // Invoke Web Sign In flow
-      await redirectTo(redirectUrl);
+      await redirectTo(authorizationUri);
     },
-    [asyncInvokeSingleSignOn, handleError, nativeSignInHandler, redirectTo]
+    [asyncInvokeSingleSignOn, handleError, nativeSignInHandler, redirectTo, setVerificationId]
   );
 };
 

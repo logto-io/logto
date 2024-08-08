@@ -1,9 +1,10 @@
-import { AgreeToTermsPolicy, SignInMode, experience } from '@logto/schemas';
-import { useCallback, useEffect, useState } from 'react';
+import { AgreeToTermsPolicy, SignInMode, VerificationType, experience } from '@logto/schemas';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { singleSignOnAuthorization, singleSignOnRegistration } from '@/apis/single-sign-on';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { registerWithVerifiedIdentifier, signInWithSso } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -15,13 +16,13 @@ import { validateState } from '@/utils/social-connectors';
 
 const useSingleSignOnRegister = () => {
   const handleError = useErrorHandler();
-  const request = useApi(singleSignOnRegistration);
+  const request = useApi(registerWithVerifiedIdentifier);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
 
   return useCallback(
-    async (connectorId: string) => {
+    async (verificationId: string) => {
       /**
        * Agree to terms and conditions first before proceeding
        * If the agreement policy is `Manual`, the user must agree to the terms to reach this step.
@@ -32,7 +33,7 @@ const useSingleSignOnRegister = () => {
         return;
       }
 
-      const [error, result] = await request(connectorId);
+      const [error, result] = await request(verificationId);
 
       if (error) {
         await handleError(error);
@@ -66,19 +67,24 @@ const useSingleSignOnListener = (connectorId: string) => {
   const { setToast } = useToast();
   const redirectTo = useGlobalRedirectTo();
   const { signInMode } = useSieMethods();
+  const { verificationIdsMap } = useContext(UserInteractionContext);
+  const verificationId = verificationIdsMap[VerificationType.EnterpriseSso];
 
   const handleError = useErrorHandler();
   const navigate = useNavigate();
 
-  const singleSignOnAuthorizationRequest = useApi(singleSignOnAuthorization);
+  const singleSignOnAuthorizationRequest = useApi(signInWithSso);
   const registerSingleSignOnIdentity = useSingleSignOnRegister();
 
   const singleSignOnHandler = useCallback(
-    async (connectorId: string, data: Record<string, unknown>) => {
+    async (connectorId: string, verificationId: string, data: Record<string, unknown>) => {
       const [error, result] = await singleSignOnAuthorizationRequest(connectorId, {
-        ...data,
-        // For connector validation use
-        redirectUri: `${window.location.origin}/callback/${connectorId}`,
+        verificationId,
+        connectorData: {
+          ...data,
+          // For connector validation use
+          redirectUri: `${window.location.origin}/callback/${connectorId}`,
+        },
       });
 
       if (error) {
@@ -92,7 +98,7 @@ const useSingleSignOnListener = (connectorId: string) => {
               return;
             }
 
-            await registerSingleSignOnIdentity(connectorId);
+            await registerSingleSignOnIdentity(verificationId);
           },
           // Redirect to sign-in page if error is not handled by the error handlers
           global: async (error) => {
@@ -138,7 +144,14 @@ const useSingleSignOnListener = (connectorId: string) => {
       return;
     }
 
-    void singleSignOnHandler(connectorId, rest);
+    // Validate the verificationId
+    if (!verificationId) {
+      setToast(t('error.invalid_session'));
+      navigate('/' + experience.routes.signIn);
+      return;
+    }
+
+    void singleSignOnHandler(connectorId, verificationId, rest);
   }, [
     connectorId,
     isConsumed,
@@ -148,6 +161,7 @@ const useSingleSignOnListener = (connectorId: string) => {
     setToast,
     singleSignOnHandler,
     t,
+    verificationId,
   ]);
 
   return { loading };
