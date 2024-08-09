@@ -1,9 +1,9 @@
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { act, waitFor, fireEvent } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { addProfile } from '@/apis/interaction';
+import { updateProfile } from '@/apis/experience';
 
 import SetUsername from '.';
 
@@ -20,8 +20,8 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  addProfile: jest.fn(async () => ({ redirectTo: '/' })),
+jest.mock('@/apis/experience', () => ({
+  updateProfile: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('SetUsername', () => {
@@ -53,7 +53,10 @@ describe('SetUsername', () => {
     });
 
     await waitFor(() => {
-      expect(addProfile).toBeCalledWith({ username: 'username' });
+      expect(updateProfile).toBeCalledWith(
+        { type: SignInIdentifier.Username, value: 'username' },
+        InteractionEvent.Register
+      );
     });
   });
 });

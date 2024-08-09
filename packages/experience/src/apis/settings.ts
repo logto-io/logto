@@ -10,6 +10,8 @@ import ky from 'ky';
 import type { SignInExperienceResponse } from '@/types';
 import { searchKeys } from '@/utils/search-parameters';
 
+import { kyPrefixUrl } from './const';
+
 const buildSearchParameters = (record: Record<string, Nullable<Optional<string>>>) => {
   const entries = Object.entries(record).filter((entry): entry is [string, string] =>
     Boolean(entry[0] && entry[1])
@@ -27,7 +29,10 @@ const camelCase = (string: string): string =>
 
 export const getSignInExperience = async <T extends SignInExperienceResponse>(): Promise<T> => {
   return ky
-    .get('/api/.well-known/sign-in-exp', {
+    .extend({
+      prefixUrl: kyPrefixUrl,
+    })
+    .get('api/.well-known/sign-in-exp', {
       searchParams: buildSearchParameters(
         Object.fromEntries(
           Object.values(searchKeys).map((key) => [camelCase(key), sessionStorage.getItem(key)])
@@ -46,6 +51,7 @@ export const getPhrases = async ({
 }) =>
   ky
     .extend({
+      prefixUrl: kyPrefixUrl,
       hooks: {
         beforeRequest: [
           (request) => {
@@ -56,7 +62,7 @@ export const getPhrases = async ({
         ],
       },
     })
-    .get('/api/.well-known/phrases', {
+    .get('api/.well-known/phrases', {
       searchParams: buildSearchParameters({
         lng: language,
       }),

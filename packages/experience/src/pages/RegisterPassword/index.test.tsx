@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
-import { setUserPassword } from '@/apis/interaction';
+import { continueRegisterWithPassword } from '@/apis/experience';
 
 import RegisterPassword from '.';
 
@@ -17,8 +17,8 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn(() => ({ state: { username: 'username' } })),
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  setUserPassword: jest.fn(async () => ({ redirectTo: '/' })),
+jest.mock('@/apis/experience', () => ({
+  continueRegisterWithPassword: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 const useLocationMock = useLocation as jest.Mock;
@@ -148,7 +148,7 @@ describe('<RegisterPassword />', () => {
     });
 
     await waitFor(() => {
-      expect(setUserPassword).toBeCalledWith('1234asdf');
+      expect(continueRegisterWithPassword).toBeCalledWith('1234asdf');
     });
   });
 });

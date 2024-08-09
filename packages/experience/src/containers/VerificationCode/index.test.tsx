@@ -1,10 +1,14 @@
 import resource from '@logto/phrases-experience';
-import { SignInIdentifier, type VerificationCodeIdentifier } from '@logto/schemas';
+import {
+  InteractionEvent,
+  SignInIdentifier,
+  type VerificationCodeIdentifier,
+} from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { identifyWithVerificationCode } from '@/apis/experience';
-import { sendVerificationCodeApi } from '@/apis/utils';
+import { identifyWithVerificationCode, updateProfileWithVerificationCode } from '@/apis/experience';
+import { resendVerificationCodeApi } from '@/apis/utils';
 import { setupI18nForTesting } from '@/jest.setup';
 import { UserFlow } from '@/types';
 
@@ -17,17 +21,25 @@ const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedNavigate,
+  useLocation: jest.fn(() => ({
+    state: {
+      interactionEvent: InteractionEvent.SignIn,
+    },
+  })),
 }));
 
 jest.mock('@/apis/utils', () => ({
   sendVerificationCodeApi: jest.fn(),
+  resendVerificationCodeApi: jest.fn(),
 }));
 
 jest.mock('@/apis/experience', () => ({
-  identifyWithVerificationCode: jest.fn().mockResolvedValue({ redirectTo: 'foo.com' }),
+  identifyWithVerificationCode: jest.fn().mockResolvedValue({ redirectTo: '/redirect' }),
+  updateProfileWithVerificationCode: jest.fn().mockResolvedValue({ redirectTo: '/redirect' }),
 }));
 
 describe('<VerificationCode />', () => {
+  const redirectTo = '/redirect';
   const email = 'foo@logto.io';
   const phone = '18573333333';
   const originalLocation = window.location;
@@ -52,7 +64,7 @@ describe('<VerificationCode />', () => {
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   afterAll(() => {
@@ -111,7 +123,7 @@ describe('<VerificationCode />', () => {
       fireEvent.click(resendButton);
     });
 
-    expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.SignIn, { email });
+    expect(resendVerificationCodeApi).toBeCalledWith(UserFlow.SignIn, emailIdentifier);
 
     // Reset i18n
     await setupI18nForTesting();
@@ -143,7 +155,7 @@ describe('<VerificationCode />', () => {
       });
 
       await waitFor(() => {
-        expect(window.location.replace).toBeCalledWith('foo.com');
+        expect(window.location.replace).toBeCalledWith(redirectTo);
       });
     });
 
@@ -172,7 +184,7 @@ describe('<VerificationCode />', () => {
       });
 
       await waitFor(() => {
-        expect(window.location.replace).toBeCalledWith('foo.com');
+        expect(window.location.replace).toBeCalledWith(redirectTo);
       });
     });
   });
@@ -203,7 +215,7 @@ describe('<VerificationCode />', () => {
       });
 
       await waitFor(() => {
-        expect(window.location.replace).toBeCalledWith('foo.com');
+        expect(window.location.replace).toBeCalledWith(redirectTo);
       });
     });
 
@@ -232,7 +244,7 @@ describe('<VerificationCode />', () => {
       });
 
       await waitFor(() => {
-        expect(window.location.replace).toBeCalledWith('foo.com');
+        expect(window.location.replace).toBeCalledWith(redirectTo);
       });
     });
   });
@@ -310,15 +322,18 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(identifyWithVerificationCode).toBeCalledWith({
-          identifier: emailIdentifier,
-          verificationId,
-          code: '111111',
-        });
+        expect(updateProfileWithVerificationCode).toBeCalledWith(
+          {
+            identifier: emailIdentifier,
+            verificationId,
+            code: '111111',
+          },
+          InteractionEvent.SignIn
+        );
       });
 
       await waitFor(() => {
-        expect(window.location.replace).toBeCalledWith('/redirect');
+        expect(window.location.replace).toBeCalledWith(redirectTo);
       });
     });
 
@@ -340,11 +355,14 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(identifyWithVerificationCode).toBeCalledWith({
-          identifier: phoneIdentifier,
-          verificationId,
-          code: '111111',
-        });
+        expect(updateProfileWithVerificationCode).toBeCalledWith(
+          {
+            identifier: phoneIdentifier,
+            verificationId,
+            code: '111111',
+          },
+          InteractionEvent.SignIn
+        );
       });
 
       await waitFor(() => {

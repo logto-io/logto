@@ -8,13 +8,12 @@ import UserInteractionContextProvider from '@/Providers/UserInteractionContextPr
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
-import { signInWithPasswordIdentifier } from '@/apis/interaction';
+import { signInWithPasswordIdentifier } from '@/apis/experience';
 import type { SignInExperienceResponse } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import PasswordSignInForm from '.';
 
-jest.mock('@/apis/interaction', () => ({ signInWithPasswordIdentifier: jest.fn(async () => 0) }));
 jest.mock('react-device-detect', () => ({
   isMobile: true,
 }));
@@ -29,9 +28,10 @@ jest.mock('i18next', () => ({
   t: (key: string) => key,
 }));
 
-jest.mock('@/apis/single-sign-on', () => ({
-  getSingleSignOnUrl: (connectorId: string) => getSingleSignOnUrlMock(connectorId),
-  getSingleSignOnConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
+jest.mock('@/apis/experience', () => ({
+  signInWithPasswordIdentifier: jest.fn(async () => 0),
+  getSsoAuthorizationUrl: (connectorId: string) => getSingleSignOnUrlMock(connectorId),
+  getSsoConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -175,10 +175,13 @@ describe('UsernamePasswordSignInForm', () => {
 
     await waitFor(() => {
       expect(signInWithPasswordIdentifier).toBeCalledWith({
-        [type]:
-          type === SignInIdentifier.Phone
-            ? `${getDefaultCountryCallingCode()}${identifier}`
-            : identifier,
+        identifier: {
+          type,
+          value:
+            type === SignInIdentifier.Phone
+              ? `${getDefaultCountryCallingCode()}${identifier}`
+              : identifier,
+        },
         password: 'password',
       });
     });
@@ -224,7 +227,7 @@ describe('UsernamePasswordSignInForm', () => {
 
     // Valid email with empty response
     const email = 'foo@logto.io';
-    getSingleSignOnConnectorsMock.mockResolvedValueOnce([]);
+    getSingleSignOnConnectorsMock.mockResolvedValueOnce({ connectorIds: [] });
     act(() => {
       fireEvent.change(identifierInput, { target: { value: email } });
     });
@@ -238,7 +241,9 @@ describe('UsernamePasswordSignInForm', () => {
     // Valid email with response
     const email2 = 'foo@bar.io';
     getSingleSignOnConnectorsMock.mockClear();
-    getSingleSignOnConnectorsMock.mockResolvedValueOnce(mockSsoConnectors.map(({ id }) => id));
+    getSingleSignOnConnectorsMock.mockResolvedValueOnce({
+      connectorIds: mockSsoConnectors.map(({ id }) => id),
+    });
 
     act(() => {
       fireEvent.change(identifierInput, { target: { value: email2 } });
@@ -282,7 +287,9 @@ describe('UsernamePasswordSignInForm', () => {
 
     const email = 'foo@bar.io';
     getSingleSignOnConnectorsMock.mockClear();
-    getSingleSignOnConnectorsMock.mockResolvedValueOnce([mockSsoConnectors[0]!.id]);
+    getSingleSignOnConnectorsMock.mockResolvedValueOnce({
+      connectorIds: [mockSsoConnectors[0]!.id],
+    });
 
     act(() => {
       fireEvent.change(identifierInput, { target: { value: email } });

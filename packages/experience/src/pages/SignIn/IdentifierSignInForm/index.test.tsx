@@ -36,8 +36,8 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-jest.mock('@/apis/single-sign-on', () => ({
-  getSingleSignOnConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
+jest.mock('@/apis/experience', () => ({
+  getSsoConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
 }));
 
 const username = 'foo';
@@ -151,12 +151,17 @@ describe('IdentifierSignInForm', () => {
 
         if (verificationCode) {
           await waitFor(() => {
-            expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.SignIn, {
-              [identifier]:
-                identifier === SignInIdentifier.Phone
-                  ? `${getDefaultCountryCallingCode()}${value}`
-                  : value,
-            });
+            expect(sendVerificationCodeApi).toBeCalledWith(
+              UserFlow.SignIn,
+              {
+                type: identifier,
+                value:
+                  identifier === SignInIdentifier.Phone
+                    ? `${getDefaultCountryCallingCode()}${value}`
+                    : value,
+              },
+              undefined
+            );
             expect(mockedNavigate).not.toBeCalled();
           });
         }
@@ -221,7 +226,7 @@ describe('IdentifierSignInForm', () => {
     });
 
     it('should call check single sign-on connector when the identifier is email, but process to password sign-in if no sso connector is matched', async () => {
-      getSingleSignOnConnectorsMock.mockResolvedValueOnce([]);
+      getSingleSignOnConnectorsMock.mockResolvedValueOnce({ connectorIds: [] });
 
       const { getByText, container, queryByText } = renderForm(
         mockSignInMethodSettingsTestCases[0]!,
@@ -255,7 +260,9 @@ describe('IdentifierSignInForm', () => {
     });
 
     it('should call check single sign-on connector when the identifier is email, and process to single sign-on if a sso connector is matched', async () => {
-      getSingleSignOnConnectorsMock.mockResolvedValueOnce(mockSsoConnectors.map(({ id }) => id));
+      getSingleSignOnConnectorsMock.mockResolvedValueOnce({
+        connectorIds: mockSsoConnectors.map(({ id }) => id),
+      });
 
       const { getByText, container, queryByText } = renderForm(
         mockSignInMethodSettingsTestCases[0]!,

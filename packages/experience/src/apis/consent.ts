@@ -8,7 +8,7 @@ export const consent = async (organizationId?: string) => {
   };
 
   return api
-    .post('/api/interaction/consent', {
+    .post('api/interaction/consent', {
       json: {
         organizationIds: organizationId && [organizationId],
       },
@@ -17,5 +17,5 @@ export const consent = async (organizationId?: string) => {
 };
 
 export const getConsentInfo = async () => {
-  return api.get('/api/interaction/consent').json<ConsentInfoResponse>();
+  return api.get('api/interaction/consent').json<ConsentInfoResponse>();
 };
