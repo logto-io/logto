@@ -29,8 +29,13 @@ const accessTokenResponseGuard = z.object({
  * The scope here can be empty and still work, because the cloud API requests made using this client do not rely on scope verification.
  * The `CloudScope.SendEmail` is added for now because it needs to call the cloud email service API.
  * The `CloudScope.FetchCustomJwt` is added for now because it needs to call the cloud custom JWT service API.
+ * The `CloudScope.ReportSubscriptionUpdates` is added since we need to report subscription updates to the cloud.
  */
-const scopes: string[] = [CloudScope.SendEmail, CloudScope.FetchCustomJwt];
+const scopes: string[] = [
+  CloudScope.SendEmail,
+  CloudScope.FetchCustomJwt,
+  CloudScope.ReportSubscriptionUpdates,
+];
 const accessTokenExpirationMargin = 60;
 
 /** The library for connecting to Logto Cloud service. */
