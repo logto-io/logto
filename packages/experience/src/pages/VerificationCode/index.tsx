@@ -21,8 +21,10 @@ const VerificationCode = () => {
   const { flow } = useParams<Parameters>();
   const { signInMethods } = useSieMethods();
 
-  const { identifierInputValue, forgotPasswordIdentifierInputValue } =
+  const { getIdentifierInputValue, forgotPasswordIdentifierInputValue } =
     useContext(UserInteractionContext);
+
+  const identifierInputValue = getIdentifierInputValue();
 
   const [, userFlow] = validate(flow, userFlowGuard);
 

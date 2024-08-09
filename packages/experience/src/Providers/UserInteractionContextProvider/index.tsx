@@ -1,7 +1,10 @@
 import { type SsoConnectorMetadata } from '@logto/schemas';
 import { type ReactNode, useEffect, useMemo, useState, useCallback } from 'react';
 
-import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import {
+  type IdentifierInputType,
+  type IdentifierInputValue,
+} from '@/components/InputFields/SmartInputField';
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { useSieMethods } from '@/hooks/use-sie';
 
@@ -76,6 +79,33 @@ const UserInteractionContextProvider = ({ children }: Props) => {
     [ssoConnectors]
   );
 
+  const getIdentifierInputValue = useCallback(
+    (enabledTypes?: IdentifierInputType[]) => {
+      /**
+       * If no enabled types are provided, return the full identifierInputValue without filtering
+       */
+      if (!enabledTypes) {
+        return identifierInputValue;
+      }
+
+      const { type } = identifierInputValue ?? {};
+
+      /**
+       * Return the identifierInputValue if the type is not determined or the identifierInputValue is not set
+       */
+      if (!type) {
+        return identifierInputValue;
+      }
+
+      /**
+       * Check if the type is included in the enabledTypes array
+       * If it is, return identifierInputValue; otherwise, return undefined
+       */
+      return enabledTypes.includes(type) ? identifierInputValue : undefined;
+    },
+    [identifierInputValue]
+  );
+
   const clearInteractionContextSessionStorage = useCallback(() => {
     remove(StorageKeys.IdentifierInputValue);
     remove(StorageKeys.ForgotPasswordIdentifierInputValue);
@@ -88,7 +118,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       availableSsoConnectorsMap: ssoConnectorsMap,
       ssoConnectors: domainFilteredConnectors,
       setSsoConnectors: setDomainFilteredConnectors,
-      identifierInputValue,
+      getIdentifierInputValue,
       setIdentifierInputValue,
       forgotPasswordIdentifierInputValue,
       setForgotPasswordIdentifierInputValue,
@@ -98,7 +128,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       ssoEmail,
       ssoConnectorsMap,
       domainFilteredConnectors,
-      identifierInputValue,
+      getIdentifierInputValue,
       forgotPasswordIdentifierInputValue,
       clearInteractionContextSessionStorage,
     ]

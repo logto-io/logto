@@ -2,7 +2,10 @@ import { type SsoConnectorMetadata } from '@logto/schemas';
 import { noop } from '@silverhand/essentials';
 import { createContext } from 'react';
 
-import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import {
+  type IdentifierInputType,
+  type IdentifierInputValue,
+} from '@/components/InputFields/SmartInputField';
 
 export type UserInteractionContextType = {
   // All the enabled sso connectors
@@ -13,10 +16,25 @@ export type UserInteractionContextType = {
   ssoConnectors: SsoConnectorMetadata[];
   setSsoConnectors: React.Dispatch<React.SetStateAction<SsoConnectorMetadata[]>>;
   /**
-   * The cached identifier input value that the user has inputted when signing in.
+   * Retrieves the cached identifier input value that the user has inputted when signing in based on enabled types.
    * The value will be used to pre-fill the identifier input field in sign-in pages.
+   *
+   * @param {IdentifierInputType[] | undefined} enabledTypes - Array of enabled identifier types
+   * @returns {IdentifierInputValue | undefined} The identifier input value object or undefined
+   *
+   * Usage:
+   * 1. If enabledTypes is not provided, the function returns the full identifierInputValue without filtering
+   * 2. If enabledTypes is provided, the function checks if the type of identifierInputValue is in the enabledTypes array
+   * 3. If the type matches, it returns identifierInputValue; otherwise, it returns undefined
+   *
+   * Example:
+   * const value = getIdentifierInputValue(['email', 'phone']);
+   * // Returns identifierInputValue if its type is 'email' or 'phone'
+   * // Returns undefined otherwise
    */
-  identifierInputValue?: IdentifierInputValue;
+  getIdentifierInputValue: (
+    enabledTypes?: IdentifierInputType[]
+  ) => IdentifierInputValue | undefined;
   /**
    * This method is used to cache the identifier input value when signing in.
    */
@@ -51,7 +69,8 @@ export default createContext<UserInteractionContextType>({
   ssoConnectors: [],
   setSsoEmail: noop,
   setSsoConnectors: noop,
-  identifierInputValue: undefined,
+  // eslint-disable-next-line unicorn/no-useless-undefined
+  getIdentifierInputValue: () => undefined,
   setIdentifierInputValue: noop,
   forgotPasswordIdentifierInputValue: undefined,
   setForgotPasswordIdentifierInputValue: noop,

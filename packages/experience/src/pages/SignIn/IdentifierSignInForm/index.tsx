@@ -34,13 +34,15 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const { identifierInputValue, setIdentifierInputValue } = useContext(UserInteractionContext);
+  const { getIdentifierInputValue, setIdentifierInputValue } = useContext(UserInteractionContext);
   const [searchParams] = useSearchParams();
 
   const enabledSignInMethods = useMemo(
     () => signInMethods.map(({ identifier }) => identifier),
     [signInMethods]
   );
+
+  const identifierInputValue = getIdentifierInputValue(enabledSignInMethods);
 
   const {
     watch,
