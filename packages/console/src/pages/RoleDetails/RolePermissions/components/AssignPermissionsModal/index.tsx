@@ -27,7 +27,7 @@ type Props = {
 
 function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan, currentSku, currentSubscriptionScopeRoleUsage, currentSubscriptionQuota } =
+  const { currentPlan, currentSku, currentSubscriptionRoleScopeUsage, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [scopes, setScopes] = useState<ScopeResponse[]>([]);
@@ -55,7 +55,7 @@ function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose
   const shouldBlockScopeAssignment = isDevFeaturesEnabled
     ? hasSurpassedSubscriptionQuotaLimit({
         quotaKey: 'scopesPerRoleLimit',
-        usage: (currentSubscriptionScopeRoleUsage[roleId] ?? 0) + scopes.length,
+        usage: (currentSubscriptionRoleScopeUsage[roleId] ?? 0) + scopes.length,
         quota: currentSubscriptionQuota,
       })
     : hasSurpassedQuotaLimit({
