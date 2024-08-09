@@ -1,5 +1,5 @@
 import { cond, condString } from '@silverhand/essentials';
-import { useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 
 import {
   defaultLogtoSku,
@@ -7,7 +7,7 @@ import {
   defaultSubscriptionQuota,
   defaultSubscriptionUsage,
 } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useLogtoSkus from '@/hooks/use-logto-skus';
 import useNewSubscriptionQuota from '@/hooks/use-new-subscription-quota';
@@ -26,14 +26,47 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
     isLoading: isSubscriptionLoading,
     mutate: mutateSubscription,
   } = useSubscription(condString(currentTenant?.id));
-  const { data: currentSubscriptionQuota, isLoading: isSubscriptionQuotaLoading } =
-    useNewSubscriptionQuota(condString(currentTenant?.id));
-  const { data: currentSubscriptionUsage, isLoading: isSubscriptionUsageLoading } =
-    useNewSubscriptionUsage(condString(currentTenant?.id));
+
   const {
-    scopeResourceUsage: { data: scopeResourceUsage, isLoading: isScopePerResourceUsageLoading },
-    scopeRoleUsage: { data: scopeRoleUsage, isLoading: isScopePerRoleUsageLoading },
+    data: currentSubscriptionQuota,
+    isLoading: isSubscriptionQuotaLoading,
+    mutate: mutateSubscriptionQuota,
+  } = useNewSubscriptionQuota(condString(currentTenant?.id));
+
+  const {
+    data: currentSubscriptionUsage,
+    isLoading: isSubscriptionUsageLoading,
+    mutate: mutateSubscriptionUsage,
+  } = useNewSubscriptionUsage(condString(currentTenant?.id));
+
+  const {
+    scopeResourceUsage: {
+      data: scopeResourceUsage,
+      isLoading: isScopePerResourceUsageLoading,
+      mutate: mutateScopeResourceUsage,
+    },
+    scopeRoleUsage: {
+      data: scopeRoleUsage,
+      isLoading: isScopePerRoleUsageLoading,
+      mutate: mutateScopeRoleUsage,
+    },
   } = useNewSubscriptionScopeUsage(condString(currentTenant?.id));
+
+  const mutateSubscriptionQuotaAndUsages = useCallback(() => {
+    if (!isDevFeaturesEnabled) {
+      return;
+    }
+
+    void mutateSubscriptionQuota();
+    void mutateSubscriptionUsage();
+    void mutateScopeResourceUsage();
+    void mutateScopeRoleUsage();
+  }, [
+    mutateScopeResourceUsage,
+    mutateScopeRoleUsage,
+    mutateSubscriptionQuota,
+    mutateSubscriptionUsage,
+  ]);
 
   const logtoSkus = useMemo(() => cond(isCloud && fetchedLogtoSkus) ?? [], [fetchedLogtoSkus]);
 
@@ -54,6 +87,7 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
     currentSku,
     currentSubscription: currentSubscription ?? defaultTenantResponse.subscription,
     onCurrentSubscriptionUpdated: mutateSubscription,
+    mutateSubscriptionQuotaAndUsages,
     currentSubscriptionQuota: currentSubscriptionQuota ?? defaultSubscriptionQuota,
     currentSubscriptionUsage: currentSubscriptionUsage ?? defaultSubscriptionUsage,
     currentSubscriptionScopeResourceUsage: scopeResourceUsage ?? {},

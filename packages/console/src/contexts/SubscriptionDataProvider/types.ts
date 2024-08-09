@@ -23,6 +23,7 @@ type NewSubscriptionSupplementContext = {
   currentSubscriptionUsage: NewSubscriptionUsage;
   currentSubscriptionScopeResourceUsage: NewSubscriptionScopeUsage;
   currentSubscriptionScopeRoleUsage: NewSubscriptionScopeUsage;
+  mutateSubscriptionQuotaAndUsages: () => void;
 };
 
 export type NewSubscriptionContext = Omit<Context, 'subscriptionPlans' | 'currentPlan'> &
