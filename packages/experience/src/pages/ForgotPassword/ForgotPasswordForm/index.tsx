@@ -42,8 +42,7 @@ const ForgotPasswordForm = ({
     UserFlow.ForgotPassword
   );
 
-  const { setForgotPasswordIdentifierInputValue, setIdentifierInputValue } =
-    useContext(UserInteractionContext);
+  const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
 
   const {
     handleSubmit,

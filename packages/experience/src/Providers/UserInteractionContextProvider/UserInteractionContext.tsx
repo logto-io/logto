@@ -2,7 +2,10 @@ import { type SsoConnectorMetadata } from '@logto/schemas';
 import { noop } from '@silverhand/essentials';
 import { createContext } from 'react';
 
-import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import {
+  type IdentifierInputType,
+  type IdentifierInputValue,
+} from '@/components/InputFields/SmartInputField';
 
 export type UserInteractionContextType = {
   // All the enabled sso connectors
@@ -13,12 +16,31 @@ export type UserInteractionContextType = {
   ssoConnectors: SsoConnectorMetadata[];
   setSsoConnectors: React.Dispatch<React.SetStateAction<SsoConnectorMetadata[]>>;
   /**
-   * The cached identifier input value that the user has inputted when signing in.
-   * The value will be used to pre-fill the identifier input field in sign-in pages.
+   * The cached identifier input value that the user has inputted.
    */
   identifierInputValue?: IdentifierInputValue;
   /**
-   * This method is used to cache the identifier input value when signing in.
+   * Retrieves the cached identifier input value that the user has inputted based on enabled types.
+   * The value will be used to pre-fill the identifier input field in experience pages.
+   *
+   * @param {IdentifierInputType[]} enabledTypes - Array of enabled identifier types
+   * @returns {IdentifierInputValue | undefined} The identifier input value object or undefined
+   *
+   * The function checks if the type of identifierInputValue is in the `enabledTypes` array,
+   * if the type matches, it returns `identifierInputValue`; otherwise, it returns `undefined`
+   *
+   * Example:
+   * ```ts
+   * const value = getIdentifierInputValueByTypes(['email', 'phone']);
+   * // Returns `identifierInputValue` if its type is 'email' or 'phone'
+   * // Returns `undefined` otherwise
+   * ```
+   */
+  getIdentifierInputValueByTypes: (
+    enabledTypes: IdentifierInputType[]
+  ) => IdentifierInputValue | undefined;
+  /**
+   * This method is used to cache the identifier input value.
    */
   setIdentifierInputValue: React.Dispatch<React.SetStateAction<IdentifierInputValue | undefined>>;
   /**
@@ -52,6 +74,8 @@ export default createContext<UserInteractionContextType>({
   setSsoEmail: noop,
   setSsoConnectors: noop,
   identifierInputValue: undefined,
+  // eslint-disable-next-line unicorn/no-useless-undefined
+  getIdentifierInputValueByTypes: () => undefined,
   setIdentifierInputValue: noop,
   forgotPasswordIdentifierInputValue: undefined,
   setForgotPasswordIdentifierInputValue: noop,
