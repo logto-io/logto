@@ -34,7 +34,8 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const { getIdentifierInputValue, setIdentifierInputValue } = useContext(UserInteractionContext);
+  const { getIdentifierInputValueByTypes, setIdentifierInputValue } =
+    useContext(UserInteractionContext);
   const [searchParams] = useSearchParams();
 
   const enabledSignInMethods = useMemo(
@@ -42,7 +43,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     [signInMethods]
   );
 
-  const identifierInputValue = getIdentifierInputValue(enabledSignInMethods);
+  const identifierInputValue = getIdentifierInputValueByTypes(enabledSignInMethods);
 
   const {
     watch,

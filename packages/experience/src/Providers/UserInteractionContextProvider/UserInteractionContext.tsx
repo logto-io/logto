@@ -28,11 +28,11 @@ export type UserInteractionContextType = {
    * 3. If the type matches, it returns identifierInputValue; otherwise, it returns undefined
    *
    * Example:
-   * const value = getIdentifierInputValue(['email', 'phone']);
+   * const value = getIdentifierInputValueByTypes(['email', 'phone']);
    * // Returns identifierInputValue if its type is 'email' or 'phone'
    * // Returns undefined otherwise
    */
-  getIdentifierInputValue: (
+  getIdentifierInputValueByTypes: (
     enabledTypes?: IdentifierInputType[]
   ) => IdentifierInputValue | undefined;
   /**
@@ -70,7 +70,7 @@ export default createContext<UserInteractionContextType>({
   setSsoEmail: noop,
   setSsoConnectors: noop,
   // eslint-disable-next-line unicorn/no-useless-undefined
-  getIdentifierInputValue: () => undefined,
+  getIdentifierInputValueByTypes: () => undefined,
   setIdentifierInputValue: noop,
   forgotPasswordIdentifierInputValue: undefined,
   setForgotPasswordIdentifierInputValue: noop,

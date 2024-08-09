@@ -79,7 +79,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
     [ssoConnectors]
   );
 
-  const getIdentifierInputValue = useCallback(
+  const getIdentifierInputValueByTypes = useCallback(
     (enabledTypes?: IdentifierInputType[]) => {
       /**
        * If no enabled types are provided, return the full identifierInputValue without filtering
@@ -118,7 +118,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       availableSsoConnectorsMap: ssoConnectorsMap,
       ssoConnectors: domainFilteredConnectors,
       setSsoConnectors: setDomainFilteredConnectors,
-      getIdentifierInputValue,
+      getIdentifierInputValueByTypes,
       setIdentifierInputValue,
       forgotPasswordIdentifierInputValue,
       setForgotPasswordIdentifierInputValue,
@@ -128,7 +128,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       ssoEmail,
       ssoConnectorsMap,
       domainFilteredConnectors,
-      getIdentifierInputValue,
+      getIdentifierInputValueByTypes,
       forgotPasswordIdentifierInputValue,
       clearInteractionContextSessionStorage,
     ]

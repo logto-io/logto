@@ -15,9 +15,9 @@ const SignInPassword = () => {
   const { t } = useTranslation();
   const { signInMethods } = useSieMethods();
 
-  const { getIdentifierInputValue } = useContext(UserInteractionContext);
+  const { getIdentifierInputValueByTypes } = useContext(UserInteractionContext);
 
-  const identifierInputValue = getIdentifierInputValue();
+  const identifierInputValue = getIdentifierInputValueByTypes();
 
   if (!identifierInputValue) {
     return <ErrorPage title="error.invalid_session" />;
