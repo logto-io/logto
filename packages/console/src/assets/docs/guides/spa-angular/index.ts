@@ -11,6 +11,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'packages/angular-sample',
   },
   fullGuide: 'angular',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/angular/#get-user-information'),
+    },
+    {
+      title: 'API resources',
+      url: new URL('https://docs.logto.io/quick-starts/angular/#api-resources'),
+    },
+  ],
 });
 
 export default metadata;

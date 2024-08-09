@@ -12,6 +12,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'packages/sveltekit-sample',
   },
   fullGuide: 'sveltekit',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/sveltekit/#get-user-information'),
+    },
+    {
+      title: 'API resources and organizations',
+      url: new URL('https://docs.logto.io/quick-starts/sveltekit/#api-resources-and-organizations'),
+    },
+  ],
 });
 
 export default metadata;

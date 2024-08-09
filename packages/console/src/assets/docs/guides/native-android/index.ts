@@ -11,6 +11,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'android-sample-kotlin',
   },
   fullGuide: 'android',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/android/#get-user-information'),
+    },
+    {
+      title: 'API resources and organizations',
+      url: new URL('https://docs.logto.io/quick-starts/android/#api-resources-and-organizations'),
+    },
+  ],
 });
 
 export default metadata;

@@ -11,6 +11,16 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     path: 'packages/rn-sample',
   },
   fullGuide: 'expo',
+  furtherReadings: [
+    {
+      title: 'Get user information',
+      url: new URL('https://docs.logto.io/quick-starts/expo/#get-user-information'),
+    },
+    {
+      title: 'API resources and organizations',
+      url: new URL('https://docs.logto.io/quick-starts/expo/#api-resources-and-organizations'),
+    },
+  ],
 });
 
 export default metadata;
