@@ -1,5 +1,4 @@
-import { notImplemented } from '@logto/cli/lib/connector/consts.js';
-import { ConnectorType } from '@logto/connector-kit';
+import { type ConnectorSession, ConnectorType, connectorSessionGuard } from '@logto/connector-kit';
 import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -31,7 +30,7 @@ export default function connectorAuthorizationUriRoutes<T extends ManagementApiR
     koaGuard({
       params: object({ connectorId: string().min(1) }),
       body: object({ state: string(), redirectUri: string() }),
-      response: object({ redirectTo: string().url() }),
+      response: object({ redirectTo: string().url(), session: connectorSessionGuard }),
       status: [200, 400, 404],
     }),
     async (ctx, next) => {
@@ -45,6 +44,9 @@ export default function connectorAuthorizationUriRoutes<T extends ManagementApiR
       const {
         headers: { 'user-agent': userAgent },
       } = ctx.request;
+
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let session: ConnectorSession = {};
 
       const redirectTo = await connector.getAuthorizationUri(
         {
@@ -60,13 +62,15 @@ export default function connectorAuthorizationUriRoutes<T extends ManagementApiR
           headers: { userAgent },
         },
         /**
-         * Same as above, passing `notImplemented` only works for connectors not relying on session storage.
-         * E.g. Google and GitHub
+         * Return session storage to api client
          */
-        notImplemented
+        async (storage: ConnectorSession) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          session = { ...session, ...storage };
+        }
       );
 
-      ctx.body = { redirectTo };
+      ctx.body = { redirectTo, session };
 
       return next();
     }

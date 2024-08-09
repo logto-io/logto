@@ -1,4 +1,5 @@
 import { notImplemented } from '@logto/cli/lib/connector/consts.js';
+import { connectorSessionGuard } from '@logto/connector-kit';
 import {
   ConnectorType,
   identityGuard,
@@ -7,7 +8,7 @@ import {
   userProfileResponseGuard,
 } from '@logto/schemas';
 import { has, pick } from '@silverhand/essentials';
-import { object, record, string, unknown } from 'zod';
+import { object, record, string, unknown, optional } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -74,6 +75,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
       body: object({
         connectorId: string(),
         connectorData: record(string(), unknown()),
+        connectorContext: optional(connectorSessionGuard),
       }),
       response: identitiesGuard,
       status: [200, 404, 422],
@@ -81,7 +83,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         params: { userId },
-        body: { connectorId, connectorData },
+        body: { connectorId, connectorData, connectorContext },
       } = ctx.guard;
 
       const [connector, user] = await Promise.all([
@@ -104,7 +106,14 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
        * Same as above, passing `notImplemented` only works for connectors not relying on session storage.
        * E.g. Google and GitHub
        */
-      const socialUserInfo = await connector.getUserInfo(connectorData, notImplemented);
+      const socialUserInfo = await connector.getUserInfo(
+        connectorData,
+        connectorContext
+          ? async () => {
+              return connectorContext;
+            }
+          : notImplemented
+      );
 
       assertThat(
         !(await hasUserWithIdentity(target, socialUserInfo.id, userId)),
