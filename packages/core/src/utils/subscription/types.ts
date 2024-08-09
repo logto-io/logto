@@ -54,4 +54,5 @@ export const allReportSubscriptionUpdatesUsageKeys = Object.freeze([
   'organizationsEnabled',
   'tenantMembersLimit',
   'enterpriseSsoLimit',
+  'hooksLimit',
 ]) satisfies readonly ReportSubscriptionUpdatesUsageKey[];
