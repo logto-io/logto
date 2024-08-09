@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
@@ -77,7 +77,7 @@ const PasswordForm = ({
         setIdentifierInputValue({ type, value });
 
         await onSubmit({
-          [type]: value,
+          identifier: { type, value },
           password,
         });
       })(event);

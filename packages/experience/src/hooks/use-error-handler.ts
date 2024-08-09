@@ -34,7 +34,7 @@ const useErrorHandler = () => {
           }
 
           return;
-        } catch {
+        } catch (error) {
           setToast(t('error.unknown'));
           console.error(error);
 
