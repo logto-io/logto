@@ -21,23 +21,23 @@ export type UserInteractionContextType = {
   identifierInputValue?: IdentifierInputValue;
   /**
    * Retrieves the cached identifier input value that the user has inputted based on enabled types.
-   * The value will be used to pre-fill the identifier input field in sign-in pages.
+   * The value will be used to pre-fill the identifier input field in experience pages.
    *
-   * @param {IdentifierInputType[] | undefined} enabledTypes - Array of enabled identifier types
+   * @param {IdentifierInputType[]} enabledTypes - Array of enabled identifier types
    * @returns {IdentifierInputValue | undefined} The identifier input value object or undefined
    *
-   * Usage:
-   * 1. If enabledTypes is not provided, the function returns the full identifierInputValue without filtering
-   * 2. If enabledTypes is provided, the function checks if the type of identifierInputValue is in the enabledTypes array
-   * 3. If the type matches, it returns identifierInputValue; otherwise, it returns undefined
+   * The function checks if the type of identifierInputValue is in the `enabledTypes` array,
+   * if the type matches, it returns `identifierInputValue`; otherwise, it returns `undefined`
    *
    * Example:
+   * ```ts
    * const value = getIdentifierInputValueByTypes(['email', 'phone']);
-   * // Returns identifierInputValue if its type is 'email' or 'phone'
-   * // Returns undefined otherwise
+   * // Returns `identifierInputValue` if its type is 'email' or 'phone'
+   * // Returns `undefined` otherwise
+   * ```
    */
   getIdentifierInputValueByTypes: (
-    enabledTypes?: IdentifierInputType[]
+    enabledTypes: IdentifierInputType[]
   ) => IdentifierInputValue | undefined;
   /**
    * This method is used to cache the identifier input value.

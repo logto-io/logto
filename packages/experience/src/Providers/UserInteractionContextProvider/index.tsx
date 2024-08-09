@@ -80,28 +80,13 @@ const UserInteractionContextProvider = ({ children }: Props) => {
   );
 
   const getIdentifierInputValueByTypes = useCallback(
-    (enabledTypes?: IdentifierInputType[]) => {
-      /**
-       * If no enabled types are provided, return the full identifierInputValue without filtering
-       */
-      if (!enabledTypes) {
-        return identifierInputValue;
-      }
-
+    (enabledTypes: IdentifierInputType[]) => {
       const { type } = identifierInputValue ?? {};
-
-      /**
-       * Return the identifierInputValue if the type is not determined or the identifierInputValue is not set
-       */
-      if (!type) {
-        return identifierInputValue;
-      }
-
       /**
        * Check if the type is included in the enabledTypes array
        * If it is, return identifierInputValue; otherwise, return undefined
        */
-      return enabledTypes.includes(type) ? identifierInputValue : undefined;
+      return type && enabledTypes.includes(type) ? identifierInputValue : undefined;
     },
     [identifierInputValue]
   );
