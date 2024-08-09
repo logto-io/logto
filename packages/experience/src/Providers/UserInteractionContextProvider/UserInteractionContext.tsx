@@ -16,7 +16,11 @@ export type UserInteractionContextType = {
   ssoConnectors: SsoConnectorMetadata[];
   setSsoConnectors: React.Dispatch<React.SetStateAction<SsoConnectorMetadata[]>>;
   /**
-   * Retrieves the cached identifier input value that the user has inputted when signing in based on enabled types.
+   * The cached identifier input value that the user has inputted.
+   */
+  identifierInputValue?: IdentifierInputValue;
+  /**
+   * Retrieves the cached identifier input value that the user has inputted based on enabled types.
    * The value will be used to pre-fill the identifier input field in sign-in pages.
    *
    * @param {IdentifierInputType[] | undefined} enabledTypes - Array of enabled identifier types
@@ -36,7 +40,7 @@ export type UserInteractionContextType = {
     enabledTypes?: IdentifierInputType[]
   ) => IdentifierInputValue | undefined;
   /**
-   * This method is used to cache the identifier input value when signing in.
+   * This method is used to cache the identifier input value.
    */
   setIdentifierInputValue: React.Dispatch<React.SetStateAction<IdentifierInputValue | undefined>>;
   /**
@@ -69,6 +73,7 @@ export default createContext<UserInteractionContextType>({
   ssoConnectors: [],
   setSsoEmail: noop,
   setSsoConnectors: noop,
+  identifierInputValue: undefined,
   // eslint-disable-next-line unicorn/no-useless-undefined
   getIdentifierInputValueByTypes: () => undefined,
   setIdentifierInputValue: noop,

@@ -11,8 +11,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
  * or update the user's credentials, enhancing the user experience and security.
  */
 const HiddenIdentifierInput = () => {
-  const { getIdentifierInputValueByTypes } = useContext(UserInteractionContext);
-  const identifierInputValue = getIdentifierInputValueByTypes();
+  const { identifierInputValue } = useContext(UserInteractionContext);
 
   if (!identifierInputValue) {
     return null;
