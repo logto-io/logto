@@ -1,8 +1,9 @@
-import { AgreeToTermsPolicy, type SignIn } from '@logto/schemas';
+import { AgreeToTermsPolicy, ExtraParamsKey, type SignIn } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
@@ -34,6 +35,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { identifierInputValue, setIdentifierInputValue } = useContext(UserInteractionContext);
+  const [searchParams] = useSearchParams();
 
   const enabledSignInMethods = useMemo(
     () => signInMethods.map(({ identifier }) => identifier),
@@ -123,7 +125,9 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledSignInMethods}
             defaultType={identifierInputValue?.type}
-            defaultValue={identifierInputValue?.value}
+            defaultValue={
+              identifierInputValue?.value ?? searchParams.get(ExtraParamsKey.LoginHint) ?? undefined
+            }
           />
         )}
       />

@@ -147,6 +147,10 @@ describe('buildLoginPromptUrl', () => {
     expect(buildLoginPromptUrl({ first_screen: FirstScreen.SignIn }, demoAppApplicationId)).toBe(
       'sign-in?app_id=demo-app'
     );
+    expect(
+      buildLoginPromptUrl({ first_screen: FirstScreen.SignIn, login_hint: 'user@mail.com' })
+    ).toBe('sign-in?login_hint=user%40mail.com');
+
     // Legacy interactionMode support
     expect(buildLoginPromptUrl({ interaction_mode: InteractionMode.SignUp })).toBe('register');
   });
@@ -169,7 +173,10 @@ describe('buildLoginPromptUrl', () => {
 
   it('should return the correct url for mixed parameters', () => {
     expect(
-      buildLoginPromptUrl({ first_screen: FirstScreen.Register, direct_sign_in: 'method:target' })
+      buildLoginPromptUrl({
+        first_screen: FirstScreen.Register,
+        direct_sign_in: 'method:target',
+      })
     ).toBe('direct/method/target?fallback=register');
     expect(
       buildLoginPromptUrl(

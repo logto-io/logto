@@ -105,6 +105,10 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
     searchParams.append(ExtraParamsKey.OrganizationId, params[ExtraParamsKey.OrganizationId]);
   }
 
+  if (params[ExtraParamsKey.LoginHint]) {
+    searchParams.append(ExtraParamsKey.LoginHint, params[ExtraParamsKey.LoginHint]);
+  }
+
   if (directSignIn) {
     searchParams.append('fallback', firstScreen);
     const [method, target] = directSignIn.split(':');
