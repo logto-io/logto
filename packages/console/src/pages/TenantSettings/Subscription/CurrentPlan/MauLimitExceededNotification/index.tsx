@@ -21,13 +21,11 @@ import {
 
 type Props = {
   /** @deprecated No need to pass in this argument in new pricing model */
-  readonly activeUsers: number;
-  /** @deprecated No need to pass in this argument in new pricing model */
   readonly currentPlan: SubscriptionPlan;
   readonly className?: string;
 };
 
-function MauLimitExceededNotification({ activeUsers, currentPlan, className }: Props) {
+function MauLimitExceededNotification({ currentPlan, className }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { subscribe } = useSubscribe();
   const { show } = useConfirmModal();
@@ -52,7 +50,7 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
 
   if (
     mauLimit === null || // Unlimited
-    (isDevFeaturesEnabled ? currentSubscriptionUsage.mauLimit : activeUsers) < mauLimit ||
+    currentSubscriptionUsage.mauLimit < mauLimit ||
     !proPlan ||
     !proSku
   ) {

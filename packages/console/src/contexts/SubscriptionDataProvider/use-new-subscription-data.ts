@@ -10,7 +10,7 @@ import {
   defaultSubscriptionQuota,
   defaultSubscriptionUsage,
 } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useLogtoSkus from '@/hooks/use-logto-skus';
 
@@ -36,7 +36,7 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
     isLoading: isSubscriptionUsageDataLoading,
     mutate: mutateSubscriptionQuotaAndUsages,
   } = useSWR<NewSubscriptionUsageResponse, Error>(
-    isCloud && isDevFeaturesEnabled && tenantId && `/api/tenants/${tenantId}/subscription-usage`,
+    isCloud && tenantId && `/api/tenants/${tenantId}/subscription-usage`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/subscription-usage', {
         params: { tenantId },
