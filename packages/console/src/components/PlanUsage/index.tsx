@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { useContext } from 'react';
 
-import { type SubscriptionUsage, type Subscription } from '@/cloud/types/router';
+import { type Subscription } from '@/cloud/types/router';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -17,14 +17,12 @@ import { usageKeys, usageKeyMap, titleKeyMap, tooltipKeyMap } from './utils';
 
 type Props = {
   /** @deprecated */
-  readonly subscriptionUsage: SubscriptionUsage;
-  /** @deprecated */
   readonly currentSubscription: Subscription;
   /** @deprecated */
   readonly currentPlan: SubscriptionPlan;
 };
 
-function PlanUsage({ subscriptionUsage, currentSubscription, currentPlan }: Props) {
+function PlanUsage({ currentSubscription, currentPlan }: Props) {
   const {
     currentSubscriptionQuota,
     currentSubscriptionUsage,
@@ -35,9 +33,10 @@ function PlanUsage({ subscriptionUsage, currentSubscription, currentPlan }: Prop
     ? currentSubscriptionFromNewPricingModel
     : currentSubscription;
 
-  const [activeUsers, mauLimit] = isDevFeaturesEnabled
-    ? [currentSubscriptionUsage.mauLimit, currentSubscriptionQuota.mauLimit]
-    : [subscriptionUsage.activeUsers, currentPlan.quota.mauLimit];
+  const [activeUsers, mauLimit] = [
+    currentSubscriptionUsage.mauLimit,
+    isDevFeaturesEnabled ? currentSubscriptionQuota.mauLimit : currentPlan.quota.mauLimit,
+  ];
 
   const usagePercent = conditional(mauLimit && activeUsers / mauLimit);
 

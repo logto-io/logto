@@ -15,9 +15,6 @@ export type LogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/a
 
 export type Subscription = GuardedResponse<GetRoutes['/api/tenants/:tenantId/subscription']>;
 
-/** @deprecated */
-export type SubscriptionUsage = GuardedResponse<GetRoutes['/api/tenants/:tenantId/usage']>;
-
 /* ===== Use `New` in the naming to avoid confusion with legacy types ===== */
 export type NewSubscriptionUsageResponse = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription-usage']
