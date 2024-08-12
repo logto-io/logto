@@ -19,10 +19,19 @@ export type Props = {
   readonly usageKey: AdminConsoleKey;
   readonly titleKey: AdminConsoleKey;
   readonly tooltipKey: AdminConsoleKey;
+  readonly unitPrice: number;
   readonly className?: string;
 };
 
-function ProPlanUsageCard({ usage, quota, usageKey, titleKey, tooltipKey, className }: Props) {
+function ProPlanUsageCard({
+  usage,
+  quota,
+  unitPrice,
+  usageKey,
+  titleKey,
+  tooltipKey,
+  className,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -38,7 +47,9 @@ function ProPlanUsageCard({ usage, quota, usageKey, titleKey, tooltipKey, classN
                 a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
               }}
             >
-              {t(tooltipKey)}
+              {t(tooltipKey, {
+                price: unitPrice,
+              })}
             </Trans>
           }
         >

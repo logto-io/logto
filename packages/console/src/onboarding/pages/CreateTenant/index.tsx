@@ -81,14 +81,13 @@ function CreateTenant() {
       if (collaboratorEmails.length > 0) {
         // Should not block the onboarding flow if the invitation fails.
         try {
-          await Promise.all(
-            collaboratorEmails.map(async (email) =>
-              tenantCloudApi.post('/api/tenants/:tenantId/invitations', {
-                params: { tenantId: newTenant.id },
-                body: { invitee: email.value, roleName: TenantRole.Collaborator },
-              })
-            )
-          );
+          await tenantCloudApi.post('/api/tenants/:tenantId/invitations', {
+            params: { tenantId: newTenant.id },
+            body: {
+              invitee: collaboratorEmails.map(({ value }) => value),
+              roleName: TenantRole.Collaborator,
+            },
+          });
           toast.success(t('tenant_members.messages.invitation_sent'));
         } catch {
           toast.error(t('tenants.create_modal.invitation_failed', { duration: 5 }));

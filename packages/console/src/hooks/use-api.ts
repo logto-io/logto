@@ -157,7 +157,9 @@ export const useStaticApi = ({
                 isCloud &&
                 isDevFeaturesEnabled &&
                 isAuthenticated &&
-                ['POST', 'PUT', 'DELETE'].includes(request.method) &&
+                (['POST', 'PUT', 'DELETE'].includes(request.method) ||
+                  // Special case for `/sign-in-exp` endpoint (MFA), which is a PATCH request.
+                  (request.method === 'PATCH' && request.url.endsWith('/sign-in-exp'))) &&
                 response.status >= 200 &&
                 response.status < 300
               ) {

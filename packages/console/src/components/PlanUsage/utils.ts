@@ -1,6 +1,16 @@
 import { type TFuncKey } from 'i18next';
 
 import { type NewSubscriptionQuota } from '@/cloud/types/router';
+import {
+  resourceAddOnUnitPrice,
+  machineToMachineAddOnUnitPrice,
+  tenantMembersAddOnUnitPrice,
+  mfaAddOnUnitPrice,
+  enterpriseSsoAddOnUnitPrice,
+  organizationAddOnUnitPrice,
+  tokenAddOnUnitPrice,
+  hooksAddOnUnitPrice,
+} from '@/consts/subscriptions';
 
 type UsageKey = Pick<
   NewSubscriptionQuota,
@@ -15,6 +25,7 @@ type UsageKey = Pick<
   | 'hooksLimit'
 >;
 
+// We decide not to show `hooksLimit` usage in console for now.
 export const usageKeys: Array<keyof UsageKey> = [
   'mauLimit',
   'organizationsEnabled',
@@ -24,8 +35,19 @@ export const usageKeys: Array<keyof UsageKey> = [
   'machineToMachineLimit',
   'tenantMembersLimit',
   'tokenLimit',
-  'hooksLimit',
 ];
+
+export const usageKeyPriceMap: Record<keyof UsageKey, number> = {
+  mauLimit: 0,
+  organizationsEnabled: organizationAddOnUnitPrice,
+  mfaEnabled: mfaAddOnUnitPrice,
+  enterpriseSsoLimit: enterpriseSsoAddOnUnitPrice,
+  resourcesLimit: resourceAddOnUnitPrice,
+  machineToMachineLimit: machineToMachineAddOnUnitPrice,
+  tenantMembersLimit: tenantMembersAddOnUnitPrice,
+  tokenLimit: tokenAddOnUnitPrice,
+  hooksLimit: hooksAddOnUnitPrice,
+};
 
 export const usageKeyMap: Record<
   keyof UsageKey,

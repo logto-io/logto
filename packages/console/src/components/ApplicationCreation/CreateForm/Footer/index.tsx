@@ -37,6 +37,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
     if (
       selectedType === ApplicationType.MachineToMachine &&
       isDevFeaturesEnabled &&
+      hasMachineToMachineAppsReachedLimit &&
       planId === ReservedPlanId.Pro
     ) {
       return (

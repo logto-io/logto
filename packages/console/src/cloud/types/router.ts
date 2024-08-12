@@ -25,6 +25,7 @@ export type NewSubscriptionQuota = NewSubscriptionUsageResponse['quota'];
 export type NewSubscriptionCountBasedUsage = NewSubscriptionUsageResponse['usage'];
 export type NewSubscriptionResourceScopeUsage = NewSubscriptionUsageResponse['resources'];
 export type NewSubscriptionRoleScopeUsage = NewSubscriptionUsageResponse['roles'];
+export type NewSubscriptionUpcomingInvoice = NewSubscriptionUsageResponse['upcomingInvoice'];
 
 export type NewSubscriptionPeriodicUsage = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription/periodic-usage']

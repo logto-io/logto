@@ -18,6 +18,8 @@ export const tenantMembersAddOnUnitPrice = 8;
 export const mfaAddOnUnitPrice = 48;
 export const enterpriseSsoAddOnUnitPrice = 48;
 export const organizationAddOnUnitPrice = 48;
+export const tokenAddOnUnitPrice = 80;
+export const hooksAddOnUnitPrice = 2;
 /* === Add-on unit price (in USD) === */
 
 /**

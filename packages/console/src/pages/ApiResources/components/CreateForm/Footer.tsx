@@ -53,7 +53,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
     );
   }
 
-  if (isDevFeaturesEnabled && planId === ReservedPlanId.Pro) {
+  if (isDevFeaturesEnabled && hasReachedLimit && planId === ReservedPlanId.Pro) {
     return (
       <AddOnNoticeFooter
         isLoading={isCreationLoading}
