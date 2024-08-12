@@ -33,7 +33,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
     currentPlan,
     currentSku,
     currentSubscriptionQuota,
-    currentSubscriptionScopeResourceUsage,
+    currentSubscriptionResourceScopeUsage,
   } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -62,7 +62,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
   const isScopesPerResourceReachLimit = isDevFeaturesEnabled
     ? hasReachedSubscriptionQuotaLimit({
         quotaKey: 'scopesPerResourceLimit',
-        usage: currentSubscriptionScopeResourceUsage[resourceId] ?? 0,
+        usage: currentSubscriptionResourceScopeUsage[resourceId] ?? 0,
         quota: currentSubscriptionQuota,
       })
     : hasReachedQuotaLimit({

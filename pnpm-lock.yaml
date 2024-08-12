@@ -1217,8 +1217,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-3b703da
-        version: 0.2.5-3b703da(zod@3.23.8)
+        specifier: 0.2.5-3452c56
+        version: 0.2.5-3452c56(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
@@ -2458,8 +2458,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-923c26f
-        version: 0.2.5-923c26f(zod@3.23.8)
+        specifier: 0.2.5-3452c56
+        version: 0.2.5-3452c56(zod@3.23.8)
       '@logto/connector-kit':
         specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
@@ -2948,8 +2948,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-50ff8fe
-        version: 0.2.5-50ff8fe(zod@3.23.8)
+        specifier: 0.2.5-3452c56
+        version: 0.2.5-3452c56(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
@@ -5076,16 +5076,8 @@ packages:
   '@logto/client@2.7.2':
     resolution: {integrity: sha512-jsmuDl9QpXfR3uLEMPE67tvYoL5XcjJi+4yGqucYPjd4GH6SUHp3N9skk8C/OyygnKDPLY+ttwD0LaIbpGvn+Q==}
 
-  '@logto/cloud@0.2.5-3b703da':
-    resolution: {integrity: sha512-VCevQnxP5910s/cDYAxoJRim9iH1yN/La0HAlOP6FhVGtZofYwTTfT9AQXC+dZScgydpcFWo4k/6MYOFRtZCLg==}
-    engines: {node: ^20.9.0}
-
-  '@logto/cloud@0.2.5-50ff8fe':
-    resolution: {integrity: sha512-EMIGnx3swILEcSvYsAlPg9E1srtPcZxHxVH+D/dTrg8ctHbRAJkFbeuQFhwHGvs1dfgULd9MKtaAkL2qckExMw==}
-    engines: {node: ^20.9.0}
-
-  '@logto/cloud@0.2.5-923c26f':
-    resolution: {integrity: sha512-NAK9/T7HxEfE2djO6VTekMziOXH6NtbAzwumZcZo0bqIUDGiKlUvted/KY6iqpCdfFOF4aIyKp+pvlQIjj1T6Q==}
+  '@logto/cloud@0.2.5-3452c56':
+    resolution: {integrity: sha512-19MGifwYGxjQMPrm6monfoQyOp9UTL/chtZE0JugppNwvvLyqr3Nx0maCHuwrydLt0ImBSgVmPW1cJVvu2tVPg==}
     engines: {node: ^20.9.0}
 
   '@logto/js@4.1.4':
@@ -14719,21 +14711,7 @@ snapshots:
       camelcase-keys: 7.0.2
       jose: 5.6.3
 
-  '@logto/cloud@0.2.5-3b703da(zod@3.23.8)':
-    dependencies:
-      '@silverhand/essentials': 2.9.1
-      '@withtyped/server': 0.13.6(zod@3.23.8)
-    transitivePeerDependencies:
-      - zod
-
-  '@logto/cloud@0.2.5-50ff8fe(zod@3.23.8)':
-    dependencies:
-      '@silverhand/essentials': 2.9.1
-      '@withtyped/server': 0.13.6(zod@3.23.8)
-    transitivePeerDependencies:
-      - zod
-
-  '@logto/cloud@0.2.5-923c26f(zod@3.23.8)':
+  '@logto/cloud@0.2.5-3452c56(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.1
       '@withtyped/server': 0.13.6(zod@3.23.8)
