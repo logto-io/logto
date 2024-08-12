@@ -36,7 +36,9 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
-  const { identifierInputValue, setIdentifierInputValue } = useContext(UserInteractionContext);
+  const { getIdentifierInputValueByTypes, setIdentifierInputValue } =
+    useContext(UserInteractionContext);
+  const identifierInputValue = getIdentifierInputValueByTypes(signUpMethods);
 
   const [searchParams] = useSearchParams();
 
