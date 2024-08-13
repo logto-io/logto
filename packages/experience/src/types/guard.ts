@@ -106,6 +106,11 @@ export const ssoConnectorMetadataGuard: s.Describe<SsoConnectorMetadata> = s.obj
   connectorName: s.string(),
 });
 
+const identifierEnumGuard = s.enums([
+  SignInIdentifier.Email,
+  SignInIdentifier.Phone,
+  SignInIdentifier.Username,
+]);
 /**
  * Defines the type guard for user identifier input value caching.
  *
@@ -117,8 +122,11 @@ export const ssoConnectorMetadataGuard: s.Describe<SsoConnectorMetadata> = s.obj
  *  page or the password page, the identifier they entered will not be cleared.
  */
 export const identifierInputValueGuard: s.Describe<IdentifierInputValue> = s.object({
-  type: s.optional(
-    s.enums([SignInIdentifier.Email, SignInIdentifier.Phone, SignInIdentifier.Username])
-  ),
+  type: s.optional(identifierEnumGuard),
   value: s.string(),
 });
+
+/**
+ * Type guard for the `identifier` search param config on the identifier sign-in/register page.
+ */
+export const identifierSearchParamGuard = s.array(identifierEnumGuard);

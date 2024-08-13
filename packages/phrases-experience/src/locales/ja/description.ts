@@ -99,6 +99,8 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: '続行することで、<link></link>に同意したことになります。',
+  identifier_sign_in_description: '{{types, list(type: disjunction;)}}を入力してサインインします。',
+  all_sign_in_options: 'すべてのサインインオプション',
 };
 
 export default Object.freeze(description);

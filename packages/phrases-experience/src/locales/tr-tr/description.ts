@@ -97,6 +97,8 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: 'Devam ederek <link></link> kabul etmiş oluyorsunuz.',
+  identifier_sign_in_description: 'Oturum açmak için {{types, list(type: disjunction;)}} girin.',
+  all_sign_in_options: 'Tüm oturum açma seçenekleri',
 };
 
 export default Object.freeze(description);

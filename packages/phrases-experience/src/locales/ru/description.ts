@@ -101,6 +101,8 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: 'Продолжая, вы соглашаетесь с <link></link>.',
+  identifier_sign_in_description: 'Введите свои {{types, list(type: disjunction;)}} для входа.',
+  all_sign_in_options: 'Все варианты входа',
 };
 
 export default Object.freeze(description);

@@ -7,12 +7,14 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
+import { isDevFeaturesEnabled } from './constants/env';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
 import DirectSignIn from './pages/DirectSignIn';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
+import IdentifierSignIn from './pages/IdentifierSignIn';
 import MfaBinding from './pages/MfaBinding';
 import BackupCodeBinding from './pages/MfaBinding/BackupCodeBinding';
 import TotpBinding from './pages/MfaBinding/TotpBinding';
@@ -119,6 +121,16 @@ const App = () => {
 
                     {/* Consent */}
                     <Route path="consent" element={<Consent />} />
+
+                    {isDevFeaturesEnabled && (
+                      <>
+                        {/* Identifier sign-in */}
+                        <Route
+                          path={experience.routes.identifierSignIn}
+                          element={<IdentifierSignIn />}
+                        />
+                      </>
+                    )}
 
                     <Route path="*" element={<ErrorPage />} />
                   </Route>
