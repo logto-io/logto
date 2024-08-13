@@ -1,0 +1,33 @@
+@use '@/scss/underscore' as _;
+
+.header {
+  margin: _.unit(6) 0;
+}
+
+.description {
+  margin-top: _.unit(2);
+  @include _.text-hint;
+}
+
+.terms {
+  margin-top: _.unit(4);
+  @include _.text-hint;
+  text-align: center;
+  font: var(--font-body-3);
+}
+
+.link {
+  margin-top: _.unit(7);
+}
+
+:global(body.mobile) {
+  .title {
+    @include _.title;
+  }
+}
+
+:global(body.desktop) {
+  .title {
+    @include _.title_desktop;
+  }
+}

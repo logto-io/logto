@@ -89,6 +89,8 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: '繼續即表示您同意<link></link>。',
+  identifier_sign_in_description: '輸入您的{{types, list(type: disjunction;)}}以登入。',
+  all_sign_in_options: '所有登入選項',
 };
 
 export default Object.freeze(description);

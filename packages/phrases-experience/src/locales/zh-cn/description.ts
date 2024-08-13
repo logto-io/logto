@@ -77,6 +77,8 @@ const description = {
   user_id: '用户 ID: {{id}}',
   redirect_to: '你将被重定向到 {{name}}。',
   auto_agreement: '继续即表示您同意<link></link>。',
+  identifier_sign_in_description: '输入您的{{types, list(type: disjunction;)}}以登录。',
+  all_sign_in_options: '所有登录选项',
 };
 
 export default Object.freeze(description);

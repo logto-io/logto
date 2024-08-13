@@ -97,6 +97,8 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: 'Ao continuar, você concorda com os <link></link>.',
+  identifier_sign_in_description: 'Digite seu {{types, list(type: disjunction;)}} para entrar.',
+  all_sign_in_options: 'Todas as opções de login',
 };
 
 export default Object.freeze(description);

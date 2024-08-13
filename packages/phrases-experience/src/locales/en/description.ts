@@ -88,6 +88,8 @@ const description = {
   user_id: 'User ID: {{id}}',
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: 'By continuing, you agree to the <link></link>.',
+  identifier_sign_in_description: 'Enter you {{types, list(type: disjunction;)}} to sign in.',
+  all_sign_in_options: 'All sign-in options',
 };
 
 export default Object.freeze(description);
