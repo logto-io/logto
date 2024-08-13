@@ -6,6 +6,15 @@
   ],
   "paths": {
     "/api/users/{userId}/personal-access-tokens": {
+      "get": {
+        "summary": "Get personal access tokens",
+        "description": "Get all personal access tokens for the user.",
+        "responses": {
+          "200": {
+            "description": "A list of personal access tokens."
+          }
+        }
+      },
       "post": {
         "summary": "Add personal access token",
         "description": "Add a new personal access token for the user.",
