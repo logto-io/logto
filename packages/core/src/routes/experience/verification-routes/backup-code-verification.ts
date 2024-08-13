@@ -3,6 +3,7 @@ import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -34,7 +35,10 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({ code: 'session.identifier_not_found', status: 404 })
+      );
 
       const backupCodeVerificationRecord = BackupCodeVerification.create(
         libraries,
@@ -80,7 +84,13 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
         },
       });
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
 
       const backupCodeVerificationRecord = BackupCodeVerification.create(
         libraries,

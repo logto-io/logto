@@ -1,0 +1,144 @@
+{
+  "paths": {
+    "/api/experience/verification/sso/{connectorId}/authorization-uri": {
+      "post": {
+        "summary": "Get SSO authorization URI",
+        "description": "Create a new EnterpriseSSO verification record and return the authorization URI for the given connector.",
+        "parameters": [
+          {
+            "name": "connectorId",
+            "in": "path",
+            "description": "The ID of the SSO connector."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "redirectUri": {
+                    "description": "The URI to redirect the user after the SSO authorization is completed."
+                  },
+                  "state": {
+                    "description": "The state parameter to pass to the SSO connector."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The SSO authorization URI has been successfully generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "authorizationUri": {
+                      "description": "The SSO authorization URI."
+                    },
+                    "verificationId": {
+                      "description": "The unique verification ID of the newly created EnterpriseSSO verification record. The `verificationId` is required when verifying the SSO authorization response."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The SSO connector is not found."
+          },
+          "500": {
+            "description": "Connector error. Failed to generate the SSO authorization URI."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/sso/{connectorId}/verify": {
+      "post": {
+        "summary": "Verify SSO authorization response",
+        "description": "Verify the SSO authorization response data and get the user's profile data from the SSO connector.",
+        "parameters": [
+          {
+            "name": "connectorId",
+            "in": "path",
+            "description": "The ID of the SSO connector."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "verificationId": {
+                    "description": "The ID of the EnterpriseSSO verification record."
+                  },
+                  "connectorData": {
+                    "description": "Arbitrary data returned by the SSO provider to complete the verification process."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The SSO authorization response has been successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The current verified EnterpriseSSO verification record ID. This ID is required when identifying the user in the current interaction."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The SSO authorization response is invalid or cannot be verified."
+          },
+          "404": {
+            "description": "The verification record or the SSO connector is not found."
+          },
+          "500": {
+            "description": "Connector error. Failed to verify the SSO authorization response or fetch the user info from the SSO provider."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/sso/connectors": {
+      "get": {
+        "summary": "Get all the enabled SSO connectors by the given email's domain",
+        "description": "Extract the email domain from the provided email address. Returns all the enabled SSO connectors that match the email domain.",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "The email address to find the enabled SSO connectors."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The enabled SSO connectors have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "connectorIds": {
+                      "description": "The list of enabled SSO connectorIds. Returns an empty array if no enabled SSO connectors are found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The email address is invalid, can not extract a valid domain from it."
+          }
+        }
+      }
+    }
+  }
+}

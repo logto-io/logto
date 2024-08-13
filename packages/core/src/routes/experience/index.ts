@@ -58,7 +58,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       body: z.object({
         interactionEvent: z.nativeEnum(InteractionEvent),
       }),
-      status: [204, 403],
+      status: [204],
     }),
     async (ctx, next) => {
       const { interactionEvent } = ctx.guard.body;

@@ -49,6 +49,7 @@ const anonymousPaths = new Set<string>([
   'authn',
   'swagger.json',
   'status',
+  'experience',
 ]);
 
 const advancedSearchPaths = new Set<string>([
