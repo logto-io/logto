@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Experience",
-      "description": "Experience represents the user's interaction with the Logto authentication service. It includes the user's actions, such as `SignIn`, `Register` and `ForgotPassword`."
+      "description": "The Experience endpoints allow end-users to interact with Logto for identity verification and profile completion."
     }
   ],
   "paths": {
