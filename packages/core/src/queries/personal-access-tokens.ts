@@ -14,7 +14,7 @@ export class PersonalAccessTokensQueries {
     returning: true,
   });
 
-  public readonly update = buildUpdateWhereWithPool(this.pool)(PersonalAccessTokens, true);
+  private readonly update = buildUpdateWhereWithPool(this.pool)(PersonalAccessTokens, true);
 
   constructor(public readonly pool: CommonQueryMethods) {}
 
@@ -24,6 +24,14 @@ export class PersonalAccessTokensQueries {
         from ${table}
         where ${fields.value} = ${value}
     `);
+  }
+
+  async updateName(userId: string, name: string, newName: string) {
+    return this.update({
+      where: { userId, name },
+      set: { name: newName },
+      jsonbMode: 'replace',
+    });
   }
 
   async getTokensByUserId(userId: string) {

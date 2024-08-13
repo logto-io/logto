@@ -43,6 +43,53 @@
           }
         }
       }
+    },
+    "/api/users/{userId}/personal-access-tokens/{name}": {
+      "delete": {
+        "summary": "Delete personal access token",
+        "description": "Delete a token for the user by name.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The name of the token."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The token was deleted successfully."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update personal access token",
+        "description": "Update a token for the user by name.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The name of the token."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The token name to update. Must be unique within the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The token was updated successfully."
+          }
+        }
+      }
     }
   }
 }

@@ -59,4 +59,41 @@ export default function adminUserPersonalAccessTokenRoutes<T extends ManagementA
       return next();
     }
   );
+
+  router.delete(
+    '/users/:userId/personal-access-tokens/:name',
+    koaGuard({
+      params: z.object({ userId: z.string(), name: z.string() }),
+      status: [204, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId, name },
+      } = ctx.guard;
+
+      await queries.personalAccessTokens.deleteByName(userId, name);
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/users/:userId/personal-access-tokens/:name',
+    koaGuard({
+      params: z.object({ userId: z.string(), name: z.string() }),
+      body: PersonalAccessTokens.updateGuard.pick({ name: true }).required(),
+      response: PersonalAccessTokens.guard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId, name },
+        body,
+      } = ctx.guard;
+
+      ctx.body = await queries.personalAccessTokens.updateName(userId, name, body.name);
+      return next();
+    }
+  );
 }
