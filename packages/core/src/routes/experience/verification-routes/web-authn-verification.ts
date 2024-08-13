@@ -41,7 +41,13 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
 
       const webAuthnVerification = WebAuthnVerification.create(
         libraries,
@@ -95,7 +101,13 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         },
       });
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
 
       const webAuthnVerification = experienceInteraction.getVerificationRecordByTypeAndId(
         VerificationType.WebAuthn,
@@ -140,7 +152,13 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
 
       const webAuthnVerification = WebAuthnVerification.create(
         libraries,
@@ -193,7 +211,13 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         },
       });
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
 
       const webAuthnVerification = experienceInteraction.getVerificationRecordByTypeAndId(
         VerificationType.WebAuthn,

@@ -1,0 +1,79 @@
+{
+  "paths": {
+    "/api/experience/verification/totp/secret": {
+      "post": {
+        "summary": "Generate TOTP secret for new TOTP binding",
+        "description": "Creates a new TOTP secret for the user to bind a new TOTP verification to their account.",
+        "responses": {
+          "200": {
+            "description": "TOTP secret successfully generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "secret": {
+                      "description": "The newly generated TOTP secret."
+                    },
+                    "verificationId": {
+                      "description": "The unique verification ID for the TOTP record. This ID is required to verify the TOTP code."
+                    },
+                    "secretQrCode": {
+                      "description": "A QR code image data URL for the TOTP secret. The user can scan this QR code with their TOTP authenticator app."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/totp/verify": {
+      "post": {
+        "summary": "Verify TOTP code",
+        "description": "Verifies the provided TOTP code against the user's TOTP secret. If the code is correct, a new TOTP verification record will be created and marked as verified..",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "description": "The TOTP code to be verified."
+                  },
+                  "verificationId": {
+                    "description": "The verification ID of the newly created TOTP secret. This ID is required to verify a newly created TOTP secret that needs to be bound to the user account. If not provided, the API will create a new TOTP verification record and verify the code against the user's existing TOTP secret."
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "The TOTP code has been successfully verified.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "properties": {
+                      "verificationId": {
+                        "description": "The unique verification ID of the TOTP verification record. For newly created TOTP secret verification record, this ID is required to bind the TOTP secret to the user account through `Profile` API."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid TOTP code."
+            },
+            "404": {
+              "description": "Verification record not found."
+            }
+          }
+        }
+      }
+    }
+  }
+}

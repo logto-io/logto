@@ -36,7 +36,13 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
 
       const totpVerification = TotpVerification.create(
         libraries,
@@ -84,7 +90,13 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
         },
       });
 
-      assertThat(experienceInteraction.identifiedUserId, 'session.identifier_not_found');
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
 
       // Verify new generated secret
       if (verificationId) {
