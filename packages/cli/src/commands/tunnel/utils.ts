@@ -12,7 +12,7 @@ import mime from 'mime';
 
 import { consoleLog } from '../../utils.js';
 
-import { type ProxyResponseHandler } from './types.js';
+import { type LogtoResponseHandler } from './types.js';
 
 export const createProxy = (targetUrl: string, onProxyResponse?: OnProxyEvent['proxyRes']) => {
   const hasResponseHandler = Boolean(onProxyResponse);
@@ -65,7 +65,7 @@ export const createStaticFileProxy =
 
 /**
  * Intercept the response from Logto endpoint and replace Logto endpoint URLs in the response with the
- * proxy URL. The string replace happens in the following cases:
+ * tunnel service URL. The string replace happens in the following cases:
  * - The response is a redirect response, and the `location` property in response header may contain Logto
  *   endpoint URI.
  * - The response body is JSON, which consists of properties such as `**_endpoint` and `redirectTo`. These
@@ -80,13 +80,13 @@ export const createLogtoResponseHandler = async ({
   request,
   response,
   logtoEndpointUrl,
-  proxyUrl,
+  tunnelServiceUrl,
   verbose,
-}: ProxyResponseHandler) => {
+}: LogtoResponseHandler) => {
   const { location } = proxyResponse.headers;
   if (location) {
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    proxyResponse.headers.location = location.replace(logtoEndpointUrl.href, proxyUrl.href);
+    proxyResponse.headers.location = location.replace(logtoEndpointUrl.href, tunnelServiceUrl.href);
   }
 
   void responseInterceptor(async (responseBuffer, proxyResponse) => {
@@ -96,7 +96,10 @@ export const createLogtoResponseHandler = async ({
     }
 
     if (proxyResponse.headers['content-type']?.includes('text/html')) {
-      return responseBody.replace(`action="${logtoEndpointUrl.href}`, `action="${proxyUrl.href}`);
+      return responseBody.replace(
+        `action="${logtoEndpointUrl.href}`,
+        `action="${tunnelServiceUrl.href}`
+      );
     }
 
     if (proxyResponse.headers['content-type']?.includes('application/json')) {
@@ -106,7 +109,7 @@ export const createLogtoResponseHandler = async ({
         const updatedEntries: Array<[string, unknown]> = Object.entries(jsonData).map(
           ([key, value]) => {
             if ((key === 'redirectTo' || key.endsWith('_endpoint')) && typeof value === 'string') {
-              return [key, value.replace(logtoEndpointUrl.href, proxyUrl.href)];
+              return [key, value.replace(logtoEndpointUrl.href, tunnelServiceUrl.href)];
             }
             return [key, value];
           }
