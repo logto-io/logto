@@ -28,12 +28,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
     subscription: { planId },
   } = tenantData;
 
-  const {
-    currentPlan,
-    subscriptionPlans,
-    currentSubscriptionUsage: usage,
-    currentSubscriptionQuota: quota,
-  } = useContext(SubscriptionDataContext);
+  const { currentPlan, subscriptionPlans } = useContext(SubscriptionDataContext);
   const tenantSubscriptionPlan = useMemo(
     () => subscriptionPlans.find((plan) => plan.id === planId),
     [subscriptionPlans, planId]
@@ -51,7 +46,6 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
           <TenantEnvTag tag={tag} />
           <TenantStatusTag
             tenantData={tenantData}
-            tenantStatus={{ usage, quota }}
             tenantSubscriptionPlan={tenantSubscriptionPlan}
             className={styles.statusTag}
           />
