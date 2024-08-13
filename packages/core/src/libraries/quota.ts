@@ -8,7 +8,6 @@ import assertThat from '#src/utils/assert-that.js';
 import {
   getTenantSubscriptionPlan,
   getTenantSubscriptionData,
-  getTenantSubscriptionScopeUsage,
   reportSubscriptionUpdates,
   isReportSubscriptionUpdatesUsageKey,
 } from '#src/utils/subscription/index.js';
@@ -235,16 +234,12 @@ export const createQuotaLibrary = (
       return;
     }
 
-    const [
-      {
-        quota: { scopesPerResourceLimit, scopesPerRoleLimit },
-      },
-      scopeUsages,
-    ] = await Promise.all([
-      getTenantSubscriptionData(cloudConnection),
-      getTenantSubscriptionScopeUsage(cloudConnection, entityName),
-    ]);
-    const usage = scopeUsages[entityId] ?? 0;
+    const {
+      quota: { scopesPerResourceLimit, scopesPerRoleLimit },
+      resources,
+      roles,
+    } = await getTenantSubscriptionData(cloudConnection);
+    const usage = (entityName === 'resources' ? resources[entityId] : roles[entityId]) ?? 0;
 
     if (entityName === 'resources') {
       assertThat(

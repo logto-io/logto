@@ -34,8 +34,9 @@ export const defaultTenantResponse: TenantResponse = {
   },
   usage: {
     activeUsers: 0,
-    cost: 0,
-    tokenUsage: 0,
+  },
+  quota: {
+    mauLimit: null,
   },
   openInvoices: [],
   isSuspended: false,

@@ -43,28 +43,16 @@ export const getTenantSubscriptionData = async (
   planId: string;
   quota: SubscriptionQuota;
   usage: SubscriptionUsage;
+  resources: Record<string, number>;
+  roles: Record<string, number>;
 }> => {
   const client = await cloudConnection.getClient();
-  const [{ planId }, quota, usage] = await Promise.all([
+  const [{ planId }, { quota, usage, resources, roles }] = await Promise.all([
     client.get('/api/tenants/my/subscription'),
-    client.get('/api/tenants/my/subscription/quota'),
-    client.get('/api/tenants/my/subscription/usage'),
+    client.get('/api/tenants/my/subscription-usage'),
   ]);
 
-  return { planId, quota, usage };
-};
-
-export const getTenantSubscriptionScopeUsage = async (
-  cloudConnection: CloudConnectionLibrary,
-  entityName: 'resources' | 'roles'
-): Promise<Record<string, number>> => {
-  const client = await cloudConnection.getClient();
-  const scopeUsages = await client.get('/api/tenants/my/subscription/usage/:entityName/scopes', {
-    params: { entityName },
-    search: {},
-  });
-
-  return scopeUsages;
+  return { planId, quota, usage, resources, roles };
 };
 
 export const reportSubscriptionUpdates = async (
