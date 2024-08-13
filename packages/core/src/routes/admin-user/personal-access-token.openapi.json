@@ -1,0 +1,39 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/users/{userId}/personal-access-tokens": {
+      "post": {
+        "summary": "Add personal access token",
+        "description": "Add a new personal access token for the user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The personal access token name. Must be unique within the user."
+                  },
+                  "expiresAt": {
+                    "description": "The epoch time in milliseconds when the token will expire. If not provided, the token will never expire."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The personal access token was added successfully."
+          },
+          "422": {
+            "description": "The personal access token name is already in use."
+          }
+        }
+      }
+    }
+  }
+}

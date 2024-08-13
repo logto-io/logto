@@ -1,9 +1,11 @@
 import type {
+  CreatePersonalAccessToken,
   Identities,
   Identity,
   MfaFactor,
   MfaVerification,
   OrganizationWithRoles,
+  PersonalAccessToken,
   Role,
   User,
   UserSsoIdentity,
@@ -130,3 +132,11 @@ export const createUserMfaVerification = async (userId: string, type: MfaFactor)
 
 export const getUserOrganizations = async (userId: string) =>
   authedAdminApi.get(`users/${userId}/organizations`).json<OrganizationWithRoles[]>();
+
+export const createPersonalAccessToken = async ({
+  userId,
+  ...body
+}: Omit<CreatePersonalAccessToken, 'value'>) =>
+  authedAdminApi
+    .post(`users/${userId}/personal-access-tokens`, { json: body })
+    .json<PersonalAccessToken>();
