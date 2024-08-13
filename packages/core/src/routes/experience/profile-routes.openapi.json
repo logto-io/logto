@@ -3,7 +3,7 @@
     "/api/experience/profile": {
       "post": {
         "summary": "Fulfill user profile data",
-        "description": "Adds user profile data to the current experience interaction. <br/> - For `Register`: The profile data provided before the identification request will be used to create a new user account. <br/> - For `SignIn` and `Register`: The profile data provided after the user is identified will be used to update the user's profile when the interaction is submitted. <br/> - `ForgotPassword`: Not supported.",
+        "description": "Adds user profile data to the current experience interaction. <br/>- For `Register`: The profile data provided before the identification request will be used to create a new user account. <br/>- For `SignIn` and `Register`: The profile data provided after the user is identified will be used to update the user's profile when the interaction is submitted. <br/>- `ForgotPassword`: Not supported.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -28,16 +28,16 @@
             "description": "The profile data has been successfully added to the current experience interaction."
           },
           "400": {
-            "description": " - `session.not_supported_for_forgot_password:` This API can not be used in the `ForgotPassword` interaction. <br/> - `session.verification_failed:` The verification record is not verified. "
+            "description": "Invalid request. <br/> - `session.not_supported_for_forgot_password:` This API can not be used in the `ForgotPassword` interaction. <br/>- `session.verification_failed:` The verification record is not verified. "
           },
           "404": {
-            "description": "- `SignIn` interaction only: The current interaction is not identified yet. All profile data must be associated with a identified user. <br/> - `session.verification_session_not_found:` The verification record is not found."
+            "description": "Entity not found. <br/> - `session.identifier_not_found:` (`SignIn` interaction only) The current interaction is not identified yet. All profile data must be associated with a identified user. <br/>- `session.verification_session_not_found:` The verification record is not found."
           },
           "403": {
             "description": "`SignIn` interaction only: Multi-Factor Authentication (MFA) is enabled for the user but has not been verified. The user must verify the MFA before updating the profile data."
           },
           "422": {
-            "description": "The user profile can not been processed, check error message for more details. <br/> - The profile data is invalid or conflicts with existing user data. <br/> - The profile data is already in use by another user account."
+            "description": "The user profile can not been processed, check error message for more details. <br/>- The profile data is invalid or conflicts with existing user data. <br/>- The profile data is already in use by another user account."
           }
         }
       }
@@ -67,10 +67,10 @@
             "description": "The current interaction event is not `ForgotPassword`. The password can only be updated through the `ForgotPassword` interaction."
           },
           "404": {
-            "description": "The user has not been identified yet. The user must be identified before updating the password.."
+            "description": "The user has not been identified yet. The user must be identified before updating the password."
           },
           "422": {
-            "description": "The password can not be updated due to validation errors, check error message for more details. <br/> - `user.password_policy_violation:` The password does not meet the password policy requirements. <br/> - `user.same_password:` The new password is the same as the current password."
+            "description": "The password can not be updated due to validation errors, check error message for more details. <br/>- `user.password_policy_violation:` The password does not meet the password policy requirements. <br/>- `user.same_password:` The new password is the same as the current password."
           }
         }
       }
@@ -123,13 +123,13 @@
             "description": "The MFA verification has been successfully added to the user profile."
           },
           "400": {
-            "description": "- `session.verification_failed:` The MFA verification record is invalid or not verified. <br/> - `session.mfa.mfa_factor_not_enabled:` The MFA factor is not enabled in the sign-in experience settings. <br/> - `session.mfa.pending_info_not_found:` The MFA verification record does not have the required information to bind the MFA verification."
+            "description": "Invalid request. <br/>- `session.verification_failed:` The MFA verification record is invalid or not verified. <br/>- `session.mfa.mfa_factor_not_enabled:` The MFA factor is not enabled in the sign-in experience settings. <br/>- `session.mfa.pending_info_not_found:` The MFA verification record does not have the required information to bind the MFA verification."
           },
           "404": {
-            "description": "- `session.identifier_not_found:` The user has not been identified yet. The MFA verification can only be added to a identified user. <br/> - `session.verification_session_not_found:` The MFA verification record is not found."
+            "description": "Entity not found. <br/> - `session.identifier_not_found:` The user has not been identified yet. The MFA verification can only be added to a identified user. <br/>- `session.verification_session_not_found:` The MFA verification record is not found."
           },
           "422": {
-            "description": "The MFA verification can not been processed, check error message for more details. <br/> - `user.totp_already_in_use`: A TOTP MFA secret is already in use in the current user profile. <br/> - `session.mfa.backup_code_can_not_be_alone`: The backup code can not be the only MFA factor in the user profile."
+            "description": "The MFA verification can not been processed, check error message for more details. <br/>- `user.totp_already_in_use`: A TOTP MFA secret is already in use in the current user profile. <br/>- `session.mfa.backup_code_can_not_be_alone`: The backup code can not be the only MFA factor in the user profile."
           }
         }
       }
