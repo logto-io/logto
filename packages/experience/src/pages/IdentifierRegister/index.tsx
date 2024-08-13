@@ -2,7 +2,7 @@ import { AgreeToTermsPolicy, experience } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
-import IdentifierPageLayout from '@/Layout/IdentifierPageLayout';
+import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
 import IdentifierRegisterForm from '../Register/IdentifierRegisterForm';
@@ -21,7 +21,7 @@ const IdentifierRegister = () => {
   }
 
   return (
-    <IdentifierPageLayout
+    <FocusedAuthPageLayout
       pageMeta={{ titleKey: 'description.create_your_account' }}
       title="description.create_account"
       description={t('description.identifier_register_description', {
@@ -34,7 +34,7 @@ const IdentifierRegister = () => {
       }}
     >
       <IdentifierRegisterForm signUpMethods={signUpMethods} />
-    </IdentifierPageLayout>
+    </FocusedAuthPageLayout>
   );
 };
 

@@ -31,6 +31,7 @@ import SignIn from './pages/SignIn';
 import SignInPassword from './pages/SignInPassword';
 import SingleSignOnConnectors from './pages/SingleSignOnConnectors';
 import SingleSignOnEmail from './pages/SingleSignOnEmail';
+import SingleSignOnLanding from './pages/SingleSignOnLanding';
 import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
@@ -115,7 +116,9 @@ const App = () => {
                     </Route>
 
                     {/* Single sign-on */}
-                    <Route path={experience.routes.sso} element={<LoadingLayerProvider />}>
+                    <Route path={experience.routes.sso}>
+                      {/* Single sign-on first screen landing page */}
+                      {isDevFeaturesEnabled && <Route index element={<SingleSignOnLanding />} />}
                       <Route path="email" element={<SingleSignOnEmail />} />
                       <Route path="connectors" element={<SingleSignOnConnectors />} />
                     </Route>
