@@ -23,7 +23,7 @@
             }
           },
           "404": {
-            "description": "The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
+            "description": "Entity not found. <br/> - `session.identifier_not_found:` The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
           }
         }
       }
@@ -64,7 +64,7 @@
             }
           },
           "400": {
-            "description": " - `session.mfa.pending_info_not_found:` The WebAuthn registration challenge is missing from the current verification record. <br/> - `session.mfa.webauthn_verification_failed:` The WebAuthn attestation response is invalid or cannot be verified."
+            "description": "Invalid request. <br/>  - `session.mfa.pending_info_not_found:` The WebAuthn registration challenge is missing from the current verification record. <br/>- `session.mfa.webauthn_verification_failed:` The WebAuthn attestation response is invalid or cannot be verified."
           },
           "404": {
             "description": "Verification record not found."
@@ -139,7 +139,7 @@
             }
           },
           "400": {
-            "description": "- `session.mfa.pending_info_not_found:` The WebAuthn authentication challenge is missing in the current verification record. <br/> - `session.mfa.webauthn_verification_failed:` The WebAuthn assertion response is invalid or cannot be verified."
+            "description": "Invalid request. <br/> - `session.mfa.pending_info_not_found:` The WebAuthn authentication challenge is missing in the current verification record. <br/>- `session.mfa.webauthn_verification_failed:` The WebAuthn assertion response is invalid or cannot be verified."
           },
           "404": {
             "description": "Verification record not found."

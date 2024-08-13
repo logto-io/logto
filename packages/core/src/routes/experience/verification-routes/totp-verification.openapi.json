@@ -26,7 +26,7 @@
             }
           },
           "404": {
-            "description": "The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
+            "description": "Entity not found. <br/> - `session.identifier_not_found:` The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
           }
         }
       }
