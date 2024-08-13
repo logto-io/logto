@@ -103,6 +103,9 @@ const description = {
   auto_agreement: 'Продолжая, вы соглашаетесь с <link></link>.',
   identifier_sign_in_description: 'Введите свои {{types, list(type: disjunction;)}} для входа.',
   all_sign_in_options: 'Все варианты входа',
+  identifier_register_description:
+    'Введите свои {{types, list(type: disjunction;)}} чтобы создать новую учётную запись.',
+  all_account_creation_options: 'Все варианты создания учётной записи',
 };
 
 export default Object.freeze(description);

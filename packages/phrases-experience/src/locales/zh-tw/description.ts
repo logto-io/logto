@@ -91,6 +91,8 @@ const description = {
   auto_agreement: '繼續即表示您同意<link></link>。',
   identifier_sign_in_description: '輸入您的{{types, list(type: disjunction;)}}以登入。',
   all_sign_in_options: '所有登入選項',
+  identifier_register_description: '輸入您的{{types, list(type: disjunction;)}}以建立新帳戶。',
+  all_account_creation_options: '所有帳戶創建選項',
 };
 
 export default Object.freeze(description);

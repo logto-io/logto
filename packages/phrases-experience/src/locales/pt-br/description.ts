@@ -99,6 +99,9 @@ const description = {
   auto_agreement: 'Ao continuar, você concorda com os <link></link>.',
   identifier_sign_in_description: 'Digite seu {{types, list(type: disjunction;)}} para entrar.',
   all_sign_in_options: 'Todas as opções de login',
+  identifier_register_description:
+    'Digite seu {{types, list(type: disjunction;)}} para criar uma nova conta.',
+  all_account_creation_options: 'Todas as opções de criação de conta',
 };
 
 export default Object.freeze(description);

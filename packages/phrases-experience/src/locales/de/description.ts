@@ -105,6 +105,9 @@ const description = {
   identifier_sign_in_description:
     'Geben Sie Ihre {{types, list(type: disjunction;)}} ein, um sich anzumelden.',
   all_sign_in_options: 'Alle Anmeldeoptionen',
+  identifier_register_description:
+    'Geben Sie Ihre {{types, list(type: disjunction;)}} ein, um ein neues Konto zu erstellen.',
+  all_account_creation_options: 'Alle Kontoerstellungsoptionen',
 };
 
 export default Object.freeze(description);

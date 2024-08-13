@@ -4,6 +4,7 @@ const routes = Object.freeze({
   sso: 'single-sign-on',
   consent: 'consent',
   identifierSignIn: 'identifier-sign-in',
+  identifierRegister: 'identifier-register',
 });
 
 export const experience = Object.freeze({

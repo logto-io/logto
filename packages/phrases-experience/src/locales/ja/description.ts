@@ -101,6 +101,9 @@ const description = {
   auto_agreement: '続行することで、<link></link>に同意したことになります。',
   identifier_sign_in_description: '{{types, list(type: disjunction;)}}を入力してサインインします。',
   all_sign_in_options: 'すべてのサインインオプション',
+  identifier_register_description:
+    '{{types, list(type: disjunction;)}}を入力して新しいアカウントを作成します。',
+  all_account_creation_options: 'すべてのアカウント作成オプション',
 };
 
 export default Object.freeze(description);

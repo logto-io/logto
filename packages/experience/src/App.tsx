@@ -14,6 +14,7 @@ import Continue from './pages/Continue';
 import DirectSignIn from './pages/DirectSignIn';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
+import IdentifierRegister from './pages/IdentifierRegister';
 import IdentifierSignIn from './pages/IdentifierSignIn';
 import MfaBinding from './pages/MfaBinding';
 import BackupCodeBinding from './pages/MfaBinding/BackupCodeBinding';
@@ -128,6 +129,12 @@ const App = () => {
                         <Route
                           path={experience.routes.identifierSignIn}
                           element={<IdentifierSignIn />}
+                        />
+
+                        {/* Identifier register */}
+                        <Route
+                          path={experience.routes.identifierRegister}
+                          element={<IdentifierRegister />}
                         />
                       </>
                     )}
