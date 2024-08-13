@@ -1,4 +1,4 @@
-export const prefix = '/api/experience';
+export const prefix = 'api/experience';
 
 export const experienceRoutes = Object.freeze({
   prefix,
