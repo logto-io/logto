@@ -1,6 +1,7 @@
 /* Replace legacy useSendVerificationCode hook with this one after the refactor */
 
 import { SignInIdentifier } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +9,11 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import { type UserFlow, type VerificationCodeIdentifier } from '@/types';
+import {
+  UserFlow,
+  type ContinueFlowInteractionEvent,
+  type VerificationCodeIdentifier,
+} from '@/types';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
 const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) => {
@@ -29,11 +34,15 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
   };
 
   const onSubmit = useCallback(
-    async ({ identifier, value }: Payload) => {
-      const [error, result] = await asyncSendVerificationCode(flow, {
-        type: identifier,
-        value,
-      });
+    async ({ identifier, value }: Payload, interactionEvent?: ContinueFlowInteractionEvent) => {
+      const [error, result] = await asyncSendVerificationCode(
+        flow,
+        {
+          type: identifier,
+          value,
+        },
+        interactionEvent
+      );
 
       if (error) {
         await handleError(error, {
@@ -58,6 +67,12 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
           },
           {
             replace: replaceCurrentPage,
+            // Append the interaction event to the state so that we can use it in the next step
+            ...conditional(
+              flow === UserFlow.Continue && {
+                state: { interactionEvent },
+              }
+            ),
           }
         );
       }

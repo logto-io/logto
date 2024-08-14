@@ -1,60 +1,42 @@
 import {
-  type IdentificationApiPayload,
   InteractionEvent,
   type PasswordVerificationPayload,
   SignInIdentifier,
-  type UpdateProfileApiPayload,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
 
-import api from './api';
+import { type ContinueFlowInteractionEvent } from '@/types';
 
-const prefix = '/api/experience';
+import api from '../api';
 
-const experienceApiRoutes = Object.freeze({
-  prefix,
-  identification: `${prefix}/identification`,
-  submit: `${prefix}/submit`,
-  verification: `${prefix}/verification`,
-  profile: `${prefix}/profile`,
-  mfa: `${prefix}/profile/mfa`,
-});
+import { experienceApiRoutes, type VerificationResponse } from './const';
+import {
+  initInteraction,
+  identifyUser,
+  submitInteraction,
+  updateInteractionEvent,
+  _updateProfile,
+  identifyAndSubmitInteraction,
+} from './interaction';
 
-type VerificationResponse = {
-  verificationId: string;
+export {
+  initInteraction,
+  submitInteraction,
+  identifyUser,
+  identifyAndSubmitInteraction,
+} from './interaction';
+
+export * from './mfa';
+export * from './social';
+
+export const registerWithVerifiedIdentifier = async (verificationId: string) => {
+  await updateInteractionEvent(InteractionEvent.Register);
+  return identifyAndSubmitInteraction({ verificationId });
 };
 
-type SubmitInteractionResponse = {
-  redirectTo: string;
-};
-
-const initInteraction = async (interactionEvent: InteractionEvent) =>
-  api.put(`${experienceApiRoutes.prefix}`, {
-    json: {
-      interactionEvent,
-    },
-  });
-
-const identifyUser = async (payload: IdentificationApiPayload = {}) =>
-  api.post(experienceApiRoutes.identification, { json: payload });
-
-const submitInteraction = async () =>
-  api.post(`${experienceApiRoutes.submit}`).json<SubmitInteractionResponse>();
-
-const updateProfile = async (payload: UpdateProfileApiPayload) => {
-  await api.post(experienceApiRoutes.profile, { json: payload });
-};
-
-const updateInteractionEvent = async (interactionEvent: InteractionEvent) =>
-  api.put(`${experienceApiRoutes.prefix}/interaction-event`, {
-    json: {
-      interactionEvent,
-    },
-  });
-
-const identifyAndSubmitInteraction = async (payload?: IdentificationApiPayload) => {
-  await identifyUser(payload);
-  return submitInteraction();
+export const signInWithVerifiedIdentifier = async (verificationId: string) => {
+  await updateInteractionEvent(InteractionEvent.SignIn);
+  return identifyAndSubmitInteraction({ verificationId });
 };
 
 // Password APIs
@@ -73,11 +55,11 @@ export const signInWithPasswordIdentifier = async (payload: PasswordVerification
 export const registerWithUsername = async (username: string) => {
   await initInteraction(InteractionEvent.Register);
 
-  return updateProfile({ type: SignInIdentifier.Username, value: username });
+  return _updateProfile({ type: SignInIdentifier.Username, value: username });
 };
 
 export const continueRegisterWithPassword = async (password: string) => {
-  await updateProfile({ type: 'password', value: password });
+  await _updateProfile({ type: 'password', value: password });
 
   return identifyAndSubmitInteraction();
 };
@@ -114,29 +96,44 @@ export const identifyWithVerificationCode = async (json: VerificationCodePayload
   return identifyAndSubmitInteraction({ verificationId });
 };
 
-export const registerWithVerifiedIdentifier = async (verificationId: string) => {
-  await updateInteractionEvent(InteractionEvent.Register);
-  return identifyAndSubmitInteraction({ verificationId });
-};
-
-export const signInWithVerifiedIdentifier = async (verificationId: string) => {
-  await updateInteractionEvent(InteractionEvent.SignIn);
-  return identifyAndSubmitInteraction({ verificationId });
-};
-
 // Profile APIs
 
-export const updateProfileWithVerificationCode = async (json: VerificationCodePayload) => {
+export const updateProfileWithVerificationCode = async (
+  json: VerificationCodePayload,
+  interactionEvent?: ContinueFlowInteractionEvent
+) => {
   const { verificationId } = await verifyVerificationCode(json);
 
   const {
     identifier: { type },
   } = json;
 
-  await updateProfile({
+  await _updateProfile({
     type,
     verificationId,
   });
+
+  if (interactionEvent === InteractionEvent.Register) {
+    await identifyUser();
+  }
+
+  return submitInteraction();
+};
+
+type UpdateProfilePayload = {
+  type: SignInIdentifier.Username | 'password';
+  value: string;
+};
+
+export const updateProfile = async (
+  payload: UpdateProfilePayload,
+  interactionEvent: ContinueFlowInteractionEvent
+) => {
+  await _updateProfile(payload);
+
+  if (interactionEvent === InteractionEvent.Register) {
+    await identifyUser();
+  }
 
   return submitInteraction();
 };
