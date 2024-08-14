@@ -1,10 +1,8 @@
 import assert from 'node:assert';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { isKeyInObject, isObject, type Optional } from '@silverhand/essentials';
-import { findUp } from 'find-up';
 import type Router from 'koa-router';
 import { OpenAPIV3 } from 'openapi-types';
 import { z } from 'zod';
@@ -14,14 +12,13 @@ import { type DeepPartial } from '#src/test-utils/tenant.js';
 import { devConsole } from '#src/utils/console.js';
 
 import { isKoaAuthMiddleware } from '../../../middleware/koa-auth/index.js';
-import assertThat from '../../../utils/assert-that.js';
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
 /** The tag name used in the supplement document to indicate that the operation is cloud only. */
 const cloudOnlyTag = 'Cloud only';
 /** The tag name is used in the supplement document to indicate that the corresponding API operation is a dev feature. */
-const devFeatureTag = 'Dev feature';
+export const devFeatureTag = 'Dev feature';
 
 const reservedTags = new Set([cloudOnlyTag, devFeatureTag]);
 
@@ -60,12 +57,15 @@ export const buildTag = (path: string) => {
  * directory.
  */
 /* eslint-disable @silverhand/fp/no-mutating-methods, no-await-in-loop */
-type FindSupplementFilesOptions = {
+export type FindSupplementFilesOptions = {
   excludeDirectories?: string[];
   includeDirectories?: string[];
 };
 
-const findSupplementFiles = async (directory: string, option?: FindSupplementFilesOptions) => {
+export const findSupplementFiles = async (
+  directory: string,
+  option?: FindSupplementFilesOptions
+) => {
   const result: string[] = [];
 
   for (const file of await fs.readdir(directory)) {
@@ -254,7 +254,7 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
  *
  */
 // eslint-disable-next-line complexity
-const removeUnnecessaryOperations = (
+export const removeUnnecessaryOperations = (
   document: DeepPartial<OpenAPIV3.Document>
 ): DeepPartial<OpenAPIV3.Document> => {
   const { isCloud, isDevFeaturesEnabled } = EnvSet.values;
@@ -322,35 +322,3 @@ export const isManagementApiRouter = ({ stack }: Router) =>
   stack
     .filter(({ path }) => !path.includes('.*'))
     .some(({ stack }) => stack.some((function_) => isKoaAuthMiddleware(function_)));
-
-export const getSupplementDocuments = async (
-  directory = 'routes',
-  option?: FindSupplementFilesOptions
-) => {
-  // Find supplemental documents
-  const routesDirectory = await findUp(directory, {
-    type: 'directory',
-    cwd: fileURLToPath(import.meta.url),
-  });
-  assertThat(routesDirectory, new Error('Cannot find routes directory.'));
-
-  const supplementPaths = await findSupplementFiles(routesDirectory, option);
-
-  const allSupplementDocuments = await Promise.all(
-    supplementPaths.map(async (path) =>
-      removeUnnecessaryOperations(
-        // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
-        JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
-      )
-    )
-  );
-
-  // Filter out supplement documents that are for dev features when dev features are disabled.
-  const supplementDocuments = allSupplementDocuments.filter(
-    (supplement) =>
-      EnvSet.values.isDevFeaturesEnabled ||
-      !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
-  );
-
-  return supplementDocuments;
-};

@@ -1,24 +1,16 @@
 import { httpCodeToMessage } from '@logto/core-kit';
-import { deduplicate, conditionalArray, cond, condString, condArray } from '@silverhand/essentials';
+import { deduplicate, conditionalArray, cond } from '@silverhand/essentials';
+import type Router from 'koa-router';
 import { type IMiddleware } from 'koa-router';
 import { type OpenAPIV3 } from 'openapi-types';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { type WithGuardConfig, isGuardMiddleware } from '#src/middleware/koa-guard.js';
 import { isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
-import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
+import { zodTypeToSwagger } from '#src/utils/zod.js';
 
-import { managementApiAuthDescription } from '../consts.js';
-
-import { buildTag } from './general.js';
-import { buildOperationId } from './operation-id.js';
-import {
-  buildParameters,
-  buildPathIdParameters,
-  customParameters,
-  paginationParameters,
-  searchParameters,
-} from './parameters.js';
+import { buildTag, isManagementApiRouter, normalizePath } from './general.js';
+import { buildOperationId, customRoutes, throwByDifference } from './operation-id.js';
+import { buildParameters, paginationParameters, searchParameters } from './parameters.js';
 
 const anonymousPaths = new Set<string>([
   'interaction',
@@ -42,7 +34,7 @@ const advancedSearchPaths = new Set<string>([
 ]);
 
 // eslint-disable-next-line complexity
-export const buildOperation = (
+const buildOperation = (
   method: OpenAPIV3.HttpMethods,
   stack: IMiddleware[],
   path: string,
@@ -114,131 +106,78 @@ export const buildOperation = (
   };
 };
 
-// Add more components here to cover more ID parameters in paths. For example, if there is a
-const managementApiIdentifiableEntityNames = Object.freeze([
-  'key',
-  'connector-factory',
-  'factory',
-  'application',
-  'connector',
-  'sso-connector',
-  'resource',
-  'user',
-  'log',
-  'role',
-  'scope',
-  'hook',
-  'domain',
-  'verification',
-  'organization',
-  'organization-role',
-  'organization-scope',
-  'organization-invitation',
-]);
+type RouteObject = {
+  path: string;
+  method: OpenAPIV3.HttpMethods;
+  operation: OpenAPIV3.OperationObject;
+};
 
-/** Additional tags that cannot be inferred from the path. */
-const additionalTags = Object.freeze(
-  condArray<string>(
-    'Organization applications',
-    EnvSet.values.isDevFeaturesEnabled && 'Custom UI assets',
-    'Organization users'
-  )
-);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type UnknownRouter = Router<unknown, any>;
 
-export const buildManagementApiBaseDocument = (
-  pathMap: Map<string, OpenAPIV3.PathItemObject>,
-  tags: Set<string>,
-  origin: string
-): OpenAPIV3.Document => ({
-  openapi: '3.0.1',
-  servers: [
-    {
-      url: EnvSet.values.isCloud ? 'https://[tenant_id].logto.app/' : origin,
-      description: 'Logto endpoint address.',
-    },
-  ],
-  info: {
-    title: 'Logto API references',
-    description:
-      'API references for Logto services.' +
-      condString(
-        EnvSet.values.isCloud &&
-          '\n\nNote: The documentation is for Logto Cloud. If you are using Logto OSS, please refer to the response of `/api/swagger.json` endpoint on your Logto instance.'
-      ),
-    version: 'Cloud',
-  },
-  paths: Object.fromEntries(pathMap),
-  security: [{ OAuth2: ['all'] }],
-  components: {
-    securitySchemes: {
-      OAuth2: {
-        type: 'oauth2',
-        description: managementApiAuthDescription,
-        flows: {
-          clientCredentials: {
-            tokenUrl: '/oidc/token',
-            scopes: {
-              all: 'All scopes',
-            },
-          },
-        },
-      },
-    },
-    schemas: translationSchemas,
-    parameters: managementApiIdentifiableEntityNames.reduce(
-      (previous, entityName) => ({
-        ...previous,
-        ...buildPathIdParameters(entityName),
-      }),
-      customParameters()
-    ),
-  },
-  tags: [...tags, ...additionalTags].map((tag) => ({ name: tag })),
-});
+type Options = {
+  guardCustomRoutes?: boolean;
+};
 
-// ID parameters for experience API entities.
-const experienceIdentifiableEntityNames = Object.freeze(['connector', 'verification']);
+export const buildRouterObjects = <T extends UnknownRouter>(routers: T[], options?: Options) => {
+  /**
+   * A set to store all custom routes that have been built.
+   * @see {@link customRoutes}
+   */
+  const builtCustomRoutes = new Set<string>();
 
-export const buildExperienceApiBaseDocument = (
-  pathMap: Map<string, OpenAPIV3.PathItemObject>,
-  tags: Set<string>,
-  origin: string
-): OpenAPIV3.Document => ({
-  openapi: '3.0.1',
-  servers: [
-    {
-      url: EnvSet.values.isCloud ? 'https://[tenant_id].logto.app/' : origin,
-      description: 'Logto endpoint address.',
-    },
-  ],
-  info: {
-    title: 'Logto experience API references',
-    description:
-      'API references for Logto experience interaction.' +
-      condString(
-        EnvSet.values.isCloud &&
-          '\n\nNote: The documentation is for Logto Cloud. If you are using Logto OSS, please refer to the response of `/api/swagger.json` endpoint on your Logto instance.'
-      ),
-    version: 'Cloud',
-  },
-  paths: Object.fromEntries(pathMap),
-  security: [{ cookieAuth: ['all'] }],
-  components: {
-    schemas: translationSchemas,
-    securitySchemes: {
-      cookieAuth: {
-        type: 'apiKey',
-        in: 'cookie',
-        name: '_interaction',
-      },
-    },
-    parameters: experienceIdentifiableEntityNames.reduce(
-      (previous, entityName) => ({
-        ...previous,
-        ...buildPathIdParameters(entityName),
-      }),
-      customParameters()
-    ),
-  },
-  tags: [...tags].map((tag) => ({ name: tag })),
-});
+  const routes = routers.flatMap<RouteObject>((router) => {
+    const isAuthGuarded = isManagementApiRouter(router);
+
+    return (
+      router.stack
+        // Filter out universal routes (mostly like a proxy route to withtyped)
+        .filter(({ path }) => !path.includes('.*'))
+        .flatMap<RouteObject>(({ path: routerPath, stack, methods }) =>
+          methods
+            .map((method) => method.toLowerCase())
+            // There is no need to show the HEAD method.
+            .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
+            .map((httpMethod) => {
+              const path = normalizePath(routerPath);
+              const operation = buildOperation(httpMethod, stack, routerPath, isAuthGuarded);
+
+              if (options?.guardCustomRoutes && customRoutes[`${httpMethod} ${routerPath}`]) {
+                builtCustomRoutes.add(`${httpMethod} ${routerPath}`);
+              }
+
+              return {
+                path,
+                method: httpMethod,
+                operation,
+              };
+            })
+        )
+    );
+  });
+
+  // Ensure all custom routes are built.
+  if (options?.guardCustomRoutes) {
+    throwByDifference(builtCustomRoutes);
+  }
+
+  return routes;
+};
+
+export const groupRoutesByPath = (routes: RouteObject[]) => {
+  const pathMap = new Map<string, OpenAPIV3.PathItemObject>();
+  const tags = new Set<string>();
+
+  // Group routes by path
+  for (const { path, method, operation } of routes) {
+    if (operation.tags) {
+      // Collect all tags for sorting
+      for (const tag of operation.tags) {
+        tags.add(tag);
+      }
+    }
+    pathMap.set(path, { ...pathMap.get(path), [method]: operation });
+  }
+
+  return { pathMap, tags };
+};
