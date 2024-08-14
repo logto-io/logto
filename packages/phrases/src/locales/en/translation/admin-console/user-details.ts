@@ -97,6 +97,34 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'User needs to have at least one of the sign-in identifiers (username, email, phone number or social) to sign in. Are you sure you want to continue?',
+  personal_access_tokens: {
+    title: 'Personal access token',
+    title_other: 'Personal access tokens',
+    title_short: 'token',
+    value: 'Value',
+    created_at: 'Created at',
+    expires_at: 'Expires at',
+    never: 'Never',
+    create_new_token: 'Create new token',
+    delete_confirmation:
+      'This action cannot be undone. Are you sure you want to delete this token?',
+    expired: 'Expired',
+    expired_tooltip: 'This token was expired on {{date}}.',
+    create_modal: {
+      title: 'Create personal access token',
+      expiration: 'Expiration',
+      expiration_description: 'The token will expire at {{date}}.',
+      expiration_description_never:
+        'The token will never expire. We recommend setting an expiration date for enhanced security.',
+      days: '{{count}} day',
+      days_other: '{{count}} days',
+      created: 'The token {{name}} has been successfully created.',
+    },
+    edit_modal: {
+      title: 'Edit personal access token',
+      edited: 'The token {{name}} has been successfully edited.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);
