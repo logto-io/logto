@@ -21,7 +21,7 @@ const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slic
 /** The tag name used in the supplement document to indicate that the operation is cloud only. */
 const cloudOnlyTag = 'Cloud only';
 /** The tag name is used in the supplement document to indicate that the corresponding API operation is a dev feature. */
-export const devFeatureTag = 'Dev feature';
+const devFeatureTag = 'Dev feature';
 
 const reservedTags = new Set([cloudOnlyTag, devFeatureTag]);
 
@@ -65,10 +65,7 @@ type FindSupplementFilesOptions = {
   includeDirectories?: string[];
 };
 
-export const findSupplementFiles = async (
-  directory: string,
-  option?: FindSupplementFilesOptions
-) => {
+const findSupplementFiles = async (directory: string, option?: FindSupplementFilesOptions) => {
   const result: string[] = [];
 
   for (const file of await fs.readdir(directory)) {
@@ -257,7 +254,7 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
  *
  */
 // eslint-disable-next-line complexity
-export const removeUnnecessaryOperations = (
+const removeUnnecessaryOperations = (
   document: DeepPartial<OpenAPIV3.Document>
 ): DeepPartial<OpenAPIV3.Document> => {
   const { isCloud, isDevFeaturesEnabled } = EnvSet.values;
