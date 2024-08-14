@@ -1,10 +1,10 @@
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 import { useOutletContext, useRoutes } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
+import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
-import { Daisy } from '@/ds-components/Spinner';
 import Tag from '@/ds-components/Tag';
 import { useConsoleRoutes } from '@/hooks/use-console-routes';
 import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
@@ -15,28 +15,7 @@ import { Skeleton } from './Sidebar';
 import useTenantScopeListener from './hooks';
 import styles from './index.module.scss';
 
-const suspenseDisplayTimeout = 500; // Milliseconds
 const Sidebar = safeLazy(async () => import('./Sidebar'));
-
-function SuspenseFallback() {
-  const [showSpinner, setShowSpinner] = useState(false);
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      setShowSpinner(true);
-    }, suspenseDisplayTimeout);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
-
-  if (showSpinner) {
-    return <Daisy className={styles.daisy} />;
-  }
-
-  return null;
-}
 
 function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
@@ -54,7 +33,7 @@ function ConsoleContent() {
       </Suspense>
       <OverlayScrollbar className={styles.overlayScrollbarWrapper}>
         <div ref={scrollableContent} className={styles.main}>
-          <Suspense fallback={<SuspenseFallback />}>{routes}</Suspense>
+          <Suspense fallback={<DelayedSuspenseFallback />}>{routes}</Suspense>
         </div>
       </OverlayScrollbar>
       {isDevFeaturesEnabled && (

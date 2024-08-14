@@ -1,5 +1,7 @@
+import { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
+import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -17,21 +19,26 @@ import SocialDemoCallback from './pages/SocialDemoCallback';
 function AppRoutes() {
   return (
     <div className={styles.app}>
-      <Routes>
-        <Route path={GlobalAnonymousRoute.Callback} element={<Callback />} />
-        <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
-        <Route element={<ProtectedRoutes />}>
-          <Route
-            path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
-            element={<AcceptInvitation />}
-          />
-          <Route path={GlobalRoute.Profile + '/*'} element={<Profile />} />
-          <Route path={GlobalRoute.HandleSocial} element={<HandleSocialCallback />} />
-          <Route path={GlobalRoute.CheckoutSuccessCallback} element={<CheckoutSuccessCallback />} />
-          <Route path={GlobalRoute.Onboarding + '/*'} element={<OnboardingApp />} />
-          <Route index element={<Main />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<DelayedSuspenseFallback />}>
+        <Routes>
+          <Route path={GlobalAnonymousRoute.Callback} element={<Callback />} />
+          <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
+          <Route element={<ProtectedRoutes />}>
+            <Route
+              path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
+              element={<AcceptInvitation />}
+            />
+            <Route path={GlobalRoute.Profile + '/*'} element={<Profile />} />
+            <Route path={GlobalRoute.HandleSocial} element={<HandleSocialCallback />} />
+            <Route
+              path={GlobalRoute.CheckoutSuccessCallback}
+              element={<CheckoutSuccessCallback />}
+            />
+            <Route path={GlobalRoute.Onboarding + '/*'} element={<OnboardingApp />} />
+            <Route index element={<Main />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </div>
   );
 }
