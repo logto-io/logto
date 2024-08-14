@@ -225,7 +225,8 @@
           "profile:address.self:read",
           "profile:address.self:write",
           "profile:entitlement.self:read",
-          "profile:entitlement.self:write"
+          "profile:entitlement.self:write",
+          "profile:user:read"
         ]
       },
       {
@@ -289,7 +290,7 @@
           {
             "resource_id": "profile-api",
             "specific_permissions": [
-              "profile:user.self:read"
+              "profile:user:read"
             ]
           }
         ],
