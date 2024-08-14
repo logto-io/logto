@@ -39,7 +39,7 @@ const useWebAuthnOperation = () => {
      * Therefore, we should avoid asynchronous operations before invoking the WebAuthn API or the os may consider the WebAuthn authorization is not initiated by the user.
      * So, we need to prepare the necessary WebAuthn options before calling the WebAuthn API, this is why we don't generate the options in this function.
      */
-    async (options: WebAuthnOptions) => {
+    async (options: WebAuthnOptions, verificationId: string) => {
       if (!browserSupportsWebAuthn()) {
         setToast(t('mfa.webauthn_not_supported'));
         return;
@@ -63,19 +63,26 @@ const useWebAuthnOperation = () => {
         }
       );
 
-      if (response) {
-        /**
-         * Assert type manually to get the correct type
-         */
-        void sendMfaPayload(
-          isAuthenticationResponseJSON(response)
-            ? {
-                flow: UserMfaFlow.MfaVerification,
-                payload: { ...response, type: MfaFactor.WebAuthn },
-              }
-            : { flow: UserMfaFlow.MfaBinding, payload: { ...response, type: MfaFactor.WebAuthn } }
-        );
+      if (!response) {
+        return;
       }
+
+      /**
+       * Assert type manually to get the correct type
+       */
+      void sendMfaPayload(
+        isAuthenticationResponseJSON(response)
+          ? {
+              flow: UserMfaFlow.MfaVerification,
+              payload: { ...response, type: MfaFactor.WebAuthn },
+              verificationId,
+            }
+          : {
+              flow: UserMfaFlow.MfaBinding,
+              payload: { ...response, type: MfaFactor.WebAuthn },
+              verificationId,
+            }
+      );
     },
     [sendMfaPayload, setToast, t]
   );

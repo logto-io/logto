@@ -4,7 +4,11 @@ import SectionLayout from '@/Layout/SectionLayout';
 import TotpCodeVerification from '@/containers/TotpCodeVerification';
 import { UserMfaFlow } from '@/types';
 
-const VerificationSection = () => {
+type Props = {
+  readonly verificationId: string;
+};
+
+const VerificationSection = ({ verificationId }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -16,7 +20,7 @@ const VerificationSection = () => {
       }}
       description="mfa.enter_one_time_code_link_description"
     >
-      <TotpCodeVerification flow={UserMfaFlow.MfaBinding} />
+      <TotpCodeVerification flow={UserMfaFlow.MfaBinding} verificationId={verificationId} />
     </SectionLayout>
   );
 };

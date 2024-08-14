@@ -1,13 +1,14 @@
 import { InteractionEvent, type VerificationCodeIdentifier } from '@logto/schemas';
 
-import { UserFlow } from '@/types';
+import { type ContinueFlowInteractionEvent, UserFlow } from '@/types';
 
 import { initInteraction, sendVerificationCode } from './experience';
 
 /** Move to API */
 export const sendVerificationCodeApi = async (
   type: UserFlow,
-  identifier: VerificationCodeIdentifier
+  identifier: VerificationCodeIdentifier,
+  interactionEvent?: ContinueFlowInteractionEvent
 ) => {
   switch (type) {
     case UserFlow.SignIn: {
@@ -23,8 +24,7 @@ export const sendVerificationCodeApi = async (
       return sendVerificationCode(InteractionEvent.ForgotPassword, identifier);
     }
     case UserFlow.Continue: {
-      // Continue flow does not have its own email template, always use sign-in template for now
-      return sendVerificationCode(InteractionEvent.SignIn, identifier);
+      return sendVerificationCode(interactionEvent ?? InteractionEvent.SignIn, identifier);
     }
   }
 };
