@@ -2,6 +2,7 @@
   "paths": {
     "/api/experience/profile": {
       "post": {
+        "tags": ["Dev feature"],
         "summary": "Fulfill user profile data",
         "description": "Adds user profile data to the current experience interaction. <br/>- For `Register`: The profile data provided before the identification request will be used to create a new user account. <br/>- For `SignIn` and `Register`: The profile data provided after the user is identified will be used to update the user's profile when the interaction is submitted. <br/>- `ForgotPassword`: Not supported.",
         "requestBody": {
@@ -44,6 +45,7 @@
     },
     "/api/experience/profile/password": {
       "put": {
+        "tags": ["Dev feature"],
         "summary": "Reset user password",
         "description": "Update the user's password. (`ForgotPassword` interaction only)",
         "requestBody": {
@@ -77,6 +79,7 @@
     },
     "/api/experience/profile/mfa/mfa-skipped": {
       "post": {
+        "tags": ["Dev feature"],
         "summary": "Skip Multi-Factor Authentication (MFA) binding flow",
         "description": "Skip MFA verification binding flow. If the MFA is enabled in the sign-in experience settings and marked as `UserControlled`, the user can skip the MFA verification binding flow by calling this API.",
         "responses": {
@@ -100,6 +103,7 @@
     },
     "/api/experience/profile/mfa": {
       "post": {
+        "tags": ["Dev feature"],
         "summary": "Bind Multi-Factor Authentication (MFA) verification by verificationId",
         "description": "Bind new MFA verification to the user profile using the verificationId.",
         "requestBody": {

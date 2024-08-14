@@ -2,6 +2,7 @@
   "paths": {
     "/api/experience/verification/verification-code": {
       "post": {
+        "tags": ["Dev feature"],
         "summary": "Create and send verification code",
         "description": "Creates a new `CodeVerification` record and sends the code to the specified identifier. The code verification can be used to verify the user's identity or bind a new identifier to the user's account.",
         "requestBody": {
@@ -46,6 +47,7 @@
     },
     "/api/experience/verification/verification-code/verify": {
       "post": {
+        "tags": ["Dev feature"],
         "summary": "Verify verification code",
         "description": "Verifies the provided verification code against the user's identifier. If successful, the verification record is marked as verified.",
         "requestBody": {

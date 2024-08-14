@@ -2,6 +2,7 @@
   "paths": {
     "/api/experience/verification/totp/secret": {
       "post": {
+        "tags": ["Dev feature"],
         "summary": "Generate TOTP secret for new TOTP binding",
         "description": "Creates a new TOTP secret for the user to bind a new TOTP verification to their account.",
         "responses": {
@@ -33,6 +34,7 @@
     },
     "/api/experience/verification/totp/verify": {
       "post": {
+        "tags": ["Dev feature"],
         "summary": "Verify TOTP code",
         "description": "Verifies the provided TOTP code against the user's TOTP secret. If the code is correct, a new TOTP verification record will be created and marked as verified..",
         "requestBody": {
