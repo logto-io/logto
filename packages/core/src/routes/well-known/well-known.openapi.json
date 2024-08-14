@@ -1,0 +1,73 @@
+{
+  "tags": [
+    {
+      "name": "Well-known",
+      "description": "Well-Known routes provide information and resources that can be discovered by clients without the need for authentication."
+    }
+  ],
+  "paths": {
+    "/api/.well-known/sign-in-exp": {
+      "get": {
+        "deprecated": true,
+        "summary": "Get full sign-in experience",
+        "description": "Get the full sign-in experience configuration.",
+        "responses": {
+          "200": {
+            "description": "The full sign-in experience configuration."
+          }
+        }
+      }
+    },
+    "/api/.well-known/phrases": {
+      "get": {
+        "summary": "Get localized phrases",
+        "description": "Get localized phrases based on the specified language.",
+        "parameters": [
+          {
+            "name": "lng",
+            "in": "query",
+            "description": "The language tag for localization."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Localized phrases for the specified language."
+          }
+        }
+      }
+    },
+    "/api/.well-known/experience": {
+      "get": {
+        "summary": "Get full sign-in experience",
+        "description": "Get the full sign-in experience configuration.",
+        "responses": {
+          "200": {
+            "description": "The full sign-in experience configuration."
+          }
+        }
+      }
+    },
+    "/api/.well-known/management.openapi.json": {
+      "get": {
+        "summary": "Get Management API swagger JSON",
+        "description": "The endpoint for the Management API JSON document. The JSON conforms to the [OpenAPI v3.0.1](https://spec.openapis.org/oas/v3.0.1) (a.k.a. Swagger) specification.",
+        "responses": {
+          "200": {
+            "description": "The JSON document."
+          }
+        }
+      }
+    },
+    "/api/.well-known/experience.openapi.json": {
+      "get": {
+        "summary": "Get Experience API swagger JSON",
+        "description": "The endpoint for the Experience API JSON document. The JSON conforms to the [OpenAPI v3.0.1](https://spec.openapis.org/oas/v3.0.1) (a.k.a. Swagger) specification.",
+        "responses": {
+          "200": {
+            "description": "The JSON document."
+          }
+        }
+      }
+    }
+  }
+}

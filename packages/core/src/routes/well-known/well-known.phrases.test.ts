@@ -1,5 +1,5 @@
 import zhCN from '@logto/phrases-experience/lib/locales/zh-cn/index.js';
-import type { CustomPhrase, SignInExperience } from '@logto/schemas';
+import { type CustomPhrase, type SignInExperience } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
@@ -58,7 +58,7 @@ const tenantContext = new MockTenant(
   { phrases: { getPhrases } }
 );
 
-const phraseRoutes = await pickDefault(import('./well-known.js'));
+const phraseRoutes = await pickDefault(import('./index.js'));
 
 const { createRequester } = await import('#src/utils/test-utils.js');
 const phraseRequest = createRequester({

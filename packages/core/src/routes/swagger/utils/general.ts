@@ -3,12 +3,15 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { isKeyInObject, isObject, type Optional } from '@silverhand/essentials';
+import type Router from 'koa-router';
 import { OpenAPIV3 } from 'openapi-types';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type DeepPartial } from '#src/test-utils/tenant.js';
 import { devConsole } from '#src/utils/console.js';
+
+import { isKoaAuthMiddleware } from '../../../middleware/koa-auth/index.js';
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
@@ -54,11 +57,28 @@ export const buildTag = (path: string) => {
  * directory.
  */
 /* eslint-disable @silverhand/fp/no-mutating-methods, no-await-in-loop */
-export const findSupplementFiles = async (directory: string) => {
+type FindSupplementFilesOptions = {
+  excludeDirectories?: string[];
+  includeDirectories?: string[];
+};
+
+export const findSupplementFiles = async (
+  directory: string,
+  option?: FindSupplementFilesOptions
+) => {
   const result: string[] = [];
 
   for (const file of await fs.readdir(directory)) {
     const stats = await fs.stat(path.join(directory, file));
+
+    if (
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      option?.excludeDirectories?.includes(file) ||
+      (option?.includeDirectories && !option.includeDirectories.includes(file))
+    ) {
+      continue;
+    }
+
     if (stats.isDirectory()) {
       result.push(...(await findSupplementFiles(path.join(directory, file))));
     } else if (file.endsWith('.openapi.json')) {
@@ -293,3 +313,12 @@ export const pruneSwaggerDocument = (document: OpenAPIV3.Document) => {
 
   prune(document);
 };
+
+/**
+ * Check if the given router is a management API router. The function will check if the router
+ * contains koa-auth middleware.
+ */
+export const isManagementApiRouter = ({ stack }: Router) =>
+  stack
+    .filter(({ path }) => !path.includes('.*'))
+    .some(({ stack }) => stack.some((function_) => isKoaAuthMiddleware(function_)));
