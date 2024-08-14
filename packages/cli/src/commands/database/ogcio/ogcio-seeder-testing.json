@@ -2,8 +2,8 @@
   "default": {
     "organizations": [
       {
-        "name": "OGCIO Seeded Org",
-        "description": "Organization created through seeder",
+        "name": "OGCIO",
+        "description": "OGCIO Organization",
         "id": "ogcio"
       },
       {
@@ -24,10 +24,6 @@
     ],
     "organization_permissions": {
       "specific_permissions": [
-        "analytics:global:*",
-        "analytics:website:admin",
-        "analytics:website:write",
-        "analytics:website:view",
         "payments:provider:*",
         "payments:payment_request:*",
         "payments:payment_request.public:read",
@@ -86,30 +82,10 @@
         "specific_permissions": ["profile:user:*", "profile:address:*", "profile:entitlement:*"]
       },
       {
-        "id": "anl-admin",
-        "name": "Analytics Admin",
-        "description": "Analytics Admin",
-        "specific_permissions": ["analytics:website:admin"]
-      },
-      {
-        "id": "anl-public-servant",
-        "name": "Analytics Public Servant",
-        "description": "Analytics Public servant",
-        "specific_permissions": ["analytics:website:view"]
-      },
-      {
-        "id": "anl-super-user",
-        "name": "Analytics Super User",
-        "description": "Analytics Super User",
-        "specific_permissions": ["analytics:global:*"]
-      },
-      {
         "id": "upload-public-servant",
         "name": "File Upload Public Servant",
         "description": "File Upload Public servant",
-        "specific_permissions": [
-          "upload:file:*"
-        ]
+        "specific_permissions": ["upload:file:*"]
       },
       {
         "id": "bb-inactive-ps",
@@ -127,7 +103,7 @@
           "profile:user:read"
         ],
         "type": "MachineToMachine",
-        "related_applications": [{"application_id":"ddl4llp30risjwcjymqw3", "organization_id": "ogcio"}]
+        "related_applications": [{"application_id":"tty6llp30risjwcjhbvc9", "organization_id": "ogcio"}]
       },
       {
         "id": "m2m-e2e-tester",
@@ -142,8 +118,8 @@
         ],
         "type": "MachineToMachine",
         "related_applications": [
-          {"application_id":"qrtllp45fgbvsdjyasd5", "organization_id": "first-testing"},
-          {"application_id":"qrtllp45fgbvsdjyasd5", "organization_id": "second-testing"}
+          {"application_id":"treftr21fgbvsdjwlol9", "organization_id": "first-testing"},
+          {"application_id":"treftr21fgbvsdjwlol9", "organization_id": "second-testing"}
         ]
       }
     ],
@@ -152,60 +128,39 @@
         "name": "Payments Building Block",
         "description": "Payments App of Life Events",
         "type": "Traditional",
-        "redirect_uri": "http://localhost:3001/callback",
-        "logout_redirect_uri": "http://localhost:3001",
-        "secret": "payments_app_local_secret",
-        "id": "2xz6sbi8ch01uhjt1oq8r",
+        "redirect_uri": "<SEEDER_PAYMENTS_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_PAYMENTS_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_PAYMENTS_APP_SECRET>",
+        "id": "r5f56tpkytpqyyshiutd2",
         "is_third_party": false
       },
       {
         "name": "Messaging Building Block",
         "description": "Messaging App of Life Events",
         "type": "Traditional",
-        "redirect_uri": "http://localhost:3002/callback",
-        "logout_redirect_uri": "http://localhost:3002",
-        "secret": "messaging_app_local_secret",
-        "id": "4695d8onfb9f3bv18phtq",
+        "redirect_uri": "<SEEDER_MESSAGING_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_MESSAGING_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_MESSAGING_APP_SECRET>",
+        "id": "1lvmteh2ao3xrswyq7j3e",
         "is_third_party": false
       },
       {
         "name": "Life Events",
         "description": "Life Events App",
         "type": "Traditional",
-        "redirect_uri": "http://localhost:3000/callback",
-        "logout_redirect_uri": "http://localhost:3000/admin",
-        "secret": "life_events_app_local_secret",
-        "id": "nfg61tuyfsgizsx8c4p3t",
+        "redirect_uri": "<SEEDER_LIFE_EVENTS_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_LIFE_EVENTS_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_LIFE_EVENTS_APP_SECRET>",
+        "id": "i61nya0wctzpqeyeno54z",
         "is_third_party": false
-      },
-      {
-        "name": "Profile Building Block",
-        "description": "Profile App of Life Events",
-        "type": "Traditional",
-        "redirect_uri": "http://localhost:3003/callback",
-        "logout_redirect_uri": "http://localhost:3003",
-        "secret": "profile_app_local_secret",
-        "id": "RZmVtZUnrv01YzUYEIwYW",
-        "is_third_party": false
-      },
-      {
-        "name": "Analytics Building Block",
-        "description": "Shared platform for Analytics",
-        "type": "Traditional",
-        "redirect_uri": "http://localhost:8055/index.php?module=LoginOGCIO&action=callback&provider=oidc",
-        "logout_redirect_uri": "http://localhost:8055",
-        "secret": "analytics_app_local_secret",
-        "id": "kgz1zomlw27cxx4pxh5gi",
-        "is_third_party": false,
-        "always_issue_refresh_token": true
       },
       {
         "name": "Home Building Block",
         "description": "Building Blocks home application",
         "type": "Traditional",
-        "redirect_uri": "http://localhost:3004/callback",
-        "logout_redirect_uri": "http://localhost:3004",
-        "secret": "home_app_local_secret",
+        "redirect_uri": "<SEEDER_HOME_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_HOME_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_HOME_APP_SECRET>",
         "id": "4icd76x8we31j1e8bqyfn",
         "is_third_party": false
       },
@@ -213,10 +168,20 @@
         "name": "File Upload Service",
         "description": "File Upload Service",
         "type": "Traditional",
-        "redirect_uri": "http://localhost:3008/callback",
-        "logout_redirect_uri": "http://localhost:3008",
-        "secret": "upload_app_local_sercret",
-        "id": "5vnf94y2lr17s2u9htkmq",
+        "redirect_uri": "<SEEDER_UPLOAD_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_UPLOAD_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_UPLOAD_APP_SECRET>",
+        "id": "8mdj23ty5vk94w7rblxhf",
+        "is_third_party": false
+      },
+      {
+        "name": "Profile Building Block",
+        "description": "Profile App of Life Events",
+        "type": "Traditional",
+        "redirect_uri": "<SEEDER_PROFILE_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_PROFILE_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_PROFILE_APP_SECRET>",
+        "id": "0921d8onfb9f3bv75trgf",
         "is_third_party": false
       },
       {
@@ -225,8 +190,8 @@
         "type": "MachineToMachine",
         "redirect_uri": "",
         "logout_redirect_uri": "",
-        "secret": "profile_reader_local_secret",
-        "id": "ddl4llp30risjwcjymqw3",
+        "secret": "<SEEDER_M2M_PROFILE_APP_SECRET>",
+        "id": "tty6llp30risjwcjhbvc9",
         "is_third_party": false
       },
       {
@@ -235,8 +200,8 @@
         "type": "MachineToMachine",
         "redirect_uri": "",
         "logout_redirect_uri": "",
-        "secret": "e2e_tester_local_secret",
-        "id": "qrtllp45fgbvsdjyasd5",
+        "secret": "<SEEDER_M2M_E2E_TESTER_APP_SECRET>",
+        "id": "treftr21fgbvsdjwlol9",
         "is_third_party": false
       }
     ],
@@ -244,27 +209,27 @@
       {
         "id": "payments-api",
         "name": "Payments Building Block API",
-        "indicator": "http://localhost:8001/"
+        "indicator": "<SEEDER_PAYMENTS_API_INDICATOR>"
       },
       {
         "id": "messaging-api",
         "name": "Messaging Building Block API",
-        "indicator": "http://localhost:8002/"
+        "indicator": "<SEEDER_MESSAGING_API_INDICATOR>"
       },
       {
         "id": "scheduler-api",
         "name": "Scheduler Building Block API",
-        "indicator": "http://localhost:8005/"
+        "indicator": "<SEEDER_SCHEDULER_API_INDICATOR>"
       },
       {
         "id": "profile-api",
         "name": "Profile Building Block API",
-        "indicator": "http://localhost:8003/"
+        "indicator": "<SEEDER_PROFILE_API_INDICATOR>"
       },
       {
         "id": "upload-api",
-        "name": "File Upload Service API",
-        "indicator": "http://localhost:8008/"
+        "name": "Upload Building Block API",
+        "indicator": "<SEEDER_UPLOAD_API_INDICATOR>"
       }
     ],
     "resource_permissions": [
@@ -367,7 +332,7 @@
           }
         ],
         "type": "MachineToMachine",
-        "related_application_ids": ["ddl4llp30risjwcjymqw3"]
+        "related_application_ids": ["tty6llp30risjwcjhbvc9"]
       }
     ],
     "connectors": [
@@ -377,13 +342,13 @@
         "connector_id": "mygovid",
         "config": {
           "scope": "openid profile email",
-          "clientId": "mock_client_id",
-          "clientSecret": "mock_client_secret",
-          "tokenEndpoint": "<MOCK_TOKEN_ENDPOINT>",
-          "authorizationEndpoint": "http://localhost:4005/logto/mock/auth",
+          "clientId": "<SEEDER_MYGOVID_CONNECTOR_CLIENT_ID>",
+          "clientSecret": "<SEEDER_MYGOVID_CONNECTOR_CLIENT_SECRET>",
+          "tokenEndpoint": "<SEEDER_MYGOVID_CONNECTOR_TOKEN_ENDPOINT>",
+          "authorizationEndpoint": "<SEEDER_MYGOVID_CONNECTOR_AUTHORIZATION_ENDPOINT>",
           "tokenEndpointAuthMethod": "client_secret_post",
           "idTokenVerificationConfig": {
-            "jwksUri": "<MOCK_KEYS_ENDPOINT>"
+            "jwksUri": "<SEEDER_MYGOVID_CONNECTOR_JWS_URI>"
           },
           "clientSecretJwtSigningAlgorithm": "HS256"
         },
@@ -400,9 +365,9 @@
         "sync_profile": true,
         "connector_id": "ogcio-entraid",
         "config": {
-          "clientId": "mock-client-id",
+          "clientId": "<SEEDER_ENTRAID_CONNECTOR_CLIENT_ID>",
           "tenantId": "organizations",
-          "clientSecret": "mock-client-secret",
+          "clientSecret": "<SEEDER_ENTRAID_CONNECTOR_CLIENT_SECRET>",
           "cloudInstance": "https://login.microsoftonline.com"
         },
         "metadata": {
@@ -449,9 +414,9 @@
           "User.SuspensionStatus.Updated"
         ],
         "config": {
-          "url": "http://localhost:8003/user-login-wh"
+          "url": "<SEEDER_WEBHOOK_LOGIN_URL>"
         },
-        "signing_key": "webhooks_local_signing_key",
+        "signing_key": "<SEEDER_WEBHOOK_SIGNING_KEY>",
         "enabled": true
       }
     ]
