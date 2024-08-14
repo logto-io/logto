@@ -1,8 +1,10 @@
 import assert from 'node:assert';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { isKeyInObject, isObject, type Optional } from '@silverhand/essentials';
+import { findUp } from 'find-up';
 import type Router from 'koa-router';
 import { OpenAPIV3 } from 'openapi-types';
 import { z } from 'zod';
@@ -12,6 +14,7 @@ import { type DeepPartial } from '#src/test-utils/tenant.js';
 import { devConsole } from '#src/utils/console.js';
 
 import { isKoaAuthMiddleware } from '../../../middleware/koa-auth/index.js';
+import assertThat from '../../../utils/assert-that.js';
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
@@ -315,10 +318,42 @@ export const pruneSwaggerDocument = (document: OpenAPIV3.Document) => {
 };
 
 /**
- * Check if the given router is a management API router. The function will check if the router
- * contains koa-auth middleware.
+ * Check if the given router is a Management API router. The function will check if the router
+ * contains the `koaAuth` middleware.
  */
 export const isManagementApiRouter = ({ stack }: Router) =>
   stack
     .filter(({ path }) => !path.includes('.*'))
     .some(({ stack }) => stack.some((function_) => isKoaAuthMiddleware(function_)));
+
+export const getSupplementDocuments = async (
+  directory = 'routes',
+  option?: FindSupplementFilesOptions
+) => {
+  // Find supplemental documents
+  const routesDirectory = await findUp(directory, {
+    type: 'directory',
+    cwd: fileURLToPath(import.meta.url),
+  });
+  assertThat(routesDirectory, new Error('Cannot find routes directory.'));
+
+  const supplementPaths = await findSupplementFiles(routesDirectory, option);
+
+  const allSupplementDocuments = await Promise.all(
+    supplementPaths.map(async (path) =>
+      removeUnnecessaryOperations(
+        // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
+        JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
+      )
+    )
+  );
+
+  // Filter out supplement documents that are for dev features when dev features are disabled.
+  const supplementDocuments = allSupplementDocuments.filter(
+    (supplement) =>
+      EnvSet.values.isDevFeaturesEnabled ||
+      !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
+  );
+
+  return supplementDocuments;
+};

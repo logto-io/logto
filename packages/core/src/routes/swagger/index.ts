@@ -1,25 +1,18 @@
-import fs from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-
 import deepmerge from 'deepmerge';
-import { findUp } from 'find-up';
 import type Router from 'koa-router';
 import { type OpenAPIV3 } from 'openapi-types';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type DeepPartial } from '#src/test-utils/tenant.js';
-import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import type { AnonymousRouter } from '../types.js';
 
 import {
-  devFeatureTag,
-  findSupplementFiles,
+  getSupplementDocuments,
   isManagementApiRouter,
   normalizePath,
   pruneSwaggerDocument,
-  removeUnnecessaryOperations,
   shouldThrow,
   validateSupplement,
   validateSwaggerDocument,
@@ -101,29 +94,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       pathMap.set(path, { ...pathMap.get(path), [method]: operation });
     }
 
-    const routesDirectory = await findUp('routes', {
-      type: 'directory',
-      cwd: fileURLToPath(import.meta.url),
-    });
-    assertThat(routesDirectory, new Error('Cannot find routes directory.'));
-
-    const supplementPaths = await findSupplementFiles(routesDirectory);
-
-    const allSupplementDocuments = await Promise.all(
-      supplementPaths.map(async (path) =>
-        removeUnnecessaryOperations(
-          // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
-          JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
-        )
-      )
-    );
-
-    // Filter out supplement documents that are for dev features when dev features are disabled.
-    const supplementDocuments = allSupplementDocuments.filter(
-      (supplement) =>
-        EnvSet.values.isDevFeaturesEnabled ||
-        !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
-    );
+    const supplementDocuments = await getSupplementDocuments();
 
     const baseDocument: OpenAPIV3.Document = buildManagementApiBaseDocument(
       pathMap,

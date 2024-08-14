@@ -1,20 +1,13 @@
-import fs from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-
 import deepmerge from 'deepmerge';
-import { findUp } from 'find-up';
 import type Router from 'koa-router';
 import { type OpenAPIV3 } from 'openapi-types';
 
-import assertThat from '#src//utils/assert-that.js';
 import { EnvSet } from '#src/env-set/index.js';
 import {
-  devFeatureTag,
-  findSupplementFiles,
+  getSupplementDocuments,
   isManagementApiRouter,
   normalizePath,
   pruneSwaggerDocument,
-  removeUnnecessaryOperations,
   shouldThrow,
   validateSupplement,
   validateSwaggerDocument,
@@ -103,31 +96,9 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     }
 
     // Find supplemental documents
-    const routesDirectory = await findUp('routes', {
-      type: 'directory',
-      cwd: fileURLToPath(import.meta.url),
-    });
-    assertThat(routesDirectory, new Error('Cannot find routes directory.'));
-
-    const supplementPaths = await findSupplementFiles(routesDirectory, {
+    const supplementDocuments = await getSupplementDocuments('routes', {
       excludeDirectories: ['experience', 'interaction'],
     });
-
-    const allSupplementDocuments = await Promise.all(
-      supplementPaths.map(async (path) =>
-        removeUnnecessaryOperations(
-          // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
-          JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
-        )
-      )
-    );
-
-    // Filter out supplement documents that are for dev features when dev features are disabled.
-    const supplementDocuments = allSupplementDocuments.filter(
-      (supplement) =>
-        EnvSet.values.isDevFeaturesEnabled ||
-        !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
-    );
 
     const baseDocument: OpenAPIV3.Document = buildManagementApiBaseDocument(
       pathMap,
@@ -200,31 +171,9 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     }
 
     // Find supplemental documents
-    const routesDirectory = await findUp('routes', {
-      type: 'directory',
-      cwd: fileURLToPath(import.meta.url),
-    });
-    assertThat(routesDirectory, new Error('Cannot find routes directory.'));
-
-    const supplementPaths = await findSupplementFiles(routesDirectory, {
+    const supplementDocuments = await getSupplementDocuments('routes', {
       includeDirectories: ['experience', 'interaction'],
     });
-
-    const allSupplementDocuments = await Promise.all(
-      supplementPaths.map(async (path) =>
-        removeUnnecessaryOperations(
-          // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
-          JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
-        )
-      )
-    );
-
-    // Filter out supplement documents that are for dev features when dev features are disabled.
-    const supplementDocuments = allSupplementDocuments.filter(
-      (supplement) =>
-        EnvSet.values.isDevFeaturesEnabled ||
-        !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
-    );
 
     const baseDocument = buildExperienceApiBaseDocument(pathMap, tags, ctx.request.origin);
 
