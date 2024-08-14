@@ -10,9 +10,10 @@ import api from './api';
 
 const prefix = '/api/experience';
 
-const experienceRoutes = Object.freeze({
+const experienceApiRoutes = Object.freeze({
   prefix,
   identification: `${prefix}/identification`,
+  submit: `${prefix}/submit`,
   verification: `${prefix}/verification`,
   profile: `${prefix}/profile`,
   mfa: `${prefix}/profile/mfa`,
@@ -27,27 +28,27 @@ type SubmitInteractionResponse = {
 };
 
 const initInteraction = async (interactionEvent: InteractionEvent) =>
-  api.put(`${experienceRoutes.prefix}`, {
+  api.put(`${experienceApiRoutes.prefix}`, {
     json: {
       interactionEvent,
     },
   });
 
 const identifyUser = async (payload: IdentificationApiPayload = {}) =>
-  api.post(experienceRoutes.identification, { json: payload });
+  api.post(experienceApiRoutes.identification, { json: payload });
 
 const submitInteraction = async () =>
-  api.post(`${experienceRoutes.prefix}/submit`).json<SubmitInteractionResponse>();
+  api.post(`${experienceApiRoutes.submit}`).json<SubmitInteractionResponse>();
 
 const updateProfile = async (payload: UpdateProfileApiPayload) => {
-  await api.post(experienceRoutes.profile, { json: payload });
+  await api.post(experienceApiRoutes.profile, { json: payload });
 };
 
 export const signInWithPasswordIdentifier = async (payload: PasswordVerificationPayload) => {
   await initInteraction(InteractionEvent.SignIn);
 
   const { verificationId } = await api
-    .post(`${experienceRoutes.verification}/password`, {
+    .post(`${experienceApiRoutes.verification}/password`, {
       json: payload,
     })
     .json<VerificationResponse>();

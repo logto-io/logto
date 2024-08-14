@@ -4,11 +4,11 @@ import { useCallback, useMemo } from 'react';
 import type { ErrorHandlers } from './use-error-handler';
 import usePasswordErrorMessage from './use-password-error-message';
 
-type ErrorHandlerProps = {
+type Options = {
   setErrorMessage: (message?: string) => void;
 };
 
-const usePasswordRejectionErrorHandler = ({ setErrorMessage }: ErrorHandlerProps) => {
+const usePasswordRejectionErrorHandler = ({ setErrorMessage }: Options) => {
   const { getErrorMessageFromBody } = usePasswordErrorMessage();
 
   const passwordRejectionHandler = useCallback(
