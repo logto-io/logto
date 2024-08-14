@@ -21,12 +21,12 @@ devFeatureTest.describe('backup code verification APIs', () => {
     await userApi.cleanUp();
   });
 
-  it('should throw 400 if the user is not identified', async () => {
+  it('should throw 404 if the user is not identified', async () => {
     const client = await initExperienceClient();
 
     await expectRejects(client.verifyBackupCode({ code: '1234' }), {
       code: 'session.identifier_not_found',
-      status: 400,
+      status: 404,
     });
   });
 
