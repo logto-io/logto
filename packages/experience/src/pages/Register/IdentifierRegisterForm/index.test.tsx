@@ -8,7 +8,7 @@ import UserInteractionContextProvider from '@/Providers/UserInteractionContextPr
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
-import { registerWithUsernamePassword } from '@/apis/interaction';
+import { registerWithUsername } from '@/apis/experience';
 import { sendVerificationCodeApi } from '@/apis/utils';
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { UserFlow } from '@/types';
@@ -34,12 +34,9 @@ jest.mock('@/apis/utils', () => ({
   sendVerificationCodeApi: jest.fn(),
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  registerWithUsernamePassword: jest.fn(async () => ({})),
-}));
-
-jest.mock('@/apis/single-sign-on', () => ({
-  getSingleSignOnConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
+jest.mock('@/apis/experience', () => ({
+  registerWithUsername: jest.fn(async () => ({})),
+  getSsoConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
 }));
 
 const renderForm = (
@@ -100,7 +97,7 @@ describe('<IdentifierRegisterForm />', () => {
 
       await waitFor(() => {
         expect(queryByText('error.general_required')).not.toBeNull();
-        expect(registerWithUsernamePassword).not.toBeCalled();
+        expect(registerWithUsername).not.toBeCalled();
         expect(sendVerificationCodeApi).not.toBeCalled();
       });
     });
@@ -121,7 +118,7 @@ describe('<IdentifierRegisterForm />', () => {
 
       await waitFor(() => {
         expect(queryByText('error.username_should_not_start_with_number')).not.toBeNull();
-        expect(registerWithUsernamePassword).not.toBeCalled();
+        expect(registerWithUsername).not.toBeCalled();
       });
 
       act(() => {
@@ -148,7 +145,7 @@ describe('<IdentifierRegisterForm />', () => {
 
       await waitFor(() => {
         expect(queryByText('error.username_invalid_charset')).not.toBeNull();
-        expect(registerWithUsernamePassword).not.toBeCalled();
+        expect(registerWithUsername).not.toBeCalled();
       });
 
       act(() => {
@@ -176,7 +173,7 @@ describe('<IdentifierRegisterForm />', () => {
 
       await waitFor(() => {
         expect(queryByText('description.agree_with_terms_modal')).not.toBeNull();
-        expect(registerWithUsernamePassword).not.toBeCalled();
+        expect(registerWithUsername).not.toBeCalled();
       });
 
       act(() => {
@@ -188,7 +185,7 @@ describe('<IdentifierRegisterForm />', () => {
       });
 
       await waitFor(() => {
-        expect(registerWithUsernamePassword).toBeCalledWith('username');
+        expect(registerWithUsername).toBeCalledWith('username');
       });
     });
   });
@@ -211,7 +208,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         await waitFor(() => {
           expect(queryByText('error.invalid_email')).not.toBeNull();
-          expect(registerWithUsernamePassword).not.toBeCalled();
+          expect(registerWithUsername).not.toBeCalled();
           expect(sendVerificationCodeApi).not.toBeCalled();
         });
 
@@ -244,10 +241,15 @@ describe('<IdentifierRegisterForm />', () => {
         });
 
         await waitFor(() => {
-          expect(registerWithUsernamePassword).not.toBeCalled();
-          expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.Register, {
-            email: 'foo@logto.io',
-          });
+          expect(registerWithUsername).not.toBeCalled();
+          expect(sendVerificationCodeApi).toBeCalledWith(
+            UserFlow.Register,
+            {
+              type: SignInIdentifier.Email,
+              value: 'foo@logto.io',
+            },
+            undefined
+          );
         });
       });
     }
@@ -271,7 +273,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         await waitFor(() => {
           expect(queryByText('error.invalid_phone')).not.toBeNull();
-          expect(registerWithUsernamePassword).not.toBeCalled();
+          expect(registerWithUsername).not.toBeCalled();
           expect(sendVerificationCodeApi).not.toBeCalled();
         });
 
@@ -303,10 +305,15 @@ describe('<IdentifierRegisterForm />', () => {
         });
 
         await waitFor(() => {
-          expect(registerWithUsernamePassword).not.toBeCalled();
-          expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.Register, {
-            phone: `${getDefaultCountryCallingCode()}8573333333`,
-          });
+          expect(registerWithUsername).not.toBeCalled();
+          expect(sendVerificationCodeApi).toBeCalledWith(
+            UserFlow.Register,
+            {
+              type: SignInIdentifier.Phone,
+              value: `${getDefaultCountryCallingCode()}8573333333`,
+            },
+            undefined
+          );
         });
       });
     }
@@ -344,9 +351,14 @@ describe('<IdentifierRegisterForm />', () => {
 
       await waitFor(() => {
         expect(getSingleSignOnConnectorsMock).not.toBeCalled();
-        expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.Register, {
-          email,
-        });
+        expect(sendVerificationCodeApi).toBeCalledWith(
+          UserFlow.Register,
+          {
+            type: SignInIdentifier.Email,
+            value: email,
+          },
+          undefined
+        );
       });
     });
 
@@ -380,14 +392,21 @@ describe('<IdentifierRegisterForm />', () => {
       expect(queryByText('action.single_sign_on')).toBeNull();
 
       await waitFor(() => {
-        expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.Register, {
-          email,
-        });
+        expect(sendVerificationCodeApi).toBeCalledWith(
+          UserFlow.Register,
+          {
+            type: SignInIdentifier.Email,
+            value: email,
+          },
+          undefined
+        );
       });
     });
 
     it('should call check single sign-on connector when the identifier is email, and goes to the SSO flow', async () => {
-      getSingleSignOnConnectorsMock.mockResolvedValueOnce(mockSsoConnectors.map(({ id }) => id));
+      getSingleSignOnConnectorsMock.mockResolvedValueOnce({
+        connectorIds: mockSsoConnectors.map(({ id }) => id),
+      });
 
       const { getByText, container, queryByText } = renderForm(
         [SignInIdentifier.Email],
