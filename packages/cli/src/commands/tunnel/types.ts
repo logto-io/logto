@@ -1,6 +1,6 @@
 import type * as http from 'node:http';
 
-export type ProxyCommandArgs = {
+export type TunnelCommandArgs = {
   'experience-uri'?: string;
   'experience-path'?: string;
   endpoint?: string;
@@ -8,11 +8,11 @@ export type ProxyCommandArgs = {
   verbose: boolean;
 };
 
-export type ProxyResponseHandler = {
+export type LogtoResponseHandler = {
   proxyResponse: http.IncomingMessage;
   request: http.IncomingMessage;
   response: http.ServerResponse;
   logtoEndpointUrl: URL;
-  proxyUrl: URL;
+  tunnelServiceUrl: URL;
   verbose: boolean;
 };

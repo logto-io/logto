@@ -7,7 +7,7 @@ import type { CommandModule } from 'yargs';
 
 import { consoleLog } from '../../utils.js';
 
-import { type ProxyCommandArgs } from './types.js';
+import { type TunnelCommandArgs } from './types.js';
 import {
   checkExperienceInput,
   createLogtoResponseHandler,
@@ -16,9 +16,9 @@ import {
   isLogtoRequestPath,
 } from './utils.js';
 
-const proxy: CommandModule<unknown, ProxyCommandArgs> = {
-  command: ['proxy'],
-  describe: 'Command for Logto proxy',
+const tunnel: CommandModule<unknown, TunnelCommandArgs> = {
+  command: ['tunnel'],
+  describe: 'Command for Logto tunnel',
   builder: (yargs) =>
     yargs
       .options({
@@ -40,7 +40,8 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
         },
         port: {
           alias: 'p',
-          describe: 'The port number where the proxy server will be running on. Defaults to 9000.',
+          describe:
+            'The port number where the tunnel service will be running on. Defaults to 9000.',
           type: 'number',
           default: 9000,
         },
@@ -59,7 +60,7 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
       consoleLog.fatal('A valid Logto endpoint URI must be provided.');
     }
     const logtoEndpointUrl = new URL(endpoint);
-    const proxyUrl = new URL(`http://localhost:${port}`);
+    const tunnelServiceUrl = new URL(`http://localhost:${port}`);
 
     const proxyLogtoRequest = createProxy(
       logtoEndpointUrl.href,
@@ -69,7 +70,7 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
           request,
           response,
           logtoEndpointUrl,
-          proxyUrl,
+          tunnelServiceUrl,
           verbose,
         })
     );
@@ -81,7 +82,7 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
         consoleLog.info(`Incoming request: ${chalk.blue(request.method, request.url)}`);
       }
 
-      // Proxy the requests to Logto endpoint
+      // Tunneling the requests to Logto endpoint
       if (isLogtoRequestPath(request.url)) {
         void proxyLogtoRequest(request, response);
         return;
@@ -98,9 +99,9 @@ const proxy: CommandModule<unknown, ProxyCommandArgs> = {
     });
 
     server.listen(port, () => {
-      consoleLog.info(`Proxy server is running on ${chalk.blue(proxyUrl.href)}`);
+      consoleLog.info(`Logto tunnel is running on ${chalk.blue(tunnelServiceUrl.href)}`);
     });
   },
 };
 
-export default proxy;
+export default tunnel;
