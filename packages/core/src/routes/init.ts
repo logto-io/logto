@@ -46,7 +46,7 @@ import type { AnonymousRouter, ManagementApiRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
 import verificationCodeRoutes from './verification-code.js';
 import wellKnownRoutes from './well-known/index.js';
-import wellKnownSwaggerRoutes from './well-known/well-known.swagger.js';
+import wellKnownSwaggerRoutes from './well-known/well-known.openapi.js';
 
 const createRouters = (tenant: TenantContext) => {
   const interactionRouter: AnonymousRouter = new Router();
