@@ -1,7 +1,7 @@
 import { cond } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
-import { type Subscription } from '@/cloud/types/router';
+import { type Subscription, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import BillInfo from '@/components/BillInfo';
 import ChargeNotification from '@/components/ChargeNotification';
 import FormCard from '@/components/FormCard';
@@ -23,10 +23,11 @@ type Props = {
   readonly subscription: Subscription;
   /** @deprecated */
   readonly subscriptionPlan: SubscriptionPlan;
+  readonly periodicUsage: NewSubscriptionPeriodicUsage;
 };
 
-function CurrentPlan({ subscription, subscriptionPlan }: Props) {
-  const { currentSku, currentSubscription, currentSubscriptionUsage, currentSubscriptionQuota } =
+function CurrentPlan({ subscription, subscriptionPlan, periodicUsage }: Props) {
+  const { currentSku, currentSubscription, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
   const {
     id,
@@ -45,12 +46,12 @@ function CurrentPlan({ subscription, subscriptionPlan }: Props) {
   const hasTokenSurpassedLimit = isDevFeaturesEnabled
     ? hasSurpassedSubscriptionQuotaLimit({
         quotaKey: 'tokenLimit',
-        usage: currentSubscriptionUsage.tokenLimit,
+        usage: periodicUsage.tokenLimit,
         quota: currentSubscriptionQuota,
       })
     : hasSurpassedQuotaLimit({
         quotaKey: 'tokenLimit',
-        usage: currentSubscriptionUsage.tokenLimit,
+        usage: periodicUsage.tokenLimit,
         plan: subscriptionPlan,
       });
 
@@ -65,12 +66,20 @@ function CurrentPlan({ subscription, subscriptionPlan }: Props) {
         </div>
       </div>
       <FormField title="subscription.plan_usage">
-        <PlanUsage currentSubscription={subscription} currentPlan={subscriptionPlan} />
+        <PlanUsage
+          currentSubscription={subscription}
+          currentPlan={subscriptionPlan}
+          periodicUsage={periodicUsage}
+        />
       </FormField>
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
       </FormField>
-      <MauLimitExceedNotification currentPlan={subscriptionPlan} className={styles.notification} />
+      <MauLimitExceedNotification
+        currentPlan={subscriptionPlan}
+        periodicUsage={periodicUsage}
+        className={styles.notification}
+      />
       <ChargeNotification
         hasSurpassedLimit={hasTokenSurpassedLimit}
         quotaItemPhraseKey="tokens"

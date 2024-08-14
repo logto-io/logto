@@ -5,7 +5,7 @@ import {
   type NewSubscriptionQuota,
   type LogtoSkuResponse,
   type TenantResponse,
-  type NewSubscriptionUsage,
+  type NewSubscriptionCountBasedUsage,
 } from '@/cloud/types/router';
 import { RegionName } from '@/components/Region';
 import { LogtoSkuType } from '@/types/skus';
@@ -143,7 +143,7 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   bringYourUiEnabled: false,
 };
 
-export const defaultSubscriptionUsage: NewSubscriptionUsage = {
+export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
   mauLimit: 0,
   tokenLimit: 0,
   applicationsLimit: 0,

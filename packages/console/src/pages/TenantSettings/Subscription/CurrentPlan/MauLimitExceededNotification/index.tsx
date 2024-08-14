@@ -2,6 +2,7 @@ import { ReservedPlanId } from '@logto/schemas';
 import { useContext, useMemo, useState } from 'react';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
+import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -23,13 +24,14 @@ type Props = {
   /** @deprecated No need to pass in this argument in new pricing model */
   readonly currentPlan: SubscriptionPlan;
   readonly className?: string;
+  readonly periodicUsage: NewSubscriptionPeriodicUsage;
 };
 
-function MauLimitExceededNotification({ currentPlan, className }: Props) {
+function MauLimitExceededNotification({ currentPlan, periodicUsage, className }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { subscribe } = useSubscribe();
   const { show } = useConfirmModal();
-  const { subscriptionPlans, logtoSkus, currentSubscriptionQuota, currentSubscriptionUsage } =
+  const { subscriptionPlans, logtoSkus, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +52,7 @@ function MauLimitExceededNotification({ currentPlan, className }: Props) {
 
   if (
     mauLimit === null || // Unlimited
-    currentSubscriptionUsage.mauLimit < mauLimit ||
+    periodicUsage.mauLimit < mauLimit ||
     !proPlan ||
     !proSku
   ) {
