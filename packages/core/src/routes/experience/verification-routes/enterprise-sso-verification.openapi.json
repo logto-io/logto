@@ -5,13 +5,6 @@
         "tags": ["Dev feature"],
         "summary": "Get SSO authorization URI",
         "description": "Create a new EnterpriseSSO verification record and return the authorization URI for the given connector.",
-        "parameters": [
-          {
-            "name": "connectorId",
-            "in": "path",
-            "description": "The ID of the SSO connector."
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -60,13 +53,6 @@
         "tags": ["Dev feature"],
         "summary": "Verify SSO authorization response",
         "description": "Verify the SSO authorization response data and get the user's profile data from the SSO connector.",
-        "parameters": [
-          {
-            "name": "connectorId",
-            "in": "path",
-            "description": "The ID of the SSO connector."
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {

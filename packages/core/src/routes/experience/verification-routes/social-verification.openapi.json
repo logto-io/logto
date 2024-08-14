@@ -5,13 +5,6 @@
         "tags": ["Dev feature"],
         "summary": "Get social authorization URI",
         "description": "Create a new SocialVerification record and return the authorization URI for the given connector.",
-        "parameters": [
-          {
-            "name": "connectorId",
-            "in": "path",
-            "description": "The ID of the social connector."
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -60,13 +53,6 @@
         "tags": ["Dev feature"],
         "summary": "Verify social authorization response",
         "description": "Verify the social authorization response data and get the user's profile data from the social connector.",
-        "parameters": [
-          {
-            "name": "connectorId",
-            "in": "path",
-            "description": "The ID of the social connector."
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
