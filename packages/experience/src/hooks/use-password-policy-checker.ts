@@ -3,11 +3,11 @@ import { useCallback } from 'react';
 import usePasswordErrorMessage from './use-password-error-message';
 import { usePasswordPolicy } from './use-sie';
 
-type PasswordPolicyCheckProps = {
+type Options = {
   setErrorMessage: (message?: string) => void;
 };
 
-const usePasswordPolicyChecker = ({ setErrorMessage }: PasswordPolicyCheckProps) => {
+const usePasswordPolicyChecker = ({ setErrorMessage }: Options) => {
   const { getErrorMessage } = usePasswordErrorMessage();
   const { policyChecker } = usePasswordPolicy();
 
