@@ -27,12 +27,12 @@ devFeatureTest.describe('TOTP verification APIs', () => {
   });
 
   describe('Create new TOTP secret', () => {
-    it('should throw 400 if the user is not identified', async () => {
+    it('should throw 404 if the user is not identified', async () => {
       const client = await initExperienceClient();
 
       await expectRejects(client.createTotpSecret(), {
         code: 'session.identifier_not_found',
-        status: 400,
+        status: 404,
       });
     });
 
@@ -46,12 +46,12 @@ devFeatureTest.describe('TOTP verification APIs', () => {
   });
 
   describe('Verify new TOTP secret', () => {
-    it('should throw 400 if the user is not identified', async () => {
+    it('should throw 404 if the user is not identified', async () => {
       const client = await initExperienceClient();
 
       await expectRejects(client.verifyTotp({ code: '1234' }), {
         code: 'session.identifier_not_found',
-        status: 400,
+        status: 404,
       });
     });
 
@@ -103,12 +103,12 @@ devFeatureTest.describe('TOTP verification APIs', () => {
   });
 
   describe('Verify existing TOTP secret', () => {
-    it('should throw 400 if the user is not identified', async () => {
+    it('should throw 404 if the user is not identified', async () => {
       const client = await initExperienceClient();
 
       await expectRejects(client.verifyTotp({ code: '1234' }), {
         code: 'session.identifier_not_found',
-        status: 400,
+        status: 404,
       });
     });
 
