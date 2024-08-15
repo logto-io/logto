@@ -146,8 +146,6 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
 };
 
 export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
-  mauLimit: 0,
-  tokenLimit: 0,
   applicationsLimit: 0,
   machineToMachineLimit: 0,
   resourcesLimit: 0,
