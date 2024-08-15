@@ -6,7 +6,6 @@
 
 import { buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
@@ -24,10 +23,11 @@ import {
 } from '../../resource.js';
 import { handleClientCertificate, handleDPoP, checkOrganizationAccess } from '../utils.js';
 
+import { validateSubjectToken } from './account.js';
 import { handleActorToken } from './actor-token.js';
 import { TokenExchangeTokenType, type TokenExchangeAct } from './types.js';
 
-const { InvalidClient, InvalidGrant, AccessDenied } = errors;
+const { InvalidClient, InvalidGrant } = errors;
 
 /**
  * The valid parameters for the `urn:ietf:params:oauth:grant-type:token-exchange` grant type. Note the `resource` parameter is
@@ -59,9 +59,6 @@ export const buildHandler: (
 ) => Parameters<Provider['registerGrantType']>['1'] = (envSet, queries) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
   const { Account, AccessToken } = provider;
-  const {
-    subjectTokens: { findSubjectToken, updateSubjectTokenById },
-  } = queries;
 
   assertThat(params, new InvalidGrant('parameters must be available'));
   assertThat(client, new InvalidClient('client must be available'));
@@ -70,9 +67,11 @@ export const buildHandler: (
     !(await isThirdPartyApplication(queries, client.clientId)),
     new InvalidClient('third-party applications are not allowed for this grant type')
   );
+  // Personal access tokens require secured client
   assertThat(
-    params.subject_token_type === TokenExchangeTokenType.AccessToken,
-    new InvalidGrant('unsupported subject token type')
+    params.subject_token_type !== TokenExchangeTokenType.PersonalAccessToken ||
+      client.tokenEndpointAuthMethod === 'client_secret_basic',
+    new InvalidClient('third-party applications are not allowed for this grant type')
   );
 
   validatePresence(ctx, ...requiredParameters);
@@ -83,15 +82,16 @@ export const buildHandler: (
     scopes: oidcScopes,
   } = providerInstance.configuration();
 
-  const subjectToken = await trySafe(async () => findSubjectToken(String(params.subject_token)));
-  assertThat(subjectToken, new InvalidGrant('subject token not found'));
-  assertThat(subjectToken.expiresAt > Date.now(), new InvalidGrant('subject token is expired'));
-  assertThat(!subjectToken.consumedAt, new InvalidGrant('subject token is already consumed'));
+  const { userId, grantId, subjectTokenId } = await validateSubjectToken(
+    queries,
+    String(params.subject_token),
+    String(params.subject_token_type)
+  );
 
-  const account = await Account.findAccount(ctx, subjectToken.userId);
+  const account = await Account.findAccount(ctx, userId);
 
   if (!account) {
-    throw new InvalidGrant('refresh token invalid (referenced account not found)');
+    throw new InvalidGrant('subject token invalid (referenced account not found)');
   }
 
   ctx.oidc.entity('Account', account);
@@ -103,7 +103,7 @@ export const buildHandler: (
     clientId: client.clientId,
     gty: GrantType.TokenExchange,
     client,
-    grantId: subjectToken.id, // There is no actual grant, so we use the subject token ID
+    grantId,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     scope: undefined!,
   });
@@ -190,10 +190,11 @@ export const buildHandler: (
   ctx.oidc.entity('AccessToken', accessToken);
   const accessTokenString = await accessToken.save();
 
-  // Consume the subject token
-  await updateSubjectTokenById(subjectToken.id, {
-    consumedAt: Date.now(),
-  });
+  if (subjectTokenId) {
+    await queries.subjectTokens.updateSubjectTokenById(subjectTokenId, {
+      consumedAt: Date.now(),
+    });
+  }
 
   ctx.body = {
     access_token: accessTokenString,
