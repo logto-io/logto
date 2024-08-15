@@ -27,6 +27,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -52,6 +53,10 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     currentSubscription: { planId },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
+  const {
+    data: { enterpriseSsoUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
   const [selectedProviderName, setSelectedProviderName] = useState<string>();
 
   const isSsoEnabled =
@@ -126,6 +131,14 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     })
   );
 
+  const isCreateButtonDisabled = useMemo(() => {
+    // The button is available only when:
+    // 1. `connectorName` field is not empty.
+    // 2. At least one connector is selected.
+    // 3. Error is resolved. Since `connectorName` is the only field of this form, it means `connectorName` field error is resolved.
+    return !(watch('connectorName') && isAnyConnectorSelected) || Boolean(errors.connectorName);
+  }, [errors.connectorName, isAnyConnectorSelected, watch]);
+
   if (!isOpen) {
     return null;
   }
@@ -147,36 +160,36 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
         )}
         footer={
           conditional(
-            isDevFeaturesEnabled && planId === ReservedPlanId.Pro && (
-              <AddOnNoticeFooter
-                buttonTitle="enterprise_sso.create_modal.create_button_text"
-                onClick={onSubmit}
-              >
-                <Trans
-                  components={{
-                    span: <span className={styles.strong} />,
-                    a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+            isDevFeaturesEnabled &&
+              planId === ReservedPlanId.Pro &&
+              !enterpriseSsoUpsellNoticeAcknowledged && (
+                <AddOnNoticeFooter
+                  buttonTitle="enterprise_sso.create_modal.create_button_text"
+                  isButtonDisabled={isCreateButtonDisabled}
+                  onClick={() => {
+                    void update({ enterpriseSsoUpsellNoticeAcknowledged: true });
+                    void onSubmit();
                   }}
                 >
-                  {t('upsell.add_on.footer.enterprise_sso', {
-                    price: enterpriseSsoAddOnUnitPrice,
-                    planName: t('subscription.pro_plan'),
-                  })}
-                </Trans>
-              </AddOnNoticeFooter>
-            )
+                  <Trans
+                    components={{
+                      span: <span className={styles.strong} />,
+                      a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                    }}
+                  >
+                    {t('upsell.add_on.footer.enterprise_sso', {
+                      price: enterpriseSsoAddOnUnitPrice,
+                      planName: t('subscription.pro_plan'),
+                    })}
+                  </Trans>
+                </AddOnNoticeFooter>
+              )
           ) ??
           (isSsoEnabled ? (
             <Button
               title="enterprise_sso.create_modal.create_button_text"
               type="primary"
-              disabled={
-                // The button is available only when:
-                // 1. `connectorName` field is not empty.
-                // 2. At least one connector is selected.
-                // 3. Error is resolved. Since `connectorName` is the only field of this form, it means `connectorName` field error is resolved.
-                !(watch('connectorName') && isAnyConnectorSelected) || Boolean(errors.connectorName)
-              }
+              disabled={isCreateButtonDisabled}
               onClick={onSubmit}
             />
           ) : (

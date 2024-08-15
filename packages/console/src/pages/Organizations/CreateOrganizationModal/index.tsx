@@ -17,6 +17,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -35,6 +36,10 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     currentSubscription: { planId },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
+  const {
+    data: { organizationUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
   const isOrganizationsDisabled =
     isCloud &&
     !(isDevFeaturesEnabled
@@ -81,25 +86,30 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
         )}
         footer={
           cond(
-            isDevFeaturesEnabled && planId === ReservedPlanId.Pro && (
-              <AddOnNoticeFooter
-                isLoading={isSubmitting}
-                buttonTitle="general.create"
-                onClick={submit}
-              >
-                <Trans
-                  components={{
-                    span: <span className={styles.strong} />,
-                    a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+            isDevFeaturesEnabled &&
+              planId === ReservedPlanId.Pro &&
+              !organizationUpsellNoticeAcknowledged && (
+                <AddOnNoticeFooter
+                  isLoading={isSubmitting}
+                  buttonTitle="general.create"
+                  onClick={async () => {
+                    void update({ organizationUpsellNoticeAcknowledged: true });
+                    await submit();
                   }}
                 >
-                  {t('upsell.add_on.footer.organization', {
-                    price: organizationAddOnUnitPrice,
-                    planName: t('subscription.pro_plan'),
-                  })}
-                </Trans>
-              </AddOnNoticeFooter>
-            )
+                  <Trans
+                    components={{
+                      span: <span className={styles.strong} />,
+                      a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                    }}
+                  >
+                    {t('upsell.add_on.footer.organization', {
+                      price: organizationAddOnUnitPrice,
+                      planName: t('subscription.pro_plan'),
+                    })}
+                  </Trans>
+                </AddOnNoticeFooter>
+              )
           ) ??
           (isOrganizationsDisabled ? (
             <QuotaGuardFooter>

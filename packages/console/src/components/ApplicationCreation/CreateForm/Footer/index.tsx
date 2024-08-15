@@ -12,6 +12,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
+import useUserPreferences from '@/hooks/use-user-preferences';
 
 import styles from './index.module.scss';
 
@@ -30,6 +31,10 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
     hasMachineToMachineAppsReachedLimit,
     hasThirdPartyAppsReachedLimit,
   } = useApplicationsUsage();
+  const {
+    data: { m2mUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
 
   if (selectedType) {
     const { id: planId, name: planName, quota } = currentPlan;
@@ -38,13 +43,17 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
       selectedType === ApplicationType.MachineToMachine &&
       isDevFeaturesEnabled &&
       hasMachineToMachineAppsReachedLimit &&
-      planId === ReservedPlanId.Pro
+      planId === ReservedPlanId.Pro &&
+      !m2mUpsellNoticeAcknowledged
     ) {
       return (
         <AddOnNoticeFooter
           isLoading={isLoading}
           buttonTitle="applications.create"
-          onClick={onClickCreate}
+          onClick={() => {
+            void update({ m2mUpsellNoticeAcknowledged: true });
+            onClickCreate();
+          }}
         >
           <Trans
             components={{

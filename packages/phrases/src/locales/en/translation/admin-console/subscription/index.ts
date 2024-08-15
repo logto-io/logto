@@ -13,10 +13,10 @@ const subscription = {
     'Here’s your current plan. You can easily see your plan usage, check your upcoming bill, and make changes to your plan as needed.',
   plan_usage: 'Plan usage',
   plan_cycle: 'Plan cycle: {{period}}. Usage renews on {{renewDate}}.',
-  next_bill: 'Your next bill',
+  next_bill: 'Your upcoming bill',
   next_bill_hint: 'To learn more about the calculation, please refer to this <a>article</a>.',
   next_bill_tip:
-    'The prices displayed here are tax-exclusive. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
   manage_payment: 'Manage payment',
   overfill_quota_warning:
     'You have reached your quota limit. To prevent any issues, upgrade the plan.',

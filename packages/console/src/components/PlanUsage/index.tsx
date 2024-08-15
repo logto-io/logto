@@ -56,8 +56,10 @@ function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodi
     periodicUsage.mauLimit,
     isDevFeaturesEnabled ? currentSubscriptionQuota.mauLimit : currentPlan.quota.mauLimit,
   ];
+  const [tokenUsage, tokenLimit] = [periodicUsage.tokenLimit, currentSubscriptionQuota.tokenLimit];
 
-  const usagePercent = conditional(mauLimit && activeUsers / mauLimit);
+  const mauUsagePercent = conditional(mauLimit && activeUsers / mauLimit) ?? 0;
+  const tokenUsagePercent = conditional(tokenLimit && tokenUsage / tokenLimit) ?? 0;
 
   const usages: ProPlanUsageCardProps[] = usageKeys.map((key) => ({
     usage:
@@ -96,6 +98,57 @@ function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodi
         ))}
       </div>
     </div>
+  ) : isDevFeaturesEnabled ? (
+    <div>
+      <div className={classNames(styles.planCycle, styles.planCycleNewPricingModel)}>
+        <DynamicT
+          forKey="subscription.plan_cycle"
+          interpolation={{
+            period: formatPeriod({
+              periodStart: currentPeriodStart,
+              periodEnd: currentPeriodEnd,
+            }),
+            renewDate: dayjs(currentPeriodEnd).add(1, 'day').format('MMM D, YYYY'),
+          }}
+        />
+      </div>
+      <div className={styles.newPricingModelUsage}>
+        <div className={classNames(styles.container, styles.freeUser)}>
+          <div className={styles.usage}>
+            {`${activeUsers} / `}
+            {mauLimit === null ? (
+              <DynamicT forKey="subscription.quota_table.unlimited" />
+            ) : (
+              mauLimit.toLocaleString()
+            )}
+            {` MAU (${(mauUsagePercent * 100).toFixed(2)}%)`}
+          </div>
+          <div className={styles.usageBar}>
+            <div
+              className={classNames(styles.usageBarInner, mauUsagePercent >= 1 && styles.overuse)}
+              style={{ width: `${Math.min(mauUsagePercent, 1) * 100}%` }}
+            />
+          </div>
+        </div>
+        <div className={classNames(styles.container, styles.freeUser)}>
+          <div className={styles.usage}>
+            {`${tokenUsage} / `}
+            {tokenLimit === null ? (
+              <DynamicT forKey="subscription.quota_table.unlimited" />
+            ) : (
+              tokenLimit.toLocaleString()
+            )}
+            {` Token usage (${(tokenUsagePercent * 100).toFixed(2)}%)`}
+          </div>
+          <div className={styles.usageBar}>
+            <div
+              className={classNames(styles.usageBarInner, tokenUsagePercent >= 1 && styles.overuse)}
+              style={{ width: `${Math.min(tokenUsagePercent, 1) * 100}%` }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   ) : (
     <div className={styles.container}>
       <div className={styles.usage}>
@@ -106,7 +159,7 @@ function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodi
           mauLimit.toLocaleString()
         )}
         {' MAU'}
-        {usagePercent && ` (${(usagePercent * 100).toFixed(2)}%)`}
+        {mauUsagePercent && ` (${(mauUsagePercent * 100).toFixed(2)}%)`}
       </div>
       <div className={styles.planCycle}>
         <DynamicT
@@ -120,11 +173,11 @@ function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodi
           }}
         />
       </div>
-      {usagePercent && (
+      {mauUsagePercent && (
         <div className={styles.usageBar}>
           <div
-            className={classNames(styles.usageBarInner, usagePercent >= 1 && styles.overuse)}
-            style={{ width: `${Math.min(usagePercent, 1) * 100}%` }}
+            className={classNames(styles.usageBarInner, mauUsagePercent >= 1 && styles.overuse)}
+            style={{ width: `${Math.min(mauUsagePercent, 1) * 100}%` }}
           />
         </div>
       )}
