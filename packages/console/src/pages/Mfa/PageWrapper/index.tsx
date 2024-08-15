@@ -18,7 +18,6 @@ function PageWrapper({ children }: Props) {
   const { isDevTenant } = useContext(TenantsContext);
   const {
     currentPlan,
-    currentSubscription: { planId },
     currentSubscriptionQuota: { mfaEnabled },
   } = useContext(SubscriptionDataContext);
   const isMfaEnabled =
@@ -28,11 +27,8 @@ function PageWrapper({ children }: Props) {
     <div className={styles.container}>
       <PageMeta titleKey="mfa.title" />
       <CardTitle
-        paywall={
-          isDevFeaturesEnabled
-            ? cond(planId === ReservedPlanId.Pro && ReservedPlanId.Pro)
-            : cond((!isMfaEnabled || isDevTenant) && ReservedPlanId.Pro)
-        }
+        paywall={cond((!isMfaEnabled || isDevTenant) && ReservedPlanId.Pro)}
+        hasAddOnTag={isDevFeaturesEnabled}
         title="mfa.title"
         subtitle="mfa.description"
         className={styles.cardTitle}

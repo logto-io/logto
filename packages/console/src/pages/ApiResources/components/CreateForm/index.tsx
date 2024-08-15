@@ -70,6 +70,7 @@ function CreateForm({ onClose }: Props) {
         paywall={conditional(
           isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
+        hasAddOnTag={isDevFeaturesEnabled}
         footer={<Footer isCreationLoading={isSubmitting} onClickCreate={onSubmit} />}
         onClose={onClose}
       >

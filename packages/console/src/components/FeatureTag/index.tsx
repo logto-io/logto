@@ -2,11 +2,10 @@ import { ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
-import AddOnTag from './AddOnTag';
 import styles from './index.module.scss';
 
 export { default as BetaTag } from './BetaTag';
@@ -53,9 +52,6 @@ export type Props = {
 function FeatureTag(props: Props) {
   const { className } = props;
   const { isDevTenant } = useContext(TenantsContext);
-  const {
-    currentSubscription: { planId },
-  } = useContext(SubscriptionDataContext);
 
   const { isVisible, plan } = props;
 
@@ -65,12 +61,36 @@ function FeatureTag(props: Props) {
     return null;
   }
 
-  // Show the add-on tag for Pro plan when dev features are enabled.
-  if (isDevFeaturesEnabled && planId === ReservedPlanId.Pro) {
-    return <AddOnTag className={className} />;
-  }
-
   return <div className={classNames(styles.tag, className)}>{plan}</div>;
 }
 
 export default FeatureTag;
+
+type CombinedAddOnAndFeatureTagProps = {
+  readonly hasAddOnTag?: boolean;
+  readonly className?: string;
+  /** The minimum plan required to use the feature. */
+  readonly paywall?: Props['plan'];
+};
+
+/**
+ * When `hasAddOnTag` is `true`, the tag will be `AddOnTag` if the plan is `ReservedPlanId.Pro`
+ * and dev features are enabled. Otherwise, it will be `FeatureTag` with the `paywall` prop.
+ */
+export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProps) {
+  const { hasAddOnTag, className, paywall } = props;
+  const {
+    currentSubscription: { planId },
+  } = useContext(SubscriptionDataContext);
+
+  // Show the "Add-on" tag for Pro plan when dev features enabled.
+  if (hasAddOnTag && isDevFeaturesEnabled && planId === ReservedPlanId.Pro) {
+    return <div className={classNames(styles.tag, styles.beta, className)}>Add-on</div>;
+  }
+
+  if (paywall && isCloud) {
+    return <FeatureTag isVisible plan={paywall} />;
+  }
+
+  return null;
+}

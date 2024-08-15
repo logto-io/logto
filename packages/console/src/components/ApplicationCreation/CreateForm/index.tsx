@@ -128,6 +128,7 @@ function CreateForm({
             planId === ReservedPlanId.Pro &&
             ReservedPlanId.Pro
         )}
+        hasAddOnTag={isDevFeaturesEnabled && watch('type') === ApplicationType.MachineToMachine}
         size={defaultCreateType ? 'medium' : 'large'}
         footer={
           <Footer

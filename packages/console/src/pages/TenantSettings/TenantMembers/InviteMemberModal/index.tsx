@@ -132,6 +132,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
         paywall={conditional(
           isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
+        hasAddOnTag={isDevFeaturesEnabled}
         subtitle="tenant_members.invite_modal.subtitle"
         footer={
           conditional(
