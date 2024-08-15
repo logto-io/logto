@@ -49,6 +49,7 @@ function CreateForm({
 }: Props) {
   const {
     handleSubmit,
+    watch,
     control,
     register,
     formState: { errors, isSubmitting },
@@ -122,7 +123,10 @@ function CreateForm({
         title="applications.create"
         subtitle={subtitleElement}
         paywall={conditional(
-          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+          isDevFeaturesEnabled &&
+            watch('type') === ApplicationType.MachineToMachine &&
+            planId === ReservedPlanId.Pro &&
+            ReservedPlanId.Pro
         )}
         size={defaultCreateType ? 'medium' : 'large'}
         footer={

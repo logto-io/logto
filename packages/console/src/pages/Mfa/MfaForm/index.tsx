@@ -33,7 +33,8 @@ type Props = {
 };
 
 function MfaForm({ data, onMfaUpdated }: Props) {
-  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSubscriptionQuota, mutateSubscriptionQuotaAndUsages } =
+    useContext(SubscriptionDataContext);
   const isMfaDisabled =
     isCloud &&
     !(isDevFeaturesEnabled ? currentSubscriptionQuota.mfaEnabled : currentPlan.quota.mfaEnabled);
@@ -77,6 +78,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
           json: { mfa: mfaConfig },
         })
         .json<SignInExperience>();
+      mutateSubscriptionQuotaAndUsages();
       reset(convertMfaConfigToForm(updatedMfaConfig));
       toast.success(t('general.saved'));
       onMfaUpdated(updatedMfaConfig);

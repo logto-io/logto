@@ -103,14 +103,15 @@ const useSubscribe = () => {
 
     // Should not use hard-coded plan update here, need to update the tenant's subscription data with response from corresponding API.
     if (isDevFeaturesEnabled) {
-      const { id, ...rest } = await cloudApi.get('/api/tenants/:tenantId/subscription', {
+      const subscription = await cloudApi.get('/api/tenants/:tenantId/subscription', {
         params: {
           tenantId,
         },
       });
 
       mutateSubscriptionQuotaAndUsages();
-      onCurrentSubscriptionUpdated();
+      onCurrentSubscriptionUpdated(subscription);
+      const { id, ...rest } = subscription;
 
       updateTenant(tenantId, {
         planId: rest.planId,

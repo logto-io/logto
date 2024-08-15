@@ -1,4 +1,4 @@
-import { cond, conditional } from '@silverhand/essentials';
+import { cond } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
 import { type Subscription, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
@@ -28,9 +28,9 @@ type Props = {
 };
 
 function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodicUsage }: Props) {
-  const { currentTenant } = useContext(TenantsContext);
   const { currentSku, currentSubscription, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
+  const { currentTenant } = useContext(TenantsContext);
   const {
     id,
     name,
@@ -40,7 +40,7 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodi
   const periodicUsage = useMemo(
     () =>
       rawPeriodicUsage ??
-      conditional(
+      cond(
         currentTenant && {
           mauLimit: currentTenant.usage.activeUsers,
           tokenLimit: currentTenant.usage.tokenUsage,
@@ -50,11 +50,12 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodi
   );
 
   /**
-   * After the new pricing model goes live, `upcomingInvoice` will always exist. However, for compatibility reasons, the price of the SKU's corresponding `unitPrice` will be used as a fallback when it does not exist. If `unitPrice` also does not exist, it means that the tenant does not have any applicable paid subscription, and the bill will be 0.
+   * After the new pricing model goes live, `upcomingInvoice` will always exist. `upcomingInvoice` is updated more frequently than `currentSubscription.upcomingInvoice`.
+   * However, for compatibility reasons, the price of the SKU's corresponding `unitPrice` will be used as a fallback when it does not exist. If `unitPrice` also does not exist, it means that the tenant does not have any applicable paid subscription, and the bill will be 0.
    */
   const upcomingCost = useMemo(
     () => currentSubscription.upcomingInvoice?.subtotal ?? currentSku.unitPrice ?? 0,
-    [currentSku.unitPrice, currentSubscription.upcomingInvoice?.subtotal]
+    [currentSku.unitPrice, currentSubscription.upcomingInvoice]
   );
 
   if (!periodicUsage) {

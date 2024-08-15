@@ -14,7 +14,7 @@ import { formatPeriod } from '@/utils/subscription';
 
 import ProPlanUsageCard, { type Props as ProPlanUsageCardProps } from './ProPlanUsageCard';
 import styles from './index.module.scss';
-import { usageKeys, usageKeyMap, titleKeyMap, tooltipKeyMap } from './utils';
+import { usageKeys, usageKeyPriceMap, usageKeyMap, titleKeyMap, tooltipKeyMap } from './utils';
 
 type Props = {
   /** @deprecated */
@@ -67,6 +67,7 @@ function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodi
     usageKey: `subscription.usage.${usageKeyMap[key]}`,
     titleKey: `subscription.usage.${titleKeyMap[key]}`,
     tooltipKey: `subscription.usage.${tooltipKeyMap[key]}`,
+    unitPrice: usageKeyPriceMap[key],
     ...cond(
       key === 'tokenLimit' &&
         currentSubscriptionQuota.tokenLimit && { quota: currentSubscriptionQuota.tokenLimit }

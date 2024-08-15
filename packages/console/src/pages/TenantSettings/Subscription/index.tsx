@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -38,6 +38,12 @@ function Subscription() {
         params: { tenantId: currentTenantId },
       })
   );
+
+  useEffect(() => {
+    if (isCloud && isDevFeaturesEnabled) {
+      onCurrentSubscriptionUpdated();
+    }
+  }, [onCurrentSubscriptionUpdated]);
 
   if (isLoading) {
     return <Skeleton />;

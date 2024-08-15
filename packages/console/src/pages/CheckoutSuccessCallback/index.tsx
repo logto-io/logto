@@ -13,6 +13,7 @@ import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils'
 import PlanName from '@/components/PlanName';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useLogtoSkus from '@/hooks/use-logto-skus';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
@@ -28,6 +29,7 @@ function CheckoutSuccessCallback() {
   const { navigate } = useTenantPathname();
   const cloudApi = useCloudApi({ hideErrorToast: true });
   const { currentTenantId, navigateTenant } = useContext(TenantsContext);
+  const { onCurrentSubscriptionUpdated } = useContext(SubscriptionDataContext);
   const { search } = useLocation();
   const checkoutState = new URLSearchParams(search).get(checkoutStateQueryKey);
   const { state, sessionId, callbackPage, isDowngrade } = getLocalCheckoutSession() ?? {};
@@ -121,6 +123,8 @@ function CheckoutSuccessCallback() {
         }
       }
 
+      onCurrentSubscriptionUpdated(tenantSubscription);
+
       // No need to check `isDowngrade` here, since a downgrade must occur in a tenant with a Pro
       // plan, and the purchase conversion has already been reported using the same tenant ID. We
       // use the tenant ID as the transaction ID, so there's no concern about duplicate conversion
@@ -147,8 +151,10 @@ function CheckoutSuccessCallback() {
     logtoSkus,
     navigate,
     navigateTenant,
+    onCurrentSubscriptionUpdated,
     subscriptionPlans,
     t,
+    tenantSubscription,
   ]);
 
   if (!isValidSession && !isLoadingPlans) {
