@@ -4,10 +4,11 @@ import useSWR from 'swr';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import PageMeta from '@/components/PageMeta';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { Skeleton } from '@/containers/ConsoleContent/Sidebar';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { pickupFeaturedLogtoSkus, pickupFeaturedPlans } from '@/utils/subscription';
+
+import Skeleton from '../components/Skeleton';
 
 import CurrentPlan from './CurrentPlan';
 import PlanComparisonTable from './PlanComparisonTable';

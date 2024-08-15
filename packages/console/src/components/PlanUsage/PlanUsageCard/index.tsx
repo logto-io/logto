@@ -1,4 +1,5 @@
 import { type AdminConsoleKey } from '@logto/phrases';
+import { conditional, type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -15,15 +16,15 @@ import styles from './index.module.scss';
 
 export type Props = {
   readonly usage: number | boolean;
-  readonly quota?: number;
+  readonly quota?: Nullable<number>;
   readonly usageKey: AdminConsoleKey;
   readonly titleKey: AdminConsoleKey;
-  readonly tooltipKey: AdminConsoleKey;
+  readonly tooltipKey?: AdminConsoleKey;
   readonly unitPrice: number;
   readonly className?: string;
 };
 
-function ProPlanUsageCard({
+function PlanUsageCard({
   usage,
   quota,
   unitPrice,
@@ -34,32 +35,43 @@ function ProPlanUsageCard({
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
+  const usagePercent = conditional(
+    typeof quota === 'number' && typeof usage === 'number' && usage / quota
+  );
+
   return (
     <div className={classNames(styles.card, className)}>
       <div className={styles.title}>
         <span>
           <DynamicT forKey={titleKey} />
         </span>
-        <ToggleTip
-          content={
-            <Trans
-              components={{
-                a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
-              }}
-            >
-              {t(tooltipKey, {
-                price: unitPrice,
-              })}
-            </Trans>
-          }
-        >
-          <IconButton size="small">
-            <Tip />
-          </IconButton>
-        </ToggleTip>
+        {tooltipKey && (
+          <ToggleTip
+            content={
+              <Trans
+                components={{
+                  a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                }}
+              >
+                {t(tooltipKey, {
+                  price: unitPrice,
+                })}
+              </Trans>
+            }
+          >
+            <IconButton size="small">
+              <Tip />
+            </IconButton>
+          </ToggleTip>
+        )}
       </div>
       {typeof usage === 'number' ? (
-        <div className={styles.description}>
+        <div
+          className={classNames(
+            styles.description,
+            typeof usagePercent === 'number' && usagePercent >= 1 && styles.quotaExceeded
+          )}
+        >
           <Trans
             components={{
               span: <span className={styles.usageTip} />,
@@ -67,9 +79,13 @@ function ProPlanUsageCard({
           >
             {t(usageKey, {
               usage:
-                quota && typeof quota === 'number'
-                  ? `${formatNumber(usage)} / ${formatNumber(quota)}`
-                  : formatNumber(usage),
+                quota === undefined
+                  ? formatNumber(usage)
+                  : typeof quota === 'number'
+                  ? `${formatNumber(usage)} / ${formatNumber(quota)}${
+                      usagePercent === undefined ? '' : ` (${(usagePercent * 100).toFixed(0)}%)`
+                    }`
+                  : `${formatNumber(usage)} / ${String(t('subscription.quota_table.unlimited'))}`,
             })}
           </Trans>
         </div>
@@ -86,4 +102,4 @@ function ProPlanUsageCard({
   );
 }
 
-export default ProPlanUsageCard;
+export default PlanUsageCard;

@@ -9,11 +9,6 @@
   > div:not(:first-child) {
     margin-top: _.unit(4);
   }
-
-  &.freeUser {
-    flex: 0 0 calc((100% - _.unit(2)) / 2);
-    max-width: calc((100% - _.unit(2)) / 2);
-  }
 }
 
 .usage {
@@ -34,6 +29,11 @@
   flex: 0 0 calc((100% - _.unit(2) * 2) / 3);
   max-width: calc((100% - _.unit(2) * 2) / 3);
   max-height: 112px;
+
+  &.freeUser {
+    flex: 0 0 calc((100% - _.unit(2)) / 2);
+    max-width: calc((100% - _.unit(2)) / 2);
+  }
 }
 
 .planCycle {
