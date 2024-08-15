@@ -1,9 +1,8 @@
-import { execSync, execFile } from 'node:child_process';
+import { execSync } from 'node:child_process';
 import { createWriteStream, existsSync } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
-import { promisify } from 'node:util';
 
 import { ConsoleLog } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
@@ -270,33 +269,4 @@ export const getConnectorPackagesFromDirectory = async (directory: string) => {
   return rawPackages.filter(
     (packageInfo): packageInfo is ConnectorPackage => typeof packageInfo.name === 'string'
   );
-};
-
-const execPromise = promisify(execFile);
-
-export const lintLocaleFiles = async (
-  /** Logto instance path */
-  instancePath: string,
-  /** Target package name, ignore to lint both `phrases` and `phrases-experience` packages */
-  packageName?: string
-) => {
-  const spinner = ora({
-    text: 'Running `eslint --fix` for locales',
-  }).start();
-
-  const targetPackages = packageName ? [packageName] : ['phrases', 'phrases-experience'];
-
-  await Promise.all(
-    targetPackages.map(async (packageName) => {
-      const phrasesPath = path.join(instancePath, 'packages', packageName);
-      const localesPath = path.join(phrasesPath, 'src/locales');
-      await execPromise(
-        'pnpm',
-        ['eslint', '--ext', '.ts', path.relative(phrasesPath, localesPath), '--fix'],
-        { cwd: phrasesPath }
-      );
-    })
-  );
-
-  spinner.succeed('Ran `eslint --fix` for locales');
 };

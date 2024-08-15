@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import dotenv from 'dotenv';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -29,6 +30,9 @@ void yargs(hideBin(process.argv))
       process.exit(0);
     }
   }, true)
+  .middleware(({ env }) => {
+    dotenv.config({ path: env });
+  })
   .option('path', {
     alias: 'p',
     type: 'string',
