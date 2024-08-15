@@ -5,7 +5,6 @@ import {
   type NewSubscriptionCountBasedUsage,
   type NewSubscriptionResourceScopeUsage,
   type NewSubscriptionRoleScopeUsage,
-  type NewSubscriptionUpcomingInvoice,
 } from '@/cloud/types/router';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
@@ -25,7 +24,6 @@ type NewSubscriptionSupplementContext = {
   currentSubscriptionUsage: NewSubscriptionCountBasedUsage;
   currentSubscriptionResourceScopeUsage: NewSubscriptionResourceScopeUsage;
   currentSubscriptionRoleScopeUsage: NewSubscriptionRoleScopeUsage;
-  upcomingInvoice: NewSubscriptionUpcomingInvoice;
   mutateSubscriptionQuotaAndUsages: () => void;
 };
 

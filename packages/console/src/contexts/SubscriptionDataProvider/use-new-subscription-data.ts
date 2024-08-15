@@ -62,7 +62,6 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
       currentSubscriptionUsage: subscriptionUsageData?.usage ?? defaultSubscriptionUsage,
       currentSubscriptionResourceScopeUsage: subscriptionUsageData?.resources ?? {},
       currentSubscriptionRoleScopeUsage: subscriptionUsageData?.roles ?? {},
-      upcomingInvoice: subscriptionUsageData?.upcomingInvoice ?? null,
     }),
     [
       currentSku,
@@ -76,7 +75,6 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
       subscriptionUsageData?.quota,
       subscriptionUsageData?.resources,
       subscriptionUsageData?.roles,
-      subscriptionUsageData?.upcomingInvoice,
       subscriptionUsageData?.usage,
     ]
   );

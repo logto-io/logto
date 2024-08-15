@@ -33,7 +33,6 @@ export const SubscriptionDataContext = createContext<FullContext>({
   currentSubscriptionResourceScopeUsage: {},
   currentSubscriptionRoleScopeUsage: {},
   mutateSubscriptionQuotaAndUsages: noop,
-  upcomingInvoice: null,
   /* ==== For new pricing model ==== */
 });
 
