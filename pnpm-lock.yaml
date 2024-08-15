@@ -2458,8 +2458,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-a1a4d0e
-        version: 0.2.5-a1a4d0e(zod@3.23.8)
+        specifier: 0.2.5-9a1b047
+        version: 0.2.5-9a1b047(zod@3.23.8)
       '@logto/connector-kit':
         specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
@@ -5080,8 +5080,8 @@ packages:
     resolution: {integrity: sha512-19MGifwYGxjQMPrm6monfoQyOp9UTL/chtZE0JugppNwvvLyqr3Nx0maCHuwrydLt0ImBSgVmPW1cJVvu2tVPg==}
     engines: {node: ^20.9.0}
 
-  '@logto/cloud@0.2.5-a1a4d0e':
-    resolution: {integrity: sha512-04BwjF4PD0Rs4hZolaw+hUNVD7vmyHf6qkcUH3eTq5fCGgVdfT6L1vZ0B+pU59UjsdtO8ZjCGkysyYhQ3tN0/Q==}
+  '@logto/cloud@0.2.5-9a1b047':
+    resolution: {integrity: sha512-1vOno0Gg5B6f2UOYW275e7zSwItNXJXJdwtcYLn9ThvRi3Lvers+TXDN4SQ/0+l39sjN/1WJ9ZCKvGH89AIGxA==}
     engines: {node: ^20.9.0}
 
   '@logto/cloud@0.2.5-a6cff75':
@@ -14726,7 +14726,7 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
-  '@logto/cloud@0.2.5-a1a4d0e(zod@3.23.8)':
+  '@logto/cloud@0.2.5-9a1b047(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.1
       '@withtyped/server': 0.13.6(zod@3.23.8)

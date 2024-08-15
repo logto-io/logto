@@ -29,7 +29,7 @@ function Subscription() {
   const reservedPlans = pickupFeaturedPlans(subscriptionPlans);
   const reservedSkus = pickupFeaturedLogtoSkus(logtoSkus);
 
-  const { data: periodicUsage } = useSWR(
+  const { data: periodicUsage, isLoading } = useSWR(
     isCloud &&
       isDevFeaturesEnabled &&
       `/api/tenants/${currentTenantId}/subscription/periodic-usage`,
@@ -39,7 +39,7 @@ function Subscription() {
       })
   );
 
-  if (!periodicUsage) {
+  if (isLoading) {
     return <Skeleton />;
   }
 

@@ -1,3 +1,4 @@
+import { cond } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -6,6 +7,7 @@ import PlanUsage from '@/components/PlanUsage';
 import { contactEmailLink } from '@/consts';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -18,13 +20,8 @@ import PlanName from '../PlanName';
 import styles from './index.module.scss';
 
 function MauExceededModal() {
-  const {
-    currentPlan,
-    currentSubscription,
-    currentSku,
-    currentSubscriptionQuota,
-    currentSubscriptionUsage,
-  } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSubscription, currentSku } = useContext(SubscriptionDataContext);
+  const { currentTenant } = useContext(TenantsContext);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
@@ -41,8 +38,10 @@ function MauExceededModal() {
   const { name: planName } = currentPlan;
 
   const isMauExceeded =
-    currentSubscriptionQuota.mauLimit !== null &&
-    currentSubscriptionUsage.mauLimit >= currentSubscriptionQuota.mauLimit;
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain, prettier/prettier
+    cond(currentTenant && currentTenant.quota.mauLimit !== null &&
+        currentTenant.usage.activeUsers >= currentTenant.quota.mauLimit
+    );
 
   if (!isMauExceeded) {
     return null;

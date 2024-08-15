@@ -1,4 +1,4 @@
-import { cond } from '@silverhand/essentials';
+import { cond, conditional } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
 import { type Subscription, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
@@ -10,6 +10,7 @@ import PlanName from '@/components/PlanName';
 import PlanUsage from '@/components/PlanUsage';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { hasSurpassedQuotaLimit, hasSurpassedSubscriptionQuotaLimit } from '@/utils/quota';
@@ -23,10 +24,11 @@ type Props = {
   readonly subscription: Subscription;
   /** @deprecated */
   readonly subscriptionPlan: SubscriptionPlan;
-  readonly periodicUsage: NewSubscriptionPeriodicUsage;
+  readonly periodicUsage?: NewSubscriptionPeriodicUsage;
 };
 
-function CurrentPlan({ subscription, subscriptionPlan, periodicUsage }: Props) {
+function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodicUsage }: Props) {
+  const { currentTenant } = useContext(TenantsContext);
   const { currentSku, currentSubscription, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
   const {
@@ -35,6 +37,18 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage }: Props) {
     quota: { tokenLimit },
   } = subscriptionPlan;
 
+  const periodicUsage = useMemo(
+    () =>
+      rawPeriodicUsage ??
+      conditional(
+        currentTenant && {
+          mauLimit: currentTenant.usage.activeUsers,
+          tokenLimit: currentTenant.usage.tokenUsage,
+        }
+      ),
+    [currentTenant, rawPeriodicUsage]
+  );
+
   /**
    * After the new pricing model goes live, `upcomingInvoice` will always exist. However, for compatibility reasons, the price of the SKU's corresponding `unitPrice` will be used as a fallback when it does not exist. If `unitPrice` also does not exist, it means that the tenant does not have any applicable paid subscription, and the bill will be 0.
    */
@@ -42,6 +56,10 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage }: Props) {
     () => currentSubscription.upcomingInvoice?.subtotal ?? currentSku.unitPrice ?? 0,
     [currentSku.unitPrice, currentSubscription.upcomingInvoice?.subtotal]
   );
+
+  if (!periodicUsage) {
+    return null;
+  }
 
   const hasTokenSurpassedLimit = isDevFeaturesEnabled
     ? hasSurpassedSubscriptionQuotaLimit({
@@ -69,7 +87,7 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage }: Props) {
         <PlanUsage
           currentSubscription={subscription}
           currentPlan={subscriptionPlan}
-          periodicUsage={periodicUsage}
+          periodicUsage={rawPeriodicUsage}
         />
       </FormField>
       <FormField title="subscription.next_bill">
@@ -77,7 +95,7 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage }: Props) {
       </FormField>
       <MauLimitExceedNotification
         currentPlan={subscriptionPlan}
-        periodicUsage={periodicUsage}
+        periodicUsage={rawPeriodicUsage}
         className={styles.notification}
       />
       <ChargeNotification

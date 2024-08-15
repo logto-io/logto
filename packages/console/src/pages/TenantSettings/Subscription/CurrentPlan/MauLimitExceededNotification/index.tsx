@@ -1,4 +1,5 @@
 import { ReservedPlanId } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useContext, useMemo, useState } from 'react';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
@@ -24,15 +25,20 @@ type Props = {
   /** @deprecated No need to pass in this argument in new pricing model */
   readonly currentPlan: SubscriptionPlan;
   readonly className?: string;
-  readonly periodicUsage: NewSubscriptionPeriodicUsage;
+  readonly periodicUsage?: NewSubscriptionPeriodicUsage;
 };
 
-function MauLimitExceededNotification({ currentPlan, periodicUsage, className }: Props) {
+function MauLimitExceededNotification({
+  currentPlan,
+  periodicUsage: rawPeriodicUsage,
+  className,
+}: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { subscribe } = useSubscribe();
   const { show } = useConfirmModal();
   const { subscriptionPlans, logtoSkus, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
+  const { currentTenant } = useContext(TenantsContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const proPlan = useMemo(
@@ -44,6 +50,22 @@ function MauLimitExceededNotification({ currentPlan, periodicUsage, className }:
   const {
     quota: { mauLimit: oldPricingModelMauLimit },
   } = currentPlan;
+
+  const periodicUsage = useMemo(
+    () =>
+      rawPeriodicUsage ??
+      conditional(
+        currentTenant && {
+          mauLimit: currentTenant.usage.activeUsers,
+          tokenLimit: currentTenant.usage.tokenUsage,
+        }
+      ),
+    [currentTenant, rawPeriodicUsage]
+  );
+
+  if (!periodicUsage) {
+    return null;
+  }
 
   // Should be safe to access `mauLimit` here since we have excluded the case where `isDevFeaturesEnabled` is `true` but `currentSubscriptionQuota` is `null` in the above condition.
   const mauLimit = isDevFeaturesEnabled

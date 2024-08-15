@@ -2,11 +2,12 @@ import { ReservedPlanId } from '@logto/schemas';
 import { cond, conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 
 import { type Subscription, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { formatPeriod } from '@/utils/subscription';
@@ -20,19 +21,36 @@ type Props = {
   readonly currentSubscription: Subscription;
   /** @deprecated */
   readonly currentPlan: SubscriptionPlan;
-  readonly periodicUsage: NewSubscriptionPeriodicUsage;
+  readonly periodicUsage?: NewSubscriptionPeriodicUsage;
 };
 
-function PlanUsage({ currentSubscription, currentPlan, periodicUsage }: Props) {
+function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodicUsage }: Props) {
   const {
     currentSubscriptionQuota,
     currentSubscriptionUsage,
     currentSubscription: currentSubscriptionFromNewPricingModel,
   } = useContext(SubscriptionDataContext);
+  const { currentTenant } = useContext(TenantsContext);
 
   const { currentPeriodStart, currentPeriodEnd } = isDevFeaturesEnabled
     ? currentSubscriptionFromNewPricingModel
     : currentSubscription;
+
+  const periodicUsage = useMemo(
+    () =>
+      rawPeriodicUsage ??
+      conditional(
+        currentTenant && {
+          mauLimit: currentTenant.usage.activeUsers,
+          tokenLimit: currentTenant.usage.tokenUsage,
+        }
+      ),
+    [currentTenant, rawPeriodicUsage]
+  );
+
+  if (!periodicUsage) {
+    return null;
+  }
 
   const [activeUsers, mauLimit] = [
     periodicUsage.mauLimit,
