@@ -5,7 +5,7 @@ import {
   type NewSubscriptionQuota,
   type LogtoSkuResponse,
   type TenantResponse,
-  type NewSubscriptionUsage,
+  type NewSubscriptionCountBasedUsage,
 } from '@/cloud/types/router';
 import { RegionName } from '@/components/Region';
 import { LogtoSkuType } from '@/types/skus';
@@ -34,9 +34,11 @@ export const defaultTenantResponse: TenantResponse = {
   },
   usage: {
     activeUsers: 0,
+    tokenUsage: 0,
   },
   quota: {
     mauLimit: null,
+    tokenLimit: null,
   },
   openInvoices: [],
   isSuspended: false,
@@ -143,9 +145,7 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   bringYourUiEnabled: false,
 };
 
-export const defaultSubscriptionUsage: NewSubscriptionUsage = {
-  mauLimit: 0,
-  tokenLimit: 0,
+export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
   applicationsLimit: 0,
   machineToMachineLimit: 0,
   resourcesLimit: 0,

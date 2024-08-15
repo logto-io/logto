@@ -2,7 +2,7 @@ import {
   type LogtoSkuResponse,
   type Subscription,
   type NewSubscriptionQuota,
-  type NewSubscriptionUsage,
+  type NewSubscriptionCountBasedUsage,
   type NewSubscriptionResourceScopeUsage,
   type NewSubscriptionRoleScopeUsage,
 } from '@/cloud/types/router';
@@ -21,7 +21,7 @@ type NewSubscriptionSupplementContext = {
   logtoSkus: LogtoSkuResponse[];
   currentSku: LogtoSkuResponse;
   currentSubscriptionQuota: NewSubscriptionQuota;
-  currentSubscriptionUsage: NewSubscriptionUsage;
+  currentSubscriptionUsage: NewSubscriptionCountBasedUsage;
   currentSubscriptionResourceScopeUsage: NewSubscriptionResourceScopeUsage;
   currentSubscriptionRoleScopeUsage: NewSubscriptionRoleScopeUsage;
   mutateSubscriptionQuotaAndUsages: () => void;

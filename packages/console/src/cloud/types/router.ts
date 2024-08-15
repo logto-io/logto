@@ -22,9 +22,13 @@ export type NewSubscriptionUsageResponse = GuardedResponse<
 /** The response of `GET /api/tenants/my/subscription/quota` has the same response type. */
 export type NewSubscriptionQuota = NewSubscriptionUsageResponse['quota'];
 /** The response of `GET /api/tenants/my/subscription/usage` has the same response type. */
-export type NewSubscriptionUsage = NewSubscriptionUsageResponse['usage'];
+export type NewSubscriptionCountBasedUsage = NewSubscriptionUsageResponse['usage'];
 export type NewSubscriptionResourceScopeUsage = NewSubscriptionUsageResponse['resources'];
 export type NewSubscriptionRoleScopeUsage = NewSubscriptionUsageResponse['roles'];
+
+export type NewSubscriptionPeriodicUsage = GuardedResponse<
+  GetRoutes['/api/tenants/:tenantId/subscription/periodic-usage']
+>;
 
 /* ===== Use `New` in the naming to avoid confusion with legacy types ===== */
 

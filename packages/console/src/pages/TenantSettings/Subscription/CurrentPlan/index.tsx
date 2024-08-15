@@ -1,7 +1,7 @@
-import { cond } from '@silverhand/essentials';
+import { cond, conditional } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
-import { type Subscription } from '@/cloud/types/router';
+import { type Subscription, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import BillInfo from '@/components/BillInfo';
 import ChargeNotification from '@/components/ChargeNotification';
 import FormCard from '@/components/FormCard';
@@ -10,6 +10,7 @@ import PlanName from '@/components/PlanName';
 import PlanUsage from '@/components/PlanUsage';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { hasSurpassedQuotaLimit, hasSurpassedSubscriptionQuotaLimit } from '@/utils/quota';
@@ -23,16 +24,30 @@ type Props = {
   readonly subscription: Subscription;
   /** @deprecated */
   readonly subscriptionPlan: SubscriptionPlan;
+  readonly periodicUsage?: NewSubscriptionPeriodicUsage;
 };
 
-function CurrentPlan({ subscription, subscriptionPlan }: Props) {
-  const { currentSku, currentSubscription, currentSubscriptionUsage, currentSubscriptionQuota } =
+function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodicUsage }: Props) {
+  const { currentTenant } = useContext(TenantsContext);
+  const { currentSku, currentSubscription, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
   const {
     id,
     name,
     quota: { tokenLimit },
   } = subscriptionPlan;
+
+  const periodicUsage = useMemo(
+    () =>
+      rawPeriodicUsage ??
+      conditional(
+        currentTenant && {
+          mauLimit: currentTenant.usage.activeUsers,
+          tokenLimit: currentTenant.usage.tokenUsage,
+        }
+      ),
+    [currentTenant, rawPeriodicUsage]
+  );
 
   /**
    * After the new pricing model goes live, `upcomingInvoice` will always exist. However, for compatibility reasons, the price of the SKU's corresponding `unitPrice` will be used as a fallback when it does not exist. If `unitPrice` also does not exist, it means that the tenant does not have any applicable paid subscription, and the bill will be 0.
@@ -42,15 +57,19 @@ function CurrentPlan({ subscription, subscriptionPlan }: Props) {
     [currentSku.unitPrice, currentSubscription.upcomingInvoice?.subtotal]
   );
 
+  if (!periodicUsage) {
+    return null;
+  }
+
   const hasTokenSurpassedLimit = isDevFeaturesEnabled
     ? hasSurpassedSubscriptionQuotaLimit({
         quotaKey: 'tokenLimit',
-        usage: currentSubscriptionUsage.tokenLimit,
+        usage: periodicUsage.tokenLimit,
         quota: currentSubscriptionQuota,
       })
     : hasSurpassedQuotaLimit({
         quotaKey: 'tokenLimit',
-        usage: currentSubscriptionUsage.tokenLimit,
+        usage: periodicUsage.tokenLimit,
         plan: subscriptionPlan,
       });
 
@@ -65,12 +84,20 @@ function CurrentPlan({ subscription, subscriptionPlan }: Props) {
         </div>
       </div>
       <FormField title="subscription.plan_usage">
-        <PlanUsage currentSubscription={subscription} currentPlan={subscriptionPlan} />
+        <PlanUsage
+          currentSubscription={subscription}
+          currentPlan={subscriptionPlan}
+          periodicUsage={rawPeriodicUsage}
+        />
       </FormField>
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
       </FormField>
-      <MauLimitExceedNotification currentPlan={subscriptionPlan} className={styles.notification} />
+      <MauLimitExceedNotification
+        currentPlan={subscriptionPlan}
+        periodicUsage={rawPeriodicUsage}
+        className={styles.notification}
+      />
       <ChargeNotification
         hasSurpassedLimit={hasTokenSurpassedLimit}
         quotaItemPhraseKey="tokens"
