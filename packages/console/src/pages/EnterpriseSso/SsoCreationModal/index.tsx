@@ -165,10 +165,10 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
               !enterpriseSsoUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter
                   buttonTitle="enterprise_sso.create_modal.create_button_text"
-                  isButtonDisabled={isCreateButtonDisabled}
-                  onClick={() => {
+                  isCreateButtonDisabled={isCreateButtonDisabled}
+                  onClick={async () => {
                     void update({ enterpriseSsoUpsellNoticeAcknowledged: true });
-                    void onSubmit();
+                    await onSubmit();
                   }}
                 >
                   <Trans

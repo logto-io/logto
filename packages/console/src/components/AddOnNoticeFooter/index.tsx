@@ -9,11 +9,17 @@ type Props = {
   readonly children: ReactNode;
   readonly isLoading?: boolean;
   readonly buttonTitle?: AdminConsoleKey;
-  readonly isButtonDisabled?: boolean;
+  readonly isCreateButtonDisabled?: boolean;
   readonly onClick: () => void;
 };
 
-function AddOnNoticeFooter({ children, isLoading, onClick, isButtonDisabled, buttonTitle }: Props) {
+function AddOnNoticeFooter({
+  children,
+  isLoading,
+  onClick,
+  isCreateButtonDisabled,
+  buttonTitle,
+}: Props) {
   return (
     <div className={styles.container}>
       <div className={styles.description}>{children}</div>
@@ -22,7 +28,7 @@ function AddOnNoticeFooter({ children, isLoading, onClick, isButtonDisabled, but
         type="primary"
         title={buttonTitle ?? 'upsell.upgrade_plan'}
         isLoading={isLoading}
-        disabled={isButtonDisabled}
+        disabled={isCreateButtonDisabled}
         onClick={onClick}
       />
     </div>
