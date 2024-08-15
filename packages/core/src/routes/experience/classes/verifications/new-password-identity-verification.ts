@@ -95,18 +95,12 @@ export class NewPasswordIdentityVerification
    * - Validate the password against the password policy
    *
    * @throws {RequestError} with status 422 if the identifier is in use by another user
-   * @throws {RequestError} with status 422 if the password is not provided
    * @throws {RequestError} with status 422 if the password does not meet the password policy
    */
   async verify(password: string) {
     const { identifier } = this;
     const identifierProfile = interactionIdentifierToUserProfile(identifier);
     await this.profileValidator.guardProfileUniquenessAcrossUsers(identifierProfile);
-
-    assertThat(
-      password,
-      new RequestError({ code: 'user.password_required_in_profile', status: 422 })
-    );
 
     const passwordPolicy = await this.signInExperienceValidator.getPasswordPolicy();
     const passwordValidator = new PasswordValidator(passwordPolicy);

@@ -100,7 +100,12 @@ const createRouters = (tenant: TenantContext) => {
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
   // The swagger.json should contain all API routers.
-  swaggerRoutes(anonymousRouter, [interactionRouter, managementRouter, anonymousRouter]);
+  swaggerRoutes(anonymousRouter, [
+    interactionRouter,
+    managementRouter,
+    anonymousRouter,
+    experienceRouter,
+  ]);
 
   return [experienceRouter, interactionRouter, managementRouter, anonymousRouter];
 };

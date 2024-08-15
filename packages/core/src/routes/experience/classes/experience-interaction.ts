@@ -368,7 +368,6 @@ export default class ExperienceInteraction {
   /**
    * Submit the current interaction result to the OIDC provider and clear the interaction data
    *
-   * @throws {RequestError} with 404 if the interaction event is not set
    * @throws {RequestError} with 404 if the user is not identified
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    * @throws {RequestError} with 422 if the profile data is conflicting with the current user account
@@ -379,12 +378,6 @@ export default class ExperienceInteraction {
     const {
       queries: { users: userQueries },
     } = this.tenant;
-
-    // Initiated
-    assertThat(
-      this.interactionEvent,
-      new RequestError({ code: 'session.interaction_not_found', status: 404 })
-    );
 
     // Identified
     const user = await this.getIdentifiedUser();

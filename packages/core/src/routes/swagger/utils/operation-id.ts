@@ -122,7 +122,7 @@ export const throwByDifference = (builtCustomRoutes: Set<string>) => {
 };
 
 /** Path segments that are treated as namespace prefixes. */
-const namespacePrefixes = Object.freeze(['jit', '.well-known']);
+const namespacePrefixes = Object.freeze(['jit', '.well-known', 'experience']);
 
 const isPathParameter = (segment?: string) =>
   Boolean(segment && (segment.startsWith(':') || segment.startsWith('{')));
@@ -154,6 +154,7 @@ const throwIfNeeded = (method: OpenAPIV3.HttpMethods, path: string) => {
  * @see {@link methodToVerb} for the mapping of HTTP methods to verbs.
  * @see {@link namespacePrefixes} for the list of namespace prefixes.
  */
+// eslint-disable-next-line complexity
 export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) => {
   const customOperationId = customRoutes[`${method} ${path}`];
 
@@ -162,7 +163,8 @@ export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) =>
   }
 
   // Skip interactions APIs as they are going to replaced by the new APIs soon.
-  if (path.startsWith('/interaction')) {
+  // Skip experience APIs as they are not strictly RESTful.
+  if (path.startsWith('/interaction') || path.startsWith('/experience')) {
     return;
   }
 

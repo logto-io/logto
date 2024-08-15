@@ -24,7 +24,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
     `${experienceRoutes.verification}/password`,
     koaGuard({
       body: passwordVerificationPayloadGuard,
-      status: [200, 400, 422],
+      status: [200, 400, 401, 422],
       response: z.object({
         verificationId: z.string(),
       }),
