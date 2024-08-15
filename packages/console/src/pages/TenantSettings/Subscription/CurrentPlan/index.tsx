@@ -40,7 +40,7 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodi
   const periodicUsage = useMemo(
     () =>
       rawPeriodicUsage ??
-      conditional(
+      cond(
         currentTenant && {
           mauLimit: currentTenant.usage.activeUsers,
           tokenLimit: currentTenant.usage.tokenUsage,
