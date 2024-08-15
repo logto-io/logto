@@ -1,5 +1,3 @@
-import { type OpenAPIV3 } from 'openapi-types';
-
 import {
   buildExperienceApiBaseDocument,
   buildManagementApiBaseDocument,
@@ -33,11 +31,7 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     const supplementDocuments = await getSupplementDocuments('routes', {
       excludeDirectories: ['experience', 'interaction'],
     });
-    const baseDocument: OpenAPIV3.Document = buildManagementApiBaseDocument(
-      pathMap,
-      tags,
-      ctx.request.origin
-    );
+    const baseDocument = buildManagementApiBaseDocument(pathMap, tags, ctx.request.origin);
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
 
