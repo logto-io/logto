@@ -146,7 +146,7 @@ const useSubscribe = () => {
         },
       });
 
-      window.location.assign(redirectUri);
+      window.open(redirectUri, '_blank', 'noopener,noreferrer');
     } catch (error: unknown) {
       void toastResponseError(error);
     }
