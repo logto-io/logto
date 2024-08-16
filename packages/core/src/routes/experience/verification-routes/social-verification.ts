@@ -144,8 +144,9 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       await socialVerificationRecord.verify(ctx, tenantContext, connectorData);
       await ctx.experienceInteraction.save();
 
+      // The input verificationId may be undefined if it's a Google one tap callback
       ctx.body = {
-        verificationId,
+        verificationId: socialVerificationRecord.id,
       };
 
       return next();
