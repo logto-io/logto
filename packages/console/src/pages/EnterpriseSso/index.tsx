@@ -36,11 +36,7 @@ function EnterpriseSso() {
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isDevTenant } = useContext(TenantsContext);
-  const {
-    currentPlan,
-    currentSubscription: { planId },
-    currentSubscriptionQuota,
-  } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
 
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
@@ -67,11 +63,10 @@ function EnterpriseSso() {
   return (
     <ListPage
       title={{
-        paywall: isDevFeaturesEnabled
-          ? conditional(planId === ReservedPlanId.Pro && ReservedPlanId.Pro)
-          : conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
+        paywall: conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
         title: 'enterprise_sso.title',
         subtitle: 'enterprise_sso.subtitle',
+        hasAddOnTag: isDevFeaturesEnabled,
       }}
       pageMeta={{ titleKey: 'enterprise_sso.page_title' }}
       createButton={conditional(

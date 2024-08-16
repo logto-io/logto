@@ -155,7 +155,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
       <ModalLayout
         title="enterprise_sso.create_modal.title"
         paywall={conditional(
-          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+          isDevFeaturesEnabled && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
         footer={
           conditional(

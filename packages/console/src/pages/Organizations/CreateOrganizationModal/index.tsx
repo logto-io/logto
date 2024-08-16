@@ -82,8 +82,9 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
       <ModalLayout
         title="organizations.create_organization"
         paywall={conditional(
-          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+          isDevFeaturesEnabled && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
+        hasAddOnTag={isDevFeaturesEnabled}
         footer={
           cond(
             isDevFeaturesEnabled &&

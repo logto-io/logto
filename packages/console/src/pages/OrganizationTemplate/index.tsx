@@ -32,11 +32,7 @@ const basePathname = '/organization-template';
 function OrganizationTemplate() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
-  const {
-    currentPlan,
-    currentSubscription: { planId },
-    currentSubscriptionQuota,
-  } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
   const isOrganizationsDisabled =
     isCloud &&
@@ -60,11 +56,7 @@ function OrganizationTemplate() {
             href: getDocumentationUrl(organizationTemplateLink),
             targetBlank: 'noopener',
           }}
-          paywall={
-            isDevFeaturesEnabled
-              ? cond(planId === ReservedPlanId.Pro && ReservedPlanId.Pro)
-              : cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)
-          }
+          paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
         />
         <Button
           title="application_details.check_guide"
