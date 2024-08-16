@@ -14,4 +14,8 @@
 
 .beta {
   background-color: var(--color-specific-tag-test);
+
+  &.addOn {
+    text-transform: none;
+  }
 }
