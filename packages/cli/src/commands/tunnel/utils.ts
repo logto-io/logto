@@ -146,10 +146,14 @@ export const checkExperienceInput = (url?: string, staticPath?: string) => {
  * @example isLogtoRequestPath('/api/interaction/submit') // true
  * @example isLogtoRequestPath('/consent') // true
  */
-export const isLogtoRequestPath = (requestPath?: string) =>
+export const isLogtoRequestPath = (requestPath?: string): boolean =>
   ['/oidc/', '/api/'].some((path) => requestPath?.startsWith(path)) || requestPath === '/consent';
 
-const isFileAssetPath = (url: string) => url.split('/').at(-1)?.includes('.');
+const isFileAssetPath = (url: string): boolean => {
+  // Check if the request URL contains query params. If yes, ignore the params and check the request path
+  const pathWithoutQuery = url.split('?')[0];
+  return Boolean(pathWithoutQuery?.split('/').at(-1)?.includes('.'));
+};
 
 const getMimeType = (requestPath: string) => {
   const fallBackToIndex = !isFileAssetPath(requestPath);
