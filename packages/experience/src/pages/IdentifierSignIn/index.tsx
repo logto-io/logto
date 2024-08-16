@@ -4,10 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
+import IdentifierSignInForm from '@/components/IdentifierSignInForm';
+import PasswordSignInForm from '@/components/PasswordSignInForm';
 import { identifierInputDescriptionMap } from '@/utils/form';
-
-import IdentifierSignInForm from '../SignIn/IdentifierSignInForm';
-import PasswordSignInForm from '../SignIn/PasswordSignInForm';
 
 import useIdentifierSignInMethods from './use-identifier-sign-in-methods';
 
