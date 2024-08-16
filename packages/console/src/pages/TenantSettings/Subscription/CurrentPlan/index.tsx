@@ -15,6 +15,7 @@ import FormField from '@/ds-components/FormField';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { hasSurpassedQuotaLimit, hasSurpassedSubscriptionQuotaLimit } from '@/utils/quota';
 
+import AddOnUsageChangesNotification from './AddOnUsageChangesNotification';
 import MauLimitExceedNotification from './MauLimitExceededNotification';
 import PaymentOverdueNotification from './PaymentOverdueNotification';
 import styles from './index.module.scss';
@@ -99,6 +100,7 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodi
         periodicUsage={rawPeriodicUsage}
         className={styles.notification}
       />
+      <AddOnUsageChangesNotification />
       <ChargeNotification
         hasSurpassedLimit={hasTokenSurpassedLimit}
         quotaItemPhraseKey="tokens"
