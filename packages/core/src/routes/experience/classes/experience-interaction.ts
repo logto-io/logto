@@ -235,7 +235,7 @@ export default class ExperienceInteraction {
     // Sync social/enterprise SSO identity profile data.
     // Note: The profile data is not saved to the user profile until the user submits the interaction.
     // Also no need to validate the synced profile data availability as it is already validated during the identification process.
-    if (syncedProfile) {
+    if (syncedProfile && Object.keys(syncedProfile).length > 0) {
       const log = this.ctx.createLog(`Interaction.${this.interactionEvent}.Profile.Update`);
       log.append({ syncedProfile });
       this.profile.unsafeSet(syncedProfile);
