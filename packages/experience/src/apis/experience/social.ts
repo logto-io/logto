@@ -53,7 +53,7 @@ export const bindSocialRelatedUser = async (verificationId: string) => {
 
 export const getSsoConnectors = async (email: string) =>
   api
-    .get(`${experienceApiRoutes.verification}/sso/connectors`, {
+    .get(`${experienceApiRoutes.prefix}/sso-connectors`, {
       searchParams: {
         email,
       },
