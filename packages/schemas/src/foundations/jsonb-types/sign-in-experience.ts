@@ -47,6 +47,8 @@ export enum SignInIdentifier {
   Phone = 'phone',
 }
 
+export const signInIdentifierGuard = z.nativeEnum(SignInIdentifier);
+
 export const signUpGuard = z.object({
   identifiers: z.nativeEnum(SignInIdentifier).array(),
   password: z.boolean(),

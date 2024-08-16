@@ -150,9 +150,22 @@ describe('buildLoginPromptUrl', () => {
     expect(
       buildLoginPromptUrl({ first_screen: FirstScreen.SignIn, login_hint: 'user@mail.com' })
     ).toBe('sign-in?login_hint=user%40mail.com');
+    expect(
+      buildLoginPromptUrl({ first_screen: FirstScreen.IdentifierSignIn, identifier: 'email phone' })
+    ).toBe('identifier-sign-in?identifier=email+phone');
+    expect(
+      buildLoginPromptUrl({
+        first_screen: FirstScreen.IdentifierRegister,
+        identifier: 'username',
+      })
+    ).toBe('identifier-register?identifier=username');
+    expect(buildLoginPromptUrl({ first_screen: FirstScreen.SingleSignOn })).toBe('single-sign-on');
 
     // Legacy interactionMode support
     expect(buildLoginPromptUrl({ interaction_mode: InteractionMode.SignUp })).toBe('register');
+
+    // Legacy FirstScreen.SignInDeprecated support
+    expect(buildLoginPromptUrl({ first_screen: FirstScreen.SignInDeprecated })).toBe('sign-in');
   });
 
   it('should return the correct url for directSignIn', () => {

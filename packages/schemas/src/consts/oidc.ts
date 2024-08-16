@@ -46,6 +46,18 @@ export enum ExtraParamsKey {
    * This can be used to pre-fill the identifier field **only on the first screen** of the sign-in/sign-up flow.
    */
   LoginHint = 'login_hint',
+  /**
+   * Specifies the identifier used in the identifier sign-in or identifier register page.
+   *
+   * This parameter is applicable only when first_screen is set to either `FirstScreen.IdentifierSignIn` or `FirstScreen.IdentifierRegister`.
+   * Multiple identifiers can be provided in the identifier parameter, separated by spaces.
+   *
+   * If the provided identifier is not supported in the Logto sign-in experience configuration, it will be ignored,
+   * and if no one of them is supported, it will fallback to the sign-in / sign-up method value set in the sign-in experience configuration.
+   *
+   * @see {@link SignInIdentifier} for available values.
+   */
+  Identifier = 'identifier',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -55,8 +67,13 @@ export enum InteractionMode {
 }
 
 export enum FirstScreen {
-  SignIn = 'signIn',
+  SignIn = 'sign_in',
   Register = 'register',
+  IdentifierSignIn = 'identifier:sign_in',
+  IdentifierRegister = 'identifier:register',
+  SingleSignOn = 'single_sign_on',
+  /** @deprecated Use snake_case 'sign_in' instead. */
+  SignInDeprecated = 'signIn',
 }
 
 export const extraParamsObjectGuard = z
@@ -66,6 +83,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.DirectSignIn]: z.string(),
     [ExtraParamsKey.OrganizationId]: z.string(),
     [ExtraParamsKey.LoginHint]: z.string(),
+    [ExtraParamsKey.Identifier]: z.string(),
   })
   .partial() satisfies ToZodObject<ExtraParamsObject>;
 
@@ -75,4 +93,5 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.DirectSignIn]: string;
   [ExtraParamsKey.OrganizationId]: string;
   [ExtraParamsKey.LoginHint]: string;
+  [ExtraParamsKey.Identifier]: string;
 }>;

@@ -5,8 +5,8 @@ const routes = Object.freeze({
   consent: 'consent',
   identifierSignIn: 'identifier-sign-in',
   identifierRegister: 'identifier-register',
-});
+} as const);
 
 export const experience = Object.freeze({
   routes,
-});
+} as const);
