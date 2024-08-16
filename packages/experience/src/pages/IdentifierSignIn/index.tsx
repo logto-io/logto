@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
-import IdentifierPageLayout from '@/Layout/IdentifierPageLayout';
+import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
 import IdentifierSignInForm from '../SignIn/IdentifierSignInForm';
@@ -29,7 +29,7 @@ const IdentifierSignIn = () => {
   }
 
   return (
-    <IdentifierPageLayout
+    <FocusedAuthPageLayout
       pageMeta={{ titleKey: 'description.sign_in' }}
       title="description.sign_in"
       description={t('description.identifier_sign_in_description', {
@@ -49,7 +49,7 @@ const IdentifierSignIn = () => {
       ) : (
         <IdentifierSignInForm signInMethods={signInMethods} />
       )}
-    </IdentifierPageLayout>
+    </FocusedAuthPageLayout>
   );
 };
 
