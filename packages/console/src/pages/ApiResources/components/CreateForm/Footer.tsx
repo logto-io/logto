@@ -12,6 +12,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
+import useUserPreferences from '@/hooks/use-user-preferences';
 
 import styles from './index.module.scss';
 
@@ -29,6 +30,10 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
     currentSku,
   } = useContext(SubscriptionDataContext);
   const { hasReachedLimit } = useApiResourcesUsage();
+  const {
+    data: { apiResourceUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
 
   if (
     hasReachedLimit &&
@@ -53,12 +58,20 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
     );
   }
 
-  if (isDevFeaturesEnabled && hasReachedLimit && planId === ReservedPlanId.Pro) {
+  if (
+    isDevFeaturesEnabled &&
+    hasReachedLimit &&
+    planId === ReservedPlanId.Pro &&
+    !apiResourceUpsellNoticeAcknowledged
+  ) {
     return (
       <AddOnNoticeFooter
         isLoading={isCreationLoading}
         buttonTitle="api_resources.create"
-        onClick={onClickCreate}
+        onClick={() => {
+          void update({ apiResourceUpsellNoticeAcknowledged: true });
+          onClickCreate();
+        }}
       >
         <Trans
           components={{

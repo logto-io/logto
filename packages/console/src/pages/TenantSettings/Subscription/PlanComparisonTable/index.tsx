@@ -53,8 +53,6 @@ function PlanComparisonTable() {
   const tables: Table[] = useMemo(() => {
     const contact = t('contact');
     const unlimited = t('unlimited');
-    const paidQuotaLimitTip = t('paid_quota_limit_tip');
-    const paidAddOnFeatureTip = t('paid_add_on_feature_tip');
     const addOn = t('add_on');
     const comingSoon = adminConsoleTranslation('general.coming_soon');
 
@@ -66,7 +64,6 @@ function PlanComparisonTable() {
     const includedTokens = t('quota.included_tokens');
     const includedTokensTip = t('tokens_tip');
     const proPlanIncludedTokens = t('million', { value: 1 });
-    const proPlanIncludedTokensTip = t('paid_token_limit_tip');
 
     // Applications
     const totalApplications = t('application.total');
@@ -102,7 +99,6 @@ function PlanComparisonTable() {
     const mfa = t('user_authn.mfa');
     const mfaPrice = t('monthly_price', { value: 48 });
     const orgPrice = t('monthly_price', { value: 48 });
-    const adaptiveMfa = t('user_authn.adaptive_mfa');
     const impersonation = t('user_authn.impersonation');
 
     // User management
@@ -147,7 +143,7 @@ function PlanComparisonTable() {
           },
           {
             name: `${includedTokens}|${includedTokensTip}`,
-            data: ['500,000', `${proPlanIncludedTokens}|${proPlanIncludedTokensTip}`, contact],
+            data: ['500,000', `${proPlanIncludedTokens}`, contact],
           },
         ],
       },
@@ -157,11 +153,7 @@ function PlanComparisonTable() {
           { name: totalApplications, data: ['3', unlimited, contact] },
           {
             name: m2mApps,
-            data: [
-              `${freePlanM2mLimit}`,
-              `${proPlanM2mAppLimit}|${paidQuotaLimitTip}|${proPlanM2mAppPrice}`,
-              contact,
-            ],
+            data: [`${freePlanM2mLimit}`, `${proPlanM2mAppLimit}||${proPlanM2mAppPrice}`, contact],
           },
           { name: `${thirdPartyApps}|${thirdPartyAppsTip}`, data: ['-', unlimited, contact] },
         ],
@@ -171,11 +163,7 @@ function PlanComparisonTable() {
         rows: [
           {
             name: resourceCount,
-            data: [
-              '1',
-              `${proPlanResourceLimit}|${paidQuotaLimitTip}|${proPlanResourcePrice}`,
-              contact,
-            ],
+            data: ['1', `${proPlanResourceLimit}||${proPlanResourcePrice}`, contact],
           },
           { name: permissionsPerResource, data: ['1', unlimited, contact] },
         ],
@@ -188,7 +176,7 @@ function PlanComparisonTable() {
           { name: appLogoAndFavicon, data: ['✓', '✓', '✓'] },
           { name: darkMode, data: ['✓', '✓', '✓'] },
           { name: i18n, data: ['✓', '✓', '✓'] },
-          { name: bringYourUi, data: ['-', '✓', '✓'] },
+          { name: bringYourUi, data: ['-', comingSoon, comingSoon] },
         ],
       },
       {
@@ -200,12 +188,8 @@ function PlanComparisonTable() {
           { name: emailConnector, data: ['✓', '✓', '✓'] },
           { name: smsConnector, data: ['✓', '✓', '✓'] },
           { name: socialConnectors, data: ['3', unlimited, contact] },
-          { name: sso, data: ['-', `${ssoPrice}|${paidAddOnFeatureTip}|${addOn}`, contact] },
-          { name: mfa, data: ['-', `${mfaPrice}|${paidAddOnFeatureTip}|${addOn}`, contact] },
-          {
-            name: adaptiveMfa,
-            data: ['-', comingSoon, contact],
-          },
+          { name: sso, data: ['-', `${ssoPrice}||${addOn}`, contact] },
+          { name: mfa, data: ['-', `${mfaPrice}||${addOn}`, contact] },
           { name: impersonation, data: ['-', '✓', '✓'] },
         ],
       },
@@ -223,14 +207,14 @@ function PlanComparisonTable() {
         rows: [
           {
             name: organization,
-            data: ['-', `${orgPrice}|${paidAddOnFeatureTip}|${addOn}`, contact],
+            data: ['-', `${orgPrice}||${addOn}`, contact],
           },
           { name: orgCount, data: ['-', unlimited, contact] },
           { name: allowedUsersPerOrg, data: ['-', unlimited, contact] },
-          { name: invitation, data: ['-', comingSoon, contact] },
+          { name: invitation, data: ['-', '✓', '✓'] },
           { name: orgRoles, data: ['-', unlimited, contact] },
           { name: orgPermissions, data: ['-', unlimited, contact] },
-          { name: jitProvisioning, data: ['-', comingSoon, comingSoon] },
+          { name: jitProvisioning, data: ['-', '✓', '✓'] },
         ],
       },
       {
@@ -241,11 +225,7 @@ function PlanComparisonTable() {
           { name: jwtClaims, data: ['-', '✓', contact] },
           {
             name: tenantMembers,
-            data: [
-              '1',
-              `${tenantMembersLimit}|${paidAddOnFeatureTip}|${tenantMembersPrice}`,
-              contact,
-            ],
+            data: ['1', `${tenantMembersLimit}||${tenantMembersPrice}`, contact],
           },
         ],
       },
@@ -254,7 +234,7 @@ function PlanComparisonTable() {
         rows: [
           { name: community, data: ['✓', '✓', '✓'] },
           { name: emailTicketSupport, data: ['-', '✓ (48h)', contact] },
-          { name: soc2Report, data: ['-', comingSoon, comingSoon] },
+          { name: soc2Report, data: ['-', '✓', '✓'] },
           { name: hipaaOrBaaReport, data: ['-', '-', comingSoon] },
         ],
       },

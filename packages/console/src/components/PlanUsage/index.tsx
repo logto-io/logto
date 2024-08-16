@@ -12,7 +12,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { formatPeriod } from '@/utils/subscription';
 
-import ProPlanUsageCard, { type Props as ProPlanUsageCardProps } from './ProPlanUsageCard';
+import PlanUsageCard, { type Props as PlanUsageCardProps } from './PlanUsageCard';
 import styles from './index.module.scss';
 import { usageKeys, usageKeyPriceMap, usageKeyMap, titleKeyMap, tooltipKeyMap } from './utils';
 
@@ -57,25 +57,35 @@ function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodi
     isDevFeaturesEnabled ? currentSubscriptionQuota.mauLimit : currentPlan.quota.mauLimit,
   ];
 
-  const usagePercent = conditional(mauLimit && activeUsers / mauLimit);
+  const mauUsagePercent = conditional(mauLimit && activeUsers / mauLimit);
 
-  const usages: ProPlanUsageCardProps[] = usageKeys.map((key) => ({
-    usage:
-      key === 'mauLimit' || key === 'tokenLimit'
-        ? periodicUsage[key]
-        : currentSubscriptionUsage[key],
-    usageKey: `subscription.usage.${usageKeyMap[key]}`,
-    titleKey: `subscription.usage.${titleKeyMap[key]}`,
-    tooltipKey: `subscription.usage.${tooltipKeyMap[key]}`,
-    unitPrice: usageKeyPriceMap[key],
-    ...cond(
-      key === 'tokenLimit' &&
-        currentSubscriptionQuota.tokenLimit && { quota: currentSubscriptionQuota.tokenLimit }
-    ),
-  }));
+  const usages: PlanUsageCardProps[] = usageKeys
+    // Show all usages for Pro plan and only show MAU and token usage for Free plan
+    .filter(
+      (key) =>
+        currentSubscriptionFromNewPricingModel.planId === ReservedPlanId.Pro ||
+        (currentSubscriptionFromNewPricingModel.planId === ReservedPlanId.Free &&
+          (key === 'mauLimit' || key === 'tokenLimit'))
+    )
+    .map((key) => ({
+      usage:
+        key === 'mauLimit' || key === 'tokenLimit'
+          ? periodicUsage[key]
+          : currentSubscriptionUsage[key],
+      usageKey: `subscription.usage.${usageKeyMap[key]}`,
+      titleKey: `subscription.usage.${titleKeyMap[key]}`,
+      unitPrice: usageKeyPriceMap[key],
+      ...conditional(
+        currentSubscriptionFromNewPricingModel.planId === ReservedPlanId.Pro && {
+          tooltipKey: `subscription.usage.${tooltipKeyMap[key]}`,
+        }
+      ),
+      ...cond(
+        (key === 'tokenLimit' || key === 'mauLimit') && { quota: currentSubscriptionQuota[key] }
+      ),
+    }));
 
-  return isDevFeaturesEnabled &&
-    currentSubscriptionFromNewPricingModel.planId === ReservedPlanId.Pro ? (
+  return isDevFeaturesEnabled ? (
     <div>
       <div className={classNames(styles.planCycle, styles.planCycleNewPricingModel)}>
         <DynamicT
@@ -91,8 +101,16 @@ function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodi
       </div>
       <div className={styles.newPricingModelUsage}>
         {usages.map((props, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <ProPlanUsageCard key={index} className={styles.cardItem} {...props} />
+          <PlanUsageCard
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            className={classNames(
+              styles.cardItem,
+              currentSubscriptionFromNewPricingModel.planId === ReservedPlanId.Free &&
+                styles.freeUser
+            )}
+            {...props}
+          />
         ))}
       </div>
     </div>
@@ -106,7 +124,7 @@ function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodi
           mauLimit.toLocaleString()
         )}
         {' MAU'}
-        {usagePercent && ` (${(usagePercent * 100).toFixed(2)}%)`}
+        {mauUsagePercent && ` (${(mauUsagePercent * 100).toFixed(2)}%)`}
       </div>
       <div className={styles.planCycle}>
         <DynamicT
@@ -120,11 +138,11 @@ function PlanUsage({ currentSubscription, currentPlan, periodicUsage: rawPeriodi
           }}
         />
       </div>
-      {usagePercent && (
+      {mauUsagePercent && (
         <div className={styles.usageBar}>
           <div
-            className={classNames(styles.usageBarInner, usagePercent >= 1 && styles.overuse)}
-            style={{ width: `${Math.min(usagePercent, 1) * 100}%` }}
+            className={classNames(styles.usageBarInner, mauUsagePercent >= 1 && styles.overuse)}
+            style={{ width: `${Math.min(mauUsagePercent, 1) * 100}%` }}
           />
         </div>
       )}

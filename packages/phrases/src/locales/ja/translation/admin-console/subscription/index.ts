@@ -13,10 +13,12 @@ const subscription = {
     '現在のプランはこちらです。プランの使用状況を簡単に確認したり、次回の請求を確認したり、必要に応じてプランを変更したりできます。',
   plan_usage: '利用状況',
   plan_cycle: 'プランサイクル: {{period}}。更新日: {{renewDate}}。',
-  next_bill: '次の請求書',
+  /** UNTRANSLATED */
+  next_bill: 'Your upcoming bill',
   next_bill_hint: '計算方法については、次の<a>記事</a>を参照してください。',
+  /** UNTRANSLATED */
   next_bill_tip:
-    'ここに表示されている価格には税金が含まれていません。税金は、提供された情報と地元の規制要件に基づいて計算され、請求書に表示されます。',
+    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
   manage_payment: '支払い方法の管理',
   overfill_quota_warning:
     'クォータ制限に到達しました。問題を防ぐために、プランをアップグレードしてください。',

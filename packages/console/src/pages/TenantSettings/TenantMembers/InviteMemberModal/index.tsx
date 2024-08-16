@@ -17,6 +17,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import Select, { type Option } from '@/ds-components/Select';
 import TextLink from '@/ds-components/TextLink';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
 import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 
@@ -45,6 +46,10 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     currentSubscriptionQuota,
     currentSubscriptionUsage: { tenantMembersLimit },
   } = useContext(SubscriptionDataContext);
+  const {
+    data: { tenantMembersUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
 
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
@@ -132,11 +137,15 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
           conditional(
             isDevFeaturesEnabled &&
               hasTenantMembersReachedLimit &&
-              planId === ReservedPlanId.Pro && (
+              planId === ReservedPlanId.Pro &&
+              !tenantMembersUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter
                   isLoading={isLoading}
                   buttonTitle="tenant_members.invite_members"
-                  onClick={onSubmit}
+                  onClick={async () => {
+                    void update({ tenantMembersUpsellNoticeAcknowledged: true });
+                    await onSubmit();
+                  }}
                 >
                   <Trans
                     components={{

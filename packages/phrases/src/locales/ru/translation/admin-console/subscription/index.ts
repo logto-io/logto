@@ -12,10 +12,12 @@ const subscription = {
     'Вот ваш текущий тарифный план. Вы можете легко просмотреть использование вашего тарифа, проверить предстоящий счет и вносить изменения в тариф по мере необходимости.',
   plan_usage: 'Использование плана',
   plan_cycle: 'Цикл плана: {{period}}. Использование обновляется {{renewDate}}.',
-  next_bill: 'Ваш следующий счет',
+  /** UNTRANSLATED */
+  next_bill: 'Your upcoming bill',
   next_bill_hint: 'Чтобы узнать больше о расчете, ознакомьтесь с этой <a>статьей</a>.',
+  /** UNTRANSLATED */
   next_bill_tip:
-    'Цены, отображаемые здесь, не включают налоги. Сумма налога будет рассчитана на основе предоставленной вами информации и местных требований регулирования, и будет указана в ваших счетах.',
+    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
   manage_payment: 'Управление платежами',
   overfill_quota_warning:
     'Вы достигли лимита вашего квоты. Чтобы избежать возможных проблем, повысьте план.',

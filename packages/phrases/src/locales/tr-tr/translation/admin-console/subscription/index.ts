@@ -13,10 +13,12 @@ const subscription = {
     'İşte mevcut planınız. Plan kullanımınızı kolayca görebilir, önümüzdeki faturanızı kontrol edebilir ve ihtiyaç duydukça planınızda değişiklikler yapabilirsiniz.',
   plan_usage: 'Plan kullanımı',
   plan_cycle: 'Plan döngüsü: {{period}}. Kullanım {{renewDate}} tarihinde yenilenir.',
-  next_bill: 'Bir sonraki faturanız',
+  /** UNTRANSLATED */
+  next_bill: 'Your upcoming bill',
   next_bill_hint: 'Hesaplama hakkında daha fazla bilgi için lütfen bu <a>makaleye</a> başvurun.',
+  /** UNTRANSLATED */
   next_bill_tip:
-    'Burada görünen fiyatlar vergileri içermez. Vergi tutarı, sağladığınız bilgilere ve yerel düzenleyici gereksinimlere dayalı olarak hesaplanacak ve faturalarınızda gösterilecektir.',
+    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
   manage_payment: 'Ödemeleri düzenle',
   overfill_quota_warning:
     'Kota sınırınıza ulaştınız. Herhangi bir sorunu önlemek için planı yükseltin.',
