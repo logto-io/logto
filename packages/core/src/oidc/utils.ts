@@ -12,7 +12,9 @@ import {
 import { conditional } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
-import type { EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
+
+const { isDevFeaturesEnabled } = EnvSet.values;
 
 export const getConstantClientMetadata = (
   envSet: EnvSet,
@@ -86,13 +88,32 @@ export const getUtcStartOfTheDay = (date: Date) => {
   );
 };
 
+const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.routes> = {
+  [FirstScreen.SignIn]: 'signIn',
+  [FirstScreen.Register]: 'register',
+  /**
+   * Todo @xiaoyijun remove isDevFeaturesEnabled check
+   * Fallback to signIn when dev feature is not ready (these three screens are not supported yet)
+   */
+  [FirstScreen.IdentifierSignIn]: isDevFeaturesEnabled ? 'identifierSignIn' : 'signIn',
+  [FirstScreen.IdentifierRegister]: isDevFeaturesEnabled ? 'identifierRegister' : 'signIn',
+  [FirstScreen.SingleSignOn]: isDevFeaturesEnabled ? 'sso' : 'signIn',
+  [FirstScreen.SignInDeprecated]: 'signIn',
+};
+
+// Note: this eslint comment can be removed once the dev feature flag is removed
+// eslint-disable-next-line complexity
 export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
     params[ExtraParamsKey.InteractionMode] ??
     FirstScreen.SignIn;
+
   const firstScreen =
-    firstScreenKey === 'signUp' ? experience.routes.register : experience.routes[firstScreenKey];
+    firstScreenKey === 'signUp'
+      ? experience.routes.register
+      : experience.routes[firstScreenRouteMapping[firstScreenKey]];
+
   const directSignIn = params[ExtraParamsKey.DirectSignIn];
   const searchParams = new URLSearchParams();
   const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
@@ -107,6 +128,13 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
 
   if (params[ExtraParamsKey.LoginHint]) {
     searchParams.append(ExtraParamsKey.LoginHint, params[ExtraParamsKey.LoginHint]);
+  }
+
+  if (isDevFeaturesEnabled) {
+    // eslint-disable-next-line unicorn/no-lonely-if
+    if (params[ExtraParamsKey.Identifier]) {
+      searchParams.append(ExtraParamsKey.Identifier, params[ExtraParamsKey.Identifier]);
+    }
   }
 
   if (directSignIn) {
