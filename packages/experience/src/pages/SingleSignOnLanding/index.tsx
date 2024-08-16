@@ -2,9 +2,8 @@ import { AgreeToTermsPolicy, experience } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
+import SingleSignOnForm from '@/components/SingleSignOnForm';
 import useTerms from '@/hooks/use-terms';
-
-import SingleSignOnForm from '../SingleSignOnEmail/SingleSignOnForm';
 
 const SingleSignOnLanding = () => {
   const { t } = useTranslation();

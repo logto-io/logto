@@ -1,6 +1,5 @@
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-
-import SingleSignOnForm from './SingleSignOnForm';
+import SingleSignOnForm from '@/components/SingleSignOnForm';
 
 const SingleSignOnEmail = () => {
   return (

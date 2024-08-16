@@ -1,11 +1,11 @@
 import { type SignIn, type ExperienceSocialConnector, AgreeToTermsPolicy } from '@logto/schemas';
 
+import IdentifierSignInForm from '@/components/IdentifierSignInForm';
+import PasswordSignInForm from '@/components/PasswordSignInForm';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import useTerms from '@/hooks/use-terms';
 
-import IdentifierSignInForm from './IdentifierSignInForm';
-import PasswordSignInForm from './PasswordSignInForm';
 import styles from './index.module.scss';
 
 type Props = {

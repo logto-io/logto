@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
+import IdentifierRegisterForm from '@/components/IdentifierRegisterForm';
 import { identifierInputDescriptionMap } from '@/utils/form';
-
-import IdentifierRegisterForm from '../Register/IdentifierRegisterForm';
 
 import useIdentifierSignUpMethods from './use-identifier-sign-up-methods';
 

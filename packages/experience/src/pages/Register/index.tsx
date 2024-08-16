@@ -8,6 +8,7 @@ import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormMod
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import Divider from '@/components/Divider';
 import GoogleOneTap from '@/components/GoogleOneTap';
+import IdentifierRegisterForm from '@/components/IdentifierRegisterForm';
 import TextLink from '@/components/TextLink';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
@@ -17,7 +18,6 @@ import useTerms from '@/hooks/use-terms';
 
 import ErrorPage from '../ErrorPage';
 
-import IdentifierRegisterForm from './IdentifierRegisterForm';
 import styles from './index.module.scss';
 
 const RegisterFooter = () => {
