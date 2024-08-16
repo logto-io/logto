@@ -1,9 +1,12 @@
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import koaGuard from '../../../middleware/koa-guard.js';
-import { type WithInteractionDetailsContext } from '../../../middleware/koa-interaction-details.js';
-import type TenantContext from '../../../tenants/TenantContext.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import koaGuard from '#src/middleware/koa-guard.js';
+import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
+import assertThat from '#src/utils/assert-that.js';
+
 import { SignInExperienceValidator } from '../classes/libraries/sign-in-experience-validator.js';
 import { experienceRoutes } from '../const.js';
 
@@ -26,6 +29,12 @@ export default function experienceAnonymousRoutes<T extends WithInteractionDetai
     }),
     async (ctx, next) => {
       const { email } = ctx.guard.query;
+
+      assertThat(
+        email.split('@')[1],
+        new RequestError({ code: 'guard.invalid_input', status: 400, email })
+      );
+
       const signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
       const connectors = await signInExperienceValidator.getEnabledSsoConnectorsByEmail(email);
 
