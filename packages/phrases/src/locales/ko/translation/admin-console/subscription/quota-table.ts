@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: '적시 프로비저닝',
   },
   support: {
-    title: '컴플라이언스 및 지원',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: '커뮤니티',
     customer_ticket: '지원 티켓',
     premium: '프리미엄',

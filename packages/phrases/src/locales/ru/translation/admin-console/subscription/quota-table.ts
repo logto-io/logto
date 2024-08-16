@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: 'Пакетная настройка по запросу',
   },
   support: {
-    title: 'Соблюдение и поддержка',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: 'Сообщество',
     customer_ticket: 'Техническая поддержка',
     premium: 'Премиум',

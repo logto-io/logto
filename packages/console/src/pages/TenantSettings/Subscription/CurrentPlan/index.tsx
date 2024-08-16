@@ -95,12 +95,12 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodi
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
       </FormField>
+      <AddOnUsageChangesNotification className={styles.notification} />
       <MauLimitExceedNotification
         currentPlan={subscriptionPlan}
         periodicUsage={rawPeriodicUsage}
         className={styles.notification}
       />
-      <AddOnUsageChangesNotification />
       <ChargeNotification
         hasSurpassedLimit={hasTokenSurpassedLimit}
         quotaItemPhraseKey="tokens"

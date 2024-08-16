@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: '即时配置',
   },
   support: {
-    title: '合规与支持',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: '社区',
     customer_ticket: '客户支持票据',
     premium: '高级版',

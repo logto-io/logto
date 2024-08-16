@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: 'İstisnai olana kadar temin',
   },
   support: {
-    title: 'Uyumluluk ve destek',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: 'Topluluk',
     customer_ticket: 'Müşteri destek bileti',
     premium: 'Premium',

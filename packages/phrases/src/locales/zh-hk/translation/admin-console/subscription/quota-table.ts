@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: '即時規定',
   },
   support: {
-    title: '合規和支援',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: '社群',
     customer_ticket: '客戶支援票據',
     premium: '高級版',

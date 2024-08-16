@@ -126,11 +126,20 @@ function PlanComparisonTable() {
     const tenantMembersLimit = t('included', { value: 3 });
     const tenantMembersPrice = t('per_member', { value: 8 });
 
-    // Compliance and support
+    // Support
     const community = t('support.community');
     const emailTicketSupport = t('support.email_ticket_support');
-    const soc2Report = t('support.soc2_report');
-    const hipaaOrBaaReport = t('support.hipaa_or_baa_report');
+    const discordPrivateChannel = t('support.discord_private_channel');
+    const premiumSupport = t('support.premium_support');
+    const developerOnboarding = t('support.developer_onboarding');
+    const solutionEngineerSupport = t('support.solution_engineer_support');
+    const sla = t('support.sla');
+    const dedicatedComputingResources = t('support.dedicated_computing_resources');
+
+    // Compliance
+    const soc2Compliant = t('compliance.soc2_compliant');
+    const soc2Report = t('compliance.soc2_report');
+    const hipaaOrBaaReport = t('compliance.hipaa_or_baa_report');
 
     return [
       {
@@ -234,8 +243,20 @@ function PlanComparisonTable() {
         rows: [
           { name: community, data: ['✓', '✓', '✓'] },
           { name: emailTicketSupport, data: ['-', '✓ (48h)', contact] },
+          { name: discordPrivateChannel, data: ['-', '✓', '✓'] },
+          { name: premiumSupport, data: ['-', '-', '✓'] },
+          { name: developerOnboarding, data: ['-', '-', '✓'] },
+          { name: solutionEngineerSupport, data: ['-', '-', '✓'] },
+          { name: sla, data: ['-', '-', '✓'] },
+          { name: dedicatedComputingResources, data: ['-', '-', '✓'] },
+        ],
+      },
+      {
+        title: 'compliance.title',
+        rows: [
+          { name: soc2Compliant, data: ['✓', '✓', '✓'] },
           { name: soc2Report, data: ['-', '✓', '✓'] },
-          { name: hipaaOrBaaReport, data: ['-', '-', comingSoon] },
+          { name: hipaaOrBaaReport, data: ['-', '-', '✓'] },
         ],
       },
     ];
