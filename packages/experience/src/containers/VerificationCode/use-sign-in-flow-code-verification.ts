@@ -30,7 +30,7 @@ const useSignInFlowCodeVerification = (
   const { show } = useConfirmModal();
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
-  const { signInMode } = useSieMethods();
+  const { signInMode, signUpMethods } = useSieMethods();
 
   const handleError = useErrorHandler();
   const registerWithIdentifierAsync = useApi(registerWithVerifiedIdentifier);
@@ -44,8 +44,12 @@ const useSignInFlowCodeVerification = (
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
   const identifierNotExistErrorHandler = useCallback(async () => {
-    // Should not redirect user to register if is sign-in only mode or bind social flow
-    if (signInMode === SignInMode.SignIn) {
+    /**
+     * Should not redirect user to register in the following cases:
+     * 1. in the sign-in only mode
+     * 2. the method is not supported for sign-up
+     */
+    if (signInMode === SignInMode.SignIn || !signUpMethods.includes(method)) {
       void showIdentifierErrorAlert(IdentifierErrorType.IdentifierNotExist, method, target);
 
       return;
@@ -81,16 +85,17 @@ const useSignInFlowCodeVerification = (
     });
   }, [
     signInMode,
+    signUpMethods,
+    method,
     show,
     t,
-    method,
     target,
-    registerWithIdentifierAsync,
     showIdentifierErrorAlert,
-    navigate,
+    registerWithIdentifierAsync,
     handleError,
     preSignInErrorHandler,
     redirectTo,
+    navigate,
   ]);
 
   const errorHandlers = useMemo<ErrorHandlers>(
