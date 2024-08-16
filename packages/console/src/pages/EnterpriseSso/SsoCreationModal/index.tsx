@@ -131,13 +131,12 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     })
   );
 
-  const isCreateButtonDisabled = useMemo(() => {
-    // The button is available only when:
-    // 1. `connectorName` field is not empty.
-    // 2. At least one connector is selected.
-    // 3. Error is resolved. Since `connectorName` is the only field of this form, it means `connectorName` field error is resolved.
-    return !(watch('connectorName') && isAnyConnectorSelected) || Boolean(errors.connectorName);
-  }, [errors.connectorName, isAnyConnectorSelected, watch]);
+  // The button is available only when:
+  // 1. `connectorName` field is not empty.
+  // 2. At least one connector is selected.
+  // 3. Error is resolved. Since `connectorName` is the only field of this form, it means `connectorName` field error is resolved.
+  const isCreateButtonDisabled =
+    !(watch('connectorName') && isAnyConnectorSelected) || Boolean(errors.connectorName);
 
   if (!isOpen) {
     return null;
@@ -158,6 +157,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
         paywall={conditional(
           isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
+        hasAddOnTag={isDevFeaturesEnabled}
         footer={
           conditional(
             isDevFeaturesEnabled &&
