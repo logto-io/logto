@@ -15,6 +15,7 @@ import FormField from '@/ds-components/FormField';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { hasSurpassedQuotaLimit, hasSurpassedSubscriptionQuotaLimit } from '@/utils/quota';
 
+import AddOnUsageChangesNotification from './AddOnUsageChangesNotification';
 import MauLimitExceedNotification from './MauLimitExceededNotification';
 import PaymentOverdueNotification from './PaymentOverdueNotification';
 import styles from './index.module.scss';
@@ -94,6 +95,7 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodi
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
       </FormField>
+      <AddOnUsageChangesNotification className={styles.notification} />
       <MauLimitExceedNotification
         currentPlan={subscriptionPlan}
         periodicUsage={rawPeriodicUsage}

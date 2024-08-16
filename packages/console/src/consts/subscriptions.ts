@@ -12,6 +12,7 @@ export const proPlanAuditLogsRetentionDays = 14;
 
 // TODO: currently we do not provide a good way to retrieve add-on items unit price in console, we hence manually defined the unit price here, will implement the API soon.
 /* === Add-on unit price (in USD) === */
+export const proPlanBasePrice = 16;
 export const resourceAddOnUnitPrice = 4;
 export const machineToMachineAddOnUnitPrice = 8;
 export const tenantMembersAddOnUnitPrice = 8;

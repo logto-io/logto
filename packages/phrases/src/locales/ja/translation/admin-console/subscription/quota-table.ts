@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: 'ジャストインタイムプロビジョニング',
   },
   support: {
-    title: 'コンプライアンスとサポート',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: 'コミュニティ',
     customer_ticket: 'カスタマーチケット',
     premium: 'プレミアム',

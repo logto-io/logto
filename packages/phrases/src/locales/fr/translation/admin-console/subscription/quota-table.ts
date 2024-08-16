@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: 'Fourniture juste-à-temps',
   },
   support: {
-    title: 'Conformité et support',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: 'Communauté',
     customer_ticket: 'Ticket de support',
     premium: 'Premium',

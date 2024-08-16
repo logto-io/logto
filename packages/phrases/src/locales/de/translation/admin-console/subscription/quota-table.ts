@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: 'Bedarfsgesteuerte Bereitstellung',
   },
   support: {
-    title: 'Compliance und Support',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: 'Gemeinschaft',
     customer_ticket: 'Support-Ticket',
     premium: 'Premium',
