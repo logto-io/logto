@@ -21,6 +21,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
+import experienceAnonymousRoutes from './anonymous-routes/index.js';
 import ExperienceInteraction from './classes/experience-interaction.js';
 import { experienceRoutes } from './const.js';
 import { koaExperienceInteractionHooks } from './middleware/koa-experience-interaction-hooks.js';
@@ -187,4 +188,5 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   newPasswordIdentityVerificationRoutes(experienceRouter, tenant);
 
   profileRoutes(experienceRouter, tenant);
+  experienceAnonymousRoutes(experienceRouter, tenant);
 }

@@ -3,6 +3,7 @@ import { ConnectorType } from '@logto/connector-kit';
 import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
+import { ExperienceClient } from '#src/client/experience/index.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import {
@@ -216,7 +217,8 @@ devFeatureTest.describe('enterprise sso verification', () => {
     });
 
     it('should get sso connectors with given email properly', async () => {
-      const client = await initExperienceClient();
+      const client = new ExperienceClient();
+      await client.initSession();
 
       const response = await client.getAvailableSsoConnectors('bar@' + domain);
 
@@ -225,7 +227,8 @@ devFeatureTest.describe('enterprise sso verification', () => {
     });
 
     it('should return empty array if no sso connectors found', async () => {
-      const client = await initExperienceClient();
+      const client = new ExperienceClient();
+      await client.initSession();
 
       const response = await client.getAvailableSsoConnectors('bar@invalid.com');
 
@@ -237,7 +240,8 @@ devFeatureTest.describe('enterprise sso verification', () => {
         singleSignOnEnabled: false,
       });
 
-      const client = await initExperienceClient();
+      const client = new ExperienceClient();
+      await client.initSession();
 
       const response = await client.getAvailableSsoConnectors('bar@' + domain);
 

@@ -154,7 +154,7 @@ export class ExperienceClient extends MockClient {
 
   public async getAvailableSsoConnectors(email: string) {
     return api
-      .get(`${experienceRoutes.verification}/sso/connectors`, {
+      .get(`${experienceRoutes.prefix}/sso-connectors`, {
         headers: { cookie: this.interactionCookie },
         searchParams: { email },
       })
