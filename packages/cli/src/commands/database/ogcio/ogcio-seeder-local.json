@@ -305,8 +305,7 @@
         "resource_id": "upload-api",
         "specific_permissions": [
           "upload:file.self:write",
-          "upload:file.self:read",
-          "upload:file.self:delete"
+          "upload:file.self:read"
         ]
       }
     ],
@@ -347,9 +346,7 @@
           {
             "resource_id": "upload-api",
             "specific_permissions": [
-              "upload:file.self:write",
-              "upload:file.self:read",
-              "upload:file.self:delete"
+              "upload:file.self:read"
             ]
           }
         ]
