@@ -8,7 +8,6 @@ export const contactEmailLink = `mailto:${contactEmail}`;
 export const reservationLink = 'https://cal.com/logto/30min';
 export const trustAndSecurityLink = 'https://logto.io/trust-and-security';
 export const pricingLink = 'https://logto.io/pricing';
-export const newPlansBlogLink = 'https://blog.logto.io/logto-pricing-v2';
 
 /** Docs link */
 export const envTagsFeatureLink = '/docs/references/tenants/#tenant-type';

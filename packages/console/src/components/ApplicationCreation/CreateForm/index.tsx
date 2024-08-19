@@ -17,6 +17,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useCurrentUser from '@/hooks/use-current-user';
 import TypeDescription from '@/pages/Applications/components/TypeDescription';
 import modalStyles from '@/scss/modal.module.scss';
@@ -56,7 +57,7 @@ function CreateForm({
     defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
   });
   const {
-    currentSubscription: { isAddOnAvailable },
+    currentSubscription: { isAddOnAvailable, planId },
   } = useContext(SubscriptionDataContext);
   const { user } = useCurrentUser();
   const { mutate: mutateGlobal } = useSWRConfig();
@@ -71,6 +72,8 @@ function CreateForm({
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
+
+  const { hasMachineToMachineAppsReachedLimit } = useApplicationsUsage();
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -124,9 +127,14 @@ function CreateForm({
         paywall={conditional(
           isAddOnAvailable &&
             watch('type') === ApplicationType.MachineToMachine &&
+            planId !== ReservedPlanId.Pro &&
             ReservedPlanId.Pro
         )}
-        hasAddOnTag={isAddOnAvailable && watch('type') === ApplicationType.MachineToMachine}
+        hasAddOnTag={
+          isAddOnAvailable &&
+          watch('type') === ApplicationType.MachineToMachine &&
+          hasMachineToMachineAppsReachedLimit
+        }
         size={defaultCreateType ? 'medium' : 'large'}
         footer={
           <Footer

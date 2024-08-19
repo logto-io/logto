@@ -26,7 +26,8 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
-  const { currentPeriodStart, currentPeriodEnd } = currentSubscriptionFromNewPricingModel;
+  const { currentPeriodStart, currentPeriodEnd, planId, isAddOnAvailable } =
+    currentSubscriptionFromNewPricingModel;
 
   const periodicUsage = useMemo(
     () =>
@@ -48,9 +49,8 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
     // Show all usages for Pro plan and only show MAU and token usage for Free plan
     .filter(
       (key) =>
-        currentSubscriptionFromNewPricingModel.planId === ReservedPlanId.Pro ||
-        (currentSubscriptionFromNewPricingModel.planId === ReservedPlanId.Free &&
-          (key === 'mauLimit' || key === 'tokenLimit'))
+        isAddOnAvailable ??
+        (planId === ReservedPlanId.Free && (key === 'mauLimit' || key === 'tokenLimit'))
     )
     .map((key) => ({
       usage:
@@ -61,7 +61,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
       titleKey: `subscription.usage.${titleKeyMap[key]}`,
       unitPrice: usageKeyPriceMap[key],
       ...conditional(
-        currentSubscriptionFromNewPricingModel.planId === ReservedPlanId.Pro && {
+        planId === ReservedPlanId.Pro && {
           tooltipKey: `subscription.usage.${tooltipKeyMap[key]}`,
         }
       ),
@@ -91,8 +91,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
             key={index}
             className={classNames(
               styles.cardItem,
-              currentSubscriptionFromNewPricingModel.planId === ReservedPlanId.Free &&
-                styles.freeUser
+              planId === ReservedPlanId.Free && styles.freeUser
             )}
             {...props}
           />

@@ -74,7 +74,9 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
       </FormField>
-      <AddOnUsageChangesNotification className={styles.notification} />
+      {currentSubscription.isAddOnAvailable && (
+        <AddOnUsageChangesNotification className={styles.notification} />
+      )}
       <MauLimitExceedNotification
         periodicUsage={rawPeriodicUsage}
         className={styles.notification}
