@@ -25,7 +25,8 @@ function CustomizeJwt() {
     currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota: { customJwtEnabled },
   } = useContext(SubscriptionDataContext);
-  const isCustomJwtEnabled = !isCloud || customJwtEnabled;
+  const isCustomJwtEnabled =
+    !isCloud || customJwtEnabled;
 
   const showPaywall = planId === ReservedPlanId.Free;
 
@@ -46,7 +47,7 @@ function CustomizeJwt() {
         subtitle="jwt_claims.description"
         className={styles.header}
       />
-      {Boolean(isAddOnAvailable) && (
+      {isAddOnAvailable && (
         <UpsellNotice isVisible={showPaywall} className={styles.inlineNotice} />
       )}
       <div className={styles.container}>

@@ -45,7 +45,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
 
     if (
       selectedType === ApplicationType.MachineToMachine &&
-      Boolean(isAddOnAvailable) &&
+      isAddOnAvailable &&
       hasMachineToMachineAppsReachedLimit &&
       planId === ReservedPlanId.Pro &&
       !m2mUpsellNoticeAcknowledged

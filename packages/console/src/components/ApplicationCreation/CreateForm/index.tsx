@@ -56,7 +56,7 @@ function CreateForm({
     defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
   });
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { isAddOnAvailable },
   } = useContext(SubscriptionDataContext);
   const { user } = useCurrentUser();
   const { mutate: mutateGlobal } = useSWRConfig();
@@ -122,12 +122,12 @@ function CreateForm({
         title="applications.create"
         subtitle={subtitleElement}
         paywall={conditional(
-          Boolean(isAddOnAvailable) &&
+          isAddOnAvailable &&
             watch('type') === ApplicationType.MachineToMachine &&
             ReservedPlanId.Pro
         )}
         hasAddOnTag={
-          Boolean(isAddOnAvailable) && watch('type') === ApplicationType.MachineToMachine
+          isAddOnAvailable && watch('type') === ApplicationType.MachineToMachine
         }
         size={defaultCreateType ? 'medium' : 'large'}
         footer={

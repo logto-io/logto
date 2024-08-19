@@ -153,11 +153,11 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
       <ModalLayout
         title="enterprise_sso.create_modal.title"
         paywall={conditional(
-          Boolean(isAddOnAvailable) && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
+          isAddOnAvailable && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
         footer={
           conditional(
-            Boolean(isAddOnAvailable) &&
+            isAddOnAvailable &&
               planId === ReservedPlanId.Pro &&
               !enterpriseSsoUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter

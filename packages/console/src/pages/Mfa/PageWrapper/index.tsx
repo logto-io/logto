@@ -20,14 +20,15 @@ function PageWrapper({ children }: Props) {
     currentSubscription: { isAddOnAvailable },
     currentSubscriptionQuota: { mfaEnabled },
   } = useContext(SubscriptionDataContext);
-  const isMfaEnabled = !isCloud || mfaEnabled;
+  const isMfaEnabled =
+    !isCloud || mfaEnabled;
 
   return (
     <div className={styles.container}>
       <PageMeta titleKey="mfa.title" />
       <CardTitle
         paywall={cond((!isMfaEnabled || isDevTenant) && ReservedPlanId.Pro)}
-        hasAddOnTag={Boolean(isAddOnAvailable)}
+        hasAddOnTag={isAddOnAvailable}
         title="mfa.title"
         subtitle="mfa.description"
         className={styles.cardTitle}

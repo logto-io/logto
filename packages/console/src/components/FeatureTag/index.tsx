@@ -84,7 +84,7 @@ export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProp
   } = useContext(SubscriptionDataContext);
 
   // Show the "Add-on" tag for Pro plan when dev features enabled.
-  if (hasAddOnTag && Boolean(isAddOnAvailable) && isCloud && planId === ReservedPlanId.Pro) {
+  if (hasAddOnTag && isAddOnAvailable && isCloud && planId === ReservedPlanId.Pro) {
     return (
       <div className={classNames(styles.tag, styles.beta, styles.addOn, className)}>Add-on</div>
     );

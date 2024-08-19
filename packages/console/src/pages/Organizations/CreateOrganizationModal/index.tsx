@@ -78,12 +78,12 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
       <ModalLayout
         title="organizations.create_organization"
         paywall={conditional(
-          Boolean(isAddOnAvailable) && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
+          isAddOnAvailable && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
-        hasAddOnTag={Boolean(isAddOnAvailable)}
+        hasAddOnTag={isAddOnAvailable}
         footer={
           cond(
-            Boolean(isAddOnAvailable) &&
+            isAddOnAvailable &&
               planId === ReservedPlanId.Pro &&
               !organizationUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter

@@ -60,7 +60,7 @@ function Organizations() {
       <div className={pageLayout.headline}>
         <CardTitle
           paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
-          hasAddOnTag={Boolean(isAddOnAvailable)}
+          hasAddOnTag={isAddOnAvailable}
           title="organizations.title"
           subtitle="organizations.subtitle"
           learnMoreLink={{

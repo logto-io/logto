@@ -67,7 +67,7 @@ function CreateForm({ onClose }: Props) {
         title="api_resources.create"
         subtitle="api_resources.subtitle"
         paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
-        hasAddOnTag={Boolean(isAddOnAvailable)}
+        hasAddOnTag={isAddOnAvailable}
         footer={<Footer isCreationLoading={isSubmitting} onClickCreate={onSubmit} />}
         onClose={onClose}
       >

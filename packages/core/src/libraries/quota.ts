@@ -18,10 +18,7 @@ const shouldReportSubscriptionUpdates = (
   planId: string,
   key: keyof SubscriptionQuota,
   isAddOnAvailable?: boolean
-): boolean =>
-  planId === ReservedPlanId.Pro &&
-  Boolean(isAddOnAvailable) &&
-  isReportSubscriptionUpdatesUsageKey(key);
+) => planId === ReservedPlanId.Pro && isAddOnAvailable && isReportSubscriptionUpdatesUsageKey(key);
 
 export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
   const guardTenantUsageByKey = async (key: keyof SubscriptionQuota) => {

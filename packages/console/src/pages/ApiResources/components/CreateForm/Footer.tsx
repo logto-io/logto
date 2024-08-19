@@ -59,7 +59,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
   }
 
   if (
-    Boolean(isAddOnAvailable) &&
+    isAddOnAvailable &&
     hasReachedLimit &&
     planId === ReservedPlanId.Pro &&
     !apiResourceUpsellNoticeAcknowledged
