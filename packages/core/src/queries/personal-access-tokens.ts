@@ -18,13 +18,13 @@ export class PersonalAccessTokensQueries {
 
   constructor(public readonly pool: CommonQueryMethods) {}
 
-  async findByValue(value: string) {
+  public readonly findByValue = async (value: string) => {
     return this.pool.maybeOne<PersonalAccessToken>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
         where ${fields.value} = ${value}
     `);
-  }
+  };
 
   async updateName(userId: string, name: string, newName: string) {
     return this.update({
