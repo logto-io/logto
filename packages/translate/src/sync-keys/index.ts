@@ -5,7 +5,7 @@ import { isLanguageTag } from '@logto/language-kit';
 import ora from 'ora';
 import { type CommandModule } from 'yargs';
 
-import { consoleLog, inquireInstancePath, lintLocaleFiles } from '../../../utils.js';
+import { consoleLog, inquireInstancePath, lintLocaleFiles } from '../utils.js';
 
 import { parseLocaleFiles, syncPhraseKeysAndFileStructure } from './utils.js';
 

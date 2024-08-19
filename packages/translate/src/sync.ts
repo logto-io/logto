@@ -3,9 +3,13 @@ import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phra
 import PQueue from 'p-queue';
 import type { CommandModule } from 'yargs';
 
-import { inquireInstancePath, lintLocaleFiles } from '../../utils.js';
-
-import { type TranslationOptions, baseLanguage, syncTranslation } from './utils.js';
+import { syncTranslation } from './openai.js';
+import {
+  inquireInstancePath,
+  lintLocaleFiles,
+  type TranslationOptions,
+  baseLanguage,
+} from './utils.js';
 
 const sync: CommandModule<
   { path?: string; skipCoreCheck?: boolean },

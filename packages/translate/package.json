@@ -1,7 +1,7 @@
 {
-  "name": "@logto/cli",
-  "version": "1.19.0",
-  "description": "Logto CLI.",
+  "name": "@logto/translate",
+  "version": "0.0.0",
+  "description": "A CLI tool that helps translate phrases and experience-phrases to i18n resources.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
@@ -11,7 +11,7 @@
   },
   "main": "lib/index.js",
   "bin": {
-    "logto": "bin/logto.js"
+    "logto-translate": "bin/index.js"
   },
   "files": [
     "bin",
@@ -25,14 +25,11 @@
     "precommit": "lint-staged",
     "prepare:package-json": "node -p \"'export const packageJson = ' + JSON.stringify(require('./package.json'), undefined, 2) + ';'\" > src/package-json.ts",
     "build": "rm -rf lib && pnpm prepare:package-json && tsc -p tsconfig.build.json",
-    "build:test": "pnpm build",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "start": "node .",
     "start:dev": "pnpm build && node .",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
-    "test:ci": "pnpm run test --silent --coverage",
     "prepack": "pnpm build"
   },
   "engines": {
@@ -42,27 +39,20 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.0.0",
     "@logto/core-kit": "workspace:^2.5.0",
-    "@logto/schemas": "workspace:1.19.0",
+    "@logto/language-kit": "workspace:^1.1.0",
+    "@logto/phrases": "workspace:^1.13.0",
+    "@logto/phrases-experience": "workspace:^1.7.0",
     "@logto/shared": "workspace:^3.1.1",
     "@silverhand/essentials": "^2.9.1",
-    "@silverhand/slonik": "31.0.0-beta.2",
     "chalk": "^5.3.0",
-    "decamelize": "^6.0.0",
     "dotenv": "^16.4.5",
     "got": "^14.0.0",
     "hpagent": "^1.2.0",
-    "http-proxy-middleware": "^3.0.0",
     "inquirer": "^9.0.0",
-    "mime": "^4.0.4",
-    "nanoid": "^5.0.1",
     "ora": "^8.0.1",
-    "p-limit": "^6.0.0",
-    "p-retry": "^6.0.0",
-    "pg-protocol": "^1.6.0",
-    "semver": "^7.3.8",
-    "tar": "^7.0.0",
+    "p-queue": "^8.0.0",
+    "typescript": "^5.5.3",
     "yargs": "^17.6.0",
     "zod": "^3.23.8"
   },
@@ -71,18 +61,11 @@
     "@silverhand/ts-config": "6.0.0",
     "@types/inquirer": "^9.0.0",
     "@types/node": "^20.9.5",
-    "@types/semver": "^7.3.12",
-    "@types/sinon": "^17.0.0",
-    "@types/tar": "^6.1.12",
     "@types/yargs": "^17.0.13",
     "@vitest/coverage-v8": "^2.0.0",
-    "@withtyped/server": "^0.13.6",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
-    "prettier": "^3.0.0",
-    "sinon": "^18.0.0",
-    "typescript": "^5.5.3",
-    "vitest": "^2.0.0"
+    "prettier": "^3.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",

@@ -5,7 +5,7 @@ import path from 'node:path';
 import { tryThat } from '@silverhand/essentials';
 import ts from 'typescript';
 
-import { consoleLog } from '../../../utils.js';
+import { consoleLog } from '../utils.js';
 
 const getValue = (property: ts.PropertyAssignment): string => {
   if (

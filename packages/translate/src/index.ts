@@ -3,12 +3,12 @@ import dotenv from 'dotenv';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import connector from './commands/connector/index.js';
-import database from './commands/database/index.js';
-import install from './commands/install/index.js';
-import tunnel from './commands/tunnel/index.js';
+import create from './create.js';
+import listTags from './list-tags.js';
 import { packageJson } from './package-json.js';
-import { cliConfig, ConfigKey, consoleLog } from './utils.js';
+import syncKeys from './sync-keys/index.js';
+import sync from './sync.js';
+import { consoleLog } from './utils.js';
 
 void yargs(hideBin(process.argv))
   .version(false)
@@ -17,14 +17,9 @@ void yargs(hideBin(process.argv))
     describe: 'The path to your `.env` file',
     type: 'string',
   })
-  .option('db', {
-    alias: ['db-url', 'database-url'],
-    describe: 'The Postgres URL to Logto database',
-    type: 'string',
-  })
   .option('version', {
     alias: 'v',
-    describe: 'Print Logto CLI version',
+    describe: 'Print Logto translate CLI version',
     type: 'boolean',
     global: false,
   })
@@ -35,19 +30,23 @@ void yargs(hideBin(process.argv))
       process.exit(0);
     }
   }, true)
-  .middleware(({ env, db: databaseUrl }) => {
+  .middleware(({ env }) => {
     dotenv.config({ path: env });
-
-    const initialDatabaseUrl = databaseUrl ?? process.env[ConfigKey.DatabaseUrl];
-
-    if (initialDatabaseUrl) {
-      cliConfig.set(ConfigKey.DatabaseUrl, initialDatabaseUrl);
-    }
   })
-  .command(install)
-  .command(database)
-  .command(connector)
-  .command(tunnel)
+  .option('path', {
+    alias: 'p',
+    type: 'string',
+    describe: 'The path to your Logto instance directory',
+  })
+  .option('skip-core-check', {
+    alias: 'sc',
+    type: 'boolean',
+    describe: 'Skip checking if the core package is existed',
+  })
+  .command(create)
+  .command(listTags)
+  .command(sync)
+  .command(syncKeys)
   .demandCommand(1)
   .showHelpOnFail(false, `Specify ${chalk.green('--help')} for available options`)
   .strict()

@@ -3,9 +3,8 @@ import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phra
 import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-experience';
 import type { CommandModule } from 'yargs';
 
-import { consoleLog, inquireInstancePath } from '../../utils.js';
-
-import { createFullTranslation } from './utils.js';
+import { createFullTranslation } from './openai.js';
+import { consoleLog, inquireInstancePath } from './utils.js';
 
 const create: CommandModule<{ path?: string }, { path?: string; 'language-tag': string }> = {
   command: ['create <language-tag>', 'c'],

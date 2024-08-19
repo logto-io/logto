@@ -4,7 +4,7 @@ import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/ph
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
-import { consoleLog } from '../../utils.js';
+import { consoleLog } from './utils.js';
 
 const listTags: CommandModule<Record<string, unknown>> = {
   command: ['list-tags', 'list'],

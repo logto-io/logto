@@ -14,6 +14,9 @@ importers:
       '@logto/cli':
         specifier: workspace:^1.1.0
         version: link:packages/cli
+      '@logto/translate':
+        specifier: workspace:^0.0.0
+        version: link:packages/translate
     devDependencies:
       '@changesets/cli':
         specifier: ^2.26.2
@@ -94,15 +97,6 @@ importers:
       '@logto/core-kit':
         specifier: workspace:^2.5.0
         version: link:../toolkit/core-kit
-      '@logto/language-kit':
-        specifier: workspace:^1.1.0
-        version: link:../toolkit/language-kit
-      '@logto/phrases':
-        specifier: workspace:^1.13.0
-        version: link:../phrases
-      '@logto/phrases-experience':
-        specifier: workspace:^1.7.0
-        version: link:../phrases-experience
       '@logto/schemas':
         specifier: workspace:1.19.0
         version: link:../schemas
@@ -148,27 +142,18 @@ importers:
       p-limit:
         specifier: ^6.0.0
         version: 6.0.0
-      p-queue:
-        specifier: ^8.0.0
-        version: 8.0.1
       p-retry:
         specifier: ^6.0.0
         version: 6.0.0
       pg-protocol:
         specifier: ^1.6.0
         version: 1.6.0
-      roarr:
-        specifier: ^7.11.0
-        version: 7.11.0
       semver:
         specifier: ^7.3.8
         version: 7.5.2
       tar:
         specifier: ^7.0.0
         version: 7.0.1
-      typescript:
-        specifier: ^5.5.3
-        version: 5.5.3
       yargs:
         specifier: ^17.6.0
         version: 17.6.0
@@ -218,6 +203,9 @@ importers:
       sinon:
         specifier: ^18.0.0
         version: 18.0.0
+      typescript:
+        specifier: ^5.5.3
+        version: 5.5.3
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
@@ -3837,6 +3825,85 @@ importers:
       vitest:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.10.4)(happy-dom@14.12.3)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+
+  packages/translate:
+    dependencies:
+      '@logto/core-kit':
+        specifier: workspace:^2.5.0
+        version: link:../toolkit/core-kit
+      '@logto/language-kit':
+        specifier: workspace:^1.1.0
+        version: link:../toolkit/language-kit
+      '@logto/phrases':
+        specifier: workspace:^1.13.0
+        version: link:../phrases
+      '@logto/phrases-experience':
+        specifier: workspace:^1.7.0
+        version: link:../phrases-experience
+      '@logto/shared':
+        specifier: workspace:^3.1.1
+        version: link:../shared
+      '@silverhand/essentials':
+        specifier: ^2.9.1
+        version: 2.9.1
+      chalk:
+        specifier: ^5.3.0
+        version: 5.3.0
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      got:
+        specifier: ^14.0.0
+        version: 14.0.0
+      hpagent:
+        specifier: ^1.2.0
+        version: 1.2.0
+      inquirer:
+        specifier: ^9.0.0
+        version: 9.1.4
+      ora:
+        specifier: ^8.0.1
+        version: 8.0.1
+      p-queue:
+        specifier: ^8.0.0
+        version: 8.0.1
+      typescript:
+        specifier: ^5.5.3
+        version: 5.5.3
+      yargs:
+        specifier: ^17.6.0
+        version: 17.7.2
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@silverhand/eslint-config':
+        specifier: 6.0.1
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
+      '@silverhand/ts-config':
+        specifier: 6.0.0
+        version: 6.0.0(typescript@5.5.3)
+      '@types/inquirer':
+        specifier: ^9.0.0
+        version: 9.0.3
+      '@types/node':
+        specifier: ^20.9.5
+        version: 20.12.7
+      '@types/yargs':
+        specifier: ^17.0.13
+        version: 17.0.13
+      '@vitest/coverage-v8':
+        specifier: ^2.0.0
+        version: 2.0.0(vitest@2.0.0(@types/node@20.12.7)(happy-dom@14.12.3)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      lint-staged:
+        specifier: ^15.0.0
+        version: 15.0.2
+      prettier:
+        specifier: ^3.0.0
+        version: 3.0.0
 
 packages:
 
@@ -16209,7 +16276,7 @@ snapshots:
       '@typescript-eslint/type-utils': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       '@typescript-eslint/utils': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       '@typescript-eslint/visitor-keys': 7.7.0
-      debug: 4.3.4
+      debug: 4.3.5
       eslint: 8.57.0
       graphemer: 1.4.0
       ignore: 5.3.1
@@ -16227,7 +16294,7 @@ snapshots:
       '@typescript-eslint/types': 7.7.0
       '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.5.3)
       '@typescript-eslint/visitor-keys': 7.7.0
-      debug: 4.3.4
+      debug: 4.3.5
       eslint: 8.57.0
     optionalDependencies:
       typescript: 5.5.3
@@ -18120,7 +18187,7 @@ snapshots:
 
   eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.5
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
@@ -18272,7 +18339,7 @@ snapshots:
   eslint-plugin-sql@2.1.0(eslint@8.57.0):
     dependencies:
       astring: 1.8.3
-      debug: 4.3.4
+      debug: 4.3.5
       eslint: 8.57.0
       lodash: 4.17.21
       pg-formatter: 1.3.0
@@ -18282,7 +18349,7 @@ snapshots:
 
   eslint-plugin-unicorn@52.0.0(eslint@8.57.0):
     dependencies:
-      '@babel/helper-validator-identifier': 7.22.20
+      '@babel/helper-validator-identifier': 7.24.7
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
       '@eslint/eslintrc': 2.1.4
       ci-info: 4.0.0
@@ -24495,7 +24562,7 @@ snapshots:
   yargs@17.7.2:
     dependencies:
       cliui: 8.0.1
-      escalade: 3.1.1
+      escalade: 3.1.2
       get-caller-file: 2.0.5
       require-directory: 2.1.1
       string-width: 4.2.3

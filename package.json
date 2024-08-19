@@ -13,6 +13,7 @@
     "start:dev": "pnpm -r --parallel --filter=!@logto/integration-tests --filter \"!./packages/connectors/connector-*\" dev",
     "start": "cd packages/core && NODE_ENV=production node .",
     "cli": "logto",
+    "translate": "logto-translate",
     "changeset": "changeset",
     "alteration": "logto db alt",
     "connectors": "pnpm -r --filter \"./packages/connectors/connector-*\"",
@@ -52,6 +53,7 @@
     }
   },
   "dependencies": {
-    "@logto/cli": "workspace:^1.1.0"
+    "@logto/cli": "workspace:^1.1.0",
+    "@logto/translate": "workspace:^0.0.0"
   }
 }
