@@ -20,7 +20,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { requestTimeout } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -155,7 +155,6 @@ export const useStaticApi = ({
             async (request, _options, response) => {
               if (
                 isCloud &&
-                isDevFeaturesEnabled &&
                 isAuthenticated &&
                 ['POST', 'PUT', 'DELETE'].includes(request.method) &&
                 response.status >= 200 &&

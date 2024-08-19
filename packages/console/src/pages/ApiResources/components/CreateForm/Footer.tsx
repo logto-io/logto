@@ -6,7 +6,6 @@ import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { resourceAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -25,7 +24,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     currentPlan,
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionUsage: { resourcesLimit },
     currentSku,
   } = useContext(SubscriptionDataContext);
@@ -40,7 +39,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
     /**
      * We don't guard API resources quota limit for paid plan, since it's an add-on feature
      */
-    (isDevFeaturesEnabled ? currentSku.id : currentPlan.id) === ReservedPlanId.Free
+    currentSku.id === ReservedPlanId.Free
   ) {
     return (
       <QuotaGuardFooter>
@@ -51,7 +50,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
           }}
         >
           {t('upsell.paywall.resources', {
-            count: (isDevFeaturesEnabled ? resourcesLimit : currentPlan.quota.resourcesLimit) ?? 0,
+            count: resourcesLimit,
           })}
         </Trans>
       </QuotaGuardFooter>
@@ -59,7 +58,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
   }
 
   if (
-    isDevFeaturesEnabled &&
+    Boolean(isAddOnAvailable) &&
     hasReachedLimit &&
     planId === ReservedPlanId.Pro &&
     !apiResourceUpsellNoticeAcknowledged

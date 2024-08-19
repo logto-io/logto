@@ -7,22 +7,15 @@ import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type LogtoSkuResponse } from '@/cloud/types/router';
 import PlanName from '@/components/PlanName';
 import { contactEmailLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useSubscribe from '@/hooks/use-subscribe';
-import NotEligibleSwitchPlanModalContent, {
-  NotEligibleSwitchSkuModalContent,
-} from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
+import { NotEligibleSwitchSkuModalContent } from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
 import { type SubscriptionPlan } from '@/types/subscriptions';
-import {
-  isDowngradePlan,
-  parseExceededQuotaLimitError,
-  parseExceededSkuQuotaLimitError,
-} from '@/utils/subscription';
+import { isDowngradePlan, parseExceededSkuQuotaLimitError } from '@/utils/subscription';
 
 import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
 
@@ -49,17 +42,17 @@ function SwitchPlanActionBar({
   const { show } = useConfirmModal();
   const [currentLoadingPlanId, setCurrentLoadingPlanId] = useState<string>();
 
-  // TODO: rename `targetPlanId` to be `targetSkuId`
-  const handleSubscribe = async (targetPlanId: string, isDowngrade: boolean) => {
+  const handleSubscribe = async (targetSkuId: string, isDowngrade: boolean) => {
     if (currentLoadingPlanId) {
       return;
     }
 
+    // TODO: clear plan related use cases.
     const currentPlan = subscriptionPlans.find(({ id }) => id === currentSubscriptionPlanId);
-    const targetPlan = subscriptionPlans.find(({ id }) => id === targetPlanId);
+    const targetPlan = subscriptionPlans.find(({ id }) => id === targetSkuId);
 
     const currentSku = logtoSkus.find(({ id }) => id === currentSkuId);
-    const targetSku = logtoSkus.find(({ id }) => id === targetPlanId);
+    const targetSku = logtoSkus.find(({ id }) => id === targetSkuId);
 
     if (!currentPlan || !targetPlan || !currentSku || !targetSku) {
       return;
@@ -86,8 +79,8 @@ function SwitchPlanActionBar({
     }
 
     try {
-      setCurrentLoadingPlanId(targetPlanId);
-      if (targetPlanId === ReservedPlanId.Free) {
+      setCurrentLoadingPlanId(targetSkuId);
+      if (targetSkuId === ReservedPlanId.Free) {
         await cancelSubscription(currentTenantId);
         await onSubscriptionUpdated();
         toast.success(
@@ -102,45 +95,22 @@ function SwitchPlanActionBar({
       await subscribe({
         tenantId: currentTenantId,
         skuId: targetSku.id,
-        planId: targetPlanId,
+        planId: targetSkuId,
         isDowngrade,
         callbackPage: subscriptionPage,
       });
     } catch (error: unknown) {
       setCurrentLoadingPlanId(undefined);
 
-      if (isDevFeaturesEnabled) {
-        const [result, exceededSkuQuotaKeys] = await parseExceededSkuQuotaLimitError(error);
-
-        if (result) {
-          await show({
-            ModalContent: () => (
-              <NotEligibleSwitchSkuModalContent
-                targetSku={targetSku}
-                isDowngrade={isDowngrade}
-                exceededSkuQuotaKeys={exceededSkuQuotaKeys}
-              />
-            ),
-            title: isDowngrade
-              ? 'subscription.not_eligible_modal.downgrade_title'
-              : 'subscription.not_eligible_modal.upgrade_title',
-            confirmButtonText: 'general.got_it',
-            confirmButtonType: 'primary',
-            isCancelButtonVisible: false,
-          });
-          return;
-        }
-      }
-
-      const [result, exceededQuotaKeys] = await parseExceededQuotaLimitError(error);
+      const [result, exceededSkuQuotaKeys] = await parseExceededSkuQuotaLimitError(error);
 
       if (result) {
         await show({
           ModalContent: () => (
-            <NotEligibleSwitchPlanModalContent
-              targetPlan={targetPlan}
+            <NotEligibleSwitchSkuModalContent
+              targetSku={targetSku}
               isDowngrade={isDowngrade}
-              exceededQuotaKeys={exceededQuotaKeys}
+              exceededSkuQuotaKeys={exceededSkuQuotaKeys}
             />
           ),
           title: isDowngrade
@@ -162,56 +132,30 @@ function SwitchPlanActionBar({
   return (
     <div className={styles.container}>
       <Spacer />
-      {isDevFeaturesEnabled
-        ? logtoSkus.map(({ id: skuId }) => {
-            const isCurrentSku = currentSkuId === skuId;
-            const isDowngrade = isDowngradePlan(currentSkuId, skuId);
+      {logtoSkus.map(({ id: skuId }) => {
+        const isCurrentSku = currentSkuId === skuId;
+        const isDowngrade = isDowngradePlan(currentSkuId, skuId);
 
-            return (
-              <div key={skuId}>
-                <Button
-                  title={
-                    isCurrentSku
-                      ? 'subscription.current'
-                      : isDowngrade
-                      ? 'subscription.downgrade'
-                      : 'subscription.upgrade'
-                  }
-                  type={isDowngrade ? 'default' : 'primary'}
-                  disabled={isCurrentSku}
-                  isLoading={!isCurrentSku && currentLoadingPlanId === skuId}
-                  onClick={() => {
-                    void handleSubscribe(skuId, isDowngrade);
-                  }}
-                />
-              </div>
-            );
-          })
-        : // TODO remove this branch once new pricing model is ready.
-          subscriptionPlans.map(({ id: planId }) => {
-            const isCurrentPlan = currentSubscriptionPlanId === planId;
-            const isDowngrade = isDowngradePlan(currentSubscriptionPlanId, planId);
-
-            return (
-              <div key={planId}>
-                <Button
-                  title={
-                    isCurrentPlan
-                      ? 'subscription.current'
-                      : isDowngrade
-                      ? 'subscription.downgrade'
-                      : 'subscription.upgrade'
-                  }
-                  type={isDowngrade ? 'default' : 'primary'}
-                  disabled={isCurrentPlan}
-                  isLoading={!isCurrentPlan && currentLoadingPlanId === planId}
-                  onClick={() => {
-                    void handleSubscribe(planId, isDowngrade);
-                  }}
-                />
-              </div>
-            );
-          })}
+        return (
+          <div key={skuId}>
+            <Button
+              title={
+                isCurrentSku
+                  ? 'subscription.current'
+                  : isDowngrade
+                  ? 'subscription.downgrade'
+                  : 'subscription.upgrade'
+              }
+              type={isDowngrade ? 'default' : 'primary'}
+              disabled={isCurrentSku}
+              isLoading={!isCurrentSku && currentLoadingPlanId === skuId}
+              onClick={() => {
+                void handleSubscribe(skuId, isDowngrade);
+              }}
+            />
+          </div>
+        );
+      })}
       <div>
         <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
           <Button title="general.contact_us_action" type="primary" />

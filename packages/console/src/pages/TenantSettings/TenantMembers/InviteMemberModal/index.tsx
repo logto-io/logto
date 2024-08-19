@@ -8,7 +8,6 @@ import ReactModal from 'react-modal';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { tenantMembersAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -42,7 +41,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const { parseEmailOptions } = useEmailInputUtils();
   const { show } = useConfirmModal();
   const {
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota,
     currentSubscriptionUsage: { tenantMembersLimit },
   } = useContext(SubscriptionDataContext);
@@ -129,14 +128,12 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
       <ModalLayout
         size="large"
         title="tenant_members.invite_modal.title"
-        paywall={conditional(
-          isDevFeaturesEnabled && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
-        )}
-        hasAddOnTag={isDevFeaturesEnabled}
+        paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
+        hasAddOnTag={Boolean(isAddOnAvailable)}
         subtitle="tenant_members.invite_modal.subtitle"
         footer={
           conditional(
-            isDevFeaturesEnabled &&
+            Boolean(isAddOnAvailable) &&
               hasTenantMembersReachedLimit &&
               planId === ReservedPlanId.Pro &&
               !tenantMembersUpsellNoticeAcknowledged && (

@@ -7,7 +7,6 @@ import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -31,7 +30,7 @@ type Props = {
 function CreateForm({ onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable },
   } = useContext(SubscriptionDataContext);
 
   const {
@@ -67,10 +66,8 @@ function CreateForm({ onClose }: Props) {
       <ModalLayout
         title="api_resources.create"
         subtitle="api_resources.subtitle"
-        paywall={conditional(
-          isDevFeaturesEnabled && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
-        )}
-        hasAddOnTag={isDevFeaturesEnabled}
+        paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
+        hasAddOnTag={Boolean(isAddOnAvailable)}
         footer={<Footer isCreationLoading={isSubmitting} onClickCreate={onSubmit} />}
         onClose={onClose}
       >

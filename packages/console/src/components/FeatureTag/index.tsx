@@ -2,7 +2,7 @@ import { ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
@@ -80,11 +80,11 @@ type CombinedAddOnAndFeatureTagProps = {
 export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProps) {
   const { hasAddOnTag, className, paywall } = props;
   const {
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable },
   } = useContext(SubscriptionDataContext);
 
   // Show the "Add-on" tag for Pro plan when dev features enabled.
-  if (hasAddOnTag && isDevFeaturesEnabled && isCloud && planId === ReservedPlanId.Pro) {
+  if (hasAddOnTag && Boolean(isAddOnAvailable) && isCloud && planId === ReservedPlanId.Pro) {
     return (
       <div className={classNames(styles.tag, styles.beta, styles.addOn, className)}>Add-on</div>
     );

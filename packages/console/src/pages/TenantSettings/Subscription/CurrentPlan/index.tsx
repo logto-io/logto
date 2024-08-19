@@ -1,19 +1,17 @@
 import { cond } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
-import { type Subscription, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
+import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import BillInfo from '@/components/BillInfo';
 import ChargeNotification from '@/components/ChargeNotification';
 import FormCard from '@/components/FormCard';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
 import PlanUsage from '@/components/PlanUsage';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
-import { type SubscriptionPlan } from '@/types/subscriptions';
-import { hasSurpassedQuotaLimit, hasSurpassedSubscriptionQuotaLimit } from '@/utils/quota';
+import { hasSurpassedSubscriptionQuotaLimit } from '@/utils/quota';
 
 import AddOnUsageChangesNotification from './AddOnUsageChangesNotification';
 import MauLimitExceedNotification from './MauLimitExceededNotification';
@@ -21,22 +19,13 @@ import PaymentOverdueNotification from './PaymentOverdueNotification';
 import styles from './index.module.scss';
 
 type Props = {
-  /** @deprecated */
-  readonly subscription: Subscription;
-  /** @deprecated */
-  readonly subscriptionPlan: SubscriptionPlan;
   readonly periodicUsage?: NewSubscriptionPeriodicUsage;
 };
 
-function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodicUsage }: Props) {
+function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
   const { currentSku, currentSubscription, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
-  const {
-    id,
-    name,
-    quota: { tokenLimit },
-  } = subscriptionPlan;
 
   const periodicUsage = useMemo(
     () =>
@@ -63,17 +52,11 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodi
     return null;
   }
 
-  const hasTokenSurpassedLimit = isDevFeaturesEnabled
-    ? hasSurpassedSubscriptionQuotaLimit({
-        quotaKey: 'tokenLimit',
-        usage: periodicUsage.tokenLimit,
-        quota: currentSubscriptionQuota,
-      })
-    : hasSurpassedQuotaLimit({
-        quotaKey: 'tokenLimit',
-        usage: periodicUsage.tokenLimit,
-        plan: subscriptionPlan,
-      });
+  const hasTokenSurpassedLimit = hasSurpassedSubscriptionQuotaLimit({
+    quotaKey: 'tokenLimit',
+    usage: periodicUsage.tokenLimit,
+    quota: currentSubscriptionQuota,
+  });
 
   return (
     <FormCard title="subscription.current_plan" description="subscription.current_plan_description">
@@ -86,18 +69,13 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodi
         </div>
       </div>
       <FormField title="subscription.plan_usage">
-        <PlanUsage
-          currentSubscription={subscription}
-          currentPlan={subscriptionPlan}
-          periodicUsage={rawPeriodicUsage}
-        />
+        <PlanUsage periodicUsage={rawPeriodicUsage} />
       </FormField>
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
       </FormField>
       <AddOnUsageChangesNotification className={styles.notification} />
       <MauLimitExceedNotification
-        currentPlan={subscriptionPlan}
         periodicUsage={rawPeriodicUsage}
         className={styles.notification}
       />
@@ -106,13 +84,10 @@ function CurrentPlan({ subscription, subscriptionPlan, periodicUsage: rawPeriodi
         quotaItemPhraseKey="tokens"
         checkedFlagKey="token"
         className={styles.notification}
-        quotaLimit={
-          cond(
-            isDevFeaturesEnabled &&
-              typeof currentSubscriptionQuota.tokenLimit === 'number' &&
-              currentSubscriptionQuota.tokenLimit
-          ) ?? cond(typeof tokenLimit === 'number' && tokenLimit)
-        }
+        quotaLimit={cond(
+          typeof currentSubscriptionQuota.tokenLimit === 'number' &&
+            currentSubscriptionQuota.tokenLimit
+        )}
       />
       <PaymentOverdueNotification className={styles.notification} />
     </FormCard>

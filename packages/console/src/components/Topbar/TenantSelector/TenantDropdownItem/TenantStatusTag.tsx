@@ -1,17 +1,13 @@
 import { type TenantResponse } from '@/cloud/types/router';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
-import { type SubscriptionPlan } from '@/types/subscriptions';
 
 type Props = {
   readonly tenantData: TenantResponse;
-  /** @deprecated */
-  readonly tenantSubscriptionPlan: SubscriptionPlan;
   readonly className?: string;
 };
 
-function TenantStatusTag({ tenantData, tenantSubscriptionPlan, className }: Props) {
+function TenantStatusTag({ tenantData, className }: Props) {
   const { usage, quota, openInvoices, isSuspended } = tenantData;
 
   /**
@@ -39,7 +35,7 @@ function TenantStatusTag({ tenantData, tenantSubscriptionPlan, className }: Prop
 
   const { activeUsers } = usage;
 
-  const mauLimit = isDevFeaturesEnabled ? quota.mauLimit : tenantSubscriptionPlan.quota.mauLimit;
+  const { mauLimit } = quota;
 
   const isMauExceeded = mauLimit !== null && activeUsers >= mauLimit;
 
