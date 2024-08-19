@@ -28,15 +28,8 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  // TODO: Remove
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   router.post(
     '/sign-in-exp/default/custom-ui-assets',
-    // Manually add this to avoid the case that the dev feature guard is removed but the quota guard is not being updated accordingly.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     EnvSet.values.isDevFeaturesEnabled
       ? newKoaQuotaGuard({ key: 'bringYourUiEnabled', quota })
       : koaQuotaGuard({ key: 'bringYourUiEnabled', quota }),
