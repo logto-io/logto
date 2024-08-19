@@ -2,13 +2,9 @@ import { useMemo } from 'react';
 import { Trans } from 'react-i18next';
 
 import PlanName from '@/components/PlanName';
-import { planQuotaItemOrder, skuQuotaItemOrder } from '@/consts/plan-quotas';
+import { skuQuotaItemOrder } from '@/consts/plan-quotas';
 import DynamicT from '@/ds-components/DynamicT';
 import { type LogtoSkuQuota, type LogtoSkuQuotaEntries } from '@/types/skus';
-import {
-  type SubscriptionPlanQuotaEntries,
-  type SubscriptionPlanQuota,
-} from '@/types/subscriptions';
 import { sortBy } from '@/utils/sort';
 
 import PlanQuotaList from './PlanQuotaList';
@@ -20,11 +16,7 @@ type Props = {
   readonly isDowngradeTargetPlan?: boolean;
 };
 
-function PlanQuotaDiffCard({
-  planName,
-  skuQuotaDiff,
-  isDowngradeTargetPlan = false,
-}: Props) {
+function PlanQuotaDiffCard({ planName, skuQuotaDiff, isDowngradeTargetPlan = false }: Props) {
   // eslint-disable-next-line no-restricted-syntax
   const sortedSkuQuotaEntries = useMemo(
     () =>

@@ -14,31 +14,6 @@ export const ticketSupportResponseTimeMap: Record<string, number> = {
 /**
  * Define the order of quota items in the downgrade plan notification modal and not eligible for downgrade plan modal.
  */
-export const planQuotaItemOrder: Array<keyof SubscriptionPlanQuota> = [
-  'mauLimit',
-  'tokenLimit',
-  'applicationsLimit',
-  'machineToMachineLimit',
-  'thirdPartyApplicationsLimit',
-  'resourcesLimit',
-  'scopesPerResourceLimit',
-  'customDomainEnabled',
-  'omniSignInEnabled',
-  'socialConnectorsLimit',
-  'mfaEnabled',
-  'ssoEnabled',
-  'rolesLimit',
-  'machineToMachineRolesLimit',
-  'scopesPerRoleLimit',
-  'organizationsEnabled',
-  'auditLogsRetentionDays',
-  'hooksLimit',
-  'ticketSupportResponseTime',
-];
-
-/**
- * Define the order of quota items in the downgrade plan notification modal and not eligible for downgrade plan modal.
- */
 export const skuQuotaItemOrder: Array<keyof LogtoSkuQuota> = [
   'mauLimit',
   'tokenLimit',

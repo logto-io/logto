@@ -42,10 +42,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
         <div className={styles.meta}>
           <div className={styles.name}>{name}</div>
           <TenantEnvTag tag={tag} />
-          <TenantStatusTag
-            tenantData={tenantData}
-            className={styles.statusTag}
-          />
+          <TenantStatusTag tenantData={tenantData} className={styles.statusTag} />
         </div>
         <div className={styles.planName}>
           {tag === TenantTag.Development ? (

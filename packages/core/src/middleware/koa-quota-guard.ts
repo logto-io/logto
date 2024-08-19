@@ -2,7 +2,7 @@ import { type Nullable } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
 import { type QuotaLibrary } from '#src/libraries/quota.js';
-import { type SubscriptionQuota, type FeatureQuota } from '#src/utils/subscription/types.js';
+import { type SubscriptionQuota } from '#src/utils/subscription/types.js';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'COPY' | 'HEAD' | 'OPTIONS';
 

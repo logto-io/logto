@@ -1,4 +1,3 @@
-
 import { ReservedPlanId } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -15,14 +14,16 @@ import { type CloudConnectionLibrary } from './cloud-connection.js';
 
 export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
 
-const shouldReportSubscriptionUpdates = (planId: string, key: keyof SubscriptionQuota, isAddOnAvailable?: boolean): boolean =>
+const shouldReportSubscriptionUpdates = (
+  planId: string,
+  key: keyof SubscriptionQuota,
+  isAddOnAvailable?: boolean
+): boolean =>
   planId === ReservedPlanId.Pro &&
-Boolean(isAddOnAvailable) &&
+  Boolean(isAddOnAvailable) &&
   isReportSubscriptionUpdatesUsageKey(key);
 
-export const createQuotaLibrary = (
-  cloudConnection: CloudConnectionLibrary,
-) => {
+export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
   const guardTenantUsageByKey = async (key: keyof SubscriptionQuota) => {
     const { isCloud, isIntegrationTest } = EnvSet.values;
 
