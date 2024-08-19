@@ -13,6 +13,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -40,6 +41,7 @@ function CreateForm({ onClose }: Props) {
   } = useForm<FormData>();
 
   const api = useApi();
+  const { hasReachedLimit } = useApiResourcesUsage();
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -67,7 +69,7 @@ function CreateForm({ onClose }: Props) {
         title="api_resources.create"
         subtitle="api_resources.subtitle"
         paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
-        hasAddOnTag={isAddOnAvailable}
+        hasAddOnTag={isAddOnAvailable && hasReachedLimit}
         footer={<Footer isCreationLoading={isSubmitting} onClickCreate={onSubmit} />}
         onClose={onClose}
       >

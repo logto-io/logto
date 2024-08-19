@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg?react';
-import { newPlansBlogLink } from '@/consts';
+import { addOnPricingExplanationLink } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -44,7 +44,7 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
               a: (
                 <TextLink
                   className={styles.articleLink}
-                  href={newPlansBlogLink}
+                  href={addOnPricingExplanationLink}
                   targetBlank="noopener"
                 />
               ),

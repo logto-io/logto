@@ -130,7 +130,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
         size="large"
         title="tenant_members.invite_modal.title"
         paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
-        hasAddOnTag={isAddOnAvailable}
+        hasAddOnTag={isAddOnAvailable && hasTenantMembersReachedLimit}
         subtitle="tenant_members.invite_modal.subtitle"
         footer={
           conditional(
