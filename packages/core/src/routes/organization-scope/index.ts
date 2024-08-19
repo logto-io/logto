@@ -1,8 +1,7 @@
 import { OrganizationScopes } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
-import koaQuotaGuard, {
+import {
   newKoaQuotaGuard,
   koaReportSubscriptionUpdates,
 } from '#src/middleware/koa-quota-guard.js';

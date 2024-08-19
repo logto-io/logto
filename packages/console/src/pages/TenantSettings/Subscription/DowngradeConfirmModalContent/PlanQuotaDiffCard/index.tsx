@@ -16,27 +16,15 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly planName: string;
-  readonly quotaDiff: Partial<SubscriptionPlanQuota>;
   readonly skuQuotaDiff: Partial<LogtoSkuQuota>;
   readonly isDowngradeTargetPlan?: boolean;
 };
 
 function PlanQuotaDiffCard({
   planName,
-  quotaDiff,
   skuQuotaDiff,
   isDowngradeTargetPlan = false,
 }: Props) {
-  // eslint-disable-next-line no-restricted-syntax
-  const sortedEntries = useMemo(
-    () =>
-      Object.entries(quotaDiff)
-        .slice()
-        .sort(([preQuotaKey], [nextQuotaKey]) =>
-          sortBy(planQuotaItemOrder)(preQuotaKey, nextQuotaKey)
-        ),
-    [quotaDiff]
-  ) as SubscriptionPlanQuotaEntries;
   // eslint-disable-next-line no-restricted-syntax
   const sortedSkuQuotaEntries = useMemo(
     () =>
@@ -62,7 +50,6 @@ function PlanQuotaDiffCard({
         </Trans>
       </div>
       <PlanQuotaList
-        entries={sortedEntries}
         skuQuotaEntries={sortedSkuQuotaEntries}
         isDowngradeTargetPlan={isDowngradeTargetPlan}
       />

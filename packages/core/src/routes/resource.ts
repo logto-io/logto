@@ -3,11 +3,10 @@ import { generateStandardId } from '@logto/shared';
 import { yes } from '@silverhand/essentials';
 import { boolean, object, string } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard, {
+import {
   newKoaQuotaGuard,
   koaReportSubscriptionUpdates,
 } from '#src/middleware/koa-quota-guard.js';

@@ -6,32 +6,12 @@ import { type SubscriptionQuota, type FeatureQuota } from '#src/utils/subscripti
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'COPY' | 'HEAD' | 'OPTIONS';
 
-/** @deprecated */
-type UsageGuardConfig = {
-  key: keyof FeatureQuota;
+type NewUsageGuardConfig = {
+  key: keyof SubscriptionQuota;
   quota: QuotaLibrary;
   /** Guard usage only for the specified method types. Guard all if not provided. */
   methods?: Method[];
 };
-
-type NewUsageGuardConfig = Omit<UsageGuardConfig, 'key'> & {
-  key: keyof SubscriptionQuota;
-};
-
-/** @deprecated */
-export default function koaQuotaGuard<StateT, ContextT, ResponseBodyT>({
-  key,
-  quota,
-  methods,
-}: UsageGuardConfig): MiddlewareType<StateT, ContextT, ResponseBodyT> {
-  return async (ctx, next) => {
-    // eslint-disable-next-line no-restricted-syntax
-    if (!methods || methods.includes(ctx.method.toUpperCase() as Method)) {
-      await quota.guardKey(key);
-    }
-    return next();
-  };
-}
 
 export function newKoaQuotaGuard<StateT, ContextT, ResponseBodyT>({
   key,

@@ -9,11 +9,10 @@ import { generateStandardId } from '@logto/shared';
 import { condArray } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard, {
+import {
   koaReportSubscriptionUpdates,
   newKoaQuotaGuard,
 } from '#src/middleware/koa-quota-guard.js';

@@ -44,7 +44,6 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
           <TenantEnvTag tag={tag} />
           <TenantStatusTag
             tenantData={tenantData}
-            tenantSubscriptionPlan={tenantSubscriptionPlan}
             className={styles.statusTag}
           />
         </div>

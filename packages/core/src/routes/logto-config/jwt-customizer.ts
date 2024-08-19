@@ -16,7 +16,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError, { formatZodError } from '#src/errors/RequestError/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
