@@ -26,6 +26,9 @@ const buildConfig = (mode: string): UserConfig => ({
     viteCompression({ disable: mode === 'development' }),
     viteCompression({ disable: mode === 'development', algorithm: 'brotliCompress' }),
   ],
+  define: {
+    'import.meta.env.DEV_FEATURES_ENABLED': JSON.stringify(process.env.DEV_FEATURES_ENABLED),
+  },
   build: {
     // Use the same browserslist configuration as in README.md.
     // Consider using the esbuild target directly in the future.
