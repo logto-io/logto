@@ -161,9 +161,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/hooks',
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'hooksLimit', quota })
-      : koaQuotaGuard({ key: 'hooksLimit', quota }),
+    newKoaQuotaGuard({ key: 'hooksLimit', quota }),
     koaGuard({
       body: Hooks.createGuard.omit({ id: true, signingKey: true }).extend({
         event: hookEventGuard.optional(),

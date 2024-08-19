@@ -61,9 +61,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 201, 400, 403],
     }),
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota })
-      : koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
+    newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { isCloud, isIntegrationTest } = EnvSet.values;
       if (tenantId === adminTenantId && isCloud && !isIntegrationTest) {
@@ -114,9 +112,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 400, 404],
     }),
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota })
-      : koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
+    newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { isIntegrationTest } = EnvSet.values;
 
@@ -219,9 +215,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       response: jsonObjectGuard,
       status: [200, 400, 403, 422],
     }),
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota })
-      : koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
+    newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { body } = ctx.guard;
 

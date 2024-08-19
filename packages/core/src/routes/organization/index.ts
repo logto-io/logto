@@ -35,15 +35,12 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
 
   const router = new SchemaRouter(Organizations, organizations, {
     middlewares: condArray(
-      EnvSet.values.isDevFeaturesEnabled
-        ? newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })
-        : koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
-      EnvSet.values.isDevFeaturesEnabled &&
-        koaReportSubscriptionUpdates({
-          key: 'organizationsEnabled',
-          quota,
-          methods: ['POST', 'PUT', 'DELETE'],
-        })
+      newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
+      koaReportSubscriptionUpdates({
+        key: 'organizationsEnabled',
+        quota,
+        methods: ['POST', 'PUT', 'DELETE'],
+      })
     ),
     errorHandler,
     searchFields: ['name'],

@@ -152,22 +152,12 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
 
-      const {
-        values: { isDevFeaturesEnabled },
-      } = EnvSet;
-
       await Promise.all([
         rest.type === ApplicationType.MachineToMachine &&
-          (isDevFeaturesEnabled
-            ? quota.guardTenantUsageByKey('machineToMachineLimit')
-            : quota.guardKey('machineToMachineLimit')),
+        quota.guardTenantUsageByKey('machineToMachineLimit'),
         rest.isThirdParty &&
-          (isDevFeaturesEnabled
-            ? quota.guardTenantUsageByKey('thirdPartyApplicationsLimit')
-            : quota.guardKey('thirdPartyApplicationsLimit')),
-        isDevFeaturesEnabled
-          ? quota.guardTenantUsageByKey('applicationsLimit')
-          : quota.guardKey('applicationsLimit'),
+        quota.guardTenantUsageByKey('thirdPartyApplicationsLimit'),
+        quota.guardTenantUsageByKey('applicationsLimit'),
       ]);
 
       assertThat(

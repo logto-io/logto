@@ -90,9 +90,7 @@ export default function resourceScopeRoutes<T extends ManagementApiRouter>(
         body,
       } = ctx.guard;
 
-      await (EnvSet.values.isDevFeaturesEnabled
-        ? quota.guardEntityScopesUsage('resources', resourceId)
-        : quota.guardKey('scopesPerResourceLimit', resourceId));
+      await quota.guardEntityScopesUsage('resources', resourceId);
 
       assertThat(!/\s/.test(body.name), 'scope.name_with_space');
 

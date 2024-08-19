@@ -151,18 +151,12 @@ export default function roleRoutes<T extends ManagementApiRouter>(
       // `rolesLimit` is actually the limit of user roles, keep this name for backward compatibility.
       // We have optional `type` when creating a new role, if `type` is not provided, use `User` as default.
       // `machineToMachineRolesLimit` is the limit of machine to machine roles, and is independent to `rolesLimit`.
-      await (EnvSet.values.isDevFeaturesEnabled
-        ? quota.guardTenantUsageByKey(
-            roleBody.type === RoleType.MachineToMachine
-              ? 'machineToMachineRolesLimit'
-              : // In new pricing model, we rename `rolesLimit` to `userRolesLimit`, which is easier to be distinguished from `machineToMachineRolesLimit`.
-                'userRolesLimit'
-          )
-        : quota.guardKey(
-            roleBody.type === RoleType.MachineToMachine
-              ? 'machineToMachineRolesLimit'
-              : 'rolesLimit'
-          ));
+      await quota.guardTenantUsageByKey(
+        roleBody.type === RoleType.MachineToMachine
+          ? 'machineToMachineRolesLimit'
+          : // In new pricing model, we rename `rolesLimit` to `userRolesLimit`, which is easier to be distinguished from `machineToMachineRolesLimit`.
+            'userRolesLimit'
+      );
 
       assertThat(
         !(await findRoleByRoleName(roleBody.name)),

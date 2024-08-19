@@ -26,9 +26,7 @@ export default function subjectTokenRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/subject-tokens',
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'subjectTokenEnabled', quota })
-      : koaQuotaGuard({ key: 'subjectTokenEnabled', quota }),
+    newKoaQuotaGuard({ key: 'subjectTokenEnabled', quota }),
     koaGuard({
       body: object({
         userId: string(),

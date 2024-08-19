@@ -19,7 +19,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const { deleteConnectorById } = queries.connectors;
   const {
     signInExperiences: { validateLanguageInfo },
-    quota: { guardKey, guardTenantUsageByKey, reportSubscriptionUpdatesUsage },
+    quota: { guardTenantUsageByKey, reportSubscriptionUpdatesUsage },
   } = libraries;
   const { getLogtoConnectors } = connectors;
 
@@ -91,9 +91,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       if (mfa) {
         if (mfa.factors.length > 0) {
-          await (EnvSet.values.isDevFeaturesEnabled
-            ? guardTenantUsageByKey('mfaEnabled')
-            : guardKey('mfaEnabled'));
+          await guardTenantUsageByKey('mfaEnabled');
         }
         validateMfa(mfa);
       }

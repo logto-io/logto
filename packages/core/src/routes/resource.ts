@@ -80,9 +80,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/resources',
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'resourcesLimit', quota })
-      : koaQuotaGuard({ key: 'resourcesLimit', quota }),
+    newKoaQuotaGuard({ key: 'resourcesLimit', quota }),
     koaGuard({
       // Intentionally omit `isDefault` since it'll affect other rows.
       // Use the dedicated API `PATCH /resources/:id/is-default` to update.

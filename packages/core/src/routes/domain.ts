@@ -57,12 +57,6 @@ export default function domainRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/domains',
-    EnvSet.values.isDevFeaturesEnabled
-      ? // We removed custom domain paywall in new pricing model
-        async (ctx, next) => {
-          return next();
-        }
-      : koaQuotaGuard({ key: 'customDomainEnabled', quota }),
     koaGuard({
       body: Domains.createGuard.pick({ domain: true }),
       response: domainResponseGuard,

@@ -50,15 +50,12 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     ManagementApiRouterContext
   >(OrganizationRoles, roles, {
     middlewares: condArray(
-      EnvSet.values.isDevFeaturesEnabled
-        ? newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })
-        : koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
-      EnvSet.values.isDevFeaturesEnabled &&
-        koaReportSubscriptionUpdates({
-          key: 'organizationsEnabled',
-          quota,
-          methods: ['POST', 'PUT', 'DELETE'],
-        })
+      newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
+      koaReportSubscriptionUpdates({
+        key: 'organizationsEnabled',
+        quota,
+        methods: ['POST', 'PUT', 'DELETE'],
+      })
     ),
     disabled: { get: true, post: true },
     errorHandler,

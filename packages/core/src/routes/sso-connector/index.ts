@@ -72,9 +72,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
   /* Create a new single sign on connector */
   router.post(
     pathname,
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'enterpriseSsoLimit', quota })
-      : koaQuotaGuard({ key: 'ssoEnabled', quota }),
+    newKoaQuotaGuard({ key: 'enterpriseSsoLimit', quota }),
     koaGuard({
       body: ssoConnectorCreateGuard,
       response: SsoConnectors.guard,
