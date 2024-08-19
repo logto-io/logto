@@ -4,8 +4,8 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import SkuName from '@/components/SkuName';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { resourceAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -24,7 +24,6 @@ type Props = {
 function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentPlan,
     currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionUsage: { resourcesLimit },
     currentSku,
@@ -47,7 +46,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
+            planName: <SkuName skuId={currentSku.id} />,
           }}
         >
           {t('upsell.paywall.resources', {

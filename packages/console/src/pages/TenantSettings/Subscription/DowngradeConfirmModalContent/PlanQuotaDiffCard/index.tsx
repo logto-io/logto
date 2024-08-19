@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Trans } from 'react-i18next';
 
-import PlanName from '@/components/PlanName';
+import SkuName from '@/components/SkuName';
 import { skuQuotaItemOrder } from '@/consts/plan-quotas';
 import DynamicT from '@/ds-components/DynamicT';
 import { type LogtoSkuQuota, type LogtoSkuQuotaEntries } from '@/types/skus';
@@ -11,12 +11,12 @@ import PlanQuotaList from './PlanQuotaList';
 import styles from './index.module.scss';
 
 type Props = {
-  readonly planName: string;
+  readonly skuId: string;
   readonly skuQuotaDiff: Partial<LogtoSkuQuota>;
   readonly isDowngradeTargetPlan?: boolean;
 };
 
-function PlanQuotaDiffCard({ planName, skuQuotaDiff, isDowngradeTargetPlan = false }: Props) {
+function PlanQuotaDiffCard({ skuId, skuQuotaDiff, isDowngradeTargetPlan = false }: Props) {
   // eslint-disable-next-line no-restricted-syntax
   const sortedSkuQuotaEntries = useMemo(
     () =>
@@ -33,7 +33,7 @@ function PlanQuotaDiffCard({ planName, skuQuotaDiff, isDowngradeTargetPlan = fal
       <div className={styles.title}>
         <Trans
           components={{
-            name: <PlanName name={planName} />,
+            name: <SkuName skuId={skuId} />,
           }}
         >
           <DynamicT

@@ -5,8 +5,8 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import BasicWebhookForm, { type BasicWebhookFormType } from '@/components/BasicWebhookForm';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -26,7 +26,7 @@ type CreateHookPayload = Pick<CreateHook, 'name'> & {
 };
 
 function CreateForm({ onClose }: Props) {
-  const { currentPlan, currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
+  const { currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
     useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -70,7 +70,7 @@ function CreateForm({ onClose }: Props) {
             <Trans
               components={{
                 a: <ContactUsPhraseLink />,
-                planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
+                planName: <SkuName skuId={currentSku.id} />,
               }}
             >
               {t('upsell.paywall.hooks', {

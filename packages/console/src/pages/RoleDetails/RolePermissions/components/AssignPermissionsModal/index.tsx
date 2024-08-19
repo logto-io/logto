@@ -5,9 +5,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
+import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -24,7 +24,7 @@ type Props = {
 
 function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan, currentSku, currentSubscriptionRoleScopeUsage, currentSubscriptionQuota } =
+  const { currentSku, currentSubscriptionRoleScopeUsage, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [scopes, setScopes] = useState<ScopeResponse[]>([]);
@@ -79,7 +79,7 @@ function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
               <Trans
                 components={{
                   a: <ContactUsPhraseLink />,
-                  planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
+                  planName: <SkuName skuId={currentSku.id} />,
                 }}
               >
                 {t('upsell.paywall.scopes_per_role', {

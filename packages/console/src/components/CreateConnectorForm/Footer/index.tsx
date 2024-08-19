@@ -3,8 +3,8 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import { type ConnectorGroup } from '@/types/connector';
@@ -24,7 +24,7 @@ function Footer({
   onClickCreateButton,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
-  const { currentPlan, currentSku, currentSubscriptionUsage, currentSubscriptionQuota } =
+  const { currentSku, currentSubscriptionUsage, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
 
   const isSocialConnectorsReachLimit = hasReachedSubscriptionQuotaLimit({
@@ -33,25 +33,26 @@ function Footer({
     quota: currentSubscriptionQuota,
   });
 
-  if (isCreatingSocialConnector && selectedConnectorGroup) {
-    const { name: planName } = currentPlan;
-
-    if (isSocialConnectorsReachLimit && !selectedConnectorGroup.isStandard) {
-      return (
-        <QuotaGuardFooter>
-          <Trans
-            components={{
-              a: <ContactUsPhraseLink />,
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
-            }}
-          >
-            {t('social_connectors', {
-              count: currentSubscriptionQuota.socialConnectorsLimit ?? 0,
-            })}
-          </Trans>
-        </QuotaGuardFooter>
-      );
-    }
+  if (
+    isCreatingSocialConnector &&
+    selectedConnectorGroup &&
+    isSocialConnectorsReachLimit &&
+    !selectedConnectorGroup.isStandard
+  ) {
+    return (
+      <QuotaGuardFooter>
+        <Trans
+          components={{
+            a: <ContactUsPhraseLink />,
+            planName: <SkuName skuId={currentSku.id} />,
+          }}
+        >
+          {t('social_connectors', {
+            count: currentSubscriptionQuota.socialConnectorsLimit ?? 0,
+          })}
+        </Trans>
+      </QuotaGuardFooter>
+    );
   }
 
   return (

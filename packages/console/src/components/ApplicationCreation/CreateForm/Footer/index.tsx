@@ -4,8 +4,8 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import SkuName from '@/components/SkuName';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { machineToMachineAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -41,7 +41,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
   } = useUserPreferences();
 
   if (selectedType) {
-    const { id: planId, name: planName, quota } = currentPlan;
+    const { id: planId, quota } = currentPlan;
 
     if (
       selectedType === ApplicationType.MachineToMachine &&
@@ -113,7 +113,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
+              planName: <SkuName skuId={currentSku.id} />,
             }}
           >
             {t('paywall.applications', { count: quota.applicationsLimit ?? 0 })}

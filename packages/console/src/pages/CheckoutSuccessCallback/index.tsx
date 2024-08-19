@@ -10,7 +10,7 @@ import useSWR from 'swr';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppLoading from '@/components/AppLoading';
 import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils';
-import PlanName from '@/components/PlanName';
+import SkuName from '@/components/SkuName';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -95,14 +95,7 @@ function CheckoutSuccessCallback() {
         toast.success(
           <Trans
             components={{
-              name: (
-                <PlanName
-                  skuId={checkoutSku.id}
-                  // Generally `checkoutPlanId` and a properly setup of SKU `name` should not be null, we still need to handle the edge case to make the type inference happy.
-                  // Also `name` will be deprecated in the future once the new pricing model is ready.
-                  name={checkoutPlanId ?? checkoutSku.name ?? checkoutSku.id}
-                />
-              ),
+              name: <SkuName skuId={checkoutSku.id} />,
             }}
           >
             {t(isDowngrade ? 'downgrade_success' : 'upgrade_success')}

@@ -4,7 +4,7 @@ import { useContext, useMemo } from 'react';
 
 import Tick from '@/assets/icons/tick.svg?react';
 import { type TenantResponse } from '@/cloud/types/router';
-import PlanName from '@/components/PlanName';
+import SkuName from '@/components/SkuName';
 import TenantEnvTag from '@/components/TenantEnvTag';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { DropdownItem } from '@/ds-components/Dropdown';
@@ -26,7 +26,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
     subscription: { planId },
   } = tenantData;
 
-  const { currentPlan, subscriptionPlans } = useContext(SubscriptionDataContext);
+  const { subscriptionPlans } = useContext(SubscriptionDataContext);
   const tenantSubscriptionPlan = useMemo(
     () => subscriptionPlans.find((plan) => plan.id === planId),
     [subscriptionPlans, planId]
@@ -48,7 +48,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
           {tag === TenantTag.Development ? (
             <DynamicT forKey="subscription.no_subscription" />
           ) : (
-            <PlanName skuId={planId} name={currentPlan.name} />
+            <SkuName skuId={planId} />
           )}
         </div>
       </div>

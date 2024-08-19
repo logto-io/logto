@@ -7,7 +7,6 @@ import { type LogtoSkuResponse, type SubscriptionPlanResponse } from '@/cloud/ty
 import { ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
 import { featuredPlanIdOrder, featuredPlanIds } from '@/consts/subscriptions';
 import { type LogtoSkuQuota } from '@/types/skus';
-import { type SubscriptionPlan } from '@/types/subscriptions';
 
 export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlanResponse) => {
   const { id, quota } = subscriptionPlanResponse;
@@ -92,9 +91,6 @@ export const parseExceededSkuQuotaLimitError = async (
   // eslint-disable-next-line no-restricted-syntax
   return [true, Object.keys(exceededQuota) as Array<keyof LogtoSkuQuota>];
 };
-
-export const pickupFeaturedPlans = (plans: SubscriptionPlan[]): SubscriptionPlan[] =>
-  plans.filter(({ id }) => featuredPlanIds.includes(id));
 
 export const pickupFeaturedLogtoSkus = (logtoSkus: LogtoSkuResponse[]): LogtoSkuResponse[] =>
   logtoSkus.filter(({ id }) => featuredPlanIds.includes(id));

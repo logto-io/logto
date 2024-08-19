@@ -3,8 +3,8 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import {
@@ -20,7 +20,7 @@ type Props = {
 
 function Footer({ roleType, isCreating, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan, currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
+  const { currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
     useContext(SubscriptionDataContext);
 
   const hasRoleReachedLimit = hasReachedSubscriptionQuotaLimit({
@@ -44,23 +44,23 @@ function Footer({ roleType, isCreating, onClickCreate }: Props) {
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
+            planName: <SkuName skuId={currentSku.id} />,
           }}
         >
           {/* User roles limit paywall */}
           {hasRoleReachedLimit &&
             roleType === RoleType.User &&
-            t('upsell.paywall.roles', { count: currentPlan.quota.rolesLimit ?? 0 })}
+            t('upsell.paywall.roles', { count: currentSubscriptionQuota.userRolesLimit ?? 0 })}
           {hasRoleReachedLimit &&
             roleType === RoleType.MachineToMachine &&
             t('upsell.paywall.machine_to_machine_roles', {
-              count: currentPlan.quota.machineToMachineRolesLimit ?? 0,
+              count: currentSubscriptionQuota.machineToMachineRolesLimit ?? 0,
             })}
           {/* Role scopes limit paywall */}
           {!hasRoleReachedLimit &&
             hasScopesPerRoleSurpassedLimit &&
             t('upsell.paywall.scopes_per_role', {
-              count: currentPlan.quota.scopesPerRoleLimit ?? 0,
+              count: currentSubscriptionQuota.scopesPerRoleLimit ?? 0,
             })}
         </Trans>
       </QuotaGuardFooter>
