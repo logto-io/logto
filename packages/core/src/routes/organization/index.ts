@@ -4,10 +4,7 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import {
-  newKoaQuotaGuard,
-  koaReportSubscriptionUpdates,
-} from '#src/middleware/koa-quota-guard.js';
+import { newKoaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 

@@ -14,9 +14,8 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
 
-import styles from './FeaturedSkuContent/index.module.scss';
-
 import FeaturedSkuContent from './FeaturedSkuContent';
+import styles from './FeaturedSkuContent/index.module.scss';
 
 type Props = {
   readonly sku: LogtoSkuResponse;

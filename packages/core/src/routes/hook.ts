@@ -17,10 +17,7 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import {
-  koaReportSubscriptionUpdates,
-  newKoaQuotaGuard,
-} from '#src/middleware/koa-quota-guard.js';
+import { koaReportSubscriptionUpdates, newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { type AllowedKeyPrefix } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
 

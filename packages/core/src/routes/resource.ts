@@ -6,10 +6,7 @@ import { boolean, object, string } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import {
-  newKoaQuotaGuard,
-  koaReportSubscriptionUpdates,
-} from '#src/middleware/koa-quota-guard.js';
+import { newKoaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { attachScopesToResources } from '#src/utils/resource.js';
 

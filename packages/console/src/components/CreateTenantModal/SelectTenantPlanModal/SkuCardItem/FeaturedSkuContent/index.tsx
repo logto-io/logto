@@ -4,7 +4,6 @@ import Failed from '@/assets/icons/failed.svg?react';
 import Success from '@/assets/icons/success.svg?react';
 
 import styles from './index.module.scss';
-
 import useFeaturedSkuContent from './use-featured-sku-content';
 
 type Props = {

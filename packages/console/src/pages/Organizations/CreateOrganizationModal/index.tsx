@@ -8,7 +8,7 @@ import ReactModal from 'react-modal';
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { organizationAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -33,19 +33,14 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentPlan,
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const {
     data: { organizationUpsellNoticeAcknowledged },
     update,
   } = useUserPreferences();
-  const isOrganizationsDisabled =
-    isCloud &&
-    !(isDevFeaturesEnabled
-      ? currentSubscriptionQuota.organizationsEnabled
-      : currentPlan.quota.organizationsEnabled);
+  const isOrganizationsDisabled = isCloud && !currentSubscriptionQuota.organizationsEnabled;
 
   const {
     reset,
@@ -83,12 +78,12 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
       <ModalLayout
         title="organizations.create_organization"
         paywall={conditional(
-          isDevFeaturesEnabled && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
+          Boolean(isAddOnAvailable) && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
-        hasAddOnTag={isDevFeaturesEnabled}
+        hasAddOnTag={Boolean(isAddOnAvailable)}
         footer={
           cond(
-            isDevFeaturesEnabled &&
+            Boolean(isAddOnAvailable) &&
               planId === ReservedPlanId.Pro &&
               !organizationUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter

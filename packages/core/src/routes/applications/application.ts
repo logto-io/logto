@@ -1,5 +1,5 @@
 // TODO: @darcyYe refactor this file later to remove disable max line comment
-/* eslint-disable max-lines */
+
 import type { Role } from '@logto/schemas';
 import {
   Applications,
@@ -13,7 +13,6 @@ import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -148,15 +147,14 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       response: Applications.guard,
       status: [200, 400, 422, 500],
     }),
-    // eslint-disable-next-line complexity
+
     async (ctx, next) => {
       const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
 
       await Promise.all([
         rest.type === ApplicationType.MachineToMachine &&
-        quota.guardTenantUsageByKey('machineToMachineLimit'),
-        rest.isThirdParty &&
-        quota.guardTenantUsageByKey('thirdPartyApplicationsLimit'),
+          quota.guardTenantUsageByKey('machineToMachineLimit'),
+        rest.isThirdParty && quota.guardTenantUsageByKey('thirdPartyApplicationsLimit'),
         quota.guardTenantUsageByKey('applicationsLimit'),
       ]);
 
@@ -361,4 +359,3 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
   applicationCustomDataRoutes(router, tenant);
 }
-/* eslint-enable max-lines */

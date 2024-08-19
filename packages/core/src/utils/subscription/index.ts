@@ -2,12 +2,9 @@ import { trySafe } from '@silverhand/essentials';
 
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 
-import assertThat from '../assert-that.js';
-
 import {
   type SubscriptionQuota,
   type SubscriptionUsage,
-  type SubscriptionPlan,
   type Subscription,
   type ReportSubscriptionUpdatesUsageKey,
   allReportSubscriptionUpdatesUsageKeys,

@@ -29,6 +29,11 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
 ) {
   router.post(
     '/sign-in-exp/default/custom-ui-assets',
+<<<<<<< HEAD
+=======
+    // Manually add this to avoid the case that the dev feature guard is removed but the quota guard is not being updated accordingly.
+
+>>>>>>> d55d69472 (fix: lint)
     newKoaQuotaGuard({ key: 'bringYourUiEnabled', quota }),
     koaGuard({
       files: object({

@@ -10,10 +10,7 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import {
-  koaReportSubscriptionUpdates,
-  newKoaQuotaGuard,
-} from '#src/middleware/koa-quota-guard.js';
+import { koaReportSubscriptionUpdates, newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { ssoConnectorCreateGuard, ssoConnectorPatchGuard } from '#src/routes/sso-connector/type.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { isSupportedSsoConnector, isSupportedSsoProvider } from '#src/sso/utils.js';
