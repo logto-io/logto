@@ -126,9 +126,7 @@ function CreateForm({
             watch('type') === ApplicationType.MachineToMachine &&
             ReservedPlanId.Pro
         )}
-        hasAddOnTag={
-          isAddOnAvailable && watch('type') === ApplicationType.MachineToMachine
-        }
+        hasAddOnTag={isAddOnAvailable && watch('type') === ApplicationType.MachineToMachine}
         size={defaultCreateType ? 'medium' : 'large'}
         footer={
           <Footer

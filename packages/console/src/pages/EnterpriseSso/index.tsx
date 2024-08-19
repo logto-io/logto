@@ -36,15 +36,16 @@ function EnterpriseSso() {
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isDevTenant } = useContext(TenantsContext);
-  const { currentSubscription:{ isAddOnAvailable }, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const {
+    currentSubscription: { isAddOnAvailable },
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
 
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
 
-  const isSsoEnabled =
-    !isCloud ||
-    (currentSubscriptionQuota.enterpriseSsoLimit !== 0);
+  const isSsoEnabled = !isCloud || currentSubscriptionQuota.enterpriseSsoLimit !== 0;
 
   const url = buildUrl('api/sso-connectors', {
     page: String(page),

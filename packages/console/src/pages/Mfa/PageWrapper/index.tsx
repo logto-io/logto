@@ -20,8 +20,7 @@ function PageWrapper({ children }: Props) {
     currentSubscription: { isAddOnAvailable },
     currentSubscriptionQuota: { mfaEnabled },
   } = useContext(SubscriptionDataContext);
-  const isMfaEnabled =
-    !isCloud || mfaEnabled;
+  const isMfaEnabled = !isCloud || mfaEnabled;
 
   return (
     <div className={styles.container}>
