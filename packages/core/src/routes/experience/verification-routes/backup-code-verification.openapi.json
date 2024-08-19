@@ -2,7 +2,6 @@
   "paths": {
     "/api/experience/verification/backup-code/generate": {
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Generate backup codes",
         "description": "Generate backup codes for the current user. A new BackupCode verification record will be created in the current interaction.",
         "responses": {
@@ -31,7 +30,6 @@
     },
     "/api/experience/verification/backup-code/verify": {
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Verify backup code",
         "description": "Verify the provided backup code against the user's backup codes. A new BackupCode verification record will be created and marked as verified if the code is correct.",
         "requestBody": {

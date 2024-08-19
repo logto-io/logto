@@ -2,7 +2,6 @@
   "paths": {
     "/api/experience/verification/social/{connectorId}/authorization-uri": {
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Get social authorization URI",
         "description": "Create a new SocialVerification record and return the authorization URI for the given connector.",
         "requestBody": {
@@ -50,7 +49,6 @@
     },
     "/api/experience/verification/social/{connectorId}/verify": {
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Verify social authorization response",
         "description": "Verify the social authorization response data and get the user's profile data from the social connector.",
         "requestBody": {

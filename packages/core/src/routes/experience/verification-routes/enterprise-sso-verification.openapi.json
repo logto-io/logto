@@ -2,7 +2,6 @@
   "paths": {
     "/api/experience/verification/sso/{connectorId}/authorization-uri": {
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Get SSO authorization URI",
         "description": "Create a new EnterpriseSSO verification record and return the authorization URI for the given connector.",
         "requestBody": {
@@ -50,7 +49,6 @@
     },
     "/api/experience/verification/sso/{connectorId}/verify": {
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Verify SSO authorization response",
         "description": "Verify the SSO authorization response data and get the user's profile data from the SSO connector.",
         "requestBody": {
