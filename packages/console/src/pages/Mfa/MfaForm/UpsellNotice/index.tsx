@@ -2,6 +2,7 @@ import { ReservedPlanId } from '@logto/schemas';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { mfaAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -36,7 +37,7 @@ function UpsellNotice({ className }: Props) {
     >
       <Trans
         components={{
-          a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+          a: <TextLink to={addOnPricingExplanationLink} />,
         }}
       >
         {t('upsell.add_on.mfa_inline_notification', {

@@ -6,6 +6,7 @@ import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { resourceAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -75,7 +76,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
         <Trans
           components={{
             span: <span className={styles.strong} />,
-            a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+            a: <TextLink to={addOnPricingExplanationLink} />,
           }}
         >
           {t('upsell.add_on.footer.api_resource', {

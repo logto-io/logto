@@ -9,6 +9,7 @@ import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { organizationAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -101,7 +102,7 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
                   <Trans
                     components={{
                       span: <span className={styles.strong} />,
-                      a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                      a: <TextLink to={addOnPricingExplanationLink} />,
                     }}
                   >
                     {t('upsell.add_on.footer.organization', {

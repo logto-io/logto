@@ -2,6 +2,7 @@ import { ReservedPlanId } from '@logto/schemas';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { proPlanBasePrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -36,7 +37,7 @@ function AddOnUsageChangesNotification({ className }: Props) {
     >
       <Trans
         components={{
-          a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+          a: <TextLink to={addOnPricingExplanationLink} />,
         }}
       >
         {t('subscription.usage.pricing.add_on_changes_in_current_cycle_notice', {

@@ -18,6 +18,7 @@ import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { enterpriseSsoAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -173,7 +174,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
                   <Trans
                     components={{
                       span: <span className={styles.strong} />,
-                      a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                      a: <TextLink to={addOnPricingExplanationLink} />,
                     }}
                   >
                     {t('upsell.add_on.footer.enterprise_sso', {

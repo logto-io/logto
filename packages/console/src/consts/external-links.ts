@@ -36,3 +36,6 @@ export const organizationJit = Object.freeze({
     '/docs/recipes/organizations/just-in-time-provisioning/#enterprise-sso-provisioning',
   emailDomain: '/docs/recipes/organizations/just-in-time-provisioning/#email-domain-provisioning',
 });
+
+export const addOnPricingExplanationLink =
+  'https://blog.logto.io/pricing-add-on-a-simple-explanation/';

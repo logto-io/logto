@@ -8,6 +8,7 @@ import ReactModal from 'react-modal';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { tenantMembersAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -148,7 +149,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
                   <Trans
                     components={{
                       span: <span className={styles.strong} />,
-                      a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                      a: <TextLink to={addOnPricingExplanationLink} />,
                     }}
                   >
                     {t('upsell.add_on.footer.tenant_members', {

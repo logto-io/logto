@@ -14,7 +14,7 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
 
-import styles from '../PlanCardItem/index.module.scss';
+import styles from './FeaturedSkuContent/index.module.scss';
 
 import FeaturedSkuContent from './FeaturedSkuContent';
 
