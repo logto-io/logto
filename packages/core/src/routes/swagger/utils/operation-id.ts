@@ -27,8 +27,6 @@ type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
   // Subject tokens
   'post /subject-tokens': 'CreateSubjectToken',
-  // Custom UI assets
-  'post /sign-in-exp/default/custom-ui-assets': 'UploadCustomUiAssets',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
@@ -83,6 +81,8 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Well-known
   'get /.well-known/phrases': 'GetSignInExperiencePhrases',
   'get /.well-known/sign-in-exp': 'GetSignInExperienceConfig',
+  // Custom UI assets
+  'post /sign-in-exp/default/custom-ui-assets': 'UploadCustomUiAssets',
   ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 
