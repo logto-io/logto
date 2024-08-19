@@ -8,7 +8,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -33,11 +33,9 @@ type Props = {
 };
 
 function MfaForm({ data, onMfaUpdated }: Props) {
-  const { currentPlan, currentSubscriptionQuota, mutateSubscriptionQuotaAndUsages } =
+  const { currentSubscriptionQuota, mutateSubscriptionQuotaAndUsages } =
     useContext(SubscriptionDataContext);
-  const isMfaDisabled =
-    isCloud &&
-    !(isDevFeaturesEnabled ? currentSubscriptionQuota.mfaEnabled : currentPlan.quota.mfaEnabled);
+  const isMfaDisabled = isCloud && !currentSubscriptionQuota.mfaEnabled;
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();

@@ -3,7 +3,7 @@ import { cond } from '@silverhand/essentials';
 import { useContext, type ReactNode } from 'react';
 
 import PageMeta from '@/components/PageMeta';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
@@ -17,18 +17,17 @@ type Props = {
 function PageWrapper({ children }: Props) {
   const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentPlan,
+    currentSubscription: { isAddOnAvailable },
     currentSubscriptionQuota: { mfaEnabled },
   } = useContext(SubscriptionDataContext);
-  const isMfaEnabled =
-    !isCloud || (isDevFeaturesEnabled ? mfaEnabled : currentPlan.quota.mfaEnabled);
+  const isMfaEnabled = !isCloud || mfaEnabled;
 
   return (
     <div className={styles.container}>
       <PageMeta titleKey="mfa.title" />
       <CardTitle
         paywall={cond((!isMfaEnabled || isDevTenant) && ReservedPlanId.Pro)}
-        hasAddOnTag={isDevFeaturesEnabled}
+        hasAddOnTag={isAddOnAvailable}
         title="mfa.title"
         subtitle="mfa.description"
         className={styles.cardTitle}

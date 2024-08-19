@@ -8,7 +8,6 @@ import ReactModal from 'react-modal';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -17,7 +16,7 @@ import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
-import { hasReachedQuotaLimit, hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
+import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 
 type Props = {
   readonly resourceId: string;
@@ -59,17 +58,11 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
     })
   );
 
-  const isScopesPerResourceReachLimit = isDevFeaturesEnabled
-    ? hasReachedSubscriptionQuotaLimit({
-        quotaKey: 'scopesPerResourceLimit',
-        usage: currentSubscriptionResourceScopeUsage[resourceId] ?? 0,
-        quota: currentSubscriptionQuota,
-      })
-    : hasReachedQuotaLimit({
-        quotaKey: 'scopesPerResourceLimit',
-        plan: currentPlan,
-        usage: totalResourceCount,
-      });
+  const isScopesPerResourceReachLimit = hasReachedSubscriptionQuotaLimit({
+    quotaKey: 'scopesPerResourceLimit',
+    usage: currentSubscriptionResourceScopeUsage[resourceId] ?? 0,
+    quota: currentSubscriptionQuota,
+  });
 
   return (
     <ReactModal
@@ -98,10 +91,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
                 }}
               >
                 {t('upsell.paywall.scopes_per_resource', {
-                  count:
-                    (isDevFeaturesEnabled
-                      ? currentSubscriptionQuota.scopesPerResourceLimit
-                      : currentPlan.quota.scopesPerResourceLimit) ?? 0,
+                  count: currentSubscriptionQuota.scopesPerResourceLimit ?? 0,
                 })}
               </Trans>
             </QuotaGuardFooter>

@@ -13,7 +13,7 @@ import useSWRImmutable from 'swr/immutable';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -36,8 +36,6 @@ type Props = {
   readonly onCreateSuccess?: (createdApp: Application) => void;
 };
 
-// TODO: refactor this component to reduce complexity
-// eslint-disable-next-line complexity
 function ProtectedAppForm({
   className,
   buttonAlignment = 'right',
@@ -49,7 +47,7 @@ function ProtectedAppForm({
 }: Props) {
   const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(isCloud && 'api/systems/application');
   const {
-    currentPlan: { name: planName, quota },
+    currentPlan: { name: planName },
     currentSku,
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
@@ -212,10 +210,7 @@ function ProtectedAppForm({
             }}
           >
             {t('upsell.paywall.applications', {
-              count:
-                (isDevFeaturesEnabled
-                  ? currentSubscriptionQuota.applicationsLimit
-                  : quota.applicationsLimit) ?? 0,
+              count: currentSubscriptionQuota.applicationsLimit ?? 0,
             })}
           </Trans>
         </QuotaGuardFooter>

@@ -1,5 +1,3 @@
-import { ReservedPlanId } from '@logto/schemas';
-import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -7,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { GlobalRoute, TenantsContext } from '@/contexts/TenantsProvider';
@@ -101,37 +98,19 @@ const useSubscribe = () => {
       },
     });
 
-    // Should not use hard-coded plan update here, need to update the tenant's subscription data with response from corresponding API.
-    if (isDevFeaturesEnabled) {
-      const subscription = await cloudApi.get('/api/tenants/:tenantId/subscription', {
-        params: {
-          tenantId,
-        },
-      });
-
-      mutateSubscriptionQuotaAndUsages();
-      onCurrentSubscriptionUpdated(subscription);
-      const { id, ...rest } = subscription;
-
-      updateTenant(tenantId, {
-        planId: rest.planId,
-        subscription: rest,
-      });
-      return;
-    }
-
-    /**
-     * Note: need to update the tenant's subscription cache data,
-     * since the cancel subscription flow will not redirect to the stripe payment page.
-     */
-    updateTenant(tenantId, {
-      planId: ReservedPlanId.Free,
-      subscription: {
-        status: 'active',
-        planId: ReservedPlanId.Free,
-        currentPeriodStart: dayjs().toDate(),
-        currentPeriodEnd: dayjs().add(1, 'month').toDate(),
+    const subscription = await cloudApi.get('/api/tenants/:tenantId/subscription', {
+      params: {
+        tenantId,
       },
+    });
+
+    mutateSubscriptionQuotaAndUsages();
+    onCurrentSubscriptionUpdated(subscription);
+    const { id, ...rest } = subscription;
+
+    updateTenant(tenantId, {
+      planId: rest.planId,
+      subscription: rest,
     });
   };
 

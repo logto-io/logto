@@ -10,7 +10,6 @@ import Modal from 'react-modal';
 import { useSWRConfig } from 'swr';
 
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -57,7 +56,7 @@ function CreateForm({
     defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
   });
   const {
-    currentSubscription: { planId },
+    currentSubscription: { isAddOnAvailable },
   } = useContext(SubscriptionDataContext);
   const { user } = useCurrentUser();
   const { mutate: mutateGlobal } = useSWRConfig();
@@ -123,12 +122,11 @@ function CreateForm({
         title="applications.create"
         subtitle={subtitleElement}
         paywall={conditional(
-          isDevFeaturesEnabled &&
+          isAddOnAvailable &&
             watch('type') === ApplicationType.MachineToMachine &&
-            planId === ReservedPlanId.Pro &&
             ReservedPlanId.Pro
         )}
-        hasAddOnTag={isDevFeaturesEnabled && watch('type') === ApplicationType.MachineToMachine}
+        hasAddOnTag={isAddOnAvailable && watch('type') === ApplicationType.MachineToMachine}
         size={defaultCreateType ? 'medium' : 'large'}
         footer={
           <Footer

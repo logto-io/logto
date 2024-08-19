@@ -4,7 +4,7 @@ import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
@@ -22,12 +22,10 @@ function CustomizeJwt() {
 
   const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentPlan,
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota: { customJwtEnabled },
   } = useContext(SubscriptionDataContext);
-  const isCustomJwtEnabled =
-    !isCloud || (isDevFeaturesEnabled ? customJwtEnabled : currentPlan.quota.customJwtEnabled);
+  const isCustomJwtEnabled = !isCloud || customJwtEnabled;
 
   const showPaywall = planId === ReservedPlanId.Free;
 
@@ -48,9 +46,7 @@ function CustomizeJwt() {
         subtitle="jwt_claims.description"
         className={styles.header}
       />
-      {isDevFeaturesEnabled && (
-        <UpsellNotice isVisible={showPaywall} className={styles.inlineNotice} />
-      )}
+      {isAddOnAvailable && <UpsellNotice isVisible={showPaywall} className={styles.inlineNotice} />}
       <div className={styles.container}>
         {isLoading && (
           <>

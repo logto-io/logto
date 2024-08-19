@@ -11,7 +11,6 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppLoading from '@/components/AppLoading';
 import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils';
 import PlanName from '@/components/PlanName';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -84,43 +83,31 @@ function CheckoutSuccessCallback() {
   const isCheckoutSuccessful =
     checkoutTenantId &&
     stripeCheckoutSession.status === 'complete' &&
-    (isDevFeaturesEnabled
-      ? !isLoadingLogtoSkus && checkoutSkuId === tenantSubscription?.planId
-      : !isLoadingPlans && checkoutPlanId === tenantSubscription?.planId);
+    !isLoadingLogtoSkus &&
+    checkoutSkuId === tenantSubscription?.planId;
 
   useEffect(() => {
     if (isCheckoutSuccessful) {
       clearLocalCheckoutSession();
 
-      if (isDevFeaturesEnabled) {
-        const checkoutSku = logtoSkus?.find((sku) => sku.id === checkoutPlanId);
-        if (checkoutSku) {
-          toast.success(
-            <Trans
-              components={{
-                name: (
-                  <PlanName
-                    skuId={checkoutSku.id}
-                    // Generally `checkoutPlanId` and a properly setup of SKU `name` should not be null, we still need to handle the edge case to make the type inference happy.
-                    // Also `name` will be deprecated in the future once the new pricing model is ready.
-                    name={checkoutPlanId ?? checkoutSku.name ?? checkoutSku.id}
-                  />
-                ),
-              }}
-            >
-              {t(isDowngrade ? 'downgrade_success' : 'upgrade_success')}
-            </Trans>
-          );
-        }
-      } else {
-        const checkoutPlan = subscriptionPlans?.find((plan) => plan.id === checkoutPlanId);
-        if (checkoutPlan) {
-          toast.success(
-            <Trans components={{ name: <PlanName name={checkoutPlan.name} /> }}>
-              {t(isDowngrade ? 'downgrade_success' : 'upgrade_success')}
-            </Trans>
-          );
-        }
+      const checkoutSku = logtoSkus?.find((sku) => sku.id === checkoutPlanId);
+      if (checkoutSku) {
+        toast.success(
+          <Trans
+            components={{
+              name: (
+                <PlanName
+                  skuId={checkoutSku.id}
+                  // Generally `checkoutPlanId` and a properly setup of SKU `name` should not be null, we still need to handle the edge case to make the type inference happy.
+                  // Also `name` will be deprecated in the future once the new pricing model is ready.
+                  name={checkoutPlanId ?? checkoutSku.name ?? checkoutSku.id}
+                />
+              ),
+            }}
+          >
+            {t(isDowngrade ? 'downgrade_success' : 'upgrade_success')}
+          </Trans>
+        );
       }
 
       onCurrentSubscriptionUpdated(tenantSubscription);

@@ -1,24 +1,17 @@
-import {
-  ConnectorType,
-  type ConnectorResponse,
-  type ConnectorFactoryResponse,
-  ReservedPlanId,
-} from '@logto/schemas';
-import { useContext, useMemo } from 'react';
+import { type ConnectorFactoryResponse } from '@logto/schemas';
+import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import { type ConnectorGroup } from '@/types/connector';
-import { hasReachedQuotaLimit, hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
+import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 
 type Props = {
   readonly isCreatingSocialConnector: boolean;
-  readonly existingConnectors: ConnectorResponse[];
   readonly selectedConnectorGroup?: ConnectorGroup<ConnectorFactoryResponse>;
   readonly isCreateButtonDisabled: boolean;
   readonly onClickCreateButton: () => void;
@@ -26,7 +19,6 @@ type Props = {
 
 function Footer({
   isCreatingSocialConnector,
-  existingConnectors,
   selectedConnectorGroup,
   isCreateButtonDisabled,
   onClickCreateButton,
@@ -35,75 +27,14 @@ function Footer({
   const { currentPlan, currentSku, currentSubscriptionUsage, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
 
-  const standardConnectorCount = useMemo(
-    () =>
-      isDevFeaturesEnabled
-        ? // No more standard connector limit in new pricing model.
-          0
-        : existingConnectors.filter(
-            ({ isStandard, isDemo, type }) => isStandard && !isDemo && type === ConnectorType.Social
-          ).length,
-    [existingConnectors]
-  );
-
-  const socialConnectorCount = useMemo(
-    () =>
-      isDevFeaturesEnabled
-        ? currentSubscriptionUsage.socialConnectorsLimit
-        : existingConnectors.filter(
-            ({ isStandard, isDemo, type }) =>
-              !isStandard && !isDemo && type === ConnectorType.Social
-          ).length,
-    [existingConnectors, currentSubscriptionUsage.socialConnectorsLimit]
-  );
-
-  const isStandardConnectorsReachLimit = isDevFeaturesEnabled
-    ? // No more standard connector limit in new pricing model.
-      false
-    : hasReachedQuotaLimit({
-        quotaKey: 'standardConnectorsLimit',
-        plan: currentPlan,
-        usage: standardConnectorCount,
-      });
-
-  const isSocialConnectorsReachLimit = isDevFeaturesEnabled
-    ? hasReachedSubscriptionQuotaLimit({
-        quotaKey: 'socialConnectorsLimit',
-        usage: currentSubscriptionUsage.socialConnectorsLimit,
-        quota: currentSubscriptionQuota,
-      })
-    : hasReachedQuotaLimit({
-        quotaKey: 'socialConnectorsLimit',
-        plan: currentPlan,
-        usage: socialConnectorCount,
-      });
+  const isSocialConnectorsReachLimit = hasReachedSubscriptionQuotaLimit({
+    quotaKey: 'socialConnectorsLimit',
+    usage: currentSubscriptionUsage.socialConnectorsLimit,
+    quota: currentSubscriptionQuota,
+  });
 
   if (isCreatingSocialConnector && selectedConnectorGroup) {
-    const { id: planId, name: planName, quota } = currentPlan;
-
-    if (isStandardConnectorsReachLimit && selectedConnectorGroup.isStandard) {
-      return (
-        <QuotaGuardFooter>
-          <Trans
-            components={{
-              a: <ContactUsPhraseLink />,
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
-            }}
-          >
-            {quota.standardConnectorsLimit === 0
-              ? t('standard_connectors_feature')
-              : t(
-                  (isDevFeaturesEnabled ? currentSku.id : planId) === ReservedPlanId.Pro
-                    ? 'standard_connectors_pro'
-                    : 'standard_connectors',
-                  {
-                    count: quota.standardConnectorsLimit ?? 0,
-                  }
-                )}
-          </Trans>
-        </QuotaGuardFooter>
-      );
-    }
+    const { name: planName } = currentPlan;
 
     if (isSocialConnectorsReachLimit && !selectedConnectorGroup.isStandard) {
       return (
@@ -115,10 +46,7 @@ function Footer({
             }}
           >
             {t('social_connectors', {
-              count:
-                (isDevFeaturesEnabled
-                  ? currentSubscriptionQuota.socialConnectorsLimit
-                  : quota.socialConnectorsLimit) ?? 0,
+              count: currentSubscriptionQuota.socialConnectorsLimit ?? 0,
             })}
           </Trans>
         </QuotaGuardFooter>

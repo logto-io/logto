@@ -6,7 +6,7 @@ import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { machineToMachineAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -24,7 +24,11 @@ type Props = {
 };
 
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
-  const { currentPlan, currentSku } = useContext(SubscriptionDataContext);
+  const {
+    currentPlan,
+    currentSku,
+    currentSubscription: { isAddOnAvailable },
+  } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
   const {
     hasAppsReachedLimit,
@@ -41,7 +45,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
 
     if (
       selectedType === ApplicationType.MachineToMachine &&
-      isDevFeaturesEnabled &&
+      isAddOnAvailable &&
       hasMachineToMachineAppsReachedLimit &&
       planId === ReservedPlanId.Pro &&
       !m2mUpsellNoticeAcknowledged
@@ -58,7 +62,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
           <Trans
             components={{
               span: <span className={styles.strong} />,
-              a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+              a: <TextLink to={addOnPricingExplanationLink} />,
             }}
           >
             {t('add_on.footer.machine_to_machine_app', {
@@ -73,7 +77,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
       selectedType === ApplicationType.MachineToMachine &&
       hasMachineToMachineAppsReachedLimit &&
       // For paid plan (pro plan), we don't guard the m2m app creation since it's an add-on feature.
-      (isDevFeaturesEnabled ? currentSku.id : planId) === ReservedPlanId.Free
+      currentSku.id === ReservedPlanId.Free
     ) {
       return (
         <QuotaGuardFooter>

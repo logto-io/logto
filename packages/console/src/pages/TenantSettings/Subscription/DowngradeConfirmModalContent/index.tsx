@@ -78,15 +78,10 @@ function DowngradeConfirmModalContent({ currentPlan, targetPlan, currentSku, tar
         </Trans>
       </div>
       <div className={styles.content}>
-        <PlanQuotaDiffCard
-          planName={currentPlanName}
-          quotaDiff={currentQuotaDiff}
-          skuQuotaDiff={currentSkuQuotaDiff}
-        />
+        <PlanQuotaDiffCard planName={currentPlanName} skuQuotaDiff={currentSkuQuotaDiff} />
         <PlanQuotaDiffCard
           isDowngradeTargetPlan
           planName={targetPlanName}
-          quotaDiff={targetQuotaDiff}
           skuQuotaDiff={targetSkuQuotaDiff}
         />
       </div>

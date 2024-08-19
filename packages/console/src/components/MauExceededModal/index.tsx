@@ -84,7 +84,7 @@ function MauExceededModal() {
           </Trans>
         </InlineNotification>
         <FormField title="subscription.plan_usage">
-          <PlanUsage currentSubscription={currentSubscription} currentPlan={currentPlan} />
+          <PlanUsage />
         </FormField>
       </ModalLayout>
     </ReactModal>

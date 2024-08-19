@@ -40,7 +40,7 @@ export default class Libraries {
   roleScopes = createRoleScopeLibrary(this.queries);
   domains = createDomainLibrary(this.queries);
   protectedApps = createProtectedAppLibrary(this.queries);
-  quota = createQuotaLibrary(this.queries, this.cloudConnection, this.connectors);
+  quota = createQuotaLibrary(this.cloudConnection);
   ssoConnectors = createSsoConnectorLibrary(this.queries);
   signInExperiences = createSignInExperienceLibrary(
     this.queries,

@@ -17,7 +17,8 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { enterpriseSsoAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -49,8 +50,7 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentPlan,
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const {
@@ -61,10 +61,8 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
 
   const isSsoEnabled =
     !isCloud ||
-    (isDevFeaturesEnabled
-      ? currentSubscriptionQuota.enterpriseSsoLimit === null ||
-        currentSubscriptionQuota.enterpriseSsoLimit > 0
-      : currentPlan.quota.ssoEnabled);
+    currentSubscriptionQuota.enterpriseSsoLimit === null ||
+    currentSubscriptionQuota.enterpriseSsoLimit > 0;
 
   const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
     'api/sso-connector-providers'
@@ -155,11 +153,11 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
       <ModalLayout
         title="enterprise_sso.create_modal.title"
         paywall={conditional(
-          isDevFeaturesEnabled && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
+          isAddOnAvailable && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
         footer={
           conditional(
-            isDevFeaturesEnabled &&
+            isAddOnAvailable &&
               planId === ReservedPlanId.Pro &&
               !enterpriseSsoUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter
@@ -173,7 +171,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
                   <Trans
                     components={{
                       span: <span className={styles.strong} />,
-                      a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                      a: <TextLink to={addOnPricingExplanationLink} />,
                     }}
                   >
                     {t('upsell.add_on.footer.enterprise_sso', {

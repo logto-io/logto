@@ -2,12 +2,9 @@ import { trySafe } from '@silverhand/essentials';
 
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 
-import assertThat from '../assert-that.js';
-
 import {
   type SubscriptionQuota,
   type SubscriptionUsage,
-  type SubscriptionPlan,
   type Subscription,
   type ReportSubscriptionUpdatesUsageKey,
   allReportSubscriptionUpdatesUsageKeys,
@@ -22,37 +19,23 @@ export const getTenantSubscription = async (
   return subscription;
 };
 
-export const getTenantSubscriptionPlan = async (
-  cloudConnection: CloudConnectionLibrary
-): Promise<SubscriptionPlan> => {
-  const client = await cloudConnection.getClient();
-  const [subscription, plans] = await Promise.all([
-    getTenantSubscription(cloudConnection),
-    client.get('/api/subscription-plans'),
-  ]);
-  const plan = plans.find(({ id }) => id === subscription.planId);
-
-  assertThat(plan, 'subscription.get_plan_failed');
-
-  return plan;
-};
-
 export const getTenantSubscriptionData = async (
   cloudConnection: CloudConnectionLibrary
 ): Promise<{
   planId: string;
+  isAddOnAvailable?: boolean;
   quota: SubscriptionQuota;
   usage: SubscriptionUsage;
   resources: Record<string, number>;
   roles: Record<string, number>;
 }> => {
   const client = await cloudConnection.getClient();
-  const [{ planId }, { quota, usage, resources, roles }] = await Promise.all([
+  const [{ planId, isAddOnAvailable }, { quota, usage, resources, roles }] = await Promise.all([
     client.get('/api/tenants/my/subscription'),
     client.get('/api/tenants/my/subscription-usage'),
   ]);
 
-  return { planId, quota, usage, resources, roles };
+  return { planId, isAddOnAvailable, quota, usage, resources, roles };
 };
 
 export const reportSubscriptionUpdates = async (

@@ -3,7 +3,7 @@ import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import PageMeta from '@/components/PageMeta';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { pickupFeaturedLogtoSkus, pickupFeaturedPlans } from '@/utils/subscription';
@@ -19,7 +19,6 @@ function Subscription() {
   const cloudApi = useCloudApi();
   const {
     subscriptionPlans,
-    currentPlan,
     logtoSkus,
     currentSku,
     currentSubscription,
@@ -31,9 +30,7 @@ function Subscription() {
   const reservedSkus = pickupFeaturedLogtoSkus(logtoSkus);
 
   const { data: periodicUsage, isLoading } = useSWR(
-    isCloud &&
-      isDevFeaturesEnabled &&
-      `/api/tenants/${currentTenantId}/subscription/periodic-usage`,
+    isCloud && `/api/tenants/${currentTenantId}/subscription/periodic-usage`,
     async () =>
       cloudApi.get(`/api/tenants/:tenantId/subscription/periodic-usage`, {
         params: { tenantId: currentTenantId },
@@ -41,7 +38,7 @@ function Subscription() {
   );
 
   useEffect(() => {
-    if (isCloud && isDevFeaturesEnabled) {
+    if (isCloud) {
       onCurrentSubscriptionUpdated();
     }
   }, [onCurrentSubscriptionUpdated]);
@@ -53,11 +50,7 @@ function Subscription() {
   return (
     <div className={styles.container}>
       <PageMeta titleKey={['tenants.tabs.subscription', 'tenants.title']} />
-      <CurrentPlan
-        subscription={currentSubscription}
-        subscriptionPlan={currentPlan}
-        periodicUsage={periodicUsage}
-      />
+      <CurrentPlan periodicUsage={periodicUsage} />
       <PlanComparisonTable />
       <SwitchPlanActionBar
         currentSubscriptionPlanId={currentSubscription.planId}

@@ -155,7 +155,6 @@ function Webhooks() {
         totalCount !== undefined && (
           <CreateFormModal
             isOpen={isCreating}
-            totalWebhookCount={totalCount}
             onClose={(createdHook?: Hook) => {
               if (createdHook) {
                 void mutate();

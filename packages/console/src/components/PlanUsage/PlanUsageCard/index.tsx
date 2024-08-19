@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Trans, useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg?react';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
 import Tag from '@/ds-components/Tag';
@@ -50,7 +51,7 @@ function PlanUsageCard({
             content={
               <Trans
                 components={{
-                  a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                  a: <TextLink to={addOnPricingExplanationLink} />,
                 }}
               >
                 {t(tooltipKey, {

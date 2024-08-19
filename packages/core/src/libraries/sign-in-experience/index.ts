@@ -19,7 +19,7 @@ import type { SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
-import { getTenantSubscription, getTenantSubscriptionPlan } from '#src/utils/subscription/index.js';
+import { getTenantSubscription } from '#src/utils/subscription/index.js';
 import { isKeyOfI18nPhrases } from '#src/utils/translation.js';
 
 import { type CloudConnectionLibrary } from '../cloud-connection.js';
@@ -113,13 +113,8 @@ export const createSignInExperienceLibrary = (
       return false;
     }
 
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      const subscription = await getTenantSubscription(cloudConnection);
-      return subscription.planId === ReservedPlanId.Development;
-    }
-
-    const plan = await getTenantSubscriptionPlan(cloudConnection);
-    return plan.id === developmentTenantPlanId;
+    const subscription = await getTenantSubscription(cloudConnection);
+    return subscription.planId === ReservedPlanId.Development;
   }, ['is-development-tenant']);
 
   /**
