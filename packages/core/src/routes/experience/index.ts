@@ -171,6 +171,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       log.append({
         interaction: ctx.experienceInteraction.toJson(),
+        userId: ctx.experienceInteraction.identifiedUserId,
       });
 
       ctx.status = 200;

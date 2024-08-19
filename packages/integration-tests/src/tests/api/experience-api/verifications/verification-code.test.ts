@@ -16,9 +16,8 @@ import {
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('Verification code verification APIs', () => {
+describe('Verification code verification APIs', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });

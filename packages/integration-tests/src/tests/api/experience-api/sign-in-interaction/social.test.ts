@@ -28,9 +28,9 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generateUsername } from '#src/utils.js';
+import { generateEmail, generateUsername } from '#src/utils.js';
 
-devFeatureTest.describe('social sign-in and sign-up', () => {
+describe('social sign-in and sign-up', () => {
   const connectorIdMap = new Map<string, string>();
   const socialUserId = generateStandardId();
   const email = generateEmail();

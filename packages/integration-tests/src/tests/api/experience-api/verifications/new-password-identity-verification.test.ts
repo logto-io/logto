@@ -4,9 +4,9 @@ import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, randomString } from '#src/utils.js';
+import { randomString } from '#src/utils.js';
 
-devFeatureTest.describe('password verifications', () => {
+describe('password verifications', () => {
   const username = 'test_' + randomString();
   const userApi = new UserApiTest();
 

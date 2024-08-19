@@ -17,7 +17,7 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
@@ -25,7 +25,7 @@ const identifiersTypeToUserProfile = Object.freeze({
   phone: 'primaryPhone',
 });
 
-devFeatureTest.describe('sign-in with password verification happy path', () => {
+describe('sign-in with password verification happy path', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await Promise.all([setEmailConnector(), setSmsConnector()]);

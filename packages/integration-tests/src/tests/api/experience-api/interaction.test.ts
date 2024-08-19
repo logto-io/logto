@@ -3,9 +3,8 @@ import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('PUT /experience API', () => {
+describe('PUT /experience API', () => {
   const userApi = new UserApiTest();
 
   afterAll(async () => {

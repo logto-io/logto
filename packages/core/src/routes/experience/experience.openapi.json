@@ -3,13 +3,11 @@
     {
       "name": "Experience",
       "description": "The Experience endpoints allow end-users to interact with Logto for identity verification and profile completion."
-    },
-    { "name": "Dev feature" }
+    }
   ],
   "paths": {
     "/api/experience": {
       "put": {
-        "tags": ["Dev feature"],
         "summary": "Init a new experience interaction",
         "description": "Init a new experience interaction with the given interaction type. Any existing experience interaction data will be cleared.",
         "responses": {
@@ -21,7 +19,6 @@
     },
     "/api/experience/interaction-event": {
       "put": {
-        "tags": ["Dev feature"],
         "summary": "Update current experience interaction event",
         "description": "Update the current experience interaction event to the given event type. This API is used to switch the interaction event between `SignIn` and `Register`, while keeping all the verification records data.",
         "requestBody": {
@@ -52,7 +49,6 @@
     },
     "/api/experience/identification": {
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Identify the user within the current experience interaction using the provided verification data",
         "description": "This API identifies the user based on the verificationId within the current experience interaction: <br/>- `SignIn` and `ForgotPassword` interactions: Verifies the user's identity using the provided `verificationId`. <br/>- `Register` interaction: Creates a new user account using the profile data from the current interaction. If a verificationId is provided, the profile data will first be updated with the verification record before creating the account. If not, the account is created directly from the stored profile data.",
         "requestBody": {
@@ -101,7 +97,6 @@
     },
     "/api/experience/submit": {
       "post": {
-        "tags": ["Dev feature"],
         "summary": "Submit experience interaction",
         "description": "Submit the current interaction. <br/>- Submit the verified user identity to the OIDC provider for further authentication (SignIn and Register). <br/>- Update the user's profile data if any (SignIn and Register). <br/>- Reset the password and clear all the interaction records (ForgotPassword).",
         "responses": {

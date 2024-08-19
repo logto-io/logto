@@ -65,6 +65,7 @@ export default function koaExperienceInteraction<
       if (ctx.experienceInteraction) {
         ctx.prependAllLogEntries({
           interaction: ctx.experienceInteraction.toJson(),
+          userId: ctx.experienceInteraction.identifiedUserId,
         });
       }
 

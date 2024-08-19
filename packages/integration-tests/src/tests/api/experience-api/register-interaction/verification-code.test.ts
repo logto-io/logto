@@ -15,7 +15,7 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
+import { generateEmail, generatePhone } from '#src/utils.js';
 
 const verificationIdentifierType: readonly [SignInIdentifier.Email, SignInIdentifier.Phone] =
   Object.freeze([SignInIdentifier.Email, SignInIdentifier.Phone]);
@@ -25,7 +25,7 @@ const identifiersTypeToUserProfile = Object.freeze({
   phone: 'primaryPhone',
 });
 
-devFeatureTest.describe('Register interaction with verification code happy path', () => {
+describe('Register interaction with verification code happy path', () => {
   beforeAll(async () => {
     await Promise.all([setEmailConnector(), setSmsConnector()]);
     await enableAllVerificationCodeSignInMethods({

@@ -54,10 +54,8 @@ const createRouters = (tenant: TenantContext) => {
   interactionRoutes(interactionRouter, tenant);
 
   const experienceRouter: AnonymousRouter = new Router();
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    experienceRouter.use(koaAuditLog(tenant.queries));
-    experienceApiRoutes(experienceRouter, tenant);
-  }
+  experienceRouter.use(koaAuditLog(tenant.queries));
+  experienceApiRoutes(experienceRouter, tenant);
 
   const managementRouter: ManagementApiRouter = new Router();
   managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));

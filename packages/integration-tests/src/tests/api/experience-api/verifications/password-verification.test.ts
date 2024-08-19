@@ -3,7 +3,6 @@ import { SignInIdentifier } from '@logto/schemas';
 import { deleteUser } from '#src/api/admin-user.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
@@ -11,7 +10,7 @@ const identifiersTypeToUserProfile = Object.freeze({
   phone: 'primaryPhone',
 });
 
-devFeatureTest.describe('password verifications', () => {
+describe('password verifications', () => {
   it.each(Object.values(SignInIdentifier))(
     'should verify with password successfully using %p',
     async (identifier) => {

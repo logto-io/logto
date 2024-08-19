@@ -16,9 +16,9 @@ import {
 } from '#src/helpers/experience/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail, randomString } from '#src/utils.js';
+import { generateEmail, randomString } from '#src/utils.js';
 
-devFeatureTest.describe('organization just-in-time provisioning', () => {
+describe('organization just-in-time provisioning', () => {
   const organizationApi = new OrganizationApiTest();
   const ssoConnectorApi = new SsoConnectorApi();
 
