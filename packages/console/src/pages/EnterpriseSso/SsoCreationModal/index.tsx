@@ -155,6 +155,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
         paywall={conditional(
           isAddOnAvailable && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
+        hasAddOnTag={isAddOnAvailable}
         footer={
           conditional(
             isAddOnAvailable &&
