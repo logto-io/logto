@@ -7,6 +7,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
+import { isImpersonationLog } from '@/components/AuditLogTable/components/EventName/utils';
 import DetailsPage from '@/components/DetailsPage';
 import PageMeta from '@/components/PageMeta';
 import UserName from '@/components/UserName';
@@ -87,9 +88,7 @@ function AuditLogDetails() {
             <div className={styles.content}>
               <div className={styles.eventName}>
                 {logEventTitle[data.key]}
-                {data.key === 'ExchangeTokenBy.TokenExchange' && (
-                  <Tag status="alert">Impersonation</Tag>
-                )}
+                {isImpersonationLog(data) && <Tag status="alert">Impersonation</Tag>}
               </div>
               <div className={styles.basicInfo}>
                 <div className={styles.infoItem}>
