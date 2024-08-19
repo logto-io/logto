@@ -3,12 +3,16 @@ import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 import { getExperienceLanguage } from '#src/utils/i18n.js';
 
-import type { AnonymousRouter, RouterInitArgs } from './types.js';
+import type { AnonymousRouter } from '../types.js';
+
+import experienceRoutes from './well-known.experience.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(
-  ...[router, { libraries, queries, id: tenantId }]: RouterInitArgs<T>
+  router: T,
+  { libraries, queries, id: tenantId }: TenantContext
 ) {
   const {
     signInExperiences: { getFullSignInExperience },
@@ -76,4 +80,6 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
+
+  experienceRoutes(router, libraries);
 }

@@ -45,7 +45,8 @@ import systemRoutes from './system.js';
 import type { AnonymousRouter, ManagementApiRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
 import verificationCodeRoutes from './verification-code.js';
-import wellKnownRoutes from './well-known.js';
+import wellKnownRoutes from './well-known/index.js';
+import wellKnownOpenApiRoutes from './well-known/well-known.openapi.js';
 
 const createRouters = (tenant: TenantContext) => {
   const interactionRouter: AnonymousRouter = new Router();
@@ -96,15 +97,23 @@ const createRouters = (tenant: TenantContext) => {
   subjectTokenRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
+
   wellKnownRoutes(anonymousRouter, tenant);
+  wellKnownOpenApiRoutes(anonymousRouter, {
+    experienceRouters: [experienceRouter, interactionRouter],
+    managementRouters: [managementRouter, anonymousRouter],
+  });
+
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
+
   // The swagger.json should contain all API routers.
   swaggerRoutes(anonymousRouter, [
-    interactionRouter,
     managementRouter,
     anonymousRouter,
     experienceRouter,
+    // TODO: interactionRouter should be removed from swagger.json
+    interactionRouter,
   ]);
 
   return [experienceRouter, interactionRouter, managementRouter, anonymousRouter];

@@ -33,7 +33,7 @@ const tenantContext = new MockTenant(
   { phrases: { getPhrases: jest.fn().mockResolvedValue(en) } }
 );
 
-const phraseRoutes = await pickDefault(import('./well-known.js'));
+const phraseRoutes = await pickDefault(import('./index.js'));
 
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
