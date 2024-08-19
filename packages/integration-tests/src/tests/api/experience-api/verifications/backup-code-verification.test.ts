@@ -6,9 +6,8 @@ import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest, generateNewUserProfile } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('backup code verification APIs', () => {
+describe('backup code verification APIs', () => {
   const { username, password } = generateNewUserProfile({ username: true, password: true });
   const userApi = new UserApiTest();
 

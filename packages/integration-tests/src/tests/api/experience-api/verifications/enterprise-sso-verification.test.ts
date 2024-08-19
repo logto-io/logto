@@ -12,9 +12,9 @@ import {
 } from '#src/helpers/experience/enterprise-sso-verification.js';
 import { successFullyCreateSocialVerification } from '#src/helpers/experience/social-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest, generateUserId, randomString } from '#src/utils.js';
+import { generateUserId, randomString } from '#src/utils.js';
 
-devFeatureTest.describe('enterprise sso verification', () => {
+describe('enterprise sso verification', () => {
   const state = 'fake_state';
   const redirectUri = 'http://localhost:3000/redirect';
   const authorizationCode = 'fake_code';

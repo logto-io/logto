@@ -11,9 +11,8 @@ import {
   enableMandatoryMfaWithTotpAndBackupCode,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('Bind MFA APIs sad path', () => {
+describe('Bind MFA APIs sad path', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {

@@ -17,9 +17,9 @@ import {
   enableMandatoryMfaWithTotp,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generatePassword } from '#src/utils.js';
+import { generateEmail, generatePassword } from '#src/utils.js';
 
-devFeatureTest.describe('enterprise sso sign-in and sign-up', () => {
+describe('enterprise sso sign-in and sign-up', () => {
   const ssoConnectorApi = new SsoConnectorApi();
   const domain = 'foo.com';
   const enterpriseSsoIdentityId = generateStandardId();

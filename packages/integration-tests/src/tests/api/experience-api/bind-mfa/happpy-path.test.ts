@@ -19,9 +19,8 @@ import {
   enableUserControlledMfaWithTotp,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('Bind MFA APIs happy path', () => {
+describe('Bind MFA APIs happy path', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {
