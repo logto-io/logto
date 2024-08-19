@@ -70,8 +70,12 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     title: t('logs.event'),
     dataIndex: 'event',
     colSpan: isUserColumnVisible ? 5 : 6,
-    render: ({ key, payload: { result } }) => (
-      <EventName eventKey={key} isSuccess={result === LogResult.Success} />
+    render: ({ key, payload }) => (
+      <EventName
+        eventKey={key}
+        isSuccess={payload.result === LogResult.Success}
+        payload={payload}
+      />
     ),
   };
 
