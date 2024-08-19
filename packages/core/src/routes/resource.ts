@@ -6,7 +6,7 @@ import { boolean, object, string } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import { newKoaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
+import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { attachScopesToResources } from '#src/utils/resource.js';
 
@@ -76,7 +76,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/resources',
-    newKoaQuotaGuard({ key: 'resourcesLimit', quota }),
+    koaQuotaGuard({ key: 'resourcesLimit', quota }),
     koaGuard({
       // Intentionally omit `isDefault` since it'll affect other rows.
       // Use the dedicated API `PATCH /resources/:id/is-default` to update.

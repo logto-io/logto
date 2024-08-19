@@ -5,7 +5,7 @@ import { object, string } from 'zod';
 
 import { subjectTokenExpiresIn, subjectTokenPrefix } from '#src/constants/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 
 import { type RouterInitArgs, type ManagementApiRouter } from './types.js';
 
@@ -25,7 +25,7 @@ export default function subjectTokenRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/subject-tokens',
-    newKoaQuotaGuard({ key: 'subjectTokenEnabled', quota }),
+    koaQuotaGuard({ key: 'subjectTokenEnabled', quota }),
     koaGuard({
       body: object({
         userId: string(),

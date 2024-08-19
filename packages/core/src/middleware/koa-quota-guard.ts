@@ -6,18 +6,18 @@ import { type SubscriptionQuota } from '#src/utils/subscription/types.js';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'COPY' | 'HEAD' | 'OPTIONS';
 
-type NewUsageGuardConfig = {
+type UsageGuardConfig = {
   key: keyof SubscriptionQuota;
   quota: QuotaLibrary;
   /** Guard usage only for the specified method types. Guard all if not provided. */
   methods?: Method[];
 };
 
-export function newKoaQuotaGuard<StateT, ContextT, ResponseBodyT>({
+export function koaQuotaGuard<StateT, ContextT, ResponseBodyT>({
   key,
   quota,
   methods,
-}: NewUsageGuardConfig): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+}: UsageGuardConfig): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
     // eslint-disable-next-line no-restricted-syntax
     if (!methods || methods.includes(ctx.method.toUpperCase() as Method)) {
@@ -31,7 +31,7 @@ export function koaReportSubscriptionUpdates<StateT, ContextT, ResponseBodyT>({
   key,
   quota,
   methods = ['POST', 'PUT', 'DELETE'],
-}: NewUsageGuardConfig): MiddlewareType<StateT, ContextT, Nullable<ResponseBodyT>> {
+}: UsageGuardConfig): MiddlewareType<StateT, ContextT, Nullable<ResponseBodyT>> {
   return async (ctx, next) => {
     await next();
 

@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import { newKoaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
+import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 
@@ -31,7 +31,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
 
   const router = new SchemaRouter(Organizations, organizations, {
     middlewares: condArray(
-      newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
+      koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
       koaReportSubscriptionUpdates({
         key: 'organizationsEnabled',
         quota,

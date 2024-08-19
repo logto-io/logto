@@ -1,7 +1,7 @@
 import { OrganizationScopes } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 
-import { newKoaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
+import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { errorHandler } from '../organization/utils.js';
@@ -20,7 +20,7 @@ export default function organizationScopeRoutes<T extends ManagementApiRouter>(
 ) {
   const router = new SchemaRouter(OrganizationScopes, scopes, {
     middlewares: condArray(
-      newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
+      koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
       koaReportSubscriptionUpdates({
         key: 'organizationsEnabled',
         quota,
