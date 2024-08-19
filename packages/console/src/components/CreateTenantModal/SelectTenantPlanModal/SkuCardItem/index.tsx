@@ -15,7 +15,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
 
 import FeaturedSkuContent from './FeaturedSkuContent';
-import styles from './FeaturedSkuContent/index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly sku: LogtoSkuResponse;
