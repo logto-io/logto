@@ -85,7 +85,9 @@ export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProp
 
   // Show the "Add-on" tag for Pro plan when dev features enabled.
   if (hasAddOnTag && isDevFeaturesEnabled && isCloud && planId === ReservedPlanId.Pro) {
-    return <div className={classNames(styles.tag, styles.beta, className)}>Add-on</div>;
+    return (
+      <div className={classNames(styles.tag, styles.beta, styles.addOn, className)}>Add-on</div>
+    );
   }
 
   if (paywall && isCloud) {
