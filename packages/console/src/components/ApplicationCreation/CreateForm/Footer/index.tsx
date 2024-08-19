@@ -25,9 +25,9 @@ type Props = {
 
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
   const {
-    currentPlan,
     currentSku,
-    currentSubscription: { isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
   const {
@@ -41,8 +41,6 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
   } = useUserPreferences();
 
   if (selectedType) {
-    const { id: planId, quota } = currentPlan;
-
     if (
       selectedType === ApplicationType.MachineToMachine &&
       isAddOnAvailable &&
@@ -116,7 +114,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
               planName: <SkuName skuId={currentSku.id} />,
             }}
           >
-            {t('paywall.applications', { count: quota.applicationsLimit ?? 0 })}
+            {t('paywall.applications', { count: currentSubscriptionQuota.applicationsLimit ?? 0 })}
           </Trans>
         </QuotaGuardFooter>
       );

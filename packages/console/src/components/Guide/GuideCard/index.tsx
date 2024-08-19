@@ -35,7 +35,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
   } = data;
 
   const buttonText = target === 'API' ? 'guide.get_started' : 'guide.start_building';
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const theme = useTheme();
 
   const showPaywallTag = isCloud && isThirdParty;
@@ -73,7 +73,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
               <div className={styles.tagWrapper}>
                 {showPaywallTag && (
                   <FeatureTag
-                    isVisible={currentPlan.quota.thirdPartyApplicationsLimit === 0}
+                    isVisible={currentSubscriptionQuota.thirdPartyApplicationsLimit === 0}
                     plan={ReservedPlanId.Pro}
                   />
                 )}

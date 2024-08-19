@@ -21,8 +21,7 @@ type Props = {
 function Footer({ newInvitationCount = 0, isLoading, onSubmit }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
 
-  const { currentPlan, currentSku } = useContext(SubscriptionDataContext);
-  const { quota } = currentPlan;
+  const { currentSku, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
 
   const { hasTenantMembersReachedLimit, limit, usage } = useTenantMembersUsage();
 
@@ -48,7 +47,7 @@ function Footer({ newInvitationCount = 0, isLoading, onSubmit }: Props) {
     return (
       <div className={styles.container}>
         <div className={styles.description}>
-          {t('tenant_members_dev_plan', { limit: quota.tenantMembersLimit })}
+          {t('tenant_members_dev_plan', { limit: currentSubscriptionQuota.tenantMembersLimit })}
         </div>
         <LinkButton
           size="large"

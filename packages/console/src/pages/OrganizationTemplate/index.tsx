@@ -32,7 +32,7 @@ const basePathname = '/organization-template';
 function OrganizationTemplate() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
-  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
   const isOrganizationsDisabled = isCloud && !currentSubscriptionQuota.organizationsEnabled;
   const { navigate } = useTenantPathname();
