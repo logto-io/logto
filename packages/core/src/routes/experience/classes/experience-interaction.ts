@@ -362,7 +362,7 @@ export default class ExperienceInteraction {
     );
 
     // Prepend the interaction data to all log entries
-    this.ctx.prependAllLogEntries({ interaction: interactionData });
+    this.ctx.prependAllLogEntries({ interaction: interactionData, userId: this.userId });
   }
 
   /**
