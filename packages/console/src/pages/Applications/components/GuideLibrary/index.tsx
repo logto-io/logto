@@ -1,4 +1,4 @@
-import { ApplicationType, ReservedPlanId } from '@logto/schemas';
+import { ReservedPlanId } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -19,8 +19,6 @@ import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import { allAppGuideCategories, type AppGuideCategory } from '@/types/applications';
 import { thirdPartyAppCategory } from '@/types/applications';
-
-import ProtectedAppCard from '../ProtectedAppCard';
 
 import styles from './index.module.scss';
 
@@ -131,34 +129,21 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
             ) : (
               <EmptyDataPlaceholder className={styles.emptyPlaceholder} size="large" />
             ))}
-          {!keyword && (
-            <>
-              {isCloud &&
-                (filterCategories.length === 0 ||
-                  filterCategories.includes(ApplicationType.Protected)) && (
-                  <ProtectedAppCard
-                    isInAppCreationPage
-                    hasCreateButton
-                    hasBorder={hasCardBorder}
-                    className={styles.protectedAppCard}
+          {!keyword &&
+            (filterCategories.length > 0 ? filterCategories : fullApplicationCategories).map(
+              (category) =>
+                structuredMetadata[category].length > 0 && (
+                  <GuideCardGroup
+                    key={category}
+                    className={styles.guideGroup}
+                    hasCardBorder={hasCardBorder}
+                    hasCardButton={hasCardButton}
+                    categoryName={t(`guide.categories.${category}`)}
+                    guides={structuredMetadata[category]}
+                    onClickGuide={onClickGuide}
                   />
-                )}
-              {(filterCategories.length > 0 ? filterCategories : fullApplicationCategories).map(
-                (category) =>
-                  structuredMetadata[category].length > 0 && (
-                    <GuideCardGroup
-                      key={category}
-                      className={styles.guideGroup}
-                      hasCardBorder={hasCardBorder}
-                      hasCardButton={hasCardButton}
-                      categoryName={t(`guide.categories.${category}`)}
-                      guides={structuredMetadata[category]}
-                      onClickGuide={onClickGuide}
-                    />
-                  )
-              )}
-            </>
-          )}
+                )
+            )}
           {!isApplicationCreateModal && (
             <TextLink className={styles.viewAll} to="/applications/create">
               {t('get_started.view_all')}

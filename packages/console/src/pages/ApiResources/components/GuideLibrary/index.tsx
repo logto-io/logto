@@ -59,7 +59,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton }: Props) {
           )}
         </div>
       </div>
-      {selectedGuide?.target === 'API' && showCreateForm && (
+      {selectedGuide?.metadata.target === 'API' && showCreateForm && (
         <CreateForm onClose={onCloseCreateForm} />
       )}
     </OverlayScrollbar>

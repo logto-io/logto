@@ -27,13 +27,14 @@ export type GuideMetadata = {
   };
   /** Whether the guide is displayed in featured group. */
   isFeatured?: boolean;
-
-  /** Indicate whether the application is for third-party use */
+  /** Indicate whether the application is for third-party use. */
   isThirdParty?: boolean;
-
+  /** Indicate whether the application is Cloud only. E.g. Protected app */
+  isCloud?: boolean;
+  /** Indicates whether we should skip the guide after creating the application. */
+  skipGuideAfterCreation?: boolean;
   /** The related complete guide url relative to the quick starts page (https://docs.logto.io/quick-starts). */
   fullGuide?: string;
-
   /** The related URLs to add to the further readings section. */
   furtherReadings?: Array<{
     title: string;

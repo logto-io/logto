@@ -38,7 +38,7 @@ function GuideDrawer({ apiResource, onClose }: Props) {
               <ArrowLeft />
             </IconButton>
             <div className={styles.separator} />
-            <span>{t('checkout_tutorial', { name: selectedGuide.name })}</span>
+            <span>{t('checkout_tutorial', { name: selectedGuide.metadata.name })}</span>
           </>
         )}
         {!selectedGuide && t('api.select_a_tutorial')}

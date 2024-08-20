@@ -1,4 +1,4 @@
-import { type Application } from '@logto/schemas';
+import { ApplicationType, type Application } from '@logto/schemas';
 import { type Nullable, joinPath, cond } from '@silverhand/essentials';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +23,7 @@ import { buildUrl } from '@/utils/url';
 
 import GuideLibrary from './components/GuideLibrary';
 import GuideLibraryModal from './components/GuideLibraryModal';
+import ProtectedAppModal from './components/ProtectedAppModal';
 import useApplicationsData from './hooks/use-application-data';
 import styles from './index.module.scss';
 
@@ -81,7 +82,7 @@ function Applications({ tab }: Props) {
         /**
          * Navigate to the application details page if no framework guide is selected or the selected guide is third party
          */
-        if (selectedGuide === null || selectedGuide?.isThirdParty) {
+        if (selectedGuide === null || selectedGuide?.metadata.skipGuideAfterCreation) {
           navigate(`/applications/${newApp.id}`, { replace: true });
           setSelectedGuide(undefined);
           return;
@@ -205,10 +206,19 @@ function Applications({ tab }: Props) {
       />
       {selectedGuide !== undefined && (
         <ApplicationCreation
-          defaultCreateType={cond(selectedGuide?.target !== 'API' && selectedGuide?.target)}
-          defaultCreateFrameworkName={selectedGuide?.name ?? undefined}
-          isDefaultCreateThirdParty={selectedGuide?.isThirdParty ?? undefined}
+          defaultCreateType={cond(
+            selectedGuide?.metadata.target !== 'API' && selectedGuide?.metadata.target
+          )}
+          defaultCreateFrameworkName={selectedGuide?.metadata.name ?? undefined}
+          isDefaultCreateThirdParty={selectedGuide?.metadata.isThirdParty ?? undefined}
           onCompleted={onAppCreationCompleted}
+        />
+      )}
+      {selectedGuide?.metadata.target === ApplicationType.Protected && (
+        <ProtectedAppModal
+          onClose={() => {
+            setSelectedGuide(undefined);
+          }}
         />
       )}
     </div>

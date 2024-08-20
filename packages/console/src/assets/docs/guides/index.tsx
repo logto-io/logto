@@ -12,6 +12,7 @@ import nativeCapacitor from './native-capacitor/index';
 import nativeExpo from './native-expo/index';
 import nativeFlutter from './native-flutter/index';
 import nativeIosSwift from './native-ios-swift/index';
+import protectedApp from './protected-app/index';
 import spaAngular from './spa-angular/index';
 import spaChromeExtension from './spa-chrome-extension/index';
 import spaReact from './spa-react/index';
@@ -83,14 +84,6 @@ export const guides: Readonly<Guide[]> = Object.freeze([
   },
   {
     order: 1.2,
-    id: 'm2m-general',
-    Logo: lazy(async () => import('./m2m-general/logo.svg?react')),
-    DarkLogo: lazy(async () => import('./m2m-general/logo-dark.svg?react')),
-    Component: lazy(async () => import('./m2m-general/README.mdx')),
-    metadata: m2mGeneral,
-  },
-  {
-    order: 1.2,
     id: 'web-express',
     Logo: lazy(async () => import('./web-express/logo.svg?react')),
     DarkLogo: lazy(async () => import('./web-express/logo-dark.svg?react')),
@@ -115,6 +108,14 @@ export const guides: Readonly<Guide[]> = Object.freeze([
   },
   {
     order: 1.3,
+    id: 'spa-vue',
+    Logo: lazy(async () => import('./spa-vue/logo.svg?react')),
+    DarkLogo: undefined,
+    Component: lazy(async () => import('./spa-vue/README.mdx')),
+    metadata: spaVue,
+  },
+  {
+    order: 1.3,
     id: 'web-go',
     Logo: lazy(async () => import('./web-go/logo.svg?react')),
     DarkLogo: undefined,
@@ -131,19 +132,27 @@ export const guides: Readonly<Guide[]> = Object.freeze([
   },
   {
     order: 1.4,
+    id: 'protected-app',
+    Logo: lazy(async () => import('./protected-app/logo.svg?react')),
+    DarkLogo: lazy(async () => import('./protected-app/logo-dark.svg?react')),
+    Component: lazy(async () => import('./protected-app/README.mdx')),
+    metadata: protectedApp,
+  },
+  {
+    order: 1.5,
+    id: 'm2m-general',
+    Logo: lazy(async () => import('./m2m-general/logo.svg?react')),
+    DarkLogo: lazy(async () => import('./m2m-general/logo-dark.svg?react')),
+    Component: lazy(async () => import('./m2m-general/README.mdx')),
+    metadata: m2mGeneral,
+  },
+  {
+    order: 1.6,
     id: 'web-java-spring-boot',
     Logo: lazy(async () => import('./web-java-spring-boot/logo.svg?react')),
     DarkLogo: undefined,
     Component: lazy(async () => import('./web-java-spring-boot/README.mdx')),
     metadata: webJavaSpringBoot,
-  },
-  {
-    order: 1.6,
-    id: 'spa-vue',
-    Logo: lazy(async () => import('./spa-vue/logo.svg?react')),
-    DarkLogo: undefined,
-    Component: lazy(async () => import('./spa-vue/README.mdx')),
-    metadata: spaVue,
   },
   {
     order: 1.7,
