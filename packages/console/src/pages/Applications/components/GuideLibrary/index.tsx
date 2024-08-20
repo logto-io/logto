@@ -38,7 +38,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
   const [filterCategories, setFilterCategories] = useState<AppGuideCategory[]>([]);
   const { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const isApplicationCreateModal = pathname.includes('/applications/create');
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
 
   const structuredMetadata = useMemo(
     () => getStructuredAppGuideMetadata({ categories: filterCategories }),
@@ -98,7 +98,9 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
                             category === 'ThirdParty' && {
                               tag: (
                                 <FeatureTag
-                                  isVisible={currentPlan.quota.thirdPartyApplicationsLimit === 0}
+                                  isVisible={
+                                    currentSubscriptionQuota.thirdPartyApplicationsLimit === 0
+                                  }
                                   plan={ReservedPlanId.Pro}
                                 />
                               ),

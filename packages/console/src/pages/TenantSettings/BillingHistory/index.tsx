@@ -6,7 +6,7 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
-import PlanName from '@/components/PlanName';
+import SkuName from '@/components/SkuName';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
@@ -50,11 +50,11 @@ function BillingHistory() {
           {
             title: <DynamicT forKey="subscription.billing_history.invoice_column" />,
             dataIndex: 'planName',
-            render: ({ planName, periodStart, periodEnd }) => {
+            render: ({ skuId, periodStart, periodEnd }) => {
               return (
                 <ItemPreview
                   title={formatPeriod({ periodStart, periodEnd, displayYear: true })}
-                  subtitle={conditional(planName && <PlanName name={planName} />)}
+                  subtitle={conditional(skuId && <SkuName skuId={skuId} />)}
                 />
               );
             },

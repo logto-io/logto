@@ -45,12 +45,15 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
     return null;
   }
 
+  const onlyShowPeriodicUsage =
+    planId === ReservedPlanId.Free || (!isAddOnAvailable && planId === ReservedPlanId.Pro);
+
   const usages: PlanUsageCardProps[] = usageKeys
     // Show all usages for Pro plan and only show MAU and token usage for Free plan
     .filter(
       (key) =>
-        isAddOnAvailable ??
-        (planId === ReservedPlanId.Free && (key === 'mauLimit' || key === 'tokenLimit'))
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        isAddOnAvailable || (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
     .map((key) => ({
       usage:
@@ -89,10 +92,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
           <PlanUsageCard
             // eslint-disable-next-line react/no-array-index-key
             key={index}
-            className={classNames(
-              styles.cardItem,
-              planId === ReservedPlanId.Free && styles.freeUser
-            )}
+            className={classNames(styles.cardItem, onlyShowPeriodicUsage && styles.periodicUsage)}
             {...props}
           />
         ))}

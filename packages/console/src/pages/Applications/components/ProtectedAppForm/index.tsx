@@ -11,8 +11,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import useSWRImmutable from 'swr/immutable';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import SkuName from '@/components/SkuName';
 import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
@@ -46,11 +46,7 @@ function ProtectedAppForm({
   onCreateSuccess,
 }: Props) {
   const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(isCloud && 'api/systems/application');
-  const {
-    currentPlan: { name: planName },
-    currentSku,
-    currentSubscriptionQuota,
-  } = useContext(SubscriptionDataContext);
+  const { currentSku, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const { hasAppsReachedLimit } = useApplicationsUsage();
   const defaultDomain = data?.protectedApps.defaultDomain ?? '';
   const { navigate } = useTenantPathname();
@@ -206,7 +202,7 @@ function ProtectedAppForm({
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
+              planName: <SkuName skuId={currentSku.id} />,
             }}
           >
             {t('upsell.paywall.applications', {

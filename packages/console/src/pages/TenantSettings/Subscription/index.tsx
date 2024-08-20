@@ -6,7 +6,7 @@ import PageMeta from '@/components/PageMeta';
 import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import { pickupFeaturedLogtoSkus, pickupFeaturedPlans } from '@/utils/subscription';
+import { pickupFeaturedLogtoSkus } from '@/utils/subscription';
 
 import Skeleton from '../components/Skeleton';
 
@@ -17,16 +17,10 @@ import styles from './index.module.scss';
 
 function Subscription() {
   const cloudApi = useCloudApi();
-  const {
-    subscriptionPlans,
-    logtoSkus,
-    currentSku,
-    currentSubscription,
-    onCurrentSubscriptionUpdated,
-  } = useContext(SubscriptionDataContext);
+  const { logtoSkus, currentSku, onCurrentSubscriptionUpdated } =
+    useContext(SubscriptionDataContext);
   const { currentTenantId } = useContext(TenantsContext);
 
-  const reservedPlans = pickupFeaturedPlans(subscriptionPlans);
   const reservedSkus = pickupFeaturedLogtoSkus(logtoSkus);
 
   const { data: periodicUsage, isLoading } = useSWR(
@@ -53,8 +47,6 @@ function Subscription() {
       <CurrentPlan periodicUsage={periodicUsage} />
       <PlanComparisonTable />
       <SwitchPlanActionBar
-        currentSubscriptionPlanId={currentSubscription.planId}
-        subscriptionPlans={reservedPlans}
         currentSkuId={currentSku.id}
         logtoSkus={reservedSkus}
         onSubscriptionUpdated={async () => {

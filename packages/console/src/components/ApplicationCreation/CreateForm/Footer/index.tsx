@@ -4,8 +4,8 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import SkuName from '@/components/SkuName';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { machineToMachineAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -25,9 +25,9 @@ type Props = {
 
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
   const {
-    currentPlan,
     currentSku,
-    currentSubscription: { isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
   const {
@@ -41,8 +41,6 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
   } = useUserPreferences();
 
   if (selectedType) {
-    const { id: planId, name: planName, quota } = currentPlan;
-
     if (
       selectedType === ApplicationType.MachineToMachine &&
       isAddOnAvailable &&
@@ -113,10 +111,10 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
+              planName: <SkuName skuId={currentSku.id} />,
             }}
           >
-            {t('paywall.applications', { count: quota.applicationsLimit ?? 0 })}
+            {t('paywall.applications', { count: currentSubscriptionQuota.applicationsLimit ?? 0 })}
           </Trans>
         </QuotaGuardFooter>
       );

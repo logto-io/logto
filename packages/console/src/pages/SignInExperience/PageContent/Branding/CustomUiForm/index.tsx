@@ -22,8 +22,8 @@ function CustomUiForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const { control } = useFormContext<SignInExperienceForm>();
-  const { currentPlan } = useContext(SubscriptionDataContext);
-  const isBringYourUiEnabled = currentPlan.quota.bringYourUiEnabled;
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const isBringYourUiEnabled = currentSubscriptionQuota.bringYourUiEnabled;
 
   return (
     <Card>

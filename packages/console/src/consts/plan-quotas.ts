@@ -1,7 +1,6 @@
 import { ReservedPlanId } from '@logto/schemas';
 
 import { type LogtoSkuQuota } from '@/types/skus';
-import { type SubscriptionPlanQuota } from '@/types/subscriptions';
 
 /**
  * Manually add this support quota item to the plan since it will be compared in the downgrade plan notification modal.
@@ -36,12 +35,5 @@ export const skuQuotaItemOrder: Array<keyof LogtoSkuQuota> = [
   'bringYourUiEnabled',
   'ticketSupportResponseTime',
 ];
-
-/**
- * Unreleased quota keys will be added here, and it will effect the following:
- * - Related quota items will have a "Coming soon" tag in the plan selection component.
- * - Related quota items will be hidden from the downgrade plan notification modal.
- */
-export const comingSoonQuotaKeys: Array<keyof SubscriptionPlanQuota> = [];
 
 export const comingSoonSkuQuotaKeys: Array<keyof LogtoSkuQuota> = [];

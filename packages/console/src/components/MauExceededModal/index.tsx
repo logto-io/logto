@@ -15,12 +15,12 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import modalStyles from '@/scss/modal.module.scss';
 
-import PlanName from '../PlanName';
+import SkuName from '../SkuName';
 
 import styles from './index.module.scss';
 
 function MauExceededModal() {
-  const { currentPlan, currentSubscription, currentSku } = useContext(SubscriptionDataContext);
+  const { currentSku } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -34,8 +34,6 @@ function MauExceededModal() {
   if (hasClosed) {
     return null;
   }
-
-  const { name: planName } = currentPlan;
 
   const isMauExceeded =
     // eslint-disable-next-line @typescript-eslint/prefer-optional-chain, prettier/prettier
@@ -77,7 +75,7 @@ function MauExceededModal() {
         <InlineNotification severity="error">
           <Trans
             components={{
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
+              planName: <SkuName skuId={currentSku.id} />,
             }}
           >
             {t('upsell.mau_exceeded_modal.notification')}

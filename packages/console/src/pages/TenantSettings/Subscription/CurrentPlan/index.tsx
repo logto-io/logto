@@ -6,8 +6,8 @@ import BillInfo from '@/components/BillInfo';
 import ChargeNotification from '@/components/ChargeNotification';
 import FormCard from '@/components/FormCard';
 import PlanDescription from '@/components/PlanDescription';
-import PlanName from '@/components/PlanName';
 import PlanUsage from '@/components/PlanUsage';
+import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
@@ -23,7 +23,7 @@ type Props = {
 };
 
 function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
-  const { currentPlan, currentSku, currentSubscription, currentSubscriptionQuota } =
+  const { currentSku, currentSubscription, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
@@ -62,7 +62,7 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
     <FormCard title="subscription.current_plan" description="subscription.current_plan_description">
       <div className={styles.planInfo}>
         <div className={styles.name}>
-          <PlanName skuId={currentSku.id} name={currentPlan.name} />
+          <SkuName skuId={currentSku.id} />
         </div>
         <div className={styles.description}>
           <PlanDescription skuId={currentSku.id} planId={currentSubscription.planId} />

@@ -30,7 +30,7 @@
   max-width: calc((100% - _.unit(2) * 2) / 3);
   max-height: 112px;
 
-  &.freeUser {
+  &.periodicUsage {
     flex: 0 0 calc((100% - _.unit(2)) / 2);
     max-width: calc((100% - _.unit(2)) / 2);
   }

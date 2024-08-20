@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type LogtoSkuResponse } from '@/cloud/types/router';
-import PlanName from '@/components/PlanName';
+import SkuName from '@/components/SkuName';
 import { contactEmailLink } from '@/consts';
 import { subscriptionPage } from '@/consts/pages';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -14,7 +14,6 @@ import Spacer from '@/ds-components/Spacer';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useSubscribe from '@/hooks/use-subscribe';
 import { NotEligibleSwitchSkuModalContent } from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
-import { type SubscriptionPlan } from '@/types/subscriptions';
 import { isDowngradePlan, parseExceededSkuQuotaLimitError } from '@/utils/subscription';
 
 import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
@@ -22,51 +21,34 @@ import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
 import styles from './index.module.scss';
 
 type Props = {
-  readonly currentSubscriptionPlanId: string;
-  readonly subscriptionPlans: SubscriptionPlan[];
   readonly currentSkuId: string;
   readonly logtoSkus: LogtoSkuResponse[];
   readonly onSubscriptionUpdated: () => Promise<void>;
 };
 
-function SwitchPlanActionBar({
-  currentSubscriptionPlanId,
-  subscriptionPlans,
-  onSubscriptionUpdated,
-  currentSkuId,
-  logtoSkus,
-}: Props) {
+function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
   const { currentTenantId } = useContext(TenantsContext);
   const { subscribe, cancelSubscription } = useSubscribe();
   const { show } = useConfirmModal();
-  const [currentLoadingPlanId, setCurrentLoadingPlanId] = useState<string>();
+  const [currentLoadingSkuId, setCurrentLoadingSkuId] = useState<string>();
 
   const handleSubscribe = async (targetSkuId: string, isDowngrade: boolean) => {
-    if (currentLoadingPlanId) {
+    if (currentLoadingSkuId) {
       return;
     }
-
-    // TODO: clear plan related use cases.
-    const currentPlan = subscriptionPlans.find(({ id }) => id === currentSubscriptionPlanId);
-    const targetPlan = subscriptionPlans.find(({ id }) => id === targetSkuId);
 
     const currentSku = logtoSkus.find(({ id }) => id === currentSkuId);
     const targetSku = logtoSkus.find(({ id }) => id === targetSkuId);
 
-    if (!currentPlan || !targetPlan || !currentSku || !targetSku) {
+    if (!currentSku || !targetSku) {
       return;
     }
 
     if (isDowngrade) {
       const [result] = await show({
         ModalContent: () => (
-          <DowngradeConfirmModalContent
-            currentPlan={currentPlan}
-            targetPlan={targetPlan}
-            currentSku={currentSku}
-            targetSku={targetSku}
-          />
+          <DowngradeConfirmModalContent currentSku={currentSku} targetSku={targetSku} />
         ),
         title: 'subscription.downgrade_modal.title',
         confirmButtonText: 'subscription.downgrade_modal.downgrade',
@@ -79,12 +61,12 @@ function SwitchPlanActionBar({
     }
 
     try {
-      setCurrentLoadingPlanId(targetSkuId);
+      setCurrentLoadingSkuId(targetSkuId);
       if (targetSkuId === ReservedPlanId.Free) {
         await cancelSubscription(currentTenantId);
         await onSubscriptionUpdated();
         toast.success(
-          <Trans components={{ name: <PlanName skuId={targetSku.id} name={targetPlan.name} /> }}>
+          <Trans components={{ name: <SkuName skuId={targetSku.id} /> }}>
             {t('downgrade_success')}
           </Trans>
         );
@@ -100,7 +82,7 @@ function SwitchPlanActionBar({
         callbackPage: subscriptionPage,
       });
     } catch (error: unknown) {
-      setCurrentLoadingPlanId(undefined);
+      setCurrentLoadingSkuId(undefined);
 
       const [result, exceededSkuQuotaKeys] = await parseExceededSkuQuotaLimitError(error);
 
@@ -125,7 +107,7 @@ function SwitchPlanActionBar({
 
       void toastResponseError(error);
     } finally {
-      setCurrentLoadingPlanId(undefined);
+      setCurrentLoadingSkuId(undefined);
     }
   };
 
@@ -148,7 +130,7 @@ function SwitchPlanActionBar({
               }
               type={isDowngrade ? 'default' : 'primary'}
               disabled={isCurrentSku}
-              isLoading={!isCurrentSku && currentLoadingPlanId === skuId}
+              isLoading={!isCurrentSku && currentLoadingSkuId === skuId}
               onClick={() => {
                 void handleSubscribe(skuId, isDowngrade);
               }}

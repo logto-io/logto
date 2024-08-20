@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { type LogtoSkuResponse } from '@/cloud/types/router';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
+import SkuName from '@/components/SkuName';
 import { skuQuotaItemOrder } from '@/consts/plan-quotas';
 import {
   skuQuotaItemLimitedPhrasesMap,
@@ -41,7 +41,7 @@ export function NotEligibleSwitchSkuModalContent({
     keyPrefix: 'admin_console.subscription.not_eligible_modal',
   });
 
-  const { id, name, quota } = targetSku;
+  const { id, quota } = targetSku;
 
   const orderedEntries = useMemo(() => {
     // eslint-disable-next-line no-restricted-syntax
@@ -59,7 +59,7 @@ export function NotEligibleSwitchSkuModalContent({
       <div className={styles.description}>
         <Trans
           components={{
-            name: <PlanName skuId={id} name={name ?? id} />,
+            name: <SkuName skuId={id} />,
           }}
         >
           {t(isDowngrade ? 'downgrade_description' : 'upgrade_description')}
