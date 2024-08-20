@@ -1,9 +1,10 @@
-import { AgreeToTermsPolicy, experience } from '@logto/schemas';
+import { AgreeToTermsPolicy, experience, SignInMode } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
 import IdentifierRegisterForm from '@/components/IdentifierRegisterForm';
+import { useSieMethods } from '@/hooks/use-sie';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
 import useIdentifierSignUpMethods from './use-identifier-sign-up-methods';
@@ -11,11 +12,14 @@ import useIdentifierSignUpMethods from './use-identifier-sign-up-methods';
 const IdentifierRegister = () => {
   const { t } = useTranslation();
   const signUpMethods = useIdentifierSignUpMethods();
+  const { signInMode } = useSieMethods();
 
   /**
-   * Fallback to sign-in page if no sign up methods are available (not allowed to create an account).
+   * Fallback to sign-in page in the following cases:
+   * - Sign-in mode is set to `SignIn` (user registration is not enabled in the sign-in experience configuration)
+   * - No sign up methods are available
    */
-  if (signUpMethods.length === 0) {
+  if (signInMode === SignInMode.SignIn || signUpMethods.length === 0) {
     return <Navigate to={`/${experience.routes.signIn}`} />;
   }
 
