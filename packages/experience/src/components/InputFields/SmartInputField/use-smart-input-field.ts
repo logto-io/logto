@@ -7,6 +7,8 @@ import useUpdateEffect from '@/hooks/use-update-effect';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 import { parseIdentifierValue } from '@/utils/form';
 
+import { detectIdentifierType } from './utils';
+
 export type IdentifierInputType =
   | SignInIdentifier.Email
   | SignInIdentifier.Phone
@@ -23,8 +25,6 @@ export type IdentifierInputValue = {
    */
   value: string;
 };
-
-const digitsRegex = /^\d*$/;
 
 type Props = {
   defaultValue?: string;
@@ -56,7 +56,14 @@ const useSmartInputField = ({ _defaultType, defaultValue, enabledTypes }: Props)
     [defaultType, defaultValue]
   );
 
-  const [currentType, setCurrentType] = useState(defaultType);
+  const [currentType, setCurrentType] = useState(
+    detectIdentifierType({
+      value: defaultValue ?? '',
+      enabledTypeSet,
+      defaultType,
+      currentType: defaultType,
+    })
+  );
 
   const [countryCode, setCountryCode] = useState<string>(
     defaultCountryCode ?? getDefaultCountryCallingCode()
@@ -65,41 +72,7 @@ const useSmartInputField = ({ _defaultType, defaultValue, enabledTypes }: Props)
   const [inputValue, setInputValue] = useState<string>(defaultInputValue ?? '');
 
   const detectInputType = useCallback(
-    (value: string) => {
-      // Reset InputType
-      if (!value && enabledTypeSet.size > 1) {
-        return;
-      }
-
-      if (enabledTypeSet.size === 1) {
-        return defaultType;
-      }
-
-      const hasAtSymbol = value.includes('@');
-      const isAllDigits = digitsRegex.test(value);
-
-      if (enabledTypeSet.has(SignInIdentifier.Phone) && value.length >= 3 && isAllDigits) {
-        return SignInIdentifier.Phone;
-      }
-
-      if (enabledTypeSet.has(SignInIdentifier.Email) && hasAtSymbol) {
-        return SignInIdentifier.Email;
-      }
-
-      if (currentType === SignInIdentifier.Phone && isAllDigits) {
-        return SignInIdentifier.Phone;
-      }
-
-      if (enabledTypeSet.has(SignInIdentifier.Username)) {
-        return SignInIdentifier.Username;
-      }
-
-      if (enabledTypeSet.has(SignInIdentifier.Email)) {
-        return SignInIdentifier.Email;
-      }
-
-      return currentType;
-    },
+    (value: string) => detectIdentifierType({ value, enabledTypeSet, defaultType, currentType }),
     [defaultType, currentType, enabledTypeSet]
   );
 

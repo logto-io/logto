@@ -40,3 +40,53 @@ export const getInputHtmlProps = (
     label: enabledTypes.map((type) => i18next.t(identifierInputPlaceholderMap[type])).join(' / '),
   };
 };
+
+const digitsRegex = /^\d*$/;
+
+type DetectIdentifierTypeParams = {
+  value: string;
+  enabledTypeSet: Set<IdentifierInputType>;
+  defaultType?: IdentifierInputType;
+  currentType?: IdentifierInputType;
+};
+
+export const detectIdentifierType = ({
+  value,
+  enabledTypeSet,
+  defaultType,
+  currentType,
+}: DetectIdentifierTypeParams) => {
+  // Reset InputType
+  if (!value && enabledTypeSet.size > 1) {
+    return;
+  }
+
+  if (enabledTypeSet.size === 1) {
+    return defaultType;
+  }
+
+  const hasAtSymbol = value.includes('@');
+  const isAllDigits = digitsRegex.test(value);
+
+  if (enabledTypeSet.has(SignInIdentifier.Phone) && value.length >= 3 && isAllDigits) {
+    return SignInIdentifier.Phone;
+  }
+
+  if (enabledTypeSet.has(SignInIdentifier.Email) && hasAtSymbol) {
+    return SignInIdentifier.Email;
+  }
+
+  if (currentType === SignInIdentifier.Phone && isAllDigits) {
+    return SignInIdentifier.Phone;
+  }
+
+  if (enabledTypeSet.has(SignInIdentifier.Username)) {
+    return SignInIdentifier.Username;
+  }
+
+  if (enabledTypeSet.has(SignInIdentifier.Email)) {
+    return SignInIdentifier.Email;
+  }
+
+  return currentType;
+};
