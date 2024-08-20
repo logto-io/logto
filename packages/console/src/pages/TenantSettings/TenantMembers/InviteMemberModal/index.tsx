@@ -45,6 +45,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota,
     currentSubscriptionUsage: { tenantMembersLimit },
+    mutateSubscriptionQuotaAndUsages,
   } = useContext(SubscriptionDataContext);
   const {
     data: { tenantMembersUpsellNoticeAcknowledged },
@@ -109,6 +110,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
           params: { tenantId: currentTenantId },
           body: { invitee: emails.map(({ value }) => value), roleName: role },
         });
+        mutateSubscriptionQuotaAndUsages();
         toast.success(t('tenant_members.messages.invitation_sent'));
         onClose(true);
       } finally {
