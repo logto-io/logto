@@ -1,5 +1,5 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
-import { ConnectorConfigFormItemType } from '@logto/connector-kit';
+import { ConnectorConfigFormItemType, ConnectorPlatform } from '@logto/connector-kit';
 
 export const authorizationEndpointInside = 'https://open.weixin.qq.com/connect/oauth2/authorize';
 export const authorizationEndpointQrcode = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect';
@@ -15,7 +15,7 @@ export const invalidAccessTokenErrcode = [40_001, 40_014];
 export const defaultMetadata: ConnectorMetadata = {
   id: 'wecom-universal',
   target: 'wecom',
-  platform: null,
+  platform: ConnectorPlatform.Universal,
   name: {
     en: 'WeCom',
     'zh-CN': '企业微信',

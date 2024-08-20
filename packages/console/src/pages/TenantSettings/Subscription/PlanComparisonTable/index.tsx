@@ -185,7 +185,7 @@ function PlanComparisonTable() {
           { name: appLogoAndFavicon, data: ['✓', '✓', '✓'] },
           { name: darkMode, data: ['✓', '✓', '✓'] },
           { name: i18n, data: ['✓', '✓', '✓'] },
-          { name: bringYourUi, data: ['-', comingSoon, comingSoon] },
+          { name: bringYourUi, data: ['-', '✓', '✓'] },
         ],
       },
       {
