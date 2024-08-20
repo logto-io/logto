@@ -15,7 +15,9 @@ const IdentifierRegister = () => {
   const { signInMode } = useSieMethods();
 
   /**
-   * Fallback to sign-in page if no sign up methods are available (not allowed to create an account).
+   * Fallback to sign-in page in the following cases:
+   * - Sign-in mode is set to `SignIn` (user registration is not enabled in the sign-in experience configuration)
+   * - No sign up methods are available
    */
   if (signInMode === SignInMode.SignIn || signUpMethods.length === 0) {
     return <Navigate to={`/${experience.routes.signIn}`} />;
