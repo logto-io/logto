@@ -1,0 +1,15 @@
+@use '@/scss/underscore' as _;
+
+button.add {
+  margin-top: _.unit(2);
+}
+
+.table {
+  margin-top: _.unit(2);
+}
+
+.empty {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin: _.unit(3) 0;
+}
