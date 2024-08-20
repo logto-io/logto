@@ -1,34 +1,18 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInIdentifier, SignInMode, SsoProviderName } from '@logto/schemas';
+import { SignInIdentifier, SignInMode } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import {
-  clearSsoConnectors,
-  createSsoConnector,
-  deleteSsoConnectorById,
-} from '#src/api/sso-connector.js';
-import { demoAppUrl, logtoUrl } from '#src/constants.js';
+import { clearSsoConnectors } from '#src/api/sso-connector.js';
+import { demoAppUrl } from '#src/constants.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { devFeatureTest, randomString } from '#src/utils.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const { describe, it } = devFeatureTest;
-
-const setupSsoConnector = async () =>
-  createSsoConnector({
-    providerName: SsoProviderName.OIDC,
-    connectorName: 'test-oidc-' + randomString(),
-    domains: [`foo${randomString()}.com`],
-    config: {
-      clientId: 'foo',
-      clientSecret: 'bar',
-      issuer: `${logtoUrl}/oidc`,
-    },
-  });
 
 describe('first screen', () => {
   beforeAll(async () => {
@@ -65,8 +49,6 @@ describe('first screen', () => {
 
   describe('single sign-on page', () => {
     it('should be landed on single sign-on page directly', async () => {
-      // Setup SSO connector
-      const ssoConnector = await setupSsoConnector();
       await updateSignInExperience({
         singleSignOnEnabled: true,
       });
@@ -76,44 +58,12 @@ describe('first screen', () => {
       await experience.page.goto(url.href, { waitUntil: 'networkidle0' });
       experience.toBeAt('single-sign-on');
       await experience.page.close();
-      await deleteSsoConnectorById(ssoConnector.id);
     });
 
     it('should fallback to sign-in page if SSO is not enabled', async () => {
-      // Setup SSO connector
-      const ssoConnector = await setupSsoConnector();
       // Turn off SSO
       await updateSignInExperience({
         singleSignOnEnabled: false,
-      });
-      const experience = new ExpectExperience(await browser.newPage());
-      const url = new URL(demoAppUrl);
-      url.searchParams.set('first_screen', 'single_sign_on');
-      await experience.page.goto(url.href, { waitUntil: 'networkidle0' });
-      experience.toBeAt('sign-in');
-      await experience.page.close();
-      await deleteSsoConnectorById(ssoConnector.id);
-    });
-
-    it('should fallback to sign-in page if SSO is not enabled', async () => {
-      // Setup SSO connector
-      const ssoConnector = await setupSsoConnector();
-      // Turn off SSO
-      await updateSignInExperience({
-        singleSignOnEnabled: false,
-      });
-      const experience = new ExpectExperience(await browser.newPage());
-      const url = new URL(demoAppUrl);
-      url.searchParams.set('first_screen', 'single_sign_on');
-      await experience.page.goto(url.href, { waitUntil: 'networkidle0' });
-      experience.toBeAt('sign-in');
-      await experience.page.close();
-      await deleteSsoConnectorById(ssoConnector.id);
-    });
-
-    it('should fallback to sign-in page if no SSO connector is configured', async () => {
-      await updateSignInExperience({
-        singleSignOnEnabled: true,
       });
       const experience = new ExpectExperience(await browser.newPage());
       const url = new URL(demoAppUrl);

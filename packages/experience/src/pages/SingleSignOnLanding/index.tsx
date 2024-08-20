@@ -9,11 +9,11 @@ import useTerms from '@/hooks/use-terms';
 
 const SingleSignOnLanding = () => {
   const { t } = useTranslation();
-  const { ssoConnectors, singleSignOnEnabled } = useSieMethods();
+  const { singleSignOnEnabled } = useSieMethods();
   const { agreeToTermsPolicy } = useTerms();
 
-  // Fallback to sign-in page if SSO is not supported
-  if (!singleSignOnEnabled || ssoConnectors.length === 0) {
+  // Fallback to sign-in page if SSO is not enabled
+  if (!singleSignOnEnabled) {
     return <Navigate to={`/${experience.routes.signIn}`} />;
   }
 
