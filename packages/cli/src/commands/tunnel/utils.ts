@@ -25,7 +25,7 @@ export const createProxy = (targetUrl: string, onProxyResponse?: OnProxyEvent['p
         on: {
           proxyRes: onProxyResponse,
           error: (error) => {
-            consoleLog.error(chalk.red(error));
+            consoleLog.error(chalk.red(error.message));
           },
         },
       }
@@ -54,8 +54,9 @@ export const createStaticFileProxy =
         response.setHeader('content-type', getMimeType(request.url));
         response.writeHead(200);
         response.end(content);
-      } catch (error: unknown) {
-        consoleLog.error(chalk.red(error));
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        consoleLog.error(chalk.red(errorMessage));
         response.setHeader('content-type', getMimeType(request.url));
         response.writeHead(existsSync(request.url) ? 500 : 404);
         response.end();
@@ -92,7 +93,7 @@ export const createLogtoResponseHandler = async ({
   void responseInterceptor(async (responseBuffer, proxyResponse) => {
     const responseBody = responseBuffer.toString();
     if (verbose) {
-      consoleLog.info(`Response received: ${chalk.green(responseBody)}`);
+      consoleLog.info(`[${proxyResponse.statusCode}] ${chalk.cyan(responseBody)}`);
     }
 
     if (proxyResponse.headers['content-type']?.includes('text/html')) {

@@ -23,19 +23,18 @@ const tunnel: CommandModule<unknown, TunnelCommandArgs> = {
     yargs
       .options({
         'experience-uri': {
-          alias: ['x'],
+          alias: ['uri'],
           describe: 'The URI of your custom sign-in experience page.',
           type: 'string',
         },
         'experience-path': {
-          alias: ['xp'],
+          alias: ['path'],
           describe: 'The local folder path of your custom sign-in experience assets.',
           type: 'string',
         },
         endpoint: {
-          alias: 'ep',
           describe:
-            'Logto endpoint URI, which can be found in Logto Console. E.g.: https://<tenant-id>.logto.app/',
+            'Logto endpoint URI that points to your Logto Cloud instance. E.g.: https://<tenant-id>.logto.app/',
           type: 'string',
         },
         port: {
@@ -52,7 +51,8 @@ const tunnel: CommandModule<unknown, TunnelCommandArgs> = {
           default: false,
         },
       })
-      .global('e'),
+      .global('e')
+      .hide('db'),
   handler: async ({ 'experience-uri': url, 'experience-path': path, endpoint, port, verbose }) => {
     checkExperienceInput(url, path);
 
@@ -60,47 +60,74 @@ const tunnel: CommandModule<unknown, TunnelCommandArgs> = {
       consoleLog.fatal('A valid Logto endpoint URI must be provided.');
     }
     const logtoEndpointUrl = new URL(endpoint);
-    const tunnelServiceUrl = new URL(`http://localhost:${port}`);
 
-    const proxyLogtoRequest = createProxy(
-      logtoEndpointUrl.href,
-      async (proxyResponse, request, response) =>
-        createLogtoResponseHandler({
-          proxyResponse,
-          request,
-          response,
-          logtoEndpointUrl,
-          tunnelServiceUrl,
-          verbose,
-        })
-    );
-    const proxyExperienceServerRequest = conditional(url && createProxy(url));
-    const proxyExperienceStaticFileRequest = conditional(path && createStaticFileProxy(path));
+    const startServer = (port: number) => {
+      const tunnelServiceUrl = new URL(`http://localhost:${port}`);
 
-    const server = http.createServer((request, response) => {
-      if (verbose) {
-        consoleLog.info(`Incoming request: ${chalk.blue(request.method, request.url)}`);
-      }
+      const proxyLogtoRequest = createProxy(
+        logtoEndpointUrl.href,
+        async (proxyResponse, request, response) =>
+          createLogtoResponseHandler({
+            proxyResponse,
+            request,
+            response,
+            logtoEndpointUrl,
+            tunnelServiceUrl,
+            verbose,
+          })
+      );
+      const proxyExperienceServerRequest = conditional(url && createProxy(url));
+      const proxyExperienceStaticFileRequest = conditional(path && createStaticFileProxy(path));
 
-      // Tunneling the requests to Logto endpoint
-      if (isLogtoRequestPath(request.url)) {
-        void proxyLogtoRequest(request, response);
-        return;
-      }
+      const server = http.createServer((request, response) => {
+        consoleLog.info(`[${chalk.green(request.method)}] ${request.url}`);
 
-      if (proxyExperienceServerRequest) {
-        void proxyExperienceServerRequest(request, response);
-        return;
-      }
+        // Tunneling the requests to Logto endpoint
+        if (isLogtoRequestPath(request.url)) {
+          void proxyLogtoRequest(request, response);
+          return;
+        }
 
-      if (proxyExperienceStaticFileRequest) {
-        void proxyExperienceStaticFileRequest(request, response);
-      }
-    });
+        if (proxyExperienceServerRequest) {
+          void proxyExperienceServerRequest(request, response);
+          return;
+        }
 
-    server.listen(port, () => {
-      consoleLog.info(`Logto tunnel is running on ${chalk.blue(tunnelServiceUrl.href)}`);
-    });
+        if (proxyExperienceStaticFileRequest) {
+          void proxyExperienceStaticFileRequest(request, response);
+        }
+      });
+
+      server.listen(port, () => {
+        const serviceUrl = new URL(`http://localhost:${port}`);
+        consoleLog.info(
+          `🎉 Logto tunnel service is running!
+  ${chalk.green('➜')} Your custom sign-in UI is hosted on: ${chalk.blue(serviceUrl.href)}
+
+  ${chalk.green('➜')} Don't forget to update your app's endpoint:
+
+      ${chalk.gray('From:')} ${chalk.bold(endpoint)}
+      ${chalk.gray('To:')}   ${chalk.bold(serviceUrl.href)}
+
+  ${chalk.green('➜')} ${chalk.gray(`Press ${chalk.white('Ctrl+C')} to stop the tunnel service.`)}
+  ${chalk.green('➜')} ${chalk.gray(
+    `Use ${chalk.white('-v')} or ${chalk.white('--verbose')} to print verbose output.`
+  )}
+          `
+        );
+      });
+
+      server.on('error', (error: Error) => {
+        if ('code' in error && error.code === 'EADDRINUSE') {
+          consoleLog.error(`Port ${port} is already in use, trying another one...`);
+          startServer(port + 1);
+          return;
+        }
+        consoleLog.fatal(`Tunnel server failed to start. ${error.message}`);
+      });
+    };
+
+    startServer(port);
   },
 };
 
