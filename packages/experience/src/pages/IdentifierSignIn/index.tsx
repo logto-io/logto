@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
+import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import IdentifierSignInForm from '@/components/IdentifierSignInForm';
 import PasswordSignInForm from '@/components/PasswordSignInForm';
 import { identifierInputDescriptionMap } from '@/utils/form';
@@ -43,11 +44,13 @@ const IdentifierSignIn = () => {
         text: 'description.all_sign_in_options',
       }}
     >
-      {isPasswordOnly ? (
-        <PasswordSignInForm signInMethods={signInMethods.map(({ identifier }) => identifier)} />
-      ) : (
-        <IdentifierSignInForm signInMethods={signInMethods} />
-      )}
+      <SingleSignOnFormModeContextProvider>
+        {isPasswordOnly ? (
+          <PasswordSignInForm signInMethods={signInMethods.map(({ identifier }) => identifier)} />
+        ) : (
+          <IdentifierSignInForm signInMethods={signInMethods} />
+        )}
+      </SingleSignOnFormModeContextProvider>
     </FocusedAuthPageLayout>
   );
 };

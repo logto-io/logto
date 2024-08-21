@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
+import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import IdentifierRegisterForm from '@/components/IdentifierRegisterForm';
 import { useSieMethods } from '@/hooks/use-sie';
 import { identifierInputDescriptionMap } from '@/utils/form';
@@ -36,7 +37,9 @@ const IdentifierRegister = () => {
         text: 'description.all_account_creation_options',
       }}
     >
-      <IdentifierRegisterForm signUpMethods={signUpMethods} />
+      <SingleSignOnFormModeContextProvider>
+        <IdentifierRegisterForm signUpMethods={signUpMethods} />
+      </SingleSignOnFormModeContextProvider>
     </FocusedAuthPageLayout>
   );
 };
