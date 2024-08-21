@@ -1,11 +1,9 @@
 import { ReservedPlanId, Theme } from '@logto/schemas';
 import classNames from 'classnames';
-import { Suspense, useCallback, useContext } from 'react';
+import { Suspense, useCallback } from 'react';
 
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
 import FeatureTag, { BetaTag } from '@/components/FeatureTag';
-import { isCloud } from '@/consts/env';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -22,18 +20,17 @@ type Props = {
   readonly onClick: (data: SelectedGuide) => void;
   readonly hasBorder?: boolean;
   readonly hasButton?: boolean;
+  readonly hasPaywall?: boolean;
+  readonly isBeta?: boolean;
 };
 
-function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
+function GuideCard({ data, onClick, hasBorder, hasButton, hasPaywall, isBeta }: Props) {
   const { id, Logo, DarkLogo, metadata } = data;
 
-  const { target, name, description, isThirdParty } = metadata;
+  const { target, name, description } = metadata;
   const buttonText = target === 'API' ? 'guide.get_started' : 'guide.start_building';
-  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const theme = useTheme();
-
-  const showPaywallTag = isCloud && isThirdParty;
-  const showBetaTag = isCloud && isThirdParty;
+  const hasTags = Boolean(hasPaywall) || Boolean(isBeta);
 
   const handleClick = useCallback(() => {
     onClick({ id, metadata });
@@ -62,18 +59,12 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
         <div className={styles.infoWrapper}>
           <div className={styles.flexRow}>
             <div className={styles.name}>{name}</div>
-            {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-            {showPaywallTag || showBetaTag ? (
+            {hasTags && (
               <div className={styles.tagWrapper}>
-                {showPaywallTag && (
-                  <FeatureTag
-                    isVisible={currentSubscriptionQuota.thirdPartyApplicationsLimit === 0}
-                    plan={ReservedPlanId.Pro}
-                  />
-                )}
-                {showBetaTag && <BetaTag />}
+                {hasPaywall && <FeatureTag isVisible plan={ReservedPlanId.Pro} />}
+                {isBeta && <BetaTag />}
               </div>
-            ) : null}
+            )}
           </div>
           <div className={styles.description} title={description}>
             {description}
