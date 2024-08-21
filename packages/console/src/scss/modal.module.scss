@@ -6,7 +6,7 @@
   inset: 0;
   overflow-y: auto;
   padding: _.unit(3) 0;
-  z-index: 101;
+  @include _.z-index(modal);
 }
 
 .content {
@@ -25,6 +25,7 @@
 .fullScreen {
   position: fixed;
   inset: 0;
+  @include _.z-index(modal);
 
   &:focus-visible {
     outline: none;
