@@ -232,6 +232,10 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
         operation.description,
         `Path \`${path}\` and operation \`${method}\` must have a description.`
       );
+      assert(
+        operation.operationId,
+        `Path \`${path}\` and operation \`${method}\` must have an operationId.`
+      );
     }
 
     for (const tag of document.tags ?? []) {
