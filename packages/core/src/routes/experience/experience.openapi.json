@@ -100,7 +100,7 @@
     },
     "/api/experience/submit": {
       "post": {
-        "operationId": "SubmitExperience",
+        "operationId": "SubmitExperienceInteraction",
         "summary": "Submit experience interaction",
         "description": "Submit the current interaction. <br/>- Submit the verified user identity to the OIDC provider for further authentication (SignIn and Register). <br/>- Update the user's profile data if any (SignIn and Register). <br/>- Reset the password and clear all the interaction records (ForgotPassword).",
         "responses": {
