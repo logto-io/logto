@@ -46,6 +46,7 @@ const general = {
   continue: 'Continue',
   page_info: '{{min, number}}-{{max, number}} of {{total, number}}',
   learn_more: 'Learn more',
+  tab_error: '{{count, number}} error',
   tab_errors: '{{count, number}} errors',
   skip_for_now: 'Skip for now',
   remove: 'Remove',
