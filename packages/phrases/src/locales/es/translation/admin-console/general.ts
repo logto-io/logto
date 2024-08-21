@@ -47,7 +47,9 @@ const general = {
   continue: 'Continuar',
   page_info: '{{min, number}}-{{max, number}} de {{total, number}}',
   learn_more: 'Saber más',
-  tab_errors: '{{count, number}} errores',
+  /** UNTRANSLATED */
+  tab_error_one: '{{count, number}} error',
+  tab_error_other: '{{count, number}} errores',
   skip_for_now: 'Omitir por ahora',
   remove: 'Eliminar',
   visit: 'Visitar',

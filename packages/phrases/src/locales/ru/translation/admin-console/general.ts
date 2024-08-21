@@ -46,7 +46,9 @@ const general = {
   continue: 'Продолжить',
   page_info: '{{min, number}}-{{max, number}} из {{total, number}}',
   learn_more: 'Узнать больше',
-  tab_errors: '{{count, number}} ошибок',
+  /** UNTRANSLATED */
+  tab_error_one: '{{count, number}} error',
+  tab_error_other: '{{count, number}} ошибок',
   skip_for_now: 'Пропустить',
   remove: 'Удалить',
   visit: 'Посетить',
