@@ -14,9 +14,7 @@ import styles from './index.module.scss';
 
 export type SelectedGuide = {
   id: Guide['id'];
-  target: GuideMetadata['target'];
-  name: GuideMetadata['name'];
-  isThirdParty: GuideMetadata['isThirdParty'];
+  metadata: GuideMetadata;
 };
 
 type Props = {
@@ -27,13 +25,9 @@ type Props = {
 };
 
 function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
-  const {
-    id,
-    Logo,
-    DarkLogo,
-    metadata: { target, name, description, isThirdParty },
-  } = data;
+  const { id, Logo, DarkLogo, metadata } = data;
 
+  const { target, name, description, isThirdParty } = metadata;
   const buttonText = target === 'API' ? 'guide.get_started' : 'guide.start_building';
   const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const theme = useTheme();
@@ -42,8 +36,8 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
   const showBetaTag = isCloud && isThirdParty;
 
   const handleClick = useCallback(() => {
-    onClick({ id, target, name, isThirdParty });
-  }, [onClick, id, target, name, isThirdParty]);
+    onClick({ id, metadata });
+  }, [onClick, id, metadata]);
 
   return (
     <div
