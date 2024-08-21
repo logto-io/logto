@@ -10,6 +10,7 @@ import ActionsButton from '@/components/ActionsButton';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import UserPreview from '@/components/ItemPreview/UserPreview';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
@@ -27,6 +28,7 @@ function Members() {
   const {
     access: { canRemoveMember, canUpdateMemberRole },
   } = useCurrentTenantScopes();
+  const { mutateSubscriptionQuotaAndUsages } = useContext(SubscriptionDataContext);
 
   const { data, error, isLoading, mutate } = useSWR<TenantMemberResponse[], RequestError>(
     `api/tenants/${currentTenantId}/members`,
@@ -100,6 +102,7 @@ function Members() {
                             params: { tenantId: currentTenantId, userId: user.id },
                           });
                           void mutate();
+                          mutateSubscriptionQuotaAndUsages();
                         })
                     )}
                   />
