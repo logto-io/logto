@@ -25,7 +25,7 @@ import { handleClientCertificate, handleDPoP, checkOrganizationAccess } from '..
 
 import { validateSubjectToken } from './account.js';
 import { handleActorToken } from './actor-token.js';
-import { TokenExchangeTokenType, type TokenExchangeAct } from './types.js';
+import { type TokenExchangeAct } from './types.js';
 
 const { InvalidClient, InvalidGrant } = errors;
 
@@ -65,12 +65,6 @@ export const buildHandler: (
   // We don't allow third-party applications to perform token exchange
   assertThat(
     !(await isThirdPartyApplication(queries, client.clientId)),
-    new InvalidClient('third-party applications are not allowed for this grant type')
-  );
-  // Personal access tokens require secured client
-  assertThat(
-    params.subject_token_type !== TokenExchangeTokenType.PersonalAccessToken ||
-      client.tokenEndpointAuthMethod === 'client_secret_basic',
     new InvalidClient('third-party applications are not allowed for this grant type')
   );
 
