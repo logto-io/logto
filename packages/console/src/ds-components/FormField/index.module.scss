@@ -35,8 +35,11 @@
     color: var(--color-text-secondary);
   }
 
-  .featureTag {
+  .tagsWrapper {
+    display: flex;
+    align-items: center;
     margin-left: _.unit(2);
+    gap: _.unit(1);
   }
 }
 
