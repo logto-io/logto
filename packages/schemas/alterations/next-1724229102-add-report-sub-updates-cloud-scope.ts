@@ -1,7 +1,8 @@
-import { generateStandardId } from '@logto/shared/universal';
 import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
+
+import { generateStandardId } from './utils/1716643968-id-generation.js';
 
 type Resource = {
   tenantId: string;
