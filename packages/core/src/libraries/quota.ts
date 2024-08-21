@@ -14,6 +14,13 @@ import { type CloudConnectionLibrary } from './cloud-connection.js';
 
 export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
 
+/**
+ * @remarks
+ * Should report usage changes to the Cloud only when the following conditions are met:
+ * 1. The tenant is on the Pro plan.
+ * 2. The add-on is available to the tenant.
+ * 3. The usage key is add-on related usage key.
+ */
 const shouldReportSubscriptionUpdates = (
   planId: string,
   key: keyof SubscriptionQuota,
@@ -41,7 +48,7 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
     } = await getTenantSubscriptionData(cloudConnection);
 
     // Do not block Pro plan from adding add-on resources.
-    if (planId === ReservedPlanId.Pro) {
+    if (planId === ReservedPlanId.Pro && isReportSubscriptionUpdatesUsageKey(key)) {
       return;
     }
 
