@@ -32,9 +32,13 @@ const basePathname = '/organization-template';
 function OrganizationTemplate() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
-  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const {
+    currentSubscription: { planId },
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
-  const isOrganizationsDisabled = isCloud && !currentSubscriptionQuota.organizationsEnabled;
+  const isOrganizationsDisabled =
+    isCloud && !currentSubscriptionQuota.organizationsEnabled && planId !== ReservedPlanId.Pro;
   const { navigate } = useTenantPathname();
 
   const handleUpgradePlan = useCallback(() => {

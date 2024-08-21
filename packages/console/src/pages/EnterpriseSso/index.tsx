@@ -37,7 +37,7 @@ function EnterpriseSso() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentSubscription: { isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
 
@@ -45,7 +45,8 @@ function EnterpriseSso() {
     page: 1,
   });
 
-  const isSsoEnabled = !isCloud || currentSubscriptionQuota.enterpriseSsoLimit !== 0;
+  const isSsoEnabled =
+    !isCloud || currentSubscriptionQuota.enterpriseSsoLimit !== 0 || planId === ReservedPlanId.Pro;
 
   const url = buildUrl('api/sso-connectors', {
     page: String(page),

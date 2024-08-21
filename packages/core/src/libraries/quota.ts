@@ -36,13 +36,12 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
 
     const {
       planId,
-      isAddOnAvailable,
       quota: fullQuota,
       usage: fullUsage,
     } = await getTenantSubscriptionData(cloudConnection);
 
     // Do not block Pro plan from adding add-on resources.
-    if (shouldReportSubscriptionUpdates(planId, key, isAddOnAvailable)) {
+    if (planId === ReservedPlanId.Pro) {
       return;
     }
 

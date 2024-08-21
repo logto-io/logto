@@ -62,7 +62,8 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const isSsoEnabled =
     !isCloud ||
     currentSubscriptionQuota.enterpriseSsoLimit === null ||
-    currentSubscriptionQuota.enterpriseSsoLimit > 0;
+    currentSubscriptionQuota.enterpriseSsoLimit > 0 ||
+    planId === ReservedPlanId.Pro;
 
   const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
     'api/sso-connector-providers'

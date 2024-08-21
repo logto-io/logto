@@ -1,4 +1,4 @@
-import { MfaFactor, MfaPolicy, type SignInExperience } from '@logto/schemas';
+import { MfaFactor, MfaPolicy, ReservedPlanId, type SignInExperience } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -33,9 +33,13 @@ type Props = {
 };
 
 function MfaForm({ data, onMfaUpdated }: Props) {
-  const { currentSubscriptionQuota, mutateSubscriptionQuotaAndUsages } =
-    useContext(SubscriptionDataContext);
-  const isMfaDisabled = isCloud && !currentSubscriptionQuota.mfaEnabled;
+  const {
+    currentSubscription: { planId },
+    currentSubscriptionQuota,
+    mutateSubscriptionQuotaAndUsages,
+  } = useContext(SubscriptionDataContext);
+  const isMfaDisabled =
+    isCloud && !currentSubscriptionQuota.mfaEnabled && planId !== ReservedPlanId.Pro;
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
