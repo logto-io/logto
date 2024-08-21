@@ -71,12 +71,16 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
         setIdentifierInputValue({ type, value });
 
-        if (showSingleSignOnForm) {
-          await navigateToSingleSignOn();
+        if (
+          agreeToTermsPolicy &&
+          agreeToTermsPolicy !== AgreeToTermsPolicy.Automatic &&
+          !(await termsValidation())
+        ) {
           return;
         }
 
-        if (!(await termsValidation())) {
+        if (showSingleSignOnForm) {
+          await navigateToSingleSignOn();
           return;
         }
 
@@ -84,6 +88,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
       })(event);
     },
     [
+      agreeToTermsPolicy,
       clearErrorMessage,
       handleSubmit,
       navigateToSingleSignOn,

@@ -394,11 +394,13 @@ describe('<IdentifierRegisterForm />', () => {
         mockSsoConnectors
       );
       const emailInput = container.querySelector('input[name="id"]');
+      const termsButton = getByText('description.agree_with_terms');
 
       assert(emailInput, new Error('username input not found'));
 
       act(() => {
         fireEvent.change(emailInput, { target: { value: email } });
+        fireEvent.click(termsButton);
       });
 
       await waitFor(() => {
