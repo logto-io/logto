@@ -69,6 +69,7 @@ export enum InteractionMode {
 export enum FirstScreen {
   SignIn = 'sign_in',
   Register = 'register',
+  ResetPassword = 'reset_password',
   IdentifierSignIn = 'identifier:sign_in',
   IdentifierRegister = 'identifier:register',
   SingleSignOn = 'single_sign_on',

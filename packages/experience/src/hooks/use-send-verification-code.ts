@@ -44,15 +44,9 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
       }
 
       if (result) {
-        navigate(
-          {
-            pathname: `/${flow}/verification-code`,
-            search: window.location.search,
-          },
-          {
-            replace: replaceCurrentPage,
-          }
-        );
+        navigate(`/${flow}/verification-code`, {
+          replace: replaceCurrentPage,
+        });
       }
     },
     [asyncSendVerificationCode, flow, handleError, navigate, replaceCurrentPage]

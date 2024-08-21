@@ -19,7 +19,7 @@ type Props = {
   // eslint-disable-next-line react/boolean-prop-naming
   readonly autoFocus?: boolean;
   readonly defaultValue?: string;
-  readonly defaultType: VerificationCodeIdentifier;
+  readonly defaultType?: VerificationCodeIdentifier;
   readonly enabledTypes: VerificationCodeIdentifier[];
 };
 
