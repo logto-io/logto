@@ -1,7 +1,10 @@
 import classNames from 'classnames';
-import { type Ref, forwardRef } from 'react';
+import { type Ref, forwardRef, useContext } from 'react';
 
 import { type Guide } from '@/assets/docs/guides/types';
+import { isCloud } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import GuideCard, { type SelectedGuide } from '../GuideCard';
 
@@ -20,6 +23,9 @@ function GuideCardGroup(
   { className, categoryName, guides, hasCardBorder, hasCardButton, onClickGuide }: Props,
   ref: Ref<HTMLDivElement>
 ) {
+  const { isDevTenant } = useContext(TenantsContext);
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+
   if (!guides?.length) {
     return null;
   }
@@ -34,6 +40,11 @@ function GuideCardGroup(
             hasBorder={hasCardBorder}
             hasButton={hasCardButton}
             data={guide}
+            hasPaywall={
+              isCloud &&
+              guide.metadata.isThirdParty &&
+              (currentSubscriptionQuota.thirdPartyApplicationsLimit === 0 || isDevTenant)
+            }
             onClick={onClickGuide}
           />
         ))}
