@@ -20,10 +20,8 @@ export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
  * 1. The tenant is on the Pro plan.
  * 2. The usage key is add-on related usage key.
  */
-const shouldReportSubscriptionUpdates = (
-  planId: string,
-  key: keyof SubscriptionQuota,
-) => planId === ReservedPlanId.Pro && isReportSubscriptionUpdatesUsageKey(key);
+const shouldReportSubscriptionUpdates = (planId: string, key: keyof SubscriptionQuota) =>
+  planId === ReservedPlanId.Pro && isReportSubscriptionUpdatesUsageKey(key);
 
 export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
   const guardTenantUsageByKey = async (key: keyof SubscriptionQuota) => {
@@ -46,7 +44,7 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
     } = await getTenantSubscriptionData(cloudConnection);
 
     // Do not block Pro plan from adding add-on resources.
-    if (shouldReportSubscriptionUpdates(planId,key)) {
+    if (shouldReportSubscriptionUpdates(planId, key)) {
       return;
     }
 
