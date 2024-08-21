@@ -4,7 +4,7 @@ import type { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg?react';
-import FeatureTag, { type Props as FeatureTagProps } from '@/components/FeatureTag';
+import FeatureTag, { BetaTag, type Props as FeatureTagProps } from '@/components/FeatureTag';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -27,6 +27,7 @@ export type Props = {
   readonly headlineClassName?: string;
   readonly tip?: ToggleTipProps['content'];
   readonly featureTag?: FeatureTagProps;
+  readonly isBeta?: boolean;
 };
 
 function FormField({
@@ -40,9 +41,11 @@ function FormField({
   headlineSpacing = 'default',
   tip,
   featureTag,
+  isBeta,
   headlineClassName,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const hasTags = Boolean(featureTag) || Boolean(isBeta);
 
   return (
     <div className={classNames(styles.field, className)}>
@@ -66,7 +69,12 @@ function FormField({
             </IconButton>
           </ToggleTip>
         )}
-        {featureTag && <FeatureTag {...featureTag} className={styles.featureTag} />}
+        {hasTags && (
+          <div className={styles.tagsWrapper}>
+            {featureTag && <FeatureTag {...featureTag} className={styles.featureTag} />}
+            {isBeta && <BetaTag />}
+          </div>
+        )}
         <Spacer />
         {isRequired && <div className={styles.required}>{t('general.required')}</div>}
       </div>
