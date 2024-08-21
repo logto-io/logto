@@ -39,6 +39,9 @@
           "200": {
             "description": "The created connector."
           },
+          "403": {
+            "description": "The tenant has reached the maximum number of connectors."
+          },
           "422": {
             "description": "Invalid request body."
           }
