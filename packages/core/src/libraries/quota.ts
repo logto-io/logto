@@ -14,11 +14,14 @@ import { type CloudConnectionLibrary } from './cloud-connection.js';
 
 export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
 
-const shouldReportSubscriptionUpdates = (
-  planId: string,
-  key: keyof SubscriptionQuota,
-  isAddOnAvailable?: boolean
-) => planId === ReservedPlanId.Pro && isAddOnAvailable && isReportSubscriptionUpdatesUsageKey(key);
+/**
+ * @remarks
+ * Should report usage changes to the Cloud only when the following conditions are met:
+ * 1. The tenant is on the Pro plan.
+ * 2. The usage key is add-on related usage key.
+ */
+const shouldReportSubscriptionUpdates = (planId: string, key: keyof SubscriptionQuota) =>
+  planId === ReservedPlanId.Pro && isReportSubscriptionUpdatesUsageKey(key);
 
 export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
   const guardTenantUsageByKey = async (key: keyof SubscriptionQuota) => {
@@ -36,13 +39,12 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
 
     const {
       planId,
-      isAddOnAvailable,
       quota: fullQuota,
       usage: fullUsage,
     } = await getTenantSubscriptionData(cloudConnection);
 
     // Do not block Pro plan from adding add-on resources.
-    if (shouldReportSubscriptionUpdates(planId, key, isAddOnAvailable)) {
+    if (shouldReportSubscriptionUpdates(planId, key)) {
       return;
     }
 
@@ -159,7 +161,7 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
 
     const { planId, isAddOnAvailable } = await getTenantSubscriptionData(cloudConnection);
 
-    if (shouldReportSubscriptionUpdates(planId, key, isAddOnAvailable)) {
+    if (shouldReportSubscriptionUpdates(planId, key) && isAddOnAvailable) {
       await reportSubscriptionUpdates(cloudConnection, key);
     }
   };

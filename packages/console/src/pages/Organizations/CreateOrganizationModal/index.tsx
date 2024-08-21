@@ -40,7 +40,8 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     data: { organizationUpsellNoticeAcknowledged },
     update,
   } = useUserPreferences();
-  const isOrganizationsDisabled = isCloud && !currentSubscriptionQuota.organizationsEnabled;
+  const isOrganizationsDisabled =
+    isCloud && !currentSubscriptionQuota.organizationsEnabled && planId !== ReservedPlanId.Pro;
 
   const {
     reset,

@@ -17,10 +17,10 @@ type Props = {
 function PageWrapper({ children }: Props) {
   const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentSubscription: { isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota: { mfaEnabled },
   } = useContext(SubscriptionDataContext);
-  const isMfaEnabled = !isCloud || mfaEnabled;
+  const isMfaEnabled = !isCloud || mfaEnabled || planId === ReservedPlanId.Pro;
 
   return (
     <div className={styles.container}>

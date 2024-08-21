@@ -26,7 +26,7 @@ const organizationsPathname = '/organizations';
 function Organizations() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const {
-    currentSubscription: { isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
@@ -34,7 +34,8 @@ function Organizations() {
   const { navigate } = useTenantPathname();
   const [isCreating, setIsCreating] = useState(false);
 
-  const isOrganizationsDisabled = isCloud && !currentSubscriptionQuota.organizationsEnabled;
+  const isOrganizationsDisabled =
+    isCloud && !currentSubscriptionQuota.organizationsEnabled && planId !== ReservedPlanId.Pro;
 
   const upgradePlan = useCallback(() => {
     navigate(subscriptionPage);

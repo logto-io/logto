@@ -47,7 +47,9 @@ const general = {
   continue: 'Devam et',
   page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
   learn_more: 'Daha fazla bilgi edinin',
-  tab_errors: '{{count, number}} hata',
+  /** UNTRANSLATED */
+  tab_error_one: '{{count, number}} error',
+  tab_error_other: '{{count, number}} hata',
   skip_for_now: 'Şimdilik atla',
   remove: 'Kaldır',
   visit: 'Ziyaret et',

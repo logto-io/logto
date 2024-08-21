@@ -57,6 +57,10 @@ export const reportSubscriptionUpdates = async (
   );
 };
 
+/**
+ * @remarks
+ * Check whether the provided usage key is add-on related usage key.
+ */
 export const isReportSubscriptionUpdatesUsageKey = (
   value: string
 ): value is ReportSubscriptionUpdatesUsageKey => {
