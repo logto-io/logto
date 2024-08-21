@@ -2,6 +2,7 @@
   "paths": {
     "/api/experience/verification/web-authn/registration": {
       "post": {
+        "operationId": "CreateWebAuthnRegistrationVerification",
         "summary": "Create WebAuthn registration",
         "description": "Creates a new WebAuthn registration verification record to allow the user to bind a new WebAuthn credential to their account.",
         "responses": {
@@ -30,6 +31,7 @@
     },
     "/api/experience/verification/web-authn/registration/verify": {
       "post": {
+        "operationId": "VerifyWebAuthnRegistrationVerification",
         "summary": "Verify WebAuthn registration",
         "description": "Verifies the WebAuthn registration response against the user's WebAuthn registration challenge. If the response is valid, the WebAuthn registration record will be marked as verified.",
         "requestBody": {
@@ -74,6 +76,7 @@
     },
     "/api/experience/verification/web-authn/authentication": {
       "post": {
+        "operationId": "CreateWebAuthnAuthenticationVerification",
         "summary": "Initiate WebAuthn authentication",
         "description": "Creates a new WebAuthn authentication verification record, allowing the user to authenticate with their WebAuthn credential.",
         "responses": {
@@ -105,6 +108,7 @@
     },
     "/api/experience/verification/web-authn/authentication/verify": {
       "post": {
+        "operationId": "VerifyWebAuthnAuthenticationVerification",
         "summary": "Verify WebAuthn authentication",
         "description": "Verifies the WebAuthn authentication response against the user's authentication challenge. Upon successful verification, the WebAuthn authentication verification record will be marked as verified.",
         "requestBody": {
