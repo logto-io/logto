@@ -1,4 +1,4 @@
-import { type PersonalAccessToken as Token } from '@logto/schemas';
+import { type PersonalAccessToken, type PersonalAccessToken as Token } from '@logto/schemas';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -15,6 +15,7 @@ import { type Column } from '@/ds-components/Table/types';
 import useApi, { type RequestError } from '@/hooks/use-api';
 
 import CreateTokenModal from './CreateTokenModal';
+import EditTokenModal from './EditTokenModal';
 import styles from './index.module.scss';
 
 type Props = {
@@ -28,6 +29,7 @@ function PersonalAccessTokens({ userId }: Props) {
     `api/users/${userId}/personal-access-tokens`
   );
   const api = useApi();
+  const [editToken, setEditToken] = useState<PersonalAccessToken>();
 
   const tableColumns: Array<Column<Token>> = useMemo(
     () => [
@@ -60,15 +62,18 @@ function PersonalAccessTokens({ userId }: Props) {
       {
         title: '',
         dataIndex: 'actions',
-        render: ({ name }) => (
+        render: (token) => (
           <ActionsButton
             fieldName="user_details.personal_access_tokens.title_short"
             deleteConfirmation="user_details.personal_access_tokens.delete_confirmation"
             onDelete={async () => {
               await api.delete(
-                `api/users/${userId}/personal-access-tokens/${encodeURIComponent(name)}`
+                `api/users/${userId}/personal-access-tokens/${encodeURIComponent(token.name)}`
               );
               void mutate();
+            }}
+            onEdit={() => {
+              setEditToken(token);
             }}
           />
         ),
@@ -126,6 +131,18 @@ function PersonalAccessTokens({ userId }: Props) {
           void mutate();
         }}
       />
+      {editToken && (
+        <EditTokenModal
+          userId={userId}
+          token={editToken}
+          onClose={(updated) => {
+            if (updated) {
+              void mutate();
+            }
+            setEditToken(undefined);
+          }}
+        />
+      )}
     </FormField>
   );
 }
