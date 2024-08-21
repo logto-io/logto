@@ -1,4 +1,4 @@
-import { MissingProfile, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
@@ -37,10 +37,17 @@ jest.mock('@/apis/utils', () => ({
 }));
 
 describe('continue with email or phone', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   const renderPage = (missingProfile: VerificationCodeProfileType) =>
     renderWithPageContext(
       <SettingsProvider>
-        <SetEmailOrPhone missingProfile={missingProfile} />
+        <SetEmailOrPhone
+          missingProfile={missingProfile}
+          interactionEvent={InteractionEvent.Register}
+        />
       </SettingsProvider>
     );
 
@@ -75,7 +82,7 @@ describe('continue with email or phone', () => {
   ] satisfies Array<[VerificationCodeProfileType, VerificationCodeIdentifier, string]>)(
     'should send verification code properly',
     async (type, identifier, input) => {
-      const { getByLabelText, getByText, container } = renderPage(type);
+      const { getByText, container } = renderPage(type);
 
       const inputField = container.querySelector('input[name="identifier"]');
       const submitButton = getByText('action.continue');
@@ -92,9 +99,14 @@ describe('continue with email or phone', () => {
       });
 
       await waitFor(() => {
-        expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.Continue, {
-          [identifier]: identifier === SignInIdentifier.Phone ? `${countryCode}${input}` : input,
-        });
+        expect(sendVerificationCodeApi).toBeCalledWith(
+          UserFlow.Continue,
+          {
+            type: identifier,
+            value: identifier === SignInIdentifier.Phone ? `${countryCode}${input}` : input,
+          },
+          InteractionEvent.Register
+        );
       });
     }
   );

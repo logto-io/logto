@@ -1,13 +1,20 @@
 /* Replace legacy useSendVerificationCode hook with this one after the refactor */
 
 import { SignInIdentifier } from '@logto/schemas';
-import { useState, useCallback } from 'react';
+import { conditional } from '@silverhand/essentials';
+import { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import { type VerificationCodeIdentifier, type UserFlow } from '@/types';
+import {
+  UserFlow,
+  type ContinueFlowInteractionEvent,
+  type VerificationCodeIdentifier,
+} from '@/types';
+import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
 const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -15,6 +22,7 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
 
   const handleError = useErrorHandler();
   const asyncSendVerificationCode = useApi(sendVerificationCodeApi);
+  const { setVerificationId } = useContext(UserInteractionContext);
 
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
@@ -26,10 +34,15 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
   };
 
   const onSubmit = useCallback(
-    async ({ identifier, value }: Payload) => {
-      const [error, result] = await asyncSendVerificationCode(flow, {
-        [identifier]: value,
-      });
+    async ({ identifier, value }: Payload, interactionEvent?: ContinueFlowInteractionEvent) => {
+      const [error, result] = await asyncSendVerificationCode(
+        flow,
+        {
+          type: identifier,
+          value,
+        },
+        interactionEvent
+      );
 
       if (error) {
         await handleError(error, {
@@ -44,6 +57,9 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
       }
 
       if (result) {
+        // Store the verification ID in the context so that we can use it in the next step
+        setVerificationId(codeVerificationTypeMap[identifier], result.verificationId);
+
         navigate(
           {
             pathname: `/${flow}/verification-code`,
@@ -51,11 +67,17 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
           },
           {
             replace: replaceCurrentPage,
+            // Append the interaction event to the state so that we can use it in the next step
+            ...conditional(
+              flow === UserFlow.Continue && {
+                state: { interactionEvent },
+              }
+            ),
           }
         );
       }
     },
-    [asyncSendVerificationCode, flow, handleError, navigate, replaceCurrentPage]
+    [asyncSendVerificationCode, flow, handleError, navigate, replaceCurrentPage, setVerificationId]
   );
 
   return {

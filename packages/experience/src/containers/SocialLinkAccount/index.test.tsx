@@ -4,7 +4,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
-import { registerWithVerifiedSocial, bindSocialRelatedUser } from '@/apis/interaction';
+import { bindSocialRelatedUser, registerWithVerifiedIdentifier } from '@/apis/experience';
 
 import SocialLinkAccount from '.';
 
@@ -15,13 +15,14 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  registerWithVerifiedSocial: jest.fn(async () => ({ redirectTo: '/' })),
+jest.mock('@/apis/experience', () => ({
+  registerWithVerifiedIdentifier: jest.fn(async () => ({ redirectTo: '/' })),
   bindSocialRelatedUser: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('SocialLinkAccount', () => {
   const relatedUser = Object.freeze({ type: 'email', value: 'foo@logto.io' });
+  const verificationId = 'foo';
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -30,7 +31,11 @@ describe('SocialLinkAccount', () => {
   it('should render bindUser Button', async () => {
     const { getByText } = renderWithPageContext(
       <SettingsProvider>
-        <SocialLinkAccount connectorId="github" relatedUser={relatedUser} />
+        <SocialLinkAccount
+          connectorId="github"
+          relatedUser={relatedUser}
+          verificationId={verificationId}
+        />
       </SettingsProvider>
     );
     const bindButton = getByText('action.bind');
@@ -39,10 +44,7 @@ describe('SocialLinkAccount', () => {
       fireEvent.click(bindButton);
     });
 
-    expect(bindSocialRelatedUser).toBeCalledWith({
-      connectorId: 'github',
-      email: 'foo@logto.io',
-    });
+    expect(bindSocialRelatedUser).toBeCalledWith(verificationId);
   });
 
   it('should render link email with email signUp identifier', () => {
@@ -57,7 +59,11 @@ describe('SocialLinkAccount', () => {
           },
         }}
       >
-        <SocialLinkAccount connectorId="github" relatedUser={relatedUser} />
+        <SocialLinkAccount
+          connectorId="github"
+          relatedUser={relatedUser}
+          verificationId={verificationId}
+        />
       </SettingsProvider>
     );
 
@@ -77,7 +83,11 @@ describe('SocialLinkAccount', () => {
           },
         }}
       >
-        <SocialLinkAccount connectorId="github" relatedUser={relatedUser} />
+        <SocialLinkAccount
+          connectorId="github"
+          relatedUser={relatedUser}
+          verificationId={verificationId}
+        />
       </SettingsProvider>
     );
 
@@ -97,7 +107,11 @@ describe('SocialLinkAccount', () => {
           },
         }}
       >
-        <SocialLinkAccount connectorId="github" relatedUser={relatedUser} />
+        <SocialLinkAccount
+          connectorId="github"
+          relatedUser={relatedUser}
+          verificationId={verificationId}
+        />
       </SettingsProvider>
     );
 
@@ -108,7 +122,11 @@ describe('SocialLinkAccount', () => {
   it('should call registerWithVerifiedSocial when click create button', async () => {
     const { getByText } = renderWithPageContext(
       <SettingsProvider>
-        <SocialLinkAccount connectorId="github" relatedUser={relatedUser} />
+        <SocialLinkAccount
+          connectorId="github"
+          relatedUser={relatedUser}
+          verificationId={verificationId}
+        />
       </SettingsProvider>
     );
     const createButton = getByText('action.create_account_without_linking');
@@ -117,6 +135,6 @@ describe('SocialLinkAccount', () => {
       fireEvent.click(createButton);
     });
 
-    expect(registerWithVerifiedSocial).toBeCalledWith('github');
+    expect(registerWithVerifiedIdentifier).toBeCalledWith(verificationId);
   });
 });

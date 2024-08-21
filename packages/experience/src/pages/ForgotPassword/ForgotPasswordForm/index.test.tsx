@@ -1,10 +1,10 @@
-import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { putInteraction, sendVerificationCode } from '@/apis/interaction';
+import { sendVerificationCodeApi } from '@/apis/utils';
 import { UserFlow, type VerificationCodeIdentifier } from '@/types';
 
 import ForgotPasswordForm from '.';
@@ -21,9 +21,8 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  sendVerificationCode: jest.fn(() => ({ success: true })),
-  putInteraction: jest.fn(() => ({ success: true })),
+jest.mock('@/apis/utils', () => ({
+  sendVerificationCodeApi: jest.fn().mockResolvedValue({ verificationId: '123' }),
 }));
 
 describe('ForgotPasswordForm', () => {
@@ -47,6 +46,8 @@ describe('ForgotPasswordForm', () => {
     Object.defineProperty(window, 'location', {
       value: originalLocation,
     });
+
+    jest.clearAllMocks();
   });
 
   describe.each([
@@ -84,8 +85,14 @@ describe('ForgotPasswordForm', () => {
         });
 
         await waitFor(() => {
-          expect(putInteraction).toBeCalledWith(InteractionEvent.ForgotPassword);
-          expect(sendVerificationCode).toBeCalledWith({ email });
+          expect(sendVerificationCodeApi).toBeCalledWith(
+            UserFlow.ForgotPassword,
+            {
+              type: identifier,
+              value,
+            },
+            undefined
+          );
           expect(mockedNavigate).toBeCalledWith(
             {
               pathname: `/${UserFlow.ForgotPassword}/verification-code`,

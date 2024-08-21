@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, VerificationType } from '@logto/schemas';
 import { renderHook } from '@testing-library/react';
 import { Routes, Route } from 'react-router-dom';
 import { remove } from 'tiny-cookie';
@@ -16,6 +16,7 @@ describe('VerificationCode Page', () => {
 
   beforeEach(() => {
     set(StorageKeys.IdentifierInputValue, { type: SignInIdentifier.Email, value: 'foo@logto.io' });
+    set(StorageKeys.verificationIds, { [VerificationType.EmailVerificationCode]: 'foo' });
   });
 
   afterEach(() => {
