@@ -3,7 +3,7 @@
  * Remove this once we have a better way to get the sign in experience through SSR
  */
 
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, VerificationType } from '@logto/schemas';
 import { isObject } from '@silverhand/essentials';
 import i18next from 'i18next';
 
@@ -68,3 +68,8 @@ export const parseHtmlTitle = (path: string) => {
 
   return 'Logto';
 };
+
+export const codeVerificationTypeMap = Object.freeze({
+  [SignInIdentifier.Email]: VerificationType.EmailVerificationCode,
+  [SignInIdentifier.Phone]: VerificationType.PhoneVerificationCode,
+});

@@ -1,26 +1,51 @@
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, type VerificationCodeIdentifier } from '@logto/schemas';
 
-import { UserFlow } from '@/types';
+import { type ContinueFlowInteractionEvent, UserFlow } from '@/types';
 
-import type { SendVerificationCodePayload } from './interaction';
-import { putInteraction, sendVerificationCode } from './interaction';
+import { initInteraction, sendVerificationCode } from './experience';
 
 /** Move to API */
 export const sendVerificationCodeApi = async (
   type: UserFlow,
-  payload: SendVerificationCodePayload
+  identifier: VerificationCodeIdentifier,
+  interactionEvent?: ContinueFlowInteractionEvent
 ) => {
-  if (type === UserFlow.ForgotPassword) {
-    await putInteraction(InteractionEvent.ForgotPassword);
+  switch (type) {
+    case UserFlow.SignIn: {
+      await initInteraction(InteractionEvent.SignIn);
+      return sendVerificationCode(InteractionEvent.SignIn, identifier);
+    }
+    case UserFlow.Register: {
+      await initInteraction(InteractionEvent.Register);
+      return sendVerificationCode(InteractionEvent.Register, identifier);
+    }
+    case UserFlow.ForgotPassword: {
+      await initInteraction(InteractionEvent.ForgotPassword);
+      return sendVerificationCode(InteractionEvent.ForgotPassword, identifier);
+    }
+    case UserFlow.Continue: {
+      return sendVerificationCode(interactionEvent ?? InteractionEvent.SignIn, identifier);
+    }
   }
+};
 
-  if (type === UserFlow.SignIn) {
-    await putInteraction(InteractionEvent.SignIn);
+export const resendVerificationCodeApi = async (
+  type: UserFlow,
+  identifier: VerificationCodeIdentifier
+) => {
+  switch (type) {
+    case UserFlow.SignIn: {
+      return sendVerificationCode(InteractionEvent.SignIn, identifier);
+    }
+    case UserFlow.Register: {
+      return sendVerificationCode(InteractionEvent.Register, identifier);
+    }
+    case UserFlow.ForgotPassword: {
+      return sendVerificationCode(InteractionEvent.ForgotPassword, identifier);
+    }
+    case UserFlow.Continue: {
+      // Continue flow does not have its own email template, always use sign-in template for now
+      return sendVerificationCode(InteractionEvent.SignIn, identifier);
+    }
   }
-
-  if (type === UserFlow.Register) {
-    await putInteraction(InteractionEvent.Register);
-  }
-
-  return sendVerificationCode(payload);
 };

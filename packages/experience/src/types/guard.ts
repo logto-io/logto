@@ -1,8 +1,10 @@
 import {
-  SignInIdentifier,
-  MissingProfile,
+  InteractionEvent,
   MfaFactor,
+  MissingProfile,
+  SignInIdentifier,
   type SsoConnectorMetadata,
+  VerificationType,
 } from '@logto/schemas';
 import * as s from 'superstruct';
 
@@ -81,11 +83,9 @@ export const totpBindingStateGuard = s.assign(
 
 export type TotpBindingState = s.Infer<typeof totpBindingStateGuard>;
 
-export const backupCodeErrorDataGuard = s.object({
+export const backupCodeBindingStateGuard = s.object({
   codes: s.array(s.string()),
 });
-
-export const backupCodeBindingStateGuard = backupCodeErrorDataGuard;
 
 export type BackupCodeBindingState = s.Infer<typeof backupCodeBindingStateGuard>;
 
@@ -130,3 +130,29 @@ export const identifierInputValueGuard: s.Describe<IdentifierInputValue> = s.obj
  * Type guard for the `identifier` search param config on the identifier sign-in/register page.
  */
 export const identifierSearchParamGuard = s.array(identifierEnumGuard);
+
+type StringGuard = ReturnType<typeof s.string>;
+// eslint-disable-next-line no-restricted-syntax -- Object.fromEntries can not infer the key type
+const mapGuard = Object.fromEntries(
+  Object.values(VerificationType).map((type) => [type, s.string()])
+) as { [key in VerificationType]: StringGuard };
+
+/**
+ * Defines the type guard for the verification ids map.
+ */
+export const verificationIdsMapGuard = s.partial(mapGuard);
+export type VerificationIdsMap = s.Infer<typeof verificationIdsMapGuard>;
+
+/**
+ * Define the interaction event state guard.
+ *
+ * This is used to pass the current interaction event state to the continue flow page.
+ *
+ * - If is in the sign in flow, directly call the submitInteraction endpoint after the user completes the profile.
+ * - If is in the register flow, we need to call the identify endpoint first after the user completes the profile.
+ */
+export const continueFlowStateGuard = s.object({
+  interactionEvent: s.enums([InteractionEvent.SignIn, InteractionEvent.Register]),
+});
+
+export type InteractionFlowState = s.Infer<typeof continueFlowStateGuard>;

@@ -1,12 +1,14 @@
 import {
   AgreeToTermsPolicy,
   ConnectorPlatform,
+  VerificationType,
   type ExperienceSocialConnector,
 } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import { getSocialAuthorizationUrl } from '@/apis/interaction';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { getSocialAuthorizationUrl } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -20,6 +22,8 @@ const useSocial = () => {
   const handleError = useErrorHandler();
   const asyncInvokeSocialSignIn = useApi(getSocialAuthorizationUrl);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
+  const { setVerificationId } = useContext(UserInteractionContext);
+
   const redirectTo = useGlobalRedirectTo({
     shouldClearInteractionContextSession: false,
     isReplace: false,
@@ -69,19 +73,23 @@ const useSocial = () => {
         return;
       }
 
-      if (!result?.redirectTo) {
+      if (!result) {
         return;
       }
 
+      const { verificationId, authorizationUri } = result;
+
+      setVerificationId(VerificationType.Social, verificationId);
+
       // Invoke native social sign-in flow
       if (isNativeWebview()) {
-        nativeSignInHandler(result.redirectTo, connector);
+        nativeSignInHandler(authorizationUri, connector);
 
         return;
       }
 
       // Invoke web social sign-in flow
-      await redirectTo(result.redirectTo);
+      await redirectTo(authorizationUri);
     },
     [
       agreeToTermsPolicy,
@@ -89,6 +97,7 @@ const useSocial = () => {
       handleError,
       nativeSignInHandler,
       redirectTo,
+      setVerificationId,
       termsValidation,
     ]
   );

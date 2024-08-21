@@ -4,12 +4,12 @@ import {
   experience,
   type SsoConnectorMetadata,
 } from '@logto/schemas';
-import { useEffect, useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { getSingleSignOnConnectors } from '@/apis/single-sign-on';
+import { getSsoConnectors } from '@/apis/experience';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import useApi from '@/hooks/use-api';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
@@ -28,7 +28,7 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
 
   const { showSingleSignOnForm, setShowSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
 
-  const request = useApi(getSingleSignOnConnectors, { silent: true });
+  const request = useApi(getSsoConnectors, { silent: true });
 
   const singleSignOn = useSingleSignOn();
 
@@ -43,7 +43,7 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
         return false;
       }
 
-      const connectors = result
+      const connectors = result.connectorIds
         .map((connectorId) => availableSsoConnectorsMap.get(connectorId))
         // eslint-disable-next-line unicorn/prefer-native-coercion-functions -- make the type more specific
         .filter((connector): connector is SsoConnectorMetadata => Boolean(connector));

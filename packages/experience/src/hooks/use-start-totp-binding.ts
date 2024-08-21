@@ -1,8 +1,9 @@
-import { MfaFactor } from '@logto/schemas';
-import { useCallback } from 'react';
+import { MfaFactor, VerificationType } from '@logto/schemas';
+import { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { createTotpSecret } from '@/apis/interaction';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { createTotpSecret } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { UserMfaFlow } from '@/types';
@@ -15,6 +16,7 @@ type Options = {
 const useStartTotpBinding = ({ replace }: Options = {}) => {
   const navigate = useNavigate();
   const asyncCreateTotpSecret = useApi(createTotpSecret);
+  const { setVerificationId } = useContext(UserInteractionContext);
 
   const handleError = useErrorHandler();
 
@@ -27,18 +29,20 @@ const useStartTotpBinding = ({ replace }: Options = {}) => {
         return;
       }
 
-      const { secret, secretQrCode } = result ?? {};
-
-      if (secret && secretQrCode) {
+      if (result) {
+        const { secret, secretQrCode, verificationId } = result;
         const state: TotpBindingState = {
           secret,
           secretQrCode,
           ...flowState,
         };
+
+        setVerificationId(VerificationType.TOTP, verificationId);
+
         navigate({ pathname: `/${UserMfaFlow.MfaBinding}/${MfaFactor.TOTP}` }, { replace, state });
       }
     },
-    [asyncCreateTotpSecret, handleError, navigate, replace]
+    [asyncCreateTotpSecret, handleError, navigate, replace, setVerificationId]
   );
 };
 

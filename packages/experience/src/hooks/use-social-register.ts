@@ -1,25 +1,30 @@
+import { InteractionEvent } from '@logto/schemas';
 import { useCallback } from 'react';
 
-import { registerWithVerifiedSocial } from '@/apis/interaction';
+import { registerWithVerifiedIdentifier } from '@/apis/experience';
 
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 import useGlobalRedirectTo from './use-global-redirect-to';
 import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
 
-const useSocialRegister = (connectorId?: string, replace?: boolean) => {
+const useSocialRegister = (connectorId: string, replace?: boolean) => {
   const handleError = useErrorHandler();
-  const asyncRegisterWithSocial = useApi(registerWithVerifiedSocial);
+  const asyncRegisterWithSocial = useApi(registerWithVerifiedIdentifier);
   const redirectTo = useGlobalRedirectTo();
 
-  const preSignInErrorHandler = usePreSignInErrorHandler({ linkSocial: connectorId, replace });
+  const preRegisterErrorHandler = usePreSignInErrorHandler({
+    linkSocial: connectorId,
+    replace,
+    interactionEvent: InteractionEvent.Register,
+  });
 
   return useCallback(
-    async (connectorId: string) => {
-      const [error, result] = await asyncRegisterWithSocial(connectorId);
+    async (verificationId: string) => {
+      const [error, result] = await asyncRegisterWithSocial(verificationId);
 
       if (error) {
-        await handleError(error, preSignInErrorHandler);
+        await handleError(error, preRegisterErrorHandler);
 
         return;
       }
@@ -28,7 +33,7 @@ const useSocialRegister = (connectorId?: string, replace?: boolean) => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncRegisterWithSocial, handleError, preSignInErrorHandler, redirectTo]
+    [asyncRegisterWithSocial, handleError, preRegisterErrorHandler, redirectTo]
   );
 };
 
