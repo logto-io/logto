@@ -58,7 +58,7 @@ export const buildHandler: (
   queries: Queries
 ) => Parameters<Provider['registerGrantType']>['1'] = (envSet, queries) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
-  const { Account, AccessToken } = provider;
+  const { Account, AccessToken, Grant } = provider;
 
   assertThat(params, new InvalidGrant('parameters must be available'));
   assertThat(client, new InvalidClient('client must be available'));
@@ -90,6 +90,11 @@ export const buildHandler: (
 
   ctx.oidc.entity('Account', account);
 
+  const grant = new Grant({
+    accountId: account.accountId,
+    clientId: client.clientId,
+  });
+
   const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
 
   const accessToken = new AccessToken({
@@ -97,9 +102,7 @@ export const buildHandler: (
     clientId: client.clientId,
     gty: GrantType.TokenExchange,
     client,
-    // The token exchange grant type does not have a grant ID or grant object,
-    // so we use an empty string here.
-    grantId: '',
+    grantId: await grant.save(),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     scope: undefined!,
     extra: {
@@ -147,6 +150,7 @@ export const buildHandler: (
       scope: availableScopes.join(' '),
     };
     accessToken.scope = issuedScopes;
+    grant.addResourceScope(audience, accessToken.scope);
     /* === End RFC 0001 === */
   } else if (resource) {
     const resourceServerInfo = await resourceIndicators.getResourceServerInfo(
@@ -163,6 +167,7 @@ export const buildHandler: (
       // @ts-expect-error -- code from oidc-provider
       .filter(Set.prototype.has.bind(accessToken.resourceServer.scopes))
       .join(' ');
+    grant.addResourceScope(resource, accessToken.scope);
   } else {
     accessToken.claims = ctx.oidc.claims;
     // Filter scopes from `oidcScopes`,
@@ -173,6 +178,7 @@ export const buildHandler: (
       // wrap it with `new Set` to make it work
       .filter((name) => new Set(oidcScopes).has(name))
       .join(' ');
+    grant.addOIDCScope(accessToken.scope);
   }
 
   // Handle the actor token
@@ -189,6 +195,8 @@ export const buildHandler: (
     };
   }
 
+  await grant.save();
+  ctx.oidc.entity('Grant', grant);
   ctx.oidc.entity('AccessToken', accessToken);
   const accessTokenString = await accessToken.save();
 

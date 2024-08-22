@@ -1,5 +1,4 @@
 import { type SubjectToken } from '@logto/schemas';
-import { createMockUtils } from '@logto/shared/esm';
 import { type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
@@ -10,11 +9,6 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import { TokenExchangeTokenType } from './types.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
-
-const { handleActorToken } = mockEsm('./actor-token.js', () => ({
-  handleActorToken: jest.fn().mockResolvedValue({ accountId: undefined }),
-}));
 
 const { buildHandler } = await import('./index.js');
 
