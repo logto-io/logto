@@ -10,6 +10,7 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type KoaContextWithOIDC, type UnknownObject } from 'oidc-provider';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
@@ -142,10 +143,17 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         (await libraries.jwtCustomizers.getUserContext(token.accountId))
     );
 
+    const subjectTokenResult = z
+      .object({
+        subjectTokenId: z.string(),
+      })
+      .safeParse(token.extra);
     const subjectToken =
       isTokenClientCredentials || token.gty !== GrantType.TokenExchange
         ? undefined
-        : await trySafe(async () => queries.subjectTokens.findSubjectToken(token.grantId));
+        : subjectTokenResult.success
+        ? await queries.subjectTokens.findSubjectToken(subjectTokenResult.data.subjectTokenId)
+        : undefined;
 
     const payload: CustomJwtFetcher = {
       script,

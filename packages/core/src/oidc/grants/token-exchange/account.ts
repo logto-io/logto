@@ -1,4 +1,3 @@
-import { generateStandardShortId } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import { errors } from 'oidc-provider';
 
@@ -13,7 +12,7 @@ export const validateSubjectToken = async (
   queries: Queries,
   subjectToken: string,
   type: string
-): Promise<{ userId: string; grantId: string; subjectTokenId?: string }> => {
+): Promise<{ userId: string; subjectTokenId?: string }> => {
   const {
     subjectTokens: { findSubjectToken },
     personalAccessTokens: { findByValue },
@@ -27,7 +26,6 @@ export const validateSubjectToken = async (
 
     return {
       userId: token.userId,
-      grantId: token.id,
       subjectTokenId: token.id,
     };
   }
@@ -39,7 +37,7 @@ export const validateSubjectToken = async (
       new InvalidGrant('subject token is expired')
     );
 
-    return { userId: token.userId, grantId: generateStandardShortId() };
+    return { userId: token.userId };
   }
   throw new InvalidGrant('unsupported subject token type');
 };
