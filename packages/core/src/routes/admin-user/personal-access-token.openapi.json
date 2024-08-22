@@ -1,9 +1,4 @@
 {
-  "tags": [
-    {
-      "name": "Dev feature"
-    }
-  ],
   "paths": {
     "/api/users/{userId}/personal-access-tokens": {
       "get": {

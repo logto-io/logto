@@ -1,4 +1,3 @@
-import { EnvSet } from '../../env-set/index.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import adminUserBasicsRoutes from './basics.js';
@@ -16,7 +15,5 @@ export default function adminUserRoutes<T extends ManagementApiRouter>(...args: 
   adminUserSocialRoutes(...args);
   adminUserOrganizationRoutes(...args);
   adminUserMfaVerificationsRoutes(...args);
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    adminUserPersonalAccessTokenRoutes(...args);
-  }
+  adminUserPersonalAccessTokenRoutes(...args);
 }
