@@ -80,14 +80,32 @@ describe('Token Exchange (Personal Access Token)', () => {
           grant_type: GrantType.TokenExchange,
           subject_token: testToken,
           subject_token_type: tokenType,
+          scope: 'openid profile',
         }),
       })
-      .json();
+      .json<{ access_token: string }>();
 
     expect(body).toHaveProperty('access_token');
     expect(body).toHaveProperty('token_type', 'Bearer');
     expect(body).toHaveProperty('expires_in');
-    expect(body).toHaveProperty('scope', '');
+    expect(body).toHaveProperty('scope', 'openid profile');
+
+    const { access_token } = body;
+    // Send to introspection endpoint
+    const introspectionResponse = await oidcApi
+      .post('token/introspection', {
+        headers: {
+          ...formUrlEncodedHeaders,
+          Authorization: authorizationHeader,
+        },
+        body: new URLSearchParams({
+          token: access_token,
+          token_type_hint: 'access_token',
+        }),
+      })
+      .json();
+    expect(introspectionResponse).toHaveProperty('active', true);
+    expect(introspectionResponse).toHaveProperty('sub', testUserId);
   });
 
   it('should be able to use for multiple times', async () => {
