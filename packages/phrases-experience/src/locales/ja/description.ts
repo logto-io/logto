@@ -104,6 +104,7 @@ const description = {
   identifier_register_description:
     '{{types, list(type: disjunction;)}}を入力して新しいアカウントを作成します。',
   all_account_creation_options: 'すべてのアカウント作成オプション',
+  back_to_sign_in: 'サインインに戻る',
 };
 
 export default Object.freeze(description);

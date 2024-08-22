@@ -102,6 +102,7 @@ const description = {
   identifier_register_description:
     'Yeni bir hesap oluşturmak için {{types, list(type: disjunction;)}} girin.',
   all_account_creation_options: 'Tüm hesap oluşturma seçenekleri',
+  back_to_sign_in: 'Girişe dön',
 };
 
 export default Object.freeze(description);

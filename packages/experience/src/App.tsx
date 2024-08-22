@@ -27,6 +27,7 @@ import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
 import Register from './pages/Register';
 import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
+import ResetPasswordLanding from './pages/ResetPasswordLanding';
 import SignIn from './pages/SignIn';
 import SignInPassword from './pages/SignInPassword';
 import SingleSignOnConnectors from './pages/SingleSignOnConnectors';
@@ -138,6 +139,12 @@ const App = () => {
                         <Route
                           path={experience.routes.identifierRegister}
                           element={<IdentifierRegister />}
+                        />
+
+                        {/* Reset password */}
+                        <Route
+                          path={experience.routes.resetPassword}
+                          element={<ResetPasswordLanding />}
                         />
                       </>
                     )}

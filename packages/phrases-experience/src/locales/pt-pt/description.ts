@@ -103,6 +103,7 @@ const description = {
   identifier_register_description:
     'Introduza o seu {{types, list(type: disjunction;)}} para criar uma nova conta.',
   all_account_creation_options: 'Todas as opções de criação de conta',
+  back_to_sign_in: 'Voltar para o login',
 };
 
 export default Object.freeze(description);

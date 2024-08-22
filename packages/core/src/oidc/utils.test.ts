@@ -160,6 +160,7 @@ describe('buildLoginPromptUrl', () => {
       })
     ).toBe('identifier-register?identifier=username');
     expect(buildLoginPromptUrl({ first_screen: FirstScreen.SingleSignOn })).toBe('single-sign-on');
+    expect(buildLoginPromptUrl({ first_screen: FirstScreen.ResetPassword })).toBe('reset-password');
 
     // Legacy interactionMode support
     expect(buildLoginPromptUrl({ interaction_mode: InteractionMode.SignUp })).toBe('register');

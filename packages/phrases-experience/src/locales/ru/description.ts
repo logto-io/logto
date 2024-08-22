@@ -106,6 +106,7 @@ const description = {
   identifier_register_description:
     'Введите свои {{types, list(type: disjunction;)}} чтобы создать новую учётную запись.',
   all_account_creation_options: 'Все варианты создания учётной записи',
+  back_to_sign_in: 'Вернуться ко входу',
 };
 
 export default Object.freeze(description);

@@ -99,6 +99,7 @@ const description = {
   identifier_register_description:
     '새 계정을 만들려면 {{types, list(type: disjunction;)}}을(를) 입력하세요.',
   all_account_creation_options: '모든 계정 생성 옵션',
+  back_to_sign_in: '로그인으로 돌아가기',
 };
 
 export default Object.freeze(description);

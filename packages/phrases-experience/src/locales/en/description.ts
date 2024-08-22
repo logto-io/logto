@@ -93,6 +93,7 @@ const description = {
   identifier_register_description:
     'Enter you {{types, list(type: disjunction;)}} to create a new account.',
   all_account_creation_options: 'All account creation options',
+  back_to_sign_in: 'Back to sign in',
 };
 
 export default Object.freeze(description);

@@ -3,6 +3,7 @@ const routes = Object.freeze({
   register: 'register',
   sso: 'single-sign-on',
   consent: 'consent',
+  resetPassword: 'reset-password',
   identifierSignIn: 'identifier-sign-in',
   identifierRegister: 'identifier-register',
 } as const);

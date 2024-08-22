@@ -18,7 +18,7 @@ type Props = {
   readonly pageMeta: PageMetaProps;
   readonly title: TFuncKey;
   readonly description: string;
-  readonly footerTermsDisplayPolicies: AgreeToTermsPolicy[];
+  readonly footerTermsDisplayPolicies?: AgreeToTermsPolicy[];
   readonly authOptionsLink: TextLinkProps;
 };
 
@@ -33,7 +33,7 @@ const FocusedAuthPageLayout = ({
   pageMeta,
   title,
   description,
-  footerTermsDisplayPolicies,
+  footerTermsDisplayPolicies = [],
   authOptionsLink,
 }: Props) => {
   const { agreeToTermsPolicy } = useTerms();

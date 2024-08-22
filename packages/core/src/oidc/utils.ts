@@ -95,6 +95,7 @@ const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.route
    * Todo @xiaoyijun remove isDevFeaturesEnabled check
    * Fallback to signIn when dev feature is not ready (these three screens are not supported yet)
    */
+  [FirstScreen.ResetPassword]: isDevFeaturesEnabled ? 'resetPassword' : 'signIn',
   [FirstScreen.IdentifierSignIn]: isDevFeaturesEnabled ? 'identifierSignIn' : 'signIn',
   [FirstScreen.IdentifierRegister]: isDevFeaturesEnabled ? 'identifierRegister' : 'signIn',
   [FirstScreen.SingleSignOn]: isDevFeaturesEnabled ? 'sso' : 'signIn',
