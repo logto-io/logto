@@ -109,6 +109,12 @@ const tunnel: CommandModule<unknown, TunnelCommandArgs> = {
       ${chalk.gray('From:')} ${chalk.bold(endpoint)}
       ${chalk.gray('To:')}   ${chalk.bold(serviceUrl.href)}
 
+  ${chalk.green(
+    '➜'
+  )} If you are using social sign-in, make sure the social redirect URI is also set to:
+
+      ${chalk.bold(`${serviceUrl.href}callback/<connector-id>`)}
+
   ${chalk.green('➜')} ${chalk.gray(`Press ${chalk.white('Ctrl+C')} to stop the tunnel service.`)}
   ${chalk.green('➜')} ${chalk.gray(
     `Use ${chalk.white('-v')} or ${chalk.white('--verbose')} to print verbose output.`
