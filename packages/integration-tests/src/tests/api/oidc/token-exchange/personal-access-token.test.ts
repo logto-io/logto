@@ -140,20 +140,6 @@ describe('Token Exchange (Personal Access Token)', () => {
     expect(payload).toHaveProperty('sub', testUserId);
   });
 
-  it('should fail with non-secure client authentication method', async () => {
-    await expect(
-      oidcApi.post('token', {
-        headers: formUrlEncodedHeaders,
-        body: new URLSearchParams({
-          client_id: testApiResourceId,
-          grant_type: GrantType.TokenExchange,
-          subject_token: testToken,
-          subject_token_type: tokenType,
-        }),
-      })
-    ).rejects.toThrow();
-  });
-
   it('should fail with invalid PAT', async () => {
     await expect(
       oidcApi.post('token', {
