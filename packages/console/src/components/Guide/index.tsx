@@ -1,6 +1,13 @@
 import { type ApplicationResponse } from '@logto/schemas';
 import classNames from 'classnames';
-import { type LazyExoticComponent, Suspense, createContext, useContext } from 'react';
+import {
+  type ComponentType,
+  type LazyExoticComponent,
+  type SVGProps,
+  Suspense,
+  createContext,
+  useContext,
+} from 'react';
 
 import { guides } from '@/assets/docs/guides';
 import { type GuideMetadata } from '@/assets/docs/guides/types';
@@ -16,7 +23,7 @@ import styles from './index.module.scss';
 export type GuideContextType = {
   metadata: Readonly<GuideMetadata>;
   Logo?:
-    | LazyExoticComponent<SvgComponent>
+    | LazyExoticComponent<ComponentType<SVGProps<SVGSVGElement>>>
     | ((props: { readonly className?: string }) => JSX.Element);
   isCompact: boolean;
   app?: ApplicationResponse;

@@ -1,6 +1,6 @@
 import { type ApplicationType } from '@logto/schemas';
 import { type MDXProps } from 'mdx/types';
-import { type LazyExoticComponent, type FunctionComponent } from 'react';
+import { type LazyExoticComponent, type ComponentType, type SVGProps } from 'react';
 
 /**
  * The guide metadata type. The directory name that the metadata is in will be the
@@ -48,11 +48,11 @@ export type Guide = {
   /** The unique identifier of the guide. */
   id: string;
   Logo:
-    | LazyExoticComponent<SvgComponent>
+    | LazyExoticComponent<ComponentType<SVGProps<SVGSVGElement>>>
     | ((props: { readonly className?: string }) => JSX.Element);
   DarkLogo?:
-    | LazyExoticComponent<SvgComponent>
+    | LazyExoticComponent<ComponentType<SVGProps<SVGSVGElement>>>
     | ((props: { readonly className?: string }) => JSX.Element);
-  Component: LazyExoticComponent<FunctionComponent<MDXProps>>;
+  Component: LazyExoticComponent<ComponentType<MDXProps>>;
   metadata: Readonly<GuideMetadata>;
 };
