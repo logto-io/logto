@@ -104,7 +104,7 @@ const tunnel: CommandModule<unknown, TunnelCommandArgs> = {
           `🎉 Logto tunnel service is running!
   ${chalk.green('➜')} Your custom sign-in UI is hosted on: ${chalk.blue(serviceUrl.href)}
 
-  ${chalk.green('➜')} Don't forget to update your app's endpoint:
+  ${chalk.green('➜')} Don't forget to update Logto endpoint URI in your app:
 
       ${chalk.gray('From:')} ${chalk.bold(endpoint)}
       ${chalk.gray('To:')}   ${chalk.bold(serviceUrl.href)}
