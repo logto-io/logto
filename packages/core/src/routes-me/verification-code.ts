@@ -1,11 +1,12 @@
 import { TemplateType } from '@logto/connector-kit';
 import { emailRegEx } from '@logto/core-kit';
-import { literal, object, string, union } from 'zod';
+import { object, string } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
-import assertThat from '#src/utils/assert-that.js';
+
+import RequestError from '../errors/RequestError/index.js';
+import assertThat from '../utils/assert-that.js';
 
 import type { AuthedMeRouter } from './types.js';
 
@@ -44,21 +45,18 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
       body: object({
         email: string().regex(emailRegEx),
         verificationCode: string().min(1),
-        action: union([literal('changeEmail'), literal('changePassword')]),
       }),
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
-      const { verificationCode, action, ...identifier } = ctx.guard.body;
+      const { verificationCode, ...identifier } = ctx.guard.body;
+
+      const user = await findUserById(userId);
+      assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+
       await verifyPasscode(undefined, codeType, verificationCode, identifier);
 
-      if (action === 'changePassword') {
-        // Store password verification status
-        const user = await findUserById(userId);
-        assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
-
-        await createVerificationStatus(userId);
-      }
+      await createVerificationStatus(userId, identifier.email);
 
       ctx.status = 204;
 
