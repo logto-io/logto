@@ -180,7 +180,6 @@ describe('token exchange', () => {
     expect(value).toMatchObject({
       accountId,
       clientId,
-      grantId: subjectTokenId,
       gty: 'urn:ietf:params:oauth:grant-type:token-exchange',
     });
   });
@@ -244,7 +243,6 @@ describe('token exchange', () => {
       expect(value).toMatchObject({
         accountId,
         clientId,
-        grantId: subjectTokenId,
         aud: 'urn:logto:organization:some_org_id',
       });
     });

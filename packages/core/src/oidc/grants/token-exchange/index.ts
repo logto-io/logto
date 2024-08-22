@@ -82,7 +82,7 @@ export const buildHandler: (
     scopes: oidcScopes,
   } = providerInstance.configuration();
 
-  const { userId, grantId, subjectTokenId } = await validateSubjectToken(
+  const { userId, subjectTokenId } = await validateSubjectToken(
     queries,
     String(params.subject_token),
     String(params.subject_token_type)
@@ -103,9 +103,14 @@ export const buildHandler: (
     clientId: client.clientId,
     gty: GrantType.TokenExchange,
     client,
-    grantId,
+    // The token exchange grant type does not have a grant ID or grant object,
+    // so we use an empty string here.
+    grantId: '',
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     scope: undefined!,
+    extra: {
+      ...(subjectTokenId ? { subjectTokenId } : {}),
+    },
   });
 
   await handleDPoP(ctx, accessToken);
@@ -184,7 +189,10 @@ export const buildHandler: (
     // @see https://github.com/panva/node-oidc-provider/blob/main/lib/models/formats/jwt.js#L118
     // We save the `act` data in the `extra` field temporarily,
     // so that we can get this context it in the `extraTokenClaims` function and add it to the JWT.
-    accessToken.extra = { act: { sub: actorId } } satisfies TokenExchangeAct;
+    accessToken.extra = {
+      ...accessToken.extra,
+      ...({ act: { sub: actorId } } satisfies TokenExchangeAct),
+    };
   }
 
   ctx.oidc.entity('AccessToken', accessToken);
