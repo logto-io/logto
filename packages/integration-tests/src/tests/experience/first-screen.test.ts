@@ -231,4 +231,58 @@ describe('first screen', () => {
       experience.toBeAt('sign-in');
     });
   });
+
+  describe('reset password page', () => {
+    // eslint-disable-next-line @silverhand/fp/no-let
+    let experience: ExpectExperience;
+    // eslint-disable-next-line @silverhand/fp/no-let
+    let url: URL;
+
+    beforeEach(async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      experience = new ExpectExperience(await browser.newPage());
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      url = new URL(demoAppUrl);
+      url.searchParams.set('first_screen', 'reset_password');
+    });
+
+    afterEach(async () => {
+      await experience.page.close();
+    });
+
+    it('should be landed on reset password page directly and render all identifiers', async () => {
+      await experience.page.goto(url.href, { waitUntil: 'networkidle0' });
+      experience.toBeAt('reset-password');
+      await experience.toMatchElement('label', { text: 'Email / Phone number' });
+    });
+
+    it('should fallback to sign-in page if forgot password is disabled', async () => {
+      // Clear SMS & Email connectors to disable forgot password
+      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+
+      await experience.page.goto(url.href, { waitUntil: 'networkidle0' });
+      experience.toBeAt('sign-in');
+
+      // Reset SMS & Email connectors
+      await setEmailConnector();
+      await setSmsConnector();
+    });
+
+    it.each([
+      {
+        value: SignInIdentifier.Phone,
+        label: 'Phone number',
+      },
+      {
+        value: SignInIdentifier.Email,
+        label: 'Email',
+      },
+    ])('should render filtered identifiers', async ({ value, label }) => {
+      url.searchParams.delete('identifier');
+      url.searchParams.set('identifier', value);
+      await experience.page.goto(url.href, { waitUntil: 'networkidle0' });
+      experience.toBeAt('reset-password');
+      await experience.toMatchElement('label', { text: label });
+    });
+  });
 });

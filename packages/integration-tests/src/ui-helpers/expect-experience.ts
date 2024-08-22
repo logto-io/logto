@@ -26,7 +26,8 @@ export type ExperiencePath =
   | `mfa-verification/${MfaFactor}`
   | 'identifier-sign-in'
   | 'identifier-register'
-  | 'single-sign-on';
+  | 'single-sign-on'
+  | 'reset-password';
 
 export type ExpectExperienceOptions = {
   /** The URL of the experience endpoint. */
