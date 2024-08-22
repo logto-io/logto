@@ -106,6 +106,16 @@ describe('Token Exchange (Personal Access Token)', () => {
       .json();
     expect(introspectionResponse).toHaveProperty('active', true);
     expect(introspectionResponse).toHaveProperty('sub', testUserId);
+
+    // Should be able to get user info
+    const userInfoResponse = await oidcApi
+      .get('me', {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+      .json();
+    expect(userInfoResponse).toHaveProperty('sub', testUserId);
   });
 
   it('should be able to use for multiple times', async () => {
