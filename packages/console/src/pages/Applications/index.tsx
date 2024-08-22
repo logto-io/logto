@@ -6,17 +6,14 @@ import { useLocation } from 'react-router-dom';
 
 import Plus from '@/assets/icons/plus.svg?react';
 import ApplicationCreation from '@/components/ApplicationCreation';
-import ChargeNotification from '@/components/ChargeNotification';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
 import PageMeta from '@/components/PageMeta';
-import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
-import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
 import { buildUrl } from '@/utils/url';
@@ -54,7 +51,6 @@ function Applications({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const isCreating = match(createApplicationPathname);
-  const { hasMachineToMachineAppsSurpassedLimit } = useApplicationsUsage();
   /**
    * Selected guide from the guide library
    * - `undefined`: No guide is selected
@@ -121,15 +117,6 @@ function Applications({ tab }: Props) {
           />
         )}
       </div>
-      {isCloud && (
-        <ChargeNotification
-          hasSurpassedLimit={hasMachineToMachineAppsSurpassedLimit}
-          quotaItemPhraseKey="machine_to_machine"
-          className={styles.chargeNotification}
-          checkedFlagKey="machineToMachineApp"
-        />
-      )}
-
       {showThirdPartyApplicationTab && (
         <TabNav className={styles.tabs}>
           <TabNavItem

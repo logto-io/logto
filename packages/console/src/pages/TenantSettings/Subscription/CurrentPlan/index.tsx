@@ -3,7 +3,6 @@ import { useContext, useMemo } from 'react';
 
 import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import BillInfo from '@/components/BillInfo';
-import ChargeNotification from '@/components/ChargeNotification';
 import FormCard from '@/components/FormCard';
 import PlanDescription from '@/components/PlanDescription';
 import PlanUsage from '@/components/PlanUsage';
@@ -11,7 +10,6 @@ import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
-import { hasSurpassedSubscriptionQuotaLimit } from '@/utils/quota';
 
 import AddOnUsageChangesNotification from './AddOnUsageChangesNotification';
 import MauLimitExceedNotification from './MauLimitExceededNotification';
@@ -23,8 +21,7 @@ type Props = {
 };
 
 function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
-  const { currentSku, currentSubscription, currentSubscriptionQuota } =
-    useContext(SubscriptionDataContext);
+  const { currentSku, currentSubscription } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
   const periodicUsage = useMemo(
@@ -52,12 +49,6 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
     return null;
   }
 
-  const hasTokenSurpassedLimit = hasSurpassedSubscriptionQuotaLimit({
-    quotaKey: 'tokenLimit',
-    usage: periodicUsage.tokenLimit,
-    quota: currentSubscriptionQuota,
-  });
-
   return (
     <FormCard title="subscription.current_plan" description="subscription.current_plan_description">
       <div className={styles.planInfo}>
@@ -80,16 +71,6 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
       <MauLimitExceedNotification
         periodicUsage={rawPeriodicUsage}
         className={styles.notification}
-      />
-      <ChargeNotification
-        hasSurpassedLimit={hasTokenSurpassedLimit}
-        quotaItemPhraseKey="tokens"
-        checkedFlagKey="token"
-        className={styles.notification}
-        quotaLimit={cond(
-          typeof currentSubscriptionQuota.tokenLimit === 'number' &&
-            currentSubscriptionQuota.tokenLimit
-        )}
       />
       <PaymentOverdueNotification className={styles.notification} />
     </FormCard>
