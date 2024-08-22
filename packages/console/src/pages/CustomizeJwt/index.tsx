@@ -22,7 +22,7 @@ function CustomizeJwt() {
 
   const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId },
     currentSubscriptionQuota: { customJwtEnabled },
   } = useContext(SubscriptionDataContext);
   const isCustomJwtEnabled = !isCloud || customJwtEnabled;
@@ -46,7 +46,7 @@ function CustomizeJwt() {
         subtitle="jwt_claims.description"
         className={styles.header}
       />
-      {isAddOnAvailable && <UpsellNotice isVisible={showPaywall} className={styles.inlineNotice} />}
+      <UpsellNotice isVisible={showPaywall} className={styles.inlineNotice} />
       <div className={styles.container}>
         {isLoading && (
           <>
