@@ -1,6 +1,6 @@
 import { type PersonalAccessToken as Token } from '@logto/schemas';
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg?react';
@@ -12,6 +12,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import { type Column } from '@/ds-components/Table/types';
+import TextLink from '@/ds-components/TextLink';
 import useApi, { type RequestError } from '@/hooks/use-api';
 
 import CreateTokenModal from './CreateTokenModal';
@@ -78,7 +79,24 @@ function PersonalAccessTokens({ userId }: Props) {
   );
 
   return (
-    <FormField title="user_details.personal_access_tokens.title_other">
+    <FormField
+      title="user_details.personal_access_tokens.title_other"
+      tip={(closeTipHandler) => (
+        <Trans
+          components={{
+            a: (
+              <TextLink
+                targetBlank
+                href="https://docs.logto.io/docs/recipes/manage-users/management-api/personal-access-token/"
+                onClick={closeTipHandler}
+              />
+            ),
+          }}
+        >
+          {t('user_details.personal_access_tokens.tip')}
+        </Trans>
+      )}
+    >
       {data?.length === 0 && !error ? (
         <>
           <div className={styles.empty}>
