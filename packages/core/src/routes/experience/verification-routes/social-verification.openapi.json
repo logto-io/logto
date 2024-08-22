@@ -2,8 +2,9 @@
   "paths": {
     "/api/experience/verification/social/{connectorId}/authorization-uri": {
       "post": {
-        "summary": "Get social authorization URI",
-        "description": "Create a new SocialVerification record and return the authorization URI for the given connector.",
+        "operationId": "CreateSocialVerification",
+        "summary": "Create social verification",
+        "description": "Create a new SocialVerification record and return the provider's authorization URI for the given connector.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -49,8 +50,9 @@
     },
     "/api/experience/verification/social/{connectorId}/verify": {
       "post": {
-        "summary": "Verify social authorization response",
-        "description": "Verify the social authorization response data and get the user's profile data from the social connector.",
+        "operationId": "VerifySocialVerification",
+        "summary": "Verify social verification",
+        "description": "Verify the social authorization response data and get the user's identity data from the social provider.",
         "requestBody": {
           "content": {
             "application/json": {

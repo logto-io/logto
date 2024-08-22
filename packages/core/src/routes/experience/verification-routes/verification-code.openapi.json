@@ -2,8 +2,9 @@
   "paths": {
     "/api/experience/verification/verification-code": {
       "post": {
+        "operationId": "CreateAndSendVerificationCode",
         "summary": "Create and send verification code",
-        "description": "Creates a new `CodeVerification` record and sends the code to the specified identifier. The code verification can be used to verify the user's identity or bind a new identifier to the user's account.",
+        "description": "Create a new `CodeVerification` record and sends the code to the specified identifier. The code verification can be used to verify the given identifier.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -46,8 +47,9 @@
     },
     "/api/experience/verification/verification-code/verify": {
       "post": {
+        "operationId": "VerifyVerificationCode",
         "summary": "Verify verification code",
-        "description": "Verifies the provided verification code against the user's identifier. If successful, the verification record is marked as verified.",
+        "description": "Verify the provided verification code against the user's identifier. If successful, the verification record will be marked as verified.",
         "requestBody": {
           "content": {
             "application/json": {

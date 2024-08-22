@@ -163,7 +163,7 @@ export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) =>
   }
 
   // Skip interactions APIs as they are going to replaced by the new APIs soon.
-  // Skip experience APIs as they are not strictly RESTful.
+  // Skip experience APIs, as all the experience APIs' `operationId` will be customized in the custom openapi.json documents.
   if (path.startsWith('/interaction') || path.startsWith('/experience')) {
     return;
   }

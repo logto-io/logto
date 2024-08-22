@@ -2,8 +2,9 @@
   "paths": {
     "/api/experience/verification/backup-code/generate": {
       "post": {
+        "operationId": "GenerateBackupCodes",
         "summary": "Generate backup codes",
-        "description": "Generate backup codes for the current user. A new BackupCode verification record will be created in the current interaction.",
+        "description": "Create a new BackupCode verification record with new backup codes generated. This verification record will be used to bind the backup codes to the user's profile.",
         "responses": {
           "200": {
             "description": "Backup codes have been successfully generated.",
@@ -30,8 +31,9 @@
     },
     "/api/experience/verification/backup-code/verify": {
       "post": {
+        "operationId": "VerifyBackupCode",
         "summary": "Verify backup code",
-        "description": "Verify the provided backup code against the user's backup codes. A new BackupCode verification record will be created and marked as verified if the code is correct.",
+        "description": "Create a new BackupCode verification record and verify the provided backup code against the user's backup codes. The verification record will be marked as verified if the code is correct.",
         "requestBody": {
           "content": {
             "application/json": {

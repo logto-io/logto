@@ -2,7 +2,8 @@
   "paths": {
     "/api/experience/profile": {
       "post": {
-        "summary": "Fulfill user profile data",
+        "operationId": "UpdateUserProfile",
+        "summary": "Update user profile data",
         "description": "Adds user profile data to the current experience interaction. <br/>- For `Register`: The profile data provided before the identification request will be used to create a new user account. <br/>- For `SignIn` and `Register`: The profile data provided after the user is identified will be used to update the user's profile when the interaction is submitted. <br/>- `ForgotPassword`: Not supported.",
         "requestBody": {
           "content": {
@@ -34,7 +35,7 @@
             "description": "Entity not found. <br/> - `session.identifier_not_found:` (`SignIn` interaction only) The current interaction is not identified yet. All profile data must be associated with a identified user. <br/>- `session.verification_session_not_found:` The verification record is not found."
           },
           "403": {
-            "description": "`SignIn` interaction only: Multi-Factor Authentication (MFA) is enabled for the user but has not been verified. The user must verify the MFA before updating the profile data."
+            "description": "`SignIn` interaction only: MFA is enabled for the user but has not been verified. The user must verify the MFA before updating the profile data."
           },
           "422": {
             "description": "The user profile can not been processed, check error message for more details. <br/>- The profile data is invalid or conflicts with existing user data. <br/>- The profile data is already in use by another user account."
@@ -44,8 +45,9 @@
     },
     "/api/experience/profile/password": {
       "put": {
+        "operationId": "ResetUserPassword",
         "summary": "Reset user password",
-        "description": "Update the user's password. (`ForgotPassword` interaction only)",
+        "description": "Reset the user's password. (`ForgotPassword` interaction only)",
         "requestBody": {
           "content": {
             "application/json": {
@@ -77,7 +79,8 @@
     },
     "/api/experience/profile/mfa/mfa-skipped": {
       "post": {
-        "summary": "Skip Multi-Factor Authentication (MFA) binding flow",
+        "operationId": "SkipMfaBindingFlow",
+        "summary": "Skip MFA binding flow",
         "description": "Skip MFA verification binding flow. If the MFA is enabled in the sign-in experience settings and marked as `UserControlled`, the user can skip the MFA verification binding flow by calling this API.",
         "responses": {
           "204": {
@@ -100,7 +103,8 @@
     },
     "/api/experience/profile/mfa": {
       "post": {
-        "summary": "Bind Multi-Factor Authentication (MFA) verification by verificationId",
+        "operationId": "BindMfaVerification",
+        "summary": "Bind MFA verification by verificationId",
         "description": "Bind new MFA verification to the user profile using the verificationId.",
         "requestBody": {
           "content": {
