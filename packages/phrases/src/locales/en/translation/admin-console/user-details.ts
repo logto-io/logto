@@ -101,6 +101,8 @@ const user_details = {
     title: 'Personal access token',
     title_other: 'Personal access tokens',
     title_short: 'token',
+    empty: 'The user does not have any personal access tokens.',
+    create: 'Create new token',
     tip: 'Personal access tokens (PATs) provide a secure way for users to grant access tokens without using their credentials and interactive sign-in. This is useful for CI/CD, scripts, or applications that need to access resources programmatically. <a>Learn more</a>',
     value: 'Value',
     created_at: 'Created at',

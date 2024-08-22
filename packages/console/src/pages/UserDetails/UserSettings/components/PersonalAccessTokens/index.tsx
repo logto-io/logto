@@ -104,14 +104,10 @@ function PersonalAccessTokens({ userId }: Props) {
     >
       {data?.length === 0 && !error ? (
         <>
-          <div className={styles.empty}>
-            {t('organizations.empty_placeholder', {
-              entity: t('user_details.personal_access_tokens.title').toLowerCase(),
-            })}
-          </div>
+          <div className={styles.empty}>{t('user_details.personal_access_tokens.empty')}</div>
           <Button
             icon={<Plus />}
-            title="general.add"
+            title="user_details.personal_access_tokens.create"
             onClick={() => {
               setShowCreateTokenModal(true);
             }}
