@@ -208,14 +208,10 @@ function EndpointsAndCredentials({
         <FormField title="application_details.application_secret_other">
           {secretsData.length === 0 && !secrets.error ? (
             <>
-              <div className={styles.empty}>
-                {t('organizations.empty_placeholder', {
-                  entity: t('application_details.application_secret').toLowerCase(),
-                })}
-              </div>
+              <div className={styles.empty}>{t('application_details.secrets.empty')}</div>
               <Button
                 icon={<Plus />}
-                title="general.add"
+                title="application_details.secrets.create_new_secret"
                 onClick={() => {
                   setShowCreateSecretModal(true);
                 }}
