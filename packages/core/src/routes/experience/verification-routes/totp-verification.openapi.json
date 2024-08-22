@@ -3,8 +3,8 @@
     "/api/experience/verification/totp/secret": {
       "post": {
         "operationId": "CreateTotpSecret",
-        "summary": "Generate TOTP secret for new TOTP binding",
-        "description": "Creates a new TOTP secret for the user to bind a new TOTP verification to their account.",
+        "summary": "Create TOTP secret",
+        "description": "Create a new TOTP verification record and generate a new TOTP secret for the user. This secret can be used to bind a new TOTP verification to the user's profile. The verification record must be verified before the secret can be used to bind a new TOTP verification to the user's profile.",
         "responses": {
           "200": {
             "description": "TOTP secret successfully generated.",
@@ -35,8 +35,8 @@
     "/api/experience/verification/totp/verify": {
       "post": {
         "operationId": "VerifyTotpVerification",
-        "summary": "Verify TOTP code",
-        "description": "Verifies the provided TOTP code against the user's TOTP secret. If the code is correct, a new TOTP verification record will be created and marked as verified..",
+        "summary": "Verify TOTP verification",
+        "description": "Verifies the provided TOTP code against the new created TOTP secret or the existing TOTP secret. If a verificationId is provided, this API will verify the code against the TOTP secret that is associated with the verification record. Otherwise, a new TOTP verification record will be created and verified against the user's existing TOTP secret.",
         "requestBody": {
           "content": {
             "application/json": {

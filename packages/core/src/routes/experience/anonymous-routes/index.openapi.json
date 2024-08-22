@@ -3,7 +3,7 @@
     "/api/experience/sso-connectors": {
       "get": {
         "operationId": "GetEnabledSsoConnectors",
-        "summary": "Get all the enabled SSO connectors by the given email's domain",
+        "summary": "Get enabled SSO connectors by the given email's domain",
         "description": "Extract the email domain from the provided email address. Returns all the enabled SSO connectors that match the email domain.",
         "parameters": [
           {

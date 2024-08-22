@@ -2,9 +2,9 @@
   "paths": {
     "/api/experience/verification/sso/{connectorId}/authorization-uri": {
       "post": {
-        "operationId": "CreateEnterpriseSSOVerification",
-        "summary": "Get SSO authorization URI",
-        "description": "Create a new EnterpriseSSO verification record and return the authorization URI for the given connector.",
+        "operationId": "CreateEnterpriseSsoVerification",
+        "summary": "Create enterprise SSO verification",
+        "description": "Create a new EnterpriseSSO verification record and return the provider's authorization URI for the given connector.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -50,9 +50,9 @@
     },
     "/api/experience/verification/sso/{connectorId}/verify": {
       "post": {
-        "operationId": "VerifyEnterpriseSSOVerification",
-        "summary": "Verify SSO authorization response",
-        "description": "Verify the SSO authorization response data and get the user's profile data from the SSO connector.",
+        "operationId": "VerifyEnterpriseSsoVerification",
+        "summary": "Verify enterprise SSO verification",
+        "description": "Verify the SSO authorization response data and get the user's identity from the SSO provider.",
         "requestBody": {
           "content": {
             "application/json": {

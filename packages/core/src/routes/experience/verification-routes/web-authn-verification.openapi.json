@@ -3,8 +3,8 @@
     "/api/experience/verification/web-authn/registration": {
       "post": {
         "operationId": "CreateWebAuthnRegistrationVerification",
-        "summary": "Create WebAuthn registration",
-        "description": "Creates a new WebAuthn registration verification record to allow the user to bind a new WebAuthn credential to their account.",
+        "summary": "Create WebAuthn registration verification",
+        "description": "Create a new WebAuthn registration verification record. The verification record can be used to bind a new WebAuthn credential to the user's profile.",
         "responses": {
           "200": {
             "description": "WebAuthn registration successfully created.",
@@ -32,8 +32,8 @@
     "/api/experience/verification/web-authn/registration/verify": {
       "post": {
         "operationId": "VerifyWebAuthnRegistrationVerification",
-        "summary": "Verify WebAuthn registration",
-        "description": "Verifies the WebAuthn registration response against the user's WebAuthn registration challenge. If the response is valid, the WebAuthn registration record will be marked as verified.",
+        "summary": "Verify WebAuthn registration verification",
+        "description": "Verify the WebAuthn registration response against the user's WebAuthn registration challenge. If the response is valid, the WebAuthn registration record will be marked as verified.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -77,8 +77,8 @@
     "/api/experience/verification/web-authn/authentication": {
       "post": {
         "operationId": "CreateWebAuthnAuthenticationVerification",
-        "summary": "Initiate WebAuthn authentication",
-        "description": "Creates a new WebAuthn authentication verification record, allowing the user to authenticate with their WebAuthn credential.",
+        "summary": "Create WebAuthn authentication verification",
+        "description": "Create a new WebAuthn authentication verification record based on the user's existing WebAuthn credential. This verification record can be used to verify the user's WebAuthn credential.",
         "responses": {
           "200": {
             "description": "WebAuthn authentication successfully initiated.",
@@ -109,8 +109,8 @@
     "/api/experience/verification/web-authn/authentication/verify": {
       "post": {
         "operationId": "VerifyWebAuthnAuthenticationVerification",
-        "summary": "Verify WebAuthn authentication",
-        "description": "Verifies the WebAuthn authentication response against the user's authentication challenge. Upon successful verification, the WebAuthn authentication verification record will be marked as verified.",
+        "summary": "Verify WebAuthn authentication verification",
+        "description": "Verifies the WebAuthn authentication response against the user's authentication challenge. Upon successful verification, the verification record will be marked as verified.",
         "requestBody": {
           "content": {
             "application/json": {
