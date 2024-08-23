@@ -7,6 +7,10 @@ const subscription = {
   pro_plan: '專業方案',
   pro_plan_description: '企業無憂享受 Logto 服務。',
   enterprise: '企業版',
+  /** UNTRANSLATED */
+  admin_plan: 'Admin plan',
+  /** UNTRANSLATED */
+  dev_plan: 'Development plan',
   current_plan: '當前方案',
   current_plan_description:
     '這是您目前的方案。您可以輕鬆查看您的方案使用情況，檢查即將到來的帳單，並根據需要進行變更。',

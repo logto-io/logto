@@ -14,6 +14,8 @@ export enum ReservedPlanName {
 export enum ReservedSkuId {
   Free = 'free',
   Pro = 'pro',
+  Development = 'dev',
+  Admin = 'admin',
   Enterprise = 'enterprise',
 }
 
