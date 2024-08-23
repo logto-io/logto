@@ -38,7 +38,7 @@ export const createVerificationStatusLibrary = (queries: Queries) => {
     assertThat(isValid, new RequestError({ code: 'session.verification_failed', status: 422 }));
 
     assertThat(
-      verificationStatus.verifiedIdentifier === identifier,
+      !identifier || verificationStatus.verifiedIdentifier === identifier,
       new RequestError({ code: 'session.verification_failed', status: 422 })
     );
   };
