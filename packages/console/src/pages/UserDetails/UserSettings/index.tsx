@@ -12,7 +12,6 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { profilePropertyReferenceLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
@@ -166,7 +165,7 @@ function UserSettings() {
           <FormField title="user_details.mfa.field_name">
             <UserMfaVerifications userId={user.id} />
           </FormField>
-          {isDevFeaturesEnabled && <PersonalAccessTokens userId={user.id} />}
+          <PersonalAccessTokens userId={user.id} />
         </FormCard>
         <FormCard title="user_details.user_profile">
           <FormField title="user_details.field_name">

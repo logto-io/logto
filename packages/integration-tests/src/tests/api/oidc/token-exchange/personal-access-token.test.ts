@@ -10,16 +10,9 @@ import {
 } from '#src/api/application.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
-import {
-  devFeatureTest,
-  generatePassword,
-  generateUsername,
-  getAccessTokenPayload,
-} from '#src/utils.js';
+import { generatePassword, generateUsername, getAccessTokenPayload } from '#src/utils.js';
 
 const tokenType = 'urn:logto:token-type:personal_access_token';
-
-const { describe, it } = devFeatureTest;
 
 describe('Token Exchange (Personal Access Token)', () => {
   const username = generateUsername();
