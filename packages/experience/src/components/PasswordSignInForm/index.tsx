@@ -1,9 +1,8 @@
-import { AgreeToTermsPolicy, ExtraParamsKey, type SignInIdentifier } from '@logto/schemas';
+import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
@@ -14,6 +13,7 @@ import type { IdentifierInputValue } from '@/components/InputFields/SmartInputFi
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
+import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
@@ -40,7 +40,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
-  const [searchParams] = useSearchParams();
+  const prefilledIdentifier = usePrefilledIdentifier({ enabledIdentifiers: signInMethods });
 
   const {
     watch,
@@ -51,7 +51,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
-      identifier: {},
+      identifier: prefilledIdentifier,
       password: '',
     },
   });
@@ -129,7 +129,8 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
             isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
             enabledTypes={signInMethods}
-            defaultValue={searchParams.get(ExtraParamsKey.LoginHint) ?? undefined}
+            defaultValue={field.value.value}
+            defaultType={field.value.type}
           />
         )}
       />
