@@ -5,7 +5,7 @@ import { conditional } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
-import { consoleLog } from '../../utils.js';
+import { consoleLog } from '../utils.js';
 
 import { type TunnelCommandArgs } from './types.js';
 import {
@@ -17,42 +17,37 @@ import {
 } from './utils.js';
 
 const tunnel: CommandModule<unknown, TunnelCommandArgs> = {
-  command: ['tunnel'],
+  command: ['$0'],
   describe: 'Command for Logto tunnel',
   builder: (yargs) =>
-    yargs
-      .options({
-        'experience-uri': {
-          alias: ['uri'],
-          describe: 'The URI of your custom sign-in experience page.',
-          type: 'string',
-        },
-        'experience-path': {
-          alias: ['path'],
-          describe: 'The local folder path of your custom sign-in experience assets.',
-          type: 'string',
-        },
-        endpoint: {
-          describe:
-            'Logto endpoint URI that points to your Logto Cloud instance. E.g.: https://<tenant-id>.logto.app/',
-          type: 'string',
-        },
-        port: {
-          alias: 'p',
-          describe:
-            'The port number where the tunnel service will be running on. Defaults to 9000.',
-          type: 'number',
-          default: 9000,
-        },
-        verbose: {
-          alias: 'v',
-          describe: 'Show verbose output.',
-          type: 'boolean',
-          default: false,
-        },
-      })
-      .global('e')
-      .hide('db'),
+    yargs.options({
+      'experience-uri': {
+        alias: ['uri'],
+        describe: 'The URI of your custom sign-in experience page.',
+        type: 'string',
+      },
+      'experience-path': {
+        alias: ['path'],
+        describe: 'The local folder path of your custom sign-in experience assets.',
+        type: 'string',
+      },
+      endpoint: {
+        describe:
+          'Logto endpoint URI that points to your Logto Cloud instance. E.g.: https://<tenant-id>.logto.app/',
+        type: 'string',
+      },
+      port: {
+        alias: 'p',
+        describe: 'The port number where the tunnel service will be running on. Defaults to 9000.',
+        type: 'number',
+        default: 9000,
+      },
+      verbose: {
+        describe: 'Show verbose output.',
+        type: 'boolean',
+        default: false,
+      },
+    }),
   handler: async ({ 'experience-uri': url, 'experience-path': path, endpoint, port, verbose }) => {
     checkExperienceInput(url, path);
 
@@ -116,9 +111,7 @@ const tunnel: CommandModule<unknown, TunnelCommandArgs> = {
       ${chalk.bold(`${serviceUrl.href}callback/<connector-id>`)}
 
   ${chalk.green('➜')} ${chalk.gray(`Press ${chalk.white('Ctrl+C')} to stop the tunnel service.`)}
-  ${chalk.green('➜')} ${chalk.gray(
-    `Use ${chalk.white('-v')} or ${chalk.white('--verbose')} to print verbose output.`
-  )}
+  ${chalk.green('➜')} ${chalk.gray(`Use ${chalk.white('--verbose')} to print verbose output.`)}
           `
         );
       });
@@ -129,7 +122,7 @@ const tunnel: CommandModule<unknown, TunnelCommandArgs> = {
           startServer(port + 1);
           return;
         }
-        consoleLog.fatal(`Tunnel server failed to start. ${error.message}`);
+        consoleLog.fatal(`Tunnel service failed to start. ${error.message}`);
       });
     };
 
