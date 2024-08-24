@@ -1,9 +1,8 @@
-import { AgreeToTermsPolicy, ExtraParamsKey, type SignInIdentifier } from '@logto/schemas';
+import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
@@ -12,6 +11,7 @@ import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
+import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
@@ -36,11 +36,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
-  const { getIdentifierInputValueByTypes, setIdentifierInputValue } =
-    useContext(UserInteractionContext);
-  const identifierInputValue = getIdentifierInputValueByTypes(signUpMethods);
-
-  const [searchParams] = useSearchParams();
+  const { setIdentifierInputValue } = useContext(UserInteractionContext);
+  const prefilledIdentifier = usePrefilledIdentifier({ enabledIdentifiers: signUpMethods });
 
   const {
     watch,
@@ -49,6 +46,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
     control,
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
+    defaultValues: { id: prefilledIdentifier },
   });
 
   // Watch identifier field and check single sign on method availability
@@ -127,10 +125,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            defaultValue={
-              identifierInputValue?.value ?? searchParams.get(ExtraParamsKey.LoginHint) ?? undefined
-            }
-            defaultType={identifierInputValue?.type}
+            defaultValue={field.value.value}
+            defaultType={field.value.type}
             isDanger={!!errors.id || !!errorMessage}
             errorMessage={errors.id?.message}
             enabledTypes={signUpMethods}

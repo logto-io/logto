@@ -1,9 +1,8 @@
-import { AgreeToTermsPolicy, ExtraParamsKey, type SignIn } from '@logto/schemas';
+import { AgreeToTermsPolicy, type SignIn } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
@@ -12,6 +11,7 @@ import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
+import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
@@ -34,16 +34,16 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const { getIdentifierInputValueByTypes, setIdentifierInputValue } =
-    useContext(UserInteractionContext);
-  const [searchParams] = useSearchParams();
+  const { setIdentifierInputValue } = useContext(UserInteractionContext);
 
   const enabledSignInMethods = useMemo(
     () => signInMethods.map(({ identifier }) => identifier),
     [signInMethods]
   );
 
-  const identifierInputValue = getIdentifierInputValueByTypes(enabledSignInMethods);
+  const prefilledIdentifier = usePrefilledIdentifier({
+    enabledIdentifiers: enabledSignInMethods,
+  });
 
   const {
     watch,
@@ -52,6 +52,9 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
+    defaultValues: {
+      identifier: prefilledIdentifier,
+    },
   });
 
   // Watch identifier field and check single sign on method availability
@@ -127,10 +130,8 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledSignInMethods}
-            defaultType={identifierInputValue?.type}
-            defaultValue={
-              identifierInputValue?.value ?? searchParams.get(ExtraParamsKey.LoginHint) ?? undefined
-            }
+            defaultType={field.value.type}
+            defaultValue={field.value.value}
           />
         )}
       />

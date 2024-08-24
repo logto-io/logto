@@ -3,7 +3,6 @@ import { assert } from '@silverhand/essentials';
 import { useState, useCallback, useMemo } from 'react';
 import type { ChangeEventHandler } from 'react';
 
-import useUpdateEffect from '@/hooks/use-update-effect';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 import { parseIdentifierValue } from '@/utils/form';
 
@@ -101,12 +100,6 @@ const useSmartInputField = ({ _defaultType, defaultValue, enabledTypes }: Props)
     setInputValue('');
     setCurrentType(enabledTypeSet.size === 1 ? defaultType : undefined);
   }, [defaultType, enabledTypeSet.size]);
-
-  // CAUTION: For preview use only, enabledTypes and defaultType should not be changed after component mounted
-  useUpdateEffect(() => {
-    setInputValue('');
-    setCurrentType(defaultType);
-  }, [defaultType]);
 
   return {
     countryCode,

@@ -1,8 +1,9 @@
-import { experience, ExtraParamsKey } from '@logto/schemas';
+import { experience } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
+import useLoginHint from '@/hooks/use-login-hint';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
 import ForgotPasswordForm from '../ForgotPassword/ForgotPasswordForm';
@@ -32,8 +33,7 @@ import { useResetPasswordMethods } from './use-reset-password-methods';
 const ResetPasswordLanding = () => {
   const { t } = useTranslation();
   const enabledMethods = useResetPasswordMethods();
-  const [searchParams] = useSearchParams();
-  const loginHint = searchParams.get(ExtraParamsKey.LoginHint) ?? undefined;
+  const loginHint = useLoginHint();
 
   // Fallback to sign-in page
   if (enabledMethods.length === 0) {
