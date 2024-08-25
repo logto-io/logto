@@ -2,10 +2,7 @@
   "name": "@logto/connector-patreon",
   "version": "1.0.0",
   "description": "Patreon web connector implementation.",
-  "author": "DevTekVE <devtekve@gmail.com>",
-  "contributors": [
-    "Silverhand Inc. <contact@silverhand.io>"
-  ],
+  "author": "DevTekVE <devtekve@gmail.com> & Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
     "@logto/connector-kit": "workspace:^4.0.0",
     "@silverhand/essentials": "^2.9.1",
