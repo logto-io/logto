@@ -6,7 +6,6 @@ const enterprise_sso = {
   col_connector_name: 'اسم الموصل',
   col_type: 'النوع',
   col_email_domain: 'نطاق البريد الإلكتروني',
-
   placeholder_title: 'موصل المؤسسة',
   placeholder_description:
     'لقد قدمت Logto العديد من موفري هوية المؤسسة المدمجة للاتصال، في الوقت نفسه يمكنك إنشاء موفر خاص بك باستخدام بروتوكولات SAML و OIDC.',

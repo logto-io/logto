@@ -9,8 +9,7 @@ const mfa = {
   verify_webauthn_description: 'تحقق من جهازك أو جهاز USB الخاص بك',
   verify_backup_code_description: 'الصق رمز النسخ الاحتياطي الذي حفظته',
   add_mfa_factors: 'إضافة التحقق من خطوتين',
-  add_mfa_description:
-    'تم تمكين التحقق من خطوتين. حدد طريقة التحقق الثانية لتسجيل الدخول الآمن.',
+  add_mfa_description: 'تم تمكين التحقق من خطوتين. حدد طريقة التحقق الثانية لتسجيل الدخول الآمن.',
   verify_mfa_factors: 'التحقق من خطوتين',
   verify_mfa_description:
     'تم تمكين التحقق من خطوتين لهذا الحساب. يرجى تحديد الطريقة الثانية للتحقق من هويتك.',

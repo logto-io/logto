@@ -25,4 +25,3 @@ const users = {
 };
 
 export default Object.freeze(users);
-

@@ -33,7 +33,8 @@ const guide = {
     modal_subtitle: 'ابدأ عملية تطوير التطبيق الخاص بك باستخدام الدروس المُعدة مسبقًا.',
     select_a_tutorial: 'اختر درسًا',
     continue_without_tutorial: 'المتابعة بدون درس',
-    describe_guide_looking_for_placeholder: 'مثال: أرغب في حماية واجهة برمجة التطبيقات الخاصة بي باستخدام deno.',
+    describe_guide_looking_for_placeholder:
+      'مثال: أرغب في حماية واجهة برمجة التطبيقات الخاصة بي باستخدام deno.',
   },
 };
 

@@ -21,16 +21,19 @@ const connector = {
   social_auth_code_invalid: 'تعذر الحصول على رمز الوصول، يرجى التحقق من رمز الترخيص.',
   more_than_one_sms: 'عدد موصلات الرسائل القصيرة أكبر من 1.',
   more_than_one_email: 'عدد موصلات البريد الإلكتروني أكبر من 1.',
-  more_than_one_connector_factory: 'تم العثور على مصانع موصل متعددة (بالمعرف {{connectorIds}})، قد تقوم بإلغاء تثبيت تلك غير الضرورية.',
+  more_than_one_connector_factory:
+    'تم العثور على مصانع موصل متعددة (بالمعرف {{connectorIds}})، قد تقوم بإلغاء تثبيت تلك غير الضرورية.',
   db_connector_type_mismatch: 'هناك موصل في قاعدة البيانات لا يتطابق مع النوع.',
   not_found_with_connector_id: 'تعذر العثور على الموصل بالمعرف القياسي المحدد.',
   multiple_instances_not_supported: 'لا يمكن إنشاء عدة مثيلات باستخدام الموصل القياسي المحدد.',
-  invalid_type_for_syncing_profile: 'يمكنك مزامنة ملف تعريف المستخدم فقط مع موصلات التواصل الاجتماعي.',
+  invalid_type_for_syncing_profile:
+    'يمكنك مزامنة ملف تعريف المستخدم فقط مع موصلات التواصل الاجتماعي.',
   can_not_modify_target: 'لا يمكن تعديل موصل الهدف.',
   should_specify_target: 'يجب تحديد الهدف.',
-  multiple_target_with_same_platform: 'لا يمكن أن يكون لديك موصلات اجتماعية متعددة لها نفس الهدف والمنصة.',
-  cannot_overwrite_metadata_for_non_standard_connector: 'لا يمكن استبدال بيانات الموصل غير القياسي هذا.',
+  multiple_target_with_same_platform:
+    'لا يمكن أن يكون لديك موصلات اجتماعية متعددة لها نفس الهدف والمنصة.',
+  cannot_overwrite_metadata_for_non_standard_connector:
+    'لا يمكن استبدال بيانات الموصل غير القياسي هذا.',
 };
 
 export default Object.freeze(connector);
-

@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: 'موصل البريد الإلكتروني المدمج',
     mfa: 'المصادقة متعددة العوامل',
     sso: 'SSO المؤسسية',
-    adaptive_mfa: 'MFA المتكيفة',
     impersonation: 'التمثيل',
   },
   user_management: {
@@ -64,8 +63,28 @@ const quota_table = {
     customer_ticket: 'دعم التذاكر',
     premium: 'متميز',
     email_ticket_support: 'دعم التذاكر عبر البريد الإلكتروني',
-    soc2_report: 'تقرير SOC2',
-    hipaa_or_baa_report: 'تقرير HIPAA/BAA',
+    /** UNTRANSLATED */
+    discord_private_channel: 'Discord private channel',
+    /** UNTRANSLATED */
+    premium_support: 'Premium support',
+    /** UNTRANSLATED */
+    developer_onboarding: 'Developer onboarding',
+    /** UNTRANSLATED */
+    solution_engineer_support: 'Solution engineer',
+    /** UNTRANSLATED */
+    sla: 'SLA',
+    /** UNTRANSLATED */
+    dedicated_computing_resources: 'Dedicated computing resources',
+  },
+  compliance: {
+    /** UNTRANSLATED */
+    title: 'Compliance',
+    /** UNTRANSLATED */
+    soc2_compliant: 'SOC2 compliant',
+    /** UNTRANSLATED */
+    soc2_report: 'SOC2 report',
+    /** UNTRANSLATED */
+    hipaa_or_baa_report: 'HIPAA/BAA report',
   },
   developers_and_platform: {
     title: 'المطورين والمنصة',
@@ -81,17 +100,10 @@ const quota_table = {
   days_other: '{{count, number}} أيام',
   add_on: 'إضافة',
   tier: 'المستوى {{value, number}}: ',
-  paid_token_limit_tip:
-    'سيتم فرض رسوم على الميزات التي تتجاوز حد الاستهلاك الخاص بك. يمكنك استخدامها بدون تكلفة حتى نبدأ في فرض رسوم حوالي الربع الثاني من عام 2024. بشكل افتراضي ، نفوتر 80 دولارًا شهريًا لكل مليون رمز.',
-  paid_quota_limit_tip:
-    'سيتم فرض رسوم على الميزات التي تتجاوز حد الاستهلاك الخاص بك. يمكنك استخدامها بدون تكلفة حتى نبدأ في فرض رسوم حوالي الربع الثاني من عام 2024.',
-  paid_add_on_feature_tip:
-    'هذه ميزة إضافية. يمكنك استخدامها بدون تكلفة حتى نبدأ في فرض رسوم حوالي الربع الثاني من عام 2024.',
   million: '{{value, number}} مليون',
   mau_tip:
     'MAU (المستخدم النشط شهريًا) يعني عدد المستخدمين الفريدة الذين قاموا بتبادل رمز واحد على الأقل مع Logto في دورة الفوترة.',
-  tokens_tip:
-    'جميع أنواع الرموز التي تصدرها Logto ، بما في ذلك رمز الوصول ورمز التحديث ، إلخ.',
+  tokens_tip: 'جميع أنواع الرموز التي تصدرها Logto ، بما في ذلك رمز الوصول ورمز التحديث ، إلخ.',
   mao_tip:
     'MAO (المؤسسة النشطة شهريًا) يعني عدد المؤسسات الفريدة التي لديها مستخدم نشط شهريًا واحد على الأقل في دورة الفوترة.',
   third_party_tip:

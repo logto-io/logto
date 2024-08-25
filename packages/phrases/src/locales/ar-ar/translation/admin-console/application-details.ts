@@ -101,8 +101,7 @@ const application_details = {
   branding: {
     name: 'العلامة التجارية',
     description: 'قم بتخصيص شعار التطبيق ولون العلامة التجارية لتجربة المستوى التطبيق.',
-    description_third_party:
-      'قم بتخصيص اسم التطبيق وشعاره على شاشة الموافقة.',
+    description_third_party: 'قم بتخصيص اسم التطبيق وشعاره على شاشة الموافقة.',
     app_logo: 'شعار التطبيق',
     app_level_sie: 'تجربة تسجيل الدخول على مستوى التطبيق',
     app_level_sie_switch:
@@ -169,6 +168,8 @@ const application_details = {
   },
   secrets: {
     value: 'Value',
+    /** UNTRANSLATED */
+    empty: 'The application does not have any secrets.',
     created_at: 'Created at',
     expires_at: 'Expires at',
     never: 'Never',

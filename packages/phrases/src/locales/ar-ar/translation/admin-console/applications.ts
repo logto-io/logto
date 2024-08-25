@@ -41,8 +41,8 @@ const applications = {
     },
     protected: {
       title: 'تطبيق محمي',
-      subtitle: 'تطبيق محمي بواسطة Logto', // غير مستخدم
-      description: 'غير متوفر', // غير مستخدم
+      subtitle: 'تطبيق محمي بواسطة Logto',
+      description: 'غير متوفر',
     },
     third_party: {
       title: 'تطبيق الجهة الخارجية',

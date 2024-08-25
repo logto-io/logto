@@ -2,7 +2,8 @@ const enterprise_sso_details = {
   back_to_sso_connectors: 'العودة إلى SSO للشركات',
   page_title: 'تفاصيل موصّل SSO للشركات',
   readme_drawer_title: 'SSO للشركات',
-  readme_drawer_subtitle: 'قم بإعداد موصّلات SSO للشركات لتمكين تسجيل الدخول الموحد للمستخدمين النهائيين',
+  readme_drawer_subtitle:
+    'قم بإعداد موصّلات SSO للشركات لتمكين تسجيل الدخول الموحد للمستخدمين النهائيين',
   tab_experience: 'تجربة SSO',
   tab_connection: 'الاتصال',
   general_settings_title: 'عام',
@@ -12,7 +13,8 @@ const enterprise_sso_details = {
   email_domain_field_name: 'نطاقات البريد الإلكتروني للشركة',
   email_domain_field_description:
     'يمكن للمستخدمين الذين لديهم هذه النطاقات البريدية استخدام SSO للمصادقة. يرجى التحقق من ملكية النطاق قبل الإضافة.',
-  email_domain_field_placeholder: 'أدخل نطاقات البريد الإلكتروني واحدة أو أكثر (على سبيل المثال yourcompany.com)',
+  email_domain_field_placeholder:
+    'أدخل نطاقات البريد الإلكتروني واحدة أو أكثر (على سبيل المثال yourcompany.com)',
   sync_profile_field_name: 'مزامنة معلومات الملف الشخصي من موفر الهوية',
   sync_profile_option: {
     register_only: 'مزامنة فقط عند تسجيل الدخول الأول',
@@ -21,7 +23,8 @@ const enterprise_sso_details = {
   connector_name_field_name: 'اسم الموصّل',
   display_name_field_name: 'اسم العرض',
   connector_logo_field_name: 'شعار العرض',
-  connector_logo_field_description: 'يجب أن يكون كل صورة أقل من 500 كيلوبايت ، SVG ، PNG ، JPG ، JPEG فقط.',
+  connector_logo_field_description:
+    'يجب أن يكون كل صورة أقل من 500 كيلوبايت ، SVG ، PNG ، JPG ، JPEG فقط.',
   branding_logo_context: 'تحميل الشعار',
   branding_logo_error: 'خطأ في تحميل الشعار: {{error}}',
   branding_light_logo_context: 'تحميل شعار الوضع الفاتح',
@@ -49,10 +52,8 @@ const enterprise_sso_details = {
   email_domain_field_required: 'مطلوب نطاق البريد الإلكتروني لتمكين SSO للشركات.',
   upload_saml_idp_metadata_info_text_url:
     'قم بلصق عنوان URL للبيانات الوصفية من موفر الهوية للاتصال.',
-  upload_saml_idp_metadata_info_text_xml:
-    'قم بلصق البيانات الوصفية من موفر الهوية للاتصال.',
-  upload_saml_idp_metadata_info_text_manual:
-    'املأ البيانات الوصفية من موفر الهوية للاتصال.',
+  upload_saml_idp_metadata_info_text_xml: 'قم بلصق البيانات الوصفية من موفر الهوية للاتصال.',
+  upload_saml_idp_metadata_info_text_manual: 'املأ البيانات الوصفية من موفر الهوية للاتصال.',
   upload_oidc_idp_info_text: 'املأ المعلومات من موفر الهوية للاتصال.',
   service_provider_property_title: 'قم بالتكوين في موفر الهوية',
   service_provider_property_description:

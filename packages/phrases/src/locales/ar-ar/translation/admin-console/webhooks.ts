@@ -26,16 +26,14 @@ const webhooks = {
   },
   create_form: {
     title: 'إنشاء ويب هوك',
-    subtitle:
-      'أضف الويب هوك لإرسال طلب POST إلى عنوان URL الخاص بك مع تفاصيل أحداث المستخدمين.',
+    subtitle: 'أضف الويب هوك لإرسال طلب POST إلى عنوان URL الخاص بك مع تفاصيل أحداث المستخدمين.',
     events: 'الأحداث',
     events_description: 'حدد أحداث التشغيل التي سترسلها Logto كطلب POST.',
     name: 'الاسم',
     name_placeholder: 'أدخل اسم الويب هوك',
     endpoint_url: 'عنوان URL النهاية',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
-    endpoint_url_tip:
-      'أدخل عنوان URL الخاص بك حيث يتم إرسال بيانات الويب هوك عند حدوث الحدث.',
+    endpoint_url_tip: 'أدخل عنوان URL الخاص بك حيث يتم إرسال بيانات الويب هوك عند حدوث الحدث.',
     create_webhook: 'إنشاء ويب هوك',
     missing_event_error: 'يجب عليك تحديد حدث واحد على الأقل.',
   },

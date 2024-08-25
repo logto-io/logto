@@ -5,8 +5,7 @@ const permissions = {
   description_column: 'الوصف',
   api_column: 'واجهة برمجية',
   placeholder_title: 'الصلاحية',
-  placeholder_description:
-    'الصلاحية تشير إلى التصريح بالوصول إلى مورد (نسميه مورد واجهة برمجية).',
+  placeholder_description: 'الصلاحية تشير إلى التصريح بالوصول إلى مورد (نسميه مورد واجهة برمجية).',
   edit: 'تعديل الصلاحية',
   delete: 'حذف الصلاحية',
   remove: 'إزالة الصلاحية',

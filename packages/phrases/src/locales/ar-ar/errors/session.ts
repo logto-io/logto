@@ -6,27 +6,21 @@ const session = {
   insufficient_info: 'معلومات تسجيل الدخول غير كافية.',
   connector_id_mismatch: 'معرف الموصل غير متطابق مع سجل الجلسة.',
   connector_session_not_found: 'جلسة الموصل غير موجودة. يرجى العودة وتسجيل الدخول مرة أخرى.',
-  verification_session_not_found:
-    'لم يتم التحقق بنجاح. أعد بدء عملية التحقق وحاول مرة أخرى.',
+  verification_session_not_found: 'لم يتم التحقق بنجاح. أعد بدء عملية التحقق وحاول مرة أخرى.',
   verification_expired: 'انتهت مدة الاتصال. قم بالتحقق مرة أخرى لضمان سلامة حسابك.',
   verification_blocked_too_many_attempts:
     'الكثير من المحاولات في وقت قصير. يرجى المحاولة مرة أخرى {{relativeTime}}.',
   unauthorized: 'يرجى تسجيل الدخول أولاً.',
   unsupported_prompt_name: 'اسم الإشعار غير مدعوم.',
   forgot_password_not_enabled: 'نسيت كلمة المرور غير ممكّنة.',
-  verification_failed:
-    'لم يتم التحقق بنجاح. أعد بدء عملية التحقق وحاول مرة أخرى.',
-  connector_validation_session_not_found:
-    'جلسة الموصل للتحقق من الرمز غير موجودة.',
+  verification_failed: 'لم يتم التحقق بنجاح. أعد بدء عملية التحقق وحاول مرة أخرى.',
+  connector_validation_session_not_found: 'جلسة الموصل للتحقق من الرمز غير موجودة.',
   csrf_token_mismatch: 'عدم تطابق رمز CSRF.',
   identifier_not_found: 'معرف المستخدم غير موجود. يرجى العودة وتسجيل الدخول مرة أخرى.',
-  interaction_not_found:
-    'جلسة التفاعل غير موجودة. يرجى العودة وبدء الجلسة مرة أخرى.',
-  invalid_interaction_type:
-    'هذا الإجراء غير مدعوم للتفاعل الحالي. يرجى بدء جلسة جديدة.',
+  interaction_not_found: 'جلسة التفاعل غير موجودة. يرجى العودة وبدء الجلسة مرة أخرى.',
+  invalid_interaction_type: 'هذا الإجراء غير مدعوم للتفاعل الحالي. يرجى بدء جلسة جديدة.',
   not_supported_for_forgot_password: 'هذا الإجراء غير مدعوم لنسيان كلمة المرور.',
-  identity_conflict:
-    'تم اكتشاف تضارب في الهوية. يرجى بدء جلسة جديدة للمتابعة بهوية مختلفة.',
+  identity_conflict: 'تم اكتشاف تضارب في الهوية. يرجى بدء جلسة جديدة للمتابعة بهوية مختلفة.',
   identifier_not_verified:
     'لم يتم التحقق من المعرف المقدم {{identifier}}. يرجى إنشاء سجل التحقق لهذا المعرف واستكمال عملية التحقق.',
   mfa: {
@@ -43,7 +37,8 @@ const session = {
     mfa_policy_not_user_controlled: 'سياسة MFA ليست تحت سيطرة المستخدم.',
     mfa_factor_not_enabled: 'عامل MFA غير ممكّن.',
   },
-  sso_enabled: 'تم تمكين تسجيل الدخول الموحد لهذا البريد الإلكتروني المحدد. يرجى تسجيل الدخول باستخدام SSO.',
+  sso_enabled:
+    'تم تمكين تسجيل الدخول الموحد لهذا البريد الإلكتروني المحدد. يرجى تسجيل الدخول باستخدام SSO.',
 };
 
 export default Object.freeze(session);

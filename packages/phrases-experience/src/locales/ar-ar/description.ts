@@ -16,10 +16,8 @@ const description = {
   passcode_sent: 'تم إعادة إرسال رمز التحقق',
   resend_after_seconds: 'لم تستلمه بعد؟ إعادة إرسال بعد <span>{{seconds}}</span> ثانية',
   resend_passcode: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
-  create_account_id_exists:
-    'الحساب بنوع {{type}} {{value}} موجود بالفعل، هل ترغب في تسجيل الدخول؟',
-  link_account_id_exists:
-    'الحساب بنوع {{type}} {{value}} موجود بالفعل. هل ترغب في ربطه؟',
+  create_account_id_exists: 'الحساب بنوع {{type}} {{value}} موجود بالفعل، هل ترغب في تسجيل الدخول؟',
+  link_account_id_exists: 'الحساب بنوع {{type}} {{value}} موجود بالفعل. هل ترغب في ربطه؟',
   sign_in_id_does_not_exist:
     'الحساب بنوع {{type}} {{value}} غير موجود، هل ترغب في إنشاء حساب جديد؟',
   sign_in_id_does_not_exist_alert: 'الحساب بنوع {{type}} {{value}} غير موجود.',
@@ -32,8 +30,7 @@ const description = {
   social_link_email: 'يمكنك ربط بريد إلكتروني آخر',
   social_link_phone: 'يمكنك ربط رقم هاتف آخر',
   social_link_email_or_phone: 'يمكنك ربط بريد إلكتروني أو رقم هاتف آخر',
-  social_bind_with_existing:
-    'لقد وجدنا حسابًا ذا صلة تم تسجيله، ويمكنك ربطه مباشرة.',
+  social_bind_with_existing: 'لقد وجدنا حسابًا ذا صلة تم تسجيله، ويمكنك ربطه مباشرة.',
   skip_social_linking: 'تخطي ربط الحساب الحالي؟',
   reset_password: 'إعادة تعيين كلمة المرور',
   reset_password_description:
@@ -53,8 +50,7 @@ const description = {
   link_email_or_phone: 'ربط البريد الإلكتروني أو الهاتف',
   link_email_description: 'لزيادة الأمان، يرجى ربط بريدك الإلكتروني بالحساب.',
   link_phone_description: 'لزيادة الأمان، يرجى ربط هاتفك بالحساب.',
-  link_email_or_phone_description:
-    'لزيادة الأمان، يرجى ربط بريدك الإلكتروني أو هاتفك بالحساب.',
+  link_email_or_phone_description: 'لزيادة الأمان، يرجى ربط بريدك الإلكتروني أو هاتفك بالحساب.',
   continue_with_more_information: 'لزيادة الأمان، يرجى استكمال تفاصيل الحساب أدناه.',
   create_your_account: 'إنشاء حسابك',
   sign_in_to_your_account: 'تسجيل الدخول إلى حسابك',
@@ -88,6 +84,17 @@ const description = {
   user_id: 'معرف المستخدم: {{id}}',
   redirect_to: 'سيتم توجيهك إلى {{name}}.',
   auto_agreement: 'من خلال المتابعة، فإنك توافق على <link></link>.',
+  /** UNTRANSLATED */
+  identifier_sign_in_description: 'Enter you {{types, list(type: disjunction;)}} to sign in.',
+  /** UNTRANSLATED */
+  all_sign_in_options: 'All sign-in options',
+  /** UNTRANSLATED */
+  identifier_register_description:
+    'Enter you {{types, list(type: disjunction;)}} to create a new account.',
+  /** UNTRANSLATED */
+  all_account_creation_options: 'All account creation options',
+  /** UNTRANSLATED */
+  back_to_sign_in: 'Back to sign in',
 };
 
 export default Object.freeze(description);

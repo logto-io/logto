@@ -56,7 +56,8 @@ const connector_details = {
   },
   google_one_tap: {
     title: 'Google One Tap',
-    description: 'Google One Tap هو طريقة آمنة وسهلة للمستخدمين لتسجيل الدخول إلى موقع الويب الخاص بك.',
+    description:
+      'Google One Tap هو طريقة آمنة وسهلة للمستخدمين لتسجيل الدخول إلى موقع الويب الخاص بك.',
     enable_google_one_tap: 'تمكين Google One Tap',
     enable_google_one_tap_description:
       'تمكين Google One Tap في تجربة تسجيل الدخول الخاصة بك: اسمح للمستخدمين بالتسجيل أو تسجيل الدخول بسرعة باستخدام حساب Google الخاص بهم إذا كانوا قد قاموا بتسجيل الدخول بالفعل على جهازهم.',

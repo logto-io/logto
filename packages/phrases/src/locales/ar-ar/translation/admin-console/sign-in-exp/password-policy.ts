@@ -9,7 +9,8 @@ const password_policy = {
   password_rejection: 'رفض كلمة المرور',
   compromised_passwords: 'رفض كلمات المرور المخترقة',
   breached_passwords: 'كلمات المرور المخترقة',
-  breached_passwords_description: 'رفض كلمات المرور التي تم العثور عليها سابقًا في قواعد البيانات المخترقة.',
+  breached_passwords_description:
+    'رفض كلمات المرور التي تم العثور عليها سابقًا في قواعد البيانات المخترقة.',
   restricted_phrases: 'تقييد عبارات ضعيفة من الناحية الأمنية',
   restricted_phrases_tooltip:
     'يجب تجنب استخدام هذه العبارات في كلمة المرور ما لم تجمعها مع 3 أحرف إضافية أو أكثر.',
@@ -18,8 +19,7 @@ const password_policy = {
   user_information: 'معلومات المستخدم',
   user_information_description: 'مثال: عنوان البريد الإلكتروني، رقم الهاتف، اسم المستخدم، إلخ.',
   custom_words: 'كلمات مخصصة',
-  custom_words_description:
-    'كلمات ذات صلة بالسياق، غير حساسة لحالة الأحرف، وكل كلمة في سطر منفصل.',
+  custom_words_description: 'كلمات ذات صلة بالسياق، غير حساسة لحالة الأحرف، وكل كلمة في سطر منفصل.',
   custom_words_placeholder: 'اسم الخدمة الخاص بك، اسم الشركة، إلخ.',
 };
 

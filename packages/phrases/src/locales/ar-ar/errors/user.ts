@@ -22,7 +22,8 @@ const user = {
   email_exists_in_profile: 'تم ربط ملف التعريف الخاص بك بالفعل بعنوان بريد إلكتروني.',
   phone_required_in_profile: 'يجب عليك إضافة رقم هاتف قبل تسجيل الدخول.',
   phone_exists_in_profile: 'تم ربط ملف التعريف الخاص بك بالفعل برقم هاتف.',
-  email_or_phone_required_in_profile: 'يجب عليك إضافة عنوان بريد إلكتروني أو رقم هاتف قبل تسجيل الدخول.',
+  email_or_phone_required_in_profile:
+    'يجب عليك إضافة عنوان بريد إلكتروني أو رقم هاتف قبل تسجيل الدخول.',
   suspended: 'تم تعليق هذا الحساب.',
   user_not_exist: 'المستخدم بالمعرف {{ identifier }} غير موجود.',
   missing_profile: 'يجب عليك تقديم معلومات إضافية قبل تسجيل الدخول.',
@@ -33,6 +34,8 @@ const user = {
   backup_code_already_in_use: 'تم استخدام رمز النسخ الاحتياطي بالفعل.',
   password_algorithm_required: 'مطلوب خوارزمية كلمة المرور.',
   password_and_digest: 'لا يمكنك تعيين كلمة مرور عادية ومعلومات تجزئة كلمة المرور معًا.',
+  /** UNTRANSLATED */
+  personal_access_token_name_exists: 'Personal access token name already exists.',
 };
 
 export default Object.freeze(user);

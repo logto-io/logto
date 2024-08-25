@@ -6,14 +6,12 @@ const oidc = {
   insufficient_scope: 'الرمز ناقص في النطاق `{{scope}}`.',
   invalid_request: 'الطلب غير صالح.',
   invalid_grant: 'طلب المنحة غير صالح.',
-  invalid_redirect_uri:
-    "`redirect_uri` لا يتطابق مع أي من `redirect_uris` المسجلة للعميل.",
+  invalid_redirect_uri: '`redirect_uri` لا يتطابق مع أي من `redirect_uris` المسجلة للعميل.',
   access_denied: 'تم رفض الوصول.',
   invalid_target: 'مؤشر المورد غير صالح.',
   unsupported_grant_type: 'نوع `grant_type` المطلوب غير مدعوم.',
   unsupported_response_mode: 'طريقة الاستجابة `response_mode` المطلوبة غير مدعومة.',
   unsupported_response_type: 'نوع الاستجابة `response_type` المطلوب غير مدعوم.',
-  /** @deprecated استخدم {@link oidc.server_error} أو {@link oidc.provider_error_fallback} بدلاً من ذلك. */
   provider_error: 'خطأ داخلي في OIDC: {{message}}.',
   server_error: 'حدث خطأ OIDC غير معروف. يرجى المحاولة مرة أخرى لاحقًا.',
   provider_error_fallback: 'حدث خطأ OIDC: {{code}}.',

@@ -18,8 +18,7 @@ const subscription = {
   next_bill_tip:
     'الأسعار المعروضة هنا لا تشمل الضرائب. سيتم حساب مبلغ الضريبة بناءً على المعلومات التي تقدمها ومتطلبات التنظيم المحلية ، وسيتم عرضه في فواتيرك.',
   manage_payment: 'إدارة الدفع',
-  overfill_quota_warning:
-    'لقد وصلت إلى حد الحصة الخاصة بك. لمنع أي مشكلة ، قم بترقية الخطة.',
+  overfill_quota_warning: 'لقد وصلت إلى حد الحصة الخاصة بك. لمنع أي مشكلة ، قم بترقية الخطة.',
   upgrade_pro: 'ترقية Pro',
   update_payment: 'تحديث الدفع',
   payment_error:
@@ -51,8 +50,7 @@ const subscription = {
   },
   not_eligible_modal: {
     downgrade_title: 'غير مؤهل للتخفيض',
-    downgrade_description:
-      'تأكد من تلبية المعايير التالية قبل التخفيض إلى <name/>.',
+    downgrade_description: 'تأكد من تلبية المعايير التالية قبل التخفيض إلى <name/>.',
     downgrade_help_tip: 'هل تحتاج إلى مساعدة في التخفيض؟ <a>اتصل بنا</a>.',
     upgrade_title: 'تذكير ودي لمبتكرينا المبكرين المحترمين',
     upgrade_description:

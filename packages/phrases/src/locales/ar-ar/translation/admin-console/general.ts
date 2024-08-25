@@ -46,7 +46,10 @@ const general = {
   continue: 'متابعة',
   page_info: '{{min, number}}-{{max, number}} من {{total, number}}',
   learn_more: 'معرفة المزيد',
-  tab_errors: '{{count, number}} أخطاء',
+  /** UNTRANSLATED */
+  tab_error_one: '{{count, number}} error',
+  /** UNTRANSLATED */
+  tab_error_other: '{{count, number}} errors',
   skip_for_now: 'تخطي للآن',
   remove: 'إزالة',
   visit: 'زيارة',

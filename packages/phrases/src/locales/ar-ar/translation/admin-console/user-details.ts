@@ -13,7 +13,8 @@ const user_details = {
   reset_password: {
     reset_password: 'إعادة تعيين كلمة المرور',
     title: 'هل أنت متأكد أنك تريد إعادة تعيين كلمة المرور؟',
-    content: 'لا يمكن التراجع عن هذا الإجراء. سيتم إعادة تعيين معلومات تسجيل الدخول الخاصة بالمستخدم.',
+    content:
+      'لا يمكن التراجع عن هذا الإجراء. سيتم إعادة تعيين معلومات تسجيل الدخول الخاصة بالمستخدم.',
     congratulations: 'تم إعادة تعيين هذا المستخدم',
     new_password: 'كلمة المرور الجديدة:',
   },
@@ -47,8 +48,7 @@ const user_details = {
     remove: 'إزالة',
     connected: 'هذا المستخدم متصل بعدة روابط اجتماعية.',
     not_connected: 'المستخدم غير متصل بأي رابط اجتماعي',
-    deletion_confirmation:
-      'أنت تقوم بإزالة هوية <name/> الحالية. هل أنت متأكد أنك تريد المتابعة؟',
+    deletion_confirmation: 'أنت تقوم بإزالة هوية <name/> الحالية. هل أنت متأكد أنك تريد المتابعة؟',
   },
   sso_connectors: {
     connectors: 'الروابط',
@@ -83,7 +83,8 @@ const user_details = {
       'سيؤدي هذا الإجراء إلى إزالة هذا الدور من هذا المستخدم. سيظل الدور نفسه قائمًا ، ولكنه لن يكون مرتبطًا بعد الآن بالمستخدم.',
     deleted: 'تمت إزالة {{name}} بنجاح من هذا المستخدم.',
     assign_title: 'تعيين الأدوار لـ {{name}}',
-    assign_subtitle: 'ابحث عن الأدوار المناسبة للمستخدم عن طريق البحث بالاسم أو الوصف أو معرف الدور.',
+    assign_subtitle:
+      'ابحث عن الأدوار المناسبة للمستخدم عن طريق البحث بالاسم أو الوصف أو معرف الدور.',
     assign_role_field: 'تعيين الأدوار',
     role_search_placeholder: 'البحث بواسطة اسم الدور',
     added_text: '{{value, number}} تمت الإضافة',
@@ -95,6 +96,60 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'يحتاج المستخدم إلى وجود واحد على الأقل من معرفات تسجيل الدخول (اسم المستخدم أو البريد الإلكتروني أو رقم الهاتف أو الوسائط الاجتماعية) لتسجيل الدخول. هل أنت متأكد أنك تريد المتابعة؟',
+  personal_access_tokens: {
+    /** UNTRANSLATED */
+    title: 'Personal access token',
+    /** UNTRANSLATED */
+    title_other: 'Personal access tokens',
+    /** UNTRANSLATED */
+    title_short: 'token',
+    /** UNTRANSLATED */
+    empty: 'The user does not have any personal access tokens.',
+    /** UNTRANSLATED */
+    create: 'Create new token',
+    /** UNTRANSLATED */
+    tip: 'Personal access tokens (PATs) provide a secure way for users to grant access tokens without using their credentials and interactive sign-in. This is useful for CI/CD, scripts, or applications that need to access resources programmatically. <a>Learn more</a>',
+    /** UNTRANSLATED */
+    value: 'Value',
+    /** UNTRANSLATED */
+    created_at: 'Created at',
+    /** UNTRANSLATED */
+    expires_at: 'Expires at',
+    /** UNTRANSLATED */
+    never: 'Never',
+    /** UNTRANSLATED */
+    create_new_token: 'Create new token',
+    /** UNTRANSLATED */
+    delete_confirmation:
+      'This action cannot be undone. Are you sure you want to delete this token?',
+    /** UNTRANSLATED */
+    expired: 'Expired',
+    /** UNTRANSLATED */
+    expired_tooltip: 'This token was expired on {{date}}.',
+    create_modal: {
+      /** UNTRANSLATED */
+      title: 'Create personal access token',
+      /** UNTRANSLATED */
+      expiration: 'Expiration',
+      /** UNTRANSLATED */
+      expiration_description: 'The token will expire at {{date}}.',
+      /** UNTRANSLATED */
+      expiration_description_never:
+        'The token will never expire. We recommend setting an expiration date for enhanced security.',
+      /** UNTRANSLATED */
+      days: '{{count}} day',
+      /** UNTRANSLATED */
+      days_other: '{{count}} days',
+      /** UNTRANSLATED */
+      created: 'The token {{name}} has been successfully created.',
+    },
+    edit_modal: {
+      /** UNTRANSLATED */
+      title: 'Edit personal access token',
+      /** UNTRANSLATED */
+      edited: 'The token {{name}} has been successfully edited.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

@@ -27,8 +27,7 @@ const organization_template = {
     permission_column: 'أذن المؤسسة',
     description_column: 'الوصف',
     placeholder_title: 'أذن المؤسسة',
-    placeholder_description:
-      'أذن المؤسسة يشير إلى التصريح بالوصول إلى مورد في سياق المؤسسة.',
+    placeholder_description: 'أذن المؤسسة يشير إلى التصريح بالوصول إلى مورد في سياق المؤسسة.',
     delete_confirm:
       'إذا تم حذف هذا الأذن ، فسيفقد جميع أدوار المؤسسة التي تحتوي على هذا الأذن هذا الأذن ، وسيفقد المستخدمون الذين لديهم هذا الأذن الوصول الذي تمنحه.',
     create_title: 'إنشاء أذن المؤسسة',

@@ -37,11 +37,9 @@ const content = {
     unsaved_description: 'لن يتم حفظ التغييرات إذا غادرت هذه الصفحة دون حفظها.',
     deletion_tip: 'حذف اللغة',
     deletion_title: 'هل ترغب في حذف اللغة المضافة؟',
-    deletion_description:
-      'بعد الحذف، لن يتمكن مستخدموك من التصفح باللغة المحذوفة مرة أخرى.',
+    deletion_description: 'بعد الحذف، لن يتمكن مستخدموك من التصفح باللغة المحذوفة مرة أخرى.',
     default_language_deletion_title: 'لا يمكن حذف اللغة الافتراضية.',
-    default_language_deletion_description:
-      'تم تعيين {{language}} كلغتك الافتراضية ولا يمكن حذفها.',
+    default_language_deletion_description: 'تم تعيين {{language}} كلغتك الافتراضية ولا يمكن حذفها.',
   },
 };
 
