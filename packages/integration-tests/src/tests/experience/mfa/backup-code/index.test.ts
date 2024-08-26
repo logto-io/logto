@@ -46,7 +46,7 @@ describe('MFA - Backup Code', () => {
     const experience = new ExpectWebAuthnExperience(await browser.newPage());
     await experience.setupVirtualAuthenticator();
     await experience.startWith(demoAppUrl, 'register');
-    await experience.toFillInput('id', username, { submit: true });
+    await experience.toFillInput('identifier', username, { submit: true });
     experience.toBeAt('register/password');
     await experience.toFillNewPasswords(password);
     experience.toBeAt('mfa-binding/WebAuthn');

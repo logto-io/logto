@@ -105,7 +105,6 @@ const IdentifierProfileForm = ({
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            defaultType={defaultType}
             isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledTypes}

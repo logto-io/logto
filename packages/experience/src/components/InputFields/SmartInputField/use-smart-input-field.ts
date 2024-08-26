@@ -1,5 +1,4 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { assert } from '@silverhand/essentials';
 import { useState, useCallback, useMemo } from 'react';
 import type { ChangeEventHandler } from 'react';
 
@@ -27,26 +26,16 @@ export type IdentifierInputValue = {
 
 type Props = {
   defaultValue?: string;
-  _defaultType?: IdentifierInputType;
   enabledTypes: IdentifierInputType[];
 };
 
-const useSmartInputField = ({ _defaultType, defaultValue, enabledTypes }: Props) => {
+const useSmartInputField = ({ defaultValue, enabledTypes }: Props) => {
   const enabledTypeSet = useMemo(() => new Set(enabledTypes), [enabledTypes]);
 
-  assert(
-    !_defaultType || enabledTypeSet.has(_defaultType),
-    new Error(
-      `Invalid input type. Current inputType ${
-        _defaultType ?? ''
-      } is detected but missing in enabledTypes`
-    )
-  );
-
-  // Parse default type from enabled types if default type is not provided and only one type is enabled
+  // Parse default type from enabled types and default value
   const defaultType = useMemo(
-    () => _defaultType ?? (enabledTypes.length === 1 ? enabledTypes[0] : undefined),
-    [_defaultType, enabledTypes]
+    () => detectIdentifierType({ value: defaultValue ?? '', enabledTypeSet }),
+    [defaultValue, enabledTypeSet]
   );
 
   // Parse default value if provided
@@ -55,14 +44,7 @@ const useSmartInputField = ({ _defaultType, defaultValue, enabledTypes }: Props)
     [defaultType, defaultValue]
   );
 
-  const [currentType, setCurrentType] = useState(
-    detectIdentifierType({
-      value: defaultValue ?? '',
-      enabledTypeSet,
-      defaultType,
-      currentType: defaultType,
-    })
-  );
+  const [currentType, setCurrentType] = useState(defaultType);
 
   const [countryCode, setCountryCode] = useState<string>(
     defaultCountryCode ?? getDefaultCountryCallingCode()
@@ -71,8 +53,8 @@ const useSmartInputField = ({ _defaultType, defaultValue, enabledTypes }: Props)
   const [inputValue, setInputValue] = useState<string>(defaultInputValue ?? '');
 
   const detectInputType = useCallback(
-    (value: string) => detectIdentifierType({ value, enabledTypeSet, defaultType, currentType }),
-    [defaultType, currentType, enabledTypeSet]
+    (value: string) => detectIdentifierType({ value, enabledTypeSet, currentType }),
+    [currentType, enabledTypeSet]
   );
 
   const onCountryCodeChange = useCallback(

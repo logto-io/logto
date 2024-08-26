@@ -130,7 +130,6 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledSignInMethods}
-            defaultType={field.value.type}
             defaultValue={field.value.value}
           />
         )}

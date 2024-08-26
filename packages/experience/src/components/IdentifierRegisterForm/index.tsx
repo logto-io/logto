@@ -27,7 +27,7 @@ type Props = {
 };
 
 type FormState = {
-  id: IdentifierInputValue;
+  identifier: IdentifierInputValue;
 };
 
 const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) => {
@@ -46,11 +46,13 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
     control,
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
-    defaultValues: { id: prefilledIdentifier },
+    defaultValues: { identifier: prefilledIdentifier },
   });
 
   // Watch identifier field and check single sign on method availability
-  const { showSingleSignOnForm, navigateToSingleSignOn } = useSingleSignOnWatch(watch('id'));
+  const { showSingleSignOnForm, navigateToSingleSignOn } = useSingleSignOnWatch(
+    watch('identifier')
+  );
 
   useEffect(() => {
     if (!isValid) {
@@ -62,7 +64,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ id: { type, value } }) => {
+      void handleSubmit(async ({ identifier: { type, value } }) => {
         if (!type) {
           return;
         }
@@ -101,7 +103,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <Controller
         control={control}
-        name="id"
+        name="identifier"
         rules={{
           validate: ({ type, value }) => {
             if (!type || !value) {
@@ -126,9 +128,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             className={styles.inputField}
             {...field}
             defaultValue={field.value.value}
-            defaultType={field.value.type}
-            isDanger={!!errors.id || !!errorMessage}
-            errorMessage={errors.id?.message}
+            isDanger={!!errors.identifier || !!errorMessage}
+            errorMessage={errors.identifier?.message}
             enabledTypes={signUpMethods}
           />
         )}

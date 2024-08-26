@@ -23,7 +23,6 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix' | 'value'> 
   readonly isDanger?: boolean;
 
   readonly enabledTypes?: IdentifierInputType[];
-  readonly defaultType?: IdentifierInputType;
 
   readonly defaultValue?: string;
   readonly onChange?: (data: IdentifierInputValue) => void;
@@ -32,7 +31,7 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix' | 'value'> 
 const AnimatedInputField = animated(InputField);
 
 const SmartInputField = (
-  { defaultValue, defaultType, enabledTypes = [], onChange, ...rest }: Props,
+  { defaultValue, enabledTypes = [], onChange, ...rest }: Props,
   ref: Ref<Nullable<HTMLInputElement>>
 ) => {
   const innerRef = useRef<HTMLInputElement>(null);
@@ -46,7 +45,6 @@ const SmartInputField = (
     onInputValueClear,
     identifierType,
   } = useSmartInputField({
-    _defaultType: defaultType,
     defaultValue,
     enabledTypes,
   });

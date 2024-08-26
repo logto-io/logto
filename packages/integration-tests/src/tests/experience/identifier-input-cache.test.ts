@@ -56,6 +56,6 @@ describe('identifier input cache', () => {
     await experience.toClick('a', 'Create account');
     experience.toMatchUrl(appendPath(new URL(logtoUrl), 'register').href);
     // The input should be empty
-    await experience.toMatchElement('input[name="id"][value=""]');
+    await experience.toMatchElement('input[name=identifier][value=""]');
   });
 });
