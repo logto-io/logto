@@ -14,6 +14,10 @@
     ],
     "organization_permissions": {
       "specific_permissions": [
+        "analytics:global:*",
+        "analytics:website:admin",
+        "analytics:website:write",
+        "analytics:website:view",
         "payments:provider:*",
         "payments:payment_request:*",
         "payments:payment_request.public:read",
@@ -72,6 +76,24 @@
         "specific_permissions": ["profile:user:*", "profile:address:*", "profile:entitlement:*"]
       },
       {
+        "id": "anl-admin",
+        "name": "Analytics Admin",
+        "description": "Analytics Admin",
+        "specific_permissions": ["analytics:website:admin"]
+      },
+      {
+        "id": "anl-public-servant",
+        "name": "Analytics Public Servant",
+        "description": "Analytics Public servant",
+        "specific_permissions": ["analytics:website:view"]
+      },
+      {
+        "id": "anl-super-user",
+        "name": "Analytics Super User",
+        "description": "Analytics Super User",
+        "specific_permissions": ["analytics:global:*"]
+      },
+      {
         "id": "upload-public-servant",
         "name": "File Upload Public Servant",
         "description": "File Upload Public servant",
@@ -126,6 +148,17 @@
         "secret": "<SEEDER_LIFE_EVENTS_APP_SECRET>",
         "id": "i61nya0wctzpqeyeno54z",
         "is_third_party": false
+      },
+      {
+        "name": "Analytics Building Block",
+        "description": "Shared platform for Analytics",
+        "type": "Traditional",
+        "redirect_uri": "<SEEDER_ANALYTICS_APP_REDIRECT_URI>",
+        "logout_redirect_uri": "<SEEDER_ANALYTICS_APP_LOGOUT_REDIRECT_URI>",
+        "secret": "<SEEDER_ANALYTICS_APP_SECRET>",
+        "id": "kgz1zomlw27cxx4pxh5gi",
+        "is_third_party": false,
+        "always_issue_refresh_token": true
       },
       {
         "name": "Home Building Block",
