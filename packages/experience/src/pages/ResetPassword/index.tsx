@@ -21,7 +21,13 @@ const ResetPassword = () => {
   const { setToast } = useToast();
   const navigate = useNavigate();
   const { show } = usePromiseConfirmModal();
-  const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
+  const {
+    identifierInputValue,
+    setIdentifierInputValue,
+    forgotPasswordIdentifierInputValue,
+    setForgotPasswordIdentifierInputValue,
+  } = useContext(UserInteractionContext);
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.verification_session_not_found': async (error) => {
@@ -37,14 +43,31 @@ const ResetPassword = () => {
   const successHandler: SuccessHandler<typeof setUserPassword> = useCallback(
     (result) => {
       if (result) {
-        // Clear the forgot password identifier input value
+        /**
+         * Improve user experience by caching the identifier input value for sign-in page
+         * when the user is first redirected to the reset password page.
+         * This allows user to continue the sign flow without having to re-enter the identifier.
+         */
+        if (!identifierInputValue) {
+          setIdentifierInputValue(forgotPasswordIdentifierInputValue);
+        }
+
+        // Clear the forgot password identifier input value after the password is set
         setForgotPasswordIdentifierInputValue(undefined);
 
         setToast(t('description.password_changed'));
         navigate('/sign-in', { replace: true });
       }
     },
-    [navigate, setForgotPasswordIdentifierInputValue, setToast, t]
+    [
+      forgotPasswordIdentifierInputValue,
+      identifierInputValue,
+      navigate,
+      setForgotPasswordIdentifierInputValue,
+      setIdentifierInputValue,
+      setToast,
+      t,
+    ]
   );
 
   const [action] = usePasswordAction({
