@@ -130,7 +130,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
             errorMessage={errors.identifier?.message}
             enabledTypes={signInMethods}
             defaultValue={field.value.value}
-            defaultType={field.value.type}
           />
         )}
       />

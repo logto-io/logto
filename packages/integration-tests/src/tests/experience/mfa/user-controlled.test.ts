@@ -50,7 +50,7 @@ describe('MFA - User controlled', () => {
 
     // Register
     await experience.startWith(demoAppUrl, 'register');
-    await experience.toFillInput('id', username, { submit: true });
+    await experience.toFillInput('identifier', username, { submit: true });
     experience.toBeAt('register/password');
     await experience.toFillNewPasswords(password);
 

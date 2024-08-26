@@ -85,7 +85,7 @@ describe('<IdentifierRegisterForm />', () => {
   ])('%p %p register form', (...signUpMethods) => {
     test('default render', () => {
       const { queryByText, container } = renderForm(signUpMethods);
-      expect(container.querySelector('input[name="id"]')).not.toBeNull();
+      expect(container.querySelector('input[name=identifier]')).not.toBeNull();
       expect(queryByText('action.create_account')).not.toBeNull();
       expect(queryByText('description.terms_of_use')).not.toBeNull();
     });
@@ -110,7 +110,7 @@ describe('<IdentifierRegisterForm />', () => {
     test('username with initial numeric char should throw', async () => {
       const { queryByText, getByText, container } = renderForm();
       const submitButton = getByText('action.create_account');
-      const usernameInput = container.querySelector('input[name="id"]');
+      const usernameInput = container.querySelector('input[name=identifier]');
 
       assert(usernameInput, new Error('username input not found'));
 
@@ -137,7 +137,7 @@ describe('<IdentifierRegisterForm />', () => {
     test('username with special character should throw', async () => {
       const { queryByText, getByText, container } = renderForm();
       const submitButton = getByText('action.create_account');
-      const usernameInput = container.querySelector('input[name="id"]');
+      const usernameInput = container.querySelector('input[name=identifier]');
 
       assert(usernameInput, new Error('username input not found'));
 
@@ -165,7 +165,7 @@ describe('<IdentifierRegisterForm />', () => {
       const { getByText, queryByText, container } = renderForm();
       const submitButton = getByText('action.create_account');
       const termsButton = getByText('description.agree_with_terms');
-      const usernameInput = container.querySelector('input[name="id"]');
+      const usernameInput = container.querySelector('input[name=identifier]');
 
       assert(usernameInput, new Error('username input not found'));
 
@@ -200,7 +200,7 @@ describe('<IdentifierRegisterForm />', () => {
         const { queryByText, getByText, container } = renderForm(signUpMethods);
 
         const submitButton = getByText('action.create_account');
-        const emailInput = container.querySelector('input[name="id"]');
+        const emailInput = container.querySelector('input[name=identifier]');
 
         assert(emailInput, new Error('email input not found'));
 
@@ -230,7 +230,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         const submitButton = getByText('action.create_account');
         const termsButton = getByText('description.agree_with_terms');
-        const emailInput = container.querySelector('input[name="id"]');
+        const emailInput = container.querySelector('input[name=identifier]');
 
         assert(emailInput, new Error('email input not found'));
 
@@ -260,7 +260,7 @@ describe('<IdentifierRegisterForm />', () => {
         const { queryByText, getByText, container } = renderForm(signUpMethods);
 
         const submitButton = getByText('action.create_account');
-        const phoneInput = container.querySelector('input[name="id"]');
+        const phoneInput = container.querySelector('input[name=identifier]');
 
         assert(phoneInput, new Error('phone input not found'));
 
@@ -289,7 +289,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         const submitButton = getByText('action.create_account');
         const termsButton = getByText('description.agree_with_terms');
-        const phoneInput = container.querySelector('input[name="id"]');
+        const phoneInput = container.querySelector('input[name=identifier]');
 
         assert(phoneInput, new Error('phone input not found'));
 
@@ -326,7 +326,7 @@ describe('<IdentifierRegisterForm />', () => {
     it('should not call check single sign-on connector when no single sign-on connector is enabled', async () => {
       const { getByText, container, queryByText } = renderForm([SignInIdentifier.Email]);
       const submitButton = getByText('action.create_account');
-      const emailInput = container.querySelector('input[name="id"]');
+      const emailInput = container.querySelector('input[name=identifier]');
       const termsButton = getByText('description.agree_with_terms');
 
       assert(emailInput, new Error('username input not found'));
@@ -358,7 +358,7 @@ describe('<IdentifierRegisterForm />', () => {
         mockSsoConnectors
       );
       const submitButton = getByText('action.create_account');
-      const emailInput = container.querySelector('input[name="id"]');
+      const emailInput = container.querySelector('input[name=identifier]');
       const termsButton = getByText('description.agree_with_terms');
 
       assert(emailInput, new Error('username input not found'));
@@ -393,7 +393,7 @@ describe('<IdentifierRegisterForm />', () => {
         [SignInIdentifier.Email],
         mockSsoConnectors
       );
-      const emailInput = container.querySelector('input[name="id"]');
+      const emailInput = container.querySelector('input[name=identifier]');
       const termsButton = getByText('description.agree_with_terms');
 
       assert(emailInput, new Error('username input not found'));

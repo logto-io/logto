@@ -54,12 +54,7 @@ const ForgotPassword = () => {
         types: enabledMethods.map((method) => t(identifierInputDescriptionMap[method])),
       }}
     >
-      <ForgotPasswordForm
-        autoFocus
-        defaultType={defaultType}
-        defaultValue={defaultValue}
-        enabledTypes={enabledMethods}
-      />
+      <ForgotPasswordForm autoFocus defaultValue={defaultValue} enabledTypes={enabledMethods} />
     </SecondaryPageLayout>
   );
 };
