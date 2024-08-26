@@ -1,4 +1,4 @@
-import { HttpError } from 'koa';
+import createError from 'http-errors';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
@@ -7,9 +7,7 @@ import koaErrorHandler from './koa-error-handler.js';
 
 const { jest } = import.meta;
 
-// Avoid "TypeError: cannot construct abstract class"
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-const httpError = Object.create(HttpError.prototype);
+const httpError = createError(404, 'Not Found');
 
 describe('koaErrorHandler middleware', () => {
   const mockBody = { data: 'foo' };
