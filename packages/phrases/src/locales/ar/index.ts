@@ -5,9 +5,9 @@ import type { LocalePhrase } from '../../types.js';
 import errors from './errors/index.js';
 import translation from './translation/index.js';
 
-const ar_ar = {
+const ar = {
   translation,
   errors,
 } satisfies DeepPartial<LocalePhrase>;
 
-export default Object.freeze(ar_ar);
+export default Object.freeze(ar);

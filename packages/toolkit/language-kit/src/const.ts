@@ -1,7 +1,9 @@
 export const languages = Object.freeze({
   'af-ZA': 'Afrikaans',
   'am-ET': 'አማርኛ',
-  'ar-AR': 'العربية',
+  ar: 'العربية',
+  /** @deprecated Use 'ar' instead. */
+  'ar-AR': 'العربية (مهجورة)',
   'as-IN': 'অসমীয়া',
   'az-AZ': 'Azərbaycan dili',
   'be-BY': 'Беларуская',

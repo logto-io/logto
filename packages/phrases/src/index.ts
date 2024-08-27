@@ -3,7 +3,7 @@ import { languages, fallback } from '@logto/language-kit';
 import type { DeepPartial, NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import arAR from './locales/ar-ar/index.js';
+import ar from './locales/ar/index.js';
 import de from './locales/de/index.js';
 import en from './locales/en/index.js';
 import es from './locales/es/index.js';
@@ -27,7 +27,7 @@ export type DefaultLocale = 'en';
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 
 export const builtInLanguages = [
-  'ar-AR',
+  'ar',
   'de',
   'en',
   'es',
@@ -74,7 +74,7 @@ export type Resource = Record<
 };
 
 const resource: Resource = {
-  'ar-AR': arAR,
+  ar,
   de,
   en,
   es,

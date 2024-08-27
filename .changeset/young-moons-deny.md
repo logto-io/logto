@@ -3,4 +3,4 @@
 "@logto/phrases": minor
 ---
 
-add ar-AR language (credit to @zaaakher)
+add ar-SA language (credit to @zaaakher)
