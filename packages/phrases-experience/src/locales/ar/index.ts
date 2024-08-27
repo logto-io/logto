@@ -12,7 +12,7 @@ import mfa from './mfa.js';
 import secondary from './secondary.js';
 import user_scopes from './user-scopes.js';
 
-const ar_ar = {
+const ar = {
   translation: {
     input,
     secondary,
@@ -26,4 +26,4 @@ const ar_ar = {
   },
 } satisfies DeepPartial<LocalePhrase>;
 
-export default Object.freeze(ar_ar);
+export default Object.freeze(ar);
