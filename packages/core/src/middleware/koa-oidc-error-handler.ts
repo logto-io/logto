@@ -97,9 +97,22 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
       ctx.body = errorOut(error);
     }
 
+    // Parse the `parse_error` from the query string.
+    // If the `parse_error` is set to false, only returns the original oidc error body.
+    // For some third-party connectors, like Google, `code` is considered as a reserved OIDC key,
+    // we can't return the error body containing `code` in the error response.
+    const queryParametersResult = z
+      .object({
+        parse_error: z.literal('false').optional(),
+      })
+      .safeParse(ctx.query);
+
+    const returnRawError =
+      queryParametersResult.success && queryParametersResult.data.parse_error === 'false';
+
     // This is the only way we can check if the error is handled by the oidc-provider, because
     // oidc-provider doesn't call `renderError` when the request prefers JSON response.
-    if (ctx.status >= 400 && isObject(ctx.body)) {
+    if (ctx.status >= 400 && isObject(ctx.body) && !returnRawError) {
       const parsed = z
         .object({
           error: z.string(),
@@ -113,26 +126,14 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
         const code = isSessionNotFound(data.error_description)
           ? 'session.not_found'
           : `oidc.${data.error}`;
+
         const uri = errorUris[data.error];
 
-        // Parse the `error_code_key` from the query string.
-        // This is used to customize the error key in the response body.
-        // For some third-party connectors, like Google, `code` is considered as a reserved OIDC key,
-        // can't be used as the error code key in the error response body.
-        // We add `error_code_key` to the query string to customize the error key in the response body.
-        const errorKeyQueryResult = z
-          .object({
-            error_code_key: z.string().optional(),
-          })
-          .safeParse(ctx.query);
-
-        const errorKey = errorKeyQueryResult.success
-          ? errorKeyQueryResult.data.error_code_key ?? 'code'
-          : 'code';
-
         ctx.body = {
-          [errorKey]: code,
-          message: i18next.t(['errors:' + code, 'errors:oidc.provider_error_fallback'], { code }),
+          code,
+          message: i18next.t(['errors:' + code, 'errors:oidc.provider_error_fallback'], {
+            code,
+          }),
           error_uri: uri,
           ...ctx.body,
         };
