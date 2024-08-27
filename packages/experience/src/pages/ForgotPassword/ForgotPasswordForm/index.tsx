@@ -98,12 +98,12 @@ const ForgotPasswordForm = ({ className, autoFocus, defaultValue = '', enabledTy
             return true;
           },
         }}
-        render={({ field }) => (
+        render={({ field, formState: { defaultValues } }) => (
           <SmartInputField
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            defaultValue={defaultValue}
+            defaultValue={defaultValues?.identifier?.value}
             isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledTypes}

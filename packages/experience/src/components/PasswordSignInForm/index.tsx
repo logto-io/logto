@@ -121,7 +121,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
             return errorMessage ? getGeneralIdentifierErrorMessage(signInMethods, 'invalid') : true;
           },
         }}
-        render={({ field }) => (
+        render={({ field, formState: { defaultValues } }) => (
           <SmartInputField
             autoFocus={autoFocus}
             className={styles.inputField}
@@ -129,7 +129,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
             isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
             enabledTypes={signInMethods}
-            defaultValue={field.value.value}
+            defaultValue={defaultValues?.identifier?.value}
           />
         )}
       />
