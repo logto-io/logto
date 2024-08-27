@@ -35,6 +35,11 @@ const SingleSignOnForm = ({ isTermsAndPrivacyCheckboxVisible }: Props) => {
     formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
+    defaultValues: {
+      identifier: {
+        value: ssoEmail,
+      },
+    },
   });
 
   useEffect(() => {
@@ -82,13 +87,13 @@ const SingleSignOnForm = ({ isTermsAndPrivacyCheckboxVisible }: Props) => {
               : true;
           },
         }}
-        render={({ field }) => (
+        render={({ field, formState: { defaultValues } }) => (
           <SmartInputField
             autoFocus
             className={styles.inputField}
             {...field}
             isDanger={!!errors.identifier}
-            defaultValue={ssoEmail}
+            defaultValue={defaultValues?.identifier?.value}
             errorMessage={errors.identifier?.message}
             enabledTypes={[SignInIdentifier.Email]}
           />

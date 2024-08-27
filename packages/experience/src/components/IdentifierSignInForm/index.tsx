@@ -122,7 +122,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
               : true;
           },
         }}
-        render={({ field }) => (
+        render={({ field, formState: { defaultValues } }) => (
           <SmartInputField
             autoFocus={autoFocus}
             className={styles.inputField}
@@ -130,7 +130,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledSignInMethods}
-            defaultValue={field.value.value}
+            defaultValue={defaultValues?.identifier?.value}
           />
         )}
       />

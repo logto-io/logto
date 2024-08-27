@@ -121,13 +121,13 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             return true;
           },
         }}
-        render={({ field }) => (
+        render={({ field, formState: { defaultValues } }) => (
           <SmartInputField
             autoComplete="off"
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            defaultValue={field.value.value}
+            defaultValue={defaultValues?.identifier?.value}
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={signUpMethods}
