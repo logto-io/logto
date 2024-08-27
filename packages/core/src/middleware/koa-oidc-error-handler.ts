@@ -82,6 +82,7 @@ const isSessionNotFound = (description?: string) =>
  * @see {@link errorUris} for the list of error URIs.
  */
 export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
+  // eslint-disable-next-line complexity
   return async (ctx, next) => {
     try {
       await next();
@@ -114,8 +115,21 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
           : `oidc.${data.error}`;
         const uri = errorUris[data.error];
 
+        // Parse the `error_key` from the query string.
+        // This is used to customize the error key in the response body.
+        // For some third-party connectors, like Google, `code` is considered as a reserved OIDC key,
+        // can't be used as the error code key in the error response body.
+        // We add `error_key` to the query string to customize the error key in the response body.
+        const errorKeyQuery = z
+          .object({
+            error_key: z.string().optional(),
+          })
+          .parse(ctx.query);
+
+        const errorKey = errorKeyQuery.error_key ?? 'code';
+
         ctx.body = {
-          code,
+          [errorKey]: code,
           message: i18next.t(['errors:' + code, 'errors:oidc.provider_error_fallback'], { code }),
           error_uri: uri,
           ...ctx.body,
