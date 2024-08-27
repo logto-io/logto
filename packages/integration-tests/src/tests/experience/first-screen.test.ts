@@ -10,9 +10,6 @@ import {
   setSmsConnector,
 } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('first screen', () => {
   beforeAll(async () => {
