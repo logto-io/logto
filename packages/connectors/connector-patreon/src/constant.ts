@@ -3,7 +3,7 @@ import { ConnectorPlatform, ConnectorConfigFormItemType } from '@logto/connector
 
 export const authorizationEndpoint = 'https://www.patreon.com/oauth2/authorize';
 export const scope = 'identity identity[email]';
-export const accessTokenEndpoint = 'https://www.patreon.com/api/oauth2/token';
+export const tokenEndpoint = 'https://www.patreon.com/api/oauth2/token';
 export const userInfoEndpoint = 'https://www.patreon.com/api/oauth2/api/current_user';
 
 export const defaultMetadata: ConnectorMetadata = {

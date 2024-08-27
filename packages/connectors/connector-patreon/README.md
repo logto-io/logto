@@ -1,6 +1,6 @@
 # Patreon Connector
 
-The official Logto connector for Patreon social sign-in, based on the GitHub connector by Silverhand Inc.
+The official Logto connector for Patreon social sign-in, based on the Hugging Face connector by Silverhand Inc.
 
 **Table of contents**
 
@@ -16,7 +16,7 @@ The official Logto connector for Patreon social sign-in, based on the GitHub con
 
 ## Get started
 
-The Patreon connector enables end-users to sign in to your application using their own Patreon accounts via the Patreon OAuth 2.0 authentication protocol. This connector is adapted from the GitHub connector by Silverhand Inc., leveraging many of the same implementation patterns and configurations.
+The Patreon connector enables end-users to sign in to your application using their own Patreon accounts via the Patreon OAuth 2.0 authentication protocol. This connector is adapted from the Hugging Face connector by Silverhand Inc., leveraging many of the same implementation patterns and configurations.
 
 ## Sign in with Patreon account
 

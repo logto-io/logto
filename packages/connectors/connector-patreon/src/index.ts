@@ -1,12 +1,5 @@
 import { assert, conditional } from '@silverhand/essentials';
 
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  validateConfig,
-  ConnectorType,
-  jsonGuard,
-} from '@logto/connector-kit';
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -14,24 +7,30 @@ import type {
   CreateConnector,
   GetConnectorConfig,
 } from '@logto/connector-kit';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  validateConfig,
+  ConnectorType,
+  parseJson,
+} from '@logto/connector-kit';
+import {
+  constructAuthorizationUri,
+  oauth2AuthResponseGuard,
+  requestTokenEndpoint,
+  TokenEndpointAuthMethod,
+} from '@logto/connector-oauth';
 import ky, { HTTPError } from 'ky';
 
 import {
   authorizationEndpoint,
-  accessTokenEndpoint,
   scope as defaultScope,
   userInfoEndpoint,
   defaultMetadata,
   defaultTimeout,
+  tokenEndpoint,
 } from './constant.js';
-import type { PatreonConfig } from './types.js';
-import {
-  authorizationCallbackErrorGuard,
-  patreonConfigGuard,
-  accessTokenResponseGuard,
-  userInfoResponseGuard,
-  authResponseGuard,
-} from './types.js';
+import { accessTokenResponseGuard, patreonConfigGuard, userInfoResponseGuard } from './types.js';
 
 /**
  * Generates an authorization URI for the given configuration.
@@ -44,95 +43,19 @@ const getAuthorizationUri =
   async ({ state, redirectUri }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, patreonConfigGuard);
-    const queryParameters = new URLSearchParams({
-      response_type: 'code',
-      client_id: config.clientId,
-      redirect_uri: redirectUri,
-      state,
-      scope: config.scope ?? defaultScope,
-    });
+
+    const { clientId, scope } = config;
 
     await setSession({ redirectUri });
 
-    return `${authorizationEndpoint}?${queryParameters.toString()}`;
+    return constructAuthorizationUri(authorizationEndpoint, {
+      responseType: 'code',
+      clientId,
+      scope: scope ?? defaultScope, // Defaults to 'profile' if not provided
+      redirectUri,
+      state,
+    });
   };
-
-/**
- * Handles the authorization callback for the application.
- *
- * @param {unknown} parameterObject - The parameter object to be handled.
- * @returns {Promise<any>} - A Promise that resolves to the data if the authorization is successful.
- * @throws {ConnectorError} - If there is an error during the authorization process.
- */
-const authorizationCallbackHandler = async (parameterObject: unknown) => {
-  const result = authResponseGuard.safeParse(parameterObject);
-
-  if (result.success) {
-    return result.data;
-  }
-
-  const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
-
-  if (!parsedError.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-  }
-
-  const { error, error_description, error_uri } = parsedError.data;
-
-  if (error === 'access_denied') {
-    throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, error_description);
-  }
-
-  throw new ConnectorError(ConnectorErrorCodes.General, {
-    error,
-    errorDescription: error_description,
-    error_uri,
-  });
-};
-
-/**
- * Retrieves an access token from Patreon using the provided configuration and parameters.
- *
- * @param {PatreonConfig} config - The Patreon configuration.
- * @param {Object} params - The parameters required for retrieving the access token.
- * @param {string} params.code - The authorization code from Patreon.
- * @param {string} params.redirectUri - The redirect URI used in the authorization process.
- * @returns {Object} - The retrieved access token.
- * @throws {ConnectorError} - If an error occurs during the retrieval process.
- */
-export const getAccessToken = async (
-  config: PatreonConfig,
-  params: { code: string; redirectUri: string }
-) => {
-  const { code, redirectUri } = params;
-  const { clientId: client_id, clientSecret: client_secret } = config;
-
-  const requestParams = new URLSearchParams({
-    grant_type: 'authorization_code',
-    client_id,
-    client_secret,
-    code,
-    redirect_uri: redirectUri,
-  });
-
-  const httpResponse = await ky
-    .post(accessTokenEndpoint, {
-      searchParams: requestParams,
-      timeout: defaultTimeout,
-    })
-    .json();
-
-  const result = accessTokenResponseGuard.safeParse(httpResponse);
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  const { access_token: accessToken } = result.data;
-
-  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
-
-  return { accessToken };
-};
 
 /**
  * Asynchronously fetches user information from a social media provider.
@@ -146,50 +69,75 @@ export const getAccessToken = async (
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data, getSession) => {
-    const { redirectUri } = await getSession();
-    const { code } = await authorizationCallbackHandler(data);
-    const config = await getConfig(defaultMetadata.id);
-    validateConfig(config, patreonConfigGuard); // Use a Patreon-specific config guard
-    assert(
-      redirectUri,
-      new ConnectorError(ConnectorErrorCodes.General, {
-        message: 'Cannot find `redirectUri` from connector session.',
-      })
-    );
-    const { accessToken } = await getAccessToken(config, { code, redirectUri });
+    const authResponseResult = oauth2AuthResponseGuard.safeParse(data);
 
-    const authedApi = ky.create({
-      timeout: defaultTimeout,
-      hooks: {
-        beforeRequest: [
-          (request) => {
-            request.headers.set('Authorization', `Bearer ${accessToken}`);
-          },
-        ],
+    if (!authResponseResult.success) {
+      throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, data);
+    }
+
+    const { code } = authResponseResult.data;
+
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig(config, patreonConfigGuard);
+
+    const { clientId, clientSecret } = config;
+    const { redirectUri } = await getSession();
+
+    if (!redirectUri) {
+      throw new ConnectorError(ConnectorErrorCodes.General, {
+        message: 'Cannot find `redirectUri` from connector session.',
+      });
+    }
+
+    const tokenResponse = await requestTokenEndpoint({
+      tokenEndpoint,
+      tokenEndpointAuthOptions: {
+        method: TokenEndpointAuthMethod.ClientSecretBasic,
+      },
+      tokenRequestBody: {
+        grantType: 'authorization_code',
+        code,
+        redirectUri,
+        clientId,
+        clientSecret,
       },
     });
 
+    const parsedTokenResponse = accessTokenResponseGuard.safeParse(await tokenResponse.json());
+
+    if (!parsedTokenResponse.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, parsedTokenResponse.error);
+    }
+
+    const { access_token: accessToken, token_type: tokenType } = parsedTokenResponse.data;
+
+    assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+
     try {
-      // Patreon-specific endpoint to fetch user details
-      const userInfo = await authedApi.get(userInfoEndpoint).json();
+      const userInfoResponse = await ky.get(userInfoEndpoint, {
+        headers: {
+          authorization: `${tokenType} ${accessToken}`,
+        },
+        timeout: defaultTimeout,
+      });
 
-      const userInfoResult = userInfoResponseGuard.safeParse(userInfo);
+      const rawData = parseJson(await userInfoResponse.text());
 
-      if (!userInfoResult.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, userInfoResult.error);
+      const parsedUserInfoResponse = userInfoResponseGuard.safeParse(rawData);
+
+      if (!parsedUserInfoResponse.success) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, parsedUserInfoResponse.error);
       }
 
-      const { data } = userInfoResult.data;
+      const { data } = parsedUserInfoResponse.data;
       const { attributes } = data;
 
       return {
-        id: String(data.id), // Patreon's user ID
+        id: data.id,
         avatar: conditional(attributes.image_url),
         email: conditional(attributes.email),
         name: conditional(attributes.full_name),
-        rawData: jsonGuard.parse({
-          userInfo,
-        }),
+        rawData,
         email_verified: conditional(attributes.is_email_verified), // Direct email verification info
         profile: attributes.url,
         preferred_username: attributes.vanity,
@@ -197,13 +145,13 @@ const getUserInfo =
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        const { status, body: rawBody } = error.response;
+        const { response } = error;
 
-        if (status === 401) {
+        if (response.status === 401) {
           throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
         }
 
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+        throw new ConnectorError(ConnectorErrorCodes.General, await response.text());
       }
 
       throw error;
